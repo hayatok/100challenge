@@ -7,6 +7,7 @@
 | Date | App | Description |
 | --- | --- | --- |
 | 2026-09-01 | [やってる感](./2026-09-01/) | 具体的なことを言わない進捗報告ジェネレーター |
+| 2026-09-02 | [いのちの庭](./2026-09-02/) | 過剰な生命観測装置で見守る8bitライフゲーム |
 
 開発状況は [GitHub Project](https://github.com/users/hayatok/projects/3) と [Issues](https://github.com/hayatok/100challenge/issues) で管理します。
 

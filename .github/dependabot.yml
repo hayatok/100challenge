@@ -8,6 +8,14 @@ updates:
       frontend-dependencies:
         patterns:
           - '*'
+  - package-ecosystem: npm
+    directory: /2026-09-02
+    schedule:
+      interval: weekly
+    groups:
+      frontend-dependencies:
+        patterns:
+          - '*'
   - package-ecosystem: github-actions
     directory: /
     schedule:

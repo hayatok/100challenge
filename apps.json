@@ -8,5 +8,15 @@
     "category": "文章ジェネレーター",
     "thumbnail": "progress-manager-v2.png",
     "accent": "#e63b32"
+  },
+  {
+    "id": "2026-09-02",
+    "date": "2026-09-02",
+    "sequence": 1,
+    "name": "いのちの庭",
+    "description": "768マスの大自然を、必要以上の設備で見守る8bitライフゲーム。",
+    "category": "ミニゲーム",
+    "thumbnail": "life-garden-cover.jpg",
+    "accent": "#4f8a3a"
   }
 ]
