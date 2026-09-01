@@ -18,5 +18,15 @@
     "category": "ミニゲーム",
     "thumbnail": "life-garden-cover.jpg",
     "accent": "#4f8a3a"
+  },
+  {
+    "id": "2026-09-02-2",
+    "date": "2026-09-02",
+    "sequence": 2,
+    "name": "勇者監督局",
+    "description": "勝手に冒険する勇者へ、査定と攻略方針だけを出す観察型ダンジョンゲーム。",
+    "category": "ミニゲーム",
+    "thumbnail": "hero-supervision-cover.jpg",
+    "accent": "#c58a22"
   }
 ]
