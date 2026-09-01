@@ -1,0 +1,12 @@
+[
+  {
+    "id": "2026-09-01",
+    "date": "2026-09-01",
+    "sequence": 1,
+    "name": "やってる感",
+    "description": "具体的なことを言わずに、進んでいる感じを出す進捗報告ジェネレーター。",
+    "category": "文章ジェネレーター",
+    "thumbnail": "progress-manager-v2.png",
+    "accent": "#e63b32"
+  }
+]
