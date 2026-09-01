@@ -1,22 +1,25 @@
 :root {
   font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans JP", sans-serif;
-  color: #1f2421;
-  background: #f2f0e9;
+  color: #181818;
+  background: #ffdc3d;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
-  --ink: #1f2421;
-  --muted: #6d746f;
-  --paper: #fffefa;
-  --canvas: #f2f0e9;
-  --line: #cfd2cc;
-  --line-strong: #8c948e;
-  --blue: #1d4ed8;
-  --blue-dark: #173ea8;
-  --blue-light: #e9efff;
-  --green: #208451;
-  --red: #b53b30;
-  --yellow: #f4d35e;
+  --ink: #181818;
+  --muted: #5d5a50;
+  --paper: #fffdeb;
+  --canvas: #ffdc3d;
+  --line: #181818;
+  --line-strong: #181818;
+  --blue: #315dd4;
+  --blue-dark: #2443a0;
+  --blue-light: #fff06a;
+  --green: #2ca566;
+  --red: #e63b32;
+  --yellow: #fff06a;
+  --orange: #ff8b3d;
+  --cyan: #7edced;
+  --purple: #5a3aa8;
 }
 
 * { box-sizing: border-box; }
@@ -25,8 +28,9 @@ body { margin: 0; min-width: 320px; min-height: 100vh; background: var(--canvas)
 button, input, select, textarea { font: inherit; }
 button, label, select, input[type="range"] { cursor: pointer; }
 button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible, a:focus-visible {
-  outline: 3px solid #7da1ff;
-  outline-offset: 2px;
+  outline: 4px solid white;
+  outline-offset: 3px;
+  box-shadow: 0 0 0 7px var(--ink);
 }
 button:disabled { cursor: not-allowed; opacity: 0.45; }
 .sr-only {
@@ -42,5 +46,5 @@ button:disabled { cursor: not-allowed; opacity: 0.45; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; }
+  *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; }
 }

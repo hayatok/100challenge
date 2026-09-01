@@ -12,6 +12,8 @@ import {
 
 type AiStatus = 'idle' | 'consent' | 'loading' | 'ready' | 'generating' | 'error' | 'unsupported'
 type ResultSource = 'template' | 'ai'
+type GenerationIntent = 'generate' | 'alternate' | 'adjust'
+type VisualEffect = 'idle' | 'printing' | 'stamped' | 'alternate' | 'copied'
 
 type WorkerMessage =
   | { type: 'progress'; progress: number; text: string }
@@ -52,9 +54,13 @@ function App() {
   const [aiStatus, setAiStatus] = useState<AiStatus>('idle')
   const [aiProgress, setAiProgress] = useState(0)
   const [aiDetail, setAiDetail] = useState('')
+  const [visualEffect, setVisualEffect] = useState<VisualEffect>('idle')
   const workerRef = useRef<Worker | null>(null)
   const pendingInputRef = useRef<ReportInput | null>(null)
+  const pendingIntentRef = useRef<GenerationIntent>('generate')
   const generationTimerRef = useRef<number | null>(null)
+  const visualTimerRef = useRef<number | null>(null)
+  const visualFrameRef = useRef<number | null>(null)
 
   useEffect(() => {
     localStorage.setItem('yatterukan:state', JSON.stringify(progressState))
@@ -66,15 +72,28 @@ function App() {
   useEffect(() => () => {
     workerRef.current?.terminate()
     if (generationTimerRef.current) window.clearTimeout(generationTimerRef.current)
+    if (visualTimerRef.current) window.clearTimeout(visualTimerRef.current)
+    if (visualFrameRef.current) window.cancelAnimationFrame(visualFrameRef.current)
   }, [])
 
   const currentInput = (): ReportInput => ({ subject, state: progressState, tone, ambiguity })
+
+  const showVisualEffect = (effect: VisualEffect, duration = 720) => {
+    if (visualTimerRef.current) window.clearTimeout(visualTimerRef.current)
+    if (visualFrameRef.current) window.cancelAnimationFrame(visualFrameRef.current)
+    setVisualEffect('idle')
+    visualFrameRef.current = window.requestAnimationFrame(() => {
+      setVisualEffect(effect)
+      visualTimerRef.current = window.setTimeout(() => setVisualEffect('idle'), duration)
+    })
+  }
 
   const commitReport = (nextReport: string, source: ResultSource) => {
     setReport(nextReport)
     setResultSource(source)
     setRecent((items) => [nextReport, ...items.filter((item) => item !== nextReport)].slice(0, 5))
     setError('')
+    showVisualEffect(pendingIntentRef.current === 'alternate' ? 'alternate' : 'stamped')
   }
 
   const generateTemplate = (input = currentInput(), fallbackMessage = '') => {
@@ -94,14 +113,18 @@ function App() {
     setAiStatus('idle')
     setAiProgress(0)
     if (generationTimerRef.current) window.clearTimeout(generationTimerRef.current)
+    if (visualTimerRef.current) window.clearTimeout(visualTimerRef.current)
+    setVisualEffect('idle')
   }
 
-  const requestGeneration = (input: ReportInput) => {
+  const requestGeneration = (input: ReportInput, intent: GenerationIntent = 'generate') => {
     setNotice('')
     if (!input.subject.trim()) {
       setError('まず、何についての進捗か入力してください。')
       return
     }
+    pendingIntentRef.current = intent
+    showVisualEffect('printing', aiEnabled && aiStatus === 'ready' ? 30_000 : 720)
     if (!aiEnabled || aiStatus !== 'ready') {
       generateTemplate(input)
       return
@@ -115,7 +138,8 @@ function App() {
     }, 30_000)
   }
 
-  const generate = () => requestGeneration(currentInput())
+  const generate = () => requestGeneration(currentInput(), 'generate')
+  const generateAlternative = () => requestGeneration(currentInput(), 'alternate')
 
   const setupWorker = () => {
     const aiWorker = new Worker(new URL('./ai.worker.ts', import.meta.url), { type: 'module' })
@@ -178,6 +202,7 @@ function App() {
     try {
       await navigator.clipboard.writeText(report)
       setNotice('進捗が発生したことになりました。')
+      showVisualEffect('copied')
     } catch {
       setNotice('コピーできませんでした。文章を選択してコピーしてください。')
     }
@@ -186,7 +211,7 @@ function App() {
   const changeAmbiguity = (delta: number) => {
     const nextAmbiguity = Math.max(0, Math.min(100, ambiguity + delta))
     setAmbiguity(nextAmbiguity)
-    requestGeneration({ ...currentInput(), ambiguity: nextAmbiguity })
+    requestGeneration({ ...currentInput(), ambiguity: nextAmbiguity }, 'adjust')
   }
 
   const clearHistory = () => {
@@ -202,7 +227,7 @@ function App() {
       : '具体性を慎重に取り除いています'
 
   return (
-    <div className="app-shell">
+    <div className={`app-shell effect-${visualEffect}`}>
       <header className="site-header">
         <a className="brand" href="#top" aria-label="やってる感 ホーム">
           <span className="brand-mark" aria-hidden="true">進</span>
@@ -268,6 +293,8 @@ function App() {
           </section>
 
           <section className="result-panel" aria-labelledby="result-title">
+            <div className="printer-slot" aria-hidden="true" />
+            <span className="approval-burst" aria-hidden="true" />
             <div className="section-heading result-heading">
               <span>02</span>
               <div>
@@ -286,7 +313,7 @@ function App() {
             <textarea id="report" value={report} onChange={(event) => setReport(event.target.value)} rows={6} />
             <div className="result-actions">
               <button className="primary-copy" type="button" onClick={copyReport}>コピーする</button>
-              <button type="button" onClick={generate} disabled={aiStatus === 'generating'}>別案</button>
+              <button type="button" onClick={generateAlternative} disabled={aiStatus === 'generating'}>別案</button>
             </div>
             <div className="fine-tune-actions" aria-label="曖昧さを調整して再生成">
               <button type="button" onClick={() => changeAmbiguity(-25)} disabled={ambiguity === 0 || aiStatus === 'generating'}>少し正直に</button><span aria-hidden="true">／</span><button type="button" onClick={() => changeAmbiguity(25)} disabled={ambiguity === 100 || aiStatus === 'generating'}>さらに曖昧に</button>
