@@ -11,6 +11,7 @@ import {
 } from './generator'
 
 type AiStatus = 'idle' | 'consent' | 'loading' | 'ready' | 'generating' | 'error' | 'unsupported'
+type ResultSource = 'template' | 'ai'
 
 type WorkerMessage =
   | { type: 'progress'; progress: number; text: string }
@@ -43,6 +44,7 @@ function App() {
   const [tone, setTone] = useState<Tone>(() => loadSetting('yatterukan:tone', 'safe'))
   const [ambiguity, setAmbiguity] = useState(() => loadSetting('yatterukan:ambiguity', 50))
   const [report, setReport] = useState(initialReport)
+  const [resultSource, setResultSource] = useState<ResultSource>('template')
   const [recent, setRecent] = useState<string[]>(() => loadSetting('yatterukan:recent', []))
   const [error, setError] = useState('')
   const [notice, setNotice] = useState('')
@@ -68,15 +70,16 @@ function App() {
 
   const currentInput = (): ReportInput => ({ subject, state: progressState, tone, ambiguity })
 
-  const commitReport = (nextReport: string) => {
+  const commitReport = (nextReport: string, source: ResultSource) => {
     setReport(nextReport)
+    setResultSource(source)
     setRecent((items) => [nextReport, ...items.filter((item) => item !== nextReport)].slice(0, 5))
     setError('')
   }
 
   const generateTemplate = (input = currentInput(), fallbackMessage = '') => {
     try {
-      commitReport(generateReport(input, recent))
+      commitReport(generateReport(input, recent), 'template')
       if (fallbackMessage) setNotice(fallbackMessage)
     } catch (generationError) {
       setError(generationError instanceof Error ? generationError.message : '文章を生成できませんでした')
@@ -93,17 +96,16 @@ function App() {
     if (generationTimerRef.current) window.clearTimeout(generationTimerRef.current)
   }
 
-  const generate = () => {
+  const requestGeneration = (input: ReportInput) => {
     setNotice('')
-    if (!subject.trim()) {
+    if (!input.subject.trim()) {
       setError('まず、何についての進捗か入力してください。')
       return
     }
     if (!aiEnabled || aiStatus !== 'ready') {
-      generateTemplate()
+      generateTemplate(input)
       return
     }
-    const input = currentInput()
     pendingInputRef.current = input
     setAiStatus('generating')
     workerRef.current?.postMessage({ type: 'generate', input })
@@ -112,6 +114,8 @@ function App() {
       generateTemplate(input, 'AIが考えすぎたため、従来型の言い訳を採用しました。')
     }, 30_000)
   }
+
+  const generate = () => requestGeneration(currentInput())
 
   const setupWorker = () => {
     const aiWorker = new Worker(new URL('./ai.worker.ts', import.meta.url), { type: 'module' })
@@ -132,7 +136,7 @@ function App() {
         const input = pendingInputRef.current
         const validated = input ? validateAiReport(message.report, input.subject) : null
         if (validated) {
-          commitReport(validated)
+          commitReport(validated, 'ai')
           setAiStatus('ready')
           setNotice('この文章は端末内のAIが慎重に曖昧化しました。')
         } else if (input) {
@@ -182,7 +186,7 @@ function App() {
   const changeAmbiguity = (delta: number) => {
     const nextAmbiguity = Math.max(0, Math.min(100, ambiguity + delta))
     setAmbiguity(nextAmbiguity)
-    generateTemplate({ ...currentInput(), ambiguity: nextAmbiguity })
+    requestGeneration({ ...currentInput(), ambiguity: nextAmbiguity })
   }
 
   const clearHistory = () => {
@@ -266,7 +270,10 @@ function App() {
           <section className="result-panel" aria-labelledby="result-title">
             <div className="section-heading result-heading">
               <span>02</span>
-              <div><h2 id="result-title">生成された進捗</h2><p>{aiEnabled && aiStatus === 'ready' ? 'ローカルAI製' : '企業努力製'}</p></div>
+              <div>
+                <h2 id="result-title">生成された進捗</h2>
+                <p>{aiStatus === 'generating' ? 'ローカルAI処理中' : resultSource === 'ai' ? 'ローカルAI製' : '企業努力製'}</p>
+              </div>
               <span className="confidential-stamp">社外秘っぽい</span>
             </div>
 
@@ -279,10 +286,10 @@ function App() {
             <textarea id="report" value={report} onChange={(event) => setReport(event.target.value)} rows={6} />
             <div className="result-actions">
               <button className="primary-copy" type="button" onClick={copyReport}>コピーする</button>
-              <button type="button" onClick={() => generateTemplate()}>別案</button>
+              <button type="button" onClick={generate} disabled={aiStatus === 'generating'}>別案</button>
             </div>
             <div className="fine-tune-actions" aria-label="曖昧さを調整して再生成">
-              <button type="button" onClick={() => changeAmbiguity(-25)} disabled={ambiguity === 0}>少し正直に</button><span aria-hidden="true">／</span><button type="button" onClick={() => changeAmbiguity(25)} disabled={ambiguity === 100}>さらに曖昧に</button>
+              <button type="button" onClick={() => changeAmbiguity(-25)} disabled={ambiguity === 0 || aiStatus === 'generating'}>少し正直に</button><span aria-hidden="true">／</span><button type="button" onClick={() => changeAmbiguity(25)} disabled={ambiguity === 100 || aiStatus === 'generating'}>さらに曖昧に</button>
             </div>
             <p className="notice" aria-live="polite">{notice}</p>
           </section>
