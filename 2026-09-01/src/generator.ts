@@ -25,6 +25,20 @@ export type ReportInput = {
   ambiguity: number
 }
 
+export const AI_REPORT_MIN_LENGTH = 120
+export const AI_REPORT_MAX_LENGTH = 300
+const AI_CORE_MIN_LENGTH = 20
+const AI_CORE_MAX_LENGTH = 120
+
+const aiCoreStatePatterns: Record<ProgressState, RegExp> = {
+  'not-started': /着手していない/,
+  working: /作業中/,
+  blocked: /詰まっている/,
+  waiting: /返事を待っている/,
+  'almost-done': /ほぼ終わっている/,
+  unknown: /状況が分からない/,
+}
+
 type RandomSource = () => number
 
 const statePhrases: Record<ProgressState, string[]> = {
@@ -98,6 +112,38 @@ const templates = [
     `${subject}に関して、${opener}、${phrase}${bridge}${closer}。`,
 ]
 
+const aiStateExpansions: Record<ProgressState, string> = {
+  'not-started':
+    'そのうえで、着手後の手戻りを抑える観点から、前提条件と影響範囲を確認し、何を先に整理すべきかという論点の粒度を揃えています。',
+  working:
+    'そのうえで、進行中の内容と周辺への影響を切り分け、認識のずれや抜け漏れが生じないよう、確認すべき観点を整理しています。',
+  blocked:
+    'そのうえで、顕在化している論点を切り分け、前提の置き方と影響範囲を確認しながら、次の判断に必要な材料を整理しています。',
+  waiting:
+    'そのうえで、返答を受けた後に認識のずれが生じないよう、確認すべき観点と進め方の選択肢をあらかじめ整理しています。',
+  'almost-done':
+    'そのうえで、残っている確認事項と周辺への影響を切り分け、見落としを避けるために必要な観点を慎重に整理しています。',
+  unknown:
+    'そのうえで、現在地を把握するために関係する情報を切り分け、優先順位を判断するうえで不足している観点を整理しています。',
+}
+
+const aiToneExpansions: Record<Tone, (ambiguity: number) => string> = {
+  safe: (ambiguity) =>
+    ambiguity >= 75
+      ? '引き続き、確定していない内容を断定せず、複数の見方を残したまま、状況に応じて調整できる進め方を慎重に見極めます。'
+      : '引き続き、確認できた範囲をもとに優先順位を見極め、状況に応じて調整できる進め方を検討します。',
+  consulting: (ambiguity) =>
+    ambiguity >= 75
+      ? '引き続き、全体の整合性を崩さないよう複数の見方を保持しながら、判断に必要な論点の解像度を段階的に高めていきます。'
+      : '引き続き、全体の整合性を確認しながら、次の判断に必要な論点の解像度を段階的に高めていきます。',
+  executive: () =>
+    '引き続き、判断に影響する要素を見極めながら、優先順位とリスクを管理できる状態へ近づけていきます。',
+  buzzword: () =>
+    '引き続き、全体の方向性と認識を揃えながら、次の動きへ移るための論点と進め方を段階的に具体化していきます。',
+  honest: () =>
+    '引き続き、進んでいない点を無理に飾らず、確認できたことと分からないことを分けながら次の進め方を考えます。',
+}
+
 const pick = <T,>(items: readonly T[], random: RandomSource) =>
   items[Math.min(items.length - 1, Math.floor(random() * items.length))]
 
@@ -128,10 +174,11 @@ export function generateReport(
 export function validateAiReport(report: string, subject: string) {
   const normalized = report.trim().replace(/^['"「]|['"」]$/g, '')
   const normalizedSubject = sanitizeSubject(subject)
-  if (!normalized || normalized.length > 120) return null
+  if (normalized.length < AI_REPORT_MIN_LENGTH || normalized.length > AI_REPORT_MAX_LENGTH) return null
   if (!normalized.includes(normalizedSubject)) return null
   if (/完了|リリース|合意|承認|実施済|対応済/.test(normalized)) return null
-  if ((normalized.match(/[。！？]/g) ?? []).length > 1) return null
+  const sentenceCount = (normalized.match(/[。！？]/g) ?? []).length
+  if (sentenceCount < 3 || sentenceCount > 4 || !/[。！？]$/.test(normalized)) return null
 
   const subjectNumbers = new Set(normalizedSubject.match(/\d+(?:[./-]\d+)*/g) ?? [])
   const reportNumbers = normalized.match(/\d+(?:[./-]\d+)*/g) ?? []
@@ -141,4 +188,31 @@ export function validateAiReport(report: string, subject: string) {
   const reportWords = normalized.match(/[A-Za-z][A-Za-z0-9/-]*/g) ?? []
   if (reportWords.some((value) => !subjectWords.has(value))) return null
   return normalized
+}
+
+function validateAiCore(report: string, input: ReportInput) {
+  const normalized = report.trim().replace(/^['"「]|['"」]$/g, '')
+  const normalizedSubject = sanitizeSubject(input.subject)
+  if (normalized.length < AI_CORE_MIN_LENGTH || normalized.length > AI_CORE_MAX_LENGTH) return null
+  if (!normalized.includes(normalizedSubject)) return null
+  if (/完了|リリース|合意|承認|実施済|対応済|変更して|着手しました|開始しました|作成しました|提出しました|共有しました/.test(normalized)) return null
+  if (!aiCoreStatePatterns[input.state].test(normalized)) return null
+  const sentenceCount = (normalized.match(/[。！？]/g) ?? []).length
+  if (sentenceCount < 1 || sentenceCount > 2 || !/[。！？]$/.test(normalized)) return null
+
+  const subjectNumbers = new Set(normalizedSubject.match(/\d+(?:[./-]\d+)*/g) ?? [])
+  const reportNumbers = normalized.match(/\d+(?:[./-]\d+)*/g) ?? []
+  if (reportNumbers.some((value) => !subjectNumbers.has(value))) return null
+
+  const subjectWords = new Set(normalizedSubject.match(/[A-Za-z][A-Za-z0-9/-]*/g) ?? [])
+  const reportWords = normalized.match(/[A-Za-z][A-Za-z0-9/-]*/g) ?? []
+  if (reportWords.some((value) => !subjectWords.has(value))) return null
+  return normalized
+}
+
+export function expandAiReport(report: string, input: ReportInput) {
+  const core = validateAiCore(report, input)
+  if (!core) return null
+  const expanded = `${core}${aiStateExpansions[input.state]}${aiToneExpansions[input.tone](input.ambiguity)}`
+  return validateAiReport(expanded, input.subject)
 }
