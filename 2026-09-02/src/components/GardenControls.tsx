@@ -65,7 +65,7 @@ export default function GardenControls({
           <small>新しい庭</small>
         </button>
         <button type="button" disabled={clearDisabled} onClick={onClear}>庭を空にする</button>
-        <button type="button" onClick={onToggleHelp}>操作説明</button>
+        <button type="button" onClick={onToggleHelp}>庭のルール</button>
       </div>
     </div>
   )
