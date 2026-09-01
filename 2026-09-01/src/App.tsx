@@ -305,7 +305,7 @@ function App() {
             </div>
 
             <div className="mascot-frame">
-              <img src={`${import.meta.env.BASE_URL}progress-manager.png`} alt="白紙の進捗報告を自信満々に掲げる会社員" />
+              <img src={`${import.meta.env.BASE_URL}progress-manager-v2.png`} alt="白紙の進捗報告を自信満々に掲げる会社員" />
               <p>資料だけは増えました</p>
             </div>
 
