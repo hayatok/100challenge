@@ -1,15 +1,27 @@
-name: Verify daily app
+name: Verify site
 
 on:
   pull_request:
     paths:
-      - '2026-09-01/**'
+      - '[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]/**'
+      - '[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]-*/**'
+      - 'apps.json'
+      - 'package.json'
+      - 'scripts/**'
+      - 'showcase/**'
       - '.github/workflows/verify.yml'
+      - '.github/workflows/deploy-pages.yml'
   push:
     branches: [main]
     paths:
-      - '2026-09-01/**'
+      - '[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]/**'
+      - '[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]-*/**'
+      - 'apps.json'
+      - 'package.json'
+      - 'scripts/**'
+      - 'showcase/**'
       - '.github/workflows/verify.yml'
+      - '.github/workflows/deploy-pages.yml'
 
 permissions:
   contents: read
@@ -19,19 +31,16 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  app:
+  verify:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: 2026-09-01
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: actions/setup-node@v4
         with:
           node-version: 24
           cache: npm
-          cache-dependency-path: 2026-09-01/package-lock.json
-      - run: npm ci
-      - run: npm run lint
-      - run: npm run test
-      - run: npm run build
+          cache-dependency-path: '**/package-lock.json'
+      - name: Install app dependencies
+        run: npm run ci:apps
+      - name: Test and build the complete site
+        run: npm run check

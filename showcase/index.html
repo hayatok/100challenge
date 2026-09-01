@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#f7e8c4" />
+    <meta name="description" content="毎日ひとつ、たまにふたつ。コーディングエージェントと作る100日分の小さなWebアプリ。" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="100 CHALLENGE — 毎日の小さなアプリ" />
+    <meta property="og:description" content="毎日つくる。ちゃんと残す。コーディングエージェントと作る100日分の小さなWebアプリ。" />
+    <meta property="og:image" content="https://hayatok.github.io/100challenge/og.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="100 CHALLENGE — 毎日の小さなアプリ" />
+    <meta name="twitter:description" content="毎日つくる。ちゃんと残す。コーディングエージェントと作る100日分の小さなWebアプリ。" />
+    <meta name="twitter:image" content="https://hayatok.github.io/100challenge/og.png" />
+    <title>100 CHALLENGE — 毎日の小さなアプリ</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="./" aria-label="100 CHALLENGE ホーム">
+        <span class="brand-number" aria-hidden="true">100</span>
+        <span class="brand-copy">CHALLENGE<small>APPS MADE WITH AGENTS</small></span>
+      </a>
+      <p class="header-note"><span aria-hidden="true"></span> きょうも制作中</p>
+    </header>
+
+    <main>
+      <section class="hero" aria-labelledby="page-title">
+        <div class="hero-copy">
+          <p class="kicker">BUILD SOMETHING / EVERY DAY</p>
+          <h1 id="page-title">毎日つくる。<br /><span>ちゃんと残す。</span></h1>
+          <p class="lead">コーディングエージェントに慣れるための、100日分の小さな実験場です。1日に2個できた日は、少し得した気分で並びます。</p>
+        </div>
+        <aside class="counter" aria-label="チャレンジの進捗">
+          <p>PROGRESS</p>
+          <strong><span id="app-count">--</span><small>/ 100</small></strong>
+          <div class="counter-track" aria-hidden="true"><span id="progress-bar"></span></div>
+          <p id="progress-copy">作品を数えています</p>
+        </aside>
+      </section>
+
+      <section class="showcase" aria-labelledby="showcase-title">
+        <div class="section-heading">
+          <div>
+            <p class="kicker">THE DAILY BUILDS</p>
+            <h2 id="showcase-title">できたもの一覧</h2>
+          </div>
+          <p>新しい順</p>
+        </div>
+
+        <div id="app-list" class="app-grid" aria-live="polite" aria-busy="true">
+          <div class="status-panel">
+            <span class="status-mark" aria-hidden="true">…</span>
+            <div><strong>作品を並べています</strong><p>少々お待ちください。</p></div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <p><strong>100 CHALLENGE</strong> — 小さく作って、毎日学ぶ。</p>
+      <p>CODE WORKS. CREATOR NEEDS MAINTENANCE.</p>
+    </footer>
+
+    <template id="app-card-template">
+      <article class="app-card">
+        <a class="app-image-link" href="#">
+          <img class="app-image" alt="" />
+          <span class="open-label">アプリを開く <span aria-hidden="true">↗</span></span>
+        </a>
+        <div class="app-body">
+          <div class="app-meta"><time></time><span class="app-sequence"></span></div>
+          <h3><a href="#"></a></h3>
+          <p class="app-description"></p>
+          <p class="app-category"></p>
+        </div>
+      </article>
+    </template>
+
+    <script type="module" src="./showcase.js"></script>
+  </body>
+</html>

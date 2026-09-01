@@ -32,4 +32,4 @@ npm run check
 
 ## Generated asset
 
-`public/progress-manager.png` は、アプリのジョークを伝えるためにOpenAIの組み込み画像生成機能で制作したプロジェクト専用素材です。
+`public/progress-manager-v2.png` は、アプリのジョークを伝えるためにOpenAIの組み込み画像生成機能で制作したプロジェクト専用素材です。

@@ -1,0 +1,14 @@
+{
+  "name": "100challenge-showcase",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build:site": "node scripts/build-site.mjs",
+    "preview:site": "node scripts/serve-site.mjs",
+    "dev:site": "npm run build:site && npm run preview:site",
+    "ci:apps": "node scripts/run-apps.mjs ci",
+    "check:apps": "node scripts/run-apps.mjs check",
+    "test": "node --test scripts/apps.test.mjs",
+    "check": "npm test && npm run check:apps && npm run build:site"
+  }
+}
