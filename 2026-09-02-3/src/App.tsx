@@ -2,7 +2,6 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import * as tf from '@tensorflow/tfjs'
 import { DrawingPad, type DrawingPadHandle } from './components/DrawingPad'
 import { CnnExplorer, type MapPoint, type MapScale } from './components/CnnExplorer'
-import { CnnScene3D } from './components/CnnScene3D'
 import { MetricsChart } from './components/MetricsChart'
 import { ModelFlow } from './components/ModelFlow'
 import { NetworkDiagram } from './components/NetworkDiagram'
@@ -552,14 +551,14 @@ function App() {
             </section>
           ) : (
             <>
-              {modelFamily === 'mlp' ? <ModelFlow
-                model="mlp"
+              <ModelFlow
+                model={modelFamily}
                 phaseIndex={phaseIndex}
                 mlpTrace={trace}
-                cnnTrace={null}
+                cnnTrace={activeCnnTrace}
                 onSelectPhase={(next) => { setPlaying(false); setPhaseIndex(next); setSelectedPoint(null); setOccludedTrace(null) }}
-              /> : <CnnScene3D input={sample?.pixels ?? new Float32Array(784)} trace={activeCnnTrace} phaseIndex={phaseIndex} selectedPoint={selectedPoint} onSelectPhase={(next) => { setPlaying(false); setPhaseIndex(next); setOccludedTrace(null) }} />}
-              {(modelFamily === 'mlp' || mode === 'draw') && <section className={modelFamily === 'cnn' ? 'observation observation--cnn-draw' : 'observation'} aria-label="ニューラルネットワークの計算過程">
+              />
+              <section className={modelFamily === 'cnn' ? 'observation observation--cnn' : 'observation'} aria-label="ニューラルネットワークの計算過程">
                 <div className="input-stage">
                   <div className="stage-heading">
                     <span>INPUT / 784</span>
@@ -580,7 +579,13 @@ function App() {
                   <p className="input-note">明るさ＝モデルへ入る0〜1の実値</p>
                 </div>
 
-                {modelFamily === 'mlp' && (
+                {modelFamily === 'cnn' ? (
+                  <div className="cnn-placeholder">
+                    <span>CNN OBSERVATION ROOM</span>
+                    <strong>画像のどこを見た？</strong>
+                    <p>局所計算、受容野、数字ごとの証拠を1モデルの中だけで追跡します。</p>
+                  </div>
+                ) : (
                   <NetworkDiagram
                     trace={trace}
                     phaseIndex={phaseIndex}
@@ -590,7 +595,7 @@ function App() {
                     onSelectOutput={setSelectedOutput}
                   />
                 )}
-              </section>}
+              </section>
 
               {modelFamily === 'cnn' && activeCnnTrace && (
                 <CnnExplorer
