@@ -78,7 +78,7 @@ export function ModelFlow({ model, phaseIndex, mlpTrace, cnnTrace, onSelectPhase
   const traceReady = model === 'mlp' ? Boolean(mlpTrace) : Boolean(cnnTrace)
   const layers = model === 'mlp' ? layersForMlp(mlpTrace, phaseIndex) : layersForCnn(cnnTrace)
   const activeIndex = flowActiveIndex(model, phaseIndex)
-  const backward = model === 'mlp' && phaseIndex >= 8 && phaseIndex <= 10
+  const backward = model === 'mlp' ? phaseIndex >= 8 && phaseIndex <= 10 : phaseIndex >= 8 && phaseIndex <= 9
 
   useEffect(() => {
     if (!traceReady) return

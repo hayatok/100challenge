@@ -86,4 +86,22 @@ describe('CNN trace integrity', () => {
     expect(masked[11 * 28 + 10]).toBe(1)
     expect(masked[12 * 28 + 10]).toBe(0)
   })
+
+  it('trains a real CNN step and can restore its previous parameters', async () => {
+    const model = CnnVisualModel.learning(42)
+    const input = new Float32Array(784)
+    for (let y = 7; y < 23; y += 1) input[y * 28 + 14] = 1
+    const training = await model.guidedTrain(input, 'train-line', 1)
+
+    expect(training.lossBefore).toBeGreaterThan(0)
+    expect(training.gradientMeanAbs).toBeGreaterThan(0)
+    expect(training.updateMeanAbs).toBeCloseTo(training.gradientMeanAbs * 0.01, 8)
+    expect(Array.from(training.after.parameters.denseKernel).some((value, index) => value !== training.before.parameters.denseKernel[index])).toBe(true)
+    expect(model.canUndoGuided()).toBe(true)
+
+    await model.undoGuided()
+    const restored = await model.infer(input, 'restored-line', 1)
+    expect(restored.logits[1]).toBeCloseTo(training.before.logits[1], 5)
+    model.dispose()
+  })
 })
