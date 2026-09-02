@@ -168,4 +168,91 @@ export function channelContribution(trace: CnnTrace, channel: number, output: nu
   return total
 }
 
+export type LocalTerm = { value: number; weight: number; product: number; x: number; y: number }
+
+export function conv1CellBreakdown(trace: CnnTrace, channel: number, x: number, y: number) {
+  const terms: LocalTerm[] = []
+  for (let ky = 0; ky < 3; ky += 1) {
+    for (let kx = 0; kx < 3; kx += 1) {
+      const inputX = x + kx - 1
+      const inputY = y + ky - 1
+      const value = inputX < 0 || inputX >= 28 || inputY < 0 || inputY >= 28 ? 0 : trace.input[inputY * 28 + inputX]
+      const weight = trace.parameters.conv1Kernel[(ky * 3 + kx) * 8 + channel]
+      terms.push({ value, weight, product: value * weight, x: inputX, y: inputY })
+    }
+  }
+  const bias = trace.parameters.conv1Bias[channel]
+  const sum = terms.reduce((total, term) => total + term.product, bias)
+  return { terms, bias, sum, activated: Math.max(0, sum) }
+}
+
+export function conv2CellBreakdown(trace: CnnTrace, inputChannel: number, outputChannel: number, x: number, y: number) {
+  const terms: LocalTerm[] = []
+  for (let ky = 0; ky < 3; ky += 1) {
+    for (let kx = 0; kx < 3; kx += 1) {
+      const inputX = x + kx - 1
+      const inputY = y + ky - 1
+      const value = inputX < 0 || inputX >= 14 || inputY < 0 || inputY >= 14
+        ? 0
+        : trace.pool1[(inputY * 14 + inputX) * 8 + inputChannel]
+      const weight = trace.parameters.conv2Kernel[((ky * 3 + kx) * 8 + inputChannel) * 16 + outputChannel]
+      terms.push({ value, weight, product: value * weight, x: inputX, y: inputY })
+    }
+  }
+  let sum = trace.parameters.conv2Bias[outputChannel]
+  for (let source = 0; source < 8; source += 1) {
+    for (let ky = 0; ky < 3; ky += 1) {
+      for (let kx = 0; kx < 3; kx += 1) {
+        const inputX = x + kx - 1
+        const inputY = y + ky - 1
+        if (inputX < 0 || inputX >= 14 || inputY < 0 || inputY >= 14) continue
+        const value = trace.pool1[(inputY * 14 + inputX) * 8 + source]
+        const weight = trace.parameters.conv2Kernel[((ky * 3 + kx) * 8 + source) * 16 + outputChannel]
+        sum += value * weight
+      }
+    }
+  }
+  return {
+    terms,
+    sourceSubtotal: terms.reduce((total, term) => total + term.product, 0),
+    bias: trace.parameters.conv2Bias[outputChannel],
+    sum,
+    activated: Math.max(0, sum),
+  }
+}
+
+export function poolCellBreakdown(trace: CnnTrace, stage: 'pool1' | 'pool2', channel: number, x: number, y: number) {
+  const source = stage === 'pool1' ? trace.conv1 : trace.conv2
+  const sourceSize = stage === 'pool1' ? 28 : 14
+  const channels = stage === 'pool1' ? 8 : 16
+  const values = Float32Array.from({ length: 4 }, (_, index) => {
+    const sourceX = x * 2 + index % 2
+    const sourceY = y * 2 + Math.floor(index / 2)
+    return source[(sourceY * sourceSize + sourceX) * channels + channel]
+  })
+  const winner = values.reduce((best, value, index) => value > values[best] ? index : best, 0)
+  return { values, winner, maximum: values[winner] }
+}
+
+export function evidenceMap(trace: CnnTrace, output: number) {
+  const evidence = new Float32Array(49)
+  for (let position = 0; position < 49; position += 1) {
+    let total = 0
+    for (let channel = 0; channel < 16; channel += 1) {
+      const flatIndex = position * 16 + channel
+      total += trace.pool2[flatIndex] * trace.parameters.denseKernel[flatIndex * 10 + output]
+    }
+    evidence[position] = total
+  }
+  return evidence
+}
+
+export function occlude(input: Float32Array, box: { x: number; y: number; size: number }) {
+  const result = Float32Array.from(input)
+  for (let y = Math.max(0, box.y); y < Math.min(28, box.y + box.size); y += 1) {
+    for (let x = Math.max(0, box.x); x < Math.min(28, box.x + box.size); x += 1) result[y * 28 + x] = 0
+  }
+  return result
+}
+
 export const CNN_CONSTANTS = { CONV1_CHANNELS: 8, CONV2_CHANNELS: 16 }
