@@ -1,5 +1,5 @@
 import type { KeyboardEvent, MouseEvent } from 'react'
-import { conv1CellBreakdown, conv1Kernel, conv2CellBreakdown, conv2Kernel, evidenceMap, featureChannel, maxPosition, poolCellBreakdown, type CnnTrace } from '../ml/cnn'
+import { conv1CellBreakdown, conv1Kernel, conv2CellBreakdown, conv2Kernel, evidenceMap, featureChannel, maxPosition, poolCellBreakdown, type CnnTrace, type CnnTrainingTrace } from '../ml/cnn'
 
 export type MapScale = 'local' | 'global'
 export type MapPoint = { x: number; y: number }
@@ -7,6 +7,7 @@ export type MapPoint = { x: number; y: number }
 type Props = {
   trace: CnnTrace
   occludedTrace: CnnTrace | null
+  trainingTrace: CnnTrainingTrace | null
   phaseIndex: number
   selectedChannel: number
   selectedSourceChannel: number
@@ -70,7 +71,7 @@ function pointFromEvent(event: MouseEvent<HTMLButtonElement>, size: number): Map
   return { x: Math.max(0, Math.min(size - 1, Math.floor((event.clientX - rect.left) / rect.width * size))), y: Math.max(0, Math.min(size - 1, Math.floor((event.clientY - rect.top) / rect.height * size))) }
 }
 
-export function CnnExplorer({ trace, occludedTrace, phaseIndex, selectedChannel, selectedSourceChannel, selectedOutput, selectedPoint, scaleMode, onSelectChannel, onSelectSourceChannel, onSelectOutput, onSelectPoint, onScaleMode, onOcclude, onClearOcclusion }: Props) {
+export function CnnExplorer({ trace, occludedTrace, trainingTrace, phaseIndex, selectedChannel, selectedSourceChannel, selectedOutput, selectedPoint, scaleMode, onSelectChannel, onSelectSourceChannel, onSelectOutput, onSelectPoint, onScaleMode, onOcclude, onClearOcclusion }: Props) {
   if (phaseIndex === 0) return <section className="cnn-explorer cnn-explorer--input" aria-label="CNNへの空間入力"><div><p className="section-number">SPATIAL INPUT / 28×28×1</p><h3>画像をバラさず、位置関係ごと読む</h3><p>隣り合うピクセルを保ったまま、3×3の小さな窓で調べます。まだ特徴マップも予測結果も表示しません。</p></div><Heatmap values={trace.input} size={28} label="CNNへ渡す28×28入力" /></section>
 
   const stage = phaseIndex === 1 ? { name: 'CONV1', values: trace.conv1, size: 28, channels: 8 } : phaseIndex === 2 ? { name: 'POOL1', values: trace.pool1, size: 14, channels: 8 } : phaseIndex === 3 ? { name: 'CONV2', values: trace.conv2, size: 14, channels: 16 } : { name: 'POOL2', values: trace.pool2, size: 7, channels: 16 }
@@ -112,5 +113,15 @@ export function CnnExplorer({ trace, occludedTrace, phaseIndex, selectedChannel,
     {pooling && <div className="pool-calculation"><p className="section-number">MAX POOL / REAL VALUES</p><div className="pool-values">{Array.from(pooling.values, (value, index) => <span className={index === pooling.winner ? 'pool-value pool-value--winner' : 'pool-value'} key={index}>{value.toFixed(5)}</span>)}</div><strong>最大値 {pooling.maximum.toFixed(5)} を次へ残す</strong></div>}
     {phaseIndex >= 4 && <div className="evidence-panel"><div className="evidence-copy"><p className="section-number">CLASS EVIDENCE / 7×7</p><h3>数字 {selectedOutput} だと思った場所</h3><p>シアンは数字 {selectedOutput} を支持し、ピンクは打ち消した位置です。49セルとbiasの合計が実際のlogitに一致します。</p><div className="digit-picker" aria-label="証拠を調べる数字">{Array.from({ length: 10 }, (_, digit) => <button type="button" key={digit} aria-pressed={digit === selectedOutput} onClick={() => onSelectOutput(digit)}>{digit}</button>)}</div></div><div className="evidence-map"><Heatmap values={evidence} size={7} signed label={`数字${selectedOutput}への位置別寄与`} /></div><dl><div><dt>49位置 + bias</dt><dd>{evidenceSum.toFixed(6)}</dd></div><div><dt>モデルのlogit</dt><dd>{trace.logits[selectedOutput].toFixed(6)}</dd></div><div><dt>差</dt><dd>{Math.abs(evidenceSum - trace.logits[selectedOutput]).toExponential(2)}</dd></div></dl></div>}
     {phaseIndex >= 5 && <div className="cnn-result"><div><p className="section-number">CNN ANSWER</p><h3>モデルの回答は {trace.predictedClass}</h3><p>表示値はCNN単体のSoftmax出力です。</p></div><div className="cnn-probabilities">{Array.from(trace.probabilities, (probability, digit) => <button type="button" key={digit} aria-pressed={digit === selectedOutput} onClick={() => onSelectOutput(digit)}><strong>{digit}</strong><span><i style={{ width: `${probability * 100}%` }} /></span><em>{(probability * 100).toFixed(1)}%</em></button>)}</div><div className="occlusion-lab"><p className="section-number">OCCLUSION TEST</p><strong>黄色い受容野を黒く塗って、もう一度読む</strong><button type="button" className="button button--update" onClick={() => onOcclude(receptiveBox)}>この範囲を隠して再推論</button>{occludedTrace && <div className="occlusion-result"><span>元: {trace.predictedClass} / {(trace.probabilities[selectedOutput] * 100).toFixed(1)}%</span><span>遮蔽後: {occludedTrace.predictedClass} / {(occludedTrace.probabilities[selectedOutput] * 100).toFixed(1)}%</span><button type="button" onClick={onClearOcclusion}>遮蔽結果を消す</button></div>}</div></div>}
+    {trainingTrace && phaseIndex >= 6 && <div className="cnn-learning-trace">
+      <div><p className="section-number">REAL CNN TRAINING</p><h3>正解 {trainingTrace.before.label} へ、誤差を戻す</h3></div>
+      <dl>
+        <div><dt>更新前</dt><dd>{trainingTrace.before.predictedClass} / {(trainingTrace.before.probabilities[trainingTrace.before.label ?? 0] * 100).toFixed(1)}%</dd></div>
+        <div><dt>cross entropy</dt><dd>{trainingTrace.lossBefore.toFixed(6)}</dd></div>
+        {phaseIndex >= 8 && <div><dt>平均 |gradient|</dt><dd>{trainingTrace.gradientMeanAbs.toExponential(3)}</dd></div>}
+        {phaseIndex >= 9 && <div><dt>平均 |Δweight|</dt><dd>{trainingTrace.updateMeanAbs.toExponential(3)}</dd></div>}
+        {phaseIndex >= 10 && <div><dt>更新後</dt><dd>{trainingTrace.after.predictedClass} / {(trainingTrace.after.probabilities[trainingTrace.after.label ?? 0] * 100).toFixed(1)}%</dd></div>}
+      </dl>
+    </div>}
   </section>
 }

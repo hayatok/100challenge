@@ -15,5 +15,8 @@ describe('live network map phase mapping', () => {
 
   it('maps CNN phases to their expanded architecture', () => {
     expect([0, 1, 2, 3, 4, 5].map((phase) => flowActiveIndex('cnn', phase))).toEqual([0, 1, 2, 3, 6, 7])
+    expect(flowActiveIndex('cnn', 8)).toBe(6)
+    expect(flowActiveIndex('cnn', 9)).toBe(3)
+    expect(flowActiveIndex('cnn', 10)).toBe(7)
   })
 })

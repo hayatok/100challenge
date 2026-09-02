@@ -8,7 +8,7 @@ import { NetworkDiagram } from './components/NetworkDiagram'
 import { PixelGrid } from './components/PixelGrid'
 import { PlaybackControls } from './components/PlaybackControls'
 import { loadCnnModel, loadManifest, loadSplit, loadWeights, type DataManifest } from './ml/dataset'
-import { CnnVisualModel, occlude, type CnnModelDefinition, type CnnTrace } from './ml/cnn'
+import { CnnVisualModel, occlude, type CnnModelDefinition, type CnnTrace, type CnnTrainingTrace } from './ml/cnn'
 import { preprocessDrawing } from './ml/drawing'
 import { VisualModel } from './ml/model'
 import type { ComputationTrace, MnistSample, TrainingMetric } from './ml/types'
@@ -45,6 +45,15 @@ const CNN_PHASES = [
   ['prediction', 'CNN単体の回答を確認する', 'Softmax確率を表示し、選んだ受容野を隠した再推論も試せます。'],
 ] as const
 
+const CNN_TRAINING_PHASES = [
+  ...CNN_PHASES,
+  ['compare', 'CNNの回答と正解を比べる', '更新前の予測と教師ラベルを比べます。'],
+  ['loss', '外れ具合をlossにする', 'cross entropyで間違いの大きさを1つの値にします。'],
+  ['gradient', '誤差を奥から手前へ戻す', 'Dense、Conv2、Conv1へ実際の勾配を伝えます。'],
+  ['update', '全9,098個のパラメータを更新する', '勾配と学習率0.01から重みの更新量を計算します。'],
+  ['after', '更新後のCNNでもう一度読む', '同じ入力を再推論し、特徴マップと確率の変化を確認します。'],
+] as const
+
 function App() {
   const [status, setStatus] = useState<AppStatus>('loading')
   const [error, setError] = useState('')
@@ -56,6 +65,7 @@ function App() {
   const [mode, setMode] = useState<Mode>('guided')
   const [trace, setTrace] = useState<ComputationTrace | null>(null)
   const [cnnTrace, setCnnTrace] = useState<CnnTrace | null>(null)
+  const [cnnTrainingTrace, setCnnTrainingTrace] = useState<CnnTrainingTrace | null>(null)
   const [occludedTrace, setOccludedTrace] = useState<CnnTrace | null>(null)
   const [cnnDefinition, setCnnDefinition] = useState<CnnModelDefinition | null>(null)
   const [phaseIndex, setPhaseIndex] = useState(0)
@@ -73,6 +83,7 @@ function App() {
   const learningModel = useRef<VisualModel | null>(null)
   const pretrainedModel = useRef<VisualModel | null>(null)
   const cnnModel = useRef<CnnVisualModel | null>(null)
+  const cnnLearningModel = useRef<CnnVisualModel | null>(null)
   const splitCache = useRef<Partial<Record<'train' | 'test', MnistSample[]>>>({})
   const stopTraining = useRef(false)
   const drawingPad = useRef<DrawingPadHandle>(null)
@@ -99,6 +110,7 @@ function App() {
         learningModel.current = VisualModel.learning()
         pretrainedModel.current = VisualModel.pretrained(weights)
         cnnModel.current = new CnnVisualModel(cnn.weights)
+        cnnLearningModel.current = CnnVisualModel.learning()
         setCnnDefinition(cnn.definition)
         setStatus('ready')
       } catch (caught) {
@@ -113,11 +125,12 @@ function App() {
       learningModel.current?.dispose()
       pretrainedModel.current?.dispose()
       cnnModel.current?.dispose()
+      cnnLearningModel.current?.dispose()
     }
   }, [])
 
   const sample = mode === 'draw' ? drawnSample : samples[sampleIndex] ?? null
-  const phases = modelFamily === 'cnn' ? CNN_PHASES : trace?.kind === 'guided-training' ? TRAINING_PHASES : INFERENCE_PHASES
+  const phases = modelFamily === 'cnn' ? cnnTrainingTrace ? CNN_TRAINING_PHASES : CNN_PHASES : trace?.kind === 'guided-training' ? TRAINING_PHASES : INFERENCE_PHASES
   const hasTrace = modelFamily === 'cnn' ? Boolean(cnnTrace) : Boolean(trace)
   const phase = phases[Math.min(phaseIndex, phases.length - 1)]
   const busy = status === 'computing' || status === 'training'
@@ -176,7 +189,8 @@ function App() {
       return
     }
     const model = mode === 'guided' ? learningModel.current : pretrainedModel.current
-    if (modelFamily === 'cnn' && !cnnModel.current) {
+    const activeCnnModel = mode === 'guided' ? cnnLearningModel.current : cnnModel.current
+    if (modelFamily === 'cnn' && !activeCnnModel) {
       setError('CNNの準備が完了していません。再読み込みしてください')
       return
     }
@@ -188,8 +202,9 @@ function App() {
     setStatus('computing')
     try {
       if (modelFamily === 'cnn') {
-        const nextTrace = await cnnModel.current!.infer(sample.pixels, sample.id, sample.label)
+        const nextTrace = await activeCnnModel!.infer(sample.pixels, sample.id, sample.label)
         setCnnTrace(nextTrace)
+        setCnnTrainingTrace(null)
         setTrace(null)
         setOccludedTrace(null)
         setSelectedOutput(sample.label ?? nextTrace.predictedClass)
@@ -204,6 +219,7 @@ function App() {
       const nextTrace = await model!.infer(sample.pixels, sample.id, sample.label)
       setTrace(nextTrace)
       setCnnTrace(null)
+      setCnnTrainingTrace(null)
       setOccludedTrace(null)
       setSelectedOutput(sample.label ?? 0)
       setSelectedHidden(0)
@@ -217,12 +233,13 @@ function App() {
   }
 
   const runOcclusion = async (box: { x: number; y: number; size: number }) => {
-    if (!cnnTrace || !cnnModel.current) return
+    const activeCnnModel = mode === 'guided' ? cnnLearningModel.current : cnnModel.current
+    if (!activeCnnTrace || !activeCnnModel) return
     setStatus('computing')
     setError('')
     try {
-      const masked = occlude(cnnTrace.input, box)
-      setOccludedTrace(await cnnModel.current.infer(masked, `${cnnTrace.sampleId}-occluded`, cnnTrace.label))
+      const masked = occlude(activeCnnTrace.input, box)
+      setOccludedTrace(await activeCnnModel.infer(masked, `${activeCnnTrace.sampleId}-occluded`, activeCnnTrace.label))
       setStatus('ready')
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : '遮蔽した入力を再推論できませんでした')
@@ -231,13 +248,28 @@ function App() {
   }
 
   const runGuidedTraining = async () => {
-    if (!sample || sample.label === null || !learningModel.current) return
+    if (!sample || sample.label === null) return
     setError('')
     setStatus('computing')
     try {
+      if (modelFamily === 'cnn') {
+        if (!cnnLearningModel.current) return
+        const nextTraining = await cnnLearningModel.current.guidedTrain(sample.pixels, sample.id, sample.label)
+        setCnnTrainingTrace(nextTraining)
+        setCnnTrace(nextTraining.before)
+        setTrace(null)
+        setSelectedOutput(sample.label)
+        setPhaseIndex(0)
+        setPlaying(true)
+        setModelTick((current) => current + 1)
+        setStatus('ready')
+        return
+      }
+      if (!learningModel.current) return
       const nextTrace = await learningModel.current.guidedTrain(sample.pixels, sample.id, sample.label)
       setTrace(nextTrace)
       setCnnTrace(null)
+      setCnnTrainingTrace(null)
       setOccludedTrace(null)
       setSelectedOutput(sample.label)
       setSelectedHidden(0)
@@ -252,10 +284,17 @@ function App() {
   }
 
   const undoGuided = async () => {
+    if (modelFamily === 'cnn') {
+      if (await cnnLearningModel.current?.undoGuided()) {
+        setCnnTrace(null); setCnnTrainingTrace(null); setOccludedTrace(null); setModelTick((current) => current + 1)
+      }
+      return
+    }
     if (!learningModel.current) return
     if (await learningModel.current.undoGuided()) {
       setTrace(null)
       setCnnTrace(null)
+      setCnnTrainingTrace(null)
       setOccludedTrace(null)
       setModelTick((current) => current + 1)
     }
@@ -264,9 +303,13 @@ function App() {
   const resetLearning = () => {
     learningModel.current?.dispose()
     learningModel.current = VisualModel.learning()
+    cnnLearningModel.current?.dispose()
+    cnnLearningModel.current = CnnVisualModel.learning()
     splitCache.current = {}
     setTrace(null)
     setCnnTrace(null)
+    setCnnTrainingTrace(null)
+    setCnnTrainingTrace(null)
     setOccludedTrace(null)
     setMetrics([])
     setTrainingOffset(0)
@@ -281,6 +324,7 @@ function App() {
     setMode('bulk')
     setTrace(null)
     setCnnTrace(null)
+    setCnnTrainingTrace(null)
     setOccludedTrace(null)
     stopTraining.current = false
     try {
@@ -311,6 +355,7 @@ function App() {
   const selectNextSample = () => {
     setTrace(null)
     setCnnTrace(null)
+    setCnnTrainingTrace(null)
     setOccludedTrace(null)
     setSelectedPoint(null)
     setSampleIndex((current) => (current + 1) % samples.length)
@@ -323,6 +368,7 @@ function App() {
     setDrawnSample(pixels ? { id: 'user-drawn', split: 'drawn', label: null, pixels } : null)
     setTrace(null)
     setCnnTrace(null)
+    setCnnTrainingTrace(null)
     setOccludedTrace(null)
     setError('')
   }
@@ -332,6 +378,7 @@ function App() {
     setDrawnSample(null)
     setTrace(null)
     setCnnTrace(null)
+    setCnnTrainingTrace(null)
     setOccludedTrace(null)
   }
 
@@ -354,6 +401,8 @@ function App() {
     ? trace.updates?.w2[selectedHidden * 10 + selectedOutput] ?? null
     : null
   const learningRevision = learningModel.current?.revision ?? 0
+  const cnnLearningRevision = cnnLearningModel.current?.revision ?? 0
+  const activeCnnTrace = cnnTrainingTrace && phaseIndex >= CNN_TRAINING_PHASES.length - 1 ? cnnTrainingTrace.after : cnnTrace
   void modelTick
 
   return (
@@ -370,17 +419,17 @@ function App() {
           <p>本当に動いているモデルの、考える途中と学ぶ瞬間を観察します。</p>
         </div>
         <div className="model-plate" aria-label="現在のモデル">
-          <span>{modelFamily === null ? '観察する構造を選ぶ' : modelFamily === 'cnn' ? '画像を空間のまま読む' : mode === 'guided' || mode === 'bulk' ? 'いま学習中のモデル' : '学習済みモデル'}</span>
+          <span>{modelFamily === null ? '観察する構造を選ぶ' : mode === 'guided' || mode === 'bulk' ? 'いま学習中のモデル' : '学習済みモデル'}</span>
           <strong>{modelFamily === null ? 'MLP OR CNN?' : modelFamily === 'cnn' ? 'CONV → POOL → DENSE' : '784 → 16 → 10'}</strong>
-          <small>revision {modelFamily === null ? 'waiting' : modelFamily === 'mlp' && (mode === 'guided' || mode === 'bulk') ? String(learningRevision).padStart(4, '0') : 'fixed'}</small>
+          <small>revision {modelFamily === null ? 'waiting' : modelFamily === 'cnn' && mode === 'guided' ? String(cnnLearningRevision).padStart(4, '0') : modelFamily === 'mlp' && (mode === 'guided' || mode === 'bulk') ? String(learningRevision).padStart(4, '0') : 'fixed'}</small>
         </div>
       </header>
 
       <section className="model-selector" aria-label="観察するモデルを選ぶ">
-        <button type="button" aria-pressed={modelFamily === 'mlp'} onClick={() => { setModelFamily('mlp'); setMode('guided'); setTrace(null); setCnnTrace(null); setOccludedTrace(null); setPhaseIndex(0); setPlaying(false); setError('') }} disabled={status === 'loading' || busy}>
+        <button type="button" aria-pressed={modelFamily === 'mlp'} onClick={() => { setModelFamily('mlp'); setMode('guided'); setTrace(null); setCnnTrace(null); setCnnTrainingTrace(null); setOccludedTrace(null); setPhaseIndex(0); setPlaying(false); setError('') }} disabled={status === 'loading' || busy}>
           <span>MODEL A / 数値の流れ</span><strong>MLP 全結合</strong><small>学習、勾配、重み更新を追う</small>
         </button>
-        <button type="button" aria-pressed={modelFamily === 'cnn'} onClick={() => { setModelFamily('cnn'); setMode('inference'); setTrace(null); setCnnTrace(null); setOccludedTrace(null); setPhaseIndex(0); setPlaying(false); setError('') }} disabled={status === 'loading' || busy}>
+        <button type="button" aria-pressed={modelFamily === 'cnn'} onClick={() => { setModelFamily('cnn'); setMode('guided'); setTrace(null); setCnnTrace(null); setCnnTrainingTrace(null); setOccludedTrace(null); setPhaseIndex(0); setPlaying(false); setError('') }} disabled={status === 'loading' || busy}>
           <span>MODEL B / 空間の見方</span><strong>CNN 畳み込み</strong><small>特徴、受容野、判断の証拠を探る</small>
         </button>
       </section>
@@ -388,7 +437,7 @@ function App() {
       {modelFamily && <nav className="mode-tabs" aria-label="観察モード">
         {((modelFamily === 'mlp' ? [
           ['guided', '1件を学ぶ'], ['inference', '推論を見る'], ['bulk', 'まとめて学ぶ'], ['draw', '自分で書く'],
-        ] : [['inference', '特徴を観察'], ['draw', '自分で書く']]) as Array<[Mode, string]>).map(([value, label]) => (
+        ] : [['guided', '1件を学ぶ'], ['inference', '推論を見る'], ['draw', '自分で書く']]) as Array<[Mode, string]>).map(([value, label]) => (
           <button
             type="button"
             key={value}
@@ -398,6 +447,7 @@ function App() {
               setMode(value)
               setTrace(null)
               setCnnTrace(null)
+              setCnnTrainingTrace(null)
               setOccludedTrace(null)
               setSelectedPoint(null)
               setPlaying(false)
@@ -444,7 +494,7 @@ function App() {
             </div>
             <div>
               <span>MEASURED</span>
-              <strong>{modelFamily === 'cnn' && cnnTrace ? `${cnnTrace.computeDurationMs.toFixed(1)}msでCNN推論` : trace ? `${trace.computeDurationMs.toFixed(1)}msで計算 / ${speed}x再生` : '計算前'}</strong>
+              <strong>{modelFamily === 'cnn' && activeCnnTrace ? `${activeCnnTrace.computeDurationMs.toFixed(1)}msでCNN計算` : trace ? `${trace.computeDurationMs.toFixed(1)}msで計算 / ${speed}x再生` : '計算前'}</strong>
             </div>
           </section>
 
@@ -470,7 +520,7 @@ function App() {
                 model={modelFamily}
                 phaseIndex={phaseIndex}
                 mlpTrace={trace}
-                cnnTrace={cnnTrace}
+                cnnTrace={activeCnnTrace}
                 onSelectPhase={(next) => { setPlaying(false); setPhaseIndex(next); setSelectedPoint(null); setOccludedTrace(null) }}
               />
               <section className={modelFamily === 'cnn' ? 'observation observation--cnn' : 'observation'} aria-label="ニューラルネットワークの計算過程">
@@ -512,10 +562,11 @@ function App() {
                 )}
               </section>
 
-              {modelFamily === 'cnn' && cnnTrace && (
+              {modelFamily === 'cnn' && activeCnnTrace && (
                 <CnnExplorer
-                  trace={cnnTrace}
+                  trace={activeCnnTrace}
                   occludedTrace={occludedTrace}
+                  trainingTrace={cnnTrainingTrace}
                   phaseIndex={phaseIndex}
                   selectedChannel={selectedChannel}
                   selectedSourceChannel={selectedSourceChannel}
@@ -540,7 +591,7 @@ function App() {
                 </div>
                 {!hasTrace && (
                   <button type="button" className="button button--primary" onClick={() => void runInference()} disabled={busy || !sample}>
-                    {busy ? '計算中…' : modelFamily === 'cnn' ? 'CNNを観察する' : mode === 'guided' ? 'まず予想を見る' : 'この数字を読ませる'}
+                    {busy ? '計算中…' : modelFamily === 'cnn' && mode === 'guided' ? 'まずCNNの予想を見る' : modelFamily === 'cnn' ? 'CNNで推論する' : mode === 'guided' ? 'まず予想を見る' : 'この数字を読ませる'}
                   </button>
                 )}
               </section>
@@ -575,17 +626,17 @@ function App() {
                 </section>
               )}
 
-              {modelFamily === 'mlp' && mode === 'guided' && (
+              {mode === 'guided' && (
                 <section className="learning-actions">
                   <div>
-                    <span>GUIDED TRAINING / BATCH SIZE 1</span>
+                    <span>{modelFamily === 'cnn' ? 'CNN GUIDED TRAINING / SGD 0.01' : 'GUIDED TRAINING / BATCH SIZE 1'}</span>
                     <strong>正解ラベル {sample?.label ?? '—'} を教師として、実際に1回更新します。</strong>
                   </div>
                   <div className="button-row">
                     <button type="button" className="button button--update" onClick={() => void runGuidedTraining()} disabled={busy || !sample}>
                       この1件を学習する
                     </button>
-                    <button type="button" onClick={() => void undoGuided()} disabled={busy || !learningModel.current?.canUndoGuided()}>
+                    <button type="button" onClick={() => void undoGuided()} disabled={busy || !(modelFamily === 'cnn' ? cnnLearningModel.current?.canUndoGuided() : learningModel.current?.canUndoGuided())}>
                       学習前へ戻す
                     </button>
                     <button type="button" onClick={resetLearning} disabled={busy}>未学習へ戻す</button>
