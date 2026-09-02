@@ -34,7 +34,7 @@
     "date": "2026-09-02",
     "sequence": 3,
     "name": "数字がわかるまで",
-    "description": "本当に動くMNISTモデルの推論と学習を、一手ずつ観察するニューラルネット実験室。",
+    "description": "MLPの学習とCNNの局所計算・判断の証拠を、実値で観察するニューラルネット実験室。",
     "category": "学習ツール",
     "thumbnail": "neural-network-cover.jpg",
     "accent": "#167a84"

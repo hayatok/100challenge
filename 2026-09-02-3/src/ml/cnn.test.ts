@@ -1,6 +1,16 @@
 import * as tf from '@tensorflow/tfjs'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
-import { CnnVisualModel, channelContribution, conv1Kernel, featureChannel } from './cnn'
+import {
+  CnnVisualModel,
+  channelContribution,
+  conv1CellBreakdown,
+  conv1Kernel,
+  conv2CellBreakdown,
+  evidenceMap,
+  featureChannel,
+  occlude,
+  poolCellBreakdown,
+} from './cnn'
 
 beforeAll(async () => {
   await tf.setBackend('cpu')
@@ -52,5 +62,28 @@ describe('CNN trace integrity', () => {
     }
     expect(channelContribution(trace, 2, 4)).toBeCloseTo(expected, 6)
     model.dispose()
+  })
+
+  it('reconstructs local convolution, pooling, and output evidence from the trace', async () => {
+    const model = new CnnVisualModel(weights())
+    const trace = await model.infer(new Float32Array(784).fill(0.5), 'flat', 0)
+    const convolution = conv1CellBreakdown(trace, 2, 10, 11)
+    const deepConvolution = conv2CellBreakdown(trace, 4, 6, 5, 7)
+    const pooling = poolCellBreakdown(trace, 'pool1', 2, 5, 5)
+    const evidence = evidenceMap(trace, 4)
+
+    expect(convolution.activated).toBeCloseTo(trace.conv1[(11 * 28 + 10) * 8 + 2], 5)
+    expect(deepConvolution.activated).toBeCloseTo(trace.conv2[(7 * 14 + 5) * 16 + 6], 5)
+    expect(pooling.maximum).toBeCloseTo(trace.pool1[(5 * 14 + 5) * 8 + 2], 5)
+    expect(evidence.reduce((sum, value) => sum + value, trace.parameters.denseBias[4])).toBeCloseTo(trace.logits[4], 4)
+    model.dispose()
+  })
+
+  it('occludes only the requested input rectangle', () => {
+    const input = new Float32Array(784).fill(1)
+    const masked = occlude(input, { x: 10, y: 12, size: 4 })
+    expect(Array.from(masked).filter((value) => value === 0)).toHaveLength(16)
+    expect(masked[11 * 28 + 10]).toBe(1)
+    expect(masked[12 * 28 + 10]).toBe(0)
   })
 })
