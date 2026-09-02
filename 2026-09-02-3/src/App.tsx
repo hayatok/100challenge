@@ -1,16 +1,18 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import * as tf from '@tensorflow/tfjs'
 import { DrawingPad, type DrawingPadHandle } from './components/DrawingPad'
+import { CnnExplorer } from './components/CnnExplorer'
 import { MetricsChart } from './components/MetricsChart'
 import { NetworkDiagram } from './components/NetworkDiagram'
 import { PixelGrid } from './components/PixelGrid'
 import { PlaybackControls } from './components/PlaybackControls'
-import { loadManifest, loadSplit, loadWeights, type DataManifest } from './ml/dataset'
+import { loadCnnModel, loadManifest, loadSplit, loadWeights, type DataManifest } from './ml/dataset'
+import { CnnVisualModel, type CnnModelDefinition, type CnnTrace } from './ml/cnn'
 import { preprocessDrawing } from './ml/drawing'
 import { VisualModel } from './ml/model'
 import type { ComputationTrace, MnistSample, TrainingMetric } from './ml/types'
 
-type Mode = 'guided' | 'inference' | 'bulk' | 'draw'
+type Mode = 'guided' | 'inference' | 'cnn' | 'bulk' | 'draw'
 type AppStatus = 'loading' | 'ready' | 'computing' | 'training' | 'error'
 
 const INFERENCE_PHASES = [
@@ -32,6 +34,15 @@ const TRAINING_PHASES = [
   ['after-inference', '同じ数字をもう一度読む', '更新後の実モデルで再推論し、確率の変化を確かめます。'],
 ] as const
 
+const CNN_PHASES = [
+  ['input', '同じ28×28画像を2つのモデルへ渡す', '全結合は784個の値として、CNNは位置を保った28×28として受け取ります。'],
+  ['conv1', '8個の小さな形の検出器で走査する', '3×3カーネルを画像全体へ適用し、線や曲がりへ反応する8枚の特徴マップを作ります。'],
+  ['pool1', '強い反応を残して14×14へ縮める', '2×2領域ごとの最大値を残し、小さな位置ずれへ強くします。'],
+  ['conv2', '特徴どうしを組み合わせる', '8枚を入力として16枚を作り、より複雑な形の組み合わせへ反応します。'],
+  ['pool2', '16枚の証拠を7×7へまとめる', '分類器へ渡す784個の特徴を作り、各MAPが数字候補へ与えた寄与を計算します。'],
+  ['compare', '同じ数字への見方を比較する', '全結合とCNNのSoftmax出力を並べます。どちらも実際のモデルが計算した値です。'],
+] as const
+
 function App() {
   const [status, setStatus] = useState<AppStatus>('loading')
   const [error, setError] = useState('')
@@ -41,16 +52,21 @@ function App() {
   const [drawnSample, setDrawnSample] = useState<MnistSample | null>(null)
   const [mode, setMode] = useState<Mode>('guided')
   const [trace, setTrace] = useState<ComputationTrace | null>(null)
+  const [cnnTrace, setCnnTrace] = useState<CnnTrace | null>(null)
+  const [cnnDefinition, setCnnDefinition] = useState<CnnModelDefinition | null>(null)
   const [phaseIndex, setPhaseIndex] = useState(0)
   const [playing, setPlaying] = useState(false)
   const [speed, setSpeed] = useState(1)
   const [selectedHidden, setSelectedHidden] = useState(0)
   const [selectedOutput, setSelectedOutput] = useState(3)
+  const [selectedChannel, setSelectedChannel] = useState(0)
+  const [selectedSourceChannel, setSelectedSourceChannel] = useState(0)
   const [metrics, setMetrics] = useState<TrainingMetric[]>([])
   const [trainingOffset, setTrainingOffset] = useState(0)
   const [modelTick, setModelTick] = useState(0)
   const learningModel = useRef<VisualModel | null>(null)
   const pretrainedModel = useRef<VisualModel | null>(null)
+  const cnnModel = useRef<CnnVisualModel | null>(null)
   const splitCache = useRef<Partial<Record<'train' | 'test', MnistSample[]>>>({})
   const stopTraining = useRef(false)
   const drawingPad = useRef<DrawingPadHandle>(null)
@@ -63,9 +79,10 @@ function App() {
         if (query.get('data-error') === '1') throw new Error('検証用: MNISTデータを読み込めませんでした')
         await tf.ready()
         const nextManifest = await loadManifest()
-        const [guided, weights] = await Promise.all([
+        const [guided, weights, cnn] = await Promise.all([
           loadSplit(nextManifest, 'guided'),
           loadWeights(nextManifest),
+          loadCnnModel(),
         ])
         if (query.get('model-error') === '1') throw new Error('検証用: 学習済みモデルを読み込めませんでした')
         if (disposed) return
@@ -75,6 +92,8 @@ function App() {
         setSampleIndex(Math.max(0, firstThree))
         learningModel.current = VisualModel.learning()
         pretrainedModel.current = VisualModel.pretrained(weights)
+        cnnModel.current = new CnnVisualModel(cnn.weights)
+        setCnnDefinition(cnn.definition)
         setStatus('ready')
       } catch (caught) {
         if (disposed) return
@@ -87,21 +106,23 @@ function App() {
       disposed = true
       learningModel.current?.dispose()
       pretrainedModel.current?.dispose()
+      cnnModel.current?.dispose()
     }
   }, [])
 
   const sample = mode === 'draw' ? drawnSample : samples[sampleIndex] ?? null
-  const phases = trace?.kind === 'guided-training' ? TRAINING_PHASES : INFERENCE_PHASES
+  const phases = mode === 'cnn' ? CNN_PHASES : trace?.kind === 'guided-training' ? TRAINING_PHASES : INFERENCE_PHASES
+  const hasTrace = mode === 'cnn' ? Boolean(trace && cnnTrace) : Boolean(trace)
   const phase = phases[Math.min(phaseIndex, phases.length - 1)]
   const busy = status === 'computing' || status === 'training'
 
   useEffect(() => {
-    if (!playing || !trace || phaseIndex >= phases.length - 1) return
+    if (!playing || !hasTrace || phaseIndex >= phases.length - 1) return
     const timer = window.setTimeout(() => {
       setPhaseIndex((current) => current + 1)
     }, 1100 / speed)
     return () => window.clearTimeout(timer)
-  }, [playing, trace, phaseIndex, phases.length, speed])
+  }, [playing, hasTrace, phaseIndex, phases.length, speed])
 
   useEffect(() => {
     if (phaseIndex >= phases.length - 1) setPlaying(false)
@@ -111,7 +132,7 @@ function App() {
     const onKeyDown = (event: KeyboardEvent) => {
       const target = event.target as HTMLElement | null
       if (target?.closest('input, select, textarea, button, canvas')) return
-      if (!trace || busy) return
+      if (!hasTrace || busy) return
       if (event.key === ' ') {
         event.preventDefault()
         setPlaying((current) => !current)
@@ -131,7 +152,7 @@ function App() {
     }
     window.addEventListener('keydown', onKeyDown)
     return () => window.removeEventListener('keydown', onKeyDown)
-  }, [trace, busy, phases.length])
+  }, [hasTrace, busy, phases.length])
 
   const highlightedPixels = useMemo(() => {
     if (!trace) return new Set<number>()
@@ -158,6 +179,7 @@ function App() {
     try {
       const nextTrace = await model.infer(sample.pixels, sample.id, sample.label)
       setTrace(nextTrace)
+      setCnnTrace(null)
       setSelectedOutput(sample.label ?? 0)
       setSelectedHidden(0)
       setPhaseIndex(0)
@@ -169,6 +191,32 @@ function App() {
     }
   }
 
+  const runCnnComparison = async () => {
+    if (!sample || !pretrainedModel.current || !cnnModel.current) {
+      setError('比較モデルの準備が完了していません。再読み込みしてください')
+      return
+    }
+    setError('')
+    setStatus('computing')
+    try {
+      const [mlp, cnn] = await Promise.all([
+        pretrainedModel.current.infer(sample.pixels, sample.id, sample.label),
+        cnnModel.current.infer(sample.pixels, sample.id, sample.label),
+      ])
+      setTrace(mlp)
+      setCnnTrace(cnn)
+      setSelectedOutput(sample.label ?? cnn.predictedClass)
+      setSelectedChannel(0)
+      setSelectedSourceChannel(0)
+      setPhaseIndex(0)
+      setPlaying(true)
+      setStatus('ready')
+    } catch (caught) {
+      setError(caught instanceof Error ? caught.message : 'CNN比較を計算できませんでした')
+      setStatus('error')
+    }
+  }
+
   const runGuidedTraining = async () => {
     if (!sample || sample.label === null || !learningModel.current) return
     setError('')
@@ -176,6 +224,7 @@ function App() {
     try {
       const nextTrace = await learningModel.current.guidedTrain(sample.pixels, sample.id, sample.label)
       setTrace(nextTrace)
+      setCnnTrace(null)
       setSelectedOutput(sample.label)
       setSelectedHidden(0)
       setPhaseIndex(0)
@@ -192,6 +241,7 @@ function App() {
     if (!learningModel.current) return
     if (await learningModel.current.undoGuided()) {
       setTrace(null)
+      setCnnTrace(null)
       setModelTick((current) => current + 1)
     }
   }
@@ -201,6 +251,7 @@ function App() {
     learningModel.current = VisualModel.learning()
     splitCache.current = {}
     setTrace(null)
+    setCnnTrace(null)
     setMetrics([])
     setTrainingOffset(0)
     setModelTick((current) => current + 1)
@@ -213,6 +264,7 @@ function App() {
     setStatus('training')
     setMode('bulk')
     setTrace(null)
+    setCnnTrace(null)
     stopTraining.current = false
     try {
       const train = splitCache.current.train ?? await loadSplit(manifest, 'train')
@@ -241,6 +293,7 @@ function App() {
 
   const selectNextSample = () => {
     setTrace(null)
+    setCnnTrace(null)
     setSampleIndex((current) => (current + 1) % samples.length)
   }
 
@@ -250,6 +303,7 @@ function App() {
     const pixels = preprocessDrawing(canvas)
     setDrawnSample(pixels ? { id: 'user-drawn', split: 'drawn', label: null, pixels } : null)
     setTrace(null)
+    setCnnTrace(null)
     setError('')
   }
 
@@ -257,6 +311,7 @@ function App() {
     drawingPad.current?.clear()
     setDrawnSample(null)
     setTrace(null)
+    setCnnTrace(null)
   }
 
   const activeForward = trace?.kind === 'guided-training' && phaseIndex >= 11 && trace.forwardAfter
@@ -294,8 +349,8 @@ function App() {
           <p>本当に動いているモデルの、考える途中と学ぶ瞬間を観察します。</p>
         </div>
         <div className="model-plate" aria-label="現在のモデル">
-          <span>{mode === 'guided' || mode === 'bulk' ? 'いま学習中のモデル' : '学習済みモデル'}</span>
-          <strong>784 → 16 → 10</strong>
+          <span>{mode === 'cnn' ? '2つの学習済みモデル' : mode === 'guided' || mode === 'bulk' ? 'いま学習中のモデル' : '学習済みモデル'}</span>
+          <strong>{mode === 'cnn' ? 'MLP ⇄ CNN' : '784 → 16 → 10'}</strong>
           <small>revision {mode === 'guided' || mode === 'bulk' ? String(learningRevision).padStart(4, '0') : 'fixed'}</small>
         </div>
       </header>
@@ -304,6 +359,7 @@ function App() {
         {([
           ['guided', '1件を学ぶ'],
           ['inference', '推論を見る'],
+          ['cnn', 'CNNと比較'],
           ['bulk', 'まとめて学ぶ'],
           ['draw', '自分で書く'],
         ] as Array<[Mode, string]>).map(([value, label]) => (
@@ -315,6 +371,7 @@ function App() {
             onClick={() => {
               setMode(value)
               setTrace(null)
+              setCnnTrace(null)
               setPlaying(false)
               setError('')
             }}
@@ -351,7 +408,7 @@ function App() {
             </div>
             <div>
               <span>MEASURED</span>
-              <strong>{trace ? `${trace.computeDurationMs.toFixed(1)}msで計算 / ${speed}x再生` : '計算前'}</strong>
+              <strong>{mode === 'cnn' && cnnTrace ? `${(trace!.computeDurationMs + cnnTrace.computeDurationMs).toFixed(1)}msで2モデル` : trace ? `${trace.computeDurationMs.toFixed(1)}msで計算 / ${speed}x再生` : '計算前'}</strong>
             </div>
           </section>
 
@@ -373,7 +430,7 @@ function App() {
             </section>
           ) : (
             <>
-              <section className="observation" aria-label="ニューラルネットワークの計算過程">
+              <section className={mode === 'cnn' ? 'observation observation--cnn' : 'observation'} aria-label="ニューラルネットワークの計算過程">
                 <div className="input-stage">
                   <div className="stage-heading">
                     <span>INPUT / 784</span>
@@ -389,35 +446,57 @@ function App() {
                       <button type="button" onClick={clearDrawing}>消す</button>
                     </div>
                   ) : sample ? (
-                    <PixelGrid pixels={sample.pixels} highlighted={highlightedPixels} label={`MNISTの数字${sample.label}`} />
+                    <PixelGrid pixels={sample.pixels} highlighted={mode === 'cnn' ? undefined : highlightedPixels} label={`MNISTの数字${sample.label}`} />
                   ) : null}
                   <p className="input-note">明るさ＝モデルへ入る0〜1の実値</p>
                 </div>
 
-                <NetworkDiagram
-                  trace={trace}
-                  phaseIndex={phaseIndex}
-                  selectedHidden={selectedHidden}
-                  selectedOutput={selectedOutput}
-                  onSelectHidden={setSelectedHidden}
-                  onSelectOutput={setSelectedOutput}
-                />
+                {mode === 'cnn' ? (
+                  <div className="cnn-placeholder">
+                    <span>SPATIAL INPUT</span>
+                    <strong>28×28の位置を保つ</strong>
+                    <p>開始すると、1枚の画像から複数の特徴マップが生まれます。</p>
+                  </div>
+                ) : (
+                  <NetworkDiagram
+                    trace={trace}
+                    phaseIndex={phaseIndex}
+                    selectedHidden={selectedHidden}
+                    selectedOutput={selectedOutput}
+                    onSelectHidden={setSelectedHidden}
+                    onSelectOutput={setSelectedOutput}
+                  />
+                )}
               </section>
 
+              {mode === 'cnn' && trace && cnnTrace && (
+                <CnnExplorer
+                  trace={cnnTrace}
+                  mlpTrace={trace}
+                  phaseIndex={phaseIndex}
+                  selectedChannel={selectedChannel}
+                  selectedSourceChannel={selectedSourceChannel}
+                  selectedOutput={selectedOutput}
+                  onSelectChannel={setSelectedChannel}
+                  onSelectSourceChannel={setSelectedSourceChannel}
+                  onSelectOutput={setSelectedOutput}
+                />
+              )}
+
               <section className="phase-panel" aria-live="polite">
-                <div className="phase-count">STEP {trace ? phaseIndex + 1 : 0} / {phases.length}</div>
+                <div className="phase-count">STEP {hasTrace ? phaseIndex + 1 : 0} / {phases.length}</div>
                 <div>
-                  <h2>{trace ? phase[1] : mode === 'guided' ? 'まず、このモデルの予想を見る' : '数字をモデルへ読ませる'}</h2>
-                  <p>{trace ? phase[2] : '開始すると実モデルが先に計算し、その記録を段階的に再生します。'}</p>
+                  <h2>{hasTrace ? phase[1] : mode === 'guided' ? 'まず、このモデルの予想を見る' : mode === 'cnn' ? '全結合とCNNへ同じ数字を渡す' : '数字をモデルへ読ませる'}</h2>
+                  <p>{hasTrace ? phase[2] : '開始すると実モデルが先に計算し、その記録を段階的に再生します。'}</p>
                 </div>
-                {!trace && (
-                  <button type="button" className="button button--primary" onClick={() => void runInference()} disabled={busy || !sample}>
-                    {busy ? '計算中…' : mode === 'guided' ? 'まず予想を見る' : 'この数字を読ませる'}
+                {!hasTrace && (
+                  <button type="button" className="button button--primary" onClick={() => void (mode === 'cnn' ? runCnnComparison() : runInference())} disabled={busy || !sample}>
+                    {busy ? '計算中…' : mode === 'guided' ? 'まず予想を見る' : mode === 'cnn' ? '2モデルで比べる' : 'この数字を読ませる'}
                   </button>
                 )}
               </section>
 
-              {trace && (
+              {hasTrace && (
                 <PlaybackControls
                   phase={phaseIndex}
                   total={phases.length}
@@ -430,7 +509,7 @@ function App() {
                 />
               )}
 
-              {trace && (
+              {trace && mode !== 'cnn' && (
                 <section className="inspector" aria-label="選択した実値の詳細">
                   <div>
                     <span>選択中</span>
@@ -472,6 +551,7 @@ function App() {
             <div>
               <p><strong>構造:</strong> 784入力 → ReLU 16 → Softmax 10、SGD、学習率0.05</p>
               <p><strong>学習済み:</strong> MNIST train 60,000件、test 10,000件で実測 {(manifest?.model.testAccuracy ?? 0) * 100 > 0 ? `${((manifest?.model.testAccuracy ?? 0) * 100).toFixed(2)}%` : '—'}</p>
+              <p><strong>CNN比較:</strong> Conv 8 → Pool → Conv 16 → Pool → Dense 10。subset 5,000件で学習し、分離test 1,000件で実測 {cnnDefinition ? `${(cnnDefinition.testAccuracy * 100).toFixed(1)}%` : '—'}</p>
               <p><strong>ブラウザ学習:</strong> train subset 5,000件。評価は分離したtest subset 1,000件</p>
               <p><strong>出典:</strong> {manifest?.source.attribution} / {manifest?.source.license}</p>
             </div>

@@ -1,4 +1,4 @@
-# 数字がわかるまで — 仕様書 v1.0
+# 数字がわかるまで — 仕様書 v1.1
 
 - Status: Approved for implementation
 - App ID: `2026-09-02-3`
@@ -769,3 +769,36 @@ lossとaccuracyは別軸または別図にし、同じ単位に見せない。ac
 - TensorFlow.js tensors and operations: https://www.tensorflow.org/js/guide/tensors_operations
 - TensorFlow.js API: https://js.tensorflow.org/api/latest/
 - TensorFlow.js examples, including browser MNIST Core: https://github.com/tensorflow/tfjs-examples
+
+## 23. Version 1.1 — CNN比較モード
+
+Version 1.0の全結合モデル、Guided training、Bulk training、手書き入力は維持し、同一入力を学習済み全結合モデルと学習済みCNNへ渡す比較モードを追加する。Version 1.0の「CNNを扱わない」という制約は、既存範囲の履歴として残し、本節が上書きする。
+
+### 23.1 CNN architecture
+
+`28×28×1 → Conv 3×3 8ch ReLU → MaxPool 2×2 → Conv 3×3 16ch ReLU → MaxPool 2×2 → Flatten 784 → Dense 10 Softmax`
+
+- 学習データ: 既存train subset 5,000件
+- 評価データ: 分離されたtest subset 1,000件
+- Optimizer: Adam、学習率0.003、12 epochs
+- 評価結果: test subset accuracy 97.8%
+
+### 23.2 Trace contract
+
+CNN推論時にinput、Conv1、Pool1、Conv2、Pool2、Flatten、logits、Softmax確率を不変traceへ保存する。アニメーションはこのtraceのみを参照し、将来phaseの値を先に表示しない。
+
+### 23.3 Visualization
+
+- 特徴マップは1枚の画像変形ではなく、別々の検出器が生成した複数チャネルとして並べる
+- 特徴マップ選択で最大活性位置と入力上の受容野を表示する
+- Conv1では選択出力チャネルの3×3カーネルを表示する
+- Conv2では入力チャネルと出力チャネルを選択し、対応する3×3カーネルを表示する
+- Pool2では選択MAPから選択数字へのDense寄与を、全空間位置の実値合計として表示する
+- 最終phaseで全結合モデルとCNNのSoftmax確率を並べる
+
+### 23.4 Acceptance criteria
+
+- CNN traceの各配列長とSoftmax合計を自動テストする
+- NHWC特徴マップのチャネル抽出が位置を変えないことを自動テストする
+- 表示するカーネル値とDense寄与が学習済みパラメータに一致する
+- 375px、768px、1024px、1440pxで比較操作、特徴マップ選択、出力選択が成立する

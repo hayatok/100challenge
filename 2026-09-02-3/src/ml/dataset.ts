@@ -1,4 +1,5 @@
 import type { MnistSample } from './types'
+import type { CnnModelDefinition } from './cnn'
 
 export type DataManifest = {
   version: number
@@ -48,6 +49,14 @@ export async function loadManifest() {
 
 export async function loadWeights(manifest: DataManifest) {
   return new Float32Array(await fetchBuffer(manifest.model.weights))
+}
+
+export async function loadCnnModel() {
+  const response = await fetch(`${DATA_ROOT}cnn-model.json`)
+  if (!response.ok) throw new Error('CNNモデルの来歴情報を読み込めませんでした')
+  const definition = await response.json() as CnnModelDefinition
+  const weights = new Float32Array(await fetchBuffer(definition.weights))
+  return { definition, weights }
 }
 
 export async function loadSplit(manifest: DataManifest, split: 'guided' | 'train' | 'test') {
