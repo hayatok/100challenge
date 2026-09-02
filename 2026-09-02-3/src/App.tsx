@@ -3,6 +3,7 @@ import * as tf from '@tensorflow/tfjs'
 import { DrawingPad, type DrawingPadHandle } from './components/DrawingPad'
 import { CnnExplorer, type MapPoint, type MapScale } from './components/CnnExplorer'
 import { MetricsChart } from './components/MetricsChart'
+import { ModelFlow } from './components/ModelFlow'
 import { NetworkDiagram } from './components/NetworkDiagram'
 import { PixelGrid } from './components/PixelGrid'
 import { PlaybackControls } from './components/PlaybackControls'
@@ -465,6 +466,13 @@ function App() {
             </section>
           ) : (
             <>
+              <ModelFlow
+                model={modelFamily}
+                phaseIndex={phaseIndex}
+                mlpTrace={trace}
+                cnnTrace={cnnTrace}
+                onSelectPhase={(next) => { setPlaying(false); setPhaseIndex(next); setSelectedPoint(null); setOccludedTrace(null) }}
+              />
               <section className={modelFamily === 'cnn' ? 'observation observation--cnn' : 'observation'} aria-label="ニューラルネットワークの計算過程">
                 <div className="input-stage">
                   <div className="stage-heading">
