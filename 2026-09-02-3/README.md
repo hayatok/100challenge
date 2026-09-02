@@ -7,6 +7,7 @@
 - `784 → 16 → 10`の全結合ニューラルネットワークをTensorFlow.jsで実行
 - `Conv 8 → Pool → Conv 16 → Pool → Dense 10`のCNNを独立した観察室で実行
 - MLP / CNNの全体経路と現在の計算位置を示すライブ・ネットワーク模式図
+- CNNはThree.jsで入力面、特徴マップ群、接続、出力ノードを1つの3D空間へ描画
 - 入力、隠れ層の活性値、logit、Softmax確率を実際の順伝播から取得
 - Guided trainingではcross entropy loss、全パラメータの勾配、SGD更新量を実計算
 - 計算後に不変の`ComputationTrace`を作り、その値だけを段階再生
