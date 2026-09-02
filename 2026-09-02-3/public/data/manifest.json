@@ -1,0 +1,87 @@
+{
+  "version": 1,
+  "source": {
+    "url": "https://storage.googleapis.com/tensorflow/tf-keras-datasets/mnist.npz",
+    "sha256": "731c5ac602752760c8e48fbffcf8c3b850d9dc2a2aedcf2cc48468fc17b673d1",
+    "license": "CC BY-SA 3.0",
+    "attribution": "MNIST by Yann LeCun and Corinna Cortes, derived from NIST data"
+  },
+  "selection": {
+    "seed": 20260902,
+    "method": "stratified fixed-count sampling"
+  },
+  "splits": {
+    "guided": {
+      "count": 100,
+      "images": "guided-images.bin",
+      "labels": "guided-labels.bin",
+      "imagesSha256": "c3b9aca86eebe00bd0932aa5db9b6c9dbd9b9f1461e302f1ba88399b2d3aceca",
+      "labelsSha256": "bc9833942eb21f42a5c4e38f980250f860c759212b64d4abd4b119e0eaa05454"
+    },
+    "train": {
+      "count": 5000,
+      "images": "train-images.bin",
+      "labels": "train-labels.bin",
+      "imagesSha256": "f68a4e4abc79bbf24423e60ffded723e913b30c152fc17756f18a8904b38d327",
+      "labelsSha256": "97e61b6679405443f2b7d71151c1d855ca9eb2909ef9da74ca6b46fa96936771"
+    },
+    "test": {
+      "count": 1000,
+      "images": "test-images.bin",
+      "labels": "test-labels.bin",
+      "imagesSha256": "2895d918aedf140b1e277be9173dba75e30f3946daebe203d3e3b61c69423a0f",
+      "labelsSha256": "ddca88b5c9184a4ff12c319f3a28be26ecb5a6ebd273054ab55ba5c446e9120d"
+    }
+  },
+  "model": {
+    "architecture": [
+      784,
+      16,
+      10
+    ],
+    "optimizer": "SGD",
+    "learningRate": 0.05,
+    "epochs": 12,
+    "trainingCount": 60000,
+    "testCount": 10000,
+    "testAccuracy": 0.9402,
+    "weights": "pretrained-weights.bin",
+    "weightsSha256": "6aaefa1463b28a8085f520c9bebbcc6dcc4d2099da2fb10501428f90bd27794f",
+    "parameterOrder": [
+      "w1",
+      "b1",
+      "w2",
+      "b2"
+    ],
+    "parameterShapes": [
+      [
+        784,
+        16
+      ],
+      [
+        16
+      ],
+      [
+        16,
+        10
+      ],
+      [
+        10
+      ]
+    ],
+    "epochLoss": [
+      0.36491551995277405,
+      0.31526079773902893,
+      0.3066500127315521,
+      0.27508148550987244,
+      0.25256431102752686,
+      0.23022250831127167,
+      0.2203206866979599,
+      0.21792127192020416,
+      0.22987127304077148,
+      0.19600985944271088,
+      0.20186854898929596,
+      0.21081556379795074
+    ]
+  }
+}
