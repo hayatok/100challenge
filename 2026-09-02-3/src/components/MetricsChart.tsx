@@ -11,18 +11,25 @@ export function MetricsChart({ metrics }: { metrics: TrainingMetric[] }) {
     return `${x},${y}`
   }).join(' ')
   const latest = metrics.at(-1)!
+  const firstAccuracy = metrics.find((metric) => metric.testAccuracy !== null)?.testAccuracy ?? null
+  const accuracyPoints = metrics.map((metric, index) => {
+    const x = metrics.length === 1 ? 0 : index / (metrics.length - 1) * width
+    const y = height - (metric.testAccuracy ?? 0) * (height - 8)
+    return `${x},${y}`
+  }).join(' ')
   return (
-    <section className="metrics" aria-label="まとめ学習の実測値">
+    <section className="metrics" aria-label="学習lossとtest精度の実測値">
       <div className="metrics__heading">
-        <div><span>処理済み</span><strong>{latest.processed} / 500件</strong></div>
+        <div><span>処理済み</span><strong>{latest.processed}件</strong></div>
         <div><span>直近batch loss</span><strong>{latest.batchLoss.toFixed(4)}</strong></div>
-        <div><span>test subset正答率</span><strong>{latest.testAccuracy === null ? '評価待ち' : `${(latest.testAccuracy * 100).toFixed(1)}%`}</strong></div>
+        <div><span>test subset正答率</span><strong>{latest.testAccuracy === null ? '評価待ち' : firstAccuracy === null ? `${(latest.testAccuracy * 100).toFixed(1)}%` : `${(firstAccuracy * 100).toFixed(1)} → ${(latest.testAccuracy * 100).toFixed(1)}%`}</strong></div>
       </div>
       <svg viewBox={`0 0 ${width} ${height}`} role="img" aria-label="実測したbatch lossの推移">
         <line x1="0" y1={height - 1} x2={width} y2={height - 1} />
-        <polyline points={points} />
+        <polyline className="metrics__loss" points={points} />
+        <polyline className="metrics__accuracy" points={accuracyPoints} />
       </svg>
-      <p>LOSS / 実測したbatch境界だけを接続</p>
+      <p><span>ピンク: LOSS</span><span>青緑: TEST精度</span> / 実測したbatch境界だけを接続</p>
     </section>
   )
 }

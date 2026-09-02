@@ -78,6 +78,9 @@ function App() {
   const [selectedPoint, setSelectedPoint] = useState<MapPoint | null>(null)
   const [mapScale, setMapScale] = useState<MapScale>('local')
   const [metrics, setMetrics] = useState<TrainingMetric[]>([])
+  const [cnnMetrics, setCnnMetrics] = useState<TrainingMetric[]>([])
+  const [cnnBatchSize, setCnnBatchSize] = useState<10 | 50 | 100>(50)
+  const [cnnProcessed, setCnnProcessed] = useState(0)
   const [trainingOffset, setTrainingOffset] = useState(0)
   const [modelTick, setModelTick] = useState(0)
   const learningModel = useRef<VisualModel | null>(null)
@@ -254,7 +257,17 @@ function App() {
     try {
       if (modelFamily === 'cnn') {
         if (!cnnLearningModel.current) return
+        const test = splitCache.current.test ?? await loadSplit(manifest!, 'test')
+        splitCache.current.test = test
+        const beforeAccuracy = cnnMetrics.at(-1)?.testAccuracy ?? await cnnLearningModel.current.evaluate(test)
         const nextTraining = await cnnLearningModel.current.guidedTrain(sample.pixels, sample.id, sample.label)
+        const afterAccuracy = await cnnLearningModel.current.evaluate(test)
+        const nextProcessed = cnnProcessed + 1
+        setCnnProcessed(nextProcessed)
+        setCnnMetrics((current) => [
+          ...(current.length ? current : [{ processed: cnnProcessed, epoch: 1, batchLoss: nextTraining.lossBefore, testAccuracy: beforeAccuracy }]),
+          { processed: nextProcessed, epoch: 1, batchLoss: nextTraining.lossBefore, testAccuracy: afterAccuracy },
+        ])
         setCnnTrainingTrace(nextTraining)
         setCnnTrace(nextTraining.before)
         setTrace(null)
@@ -287,6 +300,8 @@ function App() {
     if (modelFamily === 'cnn') {
       if (await cnnLearningModel.current?.undoGuided()) {
         setCnnTrace(null); setCnnTrainingTrace(null); setOccludedTrace(null); setModelTick((current) => current + 1)
+        setCnnMetrics([])
+        setCnnProcessed((current) => Math.max(0, current - 1))
       }
       return
     }
@@ -312,6 +327,8 @@ function App() {
     setCnnTrainingTrace(null)
     setOccludedTrace(null)
     setMetrics([])
+    setCnnMetrics([])
+    setCnnProcessed(0)
     setTrainingOffset(0)
     setModelTick((current) => current + 1)
     setStatus('ready')
@@ -331,6 +348,23 @@ function App() {
       const train = splitCache.current.train ?? await loadSplit(manifest, 'train')
       const test = splitCache.current.test ?? await loadSplit(manifest, 'test')
       splitCache.current = { train, test }
+      if (modelFamily === 'cnn') {
+        if (!cnnLearningModel.current) return
+        const start = cnnProcessed % train.length
+        const batch = Array.from({ length: cnnBatchSize }, (_, index) => train[(start + index) % train.length])
+        if (cnnMetrics.length === 0) {
+          const initialAccuracy = await cnnLearningModel.current.evaluate(test)
+          setCnnMetrics([{ processed: cnnProcessed, epoch: 1, batchLoss: 0, testAccuracy: initialAccuracy }])
+        }
+        await cnnLearningModel.current.bulkTrain(batch, async (processed, batchLoss) => {
+          const testAccuracy = await cnnLearningModel.current!.evaluate(test)
+          setCnnMetrics((current) => [...current, { processed: cnnProcessed + processed, epoch: 1, batchLoss, testAccuracy }])
+        })
+        setCnnProcessed((current) => current + batch.length)
+        setModelTick((current) => current + 1)
+        setStatus('ready')
+        return
+      }
       const batch = train.slice(trainingOffset, trainingOffset + 500)
       const epoch = Math.floor(trainingOffset / train.length) + 1
       const currentMetrics: TrainingMetric[] = []
@@ -437,7 +471,7 @@ function App() {
       {modelFamily && <nav className="mode-tabs" aria-label="観察モード">
         {((modelFamily === 'mlp' ? [
           ['guided', '1件を学ぶ'], ['inference', '推論を見る'], ['bulk', 'まとめて学ぶ'], ['draw', '自分で書く'],
-        ] : [['guided', '1件を学ぶ'], ['inference', '推論を見る'], ['draw', '自分で書く']]) as Array<[Mode, string]>).map(([value, label]) => (
+        ] : [['guided', '1件を学ぶ'], ['inference', '推論を見る'], ['bulk', 'まとめて学ぶ'], ['draw', '自分で書く']]) as Array<[Mode, string]>).map(([value, label]) => (
           <button
             type="button"
             key={value}
@@ -502,17 +536,18 @@ function App() {
             <section className="bulk-panel">
               <div className="bulk-intro">
                 <p className="section-number">EXPERIMENT B</p>
-                <h2>500件まとめて学ぶ</h2>
-                <p>詳細アニメーションは作らず、実際のbatch境界でlossを記録します。評価には学習に使っていないtest subset 1,000件を使います。</p>
+                <h2>{modelFamily === 'cnn' ? `${cnnBatchSize}件まとめて学ぶ` : '500件まとめて学ぶ'}</h2>
+                <p>実際のbatch境界でlossを記録し、学習に使っていないtest subset 1,000件で毎回精度を測ります。</p>
+                {modelFamily === 'cnn' && <label className="batch-size-control">一度に進める件数<select value={cnnBatchSize} onChange={(event) => setCnnBatchSize(Number(event.target.value) as 10 | 50 | 100)} disabled={busy}><option value="10">10件</option><option value="50">50件</option><option value="100">100件</option></select></label>}
                 <div className="button-row">
                   <button type="button" className="button button--primary" onClick={() => void runBulkTraining()} disabled={busy}>
-                    {status === 'training' ? '学習中…' : '500件学習する'}
+                    {status === 'training' ? '学習・評価中…' : `${modelFamily === 'cnn' ? cnnBatchSize : 500}件学習する`}
                   </button>
-                  {status === 'training' && <button type="button" onClick={() => { stopTraining.current = true }}>batch完了後に停止</button>}
+                  {modelFamily === 'mlp' && status === 'training' && <button type="button" onClick={() => { stopTraining.current = true }}>batch完了後に停止</button>}
                   <button type="button" onClick={resetLearning} disabled={busy}>未学習へ戻す</button>
                 </div>
               </div>
-              <MetricsChart metrics={metrics} />
+              <MetricsChart metrics={modelFamily === 'cnn' ? cnnMetrics : metrics} />
             </section>
           ) : (
             <>
@@ -641,6 +676,12 @@ function App() {
                     </button>
                     <button type="button" onClick={resetLearning} disabled={busy}>未学習へ戻す</button>
                   </div>
+                </section>
+              )}
+              {modelFamily === 'cnn' && mode === 'guided' && cnnMetrics.length > 0 && (
+                <section className="cnn-benchmark" aria-label="CNNの学習ベンチマーク">
+                  <div><p className="section-number">TEST BENCHMARK / 1,000 IMAGES</p><h3>1件の学習で、未知の数字への精度はどう動いた？</h3><p>学習には含めていないtest 1,000件を、更新のたびに同じ条件で推論しています。</p></div>
+                  <MetricsChart metrics={cnnMetrics} />
                 </section>
               )}
             </>

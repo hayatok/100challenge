@@ -104,4 +104,26 @@ describe('CNN trace integrity', () => {
     expect(restored.logits[1]).toBeCloseTo(training.before.logits[1], 5)
     model.dispose()
   })
+
+  it('benchmarks a dataset and advances bulk learning in real batches', async () => {
+    const model = CnnVisualModel.learning(7)
+    const samples = Array.from({ length: 20 }, (_, index) => ({
+      id: `sample-${index}`,
+      split: 'train' as const,
+      label: index % 10,
+      pixels: new Float32Array(784).fill((index + 1) / 20),
+    }))
+    const before = await model.evaluate(samples)
+    const batches: number[] = []
+    await model.bulkTrain(samples, (processed) => { batches.push(processed) })
+    const after = await model.evaluate(samples)
+
+    expect(before).toBeGreaterThanOrEqual(0)
+    expect(before).toBeLessThanOrEqual(1)
+    expect(after).toBeGreaterThanOrEqual(0)
+    expect(after).toBeLessThanOrEqual(1)
+    expect(batches).toEqual([10, 20])
+    expect(model.revision).toBe(2)
+    model.dispose()
+  })
 })

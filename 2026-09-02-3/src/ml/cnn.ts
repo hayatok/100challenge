@@ -1,5 +1,6 @@
 import * as tf from '@tensorflow/tfjs'
 import { createRandom, glorot } from './random'
+import type { MnistSample } from './types'
 
 export type CnnParameters = {
   conv1Kernel: Float32Array
@@ -191,6 +192,52 @@ export class CnnVisualModel {
     this.revision += 1
     const after = await this.infer(input, sampleId, label)
     return { before, after, lossBefore, gradientMeanAbs, updateMeanAbs: gradientMeanAbs * learningRate, revisionBefore, revisionAfter: this.revision }
+  }
+
+  async evaluate(samples: MnistSample[]) {
+    let correct = 0
+    for (let offset = 0; offset < samples.length; offset += 100) {
+      const batch = samples.slice(offset, offset + 100)
+      const predictions = tf.tidy(() => {
+        const x = tf.tensor4d(Float32Array.from(batch.flatMap((sample) => Array.from(sample.pixels))), [batch.length, 28, 28, 1])
+        const conv1 = tf.relu(tf.conv2d(x, this.tensors.conv1Kernel as tf.Tensor4D, 1, 'same').add(this.tensors.conv1Bias)) as tf.Tensor4D
+        const pool1 = tf.maxPool(conv1, [2, 2], [2, 2], 'valid')
+        const conv2 = tf.relu(tf.conv2d(pool1, this.tensors.conv2Kernel as tf.Tensor4D, 1, 'same').add(this.tensors.conv2Bias)) as tf.Tensor4D
+        const pool2 = tf.maxPool(conv2, [2, 2], [2, 2], 'valid')
+        return tf.matMul(pool2.reshape([batch.length, 784]), this.tensors.denseKernel as tf.Tensor2D).add(this.tensors.denseBias).argMax(1)
+      })
+      const values = await predictions.data()
+      predictions.dispose()
+      values.forEach((prediction, index) => { if (prediction === batch[index].label) correct += 1 })
+    }
+    return correct / Math.max(1, samples.length)
+  }
+
+  async bulkTrain(samples: MnistSample[], onBatch: (processed: number, loss: number) => Promise<void> | void) {
+    if (!this.trainable) throw new Error('学習済みCNNは更新できません')
+    let processed = 0
+    for (let offset = 0; offset < samples.length; offset += 10) {
+      const batch = samples.slice(offset, offset + 10)
+      const x = tf.tensor4d(Float32Array.from(batch.flatMap((sample) => Array.from(sample.pixels))), [batch.length, 28, 28, 1])
+      const labels = tf.tensor1d(batch.map((sample) => sample.label ?? 0), 'int32')
+      const target = tf.oneHot(labels, 10)
+      const result = tf.variableGrads(() => {
+        const conv1 = tf.relu(tf.conv2d(x, this.tensors.conv1Kernel as tf.Tensor4D, 1, 'same').add(this.tensors.conv1Bias)) as tf.Tensor4D
+        const pool1 = tf.maxPool(conv1, [2, 2], [2, 2], 'valid')
+        const conv2 = tf.relu(tf.conv2d(pool1, this.tensors.conv2Kernel as tf.Tensor4D, 1, 'same').add(this.tensors.conv2Bias)) as tf.Tensor4D
+        const pool2 = tf.maxPool(conv2, [2, 2], [2, 2], 'valid')
+        const logits = tf.matMul(pool2.reshape([batch.length, 784]), this.tensors.denseKernel as tf.Tensor2D).add(this.tensors.denseBias)
+        return tf.losses.softmaxCrossEntropy(target, logits).mean() as tf.Scalar
+      }, Object.values(this.tensors))
+      const loss = (await result.value.data())[0]
+      tf.tidy(() => Object.values(this.tensors).forEach((variable) => variable.assign(variable.sub(result.grads[variable.name].mul(0.01)))))
+      tf.dispose([x, labels, target, result.value, ...Object.values(result.grads)])
+      processed += batch.length
+      this.revision += 1
+      await onBatch(processed, loss)
+      await tf.nextFrame()
+    }
+    this.lastBefore = null
   }
 
   canUndoGuided() { return this.lastBefore !== null }

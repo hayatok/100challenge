@@ -108,6 +108,21 @@
 .model-flow__heading strong { margin-top: 3px; font-size: 17px; }
 .model-flow__heading p { max-width: 480px; margin: 0; color: var(--muted); font-size: 11px; line-height: 1.45; text-align: right; }
 .model-flow__heading b { margin-right: 8px; color: var(--ink); font: 850 10px ui-monospace, monospace; }
+.model-topology { display: flex; align-items: center; padding: 18px 20px 14px; overflow-x: auto; background: #d8f0ed; border-bottom: 2px solid var(--ink); }
+.topology-step { display: flex; flex: 1 0 0; min-width: 0; align-items: center; }
+.topology-layer { position: relative; display: grid; flex: 1 0 84px; min-width: 84px; justify-items: center; gap: 4px; }
+.topology-layer .flow-glyph { height: 48px; transform: scale(1.12); }
+.topology-layer strong { font-size: 11px; }
+.topology-layer small { font: 750 8px ui-monospace, monospace; }
+.topology-layer--active .flow-glyph { outline: 4px solid #ffd563; outline-offset: 4px; }
+.topology-links { position: relative; flex: 1 1 44px; min-width: 20px; height: 40px; }
+.topology-links i { position: absolute; left: 0; width: 100%; border-top: 1.5px solid var(--ink); transform-origin: right center; }
+.topology-links i:nth-child(1) { top: 9px; transform: rotate(7deg); }
+.topology-links i:nth-child(2) { top: 20px; }
+.topology-links i:nth-child(3) { top: 31px; transform: rotate(-7deg); }
+.topology-receptive-field { position: absolute; top: 11px; left: 50%; width: 14px; height: 14px; border: 3px solid #ffd563; box-shadow: 0 0 0 1px var(--ink); transform: translateX(-50%); }
+.receptive-legend { margin: 0; padding: 10px 18px; border-bottom: 2px solid var(--ink); background: var(--panel); font-size: 11px; line-height: 1.5; }
+.receptive-legend > i { display: inline-block; width: 13px; height: 13px; vertical-align: -2px; border: 3px solid #ffd563; box-shadow: 0 0 0 1px var(--ink); }
 .model-flow__rail { display: flex; align-items: stretch; padding: 16px 14px 18px; overflow-x: auto; overscroll-behavior-inline: contain; }
 .model-flow__swipe { display: none; }
 .flow-step { display: flex; flex: 1 0 0; min-width: 0; align-items: center; }
@@ -379,7 +394,14 @@ button:active:not(:disabled) { transform: translate(2px, 2px); box-shadow: none;
 .metrics svg { display: block; width: 100%; margin-top: 20px; overflow: visible; }
 .metrics line { stroke: var(--ink); stroke-width: 1; }
 .metrics polyline { fill: none; stroke: var(--negative); stroke-width: 3; vector-effect: non-scaling-stroke; }
-.metrics > p { margin: 3px 0 0; color: var(--muted); font: 700 10px ui-monospace, monospace; }
+.metrics polyline.metrics__accuracy { stroke: var(--forward); }
+.metrics > p { display: flex; flex-wrap: wrap; gap: 10px; margin: 3px 0 0; color: var(--muted); font: 700 10px ui-monospace, monospace; }
+.cnn-benchmark { display: grid; grid-template-columns: minmax(260px, .7fr) 1fr; gap: 24px; padding: 22px 24px; border: 3px solid var(--ink); border-top: 0; background: #d8f0ed; }
+.cnn-benchmark h3 { margin: 0; font-size: 21px; }
+.cnn-benchmark p:not(.section-number) { color: var(--muted); font-size: 12px; line-height: 1.6; }
+.cnn-benchmark .metrics { align-self: center; }
+.batch-size-control { display: grid; gap: 5px; max-width: 220px; margin: 14px 0; font-size: 11px; font-weight: 800; }
+.batch-size-control select { min-height: 38px; border: 2px solid var(--ink); background: var(--panel); }
 
 .drawing-area { width: 100%; display: grid; grid-template-columns: 1fr 112px; align-items: start; gap: 12px; }
 .drawing-pad { width: 100%; aspect-ratio: 1; border: 4px solid var(--ink); background: #fff; touch-action: none; cursor: crosshair; }
@@ -403,6 +425,8 @@ button:active:not(:disabled) { transform: translate(2px, 2px); box-shadow: none;
   .bulk-panel { flex-direction: column; }
   .bulk-intro { flex: none; }
   .model-flow__rail { padding-inline: 12px; }
+  .model-topology { padding-inline: 12px; }
+  .topology-step { flex: 0 0 auto; }
   .model-flow__swipe { display: block; padding: 0 12px 10px; color: var(--muted); font: 750 9px/1.3 ui-monospace, monospace; text-align: center; }
   .flow-step { flex: 0 0 auto; }
   .flow-layer { flex-basis: 116px; }
@@ -420,6 +444,7 @@ button:active:not(:disabled) { transform: translate(2px, 2px); box-shadow: none;
   .occlusion-lab { grid-column: 1 / -1; }
   .cnn-learning-trace { grid-template-columns: 1fr; }
   .cnn-learning-trace dl { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .cnn-benchmark { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 700px) {
