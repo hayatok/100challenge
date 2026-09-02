@@ -105,7 +105,7 @@ export function CnnExplorer({ trace, occludedTrace, trainingTrace, phaseIndex, s
       <p className="section-number">SPATIAL PROBE</p><h3>MAP {channel + 1} の座標 x {point.x} / y {point.y}</h3>
       <button type="button" className="focused-heatmap" aria-label="特徴マップ上の調査位置を選ぶ" onClick={(event) => onSelectPoint(pointFromEvent(event, stage.size))} onKeyDown={movePoint}><Heatmap values={selectedMap} size={stage.size} maximum={displayMaximum} label="選択中の特徴マップ" point={point} /></button>
       <p>マップをクリック、または矢印キーで調べる座標を動かせます。</p>
-      <div className="receptive-preview"><Heatmap values={trace.input} size={28} label="入力画像上の受容野" box={receptiveBox} /><div><strong>入力上のおよそ {receptiveBox.size}×{receptiveBox.size}</strong><span>黄色い枠が、この1点へ影響した入力範囲です。</span></div></div>
+      <div className="receptive-preview"><Heatmap values={trace.input} size={28} label="入力画像上の受容野" box={receptiveBox} /><div><strong>黄色い枠 = 受容野 {receptiveBox.size}×{receptiveBox.size}</strong><span>いま選んだ特徴マップの1点を計算するために、実際に使われた元画像の範囲です。</span></div></div>
       {phaseIndex === 3 && <label className="source-channel">カーネルの入力チャネル<select value={selectedSourceChannel} onChange={(event) => onSelectSourceChannel(Number(event.target.value))}>{Array.from({ length: 8 }, (_, index) => <option value={index} key={index}>POOL1 MAP {index + 1}</option>)}</select></label>}
       {(phaseIndex === 1 || phaseIndex === 3) && <Kernel values={kernel} />}
     </aside>

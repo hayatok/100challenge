@@ -94,6 +94,17 @@ export function ModelFlow({ model, phaseIndex, mlpTrace, cnnTrace, onSelectPhase
       <div><span>LIVE NETWORK MAP</span><strong>{model === 'mlp' ? '784個の値を、16個の考えへ集める' : '画像の位置を保ったまま、特徴を絞り込む'}</strong></div>
       <p><b>{backward ? 'BACKPROP ←' : 'FORWARD →'}</b>{traceReady ? '実traceの現在位置。層を選ぶと、その計算まで移動します。' : '開始前の回路図。計算すると実値が流れます。'}</p>
     </header>
+    <div className="model-topology" aria-label="入力から回答までの接続構造">
+      {layers.map((layer, index) => <div className="topology-step" key={`topology-${layer.name}`}>
+        <div className={`topology-layer${index === activeIndex && traceReady ? ' topology-layer--active' : ''}`}>
+          <LayerGlyph kind={layer.glyph} />
+          {model === 'cnn' && index === 0 && <i className="topology-receptive-field" />}
+          <strong>{layer.name}</strong><small>{layer.shape}</small>
+        </div>
+        {index < layers.length - 1 && <span className="topology-links" aria-hidden="true"><i /><i /><i /></span>}
+      </div>)}
+    </div>
+    {model === 'cnn' && <p className="receptive-legend"><i /> <strong>黄色い枠 = 受容野</strong>　次の層の「選んだ1点」を計算するために使われた、元画像の範囲です。層が深くなるほど範囲が広がります。</p>}
     <div className={`model-flow__rail${backward ? ' model-flow__rail--backward' : ''}`}>
       {layers.map((layer, index) => {
         const state = !traceReady ? 'waiting' : index === activeIndex ? 'active' : index < activeIndex || backward ? 'passed' : 'waiting'
