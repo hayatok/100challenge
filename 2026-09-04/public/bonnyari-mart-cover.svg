@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675">
+  <rect width="1200" height="675" fill="#173f38"/>
+  <rect x="48" y="52" width="1104" height="570" fill="#f2dfad" stroke="#071b17" stroke-width="16"/>
+  <rect x="48" y="52" width="1104" height="96" fill="#327861" stroke="#071b17" stroke-width="16"/>
+  <rect x="83" y="76" width="470" height="50" fill="#ee8737" stroke="#071b17" stroke-width="10"/>
+  <text x="108" y="113" fill="#fff3cf" font-family="sans-serif" font-size="40" font-weight="900">ぼんやりマート 24</text>
+  <g shape-rendering="crispEdges">
+    <rect x="85" y="189" width="760" height="376" fill="#e8d09d" stroke="#071b17" stroke-width="12"/>
+    <path d="M85 269h760M85 349h760M85 429h760M245 189v376M405 189v376M565 189v376M725 189v376" stroke="#d7b97c" stroke-width="4"/>
+    <rect x="132" y="236" width="148" height="62" fill="#d49a53" stroke="#071b17" stroke-width="9"/>
+    <rect x="432" y="236" width="148" height="62" fill="#69b7d1" stroke="#071b17" stroke-width="9"/>
+    <rect x="282" y="389" width="148" height="62" fill="#ef7f72" stroke="#071b17" stroke-width="9"/>
+    <rect x="606" y="389" width="148" height="62" fill="#88a85b" stroke="#071b17" stroke-width="9"/>
+    <g transform="translate(196 344)"><rect x="-18" y="-38" width="36" height="30" fill="#efbd90"/><rect x="-22" y="-48" width="44" height="16" fill="#303832"/><rect x="-24" y="-8" width="48" height="48" fill="#315f93"/><rect x="-18" y="40" width="14" height="24" fill="#17342f"/><rect x="4" y="40" width="14" height="24" fill="#17342f"/></g>
+    <g transform="translate(520 510)"><rect x="-18" y="-38" width="36" height="30" fill="#efbd90"/><rect x="-22" y="-48" width="44" height="16" fill="#5a382a"/><rect x="-24" y="-8" width="48" height="48" fill="#bd4635"/><rect x="-18" y="40" width="14" height="24" fill="#17342f"/><rect x="4" y="40" width="14" height="24" fill="#17342f"/></g>
+  </g>
+  <rect x="878" y="182" width="230" height="260" fill="#fff3cf" stroke="#071b17" stroke-width="12"/>
+  <text x="910" y="227" fill="#17342f" font-family="sans-serif" font-size="25" font-weight="900">本日の収支</text>
+  <text x="910" y="290" fill="#17342f" font-family="monospace" font-size="26" font-weight="900">売上 ¥28,420</text>
+  <text x="910" y="340" fill="#17342f" font-family="monospace" font-size="26" font-weight="900">仕入 ¥11,360</text>
+  <rect x="902" y="373" width="182" height="43" fill="#ee8737" stroke="#071b17" stroke-width="7"/>
+  <text x="922" y="403" fill="#fff3cf" font-family="sans-serif" font-size="22" font-weight="900">ただいま黒字</text>
+  <rect x="858" y="484" width="272" height="92" fill="#327861" stroke="#071b17" stroke-width="12"/>
+  <text x="884" y="525" fill="#fff3cf" font-family="sans-serif" font-size="24" font-weight="900">店長は見ているだけ</text>
+  <text x="884" y="554" fill="#fff3cf" font-family="sans-serif" font-size="18" font-weight="700">勝手に働くコンビニ経営</text>
+</svg>
