@@ -38,5 +38,15 @@
     "category": "学習ツール",
     "thumbnail": "neural-network-cover.jpg",
     "accent": "#167a84"
+  },
+  {
+    "id": "2026-09-04",
+    "date": "2026-09-04",
+    "sequence": 1,
+    "name": "ぼんやりマート24",
+    "description": "客も仕入れも増築も勝手に進む、眺めるドット絵コンビニ経営ゲーム。",
+    "category": "放置系経営ゲーム",
+    "thumbnail": "bonnyari-mart-cover.svg",
+    "accent": "#327861"
   }
 ]
