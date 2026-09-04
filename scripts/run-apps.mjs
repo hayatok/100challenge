@@ -4,7 +4,8 @@ import path from 'node:path'
 import { loadApps } from './apps.mjs'
 
 const commands = {
-  ci: ['ci'],
+  // Bound registry/audit outages without disabling npm's audit request.
+  ci: ['ci', '--fetch-timeout=15000', '--fetch-retries=1', '--fetch-retry-mintimeout=1000', '--fetch-retry-maxtimeout=3000'],
   check: ['run', 'check'],
 }
 
