@@ -36,7 +36,7 @@ React / TypeScript / Vite / Vitest / oxlint。新規依存、外部API、アカ�
 
 ## デザイン
 
-承認済み案は `design/approved-screen.png`。白・墨・黄・カラメル・赤の線画。`src/Scene.tsx` のSVGパスを物理に応じて変形するため、画像の単純な回転や市松模様の除去は不要。
+承認済み案は `design/approved-screen.png`。元のクリーム・ミント・カラメルの配色、太い輪郭と硬い影を継承。`src/Scene.tsx` のSVGパスを物理に応じて変形するため、画像の単純な回転や市松模様の除去は不要。
 
 旧生成原稿 `assets/source/` は履歴用。ゲームには配信しない。公開一覧画像 `public/pudding-cover.svg` は実際の描画と物理から `scripts/create-cover.mjs` で生成する。
 
