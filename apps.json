@@ -48,5 +48,15 @@
     "category": "放置系経営ゲーム",
     "thumbnail": "bonnyari-mart-cover.svg",
     "accent": "#327861"
+  },
+  {
+    "id": "2026-09-04-2",
+    "date": "2026-09-04",
+    "sequence": 2,
+    "name": "プリン通勤",
+    "description": "押して加速、離してブレーキ。ぷるぷるの乗客を守って、毎回違う3駅を走るワンボタンゲーム。",
+    "category": "ワンボタンゲーム",
+    "thumbnail": "pudding-cover.png",
+    "accent": "#39786b"
   }
 ]

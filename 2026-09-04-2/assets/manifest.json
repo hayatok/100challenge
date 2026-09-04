@@ -1,0 +1,59 @@
+{
+  "status": "original RGB art retained; runtime canvas textures keyed in src/art.ts",
+  "assets": [
+    {
+      "file": "source/background-bridge.png",
+      "width": 1536,
+      "height": 1024,
+      "bitDepth": 8,
+      "colorType": 2,
+      "hasAlpha": false,
+      "bytes": 2198481
+    },
+    {
+      "file": "source/background-residential.png",
+      "width": 1536,
+      "height": 1024,
+      "bitDepth": 8,
+      "colorType": 2,
+      "hasAlpha": false,
+      "bytes": 1819872
+    },
+    {
+      "file": "source/background-station.png",
+      "width": 1536,
+      "height": 1024,
+      "bitDepth": 8,
+      "colorType": 2,
+      "hasAlpha": false,
+      "bytes": 2477714
+    },
+    {
+      "file": "source/plate.png",
+      "width": 1774,
+      "height": 887,
+      "bitDepth": 8,
+      "colorType": 2,
+      "hasAlpha": false,
+      "bytes": 1210953
+    },
+    {
+      "file": "source/pudding-expressions.png",
+      "width": 1254,
+      "height": 1254,
+      "bitDepth": 8,
+      "colorType": 2,
+      "hasAlpha": false,
+      "bytes": 1537205
+    },
+    {
+      "file": "source/train-interior.png",
+      "width": 1536,
+      "height": 1024,
+      "bitDepth": 8,
+      "colorType": 2,
+      "hasAlpha": false,
+      "bytes": 1909926
+    }
+  ]
+}
