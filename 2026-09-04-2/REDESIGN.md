@@ -25,3 +25,13 @@
 - Production build: showcase link opened new game, Space down/up and Escape worked, browser console had no warnings/errors. No raster loading dependency remains.
 - Screenshots: design/desktop-success.png, design/desktop-fall.png, design/mobile-ready.png. Developer replay screenshots are labelled as such.
 - Limits: physical touchscreen full run and subjective fun evaluation remain unverified. Essential gameplay motion is retained under reduced-motion; optional flourishes are disabled by CSS.
+
+
+## Color restoration (issue #60)
+
+- Goal: 既存の色合いとポップさを戻す。
+- Context: ユーザーの「デザインが貧相」「既存の色合いやポップさは踏襲して良かった」という修正指示。
+- Constraints: 物理・ルール・操作配置は維持。ポスター風のコピーは増やさない。
+- Done when: クリーム背景、ミントの車内とボタン、カラメルの輪郭、木の棚と色付きの皿が見え、停止線とプリンの危険を読める。レスポンシブ確認後Pagesに公開。
+- この指示は上記「白中心・影なし」の方向を更新する。AI感への対処で元の配色・楽しさまで削りすぎた。今後は残す色・モチーフと削る要素を分けて判断する。
+- 検証: 全73テスト、lint、型チェック、全アプリbuild、サイト生成成功。375/768/1024/1440pxと停車成功のスクリーンショット確認。公開用一覧→ゲームの遷移確認。色修正版の記録は design/color-restored.png。

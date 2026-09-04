@@ -1,11 +1,11 @@
 :root {
   font-family: "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
-  color: #302d29;
-  background: #faf9f6;
+  color: #493526;
+  background: #f3e6c6;
   font-synthesis: none;
   font-weight: 500;
-  --ink: #302d29;
-  --paper: #faf9f6;
+  --ink: #493526;
+  --paper: #fff4d4;
   --red: #d64b3b;
 }
 * {
@@ -47,7 +47,9 @@ header {
 h1 {
   font-size: 28px;
   letter-spacing: 0.06em;
-  font-weight: 700;
+  font-weight: 900;
+  color: #39786b;
+  text-shadow: 1px 2px 0 #fff4d4;
   margin: 0;
   transform: rotate(-1deg);
 }
@@ -59,6 +61,8 @@ h1 {
 .station-count {
   font-family: monospace;
   font-size: 24px;
+  color: #39786b;
+  font-weight: 700;
   white-space: nowrap;
 }
 .quiet {
@@ -85,11 +89,11 @@ h1 {
   stroke-width: 3;
 }
 .platform {
-  stroke: #b7b5af;
+  stroke: #b09e7c;
 }
 .station-name {
   font-size: 20px;
-  fill: #77756f;
+  fill: #69563c;
   stroke: none;
 }
 .distance {
@@ -170,7 +174,9 @@ h1 {
 }
 .drive {
   border: 3px solid var(--ink);
-  background: var(--paper);
+  background: #39786b;
+  color: #fff4d4;
+  box-shadow: 4px 5px 0 var(--ink);
   border-radius: 3px;
   min-height: 74px;
   width: 420px;
@@ -185,11 +191,13 @@ h1 {
     transform 0.08s;
 }
 .drive.pressed {
-  background: #f5d77d;
-  transform: translateY(2px);
+  background: #efba57;
+  color: var(--ink);
+  box-shadow: 1px 1px 0 var(--ink);
+  transform: translate(3px, 4px);
 }
 .drive:hover {
-  border-color: #85451f;
+  filter: brightness(1.06);
 }
 .control-caption {
   font-size: 20px;
@@ -218,7 +226,7 @@ footer {
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  border-top: 1px solid #cbc7bf;
+  border-top: 2px solid #bcad88;
   margin: 0 16px;
   padding: 8px 0;
 }
@@ -239,7 +247,7 @@ footer {
   text-decoration: underline;
 }
 .help {
-  border-top: 1px solid #cbc7bf;
+  border-top: 2px solid #bcad88;
   margin: 8px 16px;
   padding: 16px 0;
   max-width: 800px;

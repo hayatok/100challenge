@@ -19,7 +19,7 @@ try {
   );
   svg = svg.replace("<svg ", '<svg xmlns="http://www.w3.org/2000/svg" ');
   const style =
-    "<style>svg{background:#faf9f6;font-family:sans-serif}.window-frame{fill:#faf9f6;stroke:#302d29;stroke-width:3}.platform{stroke:#b7b5af}.station-name{fill:#77756f;stroke:none;font-size:20px}.distance{font-size:28px;font-weight:600;fill:#302d29}.target-label{font-size:15px;fill:#302d29}.shelf{fill:none;stroke:#302d29;stroke-width:3}</style>";
+    "<style>svg{background:#fff4d4;font-family:sans-serif}.window-frame{fill:#fff4d4;stroke:#493526;stroke-width:3}.platform{stroke:#b09e7c}.station-name{fill:#69563c;stroke:none;font-size:20px}.distance{font-size:28px;font-weight:600;fill:#493526}.target-label{font-size:15px;fill:#493526}.shelf{fill:none;stroke:#493526;stroke-width:3}</style>";
   svg = svg.replace(/(<svg[^>]*>)/, "$1" + style);
   await writeFile("public/pudding-cover.svg", svg + "\n");
 } finally {
