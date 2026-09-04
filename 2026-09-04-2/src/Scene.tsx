@@ -1,110 +1,218 @@
-import { useEffect, useRef } from "react";
-import type { Art } from "./art";
 import type { Game } from "./game/simulation";
+
 export default function Scene({
-  art,
   game,
   reduced,
+  previous,
+  compact,
 }: {
-  art: Art;
   game: Game;
   reduced: boolean;
+  previous?: number;
+  compact: boolean;
 }) {
-  const canvas = useRef<HTMLCanvasElement>(null);
-  useEffect(() => {
-    const ctx = canvas.current?.getContext("2d");
-    if (!ctx) return;
-    const w = 1000,
-      h = 640,
-      stop = game.route[game.leg],
-      distance = stop.length - game.x;
-    ctx.clearRect(0, 0, w, h);
-    ctx.fillStyle = "#f7e5b9";
-    ctx.fillRect(0, 0, w, h);
-    const background = art[`background-${stop.scenery}`];
-    ctx.save();
-    ctx.beginPath();
-    ctx.rect(140, 100, 760, 300);
-    ctx.clip();
-    const shift = reduced ? 0 : (game.x * 2) % 760;
-    ctx.drawImage(background, 0, 260, 1536, 764, 140 - shift, 100, 760, 340);
-    ctx.drawImage(background, 0, 260, 1536, 764, 900 - shift, 100, 760, 340);
-    if (distance < 150) {
-      const x = reduced
-        ? 140
-        : 140 + Math.max(-760, Math.min(760, distance * 5));
-      ctx.drawImage(
-        art["background-station"],
-        0,
-        250,
-        1536,
-        774,
-        x,
-        100,
-        760,
-        340,
-      );
-      ctx.fillStyle = "#362719";
-      ctx.font = "bold 19px sans-serif";
-      ctx.textAlign = "center";
-      ctx.fillText(stop.name, x + 526, 245, 135);
-    }
-    ctx.restore();
-    ctx.drawImage(art["train-interior"], 0, 0, w, h);
-    // All game-critical movement remains represented by the stability meter in reduced-motion mode.
-    ctx.drawImage(art.plate, 265, 375, 470, 235);
-    const lost = game.status === "lost",
-      lean = reduced ? 0 : game.lean,
-      slipping = game.slip * (game.lean > 0 ? 1 : -1);
-    let frame = 0;
-    if (game.status === "won" || game.status === "station") frame = 3;
-    else if (game.slip > 0.45 || lost) frame = 2;
-    else if (Math.abs(game.lean) > 0.4) frame = 1;
-    const atlas = art["pudding-expressions"],
-      scale = atlas.width / 1254;
-    const frames = [
-      [88, 80],
-      [690, 80],
-      [88, 665],
-      [690, 665],
-    ];
-    ctx.save();
-    ctx.translate(500 + (reduced ? 0 : slipping * 100), lost ? 560 : 492);
-    ctx.rotate(lost && !reduced ? 0.95 : lean * 0.58);
-    ctx.transform(1, 0, -lean * 0.22, 1, 0, 0);
-    ctx.drawImage(
-      atlas,
-      frames[frame][0] * scale,
-      frames[frame][1] * scale,
-      480 * scale,
-      510 * scale,
-      -165,
-      -330,
-      330,
-      330,
-    );
-    ctx.restore();
-    if (Math.abs(game.lean) > 0.55 && !reduced) {
-      ctx.strokeStyle = "#ae522b";
-      ctx.lineWidth = 4;
-      ctx.beginPath();
-      ctx.arc(
-        490,
-        310,
-        190,
-        game.lean > 0 ? -0.5 : 2.8,
-        game.lean > 0 ? 0.05 : 3.4,
-      );
-      ctx.stroke();
-    }
-  }, [art, game, reduced]);
+  const stop = game.route[game.leg],
+    distance = stop.length - game.x;
+  const c = compact ? 400 : 500;
+  const width = compact ? 800 : 1000;
+  const lean = game.lean;
+  const fall = game.status === "lost" && game.reason === "fall";
+  const settled = game.status === "station" || game.status === "won";
+  // The caramel's mass center reaches the plate rim at |lean| = 1, the physics failure boundary.
+  const top = c + lean * 250,
+    base = c + lean * 75;
+  const stretch = Math.abs(lean),
+    y = 302 + stretch * 24;
+  const body = `M ${base - 125} 489 Q ${base - 138} 484 ${base - 116} 450 L ${top - 98} ${y + 15} Q ${top - 95} ${y - 10} ${top - 68} ${y - 9} Q ${top + 12} ${y - 12} ${top + 88} ${y - 3} Q ${top + 110} ${y + 2} ${top + 110} ${y + 26} Q ${top + 112} ${y + 65} ${base + 126} 478 Q ${base + 128} 488 ${base + 112} 490 Z`;
+  const marker = Math.max(-90, Math.min(width + 130, c + distance * 13));
+  const cx = top + 24,
+    cy = y + 65;
+  const face = stretch > 0.68 ? "strained" : settled ? "relieved" : "plain";
+  const shift = reduced ? 0 : (game.x * 19) % 220;
+  const caution = Math.abs(lean) > 0.8;
+  const gap =
+    Math.abs(distance) < 1
+      ? `${Math.round(Math.abs(distance) * 100)}cm`
+      : `${Math.abs(distance).toFixed(Math.abs(distance) < 30 ? 1 : 0)}m`;
+  const distanceText = distance >= 0 ? `あと ${gap}` : `${gap} 超過`;
   return (
-    <canvas
-      ref={canvas}
-      width={1000}
-      height={640}
+    <svg
+      className={`game-scene ${fall ? "fallen" : ""} ${settled ? "settled" : ""}`}
+      viewBox={`0 0 ${width} 570`}
       role="img"
-      aria-label={`車内のプリン。${game.slip > 0.45 ? "落下注意" : Math.abs(game.lean) > 0.4 ? "揺れています" : "安定しています"}。${game.route[game.leg].name}まで${Math.max(0, Math.round(game.route[game.leg].length - game.x))}m。`}
-    />
+      aria-label={`プリンは${fall ? "転倒" : caution ? "皿の端" : settled ? "安定して停車" : "揺れています"}。停止線まで${distance.toFixed(1)}m。`}
+    >
+      <defs>
+        <clipPath id="window">
+          <rect x="24" y="26" width={width - 48} height="382" rx="24" />
+        </clipPath>
+      </defs>
+      <rect
+        className="window-frame"
+        x="24"
+        y="26"
+        width={width - 48}
+        height="382"
+        rx="24"
+      />
+      <g clipPath="url(#window)">
+        <g className="platform" fill="none" strokeWidth="2">
+          <path
+            d={`M24 242 H${width - 24} M24 365 H${width - 24} M24 373 H${width - 24}`}
+          />
+          {Array.from({ length: 7 }, (_, i) => (
+            <path
+              key={i}
+              d={`M${i * 220 - shift} 244 V363 M${i * 220 - shift + 8} 244 V363`}
+            />
+          ))}
+          <g transform={`translate(${marker + 145} 0)`}>
+            <path d="M-18 25 V373 H22 V25 M-24 33 H28" />
+            <rect
+              x="-18"
+              y="217"
+              width="40"
+              height="22"
+              fill="#d64b3b"
+              stroke="none"
+              opacity=".45"
+            />
+            <text
+              x="2"
+              y="177"
+              textAnchor="middle"
+              writingMode="vertical-rl"
+              className="station-name"
+            >
+              {stop.name}
+            </text>
+          </g>
+        </g>
+        <g className="stopping-target" transform={`translate(${marker} 0)`}>
+          <rect
+            x={-stop.tolerance * 13}
+            y="118"
+            width={stop.tolerance * 26}
+            height="66"
+            fill="#f7e1da"
+            stroke="#d64b3b"
+            strokeWidth="2"
+          />
+          <path d="M0 109 V192" stroke="#d64b3b" strokeWidth="5" />
+          <text y="211" textAnchor="middle" className="target-label">
+            停止線
+          </text>
+        </g>
+        {previous !== undefined && (
+          <g
+            transform={`translate(${c + (distance + previous) * 13} 0)`}
+            opacity=".55"
+          >
+            <path
+              d="M0 118 V184"
+              stroke="#302d29"
+              strokeWidth="2"
+              strokeDasharray="4 5"
+            />
+            <text y="233" textAnchor="middle" className="target-label">
+              前回
+            </text>
+          </g>
+        )}
+        <g className="alignment">
+          <path d={`M${c - 7} 94 L${c} 107 L${c + 7} 94 Z`} fill="#302d29" />
+          <path
+            d={`M${c} 110 V184`}
+            stroke="#302d29"
+            strokeWidth="2"
+            strokeDasharray="4 5"
+          />
+        </g>
+      </g>
+      <text x={c} y="78" textAnchor="middle" className="distance">
+        {distanceText}
+      </text>
+      <path d={`M0 521 H${width} M0 550 H${width}`} className="shelf" />
+      <ellipse cx={c} cy="519" rx="222" ry="9" fill="#302d29" opacity=".08" />
+      <path
+        d={`M${c - 250} 490 Q${c - 232} 536 ${c} 529 Q${c + 223} 534 ${c + 250} 490 Z`}
+        fill="#faf9f6"
+        stroke="#302d29"
+        strokeWidth="3"
+      />
+      <ellipse
+        cx={c}
+        cy="490"
+        rx="250"
+        ry="15"
+        fill="#faf9f6"
+        stroke="#302d29"
+        strokeWidth="3"
+      />
+      <g
+        className={`pudding ${fall && lean < 0 ? "fall-left" : ""}`}
+        style={{ transformOrigin: `${c + Math.sign(lean) * 250}px 490px` }}
+      >
+        <path
+          d={body}
+          fill="#f5d77d"
+          stroke="#302d29"
+          strokeWidth="3"
+          strokeLinejoin="round"
+        />
+        <path
+          d={`M${top - 94} ${y + 9} Q${top - 103} ${y - 8} ${top - 65} ${y - 10} Q${top + 10} ${y - 13} ${top + 88} ${y - 3} Q${top + 108} ${y + 2} ${top + 107} ${y + 22} Q${top + 44} ${y + 32} ${top - 55} ${y + 23} Q${top - 84} ${y + 21} ${top - 94} ${y + 9}Z`}
+          fill="#85451f"
+          stroke="#302d29"
+          strokeWidth="2.5"
+        />
+        <g stroke="#302d29" strokeWidth="3" strokeLinecap="round" fill="none">
+          {face === "strained" ? (
+            <>
+              <path
+                d={`M${cx - 32} ${cy} l17 4 M${cx + 15} ${cy + 4} l17 -4 M${cx - 20} ${cy + 36} l28 -1`}
+              />
+              <path d={`M${cx - 17} ${cy + 5} v4 M${cx + 17} ${cy + 5} v4`} />
+            </>
+          ) : face === "relieved" ? (
+            <>
+              <path
+                d={`M${cx - 32} ${cy + 3} q8 8 16 0 M${cx + 15} ${cy + 3} q8 8 16 0 M${cx - 6} ${cy + 29} h16`}
+              />
+            </>
+          ) : (
+            <>
+              <path
+                d={`M${cx - 22} ${cy} v6 M${cx + 22} ${cy} v6 M${cx - 5} ${cy + 29} h10`}
+              />
+            </>
+          )}
+          {caution && (
+            <path
+              d={`M${top - 128} ${y + 20} q-15 -15 -16 -1 q-1 9 11 8 M${top - 132} ${y - 2} l-8 -9`}
+            />
+          )}
+        </g>
+        <path
+          d={`M${base + 15 + lean * 95} 416 l12 -6 11 8 -13 13 Z M${base + 25 + lean * 95} 430 Q${base + lean * 12} 459 ${base - 45 - lean * 44} 435 L${base - 61 - lean * 44} 448 Q${base + lean * 25} 481 ${base + 32 + lean * 95} 434 Z`}
+          fill="#ad6351"
+          stroke="#302d29"
+          strokeWidth="2.5"
+        />
+      </g>
+      <path
+        d={`M${c - 232} 502 Q${c} 526 ${c + 232} 502`}
+        fill="none"
+        stroke="#302d29"
+        strokeWidth="2"
+      />
+      {caution && !fall && (
+        <path
+          d={`M${c + Math.sign(lean) * 257} 472 l${Math.sign(lean) * 12} -8 M${c + Math.sign(lean) * 265} 490 h${Math.sign(lean) * 12}`}
+          stroke="#d64b3b"
+          strokeWidth="3"
+        />
+      )}
+    </svg>
   );
 }
