@@ -1,42 +1,40 @@
 export const STEP = 1 / 120;
-export const MAX_SPEED = 34;
-export const BRAKE = 12;
+export const MAX_SPEED = 18;
+export const BRAKE = 10;
+export const EDGE = 1;
 export interface Stop {
   name: string;
   length: number;
   tolerance: number;
   deadline: number;
-  bumps: number[];
-  scenery: "residential" | "bridge";
 }
 export interface Report {
   name: string;
-  accuracy: number;
-  time: number;
-  care: number;
-  score: number;
   offset: number;
-  late: number;
-  passed: boolean;
+  accuracy: number;
+  recovery: number;
+  pace: number;
+  score: number;
 }
 export interface Game {
   seed: number;
   route: Stop[];
   leg: number;
   status: "ready" | "running" | "station" | "won" | "lost";
+  reason: "fall" | "overshoot" | "timeout" | null;
   x: number;
   speed: number;
   acceleration: number;
   lean: number;
   angular: number;
-  slip: number;
   peak: number;
+  caught: boolean;
+  catchAt: number;
+  braking: boolean;
   elapsed: number;
   totalTime: number;
   stopTime: number;
-  bumpIndex: number;
   reports: Report[];
-  message: string;
 }
 export function randomSeed() {
   return crypto.getRandomValues(new Uint32Array(1))[0] || 1;
@@ -55,31 +53,12 @@ export function createRoute(seed: number): Stop[] {
     t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
     return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
   };
-  const names = [
-    "カラメル坂",
-    "ぷるぷる町",
-    "たまご台",
-    "牛乳橋",
-    "おやつ前",
-    "なめらか丘",
-    "砂糖ヶ谷",
-    "喫茶通り",
-    "定時中央",
-  ];
-  const pool = [...names];
-  return Array.from({ length: 3 }, (_, i) => {
-    const length = Math.round(330 + random() * 100 + i * 20);
-    const bumps = i === 0 ? [] : [Math.round(110 + random() * 30)];
-    if (i === 2) bumps.push(Math.round(210 + random() * 25));
-    return {
-      name: pool.splice(Math.floor(random() * pool.length), 1)[0],
-      length,
-      tolerance: 16 - i * 3 + Math.round(random() * 3),
-      deadline: Math.ceil(length / 27 + 6 - i * 0.5),
-      bumps,
-      scenery: random() > 0.5 ? "bridge" : "residential",
-    };
-  });
+  return ["住宅前", "川向こう", "会社前"].map((name, i) => ({
+    name,
+    length: Math.round(92 + random() * 22 + i * 9),
+    tolerance: [2.4, 1.8, 1.3][i],
+    deadline: 20,
+  }));
 }
 export function createGame(seed: number): Game {
   return {
@@ -87,125 +66,108 @@ export function createGame(seed: number): Game {
     route: createRoute(seed),
     leg: 0,
     status: "ready",
+    reason: null,
     x: 0,
     speed: 0,
     acceleration: 0,
     lean: 0,
     angular: 0,
-    slip: 0,
     peak: 0,
+    caught: false,
+    catchAt: -10,
+    braking: false,
     elapsed: 0,
     totalTime: 0,
     stopTime: 0,
-    bumpIndex: 0,
     reports: [],
-    message: "プリンを乗せて、出発進行。",
   };
 }
 export function depart(g: Game): Game {
   if (g.status === "ready") return { ...g, status: "running" };
   if (g.status !== "station") return g;
   return {
-    ...g,
+    ...createGame(g.seed),
+    route: g.route,
     leg: g.leg + 1,
+    reports: g.reports,
+    totalTime: g.totalTime,
     status: "running",
-    x: 0,
-    speed: 0,
-    acceleration: 0,
-    lean: 0,
-    angular: 0,
-    slip: 0,
-    peak: 0,
-    elapsed: 0,
-    stopTime: 0,
-    bumpIndex: 0,
-    message: "次の駅へ、出発進行。",
+  };
+}
+export function retry(g: Game): Game {
+  // Retry the failed station immediately; completed stations and the route stay intact.
+  return {
+    ...createGame(g.seed),
+    route: g.route,
+    leg: g.leg,
+    reports: g.reports,
+    totalTime: g.totalTime - g.elapsed,
+    status: "running",
   };
 }
 export function totalScore(g: Game) {
   return g.reports.reduce((n, r) => n + r.score, 0);
 }
-function arrive(g: Game, passed: boolean): Game {
-  const stop = g.route[g.leg],
-    offset = g.x - stop.length;
-  const accuracy = passed
-    ? 0
-    : Math.round(400 * Math.max(0, 1 - Math.abs(offset) / stop.tolerance));
-  const late = Math.max(0, g.elapsed - stop.deadline);
-  const time = Math.round(Math.max(0, 300 - late * 25));
-  const care = Math.round(300 * Math.max(0, 1 - g.peak));
-  const report = {
-    name: stop.name,
-    accuracy,
-    time,
-    care,
-    score: accuracy + time + care,
-    offset,
-    late,
-    passed,
-  };
-  return {
-    ...g,
-    status: g.leg === 2 ? "won" : "station",
-    reports: [...g.reports, report],
-    message: passed
-      ? "駅を通過。プリンは無事です。"
-      : accuracy > 320
-        ? "ぷるっと、ぴったり停車！"
-        : "到着。プリン、おつかれさま。",
-  };
+export function brakingDistance(speed: number) {
+  return (speed * speed) / (2 * BRAKE);
 }
-/** Deterministic fixed-step simulation. Rendering frame rate never changes route/physics. */
 export function tick(g: Game, pressed: boolean): Game {
   if (g.status !== "running") return g;
   const s = { ...g },
-    dt = STEP,
     stop = s.route[s.leg];
-  const target = pressed
-    ? s.speed < MAX_SPEED
-      ? 9
-      : 0
-    : s.speed > 0
-      ? -BRAKE
-      : 0;
-  s.acceleration += (target - s.acceleration) * Math.min(1, dt * 7);
   const previousSpeed = s.speed;
-  s.speed = Math.max(0, Math.min(MAX_SPEED, s.speed + s.acceleration * dt));
-  const effectiveAcceleration = (s.speed - previousSpeed) / dt;
-  s.x += (s.speed + previousSpeed) * 0.5 * dt;
-  s.elapsed += dt;
-  s.totalTime += dt;
-  if (s.bumpIndex < stop.bumps.length && s.x >= stop.bumps[s.bumpIndex]) {
-    s.angular += (s.bumpIndex % 2 ? -1 : 1) * (s.speed / MAX_SPEED) * 2.6;
-    s.bumpIndex++;
-    s.message = "ガタン！ プリンを立て直して。";
-  }
-  s.angular +=
-    (-16 * s.lean - 2.4 * s.angular - effectiveAcceleration * 0.6) * dt;
-  s.lean += s.angular * dt;
-  const danger = Math.abs(s.lean);
-  s.slip = Math.max(
+  s.speed = Math.max(
     0,
-    Math.min(
-      1,
-      s.slip +
-        (danger > 0.55 ? (danger - 0.55) * 2.5 : danger < 0.3 ? -0.18 : 0) * dt,
-    ),
+    Math.min(MAX_SPEED, s.speed + (pressed ? 6 : -BRAKE) * STEP),
   );
-  s.peak = Math.max(s.peak, s.slip);
-  if (s.slip >= 1 || danger > 1.5)
-    return { ...s, status: "lost", message: "お客様だけ、先に到着。" };
-  if (Math.abs(s.x - stop.length) <= stop.tolerance && s.speed < 0.4)
-    s.stopTime += dt;
-  else s.stopTime = 0;
-  if (s.stopTime > 0.4) return arrive(s, false);
+  s.acceleration = (s.speed - previousSpeed) / STEP;
+  s.x += (previousSpeed + s.speed) * 0.5 * STEP;
+  s.elapsed += STEP;
+  s.totalTime += STEP;
+  s.braking ||= !pressed && previousSpeed > 6;
+  // Signed center of mass, normalized to the plate rim. The scene uses this same value.
+  s.angular += (-12 * s.lean - 2.8 * s.angular - s.acceleration * 1.0) * STEP;
+  s.lean += s.angular * STEP;
+  if (s.braking) s.peak = Math.max(s.peak, Math.abs(s.lean));
+  if (!s.caught && s.peak >= 0.82 && Math.abs(s.lean) < 0.4) {
+    s.caught = true;
+    s.catchAt = s.elapsed;
+  }
+  if (Math.abs(s.lean) >= EDGE) return { ...s, status: "lost", reason: "fall" };
+  if (s.x > stop.length + stop.tolerance)
+    return { ...s, status: "lost", reason: "overshoot" };
+  if (s.elapsed >= stop.deadline)
+    return { ...s, status: "lost", reason: "timeout" };
+  // Stopping does not award a result until the pudding has settled safely.
   if (
-    s.x > stop.length + stop.tolerance &&
-    (s.speed < 0.4 || s.x > stop.length + 75)
+    s.speed === 0 &&
+    Math.abs(s.x - stop.length) <= stop.tolerance &&
+    Math.abs(s.lean) < 0.4
   )
-    return arrive(s, true);
+    s.stopTime += STEP;
+  else s.stopTime = 0;
+  if (s.stopTime >= 0.25) {
+    const offset = s.x - stop.length;
+    const accuracy = Math.round(
+      600 * Math.max(0, 1 - Math.abs(offset) / stop.tolerance),
+    );
+    const recovery = s.caught ? 250 : 0;
+    const pace = Math.round(
+      150 * Math.max(0, Math.min(1, (14 - s.elapsed) / 6)),
+    );
+    const report = {
+      name: stop.name,
+      offset,
+      accuracy,
+      recovery,
+      pace,
+      score: 100 + accuracy + recovery + pace,
+    };
+    return {
+      ...s,
+      status: s.leg === 2 ? "won" : "station",
+      reports: [...s.reports, report],
+    };
+  }
   return s;
-}
-export function brakingDistance(speed: number) {
-  return (speed * speed) / (2 * BRAKE) + speed * 0.24;
 }

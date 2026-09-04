@@ -54,9 +54,9 @@
     "date": "2026-09-04",
     "sequence": 2,
     "name": "プリン通勤",
-    "description": "押して加速、離してブレーキ。ぷるぷるの乗客を守って、毎回違う3駅を走るワンボタンゲーム。",
+    "description": "押して加速、離してブレーキ。倒れかけたプリンを戻して、停止線ぎりぎりを狙うワンボタンゲーム。",
     "category": "ワンボタンゲーム",
-    "thumbnail": "pudding-cover.png",
-    "accent": "#39786b"
+    "thumbnail": "pudding-cover.svg",
+    "accent": "#d64b3b"
   }
 ]

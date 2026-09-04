@@ -1,116 +1,142 @@
 import { describe, expect, it } from "vitest";
 import {
-  BRAKE,
-  STEP,
-  brakingDistance,
   createGame,
   createRoute,
   depart,
   parseSeed,
+  retry,
+  STEP,
   tick,
   totalScore,
+  type Game,
 } from "./simulation";
-describe("random railway", () => {
-  it("reproduces a route, varies seeds, and validates shared seed input", () => {
-    expect(createRoute(56)).toEqual(createRoute(56));
-    expect(createRoute(56)).not.toEqual(createRoute(57));
+import { recordedInput } from "./recordings";
+function run(seed: number, mode: string, all = false) {
+  let g = depart(createGame(seed));
+  for (let frame = 0; frame < 120 * 70; frame++) {
+    if (g.status === "station" && all) g = depart(g);
+    if (g.status !== "running") break;
+    g = tick(g, recordedInput(g, mode));
+  }
+  return g;
+}
+describe("generated precision routes", () => {
+  it("validates seed boundaries and reproduces courses", () => {
     for (const value of [null, "", "-1", "0", "2.1", "4294967296", "NaN"])
       expect(parseSeed(value)).toBeNull();
     expect(parseSeed("4294967295")).toBe(4294967295);
+    expect(createRoute(1)).toEqual(createRoute(1));
+    expect(createRoute(1)).not.toEqual(createRoute(2));
   });
-  it("keeps 500 courses within warning, recovery and stopping bounds", () => {
-    for (let seed = 1; seed <= 500; seed++) {
-      const route = createRoute(seed);
-      expect(new Set(route.map((s) => s.name)).size).toBe(3);
-      expect(route[0].bumps).toHaveLength(0);
-      for (const stop of route) {
-        expect(stop.length).toBeGreaterThan(300);
-        expect(stop.deadline).toBeGreaterThan(stop.length / 34 + 3);
-        expect(stop.tolerance).toBeGreaterThanOrEqual(10);
-        for (let i = 0; i < stop.bumps.length; i++) {
-          expect(stop.bumps[i]).toBeGreaterThanOrEqual(100);
-          expect(stop.length - stop.bumps[i]).toBeGreaterThan(
-            brakingDistance(34) + 30,
-          );
-          if (i)
-            expect(stop.bumps[i] - stop.bumps[i - 1]).toBeGreaterThanOrEqual(
-              70,
-            );
-        }
-      }
+  it("all 100 courses are completable with timed recovery", () => {
+    for (let seed = 1; seed <= 100; seed++) {
+      const g = run(seed, "catch", true);
+      expect(g.status, `seed ${seed}: ${JSON.stringify(g)}`).toBe("won");
+      expect(g.reports).toHaveLength(3);
+      expect(g.reports.every((r) => r.recovery === 250)).toBe(true);
+      expect(g.totalTime).toBeLessThan(35);
     }
+  });
+  it("holding the button cannot clear even the first station", () => {
+    for (let seed = 1; seed <= 100; seed++) {
+      const g = run(seed, "hold");
+      expect(g.status).toBe("lost");
+      expect(g.reason).toBe("overshoot");
+      expect(totalScore(g)).toBe(0);
+    }
+  });
+  it("a steady full-speed brake falls; timed countersteering recovers", () => {
+    const failed = run(1, "brake"),
+      saved = run(1, "catch");
+    expect(failed.reason).toBe("fall");
+    expect(Math.abs(failed.lean)).toBeGreaterThanOrEqual(1);
+    expect(saved.status).toBe("station");
+    expect(saved.caught).toBe(true);
+    expect(saved.reports[0].recovery).toBe(250);
+  });
+  it("one human-sized pulse can save a stop without frame-by-frame steering", () => {
+    for (const duration of [0.08, 0.12, 0.16]) {
+      let g = depart(createGame(1)),
+        braking = false,
+        pulse = -1;
+      while (g.status === "running") {
+        if (
+          !braking &&
+          g.route[0].length - g.x <= (g.speed * g.speed) / 20 + 1.5
+        )
+          braking = true;
+        if (braking && pulse < 0 && g.lean >= 0.8) pulse = g.elapsed;
+        g = tick(g, !braking || (pulse >= 0 && g.elapsed - pulse < duration));
+      }
+      expect(g.status).toBe("station");
+      expect(g.caught).toBe(true);
+    }
+  });
+  it("safe driving is possible but scores below precision recovery", () => {
+    const safe = run(1, "safe"),
+      precise = run(1, "catch");
+    expect(safe.status, JSON.stringify(safe)).toBe("station");
+    expect(safe.reports[0].recovery).toBe(0);
+    expect(totalScore(precise)).toBeGreaterThan(totalScore(safe));
+  });
+  it("early, precise and late inputs have distinct readable results", () => {
+    const early = run(1, "early"),
+      precise = run(1, "catch"),
+      late = run(1, "late");
+    expect(early.reason).toBe("timeout");
+    expect(early.x).toBeLessThan(
+      early.route[0].length - early.route[0].tolerance,
+    );
+    expect(precise.status).toBe("station");
+    expect(Math.abs(precise.reports[0].offset)).toBeLessThan(0.5);
+    expect(late.reason).toBe("overshoot");
   });
 });
-describe("driving", () => {
-  it("does not advance ready, stopped reports or terminal games", () => {
-    const g = createGame(1);
-    expect(tick(g, true)).toBe(g);
-    for (const status of ["station", "won", "lost"] as const) {
-      const end = { ...g, status };
-      expect(tick(end, true)).toBe(end);
+describe("fairness and recovery", () => {
+  it("retries the same failed station, preserves completed scores, clears physical state", () => {
+    let g = depart(run(1, "catch"));
+    while (g.status === "running") g = tick(g, true);
+    const again = retry(g);
+    expect(again.seed).toBe(g.seed);
+    expect(again.route).toEqual(g.route);
+    expect(again.leg).toBe(1);
+    expect(again.reports).toEqual(g.reports);
+    expect(again.x).toBe(0);
+    expect(again.lean).toBe(0);
+    expect(again.caught).toBe(false);
+    expect(again.totalTime).toBeCloseTo(g.totalTime - g.elapsed);
+  });
+  it("does not award points while wobbling or after crossing the boundary", () => {
+    const g = depart(createGame(1));
+    expect(
+      tick({ ...g, x: g.route[0].length, lean: 0.9, angular: 0 }, false).status,
+    ).toBe("running");
+    const over = tick(
+      { ...g, x: g.route[0].length + g.route[0].tolerance + 0.01 },
+      false,
+    );
+    expect(over.status).toBe("lost");
+    expect(totalScore(over)).toBe(0);
+  });
+  it("cannot farm recovery points without landing a stop", () => {
+    const base = depart(createGame(1));
+    const g = tick(
+      { ...base, peak: 0.9, lean: 0.2, x: base.route[0].length + 5 },
+      false,
+    );
+    expect(g.caught).toBe(true);
+    expect(g.status).toBe("lost");
+    expect(totalScore(g)).toBe(0);
+  });
+  it("pauses terminal states and uses fixed time without backward movement", () => {
+    for (const status of ["ready", "station", "won", "lost"] as const) {
+      const g = { ...createGame(1), status };
+      expect(tick(g, true)).toBe(g);
     }
-  });
-  it("accelerates, brakes to zero and never travels backward", () => {
-    let g = depart(createGame(1));
-    for (let i = 0; i < 240; i++) g = tick(g, true);
-    expect(g.speed).toBeGreaterThan(15);
-    const x = g.x;
-    for (let i = 0; i < 500; i++) g = tick(g, false);
-    expect(g.speed).toBe(0);
-    expect(g.x).toBeGreaterThan(x);
-    const stopped = g.x;
-    for (let i = 0; i < 100; i++) g = tick(g, false);
-    expect(g.x).toBe(stopped);
-  });
-  it("scores accurate stops, lateness and passed stations separately", () => {
-    const base = depart(createGame(4)),
-      stop = base.route[0];
-    let g = { ...base, x: stop.length, elapsed: stop.deadline + 2 };
-    for (let i = 0; i < 60; i++) g = tick(g, false);
-    expect(g.status).toBe("station");
-    expect(g.reports[0].accuracy).toBe(400);
-    expect(g.reports[0].time).toBeLessThan(300);
-    expect(totalScore(g)).toBeGreaterThan(600);
-    const passed = tick({ ...base, x: stop.length + 90 }, false);
-    expect(passed.reports[0].accuracy).toBe(0);
-    expect(passed.reports[0].passed).toBe(true);
-  });
-  it("can recover a sliding pudding and loses when it falls", () => {
-    const base = depart(createGame(2));
-    const recovered = tick({ ...base, slip: 0.5 }, false);
-    expect(recovered.slip).toBeLessThan(0.5);
-    expect(tick({ ...base, slip: 0.9999, lean: 1 }, true).status).toBe("lost");
-  });
-  it("a cautious driver can finish 100 generated routes without a fall", () => {
-    for (let seed = 1; seed <= 100; seed++) {
-      let g = depart(createGame(seed)),
-        hold = false;
-      for (
-        let i = 0;
-        i < 120 * 180 && g.status !== "won" && g.status !== "lost";
-        i++
-      ) {
-        if (g.status === "station") {
-          g = depart(g);
-          hold = false;
-        }
-        const d = g.route[g.leg].length - g.x;
-        const desired = Math.min(
-          23,
-          Math.sqrt(Math.max(0, 2 * BRAKE * (d - 1))) * 0.8,
-        );
-        if (g.speed < desired - 1) hold = true;
-        if (g.speed > desired + 1 || d < 2) hold = false;
-        g = tick(g, hold);
-      }
-      expect(g.status, `seed ${seed}: ${JSON.stringify(g)}`).toBe("won");
-      expect(g.reports.every((r) => !r.passed)).toBe(true);
-      expect(g.totalTime).toBeLessThan(100);
-    }
-  });
-  it("uses fixed seconds", () => {
-    let g = depart(createGame(1));
+    let g: Game = depart(createGame(1));
     for (let i = 0; i < 120; i++) g = tick(g, false);
     expect(g.elapsed).toBeCloseTo(120 * STEP);
+    expect(g.x).toBe(0);
+    expect(g.speed).toBe(0);
   });
 });
