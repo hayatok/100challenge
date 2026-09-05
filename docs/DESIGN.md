@@ -7,8 +7,8 @@
 
 以下をプロジェクトごとに埋める。
 
-- Product name: [プロダクト名]
-- Target users: [対象ユーザー]
+- Product name: 100日チャレンジ
+- Target users: 私
 - Primary job: [ユーザーが達成したいこと]
 - Main usage frequency: [毎日 / 毎週 / 一度だけ / その他]
 - Primary platform: [Web / macOS / iOS / Android / その他]
