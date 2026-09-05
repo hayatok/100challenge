@@ -7,6 +7,7 @@ const PINK = Color("ed7183")
 const CYAN = Color("66e4e0")
 var sim = Sim.new()
 var camera: Camera3D
+var world_art: Node3D
 var player_model: Node3D
 var enemy_multimesh: MultiMesh
 var enemy_basis = Transform3D.IDENTITY
@@ -49,6 +50,7 @@ func _ready() -> void:
 	get_window().focus_exited.connect(_focus_lost)
 	# Debug-only fixtures. Release exports ignore both command-line and URL QA requests.
 	if OS.is_debug_build():
+		print("LOOP_RENDER ",RenderingServer.get_current_rendering_method())
 		for arg in OS.get_cmdline_user_args():
 			if arg.begins_with("--qa="):
 				qa_mode = arg.trim_prefix("--qa=")
@@ -70,57 +72,21 @@ func _setup_input() -> void:
 	for action in axes:
 		var e = InputEventJoypadMotion.new();e.axis=axes[action][0];e.axis_value=axes[action][1];InputMap.action_add_event(action,e)
 
-func _material(color: Color) -> StandardMaterial3D:
-	var m = StandardMaterial3D.new();m.albedo_color=color;m.roughness=0.9;m.shading_mode=BaseMaterial3D.SHADING_MODE_UNSHADED;return m
-
-func _box(at: Vector3, dimensions: Vector3, color: Color) -> MeshInstance3D:
-	var n = MeshInstance3D.new();var mesh = BoxMesh.new();mesh.size=dimensions;n.mesh=mesh;n.material_override=_material(color);n.position=at;add_child(n);return n
-
-func _asset(name: String, at: Vector3, rotation_y: float = 0.0) -> Node3D:
-	var n = load("res://assets/models/%s.glb"%name).instantiate()
-	add_child(n);n.position=at;n.rotation.y=rotation_y
-	return n
-
-func _find_mesh(node: Node) -> MeshInstance3D:
-	if node is MeshInstance3D:
-		return node
-	for child in node.get_children():
-		var found = _find_mesh(child)
-		if found != null:
-			return found
-	return null
-
 func _setup_world() -> void:
-	var env_node = WorldEnvironment.new();var env=Environment.new()
-	env.background_mode=Environment.BG_COLOR;env.background_color=INK
-	env.ambient_light_source=Environment.AMBIENT_SOURCE_COLOR;env.ambient_light_color=Color("adbed0");env.ambient_light_energy=0.65
-	env_node.environment=env;add_child(env_node)
-	var light=DirectionalLight3D.new();light.rotation_degrees=Vector3(-65,-25,0);light.light_color=CREAM;light.light_energy=1.3;add_child(light)
-	_box(Vector3(0,-.16,0),Vector3(48,.3,32),Color("263c4c"))
-	# Large shared flat surfaces keep the street legible and avoid per-enemy shadows.
-	for x in range(-22,24,2):
-		_box(Vector3(x,.005,0),Vector3(.025,.01,27),Color("354d5b"))
-	for z in range(-14,16,2):
-		_box(Vector3(0,.006,z),Vector3(44,.01,.025),Color("354d5b"))
-	for x in range(-20,21,4):
-		_asset("building",Vector3(x,0,-15))
-	for x in [-18,-10,10,18]:
-		_asset("stall",Vector3(x,0,14))
-		_asset("speaker",Vector3(x+1.5,0,13.4))
-	for x in [-22,22]:
-		_box(Vector3(x,.1,0),Vector3(.22,.2,28),Color("cfdb76"))
-	for z in [-13.8,13.8]:
-		_box(Vector3(0,.1,z),Vector3(44,.2,.18),Color("cfdb76"))
-	player_model=_asset("kohaku",Vector3.ZERO)
-	player_model.scale=Vector3.ONE*1.5
-	var source=_asset("call_bit",Vector3.ZERO)
-	var mesh_node=_find_mesh(source)
-	enemy_multimesh=MultiMesh.new();enemy_multimesh.transform_format=MultiMesh.TRANSFORM_3D
-	enemy_multimesh.mesh=mesh_node.mesh
-	enemy_basis=mesh_node.global_transform
-	enemy_multimesh.instance_count=Sim.CAP;enemy_multimesh.visible_instance_count=0
-	var crowd=MultiMeshInstance3D.new();crowd.multimesh=enemy_multimesh;add_child(crowd);source.queue_free()
-	camera=Camera3D.new();camera.projection=Camera3D.PROJECTION_ORTHOGONAL;camera.size=32;camera.position=Vector3(0,32,21);add_child(camera);camera.look_at(Vector3(0,0,0));camera.current=true
+	world_art = preload("res://world_art.gd").new()
+	add_child(world_art)
+	world_art.build()
+	player_model = world_art.player
+	camera = world_art.camera
+	enemy_multimesh = MultiMesh.new()
+	enemy_multimesh.transform_format = MultiMesh.TRANSFORM_3D
+	enemy_multimesh.mesh = world_art.enemy_mesh
+	enemy_basis = world_art.enemy_basis
+	enemy_multimesh.instance_count = Sim.CAP
+	enemy_multimesh.visible_instance_count = 0
+	var crowd = MultiMeshInstance3D.new()
+	crowd.multimesh = enemy_multimesh
+	add_child(crowd)
 
 func _setup_audio() -> void:
 	music=AudioStreamPlayer.new();music.stream=preload("res://assets/audio/rehearsal.wav");music.volume_db=-15;add_child(music)
@@ -156,8 +122,10 @@ func _setup_ui() -> void:
 	hp_bar=ProgressBar.new();hp_bar.custom_minimum_size=Vector2(380,13);hp_bar.show_percentage=false;hp_bar.add_theme_stylebox_override("fill",_bar_style(PINK));stack.add_child(hp_bar)
 	xp_bar=ProgressBar.new();xp_bar.custom_minimum_size=Vector2(380,7);xp_bar.show_percentage=false;xp_bar.add_theme_stylebox_override("fill",_bar_style(CYAN));stack.add_child(xp_bar)
 	timer_label=_label("",29);timer_label.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT);timer_label.position=Vector2(-320,24);timer_label.size=Vector2(205,45);timer_label.horizontal_alignment=HORIZONTAL_ALIGNMENT_RIGHT;hud.add_child(timer_label)
+	timer_label.add_theme_color_override("font_outline_color",INK);timer_label.add_theme_constant_override("outline_size",4)
 	var pause_button=_button("Ⅱ",_toggle_pause,CREAM);pause_button.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT);pause_button.position=Vector2(-90,22);pause_button.size=Vector2(64,54);hud.add_child(pause_button)
 	stats_label=_label("",18);stats_label.position=Vector2(24,130);hud.add_child(stats_label)
+	stats_label.add_theme_color_override("font_outline_color",INK);stats_label.add_theme_constant_override("outline_size",4)
 	var footer=ColorRect.new();footer.color=Color(.05,.10,.14,.95);footer.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_WIDE);footer.offset_top=-92;footer.mouse_filter=Control.MOUSE_FILTER_IGNORE;hud.add_child(footer)
 	notice_label=_label("",20);notice_label.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_LEFT);notice_label.position=Vector2(24,-84);notice_label.size=Vector2(1100,36);hud.add_child(notice_label)
 	loadout_label=_label("",16,Color("b9cfd1"));loadout_label.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_LEFT);loadout_label.position=Vector2(24,-43);loadout_label.size=Vector2(1100,30);hud.add_child(loadout_label)
@@ -167,6 +135,9 @@ func _refresh_menu() -> void:
 	var key=sim.state+str(sim.level)+str(sim.rerolls)
 	if key==menu_state:return
 	menu_state=key
+	if qa_mode in ["art","map"]:
+		hud.visible=false;menu.visible=false
+		return
 	for child in menu.get_children():
 		menu.remove_child(child);child.queue_free()
 	hud.visible=sim.state!="ready"
@@ -241,6 +212,9 @@ func _focus_lost() -> void:
 	sim.pause();_refresh_menu()
 
 func _unhandled_input(event: InputEvent) -> void:
+	if event is InputEventMouseButton and event.pressed and sim.state != "ready":
+		if event.button_index == MOUSE_BUTTON_WHEEL_UP:world_art.zoom_by(-0.08)
+		if event.button_index == MOUSE_BUTTON_WHEEL_DOWN:world_art.zoom_by(0.08)
 	if event is InputEventKey and event.pressed and not event.echo:
 		if event.keycode==KEY_ESCAPE:_toggle_pause()
 		if event.keycode in [KEY_1,KEY_2,KEY_3]:sim.choose(event.keycode-KEY_1);_refresh_menu()
@@ -276,10 +250,11 @@ func _physics_process(dt: float) -> void:
 	_refresh_menu()
 
 func _process(dt: float) -> void:
-	player_model.position=Vector3(sim.player.x,0,sim.player.y)
-	player_model.rotation.y=atan2(sim.facing.x,sim.facing.y)
-	if sim.state=="running" and not reduced:
-		player_model.position.y=absf(sin(sim.clock*12))*.055
+	world_art.update_actor(dt,sim.player,sim.facing,sim.state=="running",reduced)
+	if qa_mode == "art":
+		camera.position=Vector3(3.5,2.4,5.3);camera.look_at(Vector3(0,1.5,0))
+	elif qa_mode == "map":
+		camera.position=Vector3(22,24,30);camera.look_at(Vector3(0,1,-2))
 	enemy_multimesh.visible_instance_count=mini(Sim.CAP,sim.enemies.size())
 	for i in enemy_multimesh.visible_instance_count:
 		var e=sim.enemies[i];var direction: Vector2=sim.player-e.p
@@ -289,7 +264,7 @@ func _process(dt: float) -> void:
 	timer_label.text="%02d:%02d / 03:00"%[int(sim.clock)/60,int(sim.clock)%60]
 	stats_label.text="HP %d   LV.%02d\n回収 %d  /  囲み %d  /  最大 %d"%[sim.hp,sim.level,sim.kills,sim.loops,sim.best_loop]
 	notice_label.text=sim.notice if sim.loops>0 else "自分の線を横切ると、囲んだ群れを回収。"
-	loadout_label.text="線 %.2f秒  ·  陣地 %d / 3  ·  回収威力 %d     WASD / 矢印 / ドラッグで移動   Esc 停止"%[sim.trail_life(),sim.regions.size(),3+sim.upgrades.burst*2]
+	loadout_label.text="線 %.2f秒  ·  陣地 %d / 3  ·  回収威力 %d     WASD / 矢印で移動 · ホイールで拡大 · Esc 停止"%[sim.trail_life(),sim.regions.size(),3+sim.upgrades.burst*2]
 	if not qa_mode.is_empty() and sim.state=="running":
 		loadout_label.text+="  [QA %s]"%qa_mode
 		render_frames.append(dt*1000)
@@ -316,6 +291,8 @@ func _save_record() -> void:
 
 func _apply_fixture(mode: String) -> void:
 	sim.start()
+	if mode in ["art","map"]:
+		sim.enemies.clear();sim.state="art";sim.facing=Vector2.DOWN
 	if mode in ["loop","stress"]:
 		sim.enemies.clear()
 		for i in (600 if mode=="stress" else 35):

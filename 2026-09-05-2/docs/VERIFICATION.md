@@ -1,5 +1,7 @@
 # 検証記録 — 2026-09-05
 
+このファイルの素材・性能の数値は初版v0.1の記録。v0.2の改修内容と区別は`ART-V2.md`を参照。
+
 Godot 4.7.2、Blender 5.2.1、macOS、Codex Computer Useの組み込みChromiumで検証。
 
 ## 自動検証
