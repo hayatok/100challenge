@@ -1,55 +1,55 @@
 {
   "generator": "Blender 5.2.1 LTS",
-  "source": "GUI-reviewed cleaning-kit.blend",
+  "source": "GUI-reviewed cleaning-kit-v2.blend",
   "assets": {
     "robot": {
       "file": "robot.glb",
-      "bytes": 75416,
-      "triangles": 1004
+      "bytes": 151044,
+      "triangles": 3092
     },
     "dust": {
       "file": "dust.glb",
-      "bytes": 57400,
+      "bytes": 52852,
       "triangles": 620
     },
     "dash": {
       "file": "dash.glb",
-      "bytes": 60312,
+      "bytes": 56460,
       "triangles": 640
     },
     "box": {
       "file": "box.glb",
-      "bytes": 46452,
+      "bytes": 46352,
       "triangles": 568
     },
     "boss": {
       "file": "boss.glb",
-      "bytes": 69564,
+      "bytes": 64024,
       "triangles": 752
     },
     "nozzle": {
       "file": "nozzle.glb",
-      "bytes": 13168,
+      "bytes": 13180,
       "triangles": 148
     },
     "mop": {
       "file": "mop.glb",
-      "bytes": 26448,
+      "bytes": 24600,
       "triangles": 324
     },
     "spray": {
       "file": "spray.glb",
-      "bytes": 9120,
+      "bytes": 9128,
       "triangles": 104
     },
     "disc": {
       "file": "disc.glb",
-      "bytes": 8720,
+      "bytes": 8728,
       "triangles": 120
     },
     "battery": {
       "file": "battery.glb",
-      "bytes": 13384,
+      "bytes": 13396,
       "triangles": 132
     },
     "heal": {
@@ -59,23 +59,38 @@
     },
     "tile": {
       "file": "tile.glb",
-      "bytes": 4636,
-      "triangles": 44
+      "bytes": 16088,
+      "triangles": 232
     },
     "pallet": {
       "file": "pallet.glb",
-      "bytes": 19988,
+      "bytes": 19048,
       "triangles": 220
     },
     "crate": {
       "file": "crate.glb",
-      "bytes": 8460,
+      "bytes": 8464,
       "triangles": 88
     },
     "fence": {
       "file": "fence.glb",
-      "bytes": 12388,
+      "bytes": 12336,
       "triangles": 132
+    },
+    "mud": {
+      "file": "mud.glb",
+      "bytes": 66388,
+      "triangles": 1068
+    },
+    "station": {
+      "file": "station.glb",
+      "bytes": 121520,
+      "triangles": 2524
+    },
+    "storefront": {
+      "file": "storefront.glb",
+      "bytes": 328816,
+      "triangles": 6536
     }
   }
 }

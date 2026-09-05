@@ -1,8 +1,12 @@
+import { CleaningMap } from "./CleaningMap";
+import { CELL, cleaningPercent, paintFloor, STATION } from "./game/cleaning";
 import { bestRecord, saveRecord } from "./game/records";
 import { useEffect, useRef, useState } from "react";
 import { GameScene } from "./scene";
 import {
   choose,
+  synergies,
+  synergyHint,
   createGame,
   INFO,
   LIMIT,
@@ -47,6 +51,26 @@ function previewGame() {
 function fixture(name: string) {
   const g = createGame(42);
   g.status = "running";
+  if (["cleaning", "station", "synergy", "won", "lost"].includes(name)) {
+    for (let i = 0; i <= 30; i++)
+      paintFloor(g.floor, { x: -i * 0.25, z: -i / 6 }, 1.15);
+    for (let i = 0; i <= 45; i++)
+      paintFloor(g.floor, { x: i * 0.23, z: Math.sin(i * 0.1) * 3 }, 1.4);
+    if (name === "station" || name === "won") {
+      g.station.active = true;
+      g.station.age = 30;
+      paintFloor(g.floor, STATION, 6.5);
+    }
+    if (name === "synergy") {
+      g.weapons = { nozzle: 3, spray: 3, mop: 3, disc: 0 };
+      g.level = 9;
+    }
+    if (name === "cleaning") {
+      const e = spawnEnemy(g, "mud");
+      e.x = -4;
+      e.z = -4;
+    }
+  }
   if (name === "upgrade") {
     g.level = 4;
     g.status = "upgrade";
@@ -58,7 +82,9 @@ function fixture(name: string) {
     g.time = 321;
     g.level = 18;
     g.reason =
-      name === "won" ? "倉庫、ぴかぴか。" : "バッテリー切れ。おつかれさま！";
+      name === "won"
+        ? "夜勤完了。朝を迎えよう。"
+        : "バッテリー切れ。おつかれさま！";
   }
   if (name === "boss" || name === "stress") {
     g.time = 300;
@@ -187,7 +213,20 @@ export default function App() {
       s.load((n) => alive && setLoading(n))
         .then(() => {
           if (!alive) return;
-          if (qa && ["upgrade", "won", "lost", "boss", "stress"].includes(qa))
+          if (
+            qa &&
+            [
+              "upgrade",
+              "won",
+              "lost",
+              "boss",
+              "stress",
+              "cleaning",
+              "station",
+              "synergy",
+              "route",
+            ].includes(qa)
+          )
             g.current = fixture(qa);
           s.render(g.current, reduced);
           refresh();
@@ -365,6 +404,14 @@ export default function App() {
     setThumb({ x: (x / d) * 34, z: (z / d) * 34 });
   }
   const boss = game.enemies.find((e) => e.kind === "boss");
+  const stationDirection = ["↑", "↗", "→", "↘", "↓", "↙", "←", "↖"][
+    (Math.round(
+      Math.atan2(STATION.x - game.player.x, game.player.z - STATION.z) /
+        (Math.PI / 4),
+    ) +
+      8) %
+      8
+  ];
   return (
     <main data-frame={version}>
       <header className="masthead">
@@ -380,7 +427,7 @@ export default function App() {
         <div className="shift">
           夜勤 00:00—06:00
           <br />
-          <b>第1倉庫</b>
+          <b>倉庫街・中央通路</b>
         </div>
       </header>
       <section className="game-shell" aria-label="ホコリ無双ゲーム">
@@ -428,8 +475,33 @@ export default function App() {
         >
           <div ref={host} className="canvas-host" />
           <div className="floor-label">
-            WAREHOUSE 01<span>KEEP IT CLEAN.</span>
+            NIGHT SHIFT 02<span>MAKE YOUR OWN WAY.</span>
           </div>
+          {loading === 1 &&
+            !error &&
+            (status === "running" || status === "paused") && (
+              <div className="cleaning-hud">
+                <span className="clean-rate">
+                  清掃率{" "}
+                  <b>
+                    {cleaningPercent(game.floor)}
+                    <small>%</small>
+                  </b>
+                </span>
+                <span className={game.routeBoost ? "route active" : "route"}>
+                  {game.routeBoost
+                    ? "清掃ルート ＋18%"
+                    : "掃除した道はスピードUP"}
+                </span>
+                <span className="station-state">
+                  {game.station.active
+                    ? "清掃機 復旧済み・自動清掃中"
+                    : game.station.connected
+                      ? `接続中 ${Math.round((game.station.progress / 2) * 100)}%`
+                      : `清掃機 ${stationDirection} ${Math.ceil(Math.hypot(STATION.x - game.player.x, STATION.z - game.player.z))}m・道をつなごう`}
+                </span>
+              </div>
+            )}
           {boss && (
             <div className="boss-health">
               <b>大掃除のこし</b>
@@ -441,13 +513,15 @@ export default function App() {
           {status === "running" && (
             <>
               <div className="mission">
-                {game.time < 15
-                  ? "移動して、電池を集めよう。"
-                  : game.bossSpawned
-                    ? "ボスを倒して、夜勤を終えよう。"
-                    : game.time < 60
-                      ? "まずは武器を増やそう。"
-                      : "強くなったら、大群もまとめて。"}
+                {game.station.active && game.time < 30
+                  ? "清掃機が復旧！ HP＋20・電池＋5。周囲を自動清掃。"
+                  : game.time < 15
+                    ? "まずは左上の清掃機へ、掃除しながら進もう。"
+                    : game.bossSpawned
+                      ? "ボスを倒して、夜勤を終えよう。"
+                      : game.time < 60
+                        ? "電池で成長。泡＋吸引で連携！"
+                        : "茶色い靴の敵は、道を汚す。先に吸おう。"}
               </div>
               <div
                 className="joystick"
@@ -543,11 +617,17 @@ export default function App() {
                 ) : help ? (
                   <>
                     <span className="eyebrow">夜勤のしおり</span>
-                    <h2>逃げる。拾う。強くなる。</h2>
+                    <h2>掃除した道が、逃げ道になる。</h2>
                     <ol>
                       <li>WASD／矢印キー、またはスティックで移動。</li>
                       <li>攻撃は自動。敵が落とす電池を拾うと成長。</li>
                       <li>レベルアップで3択。武器は最大3つ。</li>
+                      <li>掃除した道を走り直すと移動速度＋18%。</li>
+                      <li>
+                        出発地点から左上の清掃機へ道をつなぐと復旧。HP20＋電池5、周囲を自動清掃。
+                      </li>
+                      <li>泡＋吸引は連鎖攻撃。泡＋モップは幅広い清掃帯。</li>
+                      <li>茶色い靴の敵は道を汚す。設備の復旧は副目標。</li>
                       <li>5分でボス登場。6分までに倒せばクリア！</li>
                     </ol>
                     <p>オレンジの矢印は突進の予告。横へ避けよう。</p>
@@ -559,16 +639,16 @@ export default function App() {
                   <>
                     <span className="stamp">夜勤、出動。</span>
                     <h2>
-                      移動だけで、
+                      掃除して、
                       <br />
-                      倉庫まるごと
+                      つないだ道で
                       <br />
-                      <em>大掃除。</em>
+                      <em>生き残れ。</em>
                     </h2>
                     <p>
                       ちいさなロボ vs ホコリの大群。
                       <br />
-                      電池を集めて、過剰に強くなろう。
+                      掃除した道をつないで、街を取り戻そう。
                     </p>
                     <button className="primary" onClick={start}>
                       おそうじ開始 <span>→</span>
@@ -588,6 +668,11 @@ export default function App() {
                           <span className="choice-number">0{i + 1}</span>
                           <b>{INFO[c].name}</b>
                           <p>{INFO[c].desc}</p>
+                          {synergyHint(game, c) && (
+                            <span className="synergy-hint">
+                              {synergyHint(game, c)}
+                            </span>
+                          )}
                           <span className="choice-level">
                             {WEAPONS.includes(c as Weapon)
                               ? `Lv.${game.weapons[c as keyof Game["weapons"]]} → ${game.weapons[c as keyof Game["weapons"]] + 1}`
@@ -614,7 +699,9 @@ export default function App() {
                       {status === "won" ? "業務完了！" : "本日の業務終了"}
                     </span>
                     <h2>
-                      {status === "won" ? "倉庫、ぴかぴか。" : "また、やろう。"}
+                      {status === "won"
+                        ? "朝が来た。道が残った。"
+                        : "この道は、がんばった証。"}
                     </h2>
                     <p>{game.reason}</p>
                     <div className="results">
@@ -626,6 +713,30 @@ export default function App() {
                         Lv.{game.level}
                         <small>{clock(game.time)} 生存</small>
                       </b>
+                    </div>
+                    <div className="cleaning-results">
+                      <figure>
+                        <CleaningMap floor={game.floor} before />
+                        <figcaption>出動前</figcaption>
+                      </figure>
+                      <div>
+                        <b>
+                          {Math.round(game.floor.cleaned * CELL * CELL)}
+                          <small>m²</small>
+                        </b>
+                        <span>
+                          清掃済み · 全体の{cleaningPercent(game.floor)}%
+                        </span>
+                        <small>
+                          {game.station.active
+                            ? "清掃機 復旧！"
+                            : "清掃機 未復旧"}
+                        </small>
+                      </div>
+                      <figure>
+                        <CleaningMap floor={game.floor} />
+                        <figcaption>今回の足跡</figcaption>
+                      </figure>
                     </div>
                     <p className="result-weapons">
                       {WEAPONS.filter((w) => game.weapons[w])
@@ -659,6 +770,15 @@ export default function App() {
           </div>
           <span>
             {game.xp} / {xpNeeded(game)}
+          </span>
+        </div>
+        <div className="synergy-bar" aria-label="装備の連携">
+          <b>道具の連携</b>
+          <span>
+            {synergies(game).join(" ＋ ") ||
+              (WEAPONS.filter((w) => game.weapons[w]).length === 3
+                ? "連携なし · 次の出動で泡を組み込もう"
+                : "泡＋吸引で連鎖攻撃 ／ 泡＋モップで清掃帯")}
           </span>
         </div>
         <div className="equipment">
@@ -724,7 +844,8 @@ export default function App() {
           <b>開発確認モード（記録なし）</b>
           <span>
             {testFreeze.current ? "時間停止・描画負荷のみ / " : ""}
-            {fps} fps / {game.enemies.length} enemies / x{" "}
+            {fps} fps / {game.enemies.length} enemies / 清掃{" "}
+            {cleaningPercent(game.floor)}% / 連携 {game.comboHits}回 / x{" "}
             {game.player.x.toFixed(1)} z {game.player.z.toFixed(1)}
           </span>
           <button
@@ -745,6 +866,35 @@ export default function App() {
           >
             ボス戦を確認
           </button>
+          <button
+            onClick={() => {
+              clearInput();
+              input.current = { x: -0.8, z: -0.6 };
+            }}
+          >
+            左上へ走る
+          </button>
+          <button
+            onClick={() => {
+              clearInput();
+              input.current = { x: 0.8, z: 0.6 };
+            }}
+          >
+            右下へ走る
+          </button>
+          <button onClick={clearInput}>移動を止める</button>
+          {["cleaning", "station", "synergy"].map((name) => (
+            <button
+              key={name}
+              onClick={() => {
+                g.current = fixture(name);
+                testFreeze.current = false;
+                refresh();
+              }}
+            >
+              {name}を確認
+            </button>
+          ))}
           <button
             onClick={() => {
               g.current = fixture("stress");

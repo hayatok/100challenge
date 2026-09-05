@@ -800,3 +800,199 @@ footer button {
     white-space: normal;
   }
 }
+
+/* v0.2: floor state and tool relationships share the existing ink/mint language. */
+.cleaning-hud {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  right: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  pointer-events: none;
+  z-index: 2;
+  font-size: 12px;
+}
+.clean-rate {
+  background: var(--paper, #f5eddc);
+  border: 2px solid #292d31;
+  padding: 5px 10px;
+  white-space: nowrap;
+}
+.clean-rate b {
+  font-size: 24px;
+  margin-left: 6px;
+}
+.clean-rate small {
+  font-size: 12px;
+}
+.route,
+.station-state {
+  padding: 6px 8px;
+  background: #f5eddc;
+  line-height: 1.5;
+}
+.route.active {
+  background: #68bcb1;
+  font-weight: 800;
+}
+.station-state {
+  margin-left: auto;
+  max-width: 210px;
+  border-left: 4px solid #ed713b;
+}
+.floor-label {
+  display: none;
+}
+.synergy-bar {
+  display: flex;
+  gap: 16px;
+  padding: 9px 16px;
+  background: #d5e7dc;
+  border-top: 2px solid #292d31;
+  font-size: 12px;
+}
+.synergy-bar b {
+  white-space: nowrap;
+}
+.synergy-hint {
+  display: block;
+  padding: 8px;
+  background: #d5e7dc;
+  font-size: 12px;
+  line-height: 1.6;
+  margin: 10px 0;
+}
+.cleaning-results {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  margin: 16px 0;
+  padding: 14px 0;
+  border-block: 1px solid #292d31;
+}
+.cleaning-results figure {
+  margin: 0;
+  text-align: center;
+  font-size: 11px;
+}
+.cleaning-results canvas {
+  width: 100px;
+  height: 100px;
+  display: block;
+  background: #292d31;
+  image-rendering: pixelated;
+}
+.cleaning-results > div {
+  display: grid;
+  text-align: center;
+  gap: 5px;
+}
+.cleaning-results b {
+  font-size: 30px;
+}
+.cleaning-results span,
+.cleaning-results small {
+  font-size: 11px;
+}
+.boss-health {
+  top: 80px;
+}
+.panel:has(.cleaning-results) {
+  max-height: 100%;
+  overflow-y: auto;
+}
+@media (max-width: 600px) {
+  .cleaning-hud {
+    top: 10px;
+    left: 10px;
+    right: 10px;
+    gap: 5px;
+    flex-wrap: wrap;
+    font-size: 10px;
+  }
+  .clean-rate {
+    padding: 3px 6px;
+  }
+  .clean-rate b {
+    font-size: 20px;
+  }
+  .route {
+    font-size: 10px;
+  }
+  .station-state {
+    flex-basis: 100%;
+    max-width: none;
+    margin: 0;
+    padding: 3px 6px;
+  }
+  .synergy-bar {
+    gap: 8px;
+    font-size: 10px;
+    padding: 7px 10px;
+  }
+  .cleaning-results {
+    gap: 10px;
+  }
+  .cleaning-results canvas {
+    width: 76px;
+    height: 76px;
+  }
+  .cleaning-results b {
+    font-size: 24px;
+  }
+  .boss-health {
+    top: 94px;
+  }
+}
+@media (max-width: 600px) {
+  .choices button > :not(.choice-number) {
+    grid-column: 2;
+  }
+  .choice-number {
+    grid-column: 1;
+    grid-row: 1/6;
+  }
+  .choices .synergy-hint {
+    font-size: 10px;
+    line-height: 1.45;
+    padding: 5px 6px;
+    margin: 3px 0;
+  }
+  .upgrade-panel h2 {
+    margin: 8px 0;
+    font-size: 24px;
+  }
+  .upgrade-panel > p {
+    margin: 6px 0 10px;
+  }
+  .upgrade-panel > small {
+    font-size: 9px;
+  }
+}
+@media (max-width: 600px) {
+  .panel:has(.cleaning-results) {
+    padding: 14px;
+  }
+  .panel:has(.cleaning-results) h2 {
+    font-size: 22px;
+    margin: 10px 0;
+  }
+  .panel:has(.cleaning-results) > p {
+    margin: 8px 0 12px;
+    line-height: 1.5;
+  }
+  .panel:has(.cleaning-results) .results {
+    margin: 12px 0;
+  }
+  .cleaning-results {
+    margin: 10px 0;
+    padding: 10px 0;
+  }
+  .cleaning-results canvas {
+    width: 64px;
+    height: 64px;
+  }
+}
