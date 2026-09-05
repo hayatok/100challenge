@@ -1,6 +1,7 @@
 import * as T from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { type Game, type Point } from "./game/simulation";
+import { GRID, EDGE, STATION, DOCK, SCENERY, pointAt } from "./game/cleaning";
 const NAMES = [
   "robot",
   "dust",
@@ -17,6 +18,9 @@ const NAMES = [
   "pallet",
   "crate",
   "fence",
+  "mud",
+  "station",
+  "storefront",
 ] as const;
 type Name = (typeof NAMES)[number];
 type Batch = {
@@ -43,6 +47,32 @@ export class GameScene {
     600,
   );
   shadowCount = 0;
+  dirtData = new Uint8Array(GRID * GRID * 4);
+  dirtTexture = new T.DataTexture(this.dirtData, GRID, GRID);
+  dirt = new T.Mesh(
+    new T.PlaneGeometry(EDGE * 2, EDGE * 2),
+    new T.MeshStandardMaterial({
+      map: this.dirtTexture,
+      transparent: true,
+      roughness: 1,
+      depthWrite: false,
+    }),
+  );
+  floorVersion = -1;
+  floorIdentity?: Game["floor"];
+  lastFloorUpdate = -1;
+  stationRing = new T.Mesh(
+    new T.RingGeometry(1.3, 1.45, 48),
+    new T.MeshBasicMaterial({ color: "#ed713b", side: T.DoubleSide }),
+  );
+  dockRing = new T.Mesh(
+    new T.RingGeometry(1, 1.1, 32),
+    new T.MeshBasicMaterial({ color: "#68bcb1", side: T.DoubleSide }),
+  );
+  stationLight = new T.Mesh(
+    new T.CircleGeometry(0.2, 20),
+    new T.MeshBasicMaterial({ color: "#68bcb1" }),
+  );
   ringGeometry = new T.RingGeometry(0.55, 1, 24);
   foamGeometry = new T.CircleGeometry(1, 32);
   suctionGeometry = Array.from({ length: 5 }, (_, i) => {
@@ -66,10 +96,23 @@ export class GameScene {
     host.append(this.renderer.domElement);
     this.renderer.domElement.setAttribute("aria-label", "倉庫の3Dゲーム画面");
     this.renderer.domElement.addEventListener("webglcontextlost", this.onLost);
+    this.dirtTexture.colorSpace = T.SRGBColorSpace;
+    this.dirtTexture.magFilter = T.LinearFilter;
+    this.dirt.rotation.x = -Math.PI / 2;
+    this.dirt.position.y = 0.015;
+    this.dirt.renderOrder = 1;
+    this.scene.add(this.dirt);
+    this.stationRing.rotation.x = this.dockRing.rotation.x = -Math.PI / 2;
+    this.stationRing.position.set(STATION.x, 0.035, STATION.z);
+    this.dockRing.position.set(DOCK.x, 0.036, DOCK.z);
+    this.stationLight.rotation.x = -Math.PI / 2;
+    this.stationLight.position.set(STATION.x, 0.04, STATION.z + 1.0);
+    this.scene.add(this.stationRing, this.dockRing, this.stationLight);
+    this.shadows.renderOrder = 2;
     this.shadows.frustumCulled = false;
     this.scene.add(this.shadows);
-    this.scene.add(new T.HemisphereLight(0xffffff, 0x858573, 1.0));
-    const sun = new T.DirectionalLight(0xffffff, 0.8);
+    this.scene.add(new T.HemisphereLight(0xffffff, 0x75718a, 1.8));
+    const sun = new T.DirectionalLight(0xfff5e7, 2.0);
     sun.position.set(-6, 15, 10);
     this.scene.add(sun);
     this.observer = new ResizeObserver(() => this.resize());
@@ -125,10 +168,9 @@ export class GameScene {
         gltf.scene.traverse((o) => {
           if (o instanceof T.Mesh) {
             const src = o.material as T.MeshStandardMaterial;
-            const mat = new T.MeshLambertMaterial({
-              color: src.color,
-              flatShading: true,
-            });
+            // Preserve the reviewed Blender material, including roughness and authored normals.
+            const mat = src.clone();
+            mat.envMapIntensity = 0.4;
             const mesh = new T.InstancedMesh(o.geometry, mat, batch.capacity);
             mesh.count = 0;
             mesh.frustumCulled = false;
@@ -189,20 +231,60 @@ export class GameScene {
     g.view = { halfX: this.halfX, halfZ: this.halfZ };
     for (const b of this.batches.values()) b.count = 0;
     this.shadowCount = 0;
-    const shadow = (p: Point, r: number) => {
+    const shadow = (p: Point, r: number, depth = r) => {
       this.dummy.position.set(p.x, 0.025, p.z);
       this.dummy.rotation.set(-Math.PI / 2, 0, 0);
-      this.dummy.scale.set(r, r, 1);
+      this.dummy.scale.set(r, depth, 1);
       this.dummy.updateMatrix();
       this.shadows.setMatrixAt(this.shadowCount++, this.dummy.matrix);
     };
     shadow(g.player, 0.8);
+    shadow(STATION, 1.0);
+    shadow({ x: -7, z: -11 }, 4.2, 1.65);
     for (const e of g.enemies) shadow(e, e.kind === "boss" ? 1.6 : 0.6);
     this.shadows.count = this.shadowCount;
     this.shadows.instanceMatrix.needsUpdate = true;
     const p = g.player;
-    this.camera.position.set(p.x, 24, p.z + 18);
-    this.camera.lookAt(p.x, 0, p.z);
+    if (
+      this.floorIdentity !== g.floor ||
+      (this.floorVersion !== g.floor.version &&
+        Math.abs(g.time - this.lastFloorUpdate) > 0.09)
+    ) {
+      this.floorIdentity = g.floor;
+      this.floorVersion = g.floor.version;
+      this.lastFloorUpdate = g.time;
+      for (let i = 0; i < g.floor.cells.length; i++) {
+        const q = pointAt(i),
+          noise = ((i * 37) % 11) - 5;
+        // Texture bottom row maps to +Z after plane rotation: reverse the simulation rows.
+        const j = ((GRID - 1 - Math.floor(i / GRID)) * GRID + (i % GRID)) * 4;
+        this.dirtData[j] = 125 + noise;
+        this.dirtData[j + 1] = 118 + noise;
+        this.dirtData[j + 2] = 139 + noise;
+        this.dirtData[j + 3] =
+          Math.hypot(q.x, q.z) > EDGE || g.floor.cells[i] ? 0 : 245;
+      }
+      this.dirtTexture.needsUpdate = true;
+    }
+    (this.stationRing.material as T.MeshBasicMaterial).color.set(
+      g.station.active
+        ? "#68bcb1"
+        : g.station.connected
+          ? "#f5eddc"
+          : "#ed713b",
+    );
+    this.stationLight.visible = g.station.active;
+    this.put("station", STATION, 0, 1, 0, g.station.active ? WHITE : INACTIVE);
+    this.put(
+      "storefront",
+      SCENERY[0],
+      0,
+      1,
+      0,
+      g.station.active ? WHITE : SHOP_CLOSED,
+    );
+    this.camera.position.set(p.x, 24, p.z + 15.5);
+    this.camera.lookAt(p.x, 0, p.z - 2.5);
     // All scenery geometry comes from the Blender library. Checker tint gives the floor scale.
     for (let x = -8; x <= 8; x++)
       for (let z = -8; z <= 8; z++)
@@ -303,7 +385,13 @@ export class GameScene {
       material.color.set(
         e.kind === "hit" ? "#ed713b" : e.kind === "pop" ? "#9282ae" : "#68bcb1",
       );
-      material.opacity = e.kind === "foam" ? 0.3 : (1 - t) * 0.6;
+      material.opacity =
+        e.kind === "foam"
+          ? 0.35
+          : e.kind === "trail"
+            ? (1 - t) * 0.18
+            : (1 - t) * 0.6;
+      if (e.kind === "chain") material.color.set("#f5eddc");
       mesh.rotation.set(-Math.PI / 2, 0, 0);
       mesh.geometry = e.kind === "foam" ? this.foamGeometry : this.ringGeometry;
       if (e.kind === "suck") {
@@ -357,6 +445,7 @@ export class GameScene {
     );
     geometries.forEach((g) => g.dispose());
     materials.forEach((m) => m.dispose());
+    this.dirtTexture.dispose();
     this.renderer.dispose();
     this.renderer.domElement.remove();
   }
@@ -364,5 +453,7 @@ export class GameScene {
 const WHITE = new T.Color("white"),
   HURT = new T.Color("#ffb599"),
   WARNING = new T.Color("#ffd39a"),
-  FLOOR_A = new T.Color("#d1d4c7"),
-  FLOOR_B = new T.Color("#e1e2d4");
+  INACTIVE = new T.Color("#b5a6b1"),
+  SHOP_CLOSED = new T.Color("#bfc0c6"),
+  FLOOR_A = new T.Color("#e2e7dc"),
+  FLOOR_B = new T.Color("#fff4dc");

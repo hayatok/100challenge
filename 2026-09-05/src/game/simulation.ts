@@ -1,10 +1,19 @@
+import {
+  createFloor,
+  cleanAt,
+  paintFloor,
+  connectedToStation,
+  STATION,
+  resolveScenery,
+  type Floor,
+} from "./cleaning";
 export const STEP = 1 / 60;
 export const LIMIT = 360;
 export const ARENA = 28;
 export type Weapon = "nozzle" | "mop" | "spray" | "disc";
 export type Upgrade =
   Weapon | "speed" | "magnet" | "health" | "haste" | "repair";
-export type EnemyKind = "dust" | "dash" | "box" | "boss";
+export type EnemyKind = "dust" | "dash" | "box" | "mud" | "boss";
 export type Status =
   "ready" | "running" | "upgrade" | "paused" | "won" | "lost";
 export type Point = { x: number; z: number };
@@ -30,7 +39,7 @@ export type Shot = Point & {
 };
 export type Effect = Point & {
   id: number;
-  kind: "hit" | "suck" | "foam" | "pop";
+  kind: "hit" | "suck" | "foam" | "pop" | "chain" | "trail";
   life: number;
   max: number;
   radius: number;
@@ -62,6 +71,16 @@ export type Game = {
   reason: string;
   view: { halfX: number; halfZ: number };
   cap: number;
+  floor: Floor;
+  routeBoost: boolean;
+  station: {
+    active: boolean;
+    connected: boolean;
+    progress: number;
+    clock: number;
+    age: number;
+  };
+  comboHits: number;
 };
 export const INFO: Record<Upgrade, { name: string; desc: string }> = {
   nozzle: {
@@ -105,6 +124,10 @@ export function createGame(seed = 20260905): Game {
     reason: "",
     view: { halfX: 17, halfZ: 12 },
     cap: 200,
+    floor: createFloor(),
+    routeBoost: false,
+    station: { active: false, connected: false, progress: 0, clock: 0, age: 0 },
+    comboHits: 0,
   };
 }
 export function random(g: Game) {
@@ -160,8 +183,15 @@ export function spawnEnemy(g: Game, kind: EnemyKind): Enemy {
     (g.view.halfZ + 3) / Math.max(0.001, Math.abs(dz)),
   );
   const hp =
-    (kind === "boss" ? 950 : kind === "box" ? 36 : kind === "dash" ? 13 : 8) *
-    (kind === "boss" ? 1 : 1 + g.time / 300);
+    (kind === "boss"
+      ? 950
+      : kind === "box"
+        ? 36
+        : kind === "mud"
+          ? 24
+          : kind === "dash"
+            ? 13
+            : 8) * (kind === "boss" ? 1 : 1 + g.time / 300);
   const e: Enemy = {
     id: g.id++,
     kind,
@@ -201,11 +231,12 @@ function damage(g: Game, e: Enemy, n: number, knock = 0.08) {
     effect(g, "pop", e, e.kind === "boss" ? 2 : 0.6, 0.35);
     if (e.kind === "boss") {
       g.status = "won";
-      g.reason = "倉庫、ぴかぴか。";
+      g.reason = "夜勤完了。朝を迎えよう。";
       return;
     }
     // Merge overflow into an existing battery so XP is never silently discarded.
-    const value = e.kind === "box" ? 4 : e.kind === "dash" ? 2 : 1;
+    const value =
+      e.kind === "box" ? 4 : e.kind === "mud" ? 3 : e.kind === "dash" ? 2 : 1;
     if (g.pickups.length < 240)
       g.pickups.push({ id: g.id++, x: e.x, z: e.z, value, heal: false });
     else {
@@ -232,18 +263,32 @@ function attack(g: Game, dt: number) {
   for (const w of WEAPONS) g.cooldown[w] -= dt;
   const h = 1 - g.boosts.haste * 0.1;
   const n = g.weapons.nozzle;
+  const vacuumFoam = n > 0 && g.weapons.spray > 0;
   if (n && target && dist(target, p) < 4 + n * 0.45 && g.cooldown.nozzle <= 0) {
     g.cooldown.nozzle = 0.55 * h;
     effect(g, "suck", p, 4 + n * 0.45, 0.2, g.angle);
     let count = 0;
     for (const e of nearest) {
+      if (e.hp <= 0) continue;
       if (dist(e, p) > 4 + n * 0.45) break;
       const da = Math.atan2(
         Math.sin(Math.atan2(e.x - p.x, e.z - p.z) - g.angle),
         Math.cos(Math.atan2(e.x - p.x, e.z - p.z) - g.angle),
       );
-      if (Math.abs(da) < 0.45 + n * 0.09 && count++ < 2 + n * 2)
-        damage(g, e, 6 + n * 3, 0.18);
+      if (Math.abs(da) < 0.45 + n * 0.09 && count++ < 2 + n * 2) {
+        const foamed =
+          vacuumFoam &&
+          g.effects.some((f) => f.kind === "foam" && dist(f, e) < f.radius);
+        damage(g, e, 6 + n * 3, foamed ? -0.65 : 0.18);
+        if (foamed) {
+          g.comboHits++;
+          effect(g, "chain", e, 1.3, 0.35);
+          paintFloor(g.floor, e, 1.3);
+          for (const other of nearest)
+            if (other.hp > 0 && dist(other, e) < 1.3)
+              damage(g, other, 4 + n, 0);
+        }
+      }
     }
   }
   const m = g.weapons.mop;
@@ -255,6 +300,8 @@ function attack(g: Game, dt: number) {
         x: p.x + Math.sin(a) * (1.6 + m * 0.2),
         z: p.z + Math.cos(a) * (1.6 + m * 0.2),
       };
+      paintFloor(g.floor, mp, g.weapons.spray ? 1.65 : 0.65);
+      if (g.weapons.spray) effect(g, "trail", mp, 1.65, 0.35);
       for (const e of nearest)
         if (dist(e, mp) < 1) damage(g, e, 3 + m * 1.2, 0.14);
     }
@@ -325,12 +372,21 @@ export function tick(g: Game, input: Point, dt = STEP) {
     return;
   }
   g.invincible = Math.max(0, g.invincible - dt);
-  const length = Math.hypot(input.x, input.z),
-    speed = 4.2 * (1 + g.boosts.speed * 0.12);
+  const length = Math.hypot(input.x, input.z);
+  g.routeBoost =
+    length > 0 &&
+    cleanAt(g.floor, g.player) &&
+    cleanAt(g.floor, {
+      x: g.player.x + (input.x / length) * 1.8,
+      z: g.player.z + (input.z / length) * 1.8,
+    });
+  const speed = 4.2 * (1 + g.boosts.speed * 0.12) * (g.routeBoost ? 1.18 : 1);
   if (length) {
     g.player.x += (input.x / Math.max(1, length)) * speed * dt;
     g.player.z += (input.z / Math.max(1, length)) * speed * dt;
   }
+  resolveScenery(g.player);
+  paintFloor(g.floor, g.player, 0.95);
   const radius = Math.hypot(g.player.x, g.player.z);
   if (radius > ARENA) {
     g.player.x *= ARENA / radius;
@@ -342,11 +398,13 @@ export function tick(g: Game, input: Point, dt = STEP) {
     const r = random(g);
     spawnEnemy(
       g,
-      g.time > 100 && r < 0.2
-        ? "box"
-        : g.time > 45 && r < 0.4
-          ? "dash"
-          : "dust",
+      g.time > 45 && r < 0.14
+        ? "mud"
+        : g.time > 100 && r < 0.3
+          ? "box"
+          : g.time > 45 && r < 0.4
+            ? "dash"
+            : "dust",
     );
   }
   if (g.time >= 300 && !g.bossSpawned) {
@@ -359,13 +417,15 @@ export function tick(g: Game, input: Point, dt = STEP) {
     e.clock -= dt;
     const d = Math.max(0.0001, dist(e, g.player));
     let v =
-      e.kind === "box"
-        ? 0.8
-        : e.kind === "dash"
-          ? 1.8
-          : e.kind === "boss"
-            ? 1.2
-            : 1.15 + g.time * 0.001;
+      e.kind === "mud"
+        ? 1.6
+        : e.kind === "box"
+          ? 0.8
+          : e.kind === "dash"
+            ? 1.8
+            : e.kind === "boss"
+              ? 1.2
+              : 1.15 + g.time * 0.001;
     if (e.kind === "dash" || e.kind === "boss") {
       if (e.phase === 0 && e.clock <= 0) {
         e.phase = 1;
@@ -390,6 +450,11 @@ export function tick(g: Game, input: Point, dt = STEP) {
       e.angle = Math.atan2(g.player.x - e.x, g.player.z - e.z);
     e.x += Math.sin(e.angle) * v * dt;
     e.z += Math.cos(e.angle) * v * dt;
+    resolveScenery(e);
+    if (e.kind === "mud" && e.clock <= 0) {
+      paintFloor(g.floor, e, 1.0, false);
+      e.clock = 0.45;
+    }
     if (d < (e.kind === "boss" ? 1.8 : 1) && g.invincible <= 0) {
       g.hp = Math.max(0, g.hp - (e.kind === "boss" ? 25 : 10));
       g.invincible = 1;
@@ -402,6 +467,7 @@ export function tick(g: Game, input: Point, dt = STEP) {
     return;
   }
   attack(g, dt);
+  updateStation(g, dt);
   g.enemies = g.enemies.filter((e) => e.hp > 0);
   g.effects = g.effects.filter((f) => (f.life -= dt) > 0);
   if (g.status !== "running") return;
@@ -420,4 +486,44 @@ export function tick(g: Game, input: Point, dt = STEP) {
     return true;
   });
   levelUp(g);
+}
+
+export function updateStation(g: Game, dt: number) {
+  if (g.status !== "running") return;
+  const s = g.station;
+  s.clock -= dt;
+  if (s.clock <= 0) {
+    s.clock = 0.2;
+    if (!s.active) s.connected = connectedToStation(g.floor);
+    if (s.active) paintFloor(g.floor, STATION, Math.min(7, 2 + s.age * 0.15));
+  }
+  if (s.active) s.age += dt;
+  else {
+    s.progress = s.connected ? Math.min(2, s.progress + dt) : 0;
+    if (s.progress >= 2) {
+      s.active = true;
+      s.age = 0;
+      g.hp = Math.min(g.maxHp, g.hp + 20);
+      g.xp += 5;
+      paintFloor(g.floor, STATION, 2);
+      effect(g, "chain", STATION, 3, 0.6);
+    }
+  }
+}
+export function synergies(g: Game) {
+  return [
+    ...(g.weapons.nozzle && g.weapons.spray ? ["泡バキューム"] : []),
+    ...(g.weapons.mop && g.weapons.spray ? ["泡の滑走路"] : []),
+  ];
+}
+export function synergyHint(g: Game, choice: Upgrade) {
+  if (choice === "spray")
+    return g.weapons.mop
+      ? "連携：モップが幅広い清掃帯を作る"
+      : "連携：吸引で泡の敵を引き込み、周囲も攻撃";
+  if (choice === "mop" && g.weapons.spray)
+    return "連携：泡とモップで幅広い清掃帯";
+  if (choice === "nozzle" && g.weapons.spray)
+    return "連携：泡の敵を引き込み、周囲も攻撃";
+  return "";
 }

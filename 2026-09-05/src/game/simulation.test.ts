@@ -210,7 +210,7 @@ it("deterministically simulates complete runs with finite bounded state", () => 
       "repair",
     ];
     for (let frame = 0; frame < 60 * 361; frame++) {
-      if ((g.status as string) === "upgrade") {
+      while ((g.status as string) === "upgrade") {
         choose(
           g,
           [...g.choices].sort(
@@ -243,4 +243,65 @@ it("deterministically simulates complete runs with finite bounded state", () => 
   }
   console.log("BALANCE_RUNS", JSON.stringify(reports));
   expect(wins).toBeGreaterThan(0);
+}, 30000);
+
+it("supports both foam builds through full runs with no hidden boosts", () => {
+  const reports = [];
+  for (const build of ["vacuum", "runway"] as const) {
+    let wins = 0;
+    for (const seed of [11, 23, 42]) {
+      const g = createGame(seed);
+      g.status = "running";
+      const order: Upgrade[] =
+        build === "vacuum"
+          ? [
+              "spray",
+              "nozzle",
+              "disc",
+              "haste",
+              "magnet",
+              "health",
+              "speed",
+              "mop",
+              "repair",
+            ]
+          : [
+              "spray",
+              "mop",
+              "nozzle",
+              "haste",
+              "magnet",
+              "health",
+              "speed",
+              "disc",
+              "repair",
+            ];
+      for (let frame = 0; frame < 60 * 361; frame++) {
+        while ((g.status as string) === "upgrade")
+          choose(
+            g,
+            [...g.choices].sort(
+              (a, b) => order.indexOf(a) - order.indexOf(b),
+            )[0],
+          );
+        if (g.status !== "running") break;
+        tick(g, bot(g));
+      }
+      expect(["won", "lost"]).toContain(g.status);
+      expect(g.floor.cleaned).toBeGreaterThan(0);
+      expect(g.floor.cleaned).toBeLessThanOrEqual(g.floor.total);
+      if ((g.status as string) === "won") wins++;
+      reports.push({
+        build,
+        seed,
+        status: g.status,
+        time: Math.round(g.time),
+        kills: g.kills,
+        clean: Math.round((g.floor.cleaned / g.floor.total) * 100),
+        combos: g.comboHits,
+      });
+    }
+    expect(wins, build).toBeGreaterThan(0);
+  }
+  console.log("V2_BUILD_RUNS", JSON.stringify(reports));
 }, 30000);

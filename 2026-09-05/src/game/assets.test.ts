@@ -2,10 +2,10 @@ import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { expect, it } from "vitest";
 const root = fileURLToPath(new URL("../../public/models/", import.meta.url));
-it("ships all fifteen valid self-contained Blender GLBs at local origin", () => {
+it("ships all eighteen valid self-contained Blender GLBs at local origin", () => {
   const manifest = JSON.parse(readFileSync(root + "manifest.json", "utf8"));
   expect(manifest.generator).toContain("Blender");
-  expect(Object.keys(manifest.assets)).toHaveLength(15);
+  expect(Object.keys(manifest.assets)).toHaveLength(18);
   for (const asset of Object.values(manifest.assets) as {
     file: string;
     bytes: number;
