@@ -1,0 +1,44 @@
+name: Verify LOOP EATER
+on:
+  pull_request:
+    paths: ['2026-09-05-2/**', '.github/workflows/loop-eater.yml']
+  push:
+    branches: [main]
+    paths: ['2026-09-05-2/**', '.github/workflows/loop-eater.yml']
+permissions:
+  contents: read
+concurrency:
+  group: loop-eater-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: 2026-09-05-2
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+      - uses: actions/cache@v4
+        with:
+          path: |
+            2026-09-05-2/.cache
+            ~/.local/share/godot/export_templates/4.7.2.stable
+          key: loop-eater-godot-4.7.2-${{ runner.os }}
+      - run: npm ci
+      - run: npm run setup
+      - run: npm run check
+      - run: npm run build:mac
+      - uses: actions/upload-artifact@v4
+        with:
+          name: loop-eater-web
+          path: 2026-09-05-2/dist
+      - name: Package native app preserving permissions
+        run: tar -czf builds/loop-eater-macos.tar.gz -C builds/macos 'LOOP EATER.app'
+      - uses: actions/upload-artifact@v4
+        with:
+          name: loop-eater-macos
+          path: 2026-09-05-2/builds/loop-eater-macos.tar.gz

@@ -1,0 +1,27 @@
+{
+  "source": "art/source/yofukashi-kit.blend",
+  "source_sha256": "0149136f45e145f6563bfc14709bf20bdf41baebe790879d3b86bfdc28ddc7df",
+  "blender": "5.2.1 LTS",
+  "models": {
+    "kohaku": {
+      "triangles": 3268,
+      "bytes": 247048
+    },
+    "call_bit": {
+      "triangles": 732,
+      "bytes": 56968
+    },
+    "stall": {
+      "triangles": 988,
+      "bytes": 79884
+    },
+    "building": {
+      "triangles": 396,
+      "bytes": 33220
+    },
+    "speaker": {
+      "triangles": 468,
+      "bytes": 36608
+    }
+  }
+}

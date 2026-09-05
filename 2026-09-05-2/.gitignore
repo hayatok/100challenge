@@ -1,0 +1,7 @@
+node_modules/
+dist/
+builds/
+.cache/
+*.blend1
+*.blend2
+.DS_Store
