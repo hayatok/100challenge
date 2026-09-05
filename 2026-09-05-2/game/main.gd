@@ -1,307 +1,321 @@
-extends Node3D
-const Sim = preload("res://core/simulation.gd")
-const Overlay = preload("res://overlay.gd")
-const INK = Color("142432")
-const CREAM = Color("fff0cd")
-const PINK = Color("ed7183")
-const CYAN = Color("66e4e0")
-var sim = Sim.new()
-var camera: Camera3D
-var world_art: Node3D
-var player_model: Node3D
-var enemy_multimesh: MultiMesh
-var enemy_basis = Transform3D.IDENTITY
-var ui: Control
-var overlay: Control
+extends Node2D
+const Concert=preload("res://core/concert.gd")
+const Records=preload("res://core/records.gd")
+const Art=preload("res://art.gd")
+const Stage=preload("res://stage_view.gd")
+const INK=Color("111d2b")
+const PAPER=Color("fff1d5")
+const MINT=Color("93e3d1")
+const CORAL=Color("ed7a83")
+var font: Font=preload("res://assets/fonts/NotoSansCJKjp-Medium.otf")
+var art=Art.new()
+var sim=Concert.new()
+var record=Records.load_record()
+var view
 var hud: Control
 var menu: Control
-var hp_bar: ProgressBar
-var xp_bar: ProgressBar
-var timer_label: Label
-var stats_label: Label
-var notice_label: Label
-var loadout_label: Label
-var menu_state = ""
-var ui_font: Font = preload("res://assets/fonts/NotoSansCJKjp-Medium.otf")
-var reduced = false
-var sound_enabled = true
-var music: AudioStreamPlayer
-var chime: AudioStreamPlayer
-var last_event = 0
-var last_level = 0
-var best_record = 0
-var save_ok = true
-var touch_active = false
-var touch_origin = Vector2.ZERO
-var touch_position = Vector2.ZERO
-var qa_mode = ""
-var qa_route: Array = []
-var qa_index = 0
-var render_frames: Array = []
-var simulation_us: Array = []
-var metric_clock = 0.0
+var health: ProgressBar
+var experience: ProgressBar
+var boss_health: ProgressBar
+var hp_text: Label
+var level_text: Label
+var time_text: Label
+var score_text: Label
+var hint: Label
+var boss_text: Label
+var banner: Label
+var menu_stamp=""
+var mouse_goal=Vector2(-1,-1)
+var toast_time=0.0
+var save_ok=true
+var qa=""
+var qa_index=0
+var log_clock=0.0
+var tone_cache: Dictionary={}
+var sfx: AudioStreamPlayer
+var tone_cooldown=0.0
+var capture_path=""
+var capture_after=2.0
+var wall_clock=0.0
+var captured=false
+var qa_route=[Vector2(430,490),Vector2(430,310),Vector2(680,310),Vector2(680,540),Vector2(560,540),Vector2(560,450)]
 
 func _ready() -> void:
-	_setup_input()
-	_setup_world()
-	_setup_audio()
-	_load_record()
-	_setup_ui()
-	get_window().focus_exited.connect(_focus_lost)
-	# Debug-only fixtures. Release exports ignore both command-line and URL QA requests.
+	setup_input()
+	view=Stage.new();view.sim=sim;view.art=art;view.reduced=record.reduced;add_child(view)
+	var layer=CanvasLayer.new();add_child(layer)
+	hud=Control.new();hud.size=Vector2(1280,720);hud.mouse_filter=Control.MOUSE_FILTER_IGNORE;layer.add_child(hud)
+	menu=Control.new();menu.size=Vector2(1280,720);menu.mouse_filter=Control.MOUSE_FILTER_IGNORE;layer.add_child(menu)
+	setup_hud()
+	sfx=AudioStreamPlayer.new();sfx.volume_db=-19;add_child(sfx)
+	get_window().focus_exited.connect(func():
+		mouse_goal=Vector2(-1,-1)
+		if capture_path.is_empty(): sim.pause())
+	for arg in OS.get_cmdline_user_args():
+		if OS.is_debug_build() and arg.begins_with("--qa="): qa=arg.trim_prefix("--qa=")
+		if arg.begins_with("--capture="): capture_path=arg.trim_prefix("--capture=")
+		if arg.begins_with("--capture-after="): capture_after=float(arg.trim_prefix("--capture-after="))
 	if OS.is_debug_build():
-		print("LOOP_RENDER ",RenderingServer.get_current_rendering_method())
-		for arg in OS.get_cmdline_user_args():
-			if arg.begins_with("--qa="):
-				qa_mode = arg.trim_prefix("--qa=")
 		if OS.has_feature("web"):
-			var value = JavaScriptBridge.eval("new URLSearchParams(location.search).get('qa') || ''")
-			if value != null:
-				qa_mode = str(value)
-		if not qa_mode.is_empty():
-			_apply_fixture(qa_mode)
-	_refresh_menu()
+			var value=JavaScriptBridge.eval("new URLSearchParams(location.search).get('qa') || ''")
+			if value!=null: qa=str(value)
+		if not qa.is_empty(): fixture()
+	refresh_menu()
+	print("LOOP EATER 2D / ",RenderingServer.get_current_rendering_method())
 
-func _setup_input() -> void:
-	var bindings = {"move_left":[KEY_A,KEY_LEFT],"move_right":[KEY_D,KEY_RIGHT],"move_up":[KEY_W,KEY_UP],"move_down":[KEY_S,KEY_DOWN]}
-	for action in bindings:
-		InputMap.add_action(action,0.2)
-		for key in bindings[action]:
-			var e = InputEventKey.new(); e.physical_keycode = key; InputMap.action_add_event(action,e)
-	var axes = {"move_left":[JOY_AXIS_LEFT_X,-1.0],"move_right":[JOY_AXIS_LEFT_X,1.0],"move_up":[JOY_AXIS_LEFT_Y,-1.0],"move_down":[JOY_AXIS_LEFT_Y,1.0]}
-	for action in axes:
-		var e = InputEventJoypadMotion.new();e.axis=axes[action][0];e.axis_value=axes[action][1];InputMap.action_add_event(action,e)
+func setup_input() -> void:
+	var keys={"left":[KEY_A,KEY_LEFT],"right":[KEY_D,KEY_RIGHT],"up":[KEY_W,KEY_UP],"down":[KEY_S,KEY_DOWN]}
+	var axes={"left":[JOY_AXIS_LEFT_X,-1.0],"right":[JOY_AXIS_LEFT_X,1.0],"up":[JOY_AXIS_LEFT_Y,-1.0],"down":[JOY_AXIS_LEFT_Y,1.0]}
+	for key in keys:
+		var action="walk_"+key
+		InputMap.add_action(action,0.22)
+		for code in keys[key]:
+			var e=InputEventKey.new();e.physical_keycode=code;InputMap.action_add_event(action,e)
+		var joy=InputEventJoypadMotion.new();joy.axis=axes[key][0];joy.axis_value=axes[key][1];InputMap.action_add_event(action,joy)
 
-func _setup_world() -> void:
-	world_art = preload("res://world_art.gd").new()
-	add_child(world_art)
-	world_art.build()
-	player_model = world_art.player
-	camera = world_art.camera
-	enemy_multimesh = MultiMesh.new()
-	enemy_multimesh.transform_format = MultiMesh.TRANSFORM_3D
-	enemy_multimesh.mesh = world_art.enemy_mesh
-	enemy_basis = world_art.enemy_basis
-	enemy_multimesh.instance_count = Sim.CAP
-	enemy_multimesh.visible_instance_count = 0
-	var crowd = MultiMeshInstance3D.new()
-	crowd.multimesh = enemy_multimesh
-	add_child(crowd)
+func flat(color: Color, border: Color = Color.TRANSPARENT, margin: int = 12) -> StyleBoxFlat:
+	var box=StyleBoxFlat.new();box.bg_color=color;box.border_color=border;box.set_border_width_all(1 if border.a>0 else 0);box.set_content_margin_all(margin)
+	box.corner_radius_top_left=6;box.corner_radius_top_right=6;box.corner_radius_bottom_left=6;box.corner_radius_bottom_right=6
+	return box
 
-func _setup_audio() -> void:
-	music=AudioStreamPlayer.new();music.stream=preload("res://assets/audio/rehearsal.wav");music.volume_db=-15;add_child(music)
-	music.finished.connect(func():
-		if sim.state == "running" and sound_enabled: music.play())
-	chime=AudioStreamPlayer.new();chime.stream=preload("res://assets/audio/loop.wav");chime.volume_db=-8;add_child(chime)
+func panel(parent: Control, rect: Rect2, color: Color) -> Panel:
+	var p=Panel.new();p.position=rect.position;p.size=rect.size;p.add_theme_stylebox_override("panel",flat(color));p.mouse_filter=Control.MOUSE_FILTER_IGNORE;parent.add_child(p);return p
 
-func _style(bg: Color, border: Color = INK, width: int = 3) -> StyleBoxFlat:
-	var s=StyleBoxFlat.new();s.bg_color=bg;s.border_color=border;s.set_border_width_all(width);s.set_content_margin_all(16);s.shadow_color=Color(0,0,0,.4);s.shadow_size=5;s.shadow_offset=Vector2(4,5);return s
+func label(parent: Control, text: String, rect: Rect2, size_px: int = 20, color: Color = PAPER, alignment: int = HORIZONTAL_ALIGNMENT_LEFT) -> Label:
+	var l=Label.new();l.text=text;l.position=rect.position;l.size=rect.size;l.add_theme_font_override("font",font);l.add_theme_font_size_override("font_size",size_px);l.add_theme_color_override("font_color",color)
+	l.horizontal_alignment=alignment;l.vertical_alignment=VERTICAL_ALIGNMENT_CENTER;l.mouse_filter=Control.MOUSE_FILTER_IGNORE;parent.add_child(l);return l
 
-func _focus_style() -> StyleBoxFlat:
-	var s=StyleBoxFlat.new();s.draw_center=false;s.border_color=CREAM;s.set_border_width_all(3);return s
+func button(parent: Control, text: String, rect: Rect2, action: Callable, primary: bool = false) -> Button:
+	var b=Button.new();b.text=text;b.position=rect.position;b.size=rect.size;b.add_theme_font_override("font",font);b.add_theme_font_size_override("font_size",21)
+	b.add_theme_color_override("font_focus_color",INK if primary else PAPER);b.add_theme_color_override("font_color",INK if primary else PAPER);b.add_theme_color_override("font_hover_color",INK if primary else PAPER);b.add_theme_color_override("font_pressed_color",INK)
+	b.add_theme_stylebox_override("normal",flat(MINT if primary else Color("223546"),MINT if primary else Color("506371")))
+	b.add_theme_stylebox_override("hover",flat(Color("bcf5e4") if primary else Color("354b5e"),PAPER))
+	b.add_theme_stylebox_override("pressed",flat(CORAL,PAPER))
+	b.add_theme_stylebox_override("focus",flat(Color(0,0,0,0),CORAL))
+	b.pressed.connect(action);parent.add_child(b);return b
 
-func _bar_style(color: Color) -> StyleBoxFlat:
-	var b=StyleBoxFlat.new();b.bg_color=color;return b
+func texture(parent: Control, key: String, rect: Rect2, region: Rect2 = Rect2()) -> TextureRect:
+	var t=TextureRect.new();t.position=rect.position;t.size=rect.size;t.expand_mode=TextureRect.EXPAND_IGNORE_SIZE;t.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_CENTERED;t.mouse_filter=Control.MOUSE_FILTER_IGNORE
+	if region.has_area(): t.texture=art.atlas(key,region);t.material=art.key_material
+	else: t.texture=art.textures.get(key)
+	parent.add_child(t);return t
 
-func _label(text: String, size_px: int = 20, color: Color = CREAM) -> Label:
-	var l=Label.new();l.text=text;l.add_theme_font_size_override("font_size",size_px);l.add_theme_color_override("font_color",color);return l
+func icon(parent: Control, index: int, rect: Rect2) -> void:
+	texture(parent,"fx",rect,Rect2((index%4)*384,(index/4)*341,384,341))
 
-func _button(text: String, callback: Callable, color: Color = CYAN) -> Button:
-	var b=Button.new();b.text=text;b.custom_minimum_size.y=52;b.add_theme_color_override("font_color",INK);b.add_theme_color_override("font_hover_color",INK);b.add_theme_color_override("font_pressed_color",INK);b.add_theme_color_override("font_focus_color",INK)
-	b.add_theme_stylebox_override("normal",_style(color));b.add_theme_stylebox_override("hover",_style(color.lightened(.12),CREAM));b.add_theme_stylebox_override("pressed",_style(color.darkened(.1)));b.add_theme_stylebox_override("focus",_focus_style());b.pressed.connect(callback);return b
+func bar(parent: Control, rect: Rect2, color: Color) -> ProgressBar:
+	var b=ProgressBar.new();b.add_theme_font_size_override("font_size",1);b.position=rect.position;b.size=rect.size;b.show_percentage=false;b.mouse_filter=Control.MOUSE_FILTER_IGNORE
+	b.add_theme_stylebox_override("background",flat(Color("26394b"),Color.TRANSPARENT,0));b.add_theme_stylebox_override("fill",flat(color,Color.TRANSPARENT,0));parent.add_child(b);b.size=rect.size;return b
 
-func _setup_ui() -> void:
-	var canvas=CanvasLayer.new();add_child(canvas)
-	ui=Control.new();ui.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT);ui.mouse_filter=Control.MOUSE_FILTER_IGNORE
-	var theme=Theme.new();theme.default_font=ui_font;theme.default_font_size=20;ui.theme=theme;canvas.add_child(ui)
-	overlay=Overlay.new();overlay.host=self;overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT);overlay.mouse_filter=Control.MOUSE_FILTER_IGNORE;ui.add_child(overlay)
-	hud=Control.new();hud.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT);hud.mouse_filter=Control.MOUSE_FILTER_IGNORE;ui.add_child(hud)
-	var top=PanelContainer.new();top.position=Vector2(24,20);top.size=Vector2(460,94);top.add_theme_stylebox_override("panel",_style(INK,Color("486170"),2));hud.add_child(top)
-	var stack=VBoxContainer.new();top.add_child(stack)
-	var title=_label("よふかしシグナル  /  こはく",18);stack.add_child(title)
-	hp_bar=ProgressBar.new();hp_bar.custom_minimum_size=Vector2(380,13);hp_bar.show_percentage=false;hp_bar.add_theme_stylebox_override("fill",_bar_style(PINK));stack.add_child(hp_bar)
-	xp_bar=ProgressBar.new();xp_bar.custom_minimum_size=Vector2(380,7);xp_bar.show_percentage=false;xp_bar.add_theme_stylebox_override("fill",_bar_style(CYAN));stack.add_child(xp_bar)
-	timer_label=_label("",29);timer_label.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT);timer_label.position=Vector2(-320,24);timer_label.size=Vector2(205,45);timer_label.horizontal_alignment=HORIZONTAL_ALIGNMENT_RIGHT;hud.add_child(timer_label)
-	timer_label.add_theme_color_override("font_outline_color",INK);timer_label.add_theme_constant_override("outline_size",4)
-	var pause_button=_button("Ⅱ",_toggle_pause,CREAM);pause_button.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT);pause_button.position=Vector2(-90,22);pause_button.size=Vector2(64,54);hud.add_child(pause_button)
-	stats_label=_label("",18);stats_label.position=Vector2(24,130);hud.add_child(stats_label)
-	stats_label.add_theme_color_override("font_outline_color",INK);stats_label.add_theme_constant_override("outline_size",4)
-	var footer=ColorRect.new();footer.color=Color(.05,.10,.14,.95);footer.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_WIDE);footer.offset_top=-92;footer.mouse_filter=Control.MOUSE_FILTER_IGNORE;hud.add_child(footer)
-	notice_label=_label("",20);notice_label.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_LEFT);notice_label.position=Vector2(24,-84);notice_label.size=Vector2(1100,36);hud.add_child(notice_label)
-	loadout_label=_label("",16,Color("b9cfd1"));loadout_label.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_LEFT);loadout_label.position=Vector2(24,-43);loadout_label.size=Vector2(1100,30);hud.add_child(loadout_label)
-	menu=Control.new();menu.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT);ui.add_child(menu)
-
-func _refresh_menu() -> void:
-	var key=sim.state+str(sim.level)+str(sim.rerolls)
-	if key==menu_state:return
-	menu_state=key
-	if qa_mode in ["art","map","portrait"]:
-		hud.visible=false;menu.visible=false
-		return
-	for child in menu.get_children():
-		menu.remove_child(child);child.queue_free()
-	hud.visible=sim.state!="ready"
-	menu.visible=sim.state!="running"
-	music.stream_paused=sim.state!="running"
-	if sim.state=="running":
-		if sound_enabled and not music.playing:music.play()
-		return
-	var veil=ColorRect.new();veil.color=Color(.035,.075,.11,.86);veil.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT);menu.add_child(veil)
-	if sim.state=="ready":
-		var art=TextureRect.new();art.texture=preload("res://assets/yofukashi.png");art.expand_mode=TextureRect.EXPAND_IGNORE_SIZE;art.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_COVERED;art.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT);menu.add_child(art)
-		var left=ColorRect.new();left.color=Color(.035,.075,.11,.86);left.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT);left.anchor_right=.47;menu.add_child(left)
-		var margin=MarginContainer.new();margin.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT);margin.anchor_right=.47;margin.add_theme_constant_override("margin_left",40);margin.add_theme_constant_override("margin_right",32);margin.add_theme_constant_override("margin_top",64);margin.add_theme_constant_override("margin_bottom",40);menu.add_child(margin)
-		var box=VBoxContainer.new();box.add_theme_constant_override("separation",16);margin.add_child(box)
-		box.add_child(_label("よふかしシグナル  /  雨灯横丁",18,CYAN))
-		box.add_child(_label("LOOP\nEATER",64))
-		box.add_child(_label("オフライン・アンコール",23,PINK))
-		var desc=_label("逃げ道を、わたしたちのステージに。\n走った線をつないで、大群を回収。",19);desc.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART;box.add_child(desc)
-		var spacer=Control.new();spacer.size_flags_vertical=Control.SIZE_EXPAND_FILL;box.add_child(spacer)
-		var play=_button("リハーサルを始める  →",_start);box.add_child(play);play.grab_focus()
-		box.add_child(_label("180秒の操作・成長試作  /  WASD・矢印・パッド",14))
-		box.add_child(_label("移動だけで攻撃。線は6秒、陣地は8秒。",14,Color("b9cfd1")))
-		return
-	var center=CenterContainer.new();center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT);menu.add_child(center)
-	var panel=PanelContainer.new();panel.custom_minimum_size=Vector2(640,0);panel.add_theme_stylebox_override("panel",_style(INK,CYAN));center.add_child(panel)
-	var box=VBoxContainer.new();box.add_theme_constant_override("separation",14);panel.add_child(box)
-	if sim.state=="upgrade":
-		box.add_child(_label("機材、アップデート。",32,CYAN))
-		box.add_child(_label("LEVEL %02d  /  時間は止まっています"%sim.level,16))
-		for i in sim.choices.size():
-			var data=Sim.INFO[sim.choices[i]]
-			var text="%d  %s   Lv.%d\n%s"%[i+1,data[0],sim.upgrades[sim.choices[i]]+1,data[1]]
-			var button=_button(text,func():sim.choose(i);_refresh_menu(),CREAM);button.add_theme_font_size_override("font_size",18);box.add_child(button)
-			if i==0:button.grab_focus()
-		var reroll_button=_button("候補を入れ替える  残り%d回"%sim.rerolls,func():sim.reroll();_refresh_menu(),PINK);reroll_button.disabled=sim.rerolls==0;box.add_child(reroll_button)
-	elif sim.state=="paused":
-		box.add_child(_label("ひと息、入れよう。",32,CYAN))
-		box.add_child(_label("りつ「帰り道まで、振付です」",20))
-		var resume_button=_button("リハーサルを続ける",func():sim.resume();_refresh_menu());box.add_child(resume_button);resume_button.grab_focus()
-		var audio_check=CheckButton.new();audio_check.text="BGM・効果音";audio_check.button_pressed=sound_enabled;audio_check.toggled.connect(func(on):sound_enabled=on;music.volume_db=-15 if on else -80);box.add_child(audio_check)
-		var reduce_check=CheckButton.new();reduce_check.text="演出を控えめにする";reduce_check.button_pressed=reduced;reduce_check.toggled.connect(func(on):reduced=on);box.add_child(reduce_check)
-		box.add_child(_button("最初からやり直す",_restart,CREAM))
-		box.add_child(_button("タイトルへ戻る",_title,PINK))
-	else:
-		var success=sim.state=="won"
-		box.add_child(_label("リハーサル、おつかれ！" if success else "今日は、ここまで。",32,CYAN if success else PINK))
-		box.add_child(_label("180秒の練習を完走。製品版の本公演は、これから。" if success else "トウコの回収ドローンで撤収。次の帰り道を考えよう。",16))
-		box.add_child(_label("回収 %d体    囲み %d回    最大同時 %d体"%[sim.kills,sim.loops,sim.best_loop],24))
-		box.add_child(_label("囲み %d  /  陣地 %d  /  自動射撃 %d"%[sim.sources.burst,sim.sources.territory,sim.sources.weapon],18))
-		box.add_child(_label("こはく「次は、もっと大きく囲めそう！」",20,PINK))
-		box.add_child(_label("最高同時回収：%d体%s"%[best_record,"" if save_ok else "  /  保存できませんでした"],16))
-		var again=_button("もう一度、違う強化で",_restart);box.add_child(again);again.grab_focus()
-		box.add_child(_button("タイトルへ戻る",_title,CREAM))
-	if not qa_mode.is_empty():box.add_child(_label("検証用表示："+qa_mode+"  /  記録保存なし",14,PINK))
-
-func _start() -> void:
-	sim.start();last_event=0;_refresh_menu()
-
-func _restart() -> void:
-	sim=Sim.new();qa_route.clear();_start()
-
-func _title() -> void:
-	sim=Sim.new();qa_route.clear();music.stop();_refresh_menu()
-
-func _toggle_pause() -> void:
-	if sim.state=="running":sim.pause()
-	elif sim.state=="paused":sim.resume()
-	_refresh_menu()
-
-func _focus_lost() -> void:
-	touch_active=false
-	sim.pause();_refresh_menu()
-
-func _unhandled_input(event: InputEvent) -> void:
-	if event is InputEventMouseButton and event.pressed and sim.state != "ready":
-		if event.button_index == MOUSE_BUTTON_WHEEL_UP:world_art.zoom_by(-0.08)
-		if event.button_index == MOUSE_BUTTON_WHEEL_DOWN:world_art.zoom_by(0.08)
-	if event is InputEventKey and event.pressed and not event.echo:
-		if event.keycode==KEY_ESCAPE:_toggle_pause()
-		if event.keycode in [KEY_1,KEY_2,KEY_3]:sim.choose(event.keycode-KEY_1);_refresh_menu()
-	if event is InputEventJoypadButton and event.pressed and event.button_index==JOY_BUTTON_START:_toggle_pause()
-	# Drag movement uses the same movement vector; no extra combat action.
-	if event is InputEventMouseButton and event.button_index==MOUSE_BUTTON_LEFT:
-		touch_active=event.pressed and sim.state=="running";touch_origin=event.position;touch_position=event.position
-	if event is InputEventMouseMotion and touch_active:touch_position=event.position
-	if event is InputEventScreenTouch:
-		touch_active=event.pressed and sim.state=="running";touch_origin=event.position;touch_position=event.position
-	if event is InputEventScreenDrag and touch_active:touch_position=event.position
+func setup_hud() -> void:
+	panel(hud,Rect2(18,16,1244,77),Color(.05,.10,.16,.95))
+	icon(hud,0,Rect2(32,25,49,49))
+	level_text=label(hud,"KOHAKU  /  Lv.1",Rect2(92,23,250,25),18)
+	health=bar(hud,Rect2(93,56,196,11),CORAL)
+	hp_text=label(hud,"100 / 100",Rect2(299,49,99,22),15)
+	time_text=label(hud,"00:00",Rect2(530,21,220,39),31,PAPER,HORIZONTAL_ALIGNMENT_CENTER)
+	label(hud,"雨灯横丁 / LIVE",Rect2(524,60,232,19),13,MINT,HORIZONTAL_ALIGNMENT_CENTER)
+	score_text=label(hud,"0  回収",Rect2(860,28,190,46),20,PAPER,HORIZONTAL_ALIGNMENT_RIGHT)
+	button(hud,"Ⅱ 停止",Rect2(1123,31,121,45),func():sim.pause(),false)
+	experience=bar(hud,Rect2(28,88,1224,4),MINT)
+	boss_health=bar(hud,Rect2(403,119,474,9),CORAL)
+	boss_text=label(hud,"",Rect2(335,94,610,27),17,PAPER,HORIZONTAL_ALIGNMENT_CENTER)
+	boss_text.add_theme_stylebox_override("normal",flat(Color(.04,.08,.13,.94),Color.TRANSPARENT,0))
+	panel(hud,Rect2(235,673,810,33),Color(.04,.08,.13,.91))
+	hint=label(hud,"移動 WASD / 矢印 / クリック・ドラッグ　｜　自分の線を横切って囲む",Rect2(250,677,780,24),16,PAPER,HORIZONTAL_ALIGNMENT_CENTER)
+	banner=label(hud,"",Rect2(235,140,810,46),25,MINT,HORIZONTAL_ALIGNMENT_CENTER)
 
 func _physics_process(dt: float) -> void:
-	var direction=Input.get_vector("move_left","move_right","move_up","move_down")
-	if touch_active:direction=(touch_position-touch_origin).limit_length(65)/65.0
-	if not qa_route.is_empty() and sim.state=="running":
-		if sim.player.distance_to(qa_route[qa_index]) < .24:qa_index=(qa_index+1)%qa_route.size()
+	wall_clock+=dt;tone_cooldown=maxf(0,tone_cooldown-dt)
+	var direction=Input.get_vector("walk_left","walk_right","walk_up","walk_down")
+	if direction.length()>0.1: mouse_goal=Vector2(-1,-1)
+	elif mouse_goal.x>=0:
+		if sim.player.distance_to(mouse_goal)>7: direction=(mouse_goal-sim.player).normalized()
+		else: mouse_goal=Vector2(-1,-1)
+	if qa=="loop" and sim.state=="running":
+		if sim.player.distance_to(qa_route[qa_index])<7: qa_index=(qa_index+1)%qa_route.size()
 		direction=(qa_route[qa_index]-sim.player).normalized()
-	if qa_mode=="stress":
-		sim.hurt_clock=9999
-		if sim.state=="upgrade":sim.choose(0)
-		while sim.enemies.size()<600:sim.spawn_enemy(Vector2(sim.rng.randf_range(-20,20),sim.rng.randf_range(-12,12)))
-	var before=sim.state
-	var began=Time.get_ticks_usec()
 	sim.step(dt,direction)
-	if not qa_mode.is_empty() and before=="running":
-		simulation_us.append(Time.get_ticks_usec()-began)
-		if simulation_us.size()>3600:simulation_us.pop_front()
-	if sim.event_serial!=last_event:
-		last_event=sim.event_serial
-		if sound_enabled:chime.play()
-	if before=="running" and sim.state in ["won","lost"]:_save_record()
-	_refresh_menu()
+	for e in sim.events:
+		view.add_event(e)
+		match e.kind:
+			"loop":
+				toast("%d体、最前列へ！"%e.count if e.count>0 else "ステージ・ループ！",1.6)
+				play_tone(620,.11)
+			"upgrade": play_tone(880,.16)
+			"hurt": play_tone(140,.09)
+			"unlock": toast("シールド解除！ 看板制御機を狙おう",2.8);play_tone(1100,.15)
+			"boss": toast("看板制御機が出現！ 光る端子を囲もう",3.5);play_tone(200,.25)
+			"evolution": toast("進化！ "+str(e.name),3.5);play_tone(1320,.22)
+	sim.events.clear()
+	view.pointer=mouse_goal;view.update_view(dt)
+	if sim.state=="running": toast_time=maxf(0,toast_time-dt)
+	banner.visible=toast_time>0
+	hud.visible=sim.state not in ["title","briefing","won","lost"]
+	health.value=sim.hp;hp_text.text="%d / 100"%int(sim.hp);experience.max_value=sim.threshold();experience.value=sim.xp
+	level_text.text="KOHAKU  /  Lv.%d"%sim.level
+	time_text.text="%02d:%02d"%[int(sim.clock)/60,int(sim.clock)%60]
+	score_text.text="%d 回収  /  %d pt"%[sim.kills,sim.score]
+	boss_health.visible=not sim.boss.is_empty();boss_text.visible=boss_health.visible
+	banner.position.y=611 if boss_health.visible else 140
+	if not sim.boss.is_empty():
+		boss_health.max_value=sim.boss.max_hp;boss_health.value=sim.boss.hp
+		boss_text.text="看板制御機  /  端子を囲んでシールド解除" if sim.boss.open<=0 else "シールド解除中！ 残り %.1f秒"%sim.boss.open
+	refresh_menu()
+	if not qa.is_empty():
+		log_clock+=dt
+		if log_clock>2:
+			log_clock=0
+			print("CONCERT_QA ",JSON.stringify({"mode":qa,"state":sim.state,"seconds":sim.clock,"hp":sim.hp,"loops":sim.loops,"kills":sim.kills,"level":sim.level,"enemies":sim.enemies.size()}))
+	if not capture_path.is_empty() and not captured and wall_clock>=capture_after:
+		captured=true
+		capture.call_deferred()
 
-func _process(dt: float) -> void:
-	world_art.update_actor(dt,sim.player,sim.facing,sim.state=="running",reduced)
-	if qa_mode == "art":
-		camera.position=Vector3(3.5,2.4,5.3);camera.look_at(Vector3(0,1.5,0))
-	elif qa_mode == "portrait":
-		camera.position=Vector3(0.35,2.55,1.5);camera.fov=36;camera.look_at(Vector3(0,2.33,0))
-	elif qa_mode == "map":
-		camera.position=Vector3(22,24,30);camera.look_at(Vector3(0,1,-2))
-	enemy_multimesh.visible_instance_count=mini(Sim.CAP,sim.enemies.size())
-	for i in enemy_multimesh.visible_instance_count:
-		var e=sim.enemies[i];var direction: Vector2=sim.player-e.p
-		var transform=Transform3D(Basis(Vector3.UP,atan2(direction.x,direction.y)),Vector3(e.p.x,0,e.p.y))
-		enemy_multimesh.set_instance_transform(i,transform*enemy_basis)
-	hp_bar.value=sim.hp;xp_bar.max_value=sim.needed_xp();xp_bar.value=sim.xp
-	timer_label.text="%02d:%02d / 03:00"%[int(sim.clock)/60,int(sim.clock)%60]
-	stats_label.text="HP %d   LV.%02d\n回収 %d  /  囲み %d  /  最大 %d"%[sim.hp,sim.level,sim.kills,sim.loops,sim.best_loop]
-	notice_label.text=sim.notice if sim.loops>0 else "自分の線を横切ると、囲んだ群れを回収。"
-	loadout_label.text="線 %.2f秒  ·  陣地 %d / 3  ·  回収威力 %d     WASD / 矢印で移動 · ホイールで拡大 · Esc 停止"%[sim.trail_life(),sim.regions.size(),3+sim.upgrades.burst*2]
-	if not qa_mode.is_empty() and sim.state=="running":
-		loadout_label.text+="  [QA %s]"%qa_mode
-		render_frames.append(dt*1000)
-		if render_frames.size()>3600:render_frames.pop_front()
-		metric_clock+=dt
-		if metric_clock>10.0 and not simulation_us.is_empty():
-			metric_clock=0.0
-			var frames=render_frames.duplicate();frames.sort()
-			var steps=simulation_us.duplicate();steps.sort()
-			print("LOOP_QA ",JSON.stringify({"mode":qa_mode,"enemies":sim.enemies.size(),"loops":sim.loops,"clock":sim.clock,"render_p95_ms":frames[int(frames.size()*.95)],"simulation_p95_ms":steps[int(steps.size()*.95)]/1000.0}))
-	overlay.queue_redraw()
+func capture() -> void:
+	await RenderingServer.frame_post_draw
+	var image=get_viewport().get_texture().get_image()
+	var err=image.save_png(capture_path)
+	print("SCREENSHOT ",capture_path," ",err)
 
-func _load_record() -> void:
-	var config=ConfigFile.new()
-	if config.load("user://loop-eater.cfg")==OK:
-		var value=config.get_value("records","best_loop",0)
-		if typeof(value)==TYPE_INT and value>=0:best_record=value
+func toast(text: String, seconds: float) -> void:
+	banner.text=text;toast_time=seconds
 
-func _save_record() -> void:
-	if not qa_mode.is_empty():return
-	best_record=maxi(best_record,sim.best_loop)
-	var config=ConfigFile.new();config.set_value("records","best_loop",best_record)
-	save_ok=config.save("user://loop-eater.cfg")==OK
+func _unhandled_input(event: InputEvent) -> void:
+	if event is InputEventKey and event.pressed and not event.echo:
+		if event.keycode==KEY_ESCAPE:
+			if sim.state=="paused": sim.resume()
+			else: sim.pause()
+			mouse_goal=Vector2(-1,-1)
+		elif event.keycode in [KEY_1,KEY_2,KEY_3] and sim.state=="upgrade": sim.choose(event.keycode-KEY_1)
+		elif event.keycode==KEY_ENTER:
+			if sim.state=="title": sim.state="briefing"
+			elif sim.state=="briefing": sim.start()
+			elif sim.state in ["won","lost"]: restart()
+	if sim.state!="running": return
+	if event is InputEventMouseButton and event.button_index==MOUSE_BUTTON_LEFT and event.pressed:
+		mouse_goal=get_global_mouse_position().clamp(Concert.BOUNDS.position,Concert.BOUNDS.end)
+	elif event is InputEventMouseMotion and event.button_mask&MOUSE_BUTTON_MASK_LEFT:
+		mouse_goal=get_global_mouse_position().clamp(Concert.BOUNDS.position,Concert.BOUNDS.end)
+	elif event is InputEventScreenTouch and event.pressed:
+		mouse_goal=event.position.clamp(Concert.BOUNDS.position,Concert.BOUNDS.end)
+	elif event is InputEventScreenDrag:
+		mouse_goal=event.position.clamp(Concert.BOUNDS.position,Concert.BOUNDS.end)
 
-func _apply_fixture(mode: String) -> void:
+func refresh_menu() -> void:
+	var stamp=sim.state+str(sim.level)+str(sim.choices)+str(sim.rerolls)
+	if stamp==menu_stamp: return
+	var old=menu_stamp
+	menu_stamp=stamp
+	for child in menu.get_children(): menu.remove_child(child);child.queue_free()
+	if sim.state=="running":
+		if not qa.is_empty(): label(menu,"検証モード / 記録保存なし / "+qa,Rect2(18,695,700,22),14,CORAL)
+		return
+	if sim.state in ["won","lost"] and not old.begins_with(sim.state): record_result()
+	match sim.state:
+		"title": title_menu()
+		"briefing": briefing_menu()
+		"upgrade": upgrade_menu()
+		"paused": pause_menu()
+		"won","lost": result_menu()
+	if not qa.is_empty(): label(menu,"検証モード / 記録保存なし / "+qa,Rect2(18,695,700,22),14,CORAL)
+
+func title_menu() -> void:
+	if art.textures.has("hero"):
+		var pic=texture(menu,"hero",Rect2(0,0,1280,720));pic.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_COVERED
+	panel(menu,Rect2(0,0,547,720),Color(.035,.068,.106,.94))
+	label(menu,"YOFUKASHI SIGNAL / CHAPTER 01",Rect2(54,43,472,34),15,MINT)
+	label(menu,"LOOP\nEATER",Rect2(48,97,487,223),91,PAPER)
+	label(menu,"オフライン・アンコール",Rect2(55,342,470,35),26,CORAL)
+	label(menu,"逃げ道を、わたしたちのステージに。",Rect2(55,408,478,33),22,PAPER)
+	label(menu,"線をつなぐ。群れを回収。横丁を取り戻す。",Rect2(56,452,466,34),17,Color("adbfcb"))
+	var b=button(menu,"雨灯横丁、開演します  →",Rect2(55,531,434,61),func():sim.state="briefing",true)
+	b.grab_focus()
+	label(menu,"移動だけで戦う  /  1ラン 約3分半",Rect2(56,612,452,26),17,MINT)
+	label(menu,"最高同時回収 %d  /  ベスト %d pt"%[record.best,record.score],Rect2(56,655,457,25),15,Color("a1b2c0"))
+
+func briefing_menu() -> void:
+	panel(menu,Rect2(0,0,1280,720),Color(.025,.055,.09,.86))
+	texture(menu,"player",Rect2(40,60,400,620),Art.PLAYER_RECTS[0])
+	label(menu,"01 / 雨灯横丁、開演します",Rect2(458,76,700,48),31,PAPER)
+	label(menu,"こはく",Rect2(460,157,680,34),22,CORAL)
+	label(menu,"「無観客でも、ここなら歌える。\n　まずは、この通りの明かりを取り戻そう！」",Rect2(460,201,725,87),23)
+	label(menu,"りつ  /  帰り道まで、振付です。",Rect2(460,317,720,36),21,MINT)
+	label(menu,"移動すると線が残ります。自分の線を横切って、\n敵を囲みましょう。攻撃は自動です。",Rect2(460,367,720,77),22)
+	label(menu,"ねむ  /  輪が閉じたら、そこがうちのステージ。",Rect2(460,468,720,34),19,Color("cfdf9d"))
+	var b=button(menu,"ライブを始める  →",Rect2(460,552,675,64),func():sim.start(),true);b.grab_focus()
+	label(menu,"WASD・矢印・左スティック / クリック・ドラッグでも移動",Rect2(462,636,750,26),16,Color("adbfcb"))
+
+func upgrade_menu() -> void:
+	panel(menu,Rect2(0,0,1280,720),Color(.025,.055,.09,.92))
+	label(menu,"LEVEL UP / 次のフレーズを選ぼう",Rect2(100,105,1080,50),35,PAPER,HORIZONTAL_ALIGNMENT_CENTER)
+	label(menu,"時間は止まっています。今の囲み方に、ひとつ足す。",Rect2(100,164,1080,38),20,MINT,HORIZONTAL_ALIGNMENT_CENTER)
+	for i in sim.choices.size():
+		var key: String=sim.choices[i];var def: Array=Concert.UPGRADES[key]
+		var x=106+i*368
+		var b=button(menu,"",Rect2(x,244,332,296),func():sim.choose(i),false)
+		icon(b,int(def[2]),Rect2(124,25,84,84))
+		label(b,str(i+1)+"  "+str(def[0]),Rect2(14,119,304,43),22,PAPER,HORIZONTAL_ALIGNMENT_CENTER)
+		var copy=label(b,str(def[1]),Rect2(24,174,284,70),18,Color("d3dee4"));copy.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART
+		label(b,"今回だけ回復" if key=="heal" else "Lv.%d → %d"%[sim.ranks[key],sim.ranks[key]+1],Rect2(23,257,286,23),16,MINT,HORIZONTAL_ALIGNMENT_CENTER)
+		if i==0: b.grab_focus()
+	var roll=button(menu,"候補を交換  /  残り%d"%sim.rerolls,Rect2(452,583,376,52),func():sim.reroll())
+	roll.disabled=sim.rerolls<=0
+	label(menu,"回収＋連鎖 Lv.2：連鎖花火  /  陣地＋吸引 Lv.2：敵を集めるステージ",Rect2(100,658,1080,28),16,Color("adbfcb"),HORIZONTAL_ALIGNMENT_CENTER)
+
+func pause_menu() -> void:
+	panel(menu,Rect2(0,0,1280,720),Color(.025,.055,.09,.84))
+	panel(menu,Rect2(395,152,490,429),INK)
+	label(menu,"ひと休み",Rect2(440,179,400,62),39,PAPER,HORIZONTAL_ALIGNMENT_CENTER)
+	label(menu,"帰り道も、線も、そのまま。",Rect2(430,253,420,39),20,MINT,HORIZONTAL_ALIGNMENT_CENTER)
+	var b=button(menu,"ライブに戻る",Rect2(451,321,378,60),func():sim.resume(),true);b.grab_focus()
+	button(menu,"効果音："+("ON" if record.sound else "OFF"),Rect2(451,401,178,45),func():record.sound=not record.sound;settings_changed())
+	button(menu,"演出："+("控えめ" if record.reduced else "通常"),Rect2(650,401,179,45),func():record.reduced=not record.reduced;settings_changed())
+	button(menu,"タイトルへ戻る",Rect2(451,488,378,48),func():sim=Concert.new();view.sim=sim;mouse_goal=Vector2(-1,-1))
+
+func result_menu() -> void:
+	panel(menu,Rect2(0,0,1280,720),Color(.025,.055,.09,.90))
+	texture(menu,"player",Rect2(45,83,368,575),Art.PLAYER_RECTS[0 if sim.state=="won" else 4])
+	label(menu,"LIVE CLEAR" if sim.state=="won" else "また、明日のステージで。",Rect2(431,89,784,74),49,MINT if sim.state=="won" else CORAL)
+	label(menu,sim.ending,Rect2(435,180,748,51),27)
+	label(menu,"「次のライブはいつ？」\n横丁の掲示板に、小さな手書きの紙。" if sim.state=="won" else "こはく「片づけたら、次の作戦を考えよっか」\nねむ「うん。次は、もっと大きく囲もう」",Rect2(435,242,754,77),21,Color("c0cfda"))
+	label(menu,"%d pt"%sim.score,Rect2(435,356,376,70),49,PAPER)
+	label(menu,"最大同時 %d体  /  囲み %d回\n回収 %d体  /  到達 Lv.%d"%[sim.best_loop,sim.loops,sim.kills,sim.level],Rect2(830,351,366,86),21,MINT)
+	var b=button(menu,"もう一度、開演  →",Rect2(437,491,714,62),restart,true);b.grab_focus()
+	button(menu,"タイトルへ",Rect2(437,574,243,48),func():sim=Concert.new();view.sim=sim)
+	label(menu,"最高記録を保存しました" if save_ok and qa.is_empty() else ("検証モード：記録は保存しません" if not qa.is_empty() else "記録を保存できませんでした"),Rect2(700,576,468,44),16,Color("adbfcb"),HORIZONTAL_ALIGNMENT_RIGHT)
+
+func restart() -> void:
+	sim=Concert.new();view.sim=sim;view.effects.clear();mouse_goal=Vector2(-1,-1);qa_index=0;sim.start()
+
+func record_result() -> void:
+	if not qa.is_empty(): return
+	record.best=maxi(int(record.best),sim.best_loop);record.score=maxi(int(record.score),sim.score)
+	if sim.state=="won": record.wins+=1
+	save_ok=Records.save_record(record)
+
+func settings_changed() -> void:
+	view.reduced=record.reduced
+	if qa.is_empty(): save_ok=Records.save_record(record)
+	menu_stamp="";refresh_menu()
+
+func play_tone(frequency: int, duration: float) -> void:
+	if not record.sound or tone_cooldown>0: return
+	tone_cooldown=.08
+	if not tone_cache.has(frequency):
+		var samples=int(22050*duration);var bytes=PackedByteArray();bytes.resize(samples*2)
+		for i in samples:
+			var t=float(i)/22050;var envelope=pow(1.0-float(i)/samples,2)*minf(t*180,1)
+			var value=int(sin(TAU*frequency*t)*envelope*10000)
+			bytes.encode_s16(i*2,value)
+		var wav=AudioStreamWAV.new();wav.format=AudioStreamWAV.FORMAT_16_BITS;wav.mix_rate=22050;wav.data=bytes;tone_cache[frequency]=wav
+	sfx.stream=tone_cache[frequency];sfx.play()
+
+func fixture() -> void:
 	sim.start()
-	if mode in ["art","map","portrait"]:
-		sim.enemies.clear();sim.state="art";sim.facing=Vector2.DOWN
-	if mode in ["loop","stress"]:
-		sim.enemies.clear()
-		for i in (600 if mode=="stress" else 35):
-			sim.spawn_enemy(Vector2(sim.rng.randf_range(-13,13),sim.rng.randf_range(-8,8)))
-		qa_route=[Vector2(-5,0),Vector2(-5,-4),Vector2(3,-4),Vector2(3,2),Vector2(-2,2),Vector2(-2,-1)]
-	elif mode=="upgrade":
-		sim.xp=10;sim.check_level()
-	elif mode=="won":sim.state="won";sim.kills=108;sim.loops=12;sim.best_loop=24
-	elif mode=="lost":sim.state="lost";sim.hp=0
-	elif mode=="paused":sim.pause()
+	match qa:
+		"upgrade": sim.xp=sim.threshold();sim.check_level()
+		"boss": sim.clock=150;sim.spawn_boss()
+		"won": sim.spawn_boss();sim.boss.hp=0;sim.step(.01,Vector2.ZERO)
+		"lost": sim.hp=0;sim.step(.01,Vector2.ZERO)
+		"stress":
+			for i in 300: sim.spawn_enemy(Vector2(130+(i%25)*40,200+(i/25)*32),i%3)

@@ -10,30 +10,23 @@ config_version=5
 
 [application]
 
-config/name="LOOP EATER"
+config/name="LOOP EATER 2D"
+config/description="雨灯横丁、開演します。ImageGen art / Godot 2D"
 run/main_scene="res://main.tscn"
 config/features=PackedStringArray("4.7", "GL Compatibility")
-config/icon="res://icon.svg"
 
 [display]
 
 window/size/viewport_width=1280
 window/size/viewport_height=720
-window/size/window_width_override=1600
-window/size/window_height_override=900
+window/size/window_width_override=1280
+window/size/window_height_override=720
 window/stretch/mode="canvas_items"
-
-[physics]
-
-3d/physics_engine="Jolt Physics"
 
 [rendering]
 
-rendering_device/driver.windows="d3d12"
+textures/canvas_textures/default_texture_filter=2
 renderer/rendering_method="gl_compatibility"
-renderer/rendering_method.macos="forward_plus"
 renderer/rendering_method.mobile="gl_compatibility"
 textures/vram_compression/import_etc2_astc=true
-
-anti_aliasing/quality/msaa_3d=2
-textures/default_filters/use_nearest_mipmap_filter=false
+environment/defaults/default_clear_color=Color(0.045, 0.066, 0.11, 1)

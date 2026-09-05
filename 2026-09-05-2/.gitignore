@@ -6,3 +6,4 @@ builds/
 *.blend2
 .DS_Store
 __pycache__/
+game/.godot/

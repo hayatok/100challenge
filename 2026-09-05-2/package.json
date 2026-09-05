@@ -1,14 +1,10 @@
 {
-  "name": "loop-eater",
-  "version": "0.3.0",
-  "private": true,
-  "type": "module",
+  "name": "loop-eater-2d", "version": "1.0.0", "private": true, "type": "module",
   "scripts": {
     "setup": "node scripts/setup.mjs",
     "dev": "node scripts/godot.mjs editor",
     "preview": "node scripts/serve.mjs",
     "test": "node scripts/godot.mjs test",
-    "benchmark": "node scripts/godot.mjs benchmark",
     "check": "node scripts/check-assets.mjs && node scripts/godot.mjs import && node scripts/godot.mjs test && node scripts/godot.mjs build",
     "build": "node scripts/godot.mjs build",
     "build:debug": "node scripts/godot.mjs debug",

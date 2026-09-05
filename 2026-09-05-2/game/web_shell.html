@@ -1,12 +1,13 @@
 <!doctype html>
-<html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>LOOP EATER — オフライン・アンコール</title>
+<html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>LOOP EATER 2D — オフライン・アンコール</title>
 $GODOT_HEAD_INCLUDE
 <style>
 *{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#142432;color:#fff0cd;font-family:system-ui,sans-serif}canvas{display:block;width:100%;height:100%;outline:none;touch-action:none}#status,#portrait{position:fixed;inset:0;display:grid;place-content:center;padding:28px;text-align:center;background:#142432;z-index:3}#status h1{font-size:clamp(32px,7vw,64px);margin:0 0 20px;color:#66e4e0}#status p,#portrait p{line-height:1.8;max-width:34em}#status[hidden]{display:none}#portrait{display:none}button{font:inherit;background:#66e4e0;color:#142432;border:3px solid #fff0cd;padding:14px;cursor:pointer}button:focus-visible{outline:3px solid #ed7183;outline-offset:4px}progress{width:100%;accent-color:#66e4e0}#portrait h2{color:#ed7183}@media(max-width:1024px) and (orientation:portrait){#portrait{display:grid}} </style></head>
-<body><canvas id="canvas" tabindex="0" aria-label="LOOP EATER。WASD・矢印キーで移動、Escで停止。"></canvas>
+<body><canvas id="canvas" tabindex="0" aria-label="LOOP EATER 2D。WASD・矢印・クリックで移動、Escで停止。"></canvas>
 <div id="status" role="status"><h1>LOOP EATER</h1><p id="message">雨灯横丁へ接続中…</p><progress id="progress"></progress><button id="retry" hidden>もう一度読み込む</button></div>
-<div id="portrait"><h2>横向きで、ステージを広く。</h2><p>端末を横向きにしてください。<br>この試作はPC・横画面向けです。<br>キーボード、パッド、ドラッグで移動できます。</p></div>
+<div id="portrait"><h2>横向きで、ステージを広く。</h2><p>端末を横向きにするか、<br>PCの表示領域を広げてください。<br>キーボード、パッド、クリック・ドラッグで移動。</p><button id="narrow-play">この画面で始める</button></div>
 <script>
+document.getElementById("narrow-play").onclick=()=>{document.getElementById("portrait").style.display="none";document.getElementById("canvas").focus();};
 function showLoadError(){document.getElementById('message').textContent='ゲームを読み込めませんでした。接続とWebGL 2対応ブラウザを確認して再試行してください。';document.getElementById('progress').hidden=true;document.getElementById('retry').hidden=false;document.getElementById('retry').onclick=()=>location.reload();}
 </script><script src="$GODOT_URL" onerror="showLoadError()"></script><script>
 if(typeof Engine!=='undefined'){
