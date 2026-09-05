@@ -78,5 +78,15 @@
     "category": "2D囲みアクション",
     "thumbnail": "loop-eater-cover.png",
     "accent": "#ed7a83"
+  },
+  {
+    "id": "2026-09-06",
+    "date": "2026-09-06",
+    "sequence": 1,
+    "name": "まちあかりマート",
+    "description": "120人の好みと街の変化を読み、仕入れ・売り場・シフトで五つ星を目指すコンビニ経営ゲーム。",
+    "category": "コンビニ経営ゲーム",
+    "thumbnail": "machiakari-cover.png",
+    "accent": "#39756c"
   }
 ]
