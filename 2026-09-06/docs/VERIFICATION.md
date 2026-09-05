@@ -7,7 +7,8 @@
 - コア347項目: カタログ全件、在庫保存則、納品の締切、毎分の期限、搬送・返品・廃棄、価格と会計、実働賃金、経路、シフト、休憩、装飾、星、審査、融資、期限後継続、保存再開。
 - UI45画面: 375×812 / 768×1024 / 1024×768 / 1440×900 / 1920×1080で9画面の操作部品の横はみ出しを検査。住人ボタンを更新で作り直さない回帰検証も追加。
 - `npm run check`: インポートによるGDScript構文・型検証、コア、UI、1seed×6方針、Webリリースビルド。専用の別lintツールは使わない。
-- `npm run build:mac`: macOSリリース出力。
+- `npm run build:mac`: macOSリリース出力。出力したアプリ本体から起動し、初日の営業、購入、補充、夜への切り替えを確認。
+- ルートの `npm run check`: 既存アプリを含む全検証とショーケース出力が成功。
 - `npm run balance`: 通常のプレイヤーコマンドによる10seed×6方針、想定外0件。状態への資金注入や星の直接変更は行わない。
 
 | 方針 | 五つ星 | 結末 | 意味 |
@@ -37,7 +38,7 @@ macOSのGodotネイティブ画面とCodex内蔵ブラウザのWebGL版を操作
 - 375pxで右側詳細を別画面へ切り替え、操作列が折り返すことを確認。1280×720と1920×1080の店内・経営表示を確認。768・1024・1440幅も寸法検査と実描画確認を併用。
 - 昼夜用オリジナルWAVを生成し試聴用音声を出力。CoreAudioの再生開始・ループ・音量系を確認。終了時の残存オブジェクト警告は停止と解放を追加した後に消失。
 
-証拠: [住人](screenshots/native-resident.png)、[審査](screenshots/native-review.png)、[五つ星](screenshots/native-ending.png)、[Web再開](screenshots/web-resume.png)、[375px](screenshots/web-mobile.png)。画像は実画面のキャプチャ。アートと音の出典は[ASSETS.md](../art/ASSETS.md)。
+証拠: [住人](screenshots/native-resident.png)、[審査](screenshots/native-review.png)、[五つ星](screenshots/native-ending.png)、[Web再開](screenshots/web-resume.png)、[375px](screenshots/web-mobile.png)、[配布版の夜](screenshots/native-release-night.png)。画像は実画面のキャプチャ。アートと音の出典は[ASSETS.md](../art/ASSETS.md)。
 
 ## 仕様との対応
 
@@ -56,7 +57,7 @@ macOSのGodotネイティブ画面とCodex内蔵ブラウザのWebGL版を操作
 | 11 コミカルな店 | core/catalog.gd, store_view.gd | ネタ商品、反応、3イベント、12人物の物語 |
 | 12 導入・保存・結果 | main.gd | 開店、保存再開、お気に入り、結果 |
 | 13 音・設定・可読性 | audio.gd, main.gd | 音再生、文字130%、キー変更、幅別確認 |
-| 14 管理・改善 | docs/, GitHub | Issue #72、Project #3、PRとActions |
+| 14 管理・改善 | docs/, GitHub | Issue #72、Project #3、[PR #73 / Actions](https://github.com/hayatok/100challenge/pull/73/checks) |
 
 ## 検証の範囲
 
