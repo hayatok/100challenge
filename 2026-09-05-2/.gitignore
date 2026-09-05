@@ -5,3 +5,4 @@ builds/
 *.blend1
 *.blend2
 .DS_Store
+__pycache__/

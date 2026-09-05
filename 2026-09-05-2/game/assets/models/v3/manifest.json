@@ -1,0 +1,12 @@
+{
+  "source": "art/source/kohaku-v3.blend",
+  "source_sha256": "b863fd0968a787c8c2f9f783742483b64ad8e1d739f99e614a65062f041bfd7d",
+  "blender": "5.2.1 LTS",
+  "models": {
+    "kohaku": {
+      "triangles": 377096,
+      "bytes": 11153684,
+      "mesh_parts": 7
+    }
+  }
+}

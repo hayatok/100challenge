@@ -135,7 +135,7 @@ func _refresh_menu() -> void:
 	var key=sim.state+str(sim.level)+str(sim.rerolls)
 	if key==menu_state:return
 	menu_state=key
-	if qa_mode in ["art","map"]:
+	if qa_mode in ["art","map","portrait"]:
 		hud.visible=false;menu.visible=false
 		return
 	for child in menu.get_children():
@@ -253,6 +253,8 @@ func _process(dt: float) -> void:
 	world_art.update_actor(dt,sim.player,sim.facing,sim.state=="running",reduced)
 	if qa_mode == "art":
 		camera.position=Vector3(3.5,2.4,5.3);camera.look_at(Vector3(0,1.5,0))
+	elif qa_mode == "portrait":
+		camera.position=Vector3(0.35,2.55,1.5);camera.fov=36;camera.look_at(Vector3(0,2.33,0))
 	elif qa_mode == "map":
 		camera.position=Vector3(22,24,30);camera.look_at(Vector3(0,1,-2))
 	enemy_multimesh.visible_instance_count=mini(Sim.CAP,sim.enemies.size())
@@ -291,7 +293,7 @@ func _save_record() -> void:
 
 func _apply_fixture(mode: String) -> void:
 	sim.start()
-	if mode in ["art","map"]:
+	if mode in ["art","map","portrait"]:
 		sim.enemies.clear();sim.state="art";sim.facing=Vector2.DOWN
 	if mode in ["loop","stress"]:
 		sim.enemies.clear()

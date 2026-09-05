@@ -12,7 +12,8 @@ var camera_target = Vector3.ZERO
 var environment: Environment
 
 func model(name: String) -> Node3D:
-	var node = load("res://assets/models/v2/%s.glb" % name).instantiate()
+	var version = "v3" if name == "kohaku" else "v2"
+	var node = load("res://assets/models/%s/%s.glb" % [version,name]).instantiate()
 	add_child(node)
 	return node
 
@@ -87,7 +88,8 @@ func build() -> void:
 		lamp(location,Color("e8c391"),2.0,8.5)
 	lamp(Vector3(0,2.6,13),Color("ed839b"),2.5,7.0)
 	player = model("kohaku")
-	player.scale = Vector3.ONE * 1.28
+	player.scale = Vector3.ONE * 1.55
+	apply_character_materials(player)
 	for name in ["body","head","arm_L","arm_R","leg_L","leg_R","pony_L","pony_R"]:
 		parts[name] = player.find_child(name+"_export",true,false)
 	var enemy = model("call_bit")
@@ -158,3 +160,25 @@ func apply_architecture_materials(node: Node) -> void:
 				node.set_surface_override_material(i,masonry)
 	for child in node.get_children():
 		apply_architecture_materials(child)
+
+func apply_character_materials(node: Node) -> void:
+	if node is MeshInstance3D:
+		for i in node.mesh.get_surface_count():
+			var source = node.mesh.surface_get_material(i)
+			if source is StandardMaterial3D:
+				var toon = ShaderMaterial.new()
+				toon.shader = preload("res://shaders/character_toon.gdshader")
+				toon.set_shader_parameter("base_color",source.albedo_color)
+				toon.set_shader_parameter("face_material",source.resource_name in ["face_painted","skin"])
+				if source.albedo_texture != null:
+					toon.set_shader_parameter("has_texture",true)
+					toon.set_shader_parameter("albedo_texture",source.albedo_texture)
+				# An inverted hull is suitable for closed skin surfaces. On thin
+				# double-sided lapels/hair cards it can cover the front with black.
+				if source.resource_name in ["face_painted","skin"]:
+					var outline = ShaderMaterial.new()
+					outline.shader = preload("res://shaders/character_outline.gdshader")
+					toon.next_pass = outline
+				node.set_surface_override_material(i,toon)
+	for child in node.get_children():
+		apply_character_materials(child)
