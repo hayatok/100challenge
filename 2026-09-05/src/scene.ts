@@ -198,6 +198,8 @@ export class GameScene {
         }),
       );
       mesh.rotation.x = -Math.PI / 2;
+      // Draw ground effects above dirt (1) and contact shadows (2), retaining depth testing against models.
+      mesh.renderOrder = 3;
       mesh.visible = false;
       this.scene.add(mesh);
       this.effects.push(mesh);
