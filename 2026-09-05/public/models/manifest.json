@@ -1,0 +1,81 @@
+{
+  "generator": "Blender 5.2.1 LTS",
+  "source": "GUI-reviewed cleaning-kit.blend",
+  "assets": {
+    "robot": {
+      "file": "robot.glb",
+      "bytes": 75416,
+      "triangles": 1004
+    },
+    "dust": {
+      "file": "dust.glb",
+      "bytes": 57400,
+      "triangles": 620
+    },
+    "dash": {
+      "file": "dash.glb",
+      "bytes": 60312,
+      "triangles": 640
+    },
+    "box": {
+      "file": "box.glb",
+      "bytes": 46452,
+      "triangles": 568
+    },
+    "boss": {
+      "file": "boss.glb",
+      "bytes": 69564,
+      "triangles": 752
+    },
+    "nozzle": {
+      "file": "nozzle.glb",
+      "bytes": 13168,
+      "triangles": 148
+    },
+    "mop": {
+      "file": "mop.glb",
+      "bytes": 26448,
+      "triangles": 324
+    },
+    "spray": {
+      "file": "spray.glb",
+      "bytes": 9120,
+      "triangles": 104
+    },
+    "disc": {
+      "file": "disc.glb",
+      "bytes": 8720,
+      "triangles": 120
+    },
+    "battery": {
+      "file": "battery.glb",
+      "bytes": 13384,
+      "triangles": 132
+    },
+    "heal": {
+      "file": "heal.glb",
+      "bytes": 13396,
+      "triangles": 132
+    },
+    "tile": {
+      "file": "tile.glb",
+      "bytes": 4636,
+      "triangles": 44
+    },
+    "pallet": {
+      "file": "pallet.glb",
+      "bytes": 19988,
+      "triangles": 220
+    },
+    "crate": {
+      "file": "crate.glb",
+      "bytes": 8460,
+      "triangles": 88
+    },
+    "fence": {
+      "file": "fence.glb",
+      "bytes": 12388,
+      "triangles": 132
+    }
+  }
+}

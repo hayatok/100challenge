@@ -1,0 +1,802 @@
+:root {
+  font-family:
+    Inter, "Hiragino Kaku Gothic ProN", "Noto Sans JP", system-ui, sans-serif;
+  color: #292d31;
+  background: #f5eddc;
+  font-synthesis: none;
+  --ink: #292d31;
+  --paper: #f5eddc;
+  --orange: #ed713b;
+  --mint: #68bcb1;
+}
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+}
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+button {
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+button:focus-visible,
+a:focus-visible,
+.arena:focus-visible {
+  outline: 3px solid #ed713b;
+  outline-offset: 3px;
+}
+button:hover:not(:disabled) {
+  filter: brightness(0.94);
+}
+main {
+  max-width: 1480px;
+  margin: auto;
+  padding: 22px 36px 16px;
+}
+.masthead {
+  display: flex;
+  align-items: center;
+  gap: 17px;
+  padding-bottom: 20px;
+}
+.back {
+  color: var(--ink);
+  text-decoration: none;
+  border: 2px solid var(--ink);
+  font-size: 24px;
+  width: 39px;
+  height: 39px;
+  text-align: center;
+}
+.eyebrow {
+  font:
+    10px ui-monospace,
+    SFMono-Regular,
+    monospace;
+  letter-spacing: 1.3px;
+  font-weight: 700;
+}
+h1 {
+  font-size: 31px;
+  line-height: 1.3;
+  letter-spacing: -1.8px;
+  margin: 4px 0 0;
+  font-weight: 900;
+}
+h1 span {
+  font-size: 12px;
+  margin-left: 18px;
+  letter-spacing: 1px;
+  font-weight: 600;
+}
+.shift {
+  margin-left: auto;
+  text-align: right;
+  font:
+    10px/1.7 ui-monospace,
+    monospace;
+}
+.shift b {
+  font: 700 13px/1.7 system-ui;
+}
+.game-shell {
+  border: 3px solid var(--ink);
+  box-shadow: 6px 6px 0 var(--ink);
+  background: var(--paper);
+}
+.hud {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 12px 22px;
+  border-bottom: 3px solid var(--ink);
+  height: 76px;
+}
+.health {
+  width: 180px;
+}
+.health > span {
+  font:
+    10px ui-monospace,
+    monospace;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+.health b {
+  font-size: 19px;
+}
+.health small {
+  font-size: 10px;
+  font-weight: 400;
+}
+.meter {
+  height: 10px;
+  border: 2px solid var(--ink);
+  margin-top: 5px;
+  background: #d8cfbf;
+}
+.meter i {
+  display: block;
+  height: 100%;
+  background: var(--mint);
+}
+.timer {
+  margin-left: auto;
+  text-align: center;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.timer small {
+  font-size: 10px;
+}
+.timer strong {
+  font:
+    700 32px ui-monospace,
+    monospace;
+  letter-spacing: -2px;
+}
+.kill {
+  display: flex;
+  gap: 7px;
+  align-items: center;
+  margin-left: auto;
+}
+.kill b {
+  font:
+    700 27px ui-monospace,
+    monospace;
+}
+.kill span {
+  font-size: 10px;
+}
+.pause {
+  background: transparent;
+  border: 1.5px solid var(--ink);
+  padding: 8px 10px;
+  font-size: 11px;
+}
+.arena {
+  position: relative;
+  height: clamp(370px, 61vh, 690px);
+  overflow: hidden;
+  outline: none;
+  background: #e4dfd0;
+}
+.canvas-host {
+  width: 100%;
+  height: 100%;
+}
+.canvas-host canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.floor-label {
+  position: absolute;
+  left: 22px;
+  top: 20px;
+  font:
+    700 10px ui-monospace,
+    monospace;
+  letter-spacing: 1.5px;
+  opacity: 0.65;
+  pointer-events: none;
+}
+.floor-label span {
+  display: block;
+  font-size: 8px;
+  margin-top: 4px;
+}
+.mission {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  padding: 7px 13px;
+  font-size: 11px;
+  white-space: nowrap;
+  pointer-events: none;
+}
+.boss-health {
+  position: absolute;
+  top: 15px;
+  left: 25%;
+  width: 50%;
+  text-align: center;
+  font-size: 12px;
+}
+.boss-health .meter i {
+  background: var(--orange);
+}
+.overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: #292d3145;
+  overflow: auto;
+}
+.intro-overlay {
+  justify-content: flex-start;
+  background: transparent;
+  padding: 26px;
+}
+.panel {
+  background: var(--paper);
+  border: 3px solid var(--ink);
+  box-shadow: 6px 6px 0 var(--ink);
+  padding: 28px;
+  max-width: 490px;
+  width: 100%;
+  max-height: 100%;
+  overflow: auto;
+}
+.intro-overlay .panel {
+  width: 320px;
+  transform: rotate(-1deg);
+  padding: 27px;
+}
+.panel h2 {
+  font-size: 32px;
+  line-height: 1.24;
+  letter-spacing: -1px;
+  margin: 14px 0;
+  font-weight: 900;
+}
+.intro-overlay h2 {
+  font-size: 39px;
+  margin: 19px 0 14px;
+}
+.panel h2 em {
+  font-style: normal;
+  color: var(--orange);
+}
+.stamp {
+  display: inline-block;
+  background: var(--orange);
+  border: 2px solid var(--ink);
+  font-size: 12px;
+  font-weight: 800;
+  padding: 5px 12px;
+  transform: rotate(-3deg);
+}
+.panel p {
+  font-size: 12px;
+  line-height: 1.9;
+  margin: 12px 0 18px;
+}
+.primary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--orange);
+  border: 2px solid var(--ink);
+  box-shadow: 3px 3px 0 var(--ink);
+  font-weight: 800;
+  padding: 13px 17px;
+  width: 100%;
+  font-size: 16px;
+}
+.primary:active {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0 var(--ink);
+}
+.panel > small {
+  display: block;
+  font-size: 10px;
+  text-align: center;
+  margin-top: 12px;
+}
+.panel progress {
+  width: 100%;
+  accent-color: var(--orange);
+}
+.panel ol {
+  padding-left: 22px;
+  font-size: 13px;
+  line-height: 2;
+}
+.upgrade-panel {
+  max-width: 850px;
+}
+.choices {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 13px;
+  margin-bottom: 20px;
+}
+.choices button {
+  text-align: left;
+  border: 2px solid var(--ink);
+  background: #fffbf2;
+  padding: 17px;
+  box-shadow: 3px 3px 0 var(--ink);
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.choice-number {
+  font:
+    32px ui-monospace,
+    monospace;
+  color: var(--orange);
+  margin-bottom: 15px;
+}
+.choices b {
+  font-size: 15px;
+}
+.choices p {
+  font-size: 11px;
+  line-height: 1.7;
+  flex: 1;
+}
+.choice-level {
+  font:
+    12px ui-monospace,
+    monospace;
+  border-top: 1px solid var(--ink);
+  padding-top: 10px;
+}
+.results {
+  display: flex;
+  gap: 35px;
+  margin: 20px 0;
+}
+.results b {
+  font:
+    700 38px ui-monospace,
+    monospace;
+}
+.results small {
+  display: block;
+  font: 11px system-ui;
+  margin-top: 5px;
+}
+.result-weapons {
+  font-size: 10px !important;
+}
+.xp {
+  height: 32px;
+  background: var(--ink);
+  color: var(--paper);
+  display: flex;
+  gap: 15px;
+  padding: 6px 17px;
+  align-items: center;
+  font:
+    11px ui-monospace,
+    monospace;
+}
+.xp-track {
+  height: 7px;
+  background: #666964;
+  flex: 1;
+}
+.xp-track i {
+  height: 100%;
+  display: block;
+  background: var(--orange);
+}
+.equipment {
+  display: flex;
+  gap: 0;
+  min-height: 61px;
+  align-items: stretch;
+  padding: 0 16px;
+}
+.equipment-label {
+  font-size: 10px;
+  align-self: center;
+  width: 105px;
+}
+.weapon {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  justify-content: space-between;
+  flex: 1;
+  padding: 12px 18px;
+  border-left: 1px solid #292d3140;
+  min-width: 0;
+}
+.weapon b {
+  font-size: 12px;
+}
+.weapon span {
+  font-size: 11px;
+  letter-spacing: 2px;
+  color: #8c432a;
+}
+.empty {
+  color: #7c7a70;
+  font-size: 11px;
+  justify-content: center;
+}
+footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+  font-size: 10px;
+}
+footer b {
+  font:
+    700 11px ui-monospace,
+    monospace;
+}
+footer div {
+  display: flex;
+  gap: 18px;
+}
+footer button {
+  border: 0;
+  background: none;
+  padding: 4px;
+  font-size: 11px;
+}
+.warning {
+  font-size: 12px;
+}
+.joystick {
+  position: absolute;
+  bottom: 25px;
+  left: 24px;
+  width: 110px;
+  height: 110px;
+  border: 2px solid #292d3190;
+  border-radius: 50%;
+  background: #f5eddc80;
+  touch-action: none;
+  user-select: none;
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+.joystick > div {
+  width: 48px;
+  height: 48px;
+  background: var(--paper);
+  border: 3px solid var(--ink);
+  border-radius: 50%;
+  pointer-events: none;
+}
+.joystick span {
+  position: absolute;
+  bottom: 7px;
+  font:
+    8px ui-monospace,
+    monospace;
+  pointer-events: none;
+}
+.qa {
+  margin-top: 15px;
+  border: 1px dashed var(--ink);
+  padding: 10px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  font-size: 11px;
+}
+.qa button {
+  font-size: 11px;
+}
+.qa span {
+  font-family: monospace;
+}
+@media (pointer: coarse) {
+  .joystick {
+    display: flex;
+  }
+  .mission {
+    bottom: 12px;
+    left: auto;
+    right: 12px;
+    transform: none;
+    max-width: 55%;
+    white-space: normal;
+  }
+}
+@media (min-width: 1100px) {
+  .intro-overlay .panel {
+    margin-left: 20px;
+  }
+  .intro-overlay:after {
+    content: "ほこり、立入禁止。";
+    position: absolute;
+    right: 30px;
+    bottom: 28px;
+    font-size: 12px;
+    font-weight: 800;
+    border-bottom: 3px solid var(--orange);
+    padding-bottom: 6px;
+    transform: rotate(-3deg);
+  }
+}
+@media (max-width: 800px) {
+  main {
+    padding: 16px;
+  }
+  .masthead {
+    gap: 10px;
+    padding-bottom: 16px;
+  }
+  h1 {
+    font-size: 27px;
+  }
+  h1 span {
+    display: block;
+    margin: 3px 0 0;
+    font-size: 10px;
+  }
+  .eyebrow {
+    font-size: 8px;
+  }
+  .hud {
+    gap: 12px;
+    padding: 10px 12px;
+  }
+  .health {
+    width: 125px;
+  }
+  .kill {
+    display: block;
+    text-align: center;
+  }
+  .kill b {
+    font-size: 23px;
+    display: block;
+  }
+  .kill span {
+    font-size: 9px;
+  }
+  .timer {
+    display: block;
+  }
+  .timer strong {
+    font-size: 27px;
+  }
+  .timer small {
+    display: block;
+  }
+  .weapon {
+    padding: 10px;
+    display: block;
+  }
+  .weapon span {
+    display: block;
+    margin-top: 5px;
+  }
+  .equipment-label {
+    width: 78px;
+    font-size: 9px;
+  }
+  .intro-overlay .panel {
+    width: 280px;
+  }
+  .intro-overlay h2 {
+    font-size: 32px;
+  }
+  .choices {
+    gap: 8px;
+  }
+  .choices button {
+    padding: 12px;
+  }
+  .choices b {
+    font-size: 13px;
+  }
+}
+@media (max-width: 500px) {
+  main {
+    padding: 13px 12px;
+  }
+  .masthead {
+    padding-bottom: 12px;
+  }
+  .back {
+    width: 30px;
+    height: 30px;
+    font-size: 20px;
+  }
+  .shift {
+    font-size: 8px;
+  }
+  .shift b {
+    font-size: 10px;
+  }
+  h1 {
+    font-size: 24px;
+  }
+  .masthead .eyebrow {
+    font-size: 7px;
+    letter-spacing: 0.7px;
+  }
+  .game-shell {
+    box-shadow: 4px 4px 0 var(--ink);
+  }
+  .hud {
+    height: 68px;
+    gap: 9px;
+    padding: 8px;
+  }
+  .health {
+    width: 96px;
+  }
+  .health > span {
+    font-size: 8px;
+  }
+  .health b {
+    font-size: 15px;
+  }
+  .timer strong {
+    font-size: 25px;
+  }
+  .timer small {
+    font-size: 8px;
+  }
+  .kill b {
+    font-size: 20px;
+  }
+  .pause {
+    font-size: 9px;
+    padding: 7px 5px;
+  }
+  .arena {
+    height: clamp(370px, 58svh, 560px);
+  }
+  .floor-label {
+    left: 12px;
+    top: 12px;
+    font-size: 8px;
+  }
+  .intro-overlay {
+    align-items: flex-end;
+    padding: 15px;
+  }
+  .intro-overlay .panel {
+    width: 100%;
+    padding: 18px;
+    transform: none;
+    background: #f5eddc;
+  }
+  .intro-overlay h2 {
+    font-size: 29px;
+    margin: 12px 0;
+  }
+  .intro-overlay h2 br {
+    display: none;
+  }
+  .intro-overlay h2 em {
+    display: block;
+  }
+  .intro-overlay .panel p {
+    font-size: 11px;
+    margin: 8px 0 14px;
+  }
+  .intro-overlay .stamp {
+    font-size: 10px;
+  }
+  .panel {
+    padding: 18px;
+  }
+  .panel h2 {
+    font-size: 25px;
+  }
+  .overlay {
+    padding: 12px;
+  }
+  .choices {
+    display: flex;
+    flex-direction: column;
+    margin: 12px 0;
+    gap: 8px;
+  }
+  .choices button {
+    padding: 11px 12px;
+    display: grid;
+    grid-template-columns: 32px 1fr;
+    gap: 3px 10px;
+  }
+  .choice-number {
+    font-size: 22px;
+    grid-row: 1/4;
+    margin: 0;
+  }
+  .choices p {
+    margin: 0;
+    font-size: 10px;
+  }
+  .choice-level {
+    padding: 3px 0 0;
+    font-size: 10px;
+  }
+  .equipment {
+    padding: 0 5px;
+    min-height: 56px;
+  }
+  .equipment-label {
+    display: none;
+  }
+  .weapon {
+    padding: 10px 7px;
+  }
+  .weapon:first-of-type {
+    border-left: 0;
+  }
+  .weapon b {
+    font-size: 10px;
+  }
+  .weapon span {
+    font-size: 9px;
+    letter-spacing: 1px;
+  }
+  .empty {
+    font-size: 9px;
+    display: flex;
+  }
+  .xp {
+    padding: 6px 10px;
+    font-size: 10px;
+    gap: 10px;
+  }
+  footer {
+    margin-top: 15px;
+    font-size: 9px;
+  }
+  footer div {
+    gap: 8px;
+  }
+  footer button {
+    font-size: 10px;
+  }
+  .joystick {
+    width: 100px;
+    height: 100px;
+    left: 14px;
+    bottom: 22px;
+  }
+  .boss-health {
+    left: 15%;
+    width: 70%;
+  }
+  .mission {
+    font-size: 10px;
+  }
+  .results b {
+    font-size: 30px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  * {
+    scroll-behavior: auto !important;
+  }
+}
+
+@media (max-width: 800px) {
+  .joystick {
+    display: flex;
+  }
+  .mission {
+    bottom: 12px;
+    left: auto;
+    right: 12px;
+    transform: none;
+    max-width: 55%;
+    white-space: normal;
+  }
+}
