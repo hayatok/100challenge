@@ -1,0 +1,8 @@
+node_modules/
+.cache/
+dist/
+builds/
+game/.godot/
+*.tmp
+
+docs/balance-quick.json
