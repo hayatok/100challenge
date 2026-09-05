@@ -58,5 +58,15 @@
     "category": "ワンボタンゲーム",
     "thumbnail": "pudding-cover.svg",
     "accent": "#39786b"
+  },
+  {
+    "id": "2026-09-05",
+    "date": "2026-09-05",
+    "sequence": 1,
+    "name": "ホコリ無双",
+    "description": "移動だけで倉庫まるごと大掃除。Blender製のロボで戦う、6分間の3Dサバイバル。",
+    "category": "3Dサバイバルゲーム",
+    "thumbnail": "hokori-cover.png",
+    "accent": "#ed713b"
   }
 ]
