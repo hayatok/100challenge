@@ -1,3 +1,4 @@
+import { readFile } from 'node:fs/promises'
 import { spawnSync } from 'node:child_process'
 import { fileURLToPath } from 'node:url'
 import path from 'node:path'
@@ -29,5 +30,14 @@ for (const app of apps) {
 
   if (result.status !== 0) {
     throw new Error(`npm ${command.join(' ')} failed for ${app.id}`)
+  }
+
+  // Optional app-owned tooling, such as Godot and its export templates.
+  if (commandName === 'ci') {
+    const pkg = JSON.parse(await readFile(path.join(root, app.id, 'package.json'), 'utf8'))
+    if (pkg.scripts?.setup) {
+      const setup = spawnSync('npm', ['run', 'setup'], { cwd: path.join(root, app.id), stdio: 'inherit', shell: process.platform === 'win32' })
+      if (setup.status !== 0) throw new Error(`Setup failed for ${app.id}`)
+    }
   }
 }

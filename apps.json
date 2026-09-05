@@ -68,5 +68,15 @@
     "category": "3Dサバイバルゲーム",
     "thumbnail": "hokori-cover.png",
     "accent": "#ed713b"
+  },
+  {
+    "id": "2026-09-05-2",
+    "date": "2026-09-05",
+    "sequence": 2,
+    "name": "LOOP EATER 2D",
+    "description": "移動で線を描き、群れを囲んでステージに。雨灯横丁の明かりを取り戻す2Dアクション。",
+    "category": "2D囲みアクション",
+    "thumbnail": "loop-eater-cover.png",
+    "accent": "#ed7a83"
   }
 ]

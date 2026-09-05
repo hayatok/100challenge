@@ -1,0 +1,59 @@
+{
+  "generated_at": "2026-09-06",
+  "assets": [
+    {
+      "file": "amedori.png",
+      "source": "exec-18f17828-135a-42f4-b7ef-6bd97f935518.png",
+      "prompt": "Arena",
+      "provider": "image_gen",
+      "width": 1536,
+      "height": 1024,
+      "sha256": "abbddc9377d283bf223212301c71d237db608e0121980df687ad70fae33e738b"
+    },
+    {
+      "file": "kohaku-walk.png",
+      "source": "exec-043bd342-c1a8-4d0d-92e3-e492c41c1c18.png",
+      "prompt": "PlayerKey",
+      "provider": "image_gen",
+      "width": 1536,
+      "height": 1024,
+      "sha256": "4f4d26a561f90500a382a75fe8138f5d62460433cf05d13d325c96cbee73d445"
+    },
+    {
+      "file": "echoes.png",
+      "source": "exec-5e1a7930-5eb2-49c5-9d69-082b2529ea7d.png",
+      "prompt": "Enemies",
+      "provider": "image_gen",
+      "width": 1536,
+      "height": 1024,
+      "sha256": "16c73e15a97820f7d84ec05cd741577582a9f94db83dca58c80e3971ae9b50ad"
+    },
+    {
+      "file": "boss-kit.png",
+      "source": "exec-492a3143-27e7-4d0b-8aef-90a37aac16ad.png",
+      "prompt": "Boss",
+      "provider": "image_gen",
+      "width": 1536,
+      "height": 1024,
+      "sha256": "f44b6b8e3450a5fad0ef8fe57515199fb8183d946a061a710b1250e3984d25b7"
+    },
+    {
+      "file": "effects.png",
+      "source": "exec-6599fb94-3e5b-4136-bf22-97138f7108bd.png",
+      "prompt": "Fx",
+      "provider": "image_gen",
+      "width": 1536,
+      "height": 1024,
+      "sha256": "698d3de641173d6ad57241c437ca861b5bf5efc20330145778e91e15ca4010ea"
+    },
+    {
+      "file": "key-art.png",
+      "source": "exec-30b2ab36-fe85-4679-b5ce-4d56c86f1c03.png",
+      "prompt": "Hero",
+      "provider": "image_gen",
+      "width": 1536,
+      "height": 1024,
+      "sha256": "8265f1ad8413a2b916b8a700002793e8c5518149a04f5ec916f5c5472ebd12c0"
+    }
+  ]
+}
