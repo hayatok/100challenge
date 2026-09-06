@@ -37,7 +37,12 @@ func run():
 	while main.sim.s.tick<4320:main.sim.step()
 	var reports_before=JSON.stringify(main.sim.s.reports)
 	for dimensions in [Vector2i(375,812),Vector2i(768,1024),Vector2i(1024,768),Vector2i(1440,900),Vector2i(1920,1080)]:
-		root.size=dimensions;main.configure_viewport();main.open_report(2)
+		root.size=dimensions;main.configure_viewport();main.open_staff()
+		await process_frame;await process_frame
+		screens+=1;inspect(main,dimensions.x,"staff plan with actual sales")
+		if not contains_label(main.modal,"平均売上") or find_button(main.modal,"日報で行列・欠品・利益を見る")==null:
+			errors+=1;printerr("Staff plan did not expose actual sales and the report action")
+		main.open_report(2)
 		await process_frame;await process_frame
 		screens+=1;inspect(main,dimensions.x,"actual daily report")
 		var first=main.sim.s.reports[0];var second=main.sim.s.reports[1]

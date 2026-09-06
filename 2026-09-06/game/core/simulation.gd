@@ -926,6 +926,18 @@ func wages() -> int:
 	for w in s.staff:
 		if w.hired:n+=w.wage*w.shifts.count(true)
 	return n
+func staffing_plan() -> Dictionary:
+	var reports=s.reports.slice(maxi(0,s.reports.size()-3))
+	var slots=[]
+	for slot in 4:
+		var people=0;var cost=0;var sales=0
+		for worker in s.staff:
+			if worker.hired and worker.shifts[slot]:people+=1;cost+=worker.wage
+		for report in reports:
+			for hour in report.hours:
+				if posmod(int(hour)-6,24)/6==slot:sales+=report.hours[hour]
+		slots.append({"people":people,"wages":cost,"sales":roundi(sales/float(maxi(1,reports.size())))})
+	return {"days":reports.size(),"slots":slots,"wages":wages(),"actual_wages":s.reports[-1].wages if not s.reports.is_empty() else -1}
 func finish_day():
 	var r=s.today
 	r.fixed=fixed_cost()

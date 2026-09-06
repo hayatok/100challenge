@@ -7,6 +7,7 @@ func _init():
 	var game=Sim.new();var strategy=Strategy.new(args[1] if args.size()>1 else "staples")
 	while game.s.day<target and game.s.result.is_empty():
 		strategy.update(game);game.step(480);strategy.update(game);game.step(960)
+	if "--opening" in args and game.s.result.is_empty():strategy.update(game)
 	var save=FileAccess.open("user://qa-current.save",FileAccess.WRITE)
 	save.store_var({"game":game.s,"settings":{}});save.close()
 	var log=FileAccess.open("res://../docs/beta-qa-actions-"+str(target)+"-"+strategy.style+".json",FileAccess.WRITE)

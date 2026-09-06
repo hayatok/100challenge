@@ -2,7 +2,10 @@ extends RefCounted
 const Stories=preload("res://core/resident_stories.gd")
 var style="staples"
 var commands=[]
-func _init(kind:String="staples"):style=kind
+var extra_till=Vector2i(12,5)
+func _init(kind:String="staples"):
+	style=kind
+	extra_till=Vector2i(8,8) if kind in ["staples","sweets","night"] else Vector2i(12,5)
 func do(game,name:String,args:Dictionary={}):
 	var error=game.command(name,args)
 	if error.is_empty():commands.append({"tick":game.s.tick,"command":name,"args":args.duplicate(true)})
@@ -28,9 +31,8 @@ func update(game):
 			if f.kind==2:
 				var spot={"kind":10,"x":f.x,"y":f.y,"dir":f.dir}
 				if do(game,"remove",{"fixture":f.id}).is_empty():do(game,"place",spot)
-		# The entrance-side hot case already uses the old third-till approach.
-		# Give the extra counter its own queue on the expanded floor.
-		if s.tier>0 and not s.fixtures.any(func(f):return f.x==12 and f.y==5):do(game,"place",{"kind":10,"x":12,"y":5,"dir":1})
+		# The counter needs an independent queue near the chosen assortment.
+		if s.tier>0 and not s.fixtures.any(func(f):return Vector2i(f.x,f.y)==extra_till):do(game,"place",{"kind":10,"x":extra_till.x,"y":extra_till.y,"dir":1})
 		for hire in [[6,0,1],[7,2,3]]:
 			if not s.staff[hire[0]].hired:
 				do(game,"hire",{"id":hire[0]});do(game,"shift",{"id":hire[0],"slot":hire[1]});do(game,"shift",{"id":hire[0],"slot":hire[2]});do(game,"priority",{"id":hire[0],"value":"register"})
@@ -87,6 +89,17 @@ func update(game):
 		if style!="fixed_plan" and game.stock_expiring(p)>maxf(2,mean*0.25):price=0
 		if int(s.prices.get(p,1))!=price:do(game,"price",{"product":p,"level":price})
 	if s.star>=4 and s.review.get("status","") not in ["active","passed"] and s.day<=42:do(game,"review")
+	plan_staffing(game)
+
+func plan_staffing(game):
+	if style=="fixed_plan":return
+	# Keep two tills and stock coverage in ordinary trade. Add the third
+	# counter's shifts for the forecast winter rush, after building a reserve.
+	for id in [6,7]:
+		var worker=game.s.staff[id]
+		if not worker.hired:continue
+		for slot in ([0,1] if id==6 else [2,3]):
+			if worker.shifts[slot]!=(game.s.day>=43):do(game,"shift",{"id":id,"slot":slot})
 
 func plan_assortment(game,focus:int):
 	var s=game.s;var demands=[];var minimum_life={}

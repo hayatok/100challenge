@@ -645,7 +645,16 @@ func open_report_resident(id:int,day:int):
 
 func open_staff():
 	open_modal("働くひととシフト")
-	wrapped("1人2枠まで。レジも補充も人が必要です。昼の行列と棚切れを見て担当を調整しましょう。",modal_content,13,MUTED)
+	var plan=sim.staffing_plan()
+	wrapped("今のシフトを1日続けると 人件費 "+money(plan.wages),modal_content,18)
+	if plan.actual_wages>=0:wrapped("前日の実支払 "+money(plan.actual_wages)+"。変更した日は、実際に働いた時間分を支払います。",modal_content,12,MUTED)
+	for slot in 4:
+		var info=plan.slots[slot]
+		wrapped(["朝 6–12","昼 12–18","夜 18–24","深夜 0–6"][slot]+"　"+str(info.people)+"人 / 人件費 "+money(info.wages)+(" / 平均売上 "+money(info.sales) if plan.days>0 else ""),modal_content,13)
+	wrapped("平均売上は直近"+str(plan.days)+"営業日。商品原価・廃棄・家賃を引く前の金額です。" if plan.days>0 else "営業を終えると、時間帯別の売上をここで比べられます。",modal_content,12,MUTED)
+	if plan.days>0:button("日報で行列・欠品・利益を見る",modal_content,func():open_report())
+	divider(modal_content)
+	wrapped("1人2枠まで。レジも補充も人が必要です。行列と棚切れ、明日の催事を見て担当を調整しましょう。",modal_content,13,MUTED)
 	for w in sim.s.staff:
 		var h=row(modal_content);var l=label(w.name,h,18);l.size_flags_horizontal=Control.SIZE_EXPAND_FILL
 		label("店長" if w.id==0 else money(w.wage)+" / 1枠",h,13)

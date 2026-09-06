@@ -26,6 +26,13 @@ func _init():
 	check(sim.command("shift",{"id":0,"slot":2})!="","owner max shifts")
 	check(sim.command("price",{"product":0,"level":2})=="","price change")
 	check(sim.selling_price(0)==168,"integer price")
+	var staffing=Sim.new(11)
+	check(staffing.staffing_plan().days==0 and staffing.staffing_plan().actual_wages==-1,"Unfinished trading is not reported as completed sales or wages")
+	staffing.s.reports=[{"hours":{0:100,5:200,6:300,11:400,12:500,17:600,18:700,23:800},"wages":900}]
+	var old_report=JSON.stringify(staffing.s.reports)
+	check(staffing.staffing_plan().slots.map(func(slot):return slot.sales)==[700,1100,1500,300],"Sales follow the six-hour shifts across midnight")
+	staffing.command("shift",{"id":1,"slot":2})
+	check(staffing.staffing_plan().wages==450 and staffing.staffing_plan().actual_wages==900 and JSON.stringify(staffing.s.reports)==old_report,"Changing tomorrow's staffing changes the estimate without rewriting paid wages")
 	var a=Sim.new(90);var b=Sim.new(90)
 	a.step(500)
 	for i in 500:b.step()

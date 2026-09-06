@@ -4,6 +4,8 @@ var wanted=[]
 func _init(id:int=0):
 	resident_id=id
 	super("staples")
+	# The resident-specific shelf plan keeps its separately verified checkout route.
+	extra_till=Vector2i(12,5)
 func plan_assortment(game,focus:int):
 	var req=Stories.request(game.s.residents[resident_id])
 	if req.is_empty():super.plan_assortment(game,focus);return
