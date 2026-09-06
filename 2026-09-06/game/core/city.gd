@@ -1,4 +1,5 @@
 extends RefCounted
+const Campaign=preload("res://core/campaign.gd")
 # Forecasts are deterministic, visible before ordering, and never created as a surprise penalty.
 const CHAPTERS=[
 ["春・いつもの店をつくる","朝の定番と放課後の寄り道。まずは棚切れと会計の流れを覚えよう。"],
@@ -24,17 +25,19 @@ const OCCASIONS={
 51:{"id":"office","name":"今年最後の朝活","detail":"出勤前のコーヒーかパン。店が大きくなっても、朝の一本の列は大切です。","needs":["coffee","bread"],"cats":[2,1],"share":0.5,"hour":8},
 55:{"id":"neighbors","name":"あかり町の持ち寄り会","detail":"最後まで、いつもの暮らし。温かい食事か甘いものを探す住人が集まります。","needs":["warm hearty","sweet"],"cats":[6,4],"share":0.45,"hour":17}}
 const DELAYS={9:180,18:360,32:240,46:480}
-static func event(day:int) -> Dictionary:
+static func event(day:int,plan:String="") -> Dictionary:
 	var result={"id":"normal","name":"いつもの街","detail":"いつもの人に、いつもの一品。","cats":[],"mult":1.0,"needs":[],"share":0.0}
 	match day%7:
 		3:result.merge({"id":"chili","name":"激辛がまん大会","detail":"辛い麺と飲み物。強気の参加者にも、水は必要。","cats":[5,2],"needs":["spicy noodle","drink"],"share":0.35},true)
 		5:result.merge({"id":"hero","name":"ヒーロー撮影日","detail":"世界より先に昼休み。お米の食事か温かい食事を探す人が昼に集中します。","cats":[0,6],"needs":["rice","warm hearty"],"share":0.4,"hour":12},true)
 		0:result.merge({"id":"pudding","name":"プリン総選挙","detail":"清き一口を。スイーツを探す人が増えます。食べ比べの一票を大切に。","cats":[4],"needs":["dessert"],"share":0.35},true)
 	if OCCASIONS.has(day):result.merge(OCCASIONS[day],true)
+	if Campaign.DAYS.has(day) and Campaign.PLANS.has(plan):
+		result.merge(Campaign.PLANS[plan],true);result.id="winter_"+plan;result.share=0.55
 	result.delivery_delay=DELAYS.get(day,0)
 	return result
-static func need(day:int,rid:int,seed:int) -> String:
-	var e=event(day)
+static func need(day:int,rid:int,seed:int,plan:String="") -> String:
+	var e=event(day,plan)
 	if e.needs.is_empty() or posmod(seed+day*37+rid*61,100)>=roundi(e.share*100):return ""
 	return e.needs[posmod(rid+day,e.needs.size())]
 static func delivery_tick(tick:int) -> int:

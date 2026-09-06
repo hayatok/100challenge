@@ -1,4 +1,5 @@
 extends Control
+const Campaign=preload("res://core/campaign.gd")
 const City=preload("res://core/city.gd")
 const Goods=preload("res://core/merchandise.gd")
 const Stories=preload("res://core/resident_stories.gd")
@@ -218,17 +219,19 @@ func _unhandled_key_input(event):
 		elif event.keycode in [KEY_1,KEY_2,KEY_4]:speed={KEY_1:1,KEY_2:2,KEY_4:4}[event.keycode]
 		elif event.keycode==KEY_Q:build_dir=(build_dir+1)%4;view.build_dir=build_dir;refresh()
 func toggle_pause():
+	if not sim.s.result.is_empty():show_result();return
 	if build_kind>=0:build_kind=-1;view.build_kind=-1
 	paused=not paused;sound.enabled=true;refresh()
 func refresh():
 	if header_stats==null:return
 	var s=sim.s
-	header_stats.text=Cat.SEASONS[sim.season()]+"  "+str(s.day)+"日目 ("+Cat.DAYS[(s.day-1)%7]+")\n"+time_string(sim.minute())+"   "+sim.weather_for(s.day)
+	var chapter=("継続経営" if s.won else "練習") if s.practice else Cat.SEASONS[sim.season()]
+	header_stats.text=chapter+"  "+str(s.day)+"日目 ("+Cat.DAYS[(s.day-1)%7]+")\n"+time_string(sim.minute())+"   "+sim.weather_for(s.day)
 	header_cash.text=money(s.cash)
 	star_label.text="★".repeat(s.star)+"☆".repeat(5-s.star)
 	if s.star>last_star:
-		last_star=s.star;notice("祝・"+str(s.star)+"つ星！ 仕入れ先・設備・街の住人が広がりました。");sound.effect("good")
-	pause_button.text="営業を再開" if paused else "一時停止"
+		last_star=s.star;notice("五つ星獲得！ 冬の約束を、最後まで。" if s.star==5 else "祝・"+str(s.star)+"つ星！ 仕入れ先・設備・街の住人が広がりました。");sound.effect("good")
+	pause_button.text="結果を見る" if not s.result.is_empty() else ("営業を再開" if paused else "一時停止")
 	for i in 3:speed_buttons[i].button_pressed=speed==[1,2,4][i]
 	news.text=(str(s.day)+"日 "+time_string(sim.minute())+" · " if size.x<900 else "")+sim.event_for(s.day).name+"  ·  店内 "+str(s.visits.filter(func(v):return v.pos.x>=0).size())+"人"
 	if build_kind!=last_build_kind:
@@ -310,11 +313,17 @@ func stat(parent:Node,title:String,value:String):
 	var h=row(parent);var l=label(title,h,13,MUTED);l.size_flags_horizontal=Control.SIZE_EXPAND_FILL;label(value,h,16)
 func goal_text() -> String:
 	if sim.s.get("layout_needs_review",false):return "旧配置の見直し：レジ裏と待機列を空けてください。建設で移設できます。"
+	if sim.s.practice:
+		return "これからも、この街のいつもの店。\n常連の願いと店づくりを続けよう。" if sim.s.won else "練習営業で、立て直しを試そう。\n本編の結果は変わりません。"
+	if sim.s.day>=29 and sim.s.day<=42 and sim.s.get("winter_plan","").is_empty():return "冬に届ける約束を選ぼう。\n経営ノートから、42日目まで。"
+	if sim.s.star==5 and not sim.s.won:
+		var winter=Campaign.metrics(sim.s)
+		return "五つ星獲得。冬の約束を仕上げよう。\n目的の品を買えた人 %d / %d人"%[winter.served,winter.completed]
 	if sim.s.star==4 and sim.s.review.get("status","")=="active":return "五つ星審査 "+str(sim.s.review.reports.size())+" / 14日\nこの調子で、最後まで。"
 	if sim.s.star==4 and sim.s.review.get("status","")=="failed":return "審査未達。経営ノートで条件を確認し、再挑戦しよう。"
 	return ["3日連続の黒字を達成\n現在 "+str(sim.s.streak)+" / 3日","常連を8人に\n現在 "+str(sim.regulars())+" / 8人","繁忙日に来客20人・購買率75%以上","増床し、2つの季節で7日計の黒字を出す","14日間の五つ星審査に挑戦","この街の、いつもの店。"][sim.s.star]
 func tutorial_text() -> String:
-	return ["まず営業をはじめて、お客さんを選んでみましょう。","棚を選ぶと品揃えを変えられます。『商品』で次便を発注しましょう。","注文は14時・翌6時に届きます。倉庫から棚へ運ぶのはスタッフです。","最初のレポートが届きました。売上と利益は別の数字。自動発注も使えます。","昼のレジと補充、どちらが足りない？ シフトと優先担当を見直しましょう。","店の得意分野を育てよう。常連の買い物がヒントになります。"][mini(sim.s.tutorial,5)]
+	return ["まず営業をはじめて、お客さんを選んでみましょう。","棚を選ぶと品揃えを変えられます。『商品』で次便を発注しましょう。","商品画面で次便の時刻を確認。倉庫から棚へ運ぶのはスタッフです。","最初のレポートが届きました。売上と利益は別の数字。自動発注も使えます。","昼のレジと補充、どちらが足りない？ シフトと優先担当を見直しましょう。","店の得意分野を育てよう。常連の買い物がヒントになります。"][mini(sim.s.tutorial,5)]
 func task_name(task:String) -> String:return {"idle":"店内を見回り","off":"勤務外","depot":"倉庫へ移動","stock":"棚へ補充","register":"レジ","clean":"清掃","rest":"休憩"}.get(task,task)
 func staff_details(parent:Node,id:int):
 	var w=sim.s.staff[id]
@@ -422,7 +431,7 @@ func show_title():
 	label("あの人が、今日も来た。",modal_content,28)
 	wrapped("小さなコンビニから、街の『いつもの店』へ。\n品揃え、発注、棚の配置、働く人。あなたの工夫で、お店の毎日が変わります。",modal_content,17)
 	divider(modal_content)
-	wrapped("56日間で五つ星を目指します。売れるだけでは黒字になりません。\nお客さんを観察して、欠品・行列・廃棄の原因を見つけましょう。",modal_content,15)
+	wrapped("四季56日間。五つ星と、街に届ける「冬の約束」を目指します。\n欠品・行列・廃棄を直し、あなたの店の得意分野を育てましょう。",modal_content,15)
 	button("お店を開ける",modal_content,func():intro=false;restore_pause=false;close_modal();sound.enabled=true;sound.effect("open"),180)
 	if FileAccess.file_exists(active_save):button("前のお店のつづき",modal_content,func():load_game();intro=false;restore_pause=true;close_modal())
 	wrapped("Space：停止  /  1・2・4：速度  /  B：建設  /  P：商品  /  R：経営\n店内ドラッグ：移動  /  ホイール：拡大縮小\n音は開店後に流れます。設定で音量を変えられます。",modal_content,12,MUTED)
@@ -525,7 +534,10 @@ func open_report():
 	wrapped(City.chapter(sim.s.day)[0]+"\n"+City.chapter(sim.s.day)[1],modal_content,13,MUTED)
 	var actions=flow(modal_content)
 	button("14日先までの予定",actions,open_calendar)
-	if sim.s.star>=4 and sim.s.review.get("status","") not in ["active","passed"]:button("明朝から五つ星審査",actions,func():act("review",{},open_report))
+	button("冬の約束を知る" if sim.s.day<29 else ("冬の約束を選ぶ" if sim.s.get("winter_plan","").is_empty() and sim.s.day<=42 else "冬の約束と成績"),actions,open_winter)
+	if sim.s.star>=4 and sim.s.review.get("status","") not in ["active","passed"]:
+		var can_review=sim.s.day<=42 or sim.s.practice
+		button("明朝から五つ星審査" if can_review else "審査予約は42日目まで",actions,func():act("review",{},open_report)).disabled=not can_review
 	button("救済融資 ¥20,000",actions,func():act("loan",{},open_report)).disabled=sim.s.loan
 	wrapped("必要な固定費："+money(sim.fixed_cost()+sim.wages())+" / 日  ·  倉庫を含む廃棄に注意。",modal_content,13,MUTED)
 	if sim.s.debt>0:wrapped(str(sim.s.due)+"日目の返済："+money(sim.s.debt),modal_content,14,Color("a85240"))
@@ -564,6 +576,32 @@ func open_report():
 			if report.hours.has(hour):hours.append(str(hour)+"時 "+money(report.hours[hour]))
 		wrapped("時間帯別売上："+" / ".join(hours),modal_content,12,MUTED)
 		divider(modal_content)
+func open_winter():
+	open_modal("街に届ける、冬の約束")
+	wrapped("五つ星の先に、あなたの店らしい冬を。",modal_content,21)
+	wrapped("29〜42日目に1つ選択。\n43日目からは変更できません。\n開催日：45・49・53・56日目。\n約束を目当てにした人が来店します。",modal_content,14)
+	wrapped("達成条件\n・目的の品を買えた人70%以上。\n・買い物終了60人以上。\n・3つの目的それぞれで12人以上に販売。\n五つ星と約束を達成し、所持金を残して56日目を終えよう。",modal_content,14)
+	var chosen=sim.s.get("winter_plan","")
+	for key in Campaign.PLANS:
+		var plan=Campaign.PLANS[key]
+		divider(modal_content)
+		wrapped(("選択中：" if chosen==key else "")+plan.name+" / %02d時ごろ"%[plan.hour],modal_content,18)
+		wrapped(plan.detail,modal_content,14)
+		for need in plan.needs:
+			var examples=sim.products.filter(func(p):return Stories.product_matches(p.id,need)).slice(0,3).map(func(p):return p.name)
+			wrapped(sim.need_name(need)+"："+" / ".join(examples),modal_content,13,MUTED)
+		if sim.s.day>=29 and sim.s.day<=42:
+			button("この約束を選ぶ" if chosen!=key else "この約束を選択中",modal_content,func():act("winter_plan",{"value":key},open_winter)).disabled=chosen==key
+	if not chosen.is_empty():
+		divider(modal_content)
+		winter_stats(modal_content)
+func winter_stats(parent:Node):
+	var winter=Campaign.metrics(sim.s)
+	wrapped("冬の約束：%d / %d人にお届け（%.0f%%）"%[winter.served,winter.completed,winter.rate*100],parent,16)
+	for need in winter.groups:
+		var tally=winter.groups[need]
+		wrapped(("✓ " if tally.served>=12 else "○ ")+sim.need_name(need)+"：%d / 12人以上"%[tally.served],parent,14)
+	wrapped("56日目までの約束来店の集計。買った個数ではなく、目的を満たした人数です。",parent,12,MUTED)
 func open_calendar():
 	open_modal("街のカレンダー")
 	wrapped("向こう14日間の予告。品揃えとシフトを準備しましょう。\n本編は56日間。五つ星審査の予約は42日目まで。",modal_content,14)
@@ -577,7 +615,7 @@ func open_calendar():
 		divider(modal_content)
 func open_help():
 	open_modal("店長の手引き")
-	for item in [["01  人を見る","お客さんを選ぶと好み・予算・待てる時間が分かります。いつもの人の『買えなかった』が改善のヒント。"],["02  棚と倉庫は別","発注画面で到着日時を確認。通常は14時か翌6時、配送が遅れる日は事前にカレンダーで予告します。スタッフが棚に補充して初めて買えます。冷たいものは冷蔵、温かいものは保温棚へ。"],["03  売上と利益は別","売上から売れた商品の原価・廃棄・固定費・人件費を引いたものが利益。発注は現金を減らします。毎朝6時のレポートで両方を見ましょう。"],["04  人も時間も有限","1人2枠までのシフト。レジを増やしても店員がいなければ動きません。補充・清掃・休憩にも人と時間が必要。"],["05  配置で変わる経営","設備を選んで移動できます。向きを変えると利用面も変化。通路を短くすれば、急いでいる人も買いやすくなります。"],["06  星を育てる","3日連続黒字→常連8人→繁忙日の購買率75%→増床と2季節の黒字→14日間の最終審査。期限は56日。"],["07  自動化は店長の方針","自動発注は目標在庫を補うだけ。季節やお客さんに合わせて目標を変えるのはあなたです。"],["08  負けからの一手","資金不足では時間が止まります。設備売却、シフト削減、一度だけの融資で再建。期限後は練習として続けられます。"]]:
+	for item in [["01  人を見る","お客さんを選ぶと好み・予算・待てる時間が分かります。いつもの人の『買えなかった』が改善のヒント。"],["02  棚と倉庫は別","発注画面で到着日時を確認。通常は14時か翌6時、配送が遅れる日は事前にカレンダーで予告します。スタッフが棚に補充して初めて買えます。冷たいものは冷蔵、温かいものは保温棚へ。"],["03  売上と利益は別","売上から売れた商品の原価・廃棄・固定費・人件費を引いたものが利益。発注は現金を減らします。毎朝6時のレポートで両方を見ましょう。"],["04  人も時間も有限","1人2枠までのシフト。レジを増やしても店員がいなければ動きません。補充・清掃・休憩にも人と時間が必要。"],["05  配置で変わる経営","設備を選んで移動できます。向きを変えると利用面も変化。通路を短くすれば、急いでいる人も買いやすくなります。"],["06  星を育てる","3日連続黒字→常連8人→繁忙日の購買率75%→増床と2季節の黒字→14日間の最終審査。五つ星の先は、選んだ冬の約束を達成して56日目を迎えよう。"],["07  自動化は店長の方針","自動発注は目標在庫を補うだけ。季節やお客さんに合わせて目標を変えるのはあなたです。"],["08  負けからの一手","資金不足では時間が止まります。設備売却、シフト削減、一度だけの融資で再建。期限後は練習として続けられます。"]]:
 		label(item[0],modal_content,18);wrapped(item[1],modal_content,15);divider(modal_content)
 func open_settings():
 	open_modal("設定")
@@ -617,8 +655,17 @@ func show_result():
 	paused=true
 	var won=sim.s.result=="won"
 	open_modal("この街の、いつもの店。" if won else ("経営を立て直そう" if sim.s.result=="debt" else "最初の一年、お疲れさま。"))
-	wrapped("五つ星、おめでとう。" if won else ("所持金が足りません。" if sim.s.result=="debt" else "五つ星には、あと一歩。"),modal_content,26)
+	wrapped("五つ星、おめでとう。" if won else ("所持金が足りません。" if sim.s.result=="debt" else ("冬の約束には、あと一歩。" if sim.s.star==5 else "五つ星には、あと一歩。")),modal_content,26)
 	wrapped("名前を覚えたあの人が、今日もあなたの店に来る。\n小さな工夫が、街のいつもの風景になりました。" if won else "経営ノートには、次の一手のヒントが残っています。品揃え、シフト、売り場を見直しましょう。",modal_content,17)
+	if sim.s.result!="debt":
+		var plan=sim.s.get("winter_plan","")
+		if won and Campaign.PLANS.has(plan):wrapped(Campaign.PLANS[plan].ending,modal_content,17)
+		var neighbors=sim.s.residents.slice(0,12).filter(func(r):return r.episode>0)
+		neighbors.sort_custom(func(a,b):return a.buys>b.buys)
+		for resident in neighbors.slice(0,3):
+			wrapped(resident.name+"「"+Cat.EPISODES[resident.id][(resident.episode-1)*2+1]+"」",modal_content,14)
+		if plan.is_empty():wrapped("冬の約束が未選択でした。29〜42日目に経営ノートで選べます。",modal_content,14)
+		else:winter_stats(modal_content)
 	stat(modal_content,"常連",str(sim.regulars())+"人");stat(modal_content,"お店の資金",money(sim.s.cash))
 	button("経営ノートを見る",modal_content,open_report)
 	if sim.s.result=="debt":

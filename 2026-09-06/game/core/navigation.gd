@@ -66,6 +66,23 @@ static func queue_cells(f:Dictionary,fixtures:Array,tier:int) -> Array:
 			cells.append(p)
 		if cells.size()>best.size():best=cells
 	return best
+static func browse_cells(f:Dictionary,fixtures:Array,tier:int) -> Array:
+	var head=access(f);var d:Vector2i=DIRS[int(f.dir)%4]
+	var blocked=obstacles(fixtures,false);var dims=dimensions(tier)
+	for other in fixtures:
+		if other.id!=f.id:blocked[access(other)]=true
+		if is_register(other):
+			for cell in queue_cells(other,fixtures,tier):blocked[cell]=true
+	var best=[head]
+	for tangent in [Vector2i(d.y,-d.x),Vector2i(-d.y,d.x)]:
+		var cells=[head]
+		for i in range(1,3):
+			var at=head+tangent*i
+			if not inside(at,dims) or blocked.has(at) or at in [DOOR,DOOR+Vector2i.RIGHT,DEPOT]:break
+			cells.append(at)
+		if cells.size()>best.size():best=cells
+	return best
+
 static func validate(fixtures:Array,tier:int,positions:Array=[],strict:bool=true) -> String:
 	var occupied={};var dims=dimensions(tier)
 	for f in fixtures:

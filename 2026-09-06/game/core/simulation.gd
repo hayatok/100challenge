@@ -1,4 +1,5 @@
 extends RefCounted
+const Campaign=preload("res://core/campaign.gd")
 const City=preload("res://core/city.gd")
 const Goods=preload("res://core/merchandise.gd")
 const Stories=preload("res://core/resident_stories.gd")
@@ -14,7 +15,7 @@ func _init(world_seed:int=20260906):
 
 func reset(world_seed:int):
 	rng.seed=world_seed
-	s={"layout_version":2,"seed":world_seed,"rng":rng.state,"tick":0,"day":1,"cash":42000,"tier":0,"star":0,"residents":Catalog.residents(world_seed),"staff":Catalog.staff(),"fixtures":[],"warehouse":[],"orders":[],"visits":[],"next_visit":0,"next_fixture":0,"prices":{},"targets":{},"auto":false,"auto_limit":8000,"reports":[],"today":new_report(1),"logs":[],"effects":[],"schedule":[],"clean":100.0,"loan":false,"debt":0,"due":0,"review":{},"pending_review":false,"won":false,"result":"","practice":false,"tutorial":0,"favorites":[],"streak":0,"seasons_profit":[],"event_pass":false,"elapsed":0,"episode_events":[]}
+	s={"layout_version":2,"seed":world_seed,"rng":rng.state,"tick":0,"day":1,"cash":42000,"tier":0,"star":0,"residents":Catalog.residents(world_seed),"staff":Catalog.staff(),"fixtures":[],"warehouse":[],"orders":[],"visits":[],"next_visit":0,"next_fixture":0,"prices":{},"targets":{},"auto":false,"auto_limit":8000,"reports":[],"today":new_report(1),"logs":[],"effects":[],"schedule":[],"clean":100.0,"loan":false,"debt":0,"due":0,"review":{},"pending_review":false,"winter_plan":"","won":false,"result":"","practice":false,"tutorial":0,"favorites":[],"streak":0,"seasons_profit":[],"event_pass":false,"elapsed":0,"episode_events":[]}
 	for cat in 8:
 		var kind=[0,0,1,0,1,0,3,4][cat]
 		var layout=[Vector3i(5,3,3),Vector3i(6,3,1),Vector3i(5,0,0),Vector3i(5,5,3),Vector3i(6,0,0),Vector3i(6,5,1),Vector3i(2,9,3),Vector3i(11,4,3)]
@@ -31,7 +32,7 @@ func reset(world_seed:int):
 	log_message("朝6時。小さな店の、大きな一日が始まります。")
 
 func new_report(day:int) -> Dictionary:
-	return {"day":day,"sales":0,"cogs":0,"waste":0,"fixed":0,"wages":0,"work_minutes":{},"orders":0,"investment":0,"other":0,"profit":0,"visitors":0,"buyers":0,"miss":{},"product_sales":{},"hours":{},"returners":[],"cash_open":s.get("cash",42000),"event":event_for(day).id,"season":season(day),"need_visitors":0,"needs_served":0,"completed":0,"purpose_completed":0,"event_results":{},"unmet_needs":{},"lost_visits":[],"waste_products":{}}
+	return {"day":day,"sales":0,"cogs":0,"waste":0,"fixed":0,"wages":0,"work_minutes":{},"orders":0,"investment":0,"other":0,"profit":0,"visitors":0,"buyers":0,"miss":{},"product_sales":{},"hours":{},"returners":[],"cash_open":s.get("cash",42000),"event":event_for(day).id,"season":season(day),"need_visitors":0,"needs_served":0,"completed":0,"purpose_completed":0,"event_results":{},"unmet_needs":{},"lost_visits":[],"waste_products":{},"winter_results":{}}
 
 func season(day:int=-1) -> int:
 	return ((s.day if day<0 else day)-1)/14%4
@@ -92,7 +93,7 @@ func miss(reason:String,product:int=-1):
 		var key="p"+str(product)
 		s.today.miss[key]=s.today.miss.get(key,0)+1
 
-func event_for(day:int) -> Dictionary:return City.event(day)
+func event_for(day:int) -> Dictionary:return City.event(day,s.get("winter_plan",""))
 func weather_for(day:int) -> String:
 	var forecast=event_for(day)
 	if forecast.has("weather"):return forecast.weather
@@ -107,7 +108,7 @@ func new_schedule():
 		if rng.randf()>chance:continue
 		var hour=r.hour
 		if s.day%7 in [6,0]:hour=(hour+2)%24
-		if event.has("hour") and not City.need(s.day,i,s.seed).is_empty():hour=event.hour
+		if event.has("hour") and not City.need(s.day,i,s.seed,s.get("winter_plan","")).is_empty():hour=event.hour
 		var t=(hour*60-360+1440)%1440+rng.randi_range(0,80)
 		s.schedule.append({"at":s.tick+mini(t,1439),"rid":i,"wait":0})
 	s.schedule.sort_custom(func(a,b):return a.at<b.at)
@@ -203,9 +204,14 @@ func command(name:String,args:Dictionary={}) -> String:
 			s.cash-=cost;s.today.investment+=cost;w.training+=1;w.register+=0.18;w.stock+=0.18;w.service+=0.15
 			log_message(w.name+"の教育完了。レジも補充も一歩成長。")
 		"favorite":s.residents[int(args.id)].favorite=not s.residents[int(args.id)].favorite
+		"winter_plan":
+			if s.day<29 or s.day>42:return "冬の約束は29〜42日目に選べます。冬が始まると変更できません。"
+			var plan=str(args.get("value",""))
+			if not Campaign.PLANS.has(plan):return "街に届ける約束を選んでください。"
+			s.winter_plan=plan;log_message("冬の約束："+Campaign.PLANS[plan].name+"。45・49・53・56日目にお待ちしています。")
 		"review":
 			if s.star<4:return "四つ星に到達すると最終審査を受けられます。"
-			if s.day>42:return "期限内の14日間を確保できません。"
+			if s.day>42 and not s.practice:return "期限内の14日間を確保できません。"
 			if s.review.get("status","") in ["active","passed"] or s.pending_review:return "審査はすでに予約・進行中です。"
 			s.pending_review=true;log_message("明朝から14日間、五つ星審査に挑戦します。")
 		"loan":
@@ -340,9 +346,17 @@ func spawn_due():
 	for i in range(s.schedule.size()-1,-1,-1):
 		var due=s.schedule[i]
 		if due.at>s.tick:continue
-		if s.visits.size()>=40:
+		if s.visits.filter(func(v):return v.state!="leaving").size()>=40:
 			due.wait+=1
-			if due.wait>30:miss("満員");s.today.visitors+=1;s.schedule.remove_at(i)
+			if due.wait>30:
+				miss("満員");s.today.visitors+=1
+				var need=City.need(s.day,due.rid,s.seed,s.get("winter_plan",""))
+				record_visit_outcome({"need":need,"event_id":event_for(s.day).id},false)
+				if not need.is_empty():
+					s.today.need_visitors=s.today.get("need_visitors",0)+1
+					s.today.unmet_needs[need]=s.today.unmet_needs.get(need,0)+1
+				if s.today.lost_visits.size()<12:s.today.lost_visits.append({"rid":due.rid,"need":need,"reason":"満員","minute":minute()})
+				s.schedule.remove_at(i)
 			continue
 		var spawn=Nav.street_end(s.tier,due.rid%2!=0)
 		if s.visits.any(func(v):return v.pos==spawn):continue
@@ -356,7 +370,7 @@ func spawn_due():
 		if season()==2 and rng.randf()<0.15:goal=4
 		var budget=roundi(r.budget*rng.randf_range(0.8,1.15))
 		budget=mini(budget,Stories.request(r).get("budget",budget))
-		var v={"id":s.next_visit,"rid":r.id,"pos":spawn,"prev":spawn,"path":Nav.path(spawn,Nav.DOOR,s.fixtures,s.tier),"state":"entering","target":-1,"basket":[],"spent":0,"budget":budget,"goal":goal,"wait":0,"timer":0,"steps":0,"attempts":0,"wanted":-1,"mood":"今日は何にしよう","since":s.tick,"bought":false,"dir":0,"need":City.need(s.day,r.id,s.seed),"failure_reason":"","event_id":event.id}
+		var v={"id":s.next_visit,"rid":r.id,"pos":spawn,"prev":spawn,"path":Nav.path(spawn,Nav.DOOR,s.fixtures,s.tier),"state":"entering","target":-1,"basket":[],"spent":0,"budget":budget,"goal":goal,"wait":0,"timer":0,"steps":0,"attempts":0,"wanted":-1,"mood":"今日は何にしよう","since":s.tick,"bought":false,"dir":0,"need":City.need(s.day,r.id,s.seed,s.get("winter_plan","")),"failure_reason":"","event_id":event.id}
 		s.next_visit+=1;s.visits.append(v);s.schedule.remove_at(i);s.today.visitors+=1;r.visits+=1
 		if not v.need.is_empty():
 			s.today.need_visitors=s.today.get("need_visitors",0)+1;v.mood=need_name(v.need)+"を探しています"
@@ -365,9 +379,10 @@ func spawn_due():
 func move_actor(a:Dictionary) -> bool:
 	if a.path.is_empty():return true
 	var next:Vector2i=a.path[0]
+	if a.has("task") and a.path.size()==1 and s.visits.any(func(v):return v.pos==next):return false
 	var blocked={}
 	for v in s.visits:
-		if v!=a and v.state in ["browsing","queue","paying"]:blocked[v.pos]=true
+		if v!=a and v.state in ["browsing","browse_queue","queue","paying"]:blocked[v.pos]=true
 	for w in s.staff:
 		if w!=a and working(w) and w.task in ["register","stock"] and w.path.is_empty():blocked[w.pos]=true
 	if blocked.has(next):
@@ -385,6 +400,28 @@ func need_name(group:String) -> String:
 	for tag in group.split(" "):
 		words.append(Goods.TAG_LABELS.get(tag,tag))
 	return "・".join(words)
+func browse_line(fixture_id:int) -> Array:
+	var head=Nav.access(fixture(fixture_id))
+	var line=s.visits.filter(func(v):return v.target==fixture_id and (v.state in ["walking","browse_queue","browsing"] or (v.state=="choose" and not v.basket.is_empty() and v.pos==head)))
+	line.sort_custom(func(a,b):return a.get("browse_ticket",a.id)<b.get("browse_ticket",b.id))
+	return line
+
+func move_to_shelf(v:Dictionary):
+	var f=fixture(v.target)
+	if f.is_empty() or f.product!=v.wanted or f.ready>s.tick:v.state="choose";return
+	var index=browse_line(f.id).find(v);var cells=Nav.browse_cells(f,s.fixtures,s.tier)
+	if index<0 or index>=cells.size():v.state="choose";return
+	var destination:Vector2i=cells[index];v.browse_slot=destination
+	if v.pos!=destination:
+		if v.path.is_empty() or v.path[-1]!=destination:v.path=Nav.path(v.pos,destination,s.fixtures,s.tier)
+		# The next shopper takes the place only after its previous occupant has left.
+		var occupied=s.visits.any(func(other):return other.id!=v.id and other.pos==destination)
+		occupied=occupied or s.staff.any(func(w):return working(w) and w.pos==destination)
+		if not (v.path.size()==1 and occupied):move_actor(v)
+	if v.pos!=destination:return
+	if index==0:v.state="browsing";v.timer=2;v.dir=Nav.DIRS.find(Vector2i(f.x,f.y)-v.pos)
+	else:v.state="browse_queue";v.mood="次は、わたしの番。"
+
 func choose(v:Dictionary):
 	var r=s.residents[v.rid];var best={};var best_score=-1000.0
 	var offered=0;var stocked=0;var affordable=0;var reachable=0;var busy=false
@@ -400,17 +437,21 @@ func choose(v:Dictionary):
 		var price=selling_price(p)
 		if price+v.spent>v.budget:continue
 		affordable+=1
-		var path=Nav.path(v.pos,Nav.access(f),s.fixtures,s.tier)
-		if path.is_empty() and v.pos!=Nav.access(f):continue
+		var line=browse_line(f.id);var cells=Nav.browse_cells(f,s.fixtures,s.tier)
+		var holding=line.has(v)
+		if not holding and line.size()>=cells.size():busy=true;continue
+		var slot:Vector2i=cells[0] if holding else cells[line.size()]
+		if s.visits.any(func(other):return other.target!=f.id and other.state in ["walking","browse_queue","browsing"] and other.get("browse_slot",other.pos)==slot):busy=true;continue
+		var path=Nav.path(v.pos,slot,s.fixtures,s.tier)
+		if path.is_empty() and v.pos!=slot:continue
 		reachable+=1
-		if s.visits.any(func(other):return other.id!=v.id and other.target==f.id and other.state in ["walking","browsing"]):busy=true;continue
 		var cat=products[p].cat
 		var personal=Goods.affinity(r.id,p)+Stories.relevance(r,p,basket_ids)
 		var score=personal+r.taste[cat]*35+(40 if cat==v.goal or seeking else 0)+products[p].quality*12-price/float(r.budget)*35-path.size()*0.65+rng.randf()*8
 		var premium=price/float(products[p].price)-1.0
 		score-=premium*145.0*r.get("price_sensitivity",1.0)
 		if v.attempts>0:score-=counts(v.basket,p)*35
-		if score>best_score:best_score=score;best={"fixture":f.id,"product":p,"path":path}
+		if score>best_score:best_score=score;best={"fixture":f.id,"product":p,"path":path,"slot":slot,"holding":holding}
 	if best.is_empty() or best_score<25:
 		if best.is_empty() and busy:v.mood="先の人が選ぶのを待とう";return
 		if v.basket.is_empty():
@@ -424,7 +465,7 @@ func choose(v:Dictionary):
 			r.last_reason=v.mood;leave(v,false)
 		else:v.state="checkout"
 		return
-	v.target=best.fixture;v.wanted=best.product;v.path=best.path;v.state="walking";v.mood=products[best.product].name+"が気になる"
+	v.target=best.fixture;v.wanted=best.product;v.path=best.path;v.browse_slot=best.slot;v.browse_ticket=v.get("browse_ticket",v.id) if best.holding else s.tick*10000+v.id;v.state="walking";v.mood=products[best.product].name+"が気になる"
 
 func update_visits():
 	# People who have physically joined a line precede distant reservations.
@@ -445,11 +486,7 @@ func update_visits():
 			"entering":
 				if move_actor(v) and v.pos==Nav.DOOR:v.state="choose"
 			"choose":choose(v)
-			"walking":
-				if move_actor(v):
-					var destination=fixture(v.target)
-					if not destination.is_empty() and v.pos==Nav.access(destination):v.state="browsing";v.timer=2;v.dir=Nav.DIRS.find(Vector2i(destination.x,destination.y)-v.pos)
-					else:v.state="choose"
+			"walking","browse_queue":move_to_shelf(v)
 			"browsing":
 				v.timer-=1
 				if v.timer>0:continue
@@ -507,8 +544,7 @@ func joke_for(rid:int,p:int) -> String:
 	if products[p].joke:return ["明日から本気。今日はこれ。","これは必要経費です。","自分への議決、可決。","胃袋の会議を始めます。"][rid%4]
 	return ["これ、いつもの。","ついでに、もう一つ。","今日もお疲れさま。","いいもの見つけた。"][rid%4]
 
-func leave(v:Dictionary,success:bool):
-	if v.state=="leaving":return
+func record_visit_outcome(v:Dictionary,success:bool):
 	s.today.completed=s.today.get("completed",0)+1
 	if not v.get("need","").is_empty():s.today.purpose_completed=s.today.get("purpose_completed",0)+1
 	var event_id=v.get("event_id",event_for(s.day).id)
@@ -518,6 +554,16 @@ func leave(v:Dictionary,success:bool):
 		tally.completed+=1
 		if success:tally.buyers+=1
 		s.today.event_results[event_id]=tally
+	if event_id.begins_with("winter_") and not v.get("need","").is_empty():
+		if not s.today.has("winter_results"):s.today.winter_results={}
+		var tally=s.today.winter_results.get(v.need,{"completed":0,"served":0})
+		tally.completed+=1
+		if success and v.get("purpose_met",false):tally.served+=1
+		s.today.winter_results[v.need]=tally
+
+func leave(v:Dictionary,success:bool):
+	if v.state=="leaving":return
+	record_visit_outcome(v,success)
 	var r=s.residents[v.rid]
 	for f in s.fixtures:f.queue.erase(v.id)
 	if not success:
@@ -552,7 +598,8 @@ func update_registers():
 			cost+=l.amount*l.cost;s.today.product_sales[l.product]=s.today.product_sales.get(l.product,0)+l.amount
 		var prior=r.last_day
 		s.cash+=v.spent;s.today.sales+=v.spent;s.today.cogs+=cost;s.today.buyers+=1
-		if not v.get("need","").is_empty() and Stories.basket_has(v.basket.map(func(l):return int(l.product)),v.need):s.today.needs_served=s.today.get("needs_served",0)+1
+		v.purpose_met=not v.get("need","").is_empty() and Stories.basket_has(v.basket.map(func(l):return int(l.product)),v.need)
+		if v.purpose_met:s.today.needs_served=s.today.get("needs_served",0)+1
 		var h=minute()/60;s.today.hours[h]=s.today.hours.get(h,0)+v.spent
 		if prior>0 and prior!=s.day and not s.today.returners.has(r.id):s.today.returners.append(r.id)
 		r.buys+=1;r.last_day=s.day;r.satisfaction=clampf(r.satisfaction+8+w.service*2-(100-s.clean)*0.12,0,100)
@@ -603,7 +650,7 @@ func update_staff():
 			if w.timer<=0:w.task="idle"
 			continue
 		if w.fatigue>85 and w.task=="idle":
-			w.task="rest";w.timer=25;w.recovery=1.8
+			w.task="rest";w.timer=25;w.recovery=1.8;w.path=Nav.path(w.pos,Nav.DEPOT,s.fixtures,s.tier,true)
 			for f in s.fixtures:
 				if equipment[f.kind].kind=="rest" and f.ready<=s.tick:w.timer=10 if f.kind==19 else 15;w.recovery=4.5 if f.kind==19 else 3.0;w.path=Nav.path(w.pos,Nav.access(f),s.fixtures,s.tier,true);break
 			continue
@@ -671,6 +718,18 @@ func update_staff():
 			if not best.is_empty():w.task="depot";w.target=best.id;w.path=Nav.path(w.pos,Nav.DEPOT,s.fixtures,s.tier,true);continue
 		if s.clean<85 and w.priority in ["auto","clean"]:
 			w.task="clean";w.timer=8;w.path=Nav.path(w.pos,Vector2i(2,2),s.fixtures,s.tier,true)
+		elif w.task=="idle":
+			# Clear a shelf face after restocking instead of standing in its customer's place.
+			if w.path.is_empty() and s.fixtures.any(func(f):return Nav.access(f)==w.pos):
+				var destination=Nav.DEPOT
+				for d in Nav.DIRS:
+					var at:Vector2i=w.pos+d
+					if Nav.obstacles(s.fixtures,true).has(at) or not Nav.inside(at,Nav.dimensions(s.tier)):continue
+					if s.fixtures.any(func(f):return Nav.access(f)==at or (Nav.is_register(f) and Nav.clerk(f)==at)):continue
+					if s.visits.any(func(v):return v.pos==at):continue
+					destination=at;break
+				w.path=Nav.path(w.pos,destination,s.fixtures,s.tier,true)
+			move_actor(w)
 
 func regulars() -> int:
 	return s.residents.filter(func(r):return r.loyalty>=35).size()
@@ -710,7 +769,9 @@ func finish_day():
 	log_message("営業"+str(s.day)+"日目：利益 ¥"+str(r.profit)+("。本日の常連：廃棄箱。" if r.waste>r.sales*0.15 else "。お疲れさまでした。"))
 	s.day+=1;s.today=new_report(s.day);s.tutorial=maxi(s.tutorial,3)
 	if s.cash<0:s.result="debt"
-	elif s.day>56 and not s.won and not s.practice:s.result="deadline"
+	elif s.day>56 and not s.practice:
+		s.won=Campaign.ending_qualified(s)
+		s.result="won" if s.won else "deadline"
 	new_schedule()
 
 func update_review(report:Dictionary):
@@ -724,8 +785,8 @@ func update_review(report:Dictionary):
 	if s.review.reports.size()<14:return
 	var result=review_metrics()
 	if result.pass:
-		s.won=true;s.star=5;s.result="won";s.review.status="passed"
-		log_message("五つ星のまちあかりマート。この街の『いつもの店』になりました。")
+		s.star=5;s.review.status="passed"
+		log_message("練習で五つ星条件を達成。本編の結果はそのままです。" if s.practice else "五つ星獲得！ 次は冬の約束。街の『いつもの店』として一年を締めくくろう。")
 	else:
 		log_message("五つ星審査は未達。経営画面で理由を振り返りましょう。")
 		s.review.status="failed"

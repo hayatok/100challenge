@@ -7,7 +7,7 @@ func run():
 	for dimensions in [Vector2i(375,812),Vector2i(768,1024),Vector2i(1024,768),Vector2i(1440,900),Vector2i(1920,1080)]:
 		root.size=dimensions;main.configure_viewport()
 		await process_frame;await process_frame
-		for screen in ["show_title","open_build","open_products","open_staff","open_residents","open_report","open_calendar","open_help","open_settings"]:
+		for screen in ["show_title","open_build","open_products","open_staff","open_residents","open_report","open_winter","open_calendar","open_help","open_settings"]:
 			main.call(screen)
 			await process_frame;await process_frame
 			screens+=1
@@ -30,6 +30,10 @@ func run():
 	for i in 20:main.refresh()
 	if not "レジ" in rejection or main.toast.text!=rejection:
 		errors+=1;printerr("Placement rejection was overwritten by a refresh")
+	main.build_kind=-1;main.sim.s.result="deadline";main.show_result();main.open_report();main.close_modal();main.refresh()
+	if main.pause_button.text!="結果を見る":errors+=1;printerr("Ending lost its return action")
+	main.pause_button.pressed.emit()
+	if not main.modal.visible or find_button(main.modal,"期限後の練習として続ける")==null:errors+=1;printerr("Cannot return from report to ending")
 	print("UI: ",screens," screens, ",errors," horizontal overflow failures")
 	quit(1 if errors else 0)
 func inspect(node:Node,width:int,screen:String):
