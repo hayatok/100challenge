@@ -2,6 +2,8 @@
 
 **あの人が、今日も来た。**
 
+現在はアルファ版です。
+
 120人の住人が暮らす街で、56日間の五つ星を目指すコンビニ経営ゲーム。Godot 4.7.2 / GDScript。品揃え、発注、価格、売り場、シフトを組み合わせて、廃棄・欠品・行列を改善します。
 
 ## 遊び方
@@ -33,6 +35,7 @@ npm run build:mac   # macOSアプリ -> builds/macos/
 ```sh
 npm test
 npm run test:ui
+npm run test:circulation        # 入口・列・会計位置・旧配置の回帰検証
 npm run balance                # 10seed × 6方針、全60通し試験
 node scripts/godot.mjs balance --quick
 npm run check

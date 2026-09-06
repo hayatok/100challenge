@@ -24,6 +24,12 @@ func run():
 		await process_frame
 		if not main.sim.s.residents[0].favorite or find_button(main.sidebar,"お気に入りを解除")==null:
 			errors+=1;printerr("Favorite action did not persist")
+	main.build_kind=0;main.refresh()
+	main.on_place(Vector2i(3,7))
+	var rejection=main.toast.text
+	for i in 20:main.refresh()
+	if not "レジ" in rejection or main.toast.text!=rejection:
+		errors+=1;printerr("Placement rejection was overwritten by a refresh")
 	print("UI: ",screens," screens, ",errors," horizontal overflow failures")
 	quit(1 if errors else 0)
 func inspect(node:Node,width:int,screen:String):

@@ -32,6 +32,7 @@ var ui_clock=0.0
 var selected_kind=""
 var selected_id=-1
 var build_kind=-1
+var last_build_kind=-1
 var build_dir=0
 var move_id=-1
 var restore_pause=true
@@ -226,8 +227,10 @@ func refresh():
 		last_star=s.star;notice("祝・"+str(s.star)+"つ星！ 仕入れ先・設備・街の住人が広がりました。");sound.effect("good")
 	pause_button.text="営業を再開" if paused else "一時停止"
 	for i in 3:speed_buttons[i].button_pressed=speed==[1,2,4][i]
-	news.text=(str(s.day)+"日 "+time_string(sim.minute())+" · " if size.x<900 else "")+sim.event_for(s.day).name+"  ·  店内 "+str(s.visits.size())+"人"
-	if build_kind>=0:toast.text="建設中："+sim.equipment[build_kind].name+" / 店内をクリックして設置 · Qで回転 · Escで終了"
+	news.text=(str(s.day)+"日 "+time_string(sim.minute())+" · " if size.x<900 else "")+sim.event_for(s.day).name+"  ·  店内 "+str(s.visits.filter(func(v):return v.pos.x>=0).size())+"人"
+	if build_kind!=last_build_kind:
+		last_build_kind=build_kind
+		if build_kind>=0:toast.text="建設中："+sim.equipment[build_kind].name+" / 店内をクリックして設置 · Qで回転 · Escで終了"
 	update_sidebar()
 func on_pick(kind:String,id:int):
 	selected_kind=kind;selected_id=id;view.selected_kind=kind;view.selected_id=id;sound.effect("click")
@@ -300,6 +303,7 @@ func refresh_sidebar():
 func stat(parent:Node,title:String,value:String):
 	var h=row(parent);var l=label(title,h,13,MUTED);l.size_flags_horizontal=Control.SIZE_EXPAND_FILL;label(value,h,16)
 func goal_text() -> String:
+	if sim.s.get("layout_needs_review",false):return "旧配置の見直し：レジ裏と待機列を空けてください。建設で移設できます。"
 	if sim.s.star==4 and sim.s.review.get("status","")=="active":return "五つ星審査 "+str(sim.s.review.reports.size())+" / 14日\nこの調子で、最後まで。"
 	if sim.s.star==4 and sim.s.review.get("status","")=="failed":return "審査未達。経営ノートで条件を確認し、再挑戦しよう。"
 	return ["3日連続の黒字を達成\n現在 "+str(sim.s.streak)+" / 3日","常連を8人に\n現在 "+str(sim.regulars())+" / 8人","繁忙日に来客20人・購買率75%以上","増床し、2つの季節で7日計の黒字を出す","14日間の五つ星審査に挑戦","この街の、いつもの店。"][sim.s.star]
@@ -413,7 +417,7 @@ func show_title():
 	wrapped("Space：停止  /  1・2・4：速度  /  B：建設  /  P：商品  /  R：経営\n店内ドラッグ：移動  /  ホイール：拡大縮小\n音は開店後に流れます。設定で音量を変えられます。",modal_content,12,MUTED)
 func open_build():
 	open_modal("建設と増床")
-	wrapped("棚の手前の黄色いマスがお客さんの立つ場所。通り道を残して配置しましょう。",modal_content,14)
+	wrapped("黄色はお客さん、レジ裏の青色は店員の立つ場所。レジ前の待機列と入口への通路を空けましょう。",modal_content,14)
 	var h=row(modal_content)
 	button("増床 "+(money([26000,60000][mini(sim.s.tier,1)]) if sim.s.tier<2 else "最大"),h,func():act("expand",{},open_build))
 	button("向き："+["南東","南西","北西","北東"][build_dir],h,func():build_dir=(build_dir+1)%4;open_build())
@@ -575,10 +579,11 @@ func load_game(path:String=""):
 	if file==null:return
 	var value=file.get_var();file.close()
 	if typeof(value)!=TYPE_DICTIONARY or not value.has("game") or not value.game.has("residents"):toast.text="お店を読み込めませんでした。";return
-	sim.s=value.game;view.sim=sim;last_star=sim.s.star
+	sim.s=value.game;var layout_notice=sim.restore_spatial_state();view.sim=sim;last_star=sim.s.star
+	for actor in sim.s.visits+sim.s.staff:actor.prev=actor.pos
 	var config=value.get("settings",{});sound.music_volume=config.get("music",0.24);sound.effects_volume=config.get("effects",0.45);sound.ambient_volume=config.get("ambient",0.16);view.reduced=config.get("reduced",false)
 	ui_scale=config.get("scale",1.0);keys=config.get("keys",keys);theme=make_theme();apply_text_scale(self)
-	toast.text="おかえりなさい、店長。";refresh_sidebar();refresh()
+	toast.text="おかえりなさい、店長。" if layout_notice.is_empty() else layout_notice;refresh_sidebar();refresh()
 func show_result():
 	paused=true
 	var won=sim.s.result=="won"

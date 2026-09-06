@@ -54,7 +54,7 @@ func deep_checks():
 	check(game.command("order",{"product":0,"amount":0})!="","zero order rejected")
 	check(game.command("assign",{"fixture":0,"product":20})!="","drink needs cold storage")
 	check(game.command("remove",{"fixture":8})!="","last checkout remains")
-	check(game.command("place",{"kind":0,"x":3,"y":3})!="","overlap rejected")
+	check(game.command("place",{"kind":0,"x":5,"y":3})!="","overlap rejected")
 	check(game.command("place",{"kind":0,"x":1,"y":1})!="","depot remains accessible")
 	check(game.command("place",{"kind":0,"x":-1,"y":3})!="","outside rejected")
 	var old=game.s.cash
@@ -107,12 +107,15 @@ func deep_checks():
 	game=Sim.new(42)
 	game.s.schedule=[{"at":0,"rid":0,"wait":0},{"at":0,"rid":1,"wait":0}];game.spawn_due()
 	var f=game.fixture(8);f.clerk=0
+	game.s.staff[0].pos=Nav.clerk(f);game.s.staff[0].task="register";game.s.staff[0].target=f.id
+	var queue_index=0
 	for v in game.s.visits:
-		v.state="queue";v.target=f.id;v.basket=[game.lot(0,1)];v.spent=140;f.queue.append(v.id)
+		v.pos=Nav.queue_cells(f,game.s.fixtures,0)[queue_index];queue_index+=1;v.state="queue";v.target=f.id;v.basket=[game.lot(0,1)];v.spent=140;f.queue.append(v.id)
 	var first=game.s.visits[0].rid;var second=game.s.visits[1].rid
 	for i in 6:game.update_registers()
 	check(game.s.residents[first].buys==1 and game.s.residents[second].buys==0,"checkout FIFO")
 	check(game.s.today.sales==140 and game.s.today.cogs==83,"charge basket exactly once")
+	game.update_visits()
 	for i in 6:game.update_registers()
 	check(game.s.today.sales==280 and game.s.residents[second].buys==1,"next customer served")
 	game=Sim.new(42);game.s.cash=100000
