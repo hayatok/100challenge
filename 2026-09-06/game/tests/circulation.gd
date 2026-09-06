@@ -17,6 +17,13 @@ func _init():
 		for far in [false,true]:
 			var path=Nav.path(Nav.street_end(tier,far),Nav.DEPOT,game.s.fixtures,tier,true)
 			check(path.has(Nav.DOOR),"street route passes door at tier "+str(tier))
+			check(path[0].x==-2 and path.all(func(p):return p.x>=-2),"arrivals use sidewalk at tier "+str(tier))
+			var departure=Nav.path(Nav.DOOR,Nav.street_end(tier,far),game.s.fixtures,tier)
+			check(departure.slice(0,-1).all(func(p):return p.x>=-2),"departures use sidewalk at tier "+str(tier))
+	# Old saves may contain a route along the road. Repair it in place, with no teleport.
+	var walker={"pos":Vector2i(-3,2),"path":[Vector2i(-3,3),Vector2i(-3,4),Nav.DOOR],"dir":0}
+	game.move_actor(walker)
+	check(walker.pos==Vector2i(-2,2) and walker.path[-1]==Nav.DOOR,"saved road route resumes via adjacent sidewalk")
 	check(not Nav.connected(Vector2i(-1,4),Vector2i(0,4)),"glass facade cannot be crossed")
 	check(game.command("place",{"kind":0,"x":3,"y":7,"dir":1})!="","clerk position cannot be built over")
 	check(game.command("place",{"kind":0,"x":1,"y":8,"dir":0})!="","inside threshold clear")

@@ -31,6 +31,8 @@ static func inside(p:Vector2i,dims:Vector2i) -> bool:
 static func walkable(p:Vector2i,dims:Vector2i) -> bool:
 	return inside(p,dims) or (p.x>=-3 and p.x<0 and p.y>=-3 and p.y<=dims.y+3)
 static func connected(a:Vector2i,b:Vector2i) -> bool:
+	# The road edge only joins the sidewalk; it is not a pedestrian lane.
+	if a.x==-3 and b.x==-3:return false
 	# The facade is a wall. Only the doorway joins the sidewalk and shop.
 	if (a.x<0)!=(b.x<0):return (a==DOOR and b==DOOR+Vector2i.LEFT) or (b==DOOR and a==DOOR+Vector2i.LEFT)
 	if backroom(a)!=backroom(b):return (a==DEPOT and b==Vector2i(2,1)) or (b==DEPOT and a==Vector2i(2,1))

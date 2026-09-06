@@ -667,7 +667,7 @@ func draw_person(a:Dictionary,kind:String):
 	painter_alpha=1.0
 	if at.x<0:
 		var dims=Nav.dimensions(sim.s.tier)
-		painter_alpha=clampf(minf(at.y+3,dims.y+4-at.y)/2.0,0,1)
+		painter_alpha=clampf(minf(at.y+2.5,dims.y+3.5-at.y)/2.0,0,1)
 	var base=project(at,1 if at.x<0 else 10)
 	var select=selected_kind==kind and selected_id==(a.id if staff else a.rid)
 	if select:

@@ -379,6 +379,11 @@ func spawn_due():
 func move_actor(a:Dictionary) -> bool:
 	if a.path.is_empty():return true
 	var next:Vector2i=a.path[0]
+	# A saved route may predate the sidewalk rule. Replan without moving the person.
+	if not Nav.connected(a.pos,next):
+		a.path=Nav.path(a.pos,a.path[-1],s.fixtures,s.tier,a.has("task"))
+		if a.path.is_empty():return false
+		next=a.path[0]
 	if a.has("task") and a.path.size()==1 and s.visits.any(func(v):return v.pos==next):return false
 	var blocked={}
 	for v in s.visits:
