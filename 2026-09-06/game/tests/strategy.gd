@@ -43,7 +43,9 @@ func update(game):
 		for w in s.staff:
 			if w.hired and not game.working(w) and w.training<2:do(game,"train",{"id":w.id})
 	# The theme changes the actual assortment, shelf geography and financial risk.
-	var focus=0 if style=="morning" else (4 if style=="sweets" else (6 if style=="night" else 2))
+	# Keep a durable everyday base before specializing for the winter promise.
+	# The calendar still selects desserts and warm meals for their actual rush.
+	var focus=0 if style=="morning" else 2
 	if s.star>=1 and s.cash>28000 and s.fixtures.size()<11:
 		var kind=9 if focus in [2,4] else (11 if focus==6 else 8)
 		if do(game,"place",{"kind":kind,"x":9,"y":2,"dir":3}).is_empty():
@@ -53,7 +55,7 @@ func update(game):
 		for bay in [[9,9,4,20],[8,9,6,10]]:
 			if not s.fixtures.any(func(f):return f.x==bay[1] and f.y==bay[2]):
 				if do(game,"place",{"kind":bay[0],"x":bay[1],"y":bay[2],"dir":3}).is_empty():do(game,"assign",{"fixture":s.next_fixture-1,"product":bay[3]})
-	if s.day>=43:prepare_promise(game)
+	if s.day>=43 or (style=="sweets" and s.review.get("status","")=="passed"):prepare_promise(game)
 	if style!="fixed_plan":plan_assortment(game,focus)
 	var active=s.fixtures.filter(func(f):return f.product>=0).map(func(f):return f.product)
 	for p in s.targets.keys():

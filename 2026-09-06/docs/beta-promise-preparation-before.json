@@ -1,0 +1,244 @@
+[
+  {
+    "cash": 46157,
+    "day": 37,
+    "promise_bays": [],
+    "reserve": 29470,
+    "review": {
+      "status": "passed",
+      "start": 23
+    }
+  },
+  {
+    "cash": 46018,
+    "day": 38,
+    "promise_bays": [],
+    "reserve": 29470,
+    "review": {
+      "status": "passed",
+      "start": 23
+    }
+  },
+  {
+    "cash": 45066,
+    "day": 39,
+    "promise_bays": [],
+    "reserve": 29470,
+    "review": {
+      "status": "passed",
+      "start": 23
+    }
+  },
+  {
+    "cash": 56477,
+    "day": 40,
+    "promise_bays": [],
+    "reserve": 29470,
+    "review": {
+      "status": "passed",
+      "start": 23
+    }
+  },
+  {
+    "cash": 53282,
+    "day": 41,
+    "promise_bays": [],
+    "reserve": 29470,
+    "review": {
+      "status": "passed",
+      "start": 23
+    }
+  },
+  {
+    "cash": 60317,
+    "day": 42,
+    "promise_bays": [],
+    "reserve": 29470,
+    "review": {
+      "status": "passed",
+      "start": 23
+    }
+  },
+  {
+    "cash": 32923,
+    "day": 43,
+    "promise_bays": [
+      {
+        "kind": 14,
+        "product": 41,
+        "ready": 60495
+      },
+      {
+        "kind": 16,
+        "product": 36,
+        "ready": 60495
+      },
+      {
+        "kind": 17,
+        "product": 20,
+        "ready": 60495
+      }
+    ],
+    "reserve": 38155,
+    "review": {
+      "status": "passed",
+      "start": 23
+    }
+  },
+  {
+    "cash": 33086,
+    "day": 44,
+    "promise_bays": [
+      {
+        "kind": 14,
+        "product": 41,
+        "ready": 60495
+      },
+      {
+        "kind": 16,
+        "product": 36,
+        "ready": 60495
+      },
+      {
+        "kind": 17,
+        "product": 20,
+        "ready": 60495
+      }
+    ],
+    "reserve": 38155,
+    "review": {
+      "status": "passed",
+      "start": 23
+    }
+  },
+  {
+    "cash": 29499,
+    "day": 45,
+    "promise_bays": [
+      {
+        "kind": 14,
+        "product": 41,
+        "ready": 60495
+      },
+      {
+        "kind": 16,
+        "product": 36,
+        "ready": 60495
+      },
+      {
+        "kind": 17,
+        "product": 20,
+        "ready": 60495
+      }
+    ],
+    "reserve": 38155,
+    "review": {
+      "status": "passed",
+      "start": 23
+    }
+  },
+  {
+    "cash": 24786,
+    "day": 46,
+    "promise_bays": [
+      {
+        "kind": 14,
+        "product": 41,
+        "ready": 60495
+      },
+      {
+        "kind": 16,
+        "product": 36,
+        "ready": 60495
+      },
+      {
+        "kind": 17,
+        "product": 20,
+        "ready": 60495
+      }
+    ],
+    "reserve": 38155,
+    "review": {
+      "status": "passed",
+      "start": 23
+    }
+  },
+  {
+    "cash": 33033,
+    "day": 47,
+    "promise_bays": [
+      {
+        "kind": 14,
+        "product": 41,
+        "ready": 60495
+      },
+      {
+        "kind": 16,
+        "product": 36,
+        "ready": 60495
+      },
+      {
+        "kind": 17,
+        "product": 20,
+        "ready": 60495
+      }
+    ],
+    "reserve": 38155,
+    "review": {
+      "status": "passed",
+      "start": 23
+    }
+  },
+  {
+    "cash": 29818,
+    "day": 48,
+    "promise_bays": [
+      {
+        "kind": 14,
+        "product": 41,
+        "ready": 60495
+      },
+      {
+        "kind": 16,
+        "product": 36,
+        "ready": 60495
+      },
+      {
+        "kind": 17,
+        "product": 20,
+        "ready": 60495
+      }
+    ],
+    "reserve": 38155,
+    "review": {
+      "status": "passed",
+      "start": 23
+    }
+  },
+  {
+    "cash": 28078,
+    "day": 49,
+    "promise_bays": [
+      {
+        "kind": 14,
+        "product": 41,
+        "ready": 60495
+      },
+      {
+        "kind": 16,
+        "product": 36,
+        "ready": 60495
+      },
+      {
+        "kind": 17,
+        "product": 20,
+        "ready": 60495
+      }
+    ],
+    "reserve": 38155,
+    "review": {
+      "status": "passed",
+      "start": 23
+    }
+  }
+]
