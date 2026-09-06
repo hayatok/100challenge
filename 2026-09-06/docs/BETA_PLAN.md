@@ -100,4 +100,5 @@ Done when: 五つ星獲得で時間が停止しない。約束の内容が来店
 - macOS 1187×768で通常生成の棚の列を観察。橋本はるが順番を待ち、塩むすび3個とあんパンを購入し580円を会計したことを本人の履歴でも確認。`screenshots/beta-shelf-queue.png` / `beta-shelf-purchased.png`。
 - 29日目の約束選択、57日目のおやつ便の結末を実操作で確認。190/248人（77%）・住人の実際の物語の台詞・日報との往復・成功後の継続営業が動く。`screenshots/beta-winter-choice.png` / `beta-winter-ending.png`。準備のコマンドは `beta-qa-actions-29-staples.json` / `beta-qa-actions-57-sweets.json`。
 - 最新Web版を375×812で約束の条件・商品例、1440×900で初期店と通常営業を確認。朝6時から14:26まで進み7人の会計と売上3,700円を確認。`screenshots/beta-winter-mobile.png` / `beta-flow-initial-web.png` / `beta-flow-operating-web.png`。
+- macOSのアプリ出力も成功。生成したappを1187×768で起動し、道路から来店する住人、新規営業から11:01までの5人の会計・売上2,700円を確認。実行ログにエラーなし。`screenshots/beta-flow-macos-export.png`。これは配布版の起動・通常営業の確認であり、配布版での56日全編通し確認は未完了。
 - コア347項目、36段階の物語、街、56日目の結末、動線36項目、棚の順番待ち、UI50画面とWebビルドが成功。意味のある境界と発見した問題の再発を検証した。全12人の本編内攻略、B1/B4/B5、全seed・配布版・最終監査は引き続き未完了。PRはdraftを維持する。
