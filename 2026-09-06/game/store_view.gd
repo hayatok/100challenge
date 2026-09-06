@@ -12,6 +12,8 @@ var build_dir=0
 var move_id=-1
 var reduced=false
 var interp=0.0
+var animating=true
+var redraw_revision=0
 var zoom=1.0
 var world:Control
 var viewport:SubViewport
@@ -25,7 +27,7 @@ func _ready():
 	mouse_filter=Control.MOUSE_FILTER_STOP;clip_contents=true
 	font=load("res://assets/fonts/NotoSansCJKjp-Medium.otf")
 	viewport=SubViewport.new();viewport.disable_3d=true;viewport.transparent_bg=false
-	viewport.render_target_update_mode=SubViewport.UPDATE_ALWAYS
+	viewport.render_target_update_mode=SubViewport.UPDATE_ONCE
 	viewport.canvas_item_default_texture_filter=Viewport.DEFAULT_CANVAS_ITEM_TEXTURE_FILTER_NEAREST
 	add_child(viewport)
 	world=Scene.new();world.sim=sim;viewport.add_child(world)
@@ -34,6 +36,8 @@ func _ready():
 	# Draw overlay text after the world texture.
 	var overlay=Control.new();overlay.mouse_filter=Control.MOUSE_FILTER_IGNORE;overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT);add_child(overlay)
 	overlay.draw.connect(draw_labels.bind(overlay))
+	world.redraw_requested.connect(func():viewport.render_target_update_mode=SubViewport.UPDATE_ONCE)
+	world.draw.connect(func():overlay.queue_redraw())
 	world.picked.connect(func(k,id):picked.emit(k,id));world.placed.connect(func(c):placed.emit(c));world.hovered.connect(func(c):hovered.emit(c))
 	resized.connect(configure)
 	configure()
@@ -48,8 +52,9 @@ func configure():
 func _process(_delta):
 	if world==null:return
 	if previous_size!=size or previous_zoom!=zoom:configure()
-	for key in ["sim","selected_kind","selected_id","build_kind","build_dir","move_id","reduced","interp"]:world.set(key,get(key))
-	get_child(get_child_count()-1).queue_redraw()
+	for key in ["sim","selected_kind","selected_id","build_kind","build_dir","move_id","reduced","interp","animating","redraw_revision"]:world.set(key,get(key))
+func invalidate():
+	redraw_revision+=1
 func reset_camera():
 	zoom=1.0
 	if world!=null:world.reset_camera()

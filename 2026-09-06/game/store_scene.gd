@@ -21,6 +21,10 @@ var drag_origin=Vector2.ZERO
 var dragged=false
 var reduced=false
 var clock=0.0
+var animating=true
+var redraw_revision=0
+var last_render_state=[]
+signal redraw_requested
 var interp=0.0
 var labels=[]
 var screen_text=false
@@ -63,8 +67,13 @@ func _ready():
 	font=load("res://assets/fonts/NotoSansCJKjp-Medium.otf")
 	clip_contents=true
 func _process(delta):
-	clock+=delta
-	queue_redraw()
+	if sim==null:return
+	if animating:clock+=delta
+	var state=[sim.get_instance_id(),sim.s.tick,size,pan,zoom,selected_kind,selected_id,build_kind,build_dir,move_id,hover_cell,reduced,interp,redraw_revision]
+	if animating or state!=last_render_state:
+		last_render_state=state
+		redraw_requested.emit()
+		queue_redraw()
 func reset_camera():
 	pan=Vector2.ZERO;zoom=1.0
 func project(v:Vector2,z:float=0) -> Vector2:
@@ -118,7 +127,8 @@ func with_alpha(color:Color) -> Color:
 func paint_rect(rect:Rect2,color:Color):draw_rect(rect,with_alpha(color))
 func paint_arc(center:Vector2,radius:float,start:float,end:float,count:int,color:Color,width:float=1,antialias:bool=false):draw_arc(center,radius,start,end,count,with_alpha(color),width,antialias)
 func poly(points:Array,color:Color):
-	draw_colored_polygon(PackedVector2Array(points),with_alpha(color))
+	# All authored faces are convex triangles or quads; keep them in the canvas batch.
+	draw_primitive(PackedVector2Array(points),PackedColorArray([with_alpha(color)]),PackedVector2Array())
 func tile(x:float,y:float,color:Color,z:float=0):
 	poly([project(Vector2(x,y),z),project(Vector2(x+1,y),z),project(Vector2(x+1,y+1),z),project(Vector2(x,y+1),z)],color)
 func box(x:float,y:float,w:float,d:float,h:float,color:Color,z:float=0):

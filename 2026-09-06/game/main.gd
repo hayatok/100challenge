@@ -60,6 +60,7 @@ const PAPER=Color("f3ead3")
 const MUTED=Color("718176")
 
 func _ready():
+	Engine.max_fps=60
 	if not OS.has_feature("web") and DisplayServer.get_name()!="headless":
 		var scale=DisplayServer.screen_get_scale()
 		var usable=DisplayServer.screen_get_usable_rect().size-Vector2i(80,80)
@@ -180,7 +181,8 @@ func responsive():
 		var width=minf(920 if modal_title=="まちあかりマート" else 1000,size.x-24);var height=minf(480 if modal_title=="まちあかりマート" else 720,size.y-24)
 		modal.position=Vector2((size.x-width)/2,(size.y-height)/2);modal.size=Vector2(width,height)
 func _process(delta):
-	if not intro and not paused and not modal.visible and sim.s.result.is_empty():
+	view.animating=not intro and not paused and not modal.visible and sim.s.result.is_empty()
+	if view.animating:
 		accum+=minf(delta,0.25)*speed*4
 		while accum>=1:sim.step();accum-=1
 	view.interp=accum;view.reduced=bool(view.reduced)
@@ -246,6 +248,7 @@ func on_place(cell:Vector2i):
 	var args={"kind":build_kind,"x":cell.x,"y":cell.y,"dir":build_dir}
 	if move_id>=0:args.fixture=move_id
 	var result=sim.command("move" if move_id>=0 else "place",args)
+	view.invalidate()
 	if result.is_empty():
 		toast.text="設置しました。15分後に使えます。";sound.effect("good")
 		if move_id>=0:build_kind=-1;view.build_kind=-1
@@ -258,6 +261,7 @@ func notice(text:String):
 	if is_instance_valid(modal_notice):modal_notice.text=text
 func act(command:String,args:Dictionary={},rebuild:Callable=Callable()):
 	var error=sim.command(command,args)
+	view.invalidate()
 	var message="設定しました。" if error.is_empty() else error
 	sound.effect("good" if error.is_empty() else "error")
 	if rebuild.is_valid():rebuild.call()
@@ -659,7 +663,7 @@ func load_game(path:String=""):
 	if file==null:return
 	var value=file.get_var();file.close()
 	if typeof(value)!=TYPE_DICTIONARY or not value.has("game") or not value.game.has("residents"):toast.text="お店を読み込めませんでした。";return
-	sim.s=value.game;var layout_notice=sim.restore_spatial_state();var storage_notice=sim.restore_storage_state();view.sim=sim;last_star=sim.s.star
+	sim.s=value.game;var layout_notice=sim.restore_spatial_state();var storage_notice=sim.restore_storage_state();view.sim=sim;view.invalidate();last_star=sim.s.star
 	if not storage_notice.is_empty():layout_notice+="\n"+storage_notice
 	for actor in sim.s.visits+sim.s.staff:actor.prev=actor.pos
 	var config=value.get("settings",{});sound.music_volume=config.get("music",0.24);sound.effects_volume=config.get("effects",0.45);sound.ambient_volume=config.get("ambient",0.16);view.reduced=config.get("reduced",false)
