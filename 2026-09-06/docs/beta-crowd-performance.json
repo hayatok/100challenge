@@ -1,0 +1,9 @@
+{
+	"max_ms": 24.251,
+	"mean_ms": 7.92720833333334,
+	"minutes": 240,
+	"p95_ms": 17.337,
+	"scope": "Headless simulation cost from an actual QA save; not rendering FPS",
+	"seed": 20260979,
+	"start_tick": 69312
+}

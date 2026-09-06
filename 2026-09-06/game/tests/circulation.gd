@@ -15,8 +15,13 @@ func _init():
 	check(Nav.queue_cells(till,game.s.fixtures,0).size()==4,"four physical queue slots")
 	for tier in 3:
 		for far in [false,true]:
-			var path=Nav.path(Nav.street_end(tier,far),Nav.DEPOT,game.s.fixtures,tier,true)
+			var path=Nav.path(Nav.street_start(tier,far),Nav.DEPOT,game.s.fixtures,tier,true)
+			check(Nav.street_start(tier,far)!=Nav.street_end(tier,far),"street endpoints keep arrivals and departures separate at tier "+str(tier))
 			check(path.has(Nav.DOOR),"street route passes door at tier "+str(tier))
+			check(path.all(func(p):return p.x>=-3),"arrivals remain on widened sidewalk at tier "+str(tier))
+			var departure=Nav.path(Nav.DOOR,Nav.street_end(tier,far),game.s.fixtures,tier)
+			check(departure.all(func(p):return p.x>=-3),"departures remain on widened sidewalk at tier "+str(tier))
+	check(not Nav.walkable(Vector2i(-4,2),Nav.dimensions(0)),"road remains outside the pedestrian network")
 	check(not Nav.connected(Vector2i(-1,4),Vector2i(0,4)),"glass facade cannot be crossed")
 	check(game.command("place",{"kind":0,"x":3,"y":7,"dir":1})!="","clerk position cannot be built over")
 	check(game.command("place",{"kind":0,"x":1,"y":8,"dir":0})!="","inside threshold clear")
@@ -35,7 +40,7 @@ func _init():
 	clerk.pos=Nav.clerk(till)
 	for i in 6:game.update_registers()
 	check(game.s.today.sales==140 and customer.state=="leaving","checkout only across counter")
-	check(customer.path.has(Nav.DOOR) and customer.path[-1].x<0,"paid visit exits through door to street")
+	check(customer.path.has(Nav.EXIT_DOOR) and customer.path[-1].x<0,"paid visit exits through door to street")
 	var old_buys=game.s.residents[0].buys
 	game.repath_all()
 	check(customer.state=="leaving" and customer.path[-1].x<0,"relocation preserves departure")
@@ -61,9 +66,14 @@ func _init():
 	check(legacy.s.layout_needs_review and legacy.fixture(6).x==3,"custom geometry preserved with explicit review flag")
 	check(legacy.command("move",{"fixture":6,"x":8,"y":6,"dir":0}).is_empty(),"old store can repair its first invalid fixture")
 	check(legacy.command("move",{"fixture":7,"x":11,"y":4,"dir":3}).is_empty() and not legacy.s.layout_needs_review,"old store can complete staged repairs")
+	legacy=Sim.new(71);legacy.s.layout_version=2;legacy.fixture(7).x=0;legacy.fixture(7).y=9;legacy.fixture(7).dir=1
+	lots=var_to_bytes(legacy.fixture(7).lots);var cash=legacy.s.cash
+	check(not legacy.restore_spatial_state().is_empty() and legacy.s.layout_needs_review,"Old customized second doorway has no repair guidance")
+	check(legacy.fixture(7).x==0 and legacy.s.cash==cash and var_to_bytes(legacy.fixture(7).lots)==lots,"Wider doorway silently moved old furniture or inventory")
+	check(legacy.command("move",{"fixture":7,"x":11,"y":4,"dir":3}).is_empty() and not legacy.s.layout_needs_review,"Customized old doorway could not be opened through normal building controls")
 	# Continuous normal simulation. Report all spatial invariants as aggregate checks.
 	var stepped=true;var facade=true;var terminal=true;var counter=true;var queue=true;var unique_browse=true
-	var public_floor=true
+	var public_floor=true;var separate_workers=true
 	var entered=0;var departed=0;var served=0;var max_queue=0;var captured=false
 	game=Sim.new(20260906)
 	game.command("hire",{"id":2});game.command("shift",{"id":2,"slot":0});game.command("shift",{"id":2,"slot":1})
@@ -75,12 +85,13 @@ func _init():
 		for v in game.s.visits:
 			active[v.id]=true
 			if Nav.backroom(v.pos):public_floor=false
+			if game.s.staff.any(func(w):return w.hired and w.pos==v.pos):separate_workers=false
 			var distance=absi(v.pos.x-v.prev.x)+absi(v.pos.y-v.prev.y)
 			if distance>1:stepped=false
 			if v.prev.x<0 and v.pos.x>=0:
 				entered+=1
 				if v.pos!=Nav.DOOR:facade=false
-			if v.prev.x>=0 and v.pos.x<0 and v.prev!=Nav.DOOR:facade=false
+			if v.prev.x>=0 and v.pos.x<0 and v.prev not in [Nav.DOOR,Nav.EXIT_DOOR]:facade=false
 			if v.state=="paying":
 				served+=1;var f=game.fixture(v.target)
 				if v.pos!=Nav.access(f) or f.clerk<0 or game.s.staff[f.clerk].pos!=Nav.clerk(f):counter=false
@@ -94,7 +105,7 @@ func _init():
 		for f in game.s.fixtures:
 			if not Nav.is_register(f):continue
 			max_queue=maxi(max_queue,f.queue.size())
-			if not captured and game.s.visits.filter(func(v):return v.target==f.id and v.state in ["paying","queue"]).size()>=3:
+			if "--qa" in OS.get_cmdline_user_args() and not captured and game.s.visits.filter(func(v):return v.target==f.id and v.state in ["paying","queue"]).size()>=3:
 				var snapshot=FileAccess.open("user://qa-current.save",FileAccess.WRITE)
 				snapshot.store_var({"game":game.s,"settings":{}});snapshot.close();captured=true
 				print("CIRCULATION QA snapshot: day ",game.s.day," minute ",game.minute()," queue ",f.queue.size())
@@ -112,5 +123,6 @@ func _init():
 	check(unique_browse,"customers take turns at a shelf")
 	check(entered>20,"normal arrivals traverse street and doorway")
 	check(public_floor,"customers never enter the staff backroom")
+	check(separate_workers,"Customers never share a public floor cell with on-duty or off-duty staff")
 	print("CIRCULATION: ",checks," checks, ",errors.size()," failures; entered=",entered," departed=",departed," payment_minutes=",served," max_queue=",max_queue)
 	quit(1 if errors else 0)

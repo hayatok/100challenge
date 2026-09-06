@@ -1,0 +1,956 @@
+{
+  "baseline_commit": "a49a7370d356de4fb652889a417b47c57e38d047",
+  "environment": "Apple M5, Godot 4.7.2 Compatibility, native rendering window; simultaneous browser comparison",
+  "phases": "8 seconds paused, 8 seconds at 4x, 8 seconds paused after play",
+  "profiles": {
+    "before": [
+      {
+        "draw_calls": 1511.0,
+        "fps": 11.0,
+        "memory_bytes": 67841752.0,
+        "nodes": 105.0,
+        "phase": "paused",
+        "second": 1,
+        "textures": 1,
+        "tick": 0,
+        "world_redraws": 39
+      },
+      {
+        "draw_calls": 1511.0,
+        "fps": 47.0,
+        "memory_bytes": 67839788.0,
+        "nodes": 105.0,
+        "phase": "paused",
+        "second": 2,
+        "textures": 1,
+        "tick": 0,
+        "world_redraws": 46
+      },
+      {
+        "draw_calls": 1511.0,
+        "fps": 39.0,
+        "memory_bytes": 67840768.0,
+        "nodes": 105.0,
+        "phase": "paused",
+        "second": 3,
+        "textures": 1,
+        "tick": 0,
+        "world_redraws": 40
+      },
+      {
+        "draw_calls": 1511.0,
+        "fps": 46.0,
+        "memory_bytes": 67841772.0,
+        "nodes": 105.0,
+        "phase": "paused",
+        "second": 4,
+        "textures": 1,
+        "tick": 0,
+        "world_redraws": 48
+      },
+      {
+        "draw_calls": 1511.0,
+        "fps": 47.0,
+        "memory_bytes": 67842800.0,
+        "nodes": 105.0,
+        "phase": "paused",
+        "second": 5,
+        "textures": 1,
+        "tick": 0,
+        "world_redraws": 47
+      },
+      {
+        "draw_calls": 1511.0,
+        "fps": 46.0,
+        "memory_bytes": 67843780.0,
+        "nodes": 105.0,
+        "phase": "paused",
+        "second": 6,
+        "textures": 1,
+        "tick": 0,
+        "world_redraws": 47
+      },
+      {
+        "draw_calls": 1511.0,
+        "fps": 45.0,
+        "memory_bytes": 67844832.0,
+        "nodes": 105.0,
+        "phase": "paused",
+        "second": 7,
+        "textures": 1,
+        "tick": 0,
+        "world_redraws": 46
+      },
+      {
+        "draw_calls": 1511.0,
+        "fps": 46.0,
+        "memory_bytes": 67845812.0,
+        "nodes": 105.0,
+        "phase": "paused",
+        "second": 8,
+        "textures": 1,
+        "tick": 0,
+        "world_redraws": 45
+      },
+      {
+        "draw_calls": 1516.0,
+        "fps": 45.0,
+        "memory_bytes": 67867142.0,
+        "nodes": 105.0,
+        "phase": "playing",
+        "second": 1,
+        "textures": 9,
+        "tick": 16,
+        "world_redraws": 44
+      },
+      {
+        "draw_calls": 1513.0,
+        "fps": 42.0,
+        "memory_bytes": 67869266.0,
+        "nodes": 105.0,
+        "phase": "playing",
+        "second": 2,
+        "textures": 10,
+        "tick": 32,
+        "world_redraws": 41
+      },
+      {
+        "draw_calls": 1516.0,
+        "fps": 41.0,
+        "memory_bytes": 67874370.0,
+        "nodes": 105.0,
+        "phase": "playing",
+        "second": 3,
+        "textures": 13,
+        "tick": 48,
+        "world_redraws": 42
+      },
+      {
+        "draw_calls": 1521.0,
+        "fps": 40.0,
+        "memory_bytes": 67896842.0,
+        "nodes": 105.0,
+        "phase": "playing",
+        "second": 4,
+        "textures": 25,
+        "tick": 64,
+        "world_redraws": 41
+      },
+      {
+        "draw_calls": 1521.0,
+        "fps": 41.0,
+        "memory_bytes": 67941374.0,
+        "nodes": 105.0,
+        "phase": "playing",
+        "second": 5,
+        "textures": 40,
+        "tick": 81,
+        "world_redraws": 40
+      },
+      {
+        "draw_calls": 1528.0,
+        "fps": 40.0,
+        "memory_bytes": 68134238.0,
+        "nodes": 105.0,
+        "phase": "playing",
+        "second": 6,
+        "textures": 63,
+        "tick": 97,
+        "world_redraws": 41
+      },
+      {
+        "draw_calls": 1552.0,
+        "fps": 40.0,
+        "memory_bytes": 68197336.0,
+        "nodes": 105.0,
+        "phase": "playing",
+        "second": 7,
+        "textures": 82,
+        "tick": 113,
+        "world_redraws": 41
+      },
+      {
+        "draw_calls": 1550.0,
+        "fps": 41.0,
+        "memory_bytes": 68216492.0,
+        "nodes": 105.0,
+        "phase": "playing",
+        "second": 8,
+        "textures": 95,
+        "tick": 129,
+        "world_redraws": 41
+      },
+      {
+        "draw_calls": 1550.0,
+        "fps": 40.0,
+        "memory_bytes": 68217764.0,
+        "nodes": 105.0,
+        "phase": "paused_after_play",
+        "second": 1,
+        "textures": 95,
+        "tick": 129,
+        "world_redraws": 38
+      },
+      {
+        "draw_calls": 1550.0,
+        "fps": 36.0,
+        "memory_bytes": 68219052.0,
+        "nodes": 105.0,
+        "phase": "paused_after_play",
+        "second": 2,
+        "textures": 95,
+        "tick": 129,
+        "world_redraws": 34
+      },
+      {
+        "draw_calls": 1550.0,
+        "fps": 35.0,
+        "memory_bytes": 68220032.0,
+        "nodes": 105.0,
+        "phase": "paused_after_play",
+        "second": 3,
+        "textures": 95,
+        "tick": 129,
+        "world_redraws": 38
+      },
+      {
+        "draw_calls": 1550.0,
+        "fps": 36.0,
+        "memory_bytes": 68221228.0,
+        "nodes": 105.0,
+        "phase": "paused_after_play",
+        "second": 4,
+        "textures": 95,
+        "tick": 129,
+        "world_redraws": 39
+      },
+      {
+        "draw_calls": 1550.0,
+        "fps": 39.0,
+        "memory_bytes": 68222208.0,
+        "nodes": 105.0,
+        "phase": "paused_after_play",
+        "second": 5,
+        "textures": 95,
+        "tick": 129,
+        "world_redraws": 40
+      },
+      {
+        "draw_calls": 1550.0,
+        "fps": 39.0,
+        "memory_bytes": 68223188.0,
+        "nodes": 105.0,
+        "phase": "paused_after_play",
+        "second": 6,
+        "textures": 95,
+        "tick": 129,
+        "world_redraws": 39
+      },
+      {
+        "draw_calls": 1550.0,
+        "fps": 39.0,
+        "memory_bytes": 68224168.0,
+        "nodes": 105.0,
+        "phase": "paused_after_play",
+        "second": 7,
+        "textures": 95,
+        "tick": 129,
+        "world_redraws": 34
+      },
+      {
+        "draw_calls": 1550.0,
+        "fps": 34.0,
+        "memory_bytes": 68225148.0,
+        "nodes": 105.0,
+        "phase": "paused_after_play",
+        "second": 8,
+        "textures": 95,
+        "tick": 129,
+        "world_redraws": 37
+      }
+    ],
+    "primitives": [
+      {
+        "draw_calls": 175.0,
+        "fps": 14.0,
+        "memory_bytes": 67196272.0,
+        "nodes": 105.0,
+        "phase": "paused",
+        "second": 1,
+        "textures": 1,
+        "tick": 0,
+        "world_redraws": 53
+      },
+      {
+        "draw_calls": 175.0,
+        "fps": 85.0,
+        "memory_bytes": 67197960.0,
+        "nodes": 105.0,
+        "phase": "paused",
+        "second": 2,
+        "textures": 1,
+        "tick": 0,
+        "world_redraws": 103
+      },
+      {
+        "draw_calls": 175.0,
+        "fps": 84.0,
+        "memory_bytes": 67198940.0,
+        "nodes": 105.0,
+        "phase": "paused",
+        "second": 3,
+        "textures": 1,
+        "tick": 0,
+        "world_redraws": 80
+      },
+      {
+        "draw_calls": 175.0,
+        "fps": 94.0,
+        "memory_bytes": 67199944.0,
+        "nodes": 105.0,
+        "phase": "paused",
+        "second": 4,
+        "textures": 1,
+        "tick": 0,
+        "world_redraws": 78
+      },
+      {
+        "draw_calls": 175.0,
+        "fps": 71.0,
+        "memory_bytes": 67200972.0,
+        "nodes": 105.0,
+        "phase": "paused",
+        "second": 5,
+        "textures": 1,
+        "tick": 0,
+        "world_redraws": 76
+      },
+      {
+        "draw_calls": 175.0,
+        "fps": 80.0,
+        "memory_bytes": 67201952.0,
+        "nodes": 105.0,
+        "phase": "paused",
+        "second": 6,
+        "textures": 1,
+        "tick": 0,
+        "world_redraws": 83
+      },
+      {
+        "draw_calls": 175.0,
+        "fps": 85.0,
+        "memory_bytes": 67203004.0,
+        "nodes": 105.0,
+        "phase": "paused",
+        "second": 7,
+        "textures": 1,
+        "tick": 0,
+        "world_redraws": 82
+      },
+      {
+        "draw_calls": 175.0,
+        "fps": 80.0,
+        "memory_bytes": 67203984.0,
+        "nodes": 105.0,
+        "phase": "paused",
+        "second": 8,
+        "textures": 1,
+        "tick": 0,
+        "world_redraws": 74
+      },
+      {
+        "draw_calls": 177.0,
+        "fps": 76.0,
+        "memory_bytes": 67225122.0,
+        "nodes": 105.0,
+        "phase": "playing",
+        "second": 1,
+        "textures": 9,
+        "tick": 16,
+        "world_redraws": 80
+      },
+      {
+        "draw_calls": 177.0,
+        "fps": 70.0,
+        "memory_bytes": 67227430.0,
+        "nodes": 105.0,
+        "phase": "playing",
+        "second": 2,
+        "textures": 10,
+        "tick": 32,
+        "world_redraws": 74
+      },
+      {
+        "draw_calls": 177.0,
+        "fps": 81.0,
+        "memory_bytes": 67232422.0,
+        "nodes": 105.0,
+        "phase": "playing",
+        "second": 3,
+        "textures": 13,
+        "tick": 48,
+        "world_redraws": 80
+      },
+      {
+        "draw_calls": 185.0,
+        "fps": 71.0,
+        "memory_bytes": 67253086.0,
+        "nodes": 105.0,
+        "phase": "playing",
+        "second": 4,
+        "textures": 23,
+        "tick": 64,
+        "world_redraws": 74
+      },
+      {
+        "draw_calls": 183.0,
+        "fps": 76.0,
+        "memory_bytes": 67295914.0,
+        "nodes": 105.0,
+        "phase": "playing",
+        "second": 5,
+        "textures": 38,
+        "tick": 80,
+        "world_redraws": 69
+      },
+      {
+        "draw_calls": 190.0,
+        "fps": 66.0,
+        "memory_bytes": 67493518.0,
+        "nodes": 105.0,
+        "phase": "playing",
+        "second": 6,
+        "textures": 66,
+        "tick": 96,
+        "world_redraws": 65
+      },
+      {
+        "draw_calls": 205.0,
+        "fps": 68.0,
+        "memory_bytes": 67541322.0,
+        "nodes": 105.0,
+        "phase": "playing",
+        "second": 7,
+        "textures": 85,
+        "tick": 112,
+        "world_redraws": 67
+      },
+      {
+        "draw_calls": 212.0,
+        "fps": 63.0,
+        "memory_bytes": 67577320.0,
+        "nodes": 105.0,
+        "phase": "playing",
+        "second": 8,
+        "textures": 98,
+        "tick": 129,
+        "world_redraws": 70
+      },
+      {
+        "draw_calls": 212.0,
+        "fps": 67.0,
+        "memory_bytes": 67578592.0,
+        "nodes": 105.0,
+        "phase": "paused_after_play",
+        "second": 1,
+        "textures": 98,
+        "tick": 129,
+        "world_redraws": 63
+      },
+      {
+        "draw_calls": 212.0,
+        "fps": 70.0,
+        "memory_bytes": 67579880.0,
+        "nodes": 105.0,
+        "phase": "paused_after_play",
+        "second": 2,
+        "textures": 98,
+        "tick": 129,
+        "world_redraws": 85
+      },
+      {
+        "draw_calls": 212.0,
+        "fps": 84.0,
+        "memory_bytes": 67580860.0,
+        "nodes": 105.0,
+        "phase": "paused_after_play",
+        "second": 3,
+        "textures": 98,
+        "tick": 129,
+        "world_redraws": 74
+      },
+      {
+        "draw_calls": 212.0,
+        "fps": 74.0,
+        "memory_bytes": 67582056.0,
+        "nodes": 105.0,
+        "phase": "paused_after_play",
+        "second": 4,
+        "textures": 98,
+        "tick": 129,
+        "world_redraws": 85
+      },
+      {
+        "draw_calls": 212.0,
+        "fps": 85.0,
+        "memory_bytes": 67583036.0,
+        "nodes": 105.0,
+        "phase": "paused_after_play",
+        "second": 5,
+        "textures": 98,
+        "tick": 129,
+        "world_redraws": 78
+      },
+      {
+        "draw_calls": 212.0,
+        "fps": 73.0,
+        "memory_bytes": 67584016.0,
+        "nodes": 105.0,
+        "phase": "paused_after_play",
+        "second": 6,
+        "textures": 98,
+        "tick": 129,
+        "world_redraws": 65
+      },
+      {
+        "draw_calls": 212.0,
+        "fps": 61.0,
+        "memory_bytes": 67584996.0,
+        "nodes": 105.0,
+        "phase": "paused_after_play",
+        "second": 7,
+        "textures": 98,
+        "tick": 129,
+        "world_redraws": 63
+      },
+      {
+        "draw_calls": 212.0,
+        "fps": 62.0,
+        "memory_bytes": 67585976.0,
+        "nodes": 105.0,
+        "phase": "paused_after_play",
+        "second": 8,
+        "textures": 98,
+        "tick": 129,
+        "world_redraws": 68
+      }
+    ],
+    "final": [
+      {
+        "draw_calls": 70.0,
+        "fps": 17.0,
+        "memory_bytes": 67241109.0,
+        "nodes": 105.0,
+        "phase": "paused",
+        "second": 1,
+        "textures": 1,
+        "tick": 0,
+        "world_redraws": 3
+      },
+      {
+        "draw_calls": 70.0,
+        "fps": 60.0,
+        "memory_bytes": 67242749.0,
+        "nodes": 105.0,
+        "phase": "paused",
+        "second": 2,
+        "textures": 1,
+        "tick": 0,
+        "world_redraws": 0
+      },
+      {
+        "draw_calls": 70.0,
+        "fps": 60.0,
+        "memory_bytes": 67243729.0,
+        "nodes": 105.0,
+        "phase": "paused",
+        "second": 3,
+        "textures": 1,
+        "tick": 0,
+        "world_redraws": 0
+      },
+      {
+        "draw_calls": 70.0,
+        "fps": 60.0,
+        "memory_bytes": 67244733.0,
+        "nodes": 105.0,
+        "phase": "paused",
+        "second": 4,
+        "textures": 1,
+        "tick": 0,
+        "world_redraws": 0
+      },
+      {
+        "draw_calls": 70.0,
+        "fps": 60.0,
+        "memory_bytes": 67245761.0,
+        "nodes": 105.0,
+        "phase": "paused",
+        "second": 5,
+        "textures": 1,
+        "tick": 0,
+        "world_redraws": 0
+      },
+      {
+        "draw_calls": 70.0,
+        "fps": 60.0,
+        "memory_bytes": 67246741.0,
+        "nodes": 105.0,
+        "phase": "paused",
+        "second": 6,
+        "textures": 1,
+        "tick": 0,
+        "world_redraws": 0
+      },
+      {
+        "draw_calls": 70.0,
+        "fps": 60.0,
+        "memory_bytes": 67247793.0,
+        "nodes": 105.0,
+        "phase": "paused",
+        "second": 7,
+        "textures": 1,
+        "tick": 0,
+        "world_redraws": 0
+      },
+      {
+        "draw_calls": 70.0,
+        "fps": 60.0,
+        "memory_bytes": 67248773.0,
+        "nodes": 105.0,
+        "phase": "paused",
+        "second": 8,
+        "textures": 1,
+        "tick": 0,
+        "world_redraws": 0
+      },
+      {
+        "draw_calls": 177.0,
+        "fps": 60.0,
+        "memory_bytes": 67270831.0,
+        "nodes": 105.0,
+        "phase": "playing",
+        "second": 1,
+        "textures": 10,
+        "tick": 16,
+        "world_redraws": 60
+      },
+      {
+        "draw_calls": 177.0,
+        "fps": 60.0,
+        "memory_bytes": 67272035.0,
+        "nodes": 105.0,
+        "phase": "playing",
+        "second": 2,
+        "textures": 10,
+        "tick": 32,
+        "world_redraws": 60
+      },
+      {
+        "draw_calls": 177.0,
+        "fps": 60.0,
+        "memory_bytes": 67277803.0,
+        "nodes": 105.0,
+        "phase": "playing",
+        "second": 3,
+        "textures": 14,
+        "tick": 48,
+        "world_redraws": 60
+      },
+      {
+        "draw_calls": 181.0,
+        "fps": 58.0,
+        "memory_bytes": 67296579.0,
+        "nodes": 105.0,
+        "phase": "playing",
+        "second": 4,
+        "textures": 22,
+        "tick": 64,
+        "world_redraws": 46
+      },
+      {
+        "draw_calls": 183.0,
+        "fps": 40.0,
+        "memory_bytes": 67343043.0,
+        "nodes": 105.0,
+        "phase": "playing",
+        "second": 5,
+        "textures": 39,
+        "tick": 81,
+        "world_redraws": 57
+      },
+      {
+        "draw_calls": 198.0,
+        "fps": 53.0,
+        "memory_bytes": 67536587.0,
+        "nodes": 105.0,
+        "phase": "playing",
+        "second": 6,
+        "textures": 63,
+        "tick": 97,
+        "world_redraws": 55
+      },
+      {
+        "draw_calls": 214.0,
+        "fps": 60.0,
+        "memory_bytes": 67599709.0,
+        "nodes": 105.0,
+        "phase": "playing",
+        "second": 7,
+        "textures": 82,
+        "tick": 113,
+        "world_redraws": 60
+      },
+      {
+        "draw_calls": 212.0,
+        "fps": 61.0,
+        "memory_bytes": 67618865.0,
+        "nodes": 105.0,
+        "phase": "playing",
+        "second": 8,
+        "textures": 95,
+        "tick": 129,
+        "world_redraws": 60
+      },
+      {
+        "draw_calls": 101.0,
+        "fps": 60.0,
+        "memory_bytes": 67620137.0,
+        "nodes": 105.0,
+        "phase": "paused_after_play",
+        "second": 1,
+        "textures": 95,
+        "tick": 129,
+        "world_redraws": 0
+      },
+      {
+        "draw_calls": 101.0,
+        "fps": 60.0,
+        "memory_bytes": 67621425.0,
+        "nodes": 105.0,
+        "phase": "paused_after_play",
+        "second": 2,
+        "textures": 95,
+        "tick": 129,
+        "world_redraws": 0
+      },
+      {
+        "draw_calls": 101.0,
+        "fps": 60.0,
+        "memory_bytes": 67622405.0,
+        "nodes": 105.0,
+        "phase": "paused_after_play",
+        "second": 3,
+        "textures": 95,
+        "tick": 129,
+        "world_redraws": 0
+      },
+      {
+        "draw_calls": 101.0,
+        "fps": 60.0,
+        "memory_bytes": 67623601.0,
+        "nodes": 105.0,
+        "phase": "paused_after_play",
+        "second": 4,
+        "textures": 95,
+        "tick": 129,
+        "world_redraws": 0
+      },
+      {
+        "draw_calls": 101.0,
+        "fps": 60.0,
+        "memory_bytes": 67624581.0,
+        "nodes": 105.0,
+        "phase": "paused_after_play",
+        "second": 5,
+        "textures": 95,
+        "tick": 129,
+        "world_redraws": 0
+      },
+      {
+        "draw_calls": 101.0,
+        "fps": 60.0,
+        "memory_bytes": 67625561.0,
+        "nodes": 105.0,
+        "phase": "paused_after_play",
+        "second": 6,
+        "textures": 95,
+        "tick": 129,
+        "world_redraws": 0
+      },
+      {
+        "draw_calls": 101.0,
+        "fps": 60.0,
+        "memory_bytes": 67626541.0,
+        "nodes": 105.0,
+        "phase": "paused_after_play",
+        "second": 7,
+        "textures": 95,
+        "tick": 129,
+        "world_redraws": 0
+      },
+      {
+        "draw_calls": 101.0,
+        "fps": 60.0,
+        "memory_bytes": 67627521.0,
+        "nodes": 105.0,
+        "phase": "paused_after_play",
+        "second": 8,
+        "textures": 95,
+        "tick": 129,
+        "world_redraws": 0
+      }
+    ]
+  },
+  "chrome_comparison": {
+    "browser": "Chrome 152.0.7977.77",
+    "baseline_observed_rss_kib": [
+      708128,
+      1772576,
+      2199440,
+      2493952
+    ],
+    "baseline_note": "Separate manual process RSS observations before successful toolbar reload; not uniformly timed samples. A canvas-focused Cmd+R opened the game report instead of reloading and is excluded from the post-change interval.",
+    "post_change": "Primitive rendering only; paused viewport and FPS cap were added afterward. Same local URL reloaded using browser toolbar. 1x sales observed from opening to 04:42 the next morning, 25 buyers.",
+    "post_change_samples": [
+      {
+        "elapsed_seconds": 0,
+        "rss_kib": 775888,
+        "cpu_percent": 37.9
+      },
+      {
+        "elapsed_seconds": 10,
+        "rss_kib": 838304,
+        "cpu_percent": 39.1
+      },
+      {
+        "elapsed_seconds": 20,
+        "rss_kib": 768496,
+        "cpu_percent": 41.1
+      },
+      {
+        "elapsed_seconds": 30,
+        "rss_kib": 774416,
+        "cpu_percent": 37.0
+      },
+      {
+        "elapsed_seconds": 40,
+        "rss_kib": 768544,
+        "cpu_percent": 36.5
+      },
+      {
+        "elapsed_seconds": 50,
+        "rss_kib": 722960,
+        "cpu_percent": 39.4
+      },
+      {
+        "elapsed_seconds": 60,
+        "rss_kib": 665392,
+        "cpu_percent": 43.0
+      },
+      {
+        "elapsed_seconds": 70,
+        "rss_kib": 673840,
+        "cpu_percent": 37.9
+      },
+      {
+        "elapsed_seconds": 80,
+        "rss_kib": 680672,
+        "cpu_percent": 38.1
+      },
+      {
+        "elapsed_seconds": 90,
+        "rss_kib": 742624,
+        "cpu_percent": 38.6
+      },
+      {
+        "elapsed_seconds": 100,
+        "rss_kib": 681264,
+        "cpu_percent": 36.9
+      },
+      {
+        "elapsed_seconds": 110,
+        "rss_kib": 675200,
+        "cpu_percent": 40.4
+      },
+      {
+        "elapsed_seconds": 120,
+        "rss_kib": 680992,
+        "cpu_percent": 38.0
+      },
+      {
+        "elapsed_seconds": 130,
+        "rss_kib": 742960,
+        "cpu_percent": 37.5
+      },
+      {
+        "elapsed_seconds": 140,
+        "rss_kib": 673200,
+        "cpu_percent": 34.6
+      },
+      {
+        "elapsed_seconds": 150,
+        "rss_kib": 681760,
+        "cpu_percent": 35.2
+      },
+      {
+        "elapsed_seconds": 160,
+        "rss_kib": 683312,
+        "cpu_percent": 35.9
+      },
+      {
+        "elapsed_seconds": 170,
+        "rss_kib": 747680,
+        "cpu_percent": 37.2
+      },
+      {
+        "elapsed_seconds": 180,
+        "rss_kib": 655728,
+        "cpu_percent": 38.5
+      },
+      {
+        "elapsed_seconds": 190,
+        "rss_kib": 664400,
+        "cpu_percent": 88.3
+      },
+      {
+        "elapsed_seconds": 200,
+        "rss_kib": 667696,
+        "cpu_percent": 87.1
+      },
+      {
+        "elapsed_seconds": 210,
+        "rss_kib": 729664,
+        "cpu_percent": 87.0
+      },
+      {
+        "elapsed_seconds": 220,
+        "rss_kib": 660016,
+        "cpu_percent": 87.0
+      },
+      {
+        "elapsed_seconds": 230,
+        "rss_kib": 668432,
+        "cpu_percent": 81.4
+      },
+      {
+        "elapsed_seconds": 240,
+        "rss_kib": 671456,
+        "cpu_percent": 90.7
+      }
+    ],
+    "rss_range_kib": [
+      655728,
+      838304
+    ]
+  },
+  "visual_comparison": {
+    "equipment_board": 0,
+    "pixels": 758400,
+    "changed_pixels": 288,
+    "maximum_rgb_channel_difference": 1,
+    "difference_location": "translucent freezer lid; rounding only"
+  },
+  "render_checks": "Paused redraws zero after settling; assortment, selection, pan, zoom still redraw; live simulation advances. Passed on real renderer.",
+  "limits": "Short controlled observation, not proof of all long-duration crash scenarios; no broad campaign rerun because economic rules unchanged."
+}

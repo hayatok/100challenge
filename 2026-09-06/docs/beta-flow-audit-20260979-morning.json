@@ -1,0 +1,707 @@
+{
+	"cash": 39396,
+	"commands": 636,
+	"day": 57,
+	"days": [
+		{
+			"day": 43,
+			"oldest_visit": 131,
+			"peak_active": 16,
+			"peak_states": {
+				"browse_queue": 2,
+				"browsing": 1,
+				"choose": 5,
+				"entering": 2,
+				"leaving": 4,
+				"paying": 2,
+				"walking": 4
+			},
+			"stalls": []
+		},
+		{
+			"day": 44,
+			"oldest_visit": 123,
+			"peak_active": 16,
+			"peak_states": {
+				"choose": 3,
+				"entering": 3,
+				"leaving": 3,
+				"paying": 1,
+				"queue": 2,
+				"to_queue": 1,
+				"walking": 6
+			},
+			"stalls": []
+		},
+		{
+			"day": 45,
+			"oldest_visit": 257,
+			"peak_active": 40,
+			"peak_states": {
+				"browse_queue": 1,
+				"browsing": 1,
+				"choose": 4,
+				"entering": 23,
+				"leaving": 8,
+				"paying": 1,
+				"to_queue": 6,
+				"walking": 4
+			},
+			"stalls": []
+		},
+		{
+			"day": 46,
+			"oldest_visit": 135,
+			"peak_active": 19,
+			"peak_states": {
+				"browse_queue": 2,
+				"choose": 3,
+				"entering": 5,
+				"leaving": 3,
+				"paying": 1,
+				"queue": 3,
+				"walking": 5
+			},
+			"stalls": []
+		},
+		{
+			"day": 47,
+			"oldest_visit": 203,
+			"peak_active": 33,
+			"peak_states": {
+				"browse_queue": 3,
+				"browsing": 1,
+				"choose": 4,
+				"entering": 21,
+				"leaving": 12,
+				"to_queue": 2,
+				"walking": 2
+			},
+			"stalls": []
+		},
+		{
+			"day": 48,
+			"oldest_visit": 128,
+			"peak_active": 17,
+			"peak_states": {
+				"entering": 17,
+				"leaving": 8
+			},
+			"stalls": []
+		},
+		{
+			"day": 49,
+			"oldest_visit": 257,
+			"peak_active": 40,
+			"peak_states": {
+				"browse_queue": 2,
+				"browsing": 1,
+				"checkout": 1,
+				"choose": 7,
+				"entering": 17,
+				"leaving": 3,
+				"paying": 3,
+				"queue": 1,
+				"to_queue": 3,
+				"walking": 5
+			},
+			"stalls": [
+				{
+					"age": 136,
+					"basket": [],
+					"day": 49,
+					"id": 3999,
+					"need": "rice light",
+					"path": "[]",
+					"pos": "(5, 12)",
+					"rid": 53,
+					"state": "choose",
+					"target": -1,
+					"tick": 69405,
+					"wanted": -1
+				},
+				{
+					"age": 199,
+					"basket": [],
+					"day": 49,
+					"id": 3984,
+					"need": "rice light",
+					"path": "[]",
+					"pos": "(4, 12)",
+					"rid": 38,
+					"state": "choose",
+					"target": -1,
+					"tick": 69450,
+					"wanted": -1
+				},
+				{
+					"age": 173,
+					"basket": [],
+					"day": 49,
+					"id": 4004,
+					"need": "rice light",
+					"path": "[]",
+					"pos": "(7, 11)",
+					"rid": 119,
+					"state": "choose",
+					"target": -1,
+					"tick": 69450,
+					"wanted": -1
+				}
+			]
+		},
+		{
+			"day": 50,
+			"oldest_visit": 159,
+			"peak_active": 21,
+			"peak_states": {
+				"browse_queue": 4,
+				"browsing": 3,
+				"checkout": 1,
+				"entering": 5,
+				"paying": 2,
+				"to_queue": 1,
+				"walking": 5
+			},
+			"stalls": []
+		},
+		{
+			"day": 51,
+			"oldest_visit": 304,
+			"peak_active": 40,
+			"peak_states": {
+				"browse_queue": 4,
+				"choose": 7,
+				"entering": 19,
+				"leaving": 4,
+				"paying": 1,
+				"to_queue": 3,
+				"walking": 6
+			},
+			"stalls": [
+				{
+					"age": 99,
+					"basket": [
+						21,
+						40
+					],
+					"day": 51,
+					"id": 4177,
+					"need": "",
+					"path": "[(5, 1)]",
+					"pos": "(6, 1)",
+					"rid": 48,
+					"state": "walking",
+					"target": 2,
+					"tick": 72159,
+					"wanted": 20
+				},
+				{
+					"age": 95,
+					"basket": [
+						0
+					],
+					"day": 51,
+					"id": 4178,
+					"need": "",
+					"path": "[(6, 1)]",
+					"pos": "(6, 2)",
+					"rid": 72,
+					"state": "walking",
+					"target": 4,
+					"tick": 72160,
+					"wanted": 40
+				},
+				{
+					"age": 89,
+					"basket": [],
+					"day": 51,
+					"id": 4182,
+					"need": "",
+					"path": "[]",
+					"pos": "(7, 1)",
+					"rid": 0,
+					"state": "browse_queue",
+					"target": 4,
+					"tick": 72172,
+					"wanted": 40
+				},
+				{
+					"age": 95,
+					"basket": [],
+					"day": 51,
+					"id": 4183,
+					"need": "",
+					"path": "[]",
+					"pos": "(8, 1)",
+					"rid": 12,
+					"state": "browse_queue",
+					"target": 4,
+					"tick": 72183,
+					"wanted": 40
+				},
+				{
+					"age": 107,
+					"basket": [
+						21
+					],
+					"day": 51,
+					"id": 4181,
+					"need": "",
+					"path": "[]",
+					"pos": "(4, 1)",
+					"rid": 36,
+					"state": "browse_queue",
+					"target": 2,
+					"tick": 72189,
+					"wanted": 20
+				}
+			]
+		},
+		{
+			"day": 52,
+			"oldest_visit": 119,
+			"peak_active": 16,
+			"peak_states": {
+				"checkout": 1,
+				"entering": 4,
+				"leaving": 5,
+				"paying": 2,
+				"queue": 1,
+				"to_queue": 3,
+				"walking": 5
+			},
+			"stalls": []
+		},
+		{
+			"day": 53,
+			"oldest_visit": 222,
+			"peak_active": 40,
+			"peak_states": {
+				"browse_queue": 3,
+				"choose": 7,
+				"entering": 20,
+				"leaving": 5,
+				"paying": 1,
+				"queue": 1,
+				"to_queue": 3,
+				"walking": 5
+			},
+			"stalls": []
+		},
+		{
+			"day": 54,
+			"oldest_visit": 220,
+			"peak_active": 33,
+			"peak_states": {
+				"browse_queue": 1,
+				"browsing": 1,
+				"choose": 7,
+				"entering": 20,
+				"leaving": 7,
+				"paying": 1,
+				"to_queue": 1,
+				"walking": 2
+			},
+			"stalls": []
+		},
+		{
+			"day": 55,
+			"oldest_visit": 203,
+			"peak_active": 40,
+			"peak_states": {
+				"browsing": 1,
+				"choose": 3,
+				"entering": 22,
+				"leaving": 6,
+				"paying": 2,
+				"queue": 5,
+				"to_queue": 3,
+				"walking": 4
+			},
+			"stalls": []
+		},
+		{
+			"day": 56,
+			"oldest_visit": 250,
+			"peak_active": 40,
+			"peak_states": {
+				"browse_queue": 3,
+				"browsing": 2,
+				"choose": 3,
+				"entering": 20,
+				"leaving": 8,
+				"paying": 1,
+				"queue": 1,
+				"to_queue": 3,
+				"walking": 7
+			},
+			"stalls": []
+		}
+	],
+	"reports": [
+		{
+			"buyers": 106,
+			"day": 43,
+			"miss": {
+				"p64": 1,
+				"価格": 1,
+				"欠品": 4,
+				"行列": 1
+			},
+			"unmet": {
+				"warm soup": 3
+			},
+			"visitors": 111
+		},
+		{
+			"buyers": 107,
+			"day": 44,
+			"miss": {
+				"p3": 2,
+				"欠品": 7,
+				"行列": 2
+			},
+			"unmet": {
+				"warm soup": 5
+			},
+			"visitors": 116
+		},
+		{
+			"buyers": 97,
+			"day": 45,
+			"miss": {
+				"p0": 2,
+				"p10": 2,
+				"p64": 1,
+				"欠品": 21,
+				"行列": 3,
+				"補充待ち": 1
+			},
+			"unmet": {
+				"bread": 7,
+				"rice light": 10,
+				"tea": 2,
+				"warm soup": 1
+			},
+			"visitors": 116
+		},
+		{
+			"buyers": 90,
+			"day": 46,
+			"miss": {
+				"p0": 2,
+				"p10": 1,
+				"p20": 2,
+				"p3": 1,
+				"p30": 1,
+				"p50": 1,
+				"p51": 1,
+				"p70": 2,
+				"価格": 18,
+				"欠品": 11,
+				"行列": 1
+			},
+			"unmet": {},
+			"visitors": 114
+		},
+		{
+			"buyers": 97,
+			"day": 47,
+			"miss": {
+				"p0": 2,
+				"p3": 2,
+				"p40": 3,
+				"欠品": 28,
+				"行列": 2
+			},
+			"unmet": {
+				"rice": 11,
+				"warm hearty": 12
+			},
+			"visitors": 117
+		},
+		{
+			"buyers": 66,
+			"day": 48,
+			"miss": {
+				"p3": 1,
+				"p40": 1,
+				"欠品": 18,
+				"行列": 1
+			},
+			"unmet": {
+				"warm hearty": 16
+			},
+			"visitors": 95
+		},
+		{
+			"buyers": 100,
+			"day": 49,
+			"miss": {
+				"価格": 2,
+				"欠品": 3,
+				"満員": 23,
+				"行列": 2
+			},
+			"unmet": {
+				"bread": 5,
+				"rice light": 7,
+				"tea": 9,
+				"warm hearty": 3
+			},
+			"visitors": 113
+		},
+		{
+			"buyers": 99,
+			"day": 50,
+			"miss": {
+				"p0": 1,
+				"p40": 2,
+				"p64": 1,
+				"価格": 5,
+				"欠品": 4,
+				"行列": 2
+			},
+			"unmet": {},
+			"visitors": 111
+		},
+		{
+			"buyers": 92,
+			"day": 51,
+			"miss": {
+				"p21": 1,
+				"p64": 1,
+				"欠品": 5,
+				"満員": 13,
+				"行列": 1,
+				"補充待ち": 1
+			},
+			"unmet": {
+				"bread": 5,
+				"coffee": 11
+			},
+			"visitors": 116
+		},
+		{
+			"buyers": 105,
+			"day": 52,
+			"miss": {
+				"p64": 1,
+				"欠品": 9,
+				"行列": 1
+			},
+			"unmet": {
+				"spicy noodle": 8
+			},
+			"visitors": 113
+		},
+		{
+			"buyers": 101,
+			"day": 53,
+			"miss": {
+				"満員": 9,
+				"行列": 3
+			},
+			"unmet": {
+				"bread": 2,
+				"rice light": 4,
+				"tea": 5
+			},
+			"visitors": 110
+		},
+		{
+			"buyers": 91,
+			"day": 54,
+			"miss": {
+				"p0": 2,
+				"p3": 2,
+				"p40": 2,
+				"価格": 3,
+				"欠品": 23,
+				"行列": 1
+			},
+			"unmet": {
+				"rice": 8,
+				"warm hearty": 10
+			},
+			"visitors": 113
+		},
+		{
+			"buyers": 100,
+			"day": 55,
+			"miss": {
+				"p3": 2,
+				"p64": 2,
+				"価格": 4,
+				"欠品": 17,
+				"行列": 2
+			},
+			"unmet": {
+				"warm hearty": 14
+			},
+			"visitors": 116
+		},
+		{
+			"buyers": 106,
+			"day": 56,
+			"miss": {
+				"価格": 1,
+				"満員": 8,
+				"行列": 2
+			},
+			"unmet": {
+				"bread": 1,
+				"rice light": 6,
+				"tea": 3
+			},
+			"visitors": 117
+		}
+	],
+	"result": "deadline",
+	"seed": 20260979,
+	"stalls": [
+		{
+			"age": 136,
+			"basket": [],
+			"day": 49,
+			"id": 3999,
+			"need": "rice light",
+			"path": "[]",
+			"pos": "(5, 12)",
+			"rid": 53,
+			"state": "choose",
+			"target": -1,
+			"tick": 69405,
+			"wanted": -1
+		},
+		{
+			"age": 199,
+			"basket": [],
+			"day": 49,
+			"id": 3984,
+			"need": "rice light",
+			"path": "[]",
+			"pos": "(4, 12)",
+			"rid": 38,
+			"state": "choose",
+			"target": -1,
+			"tick": 69450,
+			"wanted": -1
+		},
+		{
+			"age": 173,
+			"basket": [],
+			"day": 49,
+			"id": 4004,
+			"need": "rice light",
+			"path": "[]",
+			"pos": "(7, 11)",
+			"rid": 119,
+			"state": "choose",
+			"target": -1,
+			"tick": 69450,
+			"wanted": -1
+		},
+		{
+			"age": 99,
+			"basket": [
+				21,
+				40
+			],
+			"day": 51,
+			"id": 4177,
+			"need": "",
+			"path": "[(5, 1)]",
+			"pos": "(6, 1)",
+			"rid": 48,
+			"state": "walking",
+			"target": 2,
+			"tick": 72159,
+			"wanted": 20
+		},
+		{
+			"age": 95,
+			"basket": [
+				0
+			],
+			"day": 51,
+			"id": 4178,
+			"need": "",
+			"path": "[(6, 1)]",
+			"pos": "(6, 2)",
+			"rid": 72,
+			"state": "walking",
+			"target": 4,
+			"tick": 72160,
+			"wanted": 40
+		},
+		{
+			"age": 89,
+			"basket": [],
+			"day": 51,
+			"id": 4182,
+			"need": "",
+			"path": "[]",
+			"pos": "(7, 1)",
+			"rid": 0,
+			"state": "browse_queue",
+			"target": 4,
+			"tick": 72172,
+			"wanted": 40
+		},
+		{
+			"age": 95,
+			"basket": [],
+			"day": 51,
+			"id": 4183,
+			"need": "",
+			"path": "[]",
+			"pos": "(8, 1)",
+			"rid": 12,
+			"state": "browse_queue",
+			"target": 4,
+			"tick": 72183,
+			"wanted": 40
+		},
+		{
+			"age": 107,
+			"basket": [
+				21
+			],
+			"day": 51,
+			"id": 4181,
+			"need": "",
+			"path": "[]",
+			"pos": "(4, 1)",
+			"rid": 36,
+			"state": "browse_queue",
+			"target": 2,
+			"tick": 72189,
+			"wanted": 20
+		}
+	],
+	"star": 4,
+	"style": "morning",
+	"winter": {
+		"completed": 249,
+		"groups": {
+			"bread": {
+				"completed": 88,
+				"served": 73
+			},
+			"rice light": {
+				"completed": 77,
+				"served": 50
+			},
+			"tea": {
+				"completed": 84,
+				"served": 65
+			}
+		},
+		"pass": true,
+		"plan": "breakfast",
+		"rate": 0.755020080321285,
+		"served": 188
+	}
+}

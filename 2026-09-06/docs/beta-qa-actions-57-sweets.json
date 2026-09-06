@@ -1,0 +1,5269 @@
+{
+	"commands": [
+		{
+			"args": {
+				"amount": 24000
+			},
+			"command": "auto_limit",
+			"tick": 0
+		},
+		{
+			"args": {
+				"amount": 4,
+				"product": 0
+			},
+			"command": "target",
+			"tick": 0
+		},
+		{
+			"args": {
+				"amount": 12,
+				"product": 10
+			},
+			"command": "target",
+			"tick": 0
+		},
+		{
+			"args": {
+				"amount": 12,
+				"product": 20
+			},
+			"command": "target",
+			"tick": 0
+		},
+		{
+			"args": {
+				"amount": 12,
+				"product": 30
+			},
+			"command": "target",
+			"tick": 0
+		},
+		{
+			"args": {
+				"amount": 6,
+				"product": 40
+			},
+			"command": "target",
+			"tick": 0
+		},
+		{
+			"args": {
+				"amount": 12,
+				"product": 50
+			},
+			"command": "target",
+			"tick": 0
+		},
+		{
+			"args": {
+				"amount": 4,
+				"product": 60
+			},
+			"command": "target",
+			"tick": 0
+		},
+		{
+			"args": {
+				"amount": 12,
+				"product": 70
+			},
+			"command": "target",
+			"tick": 0
+		},
+		{
+			"args": {
+				"level": 0,
+				"product": 60
+			},
+			"command": "price",
+			"tick": 480
+		},
+		{
+			"args": {
+				"enabled": true
+			},
+			"command": "auto",
+			"tick": 1440
+		},
+		{
+			"args": {
+				"fixture": 0,
+				"product": 51
+			},
+			"command": "assign",
+			"tick": 1440
+		},
+		{
+			"args": {
+				"amount": 6,
+				"product": 51
+			},
+			"command": "order",
+			"tick": 1440
+		},
+		{
+			"args": {
+				"amount": 0,
+				"product": 0
+			},
+			"command": "target",
+			"tick": 1440
+		},
+		{
+			"args": {
+				"amount": 7,
+				"product": 51
+			},
+			"command": "target",
+			"tick": 1440
+		},
+		{
+			"args": {
+				"amount": 27,
+				"product": 10
+			},
+			"command": "target",
+			"tick": 1440
+		},
+		{
+			"args": {
+				"amount": 14,
+				"product": 20
+			},
+			"command": "target",
+			"tick": 1440
+		},
+		{
+			"args": {
+				"amount": 9,
+				"product": 30
+			},
+			"command": "target",
+			"tick": 1440
+		},
+		{
+			"args": {
+				"amount": 4,
+				"product": 40
+			},
+			"command": "target",
+			"tick": 1440
+		},
+		{
+			"args": {
+				"amount": 11,
+				"product": 50
+			},
+			"command": "target",
+			"tick": 1440
+		},
+		{
+			"args": {
+				"level": 1,
+				"product": 60
+			},
+			"command": "price",
+			"tick": 1440
+		},
+		{
+			"args": {
+				"amount": 6,
+				"product": 70
+			},
+			"command": "target",
+			"tick": 1440
+		},
+		{
+			"args": {
+				"amount": 24,
+				"product": 10
+			},
+			"command": "target",
+			"tick": 2880
+		},
+		{
+			"args": {
+				"amount": 16,
+				"product": 20
+			},
+			"command": "target",
+			"tick": 2880
+		},
+		{
+			"args": {
+				"amount": 10,
+				"product": 30
+			},
+			"command": "target",
+			"tick": 2880
+		},
+		{
+			"args": {
+				"amount": 12,
+				"product": 50
+			},
+			"command": "target",
+			"tick": 2880
+		},
+		{
+			"args": {
+				"amount": 9,
+				"product": 70
+			},
+			"command": "target",
+			"tick": 2880
+		},
+		{
+			"args": {
+				"level": 0,
+				"product": 60
+			},
+			"command": "price",
+			"tick": 3360
+		},
+		{
+			"args": {
+				"fixture": 0,
+				"product": 0
+			},
+			"command": "assign",
+			"tick": 4320
+		},
+		{
+			"args": {
+				"amount": 6,
+				"product": 0
+			},
+			"command": "order",
+			"tick": 4320
+		},
+		{
+			"args": {
+				"amount": 0,
+				"product": 51
+			},
+			"command": "target",
+			"tick": 4320
+		},
+		{
+			"args": {
+				"amount": 7,
+				"product": 0
+			},
+			"command": "target",
+			"tick": 4320
+		},
+		{
+			"args": {
+				"amount": 23,
+				"product": 10
+			},
+			"command": "target",
+			"tick": 4320
+		},
+		{
+			"args": {
+				"amount": 22,
+				"product": 20
+			},
+			"command": "target",
+			"tick": 4320
+		},
+		{
+			"args": {
+				"amount": 6,
+				"product": 40
+			},
+			"command": "target",
+			"tick": 4320
+		},
+		{
+			"args": {
+				"amount": 14,
+				"product": 50
+			},
+			"command": "target",
+			"tick": 4320
+		},
+		{
+			"args": {
+				"level": 1,
+				"product": 60
+			},
+			"command": "price",
+			"tick": 4320
+		},
+		{
+			"args": {
+				"amount": 10,
+				"product": 70
+			},
+			"command": "target",
+			"tick": 4320
+		},
+		{
+			"args": {
+				"id": 2
+			},
+			"command": "hire",
+			"tick": 5760
+		},
+		{
+			"args": {
+				"id": 2,
+				"slot": 0
+			},
+			"command": "shift",
+			"tick": 5760
+		},
+		{
+			"args": {
+				"id": 2,
+				"slot": 1
+			},
+			"command": "shift",
+			"tick": 5760
+		},
+		{
+			"args": {
+				"dir": 3,
+				"kind": 9,
+				"x": 9,
+				"y": 2
+			},
+			"command": "place",
+			"tick": 5760
+		},
+		{
+			"args": {
+				"fixture": 9,
+				"product": 41
+			},
+			"command": "assign",
+			"tick": 5760
+		},
+		{
+			"args": {
+				"amount": 6,
+				"product": 0
+			},
+			"command": "target",
+			"tick": 5760
+		},
+		{
+			"args": {
+				"amount": 26,
+				"product": 20
+			},
+			"command": "target",
+			"tick": 5760
+		},
+		{
+			"args": {
+				"amount": 11,
+				"product": 40
+			},
+			"command": "target",
+			"tick": 5760
+		},
+		{
+			"args": {
+				"amount": 15,
+				"product": 50
+			},
+			"command": "target",
+			"tick": 5760
+		},
+		{
+			"args": {
+				"amount": 11,
+				"product": 70
+			},
+			"command": "target",
+			"tick": 5760
+		},
+		{
+			"args": {
+				"amount": 6,
+				"product": 41
+			},
+			"command": "target",
+			"tick": 5760
+		},
+		{
+			"args": {
+				"amount": 7,
+				"product": 0
+			},
+			"command": "target",
+			"tick": 7200
+		},
+		{
+			"args": {
+				"amount": 25,
+				"product": 20
+			},
+			"command": "target",
+			"tick": 7200
+		},
+		{
+			"args": {
+				"amount": 9,
+				"product": 30
+			},
+			"command": "target",
+			"tick": 7200
+		},
+		{
+			"args": {
+				"level": 0,
+				"product": 40
+			},
+			"command": "price",
+			"tick": 7200
+		},
+		{
+			"args": {
+				"amount": 16,
+				"product": 50
+			},
+			"command": "target",
+			"tick": 7200
+		},
+		{
+			"args": {
+				"amount": 10,
+				"product": 41
+			},
+			"command": "target",
+			"tick": 7200
+		},
+		{
+			"args": {
+				"level": 0,
+				"product": 41
+			},
+			"command": "price",
+			"tick": 7200
+		},
+		{
+			"args": {
+				"level": 1,
+				"product": 40
+			},
+			"command": "price",
+			"tick": 7680
+		},
+		{
+			"args": {
+				"level": 1,
+				"product": 41
+			},
+			"command": "price",
+			"tick": 7680
+		},
+		{
+			"args": {
+				"id": 3
+			},
+			"command": "hire",
+			"tick": 8640
+		},
+		{
+			"args": {
+				"id": 3,
+				"slot": 2
+			},
+			"command": "shift",
+			"tick": 8640
+		},
+		{
+			"args": {
+				"id": 3,
+				"slot": 3
+			},
+			"command": "shift",
+			"tick": 8640
+		},
+		{
+			"args": {
+				"dir": 0,
+				"kind": 10,
+				"x": 4,
+				"y": 8
+			},
+			"command": "place",
+			"tick": 8640
+		},
+		{
+			"args": {
+				"fixture": 9,
+				"product": 21
+			},
+			"command": "assign",
+			"tick": 8640
+		},
+		{
+			"args": {
+				"amount": 6,
+				"product": 21
+			},
+			"command": "order",
+			"tick": 8640
+		},
+		{
+			"args": {
+				"amount": 0,
+				"product": 41
+			},
+			"command": "target",
+			"tick": 8640
+		},
+		{
+			"args": {
+				"amount": 9,
+				"product": 0
+			},
+			"command": "target",
+			"tick": 8640
+		},
+		{
+			"args": {
+				"amount": 30,
+				"product": 10
+			},
+			"command": "target",
+			"tick": 8640
+		},
+		{
+			"args": {
+				"amount": 23,
+				"product": 20
+			},
+			"command": "target",
+			"tick": 8640
+		},
+		{
+			"args": {
+				"amount": 12,
+				"product": 40
+			},
+			"command": "target",
+			"tick": 8640
+		},
+		{
+			"args": {
+				"amount": 18,
+				"product": 50
+			},
+			"command": "target",
+			"tick": 8640
+		},
+		{
+			"args": {
+				"amount": 5,
+				"product": 60
+			},
+			"command": "target",
+			"tick": 8640
+		},
+		{
+			"args": {
+				"amount": 14,
+				"product": 70
+			},
+			"command": "target",
+			"tick": 8640
+		},
+		{
+			"args": {
+				"amount": 11,
+				"product": 21
+			},
+			"command": "target",
+			"tick": 8640
+		},
+		{
+			"args": {
+				"amount": 12,
+				"product": 0
+			},
+			"command": "target",
+			"tick": 10080
+		},
+		{
+			"args": {
+				"amount": 37,
+				"product": 10
+			},
+			"command": "target",
+			"tick": 10080
+		},
+		{
+			"args": {
+				"amount": 21,
+				"product": 20
+			},
+			"command": "target",
+			"tick": 10080
+		},
+		{
+			"args": {
+				"amount": 11,
+				"product": 30
+			},
+			"command": "target",
+			"tick": 10080
+		},
+		{
+			"args": {
+				"amount": 15,
+				"product": 40
+			},
+			"command": "target",
+			"tick": 10080
+		},
+		{
+			"args": {
+				"amount": 21,
+				"product": 50
+			},
+			"command": "target",
+			"tick": 10080
+		},
+		{
+			"args": {
+				"amount": 7,
+				"product": 60
+			},
+			"command": "target",
+			"tick": 10080
+		},
+		{
+			"args": {
+				"amount": 16,
+				"product": 70
+			},
+			"command": "target",
+			"tick": 10080
+		},
+		{
+			"args": {
+				"amount": 15,
+				"product": 21
+			},
+			"command": "target",
+			"tick": 10080
+		},
+		{
+			"args": {
+				"fixture": 9,
+				"product": 51
+			},
+			"command": "assign",
+			"tick": 11520
+		},
+		{
+			"args": {
+				"amount": 0,
+				"product": 21
+			},
+			"command": "target",
+			"tick": 11520
+		},
+		{
+			"args": {
+				"amount": 49,
+				"product": 10
+			},
+			"command": "target",
+			"tick": 11520
+		},
+		{
+			"args": {
+				"amount": 29,
+				"product": 20
+			},
+			"command": "target",
+			"tick": 11520
+		},
+		{
+			"args": {
+				"amount": 12,
+				"product": 30
+			},
+			"command": "target",
+			"tick": 11520
+		},
+		{
+			"args": {
+				"amount": 14,
+				"product": 40
+			},
+			"command": "target",
+			"tick": 11520
+		},
+		{
+			"args": {
+				"level": 0,
+				"product": 40
+			},
+			"command": "price",
+			"tick": 11520
+		},
+		{
+			"args": {
+				"amount": 23,
+				"product": 50
+			},
+			"command": "target",
+			"tick": 11520
+		},
+		{
+			"args": {
+				"amount": 6,
+				"product": 60
+			},
+			"command": "target",
+			"tick": 11520
+		},
+		{
+			"args": {
+				"amount": 15,
+				"product": 70
+			},
+			"command": "target",
+			"tick": 11520
+		},
+		{
+			"args": {
+				"amount": 12,
+				"product": 51
+			},
+			"command": "target",
+			"tick": 11520
+		},
+		{
+			"args": {
+				"level": 1,
+				"product": 40
+			},
+			"command": "price",
+			"tick": 12000
+		},
+		{
+			"args": {
+				"level": 0,
+				"product": 60
+			},
+			"command": "price",
+			"tick": 12000
+		},
+		{
+			"args": {
+				"id": 1
+			},
+			"command": "train",
+			"tick": 12960
+		},
+		{
+			"args": {
+				"id": 3
+			},
+			"command": "train",
+			"tick": 12960
+		},
+		{
+			"args": {
+				"amount": 14,
+				"product": 0
+			},
+			"command": "target",
+			"tick": 12960
+		},
+		{
+			"args": {
+				"amount": 52,
+				"product": 10
+			},
+			"command": "target",
+			"tick": 12960
+		},
+		{
+			"args": {
+				"amount": 28,
+				"product": 20
+			},
+			"command": "target",
+			"tick": 12960
+		},
+		{
+			"args": {
+				"amount": 14,
+				"product": 30
+			},
+			"command": "target",
+			"tick": 12960
+		},
+		{
+			"args": {
+				"amount": 25,
+				"product": 50
+			},
+			"command": "target",
+			"tick": 12960
+		},
+		{
+			"args": {
+				"level": 1,
+				"product": 60
+			},
+			"command": "price",
+			"tick": 12960
+		},
+		{
+			"args": {
+				"amount": 13,
+				"product": 51
+			},
+			"command": "target",
+			"tick": 12960
+		},
+		{
+			"args": {
+				"id": 1
+			},
+			"command": "train",
+			"tick": 13440
+		},
+		{
+			"args": {
+				"id": 3
+			},
+			"command": "train",
+			"tick": 13440
+		},
+		{
+			"args": {
+				"level": 0,
+				"product": 60
+			},
+			"command": "price",
+			"tick": 13440
+		},
+		{
+			"args": {
+				"amount": 16,
+				"product": 0
+			},
+			"command": "target",
+			"tick": 14400
+		},
+		{
+			"args": {
+				"amount": 50,
+				"product": 10
+			},
+			"command": "target",
+			"tick": 14400
+		},
+		{
+			"args": {
+				"amount": 37,
+				"product": 20
+			},
+			"command": "target",
+			"tick": 14400
+		},
+		{
+			"args": {
+				"amount": 13,
+				"product": 30
+			},
+			"command": "target",
+			"tick": 14400
+		},
+		{
+			"args": {
+				"amount": 9,
+				"product": 40
+			},
+			"command": "target",
+			"tick": 14400
+		},
+		{
+			"args": {
+				"level": 0,
+				"product": 40
+			},
+			"command": "price",
+			"tick": 14400
+		},
+		{
+			"args": {
+				"amount": 30,
+				"product": 50
+			},
+			"command": "target",
+			"tick": 14400
+		},
+		{
+			"args": {
+				"amount": 9,
+				"product": 60
+			},
+			"command": "target",
+			"tick": 14400
+		},
+		{
+			"args": {
+				"level": 1,
+				"product": 60
+			},
+			"command": "price",
+			"tick": 14400
+		},
+		{
+			"args": {
+				"amount": 18,
+				"product": 70
+			},
+			"command": "target",
+			"tick": 14400
+		},
+		{
+			"args": {
+				"amount": 18,
+				"product": 51
+			},
+			"command": "target",
+			"tick": 14400
+		},
+		{
+			"args": {
+				"level": 1,
+				"product": 40
+			},
+			"command": "price",
+			"tick": 14880
+		},
+		{
+			"args": {
+				"amount": 18,
+				"product": 0
+			},
+			"command": "target",
+			"tick": 15840
+		},
+		{
+			"args": {
+				"amount": 47,
+				"product": 10
+			},
+			"command": "target",
+			"tick": 15840
+		},
+		{
+			"args": {
+				"amount": 35,
+				"product": 20
+			},
+			"command": "target",
+			"tick": 15840
+		},
+		{
+			"args": {
+				"amount": 14,
+				"product": 30
+			},
+			"command": "target",
+			"tick": 15840
+		},
+		{
+			"args": {
+				"amount": 15,
+				"product": 40
+			},
+			"command": "target",
+			"tick": 15840
+		},
+		{
+			"args": {
+				"amount": 29,
+				"product": 50
+			},
+			"command": "target",
+			"tick": 15840
+		},
+		{
+			"args": {
+				"amount": 7,
+				"product": 60
+			},
+			"command": "target",
+			"tick": 15840
+		},
+		{
+			"args": {
+				"amount": 21,
+				"product": 70
+			},
+			"command": "target",
+			"tick": 15840
+		},
+		{
+			"args": {
+				"amount": 24,
+				"product": 51
+			},
+			"command": "target",
+			"tick": 15840
+		},
+		{
+			"args": {
+				"amount": 20,
+				"product": 0
+			},
+			"command": "target",
+			"tick": 17280
+		},
+		{
+			"args": {
+				"amount": 39,
+				"product": 10
+			},
+			"command": "target",
+			"tick": 17280
+		},
+		{
+			"args": {
+				"amount": 34,
+				"product": 20
+			},
+			"command": "target",
+			"tick": 17280
+		},
+		{
+			"args": {
+				"amount": 11,
+				"product": 30
+			},
+			"command": "target",
+			"tick": 17280
+		},
+		{
+			"args": {
+				"amount": 14,
+				"product": 40
+			},
+			"command": "target",
+			"tick": 17280
+		},
+		{
+			"args": {
+				"level": 0,
+				"product": 40
+			},
+			"command": "price",
+			"tick": 17280
+		},
+		{
+			"args": {
+				"amount": 25,
+				"product": 50
+			},
+			"command": "target",
+			"tick": 17280
+		},
+		{
+			"args": {
+				"amount": 22,
+				"product": 70
+			},
+			"command": "target",
+			"tick": 17280
+		},
+		{
+			"args": {
+				"amount": 22,
+				"product": 51
+			},
+			"command": "target",
+			"tick": 17280
+		},
+		{
+			"args": {
+				"dir": 3,
+				"kind": 9,
+				"x": 9,
+				"y": 4
+			},
+			"command": "place",
+			"tick": 17760
+		},
+		{
+			"args": {
+				"fixture": 11,
+				"product": 20
+			},
+			"command": "assign",
+			"tick": 17760
+		},
+		{
+			"args": {
+				"dir": 3,
+				"kind": 8,
+				"x": 9,
+				"y": 6
+			},
+			"command": "place",
+			"tick": 17760
+		},
+		{
+			"args": {
+				"fixture": 12,
+				"product": 10
+			},
+			"command": "assign",
+			"tick": 17760
+		},
+		{
+			"args": {
+				"level": 1,
+				"product": 40
+			},
+			"command": "price",
+			"tick": 17760
+		},
+		{
+			"args": {
+				"amount": 22,
+				"product": 0
+			},
+			"command": "target",
+			"tick": 18720
+		},
+		{
+			"args": {
+				"amount": 37,
+				"product": 20
+			},
+			"command": "target",
+			"tick": 18720
+		},
+		{
+			"args": {
+				"amount": 12,
+				"product": 30
+			},
+			"command": "target",
+			"tick": 18720
+		},
+		{
+			"args": {
+				"amount": 16,
+				"product": 40
+			},
+			"command": "target",
+			"tick": 18720
+		},
+		{
+			"args": {
+				"level": 0,
+				"product": 40
+			},
+			"command": "price",
+			"tick": 18720
+		},
+		{
+			"args": {
+				"amount": 18,
+				"product": 50
+			},
+			"command": "target",
+			"tick": 18720
+		},
+		{
+			"args": {
+				"amount": 5,
+				"product": 60
+			},
+			"command": "target",
+			"tick": 18720
+		},
+		{
+			"args": {
+				"amount": 20,
+				"product": 70
+			},
+			"command": "target",
+			"tick": 18720
+		},
+		{
+			"args": {
+				"amount": 18,
+				"product": 51
+			},
+			"command": "target",
+			"tick": 18720
+		},
+		{
+			"args": {
+				"level": 1,
+				"product": 40
+			},
+			"command": "price",
+			"tick": 19200
+		},
+		{
+			"args": {
+				"level": 0,
+				"product": 60
+			},
+			"command": "price",
+			"tick": 19200
+		},
+		{
+			"args": {
+				"amount": 21,
+				"product": 0
+			},
+			"command": "target",
+			"tick": 20160
+		},
+		{
+			"args": {
+				"amount": 42,
+				"product": 10
+			},
+			"command": "target",
+			"tick": 20160
+		},
+		{
+			"args": {
+				"amount": 34,
+				"product": 20
+			},
+			"command": "target",
+			"tick": 20160
+		},
+		{
+			"args": {
+				"amount": 17,
+				"product": 40
+			},
+			"command": "target",
+			"tick": 20160
+		},
+		{
+			"args": {
+				"amount": 19,
+				"product": 50
+			},
+			"command": "target",
+			"tick": 20160
+		},
+		{
+			"args": {
+				"amount": 6,
+				"product": 60
+			},
+			"command": "target",
+			"tick": 20160
+		},
+		{
+			"args": {
+				"level": 1,
+				"product": 60
+			},
+			"command": "price",
+			"tick": 20160
+		},
+		{
+			"args": {
+				"level": 0,
+				"product": 60
+			},
+			"command": "price",
+			"tick": 20640
+		},
+		{
+			"args": {
+				"amount": 45,
+				"product": 10
+			},
+			"command": "target",
+			"tick": 21600
+		},
+		{
+			"args": {
+				"amount": 52,
+				"product": 20
+			},
+			"command": "target",
+			"tick": 21600
+		},
+		{
+			"args": {
+				"amount": 15,
+				"product": 40
+			},
+			"command": "target",
+			"tick": 21600
+		},
+		{
+			"args": {
+				"amount": 20,
+				"product": 50
+			},
+			"command": "target",
+			"tick": 21600
+		},
+		{
+			"args": {
+				"amount": 4,
+				"product": 60
+			},
+			"command": "target",
+			"tick": 21600
+		},
+		{
+			"args": {
+				"level": 1,
+				"product": 60
+			},
+			"command": "price",
+			"tick": 21600
+		},
+		{
+			"args": {
+				"amount": 19,
+				"product": 70
+			},
+			"command": "target",
+			"tick": 21600
+		},
+		{
+			"args": {
+				"amount": 20,
+				"product": 51
+			},
+			"command": "target",
+			"tick": 21600
+		},
+		{
+			"args": {
+				"amount": 19,
+				"product": 0
+			},
+			"command": "target",
+			"tick": 23040
+		},
+		{
+			"args": {
+				"amount": 44,
+				"product": 10
+			},
+			"command": "target",
+			"tick": 23040
+		},
+		{
+			"args": {
+				"amount": 60,
+				"product": 20
+			},
+			"command": "target",
+			"tick": 23040
+		},
+		{
+			"args": {
+				"amount": 10,
+				"product": 30
+			},
+			"command": "target",
+			"tick": 23040
+		},
+		{
+			"args": {
+				"amount": 14,
+				"product": 40
+			},
+			"command": "target",
+			"tick": 23040
+		},
+		{
+			"args": {
+				"amount": 16,
+				"product": 50
+			},
+			"command": "target",
+			"tick": 23040
+		},
+		{
+			"args": {
+				"amount": 5,
+				"product": 60
+			},
+			"command": "target",
+			"tick": 23040
+		},
+		{
+			"args": {
+				"amount": 20,
+				"product": 70
+			},
+			"command": "target",
+			"tick": 23040
+		},
+		{
+			"args": {
+				"amount": 17,
+				"product": 51
+			},
+			"command": "target",
+			"tick": 23040
+		},
+		{
+			"args": {},
+			"command": "expand",
+			"tick": 23520
+		},
+		{
+			"args": {
+				"level": 0,
+				"product": 60
+			},
+			"command": "price",
+			"tick": 23520
+		},
+		{
+			"args": {
+				"amount": 22,
+				"product": 0
+			},
+			"command": "target",
+			"tick": 24480
+		},
+		{
+			"args": {
+				"amount": 39,
+				"product": 10
+			},
+			"command": "target",
+			"tick": 24480
+		},
+		{
+			"args": {
+				"amount": 11,
+				"product": 30
+			},
+			"command": "target",
+			"tick": 24480
+		},
+		{
+			"args": {
+				"amount": 11,
+				"product": 40
+			},
+			"command": "target",
+			"tick": 24480
+		},
+		{
+			"args": {
+				"amount": 22,
+				"product": 50
+			},
+			"command": "target",
+			"tick": 24480
+		},
+		{
+			"args": {
+				"amount": 10,
+				"product": 60
+			},
+			"command": "target",
+			"tick": 24480
+		},
+		{
+			"args": {
+				"level": 1,
+				"product": 60
+			},
+			"command": "price",
+			"tick": 24480
+		},
+		{
+			"args": {
+				"amount": 22,
+				"product": 51
+			},
+			"command": "target",
+			"tick": 24480
+		},
+		{
+			"args": {
+				"fixture": 9,
+				"product": 32
+			},
+			"command": "assign",
+			"tick": 25920
+		},
+		{
+			"args": {
+				"amount": 6,
+				"product": 32
+			},
+			"command": "order",
+			"tick": 25920
+		},
+		{
+			"args": {
+				"amount": 0,
+				"product": 51
+			},
+			"command": "target",
+			"tick": 25920
+		},
+		{
+			"args": {
+				"amount": 20,
+				"product": 0
+			},
+			"command": "target",
+			"tick": 25920
+		},
+		{
+			"args": {
+				"amount": 49,
+				"product": 10
+			},
+			"command": "target",
+			"tick": 25920
+		},
+		{
+			"args": {
+				"amount": 14,
+				"product": 40
+			},
+			"command": "target",
+			"tick": 25920
+		},
+		{
+			"args": {
+				"amount": 23,
+				"product": 50
+			},
+			"command": "target",
+			"tick": 25920
+		},
+		{
+			"args": {
+				"amount": 24,
+				"product": 70
+			},
+			"command": "target",
+			"tick": 25920
+		},
+		{
+			"args": {
+				"amount": 17,
+				"product": 32
+			},
+			"command": "target",
+			"tick": 25920
+		},
+		{
+			"args": {
+				"amount": 22,
+				"product": 0
+			},
+			"command": "target",
+			"tick": 27360
+		},
+		{
+			"args": {
+				"amount": 46,
+				"product": 10
+			},
+			"command": "target",
+			"tick": 27360
+		},
+		{
+			"args": {
+				"amount": 13,
+				"product": 30
+			},
+			"command": "target",
+			"tick": 27360
+		},
+		{
+			"args": {
+				"amount": 18,
+				"product": 40
+			},
+			"command": "target",
+			"tick": 27360
+		},
+		{
+			"args": {
+				"level": 0,
+				"product": 40
+			},
+			"command": "price",
+			"tick": 27360
+		},
+		{
+			"args": {
+				"amount": 29,
+				"product": 50
+			},
+			"command": "target",
+			"tick": 27360
+		},
+		{
+			"args": {
+				"amount": 6,
+				"product": 60
+			},
+			"command": "target",
+			"tick": 27360
+		},
+		{
+			"args": {
+				"amount": 22,
+				"product": 70
+			},
+			"command": "target",
+			"tick": 27360
+		},
+		{
+			"args": {
+				"level": 1,
+				"product": 40
+			},
+			"command": "price",
+			"tick": 27840
+		},
+		{
+			"args": {
+				"amount": 18,
+				"product": 0
+			},
+			"command": "target",
+			"tick": 28800
+		},
+		{
+			"args": {
+				"amount": 42,
+				"product": 10
+			},
+			"command": "target",
+			"tick": 28800
+		},
+		{
+			"args": {
+				"amount": 59,
+				"product": 20
+			},
+			"command": "target",
+			"tick": 28800
+		},
+		{
+			"args": {
+				"amount": 16,
+				"product": 30
+			},
+			"command": "target",
+			"tick": 28800
+		},
+		{
+			"args": {
+				"amount": 17,
+				"product": 40
+			},
+			"command": "target",
+			"tick": 28800
+		},
+		{
+			"args": {
+				"level": 0,
+				"product": 40
+			},
+			"command": "price",
+			"tick": 28800
+		},
+		{
+			"args": {
+				"amount": 26,
+				"product": 50
+			},
+			"command": "target",
+			"tick": 28800
+		},
+		{
+			"args": {
+				"amount": 10,
+				"product": 60
+			},
+			"command": "target",
+			"tick": 28800
+		},
+		{
+			"args": {
+				"amount": 23,
+				"product": 70
+			},
+			"command": "target",
+			"tick": 28800
+		},
+		{
+			"args": {
+				"amount": 9,
+				"product": 32
+			},
+			"command": "target",
+			"tick": 28800
+		},
+		{
+			"args": {
+				"level": 1,
+				"product": 40
+			},
+			"command": "price",
+			"tick": 29280
+		},
+		{
+			"args": {
+				"amount": 40000
+			},
+			"command": "auto_limit",
+			"tick": 30240
+		},
+		{
+			"args": {
+				"id": 4
+			},
+			"command": "hire",
+			"tick": 30240
+		},
+		{
+			"args": {
+				"id": 4,
+				"slot": 0
+			},
+			"command": "shift",
+			"tick": 30240
+		},
+		{
+			"args": {
+				"id": 4,
+				"slot": 1
+			},
+			"command": "shift",
+			"tick": 30240
+		},
+		{
+			"args": {
+				"id": 4,
+				"value": "stock"
+			},
+			"command": "priority",
+			"tick": 30240
+		},
+		{
+			"args": {
+				"id": 5
+			},
+			"command": "hire",
+			"tick": 30240
+		},
+		{
+			"args": {
+				"id": 5,
+				"slot": 2
+			},
+			"command": "shift",
+			"tick": 30240
+		},
+		{
+			"args": {
+				"id": 5,
+				"slot": 3
+			},
+			"command": "shift",
+			"tick": 30240
+		},
+		{
+			"args": {
+				"id": 5,
+				"value": "stock"
+			},
+			"command": "priority",
+			"tick": 30240
+		},
+		{
+			"args": {
+				"fixture": 9,
+				"product": 21
+			},
+			"command": "assign",
+			"tick": 30240
+		},
+		{
+			"args": {
+				"amount": 6,
+				"product": 21
+			},
+			"command": "order",
+			"tick": 30240
+		},
+		{
+			"args": {
+				"amount": 0,
+				"product": 32
+			},
+			"command": "target",
+			"tick": 30240
+		},
+		{
+			"args": {
+				"amount": 20,
+				"product": 0
+			},
+			"command": "target",
+			"tick": 30240
+		},
+		{
+			"args": {
+				"amount": 37,
+				"product": 10
+			},
+			"command": "target",
+			"tick": 30240
+		},
+		{
+			"args": {
+				"amount": 52,
+				"product": 20
+			},
+			"command": "target",
+			"tick": 30240
+		},
+		{
+			"args": {
+				"amount": 19,
+				"product": 40
+			},
+			"command": "target",
+			"tick": 30240
+		},
+		{
+			"args": {
+				"amount": 6,
+				"product": 60
+			},
+			"command": "target",
+			"tick": 30240
+		},
+		{
+			"args": {
+				"amount": 20,
+				"product": 70
+			},
+			"command": "target",
+			"tick": 30240
+		},
+		{
+			"args": {
+				"amount": 19,
+				"product": 21
+			},
+			"command": "target",
+			"tick": 30240
+		},
+		{
+			"args": {},
+			"command": "review",
+			"tick": 30240
+		},
+		{
+			"args": {
+				"level": 0,
+				"product": 60
+			},
+			"command": "price",
+			"tick": 30720
+		},
+		{
+			"args": {
+				"fixture": 11,
+				"product": 51
+			},
+			"command": "assign",
+			"tick": 31680
+		},
+		{
+			"args": {
+				"amount": 18,
+				"product": 0
+			},
+			"command": "target",
+			"tick": 31680
+		},
+		{
+			"args": {
+				"amount": 45,
+				"product": 10
+			},
+			"command": "target",
+			"tick": 31680
+		},
+		{
+			"args": {
+				"amount": 59,
+				"product": 20
+			},
+			"command": "target",
+			"tick": 31680
+		},
+		{
+			"args": {
+				"amount": 21,
+				"product": 40
+			},
+			"command": "target",
+			"tick": 31680
+		},
+		{
+			"args": {
+				"level": 0,
+				"product": 40
+			},
+			"command": "price",
+			"tick": 31680
+		},
+		{
+			"args": {
+				"amount": 27,
+				"product": 50
+			},
+			"command": "target",
+			"tick": 31680
+		},
+		{
+			"args": {
+				"level": 1,
+				"product": 60
+			},
+			"command": "price",
+			"tick": 31680
+		},
+		{
+			"args": {
+				"amount": 26,
+				"product": 70
+			},
+			"command": "target",
+			"tick": 31680
+		},
+		{
+			"args": {
+				"amount": 21,
+				"product": 21
+			},
+			"command": "target",
+			"tick": 31680
+		},
+		{
+			"args": {
+				"amount": 21,
+				"product": 51
+			},
+			"command": "target",
+			"tick": 31680
+		},
+		{
+			"args": {
+				"level": 1,
+				"product": 40
+			},
+			"command": "price",
+			"tick": 32160
+		},
+		{
+			"args": {
+				"amount": 21,
+				"product": 0
+			},
+			"command": "target",
+			"tick": 33120
+		},
+		{
+			"args": {
+				"amount": 46,
+				"product": 10
+			},
+			"command": "target",
+			"tick": 33120
+		},
+		{
+			"args": {
+				"amount": 57,
+				"product": 20
+			},
+			"command": "target",
+			"tick": 33120
+		},
+		{
+			"args": {
+				"amount": 13,
+				"product": 30
+			},
+			"command": "target",
+			"tick": 33120
+		},
+		{
+			"args": {
+				"amount": 20,
+				"product": 40
+			},
+			"command": "target",
+			"tick": 33120
+		},
+		{
+			"args": {
+				"level": 0,
+				"product": 40
+			},
+			"command": "price",
+			"tick": 33120
+		},
+		{
+			"args": {
+				"amount": 30,
+				"product": 50
+			},
+			"command": "target",
+			"tick": 33120
+		},
+		{
+			"args": {
+				"amount": 4,
+				"product": 60
+			},
+			"command": "target",
+			"tick": 33120
+		},
+		{
+			"args": {
+				"amount": 22,
+				"product": 70
+			},
+			"command": "target",
+			"tick": 33120
+		},
+		{
+			"args": {
+				"amount": 23,
+				"product": 21
+			},
+			"command": "target",
+			"tick": 33120
+		},
+		{
+			"args": {
+				"amount": 14,
+				"product": 51
+			},
+			"command": "target",
+			"tick": 33120
+		},
+		{
+			"args": {
+				"fixture": 8
+			},
+			"command": "remove",
+			"tick": 33600
+		},
+		{
+			"args": {
+				"dir": 3,
+				"kind": 10,
+				"x": 2,
+				"y": 7
+			},
+			"command": "place",
+			"tick": 33600
+		},
+		{
+			"args": {
+				"id": 6
+			},
+			"command": "hire",
+			"tick": 33600
+		},
+		{
+			"args": {
+				"id": 6,
+				"slot": 0
+			},
+			"command": "shift",
+			"tick": 33600
+		},
+		{
+			"args": {
+				"id": 6,
+				"slot": 1
+			},
+			"command": "shift",
+			"tick": 33600
+		},
+		{
+			"args": {
+				"id": 6,
+				"value": "register"
+			},
+			"command": "priority",
+			"tick": 33600
+		},
+		{
+			"args": {
+				"id": 7
+			},
+			"command": "hire",
+			"tick": 33600
+		},
+		{
+			"args": {
+				"id": 7,
+				"slot": 2
+			},
+			"command": "shift",
+			"tick": 33600
+		},
+		{
+			"args": {
+				"id": 7,
+				"slot": 3
+			},
+			"command": "shift",
+			"tick": 33600
+		},
+		{
+			"args": {
+				"id": 7,
+				"value": "register"
+			},
+			"command": "priority",
+			"tick": 33600
+		},
+		{
+			"args": {
+				"level": 1,
+				"product": 40
+			},
+			"command": "price",
+			"tick": 33600
+		},
+		{
+			"args": {
+				"level": 0,
+				"product": 60
+			},
+			"command": "price",
+			"tick": 33600
+		},
+		{
+			"args": {
+				"amount": 43,
+				"product": 10
+			},
+			"command": "target",
+			"tick": 34560
+		},
+		{
+			"args": {
+				"amount": 17,
+				"product": 40
+			},
+			"command": "target",
+			"tick": 34560
+		},
+		{
+			"args": {
+				"level": 0,
+				"product": 40
+			},
+			"command": "price",
+			"tick": 34560
+		},
+		{
+			"args": {
+				"amount": 40,
+				"product": 50
+			},
+			"command": "target",
+			"tick": 34560
+		},
+		{
+			"args": {
+				"amount": 11,
+				"product": 60
+			},
+			"command": "target",
+			"tick": 34560
+		},
+		{
+			"args": {
+				"level": 1,
+				"product": 60
+			},
+			"command": "price",
+			"tick": 34560
+		},
+		{
+			"args": {
+				"amount": 21,
+				"product": 70
+			},
+			"command": "target",
+			"tick": 34560
+		},
+		{
+			"args": {
+				"amount": 33,
+				"product": 21
+			},
+			"command": "target",
+			"tick": 34560
+		},
+		{
+			"args": {
+				"amount": 24,
+				"product": 51
+			},
+			"command": "target",
+			"tick": 34560
+		},
+		{
+			"args": {
+				"level": 1,
+				"product": 40
+			},
+			"command": "price",
+			"tick": 35040
+		},
+		{
+			"args": {
+				"fixture": 9,
+				"product": 73
+			},
+			"command": "assign",
+			"tick": 36000
+		},
+		{
+			"args": {
+				"amount": 6,
+				"product": 73
+			},
+			"command": "order",
+			"tick": 36000
+		},
+		{
+			"args": {
+				"amount": 0,
+				"product": 21
+			},
+			"command": "target",
+			"tick": 36000
+		},
+		{
+			"args": {
+				"amount": 23,
+				"product": 0
+			},
+			"command": "target",
+			"tick": 36000
+		},
+		{
+			"args": {
+				"amount": 47,
+				"product": 10
+			},
+			"command": "target",
+			"tick": 36000
+		},
+		{
+			"args": {
+				"amount": 42,
+				"product": 20
+			},
+			"command": "target",
+			"tick": 36000
+		},
+		{
+			"args": {
+				"amount": 11,
+				"product": 30
+			},
+			"command": "target",
+			"tick": 36000
+		},
+		{
+			"args": {
+				"amount": 20,
+				"product": 40
+			},
+			"command": "target",
+			"tick": 36000
+		},
+		{
+			"args": {
+				"amount": 39,
+				"product": 50
+			},
+			"command": "target",
+			"tick": 36000
+		},
+		{
+			"args": {
+				"amount": 9,
+				"product": 60
+			},
+			"command": "target",
+			"tick": 36000
+		},
+		{
+			"args": {
+				"amount": 20,
+				"product": 70
+			},
+			"command": "target",
+			"tick": 36000
+		},
+		{
+			"args": {
+				"amount": 29,
+				"product": 73
+			},
+			"command": "target",
+			"tick": 36000
+		},
+		{
+			"args": {
+				"amount": 32,
+				"product": 51
+			},
+			"command": "target",
+			"tick": 36000
+		},
+		{
+			"args": {
+				"amount": 25,
+				"product": 0
+			},
+			"command": "target",
+			"tick": 37440
+		},
+		{
+			"args": {
+				"amount": 37,
+				"product": 20
+			},
+			"command": "target",
+			"tick": 37440
+		},
+		{
+			"args": {
+				"amount": 13,
+				"product": 30
+			},
+			"command": "target",
+			"tick": 37440
+		},
+		{
+			"args": {
+				"amount": 22,
+				"product": 40
+			},
+			"command": "target",
+			"tick": 37440
+		},
+		{
+			"args": {
+				"amount": 37,
+				"product": 50
+			},
+			"command": "target",
+			"tick": 37440
+		},
+		{
+			"args": {
+				"amount": 7,
+				"product": 60
+			},
+			"command": "target",
+			"tick": 37440
+		},
+		{
+			"args": {
+				"amount": 18,
+				"product": 70
+			},
+			"command": "target",
+			"tick": 37440
+		},
+		{
+			"args": {
+				"amount": 32,
+				"product": 73
+			},
+			"command": "target",
+			"tick": 37440
+		},
+		{
+			"args": {
+				"amount": 30,
+				"product": 51
+			},
+			"command": "target",
+			"tick": 37440
+		},
+		{
+			"args": {
+				"fixture": 6,
+				"product": 64
+			},
+			"command": "assign",
+			"tick": 38880
+		},
+		{
+			"args": {
+				"amount": 6,
+				"product": 64
+			},
+			"command": "order",
+			"tick": 38880
+		},
+		{
+			"args": {
+				"amount": 0,
+				"product": 60
+			},
+			"command": "target",
+			"tick": 38880
+		},
+		{
+			"args": {
+				"amount": 23,
+				"product": 0
+			},
+			"command": "target",
+			"tick": 38880
+		},
+		{
+			"args": {
+				"amount": 49,
+				"product": 10
+			},
+			"command": "target",
+			"tick": 38880
+		},
+		{
+			"args": {
+				"amount": 31,
+				"product": 20
+			},
+			"command": "target",
+			"tick": 38880
+		},
+		{
+			"args": {
+				"amount": 12,
+				"product": 30
+			},
+			"command": "target",
+			"tick": 38880
+		},
+		{
+			"args": {
+				"amount": 21,
+				"product": 40
+			},
+			"command": "target",
+			"tick": 38880
+		},
+		{
+			"args": {
+				"level": 0,
+				"product": 40
+			},
+			"command": "price",
+			"tick": 38880
+		},
+		{
+			"args": {
+				"amount": 28,
+				"product": 50
+			},
+			"command": "target",
+			"tick": 38880
+		},
+		{
+			"args": {
+				"amount": 26,
+				"product": 64
+			},
+			"command": "target",
+			"tick": 38880
+		},
+		{
+			"args": {
+				"amount": 29,
+				"product": 70
+			},
+			"command": "target",
+			"tick": 38880
+		},
+		{
+			"args": {
+				"amount": 29,
+				"product": 73
+			},
+			"command": "target",
+			"tick": 38880
+		},
+		{
+			"args": {
+				"amount": 25,
+				"product": 51
+			},
+			"command": "target",
+			"tick": 38880
+		},
+		{
+			"args": {
+				"level": 1,
+				"product": 40
+			},
+			"command": "price",
+			"tick": 39360
+		},
+		{
+			"args": {
+				"value": "treats"
+			},
+			"command": "winter_plan",
+			"tick": 40320
+		},
+		{
+			"args": {
+				"amount": 42,
+				"product": 10
+			},
+			"command": "target",
+			"tick": 40320
+		},
+		{
+			"args": {
+				"amount": 37,
+				"product": 20
+			},
+			"command": "target",
+			"tick": 40320
+		},
+		{
+			"args": {
+				"amount": 13,
+				"product": 30
+			},
+			"command": "target",
+			"tick": 40320
+		},
+		{
+			"args": {
+				"amount": 22,
+				"product": 40
+			},
+			"command": "target",
+			"tick": 40320
+		},
+		{
+			"args": {
+				"amount": 24,
+				"product": 50
+			},
+			"command": "target",
+			"tick": 40320
+		},
+		{
+			"args": {
+				"amount": 22,
+				"product": 64
+			},
+			"command": "target",
+			"tick": 40320
+		},
+		{
+			"args": {
+				"amount": 26,
+				"product": 70
+			},
+			"command": "target",
+			"tick": 40320
+		},
+		{
+			"args": {
+				"amount": 35,
+				"product": 73
+			},
+			"command": "target",
+			"tick": 40320
+		},
+		{
+			"args": {
+				"amount": 26,
+				"product": 51
+			},
+			"command": "target",
+			"tick": 40320
+		},
+		{
+			"args": {
+				"amount": 21,
+				"product": 0
+			},
+			"command": "target",
+			"tick": 41760
+		},
+		{
+			"args": {
+				"amount": 50,
+				"product": 10
+			},
+			"command": "target",
+			"tick": 41760
+		},
+		{
+			"args": {
+				"amount": 35,
+				"product": 20
+			},
+			"command": "target",
+			"tick": 41760
+		},
+		{
+			"args": {
+				"amount": 10,
+				"product": 30
+			},
+			"command": "target",
+			"tick": 41760
+		},
+		{
+			"args": {
+				"amount": 23,
+				"product": 40
+			},
+			"command": "target",
+			"tick": 41760
+		},
+		{
+			"args": {
+				"level": 0,
+				"product": 40
+			},
+			"command": "price",
+			"tick": 41760
+		},
+		{
+			"args": {
+				"amount": 20,
+				"product": 50
+			},
+			"command": "target",
+			"tick": 41760
+		},
+		{
+			"args": {
+				"amount": 21,
+				"product": 64
+			},
+			"command": "target",
+			"tick": 41760
+		},
+		{
+			"args": {
+				"amount": 33,
+				"product": 73
+			},
+			"command": "target",
+			"tick": 41760
+		},
+		{
+			"args": {
+				"amount": 27,
+				"product": 51
+			},
+			"command": "target",
+			"tick": 41760
+		},
+		{
+			"args": {
+				"level": 1,
+				"product": 40
+			},
+			"command": "price",
+			"tick": 42240
+		},
+		{
+			"args": {
+				"level": 0,
+				"product": 64
+			},
+			"command": "price",
+			"tick": 42240
+		},
+		{
+			"args": {
+				"amount": 23,
+				"product": 0
+			},
+			"command": "target",
+			"tick": 43200
+		},
+		{
+			"args": {
+				"amount": 55,
+				"product": 10
+			},
+			"command": "target",
+			"tick": 43200
+		},
+		{
+			"args": {
+				"amount": 37,
+				"product": 20
+			},
+			"command": "target",
+			"tick": 43200
+		},
+		{
+			"args": {
+				"amount": 11,
+				"product": 30
+			},
+			"command": "target",
+			"tick": 43200
+		},
+		{
+			"args": {
+				"amount": 29,
+				"product": 40
+			},
+			"command": "target",
+			"tick": 43200
+		},
+		{
+			"args": {
+				"amount": 18,
+				"product": 50
+			},
+			"command": "target",
+			"tick": 43200
+		},
+		{
+			"args": {
+				"amount": 17,
+				"product": 64
+			},
+			"command": "target",
+			"tick": 43200
+		},
+		{
+			"args": {
+				"level": 1,
+				"product": 64
+			},
+			"command": "price",
+			"tick": 43200
+		},
+		{
+			"args": {
+				"amount": 16,
+				"product": 70
+			},
+			"command": "target",
+			"tick": 43200
+		},
+		{
+			"args": {
+				"amount": 14,
+				"product": 73
+			},
+			"command": "target",
+			"tick": 43200
+		},
+		{
+			"args": {
+				"amount": 25,
+				"product": 51
+			},
+			"command": "target",
+			"tick": 43200
+		},
+		{
+			"args": {
+				"level": 0,
+				"product": 64
+			},
+			"command": "price",
+			"tick": 43680
+		},
+		{
+			"args": {
+				"fixture": 9,
+				"product": 3
+			},
+			"command": "assign",
+			"tick": 44640
+		},
+		{
+			"args": {
+				"amount": 6,
+				"product": 3
+			},
+			"command": "order",
+			"tick": 44640
+		},
+		{
+			"args": {
+				"amount": 0,
+				"product": 73
+			},
+			"command": "target",
+			"tick": 44640
+		},
+		{
+			"args": {
+				"amount": 56,
+				"product": 10
+			},
+			"command": "target",
+			"tick": 44640
+		},
+		{
+			"args": {
+				"amount": 43,
+				"product": 20
+			},
+			"command": "target",
+			"tick": 44640
+		},
+		{
+			"args": {
+				"amount": 25,
+				"product": 40
+			},
+			"command": "target",
+			"tick": 44640
+		},
+		{
+			"args": {
+				"level": 0,
+				"product": 40
+			},
+			"command": "price",
+			"tick": 44640
+		},
+		{
+			"args": {
+				"amount": 23,
+				"product": 50
+			},
+			"command": "target",
+			"tick": 44640
+		},
+		{
+			"args": {
+				"level": 1,
+				"product": 64
+			},
+			"command": "price",
+			"tick": 44640
+		},
+		{
+			"args": {
+				"amount": 17,
+				"product": 70
+			},
+			"command": "target",
+			"tick": 44640
+		},
+		{
+			"args": {
+				"amount": 23,
+				"product": 3
+			},
+			"command": "target",
+			"tick": 44640
+		},
+		{
+			"args": {
+				"amount": 31,
+				"product": 51
+			},
+			"command": "target",
+			"tick": 44640
+		},
+		{
+			"args": {
+				"level": 1,
+				"product": 40
+			},
+			"command": "price",
+			"tick": 45120
+		},
+		{
+			"args": {
+				"level": 0,
+				"product": 64
+			},
+			"command": "price",
+			"tick": 45120
+		},
+		{
+			"args": {
+				"fixture": 11,
+				"product": 36
+			},
+			"command": "assign",
+			"tick": 46080
+		},
+		{
+			"args": {
+				"amount": 6,
+				"product": 36
+			},
+			"command": "order",
+			"tick": 46080
+		},
+		{
+			"args": {
+				"amount": 0,
+				"product": 51
+			},
+			"command": "target",
+			"tick": 46080
+		},
+		{
+			"args": {
+				"amount": 24,
+				"product": 0
+			},
+			"command": "target",
+			"tick": 46080
+		},
+		{
+			"args": {
+				"amount": 59,
+				"product": 10
+			},
+			"command": "target",
+			"tick": 46080
+		},
+		{
+			"args": {
+				"amount": 50,
+				"product": 20
+			},
+			"command": "target",
+			"tick": 46080
+		},
+		{
+			"args": {
+				"amount": 15,
+				"product": 30
+			},
+			"command": "target",
+			"tick": 46080
+		},
+		{
+			"args": {
+				"amount": 28,
+				"product": 40
+			},
+			"command": "target",
+			"tick": 46080
+		},
+		{
+			"args": {
+				"amount": 25,
+				"product": 50
+			},
+			"command": "target",
+			"tick": 46080
+		},
+		{
+			"args": {
+				"amount": 11,
+				"product": 64
+			},
+			"command": "target",
+			"tick": 46080
+		},
+		{
+			"args": {
+				"level": 1,
+				"product": 64
+			},
+			"command": "price",
+			"tick": 46080
+		},
+		{
+			"args": {
+				"amount": 22,
+				"product": 70
+			},
+			"command": "target",
+			"tick": 46080
+		},
+		{
+			"args": {
+				"amount": 24,
+				"product": 3
+			},
+			"command": "target",
+			"tick": 46080
+		},
+		{
+			"args": {
+				"amount": 20,
+				"product": 36
+			},
+			"command": "target",
+			"tick": 46080
+		},
+		{
+			"args": {
+				"level": 0,
+				"product": 64
+			},
+			"command": "price",
+			"tick": 46560
+		},
+		{
+			"args": {
+				"amount": 54,
+				"product": 10
+			},
+			"command": "target",
+			"tick": 47520
+		},
+		{
+			"args": {
+				"amount": 48,
+				"product": 20
+			},
+			"command": "target",
+			"tick": 47520
+		},
+		{
+			"args": {
+				"amount": 16,
+				"product": 30
+			},
+			"command": "target",
+			"tick": 47520
+		},
+		{
+			"args": {
+				"amount": 21,
+				"product": 40
+			},
+			"command": "target",
+			"tick": 47520
+		},
+		{
+			"args": {
+				"level": 0,
+				"product": 40
+			},
+			"command": "price",
+			"tick": 47520
+		},
+		{
+			"args": {
+				"amount": 29,
+				"product": 50
+			},
+			"command": "target",
+			"tick": 47520
+		},
+		{
+			"args": {
+				"amount": 7,
+				"product": 64
+			},
+			"command": "target",
+			"tick": 47520
+		},
+		{
+			"args": {
+				"level": 1,
+				"product": 64
+			},
+			"command": "price",
+			"tick": 47520
+		},
+		{
+			"args": {
+				"amount": 25,
+				"product": 70
+			},
+			"command": "target",
+			"tick": 47520
+		},
+		{
+			"args": {
+				"amount": 16,
+				"product": 3
+			},
+			"command": "target",
+			"tick": 47520
+		},
+		{
+			"args": {
+				"level": 1,
+				"product": 40
+			},
+			"command": "price",
+			"tick": 48000
+		},
+		{
+			"args": {
+				"level": 0,
+				"product": 64
+			},
+			"command": "price",
+			"tick": 48000
+		},
+		{
+			"args": {
+				"amount": 23,
+				"product": 0
+			},
+			"command": "target",
+			"tick": 48960
+		},
+		{
+			"args": {
+				"amount": 51,
+				"product": 10
+			},
+			"command": "target",
+			"tick": 48960
+		},
+		{
+			"args": {
+				"amount": 20,
+				"product": 30
+			},
+			"command": "target",
+			"tick": 48960
+		},
+		{
+			"args": {
+				"amount": 23,
+				"product": 40
+			},
+			"command": "target",
+			"tick": 48960
+		},
+		{
+			"args": {
+				"amount": 28,
+				"product": 50
+			},
+			"command": "target",
+			"tick": 48960
+		},
+		{
+			"args": {
+				"amount": 11,
+				"product": 64
+			},
+			"command": "target",
+			"tick": 48960
+		},
+		{
+			"args": {
+				"level": 1,
+				"product": 64
+			},
+			"command": "price",
+			"tick": 48960
+		},
+		{
+			"args": {
+				"amount": 26,
+				"product": 70
+			},
+			"command": "target",
+			"tick": 48960
+		},
+		{
+			"args": {
+				"amount": 21,
+				"product": 3
+			},
+			"command": "target",
+			"tick": 48960
+		},
+		{
+			"args": {
+				"amount": 15,
+				"product": 36
+			},
+			"command": "target",
+			"tick": 48960
+		},
+		{
+			"args": {
+				"fixture": 9,
+				"product": 21
+			},
+			"command": "assign",
+			"tick": 50400
+		},
+		{
+			"args": {
+				"amount": 6,
+				"product": 21
+			},
+			"command": "order",
+			"tick": 50400
+		},
+		{
+			"args": {
+				"amount": 0,
+				"product": 3
+			},
+			"command": "target",
+			"tick": 50400
+		},
+		{
+			"args": {
+				"amount": 21,
+				"product": 0
+			},
+			"command": "target",
+			"tick": 50400
+		},
+		{
+			"args": {
+				"amount": 52,
+				"product": 10
+			},
+			"command": "target",
+			"tick": 50400
+		},
+		{
+			"args": {
+				"amount": 41,
+				"product": 20
+			},
+			"command": "target",
+			"tick": 50400
+		},
+		{
+			"args": {
+				"amount": 16,
+				"product": 30
+			},
+			"command": "target",
+			"tick": 50400
+		},
+		{
+			"args": {
+				"amount": 30,
+				"product": 50
+			},
+			"command": "target",
+			"tick": 50400
+		},
+		{
+			"args": {
+				"amount": 9,
+				"product": 64
+			},
+			"command": "target",
+			"tick": 50400
+		},
+		{
+			"args": {
+				"amount": 22,
+				"product": 21
+			},
+			"command": "target",
+			"tick": 50400
+		},
+		{
+			"args": {
+				"amount": 20,
+				"product": 36
+			},
+			"command": "target",
+			"tick": 50400
+		},
+		{
+			"args": {
+				"level": 0,
+				"product": 64
+			},
+			"command": "price",
+			"tick": 50880
+		},
+		{
+			"args": {
+				"fixture": 11,
+				"product": 51
+			},
+			"command": "assign",
+			"tick": 51840
+		},
+		{
+			"args": {
+				"amount": 0,
+				"product": 36
+			},
+			"command": "target",
+			"tick": 51840
+		},
+		{
+			"args": {
+				"amount": 59,
+				"product": 10
+			},
+			"command": "target",
+			"tick": 51840
+		},
+		{
+			"args": {
+				"amount": 42,
+				"product": 20
+			},
+			"command": "target",
+			"tick": 51840
+		},
+		{
+			"args": {
+				"amount": 17,
+				"product": 30
+			},
+			"command": "target",
+			"tick": 51840
+		},
+		{
+			"args": {
+				"amount": 28,
+				"product": 40
+			},
+			"command": "target",
+			"tick": 51840
+		},
+		{
+			"args": {
+				"amount": 8,
+				"product": 64
+			},
+			"command": "target",
+			"tick": 51840
+		},
+		{
+			"args": {
+				"level": 1,
+				"product": 64
+			},
+			"command": "price",
+			"tick": 51840
+		},
+		{
+			"args": {
+				"amount": 29,
+				"product": 70
+			},
+			"command": "target",
+			"tick": 51840
+		},
+		{
+			"args": {
+				"amount": 21,
+				"product": 21
+			},
+			"command": "target",
+			"tick": 51840
+		},
+		{
+			"args": {
+				"amount": 16,
+				"product": 51
+			},
+			"command": "target",
+			"tick": 51840
+		},
+		{
+			"args": {
+				"amount": 22,
+				"product": 0
+			},
+			"command": "target",
+			"tick": 53280
+		},
+		{
+			"args": {
+				"amount": 60,
+				"product": 10
+			},
+			"command": "target",
+			"tick": 53280
+		},
+		{
+			"args": {
+				"amount": 29,
+				"product": 20
+			},
+			"command": "target",
+			"tick": 53280
+		},
+		{
+			"args": {
+				"amount": 14,
+				"product": 30
+			},
+			"command": "target",
+			"tick": 53280
+		},
+		{
+			"args": {
+				"level": 0,
+				"product": 40
+			},
+			"command": "price",
+			"tick": 53280
+		},
+		{
+			"args": {
+				"amount": 29,
+				"product": 50
+			},
+			"command": "target",
+			"tick": 53280
+		},
+		{
+			"args": {
+				"amount": 5,
+				"product": 64
+			},
+			"command": "target",
+			"tick": 53280
+		},
+		{
+			"args": {
+				"amount": 30,
+				"product": 70
+			},
+			"command": "target",
+			"tick": 53280
+		},
+		{
+			"args": {
+				"amount": 24,
+				"product": 21
+			},
+			"command": "target",
+			"tick": 53280
+		},
+		{
+			"args": {
+				"level": 1,
+				"product": 40
+			},
+			"command": "price",
+			"tick": 53760
+		},
+		{
+			"args": {
+				"level": 0,
+				"product": 64
+			},
+			"command": "price",
+			"tick": 53760
+		},
+		{
+			"args": {
+				"fixture": 9,
+				"product": 3
+			},
+			"command": "assign",
+			"tick": 54720
+		},
+		{
+			"args": {
+				"amount": 6,
+				"product": 3
+			},
+			"command": "order",
+			"tick": 54720
+		},
+		{
+			"args": {
+				"amount": 0,
+				"product": 21
+			},
+			"command": "target",
+			"tick": 54720
+		},
+		{
+			"args": {
+				"amount": 23,
+				"product": 0
+			},
+			"command": "target",
+			"tick": 54720
+		},
+		{
+			"args": {
+				"amount": 41,
+				"product": 20
+			},
+			"command": "target",
+			"tick": 54720
+		},
+		{
+			"args": {
+				"amount": 26,
+				"product": 40
+			},
+			"command": "target",
+			"tick": 54720
+		},
+		{
+			"args": {
+				"level": 0,
+				"product": 40
+			},
+			"command": "price",
+			"tick": 54720
+		},
+		{
+			"args": {
+				"amount": 28,
+				"product": 50
+			},
+			"command": "target",
+			"tick": 54720
+		},
+		{
+			"args": {
+				"amount": 4,
+				"product": 64
+			},
+			"command": "target",
+			"tick": 54720
+		},
+		{
+			"args": {
+				"level": 1,
+				"product": 64
+			},
+			"command": "price",
+			"tick": 54720
+		},
+		{
+			"args": {
+				"amount": 27,
+				"product": 70
+			},
+			"command": "target",
+			"tick": 54720
+		},
+		{
+			"args": {
+				"amount": 19,
+				"product": 3
+			},
+			"command": "target",
+			"tick": 54720
+		},
+		{
+			"args": {
+				"amount": 18,
+				"product": 51
+			},
+			"command": "target",
+			"tick": 54720
+		},
+		{
+			"args": {
+				"level": 1,
+				"product": 40
+			},
+			"command": "price",
+			"tick": 55200
+		},
+		{
+			"args": {
+				"amount": 24,
+				"product": 0
+			},
+			"command": "target",
+			"tick": 56160
+		},
+		{
+			"args": {
+				"amount": 56,
+				"product": 10
+			},
+			"command": "target",
+			"tick": 56160
+		},
+		{
+			"args": {
+				"amount": 43,
+				"product": 20
+			},
+			"command": "target",
+			"tick": 56160
+		},
+		{
+			"args": {
+				"amount": 13,
+				"product": 30
+			},
+			"command": "target",
+			"tick": 56160
+		},
+		{
+			"args": {
+				"amount": 28,
+				"product": 40
+			},
+			"command": "target",
+			"tick": 56160
+		},
+		{
+			"args": {
+				"level": 0,
+				"product": 40
+			},
+			"command": "price",
+			"tick": 56160
+		},
+		{
+			"args": {
+				"amount": 25,
+				"product": 50
+			},
+			"command": "target",
+			"tick": 56160
+		},
+		{
+			"args": {
+				"amount": 21,
+				"product": 64
+			},
+			"command": "target",
+			"tick": 56160
+		},
+		{
+			"args": {
+				"amount": 23,
+				"product": 70
+			},
+			"command": "target",
+			"tick": 56160
+		},
+		{
+			"args": {
+				"amount": 17,
+				"product": 3
+			},
+			"command": "target",
+			"tick": 56160
+		},
+		{
+			"args": {
+				"amount": 25,
+				"product": 51
+			},
+			"command": "target",
+			"tick": 56160
+		},
+		{
+			"args": {
+				"level": 1,
+				"product": 40
+			},
+			"command": "price",
+			"tick": 56640
+		},
+		{
+			"args": {
+				"amount": 41,
+				"product": 10
+			},
+			"command": "target",
+			"tick": 57600
+		},
+		{
+			"args": {
+				"amount": 40,
+				"product": 20
+			},
+			"command": "target",
+			"tick": 57600
+		},
+		{
+			"args": {
+				"amount": 10,
+				"product": 30
+			},
+			"command": "target",
+			"tick": 57600
+		},
+		{
+			"args": {
+				"amount": 27,
+				"product": 40
+			},
+			"command": "target",
+			"tick": 57600
+		},
+		{
+			"args": {
+				"level": 0,
+				"product": 40
+			},
+			"command": "price",
+			"tick": 57600
+		},
+		{
+			"args": {
+				"amount": 22,
+				"product": 50
+			},
+			"command": "target",
+			"tick": 57600
+		},
+		{
+			"args": {
+				"amount": 23,
+				"product": 64
+			},
+			"command": "target",
+			"tick": 57600
+		},
+		{
+			"args": {
+				"amount": 18,
+				"product": 70
+			},
+			"command": "target",
+			"tick": 57600
+		},
+		{
+			"args": {
+				"amount": 12,
+				"product": 3
+			},
+			"command": "target",
+			"tick": 57600
+		},
+		{
+			"args": {
+				"amount": 26,
+				"product": 51
+			},
+			"command": "target",
+			"tick": 57600
+		},
+		{
+			"args": {
+				"level": 1,
+				"product": 40
+			},
+			"command": "price",
+			"tick": 58080
+		},
+		{
+			"args": {
+				"fixture": 9,
+				"product": 54
+			},
+			"command": "assign",
+			"tick": 59040
+		},
+		{
+			"args": {
+				"amount": 6,
+				"product": 54
+			},
+			"command": "order",
+			"tick": 59040
+		},
+		{
+			"args": {
+				"amount": 0,
+				"product": 3
+			},
+			"command": "target",
+			"tick": 59040
+		},
+		{
+			"args": {
+				"amount": 21,
+				"product": 0
+			},
+			"command": "target",
+			"tick": 59040
+		},
+		{
+			"args": {
+				"amount": 42,
+				"product": 10
+			},
+			"command": "target",
+			"tick": 59040
+		},
+		{
+			"args": {
+				"amount": 26,
+				"product": 20
+			},
+			"command": "target",
+			"tick": 59040
+		},
+		{
+			"args": {
+				"amount": 25,
+				"product": 40
+			},
+			"command": "target",
+			"tick": 59040
+		},
+		{
+			"args": {
+				"amount": 18,
+				"product": 50
+			},
+			"command": "target",
+			"tick": 59040
+		},
+		{
+			"args": {
+				"amount": 12,
+				"product": 64
+			},
+			"command": "target",
+			"tick": 59040
+		},
+		{
+			"args": {
+				"amount": 16,
+				"product": 70
+			},
+			"command": "target",
+			"tick": 59040
+		},
+		{
+			"args": {
+				"amount": 44,
+				"product": 54
+			},
+			"command": "target",
+			"tick": 59040
+		},
+		{
+			"args": {
+				"amount": 20,
+				"product": 51
+			},
+			"command": "target",
+			"tick": 59040
+		},
+		{
+			"args": {
+				"dir": 2,
+				"kind": 17,
+				"x": 5,
+				"y": 11
+			},
+			"command": "place",
+			"tick": 60480
+		},
+		{
+			"args": {
+				"fixture": 14,
+				"product": 40
+			},
+			"command": "assign",
+			"tick": 60480
+		},
+		{
+			"args": {
+				"dir": 2,
+				"kind": 16,
+				"x": 7,
+				"y": 11
+			},
+			"command": "place",
+			"tick": 60480
+		},
+		{
+			"args": {
+				"fixture": 15,
+				"product": 36
+			},
+			"command": "assign",
+			"tick": 60480
+		},
+		{
+			"args": {
+				"dir": 2,
+				"kind": 17,
+				"x": 9,
+				"y": 11
+			},
+			"command": "place",
+			"tick": 60480
+		},
+		{
+			"args": {
+				"fixture": 16,
+				"product": 20
+			},
+			"command": "assign",
+			"tick": 60480
+		},
+		{
+			"args": {
+				"amount": 20,
+				"product": 0
+			},
+			"command": "target",
+			"tick": 60480
+		},
+		{
+			"args": {
+				"amount": 53,
+				"product": 10
+			},
+			"command": "target",
+			"tick": 60480
+		},
+		{
+			"args": {
+				"amount": 36,
+				"product": 20
+			},
+			"command": "target",
+			"tick": 60480
+		},
+		{
+			"args": {
+				"amount": 12,
+				"product": 30
+			},
+			"command": "target",
+			"tick": 60480
+		},
+		{
+			"args": {
+				"amount": 35,
+				"product": 40
+			},
+			"command": "target",
+			"tick": 60480
+		},
+		{
+			"args": {
+				"amount": 15,
+				"product": 64
+			},
+			"command": "target",
+			"tick": 60480
+		},
+		{
+			"args": {
+				"amount": 45,
+				"product": 54
+			},
+			"command": "target",
+			"tick": 60480
+		},
+		{
+			"args": {
+				"amount": 24,
+				"product": 51
+			},
+			"command": "target",
+			"tick": 60480
+		},
+		{
+			"args": {
+				"amount": 4,
+				"product": 36
+			},
+			"command": "target",
+			"tick": 60480
+		},
+		{
+			"args": {
+				"amount": 21,
+				"product": 0
+			},
+			"command": "target",
+			"tick": 61920
+		},
+		{
+			"args": {
+				"amount": 61,
+				"product": 10
+			},
+			"command": "target",
+			"tick": 61920
+		},
+		{
+			"args": {
+				"amount": 39,
+				"product": 20
+			},
+			"command": "target",
+			"tick": 61920
+		},
+		{
+			"args": {
+				"amount": 11,
+				"product": 30
+			},
+			"command": "target",
+			"tick": 61920
+		},
+		{
+			"args": {
+				"amount": 32,
+				"product": 40
+			},
+			"command": "target",
+			"tick": 61920
+		},
+		{
+			"args": {
+				"level": 0,
+				"product": 40
+			},
+			"command": "price",
+			"tick": 61920
+		},
+		{
+			"args": {
+				"amount": 22,
+				"product": 50
+			},
+			"command": "target",
+			"tick": 61920
+		},
+		{
+			"args": {
+				"amount": 21,
+				"product": 64
+			},
+			"command": "target",
+			"tick": 61920
+		},
+		{
+			"args": {
+				"amount": 20,
+				"product": 70
+			},
+			"command": "target",
+			"tick": 61920
+		},
+		{
+			"args": {
+				"amount": 39,
+				"product": 54
+			},
+			"command": "target",
+			"tick": 61920
+		},
+		{
+			"args": {
+				"amount": 28,
+				"product": 51
+			},
+			"command": "target",
+			"tick": 61920
+		},
+		{
+			"args": {
+				"amount": 22,
+				"product": 36
+			},
+			"command": "target",
+			"tick": 61920
+		},
+		{
+			"args": {
+				"level": 1,
+				"product": 40
+			},
+			"command": "price",
+			"tick": 62400
+		},
+		{
+			"args": {
+				"amount": 23,
+				"product": 0
+			},
+			"command": "target",
+			"tick": 63360
+		},
+		{
+			"args": {
+				"amount": 52,
+				"product": 10
+			},
+			"command": "target",
+			"tick": 63360
+		},
+		{
+			"args": {
+				"amount": 43,
+				"product": 20
+			},
+			"command": "target",
+			"tick": 63360
+		},
+		{
+			"args": {
+				"amount": 10,
+				"product": 30
+			},
+			"command": "target",
+			"tick": 63360
+		},
+		{
+			"args": {
+				"amount": 28,
+				"product": 40
+			},
+			"command": "target",
+			"tick": 63360
+		},
+		{
+			"args": {
+				"level": 0,
+				"product": 40
+			},
+			"command": "price",
+			"tick": 63360
+		},
+		{
+			"args": {
+				"amount": 28,
+				"product": 50
+			},
+			"command": "target",
+			"tick": 63360
+		},
+		{
+			"args": {
+				"amount": 17,
+				"product": 64
+			},
+			"command": "target",
+			"tick": 63360
+		},
+		{
+			"args": {
+				"amount": 22,
+				"product": 70
+			},
+			"command": "target",
+			"tick": 63360
+		},
+		{
+			"args": {
+				"amount": 56,
+				"product": 54
+			},
+			"command": "target",
+			"tick": 63360
+		},
+		{
+			"args": {
+				"amount": 31,
+				"product": 51
+			},
+			"command": "target",
+			"tick": 63360
+		},
+		{
+			"args": {
+				"level": 1,
+				"product": 40
+			},
+			"command": "price",
+			"tick": 63840
+		},
+		{
+			"args": {
+				"level": 0,
+				"product": 64
+			},
+			"command": "price",
+			"tick": 63840
+		},
+		{
+			"args": {
+				"id": 5
+			},
+			"command": "train",
+			"tick": 64800
+		},
+		{
+			"args": {
+				"id": 7
+			},
+			"command": "train",
+			"tick": 64800
+		},
+		{
+			"args": {
+				"fixture": 9,
+				"product": 3
+			},
+			"command": "assign",
+			"tick": 64800
+		},
+		{
+			"args": {
+				"amount": 6,
+				"product": 3
+			},
+			"command": "order",
+			"tick": 64800
+		},
+		{
+			"args": {
+				"amount": 0,
+				"product": 54
+			},
+			"command": "target",
+			"tick": 64800
+		},
+		{
+			"args": {
+				"amount": 48,
+				"product": 10
+			},
+			"command": "target",
+			"tick": 64800
+		},
+		{
+			"args": {
+				"amount": 47,
+				"product": 20
+			},
+			"command": "target",
+			"tick": 64800
+		},
+		{
+			"args": {
+				"amount": 23,
+				"product": 40
+			},
+			"command": "target",
+			"tick": 64800
+		},
+		{
+			"args": {
+				"amount": 24,
+				"product": 50
+			},
+			"command": "target",
+			"tick": 64800
+		},
+		{
+			"args": {
+				"amount": 14,
+				"product": 64
+			},
+			"command": "target",
+			"tick": 64800
+		},
+		{
+			"args": {
+				"level": 1,
+				"product": 64
+			},
+			"command": "price",
+			"tick": 64800
+		},
+		{
+			"args": {
+				"amount": 21,
+				"product": 3
+			},
+			"command": "target",
+			"tick": 64800
+		},
+		{
+			"args": {
+				"amount": 27,
+				"product": 51
+			},
+			"command": "target",
+			"tick": 64800
+		},
+		{
+			"args": {
+				"amount": 12,
+				"product": 36
+			},
+			"command": "target",
+			"tick": 64800
+		},
+		{
+			"args": {
+				"id": 5
+			},
+			"command": "train",
+			"tick": 65280
+		},
+		{
+			"args": {
+				"id": 7
+			},
+			"command": "train",
+			"tick": 65280
+		},
+		{
+			"args": {
+				"level": 0,
+				"product": 64
+			},
+			"command": "price",
+			"tick": 65280
+		},
+		{
+			"args": {
+				"amount": 21,
+				"product": 0
+			},
+			"command": "target",
+			"tick": 66240
+		},
+		{
+			"args": {
+				"amount": 50,
+				"product": 10
+			},
+			"command": "target",
+			"tick": 66240
+		},
+		{
+			"args": {
+				"amount": 54,
+				"product": 20
+			},
+			"command": "target",
+			"tick": 66240
+		},
+		{
+			"args": {
+				"amount": 14,
+				"product": 30
+			},
+			"command": "target",
+			"tick": 66240
+		},
+		{
+			"args": {
+				"amount": 27,
+				"product": 40
+			},
+			"command": "target",
+			"tick": 66240
+		},
+		{
+			"args": {
+				"amount": 13,
+				"product": 64
+			},
+			"command": "target",
+			"tick": 66240
+		},
+		{
+			"args": {
+				"level": 1,
+				"product": 64
+			},
+			"command": "price",
+			"tick": 66240
+		},
+		{
+			"args": {
+				"amount": 24,
+				"product": 70
+			},
+			"command": "target",
+			"tick": 66240
+		},
+		{
+			"args": {
+				"amount": 26,
+				"product": 3
+			},
+			"command": "target",
+			"tick": 66240
+		},
+		{
+			"args": {
+				"amount": 26,
+				"product": 51
+			},
+			"command": "target",
+			"tick": 66240
+		},
+		{
+			"args": {
+				"amount": 13,
+				"product": 36
+			},
+			"command": "target",
+			"tick": 66240
+		},
+		{
+			"args": {
+				"amount": 22,
+				"product": 0
+			},
+			"command": "target",
+			"tick": 67680
+		},
+		{
+			"args": {
+				"amount": 53,
+				"product": 10
+			},
+			"command": "target",
+			"tick": 67680
+		},
+		{
+			"args": {
+				"amount": 50,
+				"product": 20
+			},
+			"command": "target",
+			"tick": 67680
+		},
+		{
+			"args": {
+				"amount": 28,
+				"product": 40
+			},
+			"command": "target",
+			"tick": 67680
+		},
+		{
+			"args": {
+				"level": 0,
+				"product": 40
+			},
+			"command": "price",
+			"tick": 67680
+		},
+		{
+			"args": {
+				"amount": 20,
+				"product": 50
+			},
+			"command": "target",
+			"tick": 67680
+		},
+		{
+			"args": {
+				"amount": 14,
+				"product": 64
+			},
+			"command": "target",
+			"tick": 67680
+		},
+		{
+			"args": {
+				"amount": 26,
+				"product": 70
+			},
+			"command": "target",
+			"tick": 67680
+		},
+		{
+			"args": {
+				"amount": 25,
+				"product": 51
+			},
+			"command": "target",
+			"tick": 67680
+		},
+		{
+			"args": {
+				"amount": 22,
+				"product": 36
+			},
+			"command": "target",
+			"tick": 67680
+		},
+		{
+			"args": {
+				"level": 1,
+				"product": 40
+			},
+			"command": "price",
+			"tick": 68160
+		},
+		{
+			"args": {
+				"amount": 21,
+				"product": 0
+			},
+			"command": "target",
+			"tick": 69120
+		},
+		{
+			"args": {
+				"amount": 47,
+				"product": 10
+			},
+			"command": "target",
+			"tick": 69120
+		},
+		{
+			"args": {
+				"amount": 40,
+				"product": 20
+			},
+			"command": "target",
+			"tick": 69120
+		},
+		{
+			"args": {
+				"amount": 12,
+				"product": 30
+			},
+			"command": "target",
+			"tick": 69120
+		},
+		{
+			"args": {
+				"amount": 24,
+				"product": 40
+			},
+			"command": "target",
+			"tick": 69120
+		},
+		{
+			"args": {
+				"level": 0,
+				"product": 40
+			},
+			"command": "price",
+			"tick": 69120
+		},
+		{
+			"args": {
+				"amount": 17,
+				"product": 64
+			},
+			"command": "target",
+			"tick": 69120
+		},
+		{
+			"args": {
+				"amount": 23,
+				"product": 70
+			},
+			"command": "target",
+			"tick": 69120
+		},
+		{
+			"args": {
+				"amount": 19,
+				"product": 3
+			},
+			"command": "target",
+			"tick": 69120
+		},
+		{
+			"args": {
+				"amount": 24,
+				"product": 51
+			},
+			"command": "target",
+			"tick": 69120
+		},
+		{
+			"args": {
+				"amount": 20,
+				"product": 36
+			},
+			"command": "target",
+			"tick": 69120
+		},
+		{
+			"args": {
+				"level": 1,
+				"product": 40
+			},
+			"command": "price",
+			"tick": 69600
+		},
+		{
+			"args": {
+				"level": 0,
+				"product": 64
+			},
+			"command": "price",
+			"tick": 69600
+		},
+		{
+			"args": {
+				"fixture": 9,
+				"product": 21
+			},
+			"command": "assign",
+			"tick": 70560
+		},
+		{
+			"args": {
+				"amount": 6,
+				"product": 21
+			},
+			"command": "order",
+			"tick": 70560
+		},
+		{
+			"args": {
+				"amount": 0,
+				"product": 3
+			},
+			"command": "target",
+			"tick": 70560
+		},
+		{
+			"args": {
+				"amount": 44,
+				"product": 10
+			},
+			"command": "target",
+			"tick": 70560
+		},
+		{
+			"args": {
+				"amount": 44,
+				"product": 20
+			},
+			"command": "target",
+			"tick": 70560
+		},
+		{
+			"args": {
+				"amount": 10,
+				"product": 30
+			},
+			"command": "target",
+			"tick": 70560
+		},
+		{
+			"args": {
+				"amount": 21,
+				"product": 40
+			},
+			"command": "target",
+			"tick": 70560
+		},
+		{
+			"args": {
+				"amount": 17,
+				"product": 50
+			},
+			"command": "target",
+			"tick": 70560
+		},
+		{
+			"args": {
+				"amount": 16,
+				"product": 64
+			},
+			"command": "target",
+			"tick": 70560
+		},
+		{
+			"args": {
+				"level": 1,
+				"product": 64
+			},
+			"command": "price",
+			"tick": 70560
+		},
+		{
+			"args": {
+				"amount": 22,
+				"product": 70
+			},
+			"command": "target",
+			"tick": 70560
+		},
+		{
+			"args": {
+				"amount": 22,
+				"product": 21
+			},
+			"command": "target",
+			"tick": 70560
+		},
+		{
+			"args": {
+				"amount": 21,
+				"product": 51
+			},
+			"command": "target",
+			"tick": 70560
+		},
+		{
+			"args": {
+				"amount": 14,
+				"product": 36
+			},
+			"command": "target",
+			"tick": 70560
+		},
+		{
+			"args": {
+				"amount": 50,
+				"product": 10
+			},
+			"command": "target",
+			"tick": 72000
+		},
+		{
+			"args": {
+				"amount": 52,
+				"product": 20
+			},
+			"command": "target",
+			"tick": 72000
+		},
+		{
+			"args": {
+				"amount": 12,
+				"product": 30
+			},
+			"command": "target",
+			"tick": 72000
+		},
+		{
+			"args": {
+				"amount": 24,
+				"product": 40
+			},
+			"command": "target",
+			"tick": 72000
+		},
+		{
+			"args": {
+				"amount": 19,
+				"product": 50
+			},
+			"command": "target",
+			"tick": 72000
+		},
+		{
+			"args": {
+				"amount": 24,
+				"product": 70
+			},
+			"command": "target",
+			"tick": 72000
+		},
+		{
+			"args": {
+				"amount": 23,
+				"product": 51
+			},
+			"command": "target",
+			"tick": 72000
+		},
+		{
+			"args": {
+				"amount": 15,
+				"product": 36
+			},
+			"command": "target",
+			"tick": 72000
+		},
+		{
+			"args": {
+				"amount": 67,
+				"product": 10
+			},
+			"command": "target",
+			"tick": 73440
+		},
+		{
+			"args": {
+				"amount": 60,
+				"product": 20
+			},
+			"command": "target",
+			"tick": 73440
+		},
+		{
+			"args": {
+				"amount": 25,
+				"product": 40
+			},
+			"command": "target",
+			"tick": 73440
+		},
+		{
+			"args": {
+				"level": 0,
+				"product": 40
+			},
+			"command": "price",
+			"tick": 73440
+		},
+		{
+			"args": {
+				"amount": 11,
+				"product": 64
+			},
+			"command": "target",
+			"tick": 73440
+		},
+		{
+			"args": {
+				"amount": 27,
+				"product": 70
+			},
+			"command": "target",
+			"tick": 73440
+		},
+		{
+			"args": {
+				"amount": 26,
+				"product": 21
+			},
+			"command": "target",
+			"tick": 73440
+		},
+		{
+			"args": {
+				"amount": 24,
+				"product": 51
+			},
+			"command": "target",
+			"tick": 73440
+		},
+		{
+			"args": {
+				"amount": 22,
+				"product": 36
+			},
+			"command": "target",
+			"tick": 73440
+		},
+		{
+			"args": {
+				"level": 1,
+				"product": 40
+			},
+			"command": "price",
+			"tick": 73920
+		},
+		{
+			"args": {
+				"fixture": 9,
+				"product": 3
+			},
+			"command": "assign",
+			"tick": 74880
+		},
+		{
+			"args": {
+				"amount": 6,
+				"product": 3
+			},
+			"command": "order",
+			"tick": 74880
+		},
+		{
+			"args": {
+				"amount": 0,
+				"product": 21
+			},
+			"command": "target",
+			"tick": 74880
+		},
+		{
+			"args": {
+				"amount": 22,
+				"product": 0
+			},
+			"command": "target",
+			"tick": 74880
+		},
+		{
+			"args": {
+				"amount": 63,
+				"product": 10
+			},
+			"command": "target",
+			"tick": 74880
+		},
+		{
+			"args": {
+				"amount": 56,
+				"product": 20
+			},
+			"command": "target",
+			"tick": 74880
+		},
+		{
+			"args": {
+				"amount": 28,
+				"product": 40
+			},
+			"command": "target",
+			"tick": 74880
+		},
+		{
+			"args": {
+				"level": 0,
+				"product": 40
+			},
+			"command": "price",
+			"tick": 74880
+		},
+		{
+			"args": {
+				"amount": 26,
+				"product": 50
+			},
+			"command": "target",
+			"tick": 74880
+		},
+		{
+			"args": {
+				"amount": 25,
+				"product": 70
+			},
+			"command": "target",
+			"tick": 74880
+		},
+		{
+			"args": {
+				"amount": 19,
+				"product": 3
+			},
+			"command": "target",
+			"tick": 74880
+		},
+		{
+			"args": {
+				"amount": 35,
+				"product": 51
+			},
+			"command": "target",
+			"tick": 74880
+		},
+		{
+			"args": {
+				"level": 1,
+				"product": 40
+			},
+			"command": "price",
+			"tick": 75360
+		},
+		{
+			"args": {
+				"amount": 19,
+				"product": 0
+			},
+			"command": "target",
+			"tick": 76320
+		},
+		{
+			"args": {
+				"amount": 54,
+				"product": 10
+			},
+			"command": "target",
+			"tick": 76320
+		},
+		{
+			"args": {
+				"amount": 64,
+				"product": 20
+			},
+			"command": "target",
+			"tick": 76320
+		},
+		{
+			"args": {
+				"amount": 14,
+				"product": 30
+			},
+			"command": "target",
+			"tick": 76320
+		},
+		{
+			"args": {
+				"amount": 31,
+				"product": 40
+			},
+			"command": "target",
+			"tick": 76320
+		},
+		{
+			"args": {
+				"amount": 23,
+				"product": 50
+			},
+			"command": "target",
+			"tick": 76320
+		},
+		{
+			"args": {
+				"amount": 21,
+				"product": 70
+			},
+			"command": "target",
+			"tick": 76320
+		},
+		{
+			"args": {
+				"amount": 32,
+				"product": 51
+			},
+			"command": "target",
+			"tick": 76320
+		},
+		{
+			"args": {
+				"amount": 20,
+				"product": 36
+			},
+			"command": "target",
+			"tick": 76320
+		},
+		{
+			"args": {
+				"amount": 20,
+				"product": 0
+			},
+			"command": "target",
+			"tick": 77760
+		},
+		{
+			"args": {
+				"amount": 41,
+				"product": 10
+			},
+			"command": "target",
+			"tick": 77760
+		},
+		{
+			"args": {
+				"amount": 60,
+				"product": 20
+			},
+			"command": "target",
+			"tick": 77760
+		},
+		{
+			"args": {
+				"amount": 13,
+				"product": 30
+			},
+			"command": "target",
+			"tick": 77760
+		},
+		{
+			"args": {
+				"amount": 32,
+				"product": 40
+			},
+			"command": "target",
+			"tick": 77760
+		},
+		{
+			"args": {
+				"level": 0,
+				"product": 40
+			},
+			"command": "price",
+			"tick": 77760
+		},
+		{
+			"args": {
+				"amount": 24,
+				"product": 50
+			},
+			"command": "target",
+			"tick": 77760
+		},
+		{
+			"args": {
+				"amount": 14,
+				"product": 64
+			},
+			"command": "target",
+			"tick": 77760
+		},
+		{
+			"args": {
+				"amount": 20,
+				"product": 70
+			},
+			"command": "target",
+			"tick": 77760
+		},
+		{
+			"args": {
+				"amount": 15,
+				"product": 3
+			},
+			"command": "target",
+			"tick": 77760
+		},
+		{
+			"args": {
+				"amount": 30,
+				"product": 51
+			},
+			"command": "target",
+			"tick": 77760
+		},
+		{
+			"args": {
+				"amount": 22,
+				"product": 36
+			},
+			"command": "target",
+			"tick": 77760
+		},
+		{
+			"args": {
+				"level": 1,
+				"product": 40
+			},
+			"command": "price",
+			"tick": 78240
+		},
+		{
+			"args": {
+				"amount": 19,
+				"product": 0
+			},
+			"command": "target",
+			"tick": 79200
+		},
+		{
+			"args": {
+				"amount": 44,
+				"product": 10
+			},
+			"command": "target",
+			"tick": 79200
+		},
+		{
+			"args": {
+				"amount": 50,
+				"product": 20
+			},
+			"command": "target",
+			"tick": 79200
+		},
+		{
+			"args": {
+				"amount": 35,
+				"product": 40
+			},
+			"command": "target",
+			"tick": 79200
+		},
+		{
+			"args": {
+				"amount": 17,
+				"product": 50
+			},
+			"command": "target",
+			"tick": 79200
+		},
+		{
+			"args": {
+				"amount": 16,
+				"product": 64
+			},
+			"command": "target",
+			"tick": 79200
+		},
+		{
+			"args": {
+				"amount": 21,
+				"product": 70
+			},
+			"command": "target",
+			"tick": 79200
+		},
+		{
+			"args": {
+				"amount": 16,
+				"product": 3
+			},
+			"command": "target",
+			"tick": 79200
+		},
+		{
+			"args": {
+				"amount": 19,
+				"product": 51
+			},
+			"command": "target",
+			"tick": 79200
+		},
+		{
+			"args": {
+				"amount": 23,
+				"product": 36
+			},
+			"command": "target",
+			"tick": 79200
+		},
+		{
+			"args": {
+				"level": 0,
+				"product": 64
+			},
+			"command": "price",
+			"tick": 79680
+		}
+	],
+	"day": 57,
+	"seed": 20260906
+}

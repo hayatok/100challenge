@@ -1,0 +1,131 @@
+{
+	"results": [
+		{
+			"cash": 33153,
+			"commands": 656,
+			"day": 57,
+			"mode": "peak_staff",
+			"result": "deadline",
+			"review": {
+				"cohort": 113,
+				"days": 14,
+				"events": 6,
+				"margin": 0.0365623955897093,
+				"pass": false,
+				"repeat": 1.0,
+				"reserve": 33865,
+				"visitors": 1582,
+				"waste": 0.0876532654287715
+			},
+			"seed": 20260906,
+			"star": 4,
+			"style": "morning",
+			"winter": {
+				"completed": 256,
+				"groups": {
+					"bread": {
+						"completed": 84,
+						"served": 71
+					},
+					"rice light": {
+						"completed": 87,
+						"served": 60
+					},
+					"tea": {
+						"completed": 85,
+						"served": 61
+					}
+				},
+				"pass": true,
+				"plan": "breakfast",
+				"rate": 0.75,
+				"served": 192
+			}
+		},
+		{
+			"cash": 26046,
+			"commands": 1127,
+			"day": 57,
+			"mode": "value_prices",
+			"result": "deadline",
+			"review": {
+				"cohort": 109,
+				"days": 14,
+				"events": 5,
+				"margin": -0.0233294658488821,
+				"pass": false,
+				"repeat": 1.0,
+				"reserve": 37840,
+				"visitors": 1583,
+				"waste": 0.0979445126923629
+			},
+			"seed": 20260906,
+			"star": 4,
+			"style": "morning",
+			"winter": {
+				"completed": 257,
+				"groups": {
+					"bread": {
+						"completed": 82,
+						"served": 65
+					},
+					"rice light": {
+						"completed": 89,
+						"served": 58
+					},
+					"tea": {
+						"completed": 86,
+						"served": 66
+					}
+				},
+				"pass": true,
+				"plan": "breakfast",
+				"rate": 0.735408560311284,
+				"served": 189
+			}
+		},
+		{
+			"cash": 35697,
+			"commands": 1121,
+			"day": 57,
+			"mode": "both",
+			"result": "deadline",
+			"review": {
+				"cohort": 110,
+				"days": 14,
+				"events": 5,
+				"margin": 0.016435011269722,
+				"pass": false,
+				"repeat": 1.0,
+				"reserve": 33655,
+				"visitors": 1580,
+				"waste": 0.105004812319538
+			},
+			"seed": 20260906,
+			"star": 4,
+			"style": "morning",
+			"winter": {
+				"completed": 252,
+				"groups": {
+					"bread": {
+						"completed": 81,
+						"served": 64
+					},
+					"rice light": {
+						"completed": 85,
+						"served": 54
+					},
+					"tea": {
+						"completed": 86,
+						"served": 60
+					}
+				},
+				"pass": true,
+				"plan": "breakfast",
+				"rate": 0.706349206349206,
+				"served": 178
+			}
+		}
+	],
+	"scope": "Normal-command strategy experiments; unchanged simulation rules"
+}

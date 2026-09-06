@@ -1,0 +1,9254 @@
+{
+	"failures": 4,
+	"results": [
+		{
+			"cash": 30069,
+			"commands": 652,
+			"day": 57,
+			"event_days": [
+				{
+					"buyers": 27,
+					"day": 3,
+					"event": "chili",
+					"event_results": {
+						"chili": {
+							"buyers": 25,
+							"completed": 28
+						}
+					},
+					"miss": {
+						"p51": 1,
+						"価格": 1,
+						"欠品": 2,
+						"行列": 1
+					},
+					"needs": 11,
+					"served": 10,
+					"unmet": {
+						"spicy noodle": 1
+					},
+					"visitors": 29
+				},
+				{
+					"buyers": 30,
+					"day": 5,
+					"event": "hero",
+					"event_results": {
+						"hero": {
+							"buyers": 27,
+							"completed": 45
+						}
+					},
+					"miss": {
+						"p0": 1,
+						"価格": 1,
+						"欠品": 16,
+						"行列": 2
+					},
+					"needs": 21,
+					"served": 6,
+					"unmet": {
+						"rice": 7,
+						"warm hearty": 8
+					},
+					"visitors": 46
+				},
+				{
+					"buyers": 55,
+					"day": 7,
+					"event": "pudding",
+					"event_results": {
+						"pudding": {
+							"buyers": 55,
+							"completed": 76
+						}
+					},
+					"miss": {
+						"p0": 1,
+						"p40": 2,
+						"価格": 2,
+						"欠品": 21,
+						"行列": 1
+					},
+					"needs": 28,
+					"served": 10,
+					"unmet": {
+						"dessert": 18
+					},
+					"visitors": 76
+				},
+				{
+					"buyers": 61,
+					"day": 8,
+					"event": "office",
+					"event_results": {
+						"office": {
+							"buyers": 61,
+							"completed": 72
+						}
+					},
+					"miss": {
+						"p10": 1,
+						"p21": 2,
+						"欠品": 11,
+						"行列": 3
+					},
+					"needs": 35,
+					"served": 26,
+					"unmet": {
+						"bread": 1,
+						"coffee": 8
+					},
+					"visitors": 74
+				},
+				{
+					"buyers": 73,
+					"day": 10,
+					"event": "chili",
+					"event_results": {
+						"chili": {
+							"buyers": 70,
+							"completed": 76
+						}
+					},
+					"miss": {
+						"p0": 1,
+						"p51": 1,
+						"価格": 2,
+						"欠品": 4,
+						"行列": 1,
+						"補充待ち": 1
+					},
+					"needs": 27,
+					"served": 24,
+					"unmet": {
+						"spicy noodle": 3
+					},
+					"visitors": 79
+				},
+				{
+					"buyers": 80,
+					"day": 12,
+					"event": "hero",
+					"event_results": {
+						"hero": {
+							"buyers": 74,
+							"completed": 82
+						}
+					},
+					"miss": {
+						"p0": 1,
+						"p51": 1,
+						"価格": 3,
+						"欠品": 2,
+						"行列": 4,
+						"補充待ち": 1
+					},
+					"needs": 37,
+					"served": 34,
+					"unmet": {
+						"warm hearty": 3
+					},
+					"visitors": 84
+				},
+				{
+					"buyers": 74,
+					"day": 13,
+					"event": "sports",
+					"event_results": {
+						"hero": {
+							"buyers": 2,
+							"completed": 2
+						},
+						"sports": {
+							"buyers": 72,
+							"completed": 77
+						}
+					},
+					"miss": {
+						"p0": 3,
+						"欠品": 3,
+						"行列": 3,
+						"補充待ち": 2
+					},
+					"needs": 32,
+					"served": 28,
+					"unmet": {
+						"drink health": 1,
+						"rice light": 3
+					},
+					"visitors": 78
+				},
+				{
+					"buyers": 70,
+					"day": 14,
+					"event": "pudding",
+					"event_results": {
+						"pudding": {
+							"buyers": 69,
+							"completed": 91
+						},
+						"sports": {
+							"buyers": 1,
+							"completed": 1
+						}
+					},
+					"miss": {
+						"p40": 4,
+						"価格": 2,
+						"欠品": 17,
+						"行列": 5
+					},
+					"needs": 31,
+					"served": 18,
+					"unmet": {
+						"dessert": 13
+					},
+					"visitors": 92
+				},
+				{
+					"buyers": 76,
+					"day": 15,
+					"event": "heat",
+					"event_results": {
+						"heat": {
+							"buyers": 76,
+							"completed": 92
+						},
+						"pudding": {
+							"buyers": 0,
+							"completed": 1
+						}
+					},
+					"miss": {
+						"p20": 3,
+						"p60": 1,
+						"価格": 1,
+						"欠品": 14,
+						"行列": 6
+					},
+					"needs": 51,
+					"served": 38,
+					"unmet": {
+						"drink cold": 13
+					},
+					"visitors": 95
+				},
+				{
+					"buyers": 91,
+					"day": 16,
+					"event": "heat",
+					"event_results": {
+						"heat": {
+							"buyers": 91,
+							"completed": 92
+						}
+					},
+					"miss": {
+						"p20": 2,
+						"p60": 1,
+						"欠品": 3,
+						"行列": 1
+					},
+					"needs": 47,
+					"served": 46,
+					"unmet": {
+						"drink cold": 1
+					},
+					"visitors": 92
+				},
+				{
+					"buyers": 80,
+					"day": 17,
+					"event": "chili",
+					"event_results": {
+						"chili": {
+							"buyers": 77,
+							"completed": 85
+						},
+						"heat": {
+							"buyers": 3,
+							"completed": 3
+						}
+					},
+					"miss": {
+						"p0": 1,
+						"p51": 1,
+						"価格": 1,
+						"欠品": 4,
+						"行列": 4,
+						"補充待ち": 1
+					},
+					"needs": 31,
+					"served": 28,
+					"unmet": {
+						"spicy noodle": 3
+					},
+					"visitors": 87
+				},
+				{
+					"buyers": 63,
+					"day": 19,
+					"event": "hero",
+					"event_results": {
+						"hero": {
+							"buyers": 58,
+							"completed": 89
+						}
+					},
+					"miss": {
+						"p0": 2,
+						"p10": 1,
+						"p60": 2,
+						"価格": 3,
+						"欠品": 23,
+						"行列": 5,
+						"補充待ち": 5
+					},
+					"needs": 37,
+					"served": 12,
+					"unmet": {
+						"rice": 11,
+						"warm hearty": 14
+					},
+					"visitors": 93
+				},
+				{
+					"buyers": 88,
+					"day": 20,
+					"event": "summer_break",
+					"event_results": {
+						"hero": {
+							"buyers": 4,
+							"completed": 4
+						},
+						"summer_break": {
+							"buyers": 84,
+							"completed": 95
+						}
+					},
+					"miss": {
+						"p20": 1,
+						"p32": 2,
+						"価格": 1,
+						"欠品": 8,
+						"行列": 5
+					},
+					"needs": 42,
+					"served": 33,
+					"unmet": {
+						"drink cold": 3,
+						"snack sweet": 6
+					},
+					"visitors": 95
+				},
+				{
+					"buyers": 78,
+					"day": 21,
+					"event": "pudding",
+					"event_results": {
+						"pudding": {
+							"buyers": 78,
+							"completed": 93
+						}
+					},
+					"miss": {
+						"p40": 2,
+						"欠品": 17
+					},
+					"needs": 34,
+					"served": 19,
+					"unmet": {
+						"dessert": 15
+					},
+					"visitors": 93
+				},
+				{
+					"buyers": 62,
+					"day": 23,
+					"event": "study",
+					"event_results": {
+						"study": {
+							"buyers": 57,
+							"completed": 105
+						}
+					},
+					"miss": {
+						"満員": 14,
+						"行列": 3
+					},
+					"needs": 54,
+					"served": 13,
+					"unmet": {
+						"coffee": 17,
+						"noodle warm": 24
+					},
+					"visitors": 109
+				},
+				{
+					"buyers": 97,
+					"day": 24,
+					"event": "chili",
+					"event_results": {
+						"chili": {
+							"buyers": 93,
+							"completed": 107
+						},
+						"study": {
+							"buyers": 4,
+							"completed": 4
+						}
+					},
+					"miss": {
+						"p40": 2,
+						"p51": 1,
+						"価格": 1,
+						"欠品": 8,
+						"行列": 7,
+						"補充待ち": 1
+					},
+					"needs": 36,
+					"served": 29,
+					"unmet": {
+						"spicy noodle": 7
+					},
+					"visitors": 110
+				},
+				{
+					"buyers": 78,
+					"day": 26,
+					"event": "hero",
+					"event_results": {
+						"hero": {
+							"buyers": 73,
+							"completed": 107
+						}
+					},
+					"miss": {
+						"p60": 2,
+						"価格": 2,
+						"欠品": 5,
+						"行列": 5
+					},
+					"needs": 44,
+					"served": 16,
+					"unmet": {
+						"rice": 17,
+						"warm hearty": 11
+					},
+					"visitors": 110
+				},
+				{
+					"buyers": 105,
+					"day": 27,
+					"event": "rain",
+					"event_results": {
+						"hero": {
+							"buyers": 3,
+							"completed": 3
+						},
+						"rain": {
+							"buyers": 102,
+							"completed": 113
+						}
+					},
+					"miss": {
+						"p60": 2,
+						"価格": 1,
+						"欠品": 7,
+						"行列": 1
+					},
+					"needs": 44,
+					"served": 38,
+					"unmet": {
+						"rain": 6
+					},
+					"visitors": 114
+				},
+				{
+					"buyers": 86,
+					"day": 28,
+					"event": "pudding",
+					"event_results": {
+						"pudding": {
+							"buyers": 85,
+							"completed": 109
+						},
+						"rain": {
+							"buyers": 1,
+							"completed": 1
+						}
+					},
+					"miss": {
+						"p40": 5,
+						"価格": 1,
+						"欠品": 20,
+						"行列": 7,
+						"補充待ち": 1
+					},
+					"needs": 37,
+					"served": 20,
+					"unmet": {
+						"dessert": 17
+					},
+					"visitors": 109
+				},
+				{
+					"buyers": 76,
+					"day": 29,
+					"event": "harvest",
+					"event_results": {
+						"harvest": {
+							"buyers": 76,
+							"completed": 104
+						}
+					},
+					"miss": {
+						"p64": 2,
+						"価格": 1,
+						"欠品": 26,
+						"行列": 3
+					},
+					"needs": 49,
+					"served": 25,
+					"unmet": {
+						"warm seasonal": 24
+					},
+					"visitors": 110
+				},
+				{
+					"buyers": 91,
+					"day": 30,
+					"event": "autumn",
+					"event_results": {
+						"autumn": {
+							"buyers": 86,
+							"completed": 106
+						},
+						"harvest": {
+							"buyers": 5,
+							"completed": 6
+						}
+					},
+					"miss": {
+						"p64": 1,
+						"価格": 1,
+						"欠品": 14,
+						"行列": 7
+					},
+					"needs": 50,
+					"served": 37,
+					"unmet": {
+						"sweet seasonal": 12,
+						"warm seasonal": 1
+					},
+					"visitors": 110
+				},
+				{
+					"buyers": 101,
+					"day": 31,
+					"event": "chili",
+					"event_results": {
+						"autumn": {
+							"buyers": 3,
+							"completed": 4
+						},
+						"chili": {
+							"buyers": 98,
+							"completed": 107
+						}
+					},
+					"miss": {
+						"p20": 2,
+						"価格": 2,
+						"欠品": 5,
+						"行列": 5
+					},
+					"needs": 39,
+					"served": 33,
+					"unmet": {
+						"drink": 1,
+						"spicy noodle": 4,
+						"sweet seasonal": 1
+					},
+					"visitors": 111
+				},
+				{
+					"buyers": 78,
+					"day": 33,
+					"event": "hero",
+					"event_results": {
+						"hero": {
+							"buyers": 71,
+							"completed": 108
+						}
+					},
+					"miss": {
+						"p64": 3,
+						"価格": 2,
+						"欠品": 3,
+						"行列": 9
+					},
+					"needs": 44,
+					"served": 20,
+					"unmet": {
+						"rice": 11,
+						"warm hearty": 13
+					},
+					"visitors": 112
+				},
+				{
+					"buyers": 102,
+					"day": 34,
+					"event": "books",
+					"event_results": {
+						"books": {
+							"buyers": 98,
+							"completed": 111
+						},
+						"hero": {
+							"buyers": 4,
+							"completed": 4
+						}
+					},
+					"miss": {
+						"p64": 1,
+						"価格": 2,
+						"欠品": 1,
+						"満員": 2,
+						"行列": 9
+					},
+					"needs": 49,
+					"served": 39,
+					"unmet": {
+						"cookie": 5,
+						"tea": 5
+					},
+					"visitors": 111
+				},
+				{
+					"buyers": 90,
+					"day": 35,
+					"event": "pudding",
+					"event_results": {
+						"pudding": {
+							"buyers": 90,
+							"completed": 114
+						}
+					},
+					"miss": {
+						"p3": 1,
+						"p40": 2,
+						"p64": 2,
+						"価格": 4,
+						"欠品": 20,
+						"行列": 4
+					},
+					"needs": 40,
+					"served": 24,
+					"unmet": {
+						"dessert": 16
+					},
+					"visitors": 114
+				},
+				{
+					"buyers": 88,
+					"day": 37,
+					"event": "office",
+					"event_results": {
+						"office": {
+							"buyers": 82,
+							"completed": 110
+						}
+					},
+					"miss": {
+						"p0": 1,
+						"p10": 2,
+						"p21": 2,
+						"価格": 1,
+						"欠品": 26,
+						"行列": 5,
+						"補充待ち": 2
+					},
+					"needs": 56,
+					"served": 31,
+					"unmet": {
+						"bread": 16,
+						"coffee": 9
+					},
+					"visitors": 112
+				},
+				{
+					"buyers": 104,
+					"day": 38,
+					"event": "chili",
+					"event_results": {
+						"chili": {
+							"buyers": 102,
+							"completed": 108
+						},
+						"office": {
+							"buyers": 2,
+							"completed": 2
+						}
+					},
+					"miss": {
+						"p51": 1,
+						"価格": 1,
+						"欠品": 4,
+						"行列": 2
+					},
+					"needs": 40,
+					"served": 35,
+					"unmet": {
+						"spicy noodle": 5
+					},
+					"visitors": 116
+				},
+				{
+					"buyers": 99,
+					"day": 40,
+					"event": "hero",
+					"event_results": {
+						"hero": {
+							"buyers": 94,
+							"completed": 108
+						}
+					},
+					"miss": {
+						"p0": 1,
+						"p3": 2,
+						"価格": 3,
+						"欠品": 4,
+						"行列": 8,
+						"補充待ち": 1
+					},
+					"needs": 45,
+					"served": 36,
+					"unmet": {
+						"rice": 4,
+						"warm hearty": 5
+					},
+					"visitors": 112
+				},
+				{
+					"buyers": 105,
+					"day": 41,
+					"event": "autumn",
+					"event_results": {
+						"autumn": {
+							"buyers": 101,
+							"completed": 112
+						},
+						"hero": {
+							"buyers": 4,
+							"completed": 4
+						}
+					},
+					"miss": {
+						"p3": 1,
+						"価格": 1,
+						"欠品": 8,
+						"行列": 3
+					},
+					"needs": 50,
+					"served": 40,
+					"unmet": {
+						"sweet seasonal": 10
+					},
+					"visitors": 113
+				},
+				{
+					"buyers": 93,
+					"day": 42,
+					"event": "pudding",
+					"event_results": {
+						"autumn": {
+							"buyers": 1,
+							"completed": 1
+						},
+						"pudding": {
+							"buyers": 92,
+							"completed": 115
+						}
+					},
+					"miss": {
+						"p0": 1,
+						"p40": 4,
+						"p64": 1,
+						"価格": 2,
+						"欠品": 26,
+						"行列": 1
+					},
+					"needs": 41,
+					"served": 21,
+					"unmet": {
+						"dessert": 20
+					},
+					"visitors": 115
+				},
+				{
+					"buyers": 106,
+					"day": 43,
+					"event": "cold",
+					"event_results": {
+						"cold": {
+							"buyers": 106,
+							"completed": 108
+						}
+					},
+					"miss": {
+						"p64": 1,
+						"価格": 1,
+						"欠品": 1,
+						"行列": 1
+					},
+					"needs": 62,
+					"served": 61,
+					"unmet": {
+						"warm soup": 1
+					},
+					"visitors": 112
+				},
+				{
+					"buyers": 105,
+					"day": 44,
+					"event": "cold",
+					"event_results": {
+						"cold": {
+							"buyers": 105,
+							"completed": 111
+						}
+					},
+					"miss": {
+						"p0": 2,
+						"価格": 1,
+						"欠品": 3,
+						"行列": 4
+					},
+					"needs": 54,
+					"served": 52,
+					"unmet": {
+						"warm soup": 2
+					},
+					"visitors": 111
+				},
+				{
+					"buyers": 90,
+					"day": 45,
+					"event": "winter_breakfast",
+					"event_results": {
+						"cold": {
+							"buyers": 3,
+							"completed": 4
+						},
+						"winter_breakfast": {
+							"buyers": 87,
+							"completed": 112
+						}
+					},
+					"miss": {
+						"p0": 3,
+						"価格": 1,
+						"欠品": 4,
+						"満員": 6,
+						"行列": 11
+					},
+					"needs": 64,
+					"served": 42,
+					"unmet": {
+						"bread": 9,
+						"rice light": 3,
+						"tea": 9,
+						"warm soup": 1
+					},
+					"visitors": 114
+				},
+				{
+					"buyers": 101,
+					"day": 47,
+					"event": "hero",
+					"event_results": {
+						"hero": {
+							"buyers": 96,
+							"completed": 106
+						}
+					},
+					"miss": {
+						"p0": 1,
+						"p3": 1,
+						"価格": 1,
+						"欠品": 9,
+						"行列": 2,
+						"補充待ち": 1
+					},
+					"needs": 45,
+					"served": 37,
+					"unmet": {
+						"warm hearty": 8
+					},
+					"visitors": 110
+				},
+				{
+					"buyers": 63,
+					"day": 48,
+					"event": "night_shift",
+					"event_results": {
+						"hero": {
+							"buyers": 4,
+							"completed": 4
+						},
+						"night_shift": {
+							"buyers": 59,
+							"completed": 63
+						}
+					},
+					"miss": {
+						"p3": 1,
+						"価格": 1,
+						"行列": 3,
+						"補充待ち": 1
+					},
+					"needs": 3,
+					"served": 3,
+					"unmet": {},
+					"visitors": 94
+				},
+				{
+					"buyers": 103,
+					"day": 49,
+					"event": "winter_breakfast",
+					"event_results": {
+						"night_shift": {
+							"buyers": 20,
+							"completed": 31
+						},
+						"winter_breakfast": {
+							"buyers": 83,
+							"completed": 112
+						}
+					},
+					"miss": {
+						"p3": 1,
+						"p40": 2,
+						"価格": 2,
+						"欠品": 3,
+						"満員": 20,
+						"行列": 4
+					},
+					"needs": 88,
+					"served": 56,
+					"unmet": {
+						"bread": 7,
+						"rice light": 6,
+						"tea": 8,
+						"warm hearty": 11
+					},
+					"visitors": 112
+				},
+				{
+					"buyers": 100,
+					"day": 51,
+					"event": "office",
+					"event_results": {
+						"office": {
+							"buyers": 96,
+							"completed": 110
+						}
+					},
+					"miss": {
+						"p10": 1,
+						"p21": 2,
+						"欠品": 16,
+						"行列": 1
+					},
+					"needs": 57,
+					"served": 44,
+					"unmet": {
+						"coffee": 13
+					},
+					"visitors": 113
+				},
+				{
+					"buyers": 104,
+					"day": 52,
+					"event": "chili",
+					"event_results": {
+						"chili": {
+							"buyers": 101,
+							"completed": 111
+						},
+						"office": {
+							"buyers": 3,
+							"completed": 3
+						}
+					},
+					"miss": {
+						"p0": 1,
+						"p51": 1,
+						"p64": 1,
+						"価格": 2,
+						"欠品": 8,
+						"行列": 3
+					},
+					"needs": 39,
+					"served": 33,
+					"unmet": {
+						"drink": 1,
+						"spicy noodle": 5
+					},
+					"visitors": 116
+				},
+				{
+					"buyers": 102,
+					"day": 53,
+					"event": "winter_breakfast",
+					"event_results": {
+						"chili": {
+							"buyers": 4,
+							"completed": 5
+						},
+						"winter_breakfast": {
+							"buyers": 98,
+							"completed": 113
+						}
+					},
+					"miss": {
+						"p0": 1,
+						"価格": 1,
+						"欠品": 1,
+						"行列": 3
+					},
+					"needs": 66,
+					"served": 57,
+					"unmet": {
+						"bread": 5,
+						"rice light": 4
+					},
+					"visitors": 116
+				},
+				{
+					"buyers": 98,
+					"day": 54,
+					"event": "hero",
+					"event_results": {
+						"hero": {
+							"buyers": 95,
+							"completed": 106
+						},
+						"winter_breakfast": {
+							"buyers": 3,
+							"completed": 3
+						}
+					},
+					"miss": {
+						"p0": 1,
+						"p3": 1,
+						"p64": 1,
+						"価格": 3,
+						"欠品": 11
+					},
+					"needs": 46,
+					"served": 38,
+					"unmet": {
+						"warm hearty": 8
+					},
+					"visitors": 110
+				},
+				{
+					"buyers": 79,
+					"day": 55,
+					"event": "neighbors",
+					"event_results": {
+						"hero": {
+							"buyers": 4,
+							"completed": 4
+						},
+						"neighbors": {
+							"buyers": 75,
+							"completed": 114
+						}
+					},
+					"miss": {
+						"p3": 1,
+						"p40": 5,
+						"p64": 4,
+						"価格": 1,
+						"欠品": 29,
+						"行列": 11,
+						"補充待ち": 5
+					},
+					"needs": 51,
+					"served": 25,
+					"unmet": {
+						"sweet": 2,
+						"warm hearty": 24
+					},
+					"visitors": 114
+				},
+				{
+					"buyers": 92,
+					"day": 56,
+					"event": "winter_breakfast",
+					"event_results": {
+						"winter_breakfast": {
+							"buyers": 92,
+							"completed": 113
+						}
+					},
+					"miss": {
+						"満員": 10,
+						"行列": 11
+					},
+					"needs": 67,
+					"served": 48,
+					"unmet": {
+						"bread": 5,
+						"rice light": 9,
+						"tea": 5
+					},
+					"visitors": 113
+				}
+			],
+			"metrics": {
+				"cohort": 89,
+				"days": 14,
+				"events": 4,
+				"margin": 0.0957882359765907,
+				"pass": false,
+				"repeat": 1.0,
+				"reserve": 38050,
+				"visitors": 1549,
+				"waste": 0.0581542175062612
+			},
+			"result": "won",
+			"seed": 20260979,
+			"star": 5,
+			"stories": [
+				2,
+				3,
+				2,
+				3,
+				1,
+				2,
+				3,
+				3,
+				1,
+				3,
+				3,
+				3
+			],
+			"style": "staples",
+			"winter": {
+				"completed": 254,
+				"groups": {
+					"bread": {
+						"completed": 85,
+						"served": 59
+					},
+					"rice light": {
+						"completed": 82,
+						"served": 60
+					},
+					"tea": {
+						"completed": 87,
+						"served": 65
+					}
+				},
+				"pass": true,
+				"plan": "breakfast",
+				"rate": 0.724409448818898,
+				"served": 184
+			}
+		},
+		{
+			"cash": 37045,
+			"commands": 656,
+			"day": 57,
+			"event_days": [
+				{
+					"buyers": 34,
+					"day": 3,
+					"event": "chili",
+					"event_results": {
+						"chili": {
+							"buyers": 32,
+							"completed": 34
+						}
+					},
+					"miss": {
+						"p60": 1,
+						"欠品": 2,
+						"行列": 1
+					},
+					"needs": 14,
+					"served": 13,
+					"unmet": {
+						"spicy noodle": 1
+					},
+					"visitors": 36
+				},
+				{
+					"buyers": 28,
+					"day": 5,
+					"event": "hero",
+					"event_results": {
+						"hero": {
+							"buyers": 27,
+							"completed": 39
+						}
+					},
+					"miss": {
+						"p0": 1,
+						"p40": 2,
+						"価格": 1,
+						"欠品": 14
+					},
+					"needs": 16,
+					"served": 5,
+					"unmet": {
+						"rice": 5,
+						"warm hearty": 6
+					},
+					"visitors": 40
+				},
+				{
+					"buyers": 57,
+					"day": 7,
+					"event": "pudding",
+					"event_results": {
+						"pudding": {
+							"buyers": 56,
+							"completed": 72
+						}
+					},
+					"miss": {
+						"p40": 2,
+						"欠品": 18
+					},
+					"needs": 24,
+					"served": 8,
+					"unmet": {
+						"dessert": 16
+					},
+					"visitors": 72
+				},
+				{
+					"buyers": 44,
+					"day": 8,
+					"event": "office",
+					"event_results": {
+						"office": {
+							"buyers": 44,
+							"completed": 70
+						}
+					},
+					"miss": {
+						"p0": 1,
+						"p10": 3,
+						"p21": 2,
+						"欠品": 30,
+						"行列": 1,
+						"補充待ち": 1
+					},
+					"needs": 35,
+					"served": 10,
+					"unmet": {
+						"bread": 16,
+						"coffee": 9
+					},
+					"visitors": 71
+				},
+				{
+					"buyers": 76,
+					"day": 10,
+					"event": "chili",
+					"event_results": {
+						"chili": {
+							"buyers": 75,
+							"completed": 80
+						}
+					},
+					"miss": {
+						"p21": 1,
+						"p51": 1,
+						"価格": 1,
+						"欠品": 3,
+						"行列": 4
+					},
+					"needs": 29,
+					"served": 27,
+					"unmet": {
+						"drink": 2
+					},
+					"visitors": 84
+				},
+				{
+					"buyers": 75,
+					"day": 12,
+					"event": "hero",
+					"event_results": {
+						"hero": {
+							"buyers": 70,
+							"completed": 82
+						}
+					},
+					"miss": {
+						"p0": 5,
+						"欠品": 7,
+						"行列": 5,
+						"補充待ち": 5
+					},
+					"needs": 32,
+					"served": 22,
+					"unmet": {
+						"rice": 2,
+						"warm hearty": 8
+					},
+					"visitors": 85
+				},
+				{
+					"buyers": 82,
+					"day": 13,
+					"event": "sports",
+					"event_results": {
+						"hero": {
+							"buyers": 3,
+							"completed": 3
+						},
+						"sports": {
+							"buyers": 79,
+							"completed": 85
+						}
+					},
+					"miss": {
+						"p0": 2,
+						"p40": 2,
+						"欠品": 4,
+						"行列": 4
+					},
+					"needs": 37,
+					"served": 31,
+					"unmet": {
+						"drink health": 4,
+						"rice light": 2
+					},
+					"visitors": 85
+				},
+				{
+					"buyers": 69,
+					"day": 14,
+					"event": "pudding",
+					"event_results": {
+						"pudding": {
+							"buyers": 69,
+							"completed": 83
+						}
+					},
+					"miss": {
+						"p40": 3,
+						"価格": 1,
+						"欠品": 14,
+						"行列": 2
+					},
+					"needs": 30,
+					"served": 19,
+					"unmet": {
+						"dessert": 11
+					},
+					"visitors": 83
+				},
+				{
+					"buyers": 70,
+					"day": 15,
+					"event": "heat",
+					"event_results": {
+						"heat": {
+							"buyers": 70,
+							"completed": 86
+						}
+					},
+					"miss": {
+						"p20": 1,
+						"欠品": 13,
+						"行列": 4
+					},
+					"needs": 49,
+					"served": 36,
+					"unmet": {
+						"drink cold": 13
+					},
+					"visitors": 89
+				},
+				{
+					"buyers": 75,
+					"day": 16,
+					"event": "heat",
+					"event_results": {
+						"heat": {
+							"buyers": 75,
+							"completed": 89
+						}
+					},
+					"miss": {
+						"p20": 2,
+						"p60": 1,
+						"欠品": 15,
+						"行列": 2
+					},
+					"needs": 48,
+					"served": 35,
+					"unmet": {
+						"drink cold": 13
+					},
+					"visitors": 88
+				},
+				{
+					"buyers": 77,
+					"day": 17,
+					"event": "chili",
+					"event_results": {
+						"chili": {
+							"buyers": 76,
+							"completed": 83
+						},
+						"heat": {
+							"buyers": 1,
+							"completed": 2
+						}
+					},
+					"miss": {
+						"欠品": 4,
+						"行列": 4
+					},
+					"needs": 32,
+					"served": 28,
+					"unmet": {
+						"drink cold": 1,
+						"spicy noodle": 3
+					},
+					"visitors": 86
+				},
+				{
+					"buyers": 56,
+					"day": 19,
+					"event": "hero",
+					"event_results": {
+						"hero": {
+							"buyers": 51,
+							"completed": 88
+						}
+					},
+					"miss": {
+						"p0": 2,
+						"価格": 5,
+						"欠品": 34
+					},
+					"needs": 35,
+					"served": 3,
+					"unmet": {
+						"rice": 13,
+						"warm hearty": 19
+					},
+					"visitors": 92
+				},
+				{
+					"buyers": 80,
+					"day": 20,
+					"event": "summer_break",
+					"event_results": {
+						"hero": {
+							"buyers": 3,
+							"completed": 4
+						},
+						"summer_break": {
+							"buyers": 77,
+							"completed": 91
+						}
+					},
+					"miss": {
+						"p32": 2,
+						"価格": 1,
+						"欠品": 4,
+						"行列": 10,
+						"補充待ち": 2
+					},
+					"needs": 41,
+					"served": 30,
+					"unmet": {
+						"drink cold": 2,
+						"snack sweet": 9
+					},
+					"visitors": 91
+				},
+				{
+					"buyers": 75,
+					"day": 21,
+					"event": "pudding",
+					"event_results": {
+						"pudding": {
+							"buyers": 75,
+							"completed": 93
+						}
+					},
+					"miss": {
+						"p20": 1,
+						"p40": 4,
+						"欠品": 20,
+						"行列": 3
+					},
+					"needs": 34,
+					"served": 19,
+					"unmet": {
+						"dessert": 15
+					},
+					"visitors": 94
+				},
+				{
+					"buyers": 71,
+					"day": 23,
+					"event": "study",
+					"event_results": {
+						"study": {
+							"buyers": 68,
+							"completed": 91
+						}
+					},
+					"miss": {
+						"p21": 2,
+						"欠品": 17,
+						"行列": 4
+					},
+					"needs": 48,
+					"served": 26,
+					"unmet": {
+						"coffee": 16,
+						"noodle warm": 6
+					},
+					"visitors": 93
+				},
+				{
+					"buyers": 87,
+					"day": 24,
+					"event": "chili",
+					"event_results": {
+						"chili": {
+							"buyers": 85,
+							"completed": 88
+						},
+						"study": {
+							"buyers": 2,
+							"completed": 2
+						}
+					},
+					"miss": {
+						"欠品": 1,
+						"行列": 2
+					},
+					"needs": 31,
+					"served": 29,
+					"unmet": {
+						"spicy noodle": 2
+					},
+					"visitors": 92
+				},
+				{
+					"buyers": 74,
+					"day": 26,
+					"event": "hero",
+					"event_results": {
+						"hero": {
+							"buyers": 70,
+							"completed": 100
+						}
+					},
+					"miss": {
+						"p0": 2,
+						"p60": 4,
+						"価格": 1,
+						"欠品": 14,
+						"行列": 3,
+						"補充待ち": 4
+					},
+					"needs": 43,
+					"served": 16,
+					"unmet": {
+						"rice": 13,
+						"warm hearty": 14
+					},
+					"visitors": 105
+				},
+				{
+					"buyers": 94,
+					"day": 27,
+					"event": "rain",
+					"event_results": {
+						"hero": {
+							"buyers": 5,
+							"completed": 5
+						},
+						"rain": {
+							"buyers": 89,
+							"completed": 102
+						}
+					},
+					"miss": {
+						"p0": 2,
+						"p60": 1,
+						"p73": 2,
+						"価格": 1,
+						"欠品": 13,
+						"行列": 3,
+						"補充待ち": 1
+					},
+					"needs": 40,
+					"served": 29,
+					"unmet": {
+						"rain": 11
+					},
+					"visitors": 105
+				},
+				{
+					"buyers": 87,
+					"day": 28,
+					"event": "pudding",
+					"event_results": {
+						"pudding": {
+							"buyers": 84,
+							"completed": 108
+						},
+						"rain": {
+							"buyers": 3,
+							"completed": 3
+						}
+					},
+					"miss": {
+						"p0": 2,
+						"p40": 4,
+						"価格": 1,
+						"欠品": 23,
+						"行列": 5,
+						"補充待ち": 1
+					},
+					"needs": 37,
+					"served": 19,
+					"unmet": {
+						"dessert": 18
+					},
+					"visitors": 108
+				},
+				{
+					"buyers": 70,
+					"day": 29,
+					"event": "harvest",
+					"event_results": {
+						"harvest": {
+							"buyers": 70,
+							"completed": 102
+						}
+					},
+					"miss": {
+						"p64": 1,
+						"価格": 1,
+						"欠品": 26,
+						"行列": 5,
+						"補充待ち": 1
+					},
+					"needs": 50,
+					"served": 24,
+					"unmet": {
+						"warm seasonal": 26
+					},
+					"visitors": 109
+				},
+				{
+					"buyers": 94,
+					"day": 30,
+					"event": "autumn",
+					"event_results": {
+						"autumn": {
+							"buyers": 88,
+							"completed": 103
+						},
+						"harvest": {
+							"buyers": 6,
+							"completed": 7
+						}
+					},
+					"miss": {
+						"価格": 1,
+						"欠品": 12,
+						"行列": 3
+					},
+					"needs": 49,
+					"served": 36,
+					"unmet": {
+						"sweet seasonal": 12,
+						"warm seasonal": 1
+					},
+					"visitors": 110
+				},
+				{
+					"buyers": 104,
+					"day": 31,
+					"event": "chili",
+					"event_results": {
+						"autumn": {
+							"buyers": 5,
+							"completed": 7
+						},
+						"chili": {
+							"buyers": 99,
+							"completed": 108
+						}
+					},
+					"miss": {
+						"p20": 1,
+						"p21": 1,
+						"p64": 1,
+						"価格": 2,
+						"欠品": 9,
+						"行列": 3
+					},
+					"needs": 39,
+					"served": 32,
+					"unmet": {
+						"drink": 1,
+						"spicy noodle": 4,
+						"sweet seasonal": 2
+					},
+					"visitors": 110
+				},
+				{
+					"buyers": 94,
+					"day": 33,
+					"event": "hero",
+					"event_results": {
+						"hero": {
+							"buyers": 86,
+							"completed": 110
+						}
+					},
+					"miss": {
+						"p3": 2,
+						"p64": 1,
+						"欠品": 14,
+						"満員": 5,
+						"行列": 5,
+						"補充待ち": 2
+					},
+					"needs": 46,
+					"served": 26,
+					"unmet": {
+						"rice": 5,
+						"warm hearty": 15
+					},
+					"visitors": 112
+				},
+				{
+					"buyers": 98,
+					"day": 34,
+					"event": "books",
+					"event_results": {
+						"books": {
+							"buyers": 96,
+							"completed": 110
+						},
+						"hero": {
+							"buyers": 2,
+							"completed": 2
+						}
+					},
+					"miss": {
+						"欠品": 3,
+						"行列": 10
+					},
+					"needs": 49,
+					"served": 38,
+					"unmet": {
+						"cookie": 5,
+						"tea": 6
+					},
+					"visitors": 111
+				},
+				{
+					"buyers": 92,
+					"day": 35,
+					"event": "pudding",
+					"event_results": {
+						"books": {
+							"buyers": 1,
+							"completed": 1
+						},
+						"pudding": {
+							"buyers": 91,
+							"completed": 110
+						}
+					},
+					"miss": {
+						"p40": 3,
+						"価格": 1,
+						"欠品": 20,
+						"行列": 1
+					},
+					"needs": 38,
+					"served": 21,
+					"unmet": {
+						"dessert": 17
+					},
+					"visitors": 110
+				},
+				{
+					"buyers": 82,
+					"day": 37,
+					"event": "office",
+					"event_results": {
+						"office": {
+							"buyers": 78,
+							"completed": 111
+						}
+					},
+					"miss": {
+						"p10": 1,
+						"欠品": 6,
+						"満員": 16,
+						"行列": 7,
+						"補充待ち": 1
+					},
+					"needs": 59,
+					"served": 33,
+					"unmet": {
+						"bread": 14,
+						"coffee": 12
+					},
+					"visitors": 113
+				},
+				{
+					"buyers": 99,
+					"day": 38,
+					"event": "chili",
+					"event_results": {
+						"chili": {
+							"buyers": 97,
+							"completed": 105
+						},
+						"office": {
+							"buyers": 2,
+							"completed": 2
+						}
+					},
+					"miss": {
+						"価格": 1,
+						"行列": 7
+					},
+					"needs": 38,
+					"served": 36,
+					"unmet": {
+						"spicy noodle": 2
+					},
+					"visitors": 111
+				},
+				{
+					"buyers": 86,
+					"day": 40,
+					"event": "hero",
+					"event_results": {
+						"hero": {
+							"buyers": 80,
+							"completed": 111
+						}
+					},
+					"miss": {
+						"p0": 2,
+						"p3": 4,
+						"価格": 4,
+						"欠品": 22,
+						"行列": 5,
+						"補充待ち": 2
+					},
+					"needs": 47,
+					"served": 28,
+					"unmet": {
+						"rice": 16,
+						"warm hearty": 3
+					},
+					"visitors": 116
+				},
+				{
+					"buyers": 94,
+					"day": 41,
+					"event": "autumn",
+					"event_results": {
+						"autumn": {
+							"buyers": 90,
+							"completed": 114
+						},
+						"hero": {
+							"buyers": 4,
+							"completed": 5
+						}
+					},
+					"miss": {
+						"価格": 1,
+						"欠品": 10,
+						"行列": 5
+					},
+					"needs": 51,
+					"served": 32,
+					"unmet": {
+						"sweet seasonal": 19
+					},
+					"visitors": 114
+				},
+				{
+					"buyers": 95,
+					"day": 42,
+					"event": "pudding",
+					"event_results": {
+						"pudding": {
+							"buyers": 95,
+							"completed": 114
+						}
+					},
+					"miss": {
+						"p40": 2,
+						"p64": 1,
+						"価格": 1,
+						"欠品": 17,
+						"行列": 4
+					},
+					"needs": 41,
+					"served": 27,
+					"unmet": {
+						"dessert": 14
+					},
+					"visitors": 114
+				},
+				{
+					"buyers": 101,
+					"day": 43,
+					"event": "cold",
+					"event_results": {
+						"cold": {
+							"buyers": 101,
+							"completed": 107
+						}
+					},
+					"miss": {
+						"価格": 3,
+						"行列": 3
+					},
+					"needs": 55,
+					"served": 54,
+					"unmet": {
+						"warm soup": 1
+					},
+					"visitors": 111
+				},
+				{
+					"buyers": 97,
+					"day": 44,
+					"event": "cold",
+					"event_results": {
+						"cold": {
+							"buyers": 97,
+							"completed": 109
+						}
+					},
+					"miss": {
+						"p0": 1,
+						"p3": 2,
+						"p54": 1,
+						"p64": 1,
+						"価格": 3,
+						"欠品": 5,
+						"行列": 7,
+						"補充待ち": 2
+					},
+					"needs": 54,
+					"served": 49,
+					"unmet": {
+						"warm soup": 5
+					},
+					"visitors": 111
+				},
+				{
+					"buyers": 93,
+					"day": 45,
+					"event": "winter_breakfast",
+					"event_results": {
+						"cold": {
+							"buyers": 4,
+							"completed": 6
+						},
+						"winter_breakfast": {
+							"buyers": 89,
+							"completed": 109
+						}
+					},
+					"miss": {
+						"p0": 2,
+						"p10": 2,
+						"p54": 1,
+						"欠品": 18,
+						"行列": 8,
+						"補充待ち": 1
+					},
+					"needs": 67,
+					"served": 48,
+					"unmet": {
+						"bread": 4,
+						"rice light": 11,
+						"tea": 2,
+						"warm soup": 2
+					},
+					"visitors": 112
+				},
+				{
+					"buyers": 85,
+					"day": 47,
+					"event": "hero",
+					"event_results": {
+						"hero": {
+							"buyers": 80,
+							"completed": 112
+						}
+					},
+					"miss": {
+						"p0": 2,
+						"p3": 3,
+						"欠品": 31,
+						"行列": 8
+					},
+					"needs": 48,
+					"served": 21,
+					"unmet": {
+						"rice": 7,
+						"warm hearty": 20
+					},
+					"visitors": 116
+				},
+				{
+					"buyers": 69,
+					"day": 48,
+					"event": "night_shift",
+					"event_results": {
+						"hero": {
+							"buyers": 3,
+							"completed": 4
+						},
+						"night_shift": {
+							"buyers": 66,
+							"completed": 82
+						}
+					},
+					"miss": {
+						"p3": 2,
+						"p40": 2,
+						"p64": 4,
+						"価格": 1,
+						"欠品": 24
+					},
+					"needs": 19,
+					"served": 3,
+					"unmet": {
+						"warm hearty": 16
+					},
+					"visitors": 98
+				},
+				{
+					"buyers": 110,
+					"day": 49,
+					"event": "winter_breakfast",
+					"event_results": {
+						"night_shift": {
+							"buyers": 10,
+							"completed": 16
+						},
+						"winter_breakfast": {
+							"buyers": 100,
+							"completed": 114
+						}
+					},
+					"miss": {
+						"p40": 2,
+						"価格": 2,
+						"欠品": 8,
+						"行列": 3
+					},
+					"needs": 79,
+					"served": 64,
+					"unmet": {
+						"rice light": 4,
+						"tea": 5,
+						"warm hearty": 6
+					},
+					"visitors": 116
+				},
+				{
+					"buyers": 82,
+					"day": 51,
+					"event": "office",
+					"event_results": {
+						"office": {
+							"buyers": 77,
+							"completed": 113
+						}
+					},
+					"miss": {
+						"行列": 3
+					},
+					"needs": 59,
+					"served": 24,
+					"unmet": {
+						"bread": 20,
+						"coffee": 15
+					},
+					"visitors": 115
+				},
+				{
+					"buyers": 98,
+					"day": 52,
+					"event": "chili",
+					"event_results": {
+						"chili": {
+							"buyers": 96,
+							"completed": 103
+						},
+						"office": {
+							"buyers": 2,
+							"completed": 2
+						}
+					},
+					"miss": {
+						"p3": 1,
+						"p40": 1,
+						"p51": 1,
+						"p64": 1,
+						"欠品": 11
+					},
+					"needs": 37,
+					"served": 30,
+					"unmet": {
+						"spicy noodle": 7
+					},
+					"visitors": 111
+				},
+				{
+					"buyers": 102,
+					"day": 53,
+					"event": "winter_breakfast",
+					"event_results": {
+						"chili": {
+							"buyers": 8,
+							"completed": 8
+						},
+						"winter_breakfast": {
+							"buyers": 94,
+							"completed": 108
+						}
+					},
+					"miss": {
+						"p0": 1,
+						"欠品": 4,
+						"行列": 4
+					},
+					"needs": 63,
+					"served": 53,
+					"unmet": {
+						"rice light": 5,
+						"tea": 5
+					},
+					"visitors": 110
+				},
+				{
+					"buyers": 87,
+					"day": 54,
+					"event": "hero",
+					"event_results": {
+						"hero": {
+							"buyers": 85,
+							"completed": 110
+						},
+						"winter_breakfast": {
+							"buyers": 2,
+							"completed": 2
+						}
+					},
+					"miss": {
+						"p0": 2,
+						"p3": 4,
+						"p40": 1,
+						"p64": 2,
+						"価格": 3,
+						"欠品": 13,
+						"行列": 8,
+						"補充待ち": 2
+					},
+					"needs": 46,
+					"served": 29,
+					"unmet": {
+						"rice": 6,
+						"warm hearty": 11
+					},
+					"visitors": 114
+				},
+				{
+					"buyers": 96,
+					"day": 55,
+					"event": "neighbors",
+					"event_results": {
+						"hero": {
+							"buyers": 4,
+							"completed": 4
+						},
+						"neighbors": {
+							"buyers": 92,
+							"completed": 114
+						}
+					},
+					"miss": {
+						"p3": 2,
+						"p40": 2,
+						"価格": 3,
+						"欠品": 17,
+						"行列": 4,
+						"補充待ち": 1
+					},
+					"needs": 51,
+					"served": 35,
+					"unmet": {
+						"sweet": 2,
+						"warm hearty": 14
+					},
+					"visitors": 115
+				},
+				{
+					"buyers": 103,
+					"day": 56,
+					"event": "winter_breakfast",
+					"event_results": {
+						"neighbors": {
+							"buyers": 1,
+							"completed": 1
+						},
+						"winter_breakfast": {
+							"buyers": 102,
+							"completed": 112
+						}
+					},
+					"miss": {
+						"p0": 2,
+						"欠品": 4,
+						"行列": 6,
+						"補充待ち": 2
+					},
+					"needs": 63,
+					"served": 57,
+					"unmet": {
+						"bread": 1,
+						"rice light": 5
+					},
+					"visitors": 114
+				}
+			],
+			"metrics": {
+				"cohort": 89,
+				"days": 14,
+				"events": 5,
+				"margin": 0.10901926064804,
+				"pass": false,
+				"repeat": 1.0,
+				"reserve": 37840,
+				"visitors": 1538,
+				"waste": 0.0572833550441935
+			},
+			"result": "won",
+			"seed": 20260979,
+			"star": 5,
+			"stories": [
+				2,
+				3,
+				2,
+				3,
+				1,
+				3,
+				3,
+				3,
+				1,
+				3,
+				3,
+				3
+			],
+			"style": "morning",
+			"winter": {
+				"completed": 250,
+				"groups": {
+					"bread": {
+						"completed": 83,
+						"served": 78
+					},
+					"rice light": {
+						"completed": 83,
+						"served": 58
+					},
+					"tea": {
+						"completed": 84,
+						"served": 72
+					}
+				},
+				"pass": true,
+				"plan": "breakfast",
+				"rate": 0.832,
+				"served": 208
+			}
+		},
+		{
+			"cash": 25402,
+			"commands": 723,
+			"day": 57,
+			"event_days": [
+				{
+					"buyers": 24,
+					"day": 3,
+					"event": "chili",
+					"event_results": {
+						"chili": {
+							"buyers": 22,
+							"completed": 25
+						}
+					},
+					"miss": {
+						"価格": 1,
+						"行列": 2
+					},
+					"needs": 9,
+					"served": 9,
+					"unmet": {},
+					"visitors": 28
+				},
+				{
+					"buyers": 28,
+					"day": 5,
+					"event": "hero",
+					"event_results": {
+						"hero": {
+							"buyers": 27,
+							"completed": 44
+						}
+					},
+					"miss": {
+						"価格": 1,
+						"欠品": 13,
+						"行列": 3
+					},
+					"needs": 15,
+					"served": 2,
+					"unmet": {
+						"rice": 8,
+						"warm hearty": 5
+					},
+					"visitors": 45
+				},
+				{
+					"buyers": 56,
+					"day": 7,
+					"event": "pudding",
+					"event_results": {
+						"pudding": {
+							"buyers": 56,
+							"completed": 75
+						}
+					},
+					"miss": {
+						"p40": 2,
+						"価格": 1,
+						"欠品": 17,
+						"行列": 3
+					},
+					"needs": 26,
+					"served": 10,
+					"unmet": {
+						"dessert": 16
+					},
+					"visitors": 76
+				},
+				{
+					"buyers": 59,
+					"day": 8,
+					"event": "office",
+					"event_results": {
+						"office": {
+							"buyers": 58,
+							"completed": 76
+						},
+						"pudding": {
+							"buyers": 1,
+							"completed": 1
+						}
+					},
+					"miss": {
+						"p10": 2,
+						"p21": 2,
+						"欠品": 20,
+						"行列": 2
+					},
+					"needs": 37,
+					"served": 20,
+					"unmet": {
+						"bread": 4,
+						"coffee": 13
+					},
+					"visitors": 77
+				},
+				{
+					"buyers": 76,
+					"day": 10,
+					"event": "chili",
+					"event_results": {
+						"chili": {
+							"buyers": 72,
+							"completed": 85
+						}
+					},
+					"miss": {
+						"p20": 1,
+						"p50": 1,
+						"p51": 2,
+						"欠品": 10,
+						"行列": 6,
+						"補充待ち": 1
+					},
+					"needs": 28,
+					"served": 16,
+					"unmet": {
+						"drink": 3,
+						"spicy noodle": 9
+					},
+					"visitors": 88
+				},
+				{
+					"buyers": 68,
+					"day": 12,
+					"event": "hero",
+					"event_results": {
+						"hero": {
+							"buyers": 63,
+							"completed": 86
+						}
+					},
+					"miss": {
+						"p0": 3,
+						"価格": 2,
+						"欠品": 10,
+						"行列": 5
+					},
+					"needs": 36,
+					"served": 20,
+					"unmet": {
+						"rice": 8,
+						"warm hearty": 8
+					},
+					"visitors": 87
+				},
+				{
+					"buyers": 75,
+					"day": 13,
+					"event": "sports",
+					"event_results": {
+						"hero": {
+							"buyers": 1,
+							"completed": 1
+						},
+						"sports": {
+							"buyers": 74,
+							"completed": 91
+						}
+					},
+					"miss": {
+						"p0": 3,
+						"価格": 1,
+						"欠品": 5,
+						"行列": 9,
+						"補充待ち": 1
+					},
+					"needs": 41,
+					"served": 28,
+					"unmet": {
+						"drink health": 7,
+						"rice light": 6
+					},
+					"visitors": 91
+				},
+				{
+					"buyers": 66,
+					"day": 14,
+					"event": "pudding",
+					"event_results": {
+						"pudding": {
+							"buyers": 66,
+							"completed": 83
+						}
+					},
+					"miss": {
+						"p40": 3,
+						"欠品": 19,
+						"行列": 1
+					},
+					"needs": 31,
+					"served": 15,
+					"unmet": {
+						"dessert": 16
+					},
+					"visitors": 83
+				},
+				{
+					"buyers": 70,
+					"day": 15,
+					"event": "heat",
+					"event_results": {
+						"heat": {
+							"buyers": 70,
+							"completed": 83
+						}
+					},
+					"miss": {
+						"p20": 1,
+						"p60": 1,
+						"欠品": 12,
+						"行列": 3
+					},
+					"needs": 46,
+					"served": 35,
+					"unmet": {
+						"drink cold": 11
+					},
+					"visitors": 87
+				},
+				{
+					"buyers": 80,
+					"day": 16,
+					"event": "heat",
+					"event_results": {
+						"heat": {
+							"buyers": 80,
+							"completed": 91
+						}
+					},
+					"miss": {
+						"p20": 2,
+						"欠品": 7,
+						"行列": 5,
+						"補充待ち": 1
+					},
+					"needs": 48,
+					"served": 38,
+					"unmet": {
+						"drink cold": 10
+					},
+					"visitors": 90
+				},
+				{
+					"buyers": 84,
+					"day": 17,
+					"event": "chili",
+					"event_results": {
+						"chili": {
+							"buyers": 82,
+							"completed": 85
+						},
+						"heat": {
+							"buyers": 2,
+							"completed": 3
+						}
+					},
+					"miss": {
+						"p0": 1,
+						"p40": 1,
+						"p50": 1,
+						"欠品": 5,
+						"行列": 1,
+						"補充待ち": 1
+					},
+					"needs": 32,
+					"served": 29,
+					"unmet": {
+						"drink cold": 1,
+						"spicy noodle": 2
+					},
+					"visitors": 89
+				},
+				{
+					"buyers": 53,
+					"day": 19,
+					"event": "hero",
+					"event_results": {
+						"hero": {
+							"buyers": 49,
+							"completed": 90
+						}
+					},
+					"miss": {
+						"p0": 3,
+						"p60": 1,
+						"価格": 4,
+						"欠品": 39,
+						"行列": 2
+					},
+					"needs": 38,
+					"served": 3,
+					"unmet": {
+						"rice": 16,
+						"warm hearty": 19
+					},
+					"visitors": 93
+				},
+				{
+					"buyers": 87,
+					"day": 20,
+					"event": "summer_break",
+					"event_results": {
+						"hero": {
+							"buyers": 3,
+							"completed": 3
+						},
+						"summer_break": {
+							"buyers": 84,
+							"completed": 95
+						}
+					},
+					"miss": {
+						"p20": 2,
+						"p32": 2,
+						"価格": 1,
+						"欠品": 7,
+						"行列": 5,
+						"補充待ち": 2
+					},
+					"needs": 44,
+					"served": 35,
+					"unmet": {
+						"drink cold": 3,
+						"snack sweet": 6
+					},
+					"visitors": 97
+				},
+				{
+					"buyers": 76,
+					"day": 21,
+					"event": "pudding",
+					"event_results": {
+						"pudding": {
+							"buyers": 74,
+							"completed": 87
+						},
+						"summer_break": {
+							"buyers": 2,
+							"completed": 2
+						}
+					},
+					"miss": {
+						"p0": 1,
+						"p40": 4,
+						"価格": 1,
+						"欠品": 16,
+						"行列": 1
+					},
+					"needs": 29,
+					"served": 18,
+					"unmet": {
+						"dessert": 11
+					},
+					"visitors": 87
+				},
+				{
+					"buyers": 75,
+					"day": 23,
+					"event": "study",
+					"event_results": {
+						"study": {
+							"buyers": 72,
+							"completed": 100
+						}
+					},
+					"miss": {
+						"価格": 3,
+						"欠品": 2,
+						"満員": 11,
+						"行列": 12
+					},
+					"needs": 52,
+					"served": 32,
+					"unmet": {
+						"coffee": 10,
+						"noodle warm": 10
+					},
+					"visitors": 102
+				},
+				{
+					"buyers": 97,
+					"day": 24,
+					"event": "chili",
+					"event_results": {
+						"chili": {
+							"buyers": 95,
+							"completed": 102
+						},
+						"study": {
+							"buyers": 2,
+							"completed": 2
+						}
+					},
+					"miss": {
+						"p21": 1,
+						"価格": 1,
+						"欠品": 4,
+						"行列": 3
+					},
+					"needs": 34,
+					"served": 29,
+					"unmet": {
+						"drink": 1,
+						"spicy noodle": 4
+					},
+					"visitors": 107
+				},
+				{
+					"buyers": 83,
+					"day": 26,
+					"event": "hero",
+					"event_results": {
+						"hero": {
+							"buyers": 75,
+							"completed": 111
+						}
+					},
+					"miss": {
+						"p10": 2,
+						"p60": 3,
+						"価格": 1,
+						"欠品": 11,
+						"行列": 7,
+						"補充待ち": 2
+					},
+					"needs": 46,
+					"served": 20,
+					"unmet": {
+						"rice": 13,
+						"warm hearty": 13
+					},
+					"visitors": 113
+				},
+				{
+					"buyers": 99,
+					"day": 27,
+					"event": "rain",
+					"event_results": {
+						"hero": {
+							"buyers": 2,
+							"completed": 2
+						},
+						"rain": {
+							"buyers": 97,
+							"completed": 111
+						}
+					},
+					"miss": {
+						"p70": 1,
+						"p73": 1,
+						"価格": 1,
+						"欠品": 10,
+						"行列": 5
+					},
+					"needs": 44,
+					"served": 34,
+					"unmet": {
+						"rain": 10
+					},
+					"visitors": 111
+				},
+				{
+					"buyers": 81,
+					"day": 28,
+					"event": "pudding",
+					"event_results": {
+						"pudding": {
+							"buyers": 81,
+							"completed": 110
+						}
+					},
+					"miss": {
+						"p40": 4,
+						"価格": 3,
+						"欠品": 25,
+						"行列": 5
+					},
+					"needs": 41,
+					"served": 19,
+					"unmet": {
+						"dessert": 22
+					},
+					"visitors": 111
+				},
+				{
+					"buyers": 86,
+					"day": 29,
+					"event": "harvest",
+					"event_results": {
+						"harvest": {
+							"buyers": 85,
+							"completed": 110
+						},
+						"pudding": {
+							"buyers": 1,
+							"completed": 1
+						}
+					},
+					"miss": {
+						"p64": 1,
+						"価格": 1,
+						"欠品": 23,
+						"行列": 2
+					},
+					"needs": 50,
+					"served": 27,
+					"unmet": {
+						"warm seasonal": 23
+					},
+					"visitors": 112
+				},
+				{
+					"buyers": 87,
+					"day": 30,
+					"event": "autumn",
+					"event_results": {
+						"autumn": {
+							"buyers": 85,
+							"completed": 109
+						},
+						"harvest": {
+							"buyers": 2,
+							"completed": 2
+						}
+					},
+					"miss": {
+						"価格": 2,
+						"欠品": 7,
+						"行列": 5
+					},
+					"needs": 50,
+					"served": 30,
+					"unmet": {
+						"sweet seasonal": 20
+					},
+					"visitors": 113
+				},
+				{
+					"buyers": 90,
+					"day": 31,
+					"event": "chili",
+					"event_results": {
+						"autumn": {
+							"buyers": 4,
+							"completed": 4
+						},
+						"chili": {
+							"buyers": 86,
+							"completed": 105
+						}
+					},
+					"miss": {
+						"p21": 2,
+						"p64": 1,
+						"価格": 1,
+						"欠品": 11,
+						"行列": 7
+					},
+					"needs": 37,
+					"served": 27,
+					"unmet": {
+						"drink": 4,
+						"spicy noodle": 6
+					},
+					"visitors": 111
+				},
+				{
+					"buyers": 91,
+					"day": 33,
+					"event": "hero",
+					"event_results": {
+						"hero": {
+							"buyers": 83,
+							"completed": 111
+						}
+					},
+					"miss": {
+						"p0": 1,
+						"p3": 4,
+						"価格": 4,
+						"欠品": 18,
+						"満員": 1,
+						"行列": 5,
+						"補充待ち": 2
+					},
+					"needs": 45,
+					"served": 28,
+					"unmet": {
+						"rice": 2,
+						"warm hearty": 15
+					},
+					"visitors": 113
+				},
+				{
+					"buyers": 101,
+					"day": 34,
+					"event": "books",
+					"event_results": {
+						"books": {
+							"buyers": 99,
+							"completed": 112
+						},
+						"hero": {
+							"buyers": 2,
+							"completed": 2
+						}
+					},
+					"miss": {
+						"p20": 2,
+						"p3": 1,
+						"p36": 1,
+						"p40": 1,
+						"p64": 2,
+						"欠品": 10,
+						"行列": 10
+					},
+					"needs": 47,
+					"served": 37,
+					"unmet": {
+						"cookie": 7,
+						"tea": 3
+					},
+					"visitors": 112
+				},
+				{
+					"buyers": 95,
+					"day": 35,
+					"event": "pudding",
+					"event_results": {
+						"pudding": {
+							"buyers": 95,
+							"completed": 112
+						}
+					},
+					"miss": {
+						"p3": 2,
+						"p40": 2,
+						"p64": 1,
+						"価格": 2,
+						"欠品": 18,
+						"行列": 2
+					},
+					"needs": 39,
+					"served": 26,
+					"unmet": {
+						"dessert": 13
+					},
+					"visitors": 113
+				},
+				{
+					"buyers": 78,
+					"day": 37,
+					"event": "office",
+					"event_results": {
+						"office": {
+							"buyers": 76,
+							"completed": 107
+						}
+					},
+					"miss": {
+						"p10": 2,
+						"p21": 2,
+						"価格": 1,
+						"欠品": 30,
+						"行列": 6
+					},
+					"needs": 54,
+					"served": 28,
+					"unmet": {
+						"bread": 18,
+						"coffee": 8
+					},
+					"visitors": 110
+				},
+				{
+					"buyers": 94,
+					"day": 38,
+					"event": "chili",
+					"event_results": {
+						"chili": {
+							"buyers": 91,
+							"completed": 103
+						},
+						"office": {
+							"buyers": 3,
+							"completed": 3
+						}
+					},
+					"miss": {
+						"p64": 1,
+						"価格": 1,
+						"欠品": 7,
+						"行列": 5
+					},
+					"needs": 37,
+					"served": 28,
+					"unmet": {
+						"spicy noodle": 9
+					},
+					"visitors": 110
+				},
+				{
+					"buyers": 97,
+					"day": 40,
+					"event": "hero",
+					"event_results": {
+						"hero": {
+							"buyers": 91,
+							"completed": 114
+						}
+					},
+					"miss": {
+						"p0": 1,
+						"p3": 1,
+						"価格": 2,
+						"欠品": 2,
+						"行列": 10
+					},
+					"needs": 48,
+					"served": 36,
+					"unmet": {
+						"rice": 5,
+						"warm hearty": 7
+					},
+					"visitors": 119
+				},
+				{
+					"buyers": 105,
+					"day": 41,
+					"event": "autumn",
+					"event_results": {
+						"autumn": {
+							"buyers": 100,
+							"completed": 113
+						},
+						"hero": {
+							"buyers": 5,
+							"completed": 5
+						}
+					},
+					"miss": {
+						"p3": 1,
+						"価格": 1,
+						"欠品": 8,
+						"行列": 4
+					},
+					"needs": 50,
+					"served": 40,
+					"unmet": {
+						"sweet seasonal": 10
+					},
+					"visitors": 114
+				},
+				{
+					"buyers": 96,
+					"day": 42,
+					"event": "pudding",
+					"event_results": {
+						"autumn": {
+							"buyers": 0,
+							"completed": 1
+						},
+						"pudding": {
+							"buyers": 96,
+							"completed": 116
+						}
+					},
+					"miss": {
+						"p40": 2,
+						"価格": 4,
+						"欠品": 16,
+						"行列": 3
+					},
+					"needs": 40,
+					"served": 26,
+					"unmet": {
+						"dessert": 14
+					},
+					"visitors": 116
+				},
+				{
+					"buyers": 101,
+					"day": 43,
+					"event": "cold",
+					"event_results": {
+						"cold": {
+							"buyers": 101,
+							"completed": 107
+						}
+					},
+					"miss": {
+						"価格": 1,
+						"行列": 5
+					},
+					"needs": 58,
+					"served": 57,
+					"unmet": {
+						"warm soup": 1
+					},
+					"visitors": 113
+				},
+				{
+					"buyers": 105,
+					"day": 44,
+					"event": "cold",
+					"event_results": {
+						"cold": {
+							"buyers": 105,
+							"completed": 112
+						}
+					},
+					"miss": {
+						"p20": 1,
+						"p54": 1,
+						"欠品": 6,
+						"行列": 3
+					},
+					"needs": 54,
+					"served": 49,
+					"unmet": {
+						"warm soup": 5
+					},
+					"visitors": 111
+				},
+				{
+					"buyers": 100,
+					"day": 45,
+					"event": "winter_treats",
+					"event_results": {
+						"cold": {
+							"buyers": 4,
+							"completed": 5
+						},
+						"winter_treats": {
+							"buyers": 96,
+							"completed": 110
+						}
+					},
+					"miss": {
+						"p20": 3,
+						"p54": 1,
+						"価格": 2,
+						"欠品": 3,
+						"行列": 3,
+						"補充待ち": 2
+					},
+					"needs": 64,
+					"served": 51,
+					"unmet": {
+						"cookie": 5,
+						"tea": 7,
+						"warm soup": 1
+					},
+					"visitors": 111
+				},
+				{
+					"buyers": 79,
+					"day": 47,
+					"event": "hero",
+					"event_results": {
+						"hero": {
+							"buyers": 74,
+							"completed": 108
+						}
+					},
+					"miss": {
+						"p0": 2,
+						"p3": 4,
+						"p50": 1,
+						"価格": 2,
+						"欠品": 32,
+						"行列": 4,
+						"補充待ち": 3
+					},
+					"needs": 46,
+					"served": 17,
+					"unmet": {
+						"rice": 6,
+						"warm hearty": 23
+					},
+					"visitors": 112
+				},
+				{
+					"buyers": 65,
+					"day": 48,
+					"event": "night_shift",
+					"event_results": {
+						"hero": {
+							"buyers": 2,
+							"completed": 4
+						},
+						"night_shift": {
+							"buyers": 63,
+							"completed": 65
+						}
+					},
+					"miss": {
+						"p40": 2,
+						"p64": 1,
+						"価格": 1,
+						"欠品": 3,
+						"行列": 3
+					},
+					"needs": 2,
+					"served": 2,
+					"unmet": {},
+					"visitors": 95
+				},
+				{
+					"buyers": 113,
+					"day": 49,
+					"event": "winter_treats",
+					"event_results": {
+						"night_shift": {
+							"buyers": 15,
+							"completed": 30
+						},
+						"winter_treats": {
+							"buyers": 98,
+							"completed": 112
+						}
+					},
+					"miss": {
+						"p20": 1,
+						"p3": 3,
+						"p64": 1,
+						"欠品": 16,
+						"行列": 10,
+						"補充待ち": 3
+					},
+					"needs": 92,
+					"served": 68,
+					"unmet": {
+						"cookie": 5,
+						"dessert": 2,
+						"tea": 2,
+						"warm hearty": 15
+					},
+					"visitors": 114
+				},
+				{
+					"buyers": 83,
+					"day": 51,
+					"event": "office",
+					"event_results": {
+						"office": {
+							"buyers": 78,
+							"completed": 107
+						}
+					},
+					"miss": {
+						"p10": 2,
+						"p21": 2,
+						"p50": 2,
+						"欠品": 31,
+						"行列": 2,
+						"補充待ち": 2
+					},
+					"needs": 57,
+					"served": 30,
+					"unmet": {
+						"bread": 11,
+						"coffee": 16
+					},
+					"visitors": 111
+				},
+				{
+					"buyers": 103,
+					"day": 52,
+					"event": "chili",
+					"event_results": {
+						"chili": {
+							"buyers": 99,
+							"completed": 110
+						},
+						"office": {
+							"buyers": 4,
+							"completed": 4
+						}
+					},
+					"miss": {
+						"p40": 1,
+						"p64": 1,
+						"価格": 2,
+						"欠品": 6,
+						"行列": 5
+					},
+					"needs": 39,
+					"served": 35,
+					"unmet": {
+						"spicy noodle": 4
+					},
+					"visitors": 116
+				},
+				{
+					"buyers": 66,
+					"day": 53,
+					"event": "winter_treats",
+					"event_results": {
+						"chili": {
+							"buyers": 6,
+							"completed": 6
+						},
+						"winter_treats": {
+							"buyers": 60,
+							"completed": 112
+						}
+					},
+					"miss": {
+						"p20": 2,
+						"価格": 1,
+						"欠品": 2,
+						"満員": 21,
+						"行列": 9
+					},
+					"needs": 66,
+					"served": 25,
+					"unmet": {
+						"cookie": 17,
+						"dessert": 12,
+						"tea": 12
+					},
+					"visitors": 114
+				},
+				{
+					"buyers": 78,
+					"day": 54,
+					"event": "hero",
+					"event_results": {
+						"hero": {
+							"buyers": 76,
+							"completed": 109
+						},
+						"winter_treats": {
+							"buyers": 2,
+							"completed": 2
+						}
+					},
+					"miss": {
+						"p3": 2,
+						"p64": 4,
+						"価格": 1,
+						"欠品": 4,
+						"行列": 7,
+						"補充待ち": 2
+					},
+					"needs": 48,
+					"served": 24,
+					"unmet": {
+						"rice": 16,
+						"warm hearty": 8
+					},
+					"visitors": 112
+				},
+				{
+					"buyers": 99,
+					"day": 55,
+					"event": "neighbors",
+					"event_results": {
+						"hero": {
+							"buyers": 3,
+							"completed": 3
+						},
+						"neighbors": {
+							"buyers": 96,
+							"completed": 115
+						}
+					},
+					"miss": {
+						"p3": 2,
+						"p64": 1,
+						"価格": 1,
+						"欠品": 15,
+						"行列": 6
+					},
+					"needs": 52,
+					"served": 39,
+					"unmet": {
+						"sweet": 1,
+						"warm hearty": 12
+					},
+					"visitors": 115
+				},
+				{
+					"buyers": 77,
+					"day": 56,
+					"event": "winter_treats",
+					"event_results": {
+						"winter_treats": {
+							"buyers": 77,
+							"completed": 116
+						}
+					},
+					"miss": {
+						"満員": 6,
+						"行列": 9
+					},
+					"needs": 67,
+					"served": 39,
+					"unmet": {
+						"cookie": 11,
+						"dessert": 10,
+						"tea": 7
+					},
+					"visitors": 118
+				}
+			],
+			"metrics": {
+				"cohort": 86,
+				"days": 14,
+				"events": 3,
+				"margin": 0.103844442812779,
+				"pass": false,
+				"repeat": 1.0,
+				"reserve": 38155,
+				"visitors": 1537,
+				"waste": 0.0540597994985777
+			},
+			"result": "deadline",
+			"seed": 20260979,
+			"star": 5,
+			"stories": [
+				2,
+				3,
+				3,
+				3,
+				1,
+				2,
+				3,
+				3,
+				2,
+				3,
+				3,
+				3
+			],
+			"style": "sweets",
+			"winter": {
+				"completed": 255,
+				"groups": {
+					"cookie": {
+						"completed": 87,
+						"served": 49
+					},
+					"dessert": {
+						"completed": 82,
+						"served": 58
+					},
+					"tea": {
+						"completed": 86,
+						"served": 58
+					}
+				},
+				"pass": false,
+				"plan": "treats",
+				"rate": 0.647058823529412,
+				"served": 165
+			}
+		},
+		{
+			"cash": 26104,
+			"commands": 788,
+			"day": 57,
+			"event_days": [
+				{
+					"buyers": 27,
+					"day": 3,
+					"event": "chili",
+					"event_results": {
+						"chili": {
+							"buyers": 25,
+							"completed": 28
+						}
+					},
+					"miss": {
+						"価格": 2,
+						"行列": 1
+					},
+					"needs": 11,
+					"served": 11,
+					"unmet": {},
+					"visitors": 29
+				},
+				{
+					"buyers": 33,
+					"day": 5,
+					"event": "hero",
+					"event_results": {
+						"hero": {
+							"buyers": 30,
+							"completed": 40
+						}
+					},
+					"miss": {
+						"p0": 2,
+						"欠品": 12
+					},
+					"needs": 17,
+					"served": 7,
+					"unmet": {
+						"rice": 4,
+						"warm hearty": 6
+					},
+					"visitors": 42
+				},
+				{
+					"buyers": 43,
+					"day": 7,
+					"event": "pudding",
+					"event_results": {
+						"pudding": {
+							"buyers": 42,
+							"completed": 52
+						}
+					},
+					"miss": {
+						"p40": 1,
+						"欠品": 10,
+						"行列": 1
+					},
+					"needs": 16,
+					"served": 7,
+					"unmet": {
+						"dessert": 9
+					},
+					"visitors": 52
+				},
+				{
+					"buyers": 59,
+					"day": 8,
+					"event": "office",
+					"event_results": {
+						"office": {
+							"buyers": 59,
+							"completed": 75
+						}
+					},
+					"miss": {
+						"p0": 2,
+						"p10": 2,
+						"p21": 2,
+						"p60": 1,
+						"欠品": 19,
+						"行列": 4
+					},
+					"needs": 34,
+					"served": 19,
+					"unmet": {
+						"bread": 7,
+						"coffee": 8
+					},
+					"visitors": 76
+				},
+				{
+					"buyers": 66,
+					"day": 10,
+					"event": "chili",
+					"event_results": {
+						"chili": {
+							"buyers": 64,
+							"completed": 73
+						}
+					},
+					"miss": {
+						"p50": 1,
+						"p51": 2,
+						"価格": 3,
+						"欠品": 4,
+						"行列": 2,
+						"補充待ち": 1
+					},
+					"needs": 25,
+					"served": 22,
+					"unmet": {
+						"drink": 1,
+						"spicy noodle": 2
+					},
+					"visitors": 75
+				},
+				{
+					"buyers": 58,
+					"day": 12,
+					"event": "hero",
+					"event_results": {
+						"hero": {
+							"buyers": 55,
+							"completed": 80
+						}
+					},
+					"miss": {
+						"価格": 1,
+						"欠品": 22,
+						"行列": 2
+					},
+					"needs": 33,
+					"served": 11,
+					"unmet": {
+						"rice": 17,
+						"warm hearty": 5
+					},
+					"visitors": 84
+				},
+				{
+					"buyers": 68,
+					"day": 13,
+					"event": "sports",
+					"event_results": {
+						"hero": {
+							"buyers": 4,
+							"completed": 4
+						},
+						"sports": {
+							"buyers": 64,
+							"completed": 79
+						}
+					},
+					"miss": {
+						"p0": 3,
+						"p40": 1,
+						"p61": 1,
+						"価格": 1,
+						"欠品": 19
+					},
+					"needs": 34,
+					"served": 20,
+					"unmet": {
+						"rice light": 14
+					},
+					"visitors": 79
+				},
+				{
+					"buyers": 77,
+					"day": 14,
+					"event": "pudding",
+					"event_results": {
+						"pudding": {
+							"buyers": 77,
+							"completed": 90
+						}
+					},
+					"miss": {
+						"p0": 4,
+						"p40": 3,
+						"p61": 2,
+						"価格": 1,
+						"欠品": 20,
+						"行列": 1
+					},
+					"needs": 34,
+					"served": 23,
+					"unmet": {
+						"dessert": 11
+					},
+					"visitors": 91
+				},
+				{
+					"buyers": 75,
+					"day": 15,
+					"event": "heat",
+					"event_results": {
+						"heat": {
+							"buyers": 74,
+							"completed": 82
+						},
+						"pudding": {
+							"buyers": 1,
+							"completed": 1
+						}
+					},
+					"miss": {
+						"p20": 1,
+						"欠品": 5,
+						"行列": 4
+					},
+					"needs": 46,
+					"served": 40,
+					"unmet": {
+						"drink cold": 6
+					},
+					"visitors": 86
+				},
+				{
+					"buyers": 75,
+					"day": 16,
+					"event": "heat",
+					"event_results": {
+						"heat": {
+							"buyers": 75,
+							"completed": 83
+						}
+					},
+					"miss": {
+						"p20": 1,
+						"欠品": 5,
+						"行列": 4
+					},
+					"needs": 45,
+					"served": 39,
+					"unmet": {
+						"drink cold": 6
+					},
+					"visitors": 80
+				},
+				{
+					"buyers": 67,
+					"day": 17,
+					"event": "chili",
+					"event_results": {
+						"chili": {
+							"buyers": 67,
+							"completed": 79
+						},
+						"heat": {
+							"buyers": 0,
+							"completed": 1
+						}
+					},
+					"miss": {
+						"p51": 1,
+						"価格": 1,
+						"欠品": 8,
+						"行列": 4
+					},
+					"needs": 30,
+					"served": 23,
+					"unmet": {
+						"drink cold": 1,
+						"spicy noodle": 6
+					},
+					"visitors": 82
+				},
+				{
+					"buyers": 62,
+					"day": 19,
+					"event": "hero",
+					"event_results": {
+						"hero": {
+							"buyers": 59,
+							"completed": 85
+						}
+					},
+					"miss": {
+						"p0": 3,
+						"p61": 2,
+						"価格": 3,
+						"欠品": 29,
+						"行列": 1
+					},
+					"needs": 36,
+					"served": 12,
+					"unmet": {
+						"rice": 12,
+						"warm hearty": 12
+					},
+					"visitors": 90
+				},
+				{
+					"buyers": 87,
+					"day": 20,
+					"event": "summer_break",
+					"event_results": {
+						"hero": {
+							"buyers": 5,
+							"completed": 5
+						},
+						"summer_break": {
+							"buyers": 82,
+							"completed": 92
+						}
+					},
+					"miss": {
+						"p32": 1,
+						"価格": 1,
+						"欠品": 2,
+						"行列": 7,
+						"補充待ち": 1
+					},
+					"needs": 40,
+					"served": 34,
+					"unmet": {
+						"drink cold": 2,
+						"snack sweet": 4
+					},
+					"visitors": 92
+				},
+				{
+					"buyers": 71,
+					"day": 21,
+					"event": "pudding",
+					"event_results": {
+						"pudding": {
+							"buyers": 71,
+							"completed": 95
+						}
+					},
+					"miss": {
+						"p40": 4,
+						"価格": 1,
+						"欠品": 18,
+						"行列": 7,
+						"補充待ち": 2
+					},
+					"needs": 33,
+					"served": 17,
+					"unmet": {
+						"dessert": 16
+					},
+					"visitors": 95
+				},
+				{
+					"buyers": 67,
+					"day": 23,
+					"event": "study",
+					"event_results": {
+						"study": {
+							"buyers": 63,
+							"completed": 100
+						}
+					},
+					"miss": {
+						"p61": 2,
+						"価格": 1,
+						"欠品": 2,
+						"満員": 9,
+						"行列": 1
+					},
+					"needs": 55,
+					"served": 20,
+					"unmet": {
+						"coffee": 18,
+						"noodle warm": 17
+					},
+					"visitors": 105
+				},
+				{
+					"buyers": 96,
+					"day": 24,
+					"event": "chili",
+					"event_results": {
+						"chili": {
+							"buyers": 91,
+							"completed": 103
+						},
+						"study": {
+							"buyers": 5,
+							"completed": 5
+						}
+					},
+					"miss": {
+						"p51": 1,
+						"価格": 1,
+						"欠品": 2,
+						"行列": 10
+					},
+					"needs": 35,
+					"served": 29,
+					"unmet": {
+						"drink": 3,
+						"spicy noodle": 3
+					},
+					"visitors": 108
+				},
+				{
+					"buyers": 75,
+					"day": 26,
+					"event": "hero",
+					"event_results": {
+						"hero": {
+							"buyers": 70,
+							"completed": 99
+						}
+					},
+					"miss": {
+						"p0": 1,
+						"価格": 2,
+						"欠品": 1,
+						"行列": 4
+					},
+					"needs": 41,
+					"served": 17,
+					"unmet": {
+						"rice": 16,
+						"warm hearty": 8
+					},
+					"visitors": 103
+				},
+				{
+					"buyers": 98,
+					"day": 27,
+					"event": "rain",
+					"event_results": {
+						"hero": {
+							"buyers": 4,
+							"completed": 4
+						},
+						"rain": {
+							"buyers": 94,
+							"completed": 111
+						}
+					},
+					"miss": {
+						"p40": 1,
+						"p61": 1,
+						"p73": 1,
+						"価格": 2,
+						"欠品": 17,
+						"行列": 1
+					},
+					"needs": 48,
+					"served": 34,
+					"unmet": {
+						"rain": 14
+					},
+					"visitors": 112
+				},
+				{
+					"buyers": 92,
+					"day": 28,
+					"event": "pudding",
+					"event_results": {
+						"pudding": {
+							"buyers": 91,
+							"completed": 110
+						},
+						"rain": {
+							"buyers": 1,
+							"completed": 1
+						}
+					},
+					"miss": {
+						"p40": 2,
+						"p64": 1,
+						"価格": 2,
+						"欠品": 9,
+						"行列": 5
+					},
+					"needs": 39,
+					"served": 28,
+					"unmet": {
+						"dessert": 11
+					},
+					"visitors": 110
+				},
+				{
+					"buyers": 83,
+					"day": 29,
+					"event": "harvest",
+					"event_results": {
+						"harvest": {
+							"buyers": 83,
+							"completed": 109
+						}
+					},
+					"miss": {
+						"p64": 2,
+						"価格": 1,
+						"欠品": 21,
+						"行列": 2
+					},
+					"needs": 50,
+					"served": 30,
+					"unmet": {
+						"warm seasonal": 20
+					},
+					"visitors": 114
+				},
+				{
+					"buyers": 89,
+					"day": 30,
+					"event": "autumn",
+					"event_results": {
+						"autumn": {
+							"buyers": 86,
+							"completed": 106
+						},
+						"harvest": {
+							"buyers": 3,
+							"completed": 5
+						}
+					},
+					"miss": {
+						"p60": 1,
+						"p64": 2,
+						"価格": 2,
+						"欠品": 16,
+						"行列": 2
+					},
+					"needs": 49,
+					"served": 36,
+					"unmet": {
+						"sweet seasonal": 13
+					},
+					"visitors": 112
+				},
+				{
+					"buyers": 89,
+					"day": 31,
+					"event": "chili",
+					"event_results": {
+						"autumn": {
+							"buyers": 4,
+							"completed": 6
+						},
+						"chili": {
+							"buyers": 85,
+							"completed": 105
+						}
+					},
+					"miss": {
+						"p21": 2,
+						"p51": 1,
+						"p60": 1,
+						"p64": 1,
+						"価格": 2,
+						"欠品": 12,
+						"行列": 6
+					},
+					"needs": 38,
+					"served": 25,
+					"unmet": {
+						"drink": 8,
+						"spicy noodle": 3,
+						"sweet seasonal": 2
+					},
+					"visitors": 108
+				},
+				{
+					"buyers": 86,
+					"day": 33,
+					"event": "hero",
+					"event_results": {
+						"hero": {
+							"buyers": 79,
+							"completed": 109
+						}
+					},
+					"miss": {
+						"p0": 1,
+						"p60": 1,
+						"価格": 4,
+						"欠品": 23,
+						"行列": 3,
+						"補充待ち": 1
+					},
+					"needs": 44,
+					"served": 22,
+					"unmet": {
+						"rice": 7,
+						"warm hearty": 15
+					},
+					"visitors": 112
+				},
+				{
+					"buyers": 97,
+					"day": 34,
+					"event": "books",
+					"event_results": {
+						"books": {
+							"buyers": 94,
+							"completed": 113
+						},
+						"hero": {
+							"buyers": 3,
+							"completed": 3
+						}
+					},
+					"miss": {
+						"p20": 1,
+						"p36": 1,
+						"欠品": 12,
+						"行列": 7,
+						"補充待ち": 1
+					},
+					"needs": 51,
+					"served": 35,
+					"unmet": {
+						"cookie": 10,
+						"tea": 6
+					},
+					"visitors": 114
+				},
+				{
+					"buyers": 87,
+					"day": 35,
+					"event": "pudding",
+					"event_results": {
+						"books": {
+							"buyers": 1,
+							"completed": 1
+						},
+						"pudding": {
+							"buyers": 86,
+							"completed": 115
+						}
+					},
+					"miss": {
+						"p40": 4,
+						"価格": 2,
+						"欠品": 28,
+						"行列": 3
+					},
+					"needs": 41,
+					"served": 17,
+					"unmet": {
+						"dessert": 24
+					},
+					"visitors": 115
+				},
+				{
+					"buyers": 86,
+					"day": 37,
+					"event": "office",
+					"event_results": {
+						"office": {
+							"buyers": 81,
+							"completed": 110
+						}
+					},
+					"miss": {
+						"p10": 2,
+						"p21": 1,
+						"p60": 1,
+						"p64": 2,
+						"価格": 2,
+						"欠品": 13,
+						"満員": 12,
+						"行列": 5,
+						"補充待ち": 2
+					},
+					"needs": 56,
+					"served": 31,
+					"unmet": {
+						"bread": 20,
+						"coffee": 5
+					},
+					"visitors": 112
+				},
+				{
+					"buyers": 92,
+					"day": 38,
+					"event": "chili",
+					"event_results": {
+						"chili": {
+							"buyers": 90,
+							"completed": 107
+						},
+						"office": {
+							"buyers": 2,
+							"completed": 2
+						}
+					},
+					"miss": {
+						"p51": 1,
+						"p60": 2,
+						"p64": 1,
+						"価格": 3,
+						"欠品": 16,
+						"行列": 2
+					},
+					"needs": 40,
+					"served": 28,
+					"unmet": {
+						"drink": 5,
+						"spicy noodle": 7
+					},
+					"visitors": 110
+				},
+				{
+					"buyers": 72,
+					"day": 40,
+					"event": "hero",
+					"event_results": {
+						"hero": {
+							"buyers": 68,
+							"completed": 109
+						}
+					},
+					"miss": {
+						"p0": 2,
+						"p60": 2,
+						"価格": 1,
+						"欠品": 22,
+						"行列": 9,
+						"補充待ち": 4
+					},
+					"needs": 44,
+					"served": 16,
+					"unmet": {
+						"rice": 14,
+						"warm hearty": 14
+					},
+					"visitors": 112
+				},
+				{
+					"buyers": 99,
+					"day": 41,
+					"event": "autumn",
+					"event_results": {
+						"autumn": {
+							"buyers": 96,
+							"completed": 116
+						},
+						"hero": {
+							"buyers": 3,
+							"completed": 3
+						}
+					},
+					"miss": {
+						"p40": 1,
+						"p64": 1,
+						"価格": 1,
+						"欠品": 16,
+						"行列": 5
+					},
+					"needs": 52,
+					"served": 35,
+					"unmet": {
+						"sweet seasonal": 17
+					},
+					"visitors": 116
+				},
+				{
+					"buyers": 91,
+					"day": 42,
+					"event": "pudding",
+					"event_results": {
+						"pudding": {
+							"buyers": 91,
+							"completed": 114
+						}
+					},
+					"miss": {
+						"p40": 1,
+						"p60": 1,
+						"価格": 3,
+						"欠品": 11,
+						"行列": 7
+					},
+					"needs": 38,
+					"served": 25,
+					"unmet": {
+						"dessert": 13
+					},
+					"visitors": 114
+				},
+				{
+					"buyers": 102,
+					"day": 43,
+					"event": "cold",
+					"event_results": {
+						"cold": {
+							"buyers": 102,
+							"completed": 106
+						}
+					},
+					"miss": {
+						"p64": 1,
+						"価格": 2,
+						"欠品": 1,
+						"行列": 2
+					},
+					"needs": 57,
+					"served": 55,
+					"unmet": {
+						"warm soup": 2
+					},
+					"visitors": 111
+				},
+				{
+					"buyers": 105,
+					"day": 44,
+					"event": "cold",
+					"event_results": {
+						"cold": {
+							"buyers": 105,
+							"completed": 114
+						}
+					},
+					"miss": {
+						"p0": 1,
+						"欠品": 7,
+						"行列": 3
+					},
+					"needs": 56,
+					"served": 49,
+					"unmet": {
+						"warm soup": 7
+					},
+					"visitors": 112
+				},
+				{
+					"buyers": 80,
+					"day": 45,
+					"event": "winter_night",
+					"event_results": {
+						"cold": {
+							"buyers": 1,
+							"completed": 3
+						},
+						"winter_night": {
+							"buyers": 79,
+							"completed": 102
+						}
+					},
+					"miss": {
+						"p21": 2,
+						"p3": 1,
+						"価格": 1,
+						"欠品": 23,
+						"行列": 4
+					},
+					"needs": 57,
+					"served": 35,
+					"unmet": {
+						"coffee": 4,
+						"warm hearty": 15,
+						"warm soup": 3
+					},
+					"visitors": 112
+				},
+				{
+					"buyers": 91,
+					"day": 47,
+					"event": "hero",
+					"event_results": {
+						"hero": {
+							"buyers": 86,
+							"completed": 109
+						}
+					},
+					"miss": {
+						"p0": 3,
+						"p3": 2,
+						"p60": 4,
+						"p64": 1,
+						"価格": 2,
+						"欠品": 21,
+						"行列": 6,
+						"補充待ち": 4
+					},
+					"needs": 46,
+					"served": 28,
+					"unmet": {
+						"rice": 5,
+						"warm hearty": 13
+					},
+					"visitors": 115
+				},
+				{
+					"buyers": 65,
+					"day": 48,
+					"event": "night_shift",
+					"event_results": {
+						"hero": {
+							"buyers": 6,
+							"completed": 6
+						},
+						"night_shift": {
+							"buyers": 59,
+							"completed": 66
+						}
+					},
+					"miss": {
+						"p60": 2,
+						"欠品": 2,
+						"行列": 7
+					},
+					"needs": 2,
+					"served": 2,
+					"unmet": {},
+					"visitors": 99
+				},
+				{
+					"buyers": 97,
+					"day": 49,
+					"event": "winter_night",
+					"event_results": {
+						"night_shift": {
+							"buyers": 7,
+							"completed": 33
+						},
+						"winter_night": {
+							"buyers": 90,
+							"completed": 102
+						}
+					},
+					"miss": {
+						"p3": 2,
+						"p40": 1,
+						"p60": 1,
+						"価格": 2,
+						"欠品": 35,
+						"行列": 4,
+						"補充待ち": 1
+					},
+					"needs": 85,
+					"served": 53,
+					"unmet": {
+						"warm hearty": 32
+					},
+					"visitors": 115
+				},
+				{
+					"buyers": 87,
+					"day": 51,
+					"event": "office",
+					"event_results": {
+						"office": {
+							"buyers": 80,
+							"completed": 107
+						}
+					},
+					"miss": {
+						"p10": 2,
+						"p21": 2,
+						"p64": 2,
+						"価格": 1,
+						"欠品": 25,
+						"行列": 6,
+						"補充待ち": 2
+					},
+					"needs": 52,
+					"served": 30,
+					"unmet": {
+						"bread": 12,
+						"coffee": 10
+					},
+					"visitors": 110
+				},
+				{
+					"buyers": 98,
+					"day": 52,
+					"event": "chili",
+					"event_results": {
+						"chili": {
+							"buyers": 95,
+							"completed": 104
+						},
+						"office": {
+							"buyers": 3,
+							"completed": 3
+						}
+					},
+					"miss": {
+						"p0": 1,
+						"p40": 2,
+						"p51": 1,
+						"p60": 2,
+						"p64": 2,
+						"価格": 4,
+						"欠品": 9,
+						"行列": 3,
+						"補充待ち": 1
+					},
+					"needs": 35,
+					"served": 32,
+					"unmet": {
+						"spicy noodle": 3
+					},
+					"visitors": 111
+				},
+				{
+					"buyers": 73,
+					"day": 53,
+					"event": "winter_night",
+					"event_results": {
+						"chili": {
+							"buyers": 7,
+							"completed": 7
+						},
+						"winter_night": {
+							"buyers": 66,
+							"completed": 73
+						}
+					},
+					"miss": {
+						"p40": 2,
+						"p60": 2,
+						"p64": 2,
+						"価格": 1,
+						"欠品": 6,
+						"行列": 6
+					},
+					"needs": 29,
+					"served": 28,
+					"unmet": {
+						"coffee": 1
+					},
+					"visitors": 93
+				},
+				{
+					"buyers": 82,
+					"day": 54,
+					"event": "hero",
+					"event_results": {
+						"hero": {
+							"buyers": 77,
+							"completed": 106
+						},
+						"winter_night": {
+							"buyers": 5,
+							"completed": 20
+						}
+					},
+					"miss": {
+						"p0": 2,
+						"p60": 4,
+						"p64": 1,
+						"価格": 2,
+						"欠品": 21,
+						"行列": 7,
+						"補充待ち": 4
+					},
+					"needs": 64,
+					"served": 29,
+					"unmet": {
+						"coffee": 3,
+						"rice": 18,
+						"warm hearty": 10,
+						"warm soup": 4
+					},
+					"visitors": 109
+				},
+				{
+					"buyers": 85,
+					"day": 55,
+					"event": "neighbors",
+					"event_results": {
+						"hero": {
+							"buyers": 2,
+							"completed": 3
+						},
+						"neighbors": {
+							"buyers": 83,
+							"completed": 113
+						}
+					},
+					"miss": {
+						"p40": 2,
+						"価格": 3,
+						"欠品": 2,
+						"満員": 4,
+						"行列": 15
+					},
+					"needs": 50,
+					"served": 36,
+					"unmet": {
+						"sweet": 5,
+						"warm hearty": 9
+					},
+					"visitors": 113
+				},
+				{
+					"buyers": 59,
+					"day": 56,
+					"event": "winter_night",
+					"event_results": {
+						"winter_night": {
+							"buyers": 59,
+							"completed": 63
+						}
+					},
+					"miss": {
+						"p64": 1,
+						"価格": 1,
+						"欠品": 1,
+						"行列": 2
+					},
+					"needs": 17,
+					"served": 16,
+					"unmet": {
+						"coffee": 1
+					},
+					"visitors": 94
+				}
+			],
+			"metrics": {
+				"cohort": 84,
+				"days": 14,
+				"events": 4,
+				"margin": 0.095647237424573,
+				"pass": false,
+				"repeat": 1.0,
+				"reserve": 37945,
+				"visitors": 1540,
+				"waste": 0.0792516035462518
+			},
+			"result": "won",
+			"seed": 20260979,
+			"star": 5,
+			"stories": [
+				2,
+				3,
+				2,
+				3,
+				1,
+				3,
+				3,
+				3,
+				1,
+				3,
+				2,
+				1
+			],
+			"style": "night",
+			"winter": {
+				"completed": 186,
+				"groups": {
+					"coffee": {
+						"completed": 66,
+						"served": 56
+					},
+					"warm hearty": {
+						"completed": 62,
+						"served": 35
+					},
+					"warm soup": {
+						"completed": 58,
+						"served": 52
+					}
+				},
+				"pass": true,
+				"plan": "night",
+				"rate": 0.768817204301075,
+				"served": 143
+			}
+		},
+		{
+			"cash": 18029,
+			"commands": 623,
+			"day": 57,
+			"event_days": [
+				{
+					"buyers": 27,
+					"day": 3,
+					"event": "chili",
+					"event_results": {
+						"chili": {
+							"buyers": 27,
+							"completed": 29
+						}
+					},
+					"miss": {
+						"価格": 1,
+						"行列": 1
+					},
+					"needs": 11,
+					"served": 11,
+					"unmet": {},
+					"visitors": 31
+				},
+				{
+					"buyers": 18,
+					"day": 5,
+					"event": "hero",
+					"event_results": {
+						"hero": {
+							"buyers": 17,
+							"completed": 27
+						}
+					},
+					"miss": {
+						"価格": 3,
+						"欠品": 7
+					},
+					"needs": 9,
+					"served": 2,
+					"unmet": {
+						"rice": 4,
+						"warm hearty": 3
+					},
+					"visitors": 28
+				},
+				{
+					"buyers": 48,
+					"day": 7,
+					"event": "pudding",
+					"event_results": {
+						"pudding": {
+							"buyers": 48,
+							"completed": 68
+						}
+					},
+					"miss": {
+						"p21": 2,
+						"p40": 1,
+						"価格": 3,
+						"欠品": 20
+					},
+					"needs": 25,
+					"served": 8,
+					"unmet": {
+						"dessert": 17
+					},
+					"visitors": 68
+				},
+				{
+					"buyers": 46,
+					"day": 8,
+					"event": "office",
+					"event_results": {
+						"office": {
+							"buyers": 46,
+							"completed": 69
+						}
+					},
+					"miss": {
+						"p0": 1,
+						"p10": 2,
+						"p21": 3,
+						"p40": 1,
+						"欠品": 23,
+						"行列": 7
+					},
+					"needs": 35,
+					"served": 14,
+					"unmet": {
+						"bread": 5,
+						"coffee": 16
+					},
+					"visitors": 71
+				},
+				{
+					"buyers": 73,
+					"day": 10,
+					"event": "chili",
+					"event_results": {
+						"chili": {
+							"buyers": 68,
+							"completed": 74
+						}
+					},
+					"miss": {
+						"p0": 3,
+						"p20": 3,
+						"p51": 2,
+						"欠品": 9,
+						"行列": 1,
+						"補充待ち": 4
+					},
+					"needs": 26,
+					"served": 21,
+					"unmet": {
+						"spicy noodle": 5
+					},
+					"visitors": 77
+				},
+				{
+					"buyers": 48,
+					"day": 12,
+					"event": "hero",
+					"event_results": {
+						"hero": {
+							"buyers": 44,
+							"completed": 80
+						}
+					},
+					"miss": {
+						"p0": 2,
+						"欠品": 36,
+						"行列": 2
+					},
+					"needs": 36,
+					"served": 2,
+					"unmet": {
+						"rice": 18,
+						"warm hearty": 16
+					},
+					"visitors": 82
+				},
+				{
+					"buyers": 66,
+					"day": 13,
+					"event": "sports",
+					"event_results": {
+						"hero": {
+							"buyers": 2,
+							"completed": 2
+						},
+						"sports": {
+							"buyers": 64,
+							"completed": 78
+						}
+					},
+					"miss": {
+						"p0": 2,
+						"欠品": 12,
+						"行列": 4
+					},
+					"needs": 34,
+					"served": 21,
+					"unmet": {
+						"drink health": 3,
+						"rice light": 10
+					},
+					"visitors": 78
+				},
+				{
+					"buyers": 67,
+					"day": 14,
+					"event": "pudding",
+					"event_results": {
+						"pudding": {
+							"buyers": 67,
+							"completed": 85
+						}
+					},
+					"miss": {
+						"p40": 3,
+						"価格": 1,
+						"欠品": 17,
+						"行列": 3
+					},
+					"needs": 32,
+					"served": 18,
+					"unmet": {
+						"dessert": 14
+					},
+					"visitors": 86
+				},
+				{
+					"buyers": 75,
+					"day": 15,
+					"event": "heat",
+					"event_results": {
+						"heat": {
+							"buyers": 74,
+							"completed": 85
+						},
+						"pudding": {
+							"buyers": 1,
+							"completed": 1
+						}
+					},
+					"miss": {
+						"p20": 4,
+						"欠品": 8,
+						"行列": 5,
+						"補充待ち": 2
+					},
+					"needs": 45,
+					"served": 36,
+					"unmet": {
+						"drink cold": 9
+					},
+					"visitors": 86
+				},
+				{
+					"buyers": 78,
+					"day": 16,
+					"event": "heat",
+					"event_results": {
+						"heat": {
+							"buyers": 78,
+							"completed": 85
+						}
+					},
+					"miss": {
+						"価格": 1,
+						"欠品": 1,
+						"行列": 5
+					},
+					"needs": 46,
+					"served": 42,
+					"unmet": {
+						"drink cold": 4
+					},
+					"visitors": 89
+				},
+				{
+					"buyers": 78,
+					"day": 17,
+					"event": "chili",
+					"event_results": {
+						"chili": {
+							"buyers": 73,
+							"completed": 84
+						},
+						"heat": {
+							"buyers": 5,
+							"completed": 5
+						}
+					},
+					"miss": {
+						"p20": 1,
+						"p51": 1,
+						"欠品": 7,
+						"行列": 6
+					},
+					"needs": 37,
+					"served": 30,
+					"unmet": {
+						"drink": 2,
+						"spicy noodle": 5
+					},
+					"visitors": 86
+				},
+				{
+					"buyers": 59,
+					"day": 19,
+					"event": "hero",
+					"event_results": {
+						"hero": {
+							"buyers": 55,
+							"completed": 89
+						}
+					},
+					"miss": {
+						"p0": 3,
+						"価格": 2,
+						"欠品": 32,
+						"行列": 3
+					},
+					"needs": 38,
+					"served": 8,
+					"unmet": {
+						"rice": 12,
+						"warm hearty": 18
+					},
+					"visitors": 94
+				},
+				{
+					"buyers": 74,
+					"day": 20,
+					"event": "summer_break",
+					"event_results": {
+						"hero": {
+							"buyers": 5,
+							"completed": 5
+						},
+						"summer_break": {
+							"buyers": 69,
+							"completed": 93
+						}
+					},
+					"miss": {
+						"p32": 2,
+						"欠品": 4,
+						"行列": 13
+					},
+					"needs": 43,
+					"served": 22,
+					"unmet": {
+						"drink cold": 14,
+						"snack sweet": 7
+					},
+					"visitors": 94
+				},
+				{
+					"buyers": 75,
+					"day": 21,
+					"event": "pudding",
+					"event_results": {
+						"pudding": {
+							"buyers": 74,
+							"completed": 95
+						},
+						"summer_break": {
+							"buyers": 1,
+							"completed": 1
+						}
+					},
+					"miss": {
+						"p40": 4,
+						"価格": 2,
+						"欠品": 22,
+						"行列": 1
+					},
+					"needs": 33,
+					"served": 15,
+					"unmet": {
+						"dessert": 18
+					},
+					"visitors": 95
+				},
+				{
+					"buyers": 76,
+					"day": 23,
+					"event": "study",
+					"event_results": {
+						"study": {
+							"buyers": 70,
+							"completed": 104
+						}
+					},
+					"miss": {
+						"p21": 5,
+						"p50": 1,
+						"価格": 1,
+						"欠品": 6,
+						"満員": 12,
+						"行列": 11,
+						"補充待ち": 5
+					},
+					"needs": 52,
+					"served": 25,
+					"unmet": {
+						"coffee": 14,
+						"noodle warm": 13
+					},
+					"visitors": 107
+				},
+				{
+					"buyers": 97,
+					"day": 24,
+					"event": "chili",
+					"event_results": {
+						"chili": {
+							"buyers": 94,
+							"completed": 99
+						},
+						"study": {
+							"buyers": 3,
+							"completed": 3
+						}
+					},
+					"miss": {
+						"p20": 2,
+						"p21": 1,
+						"p51": 2,
+						"p60": 1,
+						"価格": 1,
+						"欠品": 9,
+						"行列": 1
+					},
+					"needs": 36,
+					"served": 32,
+					"unmet": {
+						"spicy noodle": 4
+					},
+					"visitors": 103
+				},
+				{
+					"buyers": 78,
+					"day": 26,
+					"event": "hero",
+					"event_results": {
+						"hero": {
+							"buyers": 73,
+							"completed": 104
+						}
+					},
+					"miss": {
+						"p0": 2,
+						"p60": 1,
+						"価格": 2,
+						"欠品": 30,
+						"行列": 2
+					},
+					"needs": 41,
+					"served": 14,
+					"unmet": {
+						"rice": 15,
+						"warm hearty": 12
+					},
+					"visitors": 107
+				},
+				{
+					"buyers": 97,
+					"day": 27,
+					"event": "rain",
+					"event_results": {
+						"hero": {
+							"buyers": 2,
+							"completed": 3
+						},
+						"rain": {
+							"buyers": 95,
+							"completed": 110
+						}
+					},
+					"miss": {
+						"p73": 2,
+						"価格": 1,
+						"欠品": 14,
+						"行列": 2
+					},
+					"needs": 43,
+					"served": 30,
+					"unmet": {
+						"rain": 13
+					},
+					"visitors": 110
+				},
+				{
+					"buyers": 84,
+					"day": 28,
+					"event": "pudding",
+					"event_results": {
+						"pudding": {
+							"buyers": 84,
+							"completed": 112
+						}
+					},
+					"miss": {
+						"p40": 6,
+						"価格": 2,
+						"欠品": 25,
+						"行列": 6,
+						"補充待ち": 1
+					},
+					"needs": 41,
+					"served": 20,
+					"unmet": {
+						"dessert": 21
+					},
+					"visitors": 114
+				},
+				{
+					"buyers": 85,
+					"day": 29,
+					"event": "harvest",
+					"event_results": {
+						"harvest": {
+							"buyers": 84,
+							"completed": 109
+						},
+						"pudding": {
+							"buyers": 1,
+							"completed": 2
+						}
+					},
+					"miss": {
+						"p64": 2,
+						"価格": 1,
+						"欠品": 24,
+						"行列": 3
+					},
+					"needs": 51,
+					"served": 28,
+					"unmet": {
+						"warm seasonal": 23
+					},
+					"visitors": 114
+				},
+				{
+					"buyers": 89,
+					"day": 30,
+					"event": "autumn",
+					"event_results": {
+						"autumn": {
+							"buyers": 86,
+							"completed": 105
+						},
+						"harvest": {
+							"buyers": 3,
+							"completed": 5
+						}
+					},
+					"miss": {
+						"p64": 1,
+						"価格": 1,
+						"欠品": 17,
+						"行列": 3,
+						"補充待ち": 1
+					},
+					"needs": 51,
+					"served": 31,
+					"unmet": {
+						"sweet seasonal": 18,
+						"warm seasonal": 2
+					},
+					"visitors": 107
+				},
+				{
+					"buyers": 89,
+					"day": 31,
+					"event": "chili",
+					"event_results": {
+						"autumn": {
+							"buyers": 2,
+							"completed": 2
+						},
+						"chili": {
+							"buyers": 87,
+							"completed": 102
+						}
+					},
+					"miss": {
+						"p0": 2,
+						"p50": 2,
+						"p51": 1,
+						"価格": 1,
+						"欠品": 12,
+						"行列": 7
+					},
+					"needs": 34,
+					"served": 22,
+					"unmet": {
+						"drink": 2,
+						"spicy noodle": 10
+					},
+					"visitors": 109
+				},
+				{
+					"buyers": 91,
+					"day": 33,
+					"event": "hero",
+					"event_results": {
+						"hero": {
+							"buyers": 87,
+							"completed": 108
+						}
+					},
+					"miss": {
+						"p0": 2,
+						"p64": 2,
+						"価格": 1,
+						"欠品": 3,
+						"行列": 8,
+						"補充待ち": 1
+					},
+					"needs": 46,
+					"served": 32,
+					"unmet": {
+						"rice": 11,
+						"warm hearty": 3
+					},
+					"visitors": 111
+				},
+				{
+					"buyers": 93,
+					"day": 34,
+					"event": "books",
+					"event_results": {
+						"books": {
+							"buyers": 90,
+							"completed": 110
+						},
+						"hero": {
+							"buyers": 3,
+							"completed": 3
+						}
+					},
+					"miss": {
+						"満員": 1,
+						"行列": 17
+					},
+					"needs": 49,
+					"served": 37,
+					"unmet": {
+						"cookie": 9,
+						"tea": 3
+					},
+					"visitors": 110
+				},
+				{
+					"buyers": 89,
+					"day": 35,
+					"event": "pudding",
+					"event_results": {
+						"pudding": {
+							"buyers": 89,
+							"completed": 111
+						}
+					},
+					"miss": {
+						"p3": 1,
+						"p40": 2,
+						"p64": 2,
+						"価格": 5,
+						"欠品": 17,
+						"行列": 1
+					},
+					"needs": 38,
+					"served": 26,
+					"unmet": {
+						"dessert": 12
+					},
+					"visitors": 111
+				},
+				{
+					"buyers": 75,
+					"day": 37,
+					"event": "office",
+					"event_results": {
+						"office": {
+							"buyers": 70,
+							"completed": 110
+						}
+					},
+					"miss": {
+						"p10": 2,
+						"p21": 2,
+						"価格": 1,
+						"欠品": 41,
+						"行列": 2
+					},
+					"needs": 58,
+					"served": 21,
+					"unmet": {
+						"bread": 20,
+						"coffee": 17
+					},
+					"visitors": 114
+				},
+				{
+					"buyers": 101,
+					"day": 38,
+					"event": "chili",
+					"event_results": {
+						"chili": {
+							"buyers": 98,
+							"completed": 105
+						},
+						"office": {
+							"buyers": 3,
+							"completed": 4
+						}
+					},
+					"miss": {
+						"p50": 1,
+						"価格": 2,
+						"欠品": 5,
+						"行列": 1
+					},
+					"needs": 37,
+					"served": 32,
+					"unmet": {
+						"spicy noodle": 5
+					},
+					"visitors": 111
+				},
+				{
+					"buyers": 88,
+					"day": 40,
+					"event": "hero",
+					"event_results": {
+						"hero": {
+							"buyers": 82,
+							"completed": 109
+						}
+					},
+					"miss": {
+						"p0": 1,
+						"価格": 3,
+						"欠品": 1,
+						"行列": 8
+					},
+					"needs": 46,
+					"served": 28,
+					"unmet": {
+						"rice": 9,
+						"warm hearty": 9
+					},
+					"visitors": 112
+				},
+				{
+					"buyers": 94,
+					"day": 41,
+					"event": "autumn",
+					"event_results": {
+						"autumn": {
+							"buyers": 91,
+							"completed": 107
+						},
+						"hero": {
+							"buyers": 3,
+							"completed": 3
+						}
+					},
+					"miss": {
+						"p64": 2,
+						"欠品": 15,
+						"行列": 3
+					},
+					"needs": 50,
+					"served": 37,
+					"unmet": {
+						"sweet seasonal": 13
+					},
+					"visitors": 110
+				},
+				{
+					"buyers": 86,
+					"day": 42,
+					"event": "pudding",
+					"event_results": {
+						"autumn": {
+							"buyers": 2,
+							"completed": 3
+						},
+						"pudding": {
+							"buyers": 84,
+							"completed": 109
+						}
+					},
+					"miss": {
+						"p40": 2,
+						"価格": 1,
+						"欠品": 18,
+						"行列": 9
+					},
+					"needs": 39,
+					"served": 23,
+					"unmet": {
+						"dessert": 16
+					},
+					"visitors": 110
+				},
+				{
+					"buyers": 101,
+					"day": 43,
+					"event": "cold",
+					"event_results": {
+						"cold": {
+							"buyers": 101,
+							"completed": 109
+						},
+						"pudding": {
+							"buyers": 0,
+							"completed": 1
+						}
+					},
+					"miss": {
+						"欠品": 4,
+						"行列": 5
+					},
+					"needs": 61,
+					"served": 55,
+					"unmet": {
+						"warm soup": 6
+					},
+					"visitors": 112
+				},
+				{
+					"buyers": 104,
+					"day": 44,
+					"event": "cold",
+					"event_results": {
+						"cold": {
+							"buyers": 104,
+							"completed": 111
+						}
+					},
+					"miss": {
+						"p54": 1,
+						"p64": 1,
+						"価格": 1,
+						"欠品": 6,
+						"行列": 2
+					},
+					"needs": 57,
+					"served": 53,
+					"unmet": {
+						"warm soup": 4
+					},
+					"visitors": 112
+				},
+				{
+					"buyers": 82,
+					"day": 45,
+					"event": "winter_breakfast",
+					"event_results": {
+						"cold": {
+							"buyers": 3,
+							"completed": 4
+						},
+						"winter_breakfast": {
+							"buyers": 79,
+							"completed": 110
+						}
+					},
+					"miss": {
+						"p0": 5,
+						"p10": 1,
+						"欠品": 6,
+						"補充待ち": 3
+					},
+					"needs": 62,
+					"served": 31,
+					"unmet": {
+						"bread": 8,
+						"rice light": 13,
+						"tea": 9,
+						"warm soup": 1
+					},
+					"visitors": 112
+				},
+				{
+					"buyers": 90,
+					"day": 47,
+					"event": "hero",
+					"event_results": {
+						"hero": {
+							"buyers": 85,
+							"completed": 109
+						}
+					},
+					"miss": {
+						"p0": 1,
+						"p3": 1,
+						"p40": 3,
+						"価格": 1,
+						"欠品": 21,
+						"行列": 5
+					},
+					"needs": 44,
+					"served": 23,
+					"unmet": {
+						"rice": 5,
+						"warm hearty": 16
+					},
+					"visitors": 110
+				},
+				{
+					"buyers": 57,
+					"day": 48,
+					"event": "night_shift",
+					"event_results": {
+						"hero": {
+							"buyers": 1,
+							"completed": 1
+						},
+						"night_shift": {
+							"buyers": 56,
+							"completed": 71
+						}
+					},
+					"miss": {
+						"p3": 1,
+						"p40": 2,
+						"価格": 1,
+						"欠品": 13,
+						"行列": 4
+					},
+					"needs": 12,
+					"served": 2,
+					"unmet": {
+						"warm hearty": 10
+					},
+					"visitors": 95
+				},
+				{
+					"buyers": 106,
+					"day": 49,
+					"event": "winter_breakfast",
+					"event_results": {
+						"night_shift": {
+							"buyers": 10,
+							"completed": 24
+						},
+						"winter_breakfast": {
+							"buyers": 96,
+							"completed": 114
+						}
+					},
+					"miss": {
+						"p0": 3,
+						"p3": 1,
+						"欠品": 22,
+						"行列": 9,
+						"補充待ち": 1
+					},
+					"needs": 83,
+					"served": 57,
+					"unmet": {
+						"rice light": 7,
+						"tea": 5,
+						"warm hearty": 14
+					},
+					"visitors": 114
+				},
+				{
+					"buyers": 94,
+					"day": 51,
+					"event": "office",
+					"event_results": {
+						"office": {
+							"buyers": 88,
+							"completed": 110
+						}
+					},
+					"miss": {
+						"p10": 3,
+						"p21": 2,
+						"価格": 1,
+						"欠品": 18,
+						"行列": 5
+					},
+					"needs": 57,
+					"served": 39,
+					"unmet": {
+						"bread": 5,
+						"coffee": 13
+					},
+					"visitors": 111
+				},
+				{
+					"buyers": 100,
+					"day": 52,
+					"event": "chili",
+					"event_results": {
+						"chili": {
+							"buyers": 99,
+							"completed": 107
+						},
+						"office": {
+							"buyers": 1,
+							"completed": 1
+						}
+					},
+					"miss": {
+						"p0": 1,
+						"p40": 1,
+						"欠品": 6,
+						"行列": 4
+					},
+					"needs": 38,
+					"served": 32,
+					"unmet": {
+						"spicy noodle": 6
+					},
+					"visitors": 115
+				},
+				{
+					"buyers": 92,
+					"day": 53,
+					"event": "winter_breakfast",
+					"event_results": {
+						"chili": {
+							"buyers": 8,
+							"completed": 8
+						},
+						"winter_breakfast": {
+							"buyers": 84,
+							"completed": 107
+						}
+					},
+					"miss": {
+						"p0": 3,
+						"欠品": 3,
+						"行列": 2
+					},
+					"needs": 59,
+					"served": 37,
+					"unmet": {
+						"bread": 7,
+						"rice light": 13,
+						"tea": 2
+					},
+					"visitors": 109
+				},
+				{
+					"buyers": 95,
+					"day": 54,
+					"event": "hero",
+					"event_results": {
+						"hero": {
+							"buyers": 93,
+							"completed": 111
+						},
+						"winter_breakfast": {
+							"buyers": 2,
+							"completed": 2
+						}
+					},
+					"miss": {
+						"p0": 4,
+						"p3": 1,
+						"p40": 1,
+						"p64": 2,
+						"価格": 2,
+						"欠品": 13,
+						"行列": 9,
+						"補充待ち": 1
+					},
+					"needs": 46,
+					"served": 37,
+					"unmet": {
+						"warm hearty": 9
+					},
+					"visitors": 114
+				},
+				{
+					"buyers": 79,
+					"day": 55,
+					"event": "neighbors",
+					"event_results": {
+						"hero": {
+							"buyers": 3,
+							"completed": 3
+						},
+						"neighbors": {
+							"buyers": 76,
+							"completed": 110
+						}
+					},
+					"miss": {
+						"p3": 1,
+						"p40": 2,
+						"p64": 1,
+						"価格": 3,
+						"欠品": 23,
+						"行列": 7
+					},
+					"needs": 48,
+					"served": 22,
+					"unmet": {
+						"sweet": 7,
+						"warm hearty": 19
+					},
+					"visitors": 113
+				},
+				{
+					"buyers": 93,
+					"day": 56,
+					"event": "winter_breakfast",
+					"event_results": {
+						"neighbors": {
+							"buyers": 2,
+							"completed": 3
+						},
+						"winter_breakfast": {
+							"buyers": 91,
+							"completed": 115
+						}
+					},
+					"miss": {
+						"p0": 1,
+						"p10": 3,
+						"欠品": 4,
+						"満員": 12,
+						"行列": 13
+					},
+					"needs": 63,
+					"served": 43,
+					"unmet": {
+						"bread": 4,
+						"rice light": 7,
+						"tea": 9
+					},
+					"visitors": 116
+				}
+			],
+			"metrics": {
+				"cohort": 83,
+				"days": 14,
+				"events": 4,
+				"margin": 0.11226815729036,
+				"pass": false,
+				"repeat": 1.0,
+				"reserve": 38050,
+				"visitors": 1537,
+				"waste": 0.0575799909110801
+			},
+			"result": "deadline",
+			"seed": 20261052,
+			"star": 5,
+			"stories": [
+				2,
+				3,
+				2,
+				3,
+				1,
+				1,
+				3,
+				3,
+				1,
+				3,
+				0,
+				3
+			],
+			"style": "staples",
+			"winter": {
+				"completed": 244,
+				"groups": {
+					"bread": {
+						"completed": 81,
+						"served": 62
+					},
+					"rice light": {
+						"completed": 82,
+						"served": 42
+					},
+					"tea": {
+						"completed": 81,
+						"served": 56
+					}
+				},
+				"pass": false,
+				"plan": "breakfast",
+				"rate": 0.655737704918033,
+				"served": 160
+			}
+		},
+		{
+			"cash": 31578,
+			"commands": 663,
+			"day": 57,
+			"event_days": [
+				{
+					"buyers": 24,
+					"day": 3,
+					"event": "chili",
+					"event_results": {
+						"chili": {
+							"buyers": 23,
+							"completed": 26
+						}
+					},
+					"miss": {
+						"p40": 1,
+						"欠品": 2,
+						"行列": 2
+					},
+					"needs": 12,
+					"served": 10,
+					"unmet": {
+						"drink": 1,
+						"spicy noodle": 1
+					},
+					"visitors": 27
+				},
+				{
+					"buyers": 27,
+					"day": 5,
+					"event": "hero",
+					"event_results": {
+						"hero": {
+							"buyers": 26,
+							"completed": 32
+						}
+					},
+					"miss": {
+						"p0": 2,
+						"欠品": 7,
+						"補充待ち": 1
+					},
+					"needs": 14,
+					"served": 8,
+					"unmet": {
+						"rice": 2,
+						"warm hearty": 4
+					},
+					"visitors": 33
+				},
+				{
+					"buyers": 35,
+					"day": 7,
+					"event": "pudding",
+					"event_results": {
+						"pudding": {
+							"buyers": 35,
+							"completed": 48
+						}
+					},
+					"miss": {
+						"p40": 2,
+						"価格": 1,
+						"欠品": 13,
+						"行列": 1
+					},
+					"needs": 17,
+					"served": 6,
+					"unmet": {
+						"dessert": 11
+					},
+					"visitors": 49
+				},
+				{
+					"buyers": 41,
+					"day": 8,
+					"event": "office",
+					"event_results": {
+						"office": {
+							"buyers": 40,
+							"completed": 73
+						},
+						"pudding": {
+							"buyers": 1,
+							"completed": 1
+						}
+					},
+					"miss": {
+						"p10": 2,
+						"価格": 1,
+						"欠品": 10,
+						"行列": 4
+					},
+					"needs": 36,
+					"served": 7,
+					"unmet": {
+						"bread": 11,
+						"coffee": 18
+					},
+					"visitors": 75
+				},
+				{
+					"buyers": 63,
+					"day": 10,
+					"event": "chili",
+					"event_results": {
+						"chili": {
+							"buyers": 62,
+							"completed": 68
+						}
+					},
+					"miss": {
+						"p21": 1,
+						"p51": 2,
+						"欠品": 6,
+						"行列": 2,
+						"補充待ち": 1
+					},
+					"needs": 25,
+					"served": 19,
+					"unmet": {
+						"drink": 1,
+						"spicy noodle": 5
+					},
+					"visitors": 72
+				},
+				{
+					"buyers": 69,
+					"day": 12,
+					"event": "hero",
+					"event_results": {
+						"hero": {
+							"buyers": 67,
+							"completed": 83
+						}
+					},
+					"miss": {
+						"価格": 3,
+						"欠品": 10,
+						"行列": 3
+					},
+					"needs": 35,
+					"served": 23,
+					"unmet": {
+						"rice": 2,
+						"warm hearty": 10
+					},
+					"visitors": 85
+				},
+				{
+					"buyers": 73,
+					"day": 13,
+					"event": "sports",
+					"event_results": {
+						"hero": {
+							"buyers": 2,
+							"completed": 2
+						},
+						"sports": {
+							"buyers": 71,
+							"completed": 82
+						}
+					},
+					"miss": {
+						"行列": 4
+					},
+					"needs": 37,
+					"served": 28,
+					"unmet": {
+						"drink health": 7,
+						"rice light": 2
+					},
+					"visitors": 82
+				},
+				{
+					"buyers": 70,
+					"day": 14,
+					"event": "pudding",
+					"event_results": {
+						"pudding": {
+							"buyers": 70,
+							"completed": 89
+						}
+					},
+					"miss": {
+						"p40": 2,
+						"価格": 1,
+						"欠品": 15,
+						"行列": 5
+					},
+					"needs": 31,
+					"served": 18,
+					"unmet": {
+						"dessert": 13
+					},
+					"visitors": 89
+				},
+				{
+					"buyers": 72,
+					"day": 15,
+					"event": "heat",
+					"event_results": {
+						"heat": {
+							"buyers": 72,
+							"completed": 84
+						}
+					},
+					"miss": {
+						"p20": 2,
+						"欠品": 13,
+						"行列": 1
+					},
+					"needs": 47,
+					"served": 35,
+					"unmet": {
+						"drink cold": 12
+					},
+					"visitors": 87
+				},
+				{
+					"buyers": 79,
+					"day": 16,
+					"event": "heat",
+					"event_results": {
+						"heat": {
+							"buyers": 79,
+							"completed": 84
+						}
+					},
+					"miss": {
+						"p20": 1,
+						"欠品": 5,
+						"行列": 1
+					},
+					"needs": 46,
+					"served": 41,
+					"unmet": {
+						"drink cold": 5
+					},
+					"visitors": 83
+				},
+				{
+					"buyers": 69,
+					"day": 17,
+					"event": "chili",
+					"event_results": {
+						"chili": {
+							"buyers": 67,
+							"completed": 83
+						},
+						"heat": {
+							"buyers": 2,
+							"completed": 2
+						}
+					},
+					"miss": {
+						"p51": 1,
+						"欠品": 5,
+						"行列": 7
+					},
+					"needs": 29,
+					"served": 22,
+					"unmet": {
+						"drink": 3,
+						"spicy noodle": 4
+					},
+					"visitors": 89
+				},
+				{
+					"buyers": 58,
+					"day": 19,
+					"event": "hero",
+					"event_results": {
+						"hero": {
+							"buyers": 52,
+							"completed": 88
+						}
+					},
+					"miss": {
+						"p0": 6,
+						"p40": 1,
+						"p60": 1,
+						"価格": 1,
+						"欠品": 9,
+						"行列": 10,
+						"補充待ち": 6
+					},
+					"needs": 36,
+					"served": 7,
+					"unmet": {
+						"rice": 15,
+						"warm hearty": 14
+					},
+					"visitors": 93
+				},
+				{
+					"buyers": 81,
+					"day": 20,
+					"event": "summer_break",
+					"event_results": {
+						"hero": {
+							"buyers": 5,
+							"completed": 5
+						},
+						"summer_break": {
+							"buyers": 76,
+							"completed": 86
+						}
+					},
+					"miss": {
+						"p32": 3,
+						"p40": 1,
+						"欠品": 9,
+						"行列": 2
+					},
+					"needs": 42,
+					"served": 33,
+					"unmet": {
+						"drink cold": 3,
+						"snack sweet": 6
+					},
+					"visitors": 88
+				},
+				{
+					"buyers": 59,
+					"day": 21,
+					"event": "pudding",
+					"event_results": {
+						"pudding": {
+							"buyers": 57,
+							"completed": 80
+						},
+						"summer_break": {
+							"buyers": 2,
+							"completed": 2
+						}
+					},
+					"miss": {
+						"p40": 3,
+						"欠品": 19,
+						"行列": 4
+					},
+					"needs": 27,
+					"served": 10,
+					"unmet": {
+						"dessert": 17
+					},
+					"visitors": 80
+				},
+				{
+					"buyers": 77,
+					"day": 23,
+					"event": "study",
+					"event_results": {
+						"study": {
+							"buyers": 72,
+							"completed": 90
+						}
+					},
+					"miss": {
+						"p21": 1,
+						"p50": 1,
+						"欠品": 9,
+						"行列": 9,
+						"補充待ち": 2
+					},
+					"needs": 44,
+					"served": 29,
+					"unmet": {
+						"coffee": 11,
+						"noodle warm": 4
+					},
+					"visitors": 91
+				},
+				{
+					"buyers": 84,
+					"day": 24,
+					"event": "chili",
+					"event_results": {
+						"chili": {
+							"buyers": 83,
+							"completed": 86
+						},
+						"study": {
+							"buyers": 1,
+							"completed": 1
+						}
+					},
+					"miss": {
+						"p0": 2,
+						"行列": 3,
+						"補充待ち": 2
+					},
+					"needs": 31,
+					"served": 30,
+					"unmet": {
+						"spicy noodle": 1
+					},
+					"visitors": 93
+				},
+				{
+					"buyers": 70,
+					"day": 26,
+					"event": "hero",
+					"event_results": {
+						"hero": {
+							"buyers": 67,
+							"completed": 89
+						}
+					},
+					"miss": {
+						"p10": 1,
+						"価格": 1,
+						"欠品": 8,
+						"行列": 10,
+						"補充待ち": 1
+					},
+					"needs": 37,
+					"served": 22,
+					"unmet": {
+						"rice": 4,
+						"warm hearty": 11
+					},
+					"visitors": 91
+				},
+				{
+					"buyers": 76,
+					"day": 27,
+					"event": "rain",
+					"event_results": {
+						"hero": {
+							"buyers": 1,
+							"completed": 2
+						},
+						"rain": {
+							"buyers": 75,
+							"completed": 93
+						}
+					},
+					"miss": {
+						"p73": 2,
+						"価格": 1,
+						"欠品": 14,
+						"行列": 6
+					},
+					"needs": 38,
+					"served": 23,
+					"unmet": {
+						"rain": 15
+					},
+					"visitors": 93
+				},
+				{
+					"buyers": 72,
+					"day": 28,
+					"event": "pudding",
+					"event_results": {
+						"pudding": {
+							"buyers": 72,
+							"completed": 92
+						}
+					},
+					"miss": {
+						"p40": 3,
+						"価格": 2,
+						"欠品": 20,
+						"行列": 1
+					},
+					"needs": 33,
+					"served": 16,
+					"unmet": {
+						"dessert": 17
+					},
+					"visitors": 93
+				},
+				{
+					"buyers": 69,
+					"day": 29,
+					"event": "harvest",
+					"event_results": {
+						"harvest": {
+							"buyers": 68,
+							"completed": 96
+						},
+						"pudding": {
+							"buyers": 1,
+							"completed": 1
+						}
+					},
+					"miss": {
+						"欠品": 19,
+						"行列": 9
+					},
+					"needs": 46,
+					"served": 24,
+					"unmet": {
+						"warm seasonal": 22
+					},
+					"visitors": 102
+				},
+				{
+					"buyers": 89,
+					"day": 30,
+					"event": "autumn",
+					"event_results": {
+						"autumn": {
+							"buyers": 85,
+							"completed": 102
+						},
+						"harvest": {
+							"buyers": 4,
+							"completed": 6
+						}
+					},
+					"miss": {
+						"p40": 3,
+						"p64": 1,
+						"欠品": 21,
+						"行列": 2
+					},
+					"needs": 51,
+					"served": 32,
+					"unmet": {
+						"sweet seasonal": 17,
+						"warm seasonal": 2
+					},
+					"visitors": 107
+				},
+				{
+					"buyers": 100,
+					"day": 31,
+					"event": "chili",
+					"event_results": {
+						"autumn": {
+							"buyers": 5,
+							"completed": 5
+						},
+						"chili": {
+							"buyers": 95,
+							"completed": 106
+						}
+					},
+					"miss": {
+						"p0": 2,
+						"p64": 1,
+						"欠品": 9,
+						"行列": 3,
+						"補充待ち": 2
+					},
+					"needs": 39,
+					"served": 30,
+					"unmet": {
+						"drink": 1,
+						"spicy noodle": 8
+					},
+					"visitors": 109
+				},
+				{
+					"buyers": 89,
+					"day": 33,
+					"event": "hero",
+					"event_results": {
+						"hero": {
+							"buyers": 84,
+							"completed": 105
+						}
+					},
+					"miss": {
+						"p0": 1,
+						"p3": 3,
+						"p40": 1,
+						"価格": 3,
+						"欠品": 19,
+						"行列": 3,
+						"補充待ち": 2
+					},
+					"needs": 45,
+					"served": 27,
+					"unmet": {
+						"rice": 2,
+						"warm hearty": 16
+					},
+					"visitors": 109
+				},
+				{
+					"buyers": 100,
+					"day": 34,
+					"event": "books",
+					"event_results": {
+						"books": {
+							"buyers": 96,
+							"completed": 110
+						},
+						"hero": {
+							"buyers": 4,
+							"completed": 4
+						}
+					},
+					"miss": {
+						"p36": 1,
+						"欠品": 6,
+						"行列": 7,
+						"補充待ち": 1
+					},
+					"needs": 50,
+					"served": 40,
+					"unmet": {
+						"cookie": 8,
+						"tea": 2
+					},
+					"visitors": 112
+				},
+				{
+					"buyers": 88,
+					"day": 35,
+					"event": "pudding",
+					"event_results": {
+						"books": {
+							"buyers": 2,
+							"completed": 2
+						},
+						"pudding": {
+							"buyers": 86,
+							"completed": 107
+						}
+					},
+					"miss": {
+						"p40": 4,
+						"価格": 2,
+						"欠品": 22,
+						"行列": 1
+					},
+					"needs": 38,
+					"served": 20,
+					"unmet": {
+						"dessert": 18
+					},
+					"visitors": 108
+				},
+				{
+					"buyers": 77,
+					"day": 37,
+					"event": "office",
+					"event_results": {
+						"office": {
+							"buyers": 72,
+							"completed": 105
+						}
+					},
+					"miss": {
+						"満員": 14,
+						"行列": 19
+					},
+					"needs": 57,
+					"served": 30,
+					"unmet": {
+						"bread": 13,
+						"coffee": 14
+					},
+					"visitors": 109
+				},
+				{
+					"buyers": 98,
+					"day": 38,
+					"event": "chili",
+					"event_results": {
+						"chili": {
+							"buyers": 94,
+							"completed": 104
+						},
+						"office": {
+							"buyers": 4,
+							"completed": 4
+						}
+					},
+					"miss": {
+						"価格": 2,
+						"欠品": 7,
+						"行列": 1
+					},
+					"needs": 37,
+					"served": 30,
+					"unmet": {
+						"spicy noodle": 7
+					},
+					"visitors": 108
+				},
+				{
+					"buyers": 99,
+					"day": 40,
+					"event": "hero",
+					"event_results": {
+						"hero": {
+							"buyers": 94,
+							"completed": 111
+						}
+					},
+					"miss": {
+						"p3": 3,
+						"p40": 1,
+						"価格": 3,
+						"欠品": 5,
+						"行列": 12,
+						"補充待ち": 1
+					},
+					"needs": 47,
+					"served": 38,
+					"unmet": {
+						"rice": 3,
+						"warm hearty": 6
+					},
+					"visitors": 112
+				},
+				{
+					"buyers": 93,
+					"day": 41,
+					"event": "autumn",
+					"event_results": {
+						"autumn": {
+							"buyers": 93,
+							"completed": 115
+						},
+						"hero": {
+							"buyers": 0,
+							"completed": 1
+						}
+					},
+					"miss": {
+						"p40": 1,
+						"p64": 2,
+						"価格": 2,
+						"欠品": 21,
+						"行列": 3
+					},
+					"needs": 53,
+					"served": 33,
+					"unmet": {
+						"sweet seasonal": 20
+					},
+					"visitors": 115
+				},
+				{
+					"buyers": 85,
+					"day": 42,
+					"event": "pudding",
+					"event_results": {
+						"pudding": {
+							"buyers": 85,
+							"completed": 110
+						}
+					},
+					"miss": {
+						"p40": 2,
+						"価格": 1,
+						"欠品": 20,
+						"行列": 6
+					},
+					"needs": 41,
+					"served": 21,
+					"unmet": {
+						"dessert": 20
+					},
+					"visitors": 111
+				},
+				{
+					"buyers": 100,
+					"day": 43,
+					"event": "cold",
+					"event_results": {
+						"cold": {
+							"buyers": 99,
+							"completed": 103
+						},
+						"pudding": {
+							"buyers": 1,
+							"completed": 1
+						}
+					},
+					"miss": {
+						"p64": 1,
+						"価格": 1,
+						"欠品": 1,
+						"行列": 3
+					},
+					"needs": 55,
+					"served": 54,
+					"unmet": {
+						"warm soup": 1
+					},
+					"visitors": 111
+				},
+				{
+					"buyers": 101,
+					"day": 44,
+					"event": "cold",
+					"event_results": {
+						"cold": {
+							"buyers": 101,
+							"completed": 113
+						}
+					},
+					"miss": {
+						"p54": 1,
+						"価格": 1,
+						"欠品": 4,
+						"行列": 7,
+						"補充待ち": 1
+					},
+					"needs": 57,
+					"served": 53,
+					"unmet": {
+						"warm soup": 4
+					},
+					"visitors": 114
+				},
+				{
+					"buyers": 94,
+					"day": 45,
+					"event": "winter_breakfast",
+					"event_results": {
+						"cold": {
+							"buyers": 9,
+							"completed": 9
+						},
+						"winter_breakfast": {
+							"buyers": 85,
+							"completed": 115
+						}
+					},
+					"miss": {
+						"p0": 1,
+						"欠品": 1,
+						"満員": 10,
+						"行列": 10
+					},
+					"needs": 70,
+					"served": 50,
+					"unmet": {
+						"bread": 6,
+						"rice light": 4,
+						"tea": 10
+					},
+					"visitors": 117
+				},
+				{
+					"buyers": 96,
+					"day": 47,
+					"event": "hero",
+					"event_results": {
+						"hero": {
+							"buyers": 88,
+							"completed": 111
+						}
+					},
+					"miss": {
+						"p0": 3,
+						"p3": 4,
+						"価格": 2,
+						"欠品": 20,
+						"行列": 5,
+						"補充待ち": 3
+					},
+					"needs": 45,
+					"served": 27,
+					"unmet": {
+						"rice": 3,
+						"warm hearty": 15
+					},
+					"visitors": 115
+				},
+				{
+					"buyers": 60,
+					"day": 48,
+					"event": "night_shift",
+					"event_results": {
+						"hero": {
+							"buyers": 4,
+							"completed": 4
+						},
+						"night_shift": {
+							"buyers": 56,
+							"completed": 77
+						}
+					},
+					"miss": {
+						"p3": 1,
+						"p64": 1,
+						"欠品": 18,
+						"行列": 5
+					},
+					"needs": 17,
+					"served": 1,
+					"unmet": {
+						"warm hearty": 16
+					},
+					"visitors": 102
+				},
+				{
+					"buyers": 123,
+					"day": 49,
+					"event": "winter_breakfast",
+					"event_results": {
+						"night_shift": {
+							"buyers": 18,
+							"completed": 25
+						},
+						"winter_breakfast": {
+							"buyers": 105,
+							"completed": 114
+						}
+					},
+					"miss": {
+						"p0": 1,
+						"p3": 1,
+						"p40": 2,
+						"価格": 1,
+						"欠品": 9,
+						"行列": 3,
+						"補充待ち": 4
+					},
+					"needs": 85,
+					"served": 72,
+					"unmet": {
+						"rice light": 6,
+						"warm hearty": 7
+					},
+					"visitors": 115
+				},
+				{
+					"buyers": 96,
+					"day": 51,
+					"event": "office",
+					"event_results": {
+						"office": {
+							"buyers": 90,
+							"completed": 114
+						}
+					},
+					"miss": {
+						"p10": 2,
+						"p21": 1,
+						"p64": 1,
+						"価格": 1,
+						"欠品": 23,
+						"行列": 3
+					},
+					"needs": 59,
+					"served": 40,
+					"unmet": {
+						"bread": 5,
+						"coffee": 14
+					},
+					"visitors": 116
+				},
+				{
+					"buyers": 99,
+					"day": 52,
+					"event": "chili",
+					"event_results": {
+						"chili": {
+							"buyers": 97,
+							"completed": 106
+						},
+						"office": {
+							"buyers": 2,
+							"completed": 2
+						}
+					},
+					"miss": {
+						"p51": 1,
+						"p64": 1,
+						"価格": 1,
+						"欠品": 5,
+						"行列": 5
+					},
+					"needs": 38,
+					"served": 34,
+					"unmet": {
+						"spicy noodle": 4
+					},
+					"visitors": 113
+				},
+				{
+					"buyers": 106,
+					"day": 53,
+					"event": "winter_breakfast",
+					"event_results": {
+						"chili": {
+							"buyers": 7,
+							"completed": 7
+						},
+						"winter_breakfast": {
+							"buyers": 99,
+							"completed": 109
+						}
+					},
+					"miss": {
+						"p0": 1,
+						"価格": 1,
+						"欠品": 3,
+						"行列": 1
+					},
+					"needs": 63,
+					"served": 56,
+					"unmet": {
+						"rice light": 3,
+						"tea": 4
+					},
+					"visitors": 112
+				},
+				{
+					"buyers": 99,
+					"day": 54,
+					"event": "hero",
+					"event_results": {
+						"hero": {
+							"buyers": 96,
+							"completed": 108
+						},
+						"winter_breakfast": {
+							"buyers": 3,
+							"completed": 3
+						}
+					},
+					"miss": {
+						"p0": 2,
+						"p3": 2,
+						"p40": 1,
+						"価格": 1,
+						"欠品": 10,
+						"行列": 4,
+						"補充待ち": 2
+					},
+					"needs": 47,
+					"served": 40,
+					"unmet": {
+						"warm hearty": 7
+					},
+					"visitors": 112
+				},
+				{
+					"buyers": 91,
+					"day": 55,
+					"event": "neighbors",
+					"event_results": {
+						"hero": {
+							"buyers": 4,
+							"completed": 4
+						},
+						"neighbors": {
+							"buyers": 87,
+							"completed": 111
+						}
+					},
+					"miss": {
+						"p3": 2,
+						"p40": 2,
+						"p64": 2,
+						"価格": 2,
+						"欠品": 17,
+						"行列": 10,
+						"補充待ち": 1
+					},
+					"needs": 49,
+					"served": 35,
+					"unmet": {
+						"sweet": 1,
+						"warm hearty": 13
+					},
+					"visitors": 112
+				},
+				{
+					"buyers": 108,
+					"day": 56,
+					"event": "winter_breakfast",
+					"event_results": {
+						"neighbors": {
+							"buyers": 1,
+							"completed": 1
+						},
+						"winter_breakfast": {
+							"buyers": 107,
+							"completed": 115
+						}
+					},
+					"miss": {
+						"価格": 2,
+						"行列": 6
+					},
+					"needs": 63,
+					"served": 61,
+					"unmet": {
+						"rice light": 2
+					},
+					"visitors": 116
+				}
+			],
+			"metrics": {
+				"cohort": 89,
+				"days": 14,
+				"events": 5,
+				"margin": 0.0963043264431418,
+				"pass": false,
+				"repeat": 1.0,
+				"reserve": 37945,
+				"visitors": 1542,
+				"waste": 0.0674056834108075
+			},
+			"result": "deadline",
+			"seed": 20261052,
+			"star": 4,
+			"stories": [
+				2,
+				3,
+				3,
+				3,
+				1,
+				3,
+				3,
+				3,
+				1,
+				3,
+				3,
+				1
+			],
+			"style": "morning",
+			"winter": {
+				"completed": 252,
+				"groups": {
+					"bread": {
+						"completed": 83,
+						"served": 77
+					},
+					"rice light": {
+						"completed": 85,
+						"served": 70
+					},
+					"tea": {
+						"completed": 84,
+						"served": 70
+					}
+				},
+				"pass": true,
+				"plan": "breakfast",
+				"rate": 0.861111111111111,
+				"served": 217
+			}
+		},
+		{
+			"cash": 32615,
+			"commands": 713,
+			"day": 57,
+			"event_days": [
+				{
+					"buyers": 28,
+					"day": 3,
+					"event": "chili",
+					"event_results": {
+						"chili": {
+							"buyers": 28,
+							"completed": 29
+						}
+					},
+					"miss": {
+						"価格": 1
+					},
+					"needs": 11,
+					"served": 11,
+					"unmet": {},
+					"visitors": 31
+				},
+				{
+					"buyers": 26,
+					"day": 5,
+					"event": "hero",
+					"event_results": {
+						"hero": {
+							"buyers": 25,
+							"completed": 43
+						}
+					},
+					"miss": {
+						"価格": 4,
+						"欠品": 14
+					},
+					"needs": 16,
+					"served": 2,
+					"unmet": {
+						"rice": 7,
+						"warm hearty": 7
+					},
+					"visitors": 45
+				},
+				{
+					"buyers": 54,
+					"day": 7,
+					"event": "pudding",
+					"event_results": {
+						"pudding": {
+							"buyers": 54,
+							"completed": 78
+						}
+					},
+					"miss": {
+						"p0": 4,
+						"p21": 1,
+						"p40": 3,
+						"価格": 3,
+						"欠品": 24,
+						"行列": 4,
+						"補充待ち": 1
+					},
+					"needs": 28,
+					"served": 11,
+					"unmet": {
+						"dessert": 17
+					},
+					"visitors": 78
+				},
+				{
+					"buyers": 60,
+					"day": 8,
+					"event": "office",
+					"event_results": {
+						"office": {
+							"buyers": 60,
+							"completed": 71
+						}
+					},
+					"miss": {
+						"p21": 2,
+						"欠品": 12,
+						"行列": 1
+					},
+					"needs": 30,
+					"served": 20,
+					"unmet": {
+						"coffee": 10
+					},
+					"visitors": 72
+				},
+				{
+					"buyers": 75,
+					"day": 10,
+					"event": "chili",
+					"event_results": {
+						"chili": {
+							"buyers": 72,
+							"completed": 85
+						}
+					},
+					"miss": {
+						"p0": 1,
+						"p50": 2,
+						"p51": 1,
+						"価格": 1,
+						"欠品": 10,
+						"行列": 4,
+						"補充待ち": 2
+					},
+					"needs": 31,
+					"served": 21,
+					"unmet": {
+						"drink": 3,
+						"spicy noodle": 7
+					},
+					"visitors": 90
+				},
+				{
+					"buyers": 59,
+					"day": 12,
+					"event": "hero",
+					"event_results": {
+						"hero": {
+							"buyers": 57,
+							"completed": 77
+						}
+					},
+					"miss": {
+						"p0": 3,
+						"価格": 4,
+						"欠品": 19,
+						"行列": 1
+					},
+					"needs": 27,
+					"served": 11,
+					"unmet": {
+						"rice": 14,
+						"warm hearty": 2
+					},
+					"visitors": 80
+				},
+				{
+					"buyers": 72,
+					"day": 13,
+					"event": "sports",
+					"event_results": {
+						"hero": {
+							"buyers": 3,
+							"completed": 3
+						},
+						"sports": {
+							"buyers": 69,
+							"completed": 81
+						}
+					},
+					"miss": {
+						"p0": 2,
+						"欠品": 12,
+						"行列": 2
+					},
+					"needs": 36,
+					"served": 24,
+					"unmet": {
+						"drink health": 2,
+						"rice light": 10
+					},
+					"visitors": 81
+				},
+				{
+					"buyers": 67,
+					"day": 14,
+					"event": "pudding",
+					"event_results": {
+						"pudding": {
+							"buyers": 67,
+							"completed": 89
+						}
+					},
+					"miss": {
+						"p40": 4,
+						"価格": 2,
+						"欠品": 21,
+						"行列": 3
+					},
+					"needs": 31,
+					"served": 13,
+					"unmet": {
+						"dessert": 18
+					},
+					"visitors": 89
+				},
+				{
+					"buyers": 74,
+					"day": 15,
+					"event": "heat",
+					"event_results": {
+						"heat": {
+							"buyers": 74,
+							"completed": 81
+						}
+					},
+					"miss": {
+						"p20": 1,
+						"欠品": 3,
+						"行列": 5
+					},
+					"needs": 43,
+					"served": 38,
+					"unmet": {
+						"drink cold": 5
+					},
+					"visitors": 86
+				},
+				{
+					"buyers": 86,
+					"day": 16,
+					"event": "heat",
+					"event_results": {
+						"heat": {
+							"buyers": 86,
+							"completed": 91
+						}
+					},
+					"miss": {
+						"p0": 1,
+						"p20": 1,
+						"価格": 1,
+						"欠品": 2,
+						"行列": 3,
+						"補充待ち": 1
+					},
+					"needs": 51,
+					"served": 48,
+					"unmet": {
+						"drink cold": 3
+					},
+					"visitors": 90
+				},
+				{
+					"buyers": 78,
+					"day": 17,
+					"event": "chili",
+					"event_results": {
+						"chili": {
+							"buyers": 74,
+							"completed": 87
+						},
+						"heat": {
+							"buyers": 4,
+							"completed": 4
+						}
+					},
+					"miss": {
+						"p60": 1,
+						"価格": 2,
+						"欠品": 6,
+						"行列": 1
+					},
+					"needs": 32,
+					"served": 26,
+					"unmet": {
+						"drink": 2,
+						"spicy noodle": 4
+					},
+					"visitors": 90
+				},
+				{
+					"buyers": 71,
+					"day": 19,
+					"event": "hero",
+					"event_results": {
+						"hero": {
+							"buyers": 65,
+							"completed": 82
+						}
+					},
+					"miss": {
+						"p0": 5,
+						"p60": 1,
+						"価格": 2,
+						"欠品": 16,
+						"行列": 4,
+						"補充待ち": 1
+					},
+					"needs": 33,
+					"served": 19,
+					"unmet": {
+						"rice": 9,
+						"warm hearty": 5
+					},
+					"visitors": 87
+				},
+				{
+					"buyers": 76,
+					"day": 20,
+					"event": "summer_break",
+					"event_results": {
+						"hero": {
+							"buyers": 5,
+							"completed": 5
+						},
+						"summer_break": {
+							"buyers": 71,
+							"completed": 93
+						}
+					},
+					"miss": {
+						"p32": 2,
+						"p60": 2,
+						"価格": 1,
+						"欠品": 10,
+						"行列": 13,
+						"補充待ち": 2
+					},
+					"needs": 43,
+					"served": 27,
+					"unmet": {
+						"drink cold": 3,
+						"snack sweet": 13
+					},
+					"visitors": 94
+				},
+				{
+					"buyers": 76,
+					"day": 21,
+					"event": "pudding",
+					"event_results": {
+						"pudding": {
+							"buyers": 76,
+							"completed": 94
+						},
+						"summer_break": {
+							"buyers": 0,
+							"completed": 1
+						}
+					},
+					"miss": {
+						"p0": 1,
+						"p40": 3,
+						"価格": 1,
+						"欠品": 19,
+						"行列": 3
+					},
+					"needs": 34,
+					"served": 19,
+					"unmet": {
+						"dessert": 15
+					},
+					"visitors": 94
+				},
+				{
+					"buyers": 90,
+					"day": 23,
+					"event": "study",
+					"event_results": {
+						"study": {
+							"buyers": 84,
+							"completed": 103
+						}
+					},
+					"miss": {
+						"p10": 2,
+						"p21": 3,
+						"価格": 1,
+						"欠品": 17,
+						"満員": 3,
+						"補充待ち": 3
+					},
+					"needs": 53,
+					"served": 35,
+					"unmet": {
+						"coffee": 15,
+						"noodle warm": 3
+					},
+					"visitors": 107
+				},
+				{
+					"buyers": 88,
+					"day": 24,
+					"event": "chili",
+					"event_results": {
+						"chili": {
+							"buyers": 84,
+							"completed": 97
+						},
+						"study": {
+							"buyers": 4,
+							"completed": 4
+						}
+					},
+					"miss": {
+						"p21": 1,
+						"欠品": 6,
+						"行列": 3
+					},
+					"needs": 34,
+					"served": 29,
+					"unmet": {
+						"spicy noodle": 5
+					},
+					"visitors": 104
+				},
+				{
+					"buyers": 77,
+					"day": 26,
+					"event": "hero",
+					"event_results": {
+						"hero": {
+							"buyers": 71,
+							"completed": 102
+						}
+					},
+					"miss": {
+						"p60": 2,
+						"価格": 1,
+						"欠品": 3,
+						"行列": 6
+					},
+					"needs": 44,
+					"served": 19,
+					"unmet": {
+						"rice": 11,
+						"warm hearty": 14
+					},
+					"visitors": 105
+				},
+				{
+					"buyers": 96,
+					"day": 27,
+					"event": "rain",
+					"event_results": {
+						"hero": {
+							"buyers": 3,
+							"completed": 3
+						},
+						"rain": {
+							"buyers": 93,
+							"completed": 109
+						}
+					},
+					"miss": {
+						"p40": 2,
+						"p70": 2,
+						"p73": 2,
+						"価格": 1,
+						"欠品": 20,
+						"行列": 1
+					},
+					"needs": 45,
+					"served": 30,
+					"unmet": {
+						"rain": 15
+					},
+					"visitors": 109
+				},
+				{
+					"buyers": 87,
+					"day": 28,
+					"event": "pudding",
+					"event_results": {
+						"pudding": {
+							"buyers": 87,
+							"completed": 110
+						}
+					},
+					"miss": {
+						"p40": 2,
+						"価格": 2,
+						"欠品": 17,
+						"行列": 5,
+						"補充待ち": 1
+					},
+					"needs": 39,
+					"served": 21,
+					"unmet": {
+						"dessert": 18
+					},
+					"visitors": 110
+				},
+				{
+					"buyers": 81,
+					"day": 29,
+					"event": "harvest",
+					"event_results": {
+						"harvest": {
+							"buyers": 81,
+							"completed": 107
+						}
+					},
+					"miss": {
+						"p64": 2,
+						"価格": 2,
+						"欠品": 20,
+						"行列": 6
+					},
+					"needs": 49,
+					"served": 27,
+					"unmet": {
+						"warm seasonal": 22
+					},
+					"visitors": 109
+				},
+				{
+					"buyers": 85,
+					"day": 30,
+					"event": "autumn",
+					"event_results": {
+						"autumn": {
+							"buyers": 84,
+							"completed": 102
+						},
+						"harvest": {
+							"buyers": 1,
+							"completed": 2
+						}
+					},
+					"miss": {
+						"欠品": 12,
+						"行列": 7
+					},
+					"needs": 48,
+					"served": 33,
+					"unmet": {
+						"sweet seasonal": 14,
+						"warm seasonal": 1
+					},
+					"visitors": 108
+				},
+				{
+					"buyers": 93,
+					"day": 31,
+					"event": "chili",
+					"event_results": {
+						"autumn": {
+							"buyers": 5,
+							"completed": 6
+						},
+						"chili": {
+							"buyers": 88,
+							"completed": 107
+						}
+					},
+					"miss": {
+						"p51": 1,
+						"p64": 2,
+						"価格": 4,
+						"欠品": 13,
+						"行列": 6
+					},
+					"needs": 39,
+					"served": 27,
+					"unmet": {
+						"drink": 1,
+						"spicy noodle": 10,
+						"sweet seasonal": 1
+					},
+					"visitors": 110
+				},
+				{
+					"buyers": 91,
+					"day": 33,
+					"event": "hero",
+					"event_results": {
+						"hero": {
+							"buyers": 85,
+							"completed": 104
+						}
+					},
+					"miss": {
+						"p0": 1,
+						"p3": 1,
+						"p64": 1,
+						"価格": 1,
+						"欠品": 15,
+						"行列": 6
+					},
+					"needs": 44,
+					"served": 28,
+					"unmet": {
+						"rice": 7,
+						"warm hearty": 9
+					},
+					"visitors": 108
+				},
+				{
+					"buyers": 87,
+					"day": 34,
+					"event": "books",
+					"event_results": {
+						"books": {
+							"buyers": 84,
+							"completed": 112
+						},
+						"hero": {
+							"buyers": 3,
+							"completed": 4
+						}
+					},
+					"miss": {
+						"p64": 2,
+						"欠品": 2,
+						"行列": 21
+					},
+					"needs": 51,
+					"served": 28,
+					"unmet": {
+						"cookie": 13,
+						"tea": 10
+					},
+					"visitors": 112
+				},
+				{
+					"buyers": 86,
+					"day": 35,
+					"event": "pudding",
+					"event_results": {
+						"pudding": {
+							"buyers": 86,
+							"completed": 112
+						}
+					},
+					"miss": {
+						"p3": 1,
+						"p40": 4,
+						"p64": 1,
+						"価格": 1,
+						"欠品": 27,
+						"行列": 3,
+						"補充待ち": 1
+					},
+					"needs": 39,
+					"served": 15,
+					"unmet": {
+						"dessert": 24
+					},
+					"visitors": 112
+				},
+				{
+					"buyers": 86,
+					"day": 37,
+					"event": "office",
+					"event_results": {
+						"office": {
+							"buyers": 82,
+							"completed": 111
+						}
+					},
+					"miss": {
+						"p10": 3,
+						"p21": 2,
+						"欠品": 29,
+						"行列": 4,
+						"補充待ち": 1
+					},
+					"needs": 58,
+					"served": 33,
+					"unmet": {
+						"bread": 14,
+						"coffee": 11
+					},
+					"visitors": 115
+				},
+				{
+					"buyers": 91,
+					"day": 38,
+					"event": "chili",
+					"event_results": {
+						"chili": {
+							"buyers": 87,
+							"completed": 104
+						},
+						"office": {
+							"buyers": 4,
+							"completed": 4
+						}
+					},
+					"miss": {
+						"p51": 1,
+						"価格": 1,
+						"欠品": 6,
+						"行列": 8
+					},
+					"needs": 38,
+					"served": 31,
+					"unmet": {
+						"spicy noodle": 7
+					},
+					"visitors": 108
+				},
+				{
+					"buyers": 89,
+					"day": 40,
+					"event": "hero",
+					"event_results": {
+						"hero": {
+							"buyers": 84,
+							"completed": 110
+						}
+					},
+					"miss": {
+						"p0": 2,
+						"p3": 5,
+						"価格": 2,
+						"欠品": 23,
+						"行列": 4,
+						"補充待ち": 4
+					},
+					"needs": 46,
+					"served": 25,
+					"unmet": {
+						"rice": 12,
+						"warm hearty": 9
+					},
+					"visitors": 113
+				},
+				{
+					"buyers": 103,
+					"day": 41,
+					"event": "autumn",
+					"event_results": {
+						"autumn": {
+							"buyers": 100,
+							"completed": 116
+						},
+						"hero": {
+							"buyers": 3,
+							"completed": 3
+						}
+					},
+					"miss": {
+						"p40": 1,
+						"価格": 1,
+						"欠品": 12,
+						"行列": 4
+					},
+					"needs": 51,
+					"served": 38,
+					"unmet": {
+						"sweet seasonal": 13
+					},
+					"visitors": 116
+				},
+				{
+					"buyers": 93,
+					"day": 42,
+					"event": "pudding",
+					"event_results": {
+						"pudding": {
+							"buyers": 93,
+							"completed": 113
+						}
+					},
+					"miss": {
+						"p40": 4,
+						"p64": 2,
+						"価格": 2,
+						"欠品": 23,
+						"行列": 1
+					},
+					"needs": 40,
+					"served": 22,
+					"unmet": {
+						"dessert": 18
+					},
+					"visitors": 114
+				},
+				{
+					"buyers": 105,
+					"day": 43,
+					"event": "cold",
+					"event_results": {
+						"cold": {
+							"buyers": 104,
+							"completed": 106
+						},
+						"pudding": {
+							"buyers": 1,
+							"completed": 1
+						}
+					},
+					"miss": {
+						"行列": 2
+					},
+					"needs": 57,
+					"served": 56,
+					"unmet": {
+						"warm soup": 1
+					},
+					"visitors": 114
+				},
+				{
+					"buyers": 110,
+					"day": 44,
+					"event": "cold",
+					"event_results": {
+						"cold": {
+							"buyers": 110,
+							"completed": 115
+						}
+					},
+					"miss": {
+						"行列": 5
+					},
+					"needs": 60,
+					"served": 58,
+					"unmet": {
+						"warm soup": 2
+					},
+					"visitors": 113
+				},
+				{
+					"buyers": 100,
+					"day": 45,
+					"event": "winter_treats",
+					"event_results": {
+						"cold": {
+							"buyers": 6,
+							"completed": 6
+						},
+						"winter_treats": {
+							"buyers": 94,
+							"completed": 111
+						}
+					},
+					"miss": {
+						"p20": 1,
+						"p40": 2,
+						"欠品": 5,
+						"行列": 4
+					},
+					"needs": 66,
+					"served": 51,
+					"unmet": {
+						"cookie": 3,
+						"dessert": 9,
+						"tea": 3
+					},
+					"visitors": 113
+				},
+				{
+					"buyers": 94,
+					"day": 47,
+					"event": "hero",
+					"event_results": {
+						"hero": {
+							"buyers": 87,
+							"completed": 110
+						}
+					},
+					"miss": {
+						"p3": 4,
+						"p40": 1,
+						"p64": 1,
+						"価格": 1,
+						"欠品": 27,
+						"行列": 1
+					},
+					"needs": 46,
+					"served": 25,
+					"unmet": {
+						"rice": 1,
+						"warm hearty": 20
+					},
+					"visitors": 115
+				},
+				{
+					"buyers": 56,
+					"day": 48,
+					"event": "night_shift",
+					"event_results": {
+						"hero": {
+							"buyers": 5,
+							"completed": 5
+						},
+						"night_shift": {
+							"buyers": 51,
+							"completed": 60
+						}
+					},
+					"miss": {
+						"p64": 1,
+						"価格": 1,
+						"欠品": 1,
+						"行列": 8
+					},
+					"needs": 2,
+					"served": 2,
+					"unmet": {},
+					"visitors": 90
+				},
+				{
+					"buyers": 121,
+					"day": 49,
+					"event": "winter_treats",
+					"event_results": {
+						"night_shift": {
+							"buyers": 26,
+							"completed": 30
+						},
+						"winter_treats": {
+							"buyers": 95,
+							"completed": 111
+						}
+					},
+					"miss": {
+						"p3": 2,
+						"p40": 2,
+						"p64": 2,
+						"価格": 2,
+						"欠品": 10,
+						"行列": 5
+					},
+					"needs": 90,
+					"served": 75,
+					"unmet": {
+						"cookie": 8,
+						"dessert": 3,
+						"warm hearty": 4
+					},
+					"visitors": 112
+				},
+				{
+					"buyers": 91,
+					"day": 51,
+					"event": "office",
+					"event_results": {
+						"office": {
+							"buyers": 84,
+							"completed": 115
+						}
+					},
+					"miss": {
+						"p10": 2,
+						"p21": 2,
+						"価格": 1,
+						"欠品": 28,
+						"行列": 5
+					},
+					"needs": 58,
+					"served": 34,
+					"unmet": {
+						"bread": 15,
+						"coffee": 9
+					},
+					"visitors": 117
+				},
+				{
+					"buyers": 100,
+					"day": 52,
+					"event": "chili",
+					"event_results": {
+						"chili": {
+							"buyers": 98,
+							"completed": 108
+						},
+						"office": {
+							"buyers": 2,
+							"completed": 2
+						}
+					},
+					"miss": {
+						"p0": 2,
+						"価格": 3,
+						"欠品": 6,
+						"行列": 3
+					},
+					"needs": 36,
+					"served": 31,
+					"unmet": {
+						"drink": 1,
+						"spicy noodle": 4
+					},
+					"visitors": 115
+				},
+				{
+					"buyers": 95,
+					"day": 53,
+					"event": "winter_treats",
+					"event_results": {
+						"chili": {
+							"buyers": 7,
+							"completed": 7
+						},
+						"winter_treats": {
+							"buyers": 88,
+							"completed": 114
+						}
+					},
+					"miss": {
+						"p0": 1,
+						"欠品": 1,
+						"行列": 5
+					},
+					"needs": 65,
+					"served": 47,
+					"unmet": {
+						"cookie": 6,
+						"dessert": 6,
+						"tea": 6
+					},
+					"visitors": 116
+				},
+				{
+					"buyers": 87,
+					"day": 54,
+					"event": "hero",
+					"event_results": {
+						"hero": {
+							"buyers": 85,
+							"completed": 107
+						},
+						"winter_treats": {
+							"buyers": 2,
+							"completed": 2
+						}
+					},
+					"miss": {
+						"p0": 1,
+						"p3": 2,
+						"p64": 2,
+						"価格": 2,
+						"欠品": 12,
+						"行列": 4,
+						"補充待ち": 2
+					},
+					"needs": 46,
+					"served": 34,
+					"unmet": {
+						"rice": 3,
+						"warm hearty": 9
+					},
+					"visitors": 112
+				},
+				{
+					"buyers": 98,
+					"day": 55,
+					"event": "neighbors",
+					"event_results": {
+						"hero": {
+							"buyers": 5,
+							"completed": 5
+						},
+						"neighbors": {
+							"buyers": 93,
+							"completed": 113
+						}
+					},
+					"miss": {
+						"p3": 2,
+						"p64": 2,
+						"価格": 1,
+						"欠品": 18,
+						"行列": 5
+					},
+					"needs": 48,
+					"served": 34,
+					"unmet": {
+						"warm hearty": 14
+					},
+					"visitors": 114
+				},
+				{
+					"buyers": 85,
+					"day": 56,
+					"event": "winter_treats",
+					"event_results": {
+						"neighbors": {
+							"buyers": 1,
+							"completed": 1
+						},
+						"winter_treats": {
+							"buyers": 84,
+							"completed": 109
+						}
+					},
+					"miss": {
+						"行列": 5
+					},
+					"needs": 60,
+					"served": 37,
+					"unmet": {
+						"cookie": 5,
+						"dessert": 11,
+						"tea": 7
+					},
+					"visitors": 110
+				}
+			],
+			"metrics": {
+				"cohort": 85,
+				"days": 14,
+				"events": 4,
+				"margin": 0.106324386888253,
+				"pass": false,
+				"repeat": 1.0,
+				"reserve": 38050,
+				"visitors": 1524,
+				"waste": 0.0543501194470724
+			},
+			"result": "won",
+			"seed": 20261052,
+			"star": 5,
+			"stories": [
+				2,
+				3,
+				3,
+				3,
+				1,
+				2,
+				3,
+				3,
+				2,
+				3,
+				3,
+				2
+			],
+			"style": "sweets",
+			"winter": {
+				"completed": 250,
+				"groups": {
+					"cookie": {
+						"completed": 83,
+						"served": 61
+					},
+					"dessert": {
+						"completed": 83,
+						"served": 54
+					},
+					"tea": {
+						"completed": 84,
+						"served": 68
+					}
+				},
+				"pass": true,
+				"plan": "treats",
+				"rate": 0.732,
+				"served": 183
+			}
+		},
+		{
+			"cash": 37027,
+			"commands": 778,
+			"day": 57,
+			"event_days": [
+				{
+					"buyers": 28,
+					"day": 3,
+					"event": "chili",
+					"event_results": {
+						"chili": {
+							"buyers": 28,
+							"completed": 29
+						}
+					},
+					"miss": {
+						"価格": 1
+					},
+					"needs": 11,
+					"served": 11,
+					"unmet": {},
+					"visitors": 31
+				},
+				{
+					"buyers": 26,
+					"day": 5,
+					"event": "hero",
+					"event_results": {
+						"hero": {
+							"buyers": 25,
+							"completed": 39
+						}
+					},
+					"miss": {
+						"p0": 3,
+						"価格": 3,
+						"欠品": 13,
+						"行列": 1
+					},
+					"needs": 14,
+					"served": 4,
+					"unmet": {
+						"rice": 5,
+						"warm hearty": 5
+					},
+					"visitors": 41
+				},
+				{
+					"buyers": 57,
+					"day": 7,
+					"event": "pudding",
+					"event_results": {
+						"pudding": {
+							"buyers": 57,
+							"completed": 82
+						}
+					},
+					"miss": {
+						"p0": 2,
+						"p40": 1,
+						"p61": 2,
+						"価格": 9,
+						"欠品": 19,
+						"行列": 2
+					},
+					"needs": 30,
+					"served": 15,
+					"unmet": {
+						"dessert": 15
+					},
+					"visitors": 82
+				},
+				{
+					"buyers": 57,
+					"day": 8,
+					"event": "office",
+					"event_results": {
+						"office": {
+							"buyers": 57,
+							"completed": 70
+						}
+					},
+					"miss": {
+						"p0": 1,
+						"欠品": 1,
+						"行列": 2
+					},
+					"needs": 33,
+					"served": 20,
+					"unmet": {
+						"bread": 1,
+						"coffee": 12
+					},
+					"visitors": 74
+				},
+				{
+					"buyers": 68,
+					"day": 10,
+					"event": "chili",
+					"event_results": {
+						"chili": {
+							"buyers": 66,
+							"completed": 80
+						}
+					},
+					"miss": {
+						"p51": 3,
+						"価格": 2,
+						"欠品": 11,
+						"行列": 2,
+						"補充待ち": 2
+					},
+					"needs": 26,
+					"served": 16,
+					"unmet": {
+						"spicy noodle": 10
+					},
+					"visitors": 86
+				},
+				{
+					"buyers": 49,
+					"day": 12,
+					"event": "hero",
+					"event_results": {
+						"hero": {
+							"buyers": 48,
+							"completed": 80
+						}
+					},
+					"miss": {
+						"p0": 5,
+						"p61": 2,
+						"価格": 2,
+						"欠品": 26,
+						"行列": 9,
+						"補充待ち": 2
+					},
+					"needs": 34,
+					"served": 12,
+					"unmet": {
+						"rice": 17,
+						"warm hearty": 5
+					},
+					"visitors": 81
+				},
+				{
+					"buyers": 66,
+					"day": 13,
+					"event": "sports",
+					"event_results": {
+						"hero": {
+							"buyers": 1,
+							"completed": 1
+						},
+						"sports": {
+							"buyers": 65,
+							"completed": 86
+						}
+					},
+					"miss": {
+						"価格": 1,
+						"欠品": 19,
+						"行列": 1
+					},
+					"needs": 39,
+					"served": 20,
+					"unmet": {
+						"rice light": 19
+					},
+					"visitors": 86
+				},
+				{
+					"buyers": 70,
+					"day": 14,
+					"event": "pudding",
+					"event_results": {
+						"pudding": {
+							"buyers": 70,
+							"completed": 86
+						}
+					},
+					"miss": {
+						"p0": 1,
+						"p40": 5,
+						"価格": 1,
+						"欠品": 19,
+						"行列": 1,
+						"補充待ち": 1
+					},
+					"needs": 32,
+					"served": 17,
+					"unmet": {
+						"dessert": 15
+					},
+					"visitors": 87
+				},
+				{
+					"buyers": 74,
+					"day": 15,
+					"event": "heat",
+					"event_results": {
+						"heat": {
+							"buyers": 73,
+							"completed": 88
+						},
+						"pudding": {
+							"buyers": 1,
+							"completed": 1
+						}
+					},
+					"miss": {
+						"p20": 2,
+						"p60": 1,
+						"価格": 2,
+						"欠品": 15,
+						"行列": 1
+					},
+					"needs": 46,
+					"served": 34,
+					"unmet": {
+						"drink cold": 12
+					},
+					"visitors": 89
+				},
+				{
+					"buyers": 70,
+					"day": 16,
+					"event": "heat",
+					"event_results": {
+						"heat": {
+							"buyers": 70,
+							"completed": 86
+						}
+					},
+					"miss": {
+						"p20": 2,
+						"価格": 2,
+						"欠品": 13,
+						"行列": 3
+					},
+					"needs": 46,
+					"served": 34,
+					"unmet": {
+						"drink cold": 12
+					},
+					"visitors": 87
+				},
+				{
+					"buyers": 75,
+					"day": 17,
+					"event": "chili",
+					"event_results": {
+						"chili": {
+							"buyers": 74,
+							"completed": 80
+						},
+						"heat": {
+							"buyers": 1,
+							"completed": 2
+						}
+					},
+					"miss": {
+						"p51": 1,
+						"p60": 1,
+						"価格": 1,
+						"欠品": 7,
+						"行列": 1
+					},
+					"needs": 32,
+					"served": 26,
+					"unmet": {
+						"drink cold": 1,
+						"spicy noodle": 5
+					},
+					"visitors": 85
+				},
+				{
+					"buyers": 51,
+					"day": 19,
+					"event": "hero",
+					"event_results": {
+						"hero": {
+							"buyers": 49,
+							"completed": 82
+						}
+					},
+					"miss": {
+						"p61": 2,
+						"価格": 5,
+						"欠品": 28,
+						"行列": 1
+					},
+					"needs": 33,
+					"served": 7,
+					"unmet": {
+						"rice": 16,
+						"warm hearty": 10
+					},
+					"visitors": 86
+				},
+				{
+					"buyers": 71,
+					"day": 20,
+					"event": "summer_break",
+					"event_results": {
+						"hero": {
+							"buyers": 4,
+							"completed": 4
+						},
+						"summer_break": {
+							"buyers": 67,
+							"completed": 86
+						}
+					},
+					"miss": {
+						"p0": 3,
+						"p32": 1,
+						"価格": 1,
+						"欠品": 8,
+						"行列": 13,
+						"補充待ち": 1
+					},
+					"needs": 41,
+					"served": 27,
+					"unmet": {
+						"drink cold": 5,
+						"snack sweet": 9
+					},
+					"visitors": 86
+				},
+				{
+					"buyers": 69,
+					"day": 21,
+					"event": "pudding",
+					"event_results": {
+						"pudding": {
+							"buyers": 69,
+							"completed": 89
+						}
+					},
+					"miss": {
+						"p0": 2,
+						"p40": 4,
+						"価格": 1,
+						"欠品": 17,
+						"行列": 6,
+						"補充待ち": 2
+					},
+					"needs": 32,
+					"served": 17,
+					"unmet": {
+						"dessert": 15
+					},
+					"visitors": 90
+				},
+				{
+					"buyers": 78,
+					"day": 23,
+					"event": "study",
+					"event_results": {
+						"study": {
+							"buyers": 73,
+							"completed": 92
+						}
+					},
+					"miss": {
+						"p21": 1,
+						"p50": 1,
+						"価格": 2,
+						"欠品": 16,
+						"行列": 3
+					},
+					"needs": 47,
+					"served": 32,
+					"unmet": {
+						"coffee": 14,
+						"noodle warm": 1
+					},
+					"visitors": 94
+				},
+				{
+					"buyers": 79,
+					"day": 24,
+					"event": "chili",
+					"event_results": {
+						"chili": {
+							"buyers": 77,
+							"completed": 88
+						},
+						"study": {
+							"buyers": 2,
+							"completed": 2
+						}
+					},
+					"miss": {
+						"p40": 1,
+						"p51": 1,
+						"価格": 2,
+						"欠品": 10,
+						"行列": 1
+					},
+					"needs": 32,
+					"served": 23,
+					"unmet": {
+						"spicy noodle": 9
+					},
+					"visitors": 94
+				},
+				{
+					"buyers": 81,
+					"day": 26,
+					"event": "hero",
+					"event_results": {
+						"hero": {
+							"buyers": 76,
+							"completed": 104
+						}
+					},
+					"miss": {
+						"p0": 2,
+						"p60": 1,
+						"p61": 2,
+						"価格": 3,
+						"欠品": 28,
+						"補充待ち": 2
+					},
+					"needs": 42,
+					"served": 17,
+					"unmet": {
+						"rice": 20,
+						"warm hearty": 5
+					},
+					"visitors": 107
+				},
+				{
+					"buyers": 95,
+					"day": 27,
+					"event": "rain",
+					"event_results": {
+						"hero": {
+							"buyers": 3,
+							"completed": 3
+						},
+						"rain": {
+							"buyers": 92,
+							"completed": 105
+						}
+					},
+					"miss": {
+						"p70": 1,
+						"p73": 4,
+						"欠品": 10,
+						"補充待ち": 4
+					},
+					"needs": 43,
+					"served": 34,
+					"unmet": {
+						"rain": 9
+					},
+					"visitors": 106
+				},
+				{
+					"buyers": 88,
+					"day": 28,
+					"event": "pudding",
+					"event_results": {
+						"pudding": {
+							"buyers": 87,
+							"completed": 110
+						},
+						"rain": {
+							"buyers": 1,
+							"completed": 1
+						}
+					},
+					"miss": {
+						"p40": 4,
+						"価格": 2,
+						"欠品": 21,
+						"行列": 2,
+						"補充待ち": 2
+					},
+					"needs": 37,
+					"served": 17,
+					"unmet": {
+						"dessert": 20
+					},
+					"visitors": 110
+				},
+				{
+					"buyers": 77,
+					"day": 29,
+					"event": "harvest",
+					"event_results": {
+						"harvest": {
+							"buyers": 77,
+							"completed": 100
+						}
+					},
+					"miss": {
+						"p60": 2,
+						"p64": 1,
+						"価格": 1,
+						"欠品": 23,
+						"行列": 2
+					},
+					"needs": 47,
+					"served": 25,
+					"unmet": {
+						"warm seasonal": 22
+					},
+					"visitors": 104
+				},
+				{
+					"buyers": 90,
+					"day": 30,
+					"event": "autumn",
+					"event_results": {
+						"autumn": {
+							"buyers": 88,
+							"completed": 106
+						},
+						"harvest": {
+							"buyers": 2,
+							"completed": 4
+						}
+					},
+					"miss": {
+						"価格": 2,
+						"欠品": 15,
+						"行列": 3
+					},
+					"needs": 49,
+					"served": 33,
+					"unmet": {
+						"sweet seasonal": 14,
+						"warm seasonal": 2
+					},
+					"visitors": 111
+				},
+				{
+					"buyers": 90,
+					"day": 31,
+					"event": "chili",
+					"event_results": {
+						"autumn": {
+							"buyers": 3,
+							"completed": 5
+						},
+						"chili": {
+							"buyers": 87,
+							"completed": 109
+						}
+					},
+					"miss": {
+						"p20": 1,
+						"p60": 1,
+						"p64": 1,
+						"欠品": 12,
+						"行列": 13
+					},
+					"needs": 39,
+					"served": 25,
+					"unmet": {
+						"drink": 5,
+						"spicy noodle": 9
+					},
+					"visitors": 113
+				},
+				{
+					"buyers": 71,
+					"day": 33,
+					"event": "hero",
+					"event_results": {
+						"hero": {
+							"buyers": 67,
+							"completed": 107
+						}
+					},
+					"miss": {
+						"p0": 3,
+						"p64": 2,
+						"価格": 2,
+						"欠品": 12,
+						"行列": 3
+					},
+					"needs": 46,
+					"served": 14,
+					"unmet": {
+						"rice": 16,
+						"warm hearty": 16
+					},
+					"visitors": 111
+				},
+				{
+					"buyers": 103,
+					"day": 34,
+					"event": "books",
+					"event_results": {
+						"books": {
+							"buyers": 99,
+							"completed": 112
+						},
+						"hero": {
+							"buyers": 4,
+							"completed": 4
+						}
+					},
+					"miss": {
+						"p60": 2,
+						"p64": 1,
+						"欠品": 9,
+						"行列": 5
+					},
+					"needs": 49,
+					"served": 38,
+					"unmet": {
+						"cookie": 6,
+						"tea": 5
+					},
+					"visitors": 113
+				},
+				{
+					"buyers": 92,
+					"day": 35,
+					"event": "pudding",
+					"event_results": {
+						"books": {
+							"buyers": 1,
+							"completed": 1
+						},
+						"pudding": {
+							"buyers": 91,
+							"completed": 112
+						}
+					},
+					"miss": {
+						"p40": 2,
+						"p64": 1,
+						"価格": 3,
+						"欠品": 20,
+						"行列": 1
+					},
+					"needs": 41,
+					"served": 24,
+					"unmet": {
+						"dessert": 17
+					},
+					"visitors": 112
+				},
+				{
+					"buyers": 77,
+					"day": 37,
+					"event": "office",
+					"event_results": {
+						"office": {
+							"buyers": 71,
+							"completed": 107
+						}
+					},
+					"miss": {
+						"p10": 2,
+						"p21": 1,
+						"価格": 2,
+						"欠品": 23,
+						"満員": 5,
+						"行列": 9
+					},
+					"needs": 54,
+					"served": 24,
+					"unmet": {
+						"bread": 13,
+						"coffee": 17
+					},
+					"visitors": 110
+				},
+				{
+					"buyers": 95,
+					"day": 38,
+					"event": "chili",
+					"event_results": {
+						"chili": {
+							"buyers": 92,
+							"completed": 107
+						},
+						"office": {
+							"buyers": 3,
+							"completed": 3
+						}
+					},
+					"miss": {
+						"p21": 1,
+						"p64": 1,
+						"価格": 4,
+						"欠品": 8,
+						"行列": 5
+					},
+					"needs": 40,
+					"served": 30,
+					"unmet": {
+						"spicy noodle": 10
+					},
+					"visitors": 113
+				},
+				{
+					"buyers": 95,
+					"day": 40,
+					"event": "hero",
+					"event_results": {
+						"hero": {
+							"buyers": 87,
+							"completed": 113
+						}
+					},
+					"miss": {
+						"p0": 3,
+						"p51": 1,
+						"p60": 3,
+						"p64": 1,
+						"価格": 1,
+						"欠品": 23,
+						"行列": 5,
+						"補充待ち": 3
+					},
+					"needs": 46,
+					"served": 25,
+					"unmet": {
+						"rice": 10,
+						"warm hearty": 11
+					},
+					"visitors": 115
+				},
+				{
+					"buyers": 99,
+					"day": 41,
+					"event": "autumn",
+					"event_results": {
+						"autumn": {
+							"buyers": 98,
+							"completed": 112
+						},
+						"hero": {
+							"buyers": 1,
+							"completed": 2
+						}
+					},
+					"miss": {
+						"p64": 1,
+						"価格": 3,
+						"欠品": 8,
+						"行列": 4,
+						"補充待ち": 1
+					},
+					"needs": 49,
+					"served": 40,
+					"unmet": {
+						"sweet seasonal": 9
+					},
+					"visitors": 112
+				},
+				{
+					"buyers": 92,
+					"day": 42,
+					"event": "pudding",
+					"event_results": {
+						"pudding": {
+							"buyers": 92,
+							"completed": 112
+						}
+					},
+					"miss": {
+						"p40": 1,
+						"p64": 2,
+						"価格": 2,
+						"欠品": 18,
+						"行列": 3
+					},
+					"needs": 36,
+					"served": 21,
+					"unmet": {
+						"dessert": 15
+					},
+					"visitors": 112
+				},
+				{
+					"buyers": 108,
+					"day": 43,
+					"event": "cold",
+					"event_results": {
+						"cold": {
+							"buyers": 108,
+							"completed": 112
+						}
+					},
+					"miss": {
+						"p54": 1,
+						"p60": 2,
+						"p64": 1,
+						"欠品": 6,
+						"行列": 2
+					},
+					"needs": 63,
+					"served": 60,
+					"unmet": {
+						"warm soup": 3
+					},
+					"visitors": 114
+				},
+				{
+					"buyers": 105,
+					"day": 44,
+					"event": "cold",
+					"event_results": {
+						"cold": {
+							"buyers": 105,
+							"completed": 111
+						}
+					},
+					"miss": {
+						"p64": 1,
+						"価格": 1,
+						"欠品": 2,
+						"行列": 4
+					},
+					"needs": 54,
+					"served": 51,
+					"unmet": {
+						"warm soup": 3
+					},
+					"visitors": 113
+				},
+				{
+					"buyers": 85,
+					"day": 45,
+					"event": "winter_night",
+					"event_results": {
+						"cold": {
+							"buyers": 3,
+							"completed": 4
+						},
+						"winter_night": {
+							"buyers": 82,
+							"completed": 106
+						}
+					},
+					"miss": {
+						"p21": 1,
+						"p64": 1,
+						"欠品": 7,
+						"満員": 12,
+						"行列": 8
+					},
+					"needs": 62,
+					"served": 43,
+					"unmet": {
+						"coffee": 9,
+						"warm hearty": 6,
+						"warm soup": 4
+					},
+					"visitors": 112
+				},
+				{
+					"buyers": 100,
+					"day": 47,
+					"event": "hero",
+					"event_results": {
+						"hero": {
+							"buyers": 94,
+							"completed": 104
+						}
+					},
+					"miss": {
+						"p0": 2,
+						"p3": 2,
+						"p40": 2,
+						"p60": 2,
+						"価格": 1,
+						"欠品": 8,
+						"行列": 4,
+						"補充待ち": 2
+					},
+					"needs": 42,
+					"served": 36,
+					"unmet": {
+						"rice": 3,
+						"warm hearty": 3
+					},
+					"visitors": 108
+				},
+				{
+					"buyers": 61,
+					"day": 48,
+					"event": "night_shift",
+					"event_results": {
+						"hero": {
+							"buyers": 4,
+							"completed": 4
+						},
+						"night_shift": {
+							"buyers": 57,
+							"completed": 63
+						}
+					},
+					"miss": {
+						"p64": 1,
+						"欠品": 1,
+						"行列": 6
+					},
+					"needs": 1,
+					"served": 1,
+					"unmet": {},
+					"visitors": 98
+				},
+				{
+					"buyers": 102,
+					"day": 49,
+					"event": "winter_night",
+					"event_results": {
+						"night_shift": {
+							"buyers": 10,
+							"completed": 35
+						},
+						"winter_night": {
+							"buyers": 92,
+							"completed": 103
+						}
+					},
+					"miss": {
+						"p3": 2,
+						"価格": 1,
+						"欠品": 33,
+						"行列": 3,
+						"補充待ち": 1
+					},
+					"needs": 88,
+					"served": 56,
+					"unmet": {
+						"warm hearty": 32
+					},
+					"visitors": 109
+				},
+				{
+					"buyers": 97,
+					"day": 51,
+					"event": "office",
+					"event_results": {
+						"office": {
+							"buyers": 92,
+							"completed": 113
+						}
+					},
+					"miss": {
+						"p10": 2,
+						"p21": 2,
+						"p30": 1,
+						"価格": 3,
+						"欠品": 21,
+						"行列": 2,
+						"補充待ち": 2
+					},
+					"needs": 58,
+					"served": 40,
+					"unmet": {
+						"bread": 14,
+						"coffee": 4
+					},
+					"visitors": 115
+				},
+				{
+					"buyers": 100,
+					"day": 52,
+					"event": "chili",
+					"event_results": {
+						"chili": {
+							"buyers": 98,
+							"completed": 105
+						},
+						"office": {
+							"buyers": 2,
+							"completed": 2
+						}
+					},
+					"miss": {
+						"p0": 1,
+						"p40": 1,
+						"p60": 2,
+						"p64": 1,
+						"欠品": 9,
+						"行列": 3
+					},
+					"needs": 36,
+					"served": 32,
+					"unmet": {
+						"spicy noodle": 4
+					},
+					"visitors": 112
+				},
+				{
+					"buyers": 90,
+					"day": 53,
+					"event": "winter_night",
+					"event_results": {
+						"chili": {
+							"buyers": 7,
+							"completed": 7
+						},
+						"winter_night": {
+							"buyers": 83,
+							"completed": 104
+						}
+					},
+					"miss": {
+						"p3": 2,
+						"p64": 2,
+						"価格": 1,
+						"欠品": 10,
+						"満員": 7,
+						"行列": 7
+					},
+					"needs": 59,
+					"served": 43,
+					"unmet": {
+						"coffee": 4,
+						"warm hearty": 8,
+						"warm soup": 4
+					},
+					"visitors": 113
+				},
+				{
+					"buyers": 108,
+					"day": 54,
+					"event": "hero",
+					"event_results": {
+						"hero": {
+							"buyers": 99,
+							"completed": 108
+						},
+						"winter_night": {
+							"buyers": 9,
+							"completed": 9
+						}
+					},
+					"miss": {
+						"p3": 1,
+						"p60": 3,
+						"p64": 1,
+						"価格": 1,
+						"欠品": 4,
+						"行列": 4,
+						"補充待ち": 1
+					},
+					"needs": 52,
+					"served": 46,
+					"unmet": {
+						"rice": 4,
+						"warm hearty": 2
+					},
+					"visitors": 112
+				},
+				{
+					"buyers": 104,
+					"day": 55,
+					"event": "neighbors",
+					"event_results": {
+						"hero": {
+							"buyers": 4,
+							"completed": 4
+						},
+						"neighbors": {
+							"buyers": 100,
+							"completed": 114
+						}
+					},
+					"miss": {
+						"p3": 1,
+						"p64": 1,
+						"価格": 1,
+						"欠品": 1,
+						"行列": 12,
+						"補充待ち": 1
+					},
+					"needs": 51,
+					"served": 41,
+					"unmet": {
+						"sweet": 4,
+						"warm hearty": 6
+					},
+					"visitors": 117
+				},
+				{
+					"buyers": 82,
+					"day": 56,
+					"event": "winter_night",
+					"event_results": {
+						"neighbors": {
+							"buyers": 2,
+							"completed": 3
+						},
+						"winter_night": {
+							"buyers": 80,
+							"completed": 85
+						}
+					},
+					"miss": {
+						"p64": 1,
+						"欠品": 1,
+						"行列": 6
+					},
+					"needs": 38,
+					"served": 37,
+					"unmet": {
+						"warm soup": 1
+					},
+					"visitors": 112
+				}
+			],
+			"metrics": {
+				"cohort": 110,
+				"days": 14,
+				"events": 7,
+				"margin": 0.00639348907948844,
+				"pass": false,
+				"repeat": 1.0,
+				"reserve": 37840,
+				"visitors": 1554,
+				"waste": 0.0962378814652085
+			},
+			"result": "deadline",
+			"seed": 20261052,
+			"star": 4,
+			"stories": [
+				2,
+				3,
+				2,
+				3,
+				1,
+				3,
+				3,
+				3,
+				1,
+				3,
+				3,
+				3
+			],
+			"style": "night",
+			"winter": {
+				"completed": 222,
+				"groups": {
+					"coffee": {
+						"completed": 74,
+						"served": 61
+					},
+					"warm hearty": {
+						"completed": 71,
+						"served": 48
+					},
+					"warm soup": {
+						"completed": 77,
+						"served": 69
+					}
+				},
+				"pass": true,
+				"plan": "night",
+				"rate": 0.801801801801802,
+				"served": 178
+			}
+		}
+	],
+	"runs": 8
+}

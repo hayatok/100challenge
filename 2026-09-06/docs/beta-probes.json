@@ -1,0 +1,146 @@
+{
+  "stage": "B1/B2 early beta work; exploratory, not completion evidence",
+  "base": "ea3dfe10ae7fe2aa941b5b975bfeb7da12071a95",
+  "results": [
+    {
+      "cash": -370,
+      "commands": 0,
+      "day": 23,
+      "metrics": {
+        "cohort": 0,
+        "days": 0,
+        "events": 0,
+        "margin": 0.0,
+        "pass": false,
+        "repeat": 0.0,
+        "reserve": 12145,
+        "visitors": 0,
+        "waste": 0.0
+      },
+      "result": "debt",
+      "seed": 20260906,
+      "star": 0,
+      "style": "neglect"
+    },
+    {
+      "cash": 150885,
+      "commands": 0,
+      "day": 57,
+      "metrics": {
+        "cohort": 0,
+        "days": 0,
+        "events": 0,
+        "margin": 0.0,
+        "pass": false,
+        "repeat": 0.0,
+        "reserve": 12145,
+        "visitors": 0,
+        "waste": 0.0
+      },
+      "result": "deadline",
+      "seed": 20260906,
+      "star": 3,
+      "style": "uniform"
+    },
+    {
+      "cash": -350,
+      "commands": 0,
+      "day": 20,
+      "metrics": {
+        "cohort": 0,
+        "days": 0,
+        "events": 0,
+        "margin": 0.0,
+        "pass": false,
+        "repeat": 0.0,
+        "reserve": 12145,
+        "visitors": 0,
+        "waste": 0.0
+      },
+      "result": "debt",
+      "seed": 20260906,
+      "star": 0,
+      "style": "markup"
+    },
+    {
+      "cash": 183441,
+      "commands": 279,
+      "day": 37,
+      "metrics": {
+        "cohort": 84,
+        "days": 14,
+        "events": 2,
+        "margin": 0.218482505366055,
+        "pass": true,
+        "repeat": 1.0,
+        "reserve": 21865,
+        "visitors": 1506,
+        "waste": 0.0191495151749524
+      },
+      "result": "won",
+      "seed": 20260906,
+      "star": 5,
+      "style": "staples"
+    },
+    {
+      "cash": 183323,
+      "commands": 262,
+      "day": 37,
+      "metrics": {
+        "cohort": 87,
+        "days": 14,
+        "events": 3,
+        "margin": 0.209670368278062,
+        "pass": true,
+        "repeat": 1.0,
+        "reserve": 21865,
+        "visitors": 1572,
+        "waste": 0.0205024508235535
+      },
+      "result": "won",
+      "seed": 20260906,
+      "star": 5,
+      "style": "morning"
+    },
+    {
+      "cash": 169790,
+      "commands": 284,
+      "day": 37,
+      "metrics": {
+        "cohort": 85,
+        "days": 14,
+        "events": 3,
+        "margin": 0.218520854049946,
+        "pass": true,
+        "repeat": 1.0,
+        "reserve": 21865,
+        "visitors": 1527,
+        "waste": 0.03713021458435
+      },
+      "result": "won",
+      "seed": 20260906,
+      "star": 5,
+      "style": "sweets"
+    },
+    {
+      "cash": 231780,
+      "commands": 22,
+      "day": 57,
+      "metrics": {
+        "cohort": 90,
+        "days": 14,
+        "events": 1,
+        "margin": 0.186128486670783,
+        "pass": false,
+        "repeat": 1.0,
+        "reserve": 21865,
+        "visitors": 1508,
+        "waste": 0.0
+      },
+      "result": "deadline",
+      "seed": 20260906,
+      "star": 4,
+      "style": "fixed_plan"
+    }
+  ]
+}
