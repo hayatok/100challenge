@@ -123,5 +123,14 @@ static func make_image(identity:int,direction:int=1,frame:int=0,staff:bool=false
 		rect(img,4,21+left,3,1,ink);rect(img,8,21+right,3,1,ink)
 	if pose=="browse" and not back:rect(img,12,11,2,2,skin);rect(img,12,13,2,2,colors.C)
 	if pose=="joy":rect(img,1,11,2,3,skin);rect(img,2,14,2,2,colors.C)
+	if pose in ["carry","wait","surprised"]:
+		rect(img,3,14,2,3,Color.TRANSPARENT);rect(img,12,14,2,3,Color.TRANSPARENT)
+		rect(img,3,12,2,2,colors.C);rect(img,12,12,2,2,colors.C)
+		if pose=="carry":rect(img,4,13,2,2,skin);rect(img,12,13,2,2,skin)
+		elif pose=="wait":
+			rect(img,4,14,7,2,colors.C);rect(img,8,14,3,1,skin);rect(img,7,14,1,1,Color(COLORS[12]))
+		else:
+			rect(img,11,10,2,2,skin);rect(img,12,12,2,2,colors.C)
+			if not back:rect(img,5,7,2,1,ink);rect(img,9,7,2,1,ink);rect(img,7,10,2,2,ink)
 	if direction in [0,2]:img.flip_x()
 	return img

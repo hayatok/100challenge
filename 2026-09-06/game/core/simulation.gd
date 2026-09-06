@@ -679,6 +679,7 @@ func update_registers():
 		var receipt={"day":s.day,"items":names,"products":v.basket.map(func(l):return int(l.product)),"price":v.spent,"wait":v.wait,"minute":minute(),"event":event_for(s.day).id,"weather":weather_for(s.day)}
 		receipt.story_feedback=Stories.feedback(Stories.request(r),receipt)
 		r.history.push_front(receipt)
+		v.purchase={"at":s.tick,"products":receipt.products.duplicate()}
 		if r.history.size()>8:r.history.resize(8)
 		var chapter=Stories.record(r,receipt)
 		if chapter>=0:

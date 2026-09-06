@@ -49,7 +49,6 @@ var intro=true
 var ui_scale=1.0
 var rebind=""
 var modal_notice:Label
-var last_sale=-1
 var last_star=0
 var sidebar_key=""
 var side_updates=[]
@@ -196,14 +195,12 @@ func _process(delta):
 	view.animating=not intro and not paused and not modal.visible and sim.s.result.is_empty()
 	if view.animating:
 		accum+=minf(delta,0.25)*speed*4
-		while accum>=1:sim.step();Guide.update(sim);accum-=1
+		while accum>=1:sim.step();Guide.update(sim);sound.observe(sim);accum-=1
 	view.interp=accum;view.reduced=bool(view.reduced)
 	sound.night=sim.minute()<360 or sim.minute()>1140
 	ui_clock+=delta
 	if ui_clock>0.5:
 		ui_clock=0;refresh()
-		if not sim.s.effects.is_empty() and sim.s.effects[-1].kind=="good" and sim.s.effects[-1].time!=last_sale:
-			last_sale=sim.s.effects[-1].time;sound.effect("sale")
 		if sim.s.day>1 and sim.s.tick%1440<3:save_game(false)
 	if sim.s.result.is_empty():result_shown=""
 	if not sim.s.result.is_empty() and result_shown!=sim.s.result:result_shown=sim.s.result;show_result()
@@ -253,7 +250,7 @@ func refresh():
 	header_cash.text=money(s.cash)
 	star_label.text="★".repeat(s.star)+"☆".repeat(5-s.star)
 	if s.star>last_star:
-		last_star=s.star;notice("五つ星獲得！ 冬の約束を、最後まで。" if s.star==5 else "祝・"+str(s.star)+"つ星！ 仕入れ先・設備・街の住人が広がりました。");sound.effect("good")
+		last_star=s.star;notice("五つ星獲得！ 冬の約束を、最後まで。" if s.star==5 else "祝・"+str(s.star)+"つ星！ 仕入れ先・設備・街の住人が広がりました。");sound.effect("star")
 	pause_button.text="結果を見る" if not s.result.is_empty() else ("営業を再開" if paused else "一時停止")
 	for i in 3:speed_buttons[i].button_pressed=speed==[1,2,4][i]
 	news.text=(str(s.day)+"日 "+time_string(sim.minute())+" · " if size.x<900 else "")+sim.event_for(s.day).name+"  ·  店内 "+str(s.visits.filter(func(v):return v.pos.x>=0).size())+"人"
@@ -841,7 +838,7 @@ func load_game(path:String=""):
 	if file==null:return
 	var value=file.get_var();file.close()
 	if typeof(value)!=TYPE_DICTIONARY or not value.has("game") or not value.game.has("residents"):toast.text="お店を読み込めませんでした。";return
-	sim.s=value.game;var layout_notice=sim.restore_spatial_state();var storage_notice=sim.restore_storage_state();view.sim=sim;view.invalidate();last_star=sim.s.star
+	sim.s=value.game;sound.reset_observer();var layout_notice=sim.restore_spatial_state();var storage_notice=sim.restore_storage_state();view.sim=sim;view.invalidate();last_star=sim.s.star
 	if not storage_notice.is_empty():layout_notice+="\n"+storage_notice
 	for actor in sim.s.visits+sim.s.staff:actor.prev=actor.pos
 	var config=value.get("settings",{});sound.music_volume=config.get("music",0.24);sound.effects_volume=config.get("effects",0.45);sound.ambient_volume=config.get("ambient",0.16);view.reduced=config.get("reduced",false)

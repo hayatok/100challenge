@@ -1,6 +1,8 @@
 extends Control
 const Nav=preload("res://core/navigation.gd")
 const People=preload("res://pixel_people.gd")
+const Props=preload("res://pixel_props.gd")
+const Life=preload("res://core/life.gd")
 const Cat=preload("res://core/catalog.gd")
 signal picked(kind:String,id:int)
 signal placed(cell:Vector2i)
@@ -687,15 +689,18 @@ func draw_person(a:Dictionary,kind:String):
 	poly([base+Vector2(-13,0),base+Vector2(0,-5),base+Vector2(13,0),base+Vector2(0,6)],Color(0.13,0.23,0.2,0.19))
 	var dir=int(a.get("dir",0))
 	var identity=int(r.id)
-	var pose="joy" if not staff and a.bought else ("browse" if not staff and a.state=="browsing" else "idle")
+	var appearance=Life.appearance(sim,a,staff,reduced)
+	var pose=appearance.pose
 	var frame=(1+int(clock*6)%2) if moving and not reduced else 0
 	var sprite=People.texture(identity,dir,frame,staff,pose)
 	var dest=Rect2((base+Vector2(-16,-46)).snapped(Vector2(2,2)),Vector2(32,48))
+	var props:Texture2D=null
+	var prop_rect=Rect2((base+Vector2(-32,-78)).snapped(Vector2(2,2)),Vector2(64,80))
+	if not appearance.prop.is_empty() or appearance.umbrella>0:
+		props=Props.texture(appearance.prop,appearance.umbrella,identity,dir)
+	if props!=null and dir in [2,3]:draw_texture_rect(props,prop_rect,false,Color(1,1,1,painter_alpha))
 	draw_texture_rect(sprite,dest,false,Color(1,1,1,painter_alpha))
-	if not staff and a.bought:
-		box(at.x+0.2,at.y+0.15,0.20,0.16,10,Color("dfc392"),14)
-		if r.history.size()>0 and "会議が長引くほど長いパン" in r.history[0].items:box(at.x+0.2,at.y+0.15,0.1,0.1,28,Color("c29458"),20)
-	if staff and not a.carry.is_empty():box(at.x+0.15,at.y+0.15,0.35,0.25,13,Color("c49e68"),20)
+	if props!=null and dir in [0,1]:draw_texture_rect(props,prop_rect,false,Color(1,1,1,painter_alpha))
 	if staff and a.task=="clean":line(base+Vector2(7,-22),base+Vector2(19,3),Color("b78d62"),2)
 	if not staff and sim.event_for(sim.s.day).id=="hero" and r.id%3==0:
 		poly([base+Vector2(-12,-34),base+Vector2(-16,-10),base+Vector2(-5,-14)],Color("be695b"))
