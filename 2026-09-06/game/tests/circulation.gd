@@ -101,7 +101,7 @@ func _init():
 		for f in game.s.fixtures:
 			if not Nav.is_register(f):continue
 			max_queue=maxi(max_queue,f.queue.size())
-			if not captured and game.s.visits.filter(func(v):return v.target==f.id and v.state in ["paying","queue"]).size()>=3:
+			if "--qa" in OS.get_cmdline_user_args() and not captured and game.s.visits.filter(func(v):return v.target==f.id and v.state in ["paying","queue"]).size()>=3:
 				var snapshot=FileAccess.open("user://qa-current.save",FileAccess.WRITE)
 				snapshot.store_var({"game":game.s,"settings":{}});snapshot.close();captured=true
 				print("CIRCULATION QA snapshot: day ",game.s.day," minute ",game.minute()," queue ",f.queue.size())

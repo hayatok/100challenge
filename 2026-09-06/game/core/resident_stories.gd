@@ -14,7 +14,7 @@ const REQUESTS=[
 [
 {"hint":"読書のお供にパンを探しています。","all":["bread"]},
 {"hint":"お茶と焼き菓子を、同じ店で買えたら。","all":["tea","cookie"]},
-{"hint":"週末の読書セット。お茶と焼き菓子を2日、待ち時間8分以内。","all":["tea","cookie"],"days":2,"wait":8}],
+{"hint":"週末の読書セット。土・日にお茶と焼き菓子を計2日、待ち時間8分以内。","all":["tea","cookie"],"days":2,"wait":8,"weekdays":[5,6]}],
 [
 {"hint":"昼休みが短いので、お米の昼食を待ち時間10分以内で。","all":["rice"],"wait":10},
 {"hint":"しっかりした昼食と飲み物を、待ち時間10分以内で。","all":["rice hearty","drink"],"wait":10},
@@ -72,26 +72,40 @@ static func wants_more(r:Dictionary,ids:Array) -> bool:
 		return unique.size()<req.distinct
 	return false
 static func matches(req:Dictionary,receipt:Dictionary) -> bool:
+	return missing(req,receipt).is_empty()
+static func group_label(group:String) -> String:
+	return "・".join(Array(group.split(" ")).map(func(tag):return Goods.TAG_LABELS.get(tag,tag)))
+static func missing(req:Dictionary,receipt:Dictionary) -> Array:
+	var reasons=[]
 	for group in req.get("all",[]):
-		if not basket_has(receipt.products,group):return false
-	if receipt.wait>req.get("wait",10000) or receipt.price>req.get("budget",100000):return false
-	if receipt.minute>=req.get("before",1441):return false
-	if req.has("event") and receipt.event!=req.event:return false
-	if req.has("weather") and receipt.weather!=req.weather:return false
+		if not basket_has(receipt.products,group):reasons.append("不足："+group_label(group))
+	if receipt.wait>req.get("wait",10000):reasons.append("レジ待ち%d分（上限%d分）"%[receipt.wait,req.wait])
+	if receipt.price>req.get("budget",100000):reasons.append("予算%d円を超えました"%req.budget)
+	if receipt.minute>=req.get("before",1441):reasons.append("会計が%02d:%02d以降でした"%[req.before/60,req.before%60])
+	if req.has("event") and receipt.event!=req.event:reasons.append("総選挙の日を待っています")
+	if req.has("weather") and receipt.weather!=req.weather:reasons.append(req.weather+"の日の買い物が必要です")
+	if req.has("weekdays") and not (int(receipt.day)-1)%7 in req.weekdays:reasons.append("土・日の買い物が必要です")
 	if req.has("distinct"):
 		var distinct={}
 		for id in receipt.products:
 			if id/10==req.distinct_cat:distinct[id]=true
-		if distinct.size()<req.distinct:return false
-	return true
+		if distinct.size()<req.distinct:reasons.append("違う商品%d種類 / 必要%d種類"%[distinct.size(),req.distinct])
+	return reasons
+static func feedback(req:Dictionary,receipt:Dictionary) -> String:
+	if req.is_empty():return ""
+	var reasons=missing(req,receipt)
+	return "願いに合う買い物ができました。" if reasons.is_empty() else " / ".join(reasons)
 static func record(r:Dictionary,receipt:Dictionary) -> int:
 	var req=request(r)
 	if req.is_empty() or not matches(req,receipt):return -1
 	var dates:Array=r.get("story_days",[])
-	if not dates.has(receipt.day):dates.append(receipt.day)
+	if not dates.has(receipt.day):
+		dates.append(receipt.day)
+		var receipts:Array=r.get("story_receipts",[]);receipts.append(receipt.duplicate(true));r.story_receipts=receipts
 	r.story_days=dates
 	if dates.size()<req.get("days",1):return -1
 	var chapter=int(r.episode);r.episode+=1;r.story_days=[]
+	var evidence:Dictionary=r.get("story_evidence",{});evidence[chapter]=r.get("story_receipts",[]).duplicate(true);r.story_evidence=evidence;r.story_receipts=[]
 	r.loyalty=minf(100,r.loyalty+8)
 	return chapter
 static func progress_text(r:Dictionary) -> String:
@@ -104,5 +118,9 @@ static func relevance(r:Dictionary,product:int,basket:Array) -> float:
 	var need=0
 	for group in req.get("all",[]):
 		if not basket_has(basket,group) and product_matches(product,group):need+=1
-	if req.has("distinct") and product/10==req.distinct_cat and not basket.has(product):need+=1
+	if req.has("distinct") and product/10==req.distinct_cat and not basket.has(product):
+		var unique={}
+		for id in basket:
+			if id/10==req.distinct_cat:unique[id]=true
+		if unique.size()<req.distinct:need+=1
 	return minf(44,need*30.0)

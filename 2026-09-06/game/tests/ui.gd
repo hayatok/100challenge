@@ -12,6 +12,10 @@ func run():
 			await process_frame;await process_frame
 			screens+=1
 			inspect(main,dimensions.x,screen)
+		main.resident_filter="story";main.open_residents()
+		await process_frame;await process_frame
+		screens+=1;inspect(main,dimensions.x,"story residents");inspect_story_labels(main.modal)
+		main.resident_filter="all"
 	root.size=Vector2i(1440,900);main.configure_viewport();main.close_modal()
 	main.on_pick("resident",0)
 	await process_frame
@@ -50,3 +54,11 @@ func find_button(node:Node,text:String):
 		var match_button=find_button(child,text)
 		if match_button!=null:return match_button
 	return null
+func inspect_story_labels(node:Node):
+	if node is Button and node.text.contains("物語 ") and node.text.ends_with("/3"):
+		var font=node.get_theme_font("font");var font_size=node.get_theme_font_size("font_size")
+		var style=node.get_theme_stylebox("normal")
+		var available=node.size.x-style.get_content_margin(SIDE_LEFT)-style.get_content_margin(SIDE_RIGHT)
+		if font.get_string_size(node.text,HORIZONTAL_ALIGNMENT_LEFT,-1,font_size).x>available:
+			errors+=1;printerr("Story progress is clipped: ",node.text)
+	for child in node.get_children():inspect_story_labels(child)

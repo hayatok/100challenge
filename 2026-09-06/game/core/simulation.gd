@@ -279,6 +279,7 @@ func return_goods(lots:Array):
 func repath_all():
 	for f in s.fixtures:f.queue=[];f.clerk=-1
 	for v in s.visits:
+		v.erase("wait_spot")
 		v.path=[];v.target=-1
 		if v.state=="leaving":v.path=Nav.path(v.pos,exit_point(v),s.fixtures,s.tier)
 		elif v.pos.x<0:v.state="entering";v.path=Nav.path(v.pos,Nav.DOOR,s.fixtures,s.tier)
@@ -396,9 +397,10 @@ func move_actor(a:Dictionary) -> bool:
 		if a.path.is_empty():return false
 		next=a.path[0]
 	if a.has("task") and a.path.size()==1 and s.visits.any(func(v):return v.pos==next):return false
+	if a.get("state","")=="entering" and a.path.size()==1 and s.visits.any(func(v):return v!=a and v.pos==next):return false
 	var blocked={}
 	for v in s.visits:
-		if v!=a and v.state in ["browsing","browse_queue","queue","paying"]:blocked[v.pos]=true
+		if v!=a and (v.state in ["browsing","browse_queue","queue","paying"] or (v.state=="choose" and v.get("wait_spot",Vector2i(-99,-99))==v.pos)):blocked[v.pos]=true
 	for w in s.staff:
 		if w!=a and working(w) and w.task in ["register","stock"] and w.path.is_empty():blocked[w.pos]=true
 	if blocked.has(next):
@@ -418,21 +420,61 @@ func need_name(group:String) -> String:
 	return "・".join(words)
 func browse_line(fixture_id:int) -> Array:
 	var head=Nav.access(fixture(fixture_id))
-	var line=s.visits.filter(func(v):return v.target==fixture_id and (v.state in ["walking","browse_queue","browsing"] or (v.state=="choose" and not v.basket.is_empty() and v.pos==head)))
+	var line=s.visits.filter(func(v):return v.target==fixture_id and (v.state in ["walking","browse_queue","browsing"] or (v.state=="choose" and v.pos==head)))
 	line.sort_custom(func(a,b):return a.get("browse_ticket",a.id)<b.get("browse_ticket",b.id))
 	return line
+
+func shelf_route(v:Dictionary,destination:Vector2i,line:Array,cells:Array) -> Array:
+	var reserved={}
+	for i in mini(line.size(),cells.size()):
+		if line[i]!=v:reserved[cells[i]]=true
+	return Nav.path(v.pos,destination,s.fixtures,s.tier,false,reserved)
+
+func wait_for_shelf(v:Dictionary):
+	# A full shelf is a reason to wait in the shop, not to pile up on the doorway.
+	if not v.has("wait_spot"):
+		var blocked=Nav.obstacles(s.fixtures,false)
+		for f in s.fixtures:
+			blocked[Nav.access(f)]=true
+			for cell in (Nav.queue_cells(f,s.fixtures,s.tier) if Nav.is_register(f) else Nav.browse_cells(f,s.fixtures,s.tier)):blocked[cell]=true
+		for other in s.visits:
+			if other!=v:blocked[other.pos]=true;blocked[other.get("wait_spot",other.pos)]=true
+		for w in s.staff:
+			if w.hired:blocked[w.pos]=true
+		var spots=[];var dims=Nav.dimensions(s.tier)
+		for x in range(2,dims.x):
+			for y in range(3,dims.y):
+				var at=Vector2i(x,y)
+				if not blocked.has(at):spots.append(at)
+		spots.sort_custom(func(a,b):return Vector2(a-v.pos).length_squared()<Vector2(b-v.pos).length_squared())
+		for at in spots:
+			var path=Nav.path(v.pos,at,s.fixtures,s.tier,false,blocked)
+			if at==v.pos or not path.is_empty():v.wait_spot=at;v.path=path;break
+	if v.has("wait_spot") and v.pos!=v.wait_spot:move_actor(v)
+	v.mood="先の人が選ぶのを待とう"
 
 func move_to_shelf(v:Dictionary):
 	var f=fixture(v.target)
 	if f.is_empty() or f.product!=v.wanted or f.ready>s.tick:v.state="choose";return
-	var index=browse_line(f.id).find(v);var cells=Nav.browse_cells(f,s.fixtures,s.tier)
+	var line=browse_line(f.id);var index=line.find(v);var cells=Nav.browse_cells(f,s.fixtures,s.tier)
 	if index<0 or index>=cells.size():v.state="choose";return
 	var destination:Vector2i=cells[index];v.browse_slot=destination
 	if v.pos!=destination:
-		if v.path.is_empty() or v.path[-1]!=destination:v.path=Nav.path(v.pos,destination,s.fixtures,s.tier)
+		var reserved={}
+		for i in mini(line.size(),cells.size()):
+			if line[i]!=v:reserved[cells[i]]=true
+		if v.path.is_empty() or v.path[-1]!=destination or v.path.any(func(p):return reserved.has(p)):v.path=shelf_route(v,destination,line,cells)
 		# The next shopper takes the place only after its previous occupant has left.
 		var occupied=s.visits.any(func(other):return other.id!=v.id and other.pos==destination)
 		occupied=occupied or s.staff.any(func(w):return working(w) and w.pos==destination)
+		# Resolve an old crossed approach by stepping aside, never swapping occupied slots.
+		if occupied and reserved.has(v.pos):
+			for direction in Nav.DIRS:
+				var at:Vector2i=v.pos+direction
+				if cells.has(at) or Nav.obstacles(s.fixtures,false).has(at) or not Nav.inside(at,Nav.dimensions(s.tier)) or not Nav.connected(v.pos,at):continue
+				if s.visits.any(func(other):return other!=v and (other.pos==at or other.get("wait_spot",other.pos)==at)):continue
+				if s.staff.any(func(w):return w.hired and w.pos==at):continue
+				v.path=[at];move_actor(v);v.state="walking";return
 		if not (v.path.size()==1 and occupied):move_actor(v)
 	if v.pos!=destination:return
 	if index==0:v.state="browsing";v.timer=2;v.dir=Nav.DIRS.find(Vector2i(f.x,f.y)-v.pos)
@@ -440,6 +482,7 @@ func move_to_shelf(v:Dictionary):
 
 func choose(v:Dictionary):
 	var r=s.residents[v.rid];var best={};var best_score=-1000.0
+	var best_wish=false
 	var offered=0;var stocked=0;var affordable=0;var reachable=0;var busy=false
 	var need=v.get("need","");var basket_ids=v.basket.map(func(l):return int(l.product))
 	var seeking=not need.is_empty() and not Stories.basket_has(basket_ids,need)
@@ -458,18 +501,22 @@ func choose(v:Dictionary):
 		if not holding and line.size()>=cells.size():busy=true;continue
 		var slot:Vector2i=cells[0] if holding else cells[line.size()]
 		if s.visits.any(func(other):return other.target!=f.id and other.state in ["walking","browse_queue","browsing"] and other.get("browse_slot",other.pos)==slot):busy=true;continue
-		var path=Nav.path(v.pos,slot,s.fixtures,s.tier)
+		var path=shelf_route(v,slot,line,cells)
 		if path.is_empty() and v.pos!=slot:continue
 		reachable+=1
 		var cat=products[p].cat
-		var personal=Goods.affinity(r.id,p)+Stories.relevance(r,p,basket_ids)
+		var relevance=Stories.relevance(r,p,basket_ids)
+		var wish=not seeking and relevance>0
+		var personal=Goods.affinity(r.id,p)+relevance
 		var score=personal+r.taste[cat]*35+(40 if cat==v.goal or seeking else 0)+products[p].quality*12-price/float(r.budget)*35-path.size()*0.65+rng.randf()*8
 		var premium=price/float(products[p].price)-1.0
 		score-=premium*145.0*r.get("price_sensitivity",1.0)
 		if v.attempts>0:score-=counts(v.basket,p)*35
-		if score>best_score:best_score=score;best={"fixture":f.id,"product":p,"path":path,"slot":slot,"holding":holding}
+		# Buy the missing part of an explicit shopping list before optional repeats.
+		if (wish and not best_wish) or (wish==best_wish and score>best_score):
+			best_wish=wish;best_score=score;best={"fixture":f.id,"product":p,"path":path,"slot":slot,"holding":holding}
 	if best.is_empty() or best_score<25:
-		if best.is_empty() and busy:v.mood="先の人が選ぶのを待とう";return
+		if best.is_empty() and busy:wait_for_shelf(v);return
 		if v.basket.is_empty():
 			var reason="価格"
 			if offered==0:reason="品揃え"
@@ -481,6 +528,7 @@ func choose(v:Dictionary):
 			r.last_reason=v.mood;leave(v,false)
 		else:v.state="checkout"
 		return
+	v.erase("wait_spot")
 	v.target=best.fixture;v.wanted=best.product;v.path=best.path;v.browse_slot=best.slot;v.browse_ticket=v.get("browse_ticket",v.id) if best.holding else s.tick*10000+v.id;v.state="walking";v.mood=products[best.product].name+"が気になる"
 
 func update_visits():
@@ -515,7 +563,8 @@ func update_visits():
 				if v.spent+price>v.budget:v.state="checkout";continue
 				v.basket.append_array(take(f.lots,p,1));v.spent+=price;v.attempts+=1
 				v.mood=joke_for(v.rid,p)
-				if counts(v.basket)<4 and v.attempts<5 and (Stories.wants_more(r,v.basket.map(func(l):return int(l.product))) or rng.randf()<0.70):v.state="choose"
+				var has_wish=not Stories.request(r).is_empty()
+				if counts(v.basket)<4 and v.attempts<5 and (Stories.wants_more(r,v.basket.map(func(l):return int(l.product))) or (not has_wish and rng.randf()<0.70)):v.state="choose"
 				else:v.state="checkout"
 			"checkout":
 				if v.basket.is_empty():leave(v,false);continue
@@ -578,6 +627,7 @@ func record_visit_outcome(v:Dictionary,success:bool):
 		s.today.winter_results[v.need]=tally
 
 func leave(v:Dictionary,success:bool):
+	v.erase("wait_spot")
 	if v.state=="leaving":return
 	record_visit_outcome(v,success)
 	var r=s.residents[v.rid]
@@ -627,6 +677,7 @@ func update_registers():
 		var names=[]
 		for l in v.basket:names.append(products[l.product].name)
 		var receipt={"day":s.day,"items":names,"products":v.basket.map(func(l):return int(l.product)),"price":v.spent,"wait":v.wait,"minute":minute(),"event":event_for(s.day).id,"weather":weather_for(s.day)}
+		receipt.story_feedback=Stories.feedback(Stories.request(r),receipt)
 		r.history.push_front(receipt)
 		if r.history.size()>8:r.history.resize(8)
 		var chapter=Stories.record(r,receipt)

@@ -32,6 +32,7 @@ func _init():
 				var state=FileAccess.open("user://qa-"+style+".save",FileAccess.WRITE);state.store_var(game.s);state.close()
 	var output_path="res://../docs/balance-quick.json" if "--quick" in args else "res://../docs/balance-results.json"
 	if "--seed-count" in args:output_path="res://../docs/balance-part-"+str(start)+".json"
+	if "--output" in args:output_path=args[args.find("--output")+1]
 	var output=FileAccess.open(output_path,FileAccess.WRITE)
 	output.store_string(JSON.stringify({"runs":results.size(),"failures":failures,"results":results},"\t"));output.close()
 	print("BALANCE: ",results.size()," runs, ",failures," unexpected outcomes")

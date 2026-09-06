@@ -374,11 +374,19 @@ func resident_mood(id:int) -> String:
 	return "いまは街で過ごしています。"
 func history_text(id:int) -> String:
 	var r=sim.s.residents[id];var lines=[]
-	for h in r.history.slice(0,3):lines.append(str(h.day)+"日目  "+money(h.price)+"\n"+"・".join(h.items))
+	for h in r.history.slice(0,3):
+		var text=str(h.day)+"日目（"+Cat.DAYS[(int(h.day)-1)%7]+"）"+(time_string(h.minute) if h.has("minute") else "")+" "+h.get("weather","")+"  "+money(h.price)+"\n"+"・".join(h.items)
+		if h.has("wait"):text+="\nレジ待ち "+str(h.wait)+"分"
+		if not h.get("story_feedback","").is_empty():text+="\n"+h.story_feedback
+		lines.append(text)
 	return "まだお会計していません。" if lines.is_empty() else "\n\n".join(lines)
 func episode_text(id:int) -> String:
 	var r=sim.s.residents[id];var lines=[]
-	for chapter in r.episode:lines.append(Cat.EPISODES[id][chapter*2]+"\n「"+Cat.EPISODES[id][chapter*2+1]+"」")
+	for chapter in r.episode:
+		var text=Cat.EPISODES[id][chapter*2]+"\n「"+Cat.EPISODES[id][chapter*2+1]+"」"
+		for receipt in r.get("story_evidence",{}).get(chapter,[]):
+			text+="\n"+str(receipt.day)+"日目 "+time_string(receipt.minute)+" / "+"・".join(receipt.items)
+		lines.append(text)
 	return "顔なじみになると、お話を聞けます。" if lines.is_empty() else "\n\n".join(lines)
 func if_modal_detail():
 	if modal.visible and modal_title=="選択したもの":open_detail()
@@ -516,7 +524,7 @@ func open_residents():
 	open_modal("あかり町の住人")
 	wrapped("訪問した人の好みと買い物が、品揃えのヒント。常連度35で『いつもの店』になります。",modal_content,13,MUTED)
 	var filter_row=flow(modal_content)
-	for entry in [["全員","all"],["訪問済み","met"],["常連","regular"],["お気に入り","favorite"]]:
+	for entry in [["全員","all"],["物語のある人","story"],["訪問済み","met"],["常連","regular"],["お気に入り","favorite"]]:
 		var b=button(entry[0],filter_row,func():resident_filter=entry[1];open_residents());b.toggle_mode=true;b.button_pressed=resident_filter==entry[1]
 	var search=LineEdit.new();search.placeholder_text="名前で検索";search.text=search_text;modal_content.add_child(search)
 	var list=VBoxContainer.new();modal_content.add_child(list)
@@ -527,7 +535,9 @@ func open_residents():
 			if resident_filter=="met" and r.visits==0:continue
 			if resident_filter=="regular" and r.loyalty<35:continue
 			if resident_filter=="favorite" and not r.favorite:continue
+			if resident_filter=="story" and r.id>=12:continue
 			var text=r.name+"  /  "+r.job+"  /  "+("まだ会っていない" if r.visits==0 else ("常連" if r.loyalty>=35 else "顔なじみ")+" · 来店"+str(r.visits)+"回")
+			if resident_filter=="story":text=r.name+"　物語 "+str(r.episode)+"/3"
 			button(text,list,func():selected_kind="resident";selected_id=r.id;view.selected_kind="resident";view.selected_id=r.id;open_detail())
 		if list.get_child_count()==0:wrapped("該当する住人はいません。",list)
 	search.text_changed.connect(func(v):search_text=v;populate.call());populate.call()

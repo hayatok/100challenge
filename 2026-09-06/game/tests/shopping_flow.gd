@@ -39,5 +39,22 @@ func _init():
 	clerk.task="idle";clerk.path=[];clerk.pos=Nav.access(shelf);clerk.fatigue=90
 	game.update_staff()
 	check(clerk.task=="rest" and not clerk.path.is_empty() and clerk.path[-1]==Nav.DEPOT,"Rest without a bench blocked the shop aisle")
+	# Reproduce the crossed approach found during the 49th morning of normal play.
+	game=Sim.new();shelf=game.fixture(7);shelf.product=73;shelf.lots=[game.lot(73,20)]
+	cells=Nav.browse_cells(shelf,game.s.fixtures,game.s.tier)
+	game.s.schedule=[{"at":0,"rid":90,"wait":0},{"at":0,"rid":91,"wait":0}];game.spawn_due()
+	for i in 2:
+		var v=game.s.visits[i];v.pos=cells[1-i];v.prev=v.pos;v.state="walking";v.target=shelf.id;v.wanted=73;v.need="rain";v.budget=1000;v.browse_ticket=i;v.path=[cells[i]]
+	var crossed=game.s.visits.duplicate()
+	for minute in 100:game.step()
+	check(crossed.all(func(v):return v.bought),"Crossed shelf approach remained deadlocked instead of stepping aside")
+	# Busy shoppers need different waiting places away from the doorway.
+	game=Sim.new();game.s.schedule=[{"at":0,"rid":90,"wait":0},{"at":0,"rid":91,"wait":0}];game.spawn_due()
+	for v in game.s.visits:v.pos=Nav.DOOR;v.prev=v.pos;v.state="choose";v.path=[];game.wait_for_shelf(v)
+	var waiters=game.s.visits.duplicate()
+	check(waiters.all(func(v):return v.has("wait_spot") and v.wait_spot!=Nav.DOOR) and waiters[0].wait_spot!=waiters[1].wait_spot,"Busy shelf waiters shared the doorway or waiting place")
+	for minute in 30:
+		for v in waiters:game.wait_for_shelf(v)
+	check(waiters.all(func(v):return v.pos==v.wait_spot),"Waiting area could not be reached")
 	print("SHOPPING FLOW: concurrent approach, physical shelf line, completed payments and staff yielding; ",failures.size()," failures")
 	quit(1 if failures else 0)

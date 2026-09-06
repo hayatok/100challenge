@@ -79,7 +79,9 @@ func update(game):
 		if s.day>=43 and style!="fixed_plan":target+=8*maxi(0,s.fixtures.filter(func(bay):return bay.product==p).size()-1)
 		if int(s.targets.get(p,0))!=target:do(game,"target",{"product":p,"amount":target})
 		var price=1
-		if style=="morning" and p==0:price=0
+		# Once customers are being turned away, stop the introductory rice discount.
+		# Extra demand has become a capacity cost, even while the shop is profitable.
+		if style=="morning" and p==0 and not s.reports.any(func(report):return report.miss.get("満員",0)>0):price=0
 		if style!="fixed_plan" and game.stock_expiring(p)>maxf(2,mean*0.25):price=0
 		if int(s.prices.get(p,1))!=price:do(game,"price",{"product":p,"level":price})
 	if s.star>=4 and s.review.get("status","") not in ["active","passed"] and s.day<=42:do(game,"review")
