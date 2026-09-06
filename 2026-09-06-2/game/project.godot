@@ -1,0 +1,15 @@
+config_version=5
+[application]
+config/name="へんないきものの系譜"
+config/description="なんでこうなった。遺伝する生き物の観察ゲーム"
+run/main_scene="res://main.tscn"
+config/features=PackedStringArray("4.7", "GL Compatibility")
+[display]
+window/size/viewport_width=1440
+window/size/viewport_height=900
+window/stretch/mode="disabled"
+[rendering]
+renderer/rendering_method="gl_compatibility"
+renderer/rendering_method.mobile="gl_compatibility"
+environment/defaults/default_clear_color=Color(0.97,0.95,0.88,1)
+textures/default_filters/use_nearest_mipmap_filter=false
