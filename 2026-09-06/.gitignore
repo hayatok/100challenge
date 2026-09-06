@@ -6,3 +6,4 @@ game/.godot/
 *.tmp
 
 docs/balance-quick.json
+docs/balance-part-*.json

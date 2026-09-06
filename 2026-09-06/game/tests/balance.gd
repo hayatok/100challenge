@@ -6,7 +6,8 @@ func _init():
 	var start=0
 	var args=OS.get_cmdline_user_args()
 	if "--seed-index" in args:start=int(args[args.find("--seed-index")+1])
-	var seed_count=1 if "--quick" in OS.get_cmdline_user_args() else 10
+	var seed_count=1 if "--quick" in args else 10
+	if "--seed-count" in args:seed_count=int(args[args.find("--seed-count")+1])
 	for seed_index in range(start,start+seed_count):
 		for style in ["neglect","uniform","markup","staples","morning","sweets"]:
 			var game=Sim.new(20260906+seed_index*73);var strategy=Strategy.new(style)
@@ -27,7 +28,9 @@ func _init():
 				var replay=FileAccess.open("res://../docs/replay-"+style+".json",FileAccess.WRITE)
 				replay.store_string(JSON.stringify({"seed":game.s.seed,"commands":strategy.commands},"\t"));replay.close()
 				var state=FileAccess.open("user://qa-"+style+".save",FileAccess.WRITE);state.store_var(game.s);state.close()
-	var output=FileAccess.open("res://../docs/balance-quick.json" if seed_count==1 else "res://../docs/balance-results.json",FileAccess.WRITE)
+	var output_path="res://../docs/balance-quick.json" if "--quick" in args else "res://../docs/balance-results.json"
+	if "--seed-count" in args:output_path="res://../docs/balance-part-"+str(start)+".json"
+	var output=FileAccess.open(output_path,FileAccess.WRITE)
 	output.store_string(JSON.stringify({"runs":results.size(),"failures":failures,"results":results},"\t"));output.close()
 	print("BALANCE: ",results.size()," runs, ",failures," unexpected outcomes")
 	quit(1 if failures else 0)

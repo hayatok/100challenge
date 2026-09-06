@@ -11,10 +11,12 @@ func _init(world_seed:int=20260906):
 
 func reset(world_seed:int):
 	rng.seed=world_seed
-	s={"seed":world_seed,"rng":rng.state,"tick":0,"day":1,"cash":42000,"tier":0,"star":0,"residents":Catalog.residents(world_seed),"staff":Catalog.staff(),"fixtures":[],"warehouse":[],"orders":[],"visits":[],"next_visit":0,"next_fixture":0,"prices":{},"targets":{},"auto":false,"auto_limit":8000,"reports":[],"today":new_report(1),"logs":[],"effects":[],"schedule":[],"clean":100.0,"loan":false,"debt":0,"due":0,"review":{},"pending_review":false,"won":false,"result":"","practice":false,"tutorial":0,"favorites":[],"streak":0,"seasons_profit":[],"event_pass":false,"elapsed":0,"episode_events":[]}
+	s={"layout_version":2,"seed":world_seed,"rng":rng.state,"tick":0,"day":1,"cash":42000,"tier":0,"star":0,"residents":Catalog.residents(world_seed),"staff":Catalog.staff(),"fixtures":[],"warehouse":[],"orders":[],"visits":[],"next_visit":0,"next_fixture":0,"prices":{},"targets":{},"auto":false,"auto_limit":8000,"reports":[],"today":new_report(1),"logs":[],"effects":[],"schedule":[],"clean":100.0,"loan":false,"debt":0,"due":0,"review":{},"pending_review":false,"won":false,"result":"","practice":false,"tutorial":0,"favorites":[],"streak":0,"seasons_profit":[],"event_pass":false,"elapsed":0,"episode_events":[]}
 	for cat in 8:
 		var kind=[0,0,1,0,1,0,3,4][cat]
-		var f=make_fixture(kind,3+(cat%3)*3,3+(cat/3)*2,0)
+		var layout=[Vector3i(5,3,3),Vector3i(6,3,1),Vector3i(5,0,0),Vector3i(5,5,3),Vector3i(6,0,0),Vector3i(6,5,1),Vector3i(2,9,3),Vector3i(11,4,3)]
+		var cell:Vector3i=layout[cat]
+		var f=make_fixture(kind,cell.x,cell.y,cell.z)
 		f.product=cat*10
 		f.lots=[lot(cat*10,12)]
 		s.fixtures.append(f)
@@ -145,10 +147,11 @@ func command(name:String,args:Dictionary={}) -> String:
 			for v in s.visits:positions.append(v.pos)
 			for w in s.staff:
 				if w.hired:positions.append(w.pos)
-			var error=Nav.validate(draft,s.tier,positions)
+			var error=Nav.validate(draft,s.tier,positions,not s.get("layout_needs_review",false))
 			if not error.is_empty():return error
 			if name=="place":s.cash-=equipment[kind].cost;s.today.investment+=equipment[kind].cost;s.next_fixture+=1
 			s.fixtures=draft
+			s.layout_needs_review=not Nav.validate(draft,s.tier).is_empty()
 			repath_all()
 			log_message(equipment[kind].name+"を"+("設置" if name=="place" else "移設")+"。15分後に使えます。")
 		"remove":
@@ -165,6 +168,8 @@ func command(name:String,args:Dictionary={}) -> String:
 			var cost=[26000,60000][s.tier]
 			if s.cash<cost:return "増床資金が足りません。"
 			s.cash-=cost;s.today.investment+=cost;s.tier+=1
+			for v in s.visits:
+				if v.state=="leaving":v.path=Nav.path(v.pos,exit_point(v),s.fixtures,s.tier)
 			log_message("新しい床、新しい悩み。店が広くなりました！")
 		"hire":
 			var id=int(args.id)
@@ -246,9 +251,44 @@ func return_goods(lots:Array):
 func repath_all():
 	for f in s.fixtures:f.queue=[];f.clerk=-1
 	for v in s.visits:
-		v.path=[];v.state="choose" if v.basket.is_empty() else "checkout";v.target=-1
+		v.path=[];v.target=-1
+		if v.state=="leaving":v.path=Nav.path(v.pos,exit_point(v),s.fixtures,s.tier)
+		elif v.pos.x<0:v.state="entering";v.path=Nav.path(v.pos,Nav.DOOR,s.fixtures,s.tier)
+		else:v.state="choose" if v.basket.is_empty() else "checkout"
 	for w in s.staff:
 		return_goods(w.carry);w.carry=[];w.path=[];w.task="idle";w.target=-1
+
+func restore_spatial_state() -> String:
+	if s.get("layout_version",0)>=2:return ""
+	# Correct only the unchanged factory layout; preserve every lot and account.
+	var factory=true
+	for i in 9:
+		var f=fixture(i)
+		var old=Vector3i(2,7,3) if i==8 else Vector3i(3+(i%3)*3,3+(i/3)*2,0)
+		if f.is_empty() or Vector3i(f.x,f.y,f.dir)!=old:factory=false;break
+	var corrected=false
+	if factory:
+		var draft=s.fixtures.duplicate(true)
+		var layout=[Vector3i(5,3,3),Vector3i(6,3,1),Vector3i(5,0,0),Vector3i(5,5,3),Vector3i(6,0,0),Vector3i(6,5,1),Vector3i(2,9,3),Vector3i(11,4,3),Vector3i(2,7,3)]
+		for f in draft:
+			if f.id<9:f.x=layout[f.id].x;f.y=layout[f.id].y;f.dir=layout[f.id].z
+		if Nav.validate(draft,s.tier).is_empty():s.fixtures=draft;corrected=true
+	s.layout_version=2
+	# Saved actors are resumed on a free adjacent floor cell if an old fixture moved under them.
+	var blocked=Nav.obstacles(s.fixtures,false)
+	for actor in s.visits+s.staff:
+		if blocked.has(actor.pos):
+			for d in Nav.DIRS:
+				var next:Vector2i=actor.pos+d
+				if not blocked.has(next) and Nav.reachable(next,Nav.DOOR,s.fixtures,s.tier,true):actor.pos=next;break
+		actor.prev=actor.pos
+	repath_all()
+	s.layout_needs_review=not Nav.validate(s.fixtures,s.tier).is_empty()
+	if s.layout_needs_review:return "以前の配置を維持しました。建設からレジ裏と待機列を空けるよう移設してください。"
+	return "旧版の初期配置と動線を修正しました。在庫と資金はそのままです。" if corrected else ""
+
+func exit_point(v:Dictionary) -> Vector2i:
+	return Nav.street_end(s.tier,v.rid%2==0)
 
 func step(minutes:int=1):
 	for _i in minutes:
@@ -267,6 +307,8 @@ func step(minutes:int=1):
 		for w in s.staff:expire(w.carry)
 		if s.tick%30==0:
 			if s.auto and s.today.orders<s.auto_limit:auto_order()
+		for v in s.visits:v.prev=v.pos
+		for w in s.staff:w.prev=w.pos
 		spawn_due()
 		update_staff()
 		update_visits()
@@ -291,6 +333,8 @@ func spawn_due():
 			due.wait+=1
 			if due.wait>30:miss("満員");s.today.visitors+=1;s.schedule.remove_at(i)
 			continue
+		var spawn=Nav.street_end(s.tier,due.rid%2!=0)
+		if s.visits.any(func(v):return v.pos==spawn):continue
 		var r=s.residents[due.rid];var event=event_for(s.day)
 		var goal=r.fav
 		if minute()<600 and r.id%3==0:goal=0
@@ -300,23 +344,30 @@ func spawn_due():
 		if season()==0 and rng.randf()<0.1:goal=1
 		if season()==2 and rng.randf()<0.15:goal=4
 		var budget=roundi(r.budget*rng.randf_range(0.8,1.15))
-		var v={"id":s.next_visit,"rid":r.id,"pos":Nav.DOOR,"prev":Nav.DOOR,"path":[],"state":"choose","target":-1,"basket":[],"spent":0,"budget":budget,"goal":goal,"wait":0,"timer":0,"steps":0,"attempts":0,"wanted":-1,"mood":"今日は何にしよう","since":s.tick,"bought":false,"dir":0}
+		var v={"id":s.next_visit,"rid":r.id,"pos":spawn,"prev":spawn,"path":Nav.path(spawn,Nav.DOOR,s.fixtures,s.tier),"state":"entering","target":-1,"basket":[],"spent":0,"budget":budget,"goal":goal,"wait":0,"timer":0,"steps":0,"attempts":0,"wanted":-1,"mood":"今日は何にしよう","since":s.tick,"bought":false,"dir":0}
 		s.next_visit+=1;s.visits.append(v);s.schedule.remove_at(i);s.today.visitors+=1;r.visits+=1
 		if r.favorite:log_message(r.name+"さんが来店しました。")
 
 func move_actor(a:Dictionary) -> bool:
-	a.prev=a.pos
 	if a.path.is_empty():return true
 	var next:Vector2i=a.path[0]
-	var crowd=0
+	var blocked={}
 	for v in s.visits:
-		if v.pos==next:crowd+=1
-	if crowd>1 and s.tick%3!=0:return false
+		if v!=a and v.state in ["browsing","queue","paying"]:blocked[v.pos]=true
+	for w in s.staff:
+		if w!=a and working(w) and w.task in ["register","stock"] and w.path.is_empty():blocked[w.pos]=true
+	if blocked.has(next):
+		var destination:Vector2i=a.path[-1]
+		if blocked.has(destination):return false
+		var detour=Nav.path(a.pos,destination,s.fixtures,s.tier,a.has("task"),blocked)
+		if detour.is_empty():return false
+		a.path=detour;next=a.path[0]
 	a.dir=Nav.DIRS.find(next-a.pos)
 	a.pos=next;a.path.pop_front()
 	return a.path.is_empty()
+
 func choose(v:Dictionary):
-	var r=s.residents[v.rid];var best={};var best_score=-1000.0;var viable=0;var affordable=0
+	var r=s.residents[v.rid];var best={};var best_score=-1000.0;var viable=0;var affordable=0;var busy=false
 	for f in s.fixtures:
 		var p=int(f.product)
 		if p<0 or f.ready>s.tick:continue
@@ -325,6 +376,7 @@ func choose(v:Dictionary):
 		var price=selling_price(p)
 		if price+v.spent>v.budget:continue
 		affordable+=1
+		if s.visits.any(func(other):return other.id!=v.id and other.target==f.id and other.state in ["walking","browsing"]):busy=true;continue
 		var path=Nav.path(v.pos,Nav.access(f),s.fixtures,s.tier)
 		if path.is_empty() and v.pos!=Nav.access(f):continue
 		var cat=products[p].cat
@@ -336,6 +388,7 @@ func choose(v:Dictionary):
 		if v.attempts>0:score-=counts(v.basket,p)*35
 		if score>best_score:best_score=score;best={"fixture":f.id,"product":p,"path":path}
 	if best.is_empty() or best_score<25:
+		if best.is_empty() and busy:v.mood="先の人が選ぶのを待とう";return
 		if v.basket.is_empty():
 			miss("価格" if viable>0 and affordable==0 else "欠品")
 			v.mood="お財布と相談…" if viable>0 else "棚にないみたい";r.last_reason=v.mood
@@ -345,14 +398,29 @@ func choose(v:Dictionary):
 	v.target=best.fixture;v.wanted=best.product;v.path=best.path;v.state="walking";v.mood=products[best.product].name+"が気になる"
 
 func update_visits():
+	# People who have physically joined a line precede distant reservations.
+	for f in s.fixtures:
+		if not Nav.is_register(f):continue
+		var arrived=[];var approaching=[]
+		for id in f.queue:
+			for v in s.visits:
+				if v.id==id:
+					if v.get("queued",false):arrived.append(id)
+					else:approaching.append(id)
+		f.queue=arrived+approaching
 	var remove=[]
 	for v in s.visits:
 		var r=s.residents[v.rid]
-		if s.tick-v.since>240 and v.state not in ["paying","leaving"]:leave(v,false)
+		if s.tick-v.since>240 and v.state not in ["paying","leaving","entering"]:leave(v,false)
 		match v.state:
+			"entering":
+				if move_actor(v) and v.pos==Nav.DOOR:v.state="choose"
 			"choose":choose(v)
 			"walking":
-				if move_actor(v):v.state="browsing";v.timer=2
+				if move_actor(v):
+					var destination=fixture(v.target)
+					if not destination.is_empty() and v.pos==Nav.access(destination):v.state="browsing";v.timer=2;v.dir=Nav.DIRS.find(Vector2i(destination.x,destination.y)-v.pos)
+					else:v.state="choose"
 			"browsing":
 				v.timer-=1
 				if v.timer>0:continue
@@ -372,23 +440,34 @@ func update_visits():
 				var best={};var score=100000.0
 				for f in s.fixtures:
 					if equipment[f.kind].kind!="register" or f.ready>s.tick:continue
-					var path=Nav.path(v.pos,Nav.access(f),s.fixtures,s.tier)
-					if path.is_empty() and v.pos!=Nav.access(f):continue
+					var cells=Nav.queue_cells(f,s.fixtures,s.tier)
+					if f.queue.size()>=cells.size():continue
+					var goal:Vector2i=cells[f.queue.size()]
+					var path=Nav.path(v.pos,goal,s.fixtures,s.tier)
+					if path.is_empty() and v.pos!=goal:continue
 					var n=path.size()+f.queue.size()*5+(10 if f.clerk<0 else 0)
 					if n<score:score=n;best={"f":f,"path":path}
-				if best.is_empty():leave(v,false);miss("通行");continue
-				v.target=best.f.id;v.path=best.path;v.state="to_queue";v.wait=0
-			"to_queue":
-				if move_actor(v):
-					var f=fixture(v.target)
-					if f.is_empty():v.state="checkout";continue
-					f.queue.append(v.id);v.state="queue";v.mood="お会計、お願いします"
-			"queue":
-				v.wait+=1
+				if best.is_empty():
+					v.wait+=1;v.mood="列が空くのを待とう"
+					if v.wait>r.patience+comfort():leave(v,false);miss("行列")
+					continue
+				v.target=best.f.id;v.path=best.path;v.state="to_queue";best.f.queue.append(v.id)
+			"to_queue","queue":
+				var f=fixture(v.target)
+				if f.is_empty():v.state="checkout";continue
+				var cells=Nav.queue_cells(f,s.fixtures,s.tier);var index=f.queue.find(v.id)
+				if index<0 or index>=cells.size():f.queue.erase(v.id);v.state="checkout";continue
+				var destination:Vector2i=cells[index]
+				if v.pos!=destination:
+					if v.path.is_empty() or v.path[-1]!=destination:v.path=Nav.path(v.pos,destination,s.fixtures,s.tier)
+					move_actor(v)
+				if v.pos==destination:v.state="queue";v.queued=true;v.mood="お会計、お願いします"
+				else:v.state="to_queue"
+				if v.get("queued",false):v.wait+=1
 				if v.wait>r.patience+comfort():
 					miss("行列");v.mood="時間がない。また今度…";r.last_reason=v.mood;leave(v,false)
 			"leaving":
-				if move_actor(v):remove.append(v)
+				if move_actor(v) and v.pos==exit_point(v) and v.prev==v.pos:remove.append(v)
 	for v in remove:s.visits.erase(v)
 
 func joke_for(rid:int,p:int) -> String:
@@ -404,7 +483,7 @@ func leave(v:Dictionary,success:bool):
 	for f in s.fixtures:f.queue.erase(v.id)
 	if not success:
 		return_goods(v.basket);v.basket=[];r.loyalty=maxf(0,r.loyalty-3);r.satisfaction=maxf(0,r.satisfaction-8)
-	v.state="leaving";v.path=Nav.path(v.pos,Nav.DOOR,s.fixtures,s.tier)
+	v.state="leaving";v.path=Nav.path(v.pos,exit_point(v),s.fixtures,s.tier)
 	v.bought=success
 
 func update_registers():
@@ -416,7 +495,8 @@ func update_registers():
 			if a.id==f.queue[0]:v=a;break
 		if v.is_empty():f.queue.pop_front();continue
 		var w=s.staff[f.clerk]
-		if v.state=="queue":v.state="paying";f.pay_timer=maxi(2,roundi((3+counts(v.basket))*1.4/(w.register*equipment[f.kind].speed*(1-w.fatigue*0.0035))))
+		if w.pos!=Nav.clerk(f) or w.task!="register" or not working(w) or v.pos!=Nav.access(f) or v.state not in ["queue","paying"]:continue
+		if v.state=="queue":v.dir=Nav.DIRS.find(Vector2i(f.x,f.y)-v.pos);v.state="paying";f.pay_timer=maxi(2,roundi((3+counts(v.basket))*1.4/(w.register*equipment[f.kind].speed*(1-w.fatigue*0.0035))))
 		f.pay_timer-=1
 		if f.pay_timer>0:continue
 		var r=s.residents[v.rid];var cost=0
@@ -455,12 +535,15 @@ func update_staff():
 	for f in s.fixtures:
 		if f.clerk>=0:
 			var w=s.staff[f.clerk]
-			if not working(w) or w.task!="register" or w.target!=f.id:f.clerk=-1
+			if not working(w) or w.task!="register" or w.target!=f.id:
+				f.clerk=-1;f.pay_timer=0
+				for v in s.visits:
+					if v.target==f.id and v.state=="paying":v.state="queue";v.mood="交代を待っています"
 	for w in s.staff:
 		if not w.hired:continue
 		if not working(w):
 			if w.task!="off":
-				return_goods(w.carry);w.carry=[];w.task="off";w.path=Nav.path(w.pos,Nav.DEPOT,s.fixtures,s.tier)
+				return_goods(w.carry);w.carry=[];w.task="off";w.path=Nav.path(w.pos,Nav.DEPOT,s.fixtures,s.tier,true)
 			move_actor(w);w.fatigue=maxf(0,w.fatigue-0.4);continue
 		s.today.work_minutes[w.id]=s.today.work_minutes.get(w.id,0)+1
 		w.fatigue+=0.14
@@ -472,13 +555,13 @@ func update_staff():
 		if w.fatigue>85 and w.task=="idle":
 			w.task="rest";w.timer=25;w.recovery=1.8
 			for f in s.fixtures:
-				if equipment[f.kind].kind=="rest" and f.ready<=s.tick:w.timer=10 if f.kind==19 else 15;w.recovery=4.5 if f.kind==19 else 3.0;w.path=Nav.path(w.pos,Nav.access(f),s.fixtures,s.tier);break
+				if equipment[f.kind].kind=="rest" and f.ready<=s.tick:w.timer=10 if f.kind==19 else 15;w.recovery=4.5 if f.kind==19 else 3.0;w.path=Nav.path(w.pos,Nav.access(f),s.fixtures,s.tier,true);break
 			continue
 		if w.task=="register":
 			var f=fixture(w.target)
 			if f.is_empty():w.task="idle";continue
-			if move_actor(w):
-				f.clerk=w.id;w.timer+=1
+			if move_actor(w) and w.pos==Nav.clerk(f):
+				f.clerk=w.id;w.timer+=1;w.dir=Nav.DIRS.find(Vector2i(f.x,f.y)-w.pos)
 				if f.queue.is_empty() and w.timer>5:f.clerk=-1;w.task="idle"
 			continue
 		if w.task=="depot":
@@ -487,7 +570,7 @@ func update_staff():
 				if f.is_empty() or f.product<0:w.task="idle";continue
 				var room=int((equipment[f.kind].capacity-volume(f.lots))/products[f.product].size)
 				w.carry=take(s.warehouse,f.product,mini(room,roundi(7*w.stock*(1-w.fatigue*0.003))))
-				w.path=Nav.path(w.pos,Nav.access(f),s.fixtures,s.tier);w.task="stock";w.timer=2
+				w.path=Nav.path(w.pos,Nav.access(f),s.fixtures,s.tier,true);w.task="stock";w.timer=2
 			continue
 		if w.task=="stock":
 			if move_actor(w):
@@ -523,7 +606,7 @@ func update_staff():
 				for v in s.visits:
 					if v.target==f.id and v.state=="to_queue":demand+=1
 				if demand>score and demand>0:best=f;score=demand
-			if not best.is_empty():w.task="register";w.target=best.id;w.path=Nav.path(w.pos,Nav.access(best),s.fixtures,s.tier);w.timer=0;continue
+			if not best.is_empty():w.task="register";w.target=best.id;w.path=Nav.path(w.pos,Nav.clerk(best),s.fixtures,s.tier,true);w.timer=0;continue
 		if w.priority in ["auto","stock"]:
 			best={};score=0
 			for f in s.fixtures:
@@ -535,9 +618,9 @@ func update_staff():
 				var capacity=equipment[f.kind].capacity
 				var need=1.0-volume(f.lots)/float(maxi(capacity,1))
 				if need>0.35 and need>score:score=need;best=f
-			if not best.is_empty():w.task="depot";w.target=best.id;w.path=Nav.path(w.pos,Nav.DEPOT,s.fixtures,s.tier);continue
+			if not best.is_empty():w.task="depot";w.target=best.id;w.path=Nav.path(w.pos,Nav.DEPOT,s.fixtures,s.tier,true);continue
 		if s.clean<85 and w.priority in ["auto","clean"]:
-			w.task="clean";w.timer=8;w.path=Nav.path(w.pos,Vector2i(2,2),s.fixtures,s.tier)
+			w.task="clean";w.timer=8;w.path=Nav.path(w.pos,Vector2i(2,2),s.fixtures,s.tier,true)
 
 func regulars() -> int:
 	return s.residents.filter(func(r):return r.loyalty>=35).size()

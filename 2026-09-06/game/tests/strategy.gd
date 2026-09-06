@@ -16,7 +16,7 @@ func update(game):
 	if s.star>=2 and not s.staff[3].hired and s.cash>28000:
 		do(game,"hire",{"id":3});do(game,"shift",{"id":3,"slot":2});do(game,"shift",{"id":3,"slot":3})
 	if s.star>=2 and s.cash>32000 and s.fixtures.filter(func(f):return f.kind==10).is_empty():
-		do(game,"place",{"kind":10,"x":4,"y":7,"dir":3})
+		do(game,"place",{"kind":10,"x":4,"y":8,"dir":0})
 	if s.star>=1 and s.tier==0 and s.cash>50000:do(game,"expand")
 	if s.star>=2 and s.cash>32000 and not s.reports.is_empty() and s.reports[-1].miss.get("行列",0)>3:
 		for w in s.staff:
@@ -25,7 +25,7 @@ func update(game):
 	var focus=0 if style=="morning" else (4 if style=="sweets" else 2)
 	if s.star>=1 and s.cash>28000 and s.fixtures.size()<11:
 		var kind=9 if focus in [2,4] else 8
-		if do(game,"place",{"kind":kind,"x":4,"y":5,"dir":1}).is_empty():
+		if do(game,"place",{"kind":kind,"x":9,"y":2,"dir":3}).is_empty():
 			do(game,"assign",{"fixture":s.next_fixture-1,"product":focus*10+1})
 	for f in s.fixtures:
 		if f.product<0:continue
