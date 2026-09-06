@@ -1,0 +1,103 @@
+{
+	"customer": {
+		"attempts": 0,
+		"basket": [],
+		"bought": false,
+		"browse_slot": "(4, 1)",
+		"browse_ticket": 139660519,
+		"budget": 1163,
+		"dir": 2,
+		"event_id": "chili",
+		"failure_reason": "",
+		"goal": 2,
+		"id": 519,
+		"mood": "緑茶が気になる",
+		"need": "",
+		"path": [
+			"(4, 1)"
+		],
+		"pos": "(4, 2)",
+		"prev": "(4, 2)",
+		"rid": 90,
+		"since": 13953,
+		"spent": 0,
+		"state": "walking",
+		"steps": 0,
+		"target": 2,
+		"timer": 0,
+		"wait": 0,
+		"wanted": 20
+	},
+	"day": 10,
+	"duration": 12,
+	"fixture": {
+		"clerk": -1,
+		"dir": 0,
+		"id": 2,
+		"kind": 1,
+		"lots": [
+			{
+				"amount": 2,
+				"cost": 71,
+				"expires": 22080,
+				"product": 20
+			},
+			{
+				"amount": 1,
+				"cost": 71,
+				"expires": 22080,
+				"product": 20
+			},
+			{
+				"amount": 2,
+				"cost": 71,
+				"expires": 22080,
+				"product": 20
+			},
+			{
+				"amount": 2,
+				"cost": 71,
+				"expires": 22080,
+				"product": 20
+			}
+		],
+		"pay_timer": 0,
+		"product": 20,
+		"queue": [],
+		"ready": 0,
+		"x": 5,
+		"y": 0
+	},
+	"seed": 20260979,
+	"tick": 13978,
+	"worker": {
+		"carry": [],
+		"dir": 3,
+		"fatigue": 41.8600000000001,
+		"hired": true,
+		"id": 3,
+		"look": 3,
+		"name": "桜庭 かな",
+		"pass_tick": 13933,
+		"path": [],
+		"pos": "(4, 1)",
+		"prev": "(4, 1)",
+		"priority": "auto",
+		"recovery": 1.8,
+		"register": 1.86,
+		"service": 1.4,
+		"shifts": [
+			false,
+			false,
+			true,
+			true
+		],
+		"stock": 1.21,
+		"target": 2,
+		"task": "idle",
+		"timer": 0,
+		"training": 2,
+		"wage": 540,
+		"yield_inside_until": 13927
+	}
+}

@@ -907,17 +907,32 @@ func update_staff():
 		if s.clean<85 and w.priority in ["auto","clean"]:
 			w.task="clean";w.timer=8;w.path=Nav.path(w.pos,Vector2i(2,2),s.fixtures,s.tier,true)
 		elif w.task=="idle":
-			# Clear a shelf face after restocking instead of standing in its customer's place.
-			if w.path.is_empty() and s.fixtures.any(func(f):return Nav.access(f)==w.pos):
-				var destination=Nav.DEPOT
-				for d in Nav.DIRS:
-					var at:Vector2i=w.pos+d
-					if Nav.obstacles(s.fixtures,true).has(at) or not Nav.inside(at,Nav.dimensions(s.tier)):continue
-					if s.fixtures.any(func(f):return Nav.access(f)==at or (Nav.is_register(f) and Nav.clerk(f)==at)):continue
-					if s.visits.any(func(v):return v.pos==at):continue
-					destination=at;break
-				w.path=Nav.path(w.pos,destination,s.fixtures,s.tier,true)
+			park_idle_staff(w)
 			move_actor(w)
+
+func park_idle_staff(w:Dictionary):
+	# Clearing only the shelf face left a worker standing in the next queue slot.
+	# Work assignments run first; only a worker with no job vacates these spaces.
+	var blocked=Nav.obstacles(s.fixtures,true)
+	for f in s.fixtures:
+		blocked[Nav.access(f)]=true
+		if Nav.is_register(f):blocked[Nav.clerk(f)]=true
+		for cell in (Nav.queue_cells(f,s.fixtures,s.tier) if Nav.is_register(f) else Nav.browse_cells(f,s.fixtures,s.tier)):
+			blocked[cell]=true
+	for v in s.visits:
+		blocked[v.pos]=true
+		if v.has("wait_spot"):blocked[v.wait_spot]=true
+		if not v.path.is_empty():blocked[v.path[0]]=true
+	for other in s.staff:
+		if other!=w and other.hired and not Nav.backroom(other.pos):blocked[other.pos]=true
+	if not w.path.is_empty() and not blocked.has(w.path[-1]):return
+	if w.path.is_empty() and not blocked.has(w.pos):return
+	var destination=Nav.DEPOT
+	for direction in Nav.DIRS:
+		var at:Vector2i=w.pos+direction
+		if not Nav.inside(at,Nav.dimensions(s.tier)) or not Nav.connected(w.pos,at) or blocked.has(at) or at in [Nav.DOOR,Nav.EXIT_DOOR]:continue
+		destination=at;break
+	w.path=Nav.path(w.pos,destination,s.fixtures,s.tier,true)
 
 func regulars() -> int:
 	return s.residents.filter(func(r):return r.loyalty>=35).size()

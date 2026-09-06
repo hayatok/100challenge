@@ -1,0 +1,169 @@
+{
+	"bought": true,
+	"events": [
+		{
+			"bought": false,
+			"customer": "(4, 1)",
+			"state": "browse_queue",
+			"task": "idle",
+			"tick": 13979,
+			"worker": "(4, 0)"
+		},
+		{
+			"bought": false,
+			"customer": "(4, 1)",
+			"state": "browse_queue",
+			"task": "idle",
+			"tick": 13980,
+			"worker": "(4, 0)"
+		},
+		{
+			"bought": false,
+			"customer": "(4, 1)",
+			"state": "browse_queue",
+			"task": "idle",
+			"tick": 13981,
+			"worker": "(4, 0)"
+		},
+		{
+			"bought": false,
+			"customer": "(4, 1)",
+			"state": "browse_queue",
+			"task": "idle",
+			"tick": 13982,
+			"worker": "(4, 0)"
+		},
+		{
+			"bought": false,
+			"customer": "(4, 1)",
+			"state": "browse_queue",
+			"task": "idle",
+			"tick": 13983,
+			"worker": "(4, 0)"
+		},
+		{
+			"bought": false,
+			"customer": "(4, 1)",
+			"state": "browse_queue",
+			"task": "idle",
+			"tick": 13984,
+			"worker": "(4, 0)"
+		},
+		{
+			"bought": false,
+			"customer": "(4, 1)",
+			"state": "browse_queue",
+			"task": "idle",
+			"tick": 13985,
+			"worker": "(4, 0)"
+		},
+		{
+			"bought": false,
+			"customer": "(4, 1)",
+			"state": "browse_queue",
+			"task": "idle",
+			"tick": 13986,
+			"worker": "(4, 0)"
+		},
+		{
+			"bought": false,
+			"customer": "(4, 2)",
+			"state": "walking",
+			"task": "idle",
+			"tick": 13987,
+			"worker": "(4, 0)"
+		},
+		{
+			"bought": false,
+			"customer": "(4, 3)",
+			"state": "walking",
+			"task": "idle",
+			"tick": 13988,
+			"worker": "(4, 0)"
+		},
+		{
+			"bought": false,
+			"customer": "(4, 4)",
+			"state": "walking",
+			"task": "idle",
+			"tick": 13989,
+			"worker": "(4, 0)"
+		},
+		{
+			"bought": false,
+			"customer": "(3, 4)",
+			"state": "walking",
+			"task": "idle",
+			"tick": 13990,
+			"worker": "(4, 0)"
+		},
+		{
+			"bought": true,
+			"customer": "(1, 7)",
+			"state": "leaving",
+			"task": "idle",
+			"tick": 14024,
+			"worker": "(4, 0)"
+		}
+	],
+	"jumped": false,
+	"overlap": false,
+	"receipt": [
+		{
+			"day": 10,
+			"event": "chili",
+			"items": [
+				"緑茶",
+				"緑茶",
+				"緑茶"
+			],
+			"minute": 1424,
+			"price": 360,
+			"products": [
+				20,
+				20,
+				20
+			],
+			"story_feedback": "",
+			"wait": 2,
+			"weather": "晴れ"
+		},
+		{
+			"day": 9,
+			"event": "normal",
+			"items": [
+				"緑茶"
+			],
+			"minute": 1428,
+			"price": 120,
+			"products": [
+				20
+			],
+			"story_feedback": "",
+			"wait": 11,
+			"weather": "雨"
+		},
+		{
+			"day": 8,
+			"event": "office",
+			"items": [
+				"ブラックコーヒー",
+				"緑茶",
+				"ブラックコーヒー",
+				"緑茶"
+			],
+			"minute": 1409,
+			"price": 524,
+			"products": [
+				21,
+				20,
+				21,
+				20
+			],
+			"story_feedback": "",
+			"wait": 1,
+			"weather": "雨"
+		}
+	],
+	"source": "Normal-command sweets policy, seed 20260979, day 10 tick 13978; no position or economy injection"
+}

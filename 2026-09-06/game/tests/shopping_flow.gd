@@ -40,6 +40,19 @@ func _init():
 	clerk.task="idle";clerk.path=[];clerk.pos=Nav.access(shelf);clerk.fatigue=90
 	game.update_staff()
 	check(clerk.task=="rest" and not clerk.path.is_empty() and clerk.path[-1]==Nav.DEPOT,"Rest without a bench blocked the shop aisle")
+	# Day 10's tea queue was blocked by an idle worker in its second slot.
+	game=Sim.new();game.s.warehouse=[];game.s.clean=100
+	for w in game.s.staff:w.hired=false
+	clerk=game.s.staff[0];clerk.hired=true;clerk.priority="stock";clerk.task="idle";clerk.path=[];clerk.pos=Vector2i(4,1);clerk.prev=clerk.pos;clerk.fatigue=0
+	game.s.schedule=[{"at":0,"rid":90,"wait":0}];game.spawn_due()
+	var tea_customer=game.s.visits[0];tea_customer.pos=Vector2i(4,2);tea_customer.prev=tea_customer.pos;tea_customer.path=[Vector2i(4,1)];tea_customer.state="walking"
+	var old_worker:Vector2i=clerk.pos
+	game.update_staff();game.move_actor(tea_customer)
+	check(tea_customer.pos==Vector2i(4,1) and clerk.pos!=tea_customer.pos,"Idle worker kept blocking the second tea queue slot")
+	check(absi(clerk.pos.x-old_worker.x)+absi(clerk.pos.y-old_worker.y)==1,"Clearing a queue teleported the worker")
+	var front=game.fixture(8);clerk.pos=Nav.queue_cells(front,game.s.fixtures,0)[1];clerk.path=[];game.s.visits=[]
+	for minute in 12:game.update_staff()
+	check(not Nav.queue_cells(front,game.s.fixtures,0).has(clerk.pos),"Idle worker settled in the checkout queue")
 	# A worker going off duty used to become invisible to customer collision checks.
 	game=Sim.new();clerk=game.s.staff[2];clerk.hired=true;clerk.task="off"
 	clerk.pos=Vector2i(7,3);clerk.prev=clerk.pos;clerk.path=[Vector2i(7,2)]
