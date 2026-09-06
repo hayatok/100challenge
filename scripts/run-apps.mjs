@@ -2,7 +2,7 @@ import { readFile } from 'node:fs/promises'
 import { spawnSync } from 'node:child_process'
 import { fileURLToPath } from 'node:url'
 import path from 'node:path'
-import { loadApps } from './apps.mjs'
+import { loadApps, selectApps } from './apps.mjs'
 
 const commands = {
   // Bound registry/audit outages without disabling npm's audit request.
@@ -18,7 +18,8 @@ if (!command) {
 }
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
-const apps = await loadApps(path.join(root, 'apps.json'))
+const apps = selectApps(await loadApps(path.join(root, 'apps.json')), process.argv.slice(3))
+if (apps.length === 0) console.log('No changed apps to run.')
 
 for (const app of apps) {
   console.log(`\nRunning npm ${command.join(' ')} in ${app.id} — ${app.name}`)
