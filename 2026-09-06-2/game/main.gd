@@ -1,6 +1,7 @@
 extends Node2D
 const World = preload("res://core/world.gd")
 const DNA = preload("res://core/genome.gd")
+const Anatomy = preload("res://core/anatomy.gd")
 const Island = preload("res://island_view.gd")
 const Portrait = preload("res://portrait.gd")
 const INK = Color("253d36")
@@ -166,14 +167,14 @@ func layout() -> void:
 	rain_button = buttons[2]
 	follow_button = buttons[5]
 	var top: float = 196 if mobile else 158
-	var board_h: float = maxf(170, h - top - (248 if mobile else 72))
+	var board_h: float = maxf(110, h - top - (258 if mobile else 72))
 	view.position = Vector2(margin, top)
 	view.size = Vector2(w - margin * 2 if mobile else w - 390, board_h)
 	if mobile and view.zoom == 1: view.zoom = 1.8
 	label(root, "草地  /  茂み  /  浅瀬", Rect2(margin, top - 24, 250, 22), 12)
 	inspector = Panel.new()
 	inspector.position = Vector2(margin, top + board_h + 12) if mobile else Vector2(w - 350, top)
-	inspector.size = Vector2(w - margin * 2 if mobile else 326, 188 if mobile else board_h)
+	inspector.size = Vector2(w - margin * 2 if mobile else 326, 198 if mobile else board_h)
 	inspector.add_theme_stylebox_override("panel", flat(PAPER))
 	root.add_child(inspector)
 	selected_title = label(inspector, "", Rect2(14, 10, inspector.size.x - 28, 28), 19)
@@ -182,11 +183,11 @@ func layout() -> void:
 	portrait.position = Vector2(6, 48)
 	portrait.size = Vector2(116, 106) if mobile else Vector2(inspector.size.x - 20, 150)
 	inspector.add_child(portrait)
-	selected_detail = label(inspector, "", Rect2(128, 46, inspector.size.x - 140, 90) if mobile else Rect2(16, 216, inspector.size.x - 32, 150), 13 if mobile else 16)
+	selected_detail = label(inspector, "", Rect2(128, 42, inspector.size.x - 140, 110) if mobile else Rect2(16, 216, inspector.size.x - 32, 150), 12 if mobile else 16)
 	selected_detail.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	button(inspector, "親子・系譜を見る", Rect2(128 if mobile else 16, 140 if mobile else 380, inspector.size.x - (142 if mobile else 32), 34 if mobile else 42), open_lineage, true)
+	button(inspector, "親子・系譜を見る", Rect2(128 if mobile else 16, 154 if mobile else 380, inspector.size.x - (142 if mobile else 32), 34 if mobile else 42), open_lineage, true)
 	if not mobile:
-		info = label(inspector, "形には、暮らしの理由がある。\n長い脚は速い。大きい体は腹ぺこ。\nヒレは浅瀬で、真価を発揮する。", Rect2(16, 445, inspector.size.x - 32, 80), 13)
+		info = label(inspector, "体のつながりも、親ゆずり。\nヒレは水辺、触手は茂み、翼は地表の移動を助けます。器官が多いほど食費も増えます。", Rect2(16, 445, inspector.size.x - 32, 80), 13)
 		info.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		info.visible = board_h > 540
 	event_line = label(root, "", Rect2(margin, h - 46, w - margin * 2, 22), 12 if mobile else 14)
@@ -211,8 +212,8 @@ func refresh() -> void:
 		selected_title.text = h.name
 		var c: Dictionary = sim.living(selected)
 		var p: Dictionary = DNA.traits(h.genes)
-		var state: String = c.state if not c.is_empty() else "土へ還った個体"
-		selected_detail.text = "%s · 第%d世代\n脚 %d対 / 体節 %d\n陸の速さ %.0f / 水の適性 %.0f%%\n%s" % [state, h.generation, p.pairs, p.parts, p.speed, p.swim * 100, "元気 %.0f / 100" % c.energy if not c.is_empty() else "生きた姿は系譜に残ります。"]
+		var state: String = c.state if not c.is_empty() else "土へ還った"
+		selected_detail.text = "%s · 第%d世代\n%s\n%s\n速さ 陸%.0f・水%.0f\n%s" % [state, h.generation, Anatomy.body_label(p.blueprint), Anatomy.organ_label(p.blueprint), p.speed * World.mobility(p, 0), p.speed * World.mobility(p, 2), "元気 %.0f / 100" % c.energy if not c.is_empty() else "生きた姿は系譜に残ります。"]
 		portrait.genes = h.genes
 		portrait.egg = not c.is_empty() and c.age < 4
 	portrait.queue_redraw()
@@ -385,9 +386,14 @@ func open_lineage() -> void:
 		row.add_child(p)
 	if h.parents.is_empty(): paragraph(box, "この子は島の創始個体。ここから系譜が始まります。")
 	else:
-		paragraph(box, "両親から遺伝情報を1本ずつ継承。脚・節は片方の特徴、体格などは両方の影響が現れます。まれに変異が加わります。")
+		paragraph(box, "体の設計を両親から1本ずつ継承。体のつながりは片方、器官は部位ごとに両方の設計が現れます。隠れた特徴も子孫に伝わり、まれに節や器官の構成が変わります。")
 		for parent in h.parents:
 			row_button(box, "親：" + sim.history[str(int(parent))].name, func(): select_creature(int(parent)); open_lineage())
+	paragraph(box, "からだを比べる", 19)
+	for id in ids:
+		var entry: Dictionary = sim.history[str(int(id))]
+		var blueprint: Dictionary = DNA.traits(entry.genes).blueprint
+		paragraph(box, "%s #%03d：%s\n%s（器官の数は左右1組）" % ["この子" if int(id) == selected else "親", id, Anatomy.body_label(blueprint), Anatomy.organ_label(blueprint)])
 	paragraph(box, "子孫の記録", 19)
 	var children: Array = sim.descendants(selected)
 	var alive: int = 0
@@ -419,8 +425,9 @@ func open_notebook() -> void:
 	var box: VBoxContainer = begin_modal("観察手帳")
 	paragraph(box, "なんでこうなった。", 25)
 	paragraph(box, "食べる、出会う、卵を産む。眺めるだけで世代が進みます。生き物を選ぶと、体の特徴と親子のつながりが見られます。")
-	paragraph(box, "草地は歩きやすい。茂みは小さな体が有利。浅瀬はヒレの適性と長い脚が役立ちます。大きい体や装甲には維持の負担があります。雨は餌の再生を早めます。")
-	paragraph(box, "初期版：卵は4秒、成体は18秒から。寿命は体質で変化します。『第○世代』は両親の大きい方＋1。系譜は祖先の記録で、新種の認定ではありません。")
+	paragraph(box, "脚は歩行、ヒレは浅瀬、触手は茂み、翼は地表での移動を助けます。器官がない体も体を揺らして進みます。翼による自由飛行はありません。大きい体や多くの器官には維持の負担があります。")
+	paragraph(box, "体は最大6節で枝分かれし、脚・ヒレ・触手・翼が最大6組付きます。目は1〜3個。取り付く場所も遺伝し、ときどき節や器官が増えたり、減ったり、種類が変わります。新しい島では最初から多様な構造に出会えます。")
+	paragraph(box, "卵は4秒、成体は18秒から。寿命は体質で変化します。『第○世代』は両親の大きい方＋1。系譜は祖先の記録で、新種の認定ではありません。")
 	row_button(box, "おまかせ観察：" + ("ON" if auto_watch else "OFF"), func(): auto_watch = not auto_watch; open_notebook())
 	row_button(box, "動きを控える：" + ("ON" if reduced else "OFF"), func(): reduced = not reduced; view.reduced = reduced; open_notebook())
 	paragraph(box, "観察の達成", 19)
@@ -497,10 +504,19 @@ func load_world() -> void:
 	speed = int(data.get("speed", 1)) if data.get("speed", 1) in [1, 2, 4] else 1
 	reduced = data.get("reduced", reduced) == true
 	auto_watch = data.get("auto_watch", false) == true
-	say("おかえりなさい。前の島の続きです。")
+	say("旧版の島を引き継ぎました。子孫には体の構造の変異も現れます。" if sim.migrated else "おかえりなさい。前の島の続きです。")
 
 func fixture() -> void:
 	if qa == "empty": sim = World.new(7, 0)
+	elif qa == "anatomy":
+		sim = World.new(20260906)
+		paused = true
+		for i in sim.creatures.size():
+			sim.creatures[i].age = 30
+			sim.creatures[i].state = "餌さがし"
+			sim.creatures[i].x = 100 + (i % 8) * 125
+			sim.creatures[i].y = 100 + (i / 8) * 175
+		selected = 1
 	elif qa == "family":
 		sim = World.new(19, 20)
 		sim.creatures[0].age = 30; sim.creatures[1].age = 30

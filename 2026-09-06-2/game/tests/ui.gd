@@ -52,5 +52,17 @@ func run():
 	app.sim.history["1"].name = "とてもとても長い名前でも画面の外へはみ出さない生き物です"
 	app.refresh()
 	check(app.selected_title.clip_text, "long individual names clip safely")
+	root.size = Vector2i(375, 667)
+	app.sync_window()
+	app.layout()
+	app.sim.creatures = app.sim.creatures.filter(func(c): return c.id != 1)
+	app.sim.history["1"].generation = 20000
+	for bp in app.sim.history["1"].genes.anatomy:
+		bp.organs = [[0, 0, 0.1, 1.0], [1, 0, 0.3, 1.0], [2, 0, 0.6, 1.0], [3, 0, 0.8, 1.0], [], []]
+	app.refresh()
+	await process_frame
+	check(root.get_visible_rect().encloses(app.inspector.get_global_rect()), "short mobile viewport retains inspector")
+	check(app.selected_detail.get_line_count() * app.selected_detail.get_line_height() <= 110, "dead ancestor and mixed organs fit mobile detail")
+	check(app.selected_detail.position.y + app.selected_detail.size.y <= 154, "detail does not overlap lineage button")
 	print("UI CHECKS ",checks," / failures ",failures)
 	quit(1 if failures else 0)

@@ -20,6 +20,8 @@ var capacity: int = 120
 var history_full: bool = false
 var spatial: Dictionary = {}
 var food_visitors: Dictionary = {}
+var phenotypes: Dictionary = {}
+var migrated: bool = false
 
 func _init(value: int = 20260906, count: int = 32) -> void:
 	seed_value = value
@@ -37,6 +39,7 @@ func _init(value: int = 20260906, count: int = 32) -> void:
 	log_event("観察開始。%d匹の暮らしを見守ります。" % count, 1)
 
 func spawn(g: Dictionary, parents: Array, family: int, generation: int, p: Vector2) -> Dictionary:
+	g = DNA.upgrade(g)
 	var c: Dictionary = {"id": next_id, "genes": g, "parents": parents, "family": family, "generation": generation,
 		"x": clampf(p.x, 25, BOUNDS.x - 25), "y": clampf(p.y, 25, BOUNDS.y - 25), "angle": rng.randf_range(-PI, PI),
 		"age": 0.0, "energy": 43.0, "cooldown": 20.0, "target": -1, "state": "卵", "pulse": 0.0, "born": time}
@@ -44,6 +47,7 @@ func spawn(g: Dictionary, parents: Array, family: int, generation: int, p: Vecto
 		"generation": generation, "born": time, "died": -1.0, "name": DNA.nickname(g) + " #%03d" % next_id}
 	next_id += 1
 	creatures.append(c)
+	phenotypes[c.id] = DNA.traits(g)
 	return c
 
 func log_event(message: String, id: int = -1) -> void:
@@ -56,12 +60,13 @@ static func habitat(p: Vector2) -> int:
 	return 0
 
 static func mobility(p: Dictionary, area: int) -> float:
-	if area == 2: return 0.26 + p.swim * 0.92 + p.reach * 0.16
-	if area == 1: return 1.0 - p.size * 0.30 - p.spines * 0.14
-	return 1.0 - p.swim * 0.12
+	var organs: Array = p.organ_counts
+	if area == 2: return maxf(0.2, 0.26 + p.swim * 0.92 + p.reach * 0.16 + organs[1] * 0.06 + organs[2] * 0.02 - organs[3] * 0.015)
+	if area == 1: return 1.0 - p.size * 0.30 - p.spines * 0.14 + organs[2] * 0.035
+	return 1.0 - p.swim * 0.12 + organs[0] * 0.015 + organs[3] * 0.025
 
 static func upkeep(p: Dictionary, area: int) -> float:
-	return 0.16 + p.size * 0.12 + p.reach * 0.05 + p.shell * 0.04 + p.spines * 0.04 + (0.10 * (1.0 - p.swim) if area == 2 else 0.0)
+	return 0.16 + p.size * 0.12 + p.reach * 0.05 + p.shell * 0.04 + p.spines * 0.04 + maxi(0, p.blueprint.organs.size() - 2) * 0.001 + maxi(0, p.parts - 2) * 0.001 + (0.10 * (1.0 - p.swim) if area == 2 else 0.0)
 
 func season_name() -> String:
 	return ["芽吹き", "陽ざし", "実り", "冬ごもり"][int(time / 120) % 4]
@@ -118,7 +123,8 @@ func breed(a: Dictionary, b: Dictionary) -> bool:
 	b.pulse = 3
 	births += 1
 	log_event("#%03d と #%03d に卵。%s" % [a.id, b.id, history[str(child.id)].name], child.id)
-	if not result.changes.is_empty(): log_event("#%03d に大きめの変異。親子を比べてみよう。" % child.id, child.id)
+	if "anatomy" in result.changes: log_event("#%03d の体の設計に変異。親子を比べてみよう。" % child.id, child.id)
+	elif not result.changes.is_empty(): log_event("#%03d に大きめの変異。親子を比べてみよう。" % child.id, child.id)
 	return true
 
 func step() -> void:
@@ -140,7 +146,8 @@ func step() -> void:
 		if c.target >= 0: food_visitors[c.target] = int(food_visitors.get(c.target, 0)) + 1
 	var dead: Array = []
 	for c in creatures.duplicate():
-		var p: Dictionary = DNA.traits(c.genes)
+		if not phenotypes.has(c.id): phenotypes[c.id] = DNA.traits(c.genes)
+		var p: Dictionary = phenotypes[c.id]
 		c.age += STEP
 		c.cooldown = maxf(0, c.cooldown - STEP)
 		c.pulse = maxf(0, c.pulse - STEP)
@@ -207,6 +214,7 @@ func step() -> void:
 	for c in dead:
 		history[str(c.id)].died = time
 		creatures.erase(c)
+		phenotypes.erase(c.id)
 		deaths += 1
 		if c.generation > 0: log_event("%s が土へ。系譜に記録しました。" % history[str(c.id)].name, c.id)
 	if history.size() >= HISTORY_LIMIT:
@@ -214,7 +222,7 @@ func step() -> void:
 		log_event("観察記録が2万匹に達しました。世界を保存して、新しい島へ。")
 
 func snapshot() -> Dictionary:
-	return {"version": 1, "seed": seed_value, "rng": str(rng.state), "time": time, "tick": tick, "rain": rain,
+	return {"version": 2, "seed": seed_value, "rng": str(rng.state), "time": time, "tick": tick, "rain": rain,
 		"rain_cooldown": rain_cooldown, "next_id": next_id, "births": births, "deaths": deaths, "capacity": capacity,
 		"creatures": creatures.duplicate(true), "plants": plants.duplicate(true), "history": history.duplicate(true), "events": events.duplicate(true)}
 
@@ -225,7 +233,8 @@ static func integer(v: Variant, low: int, high: int) -> bool:
 	return number(v, low, high) and float(v) == floorf(float(v))
 
 static func restore(data: Variant):
-	if not data is Dictionary or data.get("version") != 1: return null
+	if not data is Dictionary or data.get("version") not in [1, 2]: return null
+	var legacy: bool = data.version == 1
 	for key in ["seed", "time", "tick", "rain", "rain_cooldown", "next_id", "births", "deaths", "capacity"]:
 		if not number(data.get(key), 0, 1e12): return null
 	if not integer(data.capacity, 1, 200) or not integer(data.next_id, 1, HISTORY_LIMIT + 1): return null
@@ -242,7 +251,7 @@ static func restore(data: Variant):
 		if not number(plant.get("x"), 0, BOUNDS.x) or not number(plant.get("y"), 0, BOUNDS.y) or not number(plant.get("food"), 0, 26): return null
 	for key in data.history:
 		var h: Variant = data.history[key]
-		if not h is Dictionary or not DNA.valid(h.get("genes")): return null
+		if not h is Dictionary or not DNA.valid(h.get("genes"), legacy): return null
 		if not integer(h.get("id"), 1, int(data.next_id) - 1) or str(int(h.id)) != key: return null
 		if not h.get("name") is String or h.name.length() > 60: return null
 		for field in ["family", "generation", "born"]:
@@ -269,7 +278,7 @@ static func restore(data: Variant):
 	if data.creatures.size() != data.history.size() - dead_count: return null
 	var ids: Dictionary = {}
 	for c in data.creatures:
-		if not c is Dictionary or not DNA.valid(c.get("genes")): return null
+		if not c is Dictionary or not DNA.valid(c.get("genes"), legacy): return null
 		if not integer(c.get("id"), 1, int(data.next_id) - 1) or ids.has(c.id): return null
 		ids[c.id] = true
 		if not data.history.has(str(int(c.id))): return null
@@ -287,8 +296,11 @@ static func restore(data: Variant):
 		if not number(e.get("time"), 0, data.time) or not number(e.get("id"), -1, data.next_id - 1): return null
 	var world = load("res://core/world.gd").new(int(data.seed), 0)
 	world.creatures = data.creatures.duplicate(true)
+	world.migrated = legacy
 	world.plants = data.plants.duplicate(true)
 	for c in world.creatures:
+		c.genes = DNA.upgrade(c.genes)
+		world.phenotypes[c.id] = DNA.traits(c.genes)
 		for field in ["id", "target", "generation", "family"]: c[field] = int(c[field])
 		for i in c.parents.size(): c.parents[i] = int(c.parents[i])
 	# Restore dictionary insertion order numerically for descendant traversal.
@@ -299,6 +311,7 @@ static func restore(data: Variant):
 	world.events = data.events.duplicate(true)
 	for e in world.events: e.id = int(e.id)
 	for h in world.history.values():
+		h.genes = DNA.upgrade(h.genes)
 		for field in ["id", "generation", "family"]: h[field] = int(h[field])
 		for i in h.parents.size(): h.parents[i] = int(h.parents[i])
 	world.time = data.time
@@ -316,12 +329,17 @@ static func restore(data: Variant):
 # Lossless Variant bytes retain float bits and RNG state across JSON storage.
 # Object decoding is disabled; validation still runs before accepting the world.
 static func encode(data: Dictionary) -> Dictionary:
-	var payload: String = Marshalls.raw_to_base64(var_to_bytes(data))
-	return {"payload": payload, "sha256": payload.sha256_text()}
+	var raw: PackedByteArray = var_to_bytes(data)
+	var payload: String = Marshalls.raw_to_base64(raw.compress(FileAccess.COMPRESSION_DEFLATE))
+	return {"payload": payload, "sha256": payload.sha256_text(), "codec": "deflate", "raw_size": raw.size()}
 
 static func decode(data: Variant):
 	if not data is Dictionary or not data.get("payload") is String or not data.get("sha256") is String: return null
 	if data.payload.length() > 44000000 or data.payload.sha256_text() != data.sha256: return null
 	var raw: PackedByteArray = Marshalls.base64_to_raw(data.payload)
+	if data.has("codec"):
+		if data.codec != "deflate" or not integer(data.get("raw_size"), 8, 96000000): return null
+		raw = raw.decompress(int(data.raw_size), FileAccess.COMPRESSION_DEFLATE)
+		if raw.size() != int(data.raw_size): return null
 	if raw.size() < 8 or (raw.decode_u32(0) & 0xFFFF) != TYPE_DICTIONARY: return null
 	return restore(bytes_to_var(raw))

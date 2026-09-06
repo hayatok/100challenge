@@ -1,6 +1,6 @@
 {
   "name": "creature-lineage",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -8,8 +8,8 @@
     "dev": "node scripts/godot.mjs editor",
     "play": "node scripts/godot.mjs play",
     "preview": "node scripts/serve.mjs",
-    "test": "node scripts/godot.mjs test",
-    "check": "node scripts/godot.mjs import && node scripts/godot.mjs test && node scripts/godot.mjs ui && node scripts/godot.mjs build",
+    "test": "node scripts/godot.mjs test && node scripts/godot.mjs anatomy",
+    "check": "node scripts/godot.mjs import && npm test && node scripts/godot.mjs ui && node scripts/godot.mjs build",
     "build": "node scripts/godot.mjs build",
     "build:debug": "node scripts/godot.mjs debug",
     "build:mac": "node scripts/godot.mjs mac",

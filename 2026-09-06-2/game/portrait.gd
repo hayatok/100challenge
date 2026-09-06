@@ -7,5 +7,6 @@ var caption: String = ""
 var font: Font = preload("res://assets/fonts/NotoSansCJKjp-Medium.otf")
 func _draw() -> void:
 	if genes.is_empty(): return
-	art.render(self, genes, size * Vector2(0.56, 0.40), minf(size.x / 110, size.y / 90), 0, 0 if egg else 30, 0, false, true)
+	var fit: Dictionary = art.portrait_fit(genes, size, not caption.is_empty(), egg)
+	art.render(self, genes, fit.center, fit.scale, 0, 0 if egg else 30, 0, false, true)
 	if not caption.is_empty(): draw_string(font, Vector2(4, size.y - 6), caption, HORIZONTAL_ALIGNMENT_CENTER, size.x - 8, 13, Color("253d36"))
