@@ -479,10 +479,10 @@ func resident_details(parent:Node,id:int):
 	if parent==sidebar:
 		live_stat(parent,"来店",func():return str(sim.s.residents[id].visits)+"回")
 		live_stat(parent,"常連度",func():return str(roundi(sim.s.residents[id].loyalty))+" / 100")
-		live_text(parent,func():return sim.s.residents[id].last_reason,12)
+		live_text(parent,func():return reason_text(sim.s.residents[id].last_reason),12)
 	else:
 		stat(parent,"来店",str(r.visits)+"回");stat(parent,"常連度",str(roundi(r.loyalty))+" / 100")
-		wrapped(r.last_reason,parent,12)
+		wrapped(reason_text(r.last_reason),parent,12)
 	button("お気に入りを解除" if r.favorite else "来店を知らせる",parent,func():act("favorite",{"id":id});if_modal_detail())
 	if parent==sidebar:live_text(parent,func():return resident_mood(id),14,Color("a9703d"))
 	else:wrapped(resident_mood(id),parent,14,Color("a9703d"))
@@ -606,27 +606,44 @@ func open_products():
 	tabs(modal_content,Cat.CATEGORIES,category_filter,func(i):category_filter=i;open_products())
 	for p in sim.products:
 		if p.cat!=category_filter:continue
-		var card=VBoxContainer.new();modal_content.add_child(card)
-		var name_row=row(card);var icon=ProductIcon.new();icon.product=p;name_row.add_child(icon);var title=wrapped(p.name,name_row,17);title.size_flags_horizontal=Control.SIZE_EXPAND_FILL
-		label("星"+str(p.unlock)+"で解放" if p.unlock>sim.s.star else "原価 "+money(p.cost),name_row,12,MUTED)
-		wrapped(Cat.storage_label(p.storage)+" / "+Goods.description(p.id)+"\n"+p.note+"  /  期限 "+str(p.life/60)+"時間"+(" / 2枠使用" if p.size==2 else ""),card,12,MUTED)
-		if p.unlock>sim.s.star:divider(modal_content);continue
-		if not sim.s.fixtures.any(func(f):return sim.compatible(f,p.id)):
-			wrapped("対応する売り場がありません。建設で"+("冷凍ケース" if p.storage=="frozen" else Cat.storage_label(p.storage)+"の設備")+"を用意してください。",card,12,Color("a85240"))
-		var controls=flow(card)
-		label("店全体 "+str(sim.total_stock(p.id))+"個",controls,13)
-		var expiring=sim.stock_expiring(p.id)
-		if expiring>0:wrapped("6時間以内に期限："+str(expiring)+"個。売れ行きに合わせて値引きや次便の数量を調整できます。",card,12,Color("a85240"))
-		var price=OptionButton.new();controls.add_child(price)
-		for level in 3:price.add_item(["安め","標準","高め"][level]+" "+money(roundi(p.price*[0.85,1.0,1.2][level])))
-		price.select(int(sim.s.prices.get(p.id,1)));price.item_selected.connect(func(i):act("price",{"product":p.id,"level":i}))
-		button("発注する",controls,func():open_order(p.id))
-		var auto_row=row(card);label("自動発注の目標",auto_row,12)
-		var spin=SpinBox.new();spin.min_value=0;spin.max_value=100;spin.step=2;spin.value=sim.s.targets.get(p.id,0);spin.custom_minimum_size.x=100;auto_row.add_child(spin);spin.value_changed.connect(func(v):act("target",{"product":p.id,"amount":int(v)}))
-		divider(modal_content)
+		product_card(p,modal_content)
 	if not sim.s.orders.is_empty():
 		label("納品待ち",modal_content,17)
 		for o in sim.s.orders:wrapped(sim.products[o.product].name+" ×"+str(o.amount)+" / あと"+str(o.due-sim.s.tick)+"分",modal_content,12)
+func product_card(p:Dictionary,parent:Node):
+	var card=VBoxContainer.new();parent.add_child(card)
+	var name_row=row(card);var icon=ProductIcon.new();icon.product=p;name_row.add_child(icon);var title=wrapped(p.name,name_row,17);title.size_flags_horizontal=Control.SIZE_EXPAND_FILL
+	label("星"+str(p.unlock)+"で解放" if p.unlock>sim.s.star else "原価 "+money(p.cost),name_row,12,MUTED)
+	wrapped(Cat.storage_label(p.storage)+" / "+Goods.description(p.id)+"\n"+p.note+"  /  期限 "+str(p.life/60)+"時間"+(" / 2枠使用" if p.size==2 else ""),card,12,MUTED)
+	if p.unlock>sim.s.star:divider(parent);return
+	if not sim.s.fixtures.any(func(f):return sim.compatible(f,p.id)):
+		wrapped("対応する売り場がありません。建設で"+("冷凍ケース" if p.storage=="frozen" else Cat.storage_label(p.storage)+"の設備")+"を用意してください。",card,12,Color("a85240"))
+	var controls=flow(card)
+	label("店全体 "+str(sim.total_stock(p.id))+"個",controls,13)
+	var expiring=sim.stock_expiring(p.id)
+	if expiring>0:wrapped("6時間以内に期限："+str(expiring)+"個。売れ行きに合わせて値引きや次便の数量を調整できます。",card,12,Color("a85240"))
+	var price=OptionButton.new();controls.add_child(price)
+	for level in 3:price.add_item(["安め","標準","高め"][level]+" "+money(roundi(p.price*[0.85,1.0,1.2][level])))
+	price.select(int(sim.s.prices.get(p.id,1)));price.item_selected.connect(func(i):act("price",{"product":p.id,"level":i}))
+	button("発注する",controls,func():open_order(p.id))
+	var auto_row=row(card);label("自動発注の目標",auto_row,12)
+	var spin=SpinBox.new();spin.min_value=0;spin.max_value=100;spin.step=2;spin.value=sim.s.targets.get(p.id,0);spin.custom_minimum_size.x=100;auto_row.add_child(spin);spin.value_changed.connect(func(v):act("target",{"product":p.id,"amount":int(v)}))
+	divider(parent)
+
+func open_product_review(product:int,day:int):
+	open_modal(sim.products[product].name+"の見直し")
+	button(str(day)+"日目の日報へ戻る",modal_content,func():open_report(day))
+	wrapped("日報は過去の実績です。以下は現在の在庫・価格・発注設定です。",modal_content,13,MUTED)
+	product_card(sim.products[product],modal_content)
+	wrapped("自動発注："+("入。目標在庫まで補います。" if sim.s.auto else "切。目標を変えても自動では注文しません。"),modal_content,13,MUTED)
+	button("自動発注の設定",modal_content,open_products)
+
+func open_report_resident(id:int,day:int):
+	selected_kind="resident";selected_id=id;view.selected_kind="resident";view.selected_id=id
+	open_modal(sim.s.residents[id].name+"の買い物")
+	button(str(day)+"日目の日報へ戻る",modal_content,func():open_report(day))
+	resident_details(modal_content,id)
+
 func open_staff():
 	open_modal("働くひととシフト")
 	wrapped("1人2枠まで。レジも補充も人が必要です。昼の行列と棚切れを見て担当を調整しましょう。",modal_content,13,MUTED)
@@ -665,8 +682,28 @@ func open_residents():
 			button(text,list,func():selected_kind="resident";selected_id=r.id;view.selected_kind="resident";view.selected_id=r.id;open_detail())
 		if list.get_child_count()==0:wrapped("該当する住人はいません。",list)
 	search.text_changed.connect(func(v):search_text=v;populate.call());populate.call()
-func open_report():
+func open_report(day:int=-1):
 	open_modal("経営ノート")
+	report_tabs(0)
+	if sim.s.reports.is_empty():
+		wrapped("最初のレポートは翌朝6時に届きます。",modal_content,16);return
+	var index=sim.s.reports.size()-1
+	for i in sim.s.reports.size():
+		if sim.s.reports[i].day==day:index=i;break
+	var navigation=flow(modal_content)
+	button("前の日",navigation,func():open_report(sim.s.reports[index-1].day)).disabled=index==0
+	var dates=OptionButton.new();navigation.add_child(dates)
+	for report in sim.s.reports:dates.add_item(str(report.day)+"日目 / "+Cat.SEASONS[report.season])
+	dates.select(index);dates.item_selected.connect(func(i):open_report(sim.s.reports[i].day))
+	button("次の日",navigation,func():open_report(sim.s.reports[index+1].day)).disabled=index==sim.s.reports.size()-1
+	report_details(sim.s.reports[index],sim.s.reports[index-1] if index>0 else {})
+func report_tabs(active:int):
+	tabs(modal_content,["日報","成長と資金"],active,func(i):
+		if i==0:open_report()
+		else:open_management())
+func open_management():
+	open_modal("経営ノート")
+	report_tabs(1)
 	wrapped(goal_text(),modal_content,19)
 	wrapped(City.chapter(sim.s.day)[0]+"\n"+City.chapter(sim.s.day)[1],modal_content,13,MUTED)
 	var actions=flow(modal_content)
@@ -674,8 +711,8 @@ func open_report():
 	button("冬の約束を知る" if sim.s.day<29 else ("冬の約束を選ぶ" if sim.s.get("winter_plan","").is_empty() and sim.s.day<=42 else "冬の約束と成績"),actions,open_winter)
 	if sim.s.star>=4 and sim.s.review.get("status","") not in ["active","passed"]:
 		var can_review=sim.s.day<=42 or sim.s.practice
-		button("明朝から五つ星審査" if can_review else "審査予約は42日目まで",actions,func():act("review",{},open_report)).disabled=not can_review
-	button("救済融資 ¥20,000",actions,func():act("loan",{},open_report)).disabled=sim.s.loan
+		button("明朝から五つ星審査" if can_review else "審査予約は42日目まで",actions,func():act("review",{},open_management)).disabled=not can_review
+	button("救済融資 ¥20,000",actions,func():act("loan",{},open_management)).disabled=sim.s.loan
 	wrapped("必要な固定費："+money(sim.fixed_cost()+sim.wages())+" / 日  ·  倉庫を含む廃棄に注意。",modal_content,13,MUTED)
 	if sim.s.debt>0:wrapped(str(sim.s.due)+"日目の返済："+money(sim.s.debt),modal_content,14,Color("a85240"))
 	if not sim.s.review.is_empty():
@@ -685,34 +722,54 @@ func open_report():
 			wrapped(("✓ " if item[2] else "○ ")+item[0]+"："+item[1],modal_content,14,Color("42775b") if item[2] else Color("a05b38"))
 		wrapped("再訪：開始時点の常連が別の日に2回以上購入。催しの成績は来店のきっかけ別に、審査期間内に買い物を終えた人を通算します。",modal_content,12,MUTED)
 	divider(modal_content)
-	if sim.s.reports.is_empty():wrapped("最初のレポートは翌朝6時に届きます。",modal_content,16)
-	var recent_reports=sim.s.reports.slice(maxi(0,sim.s.reports.size()-7)).duplicate();recent_reports.reverse()
-	for report in recent_reports:
-		label(str(report.day)+"日目 / "+Cat.SEASONS[report.season]+" / "+sim.event_for(report.day).name,modal_content,17)
-		stat(modal_content,"売上",money(report.sales));stat(modal_content,"営業利益",money(report.profit));stat(modal_content,"現金増減",money(report.cash_close-report.cash_open))
-		wrapped("原価 %s · 廃棄 %s · 固定費 %s · 人件費 %s\n来店 %d人 · 会計 %d人 / 買い物終了者の購買率 %.0f%%"%[money(report.cogs),money(report.waste),money(report.fixed),money(report.wages),report.visitors,report.buyers,report.rate*100],modal_content,13)
-		wrapped("買い物終了："+str(report.get("completed",report.visitors))+"人。会計または購入せず退店した日の集計です。",modal_content,12,MUTED)
-		var reasons=[]
-		for key in report.miss:
-			if not str(key).begins_with("p"):reasons.append(str(key)+" "+str(report.miss[key])+"回")
-		wrapped("買い物中のつまずき（延べ回数）："+("特になし" if reasons.is_empty() else " / ".join(reasons)),modal_content,13,Color("9b6c4d"))
-		if report.get("purpose_completed",0)>0:
-			wrapped("目的の品を買えた人：%d / %d人"%[report.get("needs_served",0),report.purpose_completed],modal_content,14)
-			for group in report.get("unmet_needs",{}):wrapped("探していたもの："+sim.need_name(group)+" / 買えずに退店 "+str(report.unmet_needs[group])+"人",modal_content,12,Color("9b6c4d"))
-		for lost in report.get("lost_visits",[]).slice(0,3):
-			wrapped(time_string(lost.minute)+" "+sim.s.residents[lost.rid].name+"："+(sim.need_name(lost.need)+" / " if not lost.need.is_empty() else "")+lost.reason,modal_content,12)
-		var disposal=report.get("waste_products",{})
-		var waste_ids=disposal.keys();waste_ids.sort_custom(func(a,b):return disposal[a].cost>disposal[b].cost)
-		for pid in waste_ids.slice(0,3):
-			wrapped("廃棄："+sim.products[int(pid)].name+" "+str(disposal[pid].amount)+"個 / 原価 "+money(disposal[pid].cost),modal_content,12,Color("9b6c4d"))
-		var sales=[]
-		for pid in report.product_sales:sales.append(sim.products[int(pid)].name+" "+str(report.product_sales[pid])+"個")
-		wrapped("売れたもの："+" / ".join(sales),modal_content,12,MUTED)
-		var hours=[]
-		for hour in range(24):
-			if report.hours.has(hour):hours.append(str(hour)+"時 "+money(report.hours[hour]))
-		wrapped("時間帯別売上："+" / ".join(hours),modal_content,12,MUTED)
-		divider(modal_content)
+func reason_text(reason:String) -> String:
+	# Legacy "price" reports record the overall desirability threshold, not price alone.
+	if reason=="価格":return "好み・値段"
+	return reason.replace("価格で買えなかった","好みや値段が合わず、見送りました。")
+func signed_money(value:int) -> String:return ("+" if value>0 else "")+money(value)
+func report_details(report:Dictionary,previous:Dictionary):
+	wrapped(str(report.day)+"日目 / "+Cat.SEASONS[report.season]+" / "+sim.event_for(report.day).name,modal_content,17)
+	stat(modal_content,"売上",money(report.sales));stat(modal_content,"営業利益",money(report.profit));stat(modal_content,"現金増減",money(report.cash_close-report.cash_open))
+	wrapped("原価 %s · 廃棄 %s · 固定費 %s · 人件費 %s\n来店 %d人 · 会計 %d人 / 買い物終了者の購買率 %.0f%%"%[money(report.cogs),money(report.waste),money(report.fixed),money(report.wages),report.visitors,report.buyers,report.rate*100],modal_content,13)
+	wrapped("買い物終了："+str(report.get("completed",report.visitors))+"人。会計または購入せず退店した日の集計です。",modal_content,12,MUTED)
+	if not previous.is_empty():
+		wrapped("前日比：売上 %s / 営業利益 %s / 廃棄原価 %s"%[signed_money(report.sales-previous.sales),signed_money(report.profit-previous.profit),signed_money(report.waste-previous.waste)],modal_content,13)
+		wrapped("前日と客数・催し・天候が異なるため、差額だけで施策の効果は決まりません。",modal_content,12,MUTED)
+	var reasons=[]
+	for key in report.miss:
+		if not str(key).begins_with("p"):reasons.append(reason_text(str(key))+" "+str(report.miss[key])+"回")
+	wrapped("買い物中のつまずき（延べ回数）："+("特になし" if reasons.is_empty() else " / ".join(reasons)),modal_content,13,Color("9b6c4d"))
+	if report.miss.get("価格",0)>0:wrapped("好み・品質・値段・売り場までの距離を合わせて判断しています。本人の好みと品揃えも確かめましょう。",modal_content,12,MUTED)
+	var missed_products=[]
+	for key in report.miss:
+		if str(key).begins_with("p"):missed_products.append({"id":int(str(key).substr(1)),"count":report.miss[key]})
+	missed_products.sort_custom(func(a,b):return a.count>b.count)
+	for item in missed_products.slice(0,3):
+		var line=row(modal_content);wrapped(sim.products[item.id].name+"：欠品・補充待ち "+str(item.count)+"回",line,13)
+		button("在庫を見直す",line,func():open_product_review(item.id,report.day))
+	if report.miss.get("行列",0)>0 or report.miss.get("補充待ち",0)>0:
+		button("シフトと優先担当を見直す",modal_content,open_staff)
+	if report.get("purpose_completed",0)>0:
+		wrapped("目的の品を買えた人：%d / %d人"%[report.get("needs_served",0),report.purpose_completed],modal_content,14)
+		for group in report.get("unmet_needs",{}):wrapped("探していたもの："+sim.need_name(group)+" / 買えずに退店 "+str(report.unmet_needs[group])+"人",modal_content,12,Color("9b6c4d"))
+	for lost in report.get("lost_visits",[]).slice(0,3):
+		var line=row(modal_content)
+		wrapped(time_string(lost.minute)+" "+sim.s.residents[lost.rid].name+"："+(sim.need_name(lost.need)+" / " if not lost.need.is_empty() else "")+reason_text(lost.reason),line,12)
+		button("本人を見る",line,func():open_report_resident(lost.rid,report.day))
+	var disposal=report.get("waste_products",{})
+	var waste_ids=disposal.keys();waste_ids.sort_custom(func(a,b):return disposal[a].cost>disposal[b].cost)
+	for pid in waste_ids.slice(0,3):
+		var line=row(modal_content)
+		wrapped("廃棄："+sim.products[int(pid)].name+" "+str(disposal[pid].amount)+"個 / 原価 "+money(disposal[pid].cost),line,12,Color("9b6c4d"))
+		button("数量・価格",line,func():open_product_review(int(pid),report.day))
+	var sales=[]
+	for pid in report.product_sales:sales.append(sim.products[int(pid)].name+" "+str(report.product_sales[pid])+"個")
+	wrapped("売れたもの："+" / ".join(sales),modal_content,12,MUTED)
+	var hours=[]
+	for hour in range(24):
+		if report.hours.has(hour):hours.append(str(hour)+"時 "+money(report.hours[hour]))
+	wrapped("時間帯別売上："+" / ".join(hours),modal_content,12,MUTED)
+	divider(modal_content)
 func open_winter():
 	open_modal("街に届ける、冬の約束")
 	wrapped("五つ星の先に、あなたの店らしい冬を。",modal_content,21)

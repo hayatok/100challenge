@@ -7,7 +7,7 @@ func run():
 	for dimensions in [Vector2i(375,812),Vector2i(768,1024),Vector2i(1024,768),Vector2i(1440,900),Vector2i(1920,1080)]:
 		root.size=dimensions;main.configure_viewport()
 		await process_frame;await process_frame
-		for screen in ["show_title","open_build","open_products","open_staff","open_residents","open_report","open_winter","open_calendar","open_help","open_settings"]:
+		for screen in ["show_title","open_build","open_products","open_staff","open_residents","open_report","open_management","open_winter","open_calendar","open_help","open_settings"]:
 			main.call(screen)
 			await process_frame;await process_frame
 			screens+=1
@@ -33,6 +33,39 @@ func run():
 		if main.toast.get_global_rect().end.y>dimensions.y+0.5:errors+=1;printerr("Guide pushed controls below the window at ",dimensions)
 		g.hidden=true
 
+	# Empty dialogs cannot prove report navigation: generate real sales and losses.
+	while main.sim.s.tick<4320:main.sim.step()
+	var reports_before=JSON.stringify(main.sim.s.reports)
+	for dimensions in [Vector2i(375,812),Vector2i(768,1024),Vector2i(1024,768),Vector2i(1440,900),Vector2i(1920,1080)]:
+		root.size=dimensions;main.configure_viewport();main.open_report(2)
+		await process_frame;await process_frame
+		screens+=1;inspect(main,dimensions.x,"actual daily report")
+		var first=main.sim.s.reports[0];var second=main.sim.s.reports[1]
+		if not contains_label(main.modal,"前日比：売上 "+main.signed_money(second.sales-first.sales)):
+			errors+=1;printerr("Report comparison did not use the selected day's predecessor")
+		main.open_report(1);await process_frame;await process_frame
+		var waste=find_button(main.modal,"数量・価格")
+		if waste==null:errors+=1;printerr("Natural waste had no adjustment action");continue
+		waste.pressed.emit();await process_frame;await process_frame
+		screens+=1;inspect(main,dimensions.x,"report product adjustment")
+		var ids=first.waste_products.keys();ids.sort_custom(func(a,b):return first.waste_products[a].cost>first.waste_products[b].cost)
+		var product=int(ids[0])
+		if main.modal_title!=main.sim.products[product].name+"の見直し":errors+=1;printerr("Waste action opened a different product")
+		var price=find_class(main.modal,"OptionButton");price.item_selected.emit(0)
+		var target=find_class(main.modal,"SpinBox");target.value=4
+		if main.sim.s.prices.get(product,1)!=0 or main.sim.s.targets.get(product,0)!=4:errors+=1;printerr("Report adjustment did not change actual price and target")
+		find_button(main.modal,"1日目の日報へ戻る").pressed.emit()
+		await process_frame;await process_frame
+		if contains_label(main.modal,"前日比："):errors+=1;printerr("Return action lost the selected first day")
+		main.open_report(3);await process_frame;await process_frame
+		var person=find_button(main.modal,"本人を見る")
+		if person==null:errors+=1;printerr("Natural lost visit had no resident action");continue
+		var expected=main.sim.s.reports[2].lost_visits[0].rid
+		person.pressed.emit();await process_frame;await process_frame
+		screens+=1;inspect(main,dimensions.x,"report resident")
+		if main.selected_id!=expected:errors+=1;printerr("Lost-visit action opened a different resident")
+		find_button(main.modal,"3日目の日報へ戻る").pressed.emit()
+	if JSON.stringify(main.sim.s.reports)!=reports_before:errors+=1;printerr("Product adjustment rewrote past reports")
 	root.size=Vector2i(1440,900);main.configure_viewport();main.close_modal()
 	main.on_pick("resident",0)
 	await process_frame
@@ -79,3 +112,15 @@ func inspect_story_labels(node:Node):
 		if font.get_string_size(node.text,HORIZONTAL_ALIGNMENT_LEFT,-1,font_size).x>available:
 			errors+=1;printerr("Story progress is clipped: ",node.text)
 	for child in node.get_children():inspect_story_labels(child)
+
+func contains_label(node:Node,prefix:String) -> bool:
+	if node is Label and node.text.begins_with(prefix):return true
+	for child in node.get_children():
+		if contains_label(child,prefix):return true
+	return false
+func find_class(node:Node,kind:String):
+	if node.get_class()==kind:return node
+	for child in node.get_children():
+		var found=find_class(child,kind)
+		if found!=null:return found
+	return null

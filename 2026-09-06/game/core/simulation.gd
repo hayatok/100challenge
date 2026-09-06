@@ -524,7 +524,7 @@ func choose(v:Dictionary):
 			elif affordable==0:reason="予算"
 			elif reachable==0:reason="通路"
 			v.failure_reason=reason;miss(reason)
-			v.mood=(need_name(need)+"：" if seeking else "")+{"品揃え":"探している品がない","欠品":"棚が空っぽ","予算":"予算を超えてしまう","通路":"売り場へ行けない","価格":"この値段だと見送ろう"}[reason]
+			v.mood=(need_name(need)+"：" if seeking else "")+{"品揃え":"探している品がない","欠品":"棚が空っぽ","予算":"予算を超えてしまう","通路":"売り場へ行けない","価格":"今日は買いたいものがないな"}[reason]
 			r.last_reason=v.mood;leave(v,false)
 		else:v.state="checkout"
 		return
