@@ -43,7 +43,7 @@ func update(game):
 	if s.star>=1 and s.cash>28000 and s.fixtures.size()<11:
 		var kind=9 if focus in [2,4] else (11 if focus==6 else 8)
 		if do(game,"place",{"kind":kind,"x":9,"y":2,"dir":3}).is_empty():
-			do(game,"assign",{"fixture":s.next_fixture-1,"product":focus*10+1})
+			do(game,"assign",{"fixture":s.next_fixture-1,"product":43 if focus==4 else focus*10+1})
 	# Two small flexible bays have the same capital cost in the fixed and adaptive comparisons.
 	if s.star>=2 and s.cash>42000:
 		for bay in [[9,9,4,20],[8,9,6,10]]:
@@ -119,6 +119,6 @@ func prepare_promise(game):
 		var candidates=game.products.filter(func(p):return p.unlock<=game.s.star and Stories.product_matches(p.id,group))
 		# Keep a long-lived option for the night instead of relying on a 12-hour hot case.
 		candidates.sort_custom(func(a,b):return a.cost+(150 if a.life<=1440 else 0)<b.cost+(150 if b.life<=1440 else 0))
-		var p=candidates[0];var kind=17 if p.cat in [2,4] else (11 if p.cat==6 else 16)
+		var p=candidates[0];var kind=14 if p.storage=="frozen" else (17 if p.storage=="chilled" else (11 if p.storage=="hot" else 16))
 		if game.s.cash-game.equipment[kind].cost<game.review_metrics().reserve:continue
 		if do(game,"place",{"kind":kind,"x":x,"y":11,"dir":2}).is_empty():do(game,"assign",{"fixture":game.s.next_fixture-1,"product":p.id})

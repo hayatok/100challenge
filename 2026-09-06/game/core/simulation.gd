@@ -15,7 +15,7 @@ func _init(world_seed:int=20260906):
 
 func reset(world_seed:int):
 	rng.seed=world_seed
-	s={"layout_version":2,"seed":world_seed,"rng":rng.state,"tick":0,"day":1,"cash":42000,"tier":0,"star":0,"residents":Catalog.residents(world_seed),"staff":Catalog.staff(),"fixtures":[],"warehouse":[],"orders":[],"visits":[],"next_visit":0,"next_fixture":0,"prices":{},"targets":{},"auto":false,"auto_limit":8000,"reports":[],"today":new_report(1),"logs":[],"effects":[],"schedule":[],"clean":100.0,"loan":false,"debt":0,"due":0,"review":{},"pending_review":false,"winter_plan":"","won":false,"result":"","practice":false,"tutorial":0,"favorites":[],"streak":0,"seasons_profit":[],"event_pass":false,"elapsed":0,"episode_events":[]}
+	s={"layout_version":2,"storage_version":1,"seed":world_seed,"rng":rng.state,"tick":0,"day":1,"cash":42000,"tier":0,"star":0,"residents":Catalog.residents(world_seed),"staff":Catalog.staff(),"fixtures":[],"warehouse":[],"orders":[],"visits":[],"next_visit":0,"next_fixture":0,"prices":{},"targets":{},"auto":false,"auto_limit":8000,"reports":[],"today":new_report(1),"logs":[],"effects":[],"schedule":[],"clean":100.0,"loan":false,"debt":0,"due":0,"review":{},"pending_review":false,"winter_plan":"","won":false,"result":"","practice":false,"tutorial":0,"favorites":[],"streak":0,"seasons_profit":[],"event_pass":false,"elapsed":0,"episode_events":[]}
 	for cat in 8:
 		var kind=[0,0,1,0,1,0,3,4][cat]
 		var layout=[Vector3i(5,3,3),Vector3i(6,3,1),Vector3i(5,0,0),Vector3i(5,5,3),Vector3i(6,0,0),Vector3i(6,5,1),Vector3i(2,9,3),Vector3i(11,4,3)]
@@ -136,8 +136,8 @@ func command(name:String,args:Dictionary={}) -> String:
 			if f.is_empty() or p not in range(80):return "棚と商品を選んでください。"
 			if equipment[f.kind].capacity<=0:return "この設備には商品を置けません。"
 			if products[p].unlock>s.star:return "まだ仕入れ先が解放されていません。"
-			if not compatible(f,p):return "この商品には冷蔵・保温など対応する棚が必要です。"
-			if volume(s.warehouse)+volume(f.lots)>warehouse_capacity():return "入れ替える在庫を置く倉庫の空きがありません。"
+			if not compatible(f,p):return equipment[f.kind].name+"は「"+Catalog.equipment_use(f.kind)+"」。"+products[p].name+"は"+Catalog.storage_label(products[p].storage)+"の商品です。"
+			if volume(f.lots)>0 and volume(s.warehouse)+volume(f.lots)>warehouse_capacity():return "入れ替える在庫を置く倉庫の空きがありません。"
 			s.warehouse.append_array(f.lots);f.lots=[];f.product=p
 			s.tutorial=maxi(s.tutorial,1)
 		"place","move":
@@ -225,10 +225,21 @@ func command(name:String,args:Dictionary={}) -> String:
 	return ""
 
 func compatible(f:Dictionary,p:int) -> bool:
-	var kind=equipment[f.kind].kind;var cat=products[p].cat
-	if cat in [2,4]:return kind=="cold"
-	if cat==6:return kind=="hot"
-	return kind=="shelf" or kind=="cold"
+	return Catalog.accepts(f.kind,products[p])
+
+func restore_storage_state() -> String:
+	if s.get("storage_version",0)>=1:return ""
+	var changed=[]
+	for f in s.fixtures:
+		if f.product>=0 and not compatible(f,f.product):
+			changed.append(f.id);s.warehouse.append_array(f.lots);f.lots=[];f.product=-1
+	s.storage_version=1
+	if changed.is_empty():return ""
+	# Migration must preserve every lot even if the warehouse is temporarily over capacity.
+	# Normal replenishment clears that overflow; no expiry dates or money are changed.
+	for w in s.staff:s.warehouse.append_array(w.carry);w.carry=[]
+	repath_all()
+	return "保管条件を更新しました。対応しない売り場"+str(changed.size())+"か所の商品を、期限を保って倉庫へ戻しました。対応する棚に並べ直せます。"
 func order(p:int,amount:int) -> String:
 	if p not in range(80) or amount<=0 or amount>100:return "発注数は1〜100個です。"
 	if products[p].unlock>s.star:return "この商品はまだ解放されていません。"

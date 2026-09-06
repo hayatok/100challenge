@@ -9,7 +9,7 @@ const PRODUCT_NAMES = [
 ["あんパン", "クロワッサン", "ミルクパン", "会議が長引くほど長いパン", "メロンパン", "もちもちベーグル", "焼きいもパン", "議事録フランス", "ふわふわ食パン", "町のバターロール"],
 ["緑茶", "ブラックコーヒー", "天然水", "ミルクティー", "明日から早起きラテ", "炭酸レモン", "飲む会議休憩", "ほうじ茶", "特濃ミルク", "季節の果実ジュース"],
 ["塩せんべい", "ポテトチップス", "板チョコ", "深夜の言い訳チョコ", "ナッツ", "枝豆スナック", "いちごクッキー", "一粒で会議終了飴", "バタークッキー", "ごほうび詰め合わせ"],
-["カスタードプリン", "ミルクシュー", "いちごロール", "明日から本気プリン", "抹茶プリン", "杏仁豆腐", "投票用プリン", "焼きいもタルト", "大人のコーヒーゼリー", "街角パフェ"],
+["カスタードプリン", "ミルクアイス", "いちごロール", "明日から本気プリン", "抹茶プリン", "杏仁豆腐", "投票用プリン", "焼きいもタルト", "大人のコーヒーゼリー", "街角パフェアイス"],
 ["しょうゆラーメン", "カレーうどん", "塩焼きそば", "静かなる激辛焼きそば", "わかめスープ", "冷やし中華", "まだ引き分け担々麺", "きつねうどん", "ごま味噌ラーメン", "ぜいたく海鮮麺"],
 ["肉まん", "からあげ串", "コロッケ", "勇者の休憩チキン", "焼きいも", "あんまん", "おでん", "熱意だけは熱い肉まん", "チーズつくね", "特製あつあつスープ"],
 ["朝刊", "ポケットティッシュ", "ノート", "傘", "漫画週刊誌", "絆創膏", "書くと休みたいペン", "電池", "街の小説", "大人の自由帳"]]
@@ -37,14 +37,42 @@ static func products() -> Array:
 			var price = base + v * 22
 			var joke = PRODUCT_NAMES[cat][v].length() > 8 or (cat == 4 and v == 6)
 			result.append({"id":cat*10+v,"name":PRODUCT_NAMES[cat][v],"cat":cat,"price":price,"cost":roundi(price * (0.59 if v < 4 else 0.66)),"unlock":mini(4, v / 2),"life":[1440,2880,8640,10080,1200,14400,720,28800][cat],"size":2 if cat == 1 and v in [3,7] else 1,"quality":1.0+v*0.06,"joke":joke,"color":COLORS[cat],"note":"棚を2つ使う長さ。会議も、お腹も長持ち。" if cat==1 and v in [3,7] else ("本日中に。明日の決意は明日考えます。" if cat==4 and v==3 else ("好みが合う人には、忘れられない一品。" if joke else "毎日の暮らしに、小さなおいしさ。"))})
+	for p in result:
+		p.storage="frozen" if p.id in [41,49] else ("chilled" if p.cat in [2,4] else ("hot" if p.cat==6 else "ambient"))
+		if p.storage=="frozen":
+			p.life=10080;p.unlock=maxi(1,p.unlock)
+			p.note="一週間分の小さな涼しさ。冷凍ケースで販売。" if p.id==41 else "街角のごほうび、ひんやり積み上げました。冷凍ケースで販売。"
 	return result
+
+static func storage_label(storage:String) -> String:
+	return {"ambient":"常温","chilled":"冷蔵","hot":"保温","frozen":"冷凍"}.get(storage,storage)
+
+static func equipment_use(id:int) -> String:
+	if id==4:return "くらし・雑誌専用"
+	if id==12:return "パン専用 / 常温"
+	if id==13:return "スイーツ専用 / 冷蔵"
+	if id==14:return "アイス専用 / 冷凍"
+	if id in [0,8,16]:return "常温の商品"
+	if id in [1,9,17]:return "冷蔵品・常温食品 / アイス不可"
+	if id in [3,11]:return "保温が必要な食品"
+	return {2:"お会計",10:"お会計 / 速度1.5倍",18:"お会計 / 速度2.1倍",5:"清掃効率が1.7倍に",6:"疲労回復が早くなる",19:"短い休憩で疲労回復",7:"待てる時間 +2分（計8分まで）",15:"待てる時間 +4分（計8分まで）"}.get(id,"")
+
+static func accepts(id:int,p:Dictionary) -> bool:
+	if id==4:return p.cat==7 and p.storage=="ambient"
+	if id==12:return p.cat==1 and p.storage=="ambient"
+	if id==13:return p.cat==4 and p.storage=="chilled"
+	if id==14:return p.storage=="frozen"
+	if id in [0,8,16]:return p.storage=="ambient"
+	if id in [1,9,17]:return p.storage=="chilled" or (p.storage=="ambient" and p.cat!=7)
+	if id in [3,11]:return p.storage=="hot"
+	return false
 
 static func equipment() -> Array:
 	var rows = [
 ["金属の陳列棚","shelf",1800,24,0,0], ["冷蔵ケース","cold",3200,24,0,0], ["レジカウンター","register",4000,0,0,1], ["ホットケース","hot",2800,18,0,0],
-["雑誌ラック","shelf",1700,18,0,0], ["清掃セット","clean",1500,0,0,0], ["スタッフベンチ","rest",2200,0,0,0], ["鉢植え","decor",900,0,0,0],
+["くらし・雑誌ラック","shelf",1700,18,0,0], ["清掃セット","clean",1500,0,0,0], ["スタッフベンチ","rest",2200,0,0,0], ["鉢植え","decor",900,0,0,0],
 ["ワイド陳列棚","shelf",4200,40,1,0], ["大型冷蔵ケース","cold",6000,42,1,0], ["高速レジ","register",9000,0,2,1.5], ["大きなホットケース","hot",5100,30,1,0],
-["パン専用棚","shelf",3800,36,1,0], ["スイーツケース","cold",7000,48,2,0], ["冷凍ケース","cold",6500,40,2,0], ["観葉植物","decor",2400,0,2,0],
+["パン専用棚","shelf",3800,36,1,0], ["スイーツケース","cold",7000,48,2,0], ["冷凍ケース","cold",6500,40,1,0], ["観葉植物","decor",2400,0,2,0],
 ["業務用陳列棚","shelf",8800,60,3,0], ["業務用冷蔵庫","cold",11000,60,3,0], ["特急レジ","register",16000,0,4,2.1], ["休憩ソファ","rest",6800,0,3,0]]
 	var out = []
 	for i in rows.size():

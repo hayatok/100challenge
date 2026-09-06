@@ -385,6 +385,7 @@ func if_modal_detail():
 func fixture_details(parent:Node,f:Dictionary):
 	var e=sim.equipment[f.kind]
 	label("売り場  No."+str(f.id+1),parent,11,MUTED);wrapped(e.name,parent,22)
+	wrapped(Cat.equipment_use(e.id),parent,12,MUTED)
 	if f.product>=0:
 		var p=sim.products[f.product];var icon=ProductIcon.new();icon.product=p;parent.add_child(icon);wrapped(p.name,parent,17)
 		if parent==sidebar:
@@ -393,7 +394,7 @@ func fixture_details(parent:Node,f:Dictionary):
 		else:
 			stat(parent,"棚の在庫",str(sim.counts(f.lots))+"個");stat(parent,"倉庫",str(sim.counts(sim.s.warehouse,p.id))+"個")
 		stat(parent,"棚の容量",str(e.capacity)+"枠")
-		wrapped(Goods.description(p.id)+"\n"+p.note,parent,12,MUTED)
+		wrapped(Cat.storage_label(p.storage)+" / "+Goods.description(p.id)+"\n"+p.note,parent,12,MUTED)
 		button("この商品を発注",parent,func():category_filter=p.cat;open_products())
 	elif e.capacity>0:wrapped("商品を決めて、売り場をつくろう。",parent)
 	if e.capacity>0:button("並べる商品を変更",parent,func():open_assign(f.id))
@@ -443,7 +444,7 @@ func open_build():
 	button("向き："+["南東","南西","北西","北東"][build_dir],h,func():build_dir=(build_dir+1)%4;open_build())
 	for e in sim.equipment:
 		var r=row(modal_content)
-		var l=wrapped(e.name+"\n"+{"shelf":"常温の売り場","cold":"飲料・スイーツにも","hot":"温かいもの","register":"お会計","clean":"清掃効率が1.7倍に","rest":"疲労回復が早くなる","decor":"待てる時間 +2分（大鉢+4分・計8分まで）"}.get(e.kind,"")+ (" / "+str(e.capacity)+"枠" if e.capacity else ""),r,14);l.size_flags_horizontal=Control.SIZE_EXPAND_FILL
+		var l=wrapped(e.name+"\n"+Cat.equipment_use(e.id)+ (" / "+str(e.capacity)+"枠" if e.capacity else ""),r,14);l.size_flags_horizontal=Control.SIZE_EXPAND_FILL
 		label(money(e.cost),r,15)
 		var b=button("配置" if e.unlock<=sim.s.star else "星"+str(e.unlock),r,func():build_kind=e.id;move_id=-1;view.move_id=-1;view.build_kind=e.id;view.build_dir=build_dir;restore_pause=true;close_modal(),70)
 		b.disabled=e.unlock>sim.s.star
@@ -451,7 +452,7 @@ func open_assign(fid:int):
 	var f=sim.fixture(fid)
 	if f.is_empty():return
 	open_modal("棚に並べる商品")
-	wrapped(sim.equipment[f.kind].name+" / 商品を選ぶと今の在庫は倉庫に戻ります。",modal_content)
+	wrapped(sim.equipment[f.kind].name+"："+Cat.equipment_use(f.kind)+"\n商品を選ぶと今の在庫は倉庫に戻ります。",modal_content)
 	for p in sim.products:
 		if p.unlock>sim.s.star or not sim.compatible(f,p.id):continue
 		button(p.name+"  "+money(sim.selling_price(p.id)),modal_content,func():act("assign",{"fixture":fid,"product":p.id});close_modal())
@@ -475,8 +476,10 @@ func open_products():
 		var card=VBoxContainer.new();modal_content.add_child(card)
 		var name_row=row(card);var icon=ProductIcon.new();icon.product=p;name_row.add_child(icon);var title=wrapped(p.name,name_row,17);title.size_flags_horizontal=Control.SIZE_EXPAND_FILL
 		label("星"+str(p.unlock)+"で解放" if p.unlock>sim.s.star else "原価 "+money(p.cost),name_row,12,MUTED)
-		wrapped(Goods.description(p.id)+"\n"+p.note+"  /  期限 "+str(p.life/60)+"時間"+(" / 2枠使用" if p.size==2 else ""),card,12,MUTED)
+		wrapped(Cat.storage_label(p.storage)+" / "+Goods.description(p.id)+"\n"+p.note+"  /  期限 "+str(p.life/60)+"時間"+(" / 2枠使用" if p.size==2 else ""),card,12,MUTED)
 		if p.unlock>sim.s.star:divider(modal_content);continue
+		if not sim.s.fixtures.any(func(f):return sim.compatible(f,p.id)):
+			wrapped("対応する売り場がありません。建設で"+("冷凍ケース" if p.storage=="frozen" else Cat.storage_label(p.storage)+"の設備")+"を用意してください。",card,12,Color("a85240"))
 		var controls=flow(card)
 		label("店全体 "+str(sim.total_stock(p.id))+"個",controls,13)
 		var expiring=sim.stock_expiring(p.id)
@@ -646,7 +649,8 @@ func load_game(path:String=""):
 	if file==null:return
 	var value=file.get_var();file.close()
 	if typeof(value)!=TYPE_DICTIONARY or not value.has("game") or not value.game.has("residents"):toast.text="お店を読み込めませんでした。";return
-	sim.s=value.game;var layout_notice=sim.restore_spatial_state();view.sim=sim;last_star=sim.s.star
+	sim.s=value.game;var layout_notice=sim.restore_spatial_state();var storage_notice=sim.restore_storage_state();view.sim=sim;last_star=sim.s.star
+	if not storage_notice.is_empty():layout_notice+="\n"+storage_notice
 	for actor in sim.s.visits+sim.s.staff:actor.prev=actor.pos
 	var config=value.get("settings",{});sound.music_volume=config.get("music",0.24);sound.effects_volume=config.get("effects",0.45);sound.ambient_volume=config.get("ambient",0.16);view.reduced=config.get("reduced",false)
 	ui_scale=config.get("scale",1.0);keys=config.get("keys",keys);theme=make_theme();apply_text_scale(self)

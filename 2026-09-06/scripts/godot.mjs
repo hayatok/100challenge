@@ -10,7 +10,7 @@ if(info.status!==0||!info.stdout.startsWith(version+'.stable'))throw new Error(`
 const command=process.argv[2];
 const project=path.join(root,'game');
 mkdirSync(path.join(root,'dist'),{recursive:true});mkdirSync(path.join(root,'builds/macos'),{recursive:true});
-const modes={import:['--editor','--import','--quit'],test:['--script','res://tests/run.gd'],ui:['--script','res://tests/ui.gd'],flow:['--script','res://tests/shopping_flow.gd'],campaign:['--script','res://tests/campaign.gd'],city:['--script','res://tests/city.gd'],stories:['--script','res://tests/stories.gd'],circulation:['--script','res://tests/circulation.gd'],balance:['--script','res://tests/balance.gd'],build:['--export-release','Web'],debug:['--export-debug','Web'],mac:['--export-release','macOS']};
+const modes={import:['--editor','--import','--quit'],test:['--script','res://tests/run.gd'],ui:['--script','res://tests/ui.gd'],storage:['--script','res://tests/storage.gd'],flow:['--script','res://tests/shopping_flow.gd'],campaign:['--script','res://tests/campaign.gd'],city:['--script','res://tests/city.gd'],stories:['--script','res://tests/stories.gd'],circulation:['--script','res://tests/circulation.gd'],balance:['--script','res://tests/balance.gd'],build:['--export-release','Web'],debug:['--export-debug','Web'],mac:['--export-release','macOS']};
 if(command==='editor'){
  const child=spawn(executable,['--path',project,'--editor'],{stdio:'ignore',detached:true});child.unref();
 }else{
@@ -29,7 +29,7 @@ if(command==='editor'){
  const output=(result.stdout||'')+(result.stderr||'');
  if(result.status!==0||invalidOutput||/(?:SCRIPT ERROR|ERROR:)/.test(output)){if(command!=='balance')process.stderr.write(output);process.exit(1);}
  if(['build','debug'].includes(command))copyFileSync(path.join(root,'art/cover.png'),path.join(root,'dist/machiakari-cover.png'));
- if(['test','balance','ui','circulation','stories','city','campaign','flow'].includes(command)){if(command!=='balance')process.stdout.write(output);}
+ if(['test','balance','ui','circulation','stories','city','campaign','flow','storage'].includes(command)){if(command!=='balance')process.stdout.write(output);}
  else console.log(`Godot ${version}: ${command} passed`);
 
 }

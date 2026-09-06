@@ -639,6 +639,8 @@ func items(f:Dictionary,x:float,y:float,z:float,row:int,rows:int=3):
 					paint_rect(Rect2(p+Vector2(0,-6),Vector2(6,8)),ink);paint_rect(Rect2(p+Vector2(0,-6),Vector2(6,2)),paper);paint_rect(Rect2(p+Vector2(2,-2),Vector2(2,2)),Color("e7ab53"));continue
 				paint_rect(Rect2(p+Vector2(2,-6),Vector2(2,2)),paper);paint_rect(Rect2(p+Vector2(0,-4),Vector2(6,6)),c);paint_rect(Rect2(p+Vector2(0,-2),Vector2(6,2)),paper)
 			4:
+				if variant in [1,9]:
+					paint_rect(Rect2(p+Vector2(0,-6),Vector2(6,8)),ink);paint_rect(Rect2(p+Vector2(0,-6),Vector2(6,6)),paper);paint_rect(Rect2(p+Vector2(2,-4),Vector2(2,4)),Color("67a9bb") if variant==1 else Color("d65b54"));continue
 				paint_rect(Rect2(p+Vector2(0,-2),Vector2(6,4)),Color("e7ab53"));paint_rect(Rect2(p+Vector2(0,-4),Vector2(6,2)),Color("70463f"));paint_rect(Rect2(p+Vector2(2,0),Vector2(2,2)),paper)
 			5:
 				paint_rect(Rect2(p+Vector2(0,-4),Vector2(6,2)),paper);paint_rect(Rect2(p+Vector2(0,-2),Vector2(6,4)),c);paint_rect(Rect2(p+Vector2(2,0),Vector2(2,2)),paper)

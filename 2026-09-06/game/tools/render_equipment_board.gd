@@ -7,7 +7,7 @@ class Swatch extends "res://store_scene.gd":
 		if sim==null or font==null:return
 		labels=[];scale_world=0.5;origin=Vector2(48,65)
 		draw_set_transform(origin,0,Vector2.ONE*scale_world)
-		var product=[0,20,-1,60,74,-1,-1,-1,30,20,-1,60,10,40,40,-1,50,20,-1,-1][equipment_id]
+		var product=[0,20,-1,60,74,-1,-1,-1,30,20,-1,60,10,40,41,-1,50,20,-1,-1][equipment_id]
 		var f={"id":0,"kind":equipment_id,"x":0,"y":0,"dir":direction,"product":product,"lots":[] if product<0 else [sim.lot(product,sim.equipment[equipment_id].capacity)],"ready":0}
 		draw_fixture(f);draw_set_transform(Vector2.ZERO)
 func _init():call_deferred("render_board")

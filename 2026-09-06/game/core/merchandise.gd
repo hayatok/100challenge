@@ -6,7 +6,7 @@ const PROFILES=[
 ["bread sweet","bread light","bread sweet light","bread hearty novel","bread sweet","bread health","bread sweet seasonal","bread hearty novel","bread light","bread sweet seasonal"],
 ["drink tea health cold","drink coffee health","drink health cold","drink tea sweet","drink coffee sweet novel","drink cold","drink coffee novel","drink tea warm","drink hearty cold","drink sweet seasonal cold"],
 ["snack light","snack hearty","snack sweet","snack sweet novel","snack health","snack light","snack sweet cookie","snack sweet novel","snack sweet cookie","snack sweet seasonal cookie"],
-["sweet cold","sweet light","sweet cold","sweet novel cold","sweet tea cold","sweet light cold","sweet novel cold","sweet seasonal","sweet coffee cold","sweet seasonal cold"],
+["sweet cold","sweet light cold","sweet cold","sweet novel cold","sweet tea cold","sweet light cold","sweet novel cold","sweet seasonal","sweet coffee cold","sweet seasonal cold"],
 ["noodle warm","noodle spicy warm","noodle hearty","noodle spicy novel","soup warm health","noodle cold seasonal","noodle spicy novel","noodle warm light","noodle warm hearty","noodle hearty seasonal"],
 ["warm hearty","warm hearty","warm hearty","warm hearty novel","warm sweet seasonal","warm sweet","warm soup seasonal","warm hearty novel","warm hearty","warm soup health"],
 ["practical news","practical light","practical","practical rain","practical novel","practical health","practical novel","practical","practical light","practical novel"]]

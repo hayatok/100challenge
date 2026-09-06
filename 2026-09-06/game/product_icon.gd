@@ -74,7 +74,8 @@ func _draw():
 				pack([GOLD,RED,DARK,DARK,PAPER,GREEN,RED,BLUE][v])
 				for i in 3:p(6+i*3,8+(i%2)*3,3,3,BROWN if v in [0,1,4,6] else (PAPER if v==5 else RED))
 		4:
-			if v==1:bun(PAPER);p(3,11,14,2,GOLD);p(6,5,7,1,PAPER)
+			if v==1:
+				p(8,13,4,6,DARK);p(9,13,2,5,BROWN);p(4,3,12,12,INK);p(6,1,8,3,INK);p(5,4,10,10,PAPER);p(7,2,6,3,PAPER);p(6,5,2,6,BLUE)
 			elif v==2:
 				p(3,5,14,12,INK);p(4,6,12,10,PAPER);p(6,7,9,8,GOLD);p(7,8,7,6,PAPER);p(9,9,4,4,RED);p(3,15,14,2,GOLD)
 			elif v==7:
