@@ -49,6 +49,7 @@ var wall: float = 0
 var captured: bool = false
 var pixel_ratio: float = 1.0
 var window_pixels: Vector2i = Vector2i.ZERO
+var window_ratio: float = -1.0
 var backdrop: ColorRect
 
 func _ready() -> void:
@@ -85,7 +86,10 @@ func _ready() -> void:
 	print("LINEAGE ready / seed ", sim.seed_value, " / population ", sim.creatures.size())
 
 func sync_window() -> void:
-	if get_window().size == window_pixels: return
+	# Browser emulation, zoom and monitor changes can alter DPR after startup.
+	if OS.has_feature("web"): pixel_ratio = float(JavaScriptBridge.eval("window.devicePixelRatio || 1"))
+	if get_window().size == window_pixels and is_equal_approx(window_ratio, pixel_ratio): return
+	window_ratio = pixel_ratio
 	window_pixels = get_window().size
 	get_window().content_scale_size = Vector2i(Vector2(window_pixels) / pixel_ratio)
 	get_window().content_scale_factor = 1.0

@@ -16,6 +16,10 @@ func _initialize() -> void:
 	var b: Dictionary = DNA.founder(rng, 3)
 	var original_a: Dictionary = a.duplicate(true)
 	var original_b: Dictionary = b.duplicate(true)
+	var rounded: Dictionary = a.duplicate(true)
+	for key in DNA.KEYS:
+		for i in 2: rounded[key][i] += 0.00000000001
+	check(DNA.structure_seed(a) == DNA.structure_seed(rounded), "negligible platform float rounding does not change structural seed")
 	var art = Art.new()
 	var kinds: Dictionary = {}
 	var structures: Dictionary = {}

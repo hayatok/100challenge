@@ -13,7 +13,7 @@ static func founder(rng: RandomNumberGenerator, family: int) -> Dictionary:
 		g[key] = [clampf(center + rng.randfn(0, 0.10), 0, 1), clampf(center + rng.randfn(0, 0.10), 0, 1)]
 	var p: Dictionary = base_traits(g)
 	var structure_rng = RandomNumberGenerator.new()
-	structure_rng.seed = hash(g)
+	structure_rng.seed = structure_seed(g)
 	g["anatomy"] = [Anatomy.founder(structure_rng, family, p), Anatomy.founder(structure_rng, family, p)]
 	return g
 
@@ -32,11 +32,18 @@ static func cross(a: Dictionary, b: Dictionary, rng: RandomNumberGenerator, muta
 				if absf(delta) > 0.12 and key not in changes: changes.append(key)
 		g[key] = pair
 	var structure_rng = RandomNumberGenerator.new()
-	structure_rng.seed = hash(g)
+	structure_rng.seed = structure_seed(g)
 	var structure: Dictionary = Anatomy.cross(upgrade(a).anatomy, upgrade(b).anatomy, structure_rng, mutate)
 	g["anatomy"] = structure.pair
 	if structure.structural: changes.append("anatomy")
 	return {"genes": g, "changes": changes}
+
+# Do not amplify platform-level float rounding into unrelated body plans.
+static func structure_seed(g: Dictionary) -> int:
+	var values: Array = []
+	for key in KEYS:
+		for value in g[key]: values.append(roundi(float(value) * 1000000.0))
+	return hash(values)
 
 static func allele_value(g: Dictionary, key: String) -> float:
 	if key in STRUCTURAL: return float(g[key][0])

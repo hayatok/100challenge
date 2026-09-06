@@ -64,5 +64,12 @@ func run():
 	check(root.get_visible_rect().encloses(app.inspector.get_global_rect()), "short mobile viewport retains inspector")
 	check(app.selected_detail.get_line_count() * app.selected_detail.get_line_height() <= 110, "dead ancestor and mixed organs fit mobile detail")
 	check(app.selected_detail.position.y + app.selected_detail.size.y <= 154, "detail does not overlap lineage button")
+	root.size = Vector2i(750, 1334)
+	app.pixel_ratio = 2
+	app.sync_window()
+	check(root.get_visible_rect().size == Vector2(375, 667), "retina pixels map to mobile logical size")
+	app.pixel_ratio = 1
+	app.sync_window()
+	check(root.get_visible_rect().size == Vector2(750, 1334), "DPR-only change updates logical size without physical resize")
 	print("UI CHECKS ",checks," / failures ",failures)
 	quit(1 if failures else 0)
