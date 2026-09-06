@@ -88,5 +88,15 @@
     "category": "コンビニ経営ゲーム",
     "thumbnail": "machiakari-cover.png",
     "accent": "#39756c"
+  },
+  {
+    "id": "2026-09-06-2",
+    "date": "2026-09-06",
+    "sequence": 2,
+    "name": "へんないきものの系譜",
+    "description": "親の面影を持つ、ちょっと変な子が生まれる。遺伝と環境から生まれる生き物を眺める2D観察ゲーム。",
+    "category": "進化観察ゲーム",
+    "thumbnail": "lineage-cover.svg",
+    "accent": "#dc694b"
   }
 ]
