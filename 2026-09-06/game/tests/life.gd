@@ -7,6 +7,14 @@ func check(value:bool,message:String):
 	if not value and not failures.has(message):failures.append(message);printerr(message)
 func _init():call_deferred("run")
 func run():
+	# Resume exactly one minute before a real first checkout, not after the first step.
+	var main=load("res://main.tscn").instantiate();root.add_child(main)
+	while main.sim.s.tick<1440 and not main.sim.s.fixtures.any(func(f):return f.get("pay_timer",0)==1):main.sim.step()
+	check(main.sim.s.tick<1440,"No natural checkout boundary found")
+	main.close_modal();main.paused=false;main.speed=1;main.sound.enabled=true
+	var buyers=main.sim.s.today.buyers;main._process(0.25);main.paused=true
+	check(main.sim.s.today.buyers==buyers+1 and main.sound.played_counts.get("sale",0)==1,"Resuming skipped the first actual checkout sound")
+	main.queue_free();await process_frame
 	var sound=Sound.new();root.add_child(sound);await process_frame
 	sound.enabled=true;sound.effect("click");sound.effect("good");sound.effect("error")
 	check(sound.played_counts.get("good",0)==1 and sound.played_counts.get("error",0)==1,"A click swallowed immediate command feedback")

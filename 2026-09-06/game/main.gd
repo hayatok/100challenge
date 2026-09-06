@@ -194,6 +194,7 @@ func responsive():
 func _process(delta):
 	view.animating=not intro and not paused and not modal.visible and sim.s.result.is_empty()
 	if view.animating:
+		if sound.observed_source!=sim.get_instance_id():sound.observe(sim)
 		accum+=minf(delta,0.25)*speed*4
 		while accum>=1:sim.step();Guide.update(sim);sound.observe(sim);accum-=1
 	view.interp=accum;view.reduced=bool(view.reduced)
