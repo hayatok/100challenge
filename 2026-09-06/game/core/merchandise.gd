@@ -1,6 +1,6 @@
 extends RefCounted
 # Authored uses distinguish products inside a category; these are not upgrade ranks.
-const TAG_LABELS={"rice":"お米","bread":"パン","tea":"お茶","coffee":"コーヒー","drink":"飲み物","sweet":"甘い","spicy":"辛い","hearty":"満腹","light":"軽め","warm":"温かい","cold":"冷たい","health":"すっきり","snack":"おやつ","noodle":"麺","practical":"日用品","news":"新聞","rain":"雨支度","novel":"変わり種","seasonal":"季節もの","soup":"スープ","cookie":"焼き菓子"}
+const TAG_LABELS={"dessert":"スイーツ","rice":"お米","bread":"パン","tea":"お茶","coffee":"コーヒー","drink":"飲み物","sweet":"甘い","spicy":"辛い","hearty":"満腹","light":"軽め","warm":"温かい","cold":"冷たい","health":"すっきり","snack":"おやつ","noodle":"麺","practical":"日用品","news":"新聞","rain":"雨支度","novel":"変わり種","seasonal":"季節もの","soup":"スープ","cookie":"焼き菓子"}
 const PROFILES=[
 ["rice light","rice hearty","rice light health","rice hearty warm","rice hearty novel","bread light","rice hearty","rice warm","rice hearty novel","rice seasonal hearty"],
 ["bread sweet","bread light","bread sweet light","bread hearty novel","bread sweet","bread health","bread sweet seasonal","bread hearty novel","bread light","bread sweet seasonal"],
@@ -23,7 +23,10 @@ const TASTES=[
 {"rice":0.8,"coffee":1.0,"light":0.5},
 {"practical":1.0,"health":0.6,"tea":0.4},
 {"warm":0.7,"hearty":0.8,"seasonal":0.7}]
-static func tags(product:int) -> PackedStringArray:return PROFILES[product/10][product%10].split(" ")
+static func tags(product:int) -> PackedStringArray:
+	var result=PROFILES[product/10][product%10].split(" ")
+	if product/10==4:result.append("dessert")
+	return result
 static func description(product:int) -> String:
 	var words=[]
 	for tag in tags(product):words.append(TAG_LABELS[tag])

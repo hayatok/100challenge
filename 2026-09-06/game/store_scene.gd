@@ -109,8 +109,8 @@ func box(x:float,y:float,w:float,d:float,h:float,color:Color,z:float=0):
 	poly([a,b,c,e],color)
 	fixture_turn=saved_turn
 func line(a:Vector2,b:Vector2,color:Color,width:float=1):draw_line(a,b,with_alpha(color),width,false)
-func label(at:Vector2,text:String,color:Color=CREAM,font_size:int=12,bubble:bool=false):
-	labels.append({"at":at if screen_text else origin+at*scale_world,"text":text,"color":color,"size":font_size,"bubble":bubble,"caption":screen_text})
+func label(at:Vector2,text:String,color:Color=CREAM,font_size:int=12,bubble:bool=false,priority:int=0):
+	labels.append({"at":at if screen_text else origin+at*scale_world,"text":text,"color":color,"size":font_size,"bubble":bubble,"caption":screen_text,"priority":priority})
 
 func _draw():
 	if sim==null or font==null:return
@@ -129,10 +129,12 @@ func _draw():
 	for x in range(-5,dims.x+2):
 		for y in range(-4,dims.y+5):
 			if x>=0 and y>=0 and x<dims.x and y<dims.y:continue
-			var c=Color("b9b9ad") if (x+y)%2==0 else Color("798a87")
+			var c=Color("b9b9ad")
 			if x<=-3:c=Color("394357")
 			if x==-2:c=Color("c4c3ae")
 			tile(x,y,c.darkened(0.25) if night else c)
+			if x>-3:
+				line(project(Vector2(x,y)),project(Vector2(x+1,y)),Color("929b94"),1)
 	for y in range(-3,dims.y+4,3):
 		box(-4.1,y,0.07,1.2,0.2,Color("e4d8a9"))
 	for i in 6:box(-4.8,Nav.DOOR.y+i*0.15,2.3,0.065,0.2,Color("e2dfc9"))
@@ -140,9 +142,11 @@ func _draw():
 	box(-0.15,-0.15,dims.x+0.3,dims.y+0.3,8,Color("526861"))
 	for x in dims.x:
 		for y in dims.y:
-			var color=Color("f7e6bc") if (x+y)%2==0 else Color("dfd2ad")
+			var color=Color("f7e6bc")
 			if x<2 and y<3:color=Color("bcbfab") if (x+y)%2==0 else Color("b0b59f")
 			tile(x,y,color,9)
+			line(project(Vector2(x,y),9),project(Vector2(x+1,y),9),Color("dfd2ad"),1)
+			line(project(Vector2(x,y),9),project(Vector2(x,y+1),9),Color("dfd2ad"),1)
 			if (x*13+y*7)%9==0:
 				var at=project(Vector2(x+0.6,y+0.4),9);paint_rect(Rect2(at,Vector2(2,1)),Color("cfc5aa"))
 	# Rear walls, teal skirting, windows and hand-lettered store name.
@@ -242,7 +246,7 @@ func _draw():
 		var pos=project(Vector2(e.pos)+Vector2(0.5,0.5),66+(0 if reduced else age*1.2))
 		var width=font.get_string_size(e.text,HORIZONTAL_ALIGNMENT_LEFT,-1,12).x
 		pass
-		label(pos-Vector2(width/2,0),e.text,Color("397263") if e.kind=="good" else Color("956544"),12,true)
+		label(pos-Vector2(width/2,0),e.text,Color("397263") if e.kind=="good" else Color("956544"),12,true,1)
 	draw_set_transform(Vector2.ZERO)
 	# Daylight tint stays subtle and leaves menus legible.
 	if night:paint_rect(Rect2(Vector2.ZERO,size),Color(0.07,0.12,0.26,0.14))
@@ -274,23 +278,36 @@ func draw_fixture(f:Dictionary):
 	match e.kind:
 		"register":
 			height=32
-			box(x+0.04,y+0.04,0.92,0.92,28,Color("528879"),10)
-			box(x,y,1,1,5,Color("ece3cb"),38)
-			box(x+0.35,y+0.25,0.38,0.3,8,Color("425258"),43)
-			box(x+0.4,y+0.28,0.3,0.1,10,Color("264950"),51)
-			var p=project(Vector2(x+0.5,y+0.38),59);paint_rect(Rect2(p,Vector2(9,4)),Color("9ad1ac"))
-			label(project(Vector2(x+0.45,y+0.9),30),"レジ",CREAM,9)
+			box(x+0.04,y+0.04,0.92,0.92,28,Color("378c78"),10)
+			box(x+0.06,y+0.93,0.88,0.04,5,Color("d65b54"),31)
+			box(x,y,1,1,5,Color("f7e6bc"),38)
+			box(x+0.12,y+0.18,0.46,0.32,5,Color("20283f"),43)
+			box(x+0.17,y+0.20,0.36,0.08,12,Color("20283f"),48)
+			box(x+0.20,y+0.27,0.30,0.03,7,Color("67a9bb"),51)
+			box(x+0.66,y+0.57,0.22,0.25,2,Color("67a9bb"),43)
+			box(x+0.65,y+0.20,0.10,0.18,4,Color("20283f"),43)
+			if f.kind!=2:box(x+0.76,y+0.18,0.14,0.08,9,Color("e7ab53"),43)
 		"cold":
-			height=51
-			box(x+0.06,y+0.05,0.9,0.9,47,Color("cedcce"),10)
-			box(x+0.08,y+0.08,0.84,0.85,3,Color("6b9c99"),57)
+			height=65
+			box(x+0.04,y+0.06,0.92,0.84,54,Color("20283f"),10)
+			box(x+0.02,y+0.04,0.96,0.90,5,Color("f7e6bc"),64)
+			box(x+0.08,y+0.90,0.84,0.05,4,Color("67a9bb"),63)
+			for side in [0.04,0.90]:box(x+side,y+0.86,0.06,0.10,50,Color("b9b9ad"),14)
 			for row in 3:
-				box(x+0.12,y+0.53,0.76,0.38,2,Color("8bacab"),21+row*12)
-				items(f,x+0.12,y+0.64,25+row*12,row)
+				box(x+0.12,y+0.53,0.76,0.38,2,Color("67a9bb"),20+row*14)
+				items(f,x+0.12,y+0.74,24+row*14,row)
+				price_rail(x+0.12,y+0.92,0.76,20+row*14)
+			box(x+0.05,y+0.91,0.90,0.04,5,Color("b9b9ad"),11)
+			for i in 6:box(x+0.15+i*0.12,y+0.96,0.06,0.01,2,Color("20283f"),12)
 		"hot":
-			box(x+0.05,y+0.05,0.9,0.9,18,Color("a47753"),10)
-			box(x+0.12,y+0.1,0.78,0.7,25,Color("e9cf95"),28)
-			for row in 2:items(f,x+0.14,y+0.65,32+row*11,row)
+			height=51
+			box(x+0.05,y+0.05,0.9,0.9,18,Color("d65b54"),10)
+			box(x+0.12,y+0.1,0.78,0.7,25,Color("70463f"),28)
+			for row in 2:
+				box(x+0.14,y+0.5,0.72,0.38,2,Color("e7ab53"),29+row*12)
+				items(f,x+0.14,y+0.73,33+row*12,row)
+			for side in [0.10,0.85]:box(x+side,y+0.85,0.05,0.05,27,Color("f7e6bc"),27)
+			box(x+0.08,y+0.08,0.84,0.84,4,Color("e7ab53"),53)
 			var p=project(Vector2(x+0.5,y+0.3),58)
 			if not reduced and sim.counts(f.lots)>0:
 				for i in 2:paint_rect(Rect2(p+Vector2(i*7,sin(clock*2+i)*3),Vector2(3,5)),Color(1,1,0.87,0.55))
@@ -307,11 +324,13 @@ func draw_fixture(f:Dictionary):
 			box(x+0.3,y+0.3,0.4,0.4,18,Color("7c9b99"),10)
 			var p=project(Vector2(x+0.6,y+0.5),10);line(p,p+Vector2(3,-42),Color("a57955"),3)
 		_:
-			box(x+0.04,y+0.08,0.92,0.82,38,Color("858991"),10)
+			box(x+0.04,y+0.08,0.92,0.82,38,Color("596070"),10)
 			box(x+0.01,y+0.04,0.98,0.14,44,Color("b9b9ad"),10)
+			for side in [0.02,0.91]:box(x+side,y+0.85,0.06,0.08,42,Color("b9b9ad"),10)
 			for row in 3:
 				box(x+0.02,y+0.2,0.95,0.73,3,Color("f7e6bc"),16+row*13)
-				items(f,x+0.10,y+0.6,21+row*13,row)
+				items(f,x+0.10,y+0.74,21+row*13,row)
+				price_rail(x+0.04,y+0.94,0.9,16+row*13)
 	if f.product>=0:
 		var p=project(Vector2(x+0.52,y+1),13)
 		paint_rect(Rect2(p-Vector2(9,8),Vector2(18,10)),CREAM)
@@ -321,6 +340,10 @@ func draw_fixture(f:Dictionary):
 	fixture_turn=0
 	var center=cell_screen(Vector2(x+0.5,y+0.5),height/2+9)
 	hit_fixtures.append({"id":f.id,"rect":Rect2(center-Vector2(30,height/2+10)*scale_world,Vector2(60,height+30)*scale_world)})
+func price_rail(x:float,y:float,width:float,z:float):
+	box(x,y,width,0.04,3,Color("378c78"),z)
+	for i in 3:
+		box(x+0.06+i*width/3,y+0.04,0.12,0.02,2,Color("f7e6bc"),z+0.5)
 func items(f:Dictionary,x:float,y:float,z:float,row:int):
 	if f.product<0:return
 	var n=sim.counts(f.lots);var e=sim.equipment[f.kind]
@@ -388,7 +411,7 @@ func draw_person(a:Dictionary,kind:String):
 		if text.length()>15:text=text.substr(0,14)+"…"
 		var width=font.get_string_size(text,HORIZONTAL_ALIGNMENT_LEFT,-1,10).x
 		var p=base+Vector2(-width/2,-67)
-		label(p+Vector2(0,2),text,INK,12,true)
+		label(p+Vector2(0,2),text,INK,12,true,2 if select else 0)
 	var screen=origin+base*scale_world
 	hit_people.append({"kind":kind,"id":a.id if staff else a.rid,"rect":Rect2(screen+Vector2(-20,-53)*scale_world,Vector2(40,55)*scale_world)})
 

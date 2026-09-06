@@ -1,4 +1,5 @@
 extends Control
+const City=preload("res://core/city.gd")
 const Goods=preload("res://core/merchandise.gd")
 const Stories=preload("res://core/resident_stories.gd")
 const Sim=preload("res://core/simulation.gd")
@@ -293,7 +294,10 @@ func refresh_sidebar():
 	live_text(sidebar,goal_text,16)
 	live_text(sidebar,tutorial_text,12,Color("7d7459"))
 	divider(sidebar)
-	label("街のカレンダー",sidebar,11,MUTED)
+	label("今日の街と配送",sidebar,11,MUTED)
+	live_text(sidebar,func():return sim.event_for(sim.s.day).name+"\n"+City.shipping_text(sim.s.day),12)
+	live_text(sidebar,func():return "目的の品を買えた人：%d / %d人"%[sim.s.today.get("needs_served",0),sim.s.today.get("purpose_completed",0)],12)
+	label("これからの予定",sidebar,11,MUTED)
 	for offset in range(1,4):
 		live_text(sidebar,func():
 			var d=sim.s.day+offset
@@ -357,7 +361,7 @@ func resident_details(parent:Node,id:int):
 		else:wrapped(episode_text(id),parent,12)
 func resident_mood(id:int) -> String:
 	for v in sim.s.visits:
-		if v.rid==id:return "いま："+v.mood
+		if v.rid==id:return ("来店の目的："+sim.need_name(v.need)+"\n" if not v.get("need","").is_empty() else "")+"いま："+v.mood
 	return "いまは街で過ごしています。"
 func history_text(id:int) -> String:
 	var r=sim.s.residents[id];var lines=[]
@@ -448,7 +452,9 @@ func tabs(parent:Node,labels:Array,active:int,callback:Callable):
 		var b=button(labels[i],flow,func():callback.call(i));b.toggle_mode=true;b.button_pressed=i==active
 func open_products():
 	open_modal("商品と発注")
-	wrapped("次の納品は14時 / 翌6時。注文時に仕入れ代を支払います。棚への補充はスタッフが担当。",modal_content,13,MUTED)
+	var delivery=City.delivery_tick(sim.s.tick)
+	wrapped("今の注文は"+str(delivery/1440+1)+"日目 "+time_string((delivery+360)%1440)+"着。注文時に仕入れ代を支払います。棚への補充はスタッフが担当。",modal_content,13,MUTED)
+	if sim.event_for(sim.s.day).delivery_delay>0:wrapped(City.shipping_text(sim.s.day),modal_content,13,Color("a85240"))
 	var h=flow(modal_content)
 	button("自動発注："+("入" if sim.s.auto else "切"),h,func():act("auto",{"enabled":not sim.s.auto},open_products))
 	label("倉庫 "+str(sim.volume(sim.s.warehouse))+" / "+str(sim.warehouse_capacity())+"枠",h,13)
@@ -464,6 +470,8 @@ func open_products():
 		if p.unlock>sim.s.star:divider(modal_content);continue
 		var controls=flow(card)
 		label("店全体 "+str(sim.total_stock(p.id))+"個",controls,13)
+		var expiring=sim.stock_expiring(p.id)
+		if expiring>0:wrapped("6時間以内に期限："+str(expiring)+"個。売れ行きに合わせて値引きや次便の数量を調整できます。",card,12,Color("a85240"))
 		var price=OptionButton.new();controls.add_child(price)
 		for level in 3:price.add_item(["安め","標準","高め"][level]+" "+money(roundi(p.price*[0.85,1.0,1.2][level])))
 		price.select(int(sim.s.prices.get(p.id,1)));price.item_selected.connect(func(i):act("price",{"product":p.id,"level":i}))
@@ -514,6 +522,7 @@ func open_residents():
 func open_report():
 	open_modal("経営ノート")
 	wrapped(goal_text(),modal_content,19)
+	wrapped(City.chapter(sim.s.day)[0]+"\n"+City.chapter(sim.s.day)[1],modal_content,13,MUTED)
 	var actions=flow(modal_content)
 	button("14日先までの予定",actions,open_calendar)
 	if sim.s.star>=4 and sim.s.review.get("status","") not in ["active","passed"]:button("明朝から五つ星審査",actions,func():act("review",{},open_report))
@@ -525,18 +534,28 @@ func open_report():
 		wrapped("五つ星審査："+str(m.days)+" / 14日 · "+{"active":"進行中","passed":"合格","failed":"未達。原因を直して再挑戦！"}.get(sim.s.review.status,"予約中"),modal_content,17)
 		for item in [["利益率5%以上","%.1f%%"%(m.margin*100),m.margin>=0.05],["廃棄率8%以下","%.1f%%"%(m.waste*100),m.waste<=0.08],["審査開始時の常連20人以上",str(m.cohort)+"人",m.cohort>=20],["対象の再訪70%以上","%.1f%%"%(m.repeat*100),m.repeat>=0.7],["繁忙日2種で購買率80%以上",str(m.events)+"種",m.events>=2],["期間来客280人以上",str(m.visitors)+"人",m.visitors>=280],["運転資金を確保",money(sim.s.cash)+" / "+money(m.reserve),sim.s.cash>=m.reserve]]:
 			wrapped(("✓ " if item[2] else "○ ")+item[0]+"："+item[1],modal_content,14,Color("42775b") if item[2] else Color("a05b38"))
-		wrapped("再訪：開始時点の常連が、審査期間内の別の日に2回以上購入。審査は14日すべてを集計して判定します。",modal_content,12,MUTED)
+		wrapped("再訪：開始時点の常連が別の日に2回以上購入。催しの成績は来店のきっかけ別に、審査期間内に買い物を終えた人を通算します。",modal_content,12,MUTED)
 	divider(modal_content)
 	if sim.s.reports.is_empty():wrapped("最初のレポートは翌朝6時に届きます。",modal_content,16)
 	var recent_reports=sim.s.reports.slice(maxi(0,sim.s.reports.size()-7)).duplicate();recent_reports.reverse()
 	for report in recent_reports:
 		label(str(report.day)+"日目 / "+Cat.SEASONS[report.season]+" / "+sim.event_for(report.day).name,modal_content,17)
 		stat(modal_content,"売上",money(report.sales));stat(modal_content,"営業利益",money(report.profit));stat(modal_content,"現金増減",money(report.cash_close-report.cash_open))
-		wrapped("原価 %s · 廃棄 %s · 固定費 %s · 人件費 %s\n来店 %d人 → 会計 %d人 / 購買率 %.0f%%"%[money(report.cogs),money(report.waste),money(report.fixed),money(report.wages),report.visitors,report.buyers,report.rate*100],modal_content,13)
+		wrapped("原価 %s · 廃棄 %s · 固定費 %s · 人件費 %s\n来店 %d人 · 会計 %d人 / 買い物終了者の購買率 %.0f%%"%[money(report.cogs),money(report.waste),money(report.fixed),money(report.wages),report.visitors,report.buyers,report.rate*100],modal_content,13)
+		wrapped("買い物終了："+str(report.get("completed",report.visitors))+"人。会計または購入せず退店した日の集計です。",modal_content,12,MUTED)
 		var reasons=[]
 		for key in report.miss:
 			if not str(key).begins_with("p"):reasons.append(str(key)+" "+str(report.miss[key])+"回")
 		wrapped("買い物中のつまずき（延べ回数）："+("特になし" if reasons.is_empty() else " / ".join(reasons)),modal_content,13,Color("9b6c4d"))
+		if report.get("purpose_completed",0)>0:
+			wrapped("目的の品を買えた人：%d / %d人"%[report.get("needs_served",0),report.purpose_completed],modal_content,14)
+			for group in report.get("unmet_needs",{}):wrapped("探していたもの："+sim.need_name(group)+" / 買えずに退店 "+str(report.unmet_needs[group])+"人",modal_content,12,Color("9b6c4d"))
+		for lost in report.get("lost_visits",[]).slice(0,3):
+			wrapped(time_string(lost.minute)+" "+sim.s.residents[lost.rid].name+"："+(sim.need_name(lost.need)+" / " if not lost.need.is_empty() else "")+lost.reason,modal_content,12)
+		var disposal=report.get("waste_products",{})
+		var waste_ids=disposal.keys();waste_ids.sort_custom(func(a,b):return disposal[a].cost>disposal[b].cost)
+		for pid in waste_ids.slice(0,3):
+			wrapped("廃棄："+sim.products[int(pid)].name+" "+str(disposal[pid].amount)+"個 / 原価 "+money(disposal[pid].cost),modal_content,12,Color("9b6c4d"))
 		var sales=[]
 		for pid in report.product_sales:sales.append(sim.products[int(pid)].name+" "+str(report.product_sales[pid])+"個")
 		wrapped("売れたもの："+" / ".join(sales),modal_content,12,MUTED)
@@ -547,15 +566,18 @@ func open_report():
 		divider(modal_content)
 func open_calendar():
 	open_modal("街のカレンダー")
-	wrapped("向こう14日間の予告。イベントの前に品揃えと人数を整えましょう。期限は56日目、審査予約は42日目まで。",modal_content,14)
+	wrapped("向こう14日間の予告。品揃えとシフトを準備しましょう。\n本編は56日間。五つ星審査の予約は42日目まで。",modal_content,14)
 	for day in range(sim.s.day,sim.s.day+14):
 		var event=sim.event_for(day)
 		label(str(day)+"日目 · "+Cat.SEASONS[sim.season(day)]+" · "+sim.weather_for(day),modal_content,17)
+		if (day-1)%14==0:wrapped(City.chapter(day)[0]+"\n"+City.chapter(day)[1],modal_content,15)
 		wrapped(event.name+"\n"+event.detail,modal_content,14)
+		if not event.needs.is_empty():wrapped("探す人が増える品："+" / ".join(event.needs.map(func(group):return sim.need_name(group))),modal_content,13,MUTED)
+		wrapped(City.shipping_text(day),modal_content,13,Color("a85240") if event.delivery_delay>0 else MUTED)
 		divider(modal_content)
 func open_help():
 	open_modal("店長の手引き")
-	for item in [["01  人を見る","お客さんを選ぶと好み・予算・待てる時間が分かります。いつもの人の『買えなかった』が改善のヒント。"],["02  棚と倉庫は別","発注した商品は14時か翌6時に倉庫へ到着。スタッフが棚に補充して初めて買えます。冷たいものは冷蔵、温かいものは保温棚へ。"],["03  売上と利益は別","売上から売れた商品の原価・廃棄・固定費・人件費を引いたものが利益。発注は現金を減らします。毎朝6時のレポートで両方を見ましょう。"],["04  人も時間も有限","1人2枠までのシフト。レジを増やしても店員がいなければ動きません。補充・清掃・休憩にも人と時間が必要。"],["05  配置で変わる経営","設備を選んで移動できます。向きを変えると利用面も変化。通路を短くすれば、急いでいる人も買いやすくなります。"],["06  星を育てる","3日連続黒字→常連8人→繁忙日の購買率75%→増床と2季節の黒字→14日間の最終審査。期限は56日。"],["07  自動化は店長の方針","自動発注は目標在庫を補うだけ。季節やお客さんに合わせて目標を変えるのはあなたです。"],["08  負けからの一手","資金不足では時間が止まります。設備売却、シフト削減、一度だけの融資で再建。期限後は練習として続けられます。"]]:
+	for item in [["01  人を見る","お客さんを選ぶと好み・予算・待てる時間が分かります。いつもの人の『買えなかった』が改善のヒント。"],["02  棚と倉庫は別","発注画面で到着日時を確認。通常は14時か翌6時、配送が遅れる日は事前にカレンダーで予告します。スタッフが棚に補充して初めて買えます。冷たいものは冷蔵、温かいものは保温棚へ。"],["03  売上と利益は別","売上から売れた商品の原価・廃棄・固定費・人件費を引いたものが利益。発注は現金を減らします。毎朝6時のレポートで両方を見ましょう。"],["04  人も時間も有限","1人2枠までのシフト。レジを増やしても店員がいなければ動きません。補充・清掃・休憩にも人と時間が必要。"],["05  配置で変わる経営","設備を選んで移動できます。向きを変えると利用面も変化。通路を短くすれば、急いでいる人も買いやすくなります。"],["06  星を育てる","3日連続黒字→常連8人→繁忙日の購買率75%→増床と2季節の黒字→14日間の最終審査。期限は56日。"],["07  自動化は店長の方針","自動発注は目標在庫を補うだけ。季節やお客さんに合わせて目標を変えるのはあなたです。"],["08  負けからの一手","資金不足では時間が止まります。設備売却、シフト削減、一度だけの融資で再建。期限後は練習として続けられます。"]]:
 		label(item[0],modal_content,18);wrapped(item[1],modal_content,15);divider(modal_content)
 func open_settings():
 	open_modal("設定")

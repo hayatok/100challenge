@@ -26,6 +26,7 @@ func _init():
 				var result=Stories.record(r,sale)
 				check(result==(stage if day==days-1 else -1),"Stage dates failed %d/%d"%[rid,stage])
 				if day<days-1:check(Stories.record(r,sale)==-1 and r.story_days.size()==day+1,"Repeated checkout counted as a new day")
+	check(not Stories.matches(Stories.REQUESTS[0][1],receipt([24])),"Sweet coffee faked a dessert and coffee combination")
 	# Cross-product tag unions must not pretend a non-spicy noodle was spicy.
 	check(not Stories.matches({"all":["sweet novel"]},receipt([40,26])),"An ordinary pudding and novelty coffee faked a novelty dessert")
 	check(not Stories.matches({"all":["sweet"],"distinct_cat":4,"distinct":2},receipt([40,40])),"Two units faked two flavours")

@@ -1,4 +1,5 @@
 extends RefCounted
+const City=preload("res://core/city.gd")
 const Goods=preload("res://core/merchandise.gd")
 const Stories=preload("res://core/resident_stories.gd")
 const Catalog=preload("res://core/catalog.gd")
@@ -30,7 +31,7 @@ func reset(world_seed:int):
 	log_message("朝6時。小さな店の、大きな一日が始まります。")
 
 func new_report(day:int) -> Dictionary:
-	return {"day":day,"sales":0,"cogs":0,"waste":0,"fixed":0,"wages":0,"work_minutes":{},"orders":0,"investment":0,"other":0,"profit":0,"visitors":0,"buyers":0,"miss":{},"product_sales":{},"hours":{},"returners":[],"cash_open":s.get("cash",42000),"event":event_for(day).id,"season":season(day)}
+	return {"day":day,"sales":0,"cogs":0,"waste":0,"fixed":0,"wages":0,"work_minutes":{},"orders":0,"investment":0,"other":0,"profit":0,"visitors":0,"buyers":0,"miss":{},"product_sales":{},"hours":{},"returners":[],"cash_open":s.get("cash",42000),"event":event_for(day).id,"season":season(day),"need_visitors":0,"needs_served":0,"completed":0,"purpose_completed":0,"event_results":{},"unmet_needs":{},"lost_visits":[],"waste_products":{}}
 
 func season(day:int=-1) -> int:
 	return ((s.day if day<0 else day)-1)/14%4
@@ -60,6 +61,14 @@ func total_stock(product:int) -> int:
 	for o in s.orders:
 		if o.product==product:n+=o.amount
 	return n
+func stock_expiring(product:int,within:int=360) -> int:
+	var lots=s.warehouse.duplicate()
+	for f in s.fixtures:lots.append_array(f.lots)
+	for w in s.staff:lots.append_array(w.carry)
+	var result=0
+	for l in lots:
+		if l.product==product and l.expires<=s.tick+within:result+=l.amount
+	return result
 func lot(product:int,amount:int,expires:int=-1) -> Dictionary:
 	return {"product":product,"amount":amount,"expires":s.get("tick",0)+products[product].life if expires<0 else expires,"cost":products[product].cost}
 func selling_price(product:int) -> int:
@@ -83,13 +92,10 @@ func miss(reason:String,product:int=-1):
 		var key="p"+str(product)
 		s.today.miss[key]=s.today.miss.get(key,0)+1
 
-func event_for(day:int) -> Dictionary:
-	var id=day%7
-	if id==3:return {"id":"chili","name":"激辛がまん大会","detail":"辛い麺と飲み物。強気の参加者にも、水は必要。","cats":[5,2],"mult":1.25}
-	if id==5:return {"id":"hero","name":"ヒーロー撮影日","detail":"世界より先に昼休み。お昼の会計が集中します。","cats":[0,6],"mult":1.2}
-	if id==0:return {"id":"pudding","name":"プリン総選挙","detail":"清き一口を。甘党が推し味に投票します。","cats":[4,1],"mult":1.2}
-	return {"id":"normal","name":"いつもの街","detail":"いつもの人に、いつもの一品。","cats":[],"mult":1.0}
+func event_for(day:int) -> Dictionary:return City.event(day)
 func weather_for(day:int) -> String:
+	var forecast=event_for(day)
+	if forecast.has("weather"):return forecast.weather
 	var value=absi(s.get("seed",1)*31+day*7919)%10
 	return "雨" if value<3 else ("暑い" if season(day)==1 or value==8 else "晴れ")
 func new_schedule():
@@ -101,7 +107,7 @@ func new_schedule():
 		if rng.randf()>chance:continue
 		var hour=r.hour
 		if s.day%7 in [6,0]:hour=(hour+2)%24
-		if event.id=="hero" and i%3==0:hour=12
+		if event.has("hour") and not City.need(s.day,i,s.seed).is_empty():hour=event.hour
 		var t=(hour*60-360+1440)%1440+rng.randi_range(0,80)
 		s.schedule.append({"at":s.tick+mini(t,1439),"rid":i,"wait":0})
 	s.schedule.sort_custom(func(a,b):return a.at<b.at)
@@ -225,9 +231,8 @@ func order(p:int,amount:int) -> String:
 	if volume(s.warehouse)+incoming+amount*products[p].size>warehouse_capacity():return "倉庫と発注済み在庫がいっぱいです。"
 	var cost=products[p].cost*amount
 	if cost>s.cash:return "仕入れ資金が足りません。"
-	var now=minute();var delay=840-now if now<840 and now>=360 else (1800-now if now>=840 else 360-now)
-	if delay<=0:delay=960
-	s.orders.append({"product":p,"amount":amount,"due":s.tick+delay,"cost":cost})
+	var delivery=City.delivery_tick(s.tick)
+	s.orders.append({"product":p,"amount":amount,"due":delivery,"cost":cost})
 	s.cash-=cost;s.today.orders+=cost;s.tutorial=maxi(s.tutorial,2)
 	return ""
 
@@ -242,7 +247,11 @@ func take(lots:Array,p:int,amount:int) -> Array:
 		if lots[i].amount<=0:lots.remove_at(i)
 	return picked
 func waste(lots:Array):
-	for l in lots:s.today.waste+=l.amount*l.cost
+	for l in lots:
+		s.today.waste+=l.amount*l.cost
+		if not s.today.has("waste_products"):s.today.waste_products={}
+		var entry=s.today.waste_products.get(l.product,{"amount":0,"cost":0})
+		entry.amount+=l.amount;entry.cost+=l.amount*l.cost;s.today.waste_products[l.product]=entry
 func expire(lots:Array):
 	for i in range(lots.size()-1,-1,-1):
 		if lots[i].expires<=s.tick:waste([lots[i]]);lots.remove_at(i)
@@ -340,15 +349,17 @@ func spawn_due():
 		var r=s.residents[due.rid];var event=event_for(s.day)
 		var goal=r.fav
 		if minute()<600 and r.id%3==0:goal=0
-		if not event.cats.is_empty() and rng.randf()<0.45:goal=event.cats[rng.randi_range(0,1)]
+		if not event.cats.is_empty() and rng.randf()<0.45:goal=event.cats[rng.randi_range(0,event.cats.size()-1)]
 		if weather_for(s.day)=="暑い" and rng.randf()<0.25:goal=2
 		if season()==3 and rng.randf()<0.25:goal=6
 		if season()==0 and rng.randf()<0.1:goal=1
 		if season()==2 and rng.randf()<0.15:goal=4
 		var budget=roundi(r.budget*rng.randf_range(0.8,1.15))
 		budget=mini(budget,Stories.request(r).get("budget",budget))
-		var v={"id":s.next_visit,"rid":r.id,"pos":spawn,"prev":spawn,"path":Nav.path(spawn,Nav.DOOR,s.fixtures,s.tier),"state":"entering","target":-1,"basket":[],"spent":0,"budget":budget,"goal":goal,"wait":0,"timer":0,"steps":0,"attempts":0,"wanted":-1,"mood":"今日は何にしよう","since":s.tick,"bought":false,"dir":0}
+		var v={"id":s.next_visit,"rid":r.id,"pos":spawn,"prev":spawn,"path":Nav.path(spawn,Nav.DOOR,s.fixtures,s.tier),"state":"entering","target":-1,"basket":[],"spent":0,"budget":budget,"goal":goal,"wait":0,"timer":0,"steps":0,"attempts":0,"wanted":-1,"mood":"今日は何にしよう","since":s.tick,"bought":false,"dir":0,"need":City.need(s.day,r.id,s.seed),"failure_reason":"","event_id":event.id}
 		s.next_visit+=1;s.visits.append(v);s.schedule.remove_at(i);s.today.visitors+=1;r.visits+=1
+		if not v.need.is_empty():
+			s.today.need_visitors=s.today.get("need_visitors",0)+1;v.mood=need_name(v.need)+"を探しています"
 		if r.favorite:log_message(r.name+"さんが来店しました。")
 
 func move_actor(a:Dictionary) -> bool:
@@ -369,25 +380,33 @@ func move_actor(a:Dictionary) -> bool:
 	a.pos=next;a.path.pop_front()
 	return a.path.is_empty()
 
+func need_name(group:String) -> String:
+	var words=[]
+	for tag in group.split(" "):
+		words.append(Goods.TAG_LABELS.get(tag,tag))
+	return "・".join(words)
 func choose(v:Dictionary):
-	var r=s.residents[v.rid];var best={};var best_score=-1000.0;var viable=0;var affordable=0;var busy=false
+	var r=s.residents[v.rid];var best={};var best_score=-1000.0
+	var offered=0;var stocked=0;var affordable=0;var reachable=0;var busy=false
+	var need=v.get("need","");var basket_ids=v.basket.map(func(l):return int(l.product))
+	var seeking=not need.is_empty() and not Stories.basket_has(basket_ids,need)
 	for f in s.fixtures:
 		var p=int(f.product)
 		if p<0 or f.ready>s.tick:continue
+		if seeking and not Stories.product_matches(p,need):continue
+		offered+=1
 		if counts(f.lots,p)<=0:continue
-		viable+=1
+		stocked+=1
 		var price=selling_price(p)
 		if price+v.spent>v.budget:continue
 		affordable+=1
-		if s.visits.any(func(other):return other.id!=v.id and other.target==f.id and other.state in ["walking","browsing"]):busy=true;continue
 		var path=Nav.path(v.pos,Nav.access(f),s.fixtures,s.tier)
 		if path.is_empty() and v.pos!=Nav.access(f):continue
+		reachable+=1
+		if s.visits.any(func(other):return other.id!=v.id and other.target==f.id and other.state in ["walking","browsing"]):busy=true;continue
 		var cat=products[p].cat
-		var basket_ids=v.basket.map(func(l):return int(l.product))
 		var personal=Goods.affinity(r.id,p)+Stories.relevance(r,p,basket_ids)
-		var score=personal+r.taste[cat]*35+(40 if cat==v.goal else 0)+products[p].quality*12-price/float(r.budget)*35-path.size()*0.65+rng.randf()*8
-		# A markup costs impulse sales; a favourite can still justify its price.
-		# Tolerance is individual and visible, so expensive stock is a deliberate niche.
+		var score=personal+r.taste[cat]*35+(40 if cat==v.goal or seeking else 0)+products[p].quality*12-price/float(r.budget)*35-path.size()*0.65+rng.randf()*8
 		var premium=price/float(products[p].price)-1.0
 		score-=premium*145.0*r.get("price_sensitivity",1.0)
 		if v.attempts>0:score-=counts(v.basket,p)*35
@@ -395,9 +414,14 @@ func choose(v:Dictionary):
 	if best.is_empty() or best_score<25:
 		if best.is_empty() and busy:v.mood="先の人が選ぶのを待とう";return
 		if v.basket.is_empty():
-			miss("価格" if viable>0 and affordable==0 else "欠品")
-			v.mood="お財布と相談…" if viable>0 else "棚にないみたい";r.last_reason=v.mood
-			leave(v,false)
+			var reason="価格"
+			if offered==0:reason="品揃え"
+			elif stocked==0:reason="欠品"
+			elif affordable==0:reason="予算"
+			elif reachable==0:reason="通路"
+			v.failure_reason=reason;miss(reason)
+			v.mood=(need_name(need)+"：" if seeking else "")+{"品揃え":"探している品がない","欠品":"棚が空っぽ","予算":"予算を超えてしまう","通路":"売り場へ行けない","価格":"この値段だと見送ろう"}[reason]
+			r.last_reason=v.mood;leave(v,false)
 		else:v.state="checkout"
 		return
 	v.target=best.fixture;v.wanted=best.product;v.path=best.path;v.state="walking";v.mood=products[best.product].name+"が気になる"
@@ -416,7 +440,7 @@ func update_visits():
 	var remove=[]
 	for v in s.visits:
 		var r=s.residents[v.rid]
-		if s.tick-v.since>240 and v.state not in ["paying","leaving","entering"]:leave(v,false)
+		if s.tick-v.since>240 and v.state not in ["paying","leaving","entering"]:v.failure_reason="滞在時間";leave(v,false)
 		match v.state:
 			"entering":
 				if move_actor(v) and v.pos==Nav.DOOR:v.state="choose"
@@ -454,7 +478,7 @@ func update_visits():
 					if n<score:score=n;best={"f":f,"path":path}
 				if best.is_empty():
 					v.wait+=1;v.mood="列が空くのを待とう"
-					if v.wait>r.patience+comfort():leave(v,false);miss("行列")
+					if v.wait>r.patience+comfort():v.failure_reason="行列";leave(v,false);miss("行列")
 					continue
 				v.target=best.f.id;v.path=best.path;v.state="to_queue";best.f.queue.append(v.id)
 			"to_queue","queue":
@@ -470,7 +494,7 @@ func update_visits():
 				else:v.state="to_queue"
 				if v.get("queued",false):v.wait+=1
 				if v.wait>r.patience+comfort():
-					miss("行列");v.mood="時間がない。また今度…";r.last_reason=v.mood;leave(v,false)
+					v.failure_reason="行列";miss("行列");v.mood="時間がない。また今度…";r.last_reason=v.mood;leave(v,false)
 			"leaving":
 				if move_actor(v) and v.pos==exit_point(v) and v.prev==v.pos:remove.append(v)
 	for v in remove:s.visits.erase(v)
@@ -484,9 +508,28 @@ func joke_for(rid:int,p:int) -> String:
 	return ["これ、いつもの。","ついでに、もう一つ。","今日もお疲れさま。","いいもの見つけた。"][rid%4]
 
 func leave(v:Dictionary,success:bool):
+	if v.state=="leaving":return
+	s.today.completed=s.today.get("completed",0)+1
+	if not v.get("need","").is_empty():s.today.purpose_completed=s.today.get("purpose_completed",0)+1
+	var event_id=v.get("event_id",event_for(s.day).id)
+	if event_id!="normal":
+		if not s.today.has("event_results"):s.today.event_results={}
+		var tally=s.today.event_results.get(event_id,{"completed":0,"buyers":0})
+		tally.completed+=1
+		if success:tally.buyers+=1
+		s.today.event_results[event_id]=tally
 	var r=s.residents[v.rid]
 	for f in s.fixtures:f.queue.erase(v.id)
 	if not success:
+		var reason=v.get("failure_reason","")
+		if reason.is_empty():reason="会計前に退店"
+		var need=v.get("need","")
+		if not need.is_empty():
+			if not s.today.has("unmet_needs"):s.today.unmet_needs={}
+			s.today.unmet_needs[need]=s.today.unmet_needs.get(need,0)+1
+		if not s.today.has("lost_visits"):s.today.lost_visits=[]
+		if s.today.lost_visits.size()<12:s.today.lost_visits.append({"rid":r.id,"need":need,"reason":reason,"minute":minute()})
+		r.last_reason=(need_name(need)+" / " if not need.is_empty() else "")+reason+"で買えなかった"
 		return_goods(v.basket);v.basket=[];r.loyalty=maxf(0,r.loyalty-3);r.satisfaction=maxf(0,r.satisfaction-8)
 	v.state="leaving";v.path=Nav.path(v.pos,exit_point(v),s.fixtures,s.tier)
 	v.bought=success
@@ -509,6 +552,7 @@ func update_registers():
 			cost+=l.amount*l.cost;s.today.product_sales[l.product]=s.today.product_sales.get(l.product,0)+l.amount
 		var prior=r.last_day
 		s.cash+=v.spent;s.today.sales+=v.spent;s.today.cogs+=cost;s.today.buyers+=1
+		if not v.get("need","").is_empty() and Stories.basket_has(v.basket.map(func(l):return int(l.product)),v.need):s.today.needs_served=s.today.get("needs_served",0)+1
 		var h=minute()/60;s.today.hours[h]=s.today.hours.get(h,0)+v.spent
 		if prior>0 and prior!=s.day and not s.today.returners.has(r.id):s.today.returners.append(r.id)
 		r.buys+=1;r.last_day=s.day;r.satisfaction=clampf(r.satisfaction+8+w.service*2-(100-s.clean)*0.12,0,100)
@@ -642,11 +686,14 @@ func finish_day():
 	s.cash-=r.fixed+r.wages
 	if s.debt>0 and s.day>=s.due:s.cash-=s.debt;r.other-=s.debt;s.debt=0
 	r.profit=r.sales-r.cogs-r.waste-r.fixed-r.wages;r.cash_close=s.cash
-	r.regulars=regulars();r.rate=r.buyers/float(maxi(r.visitors,1));r.clean=s.clean
+	r.regulars=regulars();r.rate=r.buyers/float(maxi(r.get("completed",r.visitors),1));r.clean=s.clean
 	s.reports.append(r)
 	if s.reports.size()>84:s.reports.pop_front()
 	s.streak=s.streak+1 if r.profit>0 else 0
-	if r.event!="normal" and r.visitors>=20 and r.rate>=0.75:s.event_pass=true
+	if r.has("event_results"):
+		for tally in r.event_results.values():
+			if tally.completed>=20 and tally.buyers/float(tally.completed)>=0.75:s.event_pass=true
+	elif r.event!="normal" and r.visitors>=20 and r.rate>=0.75:s.event_pass=true
 	if s.day%7==0:
 		var weekly=0
 		for prior in s.reports.slice(maxi(0,s.reports.size()-7)):weekly+=prior.profit
@@ -684,10 +731,17 @@ func update_review(report:Dictionary):
 		s.review.status="failed"
 
 func review_metrics() -> Dictionary:
-	var sales=0;var profit=0;var waste_cost=0;var cogs=0;var events={};var second=0;var visitors=0
+	var sales=0;var profit=0;var waste_cost=0;var cogs=0;var events={};var event_totals={};var second=0;var visitors=0
 	for r in s.review.get("reports",[]):
 		sales+=r.sales;profit+=r.profit;waste_cost+=r.waste;cogs+=r.cogs;visitors+=r.visitors
-		if r.event!="normal" and r.visitors>=20 and r.rate>=0.8:events[r.event]=true
+		if r.has("event_results"):
+			for id in r.event_results:
+				var totals=event_totals.get(id,{"completed":0,"buyers":0})
+				totals.completed+=r.event_results[id].completed;totals.buyers+=r.event_results[id].buyers;event_totals[id]=totals
+		elif r.event!="normal" and r.visitors>=20 and r.rate>=0.8:events[r.event]=true
+	for id in event_totals:
+		var totals=event_totals[id]
+		if totals.completed>=20 and totals.buyers/float(totals.completed)>=0.8:events[id]=true
 	for key in s.review.get("days",{}):
 		if s.review.days[key]>=2:second+=1
 	var cohort=s.review.get("cohort",[]).size()

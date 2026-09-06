@@ -12,9 +12,10 @@
     "build": "node scripts/godot.mjs build",
     "build:debug": "node scripts/godot.mjs debug",
     "build:mac": "node scripts/godot.mjs mac",
-    "check": "node scripts/godot.mjs import && npm test && npm run test:stories && npm run test:circulation && npm run test:ui && node scripts/godot.mjs balance --quick && npm run build",
+    "check": "node scripts/godot.mjs import && npm test && npm run test:stories && npm run test:city && npm run test:circulation && npm run test:ui && node scripts/godot.mjs balance --quick && npm run build",
     "test:circulation": "node scripts/godot.mjs circulation",
     "test:ui": "node scripts/godot.mjs ui",
-    "test:stories": "node scripts/godot.mjs stories"
+    "test:stories": "node scripts/godot.mjs stories",
+    "test:city": "node scripts/godot.mjs city"
   }
 }

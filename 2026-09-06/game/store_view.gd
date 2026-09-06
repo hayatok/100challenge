@@ -69,13 +69,28 @@ func _gui_input(event):
 	world._gui_input(mapped);accept_event()
 func draw_labels(canvas:Control):
 	if world==null:return
-	for item in world.labels:
+	var ordered=world.labels.duplicate()
+	ordered.sort_custom(func(a,b):return a.get("priority",0)>b.get("priority",0))
+	var occupied=[]
+	for item in ordered:
 		var point=(output_origin+item.at*pixel_scale).round()
 		var fs=maxi(10,roundi(item.size*pixel_scale*0.5))
 		if item.get("caption",false):fs=11
 		var width=font.get_string_size(item.text,HORIZONTAL_ALIGNMENT_LEFT,-1,fs).x
 		if item.get("bubble",false):
 			point.x=clampf(point.x,4,maxf(4,size.x-width-12))
-			canvas.draw_rect(Rect2(point-Vector2(4,fs+2),Vector2(width+8,fs+8)),Color("20283f"))
-			canvas.draw_rect(Rect2(point-Vector2(3,fs+1),Vector2(width+6,fs+6)),Color("f7e6bc"))
+			var anchor=point
+			var frame=Rect2()
+			for offset in [0,-1,1,-2,2]:
+				var proposed=point+Vector2(0,offset*(fs+12))
+				var bounds=Rect2(proposed-Vector2(4,fs+2),Vector2(width+8,fs+8))
+				if bounds.position.y<4 or bounds.end.y>size.y-4:continue
+				if occupied.any(func(other):return other.grow(3).intersects(bounds)):continue
+				point=proposed;frame=bounds;break
+			if frame.size==Vector2.ZERO:continue
+			occupied.append(frame)
+			if point!=anchor:
+				canvas.draw_line(anchor+Vector2(width/2,3),frame.get_center(),Color("20283f"),1)
+			canvas.draw_rect(frame,Color("20283f"))
+			canvas.draw_rect(frame.grow(-1),Color("f7e6bc"))
 		canvas.draw_string(font,point,item.text,HORIZONTAL_ALIGNMENT_LEFT,-1,fs,item.color)

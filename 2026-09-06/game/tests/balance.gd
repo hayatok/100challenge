@@ -23,7 +23,7 @@ func _init():
 				if style in ["staples","morning","sweets","fixed_plan"]:strategy.update(game)
 				game.step(960)
 				if not game.s.result.is_empty():break
-			var result={"seed":game.s.seed,"style":style,"result":game.s.result,"day":game.s.day,"star":game.s.star,"cash":game.s.cash,"metrics":game.review_metrics(),"commands":strategy.commands.size()}
+			var result={"seed":game.s.seed,"style":style,"result":game.s.result,"day":game.s.day,"star":game.s.star,"cash":game.s.cash,"metrics":game.review_metrics(),"commands":strategy.commands.size(),"stories":game.s.residents.slice(0,12).map(func(r):return r.episode),"event_days":game.s.reports.filter(func(r):return r.event!="normal").map(func(r):return {"day":r.day,"event":r.event,"buyers":r.buyers,"visitors":r.visitors,"needs":r.get("purpose_completed",0),"served":r.get("needs_served",0),"event_results":r.get("event_results",{}),"miss":r.miss,"unmet":r.get("unmet_needs",{})})}
 			results.append(result);print("RESULT ",JSON.stringify(result))
 			if style!="fixed_plan" and (style in ["staples","morning","sweets"])!=game.s.won:failures+=1
 			if "--record-replays" in args and seed_index==0 and style in ["staples","morning","sweets"]:

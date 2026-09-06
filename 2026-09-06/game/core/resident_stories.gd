@@ -4,9 +4,9 @@ const Goods=preload("res://core/merchandise.gd")
 # 'all' is a basket combination; 'days' counts separate successful dates.
 const REQUESTS=[
 [
-{"hint":"帰り道の楽しみに、甘いものを買いたい。","all":["sweet"]},
-{"hint":"甘いものとコーヒー。両方あると仕事がはかどりそう。","all":["sweet","coffee"]},
-{"hint":"いつもの味と新味を食べ比べたい。違うスイーツを2種類。","all":["sweet novel"],"distinct_cat":4,"distinct":2}],
+{"hint":"帰り道の楽しみに、甘いものを買いたい。","all":["dessert"]},
+{"hint":"甘いものとコーヒー。両方あると仕事がはかどりそう。","all":["dessert","coffee"]},
+{"hint":"いつもの味と新味を食べ比べたい。違うスイーツを2種類。","all":["dessert novel"],"distinct_cat":4,"distinct":2}],
 [
 {"hint":"放課後のお腹に、麺がほしい。","all":["noodle"]},
 {"hint":"辛い麺に挑戦。飲み物も一緒に買えると安心。","all":["spicy noodle","drink"]},
@@ -36,9 +36,9 @@ const REQUESTS=[
 {"hint":"食事と飲み物、合わせて500円なら助かる。","all":["rice","drink"],"budget":500},
 {"hint":"またライブの日に。食事と飲み物を2日、500円以内で。","all":["rice","drink"],"budget":500,"days":2}],
 [
-{"hint":"まずはこのお店のスイーツを食べたい。","all":["sweet"]},
-{"hint":"変わり種スイーツ、発見したら買います。","all":["sweet novel"]},
-{"hint":"プリン総選挙の日に、違うスイーツを2種類食べ比べ。","all":["sweet"],"distinct_cat":4,"distinct":2,"event":"pudding"}],
+{"hint":"まずはこのお店のスイーツを食べたい。","all":["dessert"]},
+{"hint":"変わり種スイーツ、発見したら買います。","all":["dessert novel"]},
+{"hint":"プリン総選挙の日に、違うスイーツを2種類食べ比べ。","all":["dessert"],"distinct_cat":4,"distinct":2,"event":"pudding"}],
 [
 {"hint":"朝は急ぎめ。お米の朝食を待ち時間8分以内で。","all":["rice"],"wait":8},
 {"hint":"朝食とコーヒーを、待ち時間8分以内で。","all":["rice","coffee"],"wait":8},
