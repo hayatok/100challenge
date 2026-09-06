@@ -1,4 +1,5 @@
 extends Control
+const Guide=preload("res://core/onboarding.gd")
 const Campaign=preload("res://core/campaign.gd")
 const City=preload("res://core/city.gd")
 const Goods=preload("res://core/merchandise.gd")
@@ -52,6 +53,9 @@ var last_sale=-1
 var last_star=0
 var sidebar_key=""
 var side_updates=[]
+var guide_bar:HBoxContainer
+var guide_label:Label
+var guide_button:Button
 var keys={"pause":KEY_SPACE,"build":KEY_B,"products":KEY_P,"report":KEY_R}
 const SAVE="user://machiakari-mart.save"
 var active_save=SAVE
@@ -115,7 +119,11 @@ func style(bg:Color,border:Color,width:int=1,radius:int=2,px:int=12,py:int=12) -
 func label(text:String,parent:Node,font_size:int=14,color:Color=INK) -> Label:
 	var l=Label.new();l.text=text;l.set_meta("base_size",font_size);l.add_theme_font_size_override("font_size",roundi(font_size*ui_scale));l.add_theme_color_override("font_color",color);parent.add_child(l);return l
 func wrapped(text:String,parent:Node,font_size:int=14,color:Color=INK) -> Label:
-	var l=label(text,parent,font_size,color);l.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART;l.size_flags_horizontal=Control.SIZE_EXPAND_FILL;return l
+	# Set wrapping before entering a container: an unwrapped title can otherwise
+	# enlarge the dialog before the minimum-size cache is invalidated.
+	var l=Label.new();l.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART;l.size_flags_horizontal=Control.SIZE_EXPAND_FILL
+	l.text=text;l.set_meta("base_size",font_size);l.add_theme_font_size_override("font_size",roundi(font_size*ui_scale));l.add_theme_color_override("font_color",color)
+	parent.add_child(l);return l
 func button(text:String,parent:Node,action:Callable,width:int=0) -> Button:
 	var b=Button.new();b.text=text;b.custom_minimum_size=Vector2(width,40);b.mouse_default_cursor_shape=Control.CURSOR_POINTING_HAND;parent.add_child(b)
 	if text.length()>24:b.clip_text=true;b.text_overrun_behavior=TextServer.OVERRUN_TRIM_ELLIPSIS;b.custom_minimum_size.x=240;b.tooltip_text=text
@@ -148,6 +156,10 @@ func build_ui():
 	header_stats=label("",top,14);header_stats.vertical_alignment=VERTICAL_ALIGNMENT_CENTER
 	var funds=VBoxContainer.new();top.add_child(funds);label("お店の所持金",funds,10,MUTED);header_cash=label("",funds,24)
 	star_label=label("",top,20,Color("b7843e"));star_label.vertical_alignment=VERTICAL_ALIGNMENT_CENTER
+	guide_bar=row(root_box)
+	guide_label=wrapped("",guide_bar,13,PAPER);guide_label.size_flags_horizontal=Control.SIZE_EXPAND_FILL
+	guide_button=button("",guide_bar,guide_action,100)
+	button("×",guide_bar,func():Guide.state(sim.s).hidden=true;refresh(),32).tooltip_text="ガイドを隠す。手引きから再表示できます。"
 	body=HBoxContainer.new();body.size_flags_vertical=Control.SIZE_EXPAND_FILL;root_box.add_child(body)
 	var stage=VBoxContainer.new();stage.size_flags_horizontal=Control.SIZE_EXPAND_FILL;body.add_child(stage)
 	var scene_panel=PanelContainer.new();scene_panel.add_theme_stylebox_override("panel",style(Color("a5bab0"),Color("102e2a"),2,2,0,0));scene_panel.size_flags_vertical=Control.SIZE_EXPAND_FILL;stage.add_child(scene_panel)
@@ -184,7 +196,7 @@ func _process(delta):
 	view.animating=not intro and not paused and not modal.visible and sim.s.result.is_empty()
 	if view.animating:
 		accum+=minf(delta,0.25)*speed*4
-		while accum>=1:sim.step();accum-=1
+		while accum>=1:sim.step();Guide.update(sim);accum-=1
 	view.interp=accum;view.reduced=bool(view.reduced)
 	sound.night=sim.minute()<360 or sim.minute()>1140
 	ui_clock+=delta
@@ -198,7 +210,15 @@ func _process(delta):
 func _notification(what):
 	if what==NOTIFICATION_APPLICATION_FOCUS_OUT:paused=true
 func _input(event):
-	if rebind.is_empty() or not event is InputEventKey or not event.pressed or event.echo:return
+	if not event is InputEventKey or not event.pressed or event.echo:return
+	if event.ctrl_pressed or event.meta_pressed or event.alt_pressed:return
+	if rebind.is_empty():
+		if event.keycode==KEY_ESCAPE and modal.visible and get_viewport().gui_get_focus_owner() is LineEdit:
+			get_viewport().set_input_as_handled();close_modal();return
+		# Outside dialogs the advertised pause key owns Space, even after a button click.
+		if not modal.visible and not intro and event.keycode==keys.pause:
+			get_viewport().set_input_as_handled();toggle_pause()
+		return
 	get_viewport().set_input_as_handled()
 	if not rebind.is_empty():
 		if event.keycode==KEY_ESCAPE:rebind="";open_settings();return
@@ -208,6 +228,7 @@ func _input(event):
 		keys[rebind]=event.keycode;rebind="";open_settings();notice("キーを変更しました。");return
 func _unhandled_key_input(event):
 	if not event is InputEventKey or not event.pressed or event.echo:return
+	if event.ctrl_pressed or event.meta_pressed or event.alt_pressed:return
 
 	if event.keycode==KEY_ESCAPE:
 		if modal.visible:close_modal()
@@ -240,10 +261,13 @@ func refresh():
 		last_build_kind=build_kind
 		if build_kind>=0:toast.text="建設中："+sim.equipment[build_kind].name+" / 店内をクリックして設置 · Qで回転 · Escで終了"
 	update_sidebar()
+	refresh_guide()
 func on_pick(kind:String,id:int):
+	Guide.observe(sim,kind,id)
 	selected_kind=kind;selected_id=id;view.selected_kind=kind;view.selected_id=id;sound.effect("click")
 	refresh_sidebar()
 	if size.x<900 and not kind.is_empty():open_detail()
+	refresh_guide()
 func on_place(cell:Vector2i):
 	var args={"kind":build_kind,"x":cell.x,"y":cell.y,"dir":build_dir}
 	if move_id>=0:args.fixture=move_id
@@ -260,14 +284,109 @@ func notice(text:String):
 	toast.text=text
 	if is_instance_valid(modal_notice):modal_notice.text=text
 func act(command:String,args:Dictionary={},rebuild:Callable=Callable()):
+	var cash_before=sim.s.cash
 	var error=sim.command(command,args)
 	view.invalidate()
-	var message="設定しました。" if error.is_empty() else error
+	if error.is_empty() and command=="order":Guide.ordered(sim,sim.s.orders[-1])
+	var message=action_message(command,args,cash_before) if error.is_empty() else error
 	sound.effect("good" if error.is_empty() else "error")
 	if rebuild.is_valid():rebuild.call()
 	notice(message)
 	refresh_sidebar()
 	refresh()
+
+func action_message(command:String,args:Dictionary,cash_before:int) -> String:
+	var spent=cash_before-sim.s.cash
+	match command:
+		"order":
+			var o=sim.s.orders[-1]
+			return "%s %d個を発注。%sを支払い、%d日目 %s着。"%[sim.products[o.product].name,o.amount,money(o.cost),o.due/1440+1,time_string((o.due+360)%1440)]
+		"price":return sim.products[args.product].name+"を"+money(sim.selling_price(args.product))+"に変更しました。"
+		"target":return sim.products[args.product].name+"の目標在庫を"+str(sim.s.targets[args.product])+"個にしました。"
+		"auto":return "自動発注を"+("開始しました。目標在庫まで補います。" if sim.s.auto else "停止しました。発注済みの品は届きます。")
+		"auto_limit":return "自動発注の日次上限を"+money(sim.s.auto_limit)+"にしました。"
+		"assign":return sim.products[args.product].name+"の売り場に変更。前の在庫は倉庫へ戻しました。"
+		"remove":return "設備を売却し、"+money(-spent)+"を受け取りました。"
+		"hire":return sim.s.staff[args.id].name+"を採用。採用費"+money(spent)+"。シフトを確認しましょう。"
+		"train":return sim.s.staff[args.id].name+"の教育が完了。教育費"+money(spent)+"。"
+		"shift":return sim.s.staff[args.id].name+"の"+["朝","昼","夜","深夜"][args.slot]+"を"+("勤務に" if sim.s.staff[args.id].shifts[args.slot] else "休みに")+"しました。"
+		"priority":return sim.s.staff[args.id].name+"の優先担当を"+{"auto":"自動切替","register":"レジ","stock":"補充","clean":"清掃"}[args.value]+"にしました。"
+		"expand":return "売り場を増床しました。工事費"+money(spent)+"。"
+		"favorite":return sim.s.residents[args.id].name+("の来店を知らせます。" if sim.s.residents[args.id].favorite else "のお気に入りを解除しました。")
+		"loan":return "救済融資"+money(-spent)+"を受け取りました。経営ノートで返済を確認できます。"
+		"review":return "五つ星審査を予約しました。明朝から14日間の営業で判定します。"
+		"winter_plan":return Campaign.PLANS[args.value].name+"を約束しました。街の予告で準備しましょう。"
+		"continue":return "この店で営業を続けます。"
+	return "変更を反映しました。"
+
+func refresh_guide():
+	if guide_bar==null:return
+	var g=Guide.state(sim.s);var step=Guide.stage(sim.s)
+	guide_bar.visible=not intro and not g.hidden and sim.s.result.is_empty()
+	guide_button.disabled=false
+	var text="";var action=""
+	match step:
+		0:
+			text="1/5 来た人を見てみよう。名前・好み・予算が品揃えのヒント。"
+			action="来店客を見る"
+			guide_button.disabled=sim.s.visits.is_empty() and not sim.s.residents.any(func(r):return r.visits>0)
+			if guide_button.disabled:text="1/5 営業を進めて最初のお客さんを待とう。まずは店の観察から。"
+		1:text="2/5 売り場を選んで、棚と倉庫の在庫を比べよう。";action="棚を見る"
+		2:text="3/5 少量を発注してみよう。支払額と到着時刻を確かめてから。";action="発注へ"
+		3:
+			var o=g.order;var name=sim.products[o.product].name
+			if sim.s.tick<o.due:text="4/5 %sは%d日目 %s着。営業を進めよう。"%[name,o.due/1440+1,time_string((o.due+360)%1440)]
+			elif sim.s.tick>=o.expires:text="4/5 この便は棚に届く前に期限切れ。売り場と補充担当を見直し、少量で再挑戦。"
+			else:text="4/5 納品後はスタッフが補充。%sの棚と、働く人を確認しよう。"%[name]
+			action="売り場を見る"
+		4:text="5/5 発注した品が棚に届いた！ 営業を進めて、お会計を見届けよう。";action="棚を見る"
+		5:text="初めての改善！ %sが%sを購入。次は売上と利益を比べよう。"%[sim.s.residents[g.buyer].name,sim.products[g.order.product].name];action="経営を見る"
+	guide_label.text=text;guide_button.text=action
+func guide_action():
+	var g=Guide.state(sim.s);var step=Guide.stage(sim.s)
+	if step==0:
+		if not sim.s.visits.is_empty():on_pick("resident",sim.s.visits[0].rid)
+		else:
+			var met=sim.s.residents.filter(func(r):return r.visits>0)
+			if not met.is_empty():on_pick("resident",met[0].id)
+	elif step==2:
+		var f=sim.fixture(g.shelf)
+		if not f.is_empty() and f.product>=0:open_order(f.product)
+		else:open_products()
+	elif step==5:open_report()
+	else:
+		var shelves=sim.s.fixtures.filter(func(f):return f.product>=0)
+		if not g.order.is_empty():shelves=shelves.filter(func(f):return f.product==g.order.product)
+		elif g.resident>=0:
+			var favorites=shelves.filter(func(f):return sim.products[f.product].cat==sim.s.residents[g.resident].fav)
+			if not favorites.is_empty():shelves=favorites
+		if shelves.is_empty():open_products();notice("発注した商品の売り場を、棚の『並べる商品を変更』から用意してください。")
+		else:
+			on_pick("fixture",shelves[0].id)
+			if step==3 and sim.s.tick>=g.order.expires:open_order(g.order.product)
+
+func open_order(product:int):
+	var p=sim.products[product]
+	open_modal(p.name+"の発注")
+	var icon=ProductIcon.new();icon.product=p;modal_content.add_child(icon)
+	wrapped(Cat.storage_label(p.storage)+" / "+Goods.description(p.id)+" / 期限 "+str(p.life/60)+"時間",modal_content,13,MUTED)
+	stat(modal_content,"店全体の在庫",str(sim.total_stock(p.id))+"個")
+	var pending=0
+	for o in sim.s.orders:
+		if o.product==p.id:pending+=o.amount
+	stat(modal_content,"納品待ち",str(pending)+"個")
+	var due=City.delivery_tick(sim.s.tick)
+	wrapped("今の注文は%d日目 %s着。到着後、スタッフが棚へ運びます。"%[due/1440+1,time_string((due+360)%1440)],modal_content,14)
+	var controls=flow(modal_content);label("発注する個数",controls,14)
+	var quantity=SpinBox.new();quantity.min_value=1;quantity.max_value=100;quantity.value=6;quantity.custom_minimum_size.x=120;controls.add_child(quantity)
+	var total=wrapped("",modal_content,17)
+	var order_button=button("",modal_content,func():act("order",{"product":p.id,"amount":int(quantity.value)},func():open_order(p.id)))
+	var update=func(_value=0):
+		var cost=p.cost*int(quantity.value)
+		total.text="仕入れ代 %s / 支払い後 %s"%[money(cost),money(sim.s.cash-cost)]
+		order_button.text="%d個を発注 · %s"%[int(quantity.value),money(cost)]
+	quantity.value_changed.connect(update);update.call()
+	wrapped("まずは少量から。倉庫の在庫も期限が進みます。",modal_content,12,MUTED)
 
 func update_sidebar():
 	var key=selected_kind+":"+str(selected_id)
@@ -327,7 +446,8 @@ func goal_text() -> String:
 	if sim.s.star==4 and sim.s.review.get("status","")=="failed":return "審査未達。経営ノートで条件を確認し、再挑戦しよう。"
 	return ["3日連続の黒字を達成\n現在 "+str(sim.s.streak)+" / 3日","常連を8人に\n現在 "+str(sim.regulars())+" / 8人","繁忙日に来客20人・購買率75%以上","増床し、2つの季節で7日計の黒字を出す","14日間の五つ星審査に挑戦","この街の、いつもの店。"][sim.s.star]
 func tutorial_text() -> String:
-	return ["まず営業をはじめて、お客さんを選んでみましょう。","棚を選ぶと品揃えを変えられます。『商品』で次便を発注しましょう。","商品画面で次便の時刻を確認。倉庫から棚へ運ぶのはスタッフです。","最初のレポートが届きました。売上と利益は別の数字。自動発注も使えます。","昼のレジと補充、どちらが足りない？ シフトと優先担当を見直しましょう。","店の得意分野を育てよう。常連の買い物がヒントになります。"][mini(sim.s.tutorial,5)]
+	if Guide.stage(sim.s)<5:return "開店ガイドで、お客さんの観察から商品の補充・販売まで試せます。手引きから再表示できます。"
+	return "売上と利益は別の数字。翌朝の経営ノートで、欠品・行列・廃棄を確かめましょう。" if sim.s.day<4 else "店の得意分野を育てよう。常連の買い物と街の予定がヒントになります。"
 func task_name(task:String) -> String:return {"idle":"店内を見回り","off":"勤務外","depot":"倉庫へ移動","stock":"棚へ補充","register":"レジ","clean":"清掃","rest":"休憩"}.get(task,task)
 func staff_details(parent:Node,id:int):
 	var w=sim.s.staff[id]
@@ -340,6 +460,7 @@ func staff_details(parent:Node,id:int):
 		wrapped("レジ %.2f / 補充 %.2f\n疲労 %d%%"%[w.register,w.stock,w.fatigue],parent)
 	button("シフトを調整",parent,open_staff)
 func resident_details(parent:Node,id:int):
+	Guide.observe(sim,"resident",id)
 	var r=sim.s.residents[id]
 	label("まちの住人  No.%03d"%(id+1),parent,11,MUTED)
 	var identity=row(parent);var portrait=Portrait.new();portrait.identity=r.id;identity.add_child(portrait)
@@ -407,7 +528,7 @@ func fixture_details(parent:Node,f:Dictionary):
 			stat(parent,"棚の在庫",str(sim.counts(f.lots))+"個");stat(parent,"倉庫",str(sim.counts(sim.s.warehouse,p.id))+"個")
 		stat(parent,"棚の容量",str(e.capacity)+"枠")
 		wrapped(Cat.storage_label(p.storage)+" / "+Goods.description(p.id)+"\n"+p.note,parent,12,MUTED)
-		button("この商品を発注",parent,func():category_filter=p.cat;open_products())
+		button("この商品を発注",parent,func():open_order(p.id))
 	elif e.capacity>0:wrapped("商品を決めて、売り場をつくろう。",parent)
 	if e.capacity>0:button("並べる商品を変更",parent,func():open_assign(f.id))
 	if e.kind=="register":
@@ -441,7 +562,7 @@ func close_modal():
 	modal.visible=false;shade.visible=false;paused=restore_pause;intro=false;refresh()
 func show_title():
 	open_modal("まちあかりマート")
-	label("あの人が、今日も来た。",modal_content,28)
+	wrapped("あの人が、今日も来た。",modal_content,28)
 	wrapped("小さなコンビニから、街の『いつもの店』へ。\n品揃え、発注、棚の配置、働く人。あなたの工夫で、お店の毎日が変わります。",modal_content,17)
 	divider(modal_content)
 	wrapped("四季56日間。五つ星と、街に届ける「冬の約束」を目指します。\n欠品・行列・廃棄を直し、あなたの店の得意分野を育てましょう。",modal_content,15)
@@ -499,8 +620,7 @@ func open_products():
 		var price=OptionButton.new();controls.add_child(price)
 		for level in 3:price.add_item(["安め","標準","高め"][level]+" "+money(roundi(p.price*[0.85,1.0,1.2][level])))
 		price.select(int(sim.s.prices.get(p.id,1)));price.item_selected.connect(func(i):act("price",{"product":p.id,"level":i}))
-		button("＋6 発注",controls,func():act("order",{"product":p.id,"amount":6},open_products))
-		button("＋12 発注",controls,func():act("order",{"product":p.id,"amount":12},open_products))
+		button("発注する",controls,func():open_order(p.id))
 		var auto_row=row(card);label("自動発注の目標",auto_row,12)
 		var spin=SpinBox.new();spin.min_value=0;spin.max_value=100;spin.step=2;spin.value=sim.s.targets.get(p.id,0);spin.custom_minimum_size.x=100;auto_row.add_child(spin);spin.value_changed.connect(func(v):act("target",{"product":p.id,"amount":int(v)}))
 		divider(modal_content)
@@ -632,6 +752,7 @@ func open_calendar():
 		divider(modal_content)
 func open_help():
 	open_modal("店長の手引き")
+	button("開店ガイドを表示",modal_content,func():Guide.state(sim.s).hidden=false;close_modal();refresh())
 	for item in [["01  人を見る","お客さんを選ぶと好み・予算・待てる時間が分かります。いつもの人の『買えなかった』が改善のヒント。"],["02  棚と倉庫は別","発注画面で到着日時を確認。通常は14時か翌6時、配送が遅れる日は事前にカレンダーで予告します。スタッフが棚に補充して初めて買えます。冷たいものは冷蔵、温かいものは保温棚へ。"],["03  売上と利益は別","売上から売れた商品の原価・廃棄・固定費・人件費を引いたものが利益。発注は現金を減らします。毎朝6時のレポートで両方を見ましょう。"],["04  人も時間も有限","1人2枠までのシフト。レジを増やしても店員がいなければ動きません。補充・清掃・休憩にも人と時間が必要。"],["05  配置で変わる経営","設備を選んで移動できます。向きを変えると利用面も変化。通路を短くすれば、急いでいる人も買いやすくなります。"],["06  星を育てる","3日連続黒字→常連8人→繁忙日の購買率75%→増床と2季節の黒字→14日間の最終審査。五つ星の先は、選んだ冬の約束を達成して56日目を迎えよう。"],["07  自動化は店長の方針","自動発注は目標在庫を補うだけ。季節やお客さんに合わせて目標を変えるのはあなたです。"],["08  負けからの一手","資金不足では時間が止まります。設備売却、シフト削減、一度だけの融資で再建。期限後は練習として続けられます。"]]:
 		label(item[0],modal_content,18);wrapped(item[1],modal_content,15);divider(modal_content)
 func open_settings():
@@ -647,7 +768,7 @@ func open_settings():
 	button("ゲームを保存",modal_content,func():save_game(true))
 	button("タイトルへ戻る",modal_content,func():save_game(false);intro=true;show_title())
 	button("新しいお店をはじめる",modal_content,confirm_new)
-	wrapped("Godot 4.7.2 / まちあかりマート\n人物画像：built-in ImageGen / 日本語フォント：Noto Sans CJK（SIL OFL）\nゲーム内の音楽・効果音はオリジナルの合成音です。",modal_content,12,MUTED)
+	wrapped("Godot 4.7.2 / まちあかりマート\n人物・商品・設備：オリジナルの原寸ドット絵 / 日本語フォント：Noto Sans CJK（SIL OFL）\nゲーム内の音楽・効果音はオリジナルの合成音です。",modal_content,12,MUTED)
 func confirm_new():
 	open_modal("新しいお店")
 	wrapped("いまのお店を終えて、新しい店をはじめます。保存は次に保存した時点で置き換わります。",modal_content)

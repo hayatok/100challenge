@@ -16,6 +16,23 @@ func run():
 		await process_frame;await process_frame
 		screens+=1;inspect(main,dimensions.x,"story residents");inspect_story_labels(main.modal)
 		main.resident_filter="all"
+		main.open_order(40)
+		await process_frame;await process_frame
+		screens+=1;inspect(main,dimensions.x,"direct order")
+		main.act("order",{"product":40,"amount":6},func():main.open_order(40))
+		await process_frame;await process_frame;await process_frame
+		screens+=1;inspect(main,dimensions.x,"order confirmation")
+		if main.modal.get_global_rect().end.x>dimensions.x:
+			errors+=1;printerr("Order confirmation expanded its modal at ",dimensions)
+		main.close_modal()
+		var g=main.Guide.state(main.sim.s);g.hidden=false;g.resident=0;g.shelf=0
+		g.order={"product":0,"due":480,"expires":1440};g.stocked_tick=-1
+		main.refresh()
+		await process_frame;await process_frame
+		screens+=1;inspect(main,dimensions.x,"opening guide")
+		if main.toast.get_global_rect().end.y>dimensions.y+0.5:errors+=1;printerr("Guide pushed controls below the window at ",dimensions)
+		g.hidden=true
+
 	root.size=Vector2i(1440,900);main.configure_viewport();main.close_modal()
 	main.on_pick("resident",0)
 	await process_frame
