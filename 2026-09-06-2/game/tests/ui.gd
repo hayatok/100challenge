@@ -27,6 +27,10 @@ func run():
 		await process_frame
 		check(bounds.encloses(app.modal.get_global_rect()), "lineage modal inside viewport")
 		check(app.view.focus_mode == Control.FOCUS_NONE and app.pause_button.focus_mode == Control.FOCUS_NONE, "modal traps background focus")
+		for scroll in app.modal.get_children():
+			if scroll is ScrollContainer:
+				for content in scroll.get_child(0).get_children():
+					if content is Label: check(content.size.y >= 20 and not content.clip_text, "modal paragraphs retain readable height")
 		var time: float = app.sim.time
 		app._process(1.0)
 		check(app.sim.time == time, "modal freezes simulation")

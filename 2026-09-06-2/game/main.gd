@@ -54,6 +54,11 @@ func _ready() -> void:
 	get_window().content_scale_mode = Window.CONTENT_SCALE_MODE_CANVAS_ITEMS
 	if OS.has_feature("web"):
 		pixel_ratio = float(JavaScriptBridge.eval("window.devicePixelRatio || 1"))
+	elif DisplayServer.get_name() != "headless":
+		pixel_ratio = maxf(1, DisplayServer.screen_get_scale())
+		var available: Vector2i = DisplayServer.screen_get_usable_rect().size - Vector2i(80, 100)
+		get_window().size = Vector2i(Vector2(1280, 800) * pixel_ratio).min(available)
+		get_window().move_to_center()
 	sync_window()
 	for arg in OS.get_cmdline_user_args():
 		if arg.begins_with("--capture="): capture_path = arg.trim_prefix("--capture=")
@@ -333,8 +338,6 @@ func begin_modal(title: String) -> VBoxContainer:
 func paragraph(box: VBoxContainer, text: String, pixels: int = 15) -> Label:
 	var l = Label.new()
 	l.text = text
-	l.clip_text = true
-	l.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	l.add_theme_font_override("font", font)
 	l.add_theme_font_size_override("font_size", pixels)
@@ -437,13 +440,17 @@ func confirm_reset() -> void:
 	var box: VBoxContainer = begin_modal("新しい島へ")
 	paragraph(box, "現在の世界を前の島として保存し、新しいseedで始めます。前の島は一つだけ残ります。")
 	row_button(box, "保存して、新しい島へ", func():
+		if not qa.is_empty():
+			sim = World.new(99); view.sim = sim; selected = 1; paused = false
+			view.follow = false; view.camera = World.BOUNDS * 0.5
+			close_modal(); refresh(); say("検証用の新しい島。通常の保存は変更しません。"); return
 		if not save_world(true): return
 		var error: Error = DirAccess.copy_absolute(SAVE, "user://previous-island.json")
 		if error != OK: say("前の島を保存できません。今の島を続けます。"); return
 		sim = World.new(int(Time.get_unix_time_from_system()))
 		view.sim = sim; selected = 1; paused = false; view.follow = false; view.camera = World.BOUNDS * 0.5
 		close_modal(); save_world(true); refresh(), true)
-	if FileAccess.file_exists("user://previous-island.json"):
+	if qa.is_empty() and FileAccess.file_exists("user://previous-island.json"):
 		row_button(box, "前の島を復元する", func():
 			var data: Variant = JSON.parse_string(FileAccess.get_file_as_string("user://previous-island.json"))
 			var restored = World.decode(data.get("world") if data is Dictionary else null)
@@ -457,6 +464,7 @@ func manual_save() -> void:
 		var box: VBoxContainer = begin_modal("保存データの復旧")
 		paragraph(box, "以前の保存を読み込めなかったため、自動保存を止めています。元ファイルを退避して、この島を保存できます。")
 		row_button(box, "元ファイルを退避して保存", func():
+			if not qa.is_empty(): close_modal(); say("検証用の保存失敗画面です。通常の保存は変更しません。"); return
 			if FileAccess.file_exists(SAVE):
 				if DirAccess.copy_absolute(SAVE, "user://unreadable-%d.json" % Time.get_unix_time_from_system()) != OK: say("退避に失敗しました。"); return
 			save_blocked = false; close_modal(); save_world(true))
