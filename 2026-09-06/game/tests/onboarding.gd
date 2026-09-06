@@ -10,6 +10,7 @@ func key(code:int,unicode_value:int=0,meta:bool=false):
 		root.push_input(event)
 func run():
 	var main=load("res://main.tscn").instantiate();root.add_child(main);main.close_modal();main.paused=true
+	main.active_save="user://onboarding-verification.save"
 	await process_frame;await process_frame
 	check(Guide.state({"day":9}).hidden,"Legacy stores were forced into the opening guide")
 	main.on_pick("resident",0)

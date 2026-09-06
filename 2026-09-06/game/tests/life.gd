@@ -9,6 +9,7 @@ func _init():call_deferred("run")
 func run():
 	# Resume exactly one minute before a real first checkout, not after the first step.
 	var main=load("res://main.tscn").instantiate();root.add_child(main)
+	main.active_save="user://life-verification.save"
 	while main.sim.s.tick<1440 and not main.sim.s.fixtures.any(func(f):return f.get("pay_timer",0)==1):main.sim.step()
 	check(main.sim.s.tick<1440,"No natural checkout boundary found")
 	main.close_modal();main.paused=false;main.speed=1;main.sound.enabled=true

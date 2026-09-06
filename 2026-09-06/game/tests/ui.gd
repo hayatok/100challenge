@@ -4,6 +4,7 @@ var screens=0
 func _init():call_deferred("run")
 func run():
 	var main=load("res://main.tscn").instantiate();root.add_child(main)
+	main.active_save="user://ui-verification.save"
 	for dimensions in [Vector2i(375,812),Vector2i(768,1024),Vector2i(1024,768),Vector2i(1440,900),Vector2i(1920,1080)]:
 		root.size=dimensions;main.configure_viewport()
 		await process_frame;await process_frame

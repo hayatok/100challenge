@@ -12,7 +12,7 @@
     "build": "node scripts/godot.mjs build",
     "build:debug": "node scripts/godot.mjs debug",
     "build:mac": "node scripts/godot.mjs mac",
-    "check": "node scripts/godot.mjs import && npm test && npm run test:stories && npm run test:story-campaign && npm run test:city && npm run test:campaign && npm run test:circulation && npm run test:flow && npm run test:storage && npm run test:life && npm run test:onboarding && npm run test:ui && node scripts/godot.mjs balance --quick && npm run build",
+    "check": "node scripts/godot.mjs import && npm test && npm run test:stories && npm run test:story-campaign && npm run test:city && npm run test:campaign && npm run test:circulation && npm run test:flow && npm run test:storage && npm run test:autosave && npm run test:life && npm run test:onboarding && npm run test:ui && node scripts/godot.mjs balance --quick && npm run build",
     "test:circulation": "node scripts/godot.mjs circulation",
     "test:ui": "node scripts/godot.mjs ui",
     "test:story-campaign": "node scripts/godot.mjs storycampaign",
@@ -22,6 +22,7 @@
     "test:storage": "node scripts/godot.mjs storage",
     "test:flow": "node scripts/godot.mjs flow",
     "test:onboarding": "node scripts/godot.mjs onboarding",
+    "test:autosave": "node scripts/godot.mjs autosave",
     "test:life": "node scripts/godot.mjs life"
   }
 }

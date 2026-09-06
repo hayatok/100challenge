@@ -59,6 +59,8 @@ var guide_button:Button
 var keys={"pause":KEY_SPACE,"build":KEY_B,"products":KEY_P,"report":KEY_R}
 const SAVE="user://machiakari-mart.save"
 var active_save=SAVE
+var saved_source=0
+var saved_day=-1
 const INK=Color("254641")
 const PAPER=Color("f3ead3")
 const MUTED=Color("718176")
@@ -203,7 +205,7 @@ func _process(delta):
 	ui_clock+=delta
 	if ui_clock>0.5:
 		ui_clock=0;refresh()
-		if sim.s.day>1 and sim.s.tick%1440<3:save_game(false)
+		if sim.s.day>1 and (saved_source!=sim.get_instance_id() or saved_day!=sim.s.day):save_game(false)
 	if sim.s.result.is_empty():result_shown=""
 	if not sim.s.result.is_empty() and result_shown!=sim.s.result:result_shown=sim.s.result;show_result()
 func _notification(what):
@@ -842,6 +844,7 @@ func save_game(notify:bool):
 	var file=FileAccess.open(active_save,FileAccess.WRITE)
 	if file==null:notice("保存できませんでした。");return
 	file.store_var({"game":sim.s,"settings":{"music":sound.music_volume,"effects":sound.effects_volume,"ambient":sound.ambient_volume,"reduced":view.reduced,"scale":ui_scale,"keys":keys}});file.close()
+	saved_source=sim.get_instance_id();saved_day=sim.s.day
 	if notify:notice("お店を保存しました。");sound.effect("good")
 func load_game(path:String=""):
 	if path.is_empty():path=active_save
@@ -850,6 +853,7 @@ func load_game(path:String=""):
 	var value=file.get_var();file.close()
 	if typeof(value)!=TYPE_DICTIONARY or not value.has("game") or not value.game.has("residents"):toast.text="お店を読み込めませんでした。";return
 	sim.s=value.game;sound.reset_observer();var layout_notice=sim.restore_spatial_state();var storage_notice=sim.restore_storage_state();view.sim=sim;view.invalidate();last_star=sim.s.star
+	saved_source=sim.get_instance_id();saved_day=sim.s.day
 	if not storage_notice.is_empty():layout_notice+="\n"+storage_notice
 	for actor in sim.s.visits+sim.s.staff:actor.prev=actor.pos
 	var config=value.get("settings",{});sound.music_volume=config.get("music",0.24);sound.effects_volume=config.get("effects",0.45);sound.ambient_volume=config.get("ambient",0.16);view.reduced=config.get("reduced",false)
