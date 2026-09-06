@@ -1,6 +1,7 @@
 extends RefCounted
 const DIRS = [Vector2i(0,1),Vector2i(1,0),Vector2i(0,-1),Vector2i(-1,0)]
 const DOOR = Vector2i(0,8)
+const EXIT_DOOR = Vector2i(0,9)
 const DEPOT = Vector2i(1,1)
 
 static func dimensions(tier: int) -> Vector2i:
@@ -31,10 +32,13 @@ static func inside(p:Vector2i,dims:Vector2i) -> bool:
 static func walkable(p:Vector2i,dims:Vector2i) -> bool:
 	return inside(p,dims) or (p.x>=-3 and p.x<0 and p.y>=-3 and p.y<=dims.y+3)
 static func connected(a:Vector2i,b:Vector2i) -> bool:
-	# The road edge only joins the sidewalk; it is not a pedestrian lane.
-	if a.x==-3 and b.x==-3:return false
+	# The third pavement lane leaves room to yield at the curb and street ends.
+	# Keep opposite sidewalk traffic in separate walking lanes.
+	if a.x==b.x and a.x==-2:return b.y<a.y
+	if a.x==b.x and a.x==-1:return b.y>a.y
 	# The facade is a wall. Only the doorway joins the sidewalk and shop.
-	if (a.x<0)!=(b.x<0):return (a==DOOR and b==DOOR+Vector2i.LEFT) or (b==DOOR and a==DOOR+Vector2i.LEFT)
+	if a.x<0 and b.x>=0:return b==DOOR and a==DOOR+Vector2i.LEFT
+	if a.x>=0 and b.x<0:return a in [DOOR,EXIT_DOOR] and b==a+Vector2i.LEFT
 	if backroom(a)!=backroom(b):return (a==DEPOT and b==Vector2i(2,1)) or (b==DEPOT and a==Vector2i(2,1))
 	return true
 static func path(start:Vector2i,end:Vector2i,fixtures:Array,tier:int,staff:bool=false,avoid:Dictionary={}) -> Array:
@@ -57,6 +61,45 @@ static func path(start:Vector2i,end:Vector2i,fixtures:Array,tier:int,staff:bool=
 	return []
 static func reachable(start:Vector2i,end:Vector2i,fixtures:Array,tier:int,staff:bool=false) -> bool:
 	return start==end or not path(start,end,fixtures,tier,staff).is_empty()
+static func walk_region(start:Vector2i,fixtures:Array,tier:int,avoid:Dictionary={}) -> Dictionary:
+	var blocked=obstacles(fixtures,false);blocked.merge(avoid,true)
+	var dims=dimensions(tier);var queue=[start];var visited={start:true};var cursor=0
+	while cursor<queue.size():
+		var at:Vector2i=queue[cursor];cursor+=1
+		for d in DIRS:
+			var next:Vector2i=at+d
+			if not walkable(next,dims) or not connected(at,next) or blocked.has(next) or visited.has(next):continue
+			visited[next]=true;queue.append(next)
+	return visited
+static func waiting_cells(fixtures:Array,tier:int,avoid:Dictionary={}) -> Dictionary:
+	# Removing a non-articulation cell cannot divide the shop's walking space.
+	# One graph traversal replaces a flood-fill for every possible waiting spot.
+	var blocked=obstacles(fixtures,false);blocked.merge(avoid,true)
+	var dims=dimensions(tier);var graph={}
+	for x in dims.x:
+		for y in dims.y:
+			var at=Vector2i(x,y)
+			if blocked.has(at):continue
+			graph[at]=[]
+			for d in DIRS:
+				var next=at+d
+				if inside(next,dims) and not blocked.has(next) and connected(at,next):graph[at].append(next)
+	var context={"graph":graph,"order":{},"low":{},"cuts":{},"time":0}
+	if graph.has(DOOR):_wait_dfs(DOOR,DOOR,context)
+	var safe={}
+	for cell in context.order:
+		if not context.cuts.has(cell):safe[cell]=true
+	return safe
+static func _wait_dfs(at:Vector2i,parent:Vector2i,context:Dictionary):
+	context.time+=1;context.order[at]=context.time;context.low[at]=context.time
+	var children=0
+	for next in context.graph[at]:
+		if not context.order.has(next):
+			children+=1;_wait_dfs(next,at,context)
+			context.low[at]=mini(context.low[at],context.low[next])
+			if parent!=at and context.low[next]>=context.order[at]:context.cuts[at]=true
+		elif next!=parent:context.low[at]=mini(context.low[at],context.order[next])
+	if parent==at and children>1:context.cuts[at]=true
 static func queue_cells(f:Dictionary,fixtures:Array,tier:int) -> Array:
 	var head=access(f);var d:Vector2i=DIRS[int(f.dir)%4]
 	var best=[];var blocked=obstacles(fixtures,false);var dims=dimensions(tier)
@@ -64,7 +107,7 @@ static func queue_cells(f:Dictionary,fixtures:Array,tier:int) -> Array:
 		var cells=[]
 		for i in 4:
 			var p=head+tangent*i
-			if not inside(p,dims) or blocked.has(p) or p==DOOR or p==DOOR+Vector2i.RIGHT or p==DEPOT:break
+			if not inside(p,dims) or blocked.has(p) or p in [DOOR,EXIT_DOOR,DOOR+Vector2i.RIGHT,DEPOT]:break
 			cells.append(p)
 		if cells.size()>best.size():best=cells
 	return best
@@ -80,7 +123,7 @@ static func browse_cells(f:Dictionary,fixtures:Array,tier:int) -> Array:
 		var cells=[head]
 		for i in range(1,3):
 			var at=head+tangent*i
-			if not inside(at,dims) or blocked.has(at) or at in [DOOR,DOOR+Vector2i.RIGHT,DEPOT]:break
+			if not inside(at,dims) or blocked.has(at) or at in [DOOR,EXIT_DOOR,DOOR+Vector2i.RIGHT,DEPOT]:break
 			cells.append(at)
 		if cells.size()>best.size():best=cells
 	return best
@@ -90,7 +133,7 @@ static func validate(fixtures:Array,tier:int,positions:Array=[],strict:bool=true
 	for f in fixtures:
 		var p=Vector2i(f.x,f.y)
 		if not inside(p,dims):return "敷地の外には置けません。"
-		if p==DOOR or p==DEPOT or p==DOOR+Vector2i.RIGHT:return "入口と倉庫への通路を空けてください。"
+		if p in [DOOR,EXIT_DOOR,DEPOT,DOOR+Vector2i.RIGHT]:return "出入口と倉庫への通路を空けてください。"
 		if occupied.has(p):return "別の設備と重なっています。"
 		if backroom(p) and not staff_equipment(f):return "倉庫の中には売り場を置けません。"
 		occupied[p]=true

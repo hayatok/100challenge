@@ -165,10 +165,10 @@ func _draw():
 		for y in range(-4,dims.y+5):
 			if x>=0 and y>=0 and x<dims.x and y<dims.y:continue
 			var c=Color("b9b9ad")
-			if x<=-3:c=Color("394357")
-			if x==-2:c=Color("c4c3ae")
+			if x<=-4:c=Color("394357")
+			if x==-3:c=Color("c4c3ae")
 			tile(x,y,c.darkened(0.25) if night else c)
-			if x>-3:
+			if x>-4:
 				line(project(Vector2(x,y)),project(Vector2(x+1,y)),Color("929b94"),1)
 	for y in range(-3,dims.y+4,3):
 		box(-4.1,y,0.07,1.2,0.2,Color("e4d8a9"))
@@ -194,8 +194,9 @@ func _draw():
 	for x in range(2,dims.x-1,3):
 		window(Vector2(x,0),night)
 	# Glass storefront and a real gap at the shared logical doorway.
+	var door_span=1 if Nav.obstacles(s.fixtures,false).has(Nav.EXIT_DOOR) else 2
 	for y in range(3,dims.y):
-		if y==Nav.DOOR.y:continue
+		if y>=Nav.DOOR.y and y<Nav.DOOR.y+door_span:continue
 		var a=project(Vector2(0,y),10);var b=project(Vector2(0,y+1),10)
 		poly([a,b,b+Vector2(0,-52),a+Vector2(0,-52)],Color(0.46,0.66,0.65,0.27))
 		line(a,a+Vector2(0,-52),Color("8bada0"),2)
@@ -218,22 +219,23 @@ func _draw():
 	label(project(Vector2(2,1.5),50),"倉庫",CREAM,9)
 	# Door, threshold and mat use exactly the navigation coordinates.
 	var door=Vector2(Nav.DOOR)
-	tile(door.x-1,door.y,Color("34786a"),1)
-	tile(door.x,door.y,Color("a8bd9d"),10)
-	label(project(door+Vector2(-0.9,0.55),3),"入口",CREAM,10)
+	for offset in door_span:
+		tile(door.x-1,door.y+offset,Color("34786a"),1)
+		tile(door.x,door.y+offset,Color("a8bd9d"),10)
+	label(project(door+Vector2(-0.9,door_span*0.5),3),"入口",CREAM,10)
 	var opening=false
 	for v in s.visits:
 		if Vector2(v.pos-Nav.DOOR).length()<2.5:opening=true
-	for y in [door.y-0.06,door.y+1.02]:box(-0.10,y,0.10,0.06,58,Color("49786c"),9)
-	box(-0.12,door.y,0.12,1,6,Color("49786c"),64)
+	for y in [door.y-0.06,door.y+door_span+0.02]:box(-0.10,y,0.10,0.06,58,Color("49786c"),9)
+	box(-0.12,door.y,0.12,door_span,6,Color("49786c"),64)
 	if not opening:
-		var a=project(door,10);var b=project(door+Vector2(0,1),10)
+		var a=project(door,10);var b=project(door+Vector2(0,door_span),10)
 		poly([a,b,b+Vector2(0,-51),a+Vector2(0,-51)],Color(0.67,0.81,0.77,0.42))
 		line((a+b)/2,(a+b)/2+Vector2(0,-51),Color("e4e9ce"),2)
 	else:
 		line(project(door+Vector2(0,0.05),12),project(door+Vector2(0,0.05),61),Color("c1d7c8"),3)
-		line(project(door+Vector2(0,0.95),12),project(door+Vector2(0,0.95),61),Color("c1d7c8"),3)
-	label(project(door+Vector2(-0.1,0.8),76),"OPEN",CREAM,9)
+		line(project(door+Vector2(0,door_span-0.05),12),project(door+Vector2(0,door_span-0.05),61),Color("c1d7c8"),3)
+	label(project(door+Vector2(-0.1,door_span*0.5),76),"OPEN",CREAM,9)
 	for f in s.fixtures:
 		if not Nav.is_register(f):continue
 		var cells=Nav.queue_cells(f,s.fixtures,s.tier)
@@ -670,7 +672,7 @@ func actor_at(a:Dictionary) -> Vector2:
 	# Each walking direction keeps to its own side of a wide floor tile.
 	var d=int(a.get("dir",0))
 	if d>=0 and d<4 and a.get("prev",a.pos)!=a.pos:
-		var direction:Vector2=Vector2(Nav.DIRS[d]);at+=Vector2(-direction.y,direction.x)*0.14
+		var direction:Vector2=Vector2(Nav.DIRS[d]);at+=Vector2(-direction.y,direction.x)*(0.3 if a.get("pass_tick",-1)==sim.s.tick else 0.14)
 	return at
 
 func draw_person(a:Dictionary,kind:String):

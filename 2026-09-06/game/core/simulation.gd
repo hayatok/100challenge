@@ -15,7 +15,7 @@ func _init(world_seed:int=20260906):
 
 func reset(world_seed:int):
 	rng.seed=world_seed
-	s={"layout_version":2,"storage_version":1,"seed":world_seed,"rng":rng.state,"tick":0,"day":1,"cash":42000,"tier":0,"star":0,"residents":Catalog.residents(world_seed),"staff":Catalog.staff(),"fixtures":[],"warehouse":[],"orders":[],"visits":[],"next_visit":0,"next_fixture":0,"prices":{},"targets":{},"auto":false,"auto_limit":8000,"reports":[],"today":new_report(1),"logs":[],"effects":[],"schedule":[],"clean":100.0,"loan":false,"debt":0,"due":0,"review":{},"pending_review":false,"winter_plan":"","won":false,"result":"","practice":false,"tutorial":0,"favorites":[],"streak":0,"seasons_profit":[],"event_pass":false,"elapsed":0,"episode_events":[]}
+	s={"layout_version":3,"storage_version":1,"seed":world_seed,"rng":rng.state,"tick":0,"day":1,"cash":42000,"tier":0,"star":0,"residents":Catalog.residents(world_seed),"staff":Catalog.staff(),"fixtures":[],"warehouse":[],"orders":[],"visits":[],"next_visit":0,"next_fixture":0,"prices":{},"targets":{},"auto":false,"auto_limit":8000,"reports":[],"today":new_report(1),"logs":[],"effects":[],"schedule":[],"clean":100.0,"loan":false,"debt":0,"due":0,"review":{},"pending_review":false,"winter_plan":"","won":false,"result":"","practice":false,"tutorial":0,"favorites":[],"streak":0,"seasons_profit":[],"event_pass":false,"elapsed":0,"episode_events":[]}
 	for cat in 8:
 		var kind=[0,0,1,0,1,0,3,4][cat]
 		var layout=[Vector3i(5,3,3),Vector3i(6,3,1),Vector3i(5,0,0),Vector3i(5,5,3),Vector3i(6,0,0),Vector3i(6,5,1),Vector3i(2,9,3),Vector3i(11,4,3)]
@@ -178,7 +178,7 @@ func command(name:String,args:Dictionary={}) -> String:
 			if s.cash<cost:return "増床資金が足りません。"
 			s.cash-=cost;s.today.investment+=cost;s.tier+=1
 			for v in s.visits:
-				if v.state=="leaving":v.path=Nav.path(v.pos,exit_point(v),s.fixtures,s.tier)
+				if v.state=="leaving":v.path=departure_path(v)
 			log_message("新しい床、新しい悩み。店が広くなりました！")
 		"hire":
 			var id=int(args.id)
@@ -281,14 +281,18 @@ func repath_all():
 	for v in s.visits:
 		v.erase("wait_spot")
 		v.path=[];v.target=-1
-		if v.state=="leaving":v.path=Nav.path(v.pos,exit_point(v),s.fixtures,s.tier)
+		if v.state=="leaving":v.path=departure_path(v)
 		elif v.pos.x<0:v.state="entering";v.path=Nav.path(v.pos,Nav.DOOR,s.fixtures,s.tier)
 		else:v.state="choose" if v.basket.is_empty() else "checkout"
 	for w in s.staff:
 		return_goods(w.carry);w.carry=[];w.path=[];w.task="idle";w.target=-1
 
 func restore_spatial_state() -> String:
-	if s.get("layout_version",0)>=2:return ""
+	if s.get("layout_version",0)>=3:return ""
+	if s.get("layout_version",0)==2:
+		s.layout_version=3;repath_all()
+		s.layout_needs_review=not Nav.validate(s.fixtures,s.tier).is_empty()
+		return "配置と在庫を維持しました。建設から出入口の隣のマスを空けると、入店と退店がすれ違えます。" if s.layout_needs_review else ""
 	# Correct only the unchanged factory layout; preserve every lot and account.
 	var factory=true
 	for i in 9:
@@ -302,7 +306,7 @@ func restore_spatial_state() -> String:
 		for f in draft:
 			if f.id<9:f.x=layout[f.id].x;f.y=layout[f.id].y;f.dir=layout[f.id].z
 		if Nav.validate(draft,s.tier).is_empty():s.fixtures=draft;corrected=true
-	s.layout_version=2
+	s.layout_version=3
 	# Saved actors are resumed on a free adjacent floor cell if an old fixture moved under them.
 	var blocked=Nav.obstacles(s.fixtures,false)
 	for actor in s.visits+s.staff:
@@ -372,6 +376,8 @@ func spawn_due():
 			continue
 		var spawn=Nav.street_end(s.tier,due.rid%2!=0)
 		if s.visits.any(func(v):return v.pos==spawn):continue
+		if s.visits.any(func(v):return v.pos==spawn+Vector2i.RIGHT or v.pos==spawn+Vector2i.RIGHT*2):continue
+		if s.visits.any(func(v):return v.state=="leaving" and exit_point(v)==spawn and v.path.size()<=3):continue
 		var r=s.residents[due.rid];var event=event_for(s.day)
 		var goal=r.fav
 		if minute()<600 and r.id%3==0:goal=0
@@ -390,28 +396,114 @@ func spawn_due():
 
 func move_actor(a:Dictionary) -> bool:
 	if a.path.is_empty():return true
+	if a.get("pass_tick",-1)==s.tick:return false
+	if a.pos.x>=0 and a.get("yield_inside_until",-1)>=s.tick:
+		if step_aside_inside(a):return false
+	if a.get("state","")=="leaving" and a.pos.x>=0 and not a.path.has(Nav.EXIT_DOOR) and a.pos!=Nav.EXIT_DOOR:
+		a.path=departure_path(a)
+		if a.path.is_empty():return false
+	# Older saves can contain several arrivals on the same sidewalk cell.
+	if a.pos.x<0 and s.visits.any(func(v):return v!=a and v.pos==a.pos):
+		if step_aside_on_street(a):return false
 	var next:Vector2i=a.path[0]
 	# A saved route may predate the sidewalk rule. Replan without moving the person.
 	if not Nav.connected(a.pos,next):
 		a.path=Nav.path(a.pos,a.path[-1],s.fixtures,s.tier,a.has("task"))
 		if a.path.is_empty():return false
 		next=a.path[0]
+	if a.get("state","")=="entering" and a.pos.x<0:
+		# Keep a waiting arrival from refilling the gap an outgoing shopper needs.
+		if a.get("yield_until",-1)>=s.tick or s.visits.any(func(v):return v.state=="leaving" and not v.path.is_empty() and v.path[0]==a.pos):
+			step_aside_on_street(a);return false
+		if s.visits.any(func(v):return v.state=="leaving" and not v.path.is_empty() and v.path[0]==next):return false
 	if a.has("task") and a.path.size()==1 and s.visits.any(func(v):return v.pos==next):return false
-	if a.get("state","")=="entering" and a.path.size()==1 and s.visits.any(func(v):return v!=a and v.pos==next):return false
+	if a.get("state","")=="entering" and (next==Nav.DOOR or next.x<0):
+		var at_door=s.visits.filter(func(v):return v!=a and v.pos==next)
+		if not at_door.is_empty():
+			if next==Nav.DOOR and Nav.obstacles(s.fixtures,false).has(Nav.EXIT_DOOR) and at_door.any(func(v):return v.state=="leaving"):step_aside_on_street(a)
+			return false
 	var blocked={}
 	for v in s.visits:
-		if v!=a and (v.state in ["browsing","browse_queue","queue","paying"] or (v.state=="choose" and v.get("wait_spot",Vector2i(-99,-99))==v.pos)):blocked[v.pos]=true
+		if v!=a:blocked[v.pos]=true
 	for w in s.staff:
 		if w!=a and working(w) and w.task in ["register","stock"] and w.path.is_empty():blocked[w.pos]=true
 	if blocked.has(next):
+		if pass_walker(a,next):return a.path.is_empty()
+		if a.pos.x>=0 and s.visits.any(func(v):return v!=a and not v.path.is_empty() and v.path[0]==a.pos):
+			if step_aside_inside(a):return false
 		var destination:Vector2i=a.path[-1]
-		if blocked.has(destination):return false
-		var detour=Nav.path(a.pos,destination,s.fixtures,s.tier,a.has("task"),blocked)
-		if detour.is_empty():return false
+		if blocked.has(destination):request_passage(a);return false
+		var detour=departure_path(a,blocked) if a.get("state","")=="leaving" and a.pos.x>=0 else Nav.path(a.pos,destination,s.fixtures,s.tier,a.has("task"),blocked)
+		if detour.is_empty():request_passage(a);return false
 		a.path=detour;next=a.path[0]
 	a.dir=Nav.DIRS.find(next-a.pos)
 	a.pos=next;a.path.pop_front()
 	return a.path.is_empty()
+
+func pass_walker(a:Dictionary,next:Vector2i) -> bool:
+	# Two walking lanes fit inside a floor tile. Opposing walkers can pass
+	# atomically; queues, checkout positions and the doorway remain exclusive.
+	if a.has("task") or a.pos.x<0 or next.x<0 or a.pos in [Nav.DOOR,Nav.EXIT_DOOR] or next in [Nav.DOOR,Nav.EXIT_DOOR]:return false
+	for other in s.visits:
+		if other==a or other.pos!=next or other.path.is_empty() or other.path[0]!=a.pos:continue
+		if other.state not in ["walking","to_queue","leaving","choose"] or other.get("prev",other.pos)!=other.pos or other.get("pass_tick",-1)==s.tick:continue
+		var before:Vector2i=a.pos
+		a.pos=next;a.path.pop_front();a.dir=Nav.DIRS.find(next-before);a.pass_tick=s.tick
+		other.pos=before;other.path.pop_front();other.dir=Nav.DIRS.find(before-next);other.pass_tick=s.tick
+		return true
+	return false
+
+func step_aside_on_street(a:Dictionary) -> bool:
+	if a.pos.x>=0 or a.path.is_empty():return false
+	var destination:Vector2i=a.path[-1]
+	var directions=[Vector2i.LEFT,Vector2i.UP,Vector2i.RIGHT,Vector2i.DOWN] if a.pos.x==-2 else Nav.DIRS
+	var waiting=[]
+	for direction in directions:
+		var at:Vector2i=a.pos+direction
+		if at.x>=0 or not Nav.walkable(at,Nav.dimensions(s.tier)) or not Nav.connected(a.pos,at):continue
+		if a.get("state","")=="entering" and at==Nav.EXIT_DOOR+Vector2i.LEFT:continue
+		var occupants=s.visits.filter(func(v):return v!=a and v.pos==at)
+		if not occupants.is_empty():waiting.append_array(occupants);continue
+		var route=Nav.path(at,destination,s.fixtures,s.tier)
+		if route.is_empty() and at!=destination:continue
+		a.dir=Nav.DIRS.find(direction);a.pos=at;a.path=route
+		return true
+	# Pass the request along a packed arrival line; each person still moves only
+	# during their own update, into an empty adjacent pavement cell.
+	for other in waiting:
+		if other.state=="entering":other.yield_until=s.tick+2
+	return false
+
+func step_aside_inside(a:Dictionary) -> bool:
+	if a.pos.x<0 or a.path.is_empty():return false
+	var obstacle=Nav.obstacles(s.fixtures,a.has("task"));var destination:Vector2i=a.path[-1]
+	for direction in Nav.DIRS:
+		var at:Vector2i=a.pos+direction
+		if not Nav.inside(at,Nav.dimensions(s.tier)) or obstacle.has(at) or not Nav.connected(a.pos,at) or at in [Nav.DOOR,Nav.EXIT_DOOR]:continue
+		if s.visits.any(func(v):return v!=a and (v.pos==at or v.get("wait_spot",v.pos)==at)):continue
+		if s.staff.any(func(w):return w!=a and w.hired and w.pos==at):continue
+		var route=Nav.path(at,destination,s.fixtures,s.tier,a.has("task"))
+		if route.is_empty() and at!=destination:continue
+		a.dir=Nav.DIRS.find(direction);a.pos=at;a.path=route;return true
+	return false
+
+func request_passage(a:Dictionary):
+	if a.pos.x<0:return
+	for other in s.visits:
+		if other==a or other.pos.x<0 or other.path.is_empty():continue
+		if absi(other.pos.x-a.pos.x)+absi(other.pos.y-a.pos.y)==1:other.yield_inside_until=s.tick+2
+
+func departure_path(v:Dictionary,avoid:Dictionary={}) -> Array:
+	var end=exit_point(v)
+	if v.pos.x<0:return Nav.path(v.pos,end,s.fixtures,s.tier,false,avoid)
+	var first=Nav.path(v.pos,Nav.EXIT_DOOR,s.fixtures,s.tier,false,avoid)
+	if not first.is_empty() or v.pos==Nav.EXIT_DOOR:
+		var threshold=Nav.EXIT_DOOR+Vector2i.LEFT
+		if v.pos==Nav.EXIT_DOOR and avoid.has(threshold):return []
+		first.append(threshold);first.append_array(Nav.path(threshold,end,s.fixtures,s.tier));return first
+	if not Nav.path(v.pos,Nav.EXIT_DOOR,s.fixtures,s.tier).is_empty():return []
+	# A customized older store may occupy the second leaf; preserve its furniture.
+	return Nav.path(v.pos,end,s.fixtures,s.tier,false,avoid)
 
 func need_name(group:String) -> String:
 	var words=[]
@@ -432,24 +524,40 @@ func shelf_route(v:Dictionary,destination:Vector2i,line:Array,cells:Array) -> Ar
 
 func wait_for_shelf(v:Dictionary):
 	# A full shelf is a reason to wait in the shop, not to pile up on the doorway.
+	# New reservations preserve connectivity; removals can only free space.
+	# Geometry edits call repath_all(), which removes every reservation.
+	var yielding=v.has("wait_spot") and v.pos==v.wait_spot and s.visits.any(func(other):return other!=v and not other.path.is_empty() and other.path[0]==v.pos)
+	if yielding:v.erase("wait_spot");v.path=[]
+	if v.has("wait_spot") and v.get("wait_clearance",0)==1:
+		if v.pos!=v.wait_spot:move_actor(v)
+		v.mood="先の人が選ぶのを待とう";return
+	var waiting={}
+	for other in s.visits:
+		if other!=v and other.state in ["choose","checkout"] and other.has("wait_spot"):waiting[other.wait_spot]=true
+	var safe=Nav.waiting_cells(s.fixtures,s.tier,waiting)
+	if v.has("wait_spot") and (v.wait_spot.x<4 or not safe.has(v.wait_spot)):v.erase("wait_spot");v.path=[]
 	if not v.has("wait_spot"):
-		var blocked=Nav.obstacles(s.fixtures,false)
+		var blocked=Nav.obstacles(s.fixtures,false);var clearance={}
+		if yielding:clearance[v.pos]=true
 		for f in s.fixtures:
 			blocked[Nav.access(f)]=true
-			for cell in (Nav.queue_cells(f,s.fixtures,s.tier) if Nav.is_register(f) else Nav.browse_cells(f,s.fixtures,s.tier)):blocked[cell]=true
+			for cell in (Nav.queue_cells(f,s.fixtures,s.tier) if Nav.is_register(f) else Nav.browse_cells(f,s.fixtures,s.tier)):
+				blocked[cell]=true
+				for direction in Nav.DIRS:clearance[cell+direction]=true
 		for other in s.visits:
 			if other!=v:blocked[other.pos]=true;blocked[other.get("wait_spot",other.pos)]=true
 		for w in s.staff:
 			if w.hired:blocked[w.pos]=true
 		var spots=[];var dims=Nav.dimensions(s.tier)
-		for x in range(2,dims.x):
+		var reachable=Nav.walk_region(v.pos,s.fixtures,s.tier,blocked)
+		for x in range(4,dims.x):
 			for y in range(3,dims.y):
 				var at=Vector2i(x,y)
-				if not blocked.has(at):spots.append(at)
+				if not blocked.has(at) and not clearance.has(at) and safe.has(at) and reachable.has(at):spots.append(at)
 		spots.sort_custom(func(a,b):return Vector2(a-v.pos).length_squared()<Vector2(b-v.pos).length_squared())
 		for at in spots:
 			var path=Nav.path(v.pos,at,s.fixtures,s.tier,false,blocked)
-			if at==v.pos or not path.is_empty():v.wait_spot=at;v.path=path;break
+			if at==v.pos or not path.is_empty():v.wait_spot=at;v.wait_clearance=1;v.path=path;break
 	if v.has("wait_spot") and v.pos!=v.wait_spot:move_actor(v)
 	v.mood="先の人が選ぶのを待とう"
 
@@ -564,7 +672,9 @@ func update_visits():
 				v.basket.append_array(take(f.lots,p,1));v.spent+=price;v.attempts+=1
 				v.mood=joke_for(v.rid,p)
 				var has_wish=not Stories.request(r).is_empty()
-				if counts(v.basket)<4 and v.attempts<5 and (Stories.wants_more(r,v.basket.map(func(l):return int(l.product))) or (not has_wish and rng.randf()<0.70)):v.state="choose"
+				# An errand ends when its requested item/list is complete. Browsing
+				# without a purpose still permits personal, spontaneous extras.
+				if counts(v.basket)<4 and v.attempts<5 and (Stories.wants_more(r,v.basket.map(func(l):return int(l.product))) or (not has_wish and v.get("need","").is_empty() and rng.randf()<0.70)):v.state="choose"
 				else:v.state="checkout"
 			"checkout":
 				if v.basket.is_empty():leave(v,false);continue
@@ -580,8 +690,10 @@ func update_visits():
 					if n<score:score=n;best={"f":f,"path":path}
 				if best.is_empty():
 					v.wait+=1;v.mood="列が空くのを待とう"
+					wait_for_shelf(v);v.mood="会計の列が空くのを待とう"
 					if v.wait>r.patience+comfort():v.failure_reason="行列";leave(v,false);miss("行列")
 					continue
+				v.erase("wait_spot")
 				v.target=best.f.id;v.path=best.path;v.state="to_queue";best.f.queue.append(v.id)
 			"to_queue","queue":
 				var f=fixture(v.target)
@@ -643,7 +755,7 @@ func leave(v:Dictionary,success:bool):
 		if s.today.lost_visits.size()<12:s.today.lost_visits.append({"rid":r.id,"need":need,"reason":reason,"minute":minute()})
 		r.last_reason=(need_name(need)+" / " if not need.is_empty() else "")+reason+"で買えなかった"
 		return_goods(v.basket);v.basket=[];r.loyalty=maxf(0,r.loyalty-3);r.satisfaction=maxf(0,r.satisfaction-8)
-	v.state="leaving";v.path=Nav.path(v.pos,exit_point(v),s.fixtures,s.tier)
+	v.state="leaving";v.path=departure_path(v)
 	v.bought=success
 
 func update_registers():

@@ -28,7 +28,9 @@ func update(game):
 			if f.kind==2:
 				var spot={"kind":10,"x":f.x,"y":f.y,"dir":f.dir}
 				if do(game,"remove",{"fixture":f.id}).is_empty():do(game,"place",spot)
-		if not s.fixtures.any(func(f):return f.x==2 and f.y==11):do(game,"place",{"kind":10,"x":2,"y":11,"dir":3})
+		# The entrance-side hot case already uses the old third-till approach.
+		# Give the extra counter its own queue on the expanded floor.
+		if s.tier>0 and not s.fixtures.any(func(f):return f.x==12 and f.y==5):do(game,"place",{"kind":10,"x":12,"y":5,"dir":1})
 		for hire in [[6,0,1],[7,2,3]]:
 			if not s.staff[hire[0]].hired:
 				do(game,"hire",{"id":hire[0]});do(game,"shift",{"id":hire[0],"slot":hire[1]});do(game,"shift",{"id":hire[0],"slot":hire[2]});do(game,"priority",{"id":hire[0],"value":"register"})
@@ -115,7 +117,7 @@ func prepare_promise(game):
 	var plan=game.s.get("winter_plan","")
 	if not game.Campaign.PLANS.has(plan):return
 	for i in 3:
-		var x=5+i*2
+		var x=5+i*4
 		if game.s.fixtures.any(func(f):return f.x==x and f.y==11):continue
 		var group=game.Campaign.PLANS[plan].needs[i]
 		var candidates=game.products.filter(func(p):return p.unlock<=game.s.star and Stories.product_matches(p.id,group))
@@ -123,4 +125,5 @@ func prepare_promise(game):
 		candidates.sort_custom(func(a,b):return a.cost+(150 if a.life<=1440 else 0)<b.cost+(150 if b.life<=1440 else 0))
 		var p=candidates[0];var kind=14 if p.storage=="frozen" else (17 if p.storage=="chilled" else (11 if p.storage=="hot" else 16))
 		if game.s.cash-game.equipment[kind].cost<game.review_metrics().reserve:continue
-		if do(game,"place",{"kind":kind,"x":x,"y":11,"dir":2}).is_empty():do(game,"assign",{"fixture":game.s.next_fixture-1,"product":p.id})
+		# Face the dedicated bays toward the open rear aisle, away from the tills.
+		if do(game,"place",{"kind":kind,"x":x,"y":11,"dir":0}).is_empty():do(game,"assign",{"fixture":game.s.next_fixture-1,"product":p.id})

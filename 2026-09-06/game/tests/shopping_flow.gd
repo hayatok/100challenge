@@ -22,6 +22,7 @@ func _init():
 				positions[v.pos]=true
 	check(waited and separate,"Shelf line was invisible or shared standing cells")
 	check(game.s.residents[12].buys==1 and game.s.residents[13].buys==1,"Both customers could not finish their purchases")
+	check([12,13].all(func(id):return not game.s.residents[id].history.is_empty() and game.s.residents[id].history[0].products==[73]),"An errand shopper kept browsing after purchasing the requested umbrella")
 	# Taking a second item must not send the head to the occupied tail of its own line.
 	var cells=Nav.browse_cells(shelf,game.s.fixtures,game.s.tier)
 	game.s.visits=[]
@@ -56,5 +57,65 @@ func _init():
 	for minute in 30:
 		for v in waiters:game.wait_for_shelf(v)
 	check(waiters.all(func(v):return v.pos==v.wait_spot),"Waiting area could not be reached")
+	# Four walkers can block one another without forming a two-person head-on pair.
+	game=Sim.new();game.s.visits=[]
+	var corners=[Vector2i(7,7),Vector2i(8,7),Vector2i(8,8),Vector2i(7,8)]
+	for i in 4:game.s.visits.append({"id":i,"pos":corners[i],"state":"walking","path":[corners[(i+1)%4]],"dir":0})
+	var cycle_overlap=false;var jumped=false
+	for minute in 20:
+		game.s.tick+=1
+		for v in game.s.visits:v.prev=v.pos
+		for v in game.s.visits:
+			var before:Vector2i=v.pos;game.move_actor(v)
+			if absi(v.pos.x-before.x)+absi(v.pos.y-before.y)>1:jumped=true
+			if game.s.visits.any(func(other):return other!=v and other.pos==v.pos):cycle_overlap=true
+	check(game.s.visits.all(func(v):return v.pos==corners[(v.id+1)%4]) and not cycle_overlap and not jumped,"A circular aisle wait did not resolve by adjacent free steps")
+	# A shopper leaving a bay may be surrounded by a fixed line and a new arrival.
+	# The approaching walker must open the free side even without a direct swap.
+	game=Sim.new();game.s.tier=1
+	game.s.fixtures.append({"id":100,"kind":0,"x":5,"y":11,"dir":0})
+	var trapped={"id":1,"pos":Vector2i(5,10),"state":"walking","path":[Vector2i(4,10),Vector2i(3,10)],"dir":0}
+	var approaching={"id":2,"pos":Vector2i(6,10),"state":"walking","path":[Vector2i(5,10)],"dir":0}
+	game.s.visits=[trapped,approaching,{"id":3,"pos":Vector2i(4,10),"state":"browse_queue","path":[]},{"id":4,"pos":Vector2i(5,9),"state":"queue","path":[]}]
+	for minute in 30:
+		game.s.tick+=1
+		for v in game.s.visits:v.prev=v.pos
+		game.move_actor(trapped);game.move_actor(approaching)
+	check(trapped.pos==Vector2i(3,10) and approaching.pos==Vector2i(5,10),"An approaching walker trapped a shopper behind the stationary line")
+	# A burst from both street ends must form a physical crowd, not stacked sprites.
+	game=Sim.new();game.s.schedule=[]
+	for id in 60:game.s.schedule.append({"at":0,"rid":id,"wait":0})
+	var overlap=false;var disconnected=false;var entered=0
+	for minute in 600:
+		game.step()
+		var outside={};var waiting={};var departures={}
+		for v in game.s.visits:
+			if v.pos.x<0 or v.pos in [Nav.DOOR,Nav.EXIT_DOOR]:
+				if outside.has(v.pos):overlap=true
+				outside[v.pos]=true
+			if v.state=="leaving":
+				if departures.has(v.pos):overlap=true
+				departures[v.pos]=true
+			if v.state in ["choose","checkout"] and v.has("wait_spot"):waiting[v.wait_spot]=true
+		var reached=Nav.walk_region(Nav.DOOR,game.s.fixtures,game.s.tier,waiting)
+		for f in game.s.fixtures:
+			if not Nav.staff_equipment(f) and not reached.has(Nav.access(f)):disconnected=true
+		entered=maxi(entered,game.s.residents.reduce(func(total,r):return total+r.visits,0))
+	check(not overlap,"Crowded arrivals or departures shared a sidewalk cell")
+	check(not disconnected,"Shelf waiters cut off a service aisle")
+	print("BURST admitted=",entered," remaining=",game.s.visits.size()," pending=",game.s.schedule.size());
+	if not game.s.visits.is_empty():print(game.s.visits.map(func(v):return {"id":v.id,"pos":str(v.pos),"state":v.state,"path":str(v.path)}))
+	check(entered>=40 and game.s.visits.is_empty(),"A burst of arrivals could not clear the doorway and depart")
+	# Opposing traffic at the one-cell door must let the departing shopper through.
+	game=Sim.new();game.s.schedule=[{"at":0,"rid":90,"wait":0},{"at":0,"rid":91,"wait":0}];game.spawn_due()
+	var outgoing=game.s.visits[0];var incoming=game.s.visits[1]
+	outgoing.pos=Nav.DOOR;outgoing.prev=outgoing.pos;outgoing.state="leaving";outgoing.path=Nav.path(outgoing.pos,game.exit_point(outgoing),game.s.fixtures,0)
+	incoming.pos=Nav.DOOR+Vector2i.LEFT;incoming.prev=incoming.pos;incoming.state="entering";incoming.path=[Nav.DOOR]
+	for minute in 8:game.step()
+	check(outgoing.pos.x<0 and incoming.pos.x>=0 and outgoing.pos!=incoming.pos,"Opposing doorway traffic did not yield and enter separately")
+	outgoing.pos=Nav.EXIT_DOOR;outgoing.prev=outgoing.pos;outgoing.state="leaving";outgoing.path=game.departure_path(outgoing)
+	incoming.pos=Nav.EXIT_DOOR+Vector2i.LEFT;incoming.state="entering";incoming.path=Nav.path(incoming.pos,Nav.DOOR,game.s.fixtures,0)
+	game.s.visits=[outgoing,incoming];game.move_actor(outgoing)
+	check(outgoing.pos==Nav.EXIT_DOOR and not outgoing.path.has(Nav.DOOR),"A blocked exit sent a departing shopper back into the entry leaf")
 	print("SHOPPING FLOW: concurrent approach, physical shelf line, completed payments and staff yielding; ",failures.size()," failures")
 	quit(1 if failures else 0)
