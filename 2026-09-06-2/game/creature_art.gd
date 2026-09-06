@@ -76,7 +76,8 @@ func render(canvas: CanvasItem, genes: Dictionary, center: Vector2, scale_value:
 		canvas.draw_line(Vector2(-r * 0.3, -r * 0.64), Vector2(-r * 0.3, r * 0.3), INK, 1.6, true)
 	var eye: Vector2 = Vector2(r * (0.52 + p.length * 0.3), -r * 0.40 - p.sense * 4)
 	var eye_size: float = 3.7 + p.eyes * 4.2
-	for offset in [Vector2(-eye_size * 1.5, -2), Vector2.ZERO]:
+	var eye_spacing: float = (eye_size + 1.6) * 2.0 + 1.0
+	for offset in [Vector2(-eye_spacing, -2), Vector2.ZERO]:
 		canvas.draw_line(eye + offset + Vector2(0, 4), eye + offset + Vector2(0, p.sense * 7), INK, 2, true)
 		canvas.draw_circle(eye + offset, eye_size + 1.6, INK)
 		canvas.draw_circle(eye + offset, eye_size, Color("fffaf0"))
