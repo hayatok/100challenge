@@ -18,7 +18,7 @@ func update(game):
 	if s.star>=2 and s.cash>32000 and s.fixtures.filter(func(f):return f.kind==10).is_empty():
 		do(game,"place",{"kind":10,"x":4,"y":8,"dir":0})
 	if s.star>=1 and s.tier==0 and s.cash>50000:do(game,"expand")
-	if s.star>=2 and s.cash>32000 and not s.reports.is_empty() and s.reports[-1].miss.get("行列",0)>3:
+	if s.star>=2 and s.cash>32000 and not s.reports.is_empty() and (style=="fixed_plan" or s.reports[-1].miss.get("行列",0)>3):
 		for w in s.staff:
 			if w.hired and not game.working(w) and w.training<2:do(game,"train",{"id":w.id})
 	# The theme changes the actual assortment, shelf geography and financial risk.
@@ -36,6 +36,7 @@ func update(game):
 		var target=12 if reports.is_empty() else clampi(ceili(mean*1.3)+3,4,60)
 		if game.products[p].life<=1440:target=mini(target,ceili(mean*0.6)+3)
 		if game.products[p].cat==focus:target+=3
+		if style=="fixed_plan":target=6 if game.products[p].life<=1440 else 18
 		if int(s.targets.get(p,0))!=target:do(game,"target",{"product":p,"amount":target})
 		var price=1
 		if style=="morning" and p==0:price=0

@@ -1,4 +1,6 @@
 extends Control
+const Goods=preload("res://core/merchandise.gd")
+const Stories=preload("res://core/resident_stories.gd")
 const Sim=preload("res://core/simulation.gd")
 const Cat=preload("res://core/catalog.gd")
 const Nav=preload("res://core/navigation.gd")
@@ -152,8 +154,8 @@ func build_ui():
 	pause_button=button("営業をはじめる",timebar,toggle_pause,130)
 	for n in [1,2,4]:
 		var b=button(str(n)+"倍",timebar,func():speed=n;refresh(),48);b.toggle_mode=true;speed_buttons.append(b)
-	button("−",timebar,func():view.zoom=maxf(0.65,view.zoom/1.15),36)
-	button("＋",timebar,func():view.zoom=minf(2.2,view.zoom*1.15),36)
+	button("−",timebar,func():view.zoom_step(-1),36)
+	button("＋",timebar,func():view.zoom_step(1),36)
 	button("中央",timebar,func():view.reset_camera(),50)
 	news=label("",timebar,12,Color("e8e4ca"));news.size_flags_horizontal=Control.SIZE_EXPAND_FILL;news.text_overrun_behavior=TextServer.OVERRUN_TRIM_ELLIPSIS;news.vertical_alignment=VERTICAL_ALIGNMENT_CENTER
 	side_panel=PanelContainer.new();side_panel.custom_minimum_size.x=290;body.add_child(side_panel)
@@ -323,12 +325,17 @@ func staff_details(parent:Node,id:int):
 func resident_details(parent:Node,id:int):
 	var r=sim.s.residents[id]
 	label("まちの住人  No.%03d"%(id+1),parent,11,MUTED)
-	var identity=row(parent);var portrait=Portrait.new();portrait.look=r.look;identity.add_child(portrait)
+	var identity=row(parent);var portrait=Portrait.new();portrait.identity=r.id;identity.add_child(portrait)
 	var words=VBoxContainer.new();words.size_flags_horizontal=Control.SIZE_EXPAND_FILL;identity.add_child(words)
 	wrapped(r.name,words,22)
 	wrapped(str(r.age)+"歳 / "+r.gender+" / "+r.job,words,12,MUTED)
 	divider(parent)
 	wrapped("好き："+Cat.CATEGORIES[r.fav],parent,16)
+	wrapped(Goods.preference(r.id),parent,12,MUTED)
+	if r.id<12:
+		label("この人の小さな願い",parent,14)
+		if parent==sidebar:live_text(parent,func():return Stories.progress_text(sim.s.residents[id]),12)
+		else:wrapped(Stories.progress_text(r),parent,12)
 	wrapped("価格への敏感さ："+["おおらか","ほどほど","かなり慎重"][0 if r.get("price_sensitivity",1.0)<0.95 else (1 if r.get("price_sensitivity",1.0)<1.3 else 2)],parent,12)
 	wrapped("よく来る時間："+str(r.hour)+"時ごろ\n予算："+money(r.budget)+"\n待てる時間："+str(r.patience)+"分",parent,13)
 	if parent==sidebar:
@@ -373,7 +380,7 @@ func fixture_details(parent:Node,f:Dictionary):
 		else:
 			stat(parent,"棚の在庫",str(sim.counts(f.lots))+"個");stat(parent,"倉庫",str(sim.counts(sim.s.warehouse,p.id))+"個")
 		stat(parent,"棚の容量",str(e.capacity)+"枠")
-		wrapped(p.note,parent,12,MUTED)
+		wrapped(Goods.description(p.id)+"\n"+p.note,parent,12,MUTED)
 		button("この商品を発注",parent,func():category_filter=p.cat;open_products())
 	elif e.capacity>0:wrapped("商品を決めて、売り場をつくろう。",parent)
 	if e.capacity>0:button("並べる商品を変更",parent,func():open_assign(f.id))
@@ -453,7 +460,7 @@ func open_products():
 		var card=VBoxContainer.new();modal_content.add_child(card)
 		var name_row=row(card);var icon=ProductIcon.new();icon.product=p;name_row.add_child(icon);var title=wrapped(p.name,name_row,17);title.size_flags_horizontal=Control.SIZE_EXPAND_FILL
 		label("星"+str(p.unlock)+"で解放" if p.unlock>sim.s.star else "原価 "+money(p.cost),name_row,12,MUTED)
-		wrapped(p.note+"  /  期限 "+str(p.life/60)+"時間"+(" / 2枠使用" if p.size==2 else ""),card,12,MUTED)
+		wrapped(Goods.description(p.id)+"\n"+p.note+"  /  期限 "+str(p.life/60)+"時間"+(" / 2枠使用" if p.size==2 else ""),card,12,MUTED)
 		if p.unlock>sim.s.star:divider(modal_content);continue
 		var controls=flow(card)
 		label("店全体 "+str(sim.total_stock(p.id))+"個",controls,13)

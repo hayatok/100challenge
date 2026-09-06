@@ -1,11 +1,9 @@
 extends Control
-var look=0
-var tint=Color.WHITE
-var atlas:Texture2D
+const People=preload("res://pixel_people.gd")
+var identity=0
 func _ready():
-	custom_minimum_size=Vector2(60,82);mouse_filter=Control.MOUSE_FILTER_IGNORE;texture_filter=CanvasItem.TEXTURE_FILTER_NEAREST
-	atlas=load("res://assets/images/neighbors.png")
-	var shader=Shader.new();shader.code="shader_type canvas_item; varying vec4 tint_color; void vertex(){tint_color=COLOR;} void fragment(){vec4 t=texture(TEXTURE,UV);if(t.r>0.72&&t.b>0.65&&t.g<0.22)t.a=0.0;COLOR=t*tint_color;}"
-	var mat=ShaderMaterial.new();mat.shader=shader;material=mat
+	custom_minimum_size=Vector2(64,80);mouse_filter=Control.MOUSE_FILTER_IGNORE;texture_filter=CanvasItem.TEXTURE_FILTER_NEAREST
 func _draw():
-	if atlas:draw_texture_rect_region(atlas,Rect2(0,0,60,82),Rect2(1306,26+look*237,157,215),tint)
+	draw_rect(Rect2(0,0,64,80),Color("9bc59d"))
+	draw_rect(Rect2(3,3,58,74),Color("f7e6bc"))
+	draw_texture_rect(People.texture(identity,1,0,false,"idle"),Rect2(8,5,48,72),false)

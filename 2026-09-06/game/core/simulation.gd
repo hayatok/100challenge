@@ -1,4 +1,6 @@
 extends RefCounted
+const Goods=preload("res://core/merchandise.gd")
+const Stories=preload("res://core/resident_stories.gd")
 const Catalog=preload("res://core/catalog.gd")
 const Nav=preload("res://core/navigation.gd")
 var products=Catalog.products()
@@ -344,6 +346,7 @@ func spawn_due():
 		if season()==0 and rng.randf()<0.1:goal=1
 		if season()==2 and rng.randf()<0.15:goal=4
 		var budget=roundi(r.budget*rng.randf_range(0.8,1.15))
+		budget=mini(budget,Stories.request(r).get("budget",budget))
 		var v={"id":s.next_visit,"rid":r.id,"pos":spawn,"prev":spawn,"path":Nav.path(spawn,Nav.DOOR,s.fixtures,s.tier),"state":"entering","target":-1,"basket":[],"spent":0,"budget":budget,"goal":goal,"wait":0,"timer":0,"steps":0,"attempts":0,"wanted":-1,"mood":"今日は何にしよう","since":s.tick,"bought":false,"dir":0}
 		s.next_visit+=1;s.visits.append(v);s.schedule.remove_at(i);s.today.visitors+=1;r.visits+=1
 		if r.favorite:log_message(r.name+"さんが来店しました。")
@@ -380,7 +383,9 @@ func choose(v:Dictionary):
 		var path=Nav.path(v.pos,Nav.access(f),s.fixtures,s.tier)
 		if path.is_empty() and v.pos!=Nav.access(f):continue
 		var cat=products[p].cat
-		var score=r.taste[cat]*35+(40 if cat==v.goal else 0)+products[p].quality*12-price/float(r.budget)*35-path.size()*0.65+rng.randf()*8
+		var basket_ids=v.basket.map(func(l):return int(l.product))
+		var personal=Goods.affinity(r.id,p)+Stories.relevance(r,p,basket_ids)
+		var score=personal+r.taste[cat]*35+(40 if cat==v.goal else 0)+products[p].quality*12-price/float(r.budget)*35-path.size()*0.65+rng.randf()*8
 		# A markup costs impulse sales; a favourite can still justify its price.
 		# Tolerance is individual and visible, so expensive stock is a deliberate niche.
 		var premium=price/float(products[p].price)-1.0
@@ -433,7 +438,7 @@ func update_visits():
 				if v.spent+price>v.budget:v.state="checkout";continue
 				v.basket.append_array(take(f.lots,p,1));v.spent+=price;v.attempts+=1
 				v.mood=joke_for(v.rid,p)
-				if counts(v.basket)<4 and v.attempts<5 and rng.randf()<0.70:v.state="choose"
+				if counts(v.basket)<4 and v.attempts<5 and (Stories.wants_more(r,v.basket.map(func(l):return int(l.product))) or rng.randf()<0.70):v.state="choose"
 				else:v.state="checkout"
 			"checkout":
 				if v.basket.is_empty():leave(v,false);continue
@@ -514,10 +519,11 @@ func update_registers():
 		r.last_reason="購入できた / 待ち時間 "+str(v.wait)+"分"
 		var names=[]
 		for l in v.basket:names.append(products[l.product].name)
-		r.history.push_front({"day":s.day,"items":names,"price":v.spent})
+		var receipt={"day":s.day,"items":names,"products":v.basket.map(func(l):return int(l.product)),"price":v.spent,"wait":v.wait,"minute":minute(),"event":event_for(s.day).id,"weather":weather_for(s.day)}
+		r.history.push_front(receipt)
 		if r.history.size()>8:r.history.resize(8)
-		if r.id<12 and r.episode<3 and r.buys>=[2,5,10][r.episode]:
-			var chapter=r.episode;r.episode+=1
+		var chapter=Stories.record(r,receipt)
+		if chapter>=0:
 			var text=r.name+"「"+Catalog.EPISODES[r.id][chapter*2+1]+"」"
 			s.episode_events.push_front({"rid":r.id,"chapter":chapter,"day":s.day,"text":text});log_message(text)
 			if s.episode_events.size()>36:s.episode_events.resize(36)
