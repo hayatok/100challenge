@@ -17,7 +17,9 @@ static func backroom(p:Vector2i) -> bool:
 static func staff_equipment(f:Dictionary) -> bool:
 	return int(f.get("kind",-1)) in [5,6,19]
 static func street_end(tier:int,far_end:bool=false) -> Vector2i:
-	return Vector2i(-3,dimensions(tier).y+3 if far_end else -3)
+	return Vector2i(-1 if far_end else -2,dimensions(tier).y+3 if far_end else -3)
+static func street_start(tier:int,far_end:bool=false) -> Vector2i:
+	return Vector2i(-2 if far_end else -1,dimensions(tier).y+3 if far_end else -3)
 static func obstacles(fixtures:Array,staff:bool=true) -> Dictionary:
 	var out={}
 	if not staff:

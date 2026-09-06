@@ -288,6 +288,10 @@ func repath_all():
 		return_goods(w.carry);w.carry=[];w.path=[];w.task="idle";w.target=-1
 
 func restore_spatial_state() -> String:
+	# Old saves excluded off-duty walkers from collision checks. Let them take
+	# a free adjacent step before the paused store is first drawn.
+	for worker in s.staff:
+		if worker.hired and worker.pos.x>=0 and not Nav.backroom(worker.pos) and s.visits.any(func(v):return v.pos==worker.pos):step_aside_inside(worker)
 	if s.get("layout_version",0)>=3:return ""
 	if s.get("layout_version",0)==2:
 		s.layout_version=3;repath_all()
@@ -374,10 +378,8 @@ func spawn_due():
 				if s.today.lost_visits.size()<12:s.today.lost_visits.append({"rid":due.rid,"need":need,"reason":"満員","minute":minute()})
 				s.schedule.remove_at(i)
 			continue
-		var spawn=Nav.street_end(s.tier,due.rid%2!=0)
+		var spawn=Nav.street_start(s.tier,due.rid%2!=0)
 		if s.visits.any(func(v):return v.pos==spawn):continue
-		if s.visits.any(func(v):return v.pos==spawn+Vector2i.RIGHT or v.pos==spawn+Vector2i.RIGHT*2):continue
-		if s.visits.any(func(v):return v.state=="leaving" and exit_point(v)==spawn and v.path.size()<=3):continue
 		var r=s.residents[due.rid];var event=event_for(s.day)
 		var goal=r.fav
 		if minute()<600 and r.id%3==0:goal=0
@@ -395,8 +397,14 @@ func spawn_due():
 		if r.favorite:log_message(r.name+"さんが来店しました。")
 
 func move_actor(a:Dictionary) -> bool:
+	# Resume old outgoing routes on their own lane instead of converging on the
+	# incoming spawn point at the pavement's edge.
+	if a.get("state","")=="leaving" and a.pos.x<0 and (a.path.is_empty() or a.path[-1]!=exit_point(a)):
+		a.path=Nav.path(a.pos,exit_point(a),s.fixtures,s.tier)
 	if a.path.is_empty():return true
 	if a.get("pass_tick",-1)==s.tick:return false
+	if a.pos.x>=0 and not Nav.backroom(a.pos) and (s.visits+s.staff.filter(func(w):return w.hired)).any(func(other):return other!=a and other.pos==a.pos):
+		if step_aside_inside(a):return false
 	if a.pos.x>=0 and a.get("yield_inside_until",-1)>=s.tick:
 		if step_aside_inside(a):return false
 	if a.get("state","")=="leaving" and a.pos.x>=0 and not a.path.has(Nav.EXIT_DOOR) and a.pos!=Nav.EXIT_DOOR:
@@ -426,7 +434,7 @@ func move_actor(a:Dictionary) -> bool:
 	for v in s.visits:
 		if v!=a:blocked[v.pos]=true
 	for w in s.staff:
-		if w!=a and working(w) and w.task in ["register","stock"] and w.path.is_empty():blocked[w.pos]=true
+		if w!=a and w.hired and not Nav.backroom(w.pos):blocked[w.pos]=true
 	if blocked.has(next):
 		if pass_walker(a,next):return a.path.is_empty()
 		if a.pos.x>=0 and s.visits.any(func(v):return v!=a and not v.path.is_empty() and v.path[0]==a.pos):
@@ -443,10 +451,10 @@ func move_actor(a:Dictionary) -> bool:
 func pass_walker(a:Dictionary,next:Vector2i) -> bool:
 	# Two walking lanes fit inside a floor tile. Opposing walkers can pass
 	# atomically; queues, checkout positions and the doorway remain exclusive.
-	if a.has("task") or a.pos.x<0 or next.x<0 or a.pos in [Nav.DOOR,Nav.EXIT_DOOR] or next in [Nav.DOOR,Nav.EXIT_DOOR]:return false
-	for other in s.visits:
+	if a.pos.x<0 or next.x<0 or Nav.backroom(a.pos) or Nav.backroom(next) or a.pos in [Nav.DOOR,Nav.EXIT_DOOR] or next in [Nav.DOOR,Nav.EXIT_DOOR]:return false
+	for other in s.visits+s.staff.filter(func(w):return w.hired):
 		if other==a or other.pos!=next or other.path.is_empty() or other.path[0]!=a.pos:continue
-		if other.state not in ["walking","to_queue","leaving","choose"] or other.get("prev",other.pos)!=other.pos or other.get("pass_tick",-1)==s.tick:continue
+		if (not other.has("task") and other.state not in ["walking","to_queue","leaving","choose","browse_queue","queue"]) or other.get("prev",other.pos)!=other.pos or other.get("pass_tick",-1)==s.tick:continue
 		var before:Vector2i=a.pos
 		a.pos=next;a.path.pop_front();a.dir=Nav.DIRS.find(next-before);a.pass_tick=s.tick
 		other.pos=before;other.path.pop_front();other.dir=Nav.DIRS.find(before-next);other.pass_tick=s.tick
@@ -489,7 +497,7 @@ func step_aside_inside(a:Dictionary) -> bool:
 
 func request_passage(a:Dictionary):
 	if a.pos.x<0:return
-	for other in s.visits:
+	for other in s.visits+s.staff.filter(func(w):return w.hired):
 		if other==a or other.pos.x<0 or other.path.is_empty():continue
 		if absi(other.pos.x-a.pos.x)+absi(other.pos.y-a.pos.y)==1:other.yield_inside_until=s.tick+2
 
@@ -526,7 +534,7 @@ func wait_for_shelf(v:Dictionary):
 	# A full shelf is a reason to wait in the shop, not to pile up on the doorway.
 	# New reservations preserve connectivity; removals can only free space.
 	# Geometry edits call repath_all(), which removes every reservation.
-	var yielding=v.has("wait_spot") and v.pos==v.wait_spot and s.visits.any(func(other):return other!=v and not other.path.is_empty() and other.path[0]==v.pos)
+	var yielding=v.has("wait_spot") and v.pos==v.wait_spot and (s.visits+s.staff).any(func(other):return other!=v and not other.path.is_empty() and other.path[0]==v.pos)
 	if yielding:v.erase("wait_spot");v.path=[]
 	if v.has("wait_spot") and v.get("wait_clearance",0)==1:
 		if v.pos!=v.wait_spot:move_actor(v)

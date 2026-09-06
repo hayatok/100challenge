@@ -10,11 +10,11 @@ func plan_assortment(game,focus:int):
 	wanted=[]
 	for group in req.get("all",[]):
 		if wanted.any(func(p):return Stories.product_matches(p,group)):continue
-		var candidates=game.products.filter(func(p):return p.unlock<=game.s.star and Stories.product_matches(p.id,group))
+		var candidates=game.products.filter(func(p):return p.unlock<=game.s.star and Stories.product_matches(p.id,group) and game.s.fixtures.any(func(f):return game.compatible(f,p.id)))
 		candidates.sort_custom(func(a,b):return a.price<b.price)
 		if not candidates.is_empty():wanted.append(candidates[0].id)
 	if req.has("distinct"):
-		var candidates=game.products.filter(func(p):return p.unlock<=game.s.star and p.cat==req.distinct_cat and not wanted.has(p.id))
+		var candidates=game.products.filter(func(p):return p.unlock<=game.s.star and p.cat==req.distinct_cat and not wanted.has(p.id) and game.s.fixtures.any(func(f):return game.compatible(f,p.id)))
 		candidates.sort_custom(func(a,b):return a.price<b.price)
 		for p in candidates:
 			if wanted.filter(func(id):return game.products[id].cat==req.distinct_cat).size()>=req.distinct:break

@@ -15,7 +15,8 @@ func _init():
 	check(Nav.queue_cells(till,game.s.fixtures,0).size()==4,"four physical queue slots")
 	for tier in 3:
 		for far in [false,true]:
-			var path=Nav.path(Nav.street_end(tier,far),Nav.DEPOT,game.s.fixtures,tier,true)
+			var path=Nav.path(Nav.street_start(tier,far),Nav.DEPOT,game.s.fixtures,tier,true)
+			check(Nav.street_start(tier,far)!=Nav.street_end(tier,far),"street endpoints keep arrivals and departures separate at tier "+str(tier))
 			check(path.has(Nav.DOOR),"street route passes door at tier "+str(tier))
 			check(path.all(func(p):return p.x>=-3),"arrivals remain on widened sidewalk at tier "+str(tier))
 			var departure=Nav.path(Nav.DOOR,Nav.street_end(tier,far),game.s.fixtures,tier)
@@ -72,7 +73,7 @@ func _init():
 	check(legacy.command("move",{"fixture":7,"x":11,"y":4,"dir":3}).is_empty() and not legacy.s.layout_needs_review,"Customized old doorway could not be opened through normal building controls")
 	# Continuous normal simulation. Report all spatial invariants as aggregate checks.
 	var stepped=true;var facade=true;var terminal=true;var counter=true;var queue=true;var unique_browse=true
-	var public_floor=true
+	var public_floor=true;var separate_workers=true
 	var entered=0;var departed=0;var served=0;var max_queue=0;var captured=false
 	game=Sim.new(20260906)
 	game.command("hire",{"id":2});game.command("shift",{"id":2,"slot":0});game.command("shift",{"id":2,"slot":1})
@@ -84,6 +85,7 @@ func _init():
 		for v in game.s.visits:
 			active[v.id]=true
 			if Nav.backroom(v.pos):public_floor=false
+			if game.s.staff.any(func(w):return w.hired and w.pos==v.pos):separate_workers=false
 			var distance=absi(v.pos.x-v.prev.x)+absi(v.pos.y-v.prev.y)
 			if distance>1:stepped=false
 			if v.prev.x<0 and v.pos.x>=0:
@@ -121,5 +123,6 @@ func _init():
 	check(unique_browse,"customers take turns at a shelf")
 	check(entered>20,"normal arrivals traverse street and doorway")
 	check(public_floor,"customers never enter the staff backroom")
+	check(separate_workers,"Customers never share a public floor cell with on-duty or off-duty staff")
 	print("CIRCULATION: ",checks," checks, ",errors.size()," failures; entered=",entered," departed=",departed," payment_minutes=",served," max_queue=",max_queue)
 	quit(1 if errors else 0)

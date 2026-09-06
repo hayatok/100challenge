@@ -670,7 +670,7 @@ func items(f:Dictionary,x:float,y:float,z:float,row:int,rows:int=3):
 func actor_at(a:Dictionary) -> Vector2:
 	var at=Vector2(a.get("prev",a.pos)).lerp(Vector2(a.pos),interp)+Vector2(0.5,0.5)
 	# Each walking direction keeps to its own side of a wide floor tile.
-	var d=int(a.get("dir",0))
+	var d=Nav.DIRS.find(Vector2i(a.pos)-Vector2i(a.get("prev",a.pos)))
 	if d>=0 and d<4 and a.get("prev",a.pos)!=a.pos:
 		var direction:Vector2=Vector2(Nav.DIRS[d]);at+=Vector2(-direction.y,direction.x)*(0.3 if a.get("pass_tick",-1)==sim.s.tick else 0.14)
 	return at
@@ -690,6 +690,7 @@ func draw_person(a:Dictionary,kind:String):
 		paint_arc(base+Vector2(0,2),15,0,TAU,12,Color("ffdd8d"),3,false)
 	poly([base+Vector2(-13,0),base+Vector2(0,-5),base+Vector2(13,0),base+Vector2(0,6)],Color(0.13,0.23,0.2,0.19))
 	var dir=int(a.get("dir",0))
+	if moving:dir=Nav.DIRS.find(Vector2i(a.pos)-Vector2i(a.get("prev",a.pos)))
 	var identity=int(r.id)
 	var appearance=Life.appearance(sim,a,staff,reduced)
 	var pose=appearance.pose

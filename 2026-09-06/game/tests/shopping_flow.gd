@@ -40,6 +40,20 @@ func _init():
 	clerk.task="idle";clerk.path=[];clerk.pos=Nav.access(shelf);clerk.fatigue=90
 	game.update_staff()
 	check(clerk.task=="rest" and not clerk.path.is_empty() and clerk.path[-1]==Nav.DEPOT,"Rest without a bench blocked the shop aisle")
+	# A worker going off duty used to become invisible to customer collision checks.
+	game=Sim.new();clerk=game.s.staff[2];clerk.hired=true;clerk.task="off"
+	clerk.pos=Vector2i(7,3);clerk.prev=clerk.pos;clerk.path=[Vector2i(7,2)]
+	var shopper={"id":500,"pos":Vector2i(7,4),"prev":Vector2i(7,4),"state":"walking","path":[Vector2i(7,3)],"dir":0}
+	game.s.visits=[shopper];game.move_actor(shopper)
+	check(shopper.pos!=clerk.pos,"An off-duty worker was ignored by customer collision checks")
+	clerk.path=[shopper.pos];game.move_actor(shopper)
+	check(shopper.pos==Vector2i(7,3) and clerk.pos==Vector2i(7,4),"Customer and off-duty worker could not pass in a public aisle")
+	check(shopper.get("pass_tick",-1)==game.s.tick and clerk.get("pass_tick",-1)==game.s.tick,"Passing customer and worker did not receive separate drawing lanes")
+	# Actual old saves can already contain the overlap: recover beside the shopper.
+	clerk.pos=shopper.pos;clerk.prev=clerk.pos;clerk.path=Nav.path(clerk.pos,Nav.DEPOT,game.s.fixtures,0,true)
+	var before_restore:Vector2i=clerk.pos
+	game.restore_spatial_state()
+	check(clerk.pos!=shopper.pos and absi(clerk.pos.x-before_restore.x)+absi(clerk.pos.y-before_restore.y)==1,"Loading an old overlapping off-duty worker failed to restore adjacent separation")
 	# Reproduce the crossed approach found during the 49th morning of normal play.
 	game=Sim.new();shelf=game.fixture(7);shelf.product=73;shelf.lots=[game.lot(73,20)]
 	cells=Nav.browse_cells(shelf,game.s.fixtures,game.s.tier)
@@ -82,6 +96,16 @@ func _init():
 		for v in game.s.visits:v.prev=v.pos
 		game.move_actor(trapped);game.move_actor(approaching)
 	check(trapped.pos==Vector2i(3,10) and approaching.pos==Vector2i(5,10),"An approaching walker trapped a shopper behind the stationary line")
+	# The old shared endpoint could trap an arrival between two departing people.
+	game=Sim.new();game.s.schedule=[{"at":0,"rid":90,"wait":0},{"at":0,"rid":91,"wait":0},{"at":0,"rid":93,"wait":0}]
+	for minute in 3:game.step()
+	var arrivals=game.s.visits.filter(func(v):return v.rid==90)
+	var exits=game.s.visits.filter(func(v):return v.rid in [91,93])
+	for i in exits.size():
+		var v=exits[i];v.pos=Vector2i(-2,-3) if i==0 else Vector2i(-3,-2);v.prev=v.pos;v.state="leaving";v.path=[Vector2i(-3,-3)]
+	arrivals[0].pos=Vector2i(-3,-3);arrivals[0].prev=arrivals[0].pos;arrivals[0].state="entering";arrivals[0].path=Nav.path(arrivals[0].pos,Nav.DOOR,game.s.fixtures,0)
+	for minute in 40:game.step()
+	check(exits.all(func(v):return not game.s.visits.has(v)) and arrivals[0].pos!=Vector2i(-3,-3),"Old arrivals and departures deadlocked at the pavement endpoint")
 	# A burst from both street ends must form a physical crowd, not stacked sprites.
 	game=Sim.new();game.s.schedule=[]
 	for id in 60:game.s.schedule.append({"at":0,"rid":id,"wait":0})
