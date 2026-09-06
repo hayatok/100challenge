@@ -82,16 +82,17 @@ func _draw() -> void:
 	ordered.sort_custom(func(a, b): return a.y < b.y)
 	for c in ordered:
 		var pos: Vector2 = screen(positions.get(c.id, Vector2(c.x, c.y)))
-		if not Rect2(Vector2(-100, -100), size + Vector2(200, 200)).has_point(pos): continue
+		var body: Rect2 = creature_rect(c, pos)
+		if not Rect2(Vector2.ZERO, size).intersects(body): continue
 		if c.id == selected:
-			draw_arc(pos, 34 * unit_scale(), 0, TAU, 40, Color("dc694b"), 3, true)
+			draw_rect(body.grow(3), Color("dc694b"), false, 2)
 		art.render(self, c.genes, pos, unit_scale(), c.angle, c.age, visual_time, c.state not in ["もぐもぐ", "卵"], reduced)
 		if c.pulse > 0:
 			draw_circle(pos + Vector2(0, -37) * unit_scale(), 4, Color("dc694b"))
 		if c.id == selected:
 			var text: String = "#%03d  %s" % [c.id, c.state]
 			var width: float = font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, 13).x
-			var where: Vector2 = Vector2(clampf(pos.x - width * 0.5, 6, maxf(6, size.x - width - 8)), clampf(pos.y - 38 * unit_scale(), 22, size.y - 12))
+			var where: Vector2 = Vector2(clampf(body.get_center().x - width * 0.5, 6, maxf(6, size.x - width - 8)), clampf(body.position.y - 8, 22, size.y - 12))
 			draw_rect(Rect2(where - Vector2(5, 17), Vector2(width + 10, 23)), Color("fff7df"))
 			draw_string(font, where, text, HORIZONTAL_ALIGNMENT_LEFT, -1, 13, ink)
 	if sim.rain > 0 and not reduced:
@@ -100,6 +101,11 @@ func _draw() -> void:
 			draw_line(p, p + Vector2(-3, 11), Color(0.22, 0.47, 0.43, 0.35), 1.5, true)
 	draw_rect(Rect2(Vector2.ZERO, size), ink, false, 3)
 	if has_focus(): draw_rect(Rect2(Vector2(4, 4), size - Vector2(8, 8)), Color("dc694b"), false, 2)
+
+func creature_rect(c: Dictionary, pos: Vector2) -> Rect2:
+	var rect: Rect2 = art.bounds(c.genes, c.age)
+	if cos(c.angle) < 0: rect.position.x = -rect.end.x
+	return Rect2(pos + rect.position * unit_scale(), rect.size * unit_scale())
 
 func _gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton:
@@ -110,11 +116,12 @@ func _gui_input(event: InputEvent) -> void:
 			else:
 				dragging = false
 				if drag_distance < 8:
-					var best: float = 36
+					var best: float = INF
 					var id: int = -1
 					for c in sim.creatures:
-						var distance: float = screen(Vector2(c.x, c.y)).distance_to(event.position)
-						if distance < best: best = distance; id = c.id
+						var pos: Vector2 = screen(positions.get(c.id, Vector2(c.x, c.y)))
+						var distance: float = pos.distance_to(event.position)
+						if distance < best and (distance < 24 or creature_rect(c, pos).grow(4).has_point(event.position)): best = distance; id = c.id
 					if id > 0: picked.emit(id)
 	elif event is InputEventMouseMotion and dragging:
 		drag_distance += event.relative.length()
