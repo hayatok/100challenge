@@ -1,4 +1,5 @@
 extends Control
+const NumberInput=preload("res://number_input.gd")
 const Guide=preload("res://core/onboarding.gd")
 const Campaign=preload("res://core/campaign.gd")
 const City=preload("res://core/city.gd")
@@ -376,7 +377,7 @@ func open_order(product:int):
 	var due=City.delivery_tick(sim.s.tick)
 	wrapped("今の注文は%d日目 %s着。到着後、スタッフが棚へ運びます。"%[due/1440+1,time_string((due+360)%1440)],modal_content,14)
 	var controls=flow(modal_content);label("発注する個数",controls,14)
-	var quantity=SpinBox.new();quantity.min_value=1;quantity.max_value=100;quantity.value=6;quantity.custom_minimum_size.x=120;controls.add_child(quantity)
+	var quantity=NumberInput.new();quantity.min_value=1;quantity.max_value=100;quantity.value=6;quantity.custom_minimum_size.x=120;controls.add_child(quantity)
 	var total=wrapped("",modal_content,17)
 	var order_button=button("",modal_content,func():act("order",{"product":p.id,"amount":int(quantity.value)},func():open_order(p.id)))
 	var update=func(_value=0):
@@ -600,7 +601,7 @@ func open_products():
 	button("自動発注："+("入" if sim.s.auto else "切"),h,func():act("auto",{"enabled":not sim.s.auto},open_products))
 	label("倉庫 "+str(sim.volume(sim.s.warehouse))+" / "+str(sim.warehouse_capacity())+"枠",h,13)
 	var budget_row=flow(modal_content);label("自動発注の日次上限",budget_row,12)
-	var budget=SpinBox.new();budget.min_value=1000;budget.max_value=50000;budget.step=1000;budget.value=sim.s.auto_limit;budget.custom_minimum_size.x=130;budget_row.add_child(budget);budget.value_changed.connect(func(v):act("auto_limit",{"amount":int(v)}))
+	var budget=NumberInput.new();budget.min_value=1000;budget.max_value=50000;budget.step=1000;budget.value=sim.s.auto_limit;budget.custom_minimum_size.x=130;budget_row.add_child(budget);budget.value_changed.connect(func(v):act("auto_limit",{"amount":int(v)}))
 	tabs(modal_content,Cat.CATEGORIES,category_filter,func(i):category_filter=i;open_products())
 	for p in sim.products:
 		if p.cat!=category_filter:continue
@@ -625,7 +626,7 @@ func product_card(p:Dictionary,parent:Node):
 	price.select(int(sim.s.prices.get(p.id,1)));price.item_selected.connect(func(i):act("price",{"product":p.id,"level":i}))
 	button("発注する",controls,func():open_order(p.id))
 	var auto_row=row(card);label("自動発注の目標",auto_row,12)
-	var spin=SpinBox.new();spin.min_value=0;spin.max_value=100;spin.step=2;spin.value=sim.s.targets.get(p.id,0);spin.custom_minimum_size.x=100;auto_row.add_child(spin);spin.value_changed.connect(func(v):act("target",{"product":p.id,"amount":int(v)}))
+	var spin=NumberInput.new();spin.min_value=0;spin.max_value=100;spin.step=2;spin.value=sim.s.targets.get(p.id,0);spin.custom_minimum_size.x=100;auto_row.add_child(spin);spin.value_changed.connect(func(v):act("target",{"product":p.id,"amount":int(v)}))
 	divider(parent)
 
 func open_product_review(product:int,day:int):

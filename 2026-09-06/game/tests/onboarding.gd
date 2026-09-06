@@ -49,6 +49,24 @@ func run():
 	check(search.text=="r" and main.modal_title=="あかり町の住人","Typing in search triggered a game shortcut")
 	key(KEY_ESCAPE);await process_frame
 	check(not main.modal.visible,"Escape did not close the modal")
+	main.open_products();await process_frame;await process_frame
+	var inputs=main.modal.find_children("*","SpinBox",true,false)
+	var target=inputs[1].get_line_edit();target.grab_focus();target.edit();await process_frame;target.select_all()
+	key(KEY_NONE,0xFF16);await process_frame
+	check(target.text=="6" and main.sim.s.targets[0]==18,"Full-width target was not normalized or committed prematurely")
+	key(KEY_ENTER);await process_frame
+	check(main.sim.s.targets[0]==6 and "6個" in main.modal_notice.text,"Full-width target did not reach the actual model")
+	main.open_products();await process_frame;await process_frame
+	inputs=main.modal.find_children("*","SpinBox",true,false)
+	check(inputs[1].value==6,"Reopening discarded the submitted target")
+	var budget=inputs[0].get_line_edit();budget.grab_focus();budget.edit();await process_frame;budget.select_all()
+	for digit in [0xFF11,0xFF12,0xFF10,0xFF10,0xFF10]:key(KEY_NONE,digit)
+	await process_frame;key(KEY_TAB);await process_frame
+	check(main.sim.s.auto_limit==12000,"Full-width budget was discarded on focus change")
+	main.open_order(0);await process_frame;await process_frame
+	var quantity=main.modal.find_children("*","SpinBox",true,false)[0]
+	quantity.get_line_edit().grab_focus();quantity.get_line_edit().edit();await process_frame;quantity.get_line_edit().select_all();key(KEY_NONE,0xFF18);await process_frame;key(KEY_ENTER);await process_frame
+	check(quantity.value==8 and main.modal.find_children("*","Button",true,false).any(func(b):return "8個を発注" in b.text and main.money(8*main.sim.products[0].cost) in b.text),"Full-width quantity and order cost diverged")
 	print("ONBOARDING / INPUT: ",failures.size()," failures")
 	main.queue_free();await create_timer(0.3).timeout
 	quit(1 if failures else 0)
