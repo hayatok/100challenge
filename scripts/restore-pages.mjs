@@ -14,6 +14,7 @@ export async function restorePages(root, { repository, runId, force = false, exe
   const destination = path.join(root, '.pages-baseline')
   await rm(destination, { recursive: true, force: true })
   if (force) return null
+  let phase = 'workflow lookup'
   try {
     if (!/^[\w.-]+\/[\w.-]+$/.test(repository ?? '')) throw new Error('Missing repository')
     const api = endpoint => JSON.parse(executeCommand('gh', ['api', endpoint]))
@@ -23,11 +24,14 @@ export async function restorePages(root, { repository, runId, force = false, exe
       if (String(run.id) === String(runId) || run.status !== 'completed' || run.conclusion !== 'success') continue
       if (!['push', 'workflow_dispatch'].includes(run.event) || run.repository?.full_name !== repository || run.head_repository?.full_name !== repository) continue
       if (!/^[a-f0-9]{40,64}$/i.test(run.head_sha)) continue
+      phase = 'artifact lookup'
       const { artifacts } = api(`repos/${repository}/actions/runs/${run.id}/artifacts?per_page=100`)
       if (!artifacts.some(artifact => artifact.name === 'github-pages' && !artifact.expired)) continue
       await mkdir(path.join(destination, 'download'), { recursive: true })
       await mkdir(path.join(destination, 'site'), { recursive: true })
+      phase = 'artifact download'
       executeCommand('gh', ['run', 'download', String(run.id), '--repo', repository, '--name', 'github-pages', '--dir', path.join(destination, 'download')])
+      phase = 'artifact extraction'
       executeCommand('tar', ['-xf', path.join(destination, 'download', 'artifact.tar'), '-C', path.join(destination, 'site')])
       const source = { sha: run.head_sha, runId: run.id }
       // Write provenance only after the download and extraction both succeed.
@@ -39,7 +43,7 @@ export async function restorePages(root, { repository, runId, force = false, exe
     console.log('No retained successful Pages artifact; rebuilding all apps.')
   } catch {
     // Do not expose CLI output (which may contain signed download URLs).
-    console.warn('Pages baseline unavailable; rebuilding all apps.')
+    console.warn(`Pages baseline unavailable during ${phase}; rebuilding all apps.`)
   }
   await rm(destination, { recursive: true, force: true })
   return null
