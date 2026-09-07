@@ -1,4 +1,5 @@
 extends RefCounted
+const Ecology = preload("res://core/ecology.gd")
 const DNA = preload("res://core/genome.gd")
 const STEP = 0.2
 const BOUNDS = Vector2(1100, 760)
@@ -22,6 +23,9 @@ var spatial: Dictionary = {}
 var food_visitors: Dictionary = {}
 var phenotypes: Dictionary = {}
 var migrated: bool = false
+var census: Array = []
+var notes: Array = []
+var ancestor_masks: Dictionary = {}
 
 func _init(value: int = 20260906, count: int = 32) -> void:
 	seed_value = value
@@ -37,6 +41,7 @@ func _init(value: int = 20260906, count: int = 32) -> void:
 		c.energy = rng.randf_range(70, 94)
 		c.cooldown = rng.randf_range(0, 8)
 	log_event("観察開始。%d匹の暮らしを見守ります。" % count, 1)
+	census.append(survey())
 
 func spawn(g: Dictionary, parents: Array, family: int, generation: int, p: Vector2) -> Dictionary:
 	g = DNA.upgrade(g)
@@ -48,6 +53,14 @@ func spawn(g: Dictionary, parents: Array, family: int, generation: int, p: Vecto
 	next_id += 1
 	creatures.append(c)
 	phenotypes[c.id] = DNA.traits(g)
+	var inherited: int = 0
+	for parent in parents: inherited |= int(ancestor_masks[parent])
+	var expressed: int = Ecology.mask(g)
+	ancestor_masks[c.id] = inherited | expressed
+	if not parents.is_empty():
+		for organ in 4:
+			if (expressed & (1 << organ)) != 0 and (inherited & (1 << organ)) == 0:
+				add_note({"kind": "novel", "time": time, "id": c.id, "area": habitat(p), "organ": organ})
 	return c
 
 func log_event(message: String, id: int = -1) -> void:
@@ -66,7 +79,7 @@ static func mobility(p: Dictionary, area: int) -> float:
 	return 1.0 - p.swim * 0.12 + organs[0] * 0.015 + organs[3] * 0.025
 
 static func upkeep(p: Dictionary, area: int) -> float:
-	return 0.16 + p.size * 0.12 + p.reach * 0.05 + p.shell * 0.04 + p.spines * 0.04 + maxi(0, p.blueprint.organs.size() - 2) * 0.001 + maxi(0, p.parts - 2) * 0.001 + (0.10 * (1.0 - p.swim) if area == 2 else 0.0)
+	return 0.16 + p.size * 0.12 + p.reach * 0.05 + p.shell * 0.04 + p.spines * 0.04 + maxi(0, p.blueprint.organs.size() - 2) * 0.001 + maxi(0, p.parts - 2) * 0.001 + Ecology.cost(p, area) + (0.10 * (1.0 - p.swim) if area == 2 else 0.0)
 
 func season_name() -> String:
 	return ["芽吹き", "陽ざし", "実り", "冬ごもり"][int(time / 120) % 4]
@@ -182,16 +195,18 @@ func step() -> void:
 					var place: Vector2 = Vector2(plant.x, plant.y)
 					var d: float = pos.distance_to(place)
 					var crowd: int = int(food_visitors.get(i, 0)) - (1 if c.target == i else 0)
-					var score: float = d / mobility(p, habitat(place)) - plant.food * 0.6 + crowd * 12.0
+					var efficiency: float = Ecology.efficiency(p, habitat(place))
+					var score: float = d / mobility(p, habitat(place)) + (90.0 + crowd * 12.0) / efficiency - plant.food * 0.6 * efficiency
 					if score < best_score: best_score = score; c.target = i
 			if c.target >= 0:
 				var plant: Dictionary = plants[c.target]
 				goal = Vector2(plant.x, plant.y)
 				c.state = "餌さがし"
 				if pos.distance_to(goal) < 15:
-					var bite: float = minf(plant.food, minf((1.5 + p.mouth * 1.0) * STEP, 100.0 - c.energy))
+					var efficiency: float = Ecology.efficiency(p, habitat(goal))
+					var bite: float = minf(plant.food, minf((1.5 + p.mouth * 1.0) * STEP, (100.0 - c.energy) / efficiency))
 					plant.food -= bite
-					c.energy += bite
+					c.energy = minf(100, c.energy + bite * efficiency)
 					c.state = "もぐもぐ"
 					if c.energy > 95:
 						c.target = rng.randi_range(0, plants.size() - 1)
@@ -217,14 +232,67 @@ func step() -> void:
 		phenotypes.erase(c.id)
 		deaths += 1
 		if c.generation > 0: log_event("%s が土へ。系譜に記録しました。" % history[str(c.id)].name, c.id)
+	if tick % 150 == 0: take_census()
 	if history.size() >= HISTORY_LIMIT:
 		history_full = true
 		log_event("観察記録が2万匹に達しました。世界を保存して、新しい島へ。")
 
+func add_note(note: Dictionary) -> void:
+	notes.append(note)
+	if notes.size() > Ecology.NOTE_LIMIT: notes.pop_front()
+	log_event(Ecology.sentence(note), note.id)
+
+func survey() -> Dictionary:
+	var areas: Array = []
+	for area in 3: areas.append({"n": 0, "counts": [0, 0, 0, 0], "generation": 0.0, "example": -1})
+	for c in creatures:
+		if c.age < 4: continue
+		var area: int = habitat(Vector2(c.x, c.y))
+		var group: Dictionary = areas[area]
+		var expressed: int = Ecology.mask(c.genes)
+		group.n += 1
+		group.generation += c.generation
+		for kind in 4:
+			if (expressed & (1 << kind)) != 0: group.counts[kind] += 1
+		if group.example == -1 or (expressed & (1 << Ecology.FOCUS[area])) != 0: group.example = c.id
+	for group in areas:
+		if group.n > 0: group.generation /= group.n
+	return {"time": time, "areas": areas}
+
+func comparison(current: Dictionary) -> Dictionary:
+	for i in range(census.size() - 1, -1, -1):
+		if current.time - census[i].time >= 299.999: return census[i]
+	return {}
+
+func take_census() -> void:
+	var current: Dictionary = survey()
+	var before: Dictionary = comparison(current)
+	if not before.is_empty():
+		for area in 3:
+			var old: Dictionary = before.areas[area]
+			var now: Dictionary = current.areas[area]
+			if old.n < 5 or now.n < 5: continue
+			var recent: bool = false
+			for note in notes:
+				if note.kind == "trend" and note.area == area and time - note.time < 299.999: recent = true
+			if recent: continue
+			var best: int = -1
+			var change: float = 0.19999
+			for kind in 4:
+				var delta: float = float(now.counts[kind]) / now.n - float(old.counts[kind]) / old.n
+				if delta > change: change = delta; best = kind
+			if best < 0: continue
+			var example: int = -1
+			for c in creatures:
+				if c.age >= 4 and habitat(Vector2(c.x, c.y)) == area and (Ecology.mask(c.genes) & (1 << best)) != 0: example = c.id; break
+			if example > 0: add_note({"kind": "trend", "time": time, "id": example, "area": area, "organ": best, "before": [old.counts[best], old.n], "after": [now.counts[best], now.n], "from": before.time})
+	census.append(current)
+	if census.size() > Ecology.SAMPLE_LIMIT: census.pop_front()
+
 func snapshot() -> Dictionary:
-	return {"version": 2, "seed": seed_value, "rng": str(rng.state), "time": time, "tick": tick, "rain": rain,
+	return {"version": 3, "seed": seed_value, "rng": str(rng.state), "time": time, "tick": tick, "rain": rain,
 		"rain_cooldown": rain_cooldown, "next_id": next_id, "births": births, "deaths": deaths, "capacity": capacity,
-		"creatures": creatures.duplicate(true), "plants": plants.duplicate(true), "history": history.duplicate(true), "events": events.duplicate(true)}
+		"creatures": creatures.duplicate(true), "plants": plants.duplicate(true), "history": history.duplicate(true), "events": events.duplicate(true), "census": census.duplicate(true), "notes": notes.duplicate(true)}
 
 static func number(v: Variant, low: float, high: float) -> bool:
 	return (v is int or v is float) and is_finite(float(v)) and v >= low and v <= high
@@ -233,7 +301,7 @@ static func integer(v: Variant, low: int, high: int) -> bool:
 	return number(v, low, high) and float(v) == floorf(float(v))
 
 static func restore(data: Variant):
-	if not data is Dictionary or data.get("version") not in [1, 2]: return null
+	if not data is Dictionary or data.get("version") not in [1, 2, 3]: return null
 	var legacy: bool = data.version == 1
 	for key in ["seed", "time", "tick", "rain", "rain_cooldown", "next_id", "births", "deaths", "capacity"]:
 		if not number(data.get(key), 0, 1e12): return null
@@ -294,9 +362,10 @@ static func restore(data: Variant):
 	for e in data.events:
 		if not e is Dictionary or not e.get("text") is String or e.text.length() > 300: return null
 		if not number(e.get("time"), 0, data.time) or not number(e.get("id"), -1, data.next_id - 1): return null
+	if data.version == 3 and not Ecology.valid_records(data): return null
 	var world = load("res://core/world.gd").new(int(data.seed), 0)
 	world.creatures = data.creatures.duplicate(true)
-	world.migrated = legacy
+	world.migrated = data.version < 3
 	world.plants = data.plants.duplicate(true)
 	for c in world.creatures:
 		c.genes = DNA.upgrade(c.genes)
@@ -324,6 +393,21 @@ static func restore(data: Variant):
 	world.capacity = int(data.capacity)
 	world.rng.state = data.rng.to_int()
 	world.history_full = world.history.size() >= HISTORY_LIMIT
+	world.ancestor_masks.clear()
+	for entry in world.history.values():
+		var inherited: int = 0
+		for parent in entry.parents: inherited |= int(world.ancestor_masks[int(parent)])
+		world.ancestor_masks[entry.id] = inherited | Ecology.mask(entry.genes)
+	world.notes = data.notes.duplicate(true) if data.version == 3 else []
+	world.census = data.census.duplicate(true) if data.version == 3 else [world.survey()]
+	for note in world.notes:
+		var entry: Dictionary = world.history[str(int(note.id))]
+		var bit: int = 1 << int(note.organ)
+		if (Ecology.mask(entry.genes) & bit) == 0: return null
+		if note.kind == "novel":
+			if entry.parents.is_empty(): return null
+			for parent in entry.parents:
+				if (int(world.ancestor_masks[int(parent)]) & bit) != 0: return null
 	return world
 
 # Lossless Variant bytes retain float bits and RNG state across JSON storage.

@@ -1,6 +1,7 @@
 extends Node2D
 const World = preload("res://core/world.gd")
 const DNA = preload("res://core/genome.gd")
+const Ecology = preload("res://core/ecology.gd")
 const Anatomy = preload("res://core/anatomy.gd")
 const Island = preload("res://island_view.gd")
 const Portrait = preload("res://portrait.gd")
@@ -27,6 +28,7 @@ var pause_button: Button
 var speed_button: Button
 var rain_button: Button
 var follow_button: Button
+var notebook_button: Button
 var selected: int = 1
 var paused: bool = false
 var speed: int = 1
@@ -170,12 +172,13 @@ func layout() -> void:
 	speed_button = buttons[1]
 	rain_button = buttons[2]
 	follow_button = buttons[5]
+	notebook_button = buttons[7]
 	var top: float = 196 if mobile else 158
 	var board_h: float = maxf(110, h - top - (258 if mobile else 72))
 	view.position = Vector2(margin, top)
 	view.size = Vector2(w - margin * 2 if mobile else w - 390, board_h)
 	if mobile and view.zoom == 1: view.zoom = 1.8
-	label(root, "草地  /  茂み  /  浅瀬", Rect2(margin, top - 24, 250, 22), 12)
+	label(root, "草地：種  /  茂み：実  /  浅瀬：藻", Rect2(margin, top - 24, w - margin * 2, 22), 12)
 	inspector = Panel.new()
 	inspector.position = Vector2(margin, top + board_h + 12) if mobile else Vector2(w - 350, top)
 	inspector.size = Vector2(w - margin * 2 if mobile else 326, 198 if mobile else board_h)
@@ -191,7 +194,7 @@ func layout() -> void:
 	selected_detail.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	button(inspector, "親子・系譜を見る", Rect2(128 if mobile else 16, 154 if mobile else 380, inspector.size.x - (142 if mobile else 32), 34 if mobile else 42), open_lineage, true)
 	if not mobile:
-		info = label(inspector, "体のつながりも、親ゆずり。\nヒレは水辺、触手は茂み、翼は地表の移動を助けます。器官が多いほど食費も増えます。", Rect2(16, 445, inspector.size.x - 32, 80), 13)
+		info = label(inspector, "得意な餌も、親ゆずり。\n脚は種、触手は実、ヒレは藻。いろいろ付くと得意が分散します。島の変化は手帳へ。", Rect2(16, 445, inspector.size.x - 32, 80), 13)
 		info.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		info.visible = board_h > 540
 	event_line = label(root, "", Rect2(margin, h - 46, w - margin * 2, 22), 12 if mobile else 14)
@@ -207,6 +210,7 @@ func refresh() -> void:
 	rain_button.disabled = sim.rain_cooldown > 0
 	rain_button.text = "雨 %d秒" % ceili(sim.rain_cooldown) if sim.rain_cooldown > 0 else "雨を降らす"
 	follow_button.text = "追跡中" if view.follow else "追跡"
+	notebook_button.text = "手帳 %d" % sim.notes.size() if not sim.notes.is_empty() else "手帳"
 	var h: Dictionary = sim.history.get(str(selected), {})
 	if h.is_empty():
 		selected_title.text = "まだ、誰もいません。"
@@ -217,7 +221,9 @@ func refresh() -> void:
 		var c: Dictionary = sim.living(selected)
 		var p: Dictionary = DNA.traits(h.genes)
 		var state: String = c.state if not c.is_empty() else "土へ還った"
-		selected_detail.text = "%s · 第%d世代\n%s\n%s\n速さ 陸%.0f・水%.0f\n%s" % [state, h.generation, Anatomy.body_label(p.blueprint), Anatomy.organ_label(p.blueprint), p.speed * World.mobility(p, 0), p.speed * World.mobility(p, 2), "元気 %.0f / 100" % c.energy if not c.is_empty() else "生きた姿は系譜に残ります。"]
+		var food: String = "得意な餌：" + Ecology.FOODS[Ecology.best_food(p)]
+		if not c.is_empty(): food += " / 元気%.0f" % c.energy
+		selected_detail.text = "%s · 第%d世代\n%s\n%s\n速さ 陸%.0f・水%.0f\n%s" % [state, h.generation, Anatomy.body_label(p.blueprint), Anatomy.organ_label(p.blueprint), p.speed * World.mobility(p, 0), p.speed * World.mobility(p, 2), food]
 		portrait.genes = h.genes
 		portrait.egg = not c.is_empty() and c.age < 4
 	portrait.queue_redraw()
@@ -311,6 +317,7 @@ func _unhandled_key_input(event: InputEvent) -> void:
 		KEY_S: manual_save()
 		KEY_L: open_lineage()
 		KEY_H: open_notebook()
+		KEY_O: open_ecology()
 	refresh()
 
 func begin_modal(title: String) -> VBoxContainer:
@@ -428,8 +435,9 @@ func open_lineage() -> void:
 func open_notebook() -> void:
 	var box: VBoxContainer = begin_modal("観察手帳")
 	paragraph(box, "なんでこうなった。", 25)
+	row_button(box, "島の変化と発見を見る（%d件）" % sim.notes.size(), open_ecology, true)
 	paragraph(box, "食べる、出会う、卵を産む。眺めるだけで世代が進みます。生き物を選ぶと、体の特徴と親子のつながりが見られます。")
-	paragraph(box, "脚は歩行、ヒレは浅瀬、触手は茂み、翼は地表での移動を助けます。器官がない体も体を揺らして進みます。翼による自由飛行はありません。大きい体や多くの器官には維持の負担があります。")
+	paragraph(box, "草地の種は脚と翼、茂みの実は触手、浅瀬の藻はヒレが採餌を助けます。器官の種類が増えると得意が分散し、不得意な環境では消耗も増えます。器官がない体も体を揺らして進みます。翼による自由飛行はありません。大きい体や多くの器官には維持の負担があります。")
 	paragraph(box, "体は最大6節で枝分かれし、脚・ヒレ・触手・翼が最大6組付きます。目は1〜3個。取り付く場所も遺伝し、ときどき節や器官が増えたり、減ったり、種類が変わります。新しい島では最初から多様な構造に出会えます。")
 	paragraph(box, "卵は4秒、成体は18秒から。寿命は体質で変化します。『第○世代』は両親の大きい方＋1。系譜は祖先の記録で、新種の認定ではありません。")
 	row_button(box, "おまかせ観察：" + ("ON" if auto_watch else "OFF"), func(): auto_watch = not auto_watch; open_notebook())
@@ -444,8 +452,77 @@ func open_notebook() -> void:
 		if e.id > 0: row_button(box, "%d秒  %s" % [e.time, e.text], func(): select_creature(int(e.id)); open_lineage())
 		else: paragraph(box, "%d秒  %s" % [e.time, e.text])
 	paragraph(box, "保存はこの端末・ブラウザ内。30秒ごとに自動保存。別タブや閉じている間の進化は計算しません。手帳を開いている間も停止します。")
-	paragraph(box, "Space 停止 / 1・2・4 速度 / N 次の個体 / F 追跡 / R 雨 / L 系譜 / H 手帳 / S 保存 / Esc 閉じる")
+	paragraph(box, "Space 停止 / 1・2・4 速度 / N 次の個体 / F 追跡 / R 雨 / L 系譜 / H 手帳 / O 島の変化 / S 保存 / Esc 閉じる")
 	row_button(box, "新しい島を始める", confirm_reset)
+
+func observe_entry(id: int) -> void:
+	select_creature(id)
+	open_lineage()
+
+func open_ecology() -> void:
+	var box: VBoxContainer = begin_modal("島の変化と発見")
+	var current: Dictionary = sim.survey()
+	var before: Dictionary = sim.comparison(current)
+	paragraph(box, "種を拾う、実をつかむ、藻を食む。", 19)
+	paragraph(box, "器官と口・体質で、同じ量の餌から得る元気が変わります。親ゆずりの体で餌を選び、子孫を残します。")
+	paragraph(box, "集計記録 %.1f分〜 / いま %.1f分。卵を除いた、その場所にいる個体の集計です。" % [sim.census[0].time / 60.0, current.time / 60.0])
+	if before.is_empty(): paragraph(box, "比較を準備中。島を動かして5分たつと、以前の顔ぶれと比べられます。手帳を閉じると時間が進みます。")
+	else:
+		paragraph(box, "%.1f分前と現在を比較" % [(current.time - before.time) / 60.0])
+		paragraph(box, "移動・出生・死亡も割合を変えます。分布の変化を示す記録で、進化した証明ではありません。", 13)
+	for area in 3:
+		var group: Dictionary = current.areas[area]
+		paragraph(box, "%s — %sを食べる場所" % [Ecology.AREAS[area], Ecology.FOODS[area]], 19)
+		if group.n == 0:
+			paragraph(box, "いまは0匹。生き物が訪れると姿を表示します。")
+		else:
+			var row = HBoxContainer.new()
+			row.add_theme_constant_override("separation", 12)
+			box.add_child(row)
+			var portrait_view = Portrait.new()
+			portrait_view.genes = sim.history[str(group.example)].genes
+			portrait_view.caption = "#%03d" % group.example
+			portrait_view.custom_minimum_size = Vector2(90, 106)
+			row.add_child(portrait_view)
+			var text = VBoxContainer.new()
+			text.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			row.add_child(text)
+			paragraph(text, "いま%d匹 / 平均第%.1f世代" % [group.n, group.generation])
+			var example: Dictionary = DNA.traits(portrait_view.genes)
+			paragraph(text, "この子の採餌効率：%d%%\n餌1 → 元気%.2f" % [roundi(Ecology.efficiency(example, area) * 100), Ecology.efficiency(example, area)], 13)
+			var id: int = group.example
+			row_button(text, "この子を見る", func(): observe_entry(id))
+		var lines: PackedStringArray = []
+		for organ in 4:
+			var now: String = "%d/%d匹" % [group.counts[organ], group.n]
+			if not before.is_empty():
+				var old: Dictionary = before.areas[area]
+				lines.append("%s持ち：%d/%d匹 → %s" % [Anatomy.NAMES[organ], old.counts[organ], old.n, now])
+			else: lines.append("%s持ち：%s" % [Anatomy.NAMES[organ], now])
+		paragraph(box, "\n".join(lines), 14)
+	paragraph(box, "姿で残す発見", 21)
+	paragraph(box, "地域の割合が20ポイント以上増えたとき（両時点5匹以上）、または祖先全体で初めての器官が現れたときに記録します。最近40件を保存。")
+	if sim.notes.is_empty(): paragraph(box, "まだ発見の記録はありません。いろいろな姿を追いかけながら、島の続きを眺めてみましょう。")
+	var notes: Array = sim.notes.duplicate()
+	notes.reverse()
+	for note in notes:
+		var row = HBoxContainer.new()
+		row.add_theme_constant_override("separation", 12)
+		box.add_child(row)
+		var portrait_view = Portrait.new()
+		portrait_view.genes = sim.history[str(int(note.id))].genes
+		portrait_view.caption = "#%03d" % note.id
+		portrait_view.custom_minimum_size = Vector2(90, 110)
+		row.add_child(portrait_view)
+		var text = VBoxContainer.new()
+		text.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		row.add_child(text)
+		paragraph(text, "%.1f分 · %s" % [note.time / 60.0, Ecology.AREAS[note.area]], 13)
+		paragraph(text, "祖先になかった%s持ちが誕生しました。" % Anatomy.NAMES[note.organ] if note.kind == "novel" else Ecology.sentence(note))
+		if note.kind == "trend": paragraph(text, "%d/%d匹 → %d/%d匹\n%.1f分時点との比較" % [note.before[0], note.before[1], note.after[0], note.after[1], note.from / 60.0], 12)
+		var id: int = note.id
+		row_button(text, "親子・系譜を見る", func(): observe_entry(id))
+	row_button(box, "観察手帳へ戻る", open_notebook)
 
 func confirm_reset() -> void:
 	var box: VBoxContainer = begin_modal("新しい島へ")
@@ -508,7 +585,7 @@ func load_world() -> void:
 	speed = int(data.get("speed", 1)) if data.get("speed", 1) in [1, 2, 4] else 1
 	reduced = data.get("reduced", reduced) == true
 	auto_watch = data.get("auto_watch", false) == true
-	say("旧版の島を引き継ぎました。子孫には体の構造の変異も現れます。" if sim.migrated else "おかえりなさい。前の島の続きです。")
+	say("旧版の島を引き継ぎました。餌と暮らしの観測をここから始めます。" if sim.migrated else "おかえりなさい。前の島の続きです。")
 
 func fixture() -> void:
 	if qa == "empty": sim = World.new(7, 0)
@@ -521,6 +598,11 @@ func fixture() -> void:
 			sim.creatures[i].x = 100 + (i % 8) * 125
 			sim.creatures[i].y = 100 + (i / 8) * 175
 		selected = 1
+	elif qa == "habitat":
+		sim = World.new(19)
+		for i in 1800: sim.step()
+		paused = true
+		selected = sim.notes[-1].id if not sim.notes.is_empty() else sim.creatures[0].id
 	elif qa == "family":
 		sim = World.new(19, 20)
 		sim.creatures[0].age = 30; sim.creatures[1].age = 30

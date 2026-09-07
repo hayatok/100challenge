@@ -8,6 +8,9 @@ func check(value: bool, message: String):
 func _initialize(): call_deferred("run")
 func run():
 	app = load("res://main.tscn").instantiate()
+	if not app.has_method("sync_window"):
+		printerr("FAIL UI: main script did not load")
+		app.free(); quit(1); return
 	root.add_child(app)
 	await process_frame
 	for width in [375, 768, 1024, 1440]:
@@ -17,6 +20,7 @@ func run():
 		await process_frame
 		var bounds: Rect2 = root.get_visible_rect()
 		check(bounds.size.x == width, "viewport follows physical size at %d" % width)
+		check(app.selected_detail.get_line_count() * app.selected_detail.get_line_height() <= app.selected_detail.size.y, "all individual details are readable")
 		check(bounds.encloses(app.inspector.get_global_rect()), "inspector within viewport at %d" % width)
 		check(bounds.encloses(app.view.get_global_rect()), "island within viewport at %d" % width)
 		for child in app.root.get_children():
@@ -36,6 +40,17 @@ func run():
 		check(app.sim.time == time, "modal freezes simulation")
 		app.close_modal()
 		check(app.pause_button.focus_mode == Control.FOCUS_ALL, "background focus restored")
+		app.open_ecology()
+		await process_frame
+		check(bounds.encloses(app.modal.get_global_rect()), "habitat observations fit each viewport")
+		check(app.modal_open and app.view.focus_mode == Control.FOCUS_NONE, "observations pause and trap background focus")
+		for scroll in app.modal.get_children():
+			if scroll is ScrollContainer:
+				var box = scroll.get_child(0)
+				for content in box.get_children():
+					check(content.size.x <= scroll.size.x, "observation rows do not require horizontal scrolling")
+					if content is Label: check(content.size.y >= 18 and not content.clip_text, "observation paragraphs remain readable")
+		app.close_modal()
 		app.open_notebook()
 		await process_frame
 		check(bounds.encloses(app.modal.get_global_rect()), "notebook inside viewport")
@@ -71,5 +86,12 @@ func run():
 	app.pixel_ratio = 1
 	app.sync_window()
 	check(root.get_visible_rect().size == Vector2(750, 1334), "DPR-only change updates logical size without physical resize")
+	app.layout()
+	app.sim.creatures.clear()
+	app.sim.notes.clear()
+	app.open_ecology()
+	await process_frame
+	check(app.modal_open, "empty habitats and no discoveries remain inspectable")
+	app.close_modal()
 	print("UI CHECKS ",checks," / failures ",failures)
 	quit(1 if failures else 0)
