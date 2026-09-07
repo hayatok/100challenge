@@ -61,4 +61,4 @@ jobs:
         run: npm run check:apps -- --apps-json "$CHANGED_APPS"
       - name: Build complete site for shared changes
         if: steps.changes.outputs.full == 'true'
-        run: npm run build:site
+        run: npm run build:site -- --prebuilt

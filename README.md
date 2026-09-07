@@ -31,15 +31,37 @@ PRでは比較元ブランチのコミット、mainへのpushではpush前のコ
 
 `apps.json`の変更は追加・更新された項目のアプリが対象です。削除済みアプリは実行せず、アプリ一覧と差分判定のテストは常に実行します。共通スクリプト・ルートpackage設定・ショーケース・CI設定の変更、または比較元を取得できない場合は全アプリを検証し、サイト全体もビルドします。共通Markdownとルートのテストファイルだけの変更は、アプリの再検証を増やしません。
 
-ローカルの`npm run check`と公開ワークフローは従来どおり全体検証です。差分判定は`node scripts/changed-apps.mjs <比較元SHA>`で確認できます。
+ローカルの`npm run check`は全体検証です。`check:apps`で生成した`dist/`を`build:site -- --prebuilt`で組み立て、二重ビルドを避けます。各アプリの`check`は必ずテスト・必要な静的検証とWeb用`dist/index.html`の生成までを行ってください。差分判定は`node scripts/changed-apps.mjs <比較元SHA>`で確認できます。
 
 ## Publish
 
-通常のpushではGitHub Pagesを更新しません。公開するコミットを`main`へ反映した後、`release-*`形式のタグをpushすると、全アプリの依存関係をインストールし、テスト・lint・ビルドを通過した成果物だけを公開します。
+通常のpushではGitHub Pagesを更新しません。公開するコミットを`main`へ反映した後、`release-*`形式のタグをpushすると、以下の差分更新を行います。
+
+1. 同じデプロイワークフローの成功済み実行から、前回の`github-pages`成果物とそのコミットSHAを取得します。直近20件の成功実行を探し、取得した成果物のSHAを比較元にします（直前のタグやpushのSHAではありません）。
+2. 比較元から公開対象コミットまでに変更されたアプリだけ、依存関係・専用ツールの準備と`check`（テスト・必要なlint・型チェック・ビルド）を実行します。変更なしならアプリの準備・検証・ビルドは0件です。
+3. 検証で生成した`dist/`と、未変更アプリの前回成果物から`.site/`を新しく組み立てます。ショーケースと`apps.json`は毎回最新にし、削除アプリや更新前の古いファイルを残しません。
+4. 全アプリを含むサイトをPagesへ公開します。差分化するのは準備・検証・ビルドであり、成果物のダウンロードとサイト全体のアップロードには全体サイズに応じた時間がかかります。
+
+初回、成果物の期限切れ・取得失敗、比較元が不明な場合、共通スクリプト・ルートpackage設定・ショーケース・CI設定の変更時は、全アプリを検証・ビルドします。前回成果物でアプリの`index.html`が欠けている場合は、そのアプリを再構築します。失敗した公開の成果物は再利用しません。ルートのテストは毎回実行します。
+
+成果物は30日間保持する設定です（リポジトリ・組織の保持上限や手動削除の影響を受けます）。取得には標準の`GITHUB_TOKEN`の`actions: read`を使用し、別途シークレットの登録は不要です。タグ間で共有範囲が制限されるActionsキャッシュではなく、成功済みのPages成果物を再利用します。
 
 ```bash
 git tag release-YYYY-MM-DD
 git push origin release-YYYY-MM-DD
 ```
 
-同じ日に複数回公開する場合は、`release-YYYY-MM-DD-2`のように末尾へ通し番号を付けます。GitHubのActions画面から手動実行することもできます。
+同じ日に複数回公開する場合は、`release-YYYY-MM-DD-2`のように末尾へ通し番号を付けます。GitHubのActions画面から手動実行することもできます。`full_rebuild`を有効にすると前回成果物を使用せず全アプリを再検証・再構築します。Actionsのジョブサマリーに比較元とビルド件数・再利用件数が表示されます。
+
+差分判定と組み立てをローカルで調べる場合（Gitへコミット済みの差分が対象）:
+
+```bash
+GITHUB_REPOSITORY=hayatok/100challenge node scripts/restore-pages.mjs
+node scripts/pages-plan.mjs
+# 上の出力のappsを指定する。空配列なら全アプリを再利用する。
+npm run ci:apps -- --apps-json '["2026-09-06-2"]'
+npm run check:apps -- --apps-json '["2026-09-06-2"]'
+npm run build:site -- --prebuilt --apps-json '["2026-09-06-2"]' --reuse-from .pages-baseline/site
+```
+
+`.pages-baseline/`は取得した生成物でGit管理外です。`--prebuilt`は直前に対象アプリの`check`を通した場合のみ使用してください。通常の`npm run build:site`は従来どおり全アプリをビルドします。

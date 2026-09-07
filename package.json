@@ -9,6 +9,6 @@
     "ci:apps": "node scripts/run-apps.mjs ci",
     "check:apps": "node scripts/run-apps.mjs check",
     "test": "node --test scripts/*.test.mjs",
-    "check": "npm test && npm run check:apps && npm run build:site"
+    "check": "npm test && npm run check:apps && npm run build:site -- --prebuilt"
   }
 }
