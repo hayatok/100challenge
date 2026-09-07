@@ -1,4 +1,5 @@
 extends Control
+const Ecology = preload("res://core/ecology.gd")
 const World = preload("res://core/world.gd")
 const DNA = preload("res://core/genome.gd")
 const Art = preload("res://creature_art.gd")
@@ -73,11 +74,25 @@ func _draw() -> void:
 	for plant in sim.plants:
 		if plant.food < 1: continue
 		var at: Vector2 = screen(Vector2(plant.x, plant.y))
-		var r: float = (2 + plant.food * 0.11) * unit_scale()
-		var water: bool = World.habitat(Vector2(plant.x, plant.y)) == 2
-		draw_circle(at, r + 1, Color("46684f"))
-		draw_circle(at - Vector2(r * 0.2, r * 0.3), r * 0.85, Color("e9c56d") if water else Color("f5e3a0"))
-		if not water: draw_line(at, at - Vector2(0, r + 3), Color("46684f"), 1.5, true)
+		var r: float = (3 + plant.food * 0.10) * unit_scale()
+		var area: int = World.habitat(Vector2(plant.x, plant.y))
+		if area == 0:
+			for offset in [Vector2(-0.65, 0.35), Vector2(0.6, -0.3)]:
+				var grain: Vector2 = at + offset * r
+				draw_circle(grain, r * 0.7 + 0.6, ink)
+				draw_circle(grain, r * 0.6, Color("f5e3a0"))
+				draw_line(grain - Vector2(0, r * 0.3), grain + Vector2(0, r * 0.3), ink, 1, true)
+		elif area == 1:
+			draw_line(at + Vector2(0, r), at - Vector2(0, r * 1.8), ink, 1.5, true)
+			for offset in [Vector2(-0.6, 0), Vector2(0.6, 0), Vector2(0, -0.9)]:
+				draw_circle(at + offset * r, r * 0.75 + 0.6, ink)
+				draw_circle(at + offset * r, r * 0.65, Color("dc694b"))
+		else:
+			for i in 3:
+				var base: Vector2 = at + Vector2((i - 1) * r * 0.7, r)
+				var leaf: PackedVector2Array = PackedVector2Array([base, base + Vector2(-r * 0.45, -r), base + Vector2(r * 0.25, -r * 2.4)])
+				draw_polyline(leaf, ink, 2.6, true)
+				draw_polyline(leaf, Color("b4ce9b"), 1.1, true)
 	var ordered: Array = sim.creatures.duplicate()
 	ordered.sort_custom(func(a, b): return a.y < b.y)
 	for c in ordered:
