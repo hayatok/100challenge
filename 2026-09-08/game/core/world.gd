@@ -4,6 +4,7 @@ extends Node2D
 signal changed
 signal finished(won: bool, reason: String)
 signal cut_made(at: Vector2)
+signal impact_made(at: Vector2, strength: float)
 var art_id: int = 0
 var visuals: RescueVisualEffects
 var level: Dictionary
@@ -47,6 +48,10 @@ func build(data: Dictionary) -> void:
 		b.rotation = spec["angle"]
 		add_child(b)
 		beams.append(b)
+		b.struck.connect(func(at: Vector2, strength: float) -> void:
+			if not ended:
+				visuals.impact(at,strength)
+				impact_made.emit(at,strength))
 	for spec: Dictionary in data["pins"]:
 		var b: RescueBeam = beams[spec["beam"]]
 		var offset := Vector2(float(spec["end"]) * (b.dimensions.x / 2.0 - 10.0), 0)
@@ -60,7 +65,7 @@ func build(data: Dictionary) -> void:
 	for p: Vector2 in data["vases"]:
 		var v := RescueCeramic.new()
 		v.position = p
-		v.kind = 4 if art_id==4 else (art_id+ceramics.size()) % 8
+		v.kind = RescueArt.kind_for(art_id,ceramics.size())
 		add_child(v)
 		v.shattered.connect(_shatter)
 		ceramics.append(v)

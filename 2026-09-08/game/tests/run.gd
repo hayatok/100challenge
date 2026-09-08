@@ -24,7 +24,7 @@ func trial(data: Dictionary, actions: Array, shift: float = 0.0) -> Dictionary:
 	w.build(changed_data)
 	var reason: Array[String] = []
 	w.finished.connect(func(_won: bool, why: String) -> void: reason.append(why))
-	for tick: int in range(2400):
+	for tick: int in range(3600):
 		for a: Dictionary in actions:
 			if tick == int(float(a["at"])*120):
 				w.cut(a["pin"])
@@ -58,6 +58,30 @@ func run() -> void:
 			wrong.append({"pin":j,"at":0.5})
 		var result: Dictionary = await trial(data,wrong)
 		check(bool(result["won"]) == (i == 2),"All-cut outcome stage %d: %s" % [i+1,result])
+	# Solution feasibility is not difficulty: audit early release and omitted phases.
+	for i: int in range(9,16):
+		var early: Array = all[i]["solution"].duplicate(true)
+		for action: Dictionary in early:
+			action["at"] = 0.5
+		var early_result: Dictionary = await trial(all[i],early)
+		check(not early_result["won"] and early_result["broken"],"Stage %d lost its receiving decision: %s" % [i+1,early_result])
+		var reversed: Array = all[i]["solution"].duplicate(true)
+		var last_phase: float = float(reversed.back()["at"])
+		for action: Dictionary in reversed:
+			action["at"] = last_phase+0.5-float(action["at"])
+		check(not (await trial(all[i],reversed))["won"],"Stage %d ignores phase order" % (i+1))
+		var waiting: Array = all[i]["solution"].duplicate(true)
+		for action: Dictionary in waiting:
+			# Shift each phase independently by seconds, keeping its simultaneous pair.
+			if float(action["at"])>=5.0:
+				action["at"] += 3.0
+		var waited: Dictionary = await trial(all[i],waiting,0.5)
+		check(waited["won"],"Stage %d penalizes patient observation: %s" % [i+1,waited])
+		var no_receiving_release: Array = all[i]["solution"].filter(func(a: Dictionary) -> bool: return a["pin"] not in [2,3])
+		check(not (await trial(all[i],no_receiving_release))["won"],"Stage %d bypasses receiving phase" % (i+1))
+	# A real alternate: tip the delivery tray instead of dropping both fastenings.
+	check((await trial(all[10],[{"pin":1,"at":0.5},{"pin":3,"at":5.0}]))["won"],"Tray alternative was artificially forbidden")
+	check(not (await trial(all[14],[{"pin":6,"at":0.5},{"pin":7,"at":0.5},{"pin":1,"at":3.0},{"pin":2,"at":9.0},{"pin":3,"at":9.0}]))["won"],"Final chapter bypasses lower route preparation")
 	# A wrong remaining support must cause a real contact fracture.
 	var impact: Dictionary = await trial(all[0],[{"pin":0,"at":0.5}])
 	check(impact["broken"] and not impact["won"],"Wrong support did not shatter ceramic")
@@ -81,8 +105,10 @@ func run() -> void:
 	check(not w.cut(0),"Finished world accepted a cut")
 	w.free()
 	check(Progress.validate(null,8).is_empty(),"Null save accepted")
-	check(Progress.validate({"version":2,"best":{"0":1}},8).is_empty(),"Unknown save version accepted")
-	check(Progress.validate({"version":1,"best":{"0":1,"1":2.5,"2":"3","9":1,"3":-1,"4":999}},8) == {"0":1},"Save bounds not enforced")
+	check(Progress.validate({"version":99,"best":{"0":1}},8).is_empty(),"Unknown save version accepted")
+	check(Progress.validate({"version":2,"best":{"0":1,"1":2.5,"2":"3","9":1,"3":-1,"4":999}},8) == {"0":1},"Save bounds not enforced")
+	check(Progress.migrate({"version":1,"best":{"3":2,"4":2,"5":1,"7":2,"8":1}})=={"4":2,"5":2,"3":1,"7":2},"Legacy records assigned to wrong models")
+	check(Progress.validate({"version":2,"best":{"15":8,"16":1,"-1":1}},16)=={"15":8},"Sixteen-model save bounds not enforced")
 	print("PHYSICS CHECKS ",checks," failures=",failures.size())
 	print("STAGE REPORT ",JSON.stringify(report))
 	quit(0 if failures.is_empty() else 1)

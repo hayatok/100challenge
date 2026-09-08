@@ -3,12 +3,16 @@ extends RefCounted
 
 # Shared art direction only. Palettes and ornament never change collision/material physics.
 const ROOMS: Array[String] = ["採光のアトリエ", "煉瓦の中庭", "青い収蔵庫", "夕暮れの展示室"]
-const WORKS: Array[String] = ["朝露の一輪挿し", "波紋の壺", "琥珀の小瓶", "藍の花器", "双子の白磁", "木の葉の壺", "夜空の花器", "最後の二作品"]
+const WORKS: Array[String] = ["朝露の一輪挿し", "波紋の壺", "琥珀の小瓶", "木の葉の壺", "藍の花器", "双子の白磁", "夜空の花器", "茜の二作品", "回廊の花器", "静寂の青磁", "運河の壺", "合流する白磁", "層の花器", "旅立ちの対器", "重なる青磁", "夜明けの二作品"]
 const GLAZES: Array[Color] = [Color("cce3d5"),Color("c4dce5"),Color("dfae70"),Color("536d91"),Color("f2e8d4"),Color("9daf7c"),Color("647589"),Color("d19c87")]
 const INKS: Array[Color] = [Color("31594f"),Color("375a73"),Color("735137"),Color("e4d6b2"),Color("777362"),Color("3d5947"),Color("e2c88f"),Color("713e3a")]
 
+static func kind_for(stage: int, object_index: int = 0) -> int:
+	var kinds: Array[int] = [0,1,2,5,3,4,6,7,3,0,1,4,6,7,1,7]
+	return 4 if stage==5 else (kinds[clampi(stage,0,15)]+object_index)%8
+
 static func room_for(stage: int) -> int:
-	return [0,0,0,1,1,2,2,3][clampi(stage,0,7)]
+	return clampi(stage / 4,0,3)
 
 static func paper(room: int) -> Color:
 	return [Color("eee6d6"),Color("e8dbcd"),Color("dce3e2"),Color("e8dcd7")][clampi(room,0,3)]

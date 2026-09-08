@@ -76,7 +76,98 @@ static func all() -> Array[Dictionary]:
 	finale["vases"] = [Vector2(255,160),Vector2(335,160)]
 	finale["box"] = Rect2(765,435,150,120)
 	finale["hints"] = ["陶器の数が増えても、道づくりの基本は変わらない。","④で橋を倒し、止まってから②。①と③は最後まで残す。"]
-	var result: Array[Dictionary] = [first,mirror,cradle,bridge,pair,roof,cascade,finale]
+	# First half teaches individual tools. The second half composes them into
+	# physical intermediate states; no solution-order flags are used by the world.
+	roof["chapter"] = "I  支点を選ぶ"
+	finale["title"] = "橋を渡る、二作品"
+	finale["lesson"] = "ふたつとも、同じ箱へ。途中の支えも読み解こう。"
+	var return_bridge: Dictionary = bridge.duplicate(true)
+	return_bridge["title"] = "長い、帰り道"
+	return_bridge["lesson"] = "橋の向こうに、もう一枚の床。箱までの道を組み立てる。"
+	return_bridge["beams"].append(beam(790,490,200))
+	add_pins(return_bridge,2)
+	return_bridge["solids"] = [Rect2(416,302,35,20),Rect2(720,444,35,20),Rect2(889,428,18,40),Rect2(805,530,30,40)]
+	return_bridge["box"] = Rect2(575,510,200,55)
+	return_bridge["solution"] = [{"pin":3,"at":0.5},{"pin":4,"at":0.5},{"pin":1,"at":4.5}]
+	return_bridge["par"] = 3
+	return_bridge["hints"] = ["最後の床で、進む向きをもう一度変える。", "④で橋を倒し、⑤で右端の床を左下がりに。最後に②。"]
+	var catch_tray: Dictionary = bridge.duplicate(true)
+	catch_tray["title"] = "まだ、切らない"
+	catch_tray["lesson"] = "先に道を作る？ それとも、今は残す？"
+	catch_tray["beams"] = [beam(310,190,300),beam(560,360,220)]
+	catch_tray["solids"] = [Rect2(416,302,35,20),Rect2(535,425,30,145),Rect2(659,298,18,40)]
+	catch_tray["box"] = Rect2(300,460,190,105)
+	catch_tray["solution"] = [{"pin":1,"at":0.5},{"pin":2,"at":5.0}]
+	catch_tray["hints"] = ["下の床を早く傾けると、着地の衝撃が強すぎる。", "②で送り出し、下の水平な床に載って止まるまで待つ。そこで③。"]
+	var drop_tray: Dictionary = catch_tray.duplicate(true)
+	drop_tray["title"] = "床も、荷物になる"
+	drop_tray["lesson"] = "箱の形が変わった。傾けるだけが、搬出じゃない。"
+	drop_tray["beams"] = [beam(310,190,300),beam(560,330,220)]
+	drop_tray["solids"] = [Rect2(416,302,35,20),Rect2(659,268,18,40)]
+	drop_tray["box"] = Rect2(450,370,245,100)
+	drop_tray["solution"] = [{"pin":1,"at":0.5},{"pin":2,"at":5.0},{"pin":3,"at":5.0}]
+	drop_tray["par"] = 3
+	drop_tray["hints"] = ["陶器を受け止めた床を、そのまま箱へ。", "②で送り、下の床で止まるのを待つ。停止中に③④を切り、再開。"]
+	var merge_tray: Dictionary = catch_tray.duplicate(true)
+	merge_tray["title"] = "合流して、折り返す"
+	merge_tray["lesson"] = "別々の高さから、ひとつの道へ。全員が通れる構造を。"
+	add_upper(merge_tray,2)
+	merge_tray["solution"] = [{"pin":4,"at":0.5},{"pin":5,"at":0.5},{"pin":1,"at":3.0},{"pin":2,"at":9.0}]
+	merge_tray["par"] = 4
+	merge_tray["hints"] = ["上の小台を先に降ろせば、ふたつを一緒に送れる。", "⑤⑥で小台を降ろす。落ち着いてから②。二作品とも受け皿に載ってから③。"]
+	var stack: Dictionary = drop_tray.duplicate(true)
+	stack["title"] = "二枚の床の、役割"
+	stack["lesson"] = "運ぶ床と、道になる床。最後まで残す支点を探そう。"
+	stack["beams"].append(beam(560,395,240))
+	add_pins(stack,2)
+	stack["solids"].append(Rect2(535,460,30,110))
+	stack["box"] = Rect2(270,440,240,120)
+	stack["solution"] = [{"pin":1,"at":0.5},{"pin":2,"at":5.0},{"pin":3,"at":5.0},{"pin":4,"at":8.0}]
+	stack["par"] = 4
+	stack["hints"] = ["中段を台ごと降ろし、下段を坂に変える。", "②で中段に載せて待つ。③④で下段へ降ろし、⑤で左へ。下段の坂は先に作ってもよい。"]
+	var merge_drop: Dictionary = merge_tray.duplicate(true)
+	merge_drop["title"] = "最後のひとつを、待つ"
+	merge_drop["lesson"] = "先に着いた作品だけで、搬出を始めない。"
+	merge_drop["solids"] = [Rect2(416,302,35,20),Rect2(659,298,18,40)]
+	merge_drop["box"] = Rect2(450,390,245,100)
+	merge_drop["solution"] = [{"pin":4,"at":0.5},{"pin":5,"at":0.5},{"pin":1,"at":3.0},{"pin":2,"at":9.0},{"pin":3,"at":9.0}]
+	merge_drop["par"] = 5
+	merge_drop["hints"] = ["受け皿を降ろすのは、ふたつがそろってから。", "⑤⑥で合流、②で移動。二作品が中段で止まったら、停止中に③④を切って降ろす。"]
+	var merge_stack: Dictionary = stack.duplicate(true)
+	merge_stack["title"] = "重ねた床を、ほどく"
+	merge_stack["lesson"] = "台と陶器が重なると、着地も変わる。下から上へ構造を読もう。"
+	merge_stack["beams"] = [beam(310,190,300),beam(560,360,220),beam(560,400,240)]
+	merge_stack["solids"] = [Rect2(416,302,35,20),Rect2(659,288,18,40),Rect2(535,465,30,105)]
+	merge_stack["box"] = Rect2(270,450,240,115)
+	add_upper(merge_stack,3)
+	merge_stack["solution"] = [{"pin":4,"at":0.5},{"pin":6,"at":0.5},{"pin":7,"at":0.5},{"pin":1,"at":3.0},{"pin":2,"at":9.0},{"pin":3,"at":9.0}]
+	merge_stack["par"] = 6
+	merge_stack["hints"] = ["台を重ねて水平に落とすと衝撃が大きい。下段は坂にしておこう。", "⑤で下段を傾け、⑦⑧で小台を降ろす。②で二作品を中段へ。そろってから③④。"]
+	var final_model: Dictionary = merge_stack.duplicate(true)
+	final_model["title"] = "こわさず、壊す。"
+	final_model["lesson"] = "離れた二作品、五枚の床。搬出の手順を、自分で組み立てる。"
+	final_model["beams"].append(beam(235,120,90))
+	add_pins(final_model,4)
+	final_model["vases"] = [Vector2(235,90),Vector2(350,90)]
+	final_model["solution"] = [{"pin":4,"at":0.5},{"pin":6,"at":0.5},{"pin":7,"at":0.5},{"pin":8,"at":0.5},{"pin":9,"at":0.5},{"pin":1,"at":3.0},{"pin":2,"at":9.0},{"pin":3,"at":9.0}]
+	final_model["par"] = 8
+	final_model["hints"] = ["終点の坂、出発前の合流、受け皿での待機。三つの場所を順に考える。", "⑤で出口を準備。⑦⑧と⑨⑩で二つの小台を降ろし、②。全員が中段で止まってから③④。"]
+	var result: Array[Dictionary] = [first,mirror,cradle,roof,bridge,pair,cascade,finale,return_bridge,catch_tray,drop_tray,merge_tray,stack,merge_drop,merge_stack,final_model]
+	var chapters: Array[String] = ["I  支点を選ぶ", "II  道をつなぐ", "III  残す時間", "IV  搬出を組み立てる"]
 	for i: int in range(result.size()):
 		result[i]["art_id"] = i
+		result[i]["chapter"] = chapters[i/4]
+		if i>=9:
+			# Keep the receiving ledge readable while the player decides the next cut.
+			var tray_y: float = result[i]["beams"][1]["p"].y
+			result[i]["clear_zones"] = [Rect2(570,tray_y-52,96,44)]
 	return result
+
+static func add_pins(data: Dictionary, body: int) -> void:
+	data["pins"].append({"beam":body,"end":-1})
+	data["pins"].append({"beam":body,"end":1})
+
+static func add_upper(data: Dictionary, body: int) -> void:
+	data["beams"].append(beam(350,120,90))
+	add_pins(data,body)
+	data["vases"] = [Vector2(280,160),Vector2(350,90)]

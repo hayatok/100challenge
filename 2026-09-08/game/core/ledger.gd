@@ -3,10 +3,8 @@ extends Control
 
 signal stage_selected(index: int)
 signal dismissed
-signal motion_changed(reduced: bool)
 var tiles: Array[Button] = []
 var close_button: Button
-var motion_toggle: CheckButton
 var heading: Label
 var summary: Label
 var scroll: ScrollContainer
@@ -20,14 +18,14 @@ class WorkTile extends Button:
 		var room: int = RescueArt.room_for(work_index)
 		draw_rect(Rect2(7,7,size.x-14,104),RescueArt.paper(room))
 		draw_line(Vector2(14,100),Vector2(size.x-14,100),RescueArt.accent(room),2)
-		if work_index in [4,7]:
+		if work_index in [5,7,11,13,14,15]:
 			draw_set_transform(Vector2(size.x/2-22,70),-0.08,Vector2.ONE*1.25)
-			RescueArt.vase(self,work_index)
+			RescueArt.vase(self,RescueArt.kind_for(work_index))
 			draw_set_transform(Vector2(size.x/2+22,70),0.08,Vector2.ONE*1.25)
-			RescueArt.vase(self,4 if work_index==4 else 0)
+			RescueArt.vase(self,RescueArt.kind_for(work_index,1))
 		else:
 			draw_set_transform(Vector2(size.x/2,68),0,Vector2.ONE*1.6)
-			RescueArt.vase(self,work_index)
+			RescueArt.vase(self,RescueArt.kind_for(work_index))
 		draw_set_transform(Vector2.ZERO)
 		if completed:
 			draw_circle(Vector2(size.x-25,25),11,Color("426d60"))
@@ -47,10 +45,6 @@ func _ready() -> void:
 	close_button.text = "模型に戻る"
 	close_button.pressed.connect(func() -> void: dismissed.emit())
 	add_child(close_button)
-	motion_toggle = CheckButton.new()
-	motion_toggle.text = "演出を控えめに"
-	motion_toggle.toggled.connect(func(value: bool) -> void: motion_changed.emit(value))
-	add_child(motion_toggle)
 	scroll = ScrollContainer.new()
 	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	scroll.follow_focus = true
@@ -60,7 +54,7 @@ func _ready() -> void:
 	grid.add_theme_constant_override("h_separation",12)
 	grid.add_theme_constant_override("v_separation",12)
 	scroll.add_child(grid)
-	for i: int in range(8):
+	for i: int in range(RescueLevels.all().size()):
 		var tile := WorkTile.new()
 		tile.work_index = i
 		tile.custom_minimum_size = Vector2(140,184)
@@ -81,7 +75,7 @@ func _ready() -> void:
 		record.add_theme_font_size_override("font_size",13)
 		record.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		tile.add_child(record)
-	var focus_order: Array[Control] = [close_button,motion_toggle]
+	var focus_order: Array[Control] = [close_button]
 	for tile: Button in tiles:
 		focus_order.append(tile)
 	for i: int in range(focus_order.size()):
@@ -90,10 +84,9 @@ func _ready() -> void:
 	get_viewport().size_changed.connect(_layout)
 	_layout()
 
-func open(best: Dictionary, reduced: bool) -> void:
+func open(best: Dictionary) -> void:
 	visible = true
-	summary.text = "%d / 8 模型を搬出済み\n作品を選ぶと、もう一度遊べます。" % best.size()
-	motion_toggle.set_pressed_no_signal(reduced)
+	summary.text = "%d / %d 模型を搬出済み\n作品を選んで、搬出をはじめる。" % [best.size(),tiles.size()]
 	for i: int in range(tiles.size()):
 		var tile: WorkTile = tiles[i]
 		tile.completed = best.has(str(i))
@@ -113,16 +106,15 @@ func _layout() -> void:
 	summary.position = Vector2(24,76)
 	summary.size = Vector2(w-48,44)
 	summary.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	motion_toggle.position = Vector2(20,128)
-	motion_toggle.size = Vector2(230,44)
-	scroll.position = Vector2(24,190)
-	scroll.size = Vector2(w-48,maxf(100,size.y-214))
+	# Change columns first: otherwise the old four-column minimum clamps width.
 	grid.columns = 2 if w<700 else 4
+	scroll.position = Vector2(24,136)
+	scroll.size = Vector2(w-48,maxf(100,size.y-160))
 	queue_redraw()
 
 func _draw() -> void:
 	draw_rect(Rect2(Vector2.ZERO,size),Color("ece7db"))
-	draw_line(Vector2(24,181),Vector2(size.x-24,181),Color("b6ac97"),1)
+	draw_line(Vector2(24,127),Vector2(size.x-24,127),Color("b6ac97"),1)
 
 func _select_stage(index: int) -> void:
 	stage_selected.emit(index)
