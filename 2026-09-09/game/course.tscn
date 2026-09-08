@@ -1,0 +1,55 @@
+[gd_scene format=3 uid="uid://dehqm7v382t8k"]
+
+[ext_resource type="PackedScene" uid="uid://diorhsi1vr3b5" path="res://scenes/Straight.tscn" id="1_wu01y"]
+[ext_resource type="PackedScene" uid="uid://d104fsbw437is" path="res://scenes/RightWide.tscn" id="2_a5owf"]
+[ext_resource type="PackedScene" uid="uid://bo0afwaed633i" path="res://scenes/RightTight.tscn" id="3_y17gl"]
+[ext_resource type="PackedScene" uid="uid://dado6eon22rro" path="res://scenes/LeftTight.tscn" id="4_trt74"]
+
+[node name="Node3D" type="Node3D" unique_id=1049385555]
+
+[node name="Straight" parent="." unique_id=1266816859 instance=ExtResource("1_wu01y")]
+
+[node name="RightWide" parent="." unique_id=1085074682 instance=ExtResource("2_a5owf")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 24)
+
+[node name="Straight2" parent="." unique_id=799644299 instance=ExtResource("1_wu01y")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 18, 0, 42)
+
+[node name="RightTight" parent="." unique_id=184775037 instance=ExtResource("3_y17gl")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 42, 0, 42)
+
+[node name="Straight3" parent="." unique_id=103209943 instance=ExtResource("1_wu01y")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 48, 0, 36)
+
+[node name="LeftTight" parent="." unique_id=1950647264 instance=ExtResource("4_trt74")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 48, 0, 12)
+
+[node name="Straight4" parent="." unique_id=1243307612 instance=ExtResource("1_wu01y")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 54, 0, 6)
+
+[node name="RightWide2" parent="." unique_id=244785220 instance=ExtResource("2_a5owf")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 78, 0, 6)
+
+[node name="Straight5" parent="." unique_id=766343225 instance=ExtResource("1_wu01y")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 96, 0, -12)
+
+[node name="RightWide3" parent="." unique_id=1513039902 instance=ExtResource("2_a5owf")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 96, 0, -36)
+
+[node name="Straight6" parent="." unique_id=1542902042 instance=ExtResource("1_wu01y")]
+transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 78, 0, -54)
+
+[node name="Straight7" parent="." unique_id=480251469 instance=ExtResource("1_wu01y")]
+transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 54, 0, -54)
+
+[node name="Straight8" parent="." unique_id=1615654510 instance=ExtResource("1_wu01y")]
+transform = Transform3D(1.1924881e-08, 0, -0.5, 0, 1, 0, 1, 0, 5.9624403e-09, 30, 0, -54)
+
+[node name="RightWide4" parent="." unique_id=1603919024 instance=ExtResource("2_a5owf")]
+transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 18, 0, -54)
+
+[node name="Straight9" parent="." unique_id=549762672 instance=ExtResource("1_wu01y")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -36)
+
+[node name="Straight10" parent="." unique_id=1574899048 instance=ExtResource("1_wu01y")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 0.5, 0, 0, -12)

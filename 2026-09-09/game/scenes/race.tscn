@@ -1,0 +1,131 @@
+[gd_scene format=3 uid="uid://cxdw8gt3bm5sk"]
+
+[ext_resource type="Script" uid="uid://brd2c5w4oaosn" path="res://scripts/race.gd" id="1"]
+[ext_resource type="PackedScene" path="res://scenes/Car.tscn" id="2"]
+[ext_resource type="PackedScene" path="res://scenes/HUD.tscn" id="3"]
+[ext_resource type="ArrayMesh" uid="uid://bamuj2073ossv" path="res://assets/racing/raceCarGreen.obj" id="4"]
+[ext_resource type="ArrayMesh" uid="uid://dd2xcfjidchnu" path="res://assets/racing/raceCarOrange.obj" id="5"]
+[ext_resource type="ArrayMesh" uid="uid://cjj48esj74p7u" path="res://assets/racing/raceCarWhite.obj" id="6"]
+[ext_resource type="Script" uid="uid://d2udahlufo6ks" path="res://scripts/sound.gd" id="7"]
+[ext_resource type="ArrayMesh" uid="uid://dyxvnub2gvbky" path="res://assets/racing/roadStart.obj" id="8"]
+[ext_resource type="PackedScene" uid="uid://dehqm7v382t8k" path="res://course.tscn" id="9_l0hv7"]
+[ext_resource type="PackedScene" uid="uid://cq7ffoasl46hu" path="res://scenes/Pit.tscn" id="10_r6hvi"]
+[ext_resource type="PackedScene" uid="uid://csfnc5ry01rk1" path="res://scenes/Trees.tscn" id="11_cd6ng"]
+
+[sub_resource type="Environment" id="Environment"]
+background_mode = 1
+background_color = Color(0.65, 0.83, 0.87, 1)
+ambient_light_source = 3
+ambient_light_color = Color(0.85, 0.91, 1, 1)
+ambient_light_energy = 0.45
+
+[sub_resource type="StandardMaterial3D" id="Grass"]
+albedo_color = Color(0.15, 0.31, 0.11, 1)
+
+[sub_resource type="PlaneMesh" id="Ground"]
+material = SubResource("Grass")
+size = Vector2(900, 900)
+
+[sub_resource type="AudioStreamGenerator" id="Engine"]
+mix_rate = 22050.0
+buffer_length = 0.1
+
+[node name="Race" type="Node3D" unique_id=1371615312]
+script = ExtResource("1")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1771812777]
+environment = SubResource("Environment")
+
+[node name="Sun" type="DirectionalLight3D" parent="." unique_id=1055296526]
+transform = Transform3D(0.8660254, 0.40957603, -0.28678823, 0, 0.57357645, 0.81915206, 0.5, -0.7094065, 0.49673176, 0, 0, 0)
+light_color = Color(1, 0.94, 0.81, 1)
+shadow_enabled = true
+directional_shadow_max_distance = 140.0
+
+[node name="Ground" type="MeshInstance3D" parent="." unique_id=1476239088]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 48, -0.03, -6)
+mesh = SubResource("Ground")
+
+[node name="StartLine" type="MeshInstance3D" parent="." unique_id=1802987301]
+transform = Transform3D(12, 0, 0, 0, 12, 0, 0, 0, 1, 6, 0.025, 12)
+mesh = ExtResource("8")
+
+[node name="Cars" type="Node3D" parent="." unique_id=1853147770]
+
+[node name="Player" parent="Cars" unique_id=1913216535 instance=ExtResource("2")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0.31, 0)
+player = true
+
+[node name="Mint" parent="Cars" unique_id=661770371 instance=ExtResource("2")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0.31, 4)
+driver_name = "ミント"
+pace = 0.94
+lane = -1.7
+
+[node name="Model" parent="Cars/Mint" index="0"]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0)
+mesh = ExtResource("4")
+
+[node name="Collision" parent="Cars/Mint" index="1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4, 0)
+
+[node name="Orange" parent="Cars" unique_id=1616632282 instance=ExtResource("2")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0.31, 8)
+driver_name = "だいだい"
+pace = 0.88
+lane = 1.7
+
+[node name="Model" parent="Cars/Orange" index="0"]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0)
+mesh = ExtResource("5")
+
+[node name="Collision" parent="Cars/Orange" index="1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4, 0)
+
+[node name="Milk" parent="Cars" unique_id=1330783933 instance=ExtResource("2")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0.31, 8)
+driver_name = "ミルク"
+pace = 0.82
+
+[node name="Model" parent="Cars/Milk" index="0"]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0)
+mesh = ExtResource("6")
+
+[node name="Collision" parent="Cars/Milk" index="1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4, 0)
+
+[node name="FollowCamera" type="Camera3D" parent="." unique_id=112058191]
+transform = Transform3D(-0.6946583, 0.43290955, -0.5744904, 0, 0.79863554, 0.601815, 0.7193399, 0.41805577, -0.5547788, -40, 88, -90)
+current = true
+fov = 65.0
+far = 600.0
+
+[node name="Sound" type="AudioStreamPlayer" parent="." unique_id=1222396267]
+stream = SubResource("Engine")
+script = ExtResource("7")
+
+[node name="HUD" parent="." unique_id=1649425366 instance=ExtResource("3")]
+
+[node name="Course" parent="." unique_id=1049385555 instance=ExtResource("9_l0hv7")]
+
+[node name="Pit" parent="." unique_id=197597336 instance=ExtResource("10_r6hvi")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 0, -6)
+
+[node name="Trees" parent="." unique_id=1254371752 instance=ExtResource("11_cd6ng")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 22, 0, -22)
+
+[node name="Trees2" parent="." unique_id=1946564471 instance=ExtResource("11_cd6ng")]
+transform = Transform3D(0.9396926, 0, 0.34202012, 0, 1, 0, -0.34202012, 0, 0.9396926, 68, 0, -24)
+
+[node name="Trees3" parent="." unique_id=2138395199 instance=ExtResource("11_cd6ng")]
+transform = Transform3D(0.17364822, 0, 0.9848077, 0, 1, 0, -0.9848077, 0, 0.17364822, 116, 0, 12)
+
+[node name="Trees4" parent="." unique_id=1445611874 instance=ExtResource("11_cd6ng")]
+transform = Transform3D(-0.76604444, 0, 0.64278764, 0, 1, 0, -0.64278764, 0, -0.76604444, 26, 0, 61)
+
+[node name="Trees5" parent="." unique_id=348293823 instance=ExtResource("11_cd6ng")]
+transform = Transform3D(-0.7660445, 0, -0.6427876, 0, 1, 0, 0.6427876, 0, -0.7660445, -24, 0, -45)
+
+[editable path="Cars/Mint"]
+[editable path="Cars/Orange"]
+[editable path="Cars/Milk"]

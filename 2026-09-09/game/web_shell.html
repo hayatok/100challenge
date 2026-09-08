@@ -1,0 +1,11 @@
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>ちび車グランプリ</title>
+$GODOT_HEAD_INCLUDE
+<style>*{box-sizing:border-box}html,body{margin:0;width:100%;min-height:100%;background:#faf2d9;color:#343e3b;font-family:system-ui,sans-serif}body{height:100dvh;overflow:hidden}canvas{display:block;width:100%;height:100%;touch-action:none}canvas:focus-visible{outline:2px solid #d45735;outline-offset:-2px}#status{position:fixed;inset:0;display:grid;place-content:center;gap:18px;padding:28px;background:#faf2d9}#status[hidden]{display:none}h1{font-size:clamp(30px,5vw,48px);font-weight:500;margin:0}p{max-width:30em;line-height:1.8}button{font:inherit;background:#287b69;color:#faf6e9;border:1px solid #287b69;padding:14px;cursor:pointer}progress{width:100%;accent-color:#d45735}.eyebrow{font-size:12px;letter-spacing:.18em;color:#d45735}</style></head><body>
+<canvas id="canvas" tabindex="0" aria-label="ちび車グランプリ。WASD・矢印で運転、Spaceでブレーキ、Rでコース復帰、Escで一時停止。画面下のボタンでも操作できます。"></canvas>
+<div id="status" role="status"><span class="eyebrow">SMALL CARS. BIG CORNERS.</span><h1>ちび車グランプリ</h1><p id="message">サーキットを準備しています。</p><progress id="progress" aria-label="ゲームの読み込み"></progress><button id="retry" hidden>もう一度読み込む</button></div>
+<script>function showLoadError(){document.getElementById('message').textContent='ゲームを読み込めませんでした。接続とWebGL 2対応ブラウザを確認し、もう一度読み込んでください。';document.getElementById('status').hidden=false;document.getElementById('progress').hidden=true;document.getElementById('retry').hidden=false;document.getElementById('retry').onclick=()=>location.reload();}</script>
+<script src="$GODOT_URL" onerror="showLoadError()"></script><script>
+if(typeof Engine!=='undefined'){
+const engine=new Engine($GODOT_CONFIG);engine.startGame({onProgress(c,t){if(t>0){document.getElementById('progress').max=t;document.getElementById('progress').value=c;}}}).then(()=>{document.getElementById('status').hidden=true;document.getElementById('canvas').focus();}).catch(showLoadError);
+}
+</script></body></html>
