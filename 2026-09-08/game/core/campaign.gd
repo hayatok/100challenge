@@ -115,16 +115,19 @@ static func all() -> Array[Dictionary]:
 	d["traps"] = [[action(0,0.5),action(1,4)]]
 	result.append(d)
 
-	d = base("通り抜ける梁",Rect2(285,460,150,105),[Vector2(515,125)])
-	d["beams"] = [body(650,169,24,24,"beam",3),body(590,160,300,18,"beam",2,0.08),body(570,110,70,8,"beam",0.1,1.35),body(740,235,120,18)]
+	d = base("通り抜ける梁",Rect2(450,460,180,105),[Vector2(515,125)])
+	d["beams"] = [body(650,169,24,24,"beam",3),body(590,160,300,18,"beam",2,0.08),body(570,110,70,8,"beam",0.1,1.35),body(740,235,180,18)]
 	d["beams"][0]["lock"] = true
 	d["beams"][0]["pad"] = true
 	d["beams"][1]["pad"] = true
+	d["beams"][3]["pad"] = true
 	d["beams"][1]["friction"] = 0.04
 	d["rails"] = [rail(0,650,169,650,490)]
-	d["joints"] = [{"beam":1,"local":Vector2(60,0),"other":0,"limits":Vector2(-1.5,0.3)},{"beam":2,"local":Vector2(-35,0)},{"beam":3,"local":Vector2(60,0)}]
+	d["joints"] = [{"beam":1,"local":Vector2(60,0),"other":0,"limits":Vector2(-1.5,0.3)},{"beam":2,"local":Vector2(-35,0)},{"beam":3,"local":Vector2(90,0)}]
 	d["pins"] = [pin(1,-1),pin(0),pin(2,1),pin(3,-1)]
-	d["surfaces"] = [surface(285,398,550,18,0.12),surface(820,425,220,18,-0.12),surface(740,366,118,18,-0.84),surface(552,540,220,20,0.08)]
+	d["surfaces"] = [surface(285,398,550,18,0.12),surface(820,425,220,18,-0.12),surface(740,366,118,18,-0.84),surface(500,530,350,20,-0.08)]
+	for receiving_surface: Dictionary in d["surfaces"]:
+		receiving_surface["pad"] = true
 	d["solids"] = [Rect2(802,172,15,63)]
 	d["hints"] = ["上の待機棚と、下の道。梁を両方で使えないだろうか。","③で陶器を棚へ。①で空の梁を縦にし、②で下ろす。下で梁が落ち着いてから④。"]
 	d["solution"] = [action(2,0.5),action(0,9),action(1,13),action(3,20)]
@@ -144,11 +147,11 @@ static func all() -> Array[Dictionary]:
 
 	# Q is a contact cradle, not an automatically attached joint.
 	d = base("支点の引越し",Rect2(130,425,175,135),[Vector2(605,180)])
-	d["beams"] = [body(520,210,440),body(390,275,42,42,"weight",8),body(575,175,70,12,"beam",0.2,1.35)]
+	d["beams"] = [body(520,210,440,18,"beam",3,-0.1),body(390,275,42,42,"weight",8),body(575,175,70,12,"beam",0.2,1.35)]
 	d["beams"][0]["parts"] = [{"p":Vector2(-28,20),"size":Vector2(10,32)},{"p":Vector2(28,20),"size":Vector2(10,32)}]
 	d["joints"] = [{"beam":1,"other":0},{"beam":2,"local":Vector2(35,0),"other":0}]
 	d["pins"] = [{"beam":0,"local":Vector2(-200,0)},pin(0,1),{"beam":2,"end":-1,"other":0}]
-	d["surfaces"] = [surface(500,321,30,30),surface(500,446,18,220),surface(312,440,38,25)]
+	d["surfaces"] = [surface(500,321,30,30),surface(500,446,18,220),surface(312,440,38,25),surface(280,400,500,18,-0.1,true)]
 	d["hints"] = ["最初の支点を残したまま、左の箱へ傾けられる？","②で床を叉形の受け座へ載せ、①の旧支点を外す。重りが左を下げてから③。"]
 	d["solution"] = [action(1,0.5),action(0,6),action(2,12)]
 	d["traps"] = [[action(0,0.5),action(1,6),action(2,12)],[action(1,0.5),action(2,8)],[action(2,0.5),action(1,4),action(0,8)]]

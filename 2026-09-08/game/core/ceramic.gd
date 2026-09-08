@@ -2,8 +2,8 @@ class_name RescueCeramic
 extends RigidBody2D
 
 signal shattered(reason: String, at: Vector2)
-const BREAK_SPEED: float = 390.0
-const CUSHION_SPEED: float = 570.0
+const BREAK_SPEED: float = 520.0
+const CUSHION_SPEED: float = 700.0
 var broken: bool = false
 var rescued: bool = false
 var max_impact: float = 0.0
