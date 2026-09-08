@@ -1,0 +1,88 @@
+{
+  "installed_on": "2026-09-08",
+  "skills": [
+    {
+      "name": "godot-gdscript-patterns",
+      "repository": "https://github.com/wshobson/agents",
+      "commit": "a30778f8c4e6b0a87567941b7cca4f534bf642b6",
+      "path": "plugins/game-development/skills/godot-gdscript-patterns",
+      "license": "MIT",
+      "local_modifications": [
+        "LICENSE: remove trailing whitespace only",
+        "SKILL.md: remove extra blank line at EOF only"
+      ],
+      "files_sha256": {
+        "SKILL.md": "be24d73cbffcaa42dcbd363225b54478b7e010bad0e9bfb71a63ee8bd085041c",
+        "references/advanced-patterns.md": "659531834c96b493caeeba32303eeacafe0ed482439933beb0a1765af7288bec",
+        "references/details.md": "dc181018b94f5e03d7d36fe461097915856aaffc8342588e066ee5fe806a5625",
+        "LICENSE": "8ceaab71b527eb5db43810b74afc618ee36556197d2d51c45fd00aac483988c1"
+      },
+      "upstream_files_sha256": {
+        "SKILL.md": "baee8a6df1556a517dcff9df8ebca0b763c3c8275752f12a146fd12eac994b55",
+        "references/advanced-patterns.md": "659531834c96b493caeeba32303eeacafe0ed482439933beb0a1765af7288bec",
+        "references/details.md": "dc181018b94f5e03d7d36fe461097915856aaffc8342588e066ee5fe806a5625",
+        "LICENSE": "f89abb55d9f073f38f1703e4518f0613c788c6174be7f13b8dfe48a1c076c746"
+      }
+    },
+    {
+      "name": "godot-physics",
+      "repository": "https://github.com/gamedev-skills/awesome-gamedev-agent-skills",
+      "commit": "7110607ab816ece9669274bc84937857a8819796",
+      "path": "skills/godot/godot-physics",
+      "license": "Apache-2.0",
+      "local_modifications": false,
+      "files_sha256": {
+        "SKILL.md": "04babff5594de194f5ae92fb2e918c905fab89fa837fc83f309da72c7d471139",
+        "references/bodies-and-queries.md": "64f6bdd613b92607cfbf0d3be0b88172d2e6c5b9cfd353706740833fd1343160",
+        "LICENSE": "6f82dcfeb95a1c0a0452180a3b16f21bf82111780018fed59d95a052b5b75f6c",
+        "NOTICE": "2dcb65b1c5be24e5ba11e937f3996100f4e980d8cf8ac5b30ba1d70dae6c40f8"
+      },
+      "upstream_files_sha256": {
+        "SKILL.md": "04babff5594de194f5ae92fb2e918c905fab89fa837fc83f309da72c7d471139",
+        "references/bodies-and-queries.md": "64f6bdd613b92607cfbf0d3be0b88172d2e6c5b9cfd353706740833fd1343160",
+        "LICENSE": "6f82dcfeb95a1c0a0452180a3b16f21bf82111780018fed59d95a052b5b75f6c",
+        "NOTICE": "2dcb65b1c5be24e5ba11e937f3996100f4e980d8cf8ac5b30ba1d70dae6c40f8"
+      }
+    },
+    {
+      "name": "physics-tuning",
+      "repository": "https://github.com/gamedev-skills/awesome-gamedev-agent-skills",
+      "commit": "7110607ab816ece9669274bc84937857a8819796",
+      "path": "skills/disciplines/physics-tuning",
+      "license": "Apache-2.0",
+      "local_modifications": false,
+      "files_sha256": {
+        "SKILL.md": "faa9a50d465c16d0060af8c8e20533efb829e07616ec01de4cbdb8d536a7d986",
+        "references/timestep-and-ccd.md": "8091f77b848fa2e9e0eaa267f7b3ad06c1af6e8af5965d6d9c1a66076f9380ef",
+        "LICENSE": "6f82dcfeb95a1c0a0452180a3b16f21bf82111780018fed59d95a052b5b75f6c",
+        "NOTICE": "2dcb65b1c5be24e5ba11e937f3996100f4e980d8cf8ac5b30ba1d70dae6c40f8"
+      },
+      "upstream_files_sha256": {
+        "SKILL.md": "faa9a50d465c16d0060af8c8e20533efb829e07616ec01de4cbdb8d536a7d986",
+        "references/timestep-and-ccd.md": "8091f77b848fa2e9e0eaa267f7b3ad06c1af6e8af5965d6d9c1a66076f9380ef",
+        "LICENSE": "6f82dcfeb95a1c0a0452180a3b16f21bf82111780018fed59d95a052b5b75f6c",
+        "NOTICE": "2dcb65b1c5be24e5ba11e937f3996100f4e980d8cf8ac5b30ba1d70dae6c40f8"
+      }
+    },
+    {
+      "name": "level-design",
+      "repository": "https://github.com/gamedev-skills/awesome-gamedev-agent-skills",
+      "commit": "7110607ab816ece9669274bc84937857a8819796",
+      "path": "skills/disciplines/level-design",
+      "license": "Apache-2.0",
+      "local_modifications": false,
+      "files_sha256": {
+        "SKILL.md": "f1656cb00b9af8dc625a9655448b410b37ce6f1e523048a5abf09fda25cbfd32",
+        "references/pacing-and-flow.md": "e8e3940f585e376f353aefea009befe8199a1871f99d34d7b2340cb35cb61872",
+        "LICENSE": "6f82dcfeb95a1c0a0452180a3b16f21bf82111780018fed59d95a052b5b75f6c",
+        "NOTICE": "2dcb65b1c5be24e5ba11e937f3996100f4e980d8cf8ac5b30ba1d70dae6c40f8"
+      },
+      "upstream_files_sha256": {
+        "SKILL.md": "f1656cb00b9af8dc625a9655448b410b37ce6f1e523048a5abf09fda25cbfd32",
+        "references/pacing-and-flow.md": "e8e3940f585e376f353aefea009befe8199a1871f99d34d7b2340cb35cb61872",
+        "LICENSE": "6f82dcfeb95a1c0a0452180a3b16f21bf82111780018fed59d95a052b5b75f6c",
+        "NOTICE": "2dcb65b1c5be24e5ba11e937f3996100f4e980d8cf8ac5b30ba1d70dae6c40f8"
+      }
+    }
+  ]
+}
