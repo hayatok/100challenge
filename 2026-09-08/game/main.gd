@@ -196,6 +196,7 @@ func _finish(success: bool, reason: String) -> void:
 		sound.play("win")
 		var key := str(stage)
 		best[key] = mini(world.cuts,int(best.get(key,99)))
+		menu.set_item_text(stage,"✓ %02d  %s" % [stage+1,levels[stage]["title"]])
 		if persist_progress and not Progress.save_best(best):
 			detail.text += "\n記録を保存できませんでした。この画面では続けて遊べます。"
 		elif world.cuts <= int(levels[stage]["par"]):
@@ -235,8 +236,10 @@ func _cut_feedback(at: Vector2) -> void:
 	if not reduce_motion:
 		effects.append({"at":at,"age":0.0})
 
-func _unhandled_key_input(event: InputEvent) -> void:
+func _input(event: InputEvent) -> void:
 	if not event is InputEventKey or not event.pressed or event.echo:
+		return
+	if menu.get_popup().visible:
 		return
 	var key: int = event.keycode
 	if key >= KEY_1 and key <= KEY_9:

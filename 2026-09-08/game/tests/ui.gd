@@ -44,6 +44,7 @@ func run() -> void:
 		if app.world.ended:
 			break
 	check(app.world.won and app.next_button.visible,"Actual UI did not enter success state")
+	check(app.menu.get_item_text(0).begins_with("✓"),"Success missing from stage menu")
 	app._next()
 	check(app.stage==1 and not paused,"Next stage did not resume physics")
 	app._load_stage(0)
@@ -55,6 +56,15 @@ func run() -> void:
 	check(not app.world.won and app.world.ended and paused,"Actual UI did not pause at fracture")
 	app._load_stage(0)
 	check(not paused and app.world.cuts==0,"Retry did not reconstruct initial state")
+	app.retry.grab_focus()
+	var space_key := InputEventKey.new()
+	space_key.keycode = KEY_SPACE
+	space_key.pressed = true
+	root.push_input(space_key,true)
+	await process_frame
+	await process_frame
+	check(paused,"Space shortcut was consumed by focused retry control")
+	app._toggle_pause()
 	app._hint()
 	app._hint()
 	check(app.detail.text==app.levels[0]["hints"][1],"Second hint not shown")
