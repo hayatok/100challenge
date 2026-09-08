@@ -25,7 +25,7 @@ static func all() -> Array[Dictionary]:
 	}
 	var bridge: Dictionary = {
 		"title":"壁だった、橋", "chapter":"II  崩して、つなぐ",
-		"lesson":"立っている梁も、倒せば道になる。陶器を動かす前に、行き先をつくろう。",
+		"lesson":"立つ梁も、倒せば道になる。\n陶器の行き先を、先につくろう。",
 		"hints":["右の長い梁は、根元を残すと右へ倒れる。","④を切って橋が落ち着くのを待つ。そのあと②を切る。"],
 		"beams":[beam(310,190,300),beam(502,215,300,-1.35)],
 		"pins":[{"beam":0,"end":-1},{"beam":0,"end":1},{"beam":1,"end":-1},{"beam":1,"end":1}],
@@ -64,7 +64,7 @@ static func all() -> Array[Dictionary]:
 	var roof: Dictionary = first.duplicate(true)
 	roof["title"] = "触れない、勇気"
 	roof["chapter"] = "III  構造を読む"
-	roof["lesson"] = "切れる場所が増えても、全部切る必要はない。上の梁は誰の味方？"
+	roof["lesson"] = "全部を切る必要はない。\n上の梁は、誰の味方？"
 	roof["beams"].append(beam(320,130,240))
 	roof["pins"].append({"beam":1,"end":-1})
 	roof["pins"].append({"beam":1,"end":1})
@@ -76,4 +76,7 @@ static func all() -> Array[Dictionary]:
 	finale["vases"] = [Vector2(255,160),Vector2(335,160)]
 	finale["box"] = Rect2(765,435,150,120)
 	finale["hints"] = ["陶器の数が増えても、道づくりの基本は変わらない。","④で橋を倒し、止まってから②。①と③は最後まで残す。"]
-	return [first,mirror,cradle,bridge,pair,roof,cascade,finale]
+	var result: Array[Dictionary] = [first,mirror,cradle,bridge,pair,roof,cascade,finale]
+	for i: int in range(result.size()):
+		result[i]["art_id"] = i
+	return result

@@ -30,3 +30,10 @@ func _draw() -> void:
 	for i: int in range(3):
 		var y: float = -dimensions.y / 2.0 + 6.0 + float(i) * 4
 		draw_line(Vector2(-dimensions.x / 2.0 + 12, y), Vector2(dimensions.x / 2.0 - 12, y + 1), Color("987750"), 0.6)
+
+	# End grain and a narrow brass ferrule keep the moving beam recognizable at any angle.
+	for side: float in [-1.0,1.0]:
+		var x: float = side*(dimensions.x/2-7)
+		draw_rect(Rect2(x-3,-9,6,18),Color("b29a60"))
+		draw_line(Vector2(x-2,-7),Vector2(x-2,7),Color("e7d7a6"),1)
+		draw_circle(Vector2(side*(dimensions.x/2-18),0),2,Color("624f3b"))
