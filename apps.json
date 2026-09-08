@@ -108,5 +108,15 @@
     "category": "2D物理パズル",
     "thumbnail": "rescue-cover.svg",
     "accent": "#987333"
+  },
+  {
+    "id": "2026-09-09",
+    "date": "2026-09-09",
+    "sequence": 1,
+    "name": "ちび車グランプリ",
+    "description": "カーブの前で減速、出口で加速。小さな車でCPU3台と競う、Godot製3Dレースゲーム。",
+    "category": "3Dレースゲーム",
+    "thumbnail": "racing-cover.png",
+    "accent": "#d45735"
   }
 ]

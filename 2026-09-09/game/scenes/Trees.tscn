@@ -1,0 +1,17 @@
+[gd_scene format=3 uid="uid://csfnc5ry01rk1"]
+
+[ext_resource type="ArrayMesh" uid="uid://cpve3tfvrmmgo" path="res://assets/racing/treeLarge.obj" id="1"]
+
+[node name="Trees" type="Node3D" unique_id=1254371752]
+
+[node name="Oak" type="MeshInstance3D" parent="." unique_id=324387919]
+transform = Transform3D(8, 0, 0, 0, 8, 0, 0, 0, 8, 0, 0, 0)
+mesh = ExtResource("1")
+
+[node name="Oak2" type="MeshInstance3D" parent="." unique_id=1748283191]
+transform = Transform3D(6, 0, 0, 0, 7, 0, 0, 0, 6, 6, 0, 4)
+mesh = ExtResource("1")
+
+[node name="Oak3" type="MeshInstance3D" parent="." unique_id=1775254906]
+transform = Transform3D(5, 0, 0, 0, 6, 0, 0, 0, 5, -5, 0, 7)
+mesh = ExtResource("1")

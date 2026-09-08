@@ -1,0 +1,14 @@
+[gd_scene format=3 uid="uid://bo0afwaed633i"]
+
+[ext_resource type="ArrayMesh" uid="uid://b0fg4en08f5mo" path="res://assets/racing/roadCornerSmall.obj" id="1"]
+[ext_resource type="Script" uid="uid://cituc7fteea3b" path="res://scripts/road.gd" id="2"]
+
+[node name="RightTight" type="Node3D" unique_id=184775037 groups=["road"]]
+script = ExtResource("2")
+turn = 1.0
+radius = 6.0
+speed_hint = 7.0
+
+[node name="RoadMesh" type="MeshInstance3D" parent="." unique_id=1556825564]
+transform = Transform3D(-5.2453663e-07, 0, -12, 0, 12, 0, 12, 0, -5.2453663e-07, 6, 0, 12)
+mesh = ExtResource("1")

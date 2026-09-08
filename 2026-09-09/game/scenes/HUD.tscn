@@ -1,0 +1,249 @@
+[gd_scene load_steps=9 format=3]
+[ext_resource type="FontFile" path="res://assets/fonts/NotoSansCJKjp-Medium.otf" id="1"]
+[ext_resource type="Script" path="res://scripts/minimap.gd" id="2"]
+[sub_resource type="StyleBoxFlat" id="Panel"]
+bg_color = Color(0.98, 0.95, 0.85, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.09, 0.18, 0.20, 1)
+shadow_color = Color(0.09, 0.18, 0.20, 1)
+shadow_size = 0
+shadow_offset = Vector2(8, 8)
+[sub_resource type="StyleBoxFlat" id="Button"]
+bg_color = Color(1, 0.80, 0.32, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.09, 0.18, 0.20, 1)
+content_margin_left = 12.0
+content_margin_right = 12.0
+content_margin_top = 10.0
+content_margin_bottom = 10.0
+[sub_resource type="StyleBoxFlat" id="Hover"]
+bg_color = Color(1, 0.87, 0.52, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.09, 0.18, 0.20, 1)
+content_margin_left = 12.0
+content_margin_right = 12.0
+content_margin_top = 10.0
+content_margin_bottom = 10.0
+[sub_resource type="StyleBoxFlat" id="Pressed"]
+bg_color = Color(0.32, 0.65, 0.58, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.09, 0.18, 0.20, 1)
+content_margin_left = 12.0
+content_margin_right = 12.0
+content_margin_top = 10.0
+content_margin_bottom = 10.0
+[sub_resource type="StyleBoxFlat" id="Focus"]
+bg_color = Color(0, 0, 0, 0)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.93, 0.29, 0.20, 1)
+expand_margin_left = 3.0
+expand_margin_right = 3.0
+expand_margin_top = 3.0
+expand_margin_bottom = 3.0
+[sub_resource type="Theme" id="Theme"]
+default_font = ExtResource("1")
+default_font_size = 17
+Label/colors/font_color = Color(0.09, 0.18, 0.20, 1)
+Button/colors/font_color = Color(0.09, 0.18, 0.20, 1)
+Button/colors/font_focus_color = Color(0.09, 0.18, 0.20, 1)
+Button/colors/font_hover_color = Color(0.09, 0.18, 0.20, 1)
+Button/colors/font_pressed_color = Color(0.09, 0.18, 0.20, 1)
+Button/styles/normal = SubResource("Button")
+Button/styles/hover = SubResource("Hover")
+Button/styles/pressed = SubResource("Pressed")
+Button/styles/focus = SubResource("Focus")
+PanelContainer/styles/panel = SubResource("Panel")
+[node name="HUD" type="CanvasLayer"]
+[node name="Root" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme = SubResource("Theme")
+[node name="Top" type="HBoxContainer" parent="Root"]
+anchor_right = 1.0
+offset_left = 16.0
+offset_top = 12.0
+offset_right = -16.0
+offset_bottom = 58.0
+theme_override_constants/separation = 12
+[node name="Place" type="Label" parent="Root/Top"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "1 / 4 位"
+[node name="Lap" type="Label" parent="Root/Top"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "LAP 1 / 3"
+[node name="Clock" type="Label" parent="Root/Top"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "00:00.000"
+[node name="Pause" type="Button" parent="Root/Top"]
+layout_mode = 2
+text = "II"
+focus_mode = 0
+tooltip_text = "一時停止 (Esc)"
+[node name="Status" type="Label" parent="Root"]
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -180.0
+offset_top = 88.0
+offset_right = 180.0
+offset_bottom = 162.0
+theme_override_font_sizes/font_size = 34
+theme_override_colors/font_color = Color(1, 0.96, 0.86, 1)
+theme_override_colors/font_outline_color = Color(0.09, 0.18, 0.20, 1)
+theme_override_constants/outline_size = 8
+text = "3"
+horizontal_alignment = 1
+[node name="Map" type="Control" parent="Root"]
+offset_left = 1050.0
+offset_top = 490.0
+offset_right = 1230.0
+offset_bottom = 670.0
+mouse_filter = 2
+script = ExtResource("2")
+[node name="Speed" type="Label" parent="Root"]
+offset_left = 20.0
+offset_top = 580.0
+offset_right = 160.0
+offset_bottom = 680.0
+theme_override_font_sizes/font_size = 28
+text = "00\nkm/h"
+[node name="Controls" type="HBoxContainer" parent="Root"]
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 16.0
+offset_top = -88.0
+offset_right = -16.0
+offset_bottom = -18.0
+theme_override_constants/separation = 8
+[node name="Left" type="Button" parent="Root/Controls"]
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 0
+text = "左"
+[node name="Right" type="Button" parent="Root/Controls"]
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 0
+text = "右"
+[node name="Brake" type="Button" parent="Root/Controls"]
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 0
+text = "減速"
+[node name="Gas" type="Button" parent="Root/Controls"]
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 0
+text = "加速"
+[node name="Recover" type="Button" parent="Root"]
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 16.0
+offset_top = -132.0
+offset_right = 168.0
+offset_bottom = -96.0
+focus_mode = 0
+theme_override_font_sizes/font_size = 14
+text = "コースへ戻る (R)"
+[node name="Mute" type="Button" parent="Root"]
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -100.0
+offset_top = 70.0
+offset_right = -16.0
+offset_bottom = 106.0
+focus_mode = 0
+theme_override_font_sizes/font_size = 14
+text = "音 ON"
+[node name="Hint" type="Label" parent="Root"]
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 14.0
+offset_top = -78.0
+offset_right = -14.0
+offset_bottom = -16.0
+theme_override_font_sizes/font_size = 15
+theme_override_colors/font_color = Color(0.98, 0.95, 0.85, 1)
+theme_override_colors/font_outline_color = Color(0.09, 0.18, 0.20, 1)
+theme_override_constants/outline_size = 4
+horizontal_alignment = 1
+text = "WASD / 矢印: 運転   Space: ブレーキ\nR: コースへ戻る   Esc: 一時停止"
+[node name="Menu" type="PanelContainer" parent="Root"]
+offset_left = 385.0
+offset_top = 190.0
+offset_right = 895.0
+offset_bottom = 575.0
+[node name="Padding" type="MarginContainer" parent="Root/Menu"]
+layout_mode = 2
+theme_override_constants/margin_left = 22
+theme_override_constants/margin_right = 22
+theme_override_constants/margin_top = 22
+theme_override_constants/margin_bottom = 22
+[node name="Stack" type="VBoxContainer" parent="Root/Menu/Padding"]
+layout_mode = 2
+theme_override_constants/separation = 14
+[node name="Kicker" type="Label" parent="Root/Menu/Padding/Stack"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 13
+text = "SMALL CARS. BIG CORNERS."
+[node name="Title" type="Label" parent="Root/Menu/Padding/Stack"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 42
+text = "ちび車グランプリ"
+[node name="Summary" type="Label" parent="Root/Menu/Padding/Stack"]
+layout_mode = 2
+text = "みどりの丘サーキット / 3周\nカーブの前で減速。出口でアクセル！\nベストラップ  --:--.---"
+autowrap_mode = 2
+[node name="Colors" type="HBoxContainer" parent="Root/Menu/Padding/Stack"]
+layout_mode = 2
+theme_override_constants/separation = 6
+[node name="Red" type="Button" parent="Root/Menu/Padding/Stack/Colors"]
+layout_mode = 2
+size_flags_horizontal = 3
+toggle_mode = true
+text = "赤"
+[node name="Orange" type="Button" parent="Root/Menu/Padding/Stack/Colors"]
+layout_mode = 2
+size_flags_horizontal = 3
+toggle_mode = true
+text = "橙"
+[node name="Green" type="Button" parent="Root/Menu/Padding/Stack/Colors"]
+layout_mode = 2
+size_flags_horizontal = 3
+toggle_mode = true
+text = "緑"
+[node name="White" type="Button" parent="Root/Menu/Padding/Stack/Colors"]
+layout_mode = 2
+size_flags_horizontal = 3
+toggle_mode = true
+text = "白"
+[node name="Race" type="Button" parent="Root/Menu/Padding/Stack"]
+layout_mode = 2
+text = "4台でレース！"
+[node name="Trial" type="Button" parent="Root/Menu/Padding/Stack"]
+layout_mode = 2
+text = "ひとりでタイムアタック"

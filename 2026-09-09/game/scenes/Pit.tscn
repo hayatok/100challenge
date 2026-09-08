@@ -1,0 +1,28 @@
+[gd_scene format=3 uid="uid://cq7ffoasl46hu"]
+
+[ext_resource type="ArrayMesh" uid="uid://bdtmld8xqkusw" path="res://assets/racing/pitsGarage.obj" id="1"]
+[ext_resource type="ArrayMesh" uid="uid://wlndlystg2an" path="res://assets/racing/grandStandCovered.obj" id="2"]
+[ext_resource type="ArrayMesh" uid="uid://cyby1b2ryrwgh" path="res://assets/racing/bannerTowerRed.obj" id="3"]
+
+[sub_resource type="BoxShape3D" id="Box"]
+size = Vector3(9, 5, 8)
+
+[node name="Pit" type="Node3D" unique_id=197597336]
+
+[node name="Garage" type="MeshInstance3D" parent="." unique_id=977811]
+transform = Transform3D(8, 0, 0, 0, 8, 0, 0, 0, 8, 0, 0, 0)
+mesh = ExtResource("1")
+
+[node name="Grandstand" type="MeshInstance3D" parent="." unique_id=1333077800]
+transform = Transform3D(8, 0, 0, 0, 8, 0, 0, 0, 8, 0, 0, 14)
+mesh = ExtResource("2")
+
+[node name="Banner" type="MeshInstance3D" parent="." unique_id=571722295]
+transform = Transform3D(8, 0, 0, 0, 8, 0, 0, 0, 8, -2, 0, -7)
+mesh = ExtResource("3")
+
+[node name="Wall" type="StaticBody3D" parent="." unique_id=2038471778]
+
+[node name="Collision" type="CollisionShape3D" parent="Wall" unique_id=1089130733]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 2.5, 4)
+shape = SubResource("Box")

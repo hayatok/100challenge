@@ -1,0 +1,11 @@
+[gd_scene format=3 uid="uid://diorhsi1vr3b5"]
+
+[ext_resource type="ArrayMesh" uid="uid://n7j6p8rqkvop" path="res://assets/racing/roadStraightLong.obj" id="1"]
+[ext_resource type="Script" uid="uid://cituc7fteea3b" path="res://scripts/road.gd" id="2"]
+
+[node name="Straight" type="Node3D" unique_id=1266816859 groups=["road"]]
+script = ExtResource("2")
+
+[node name="RoadMesh" type="MeshInstance3D" parent="." unique_id=1419643350]
+transform = Transform3D(12, 0, 0, 0, 12, 0, 0, 0, 12, 6, 0, 0)
+mesh = ExtResource("1")
