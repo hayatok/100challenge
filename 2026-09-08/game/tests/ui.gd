@@ -14,13 +14,16 @@ func run() -> void:
 	app.persist_progress = false
 	root.add_child(app)
 	app.sound.muted = true
-	for width: int in [375,600,768,1024,1440]:
-		var height: int = maxi(900,int(float(width)*0.645833+610)) if width < 900 else 900
+	for dimensions: Vector2i in [Vector2i(375,900),Vector2i(600,1000),Vector2i(768,1110),Vector2i(1024,900),Vector2i(1440,900),Vector2i(1440,720)]:
+		var width: int = dimensions.x
+		var height: int = dimensions.y
 		app.size = Vector2(width,height)
 		for stage: int in range(app.levels.size()):
 			app._load_stage(stage)
 			await process_frame
 			app._layout()
+			if app.footer.visible:
+				check(not app.footer.get_rect().intersects(app.menu.get_rect()),"Keyboard legend overlaps stage menu")
 			for control: Control in [app.retry,app.pause_button,app.hint_button,app.mute_button,app.menu,app.detail,app.stage_label]:
 				check(control.position.x>=0 and control.get_rect().end.x<=width+1 and control.get_rect().end.y<=height+1,"Control overflow at %d stage %d %s" % [width,stage,control.name])
 			for i: int in range(app.pin_buttons.size()):
@@ -69,5 +72,25 @@ func run() -> void:
 	app._hint()
 	check(app.detail.text==app.levels[0]["hints"][1],"Second hint not shown")
 	app.free()
+	# Exercise the actual scene wrapper, including a short mobile viewport.
+	var screen := SubViewport.new()
+	screen.size = Vector2i(375,667)
+	root.add_child(screen)
+	var frame: ScrollContainer = load("res://main.tscn").instantiate()
+	var content: Control = frame.get_node("Rescue")
+	content.persist_progress = false
+	screen.add_child(frame)
+	content.sound.muted = true
+	await process_frame
+	await process_frame
+	check(frame.get_v_scroll_bar().max_value>frame.get_v_scroll_bar().page,"Short mobile screen has no scroll range")
+	frame.scroll_vertical = 120
+	await process_frame
+	check(frame.scroll_vertical==120,"Mobile scroll did not move content")
+	check(content.position.y<0,"Scroll wrapper did not offset the UI")
+	content._load_stage(0)
+	await process_frame
+	check(frame.scroll_vertical==0,"Retry did not return to model")
+	screen.free()
 	print("UI CHECKS ",checks," failures=",failures)
 	quit(0 if failures==0 else 1)

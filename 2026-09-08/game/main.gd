@@ -135,6 +135,8 @@ func _make_ui() -> void:
 func _load_stage(index: int) -> void:
 	get_tree().paused = false
 	stage = clampi(index,0,levels.size()-1)
+	if get_parent() is ScrollContainer:
+		get_parent().set_deferred("scroll_vertical",0)
 	hint_step = 0
 	effects.clear()
 	if is_instance_valid(world):
@@ -200,7 +202,7 @@ func _finish(success: bool, reason: String) -> void:
 		if persist_progress and not Progress.save_best(best):
 			detail.text += "\n記録を保存できませんでした。この画面では続けて遊べます。"
 		elif world.cuts <= int(levels[stage]["par"]):
-			detail.text += "\n必要なところだけを切った、見事な解体です。"
+			detail.text += "\n少ない切断で、搬出できました。"
 		next_button.text = "全作品を見返す" if stage == levels.size()-1 else "次の模型へ"
 		next_button.visible = true
 	else:
@@ -271,6 +273,8 @@ func _layout() -> void:
 		return
 	var w: float = size.x
 	var h: float = size.y
+	if w < 100:
+		return
 	small = w < 900
 	var pad: float = 18.0 if small else 32.0
 	title_label.add_theme_font_size_override("font_size",30 if small else 42)
@@ -302,7 +306,7 @@ func _layout() -> void:
 		_place(menu,pad,y+233,w-2*pad,44)
 		footer.visible = false
 	else:
-		var available := Vector2(w-360,h-168)
+		var available := Vector2(w-360,h-220)
 		var scale_value: float = minf(available.x/960.0,available.y/620.0)
 		board_rect = Rect2(24,120,960*scale_value,620*scale_value)
 		side_rect = Rect2(w-300,128,268,h-150)

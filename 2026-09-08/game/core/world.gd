@@ -121,7 +121,7 @@ func _physics_process(delta: float) -> void:
 		won = true
 		for v: RescueCeramic in ceramics:
 			v.rescued = true
-		finished.emit(true,"すべての陶器を、無傷で梱包しました。")
+		finished.emit(true,"すべての陶器を、無傷で梱包。")
 	trace_tick += 1
 	if trace_tick % 12 == 0 and cuts > 0 and not ceramics.is_empty():
 		trace.append(ceramics[0].position)
