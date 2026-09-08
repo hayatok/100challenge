@@ -113,6 +113,11 @@ func _make_ui() -> void:
 	menu = OptionButton.new()
 	menu.add_theme_color_override("font_color",INK)
 	menu.add_theme_stylebox_override("normal",style(Color("f5f2e9"),Color("bbb4a3")))
+	menu.get_popup().add_theme_stylebox_override("panel",style(Color("f5f2e9"),Color("bbb4a3")))
+	menu.get_popup().add_theme_stylebox_override("hover",style(Color("e4d5b5"),BRASS))
+	menu.get_popup().add_theme_constant_override("v_separation",22)
+	menu.get_popup().add_theme_color_override("font_color",INK)
+	menu.get_popup().add_theme_color_override("font_hover_color",INK)
 	menu.item_selected.connect(_load_stage)
 	add_child(menu)
 	board = SubViewportContainer.new()
@@ -177,7 +182,7 @@ func _cut(index: int) -> void:
 		detail.text = "床が止まる場所、陶器が落ちる先を見よう。\nいつでも一時停止・やり直しできます。"
 
 func _update_counts() -> void:
-	tally.text = "%d 点を切断  /  目安 %d 点\n陶器 %d 点を救出" % [world.cuts,levels[stage]["par"],world.ceramics.size()]
+	tally.text = "切断 %d  /  目安 %d  /  最少 %s\n救出する陶器 %d 点" % [world.cuts,levels[stage]["par"],str(best.get(str(stage),"未記録")),world.ceramics.size()]
 	number_label.text = "COLLECTION  %02d / %02d" % [best.size(),levels.size()]
 
 func _finish(success: bool, reason: String) -> void:
@@ -263,7 +268,7 @@ func _layout() -> void:
 		return
 	var w: float = size.x
 	var h: float = size.y
-	small = w < 760
+	small = w < 900
 	var pad: float = 18.0 if small else 32.0
 	title_label.add_theme_font_size_override("font_size",30 if small else 42)
 	_place(title_label,pad,16,w-2*pad,52)
@@ -324,6 +329,12 @@ func _layout() -> void:
 		var diameter: float = 44.0
 		var p: Vector2 = board_rect.position+at*board.scale.x-Vector2.ONE*diameter/2.0
 		_place(pin_buttons[i],p.x,p.y,diameter,diameter)
+	# Leaders keep small ceramics visible instead of covering them with a touch target.
+	for i: int in range(pin_buttons.size()):
+		for vase: Vector2 in levels[stage]["vases"]:
+			var art_rect := Rect2(board_rect.position+(vase-Vector2(18,24))*board.scale.x,Vector2(36,48)*board.scale.x)
+			if pin_buttons[i].get_rect().intersects(art_rect.grow(4)):
+				pin_buttons[i].position.y = art_rect.position.y-52.0
 	# Keep touch targets separate on compact models; leaders retain the physical attachment.
 	for iteration: int in range(4):
 		for i: int in range(pin_buttons.size()):

@@ -7,7 +7,7 @@ static func beam(x: float, y: float, length: float, angle: float = 0.0) -> Dicti
 static func all() -> Array[Dictionary]:
 	var first: Dictionary = {
 		"title": "片方だけ、ほどく", "chapter": "I  支点のアトリエ",
-		"lesson": "真鍮の接合点を切る。残した支点が、床を道に変える。",
+		"lesson": "真鍮の接合点を切る。\n残した支点で、床が道になる。",
 		"hints": ["箱は右側。床の右端を下げるには？", "右の接合点②を切り、左の①を残そう。"],
 		"beams": [beam(310,230,300)],
 		"pins": [{"beam":0,"end":-1}, {"beam":0,"end":1}],

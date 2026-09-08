@@ -7,9 +7,11 @@ const port=Number(process.env.PORT||4208);
 http.createServer(async(req,res)=>{
  try{
   const name=decodeURIComponent(new URL(req.url,'http://localhost').pathname);
-  const file=name==='/qa-load-error/'?path.join(root,'index.html'):path.resolve(root,'.'+(name.endsWith('/')?name+'index.html':name));
+  const file=['/qa-load-error/','/qa-loading/'].includes(name)?path.join(root,'index.html'):path.resolve(root,'.'+(name.endsWith('/')?name+'index.html':name));
   if(!file.startsWith(root+path.sep))throw Error('outside root');
   const info=await stat(file);if(!info.isFile())throw Error('not file');
-  res.writeHead(200,{'Content-Type':types[path.extname(file)]||'application/octet-stream','Cache-Control':'no-store'});res.end(await readFile(file));
+  res.writeHead(200,{'Content-Type':types[path.extname(file)]||'application/octet-stream','Cache-Control':'no-store'});const payload=await readFile(file);
+  // Local visual-QA fixture: leave the real loading UI visible without starting Godot.
+  res.end(name==='/qa-loading/'?payload.toString().replace(/<script src="[^"]+" onerror="showLoadError\(\)"><\/script>/,''):payload);
  }catch{res.writeHead(404);res.end('Not found');}
 }).listen(port,'127.0.0.1',()=>console.log(`Break to Rescue http://127.0.0.1:${port}/`));

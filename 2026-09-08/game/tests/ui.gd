@@ -15,7 +15,7 @@ func run() -> void:
 	root.add_child(app)
 	app.sound.muted = true
 	for width: int in [375,600,768,1024,1440]:
-		var height: int = maxi(900,int(float(width)*0.645833+610)) if width < 760 else 900
+		var height: int = maxi(900,int(float(width)*0.645833+610)) if width < 900 else 900
 		app.size = Vector2(width,height)
 		for stage: int in range(app.levels.size()):
 			app._load_stage(stage)
@@ -25,6 +25,9 @@ func run() -> void:
 				check(control.position.x>=0 and control.get_rect().end.x<=width+1 and control.get_rect().end.y<=height+1,"Control overflow at %d stage %d %s" % [width,stage,control.name])
 			for i: int in range(app.pin_buttons.size()):
 				check(app.pin_buttons[i].size.x>=43.9,"Touch target too small")
+				for vase: Vector2 in app.levels[stage]["vases"]:
+					var art_rect := Rect2(app.board_rect.position+(vase-Vector2(18,24))*app.board.scale.x,Vector2(36,48)*app.board.scale.x)
+					check(not app.pin_buttons[i].get_rect().intersects(art_rect),"Cut control hides initial ceramic at %d stage %d pin %d" % [width,stage,i])
 				for j: int in range(i+1,app.pin_buttons.size()):
 					check(app.pin_buttons[i].position.distance_to(app.pin_buttons[j].position)>=47.9,"Overlapping touch targets")
 	app._load_stage(0)
