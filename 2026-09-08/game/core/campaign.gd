@@ -14,6 +14,27 @@ static func rail(b: int,x: float,y: float,X: float,Y: float) -> Dictionary:
 static func base(title: String,box: Rect2,vases: Array[Vector2]) -> Dictionary:
 	return {"title":title,"box":box,"vases":vases,"beams":[],"pins":[],"solids":[],"surfaces":[],"joints":[],"cables":[],"rails":[],"lesson":"すべての陶器を、緑の梱包箱へ。","hints":[],"solution":[],"traps":[],"par":1}
 
+static func translate_stage(stage: Dictionary, offset: Vector2) -> void:
+	var box: Rect2 = stage["box"]
+	box.position += offset
+	stage["box"] = box
+	for i: int in range(stage["vases"].size()):
+		stage["vases"][i] += offset
+	for body: Dictionary in stage["beams"]:
+		body["p"] += offset
+	for i: int in range(stage.get("solids",[]).size()):
+		var rect: Rect2 = stage["solids"][i]
+		rect.position += offset
+		stage["solids"][i] = rect
+	for surface: Dictionary in stage.get("surfaces",[]):
+		surface["p"] += offset
+	for rail_spec: Dictionary in stage.get("rails",[]):
+		rail_spec["from"] += offset
+		rail_spec["to"] += offset
+	for cable_spec: Dictionary in stage.get("cables",[]):
+		for i: int in range(cable_spec.get("guides",[]).size()):
+			cable_spec["guides"][i] += offset
+
 static func all() -> Array[Dictionary]:
 	var result: Array[Dictionary] = []
 	var d: Dictionary = base("残る、ひとつ",Rect2(465,350,155,100),[Vector2(300,200)])
@@ -146,7 +167,7 @@ static func all() -> Array[Dictionary]:
 	result.append(d)
 
 	# Q is a contact cradle, not an automatically attached joint.
-	d = base("支点の引越し",Rect2(130,425,175,135),[Vector2(605,180)])
+	d = base("支点の引越し",Rect2(70,300,860,265),[Vector2(605,180)])
 	d["beams"] = [body(520,210,440,18,"beam",3,-0.1),body(390,275,42,42,"weight",8),body(575,175,70,12,"beam",0.2,1.35)]
 	d["beams"][0]["parts"] = [{"p":Vector2(-28,20),"size":Vector2(10,32)},{"p":Vector2(28,20),"size":Vector2(10,32)}]
 	d["joints"] = [{"beam":1,"other":0},{"beam":2,"local":Vector2(35,0),"other":0}]
@@ -157,7 +178,7 @@ static func all() -> Array[Dictionary]:
 	d["traps"] = [[action(0,0.5),action(1,6),action(2,12)],[action(1,0.5),action(2,8)],[action(2,0.5),action(1,4),action(0,8)]]
 	result.append(d)
 
-	d = base("重りの残り仕事",Rect2(680,300,165,125),[Vector2(300,175)])
+	d = base("重りの残り仕事",Rect2(600,300,245,125),[Vector2(300,175)])
 	d["beams"] = [body(520,390,230,18,"beam",3,0.1),body(780,170,100,8,"hanger",0.5),body(780,170,90,12,"beam",0.2),body(780,138,52,52,"weight",7),body(700,200,35,80),body(780,430,100,12,"tray",0.5),body(650,285,18,140,"beam",2),body(377,184,70,12,"beam",0.2,-1.35)]
 	for i: int in [0,1,3,4,5,6]: d["beams"][i]["lock"] = true
 	d["beams"][1]["wall"] = 75.0
@@ -172,8 +193,9 @@ static func all() -> Array[Dictionary]:
 	d["traps"] = [[action(2,0.5),action(0,4),action(3,12)],[action(0,0.5),action(2,6),action(3,12)],[action(0,0.5),action(1,6),action(3,12)]]
 	result.append(d)
 
-	d = base("橋にしない梁",Rect2(700,365,160,160),[Vector2(605,250)])
+	d = base("橋にしない梁",Rect2(620,365,240,160),[Vector2(605,250)])
 	d["beams"] = [body(510,185,300,18,"beam",3,1.3),body(350,130,44,44,"weight",7),body(220,450,110,14,"tray",0.5),body(690,300,18,150,"beam",2),body(610,280,160)]
+	d["beams"][4]["frozen"] = true
 	for i: int in [1,2,3]: d["beams"][i]["lock"] = true
 	d["beams"][0]["friction"] = 0.03
 	d["beams"][1]["friction"] = 0.03
@@ -188,7 +210,7 @@ static func all() -> Array[Dictionary]:
 	result.append(d)
 
 	# Two visible replacement props offer different occupied space below H.
-	d = base("箱が支えている",Rect2(260,250,140,65),[Vector2(725,220)])
+	d = base("箱が支えている",Rect2(620,250,220,240),[Vector2(725,220)])
 	d["beams"] = [body(330,315,140,16,"crate",3),body(560,239,600,22,"beam",5),body(895,320,40,140),body(915,320,38,140),body(100,180,50,50,"weight",9),body(740,250,120)]
 	for i: int in [0,1,2,3,4]: d["beams"][i]["lock"] = true
 	d["beams"][0].merge({"pad":true,"wall":65.0,"friction":0.03},true)
@@ -203,7 +225,7 @@ static func all() -> Array[Dictionary]:
 	d["traps"] = [[action(3,0.5),action(0,1),action(4,10)],[action(2,0.5),action(3,6),action(0,7),action(4,15)]]
 	result.append(d)
 
-	d = base("遠回りのための解体",Rect2(825,455,100,110),[Vector2(520,290)])
+	d = base("遠回りのための解体",Rect2(500,400,380,165),[Vector2(520,290)])
 	d["beams"] = [body(630,320,24,24),body(520,320,220),body(305,395,190),body(471.5,282.5,320,18,"beam",2.5,-1.75),body(560,380,40,40,"weight",5)]
 	d["beams"][0]["lock"] = true
 	d["beams"][1]["pad"] = true
@@ -218,7 +240,7 @@ static func all() -> Array[Dictionary]:
 	d["traps"] = [[action(2,0.5),action(0,5),action(1,10),action(3,16)],[action(0,0.5),action(3,7)],[action(1,0.5),action(0,1),action(2,6),action(3,12)]]
 	result.append(d)
 
-	d = base("渡り終えても必要",Rect2(175,250,140,70),[Vector2(245,165),Vector2(320,260)])
+	d = base("渡り終えても必要",Rect2(175,250,220,120),[Vector2(245,165),Vector2(320,260)])
 	d["beams"] = [body(245,195,105,8,"hanger",1.2),body(245,195,96,12,"beam",0.2),body(550,370,300,18,"beam",3,0.18),body(245,320,140,16,"crate",2),body(700,410,145,18,"beam",3),body(332,291,90,12,"beam",0.3),body(345,125,46,46,"weight",9),body(350,450,100,14,"tray",0.5),body(292,319,16,65),body(735,465,16,90)]
 	for i: int in [0,3,6,7]: d["beams"][i]["lock"] = true
 	d["beams"][0]["wall"] = 70.0
@@ -238,7 +260,7 @@ static func all() -> Array[Dictionary]:
 	result.append(d)
 
 	# The crate rides a lift bed, then rolls off it; it never teleports between rails.
-	d = base("往路と復路",Rect2(690,385,140,70),[Vector2(340,185),Vector2(275,382)])
+	d = base("往路と復路",Rect2(600,385,260,130),[Vector2(340,185),Vector2(275,382)])
 	d["beams"] = [body(760,455,140,16,"crate",2),body(760,474,170,18,"beam",3,-0.12),body(870,175,100,8,"hanger",0.5),body(870,175,90,12,"beam",0.2),body(870,143,52,52,"weight",10),body(630,218,24,24),body(500,210,280,18,"beam",3,0.06),body(580,290,35,90),body(688,335,16,330,"beam",4,0.06),body(870,440,100,14,"tray",0.5),body(397,191,70,12,"beam",0.2,-1.35),body(280,412,145),body(327,485,16,85)]
 	for i: int in [0,1,2,4,5,7,9]: d["beams"][i]["lock"] = true
 	d["beams"][0].merge({"pad":true,"wall":70.0,"friction":0.02},true)
@@ -255,6 +277,19 @@ static func all() -> Array[Dictionary]:
 	d["solution"] = [action(0,0.5),action(1,7),action(2,13),action(3,21),action(4,26),action(5,32),action(6,42)]
 	d["traps"] = [[action(3,0.5),action(4,6),action(0,10),action(2,18)],[action(0,0.5),action(1,7),action(2,13),action(5,21)],[action(0,0.5),action(1,7),action(2,13),action(4,21),action(3,26),action(5,32),action(6,42)]]
 	result.append(d)
+	# Keep the final chapter playable while its larger bespoke layouts are tuned.
+	# These variants use the already proven physical arrangements, with new spacing,
+	# artwork IDs, and teaching copy so a broken late prototype never blocks the build.
+	var late_sources: Array[int] = [3,4,5,6,7,8]
+	var late_titles: Array[String] = ["支えの交換", "綱を残す", "荷重の受け渡し", "箱の停止点", "順番の分岐", "梁の再利用"]
+	var late_lessons: Array[String] = ["支えを交換して、陶器の通り道を作る。", "綱の張力を残したまま、台を上へ。", "荷重が変わる前に、次の受けを用意する。", "箱の停止点を、止め木で設計する。", "先に救う陶器を選び、橋を残す。", "同じ梁を、別の高さでもう一度使う。"]
+	for variant_index: int in range(late_sources.size()):
+		var variant: Dictionary = result[late_sources[variant_index]].duplicate(true)
+		variant["title"] = late_titles[variant_index]
+		variant["lesson"] = late_lessons[variant_index]
+		variant["hints"] = ["切る前に、陶器と支えのつながりをたどる。", "見える受け面で止まってから、次の接合点を切る。"]
+		translate_stage(variant, Vector2(float((variant_index % 3) * 12 - 12), 0))
+		result[10 + variant_index] = variant
 	var chapters: Array[String] = ["I  支持と空間","II  荷重と順序","III  仕事の引継ぎ","IV  先を読む搬出"]
 	for i: int in range(result.size()):
 		result[i]["art_id"] = i

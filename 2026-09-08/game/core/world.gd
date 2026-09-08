@@ -62,6 +62,7 @@ func build(data: Dictionary) -> void:
 		b.friction = spec.get("friction",0.3)
 		b.caption = spec.get("caption","")
 		b.parts = spec.get("parts",[])
+		b.freeze = spec.get("frozen",false)
 		add_child(b)
 		beams.append(b)
 		b.struck.connect(func(at: Vector2, strength: float) -> void:
@@ -218,7 +219,8 @@ func _physics_process(delta: float) -> void:
 		return
 	var all_inside: bool = true
 	for v: RescueCeramic in ceramics:
-		if v.position.y > 600 or v.position.x < -30 or v.position.x > 990:
+		var boundary_x: float = 1300.0 if art_id >= 9 else 990.0
+		if v.position.y > 600 or v.position.x < -30 or v.position.x > boundary_x:
 			_shatter("模型の外へ落下しました。\n箱につながる道を残して。", v.position)
 			return
 		var interior := Rect2(box.position + Vector2(15,0), box.size - Vector2(30,12))
