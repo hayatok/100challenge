@@ -31,6 +31,9 @@ var pause_button: Button
 var hint_button: Button
 var mute_button: Button
 var next_button: Button
+var ledger: RescueLedger
+var ledger_button: Button
+var paused_before_ledger: bool = false
 var menu: OptionButton
 var sound: RescueSound
 var hint_step: int = 0
@@ -52,6 +55,7 @@ func _ready() -> void:
 	resized.connect(_layout)
 	if OS.has_feature("web"):
 		reduce_motion = bool(JavaScriptBridge.eval("window.matchMedia('(prefers-reduced-motion: reduce)').matches"))
+	_make_ledger()
 	_load_stage(0)
 
 func label_node(text_value: String, font_size: int, color: Color = INK) -> Label:
@@ -78,6 +82,7 @@ func button_node(caption: String, action: Callable) -> Button:
 	b.text = caption
 	b.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 	b.add_theme_color_override("font_color",INK)
+	b.add_theme_color_override("font_focus_color",INK)
 	b.add_theme_color_override("font_hover_color",INK)
 	b.add_theme_color_override("font_pressed_color",INK)
 	b.add_theme_stylebox_override("normal",style(Color("f5f2e9"),Color("bbb4a3")))
@@ -110,6 +115,9 @@ func _make_ui() -> void:
 	next_button = button_node("次の模型へ",_next)
 	next_button.add_theme_stylebox_override("normal",style(GREEN,GREEN))
 	next_button.add_theme_color_override("font_color",Color("faf6e9"))
+	next_button.add_theme_color_override("font_focus_color",Color("faf6e9"))
+	next_button.add_theme_color_override("font_hover_color",INK)
+	ledger_button = button_node("搬出台帳",_show_ledger)
 	menu = OptionButton.new()
 	menu.add_theme_color_override("font_color",INK)
 	menu.add_theme_stylebox_override("normal",style(Color("f5f2e9"),Color("bbb4a3")))
@@ -149,6 +157,8 @@ func _load_stage(index: int) -> void:
 	world.process_mode = Node.PROCESS_MODE_PAUSABLE
 	viewport.add_child(world)
 	world.build(levels[stage])
+	world.visuals.reduced = reduce_motion
+	subtitle.text = "%s / %s" % [RescueArt.ROOMS[RescueArt.room_for(stage)],RescueArt.WORKS[stage]]
 	world.finished.connect(_finish)
 	world.changed.connect(_update_counts)
 	world.cut_made.connect(_cut_feedback)
@@ -158,6 +168,8 @@ func _load_stage(index: int) -> void:
 		b.add_theme_stylebox_override("normal",style(Color("e4c98a"),Color("8a682c"),24))
 		b.add_theme_stylebox_override("hover",style(Color("f5dfab"),BRASS,24))
 		b.add_theme_stylebox_override("pressed",style(Color("d5b46c"),BRASS,24))
+		b.add_theme_stylebox_override("disabled",style(Color("d4c6a8"),Color("9d8d6d"),24))
+		b.add_theme_color_override("font_disabled_color",Color("695f4b"))
 		pin_buttons.append(b)
 	stage_label.text = "%02d  %s" % [stage+1,levels[stage]["title"]]
 	chapter_label.text = levels[stage]["chapter"]
@@ -231,7 +243,58 @@ func _mute() -> void:
 	mute_button.text = "音 OFF" if sound.muted else "音 ON"
 
 func _next() -> void:
-	_load_stage((stage+1)%levels.size())
+	if stage == levels.size()-1:
+		_show_ledger()
+	else:
+		_load_stage(stage+1)
+
+func _make_ledger() -> void:
+	var layer := CanvasLayer.new()
+	layer.layer = 10
+	add_child(layer)
+	ledger = RescueLedger.new()
+	ledger.theme = theme.duplicate()
+	ledger.theme.set_color("font_color","Label",INK)
+	ledger.theme.set_color("font_color","CheckButton",INK)
+	for type_name: String in ["Button","CheckButton"]:
+		for state: String in ["font_color","font_focus_color","font_hover_color","font_pressed_color","font_hover_pressed_color"]:
+			ledger.theme.set_color(state,type_name,INK)
+	ledger.theme.set_stylebox("normal","Button",style(Color("f7f1e5"),Color("b6ac97")))
+	ledger.theme.set_stylebox("hover","Button",style(Color("e9dfc8"),BRASS))
+	ledger.theme.set_stylebox("pressed","Button",style(Color("d8c59d"),BRASS))
+	var focus := style(Color(0,0,0,0),GREEN)
+	focus.set_border_width_all(3)
+	ledger.theme.set_stylebox("focus","Button",focus)
+	layer.add_child(ledger)
+	ledger.hide()
+	ledger.dismissed.connect(_close_ledger)
+	ledger.stage_selected.connect(func(index: int) -> void:
+		ledger.hide()
+		_load_stage(index)
+		ledger_button.grab_focus())
+	ledger.motion_changed.connect(_set_reduced)
+
+func _show_ledger() -> void:
+	paused_before_ledger = get_tree().paused
+	get_tree().paused = true
+	ledger.open(best,reduce_motion)
+
+func _close_ledger() -> void:
+	ledger.hide()
+	get_tree().paused = paused_before_ledger
+	ledger_button.grab_focus()
+
+func _set_reduced(value: bool) -> void:
+	reduce_motion = value
+	effects.clear()
+	world.visuals.reduced = value
+	if value:
+		world.visuals.bursts = world.visuals.bursts.filter(func(b: Dictionary) -> bool: return b["fracture"])
+		for burst: Dictionary in world.visuals.bursts:
+			burst["age"] = 0.7
+		world.visuals.packing_age = 1.0
+	world.visuals.queue_redraw()
+
 
 func _cut_feedback(at: Vector2) -> void:
 	sound.play("cut")
@@ -240,6 +303,11 @@ func _cut_feedback(at: Vector2) -> void:
 
 func _input(event: InputEvent) -> void:
 	if not event is InputEventKey or not event.pressed or event.echo:
+		return
+	if ledger.visible:
+		if event.keycode == KEY_ESCAPE:
+			_close_ledger()
+			get_viewport().set_input_as_handled()
 		return
 	if menu.get_popup().visible:
 		return
@@ -304,6 +372,7 @@ func _layout() -> void:
 		_place(detail,pad,y+93,w-2*pad,80)
 		_place(next_button,pad,y+181,w-2*pad,44)
 		_place(menu,pad,y+233,w-2*pad,44)
+		_place(ledger_button,pad,y+287,w-2*pad,44)
 		footer.visible = false
 	else:
 		var available := Vector2(w-360,h-220)
@@ -325,7 +394,8 @@ func _layout() -> void:
 		status_label.add_theme_font_size_override("font_size",20)
 		_place(detail,side_rect.position.x,546,268,100)
 		_place(next_button,side_rect.position.x,minf(h-60,660),268,44)
-		_place(menu,32,h-52,minf(board_rect.size.x,540),40)
+		_place(menu,32,h-52,minf(board_rect.size.x-140,440),44)
+		_place(ledger_button,menu.get_rect().end.x+12,h-52,116,44)
 		footer.visible = true
 		footer.text = "1–9  切断     SPACE  停止     R  やり直す     H  ヒント"
 		_place(footer,32,board_rect.end.y-6,board_rect.size.x,30)
@@ -358,7 +428,7 @@ func _layout() -> void:
 	queue_redraw()
 
 func _draw() -> void:
-	draw_rect(Rect2(Vector2.ZERO,size),Color("ece7db"))
+	draw_rect(Rect2(Vector2.ZERO,size),RescueArt.paper(RescueArt.room_for(stage)).lightened(0.06))
 	draw_line(Vector2(24,106),Vector2(size.x-24,106),Color("c6bead"),1)
 	if not small:
 		draw_line(Vector2(side_rect.position.x-20,130),Vector2(side_rect.position.x-20,size.y-30),Color("c6bead"),1)
