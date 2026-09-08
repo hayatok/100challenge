@@ -1,0 +1,20 @@
+[gd_scene load_steps=3 format=3]
+[ext_resource type="Script" path="res://main.gd" id="1"]
+[ext_resource type="Script" path="res://frame.gd" id="2"]
+[node name="Frame" type="ScrollContainer"]
+layout_mode=3
+anchors_preset=15
+anchor_right=1.0
+anchor_bottom=1.0
+grow_horizontal=2
+grow_vertical=2
+horizontal_scroll_mode=0
+follow_focus=true
+scroll_deadzone=12
+script=ExtResource("2")
+[node name="Rescue" type="Control" parent="."]
+layout_mode=2
+size_flags_horizontal=3
+size_flags_vertical=3
+mouse_filter=1
+script=ExtResource("1")
