@@ -41,7 +41,7 @@ func _integrate_forces(state: PhysicsDirectBodyState2D) -> void:
 			var cushion: bool = collider != null and collider.has_meta("cushion")
 			if impact > BREAK_SPEED and not cushion:
 				broken = true
-				shattered.emit("強い衝突で割れました。\n落差を抑えるか、先に道を。", state.transform.origin)
+				shattered.emit("強い衝突で割れました。\n着地する場所と、切る時機を見直そう。", state.transform.origin)
 				queue_redraw()
 				break
 	state.linear_velocity = state.linear_velocity.limit_length(800.0)

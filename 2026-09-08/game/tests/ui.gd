@@ -27,12 +27,16 @@ func run() -> void:
 			for control: Control in [app.retry,app.pause_button,app.hint_button,app.mute_button,app.menu,app.ledger_button,app.detail,app.stage_label]:
 				check(control.position.x>=0 and control.get_rect().end.x<=width+1 and control.get_rect().end.y<=height+1,"Control overflow at %d stage %d %s" % [width,stage,control.name])
 			for i: int in range(app.pin_buttons.size()):
+				check(app.board_rect.encloses(app.pin_buttons[i].get_rect()),"Cut target escapes model")
 				check(app.pin_buttons[i].size.x>=43.9,"Touch target too small")
+				for zone: Rect2 in app.levels[stage].get("clear_zones",[]):
+					var waiting_rect := Rect2(app.board_rect.position+zone.position*app.board.scale.x,zone.size*app.board.scale.x)
+					check(not app.pin_buttons[i].get_rect().intersects(waiting_rect),"Cut control hides receiving area")
 				for vase: Vector2 in app.levels[stage]["vases"]:
 					var art_rect := Rect2(app.board_rect.position+(vase-Vector2(18,24))*app.board.scale.x,Vector2(36,48)*app.board.scale.x)
 					check(not app.pin_buttons[i].get_rect().intersects(art_rect),"Cut control hides initial ceramic at %d stage %d pin %d" % [width,stage,i])
 				for j: int in range(i+1,app.pin_buttons.size()):
-					check(app.pin_buttons[i].position.distance_to(app.pin_buttons[j].position)>=47.9,"Overlapping touch targets")
+					check(app.pin_buttons[i].position.distance_to(app.pin_buttons[j].position)>=47.9,"Overlapping touch targets at %d stage %d pins %d/%d" % [width,stage,i,j])
 	app._load_stage(0)
 	await physics_frame
 	app._toggle_pause()
@@ -97,12 +101,12 @@ func run() -> void:
 	check(app.world.visuals.bursts.is_empty(),"Reduced motion emitted cut particles")
 	app.world.visuals.pack(app.world.box)
 	check(app.world.visuals.packing_age>=1.0,"Reduced motion waited for packing animation")
-	app._load_stage(7)
+	app._load_stage(15)
 	app.world.won = true
 	app.world.ended = true
 	paused = true
 	app._next()
-	check(app.ledger.visible and app.stage==7,"Final stage failed to open ledger")
+	check(app.ledger.visible and app.stage==15,"Final stage failed to open ledger")
 	app.ledger.tiles[5].pressed.emit()
 	check(app.stage==5 and not app.ledger.visible and not paused,"Ledger selected wrong stage or left game paused")
 	check(app.world.visuals.reduced,"Reduced motion preference lost on stage change")
@@ -137,6 +141,16 @@ func run() -> void:
 		for label: Label in tile.get_children():
 			check(label.position.x+label.get_minimum_size().x<=tile.size.x-4,"Ledger text clips at mobile width")
 	check(content.ledger.scroll.get_v_scroll_bar().max_value>content.ledger.scroll.get_v_scroll_bar().page,"Mobile ledger cannot scroll to last work")
+	# Visible ledger must survive a landscape-to-portrait resize, not just fresh open.
+	screen.size = Vector2i(1440,900)
+	await process_frame
+	await process_frame
+	screen.size = Vector2i(375,667)
+	await process_frame
+	await process_frame
+	check(content.ledger.scroll.size.x<=327,"Visible ledger retains desktop minimum width")
+	for tile: Button in content.ledger.tiles:
+		check(tile.get_rect().end.x<=327,"Resized ledger clips the second column")
 	content._close_ledger()
 	content._load_stage(0)
 	await process_frame

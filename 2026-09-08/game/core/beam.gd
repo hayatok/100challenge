@@ -1,11 +1,18 @@
 class_name RescueBeam
 extends RigidBody2D
 
+signal struck(at: Vector2, strength: float)
+var previous_velocity: Vector2 = Vector2.ZERO
+var previous_spin: float = 0.0
+var impact_cooldown: float = 0.0
+
 var dimensions: Vector2 = Vector2(300, 18)
 var material_kind: String = "wood"
 
 func _ready() -> void:
 	mass = 3.0
+	contact_monitor = true
+	max_contacts_reported = 4
 	collision_layer = 1
 	collision_mask = 3
 	continuous_cd = RigidBody2D.CCD_MODE_CAST_SHAPE
@@ -20,6 +27,21 @@ func _ready() -> void:
 	shape.size = dimensions
 	collision.shape = shape
 	add_child(collision)
+
+func _integrate_forces(state: PhysicsDirectBodyState2D) -> void:
+	impact_cooldown = maxf(0,impact_cooldown-state.step)
+	if impact_cooldown<=0:
+		for i: int in range(state.get_contact_count()):
+			var at: Vector2 = state.get_contact_local_position(i)
+			var arm: Vector2 = at-state.transform.origin
+			var velocity: Vector2 = previous_velocity+Vector2(-arm.y,arm.x)*previous_spin
+			var speed: float = -(velocity-state.get_contact_collider_velocity_at_position(i)).dot(state.get_contact_local_normal(i))
+			if speed>85:
+				struck.emit(at,clampf(speed/220,0.5,1.5))
+				impact_cooldown = 0.3
+				break
+	previous_velocity = state.linear_velocity
+	previous_spin = state.angular_velocity
 
 func _draw() -> void:
 	var rect := Rect2(-dimensions / 2.0, dimensions)

@@ -162,9 +162,10 @@ func _load_stage(index: int) -> void:
 	world.finished.connect(_finish)
 	world.changed.connect(_update_counts)
 	world.cut_made.connect(_cut_feedback)
+	world.impact_made.connect(func(_at: Vector2, _strength: float) -> void: sound.play("impact"))
 	for i: int in range(world.pins.size()):
 		var b := button_node(str(i+1),func() -> void: _cut(i))
-		b.tooltip_text = "接合点 %d を切る（キー %d）" % [i+1,i+1]
+		b.tooltip_text = "接合点 %d を切る（キー %d）" % [i+1,(i+1)%10]
 		b.add_theme_stylebox_override("normal",style(Color("e4c98a"),Color("8a682c"),24))
 		b.add_theme_stylebox_override("hover",style(Color("f5dfab"),BRASS,24))
 		b.add_theme_stylebox_override("pressed",style(Color("d5b46c"),BRASS,24))
@@ -196,7 +197,7 @@ func _cut(index: int) -> void:
 		detail.text = "床が止まる場所、陶器が落ちる先を見よう。\nいつでも一時停止・やり直しできます。"
 
 func _update_counts() -> void:
-	tally.text = "切断 %d  /  目安 %d  /  最少 %s\n救出する陶器 %d 点" % [world.cuts,levels[stage]["par"],str(best.get(str(stage),"未記録")),world.ceramics.size()]
+	tally.text = "切断 %d 回   ·   陶器 %d 点" % [world.cuts,world.ceramics.size()]
 	number_label.text = "COLLECTION  %02d / %02d" % [best.size(),levels.size()]
 
 func _finish(success: bool, reason: String) -> void:
@@ -272,12 +273,11 @@ func _make_ledger() -> void:
 		ledger.hide()
 		_load_stage(index)
 		ledger_button.grab_focus())
-	ledger.motion_changed.connect(_set_reduced)
 
 func _show_ledger() -> void:
 	paused_before_ledger = get_tree().paused
 	get_tree().paused = true
-	ledger.open(best,reduce_motion)
+	ledger.open(best)
 
 func _close_ledger() -> void:
 	ledger.hide()
@@ -314,6 +314,8 @@ func _input(event: InputEvent) -> void:
 	var key: int = event.keycode
 	if key >= KEY_1 and key <= KEY_9:
 		_cut(key-KEY_1)
+	elif key == KEY_0:
+		_cut(9)
 	elif key == KEY_R:
 		_load_stage(stage)
 	elif key == KEY_SPACE:
@@ -397,31 +399,44 @@ func _layout() -> void:
 		_place(menu,32,h-52,minf(board_rect.size.x-140,440),44)
 		_place(ledger_button,menu.get_rect().end.x+12,h-52,116,44)
 		footer.visible = true
-		footer.text = "1–9  切断     SPACE  停止     R  やり直す     H  ヒント"
+		footer.text = "1–9 / 0  切断     SPACE  停止     R  やり直す     H  ヒント"
 		_place(footer,32,board_rect.end.y-6,board_rect.size.x,30)
 	board.position = board_rect.position
 	board.scale = Vector2.ONE * board_rect.size.x / 960.0
+	# Place touch targets near their actual pins, within the model and clear of art.
+	# Dense final models need a constrained layout, not pairwise repulsion that can
+	# push a third target over a vase or into the title on a phone.
+	var placed: Array[Vector2] = []
+	var avoid: Array[Rect2] = []
+	for vase: Vector2 in levels[stage]["vases"]:
+		avoid.append(Rect2(board_rect.position+(vase-Vector2(18,24))*board.scale.x,Vector2(36,48)*board.scale.x).grow(4))
+	for zone: Rect2 in levels[stage].get("clear_zones",[]):
+		avoid.append(Rect2(board_rect.position+zone.position*board.scale.x,zone.size*board.scale.x).grow(4))
 	for i: int in range(pin_buttons.size()):
-		var at: Vector2 = world.pins[i]["at"]
-		var diameter: float = 44.0
-		var p: Vector2 = board_rect.position+at*board.scale.x-Vector2.ONE*diameter/2.0
-		_place(pin_buttons[i],p.x,p.y,diameter,diameter)
-	# Leaders keep small ceramics visible instead of covering them with a touch target.
-	for i: int in range(pin_buttons.size()):
-		for vase: Vector2 in levels[stage]["vases"]:
-			var art_rect := Rect2(board_rect.position+(vase-Vector2(18,24))*board.scale.x,Vector2(36,48)*board.scale.x)
-			if pin_buttons[i].get_rect().intersects(art_rect.grow(4)):
-				pin_buttons[i].position.y = art_rect.position.y-52.0
-	# Keep touch targets separate on compact models; leaders retain the physical attachment.
-	for iteration: int in range(4):
-		for i: int in range(pin_buttons.size()):
-			for j: int in range(i+1,pin_buttons.size()):
-				var delta: Vector2 = pin_buttons[j].position-pin_buttons[i].position
-				if delta.length() < 48.0:
-					var direction: Vector2 = delta.normalized() if delta.length()>0 else Vector2.RIGHT
-					var correction: Vector2 = direction*(48.0-delta.length())/2.0
-					pin_buttons[i].position -= correction
-					pin_buttons[j].position += correction
+		var origin: Vector2 = board_rect.position+world.pins[i]["at"]*board.scale.x-Vector2(22,22)
+		var chosen: Vector2 = origin
+		var best_distance: float = INF
+		for dx: int in range(-16,17):
+			for dy: int in range(-16,17):
+				var candidate: Vector2 = origin+Vector2(dx,dy)*8
+				var distance: float = candidate.distance_squared_to(origin)
+				if distance>=best_distance:
+					continue
+				var rect := Rect2(candidate,Vector2(44,44))
+				if not board_rect.encloses(rect):
+					continue
+				var blocked: bool = false
+				for occupied: Vector2 in placed:
+					if occupied.distance_to(candidate)<48:
+						blocked = true
+				for art: Rect2 in avoid:
+					if art.intersects(rect):
+						blocked = true
+				if not blocked:
+					chosen = candidate
+					best_distance = distance
+		placed.append(chosen)
+		_place(pin_buttons[i],chosen.x,chosen.y,44,44)
 	for i: int in range(pin_buttons.size()):
 		world.pins[i]["label_at"] = (pin_buttons[i].position+Vector2(22,22)-board_rect.position)/board.scale.x
 	world.queue_redraw()
