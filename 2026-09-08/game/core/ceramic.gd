@@ -2,7 +2,8 @@ class_name RescueCeramic
 extends RigidBody2D
 
 signal shattered(reason: String, at: Vector2)
-const BREAK_SPEED: float = 390.0
+const BREAK_SPEED: float = 520.0
+const CUSHION_SPEED: float = 700.0
 var broken: bool = false
 var rescued: bool = false
 var max_impact: float = 0.0
@@ -12,6 +13,7 @@ var kind: int = 0
 
 func _ready() -> void:
 	mass = 1.0
+	can_sleep = false
 	collision_layer = 2
 	collision_mask = 3
 	continuous_cd = RigidBody2D.CCD_MODE_CAST_SHAPE
@@ -39,7 +41,7 @@ func _integrate_forces(state: PhysicsDirectBodyState2D) -> void:
 			max_impact = maxf(max_impact, impact)
 			var collider: Object = state.get_contact_collider_object(i)
 			var cushion: bool = collider != null and collider.has_meta("cushion")
-			if impact > BREAK_SPEED and not cushion:
+			if impact > (CUSHION_SPEED if cushion else BREAK_SPEED):
 				broken = true
 				shattered.emit("強い衝突で割れました。\n着地する場所と、切る時機を見直そう。", state.transform.origin)
 				queue_redraw()
