@@ -1,0 +1,4 @@
+game/.godot/
+dist/
+.cache/
+source/*.blend1
