@@ -3,6 +3,8 @@
 小さな怪獣「モグ」が街を食べて大きくなる、PC向けの3Dアクションゲーム。
 車を戦車へ弾いて装甲を崩し、射撃の隙にコアをかじる。成長すると、武器にしていた車も、怖かった戦車も、そのまま食べられる。
 
+[GitHub Pagesで遊ぶ](https://hayatok.github.io/100challenge/2026-09-12/)
+
 ## 遊ぶ
 
 ```sh
@@ -70,4 +72,4 @@ npm run test:playthrough --prefix 2026-09-12
 
 33項目の挙動テストとWebエクスポート、3変異の自動通しプレイが成功。詳細と未確認項目は [検証記録](docs/VERIFICATION.md)。自動クリアは面白さの保証ではなく、人による一周の体感・難易度・5〜7分という企画上の尺は次のプレイ評価で調整する。
 
-素材の出自は [ASSETS.md](docs/ASSETS.md)。承認済みの企画は [REBOOT_PROPOSAL.md](../2026-09-10/docs/REBOOT_PROPOSAL.md)。公開デプロイは行っていない。
+素材の出自は [ASSETS.md](docs/ASSETS.md)。制作上の判断は [DEVELOPMENT.md](docs/DEVELOPMENT.md)。

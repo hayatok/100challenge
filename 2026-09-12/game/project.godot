@@ -23,10 +23,6 @@ window/size/window_width_override=1152
 window/size/window_height_override=720
 window/stretch/mode="canvas_items"
 
-[gui]
-
-theme/custom_font="res://assets/fonts/NotoSansCJKjp-Medium.otf"
-
 [layer_names]
 
 3d_physics/layer_1="Town"

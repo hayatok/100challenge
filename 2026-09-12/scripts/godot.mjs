@@ -1,5 +1,5 @@
 import {spawnSync,spawn} from 'node:child_process';
-import {existsSync,mkdirSync} from 'node:fs';
+import {existsSync,mkdirSync,copyFileSync} from 'node:fs';
 import path from 'node:path';
 const root=path.resolve(import.meta.dirname,'..');
 const bundled=process.platform==='darwin'?'/Applications/Godot.app/Contents/MacOS/Godot':path.join(root,'.cache/Godot_v4.7.2-stable_linux.x86_64');
@@ -17,4 +17,5 @@ if(['editor','play'].includes(command)){
  const output=(result.stdout||'')+(result.stderr||'');
  if(result.status!==0||/(?:SCRIPT ERROR|ERROR:)/.test(output)){process.stderr.write(output);process.exit(1);}
  console.log(['test','playtest'].includes(command)?output:`Godot 4.7.2: ${command} passed`);
+ if(command==='build')copyFileSync(path.join(root,'cover.png'),path.join(root,'dist/marunomi-cover.png'));
 }

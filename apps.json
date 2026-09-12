@@ -118,5 +118,15 @@
     "category": "3Dレースゲーム",
     "thumbnail": "racing-cover.png",
     "accent": "#d45735"
+  },
+  {
+    "id": "2026-09-12",
+    "date": "2026-09-12",
+    "sequence": 1,
+    "name": "まるのみ怪獣",
+    "description": "車を弾き、装甲を崩し、街を食べて大きくなる。3つの変異でボスへ挑む3D成長アクション。",
+    "category": "3D成長アクション",
+    "thumbnail": "marunomi-cover.png",
+    "accent": "#dc694b"
   }
 ]
