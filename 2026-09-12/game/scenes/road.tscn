@@ -1,0 +1,58 @@
+[gd_scene format=3 uid="uid://c2c1y4nxpju4t"]
+
+[ext_resource type="Texture2D" path="res://assets/textures/miniature-asphalt.png" id="1"]
+
+[sub_resource type="StandardMaterial3D" id="Mat"]
+albedo_color = Color(0.75, 0.8, 0.86, 1)
+albedo_texture = ExtResource("1")
+roughness = 0.9
+uv1_scale = Vector3(4, 8, 1)
+
+[sub_resource type="BoxMesh" id="Road"]
+material = SubResource("Mat")
+size = Vector3(12, 0.08, 24)
+
+[sub_resource type="StandardMaterial3D" id="Line"]
+albedo_color = Color(0.92, 0.83, 0.6, 1)
+
+[sub_resource type="BoxMesh" id="Dash"]
+material = SubResource("Line")
+size = Vector3(0.12, 0.018, 1.4)
+
+[node name="Road" type="Node3D"]
+
+[node name="Asphalt" type="MeshInstance3D" parent="."]
+mesh = SubResource("Road")
+position = Vector3(0, 0.03, 0)
+
+[node name="Mark0" type="MeshInstance3D" parent="."]
+position = Vector3(0, 0.085, -10)
+mesh = SubResource("Dash")
+
+[node name="Mark1" type="MeshInstance3D" parent="."]
+position = Vector3(0, 0.085, -7)
+mesh = SubResource("Dash")
+
+[node name="Mark2" type="MeshInstance3D" parent="."]
+position = Vector3(0, 0.085, -4)
+mesh = SubResource("Dash")
+
+[node name="Mark3" type="MeshInstance3D" parent="."]
+position = Vector3(0, 0.085, -1)
+mesh = SubResource("Dash")
+
+[node name="Mark4" type="MeshInstance3D" parent="."]
+position = Vector3(0, 0.085, 2)
+mesh = SubResource("Dash")
+
+[node name="Mark5" type="MeshInstance3D" parent="."]
+position = Vector3(0, 0.085, 5)
+mesh = SubResource("Dash")
+
+[node name="Mark6" type="MeshInstance3D" parent="."]
+position = Vector3(0, 0.085, 8)
+mesh = SubResource("Dash")
+
+[node name="Mark7" type="MeshInstance3D" parent="."]
+position = Vector3(0, 0.085, 11)
+mesh = SubResource("Dash")

@@ -1,0 +1,32 @@
+[gd_scene format=3 uid="uid://bfel5k6rsdpsc"]
+
+[sub_resource type="StandardMaterial3D" id="Mat"]
+albedo_color = Color(0.66, 0.76, 0.67, 1)
+roughness = 0.95
+
+[sub_resource type="BoxMesh" id="Mesh"]
+material = SubResource("Mat")
+size = Vector3(72, 0.6, 72)
+
+[sub_resource type="BoxShape3D" id="Shape"]
+size = Vector3(72, 0.6, 72)
+
+[sub_resource type="StandardMaterial3D" id="RimMat"]
+albedo_color = Color(0.16, 0.3, 0.31, 1)
+
+[sub_resource type="BoxMesh" id="RimMesh"]
+material = SubResource("RimMat")
+size = Vector3(73, 1, 73)
+
+[node name="Ground" type="StaticBody3D"]
+position = Vector3(0, -0.3, 0)
+
+[node name="Surface" type="MeshInstance3D" parent="."]
+mesh = SubResource("Mesh")
+
+[node name="Collision" type="CollisionShape3D" parent="."]
+shape = SubResource("Shape")
+
+[node name="Base" type="MeshInstance3D" parent="."]
+position = Vector3(0, -0.7, 0)
+mesh = SubResource("RimMesh")

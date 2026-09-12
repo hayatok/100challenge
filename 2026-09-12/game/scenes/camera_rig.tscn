@@ -1,0 +1,14 @@
+[gd_scene format=3 uid="uid://cj3mpj7jkxxiu"]
+
+[ext_resource type="Script" uid="uid://scalv7xda6i2" path="res://scripts/camera_rig.gd" id="1"]
+
+[node name="CameraRig" type="Node3D" unique_id=1141477423]
+script = ExtResource("1")
+base_size = 20.0
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=662046755]
+transform = Transform3D(0.8660254, -0.3213938, 0.38302222, 0, 0.76604444, 0.6427876, -0.5, -0.55667037, 0.66341394, 12, 20, 20)
+projection = 1
+current = true
+size = 24.0
+far = 150.0

@@ -1,0 +1,28 @@
+[gd_scene format=3 uid="uid://dvxcunm2a7xa7"]
+
+[ext_resource type="PackedScene" uid="uid://d3qpy3fd4kd6w" path="res://assets/models/tank.glb" id="1"]
+[ext_resource type="Script" uid="uid://c7hsvirurg44y" path="res://scripts/enemy.gd" id="2"]
+[ext_resource type="PackedScene" uid="uid://duneq56seib70" path="res://assets/models/core.glb" id="3"]
+
+[sub_resource type="BoxShape3D" id="Shape"]
+size = Vector3(1.9, 1.7, 2.6)
+
+[node name="Tank" type="CharacterBody3D" unique_id=1577482570 groups=["targets"]]
+collision_layer = 4
+collision_mask = 5
+script = ExtResource("2")
+awareness_radius = 12.0
+recovery_seconds = 3.1
+kind = 2
+reward = 42
+armor = 2
+
+[node name="Collision" type="CollisionShape3D" parent="." unique_id=542245554]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.85, 0)
+shape = SubResource("Shape")
+
+[node name="Model" parent="." unique_id=1710749126 instance=ExtResource("1")]
+
+[node name="Core" parent="." unique_id=1028308084 instance=ExtResource("3")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1, 0)
+visible = false
