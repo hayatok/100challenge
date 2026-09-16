@@ -1,0 +1,9 @@
+{
+  "name": "manual-maker-description",
+  "version": "0.1.3",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "check:site": "node --test scripts/site.test.mjs"
+  }
+}

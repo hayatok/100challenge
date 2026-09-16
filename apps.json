@@ -128,5 +128,16 @@
     "category": "3D成長アクション",
     "thumbnail": "marunomi-cover.png",
     "accent": "#dc694b"
+  },
+  {
+    "id": "2026-09-15",
+    "date": "2026-09-15",
+    "sequence": 1,
+    "name": "説明書メーカー",
+    "description": "撮って、印をつけて、説明を書く。画像入りのHTML手順書を作るWindowsアプリ。",
+    "category": "Windowsアプリ / 手順書作成",
+    "thumbnail": "manual-maker.png",
+    "accent": "#167a84",
+    "type": "desktop"
   }
 ]

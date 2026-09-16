@@ -47,6 +47,10 @@ function renderApps(apps) {
     card.querySelector('h3 a').textContent = app.name
     card.querySelector('.app-description').textContent = app.description
     card.querySelector('.app-category').textContent = app.category
+    if (app.type === 'desktop') {
+      card.querySelector('.open-label').firstChild.textContent = '説明を見る '
+      card.querySelector('.app-image-link').setAttribute('aria-label', `${app.name}の説明を見る`)
+    }
     image.src = `${href}${app.thumbnail}`
     image.alt = `${app.name}のプレビュー`
     list.append(card)
