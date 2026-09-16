@@ -16,8 +16,8 @@ export async function buildSite(root, { prebuilt = false, args = [], reuseFrom }
 
   // Validate every input before removing the old site. Never silently omit an app.
   for (const app of apps) {
-    const source = selected.has(app.id) ? path.join(root, app.id, 'dist') : path.join(reuseFrom, app.id)
-    if (!selected.has(app.id) || prebuilt) {
+    const source = selected.has(app.id) ? path.join(root, app.id, app.type === 'desktop' ? 'site' : 'dist') : path.join(reuseFrom, app.id)
+    if (!selected.has(app.id) || prebuilt || app.type === 'desktop') {
       if (!(await stat(path.join(source, 'index.html'))).isFile()) throw new Error(`Missing index.html for ${app.id}`)
     }
   }
@@ -35,6 +35,11 @@ export async function buildSite(root, { prebuilt = false, args = [], reuseFrom }
       continue
     }
     const appRoot = path.join(root, app.id)
+    // Desktop apps publish an explicit static description, never their renderer or binaries.
+    if (app.type === 'desktop') {
+      await cp(path.join(appRoot, 'site'), path.join(output, app.id), { recursive: true })
+      continue
+    }
     const appPackage = path.join(appRoot, 'package.json')
 
     try {

@@ -175,3 +175,19 @@ test('forced full rebuild does not contact GitHub and clears the baseline', asyn
   await restorePages(f.root, { force: true, executeCommand() { assert.fail('Unexpected network call') } })
   assert.deepEqual((await planPages(f.root)).apps, [a.id, b.id])
 })
+
+test('desktop entries publish only their static description even when an editor dist exists', async t => {
+  const f = await fixture(t)
+  await f.save('apps.json', JSON.stringify([{ ...a, type: 'desktop' }, b]))
+  await f.save(`${a.id}/site/index.html`, 'Windows app description')
+  await f.save(`${a.id}/site/manual-maker.png`, 'public screenshot')
+  await f.save(`${a.id}/dist/index.html`, 'private desktop renderer')
+  await f.save(`${a.id}/release/app.exe`, 'desktop binary')
+  for (const prebuilt of [true, false]) {
+    await buildSite(f.root, { ...options(f, [a.id]), prebuilt })
+    assert.equal(await read(f, `.site/${a.id}/index.html`), 'Windows app description')
+    assert.equal(await read(f, `.site/${a.id}/manual-maker.png`), 'public screenshot')
+    await assert.rejects(stat(path.join(f.root, '.site', a.id, 'release/app.exe')))
+    assert.equal(await read(f, `.site/${b.id}/index.html`), 'B previous')
+  }
+})

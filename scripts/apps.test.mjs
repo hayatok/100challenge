@@ -16,7 +16,7 @@ test('rejects unsupported directory names', () => {
 
 test('loads the current app catalog', async () => {
   const apps = await loadApps(new URL('../apps.json', import.meta.url))
-  assert.equal(apps.length, 13)
+  assert.equal(apps.length, 14)
   assert.equal(apps[0].id, '2026-09-01')
   assert.equal(apps[1].id, '2026-09-02')
   assert.equal(apps[2].id, '2026-09-02-2')
@@ -30,4 +30,6 @@ test('loads the current app catalog', async () => {
   assert.equal(apps[10].id, '2026-09-08')
   assert.equal(apps[11].id, '2026-09-09')
   assert.equal(apps[12].id, '2026-09-12')
+  assert.equal(apps[13].id, '2026-09-15')
+  assert.equal(apps[13].type, 'desktop')
 })

@@ -22,6 +22,14 @@ const apps = selectApps(await loadApps(path.join(root, 'apps.json')), process.ar
 if (apps.length === 0) console.log('No changed apps to run.')
 
 for (const app of apps) {
+  if (app.type === 'desktop') {
+    // Static description pages require no install. Native builds are managed separately.
+    if (commandName === 'check') {
+      const result = spawnSync('npm', ['run', 'check:site'], { cwd: path.join(root, app.id), stdio: 'inherit', shell: process.platform === 'win32' })
+      if (result.status !== 0) throw new Error(`Description page check failed for ${app.id}`)
+    }
+    continue
+  }
   console.log(`\nRunning npm ${command.join(' ')} in ${app.id} — ${app.name}`)
   const result = spawnSync('npm', command, {
     cwd: path.join(root, app.id),

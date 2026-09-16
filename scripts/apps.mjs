@@ -29,6 +29,9 @@ export async function loadApps(fileUrl) {
     if (ids.has(app.id)) {
       throw new Error(`Duplicate app id: ${app.id}`)
     }
+    if (app.type !== undefined && !['web', 'desktop'].includes(app.type)) {
+      throw new Error(`Invalid app type for ${app.id}`)
+    }
     if (!/^\d{4}-\d{2}-\d{2}$/.test(app.date)) {
       throw new Error(`Invalid app date: ${app.date}`)
     }
