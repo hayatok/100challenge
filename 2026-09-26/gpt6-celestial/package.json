@@ -1,0 +1,10 @@
+{
+  "name": "gpt6-celestial-teaser",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node build.mjs",
+    "check": "node --check src/film.js && node --check src/score.js && node --check src/player.js && node --test tests/*.test.mjs && node build.mjs",
+    "dev": "python3 -m http.server 8266 --bind 127.0.0.1"
+  }
+}

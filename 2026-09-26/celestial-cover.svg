@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" role="img" aria-labelledby="title desc">
+<title id="title">CELESTIAL — Astra / Sol / Luna</title>
+<desc id="desc">星・太陽・月と大きなモデル名を三つの色面に配置した映像作品の表紙</desc>
+<path fill="#3d48ef" d="M0 0h400v675H0z"/><path fill="#ff7345" d="M400 0h400v675H400z"/><path fill="#f4f0e7" d="M800 0h400v675H800z"/>
+<g fill="none" stroke="#f4f0e7"><circle cx="200" cy="255" r="108" opacity=".4"/></g>
+<path fill="#f4f0e7" d="m200 147 13 95 95 13-95 13-13 95-13-95-95-13 95-13z"/>
+<g fill="none" stroke="#111115" stroke-width="5"><circle cx="600" cy="255" r="99" stroke-dasharray="3 16" stroke-width="24"/></g><circle cx="600" cy="255" r="70" fill="#111115"/>
+<defs><clipPath id="moon"><circle cx="1000" cy="255" r="99"/></clipPath></defs><circle cx="1000" cy="255" r="99" fill="#111115"/><circle cx="943" cy="246" r="98" fill="#f4f0e7" clip-path="url(#moon)"/>
+<g font-family="Arial,Helvetica,sans-serif" text-anchor="middle" font-weight="700" font-size="62"><text x="200" y="447" fill="#f4f0e7">ASTRA</text><text x="600" y="447" fill="#111115">SOL</text><text x="1000" y="447" fill="#111115">LUNA</text></g>
+<g font-family="Arial,Helvetica,sans-serif" font-size="17" letter-spacing="2"><text x="38" y="50" fill="#f4f0e7">CELESTIAL / GPT–6</text><text x="1162" y="50" fill="#111115" text-anchor="end">CUT 02 · 24 SEC</text></g>
+<g font-family="Arial,Helvetica,sans-serif" font-size="14" text-anchor="middle" letter-spacing="2"><text x="200" y="493" fill="#f4f0e7">THE STARS</text><text x="600" y="493" fill="#111115">THE SUN</text><text x="1000" y="493" fill="#111115">THE MOON</text></g>
+</svg>

@@ -1,0 +1,13 @@
+import { readFile, writeFile } from 'node:fs/promises';
+import { fileURLToPath } from 'node:url';
+const root = new URL('./', import.meta.url);
+const read = path => readFile(new URL(path, root), 'utf8');
+const font = (await readFile(new URL('assets/SpaceGrotesk.ttf', root))).toString('base64');
+let page = await read('src/page.html');
+page = page.replace('/* FONT */', `@font-face{font-family:Celestial;src:url(data:font/ttf;base64,${font}) format('truetype');font-weight:300 700;font-display:block;}`);
+page = page.replace('/* STYLE */', await read('src/style.css'));
+page = page.replace('/* SCRIPT */', (await Promise.all(['film', 'score', 'player'].map(name => read(`src/${name}.js`)))).join('\n'));
+const license = (await read('assets/OFL.txt')).replaceAll('--', '—');
+page = page.replace('<!-- LICENSE -->', `<!-- Space Grotesk font license\n${license}\n-->`);
+await writeFile(new URL('index.html', root), page);
+console.log(`Built ${fileURLToPath(new URL('index.html', root))} (${Math.round(Buffer.byteLength(page) / 1024)} KiB), all assets embedded.`);

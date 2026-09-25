@@ -149,5 +149,15 @@
     "category": "モーショングラフィックス",
     "thumbnail": "moving-cover-studio.png",
     "accent": "#C94332"
+  },
+  {
+    "id": "2026-09-26",
+    "date": "2026-09-26",
+    "sequence": 1,
+    "name": "CELESTIAL",
+    "description": "星・太陽・月と文字が変形する、GPT–6シリーズの24秒コンセプト映像。",
+    "category": "モーショングラフィック作品",
+    "thumbnail": "celestial-cover.svg",
+    "accent": "#3d48ef"
   }
 ]
