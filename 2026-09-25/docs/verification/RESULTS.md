@@ -2,6 +2,12 @@
 
 検証日: 2026-09-25（Asia/Tokyo）。作業ブランチ `codex/moving-cover-studio`、開始HEAD `9a3c4554d5cf3ec312f59e63e07f4804094c3d5d`。以下は公開前に行ったローカル検証の記録。
 
+## GitHub Pages公開後の確認
+
+- `release-2026-09-25` はmainの `dd0e8d8d15246e6681ba9f08e1f03735d8baa6f9` を指す。[main検証](https://github.com/hayatok/100challenge/actions/runs/36123671995)と[Pages公開](https://github.com/hayatok/100challenge/actions/runs/36124717862)が成功した。公開版は [動く表紙の試着室](https://hayatok.github.io/100challenge/2026-09-25/)。一覧、アプリ、サムネイルはいずれもHTTP 200で、一覧カードからアプリへ遷移できた。
+- 公開版をChromeで1440pxと375pxで操作し、[1440px画面](artifacts/production-ui-1440.png)と[375px画面](artifacts/production-ui-375.png)を目視した。4候補の生成と候補canvasの1秒後の変化、375pxの横はみ出しなし、両画面のJavaScriptエラーなしを確認した。
+- 公開版から実際に[PNG](artifacts/production-cover.png)、[編集用JSON](artifacts/production-cover.json)、[MP4](artifacts/production-cover.mp4)を保存した。Chromeの動画要素で再生時刻が1秒以上進み、ffprobeでH.264・720×720・30fps・180フレーム・6.000秒を確認。PNGは1080×1080。同じ作品のPNGとMP4先頭フレームを720pxへ揃えたRGB平均絶対誤差は2.89/255で、許容12/255未満。JSONを公開版へ読み込むとタイトル「公開テスト」と1候補が復元された。
+
 ## 公開前の最終確認
 
 - mainへの初回push後、GitHub ActionsのUbuntuで動画検証7件が `ffmpeg` / `ffprobe` 不在のため失敗した。実動画は生成されており、復号検査コマンドが起動できなかった。アプリの `setup` に不足時のffmpeg導入を追加し、クリーン環境でも実動画検証を実行する構成へ修正した。
