@@ -1,0 +1,11 @@
+{
+  "name": "celestial-motion-film",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node build.mjs",
+    "check": "npm --prefix gpt6-celestial run check && npm run build",
+    "dev": "npm --prefix gpt6-celestial run dev"
+  }
+}

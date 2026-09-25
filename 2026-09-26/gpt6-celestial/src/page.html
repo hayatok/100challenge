@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#090d12">
+  <title>GPT–6 · CELESTIAL — Astra / Sol / Luna</title>
+  <style>/* FONT */
+/* STYLE */</style>
+</head>
+<body>
+  <main>
+    <header class="masthead"><a href="#film" aria-label="映像へ">CELESTIAL<span> / GPT–6</span></a><span class="edition">CUT 02 · 024 SEC</span></header>
+    <section id="film" class="film" tabindex="0" aria-label="GPT–6シリーズの天体モチーフのティザー。スペースキーで再生・停止">
+      <canvas id="screen" width="1920" height="1080" role="img" aria-label="Astraは星座、Solは太陽、Lunaは月をモチーフに紹介する24秒のモーショングラフィック"></canvas>
+      <div id="loading" class="loading" role="status">PREPARING THE CONSTELLATION</div>
+      <button class="stage-play" id="stagePlay" hidden aria-label="ティザーを再生">PLAY FILM <span>↗</span></button>
+      <div class="fullscreen-controls"><button id="fsPlay">再生</button><button id="fsExit">全画面を終了</button></div>
+    </section>
+    <section class="transport" aria-label="再生コントロール">
+      <div class="seek-row"><label for="seek" class="sr-only">再生位置（秒）</label><input id="seek" type="range" min="0" max="24" step="0.01" value="0" aria-valuetext="0秒 / 24秒"><output id="time" for="seek">00:00 / 00:24</output></div>
+      <div class="controls"><div class="primary-controls"><button id="play" disabled>再生</button><button id="replay" disabled>最初から</button></div><div class="secondary-controls"><button id="sound" aria-pressed="false" disabled>音：OFF</button><button id="fullscreen" disabled>全画面</button></div></div>
+      <nav class="chapters" aria-label="場面を選択"><button data-time="1.8"><span>00</span> ORIGIN</button><button data-time="4.8"><span>01</span> ASTRA</button><button data-time="9"><span>02</span> SOL</button><button data-time="15.2"><span>03</span> LUNA</button><button data-time="23"><span>04</span> GPT–6</button></nav>
+    </section>
+    <footer><span>THREE BODIES. ONE UNIVERSE.</span><span>UNOFFICIAL CONCEPT FILM</span></footer>
+    <p id="status" class="status" role="status" aria-live="polite"></p>
+    <p class="sr-only">映像内容：三つの天体、一つの宇宙。星座を描くAstra、光を放つSol、満ち欠けするLuna。最後に三つの名前とGPT–6が並びます。スペースキーで再生・停止、左右キーで1秒移動できます。</p>
+    <noscript>このアニメーションの再生にはJavaScriptを有効にしてください。</noscript>
+  </main>
+  <script>/* SCRIPT */</script>
+  <!-- LICENSE -->
+</body>
+</html>
