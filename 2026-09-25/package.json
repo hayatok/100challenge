@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "setup": "playwright install --with-deps chromium",
+    "setup": "playwright install --with-deps chromium && node scripts/setup-video-tools.mjs",
     "typecheck": "tsc -b",
     "lint": "oxlint src tests",
     "test": "vitest run",

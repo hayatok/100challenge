@@ -66,7 +66,7 @@ TEST_PLANの必須項目を実施し、代表画像と実動画を目視。未�
 ```json
 {
   "dev": "vite",
-  "setup": "playwright install --with-deps chromium",
+  "setup": "playwright install --with-deps chromium && node scripts/setup-video-tools.mjs",
   "typecheck": "tsc -b",
   "lint": "oxlint src tests",
   "test": "vitest run",

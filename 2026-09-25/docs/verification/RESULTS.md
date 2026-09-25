@@ -4,6 +4,7 @@
 
 ## 公開前の最終確認
 
+- mainへの初回push後、GitHub ActionsのUbuntuで動画検証7件が `ffmpeg` / `ffprobe` 不在のため失敗した。実動画は生成されており、復号検査コマンドが起動できなかった。アプリの `setup` に不足時のffmpeg導入を追加し、クリーン環境でも実動画検証を実行する構成へ修正した。
 - 全ブラウザ試験の初回実行で、長い和欧混植タイトルと補助文を「迫る」に割り当てると、文字が重なるという組版エラーが1件発生した。タイトルの文字サイズを決める際に補助文の余白も判定するよう修正し、その入力を固定した回帰試験を追加した。
 - 修正後の `npm run check` はlint、Vitest 9件、型チェックとbuild、Playwright Chromium 35件が通過。36構図の実MP4の動き・継ぎ目、12表現の実MP4とPNGの同時刻比較を含む。ルートの `npm test` 38件、`npm run build:site -- --prebuilt`、`git diff --check` も通過。
 - 修正後の「迫る」の[375px候補](artifacts/release-monolith-candidate-375.png)、[1440px候補](artifacts/release-monolith-candidate-1440.png)、[375px画面](artifacts/release-monolith-page-375.png)を目視した。タイトルと補助文は重ならず、375pxと1440pxの画面に横はみ出しはない。

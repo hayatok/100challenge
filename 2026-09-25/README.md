@@ -22,6 +22,7 @@ npm run check
 ```
 
 `check` はlint、unit、型チェックとbuild、Playwrightのブラウザ統合テストを実行する。実動画はブラウザのWebCodecsで生成し、ffprobeを使って再検査する。実測、スクリーンショット、実動画の確認記録は[RESULTS](docs/verification/RESULTS.md)にまとめる。
+`setup` はChromiumと動画検証用のffmpeg・ffprobeを準備する。Ubuntuでは不足していればaptで導入し、macOSでは両ツールを事前にインストールする。アプリの閲覧や書き出しにffmpegは不要。
 
 ## 仕様
 
