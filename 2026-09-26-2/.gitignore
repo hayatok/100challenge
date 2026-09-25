@@ -1,0 +1,10 @@
+node_modules/
+dist/
+test-results/
+playwright-report/
+*.tsbuildinfo
+src/export/player-bundle.ts
+docs/verification/artifacts/*.mp4
+docs/verification/artifacts/*.webm
+docs/verification/artifacts/*.html
+docs/verification/artifacts/*.mp3

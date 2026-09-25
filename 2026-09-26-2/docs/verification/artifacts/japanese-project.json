@@ -1,0 +1,98 @@
+{
+  "schemaVersion": 1,
+  "rendererVersion": "1",
+  "id": "b5548628-8128-4909-9134-e01c5827bbb8",
+  "name": "ひらめきを",
+  "seed": 260926,
+  "aspect": "landscape",
+  "bpm": 120,
+  "palette": {
+    "paper": "#F4F0E7",
+    "ink": "#111115",
+    "accent": "#3D48EF",
+    "secondary": "#FF7345",
+    "muted": "#CBD0E1"
+  },
+  "fontSet": "space-noto-v1",
+  "audio": {
+    "mode": "synth-v1",
+    "gain": 0.6
+  },
+  "scenes": [
+    {
+      "id": "605442f8-1d73-4096-909a-14c6b05f496e",
+      "role": "hook",
+      "content": {
+        "headline": "ひらめきを",
+        "secondary": "",
+        "items": [
+          "ひらめきを"
+        ]
+      },
+      "durationTicks": 3840,
+      "motion": {
+        "intensity": 0.72,
+        "motif": "celestial",
+        "kind": "impact-type",
+        "direction": "up",
+        "anticipateNext": true
+      },
+      "typography": {
+        "scale": 1,
+        "align": "center"
+      },
+      "outgoing": {
+        "kind": "cut",
+        "durationTicks": 0
+      }
+    },
+    {
+      "id": "369fbdee-d9d2-40a8-b850-340bf7b1ff8d",
+      "role": "summary",
+      "content": {
+        "headline": "動かそう",
+        "secondary": "",
+        "items": []
+      },
+      "durationTicks": 3840,
+      "motion": {
+        "intensity": 0.72,
+        "motif": "celestial",
+        "kind": "particle-flight",
+        "depth": 0.75
+      },
+      "typography": {
+        "scale": 1,
+        "align": "center"
+      },
+      "outgoing": {
+        "kind": "cut",
+        "durationTicks": 0
+      }
+    },
+    {
+      "id": "de0088c0-b040-4a8b-82d9-ebfac3101040",
+      "role": "outro",
+      "content": {
+        "headline": "言葉が、映像になる",
+        "secondary": "",
+        "items": []
+      },
+      "durationTicks": 3840,
+      "motion": {
+        "intensity": 0.72,
+        "motif": "celestial",
+        "kind": "particle-lockup",
+        "focusGrapheme": 8
+      },
+      "typography": {
+        "scale": 1,
+        "align": "center"
+      },
+      "outgoing": {
+        "kind": "cut",
+        "durationTicks": 0
+      }
+    }
+  ]
+}
