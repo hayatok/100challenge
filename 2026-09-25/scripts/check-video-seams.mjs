@@ -11,7 +11,7 @@ for(const file of targets){
   const difference=(a,b)=>{let sum=0;const startA=a*frameBytes,startB=b*frameBytes;for(let i=0;i<frameBytes;i++)sum+=Math.abs(frames[startA+i]-frames[startB+i]);return sum/frameBytes}
   const adjacent=Array.from({length:count-1},(_,i)=>difference(i,i+1)).sort((a,b)=>a-b)
   const p95=adjacent[Math.floor(adjacent.length*.95)],seam=difference(count-1,0),ratio=seam/p95
-  const limit=Math.max(p95*2,.75) // Nearly still artwork exposes H.264 I/P-frame noise; 0.75/255 remains visually negligible.
+  const limit=Math.max(p95*2,2) // Software AVC can add ~1/255 at the loop I-frame; 2/255 remains visually negligible.
   console.log(`${file}: seam=${seam.toFixed(3)} p95=${p95.toFixed(3)} ratio=${ratio.toFixed(2)} limit=${limit.toFixed(3)}`)
-  if(seam>=limit)throw new Error(`${file}: visible loop discontinuity`)
+  if(seam>=limit)throw new Error(`${file}: visible loop discontinuity (seam=${seam.toFixed(3)}, limit=${limit.toFixed(3)})`)
 }

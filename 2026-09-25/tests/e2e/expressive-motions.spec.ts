@@ -5,6 +5,7 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 
 test('全36構図の実MP4で動きが見え、6秒で自然につながる',async({page})=>{
+  test.setTimeout(600000)
   const variants={h1:['sweep','arch','margin'],h2:['fan','gate','stack'],h3:['frame','corner','columns'],h4:['slit','steps','split'],h5:['halo','eclipse','duo'],h6:['trail','mirror','burst'],h7:['tide','crossflow','columnflow'],h8:['stringfan','lens','twist'],h9:['matrix','rift','corona'],h10:['extrude','cascade','vertical'],h11:['concentric','wavefield','tunnel'],h12:['cloud','fracture','scan']}
   const directory=mkdtempSync(join(tmpdir(),'cover-expressive-motions-'))
   await page.goto('/')

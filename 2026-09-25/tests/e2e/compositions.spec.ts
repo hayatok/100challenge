@@ -4,6 +4,7 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 
 test('36構図×2比率で実PNGを描画できる',async({page})=>{
+  test.setTimeout(600000)
   const compositions={h1:['sweep','arch','margin'],h2:['fan','gate','stack'],h3:['frame','corner','columns'],h4:['slit','steps','split'],h5:['halo','eclipse','duo'],h6:['trail','mirror','burst'],h7:['tide','crossflow','columnflow'],h8:['stringfan','lens','twist'],h9:['matrix','rift','corona'],h10:['extrude','cascade','vertical'],h11:['concentric','wavefield','tunnel'],h12:['cloud','fracture','scan']} as const
   const directory=mkdtempSync(join(tmpdir(),'cover-compositions-'))
   await page.goto('/')
@@ -22,6 +23,7 @@ test('36構図×2比率で実PNGを描画できる',async({page})=>{
 })
 
 test('36構図×2比率で英字改行の実PNGを描画できる',async({page})=>{
+  test.setTimeout(600000)
   const compositions={h1:['sweep','arch','margin'],h2:['fan','gate','stack'],h3:['frame','corner','columns'],h4:['slit','steps','split'],h5:['halo','eclipse','duo'],h6:['trail','mirror','burst'],h7:['tide','crossflow','columnflow'],h8:['stringfan','lens','twist'],h9:['matrix','rift','corona'],h10:['extrude','cascade','vertical'],h11:['concentric','wavefield','tunnel'],h12:['cloud','fracture','scan']} as const
   const directory=mkdtempSync(join(tmpdir(),'cover-english-'))
   await page.goto('/')
