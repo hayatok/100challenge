@@ -1,0 +1,41 @@
+import { expect, test } from '@playwright/test'
+
+test('画像付き選択で12表現を識別し、選んだ表現だけの4案を作る',async({page})=>{
+  await page.goto('/')
+  await expect(page.locator('.style-option')).toHaveCount(13)
+  await expect(page.locator('.style-option img')).toHaveCount(15)
+  for(const name of ['迫る','干渉','散る','流れる','張る','増殖','織る','めくる','組む','切る','巡る','響く']){
+    const option=page.locator('.style-option').filter({has:page.getByText(name,{exact:true})})
+    await option.press('Enter')
+    await expect(option).toHaveAttribute('aria-pressed','true')
+    await page.getByRole('textbox',{name:'タイトル'}).fill('街の\n輪郭')
+    await page.getByRole('button',{name:/4案を見る/}).click()
+    await expect(page.locator('.candidate')).toHaveCount(4)
+    await expect(page.locator('.candidate-select strong')).toHaveCount(4)
+    await expect(page.locator('.candidate-select strong').first()).toContainText(name)
+    for(const title of await page.locator('.candidate-select strong').allTextContents())expect(title).toContain(name)
+  }
+  const all=page.locator('.style-option').filter({has:page.getByText('おまかせ',{exact:true})})
+  await all.click()
+  await page.getByRole('button',{name:/4案を見る/}).click()
+  const names=await page.locator('.candidate-select strong').allTextContents()
+  expect(new Set(names.map(name=>name.replace(/^[A-D]\.\s*/,'').split('・')[0])).size).toBe(4)
+  expect(names.filter(name=>['迫る','干渉','散る'].some(style=>name.includes(style)))).toHaveLength(2)
+})
+
+test('新表現の選択・固定・履歴・保存が再読込後も残る',async({page})=>{
+  await page.goto('/')
+  await page.locator('.style-option').filter({has:page.getByText('張る',{exact:true})}).click()
+  await page.getByRole('button',{name:/4案を見る/}).click()
+  await expect(page.locator('.candidate')).toHaveCount(4)
+  await page.getByRole('checkbox',{name:'色'}).check()
+  await page.getByRole('button',{name:'この案から4案'}).click()
+  await expect(page.locator('.candidate')).toHaveCount(4)
+  await page.getByRole('button',{name:'ひとつ前の候補へ'}).click()
+  await expect(page.locator('.style-option').filter({has:page.getByText('張る',{exact:true})})).toHaveAttribute('aria-pressed','true')
+  await expect(page.getByRole('checkbox',{name:'色'})).toBeChecked()
+  await expect(page.locator('.candidate-select strong').first()).toContainText('張る')
+  await page.reload()
+  await expect(page.locator('.candidate-select strong').first()).toContainText('張る')
+  await expect(page.getByRole('checkbox',{name:'色'})).toBeChecked()
+})

@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "rendererVersion": "1",
+  "id": "4be83c81-1d2a-46ad-b6c6-272ffbeca8a8",
+  "brief": {
+    "title": "まだ、\n途中です。",
+    "subtitle": ""
+  },
+  "format": "portrait",
+  "family": "fold",
+  "color": {
+    "paletteId": "night",
+    "bg": "#171B27",
+    "ink": "#F7F0DF",
+    "surface": "#2D3548",
+    "accent": "#FF826C"
+  },
+  "type": {
+    "fontId": "noto-sans-jp-700",
+    "align": "center",
+    "size": "large",
+    "lineHeight": 1.15,
+    "letterSpacing": 0
+  },
+  "shape": {
+    "composition": "fan",
+    "density": "low",
+    "tilt": 0,
+    "seed": 205
+  },
+  "motion": {
+    "amount": "normal",
+    "cycles": 1,
+    "seed": 1859516344
+  }
+}

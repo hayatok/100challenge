@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "rendererVersion": "1",
+  "id": "20522013-27e3-46e8-8969-a1ee57153603",
+  "brief": {
+    "title": "まだ、\n響いてる。",
+    "subtitle": ""
+  },
+  "format": "square",
+  "family": "echo",
+  "color": {
+    "paletteId": "mono",
+    "bg": "#F5F5EF",
+    "ink": "#1D1D1B",
+    "surface": "#D8D8D0",
+    "accent": "#6B6B64"
+  },
+  "type": {
+    "fontId": "noto-sans-jp-700",
+    "align": "left",
+    "size": "large",
+    "lineHeight": 1.15,
+    "letterSpacing": 0
+  },
+  "shape": {
+    "composition": "trail",
+    "density": "medium",
+    "tilt": 0,
+    "seed": 609
+  },
+  "motion": {
+    "amount": "normal",
+    "cycles": 1,
+    "seed": 2904739278
+  }
+}

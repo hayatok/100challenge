@@ -139,5 +139,15 @@
     "thumbnail": "manual-maker.png",
     "accent": "#167a84",
     "type": "desktop"
+  },
+  {
+    "id": "2026-09-25",
+    "date": "2026-09-25",
+    "sequence": 1,
+    "name": "動く表紙の試着室",
+    "description": "言葉を入れて4案から選ぶ。好きな部分を残して試せる、動く表紙の制作室。",
+    "category": "モーショングラフィックス",
+    "thumbnail": "moving-cover-studio.png",
+    "accent": "#C94332"
   }
 ]

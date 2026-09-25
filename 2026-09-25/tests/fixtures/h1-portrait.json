@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "rendererVersion": "1",
+  "id": "4be83c81-1d2a-46ad-b6c6-272ffbeca8a8",
+  "brief": {
+    "title": "余白の、\nその先。",
+    "subtitle": ""
+  },
+  "format": "portrait",
+  "family": "weave",
+  "color": {
+    "paletteId": "paper",
+    "bg": "#F4F0E8",
+    "ink": "#20201E",
+    "surface": "#E0D8C7",
+    "accent": "#C94332"
+  },
+  "type": {
+    "fontId": "noto-serif-jp-600",
+    "align": "left",
+    "size": "large",
+    "lineHeight": 1.15,
+    "letterSpacing": 0
+  },
+  "shape": {
+    "composition": "sweep",
+    "density": "medium",
+    "tilt": 0,
+    "seed": 104
+  },
+  "motion": {
+    "amount": "bold",
+    "cycles": 1,
+    "seed": 1859516344
+  }
+}

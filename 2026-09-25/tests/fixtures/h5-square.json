@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "rendererVersion": "1",
+  "id": "3bae5fc0-e677-4efe-87fc-52d78dc2ced1",
+  "brief": {
+    "title": "星の\n途中。",
+    "subtitle": ""
+  },
+  "format": "square",
+  "family": "orbit",
+  "color": {
+    "paletteId": "lilac",
+    "bg": "#EEEAF3",
+    "ink": "#292039",
+    "surface": "#D1C6E1",
+    "accent": "#6C49C9"
+  },
+  "type": {
+    "fontId": "noto-serif-jp-600",
+    "align": "center",
+    "size": "large",
+    "lineHeight": 1.15,
+    "letterSpacing": 0
+  },
+  "shape": {
+    "composition": "eclipse",
+    "density": "medium",
+    "tilt": 0,
+    "seed": 508
+  },
+  "motion": {
+    "amount": "normal",
+    "cycles": 1,
+    "seed": 279171156
+  }
+}

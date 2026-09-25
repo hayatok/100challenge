@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "rendererVersion": "1",
+  "id": "4a6b9f3c-0ddb-4c7e-80a0-0fad7091157d",
+  "brief": {
+    "title": "輪郭は\nほどける。",
+    "subtitle": ""
+  },
+  "format": "portrait",
+  "family": "scatter",
+  "color": {
+    "paletteId": "ultramarine",
+    "bg": "#172BD4",
+    "ink": "#FBF4E6",
+    "surface": "#8A95EF",
+    "accent": "#F54C2F"
+  },
+  "type": {
+    "fontId": "noto-sans-jp-700",
+    "align": "left",
+    "size": "large",
+    "lineHeight": 1.15,
+    "letterSpacing": 0
+  },
+  "shape": {
+    "composition": "cloud",
+    "density": "high",
+    "tilt": 0,
+    "seed": 1215
+  },
+  "motion": {
+    "amount": "normal",
+    "cycles": 1,
+    "seed": 70032776
+  }
+}

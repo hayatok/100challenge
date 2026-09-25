@@ -1,0 +1,39 @@
+{
+  "name": "moving-cover-studio",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "setup": "playwright install --with-deps chromium",
+    "typecheck": "tsc -b",
+    "lint": "oxlint src tests",
+    "test": "vitest run",
+    "test:e2e": "playwright test --project=chromium",
+    "build": "tsc -b && vite build && node scripts/check-dist-assets.mjs",
+    "check": "npm run lint && npm run test && npm run build && npm run test:e2e",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@fontsource/noto-sans-jp": "5.3.0",
+    "@fontsource/noto-serif-jp": "5.3.0",
+    "idb": "8.0.3",
+    "lucide-react": "1.48.0",
+    "mediabunny": "1.59.1",
+    "p5": "2.3.3",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "zod": "4.6.5"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.63.0",
+    "@types/node": "24.13.3",
+    "@types/react": "19.2.18",
+    "@types/react-dom": "19.2.4",
+    "@vitejs/plugin-react": "6.1.0",
+    "oxlint": "1.79.0",
+    "typescript": "6.0.2",
+    "vite": "8.2.2",
+    "vitest": "4.1.11"
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "rendererVersion": "1",
+  "id": "0af3ff3a-4e7b-4045-b704-e3dc24c84855",
+  "brief": {
+    "title": "まだ、\nほどけない。",
+    "subtitle": ""
+  },
+  "format": "square",
+  "family": "lattice",
+  "color": {
+    "paletteId": "cinder",
+    "bg": "#111714",
+    "ink": "#F6F2E8",
+    "surface": "#627368",
+    "accent": "#F16544"
+  },
+  "type": {
+    "fontId": "noto-sans-jp-700",
+    "align": "center",
+    "size": "large",
+    "lineHeight": 1.15,
+    "letterSpacing": 0
+  },
+  "shape": {
+    "composition": "stringfan",
+    "density": "high",
+    "tilt": 0,
+    "seed": 811
+  },
+  "motion": {
+    "amount": "normal",
+    "cycles": 1,
+    "seed": 3870751548
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "rendererVersion": "1",
+  "id": "702fc6df-80a6-41e5-bb37-dca27ae7f488",
+  "brief": {
+    "title": "視線を\n揺らす。",
+    "subtitle": ""
+  },
+  "format": "square",
+  "family": "interference",
+  "color": {
+    "paletteId": "volt",
+    "bg": "#D8FA38",
+    "ink": "#111511",
+    "surface": "#83A129",
+    "accent": "#1745DB"
+  },
+  "type": {
+    "fontId": "noto-sans-jp-700",
+    "align": "center",
+    "size": "large",
+    "lineHeight": 1.15,
+    "letterSpacing": 0
+  },
+  "shape": {
+    "composition": "concentric",
+    "density": "high",
+    "tilt": 0,
+    "seed": 1114
+  },
+  "motion": {
+    "amount": "normal",
+    "cycles": 1,
+    "seed": 2065177807
+  }
+}
