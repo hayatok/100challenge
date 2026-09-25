@@ -52,3 +52,4 @@ This is an explicitly requested celestial motion-design film, not a daily utilit
 - Constraints: Preserve the approved film bytes and unrelated untracked work; reuse prior published apps; publish only the final HTML and cover SVG to the date route.
 - Done when: Catalog and film checks pass, PR is merged, release deploy succeeds, and the live Pages route plays correctly.
 - Added a dependency-free date-level build wrapper and a catalog entry. Local catalog tests (38), audio tests (2), syntax/build and explicit publication-file checks pass.
+- Publication complete: PR #117 merged; release-2026-09-26 deployed successfully; production HTML equality, catalog navigation, playback, desktop and mobile screenshots verified. App planning remains a subsequent task.

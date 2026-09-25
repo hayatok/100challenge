@@ -51,3 +51,16 @@ Used the Codex in-app Chromium browser at `http://127.0.0.1:8266/`.
 - Fullscreen entry, fullscreen play/pause and exit were exercised. Browser error/warning logs were empty during the checked run. Font status was loaded.
 - Browser was returned to normal viewport, paused poster, sound OFF. The preview remains at http://127.0.0.1:8266/.
 - Direct file launch and OS reduced-motion preference change remain unverified as noted above. No MP4/export or publication was requested or performed. No claim of model parity is inferred from these checks.
+
+## GitHub Pages publication — 2026-09-26 JST
+
+- Public film: https://hayatok.github.io/100challenge/2026-09-26/
+- Source PR: https://github.com/hayatok/100challenge/pull/117 (merged).
+- Release tag: `release-2026-09-26`, commit `2ad159578f9bec82029ec8db4a448c66bfab1923`.
+- Deployment: https://github.com/hayatok/100challenge/actions/runs/36163208996 — build and deploy succeeded. Existing September 25 work was rechecked by the unchanged incremental selection rules; other published apps were reused.
+- Local common suite: 38 passing tests. Selected film checks: syntax, 2 audio tests, standalone build and explicit two-file Pages package passed. PR Verify and merged-main Verify succeeded.
+- Live film and SVG returned HTTP 200. Live HTML matched the built artifact byte-for-byte (SHA-256 `99158106966fd2b35dc782a860dbd5ff8afd1093af50da48c78492809aa721a4`). Live catalog contains 16 works. Existing September 1 and September 25 routes returned HTTP 200.
+- In the real browser, the production catalog link opened CUT 02. Production playback advanced through the film; seeking from 23 seconds reached 24 seconds and changed the control to replay. Scene jump worked.
+- Production screenshots inspected at 1440×900 and 375×812. Phone document width equals 375px, embedded font loaded, browser error/warning logs empty. Earlier CUT 02 verification covers the intermediate viewport widths and fullscreen/audio controls.
+- Pages output is limited to `index.html` and `celestial-cover.svg`; sources, old cuts and notes are not copied into the public site.
+- Unrelated pre-existing untracked verification media and research files were preserved.
