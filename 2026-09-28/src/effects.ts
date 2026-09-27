@@ -12,24 +12,24 @@ export class CombatEffects {
   private ring = new T.RingGeometry(0.92, 1, 64);
   private materials = COLORS.map(color => new T.MeshBasicMaterial({color, toneMapped: false, blending: T.AdditiveBlending, transparent: true, depthWrite: false}));
   constructor(private scene: T.Scene) {}
-  burst(pos: T.Vector3, tier: number, kill: boolean, reduced: boolean) {
+  burst(pos: T.Vector3, tier: number, kill: boolean, reduced: boolean, strength = 1) {
     const level = Math.max(0, Math.min(4, tier));
-    const n = reduced ? (kill ? 12 : 3) : kill ? 36 + level * 17 : 7 + level * 3;
+    const n = Math.round((reduced ? (kill ? 10 : 2) : kill ? 28 + level * 11 : 5 + level * 2) * strength);
     for (let i = 0; i < n && this.bits.length < 300; i++) {
       const trail = i % 3 !== 0;
       const mesh = new T.Mesh(trail ? this.streak : this.shard, this.materials[i % 5 === 0 ? 0 : level]);
       mesh.position.copy(pos);
       const direction = new T.Vector3(Math.random() - .5, Math.random() - .3, Math.random() - .5).normalize();
       const speed = kill ? 2.5 + Math.random() * (4 + level) : 1.5 + Math.random() * 3;
-      const size = kill ? .035 + Math.random() * .07 : .018 + Math.random() * .035;
+      const size = (kill ? .025 + Math.random() * .05 : .012 + Math.random() * .025) * Math.min(1.3, strength);
       mesh.scale.set(size, size, size * (trail ? 6 : 1));
       mesh.quaternion.setFromUnitVectors(new T.Vector3(0, 0, 1), direction);
       this.scene.add(mesh);
       this.bits.push({ mesh, v: direction.multiplyScalar(speed), age: 0, life: kill ? .5 + Math.random() * .55 : .16 + Math.random() * .23, size, streak: trail });
     }
     if (kill) {
-      this.pulse(pos, level, reduced ? 1.2 : 2.1 + level * .45, .5, false);
-      if (level >= 2 && !reduced) this.pulse(new T.Vector3(pos.x, .06, pos.z), level, 3 + level, .7, true);
+      this.pulse(pos, level, reduced ? .8 : (1.3 + level * .3) * strength, .5, false);
+      if (level >= 2 && !reduced && strength >= 1) this.pulse(new T.Vector3(pos.x, .06, pos.z), level, 3 + level, .7, true);
     }
   }
   private pulse(pos: T.Vector3, tier: number, size: number, life: number, floor: boolean) {
@@ -48,7 +48,7 @@ export class CombatEffects {
     const mesh = new T.Mesh(this.streak, this.materials[Math.min(4, level)]);
     mesh.position.copy(from).lerp(to, .5);
     const distance = from.distanceTo(to);
-    mesh.scale.set(.012, .012, distance);
+    mesh.scale.set(.008, .008, distance);
     mesh.quaternion.setFromUnitVectors(new T.Vector3(0, 0, 1), to.clone().sub(from).normalize());
     this.scene.add(mesh);
     this.bits.push({mesh, v: new T.Vector3(), age: 0, life: .045, size: .012, streak: false});

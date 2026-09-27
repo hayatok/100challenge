@@ -9,11 +9,12 @@ export type GameEvent = {
   id: number; type: 'spawn'|'lock'|'hit'|'miss'|'kill'|'attack'|'travel'|'stage'|'bossPhase'|'pause'|'resume'|'defeat'|'clear';
   enemyId?: number; kind?: EnemyKind; stage?: number; phase?: number; key?: string; reason?: string;
   combo?: number; clean?: boolean; scoreDelta?: number; effectsLevel?: number;
+  hitZone?: 'head'|'chest'|'shoulder'; finisher?: boolean;
 };
 export type EnemyView = {
   id: number; kind: EnemyKind; lane: -1|0|1; progress: number; remaining: number;
   phrase: string; reading: string; typed: string; guide: string; keys: string[];
-  typingProgress: number; telegraph: boolean; locked: boolean;
+  typingProgress: number; telegraph: boolean; locked: boolean; threatRank: number;
 };
 export type GameResults = {
   score: number; maxCombo: number; accuracy: number; correct: number; mistakes: number;
@@ -39,6 +40,18 @@ const STAGE_WAVES: readonly (readonly (readonly EnemyKind[])[])[] = [
 ];
 const LEVELS = [3,6,10,15];
 const effectLevel = (combo: number): number => LEVELS.filter(level => combo >= level).length;
+// The listed order is the safe deadline order, not the only possible choice.
+// Different waves put the short runner, long worker, or regular office target first.
+const WAVE_ORDERS = [
+  [[0],[0],[0],[0],[0],[0]],
+  [[1,0],[0,1],[1,0],[1,0]],
+  [[1,0],[0,1],[2,0,1],[1,2,0]],
+] as const;
+const BOSS_TIMING = [
+  {read:1.4,work:1.7,recovery:0.75,telegraph:1.0},
+  {read:1.15,work:1.55,recovery:1.2,telegraph:1.1},
+  {read:1.0,work:1.5,recovery:1.2,telegraph:1.2},
+] as const;
 
 export class Game {
   readonly difficulty: Difficulty;
@@ -116,17 +129,18 @@ export class Game {
     const kinds = STAGE_WAVES[this.stageValue]?.[this.wave];
     if (!kinds) throw new Error('Invalid wave');
     const occupied = new Set<string>();
-    const sorted = [...kinds].sort((a,b) => ({runner:0,office:1,worker:2,boss:3})[a]-({runner:0,office:1,worker:2,boss:3})[b]);
+    const order = WAVE_ORDERS[this.stageValue][this.wave];
+    const laneOrder = (this.wave + this.stageValue) % 2 ? [1,-1,0] : [-1,1,0];
     let workload = 0;
-    this.enemiesValue = sorted.map((kind,index) => {
+    this.enemiesValue = order.map((sourceIndex,index) => {
+      const kind = kinds[sourceIndex];
       const phrase = this.pickPhrase(kind as Exclude<EnemyKind,'boss'>, occupied);
       const typing = new TypingSession(phrase.reading);
       const length = typing.standardLength;
       workload += length / CPS[this.difficulty];
-      // Cumulative work leaves at least one feasible order for every wave.
-      const base = kind === 'runner' ? 1.0 : kind === 'worker' ? 1.6 : 1.3;
-      const deadline = this.time + base + workload * 1.6 + index * 0.5;
-      const lane = (sorted.length === 1 ? 0 : [-1,1,0][index]) as -1|0|1;
+      // Read time and accumulated work guarantee this advertised order is feasible.
+      const deadline = this.time + 1.2 + workload * 1.6 + (index + 1) * 0.55;
+      const lane = (kinds.length === 1 ? 0 : laneOrder[sourceIndex]) as -1|0|1;
       const enemy: Enemy = {id:this.nextEnemyId++,kind,lane,phrase,typing,spawned:this.time,deadline,clean:true};
       this.emit('spawn',{enemyId:enemy.id,kind,stage:this.stageValue});
       return enemy;
@@ -136,7 +150,8 @@ export class Game {
   private spawnBoss(): void {
     const phrase = BOSS_PHRASES[this.phase * 4 + ((this.seed >>> 0) + this.bossFailures) % 4];
     const typing = new TypingSession(phrase.reading);
-    const deadline = this.time + 1.2 + typing.standardLength / CPS[this.difficulty] * 1.6;
+    const timing = BOSS_TIMING[this.phase];
+    const deadline = this.time + timing.read + typing.standardLength / CPS[this.difficulty] * timing.work;
     const enemy: Enemy = {id:this.nextEnemyId++,kind:'boss',lane:0,phrase,typing,spawned:this.time,deadline,clean:true};
     this.enemiesValue = [enemy];
     this.emit('spawn',{enemyId:enemy.id,kind:'boss',stage:3,phase:this.phase});
@@ -152,7 +167,7 @@ export class Game {
     this.locked = null;
     if (this.stageValue === 3) {
       if (this.phase >= 3) { this.finish('clear'); return; }
-      this.beginTravel(0.7);
+      this.beginTravel(BOSS_TIMING[this.phase-1].recovery);
       return;
     }
     this.wave++;
@@ -161,7 +176,7 @@ export class Game {
       this.wave = 0;
       this.checkpoint = {score:this.scoreValue,maxCombo:this.maxComboValue,correct:this.correct,mistakes:this.mistakes,battleTime:this.battleTime,elapsed:this.elapsed,used:new Set(this.used)};
       this.emit('stage',{stage:this.stageValue});
-      this.beginTravel(1);
+      this.beginTravel(this.stageValue === 3 ? 2.2 : 1);
     } else this.beginTravel(0.6);
   }
 
@@ -279,7 +294,9 @@ export class Game {
       this.emit('lock',{enemyId:enemy.id,kind:enemy.kind,combo:this.comboValue,effectsLevel:this.effectsLevelValue});
     }
     this.correct++;
-    this.emit('hit',{enemyId:enemy.id,kind:enemy.kind,key:normalized,combo:this.comboValue,effectsLevel:this.effectsLevelValue});
+    const finisher = enemy.typing.complete;
+    const hitZone = finisher ? 'head' : enemy.typing.typed.length % 3 === 0 ? 'shoulder' : 'chest';
+    this.emit('hit',{enemyId:enemy.id,kind:enemy.kind,key:normalized,combo:this.comboValue,effectsLevel:this.effectsLevelValue,hitZone,finisher});
     if (enemy.typing.complete) {
       this.enemiesValue = this.enemiesValue.filter(item => item.id !== enemy.id);
       this.locked = null;
@@ -296,7 +313,7 @@ export class Game {
       const scoreDelta = 100 + (enemy.clean ? 50+Math.min(this.comboValue,15)*10 : 0);
       this.scoreValue += scoreDelta;
       this.emit('kill',{enemyId:enemy.id,kind:enemy.kind,phase:enemy.kind === 'boss' ? this.phase : undefined,
-        combo:this.comboValue,clean:enemy.clean,scoreDelta,effectsLevel:this.effectsLevelValue});
+        combo:this.comboValue,clean:enemy.clean,scoreDelta,effectsLevel:this.effectsLevelValue,hitZone:'head',finisher:true});
       if (enemy.kind === 'boss') {
         this.phase++;
         this.bossFailures = 0;
@@ -353,7 +370,7 @@ export class Game {
       visualCombo:this.visualComboValue,lockedId:this.locked,practice:this.practice,
       difficulty:this.difficulty,countdown:this.countdown,results:this.finalResults,
       attempts:this.attemptsValue,
-      enemies:this.enemiesValue.map(enemy => {
+      enemies:this.enemiesValue.map((enemy,index) => {
         const duration = enemy.deadline-enemy.spawned;
         const progress = this.practice
           ? Math.min(0.9,(this.time-enemy.spawned)/duration)
@@ -363,8 +380,8 @@ export class Game {
           id:enemy.id,kind:enemy.kind,lane:enemy.lane,progress,remaining,
           phrase:enemy.phrase.text,reading:enemy.phrase.reading,
           typed:enemy.typing.typed,guide:enemy.typing.guide,keys:enemy.typing.keys,
-          typingProgress:enemy.typing.progress,telegraph:!this.practice && remaining <= 0.8,
-          locked:this.locked === enemy.id,
+          typingProgress:enemy.typing.progress,telegraph:!this.practice && remaining <= (enemy.kind === 'boss' ? BOSS_TIMING[this.phase].telegraph : 0.8),
+          locked:this.locked === enemy.id,threatRank:index+1,
         };
       }),
     };

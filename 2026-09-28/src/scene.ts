@@ -4,6 +4,7 @@ import { RenderPass } from "three/addons/postprocessing/RenderPass.js";
 import { UnrealBloomPass } from "three/addons/postprocessing/UnrealBloomPass.js";
 import { OutputPass } from "three/addons/postprocessing/OutputPass.js";
 import { loadCharacterLibrary, type CharacterLibrary } from "./characters.ts";
+import { createCharacterMotion, type CharacterMotion } from "./character-motion.ts";
 import { CombatEffects } from "./effects.ts";
 import { createWeapon } from "./weapon.ts";
 import { createEnvironment } from "./environment.ts";
@@ -11,6 +12,13 @@ import type { EnemyView, GameEvent, GameState } from "./game.ts";
 
 type Actor = {
   root: T.Group;
+  motion: CharacterMotion;
+  kind: EnemyView["kind"];
+  hitZone: "head" | "chest" | "shoulder";
+  phase: number;
+  recovering: boolean;
+  walk: T.AnimationClip;
+  shadow: T.Mesh;
   model: T.Object3D;
   velocity: T.Vector3;
   hitstop: number;
@@ -40,6 +48,9 @@ export class World {
   private recoil = 0;
   private impact = 0;
   private level = 0;
+  private celebration = 0;
+  private previousTier = 0;
+  private bossLight = new T.PointLight(0xe84427, 0, 12, 2);
   private effects = new CombatEffects(this.scene);
   private cameraZ = 5;
   private elapsed = 0;
@@ -75,7 +86,7 @@ export class World {
     const key = new T.DirectionalLight(0xbedaff, 3.2);
     key.position.set(-4, 8, 5);
     this.scene.add(key);
-    this.scene.add(this.camera);
+    this.scene.add(this.camera, this.bossLight);
     this.camera.position.set(0, 1.65, 5);
     const fill = new T.PointLight(0xffcc9b, 28, 20, 2);
     fill.position.set(0, 2, -1);
@@ -141,7 +152,8 @@ export class World {
   }
   reset(stage = 0) {
     for (const a of this.actors.values()) {
-      this.scene.remove(a.root);
+      this.scene.remove(a.root, a.shadow);
+      a.motion.dispose();
       a.mixer.stopAllAction();
       a.root.traverse((o) => {
         if (o instanceof T.SkinnedMesh) o.skeleton.dispose();
@@ -152,6 +164,8 @@ export class World {
     this.particles = [];
     this.recoil = 0;
     this.impact = 0;
+    this.celebration = 0;
+    this.previousTier = 0;
     this.effects.reset();
     this.cameraZ = 5 - stage * 15;
   }
@@ -164,6 +178,17 @@ export class World {
     this.composer.setSize(w, h);
   }
   private actor(e: EnemyView) {
+    if (e.kind === "boss") {
+      const previous = [...this.actors].find(([,actor]) => actor.boss && actor.recovering && !actor.dead);
+      if (previous) {
+        const [id, actor] = previous;
+        this.actors.delete(id);
+        actor.recovering = false; actor.attacking = false; actor.progress = e.progress;
+        actor.mixer.stopAllAction(); actor.mixer.clipAction(actor.walk).play();
+        this.actors.set(e.id, actor);
+        return actor;
+      }
+    }
     const root = new T.Group();
     const character = this.characters.create(e.kind, e.id);
     const model = character.model;
@@ -174,7 +199,7 @@ export class World {
     if (e.kind === "boss") shadow.scale.setScalar(1.6);
     shadow.rotation.x = -Math.PI / 2;
     shadow.position.y = 0.015;
-    root.add(shadow);
+    this.scene.add(shadow);
     const mixer = new T.AnimationMixer(model);
     const clip = character.walk ?? character.clips[0];
     if (clip) {
@@ -184,6 +209,13 @@ export class World {
     const a: Actor = {
       root,
       model,
+      motion: createCharacterMotion(character, e.kind),
+      kind: e.kind,
+      hitZone: "chest",
+      phase: 0,
+      recovering: false,
+      walk: character.walk,
+      shadow,
       velocity: new T.Vector3(),
       hitstop: 0,
       twist: (e.id % 2 ? 1 : -1),
@@ -219,17 +251,30 @@ export class World {
       });
       if (a) {
         a.hit = 1;
+        a.hitZone = e.hitZone ?? "chest";
         if (a.hitstop <= 0) a.hitstop = .035;
-        const hit = a.root.position.clone().add(new T.Vector3((Math.random() - .5) * .25, a.boss ? 2 : 1.35, .1));
-        this.effects.burst(hit, this.level, false, !this.motion);
+        const hit = a.motion.target(a.hitZone) ?? a.root.position.clone().add(new T.Vector3(a.hitZone === "shoulder" ? .23 : 0, a.height * (a.hitZone === "head" ? .9 : .68), .1));
+        // The body reads through sustained fire; the last key has its own larger flash.
+        this.effects.burst(hit, this.level, false, !this.motion, e.finisher ? 1.5 : .65);
+        if (e.finisher) this.impact = Math.max(this.impact, .5);
         this.effects.tracer(this.muzzle.getWorldPosition(new T.Vector3()), hit, this.level);
       }
     }
     if (e.type === "kill" && a) {
+      const milestone = (e.effectsLevel ?? 0) > this.previousTier || ((e.combo ?? 0) >= 20 && (e.combo ?? 0) % 5 === 0);
+      if (milestone) this.celebration = 1;
+      this.previousTier = e.effectsLevel ?? this.level;
+      if (a.boss && (e.phase ?? 0) < 2) {
+        a.recovering = true; a.hit = 1; a.phase = (e.phase ?? 0) + 1;
+        this.effects.burst(a.root.position.clone().add(new T.Vector3(0, 1.9, 0)), this.level, true, !this.motion, 1);
+        this.impact = .6;
+        return;
+      }
       a.dead = 0.001;
       a.hitstop = .04;
-      this.impact = .65 + this.level * .15;
-      a.velocity.set(a.twist * (.35 + this.level * .22), 1.6 + this.level * .35, -2.8 - this.level * .8);
+      this.impact = a.boss ? 1.2 : .5 + this.level * .07;
+      const weight = a.kind === "runner" ? 1.3 : a.kind === "worker" ? .48 : a.boss ? .12 : .9;
+      a.velocity.set(a.twist * .8 * weight, (1.2 + this.level * .2) * weight, -(2.5 + this.level * .35) * weight);
       const death = a.clips.find((c) => /death|dead|dying/i.test(c.name));
       if (death) {
         a.mixer.stopAllAction();
@@ -238,18 +283,24 @@ export class World {
         action.clampWhenFinished = true;
         action.play();
       }
-      this.effects.burst(a.root.position.clone().add(new T.Vector3(0, a.boss ? 1.9 : 1.3, 0)), this.level, true, !this.motion);
+      this.effects.burst(a.root.position.clone().add(new T.Vector3(0, a.boss ? 1.9 : 1.3, 0)), this.level, true, !this.motion, a.boss ? 1.8 : milestone ? 1.35 : .85);
     }
-    if (e.type === "attack" && a) a.dead = 2.2;
+    if (e.type === "attack" && a) {
+      if (a.boss) { a.recovering = true; a.attacking = false; }
+      else a.dead = 2.2;
+    }
+    if (e.type === "bossPhase" && e.phase === 3) this.celebration = 1.6;
   }
   update(dt: number, state: GameState | null) {
     this.gun.visible = !!state;
-    this.elapsed += dt;
     const running =
       !state ||
       !["paused", "countdown"].includes(state.mode);
     const delta = running ? dt : 0;
+    this.elapsed += delta;
+    this.celebration = Math.max(0, this.celebration - delta * .65);
     this.level = state?.effectsLevel ?? 0;
+    this.previousTier = Math.min(this.previousTier, this.level);
     const stage = state?.stage ?? 0;
     const desired = 5 - stage * 15;
     this.cameraZ = T.MathUtils.damp(this.cameraZ, desired, 2, delta);
@@ -267,28 +318,31 @@ export class World {
           a.mixer.clipAction(clip).setLoop(T.LoopOnce, 1).play();
         }
       }
+      a.phase = e.kind === "boss" ? (state?.bossPhase ?? 0) : 0;
       a.progress = e.progress;
       a.lane = e.lane;
     }
     for (const [id, a] of this.actors) {
-      if (!active.has(id) && !a.dead) a.dead = 0.001;
+      if (!active.has(id) && !a.dead && !a.recovering) a.dead = 0.001;
       a.hitstop = Math.max(0, a.hitstop - delta);
       const actorDelta = a.hitstop > 0 ? 0 : delta;
-      a.mixer.update(actorDelta);
       const threat = !a.dead && a.attacking ? Math.max(0, (a.progress - .75) / .25) : 0;
-      a.model.position.z = threat * .35 - a.hit * (this.motion ? .24 : .08);
-      a.model.rotation.x = threat * .12 - a.hit * (this.motion ? .16 : .04);
-      a.model.rotation.z = a.twist * a.hit * (this.motion ? .1 : .02);
+      a.motion.step(a.mixer, actorDelta, {hit: a.hit, hitZone: a.hitZone, threat, dead: a.dead, reducedMotion: !this.motion, phase: a.phase});
+      const weight = a.kind === "worker" || a.boss ? .4 : 1;
+      a.model.position.z = threat * .22 - a.hit * (this.motion ? .12 : .04) * weight;
+      a.model.rotation.x = a.recovering ? -.12 : 0;
+      a.model.rotation.z = 0;
       a.hit = Math.max(0, a.hit - delta * 8);
       if (a.dead) {
         a.dead += actorDelta;
         a.velocity.y -= actorDelta * 6;
         a.root.position.addScaledVector(a.velocity, actorDelta);
         a.root.position.y = Math.max(-.2, a.root.position.y);
-        a.root.rotation.z += actorDelta * a.twist * (.3 + this.level * .1);
+        a.root.rotation.z += actorDelta * a.twist * (a.boss ? .015 : a.kind === "worker" ? .1 : .35);
         if (a.dead > 1.7) a.root.scale.setScalar(Math.max(.01, (2.4 - a.dead) / .7));
         if (a.dead > 2.4) {
-          this.scene.remove(a.root);
+          this.scene.remove(a.root, a.shadow);
+          a.motion.dispose();
           this.actors.delete(id);
           a.root.traverse((o) => {
             if (o instanceof T.SkinnedMesh) o.skeleton.dispose();
@@ -296,16 +350,18 @@ export class World {
           continue;
         }
         if (!a.clips.some((c) => /death|dead|dying/i.test(c.name)))
-          a.root.rotation.x = -Math.min(1.5, a.dead * 2);
+          a.root.rotation.x = -Math.min(a.boss ? .65 : 1.45, a.dead * (a.boss ? .35 : 1.5));
       } else {
-        a.root.position.set(
-          a.lane * 1.75,
-          0,
-          this.cameraZ - (7.8 - a.progress * 5.2),
-        );
+        const z = this.cameraZ - (7.8 - (a.recovering ? .1 : a.progress) * 5.2);
+        a.root.position.set(a.lane * 1.75, 0, a.boss ? T.MathUtils.damp(a.root.position.z || z, z, 5, delta) : z);
         a.root.rotation.z = Math.sin(this.elapsed * 31) * a.hit * 0.055;
       }
+      a.shadow.position.set(a.root.position.x, .015, a.root.position.z);
+      a.shadow.visible = !a.dead || a.dead < 1.7;
     }
+    const boss = [...this.actors.values()].find(a => a.boss && !a.dead);
+    this.bossLight.intensity = boss ? (this.motion ? 20 + boss.phase * 9 : 10) : 0;
+    if (boss) this.bossLight.position.copy(boss.root.position).add(new T.Vector3(-1.2, 1.8, .9));
     this.recoil = Math.max(0, this.recoil - delta * 13);
     this.gun.rotation.x = this.recoil * (this.motion ? .24 : .05);
     this.gun.rotation.z = -this.recoil * (this.motion ? .06 : .01);
@@ -321,8 +377,8 @@ export class World {
       -0.19 + (this.motion ? Math.sin(this.elapsed * 1.4) * 0.003 : 0);
     this.muzzle.visible = this.recoil > 0.45;
     this.muzzle.rotation.z = Math.random() * Math.PI;
-    this.muzzle.scale.setScalar(this.motion ? 1 + this.level * .16 : .45);
-    this.flash.intensity = this.recoil > 0.45 ? (this.motion ? 22 + this.level * 5 : 5) : 0;
+    this.muzzle.scale.setScalar(this.motion ? .85 + this.level * .055 : .4);
+    this.flash.intensity = this.recoil > 0.45 ? (this.motion ? 15 + this.level * 2 : 4) : 0;
     this.impact = Math.max(0, this.impact - delta * 5);
     if (this.motion) {
       this.camera.position.x = Math.sin(this.elapsed * 87) * this.impact * .028;
@@ -345,7 +401,7 @@ export class World {
       }
     }
     const level = state?.effectsLevel ?? 0;
-    this.bloom.strength = this.motion ? 0.3 + level * 0.13 : 0.2;
+    this.bloom.strength = this.motion ? .25 + level * .055 + this.celebration * .22 : .18;
     this.environment?.update(this.elapsed, level);
     this.composer.render();
   }

@@ -3,9 +3,10 @@ import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { clone } from "three/addons/utils/SkeletonUtils.js";
 import type { EnemyKind } from "./game.ts";
 
-type CharacterAsset = "city" | "thin" | "granny" | "creature";
+export type CharacterAsset = "city" | "thin" | "granny" | "creature";
 
 export type CharacterInstance = {
+  asset: CharacterAsset;
   model: T.Group;
   clips: T.AnimationClip[];
   height: number;
@@ -16,6 +17,19 @@ export type CharacterInstance = {
   hit?: T.AnimationClip;
   death?: T.AnimationClip;
 };
+
+/** A small marker follows the boss's chest without masking the original sculpt. */
+function dressBoss(model: T.Group, rig: T.Object3D) {
+  const badge = new T.Mesh(
+    new T.SphereGeometry(0.03, 8, 6),
+    new T.MeshStandardMaterial({ color: 0x827669, metalness: 0.2, roughness: 0.85 }),
+  );
+  badge.position.set(0.1, 1.38, 0.16);
+  badge.scale.z = 0.35;
+  model.add(badge);
+  model.updateMatrixWorld(true);
+  rig.getObjectByName("joint3")?.attach(badge);
+}
 
 export type CharacterLibrary = {
   create(kind: EnemyKind, id: number): CharacterInstance;
@@ -64,17 +78,22 @@ export async function loadCharacterLibrary(): Promise<CharacterLibrary> {
     loaded[asset] = await loader.loadAsync(
       `${import.meta.env.BASE_URL}assets/characters/${assets[asset].file}`,
     );
+    const adjusted = new Set<T.Material>();
     loaded[asset].scene.traverse((object) => {
       if (!(object instanceof T.Mesh)) return;
       object.castShadow = true;
       // Skinning can extend outside the rest-pose bounds used for culling.
       object.frustumCulled = false;
-      if (asset !== "city") return;
       for (const material of Array.isArray(object.material) ? object.material : [object.material]) {
+        if (adjusted.has(material)) continue;
+        adjusted.add(material);
         if (!(material instanceof T.MeshStandardMaterial)) continue;
         material.metalness = 0;
-        material.roughness = 0.8;
-        if (/Body/i.test(material.name)) {
+        material.roughness = 0.9;
+        // Keep the authored albedo and detail, but bring four unrelated source
+        // assets into one restrained exposure range under the arcade lights.
+        material.color.multiplyScalar({ city: 0.88, thin: 0.78, granny: 0.72, creature: 0.76 }[asset]);
+        if (asset === "city" && /Body/i.test(material.name)) {
           material.onBeforeCompile = (shader) => {
             shader.fragmentShader = shader.fragmentShader.replace(
               "#include <color_fragment>",
@@ -96,10 +115,12 @@ export async function loadCharacterLibrary(): Promise<CharacterLibrary> {
       const character = clone(source.scene);
       character.position.y = -spec.floor;
       model.add(character);
+      if (kind === "boss") dressBoss(model, character);
       const clip = (name?: string) => source.animations.find((item) => item.name === name);
       const walk = clip(spec.walk);
       if (!walk) throw new Error(`Missing walk animation in ${spec.file}`);
       return {
+        asset,
         model,
         clips: source.animations,
         height: spec.height,

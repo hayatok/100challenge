@@ -816,3 +816,22 @@ body[data-motion="false"] .combo { filter: none; }
 .modal-card a { color: var(--teal); text-underline-offset: 3px; }
 /* World flashes stay behind every game label and the fixed typing surface. */
 #hud { position: relative; z-index: 4; }
+
+/* v0.3: sustained heat leaves contrast for each milestone. */
+body[data-level="3"] .combo, body[data-level="4"] .combo { filter: drop-shadow(0 0 6px color-mix(in srgb, var(--combat) 45%, transparent)); }
+#boss-hud { position: fixed; top: 96px; left: 50%; transform: translateX(-50%); width: min(360px, 35vw); text-align: center; color: #ffd1b0; text-shadow: 0 2px 8px #000; }
+#boss-hud small { display: block; font-size: 9px; letter-spacing: 3px; color: #d9bca8; }
+#boss-hud b { display: block; margin: 5px 0 8px; font-size: 22px; }
+#boss-phase { font-size: 10px; letter-spacing: 2px; margin-left: 10px; }
+#boss-pips { display: flex; gap: 5px; }
+#boss-pips i { height: 4px; flex: 1; background: #bf635c70; }
+#boss-pips i.active { background: #ffac68; box-shadow: 0 0 10px #f4783870; }
+#boss-pips i.done { background: #ffffff20; }
+.result-hero { display: flex; align-items: center; gap: 24px; margin: 18px 0; }
+.result-grade { color: var(--teal); font: italic 86px/.9 Impact, sans-serif; border-right: 1px solid #ffffff25; padding-right: 24px; }
+.result-grade small { display: block; margin-bottom: 7px; font: 9px sans-serif; letter-spacing: 3px; }
+.result-hero .result-score { margin: 0; font-size: 44px; }
+.result-record { display: flex; justify-content: space-between; gap: 20px; border-block: 1px solid #ffffff20; padding: 12px 0; margin: 16px 0; }
+.result-record span { font-size: 9px; letter-spacing: 1px; color: #a6b6b4; }
+.result-record b { display: block; margin-top: 5px; font-size: 19px; color: var(--teal); }
+@media (max-width: 800px) { #boss-hud { top: 145px; width: 45vw; } #boss-hud b { font-size: 17px; } #boss-phase { font-size: 8px; } .result-hero .result-score { font-size: 32px; } }

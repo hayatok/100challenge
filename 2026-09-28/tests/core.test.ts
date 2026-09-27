@@ -331,3 +331,73 @@ test('pause, countdown, and camera travel do not advance visual decay', () => {
   game.update(0.02);
   assert.equal(game.state.effectsLevel,0);
 });
+
+test('later waves change the first threat and report a deadline order', () => {
+  const game = new Game({seed:42});
+  const firstKinds = new Set<string>();
+  const layouts = new Set<string>();
+  let guard = 0;
+  while (game.state.mode !== 'clear' && guard++ < 10000) {
+    const state = game.state;
+    if (state.mode === 'travel') { game.update(2.2); continue; }
+    if (state.enemies.length > 1 && state.lockedId === null) {
+      firstKinds.add(state.enemies[0].kind);
+      layouts.add(state.enemies.map(e => `${e.kind}:${e.lane}`).join(','));
+      assert.deepEqual(state.enemies.map(e => e.threatRank),state.enemies.map((_,i) => i+1));
+      const remaining = state.enemies.map(e => e.remaining);
+      assert.deepEqual(remaining,[...remaining].sort((a,b) => a-b));
+    }
+    assert.equal(game.type(state.enemies[0].guide[0]),true);
+  }
+  assert.equal(game.state.mode,'clear');
+  assert.ok(firstKinds.has('runner'));
+  assert.ok(firstKinds.has('worker'));
+  assert.ok(firstKinds.has('office'));
+  assert.ok(layouts.size >= 4);
+});
+
+test('hit events use deterministic zones and the final shot is a head finisher', () => {
+  const game = new Game({seed:9});
+  game.drainEvents();
+  const first = game.state.enemies[0];
+  while (game.state.enemies.some(e => e.id === first.id))
+    assert.equal(game.type(game.state.enemies[0].guide[0]),true);
+  const hits = game.drainEvents().filter(e => e.type === 'hit');
+  assert.ok(hits.length > 3);
+  assert.equal(hits[0].hitZone,'chest');
+  assert.equal(hits[2].hitZone,'shoulder');
+  assert.equal(hits.at(-1)?.hitZone,'head');
+  assert.equal(hits.at(-1)?.finisher,true);
+  assert.equal(hits.filter(e => e.finisher).length,1);
+});
+
+test('boss introduction and phase recoveries freeze combat, with increasing warning windows', () => {
+  const game = new Game({seed:5});
+  let guard = 0;
+  while (game.state.stage < 3 && guard++ < 10000) {
+    if (game.state.mode === 'travel') { game.update(2.2); continue; }
+    assert.equal(game.type(game.state.enemies[0].guide[0]),true);
+  }
+  assert.equal(game.state.mode,'travel');
+  game.update(2.19);
+  assert.equal(game.state.mode,'travel');
+  game.update(0.01);
+  assert.equal(game.state.mode,'playing');
+  const initial = game.state.enemies[0];
+  assert.equal(initial.kind,'boss');
+  for (let phase=0;phase<3;phase++) {
+    assert.equal(game.state.bossPhase,phase);
+    const remaining = game.state.enemies[0].remaining;
+    game.update(remaining-(phase === 0 ? 1.0 : phase === 1 ? 1.1 : 1.2)+0.001);
+    assert.equal(game.state.enemies[0].telegraph,true);
+    while (game.state.mode === 'playing')
+      assert.equal(game.type(game.state.enemies[0].guide[0]),true);
+    if (phase < 2) {
+      assert.equal(game.state.mode,'travel');
+      game.update(phase === 0 ? 0.75 : 1.2);
+      assert.equal(game.state.mode,'playing');
+    }
+  }
+  assert.equal(game.state.mode,'clear');
+  assert.equal(game.state.results?.attempts,1);
+});
