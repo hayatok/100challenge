@@ -1,5 +1,5 @@
 import * as THREE from 'three'
-import type { BallSnapshot } from '../physics/PhysicsWorld'
+import type { ObjectKind, ObjectSnapshot } from '../physics/PhysicsWorld'
 
 export class SceneView {
   readonly canvas: HTMLCanvasElement
@@ -9,7 +9,16 @@ export class SceneView {
   private raycaster = new THREE.Raycaster()
   private plane = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0)
   private hand: THREE.Group
-  private balls: THREE.Mesh[] = []
+  private objects = new Map<number, THREE.Mesh>()
+  private sphereGeometry = new THREE.SphereGeometry(1, 24, 16)
+  private boxGeometry = new THREE.BoxGeometry(1, 1, 1)
+  private ballMaterials = ['#ff8b69', '#ffc774', '#86c8ff', '#e8a0ff', '#8ff0d5'].map(color =>
+    new THREE.MeshStandardMaterial({ color, emissive: color, emissiveIntensity: 0.25, metalness: 0.2, roughness: 0.26 }))
+  private materials: Record<ObjectKind, THREE.MeshStandardMaterial> = {
+    ball: new THREE.MeshStandardMaterial({ color: '#86c8ff', emissive: '#56adff', emissiveIntensity: 0.25, metalness: 0.2, roughness: 0.26 }),
+    box: new THREE.MeshStandardMaterial({ color: '#ffbd83', emissive: '#e9864d', emissiveIntensity: 0.2, metalness: 0.18, roughness: 0.4 }),
+    domino: new THREE.MeshStandardMaterial({ color: '#c7abff', emissive: '#915cff', emissiveIntensity: 0.27, metalness: 0.24, roughness: 0.3 }),
+  }
   private resizeObserver: ResizeObserver
 
   constructor(host: HTMLElement) {
@@ -94,22 +103,27 @@ export class SceneView {
     return result.set(THREE.MathUtils.clamp(result.x, -5.2, 5.2), THREE.MathUtils.clamp(result.y, 0.27, 4.3), 0)
   }
 
-  update(balls: BallSnapshot[], handPosition: THREE.Vector3 | null, now: number): void {
-    while (this.balls.length < balls.length) {
-      const index = this.balls.length
-      const colors = ['#ff8b69', '#ffc774', '#86c8ff', '#e8a0ff', '#8ff0d5']
-      const mesh = new THREE.Mesh(
-        new THREE.SphereGeometry(1, 24, 16),
-        new THREE.MeshStandardMaterial({ color: colors[index % colors.length], emissive: colors[index % colors.length], emissiveIntensity: 0.25, metalness: 0.2, roughness: 0.26 }),
-      )
-      this.scene.add(mesh)
-      this.balls.push(mesh)
+  update(objects: ObjectSnapshot[], handPosition: THREE.Vector3 | null, now: number): void {
+    const active = new Set<number>()
+    for (const object of objects) {
+      active.add(object.id)
+      let mesh = this.objects.get(object.id)
+      if (!mesh) {
+        const material = object.kind === 'ball' ? this.ballMaterials[(object.id - 1) % this.ballMaterials.length] : this.materials[object.kind]
+        mesh = new THREE.Mesh(object.kind === 'ball' ? this.sphereGeometry : this.boxGeometry, material)
+        this.scene.add(mesh)
+        this.objects.set(object.id, mesh)
+      }
+      mesh.position.set(object.x, object.y, object.z)
+      mesh.quaternion.set(object.rotation.x, object.rotation.y, object.rotation.z, object.rotation.w)
+      if (object.kind === 'ball') mesh.scale.setScalar(object.size.x / 2)
+      else mesh.scale.set(object.size.x, object.size.y, object.size.z)
     }
-    balls.forEach((ball, index) => {
-      const mesh = this.balls[index]
-      mesh.position.set(ball.x, ball.y, ball.z)
-      mesh.scale.setScalar(ball.radius)
-    })
+    for (const [id, mesh] of this.objects) {
+      if (active.has(id)) continue
+      this.scene.remove(mesh)
+      this.objects.delete(id)
+    }
     this.hand.visible = handPosition !== null
     if (handPosition) {
       this.hand.position.copy(handPosition)

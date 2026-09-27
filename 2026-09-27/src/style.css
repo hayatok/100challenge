@@ -141,7 +141,7 @@ button:disabled {
 .world-hint {
   position: absolute;
   left: 22px;
-  bottom: 82px;
+  bottom: 185px;
   font-size: 12px;
   color: #a9c4d4;
   letter-spacing: 0.02em;
@@ -188,27 +188,68 @@ button:disabled {
   letter-spacing: 0.025em;
   color: #9bb4c1;
 }
-.bottom-controls {
+.sandbox-controls {
   position: absolute;
   left: 22px;
   bottom: 22px;
-  display: flex;
-  gap: 8px;
+  width: min(510px, calc(100% - 44px));
+  padding: 12px;
+  background: #07121ee8;
+  border: 1px solid #3c6979;
+  box-shadow: 0 14px 32px #0008;
 }
-.bottom-controls button,
+.sandbox-heading {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 9px;
+  color: #94becb;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+}
+.sandbox-heading strong {
+  color: #79e8db;
+  font-variant-numeric: tabular-nums;
+}
+.sandbox-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+.sandbox-actions + .sandbox-actions {
+  margin-top: 7px;
+}
+.sandbox-controls button,
 .statusbar button {
   background: #102637;
   color: #d7f8f5;
   border: 1px solid #4e8796;
-  min-height: 40px;
+  min-height: 44px;
   padding: 0 14px;
   font-size: 10px;
   letter-spacing: 0.12em;
   font-weight: 800;
 }
-.bottom-controls button:hover,
+.sandbox-controls button:hover,
 .statusbar button:hover {
   background: #204253;
+}
+.sandbox-actions:not(.sandbox-secondary) button {
+  flex: 1;
+  min-width: 100px;
+  color: #102731;
+  background: #85e9d9;
+  border-color: #b6fff4;
+}
+.sandbox-actions:not(.sandbox-secondary) button:hover {
+  background: #b6fff4;
+}
+.sandbox-secondary button {
+  flex: 1;
+}
+.sandbox-controls button:disabled {
+  opacity: 0.42;
 }
 .intro {
   position: absolute;
@@ -315,6 +356,7 @@ button:disabled {
   letter-spacing: 0.14em;
   font-weight: 800;
   position: relative;
+  flex-wrap: wrap;
 }
 .statusbar button {
   border: 0;
@@ -323,9 +365,9 @@ button:disabled {
   min-height: 44px;
 }
 .debug {
-  position: absolute;
-  right: 0;
-  bottom: 52px;
+  position: static;
+  flex-basis: 100%;
+  width: 100%;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 9px 22px;
@@ -335,6 +377,7 @@ button:disabled {
   padding: 16px;
   min-width: 250px;
   z-index: 4;
+  margin-bottom: 12px;
 }
 .debug span {
   white-space: nowrap;
@@ -346,7 +389,7 @@ button:disabled {
 .debug[hidden],
 .intro[hidden],
 .camera-card[hidden],
-.bottom-controls[hidden] {
+.sandbox-controls[hidden] {
   display: none !important;
 }
 @media (max-width: 700px) {
@@ -372,7 +415,7 @@ button:disabled {
     max-height: none;
   }
   .world-hint {
-    bottom: 80px;
+    bottom: 275px;
     font-size: 11px;
   }
   .camera-card {
@@ -404,13 +447,17 @@ button:disabled {
   .statusbar {
     font-size: 9px;
   }
-  .bottom-controls {
+  .sandbox-controls {
     left: 12px;
     bottom: 12px;
+    width: calc(100% - 24px);
   }
-  .bottom-controls button {
-    padding: 0 9px;
+  .sandbox-controls button {
+    padding: 0 7px;
     font-size: 9px;
+  }
+  .sandbox-secondary button {
+    flex-basis: calc(50% - 7px);
   }
 }
 @media (prefers-reduced-motion: reduce) {

@@ -1,20 +1,35 @@
 import RAPIER from '@dimforge/rapier3d-compat'
 import { Vector3 } from 'three'
 
-export interface BallSnapshot {
+export type ObjectKind = 'ball' | 'box' | 'domino'
+
+export interface ObjectSnapshot {
+  id: number
+  kind: ObjectKind
   x: number
   y: number
   z: number
-  radius: number
+  rotation: { x: number; y: number; z: number; w: number }
+  size: { x: number; y: number; z: number }
+}
+
+interface PhysicsObject {
+  id: number
+  kind: ObjectKind
+  body: RAPIER.RigidBody
+  size: ObjectSnapshot['size']
 }
 
 export class PhysicsWorld {
   private world!: RAPIER.World
   private hand!: RAPIER.RigidBody
-  private balls: Array<{ body: RAPIER.RigidBody; radius: number }> = []
+  private objects: PhysicsObject[] = []
+  private nextId = 1
+  private spawnIndex = 0
   private target = new Vector3(0, -10, 0)
   private active = false
   readonly timestep = 1 / 60
+  readonly maxObjects = 100
 
   async init(): Promise<void> {
     await RAPIER.init()
@@ -30,24 +45,58 @@ export class PhysicsWorld {
     }
     this.hand = this.world.createRigidBody(RAPIER.RigidBodyDesc.kinematicPositionBased().setTranslation(0, -10, 0))
     this.world.createCollider(RAPIER.ColliderDesc.ball(0.48).setFriction(0.2), this.hand)
-    this.resetBalls()
+    this.resetObjects()
   }
 
-  resetBalls(): void {
-    for (const ball of this.balls) this.world.removeRigidBody(ball.body)
-    this.balls = []
+  private createObject(kind: ObjectKind, x: number, y: number, z: number): boolean {
+    if (this.objects.length >= this.maxObjects) return false
+    const size = kind === 'ball' ? { x: 0.54, y: 0.54, z: 0.54 }
+      : kind === 'box' ? { x: 0.56, y: 0.56, z: 0.56 }
+      : { x: 0.18, y: 0.8, z: 0.42 }
+    const body = this.world.createRigidBody(
+      RAPIER.RigidBodyDesc.dynamic().setTranslation(x, y, z).setCcdEnabled(true).setLinearDamping(0.18),
+    )
+    const collider = kind === 'ball'
+      ? RAPIER.ColliderDesc.ball(size.x / 2).setRestitution(0.62).setFriction(0.52)
+      : RAPIER.ColliderDesc.cuboid(size.x / 2, size.y / 2, size.z / 2).setRestitution(0.18).setFriction(0.78)
+    this.world.createCollider(collider, body)
+    this.objects.push({ id: this.nextId++, kind, body, size })
+    return true
+  }
+
+  addObject(kind: ObjectKind): boolean {
+    const index = this.spawnIndex++
+    const x = ((index % 7) - 3) * 0.78
+    const y = 2.7 + (Math.floor(index / 7) % 3) * 0.85
+    const z = ((Math.floor(index / 21) % 3) - 1) * 0.65
+    return this.createObject(kind, x, y, z)
+  }
+
+  clearObjects(): void {
+    for (const object of this.objects) this.world.removeRigidBody(object.body)
+    this.objects = []
+    this.spawnIndex = 0
+  }
+
+  resetObjects(): void {
+    this.clearObjects()
     const radius = 0.27
     for (let row = 0; row < 4; row++) {
       for (let column = 0; column < 5; column++) {
-        const x = (column - 2) * 0.62 + (row % 2) * 0.08
-        const y = radius + row * 0.62 + 0.04
-        const z = ((column + row) % 3 - 1) * 0.17
-        const body = this.world.createRigidBody(
-          RAPIER.RigidBodyDesc.dynamic().setTranslation(x, y, z).setCcdEnabled(true).setLinearDamping(0.18),
-        )
-        this.world.createCollider(RAPIER.ColliderDesc.ball(radius).setRestitution(0.62).setFriction(0.52), body)
-        this.balls.push({ body, radius })
+        this.createObject('ball', (column - 2) * 0.62 + (row % 2) * 0.08,
+          radius + row * 0.62 + 0.04, ((column + row) % 3 - 1) * 0.17)
       }
+    }
+  }
+
+  loadHundred(): void {
+    this.clearObjects()
+    for (let index = 0; index < this.maxObjects; index++) {
+      const kind: ObjectKind = index % 5 === 0 ? 'domino' : index % 3 === 0 ? 'box' : 'ball'
+      const x = ((index % 10) - 4.5) * 0.72
+      const z = ((Math.floor(index / 10) % 5) - 2) * 0.82
+      const y = 0.8 + Math.floor(index / 50) * 1.05
+      this.createObject(kind, x, y, z)
     }
   }
 
@@ -81,12 +130,12 @@ export class PhysicsWorld {
     return new Vector3(point.x, point.y, point.z)
   }
 
-  getBalls(): BallSnapshot[] {
-    return this.balls.map(({ body, radius }) => {
+  getObjects(): ObjectSnapshot[] {
+    return this.objects.map(({ id, kind, body, size }) => {
       const point = body.translation()
-      return { x: point.x, y: point.y, z: point.z, radius }
+      return { id, kind, x: point.x, y: point.y, z: point.z, rotation: body.rotation(), size }
     })
   }
 
-  get ballCount(): number { return this.balls.length }
+  get objectCount(): number { return this.objects.length }
 }

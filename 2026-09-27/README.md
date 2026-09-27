@@ -1,6 +1,10 @@
-# Reality Sandbox v0
+# Reality Sandbox
 
-Webcam の片手で 3D のボールを押せる、ブラウザ内の物理プレイグラウンドです。最初の Vertical Slice は手のひら 1 点だけを使います。
+Webcam の片手で 3D の物体を押せる、ブラウザ内の物理プレイグラウンドです。手のひら 1 点の collider でボール・箱・ドミノに触れます。
+
+## Play
+
+Camera で始めるか Mouse Mode を選び、手またはポインターを物体へ動かします。操作パネルの `+ BALL`・`+ BOX`・`+ DOMINO` で 1 個ずつ追加できます。`CLEAR ALL` は空の世界にし、`RESET 20` は初期のボール 20 個へ戻します。`LOAD 100` は 3 種類の混合プリセットを読み込みます。100 個が上限です。
 
 ## Run
 
@@ -14,7 +18,7 @@ npm run dev
 ## Architecture
 
 - `src/vision`: MediaPipe の出力を手のひら中心へ縮約。カメラ取得と検出はここに閉じ込める。
-- `src/physics`: Rapier の固定 60 Hz 世界、ボール、単一の kinematic hand collider。
+- `src/physics`: Rapier の固定 60 Hz 世界、3 種類の動的物体、単一の kinematic hand collider。
 - `src/rendering`: Three.js のシーンと、画面座標から衝突平面への投影。
 - `src/main.ts`: 開始状態、操作、平滑化、各更新周期、表示。
 

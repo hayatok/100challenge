@@ -1,15 +1,16 @@
-# Reality Sandbox v0
+# Reality Sandbox
 
 ## Goal
 
-Desktop Chrome で、片手の動きに追従する単一の手のひら collider が、3D 空間のボールを押す Vertical Slice を完成させる。
+Desktop Chrome で、片手の動きに追従する単一の手のひら collider が、3D 空間の物体を押す Sandbox を開発する。
 
 ## Scope
 
 - Vite + TypeScript の静的アプリ。Three.js、Rapier、MediaPipe Hand Landmarker を責務別に配置する。
 - モデルと WASM は `public/` に固定し、カメラ映像とランドマークは端末内で処理する。
 - 20 個のボール、床、カメラプレビュー、状態表示、実測 debug 指標、Mouse Mode を用意する。
-- Grab、指 collider、特殊ジェスチャー、ゲームモードは v0 の対象外。
+- ボール・箱・ドミノの追加、全消去、20 個への復元、100 個の負荷プリセットを扱う。上限は 100 個。
+- Grab、指 collider、特殊ジェスチャー、ゲームモードは現在の対象外。
 
 ## Design
 

@@ -1,5 +1,5 @@
 import { Vector3 } from 'three'
-import { PhysicsWorld } from './physics/PhysicsWorld'
+import { PhysicsWorld, type ObjectKind } from './physics/PhysicsWorld'
 import { SceneView } from './rendering/SceneView'
 import { HandTracker } from './vision/HandTracker'
 import './style.css'
@@ -9,15 +9,19 @@ type Mode = 'idle' | 'camera' | 'mouse'
 const app = document.querySelector<HTMLDivElement>('#app')!
 app.innerHTML = `
   <main class="shell">
-    <header class="topbar"><div class="brand"><span class="brand-mark">◈</span> REALITY <span>SANDBOX</span><small>V0 / HAND PHYSICS</small></div><div class="top-note">A WORLD YOU CAN TOUCH</div></header>
+    <header class="topbar"><div class="brand"><span class="brand-mark">◈</span> REALITY <span>SANDBOX</span><small>V1 / PHYSICS PLAYGROUND</small></div><div class="top-note">A WORLD YOU CAN TOUCH</div></header>
     <section class="world-wrap" aria-label="Physics playground">
       <div id="world" class="world"></div>
       <div class="world-shine" aria-hidden="true"></div>
       <div class="world-tag"><span class="pulse"></span><span id="mode-label">WORLD STANDBY</span></div>
-      <div class="world-hint" id="world-hint">Move your hand across the camera to scatter the spheres.</div>
+      <div class="world-hint" id="world-hint">Move your hand across the camera to scatter the objects.</div>
       <aside class="camera-card" id="camera-card" hidden><div class="camera-head"><span>CAM / LIVE</span><span id="hand-label">SEARCHING</span></div><div class="video-wrap" id="video-wrap"></div><div class="camera-foot">Mirror preview · video stays on this device</div></aside>
-      <div class="bottom-controls" id="bottom-controls" hidden><button id="reset" type="button">RESET SPHERES</button><button id="switch-mode" type="button">USE MOUSE</button></div>
-      <section class="intro" id="intro" aria-labelledby="intro-title"><div class="intro-inner"><p class="eyebrow">INTERACTIVE PHYSICS PLAYGROUND</p><h1 id="intro-title">REALITY<br><em>SANDBOX</em></h1><p class="intro-line">Move your hand.<br>Touch the world.</p><p class="intro-sub">Your webcam becomes a way into this world. Sweep your hand to send the spheres flying.</p><div class="intro-actions"><button id="start" class="primary" type="button">START WITH CAMERA <span aria-hidden="true">↗</span></button><button id="mouse" type="button">TRY WITH MOUSE</button></div><p class="privacy">Camera processing stays on this device. No account required.</p><p id="notice" class="notice" role="status" aria-live="polite"></p></div></section>
+      <div class="sandbox-controls" id="bottom-controls" hidden>
+        <div class="sandbox-heading"><span>BUILD YOUR WORLD</span><strong><span id="object-count">20</span> / 100 OBJECTS</strong></div>
+        <div class="sandbox-actions" aria-label="Add objects"><button data-add="ball" type="button">+ BALL</button><button data-add="box" type="button">+ BOX</button><button data-add="domino" type="button">+ DOMINO</button></div>
+        <div class="sandbox-actions sandbox-secondary"><button id="reset" type="button">RESET 20</button><button id="load-100" type="button">LOAD 100</button><button id="clear" type="button">CLEAR ALL</button><button id="switch-mode" type="button">USE MOUSE</button></div>
+      </div>
+      <section class="intro" id="intro" aria-labelledby="intro-title"><div class="intro-inner"><p class="eyebrow">INTERACTIVE PHYSICS PLAYGROUND</p><h1 id="intro-title">REALITY<br><em>SANDBOX</em></h1><p class="intro-line">Move your hand.<br>Touch the world.</p><p class="intro-sub">Your webcam becomes a way into this world. Push balls, boxes, and dominoes around.</p><div class="intro-actions"><button id="start" class="primary" type="button">START WITH CAMERA <span aria-hidden="true">↗</span></button><button id="mouse" type="button">TRY WITH MOUSE</button></div><p class="privacy">Camera processing stays on this device. No account required.</p><p id="notice" class="notice" role="status" aria-live="polite"></p></div></section>
     </section>
     <footer class="statusbar"><span class="status-text" id="status">INITIALIZING WORLD</span><button id="debug-toggle" type="button" aria-expanded="false">DEBUG <span aria-hidden="true">⌁</span></button><div id="debug" class="debug" hidden><span>RENDER <b id="render-fps">—</b> FPS</span><span>TRACK <b id="track-fps">—</b> FPS</span><span>PHYSICS <b id="physics-time">—</b> MS</span><span>HANDS <b id="hands">0</b></span><span>OBJECTS <b id="objects">20</b></span></div></footer>
   </main>`
@@ -52,6 +56,16 @@ let startGeneration = 0
 
 function setStatus(message: string): void { status.textContent = message }
 
+function syncObjectControls(): void {
+  const count = physics.objectCount
+  element<HTMLElement>('object-count').textContent = String(count)
+  element<HTMLElement>('objects').textContent = String(count)
+  for (const button of document.querySelectorAll<HTMLButtonElement>('[data-add]')) {
+    button.disabled = count >= physics.maxObjects
+  }
+  element<HTMLButtonElement>('clear').disabled = count === 0
+}
+
 function activate(next: Mode): void {
   if (next === 'mouse') startGeneration++
   mode = next
@@ -59,7 +73,7 @@ function activate(next: Mode): void {
   controls.hidden = false
   cameraCard.hidden = next !== 'camera'
   modeLabel.textContent = next === 'camera' ? 'CAMERA CONNECTED' : 'MOUSE MODE'
-  hint.textContent = next === 'camera' ? 'Show one hand, then sweep it through the spheres.' : 'Move your pointer across the spheres.'
+  hint.textContent = next === 'camera' ? 'Show one hand, then sweep it through the objects.' : 'Move your pointer across the objects.'
   switchMode.textContent = next === 'camera' ? 'USE MOUSE' : 'USE CAMERA'
   if (next === 'mouse') {
     tracker?.stop()
@@ -71,7 +85,7 @@ function activate(next: Mode): void {
   } else {
     setStatus('CAMERA READY · SHOW YOUR HAND')
   }
-  physics.resetBalls()
+  syncObjectControls()
 }
 
 async function startCamera(): Promise<void> {
@@ -106,7 +120,30 @@ function startMouse(): void { activate('mouse') }
 
 element<HTMLButtonElement>('start').addEventListener('click', () => void startCamera())
 element<HTMLButtonElement>('mouse').addEventListener('click', startMouse)
-element<HTMLButtonElement>('reset').addEventListener('click', () => physics.resetBalls())
+for (const button of document.querySelectorAll<HTMLButtonElement>('[data-add]')) {
+  button.addEventListener('click', () => {
+    const kind = button.dataset.add as ObjectKind
+    if (physics.addObject(kind)) {
+      syncObjectControls()
+      setStatus(`${kind.toUpperCase()} ADDED · ${physics.objectCount} ${physics.objectCount === 1 ? 'OBJECT' : 'OBJECTS'}`)
+    }
+  })
+}
+element<HTMLButtonElement>('reset').addEventListener('click', () => {
+  physics.resetObjects()
+  syncObjectControls()
+  setStatus('20 BALLS RESTORED')
+})
+element<HTMLButtonElement>('load-100').addEventListener('click', () => {
+  physics.loadHundred()
+  syncObjectControls()
+  setStatus('100 OBJECTS LOADED · SWEEP TO PUSH')
+})
+element<HTMLButtonElement>('clear').addEventListener('click', () => {
+  physics.clearObjects()
+  syncObjectControls()
+  setStatus('WORLD CLEARED · ADD AN OBJECT')
+})
 switchMode.addEventListener('click', () => {
   if (mode === 'camera') startMouse()
   else {
@@ -189,7 +226,7 @@ function frame(now: number): void {
     steps++
   }
   if (steps === 3) accumulator = 0
-  scene.update(physics.getBalls(), physics.getHandPosition(), now)
+  scene.update(physics.getObjects(), physics.getHandPosition(), now)
   renderFrames++
 
   if (now - statsAt >= 1000) {
@@ -197,7 +234,7 @@ function frame(now: number): void {
     element<HTMLElement>('render-fps').textContent = String(Math.round(renderFrames / seconds))
     element<HTMLElement>('track-fps').textContent = mode === 'camera' ? String(Math.round(trackFrames / seconds)) : '—'
     element<HTMLElement>('physics-time').textContent = physicsFrames ? (physicsTotal / physicsFrames).toFixed(1) : '—'
-    element<HTMLElement>('objects').textContent = String(physics.ballCount)
+    element<HTMLElement>('objects').textContent = String(physics.objectCount)
     renderFrames = 0; trackFrames = 0; physicsTotal = 0; physicsFrames = 0; statsAt = now
   }
 }
@@ -208,6 +245,7 @@ async function boot(): Promise<void> {
     setStatus('INITIALIZING PHYSICS')
     physics = new PhysicsWorld()
     await physics.init()
+    syncObjectControls()
     setStatus('WORLD READY · PRESS START')
     requestAnimationFrame(frame)
   } catch (error) {
