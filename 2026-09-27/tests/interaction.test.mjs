@@ -5,6 +5,7 @@ import { FlickDetector } from '../src/vision/FlickDetector.ts'
 import { readPalm } from '../src/vision/HandState.ts'
 import { HandTracker } from '../src/vision/HandTracker.ts'
 import { PhysicsWorld } from '../src/physics/PhysicsWorld.ts'
+import { ScreenContact } from '../src/vision/ScreenContact.ts'
 
 const point = x => ({ x, y: 1, z: 0 })
 
@@ -104,4 +105,33 @@ test('queued finger flick moves a nearby dynamic ball in the fixed physics step'
   const after = physics.getObjects()[0]
   assert.ok(after.x > before.x + 0.01, `expected a flick to move the ball: ${before.x} -> ${after.x}`)
   assert.ok(after.x - before.x < 0.27, 'one fixed step stays within the velocity cap')
+})
+
+test('a hand sweep contacts a visually crossed object even when its endpoint has passed it', () => {
+  const contact = new ScreenContact()
+  const target = [{ id: 42, x: 150, y: 100, radius: 12 }]
+  assert.equal(contact.sample({ x: 90, y: 100 }, null, target, 100).impact, null)
+  const hit = contact.sample({ x: 210, y: 100 }, null, target, 133).impact
+  assert.equal(hit?.id, 42)
+  assert.equal(hit?.source, 'palm')
+  assert.ok(hit && hit.direction.x > 0)
+  assert.equal(contact.sample({ x: 90, y: 100 }, null, target, 166).impact, null, 'contact has a per-object cooldown')
+  assert.equal(contact.sample({ x: 210, y: 100 }, null, target, 400).impact, null, 'stale tracking does not jump into an object')
+  assert.equal(contact.sample({ x: 90, y: 100 }, null, target, 433).impact?.id, 42)
+})
+
+test('an aimed object is highlighted while stationary, but only moving the hand applies force', async () => {
+  const contact = new ScreenContact()
+  const target = [{ id: 1, x: 100, y: 100, radius: 15 }]
+  assert.deepEqual(contact.sample({ x: 100, y: 100 }, null, target, 100), { aimedId: 1, impact: null })
+  assert.equal(contact.sample({ x: 102, y: 100 }, null, target, 133).impact, null)
+
+  const physics = new PhysicsWorld()
+  await physics.init()
+  physics.clearObjects()
+  physics.addObject('ball')
+  const before = physics.getObjects()[0]
+  physics.queueScreenImpact({ id: before.id, source: 'palm', direction: { x: 1, y: 0, z: 0 }, speed: 700 })
+  physics.step()
+  assert.ok(physics.getObjects()[0].x > before.x + 0.01)
 })

@@ -4,6 +4,7 @@ import { SceneView } from './rendering/SceneView'
 import { imageXToScreen, type CameraFacing } from './vision/CameraFacing'
 import { FlickDetector, type Flick } from './vision/FlickDetector'
 import { HandTracker } from './vision/HandTracker'
+import { ScreenContact } from './vision/ScreenContact'
 import './style.css'
 
 type Mode = 'idle' | 'camera' | 'mouse'
@@ -16,15 +17,15 @@ app.innerHTML = `
       <div id="world" class="world"></div>
       <div class="world-shine" aria-hidden="true"></div>
       <div class="world-tag"><span class="pulse"></span><span id="mode-label">WORLD STANDBY</span></div>
-      <div class="world-hint" id="world-hint"><strong id="guide-title">SWEEP YOUR PALM</strong><span id="guide-detail">Move through a ball. Extend your index finger and flick it across one.</span></div>
+      <div class="world-hint" id="world-hint"><strong id="guide-title">ボールを狙う</strong><span id="guide-detail">3D画面の水色の手をボールに重ねる。白い輪が出たら横へ払う。</span></div>
       <div class="gesture-feedback" id="gesture-feedback" aria-live="polite"></div>
       <aside class="camera-card" id="camera-card" hidden><div class="camera-head"><span id="camera-facing">FRONT CAM</span><span id="hand-label">SEARCHING</span></div><div class="video-wrap" id="video-wrap"></div><div class="camera-foot" id="preview-note">Mirror preview · on-device processing</div><button id="flip-camera" type="button">USE REAR CAMERA</button></aside>
       <div class="sandbox-controls" id="bottom-controls" hidden>
-        <div class="sandbox-heading"><span>BUILD YOUR WORLD</span><strong><span id="object-count">20</span> / 100 OBJECTS</strong></div>
+        <div class="sandbox-heading"><span>BUILD YOUR WORLD</span><strong><span id="object-count">20</span> / 100 OBJECTS</strong><button id="objects-toggle" type="button" aria-expanded="false" aria-label="Show object controls">EDIT</button></div>
         <div class="sandbox-actions" aria-label="Add objects"><button data-add="ball" type="button">+ BALL</button><button data-add="box" type="button">+ BOX</button><button data-add="domino" type="button">+ DOMINO</button></div>
         <div class="sandbox-actions sandbox-secondary"><button id="reset" type="button">RESET 20</button><button id="load-100" type="button">LOAD 100</button><button id="clear" type="button">CLEAR ALL</button><button id="switch-mode" type="button">USE MOUSE</button></div>
       </div>
-      <section class="intro" id="intro" aria-labelledby="intro-title"><div class="intro-inner"><p class="eyebrow">INTERACTIVE PHYSICS PLAYGROUND</p><h1 id="intro-title">REALITY<br><em>SANDBOX</em></h1><p class="intro-line">Move your hand.<br>Touch the world.</p><p class="intro-sub">Aim a camera at one hand. Move through a ball to push it.</p><div class="how-to"><div><b>01 / PALM</b><span>Sweep your hand sideways through a ball.</span></div><div><b>02 / FINGER</b><span>Extend your index finger and flick across a ball.</span></div></div><div class="intro-actions"><button id="start-front" class="primary" type="button">FRONT CAMERA <span aria-hidden="true">↗</span></button><button id="start-rear" type="button">REAR CAMERA</button><button id="mouse" type="button">TRY WITH MOUSE</button></div><p class="privacy">Camera processing stays on this device. No account required.</p><p id="notice" class="notice" role="status" aria-live="polite"></p></div></section>
+      <section class="intro" id="intro" aria-labelledby="intro-title"><div class="intro-inner"><p class="eyebrow">INTERACTIVE PHYSICS PLAYGROUND</p><h1 id="intro-title">REALITY<br><em>SANDBOX</em></h1><p class="intro-line">Move your hand.<br>Touch the world.</p><p class="intro-sub">小窓ではなく3D画面の光る手を見る。ボールに重ね、横へ払う。</p><div class="how-to"><div><b>01 / PALM</b><span>水色の手をボールへ。白い輪が出たら横へ払う。</span></div><div><b>02 / FINGER</b><span>人差し指を伸ばし、黄色い点でボールを横切る。</span></div></div><div class="intro-actions"><button id="start-front" class="primary" type="button">FRONT CAMERA <span aria-hidden="true">↗</span></button><button id="start-rear" type="button">REAR CAMERA</button><button id="mouse" type="button">TRY WITH MOUSE</button></div><p class="privacy">Camera processing stays on this device. No account required.</p><p id="notice" class="notice" role="status" aria-live="polite"></p></div></section>
     </section>
     <footer class="statusbar"><span class="status-text" id="status">INITIALIZING WORLD</span><button id="debug-toggle" type="button" aria-expanded="false">DEBUG <span aria-hidden="true">⌁</span></button><div id="debug" class="debug" hidden><span>RENDER <b id="render-fps">—</b> FPS</span><span>TRACK <b id="track-fps">—</b> FPS</span><span>PHYSICS <b id="physics-time">—</b> MS</span><span>HANDS <b id="hands">0</b></span><span>OBJECTS <b id="objects">20</b></span></div></footer>
   </main>`
@@ -36,6 +37,7 @@ const status = element<HTMLElement>('status')
 const modeLabel = element<HTMLElement>('mode-label')
 const handLabel = element<HTMLElement>('hand-label')
 const controls = element<HTMLElement>('bottom-controls')
+const objectsToggle = element<HTMLButtonElement>('objects-toggle')
 const cameraCard = element<HTMLElement>('camera-card')
 const guideTitle = element<HTMLElement>('guide-title')
 const guideDetail = element<HTMLElement>('guide-detail')
@@ -44,6 +46,7 @@ const switchMode = element<HTMLButtonElement>('switch-mode')
 const flipCamera = element<HTMLButtonElement>('flip-camera')
 const worldElement = element<HTMLElement>('world')
 const flickDetector = new FlickDetector()
+const screenContact = new ScreenContact()
 
 let scene: SceneView
 let physics: PhysicsWorld
@@ -52,6 +55,7 @@ let mode: Mode = 'idle'
 let handTarget: Vector3 | null = null
 let smoothedTarget: Vector3 | null = null
 let fingertipTarget: Vector3 | null = null
+let aimedId: number | null = null
 let smoothedFingertip: Vector3 | null = null
 let handSeenAt = 0
 let feedbackUntil = 0
@@ -72,9 +76,32 @@ function clearHand(): void {
   fingertipTarget = null
   smoothedFingertip = null
   flickDetector.reset()
+  screenContact.reset()
+  aimedId = null
+  guideTitle.textContent = mode === 'camera' ? '手をカメラに映す' : 'ボールを狙う'
+  guideDetail.textContent = mode === 'camera'
+    ? '手全体を映し、3D画面に水色の手が現れるのを待つ。'
+    : '水色の球をボールに重ね、横へ払う。'
   physics.setHandTarget(null)
   physics.setFingertipTarget(null)
   element<HTMLElement>('hands').textContent = '0'
+}
+
+function updateContact(palm: Vector3, finger: Vector3 | null, now: number): void {
+  const contact = screenContact.sample(scene.worldToScreen(palm), finger ? scene.worldToScreen(finger) : null,
+    scene.screenTargets(physics.getObjects()), now)
+  aimedId = contact.aimedId
+  if (contact.impact) {
+    physics.queueScreenImpact(contact.impact)
+    feedback.textContent = contact.impact.source === 'finger' ? 'FINGER HIT!' : 'PALM HIT!'
+    feedback.classList.toggle('finger', contact.impact.source === 'finger')
+    feedbackUntil = now + 700
+  }
+  guideTitle.textContent = aimedId === null ? 'ボールを狙う' : '白い輪が出たら横へ'
+  guideDetail.textContent = aimedId === null
+    ? mode === 'camera' ? '小窓ではなく3D画面の水色の手をボールに重ねる。'
+      : '水色の球をボールに重ね、横へ払う。'
+    : '手または黄色い指先を横へ動かしてボールを弾く。'
 }
 
 function showFlick(flick: Flick, now: number): void {
@@ -109,12 +136,16 @@ function activate(next: Mode): void {
   mode = next
   intro.hidden = true
   controls.hidden = false
+  controls.classList.toggle('compact', window.matchMedia('(max-width: 700px)').matches)
+  objectsToggle.setAttribute('aria-expanded', String(!controls.classList.contains('compact')))
+  objectsToggle.setAttribute('aria-label', controls.classList.contains('compact') ? 'Show object controls' : 'Hide object controls')
+  objectsToggle.textContent = controls.classList.contains('compact') ? 'EDIT' : 'CLOSE'
   cameraCard.hidden = next !== 'camera'
   modeLabel.textContent = next === 'camera' ? 'CAMERA CONNECTED' : 'MOUSE MODE'
-  guideTitle.textContent = next === 'camera' ? 'SWEEP YOUR PALM' : 'SWIPE WITH YOUR POINTER'
+  guideTitle.textContent = 'ボールを狙う'
   guideDetail.textContent = next === 'camera'
-    ? 'Move through a ball. Extend your index finger and flick it across one.'
-    : 'Move through a ball. A quick swipe sends it flying.'
+    ? '小窓ではなく3D画面の水色の手をボールに重ねる。'
+    : '水色の球をボールに重ね、横へ払う。'
   switchMode.textContent = next === 'camera' ? 'USE MOUSE' : 'USE CAMERA'
   if (next === 'mouse') {
     tracker?.stop()
@@ -167,6 +198,13 @@ function startMouse(): void { activate('mouse') }
 element<HTMLButtonElement>('start-front').addEventListener('click', () => void startCamera('user'))
 element<HTMLButtonElement>('start-rear').addEventListener('click', () => void startCamera('environment'))
 element<HTMLButtonElement>('mouse').addEventListener('click', startMouse)
+objectsToggle.addEventListener('click', () => {
+  controls.classList.toggle('compact')
+  const expanded = !controls.classList.contains('compact')
+  objectsToggle.setAttribute('aria-expanded', String(expanded))
+  objectsToggle.setAttribute('aria-label', expanded ? 'Hide object controls' : 'Show object controls')
+  objectsToggle.textContent = expanded ? 'CLOSE' : 'EDIT'
+})
 flipCamera.addEventListener('click', async () => {
   const activeTracker = tracker
   if (!activeTracker || mode !== 'camera') return
@@ -232,7 +270,8 @@ element<HTMLButtonElement>('debug-toggle').addEventListener('click', event => {
 worldElement.addEventListener('pointermove', event => {
   if (mode !== 'mouse') return
   const bounds = worldElement.getBoundingClientRect()
-  handTarget = scene.screenToWorld((event.clientX - bounds.left) / bounds.width, (event.clientY - bounds.top) / bounds.height)
+  const point = { x: (event.clientX - bounds.left) / bounds.width, y: (event.clientY - bounds.top) / bounds.height }
+  handTarget = scene.screenToWorld(point.x, point.y)
   const now = performance.now()
   const flick = flickDetector.sample(handTarget, null, now)
   if (flick) showFlick(flick, now)
@@ -252,9 +291,13 @@ function frame(now: number): void {
         trackFrames++
         element<HTMLElement>('hands').textContent = state.detected ? '1' : '0'
         if (state.detected) {
-          handTarget = scene.screenToWorld(imageXToScreen(state.x, tracker.facing), state.y)
+          const palm = { x: imageXToScreen(state.x, tracker.facing), y: state.y }
+          const finger = state.indexTip
+            ? { x: imageXToScreen(state.indexTip.x, tracker.facing), y: state.indexTip.y }
+            : null
+          handTarget = scene.screenToWorld(palm.x, palm.y)
           fingertipTarget = state.indexTip
-            ? scene.screenToWorld(imageXToScreen(state.indexTip.x, tracker.facing), state.indexTip.y)
+            ? scene.screenToWorld(finger!.x, finger!.y)
             : null
           const flick = flickDetector.sample(handTarget, fingertipTarget, now)
           if (flick) showFlick(flick, now)
@@ -305,7 +348,10 @@ function frame(now: number): void {
     steps++
   }
   if (steps === 3) accumulator = 0
-  scene.update(physics.getObjects(), physics.getHandPosition(), physics.getFingertipPosition(), now)
+  const visibleHand = physics.getHandPosition()
+  const visibleFinger = physics.getFingertipPosition()
+  if (visibleHand) updateContact(visibleHand, visibleFinger, now)
+  scene.update(physics.getObjects(), visibleHand, visibleFinger, aimedId, now)
   if (feedback.textContent && now > feedbackUntil) feedback.textContent = ''
   renderFrames++
 

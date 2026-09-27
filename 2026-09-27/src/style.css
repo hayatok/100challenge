@@ -248,6 +248,9 @@ button:disabled {
   font-weight: 800;
   letter-spacing: 0.12em;
 }
+.sandbox-heading > button {
+  display: none;
+}
 .sandbox-heading strong {
   color: #79e8db;
   font-variant-numeric: tabular-nums;
@@ -294,8 +297,9 @@ button:disabled {
 .intro {
   position: absolute;
   inset: 0;
-  display: grid;
-  place-items: center;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
   background: radial-gradient(
     ellipse at 50% 50%,
     rgba(7, 15, 26, 0.93),
@@ -304,9 +308,11 @@ button:disabled {
   );
   text-align: center;
   padding: 28px;
+  overflow-y: auto;
 }
 .intro-inner {
   max-width: 650px;
+  margin: auto 0;
 }
 .eyebrow {
   color: #70e9d9;
@@ -533,12 +539,56 @@ button:disabled {
     bottom: 12px;
     width: calc(100% - 24px);
   }
+  .sandbox-controls.compact .sandbox-actions {
+    display: none;
+  }
+  .sandbox-controls.compact .sandbox-heading {
+    margin-bottom: 0;
+  }
+  .sandbox-controls.compact .sandbox-heading > span {
+    display: none;
+  }
+  .sandbox-controls.compact .sandbox-heading strong {
+    white-space: nowrap;
+  }
+  .sandbox-heading {
+    align-items: center;
+  }
+  .sandbox-heading > button {
+    display: block;
+    min-height: 44px;
+    padding: 0 9px;
+    flex: 0 0 auto;
+  }
   .sandbox-controls button {
     padding: 0 7px;
     font-size: 9px;
   }
   .sandbox-secondary button {
     flex-basis: calc(50% - 7px);
+  }
+}
+@media (max-height: 760px) and (min-width: 701px) {
+  .intro h1 {
+    font-size: min(7vw, 86px);
+  }
+  .eyebrow {
+    margin-bottom: 12px;
+  }
+  .intro-line {
+    margin: 18px 0 10px;
+  }
+  .intro-sub {
+    margin-bottom: 16px;
+  }
+  .how-to {
+    margin-bottom: 16px;
+  }
+  .privacy {
+    margin-top: 12px;
+  }
+  .notice {
+    margin-top: 7px;
   }
 }
 @media (prefers-reduced-motion: reduce) {

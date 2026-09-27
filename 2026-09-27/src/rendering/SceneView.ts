@@ -1,6 +1,7 @@
 import * as THREE from 'three'
 import type { ObjectKind, ObjectSnapshot } from '../physics/PhysicsWorld'
 import type { Flick } from '../vision/FlickDetector'
+import type { ScreenPoint, ScreenTarget } from '../vision/ScreenContact'
 
 export class SceneView {
   readonly canvas: HTMLCanvasElement
@@ -16,6 +17,10 @@ export class SceneView {
     new THREE.MeshBasicMaterial({ color: '#a6fff1', transparent: true, opacity: 0, side: THREE.DoubleSide, depthWrite: false }),
   )
   private flickAt = -Infinity
+  private targetRing = new THREE.Mesh(
+    new THREE.TorusGeometry(1, 0.035, 8, 48),
+    new THREE.MeshBasicMaterial({ color: '#e7fff9', transparent: true, opacity: 0.86, depthTest: false }),
+  )
   private objects = new Map<number, THREE.Mesh>()
   private sphereGeometry = new THREE.SphereGeometry(1, 24, 16)
   private boxGeometry = new THREE.BoxGeometry(1, 1, 1)
@@ -82,6 +87,8 @@ export class SceneView {
     this.scene.add(this.finger)
     this.flickRing.visible = false
     this.scene.add(this.flickRing)
+    this.targetRing.visible = false
+    this.scene.add(this.targetRing)
     this.resizeObserver = new ResizeObserver(() => this.resize(host))
     this.resizeObserver.observe(host)
     this.resize(host)
@@ -122,6 +129,31 @@ export class SceneView {
     return result.set(THREE.MathUtils.clamp(result.x, -5.2, 5.2), THREE.MathUtils.clamp(result.y, 0.27, 4.3), 0)
   }
 
+  worldToScreen(point: THREE.Vector3): ScreenPoint {
+    const projected = point.clone().project(this.camera)
+    return {
+      x: (projected.x + 1) * this.canvas.clientWidth / 2,
+      y: (1 - projected.y) * this.canvas.clientHeight / 2,
+    }
+  }
+
+  screenTargets(objects: ObjectSnapshot[]): ScreenTarget[] {
+    const width = this.canvas.clientWidth
+    const height = this.canvas.clientHeight
+    return objects.map(object => {
+      const center = new THREE.Vector3(object.x, object.y, object.z).project(this.camera)
+      const radius = Math.max(object.size.x, object.size.y) / 2
+      const edgeX = new THREE.Vector3(object.x + radius, object.y, object.z).project(this.camera)
+      const edgeY = new THREE.Vector3(object.x, object.y + radius, object.z).project(this.camera)
+      return {
+        id: object.id,
+        x: (center.x + 1) * width / 2,
+        y: (1 - center.y) * height / 2,
+        radius: Math.max(8, Math.abs(edgeX.x - center.x) * width / 2, Math.abs(edgeY.y - center.y) * height / 2),
+      }
+    })
+  }
+
   showFlick(flick: Flick, now: number): void {
     this.flickRing.position.set(flick.origin.x, flick.origin.y, flick.origin.z + 0.12)
     ;(this.flickRing.material as THREE.MeshBasicMaterial).color.set(flick.source === 'finger' ? '#ffe19a' : '#a6fff1')
@@ -129,7 +161,7 @@ export class SceneView {
     this.flickRing.visible = true
   }
 
-  update(objects: ObjectSnapshot[], handPosition: THREE.Vector3 | null, fingertipPosition: THREE.Vector3 | null, now: number): void {
+  update(objects: ObjectSnapshot[], handPosition: THREE.Vector3 | null, fingertipPosition: THREE.Vector3 | null, aimedId: number | null, now: number): void {
     const active = new Set<number>()
     for (const object of objects) {
       active.add(object.id)
@@ -149,6 +181,15 @@ export class SceneView {
       if (active.has(id)) continue
       this.scene.remove(mesh)
       this.objects.delete(id)
+    }
+    const aimed = objects.find(object => object.id === aimedId)
+    this.targetRing.visible = Boolean(aimed && handPosition)
+    if (aimed && handPosition) {
+      const center = new THREE.Vector3(aimed.x, aimed.y, aimed.z)
+      const towardsCamera = this.camera.position.clone().sub(center).normalize()
+      this.targetRing.position.copy(center.addScaledVector(towardsCamera, Math.max(aimed.size.x, aimed.size.y, aimed.size.z) * 0.6 + 0.08))
+      this.targetRing.quaternion.copy(this.camera.quaternion)
+      this.targetRing.scale.setScalar(Math.max(aimed.size.x, aimed.size.y, aimed.size.z) * 0.65)
     }
     this.hand.visible = handPosition !== null
     if (handPosition) {

@@ -1,6 +1,7 @@
 import RAPIER from '@dimforge/rapier3d-compat'
 import { Vector3 } from 'three'
 import type { Flick } from '../vision/FlickDetector'
+import type { ScreenImpact } from '../vision/ScreenContact'
 
 export type ObjectKind = 'ball' | 'box' | 'domino'
 
@@ -33,6 +34,7 @@ export class PhysicsWorld {
   private active = false
   private fingertipActive = false
   private queuedFlicks: Flick[] = []
+  private queuedScreenImpacts: ScreenImpact[] = []
   readonly timestep = 1 / 60
   readonly maxObjects = 100
 
@@ -83,6 +85,7 @@ export class PhysicsWorld {
     for (const object of this.objects) this.world.removeRigidBody(object.body)
     this.objects = []
     this.queuedFlicks = []
+    this.queuedScreenImpacts = []
     this.spawnIndex = 0
   }
 
@@ -140,6 +143,26 @@ export class PhysicsWorld {
     if (this.queuedFlicks.length < 2) this.queuedFlicks.push(flick)
   }
 
+  queueScreenImpact(impact: ScreenImpact): void {
+    if (this.queuedScreenImpacts.length < 3) this.queuedScreenImpacts.push(impact)
+  }
+
+  private applyScreenImpact(impact: ScreenImpact): void {
+    const object = this.objects.find(candidate => candidate.id === impact.id)
+    if (!object) return
+    const current = object.body.linvel()
+    const direction = new Vector3(impact.direction.x, impact.direction.y + 0.1, 0).normalize()
+    const gain = Math.min(10, 2.5 + impact.speed * 0.004)
+    const next = new Vector3(current.x, current.y, current.z).addScaledVector(direction, gain)
+    if (next.length() > 16) next.setLength(16)
+    const mass = object.body.mass()
+    object.body.applyImpulse({
+      x: (next.x - current.x) * mass,
+      y: (next.y - current.y) * mass,
+      z: (next.z - current.z) * mass,
+    }, true)
+  }
+
   private applyFlick(flick: Flick): void {
     const reach = flick.source === 'finger' ? 0.72 : 0.95
     for (const object of this.objects) {
@@ -179,6 +202,8 @@ export class PhysicsWorld {
     })
     for (const flick of this.queuedFlicks) this.applyFlick(flick)
     this.queuedFlicks = []
+    for (const impact of this.queuedScreenImpacts) this.applyScreenImpact(impact)
+    this.queuedScreenImpacts = []
     this.world.step()
     return performance.now() - start
   }
