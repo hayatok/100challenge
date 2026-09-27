@@ -1,6 +1,6 @@
 # Type Motion Studio
 
-文章と場面構成から文字中心のモーショングラフィックを作るローカルWebアプリ。最初にCELESTIALの編集可能な作例を開き、再生、文章の差し替え、場面調整、単体HTML・音声付きMP4の書き出しができます。公開済み[CELESTIAL / CUT 02](https://hayatok.github.io/100challenge/2026-09-26/)は比較対象として使用し、変更していません。HyperFramesは使用していません。
+文章と場面構成から文字中心のモーショングラフィックを作るWebアプリ。[公開版](https://hayatok.github.io/100challenge/2026-09-26-2/)では、最初にCELESTIALの編集可能な作例を開き、再生、文章の差し替え、場面調整、単体HTML・音声付きMP4の書き出しができます。公開済み[CELESTIAL / CUT 02](https://hayatok.github.io/100challenge/2026-09-26/)は比較対象として使用し、変更していません。HyperFramesは使用していません。
 
 ## 起動
 
@@ -33,8 +33,8 @@ npm run build
 npm run check
 ```
 
-Playwright Chromiumが未導入なら `npx playwright install chromium` を先に実行してください。`npm run check` は上記のlint、単体テスト、型チェックとbuild、ブラウザ試験をまとめます。E2Eは実際のHTML/MP4を `docs/verification/artifacts/` に出します。大きい動画とHTMLはGit管理対象外です。アプリ固有の試験はこのフォルダで実行します。rootの `npm test` はこのアプリの試験ではありません。
+Playwright Google Chromeが未導入なら `npm run setup` を先に実行してください。CIではアプリの依存関係を入れた後、同じsetupを実行します。`npm run check` はlint、単体テスト、型チェック、build、動画出力を除くブラウザ試験をまとめます。音声付きMP4の実ファイル出力を含む全ブラウザ試験はローカルで `npm run check:full` を実行します。E2Eの成果物は `docs/verification/artifacts/` に出します。大きい動画とHTMLはGit管理対象外です。アプリ固有の試験はこのフォルダで実行します。rootの `npm test` はこのアプリの試験ではありません。
 
 実測結果、再生・復号・画面確認の範囲、未確認事項は[検証結果](docs/verification/RESULTS.md)に記録しています。仕様と当初の判断は[プロダクト仕様](docs/PRODUCT_SPEC.md)、[演出仕様](docs/MOTION_DESIGN.md)、[技術設計](docs/TECHNICAL_DESIGN.md)、[データ契約](docs/DATA_MODEL.md)、[実装計画](IMPLEMENTATION_PLAN.md)、[検証計画](docs/TEST_PLAN.md)を参照してください。
 
-このアプリのPages公開、`apps.json`への登録、リリースタグ作成は今回の作業に含めていません。
+GitHub Pagesではブラウザ内のIndexedDBに作品を保存します。異なる端末・ブラウザとの同期はありません。
