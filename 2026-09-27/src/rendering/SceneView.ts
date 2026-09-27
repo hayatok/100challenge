@@ -1,5 +1,6 @@
 import * as THREE from 'three'
 import type { ObjectKind, ObjectSnapshot } from '../physics/PhysicsWorld'
+import type { Flick } from '../vision/FlickDetector'
 
 export class SceneView {
   readonly canvas: HTMLCanvasElement
@@ -9,6 +10,12 @@ export class SceneView {
   private raycaster = new THREE.Raycaster()
   private plane = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0)
   private hand: THREE.Group
+  private finger = new THREE.Group()
+  private flickRing = new THREE.Mesh(
+    new THREE.RingGeometry(0.24, 0.32, 40),
+    new THREE.MeshBasicMaterial({ color: '#a6fff1', transparent: true, opacity: 0, side: THREE.DoubleSide, depthWrite: false }),
+  )
+  private flickAt = -Infinity
   private objects = new Map<number, THREE.Mesh>()
   private sphereGeometry = new THREE.SphereGeometry(1, 24, 16)
   private boxGeometry = new THREE.BoxGeometry(1, 1, 1)
@@ -63,6 +70,18 @@ export class SceneView {
     this.hand = this.createHand()
     this.scene.add(this.hand)
     this.hand.visible = false
+    this.finger.add(new THREE.Mesh(
+      new THREE.SphereGeometry(0.16, 16, 12),
+      new THREE.MeshBasicMaterial({ color: '#fff3c0', transparent: true, opacity: 0.9 }),
+    ))
+    this.finger.add(new THREE.Mesh(
+      new THREE.TorusGeometry(0.23, 0.018, 8, 32),
+      new THREE.MeshBasicMaterial({ color: '#ffe19a' }),
+    ))
+    this.finger.visible = false
+    this.scene.add(this.finger)
+    this.flickRing.visible = false
+    this.scene.add(this.flickRing)
     this.resizeObserver = new ResizeObserver(() => this.resize(host))
     this.resizeObserver.observe(host)
     this.resize(host)
@@ -103,7 +122,14 @@ export class SceneView {
     return result.set(THREE.MathUtils.clamp(result.x, -5.2, 5.2), THREE.MathUtils.clamp(result.y, 0.27, 4.3), 0)
   }
 
-  update(objects: ObjectSnapshot[], handPosition: THREE.Vector3 | null, now: number): void {
+  showFlick(flick: Flick, now: number): void {
+    this.flickRing.position.set(flick.origin.x, flick.origin.y, flick.origin.z + 0.12)
+    ;(this.flickRing.material as THREE.MeshBasicMaterial).color.set(flick.source === 'finger' ? '#ffe19a' : '#a6fff1')
+    this.flickAt = now
+    this.flickRing.visible = true
+  }
+
+  update(objects: ObjectSnapshot[], handPosition: THREE.Vector3 | null, fingertipPosition: THREE.Vector3 | null, now: number): void {
     const active = new Set<number>()
     for (const object of objects) {
       active.add(object.id)
@@ -128,6 +154,14 @@ export class SceneView {
     if (handPosition) {
       this.hand.position.copy(handPosition)
       this.hand.rotation.z = Math.sin(now * 0.002) * 0.08
+    }
+    this.finger.visible = fingertipPosition !== null
+    if (fingertipPosition) this.finger.position.copy(fingertipPosition)
+    const age = (now - this.flickAt) / 380
+    this.flickRing.visible = age >= 0 && age < 1
+    if (this.flickRing.visible) {
+      this.flickRing.scale.setScalar(1 + age * 2.4)
+      ;(this.flickRing.material as THREE.MeshBasicMaterial).opacity = (1 - age) * 0.9
     }
     this.renderer.render(this.scene, this.camera)
   }

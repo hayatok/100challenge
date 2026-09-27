@@ -1,10 +1,10 @@
 # Reality Sandbox
 
-Webcam の片手で 3D の物体を押せる、ブラウザ内の物理プレイグラウンドです。手のひら 1 点の collider でボール・箱・ドミノに触れます。
+Webcam の片手で 3D の物体を押し、弾けるブラウザ内の物理プレイグラウンドです。手のひらと伸ばした人差し指の簡易 collider でボール・箱・ドミノに触れます。
 
 ## Play
 
-Camera で始めるか Mouse Mode を選び、手またはポインターを物体へ動かします。操作パネルの `+ BALL`・`+ BOX`・`+ DOMINO` で 1 個ずつ追加できます。`CLEAR ALL` は空の世界にし、`RESET 20` は初期のボール 20 個へ戻します。`LOAD 100` は 3 種類の混合プリセットを読み込みます。100 個が上限です。
+`FRONT CAMERA` または `REAR CAMERA` で始め、手のひらをボールに向かって横に振ります。人差し指を伸ばしてボールを横切るように素早く動かしても弾けます。プレイ中はプレビューのボタンでカメラを切り替えられます。カメラが使えない場合は `TRY WITH MOUSE` を選び、ポインターで同じように払います。操作パネルの `+ BALL`・`+ BOX`・`+ DOMINO` で 1 個ずつ追加できます。`CLEAR ALL` は空の世界にし、`RESET 20` は初期のボール 20 個へ戻します。`LOAD 100` は 3 種類の混合プリセットを読み込みます。100 個が上限です。
 
 ## Run
 
@@ -17,12 +17,12 @@ npm run dev
 
 ## Architecture
 
-- `src/vision`: MediaPipe の出力を手のひら中心へ縮約。カメラ取得と検出はここに閉じ込める。
-- `src/physics`: Rapier の固定 60 Hz 世界、3 種類の動的物体、単一の kinematic hand collider。
+- `src/vision`: MediaPipe の出力を手のひらと人差し指へ縮約。前面・背面カメラ取得、座標変換、フリック検出はここに閉じ込める。
+- `src/physics`: Rapier の固定 60 Hz 世界、3 種類の動的物体、手のひらと指先の kinematic collider、フリックの impulse。
 - `src/rendering`: Three.js のシーンと、画面座標から衝突平面への投影。
 - `src/main.ts`: 開始状態、操作、平滑化、各更新周期、表示。
 
-Tracking は約 30 Hz、physics は固定 60 Hz、render は `requestAnimationFrame`。手の位置は指数平滑化し、collider の 1 step の最大移動距離を制限します。カメラ像は鏡像プレビューにし、x 座標も反転させます。
+Tracking は約 30 Hz、physics は固定 60 Hz、render は `requestAnimationFrame`。手の位置は指数平滑化し、collider の 1 step の最大移動距離を制限します。前面カメラのみプレビューと x 座標を左右反転し、背面カメラは自然な向きで表示します。フリックは短いクールダウンと速度上限を使い、物理の固定 step に力を渡します。
 
 ## Privacy and assets
 
@@ -34,4 +34,4 @@ MediaPipe Tasks package は Apache-2.0、Rapier は Apache-2.0、Three.js は MI
 
 ## Current limits
 
-対象は Desktop Chrome。奥行きは固定の衝突平面を使い、現実の手の距離は推定しません。掴む、指先、ジェスチャー、スマートフォン最適化は未実装です。MediaPipe の同期推論による描画停止は性能検証対象です。
+対象は Desktop Chrome。iPhone の前面・背面カメラ操作は実機検証対象です。奥行きは固定の衝突平面を使い、現実の手の距離は推定しません。指先は人差し指の先端 1 点のみで、掴む操作や指の骨格は未実装です。MediaPipe の同期推論による描画停止は性能検証対象です。背面カメラの選択には対応端末と HTTPS が必要です。

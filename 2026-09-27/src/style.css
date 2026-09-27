@@ -142,11 +142,34 @@ button:disabled {
   position: absolute;
   left: 22px;
   bottom: 185px;
+  display: grid;
+  gap: 5px;
   font-size: 12px;
   color: #a9c4d4;
   letter-spacing: 0.02em;
   pointer-events: none;
-  max-width: 240px;
+  max-width: 330px;
+  text-shadow: 0 2px 8px #03101a;
+}
+.world-hint strong {
+  color: #81eadd;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+}
+.gesture-feedback {
+  position: absolute;
+  left: 22px;
+  top: 56px;
+  color: #9affed;
+  font-size: 15px;
+  font-weight: 900;
+  letter-spacing: 0.16em;
+  text-shadow: 0 0 18px #35e6ca;
+  pointer-events: none;
+}
+.gesture-feedback.finger {
+  color: #ffe8a5;
+  text-shadow: 0 0 18px #ffcf72;
 }
 .camera-card {
   position: absolute;
@@ -181,12 +204,29 @@ button:disabled {
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+.video-wrap video.mirrored {
   transform: scaleX(-1);
 }
 .camera-foot {
   line-height: 1.35;
   letter-spacing: 0.025em;
   color: #9bb4c1;
+}
+.camera-card button {
+  width: 100%;
+  min-height: 44px;
+  padding: 6px 8px;
+  border: 0;
+  border-top: 1px solid #34586b;
+  color: #c8fff3;
+  background: #153140;
+  font-size: 9px;
+  font-weight: 850;
+  letter-spacing: 0.08em;
+}
+.camera-card button:hover {
+  background: #245266;
 }
 .sandbox-controls {
   position: absolute;
@@ -300,6 +340,29 @@ button:disabled {
   color: #a8bfce;
   margin: 0 auto 26px;
   max-width: 380px;
+}
+.how-to {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin: 0 auto 24px;
+  max-width: 560px;
+  text-align: left;
+}
+.how-to div {
+  display: grid;
+  gap: 6px;
+  padding: 12px 14px;
+  border: 1px solid #315668;
+  background: #0e2030;
+  color: #bdd8e0;
+  font-size: 12px;
+  line-height: 1.4;
+}
+.how-to b {
+  color: #7deada;
+  font-size: 10px;
+  letter-spacing: 0.14em;
 }
 .intro-actions {
   display: flex;
@@ -415,8 +478,14 @@ button:disabled {
     max-height: none;
   }
   .world-hint {
-    bottom: 275px;
+    top: 115px;
+    bottom: auto;
+    left: 12px;
+    padding: 9px 10px;
+    border-left: 2px solid #6ce5d6;
+    background: #07121ee8;
     font-size: 11px;
+    max-width: 190px;
   }
   .camera-card {
     width: 130px;
@@ -431,12 +500,24 @@ button:disabled {
   }
   .intro {
     padding: 20px;
+    overflow-y: auto;
   }
   .intro h1 {
     font-size: clamp(44px, 11vw, 76px);
   }
   .intro-sub {
     font-size: 13px;
+    margin-bottom: 16px;
+  }
+  .how-to {
+    grid-template-columns: 1fr;
+    gap: 6px;
+    margin-bottom: 16px;
+  }
+  .how-to div {
+    padding: 8px 10px;
+    gap: 2px;
+    font-size: 11px;
   }
   .intro-actions {
     gap: 8px;

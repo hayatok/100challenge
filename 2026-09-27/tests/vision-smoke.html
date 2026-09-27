@@ -3,6 +3,7 @@
 <body><output id="result">Loading local WASM and model…</output>
 <script type="module">
   import { FilesetResolver, HandLandmarker } from '@mediapipe/tasks-vision'
+  import { readPalm } from '/src/vision/HandState.ts'
   const result = document.getElementById('result')
   try {
     const start = performance.now()
@@ -23,9 +24,10 @@
     video.srcObject = canvas.captureStream(30)
     await video.play()
     const detection = detector.detectForVideo(video, performance.now())
+    const hand = readPalm(detection)
     video.srcObject.getTracks().forEach(track => track.stop())
     const origins = [...new Set(performance.getEntriesByType('resource').map(entry => new URL(entry.name).origin))]
-    result.textContent = `READY: local VIDEO model found ${detection.landmarks.length} hand(s), ${detection.landmarks[0]?.length ?? 0} landmarks; init + detection ${Math.round(performance.now() - start)} ms; observed resource origins: ${origins.join(', ')}`
+    result.textContent = `READY: local VIDEO model found ${detection.landmarks.length} hand(s), ${detection.landmarks[0]?.length ?? 0} landmarks; index tip ${hand.indexTip ? 'visible' : 'curled/hidden'}; init + detection ${Math.round(performance.now() - start)} ms; observed resource origins: ${origins.join(', ')}`
     detector.close()
   } catch (error) {
     result.textContent = `FAILED: ${error.message}`

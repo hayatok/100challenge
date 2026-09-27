@@ -1,5 +1,6 @@
 import RAPIER from '@dimforge/rapier3d-compat'
 import { Vector3 } from 'three'
+import type { Flick } from '../vision/FlickDetector'
 
 export type ObjectKind = 'ball' | 'box' | 'domino'
 
@@ -23,11 +24,15 @@ interface PhysicsObject {
 export class PhysicsWorld {
   private world!: RAPIER.World
   private hand!: RAPIER.RigidBody
+  private fingertip!: RAPIER.RigidBody
   private objects: PhysicsObject[] = []
   private nextId = 1
   private spawnIndex = 0
   private target = new Vector3(0, -10, 0)
+  private fingertipTarget = new Vector3(0, -10, 0)
   private active = false
+  private fingertipActive = false
+  private queuedFlicks: Flick[] = []
   readonly timestep = 1 / 60
   readonly maxObjects = 100
 
@@ -45,6 +50,8 @@ export class PhysicsWorld {
     }
     this.hand = this.world.createRigidBody(RAPIER.RigidBodyDesc.kinematicPositionBased().setTranslation(0, -10, 0))
     this.world.createCollider(RAPIER.ColliderDesc.ball(0.48).setFriction(0.2), this.hand)
+    this.fingertip = this.world.createRigidBody(RAPIER.RigidBodyDesc.kinematicPositionBased().setTranslation(0, -10, 0))
+    this.world.createCollider(RAPIER.ColliderDesc.ball(0.17).setFriction(0.15), this.fingertip)
     this.resetObjects()
   }
 
@@ -75,6 +82,7 @@ export class PhysicsWorld {
   clearObjects(): void {
     for (const object of this.objects) this.world.removeRigidBody(object.body)
     this.objects = []
+    this.queuedFlicks = []
     this.spawnIndex = 0
   }
 
@@ -114,12 +122,63 @@ export class PhysicsWorld {
     }
   }
 
+  setFingertipTarget(position: Vector3 | null): void {
+    if (!position) {
+      this.fingertipActive = false
+      this.fingertipTarget.set(0, -10, 0)
+      this.fingertip.setTranslation({ x: 0, y: -10, z: 0 }, true)
+      return
+    }
+    this.fingertipTarget.copy(position)
+    if (!this.fingertipActive) {
+      this.fingertip.setTranslation(position, true)
+      this.fingertipActive = true
+    }
+  }
+
+  queueFlick(flick: Flick): void {
+    if (this.queuedFlicks.length < 2) this.queuedFlicks.push(flick)
+  }
+
+  private applyFlick(flick: Flick): void {
+    const reach = flick.source === 'finger' ? 0.72 : 0.95
+    for (const object of this.objects) {
+      const point = object.body.translation()
+      const distance = Math.hypot(point.x - flick.origin.x, point.y - flick.origin.y, point.z - flick.origin.z)
+      const range = reach + Math.max(object.size.x, object.size.y, object.size.z) / 2
+      if (distance > range) continue
+      const falloff = Math.max(0.15, 1 - distance / range)
+      const gain = flick.source === 'finger' ? 4 : 3
+      const speed = Math.min(11, gain + flick.speed * 0.45) * falloff
+      const direction = new Vector3(flick.direction.x, flick.direction.y + 0.08, flick.direction.z).normalize()
+      const current = object.body.linvel()
+      const next = new Vector3(current.x, current.y, current.z).addScaledVector(direction, speed)
+      if (next.length() > 16) next.setLength(16)
+      const mass = object.body.mass()
+      object.body.applyImpulse({
+        x: (next.x - current.x) * mass,
+        y: (next.y - current.y) * mass,
+        z: (next.z - current.z) * mass,
+      }, true)
+    }
+  }
+
   step(): number {
     const start = performance.now()
     const current = this.hand.translation()
     const delta = this.target.clone().sub(new Vector3(current.x, current.y, current.z))
     delta.clampLength(0, 0.28)
     this.hand.setNextKinematicTranslation({ x: current.x + delta.x, y: current.y + delta.y, z: current.z + delta.z })
+    const fingertip = this.fingertip.translation()
+    const fingertipDelta = this.fingertipTarget.clone().sub(new Vector3(fingertip.x, fingertip.y, fingertip.z))
+    fingertipDelta.clampLength(0, 0.3)
+    this.fingertip.setNextKinematicTranslation({
+      x: fingertip.x + fingertipDelta.x,
+      y: fingertip.y + fingertipDelta.y,
+      z: fingertip.z + fingertipDelta.z,
+    })
+    for (const flick of this.queuedFlicks) this.applyFlick(flick)
+    this.queuedFlicks = []
     this.world.step()
     return performance.now() - start
   }
@@ -127,6 +186,12 @@ export class PhysicsWorld {
   getHandPosition(): Vector3 | null {
     if (!this.active) return null
     const point = this.hand.translation()
+    return new Vector3(point.x, point.y, point.z)
+  }
+
+  getFingertipPosition(): Vector3 | null {
+    if (!this.fingertipActive) return null
+    const point = this.fingertip.translation()
     return new Vector3(point.x, point.y, point.z)
   }
 

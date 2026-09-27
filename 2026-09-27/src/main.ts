@@ -1,6 +1,8 @@
 import { Vector3 } from 'three'
 import { PhysicsWorld, type ObjectKind } from './physics/PhysicsWorld'
 import { SceneView } from './rendering/SceneView'
+import { imageXToScreen, type CameraFacing } from './vision/CameraFacing'
+import { FlickDetector, type Flick } from './vision/FlickDetector'
 import { HandTracker } from './vision/HandTracker'
 import './style.css'
 
@@ -14,14 +16,15 @@ app.innerHTML = `
       <div id="world" class="world"></div>
       <div class="world-shine" aria-hidden="true"></div>
       <div class="world-tag"><span class="pulse"></span><span id="mode-label">WORLD STANDBY</span></div>
-      <div class="world-hint" id="world-hint">Move your hand across the camera to scatter the objects.</div>
-      <aside class="camera-card" id="camera-card" hidden><div class="camera-head"><span>CAM / LIVE</span><span id="hand-label">SEARCHING</span></div><div class="video-wrap" id="video-wrap"></div><div class="camera-foot">Mirror preview · video stays on this device</div></aside>
+      <div class="world-hint" id="world-hint"><strong id="guide-title">SWEEP YOUR PALM</strong><span id="guide-detail">Move through a ball. Extend your index finger and flick it across one.</span></div>
+      <div class="gesture-feedback" id="gesture-feedback" aria-live="polite"></div>
+      <aside class="camera-card" id="camera-card" hidden><div class="camera-head"><span id="camera-facing">FRONT CAM</span><span id="hand-label">SEARCHING</span></div><div class="video-wrap" id="video-wrap"></div><div class="camera-foot" id="preview-note">Mirror preview · on-device processing</div><button id="flip-camera" type="button">USE REAR CAMERA</button></aside>
       <div class="sandbox-controls" id="bottom-controls" hidden>
         <div class="sandbox-heading"><span>BUILD YOUR WORLD</span><strong><span id="object-count">20</span> / 100 OBJECTS</strong></div>
         <div class="sandbox-actions" aria-label="Add objects"><button data-add="ball" type="button">+ BALL</button><button data-add="box" type="button">+ BOX</button><button data-add="domino" type="button">+ DOMINO</button></div>
         <div class="sandbox-actions sandbox-secondary"><button id="reset" type="button">RESET 20</button><button id="load-100" type="button">LOAD 100</button><button id="clear" type="button">CLEAR ALL</button><button id="switch-mode" type="button">USE MOUSE</button></div>
       </div>
-      <section class="intro" id="intro" aria-labelledby="intro-title"><div class="intro-inner"><p class="eyebrow">INTERACTIVE PHYSICS PLAYGROUND</p><h1 id="intro-title">REALITY<br><em>SANDBOX</em></h1><p class="intro-line">Move your hand.<br>Touch the world.</p><p class="intro-sub">Your webcam becomes a way into this world. Push balls, boxes, and dominoes around.</p><div class="intro-actions"><button id="start" class="primary" type="button">START WITH CAMERA <span aria-hidden="true">↗</span></button><button id="mouse" type="button">TRY WITH MOUSE</button></div><p class="privacy">Camera processing stays on this device. No account required.</p><p id="notice" class="notice" role="status" aria-live="polite"></p></div></section>
+      <section class="intro" id="intro" aria-labelledby="intro-title"><div class="intro-inner"><p class="eyebrow">INTERACTIVE PHYSICS PLAYGROUND</p><h1 id="intro-title">REALITY<br><em>SANDBOX</em></h1><p class="intro-line">Move your hand.<br>Touch the world.</p><p class="intro-sub">Aim a camera at one hand. Move through a ball to push it.</p><div class="how-to"><div><b>01 / PALM</b><span>Sweep your hand sideways through a ball.</span></div><div><b>02 / FINGER</b><span>Extend your index finger and flick across a ball.</span></div></div><div class="intro-actions"><button id="start-front" class="primary" type="button">FRONT CAMERA <span aria-hidden="true">↗</span></button><button id="start-rear" type="button">REAR CAMERA</button><button id="mouse" type="button">TRY WITH MOUSE</button></div><p class="privacy">Camera processing stays on this device. No account required.</p><p id="notice" class="notice" role="status" aria-live="polite"></p></div></section>
     </section>
     <footer class="statusbar"><span class="status-text" id="status">INITIALIZING WORLD</span><button id="debug-toggle" type="button" aria-expanded="false">DEBUG <span aria-hidden="true">⌁</span></button><div id="debug" class="debug" hidden><span>RENDER <b id="render-fps">—</b> FPS</span><span>TRACK <b id="track-fps">—</b> FPS</span><span>PHYSICS <b id="physics-time">—</b> MS</span><span>HANDS <b id="hands">0</b></span><span>OBJECTS <b id="objects">20</b></span></div></footer>
   </main>`
@@ -34,9 +37,13 @@ const modeLabel = element<HTMLElement>('mode-label')
 const handLabel = element<HTMLElement>('hand-label')
 const controls = element<HTMLElement>('bottom-controls')
 const cameraCard = element<HTMLElement>('camera-card')
-const hint = element<HTMLElement>('world-hint')
+const guideTitle = element<HTMLElement>('guide-title')
+const guideDetail = element<HTMLElement>('guide-detail')
+const feedback = element<HTMLElement>('gesture-feedback')
 const switchMode = element<HTMLButtonElement>('switch-mode')
+const flipCamera = element<HTMLButtonElement>('flip-camera')
 const worldElement = element<HTMLElement>('world')
+const flickDetector = new FlickDetector()
 
 let scene: SceneView
 let physics: PhysicsWorld
@@ -44,7 +51,10 @@ let tracker: HandTracker | undefined
 let mode: Mode = 'idle'
 let handTarget: Vector3 | null = null
 let smoothedTarget: Vector3 | null = null
+let fingertipTarget: Vector3 | null = null
+let smoothedFingertip: Vector3 | null = null
 let handSeenAt = 0
+let feedbackUntil = 0
 let lastFrame = performance.now()
 let accumulator = 0
 let renderFrames = 0
@@ -55,6 +65,34 @@ let statsAt = performance.now()
 let startGeneration = 0
 
 function setStatus(message: string): void { status.textContent = message }
+
+function clearHand(): void {
+  handTarget = null
+  smoothedTarget = null
+  fingertipTarget = null
+  smoothedFingertip = null
+  flickDetector.reset()
+  physics.setHandTarget(null)
+  physics.setFingertipTarget(null)
+  element<HTMLElement>('hands').textContent = '0'
+}
+
+function showFlick(flick: Flick, now: number): void {
+  physics.queueFlick(flick)
+  scene.showFlick(flick, now)
+  feedback.textContent = flick.source === 'finger' ? 'INDEX FLICK!' : 'PALM SWIPE!'
+  feedback.classList.toggle('finger', flick.source === 'finger')
+  feedbackUntil = now + 700
+}
+
+function syncCameraFacing(): void {
+  if (!tracker) return
+  const rear = tracker.facing === 'environment'
+  element<HTMLElement>('camera-facing').textContent = rear ? 'REAR CAM' : 'FRONT CAM'
+  element<HTMLElement>('preview-note').textContent = rear ? 'Natural view · on-device processing' : 'Mirror preview · on-device processing'
+  tracker.video.classList.toggle('mirrored', !rear)
+  flipCamera.textContent = rear ? 'USE FRONT CAMERA' : 'USE REAR CAMERA'
+}
 
 function syncObjectControls(): void {
   const count = physics.objectCount
@@ -73,31 +111,35 @@ function activate(next: Mode): void {
   controls.hidden = false
   cameraCard.hidden = next !== 'camera'
   modeLabel.textContent = next === 'camera' ? 'CAMERA CONNECTED' : 'MOUSE MODE'
-  hint.textContent = next === 'camera' ? 'Show one hand, then sweep it through the objects.' : 'Move your pointer across the objects.'
+  guideTitle.textContent = next === 'camera' ? 'SWEEP YOUR PALM' : 'SWIPE WITH YOUR POINTER'
+  guideDetail.textContent = next === 'camera'
+    ? 'Move through a ball. Extend your index finger and flick it across one.'
+    : 'Move through a ball. A quick swipe sends it flying.'
   switchMode.textContent = next === 'camera' ? 'USE MOUSE' : 'USE CAMERA'
   if (next === 'mouse') {
     tracker?.stop()
     tracker = undefined
-    smoothedTarget = null
-    handTarget = null
-    physics.setHandTarget(null)
+    clearHand()
     setStatus('MOUSE MODE · MOVE POINTER TO TOUCH')
   } else {
+    clearHand()
+    syncCameraFacing()
     setStatus('CAMERA READY · SHOW YOUR HAND')
   }
   syncObjectControls()
 }
 
-async function startCamera(): Promise<void> {
+async function startCamera(facing: CameraFacing): Promise<void> {
   if (!physics || mode === 'camera') return
   const generation = ++startGeneration
-  element<HTMLButtonElement>('start').disabled = true
+  element<HTMLButtonElement>('start-front').disabled = true
+  element<HTMLButtonElement>('start-rear').disabled = true
   notice.textContent = 'Waiting for camera…'
   tracker?.stop()
   const pendingTracker = new HandTracker()
   tracker = pendingTracker
   try {
-    await pendingTracker.start(message => { if (generation === startGeneration) { notice.textContent = message; setStatus(message.toUpperCase()) } })
+    await pendingTracker.start(message => { if (generation === startGeneration) { notice.textContent = message; setStatus(message.toUpperCase()) } }, facing)
     if (generation !== startGeneration) { pendingTracker.stop(); return }
     const preview = element<HTMLElement>('video-wrap')
     preview.replaceChildren(pendingTracker.video)
@@ -106,20 +148,50 @@ async function startCamera(): Promise<void> {
     pendingTracker.stop()
     if (generation !== startGeneration) return
     tracker = undefined
-    const message = error instanceof DOMException && error.name === 'NotAllowedError'
+    const errorName = error instanceof Error ? error.name : ''
+    const message = errorName === 'NotAllowedError'
       ? 'Camera permission was denied. You can still play with your mouse.'
-      : `Camera could not start. ${error instanceof Error ? error.message : 'Try Mouse Mode.'}`
+      : facing === 'environment' && (errorName === 'OverconstrainedError' || errorName === 'NotFoundError')
+        ? 'Rear camera was not found. Try Front Camera or Mouse Mode.'
+        : `Camera could not start. ${error instanceof Error && error.message ? error.message : 'Try another camera or Mouse Mode.'}`
     notice.textContent = message
     setStatus('CAMERA UNAVAILABLE · MOUSE MODE READY')
   } finally {
-    element<HTMLButtonElement>('start').disabled = false
+    element<HTMLButtonElement>('start-front').disabled = false
+    element<HTMLButtonElement>('start-rear').disabled = false
   }
 }
 
 function startMouse(): void { activate('mouse') }
 
-element<HTMLButtonElement>('start').addEventListener('click', () => void startCamera())
+element<HTMLButtonElement>('start-front').addEventListener('click', () => void startCamera('user'))
+element<HTMLButtonElement>('start-rear').addEventListener('click', () => void startCamera('environment'))
 element<HTMLButtonElement>('mouse').addEventListener('click', startMouse)
+flipCamera.addEventListener('click', async () => {
+  const activeTracker = tracker
+  if (!activeTracker || mode !== 'camera') return
+  const generation = ++startGeneration
+  const target: CameraFacing = activeTracker.facing === 'user' ? 'environment' : 'user'
+  flipCamera.disabled = true
+  handLabel.textContent = 'SWITCHING'
+  clearHand()
+  try {
+    const switched = await activeTracker.switchFacing(target, message => {
+      if (generation === startGeneration) setStatus(message.toUpperCase())
+    })
+    if (generation !== startGeneration || tracker !== activeTracker || mode !== 'camera') return
+    syncCameraFacing()
+    handLabel.textContent = 'SEARCHING'
+    setStatus(switched ? `${target === 'environment' ? 'REAR' : 'FRONT'} CAMERA READY · SHOW YOUR HAND`
+      : `${target === 'environment' ? 'REAR' : 'FRONT'} CAMERA UNAVAILABLE · PREVIOUS CAMERA RESTORED`)
+  } catch (error) {
+    if (generation !== startGeneration || tracker !== activeTracker || mode !== 'camera') return
+    startMouse()
+    setStatus(`CAMERA SWITCH FAILED · ${error instanceof Error ? error.message : 'TRY MOUSE MODE'}`)
+  } finally {
+    flipCamera.disabled = false
+  }
+})
 for (const button of document.querySelectorAll<HTMLButtonElement>('[data-add]')) {
   button.addEventListener('click', () => {
     const kind = button.dataset.add as ObjectKind
@@ -149,7 +221,7 @@ switchMode.addEventListener('click', () => {
   else {
     intro.hidden = false
     notice.textContent = ''
-    void startCamera()
+    setStatus('CHOOSE FRONT OR REAR CAMERA')
   }
 })
 element<HTMLButtonElement>('debug-toggle').addEventListener('click', event => {
@@ -161,9 +233,12 @@ worldElement.addEventListener('pointermove', event => {
   if (mode !== 'mouse') return
   const bounds = worldElement.getBoundingClientRect()
   handTarget = scene.screenToWorld((event.clientX - bounds.left) / bounds.width, (event.clientY - bounds.top) / bounds.height)
+  const now = performance.now()
+  const flick = flickDetector.sample(handTarget, null, now)
+  if (flick) showFlick(flick, now)
 })
 worldElement.addEventListener('pointerleave', () => {
-  if (mode === 'mouse') { handTarget = null; smoothedTarget = null; physics.setHandTarget(null) }
+  if (mode === 'mouse') clearHand()
 })
 
 function frame(now: number): void {
@@ -177,34 +252,29 @@ function frame(now: number): void {
         trackFrames++
         element<HTMLElement>('hands').textContent = state.detected ? '1' : '0'
         if (state.detected) {
-          // The preview is mirrored, so image x is inverted into screen x.
-          handTarget = scene.screenToWorld(1 - state.x, state.y)
+          handTarget = scene.screenToWorld(imageXToScreen(state.x, tracker.facing), state.y)
+          fingertipTarget = state.indexTip
+            ? scene.screenToWorld(imageXToScreen(state.indexTip.x, tracker.facing), state.indexTip.y)
+            : null
+          const flick = flickDetector.sample(handTarget, fingertipTarget, now)
+          if (flick) showFlick(flick, now)
           handSeenAt = now
           handLabel.textContent = 'HAND FOUND'
-          setStatus(`${state.handedness.toUpperCase() || 'HAND'} TRACKED · SWEEP TO PUSH`)
+          setStatus(`${state.handedness.toUpperCase() || 'HAND'} TRACKED · SWEEP OR FLICK`)
         } else if (now - handSeenAt > 180) {
-          handTarget = null
-          smoothedTarget = null
+          clearHand()
           handLabel.textContent = 'SEARCHING'
           setStatus('SHOW ONE HAND TO THE CAMERA')
         }
       }
     } catch (error) {
-      tracker.stop()
-      tracker = undefined
-      mode = 'mouse'
-      cameraCard.hidden = true
-      switchMode.textContent = 'USE CAMERA'
+      startMouse()
       setStatus('TRACKING STOPPED · MOVE POINTER TO PLAY')
-      handTarget = null
-      smoothedTarget = null
-      physics.setHandTarget(null)
       console.error('Hand tracking stopped:', error)
     }
   }
   if (mode === 'camera' && handTarget && now - handSeenAt > 400) {
-    handTarget = null
-    smoothedTarget = null
+    clearHand()
     handLabel.textContent = 'SEARCHING'
     setStatus('SHOW ONE HAND TO THE CAMERA')
   }
@@ -213,8 +283,17 @@ function frame(now: number): void {
     if (!smoothedTarget) smoothedTarget = handTarget.clone()
     else smoothedTarget.lerp(handTarget, 1 - Math.exp(-dt * 18))
     physics.setHandTarget(smoothedTarget)
+    if (fingertipTarget) {
+      if (!smoothedFingertip) smoothedFingertip = fingertipTarget.clone()
+      else smoothedFingertip.lerp(fingertipTarget, 1 - Math.exp(-dt * 22))
+      physics.setFingertipTarget(smoothedFingertip)
+    } else {
+      smoothedFingertip = null
+      physics.setFingertipTarget(null)
+    }
   } else if (mode !== 'idle') {
     physics.setHandTarget(null)
+    physics.setFingertipTarget(null)
   }
 
   accumulator += dt
@@ -226,7 +305,8 @@ function frame(now: number): void {
     steps++
   }
   if (steps === 3) accumulator = 0
-  scene.update(physics.getObjects(), physics.getHandPosition(), now)
+  scene.update(physics.getObjects(), physics.getHandPosition(), physics.getFingertipPosition(), now)
+  if (feedback.textContent && now > feedbackUntil) feedback.textContent = ''
   renderFrames++
 
   if (now - statsAt >= 1000) {
@@ -251,7 +331,8 @@ async function boot(): Promise<void> {
   } catch (error) {
     notice.textContent = `This browser cannot start the 3D world. ${error instanceof Error ? error.message : ''}`
     setStatus('WORLD UNAVAILABLE')
-    element<HTMLButtonElement>('start').disabled = true
+    element<HTMLButtonElement>('start-front').disabled = true
+    element<HTMLButtonElement>('start-rear').disabled = true
     element<HTMLButtonElement>('mouse').disabled = true
   }
 }
