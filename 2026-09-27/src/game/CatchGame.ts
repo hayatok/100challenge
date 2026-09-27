@@ -14,7 +14,7 @@ export class CatchGame {
   spawned = 0
   private countdown = 2.2
   private spawnClock = 0
-  private active = new Map<number, number>()
+  private active = new Map<number, { x: number, age: number }>()
   private laneReach = 2.2
   private physics: PhysicsWorld
 
@@ -35,7 +35,7 @@ export class CatchGame {
   get nextX(): number | null {
     return this.spawned < this.total ? lanes[this.spawned] * this.laneReach : null
   }
-  get cueX(): number | null { return this.active.values().next().value ?? this.nextX }
+  get cueX(): number | null { return this.active.values().next().value?.x ?? this.nextX }
 
   get remaining(): number { return this.total - this.catches - this.misses }
   get countdownSeconds(): number { return Math.max(1, Math.ceil(this.countdown)) }
@@ -53,23 +53,25 @@ export class CatchGame {
       this.spawnClock -= 1.45
       const x = lanes[this.spawned] * this.laneReach
       const id = this.physics.spawnCatchBall(x)
-      if (id !== null) { this.active.set(id, x); this.spawned++ }
+      if (id !== null) { this.active.set(id, { x, age: 0 }); this.spawned++ }
     }
 
     let event: CatchEvent = null
+    for (const ball of this.active.values()) ball.age += dt
     for (const object of objects) {
-      if (!this.active.has(object.id)) continue
+      const ball = this.active.get(object.id)
+      if (!ball) continue
       const dx = Math.abs(object.x - hand.x)
-      const dy = object.y - hand.y
+      const dy = Math.abs(object.y - hand.y)
       const dz = Math.abs(object.z - hand.z)
-      // Broad palm target tolerates pose noise while still rewarding depth and a palm facing up/forward.
-      const reach = normal.y < -0.4 ? 0.62 : 0.82
-      if (dx < reach && dy > -0.36 && dy < 0.52 && dz < 1.04) {
+      // A broad target keeps the catch responsive; a palm facing the camera has more reach.
+      const reach = normal.z < 0.4 ? 0.62 : 0.82
+      if (dx < reach && dy < reach && dz < 0.88) {
         this.catches++
         this.active.delete(object.id)
         this.physics.removeObject(object.id)
         event = 'caught'
-      } else if (object.y < 0.28) {
+      } else if (object.z > 2.15 || ball.age > 3.5) {
         this.misses++
         this.active.delete(object.id)
         this.physics.removeObject(object.id)

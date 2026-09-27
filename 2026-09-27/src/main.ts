@@ -36,7 +36,7 @@ app.innerHTML = `
         <div class="sandbox-actions" aria-label="Add objects"><button data-add="ball" type="button">+ BALL</button><button data-add="box" type="button">+ BOX</button><button data-add="domino" type="button">+ DOMINO</button></div>
         <div class="sandbox-actions sandbox-secondary"><button id="reset" type="button">RESET 20</button><button id="load-100" type="button">LOAD 100</button><button id="clear" type="button">CLEAR ALL</button><button id="switch-mode" type="button">USE MOUSE</button></div>
       </div>
-      <section class="intro" id="intro" aria-labelledby="intro-title"><div class="intro-inner"><p class="eyebrow">INTERACTIVE PHYSICS PLAYGROUND</p><h1 id="intro-title">REALITY<br><em>SANDBOX</em></h1><p class="intro-line">Move your hand.<br>Touch the world.</p><p class="intro-sub">カメラを選んだら PLAY BALL CATCH。光る落下位置へ手のひらを動かすだけ。</p><div class="how-to"><div><b>01 / BALL CATCH</b><span>上から落ちるボールを手のひらで受け止める。指の操作は不要。</span></div><div><b>02 / SANDBOX</b><span>ボールを手で押したり、指先で弾いたりして自由に遊べる。</span></div></div><div class="intro-actions"><button id="start-front" class="primary" type="button">FRONT CAMERA <span aria-hidden="true">↗</span></button><button id="start-rear" type="button">REAR CAMERA</button><button id="mouse" type="button">TRY WITH MOUSE</button></div><p class="privacy">Camera processing stays on this device. No account required.</p><p id="notice" class="notice" role="status" aria-live="polite"></p></div></section>
+      <section class="intro" id="intro" aria-labelledby="intro-title"><div class="intro-inner"><p class="eyebrow">INTERACTIVE PHYSICS PLAYGROUND</p><h1 id="intro-title">REALITY<br><em>SANDBOX</em></h1><p class="intro-line">Move your hand.<br>Touch the world.</p><p class="intro-sub">カメラを選んだら PLAY BALL CATCH。手のひらをカメラへ向け、奥から飛んでくるボールを受け止めよう。</p><div class="how-to"><div><b>01 / BALL CATCH</b><span>画面奥から迫るボールに手のひらを重ねる。指の操作は不要。</span></div><div><b>02 / SANDBOX</b><span>ボールを手で押したり、指先で弾いたりして自由に遊べる。</span></div></div><div class="intro-actions"><button id="start-front" class="primary" type="button">FRONT CAMERA <span aria-hidden="true">↗</span></button><button id="start-rear" type="button">REAR CAMERA</button><button id="mouse" type="button">TRY WITH MOUSE</button></div><p class="privacy">Camera processing stays on this device. No account required.</p><p id="notice" class="notice" role="status" aria-live="polite"></p></div></section>
     </section>
     <footer class="statusbar"><span class="status-text" id="status">INITIALIZING WORLD</span><button id="debug-toggle" type="button" aria-expanded="false">DEBUG <span aria-hidden="true">⌁</span></button><div id="debug" class="debug" hidden><span>RENDER <b id="render-fps">—</b> FPS</span><span>TRACK <b id="track-fps">—</b> FPS</span><span>PHYSICS <b id="physics-time">—</b> MS</span><span>HANDS <b id="hands">0</b></span><span>OBJECTS <b id="objects">20</b></span></div></footer>
   </main>`
@@ -114,8 +114,8 @@ function clearHand(): void {
   guideTitle.textContent = activity === 'catch' ? mode === 'camera' ? '手のひらを映す' : 'ポインターを動かす'
     : mode === 'camera' ? '手をカメラに映す' : 'ボールを狙う'
   guideDetail.textContent = activity === 'catch' ? mode === 'camera'
-    ? '光る落下位置へ水色の手のひらを動かしてキャッチ。指の操作は不要。'
-    : '光る落下位置へ水色の球を動かしてキャッチ。'
+    ? '手のひらをカメラへ向け、光る輪の前で迫るボールをキャッチ。'
+    : '光る輪の前へ水色の球を動かし、迫るボールをキャッチ。'
     : mode === 'camera'
     ? '手全体を映し、3D画面に水色の手が現れるのを待つ。'
     : '水色の球をボールに重ね、横へ払う。'
@@ -184,7 +184,7 @@ function activate(next: Mode): void {
   catchRecenter.hidden = next !== 'camera'
   modeLabel.textContent = activity === 'catch' ? 'BALL CATCH' : next === 'camera' ? 'CAMERA CONNECTED' : 'MOUSE MODE'
   guideTitle.textContent = activity === 'catch' ? '手のひらでキャッチ' : 'ボールを狙う'
-  guideDetail.textContent = activity === 'catch' ? '光る位置へ手のひらを動かす。手が消えると一時停止します。'
+  guideDetail.textContent = activity === 'catch' ? '手のひらをカメラへ向け、奥から迫るボールに重ねる。'
     : next === 'camera'
     ? '小窓ではなく3D画面の水色の手をボールに重ねる。'
     : '水色の球をボールに重ね、横へ払う。'
@@ -211,15 +211,15 @@ function syncCatchHud(): void {
   writeText(catchLeft, String(catchGame.remaining))
   writeText(catchPose, !handTarget ? '手の位置を確認中'
     : mode === 'mouse' ? '手のひら: ポインター位置'
-      : `奥行き: ${handDepth > 0.55 ? '近い' : handDepth < -0.55 ? '遠い' : '中央'} · 向き: ${handNormal.y > 0.4 ? '上' : handNormal.y < -0.4 ? '下' : '正面'}`)
+      : `奥行き: ${handDepth > 0.55 ? '近い' : handDepth < -0.55 ? '遠い' : '中央'} · 向き: ${handNormal.z > 0.65 ? 'カメラ向き' : handNormal.z > 0.4 ? '斜め' : '横向き'}`)
   let message = catchGame.phase === 'finished' ? `${catchGame.catches} / ${catchGame.total} キャッチ！ RETRY で再挑戦`
     : !handTarget ? mode === 'camera' ? '手のひらを映してください · 一時停止中' : '画面の中でポインターを動かしてください'
-      : catchGame.phase === 'ready' ? '手のひらを光るラインの下へ'
+      : catchGame.phase === 'ready' ? '手のひらをカメラへ。最初は中央の輪へ'
       : catchGame.phase === 'countdown' ? `${catchGame.countdownSeconds} 秒後にスタート · 最初は中央`
-        : '光るラインの下でボールを受け止める'
+        : '奥から迫るボールを手のひらで受け止める'
   if (catchGame.phase === 'running' && mode === 'camera' && handTarget) {
     if (Math.abs(handDepth) > 0.88) message = '奥行きを中央へ。必要なら RECENTER DEPTH'
-    else if (handNormal.y < -0.4) message = '手のひらを上か正面へ向けると受け止めやすい'
+    else if (handNormal.z < 0.4) message = '手のひらをカメラへ向けると受け止めやすい'
   }
   writeText(catchMessage, message)
 }
@@ -243,7 +243,7 @@ function enterCatch(): void {
   aimedId = null
   screenContact.reset()
   guideTitle.textContent = '手のひらでキャッチ'
-  guideDetail.textContent = '光る落下位置へ手を動かす。指は使わず、手のひらをボールに重ねる。'
+  guideDetail.textContent = 'カメラへ手のひらを向け、奥から迫るボールに重ねる。指の操作は不要。'
   setStatus(mode === 'camera' ? 'BALL CATCH · SHOW YOUR PALM' : 'BALL CATCH · MOVE POINTER INTO WORLD')
   syncCatchHud()
 }

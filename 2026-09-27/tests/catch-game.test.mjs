@@ -2,6 +2,7 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 import { Vector3 } from 'three'
 import { CatchGame } from '../src/game/CatchGame.ts'
+import { PhysicsWorld } from '../src/physics/PhysicsWorld.ts'
 import { SpatialHand } from '../src/vision/SpatialHand.ts'
 
 test('catch round pauses without a hand, awards a palm catch, and finishes after 12 balls', () => {
@@ -21,14 +22,16 @@ test('catch round pauses without a hand, awards a palm catch, and finishes after
   for (let i = 0; i < 300 && game.spawned === 0; i++) game.update(1 / 60, palm, normal, [])
   assert.equal(game.spawned, 1)
   const first = [...balls.entries()][0]
-  const caught = { id: first[0], x: first[1], y: palm.y + 0.15, z: 0 }
+  const caught = { id: first[0], x: first[1], y: 1.55, z: -0.6 }
+  assert.equal(game.update(1 / 60, palm, normal, [{ ...caught, z: -2.2 }]), null)
+  assert.equal(game.catches, 0, 'distant balls cannot be caught early')
   assert.equal(game.update(1 / 60, palm, normal, [caught]), 'caught')
   assert.equal(game.catches, 1)
   assert.equal(game.remaining, 11)
 
   let finish = null
   for (let i = 0; i < 1600 && game.phase !== 'finished'; i++) {
-    const objects = [...balls].map(([ballId, x]) => ({ id: ballId, x, y: 0.27, z: 0 }))
+    const objects = [...balls].map(([ballId, x]) => ({ id: ballId, x, y: 1.55, z: 2.16 }))
     finish = game.update(1 / 60, palm, normal, objects)
   }
   assert.equal(finish, 'finished')
@@ -38,6 +41,21 @@ test('catch round pauses without a hand, awards a palm catch, and finishes after
   game.reset(1)
   assert.equal(game.phase, 'ready')
   assert.equal(game.catches, 0)
+})
+
+test('catch balls travel from the back toward the viewer without falling', async () => {
+  const physics = new PhysicsWorld()
+  await physics.init()
+  physics.clearObjects()
+  const id = physics.spawnCatchBall(0)
+  assert.ok(id)
+  const start = physics.getObjects().find(object => object.id === id)
+  assert.ok(Math.abs(start.y - 1.55) < 0.001)
+  assert.ok(Math.abs(start.z + 2.2) < 0.001)
+  for (let i = 0; i < 30; i++) physics.step()
+  const approaching = physics.getObjects().find(object => object.id === id)
+  assert.ok(approaching.z > -1 && approaching.z < 0, 'ball approaches the palm depth')
+  assert.ok(Math.abs(approaching.y - start.y) < 0.02, 'ball follows a level depth path')
 })
 
 test('relative hand depth recenters and 3D pose mirrors with front camera', () => {

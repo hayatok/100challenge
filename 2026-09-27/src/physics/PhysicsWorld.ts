@@ -62,9 +62,10 @@ export class PhysicsWorld {
     const size = kind === 'ball' || kind === 'catch' ? { x: 0.54, y: 0.54, z: 0.54 }
       : kind === 'box' ? { x: 0.56, y: 0.56, z: 0.56 }
       : { x: 0.18, y: 0.8, z: 0.42 }
-    const body = this.world.createRigidBody(
-      RAPIER.RigidBodyDesc.dynamic().setTranslation(x, y, z).setCcdEnabled(true).setLinearDamping(0.18),
-    )
+    const description = RAPIER.RigidBodyDesc.dynamic().setTranslation(x, y, z)
+      .setCcdEnabled(true).setLinearDamping(kind === 'catch' ? 0 : 0.18)
+    if (kind === 'catch') description.setGravityScale(0).setLinvel(0, 0, 2.65)
+    const body = this.world.createRigidBody(description)
     const collider = kind === 'ball' || kind === 'catch'
       ? RAPIER.ColliderDesc.ball(size.x / 2).setRestitution(0.62).setFriction(0.52)
       : RAPIER.ColliderDesc.cuboid(size.x / 2, size.y / 2, size.z / 2).setRestitution(0.18).setFriction(0.78)
@@ -82,7 +83,7 @@ export class PhysicsWorld {
     return this.createObject(kind, x, y, z) !== null
   }
 
-  spawnCatchBall(x: number): number | null { return this.createObject('catch', x, 4.15, 0) }
+  spawnCatchBall(x: number): number | null { return this.createObject('catch', x, 1.55, -2.2) }
 
   removeObject(id: number): void {
     const index = this.objects.findIndex(object => object.id === id)

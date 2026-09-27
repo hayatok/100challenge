@@ -131,14 +131,16 @@ export class SceneView {
     this.targetRing.visible = false
     this.scene.add(this.targetRing)
     const cueLine = new THREE.Line(
-      new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0, 0.38, 0), new THREE.Vector3(0, 4.2, 0)]),
+      new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0, 1.55, -2.35), new THREE.Vector3(0, 1.55, 1.35)]),
       new THREE.LineBasicMaterial({ color: '#ffd880', transparent: true, opacity: 0.48 }),
     )
     this.catchCue.add(cueLine)
-    const cueRing = new THREE.Mesh(new THREE.TorusGeometry(0.36, 0.025, 6, 40),
-      new THREE.MeshBasicMaterial({ color: '#ffe69c', transparent: true, opacity: 0.82, depthTest: false }))
-    cueRing.position.y = 1.35
-    this.catchCue.add(cueRing)
+    for (const [z, radius, opacity] of [[-2.25, 0.3, 0.4], [-0.4, 0.38, 0.56], [1.15, 0.5, 0.86]]) {
+      const cueRing = new THREE.Mesh(new THREE.TorusGeometry(radius, 0.025, 6, 40),
+        new THREE.MeshBasicMaterial({ color: '#ffe69c', transparent: true, opacity, depthTest: false }))
+      cueRing.position.set(0, 1.55, z)
+      this.catchCue.add(cueRing)
+    }
     this.catchCue.visible = false
     this.scene.add(this.catchCue)
     this.resizeObserver = new ResizeObserver(() => this.resize(host))
