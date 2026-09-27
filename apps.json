@@ -169,5 +169,15 @@
     "category": "モーショングラフィックス",
     "thumbnail": "type-motion-studio.png",
     "accent": "#3d48ef"
+  },
+  {
+    "id": "2026-09-27",
+    "date": "2026-09-27",
+    "sequence": 1,
+    "name": "Reality Sandbox",
+    "description": "Webカメラの片手で3D物理世界に触れる。手を振って20個のボールを押し飛ばすプレイグラウンド。",
+    "category": "Webカメラ × 3D物理",
+    "thumbnail": "reality-sandbox.svg",
+    "accent": "#70e9d9"
   }
 ]

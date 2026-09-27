@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="ja"><head><meta charset="utf-8"><title>Spatial hand smoke</title>
+<style>body{margin:0;background:#080e18;color:#dffaf3;font:14px system-ui}#world{width:100vw;height:85vh}#world canvas{display:block;width:100%;height:100%}#result{display:block;padding:14px}</style></head>
+<body><div id="world"></div><output id="result">Loading a local sample hand…</output>
+<script type="module">
+  import { FilesetResolver, HandLandmarker } from '@mediapipe/tasks-vision'
+  import { readPalm } from '/src/vision/HandState.ts'
+  import { SpatialHand } from '/src/vision/SpatialHand.ts'
+  import { SceneView } from '/src/rendering/SceneView.ts'
+  const result = document.getElementById('result')
+  try {
+    const scene = new SceneView(document.getElementById('world'))
+    const vision = await FilesetResolver.forVisionTasks('/vision/wasm')
+    const detector = await HandLandmarker.createFromOptions(vision, {
+      baseOptions: { modelAssetPath: '/vision/hand_landmarker.task', delegate: 'CPU' },
+      runningMode: 'VIDEO', numHands: 1,
+    })
+    const image = new Image()
+    image.src = '/tests/hand-landmark-sample.jpg'
+    await image.decode()
+    const canvas = document.createElement('canvas')
+    canvas.width = image.naturalWidth
+    canvas.height = image.naturalHeight
+    canvas.getContext('2d').drawImage(image, 0, 0)
+    const video = document.createElement('video')
+    video.muted = true
+    video.srcObject = canvas.captureStream(30)
+    await video.play()
+    const state = readPalm(detector.detectForVideo(video, performance.now()))
+    if (!state.detected || !state.worldPoints) throw new Error('No 3D hand in sample')
+    const pose = new SpatialHand().sample(state, 'user', 1 / 30)
+    const anchor = scene.screenToWorld(1 - state.x, state.y, pose.depth)
+    const draw = () => { scene.update([], anchor, null, null, performance.now(), pose.points); requestAnimationFrame(draw) }
+    draw()
+    const projected = scene.worldToScreen(anchor)
+    result.textContent = `Rendered ${pose.points.length} local 3D landmarks; palm ${state.x.toFixed(2)}, ${state.y.toFixed(2)}; span ${state.palmSpan.toFixed(2)}; anchor ${anchor.x.toFixed(2)}, ${anchor.y.toFixed(2)}; screen ${projected.x.toFixed(0)}, ${projected.y.toFixed(0)}; extents ${Math.min(...pose.points.map(p=>p.x)).toFixed(2)}..${Math.max(...pose.points.map(p=>p.x)).toFixed(2)}, ${Math.min(...pose.points.map(p=>p.y)).toFixed(2)}..${Math.max(...pose.points.map(p=>p.y)).toFixed(2)}; palm normal ${pose.normal.toArray().map(v => v.toFixed(2)).join(', ')}`
+    video.srcObject.getTracks().forEach(track => track.stop())
+    detector.close()
+  } catch (error) { result.textContent = `FAILED: ${error.message}` }
+</script></body></html>
