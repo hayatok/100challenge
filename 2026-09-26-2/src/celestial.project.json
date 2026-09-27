@@ -1,0 +1,175 @@
+{
+  "schemaVersion": 1,
+  "rendererVersion": "1",
+  "id": "77adb4dc-8fba-4dd2-bd92-c09d3542dc47",
+  "name": "CELESTIAL / editable study",
+  "seed": 260926,
+  "aspect": "landscape",
+  "bpm": 120,
+  "palette": {
+    "paper": "#F4F0E7",
+    "ink": "#111115",
+    "accent": "#3D48EF",
+    "secondary": "#FF7345",
+    "muted": "#CBD0E1"
+  },
+  "fontSet": "space-noto-v1",
+  "audio": {
+    "mode": "synth-v1",
+    "gain": 0.6
+  },
+  "scenes": [
+    {
+      "id": "intro",
+      "role": "hook",
+      "content": {
+        "headline": "THINK BEYOND",
+        "secondary": "A NEW CONSTELLATION",
+        "items": [
+          "THINK",
+          "BEYOND"
+        ]
+      },
+      "durationTicks": 3840,
+      "motion": {
+        "kind": "impact-type",
+        "intensity": 0.8,
+        "motif": "celestial",
+        "direction": "up",
+        "anticipateNext": true
+      },
+      "typography": {
+        "scale": 1,
+        "align": "center"
+      },
+      "outgoing": {
+        "kind": "cut",
+        "durationTicks": 0
+      }
+    },
+    {
+      "id": "astra",
+      "role": "feature",
+      "content": {
+        "headline": "ASTRA",
+        "secondary": "EXPAND YOUR HORIZON",
+        "items": []
+      },
+      "durationTicks": 3840,
+      "motion": {
+        "kind": "particle-flight",
+        "intensity": 0.85,
+        "motif": "celestial",
+        "depth": 0.9
+      },
+      "typography": {
+        "scale": 1,
+        "align": "center"
+      },
+      "outgoing": {
+        "kind": "cut",
+        "durationTicks": 0
+      }
+    },
+    {
+      "id": "sol",
+      "role": "feature",
+      "content": {
+        "headline": "SOL",
+        "secondary": "SET IDEAS IN MOTION",
+        "items": []
+      },
+      "durationTicks": 5760,
+      "motion": {
+        "kind": "radial-pulse",
+        "intensity": 0.8,
+        "motif": "celestial",
+        "focusGrapheme": 1
+      },
+      "typography": {
+        "scale": 1,
+        "align": "center"
+      },
+      "outgoing": {
+        "kind": "cut",
+        "durationTicks": 0
+      }
+    },
+    {
+      "id": "luna",
+      "role": "feature",
+      "content": {
+        "headline": "LUNA",
+        "secondary": "LIGHT IN A DIFFERENT ORBIT",
+        "items": []
+      },
+      "durationTicks": 3840,
+      "motion": {
+        "kind": "slice-orbit",
+        "intensity": 0.65,
+        "motif": "celestial",
+        "slices": 8
+      },
+      "typography": {
+        "scale": 1,
+        "align": "center"
+      },
+      "outgoing": {
+        "kind": "cut",
+        "durationTicks": 0
+      }
+    },
+    {
+      "id": "trio",
+      "role": "summary",
+      "content": {
+        "headline": "THREE WORLDS",
+        "secondary": "THREE BODIES. ONE UNIVERSE.",
+        "items": [
+          "ASTRA",
+          "SOL",
+          "LUNA"
+        ]
+      },
+      "durationTicks": 1920,
+      "motion": {
+        "kind": "three-up",
+        "intensity": 0.75,
+        "motif": "celestial",
+        "layout": "adaptive"
+      },
+      "typography": {
+        "scale": 1,
+        "align": "center"
+      },
+      "outgoing": {
+        "kind": "cut",
+        "durationTicks": 0
+      }
+    },
+    {
+      "id": "outro",
+      "role": "outro",
+      "content": {
+        "headline": "GPT–6",
+        "secondary": "ASTRA / SOL / LUNA",
+        "items": []
+      },
+      "durationTicks": 3840,
+      "motion": {
+        "kind": "particle-lockup",
+        "intensity": 0.8,
+        "motif": "celestial",
+        "focusGrapheme": 4
+      },
+      "typography": {
+        "scale": 1,
+        "align": "center"
+      },
+      "outgoing": {
+        "kind": "cut",
+        "durationTicks": 0
+      }
+    }
+  ]
+}
