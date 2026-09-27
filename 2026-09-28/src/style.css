@@ -774,3 +774,45 @@ body[data-level="4"] .combo {
 /* Keep controls reachable even where the game HUD uses compact type. */
 header button { width: 44px; height: 44px; }
 .title-options button, .text-button { min-height: 44px; }
+/* Alpha: keep the typing surface still while the combat around it escalates. */
+body { --combat: #ffc367; }
+body[data-level="1"] { --combat: #ffdb75; }
+body[data-level="2"] { --combat: #ff884e; }
+body[data-level="3"] { --combat: #e892ff; }
+body[data-level="4"] { --combat: #79fff0; }
+#combat-glow { position: fixed; inset: 0; pointer-events: none; opacity: 0; box-shadow: inset 0 0 110px 20px var(--combat); z-index: 3; }
+.combo { color: var(--combat); transition: color .3s; }
+body[data-level="3"] .combo, body[data-level="4"] .combo { filter: drop-shadow(0 0 18px var(--combat)); }
+.fever-track { width: 180px; height: 4px; background: #ffffff26; margin: 10px 0 6px auto; }
+#fever-fill { height: 100%; background: var(--combat); transform-origin: left; transition: transform .25s, background .3s; box-shadow: 0 0 12px var(--combat); }
+#fever-next { font-size: 8px; letter-spacing: 1.1px; color: var(--combat); }
+#milestone { position: fixed; left: 4%; top: 38%; opacity: 0; pointer-events: none; color: var(--combat); text-shadow: 0 3px 3px #081014, 0 0 30px #061115; }
+#milestone small { display: block; font-size: 10px; letter-spacing: 3px; margin-bottom: 8px; }
+#milestone strong { display: block; font: italic 64px/.95 Impact, "Arial Narrow", sans-serif; letter-spacing: -1px; max-width: 370px; }
+#score-pop { position: fixed; right: 44px; top: 282px; opacity: 0; font: italic 24px Impact, sans-serif; color: var(--combat); pointer-events: none; text-shadow: 0 2px 10px #000; }
+#score { display: inline-block; }
+#feedback { top: 26%; font-size: 22px; font-style: italic; }
+.target { max-width: 260px; padding: 8px 12px 12px; }
+.target > span { overflow: hidden; text-overflow: ellipsis; }
+.target small { display: block; color: #a2b8b5; font: 8px "Noto Sans JP", sans-serif; letter-spacing: 2px; margin-bottom: 4px; }
+.enemy-time { position: absolute; bottom: 0; left: 0; right: 0; height: 2px; transform: scaleX(var(--remaining, 1)); transform-origin: left; background: #b4c9b5; }
+.target.locked { border-color: var(--combat); box-shadow: 0 0 18px color-mix(in srgb, var(--combat) 25%, transparent); }
+.target.locked .enemy-time { background: var(--combat); }
+.target.danger .enemy-time { background: #ff785e; }
+#typing-panel { width: min(800px, 70vw); border-top-color: var(--combat); }
+#phrase { font-size: clamp(20px, 2vw, 27px); }
+#romaji { font-size: clamp(18px, 1.7vw, 25px); letter-spacing: 1px; line-height: 1.4; }
+body[data-motion="false"] #combat-glow { display: none; }
+body[data-motion="false"] .combo { filter: none; }
+@media (max-width: 800px) {
+  #typing-panel { width: 92vw; }
+  #milestone { top: 34%; }
+  #milestone strong { font-size: 38px; max-width: 200px; }
+  #milestone small { font-size: 8px; letter-spacing: 1px; }
+  #score-pop { right: 20px; top: 232px; font-size: 20px; }
+  .fever-track { width: 140px; }
+}
+
+.modal-card a { color: var(--teal); text-underline-offset: 3px; }
+/* World flashes stay behind every game label and the fixed typing surface. */
+#hud { position: relative; z-index: 4; }

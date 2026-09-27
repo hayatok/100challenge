@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { BOSS_PHRASES, PHRASES } from '../src/content.ts';
+import { BOSS_PHRASES, OFFICE_PHRASES, PHRASES, RUNNER_PHRASES, WORKER_PHRASES } from '../src/content.ts';
 import { Game } from '../src/game.ts';
 import { TypingSession, validateReading } from '../src/typing.ts';
 
@@ -43,12 +43,24 @@ test('n, terminal n and punctuation follow the explicit contract', () => {
   typeAll(new TypingSession('し、ふ。'),'sihu');
 });
 
-test('all original content is valid, distinct and large enough', () => {
-  assert.ok(PHRASES.length >= 80);
-  assert.equal(new Set(PHRASES.map(phrase => phrase.text)).size,PHRASES.length);
+test('all authored content is distinct, typeable, and divided by enemy workload', () => {
+  assert.ok(PHRASES.length >= 300);
+  assert.ok(BOSS_PHRASES.length >= 12);
+  assert.equal(PHRASES.length,RUNNER_PHRASES.length+OFFICE_PHRASES.length+WORKER_PHRASES.length);
+  assert.equal(new Set([...PHRASES,...BOSS_PHRASES].map(phrase => phrase.text)).size,PHRASES.length+BOSS_PHRASES.length);
+  assert.equal(new Set([...PHRASES,...BOSS_PHRASES].map(phrase => phrase.reading)).size,PHRASES.length+BOSS_PHRASES.length);
   for (const phrase of [...PHRASES,...BOSS_PHRASES]) {
     assert.equal(validateReading(phrase.reading),true,phrase.text);
+    const session = new TypingSession(phrase.reading);
+    typeAll(session,session.guide);
   }
+  const lengths = (phrases: typeof PHRASES) => phrases.map(phrase => new TypingSession(phrase.reading).standardLength);
+  const runner = lengths(RUNNER_PHRASES);
+  const office = lengths(OFFICE_PHRASES);
+  const worker = lengths(WORKER_PHRASES);
+  assert.ok(Math.max(...runner) < Math.min(...worker));
+  assert.ok(runner.reduce((a,b) => a+b,0)/runner.length < office.reduce((a,b) => a+b,0)/office.length);
+  assert.ok(office.reduce((a,b) => a+b,0)/office.length < worker.reduce((a,b) => a+b,0)/worker.length);
 });
 
 test('first keys in every simultaneous wave are disjoint and a full run clears 24 enemies plus three boss phases', () => {
@@ -79,19 +91,72 @@ test('first keys in every simultaneous wave are disjoint and a full run clears 2
   assert.ok(game.state.score > 27*100);
 });
 
-test('seeded phrase assignment never blocks a planned spawn', () => {
-  for (let seed=0;seed<32;seed++) {
+test('seeded phrase assignment remains kind-correct and never blocks a planned spawn', () => {
+  const pools = {runner:new Set(RUNNER_PHRASES.map(item => item.text)),office:new Set(OFFICE_PHRASES.map(item => item.text)),worker:new Set(WORKER_PHRASES.map(item => item.text)),boss:new Set(BOSS_PHRASES.map(item => item.text))};
+  const seenBoss = new Set<string>();
+  for (let seed=0;seed<128;seed++) {
     const game = new Game({seed});
     let guard = 0;
     while (game.state.mode !== 'clear' && guard++ < 10000) {
       const state = game.state;
       if (state.mode === 'travel') { game.update(0.7); continue; }
+      if (state.lockedId === null) {
+        const initials = state.enemies.flatMap(enemy => enemy.keys);
+        assert.equal(initials.length,new Set(initials).size,`seed ${seed}`);
+      }
+      for (const candidate of state.enemies) {
+        assert.ok(pools[candidate.kind].has(candidate.phrase),`seed ${seed}: ${candidate.kind} ${candidate.phrase}`);
+        if (candidate.kind === 'boss') seenBoss.add(candidate.phrase);
+      }
       const enemy = state.enemies[0];
       assert.ok(enemy,`seed ${seed}`);
       assert.equal(game.type(enemy.guide[0]),true,`seed ${seed}`);
     }
     assert.equal(game.state.mode,'clear',`seed ${seed}`);
   }
+  assert.equal(seenBoss.size,BOSS_PHRASES.length);
+});
+
+test('a feasible typing order clears timed waves at each difficulty', () => {
+  const cps = {relaxed:2,normal:3.5,fierce:5} as const;
+  for (const difficulty of ['relaxed','normal','fierce'] as const) for (let seed=0;seed<16;seed++) {
+    const game = new Game({difficulty,seed});
+    let guard = 0;
+    let target: number|null = null;
+    while (game.state.mode !== 'clear' && guard++ < 10000) {
+      const state = game.state;
+      if (state.mode === 'travel') { game.update(1); target = null; continue; }
+      assert.equal(state.mode,'playing',`${difficulty} seed ${seed}`);
+      if (state.lockedId === null) {
+        target = [...state.enemies].sort((a,b) => a.remaining-b.remaining)[0]?.id ?? null;
+        game.update(0.25);
+      }
+      const enemy = game.state.enemies.find(item => item.id === target);
+      assert.ok(enemy,`${difficulty} seed ${seed}`);
+      game.update(1/cps[difficulty]);
+      assert.equal(game.type(enemy.guide[0]),true,`${difficulty} seed ${seed}`);
+    }
+    assert.ok(guard < 10000,`${difficulty} seed ${seed}`);
+    assert.equal(game.state.mode,'clear',`${difficulty} seed ${seed}`);
+    assert.equal(game.state.health,3,`${difficulty} seed ${seed}`);
+  }
+});
+
+test('combat events expose score and combo changes for presentation', () => {
+  const game = new Game({seed:2});
+  game.drainEvents();
+  const enemy = game.state.enemies[0];
+  while (game.state.enemies.some(item => item.id === enemy.id)) {
+    assert.equal(game.type(game.state.enemies[0].guide[0]),true);
+  }
+  const events = game.drainEvents();
+  assert.equal(events.find(event => event.type === 'lock')?.combo,0);
+  assert.ok(events.some(event => event.type === 'hit' && event.enemyId === enemy.id));
+  const kill = events.find(event => event.type === 'kill');
+  assert.equal(kill?.clean,true);
+  assert.equal(kill?.combo,1);
+  assert.equal(kill?.scoreDelta,160);
+  assert.equal(kill?.effectsLevel,0);
 });
 
 test('wrong key preserves graph progress, breaks clean kill and has fixed score', () => {

@@ -1,4 +1,4 @@
-import { BOSS_PHRASES, PHRASES, type Phrase } from './content.ts';
+import { BOSS_PHRASES, OFFICE_PHRASES, PHRASES, RUNNER_PHRASES, WORKER_PHRASES, type Phrase } from './content.ts';
 import { TypingSession } from './typing.ts';
 
 export type Difficulty = 'relaxed' | 'normal' | 'fierce';
@@ -8,6 +8,7 @@ export type GameOptions = { difficulty?: Difficulty; practice?: boolean; seed?: 
 export type GameEvent = {
   id: number; type: 'spawn'|'lock'|'hit'|'miss'|'kill'|'attack'|'travel'|'stage'|'bossPhase'|'pause'|'resume'|'defeat'|'clear';
   enemyId?: number; kind?: EnemyKind; stage?: number; phase?: number; key?: string; reason?: string;
+  combo?: number; clean?: boolean; scoreDelta?: number; effectsLevel?: number;
 };
 export type EnemyView = {
   id: number; kind: EnemyKind; lane: -1|0|1; progress: number; remaining: number;
@@ -87,15 +88,17 @@ export class Game {
   }
   drainEvents(): GameEvent[] { return this.events.splice(0); }
 
-  private phraseOrder(): number[] {
-    return PHRASES.map((_,index) => index).sort((a,b) => {
+  private phraseOrder(kind: Exclude<EnemyKind,'boss'>): number[] {
+    const start = kind === 'runner' ? 0 : kind === 'office' ? RUNNER_PHRASES.length : RUNNER_PHRASES.length + OFFICE_PHRASES.length;
+    const count = kind === 'runner' ? RUNNER_PHRASES.length : kind === 'office' ? OFFICE_PHRASES.length : WORKER_PHRASES.length;
+    return Array.from({length:count},(_,index) => start + index).sort((a,b) => {
       const hash = (n:number) => { let x = (n+1) ^ this.seed; x = Math.imul(x ^ (x>>>16), 0x7feb352d); x = Math.imul(x ^ (x>>>15), 0x846ca68b); return (x^(x>>>16))>>>0; };
       return hash(a)-hash(b);
     });
   }
 
-  private pickPhrase(occupied: Set<string>): Phrase {
-    const order = this.phraseOrder();
+  private pickPhrase(kind: Exclude<EnemyKind,'boss'>, occupied: Set<string>): Phrase {
+    const order = this.phraseOrder(kind);
     for (const allowUsed of [false,true]) for (const index of order) {
       if (!allowUsed && this.used.has(index)) continue;
       const phrase = PHRASES[index];
@@ -116,7 +119,7 @@ export class Game {
     const sorted = [...kinds].sort((a,b) => ({runner:0,office:1,worker:2,boss:3})[a]-({runner:0,office:1,worker:2,boss:3})[b]);
     let workload = 0;
     this.enemiesValue = sorted.map((kind,index) => {
-      const phrase = this.pickPhrase(occupied);
+      const phrase = this.pickPhrase(kind as Exclude<EnemyKind,'boss'>, occupied);
       const typing = new TypingSession(phrase.reading);
       const length = typing.standardLength;
       workload += length / CPS[this.difficulty];
@@ -131,7 +134,7 @@ export class Game {
   }
 
   private spawnBoss(): void {
-    const phrase = BOSS_PHRASES[(this.phase+this.bossFailures) % BOSS_PHRASES.length];
+    const phrase = BOSS_PHRASES[this.phase * 4 + ((this.seed >>> 0) + this.bossFailures) % 4];
     const typing = new TypingSession(phrase.reading);
     const deadline = this.time + 1.2 + typing.standardLength / CPS[this.difficulty] * 1.6;
     const enemy: Enemy = {id:this.nextEnemyId++,kind:'boss',lane:0,phrase,typing,spawned:this.time,deadline,clean:true};
@@ -236,7 +239,7 @@ export class Game {
       // At the exact deadline an arriving final key wins the tie.
       if (this.time <= enemy.deadline) continue;
       this.enemiesValue = this.enemiesValue.filter(item => item.id !== enemy.id);
-      this.emit('attack',{enemyId:enemy.id,kind:enemy.kind});
+      this.emit('attack',{enemyId:enemy.id,kind:enemy.kind,combo:0});
       this.healthValue--;
       this.breakCombo();
       if (this.locked === enemy.id) this.locked = null;
@@ -268,15 +271,15 @@ export class Game {
       this.breakCombo();
       const locked = this.enemiesValue.find(item => item.id === this.locked);
       if (locked) locked.clean = false;
-      this.emit('miss',{key:normalized,enemyId:locked?.id});
+      this.emit('miss',{key:normalized,enemyId:locked?.id,combo:0});
       return false;
     }
     if (this.locked === null) {
       this.locked = enemy.id;
-      this.emit('lock',{enemyId:enemy.id,kind:enemy.kind});
+      this.emit('lock',{enemyId:enemy.id,kind:enemy.kind,combo:this.comboValue,effectsLevel:this.effectsLevelValue});
     }
     this.correct++;
-    this.emit('hit',{enemyId:enemy.id,kind:enemy.kind,key:normalized});
+    this.emit('hit',{enemyId:enemy.id,kind:enemy.kind,key:normalized,combo:this.comboValue,effectsLevel:this.effectsLevelValue});
     if (enemy.typing.complete) {
       this.enemiesValue = this.enemiesValue.filter(item => item.id !== enemy.id);
       this.locked = null;
@@ -290,8 +293,10 @@ export class Game {
           this.decayNextAt = null;
         }
       }
-      this.scoreValue += 100 + (enemy.clean ? 50+Math.min(this.comboValue,15)*10 : 0);
-      this.emit('kill',{enemyId:enemy.id,kind:enemy.kind,phase:enemy.kind === 'boss' ? this.phase : undefined});
+      const scoreDelta = 100 + (enemy.clean ? 50+Math.min(this.comboValue,15)*10 : 0);
+      this.scoreValue += scoreDelta;
+      this.emit('kill',{enemyId:enemy.id,kind:enemy.kind,phase:enemy.kind === 'boss' ? this.phase : undefined,
+        combo:this.comboValue,clean:enemy.clean,scoreDelta,effectsLevel:this.effectsLevelValue});
       if (enemy.kind === 'boss') {
         this.phase++;
         this.bossFailures = 0;

@@ -4,7 +4,7 @@ import { World } from "./scene.ts";
 import { GameAudio } from "./audio.ts";
 import { readSave, writeSave } from "./storage.ts";
 const app = document.querySelector<HTMLDivElement>("#app")!;
-app.innerHTML = `<div id="world" aria-hidden="true"></div><div class="vignette"></div><header><a class="brand" href="#">夜勤<span>NIGHTSHIFT / TYPING</span></a><div class="top-center">● 午前零時の商店街<span id="stage">AFTER HOURS — 00:13</span></div><button id="pause-button" aria-label="一時停止" hidden>Ⅱ</button><button id="sound-button" aria-label="音を切り替える">♪</button></header><div id="loading" class="center-card"><p class="eyebrow">OPENING THE NIGHT</p><h1>夜の準備中…</h1><p id="loading-text" role="status">商店街へ向かっています</p></div><section id="title" hidden><div class="title-copy"><p class="eyebrow">— A MIDNIGHT TYPING SHOOTER</p><h1><span>夜勤</span>タイピング<span class="period">。</span></h1><p class="title-sub">今夜の残業は、少し騒がしい。</p><p class="description">迫るゾンビを、打って撃て。<br>一文字で一発。打ち切って、とどめを。</p><button id="start-button" class="primary">出勤する <span>↗</span></button><div class="title-options"><button id="settings-button">装備と設定</button><button id="credits-button">クレジット</button></div><p class="keyboard-note">⌨ PC・キーボード専用 ／ 1 PLAY 約3–5分</p></div><div class="stamp">深夜勤務<b>歓迎</b><small>NO EXPERIENCE REQUIRED</small></div><footer><span>生きて、定時で帰ろう。</span><span>SHIFT 01 / 黒猫商店街</span></footer></section><section id="hud" hidden><div class="health-block"><p class="eyebrow" id="shift-label"></p><div id="health"></div><small id="practice-label"></small></div><div class="score-block"><div class="score-label">SCORE <b id="score">000000</b></div><div class="combo"><strong id="combo">0</strong><span>COMBO<small id="combo-word">KEEP TYPING</small></span></div></div><div id="targets"></div><div id="feedback" aria-live="polite"></div><div class="reticle">+</div><div id="typing-panel"><div class="panel-top"><span id="target-number"></span><span id="input-status"></span></div><div id="phrase"></div><div id="reading"></div><div id="romaji"></div><div class="deadline"><div id="deadline-bar"></div></div><div class="panel-bottom"><span>一文字、一発。</span><span>ESC 一時停止</span></div></div><div id="travel-message" hidden></div></section><div id="modal" class="modal" hidden><section class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modal-title"><div id="modal-content"></div></section></div><input id="key-capture" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="ゲーム入力。半角英字でタイプしてください"><div id="notice" role="status" hidden></div>`;
+app.innerHTML = `<div id="world" aria-hidden="true"></div><div class="vignette"></div><div id="combat-glow" aria-hidden="true"></div><header><a class="brand" href="#">夜勤<span>NIGHTSHIFT / TYPING</span></a><div class="top-center">● 午前零時の商店街<span id="stage">AFTER HOURS — 00:13</span></div><button id="pause-button" aria-label="一時停止" hidden>Ⅱ</button><button id="sound-button" aria-label="音を切り替える">♪</button></header><div id="loading" class="center-card"><p class="eyebrow">OPENING THE NIGHT</p><h1>夜の準備中…</h1><p id="loading-text" role="status">商店街へ向かっています</p></div><section id="title" hidden><div class="title-copy"><p class="eyebrow">— A MIDNIGHT TYPING SHOOTER</p><h1><span>夜勤</span>タイピング<span class="period">。</span></h1><p class="title-sub">今夜の残業は、少し騒がしい。</p><p class="description">迫るゾンビを、打って撃て。<br>一文字で一発。打ち切って、とどめを。</p><button id="start-button" class="primary">出勤する <span>↗</span></button><div class="title-options"><button id="settings-button">装備と設定</button><button id="credits-button">クレジット</button></div><p class="keyboard-note">⌨ PC・キーボード専用 ／ 1 PLAY 約3–5分</p></div><div class="stamp">深夜勤務<b>歓迎</b><small>NO EXPERIENCE REQUIRED</small></div><footer><span>生きて、定時で帰ろう。</span><span>ALPHA 0.2 / 黒猫商店街</span></footer></section><section id="hud" hidden><div class="health-block"><p class="eyebrow" id="shift-label"></p><div id="health"></div><small id="practice-label"></small></div><div class="score-block"><div class="score-label">SCORE <b id="score">000000</b></div><div class="combo"><strong id="combo">0</strong><span>COMBO<small id="combo-word">KEEP TYPING</small></span></div><div class="fever-track"><div id="fever-fill"></div></div><small id="fever-next"></small></div><div id="targets"></div><div id="milestone" aria-hidden="true"><small id="milestone-caption"></small><strong id="milestone-word"></strong></div><div id="score-pop" aria-hidden="true"></div><div id="feedback" aria-live="polite"></div><div id="reticle" class="reticle">+</div><div id="typing-panel"><div class="panel-top"><span id="target-number"></span><span id="input-status"></span></div><div id="phrase"></div><div id="reading"></div><div id="romaji"></div><div class="deadline"><div id="deadline-bar"></div></div><div class="panel-bottom"><span>一文字、一発。</span><span>ESC 一時停止</span></div></div><div id="travel-message" hidden></div></section><div id="modal" class="modal" hidden><section class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modal-title"><div id="modal-content"></div></section></div><input id="key-capture" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="ゲーム入力。半角英字でタイプしてください"><div id="notice" role="status" hidden></div>`;
 const el = <T extends HTMLElement = HTMLElement>(id: string) =>
   document.getElementById(id) as T;
 const show = (id: string, v: boolean) => {
@@ -25,6 +25,7 @@ let screen = "loading",
 let lastTime = performance.now(),
   feedbackUntil = 0,
   saved = false;
+let finishAt = 0, shownLevel = 0;
 const input = el<HTMLInputElement>("key-capture");
 function notify(t: string) {
   el("notice").textContent = t;
@@ -60,6 +61,9 @@ function title() {
   audio.stop();
   game = null;
   screen = "title";
+  finishAt = 0;
+  document.body.dataset.level = "0";
+  el("milestone").getAnimations().forEach(a => a.cancel());
   close();
   show("title", true);
   show("hud", false);
@@ -98,6 +102,7 @@ function settings() {
   el<HTMLInputElement>("motion").onchange = (e) => {
     preferences.motion = (e.target as HTMLInputElement).checked;
     world.motion = preferences.motion;
+    document.body.dataset.motion = String(preferences.motion);
   };
   for (const id of ["music", "effects"] as const)
     el<HTMLInputElement>(id).oninput = (e) => {
@@ -112,7 +117,7 @@ function settings() {
 }
 function credits() {
   modal(
-    `<p class="eyebrow">THE PEOPLE BEHIND THE NIGHT</p><h2 id="modal-title">クレジット</h2><p>企画・ゲーム・街・音楽：NIGHTSHIFT TYPING</p><p>ゾンビ：Rikindle3D / Male City Zombie（CC0）<br>拳銃：loafbrr_1 / Pistol（CC0）<br>腕：para / FPS Arms（CC0）</p><p class="note">素材出典は同梱の THIRD_PARTY_NOTICES.md に記録。元作品のキャラクター・音声・ロゴは使用していません。</p><button id="credits-close" class="primary">商店街へ戻る <span>↗</span></button>`,
+    `<p class="eyebrow">THE PEOPLE BEHIND THE NIGHT</p><h2 id="modal-title">クレジット</h2><p>企画・ゲーム・街・演出：NIGHTSHIFT TYPING</p><p>ゾンビ：Rikindle3D / Male City Zombie（CC0）<br>老婦人：Petrov_the_blind / Zombie Grandma（CC0）<br>変異体：City Building Game Art / Horror Game Monster（CC0）<br>細身ゾンビ：Rosswet Mobile / <a href="https://opengameart.org/content/thin-zombie-awake-zombie-asset" target="_blank" rel="noreferrer">Thin Zombie [Awake Zombie Asset]</a>（<a href="https://creativecommons.org/licenses/by/3.0/" target="_blank" rel="noreferrer">CC BY 3.0</a>）<br><small>GLB変換・テクスチャ再接続・動作選択・スケール調整。</small><br>拳銃：loafbrr_1 / Pistol（CC0）<br>腕：para / FPS Arms（CC0）</p><p>音楽：MintoDog / <a href="https://opengameart.org/content/darkness-roadremeke" target="_blank" rel="noreferrer">Darkness Road Remake</a>（CC0）<br>打撃・破片：Kenney / Impact Sounds（CC0）<br>銃声：© 2009 Vincent Sevedge / <a href="https://opengameart.org/content/gunshot-sounds" target="_blank" rel="noreferrer">Gunshot Sounds</a>（<a href="https://creativecommons.org/licenses/by/3.0/" target="_blank" rel="noreferrer">CC BY 3.0</a>）<br><small>銃声は切り出し・EQ・圧縮・音量調整をしています。</small></p><p class="note">素材出典は同梱の THIRD_PARTY_NOTICES.md に記録。元作品のキャラクター・音声・ロゴは使用していません。</p><button id="credits-close" class="primary">商店街へ戻る <span>↗</span></button>`,
     "credits",
   );
   el("credits-close").onclick = () => {
@@ -141,6 +146,8 @@ function start() {
   });
   screen = "game";
   saved = false;
+  finishAt = 0;
+  shownLevel = 0;
   lastMode = "";
   signature = "";
   show("title", false);
@@ -205,6 +212,8 @@ function finish(s: GameState) {
       world.reset(game?.state.stage);
       screen = "game";
       saved = false;
+      finishAt = 0;
+      shownLevel = 0;
       close();
       audio.start();
       focus();
@@ -235,6 +244,12 @@ function draw(s: GameState) {
   el("health").setAttribute("aria-label", `体力 ${s.health} / 3`);
   el("practice-label").textContent = s.practice ? "PRACTICE / 攻撃なし" : "";
   document.body.dataset.level = String(s.effectsLevel);
+  const thresholds = [0, 3, 6, 10, 15];
+  const tier = thresholds.filter(t => s.combo >= t).length - 1;
+  const next = thresholds[tier + 1];
+  const progress = next ? (s.combo - thresholds[tier]) / (next - thresholds[tier]) : 1;
+  el("fever-fill").style.transform = `scaleX(${progress})`;
+  el("fever-next").textContent = next ? `あと ${next - s.combo} 撃破で LEVEL ${tier + 1}` : "MAX LEVEL / NIGHT FEVER";
   const e = s.enemies.find((e) => e.id === s.lockedId) ?? s.enemies[0];
   const sig = JSON.stringify([
     s.enemies.map((e) => [e.id, e.phrase, e.keys, e.locked]),
@@ -246,7 +261,7 @@ function draw(s: GameState) {
     el("targets").innerHTML = s.enemies
       .map(
         (e) =>
-          `<div class="target ${e.locked ? "locked" : ""}" data-enemy="${e.id}"><b>${e.keys.join("/").toUpperCase()}</b><span>${e.phrase}</span></div>`,
+          `<div class="target ${e.locked ? "locked" : ""}" data-enemy="${e.id}"><b>${e.keys.join("/").toUpperCase()}</b><span><small>${({office:"徘徊者",runner:"疾走者",worker:"巨体",boss:"店長"})[e.kind]}</small>${e.phrase}</span><i class="enemy-time"></i></div>`,
       )
       .join("");
     el("phrase").textContent = e?.phrase ?? "次の勤務先へ";
@@ -277,6 +292,7 @@ function draw(s: GameState) {
       label.style.left = `${Math.max(80, Math.min(innerWidth - 80, pos.x))}px`;
       label.style.top = `${Math.max(145, pos.y)}px`;
       label.classList.toggle("danger", enemy.telegraph);
+      label.style.setProperty("--remaining", String(1 - enemy.progress));
     }
   }
   el("deadline-bar").style.transform = `scaleX(${e ? 1 - e.progress : 0})`;
@@ -290,26 +306,56 @@ function draw(s: GameState) {
         : "足音が、近づいてくる。";
   if (s.mode !== lastMode) {
     if (s.mode === "playing" && lastMode === "countdown") audio.start();
-    if (s.mode === "clear" || s.mode === "defeat") finish(s);
+    if (s.mode === "clear" || s.mode === "defeat") finishAt = performance.now() + (s.mode === "clear" ? 1200 : 500);
     lastMode = s.mode;
   }
+  if (finishAt && performance.now() >= finishAt) { finishAt = 0; finish(s); }
 }
 function feedback(t: string, kind: string) {
   el("feedback").textContent = t;
   el("feedback").className = kind;
   feedbackUntil = performance.now() + 750;
 }
+function punch(id: string, scale = 1.18) {
+  if (!preferences.motion) return;
+  el(id).getAnimations().forEach(a => a.cancel());
+  el(id).animate([{scale: String(scale), filter: "brightness(1.8)"}, {scale: "1", filter: "brightness(1)"}], {duration: 240, easing: "cubic-bezier(.12,.7,.3,1)"});
+}
+function milestone(level: number) {
+  el("milestone-caption").textContent = `COMBO LEVEL ${level} / 勤務熱量上昇`;
+  el("milestone-word").textContent = ["", "NICE SHIFT", "ON FIRE", "OVERTIME", "NIGHT FEVER"][level];
+  el("milestone").getAnimations().forEach(a => a.cancel());
+  el("milestone").animate(preferences.motion ? [
+    {opacity: 0, translate: "-30px 0", scale: "1.15", offset: 0},
+    {opacity: 1, translate: "0 0", scale: "1", offset: .12},
+    {opacity: 1, translate: "0 0", scale: "1", offset: .7},
+    {opacity: 0, translate: "15px 0", scale: "1", offset: 1},
+  ] : [{opacity: 1}, {opacity: 0}], {duration: 1650, easing: "ease-out"});
+}
 function events() {
   for (const e of game?.drainEvents() ?? []) {
     world.event(e);
-    if (e.type === "hit") audio.shot();
-    if (e.type === "kill") {
-      audio.celebrate();
-      feedback(
-        game!.state.combo >= 3 ? `${game!.state.combo} COMBO` : "NICE SHOT",
-        "good",
-      );
+    if (e.type === "hit") {
+      audio.shot();
+      punch("reticle", 1.55);
+      if (preferences.motion) el("combat-glow").animate([{opacity: .12}, {opacity: 0}], {duration: 100});
     }
+    if (e.type === "kill") {
+      audio.kill(e.combo ?? game!.state.combo, e.kind === "boss" ? "boss" : "normal");
+      const combo = e.combo ?? game!.state.combo;
+      const level = e.effectsLevel ?? game!.state.effectsLevel;
+      feedback(e.clean ? "CLEAN KILL" : "TAKE DOWN", "good");
+      el("score-pop").textContent = `+${e.scoreDelta ?? 100}${combo >= 3 ? " / " + combo + " CHAIN" : ""}`;
+      el("score-pop").getAnimations().forEach(a => a.cancel());
+      el("score-pop").animate(preferences.motion ? [{opacity: 1, translate: "0 10px"}, {opacity: 0, translate: "0 -20px"}] : [{opacity: 1}, {opacity: 0}], {duration: 900});
+      punch("combo", 1.35);
+      punch("score", 1.12);
+      if (level > shownLevel) { milestone(level); audio.tier(level); }
+      shownLevel = level;
+      if (preferences.motion) el("combat-glow").animate([{opacity: .45}, {opacity: 0}], {duration: 380});
+    }
+    if (e.type === "travel") audio.transition(e.stage ?? game!.state.stage);
+    if (e.type === "clear") audio.victory();
     if (e.type === "miss") {
       audio.miss();
       feedback("続きから、落ち着いて。", "miss");
@@ -339,6 +385,7 @@ function tick(now: number) {
   events();
   if (s && screen === "game") draw(s);
   audio.setLevel(s?.effectsLevel ?? 0);
+  if (s) shownLevel = Math.min(shownLevel, s.effectsLevel);
   if (now > feedbackUntil) el("feedback").textContent = "";
   requestAnimationFrame(tick);
 }
@@ -439,7 +486,10 @@ async function boot() {
   try {
     world = new World(el("world"));
     world.motion = preferences.motion;
+    document.body.dataset.motion = String(preferences.motion);
+    const soundReady = Promise.resolve().then(() => audio.load()).catch(() => false);
     await world.load((t) => (el("loading-text").textContent = t));
+    if (!(await soundReady)) notify("一部の音源を読み込めませんでした。再読み込みで再試行できます。");
     show("loading", false);
     title();
     lastTime = performance.now();
