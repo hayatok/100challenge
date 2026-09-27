@@ -171,6 +171,76 @@ button:disabled {
   color: #ffe8a5;
   text-shadow: 0 0 18px #ffcf72;
 }
+.gesture-feedback.caught { color: #ffe398; text-shadow: 0 0 18px #d6a450; }
+.gesture-feedback.missed { color: #ff9b8b; text-shadow: 0 0 18px #e07157; }
+.play-catch {
+  position: absolute;
+  top: 53px;
+  left: 22px;
+  min-height: 44px;
+  border: 1px solid #f4d688;
+  background: #49391b;
+  color: #ffe29d;
+  padding: 0 16px;
+  font-size: 11px;
+  font-weight: 850;
+  letter-spacing: 0.1em;
+  box-shadow: 0 7px 20px #0007;
+}
+.play-catch span { margin-left: 8px; }
+.play-catch:hover { background: #6b5127; }
+.catch-hud {
+  position: absolute;
+  top: 56px;
+  left: 22px;
+  width: 285px;
+  padding: 12px;
+  background: #091a27ed;
+  border: 1px solid #d6a959;
+  box-shadow: 0 12px 30px #0008;
+}
+.catch-heading {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  color: #ffe29d;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+}
+.catch-heading span { color: #b2a17d; font-size: 8px; }
+.catch-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+  margin: 12px 0 8px;
+}
+.catch-stats div { display: grid; gap: 2px; }
+.catch-stats strong { color: #fff6d7; font-size: 25px; line-height: 1; font-variant-numeric: tabular-nums; }
+.catch-stats span { color: #9bbac4; font-size: 8px; letter-spacing: .12em; font-weight: 800; }
+.catch-pose { margin: 0 0 7px; color: #8ee9de; font-size: 10px; line-height: 1.4; }
+.catch-message { color: #c5d8d9; font-size: 11px; line-height: 1.45; margin: 0; min-height: 2.8em; }
+.catch-actions {
+  position: absolute;
+  bottom: 20px;
+  left: 22px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  max-width: calc(100% - 44px);
+}
+.catch-actions button {
+  min-height: 44px;
+  border: 1px solid #548a95;
+  color: #dcf9f3;
+  background: #102637;
+  padding: 0 13px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .08em;
+}
+.catch-actions button:first-child { border-color: #f3cf83; color: #ffe29d; background: #49391b; }
+.catch-actions button:hover { filter: brightness(1.25); }
 .camera-card {
   position: absolute;
   top: 20px;
@@ -461,6 +531,7 @@ button:disabled {
 .sandbox-controls[hidden] {
   display: none !important;
 }
+.play-catch[hidden], .catch-hud[hidden], .catch-actions[hidden], .catch-actions button[hidden] { display: none !important; }
 @media (max-width: 700px) {
   .shell {
     padding: 0 10px;
@@ -493,6 +564,16 @@ button:disabled {
     font-size: 11px;
     max-width: 190px;
   }
+  .play-catch { left: 12px; top: 49px; padding: 0 10px; font-size: 9px; }
+  .catch-hud { left: 12px; top: 50px; width: min(195px, calc(100% - 158px)); padding: 9px; }
+  .catch-heading { display: grid; font-size: 10px; }
+  .catch-stats { margin: 8px 0 6px; gap: 2px; }
+  .catch-stats strong { font-size: 21px; }
+  .catch-stats span { font-size: 7px; }
+  .catch-message { font-size: 10px; }
+  .catch-actions { left: 12px; bottom: 12px; max-width: calc(100% - 24px); gap: 5px; }
+  .catch-actions button { padding: 0 8px; font-size: 8px; }
+  .world-wrap.catch-active .world-hint { top: 242px; }
   .camera-card {
     width: 130px;
     top: 16px;

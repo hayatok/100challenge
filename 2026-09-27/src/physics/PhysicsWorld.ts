@@ -3,7 +3,7 @@ import { Vector3 } from 'three'
 import type { Flick } from '../vision/FlickDetector'
 import type { ScreenImpact } from '../vision/ScreenContact'
 
-export type ObjectKind = 'ball' | 'box' | 'domino'
+export type ObjectKind = 'ball' | 'box' | 'domino' | 'catch'
 
 export interface ObjectSnapshot {
   id: number
@@ -57,20 +57,21 @@ export class PhysicsWorld {
     this.resetObjects()
   }
 
-  private createObject(kind: ObjectKind, x: number, y: number, z: number): boolean {
-    if (this.objects.length >= this.maxObjects) return false
-    const size = kind === 'ball' ? { x: 0.54, y: 0.54, z: 0.54 }
+  private createObject(kind: ObjectKind, x: number, y: number, z: number): number | null {
+    if (this.objects.length >= this.maxObjects) return null
+    const size = kind === 'ball' || kind === 'catch' ? { x: 0.54, y: 0.54, z: 0.54 }
       : kind === 'box' ? { x: 0.56, y: 0.56, z: 0.56 }
       : { x: 0.18, y: 0.8, z: 0.42 }
     const body = this.world.createRigidBody(
       RAPIER.RigidBodyDesc.dynamic().setTranslation(x, y, z).setCcdEnabled(true).setLinearDamping(0.18),
     )
-    const collider = kind === 'ball'
+    const collider = kind === 'ball' || kind === 'catch'
       ? RAPIER.ColliderDesc.ball(size.x / 2).setRestitution(0.62).setFriction(0.52)
       : RAPIER.ColliderDesc.cuboid(size.x / 2, size.y / 2, size.z / 2).setRestitution(0.18).setFriction(0.78)
     this.world.createCollider(collider, body)
-    this.objects.push({ id: this.nextId++, kind, body, size })
-    return true
+    const id = this.nextId++
+    this.objects.push({ id, kind, body, size })
+    return id
   }
 
   addObject(kind: ObjectKind): boolean {
@@ -78,7 +79,16 @@ export class PhysicsWorld {
     const x = ((index % 7) - 3) * 0.78
     const y = 2.7 + (Math.floor(index / 7) % 3) * 0.85
     const z = ((Math.floor(index / 21) % 3) - 1) * 0.65
-    return this.createObject(kind, x, y, z)
+    return this.createObject(kind, x, y, z) !== null
+  }
+
+  spawnCatchBall(x: number): number | null { return this.createObject('catch', x, 4.15, 0) }
+
+  removeObject(id: number): void {
+    const index = this.objects.findIndex(object => object.id === id)
+    if (index < 0) return
+    this.world.removeRigidBody(this.objects[index].body)
+    this.objects.splice(index, 1)
   }
 
   clearObjects(): void {

@@ -41,6 +41,8 @@ test('finger motion relative to a still palm triggers an index flick', () => {
 test('hand state exposes an extended index tip but hides a curled one', () => {
   const landmarks = Array.from({ length: 21 }, () => ({ x: 0.5, y: 0.5, z: 0 }))
   landmarks[0] = { x: 0.5, y: 0.8, z: 0 }
+  landmarks[5] = { x: 0.4, y: 0.5, z: 0 }
+  landmarks[17] = { x: 0.6, y: 0.5, z: 0 }
   landmarks[6] = { x: 0.5, y: 0.5, z: 0 }
   landmarks[8] = { x: 0.5, y: 0.2, z: 0 }
   const result = { landmarks: [landmarks], handedness: [[{ categoryName: 'Right' }]] }

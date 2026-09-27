@@ -117,7 +117,7 @@ export class HandTracker {
     if (now - this.previousDetectionAt < 32 || this.video.currentTime === this.previousVideoTime) return
     this.previousDetectionAt = now
     this.previousVideoTime = this.video.currentTime
-    return readPalm(this.detector.detectForVideo(this.video, now))
+    return readPalm(this.detector.detectForVideo(this.video, now), this.video.videoWidth / this.video.videoHeight)
   }
 
   stop(): void {
