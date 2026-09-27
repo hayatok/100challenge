@@ -159,5 +159,15 @@
     "category": "モーショングラフィック作品",
     "thumbnail": "celestial-cover.svg",
     "accent": "#3d48ef"
+  },
+  {
+    "id": "2026-09-26-2",
+    "date": "2026-09-26",
+    "sequence": 2,
+    "name": "Type Motion Studio",
+    "description": "文章を場面にして、文字と図形が動く映像へ。再生しながら調整し、HTMLや音声付きMP4を書き出せる制作アプリ。",
+    "category": "モーショングラフィックス",
+    "thumbnail": "type-motion-studio.png",
+    "accent": "#3d48ef"
   }
 ]

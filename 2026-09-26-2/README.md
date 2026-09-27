@@ -1,6 +1,6 @@
 # Type Motion Studio
 
-文章と場面構成から文字中心のモーショングラフィックを作るローカルWebアプリ。最初にCELESTIALの編集可能な作例を開き、再生、文章の差し替え、場面調整、単体HTML・音声付きMP4の書き出しができます。公開済み[CELESTIAL / CUT 02](https://hayatok.github.io/100challenge/2026-09-26/)は比較対象として使用し、変更していません。HyperFramesは使用していません。
+文章と場面構成から文字中心のモーショングラフィックを作るWebアプリ。[公開版](https://hayatok.github.io/100challenge/2026-09-26-2/)では、最初にCELESTIALの編集可能な作例を開き、再生、文章の差し替え、場面調整、単体HTML・音声付きMP4の書き出しができます。公開済み[CELESTIAL / CUT 02](https://hayatok.github.io/100challenge/2026-09-26/)は比較対象として使用し、変更していません。HyperFramesは使用していません。
 
 ## 起動
 
@@ -37,4 +37,4 @@ Playwright Chromiumが未導入なら `npx playwright install chromium` を先�
 
 実測結果、再生・復号・画面確認の範囲、未確認事項は[検証結果](docs/verification/RESULTS.md)に記録しています。仕様と当初の判断は[プロダクト仕様](docs/PRODUCT_SPEC.md)、[演出仕様](docs/MOTION_DESIGN.md)、[技術設計](docs/TECHNICAL_DESIGN.md)、[データ契約](docs/DATA_MODEL.md)、[実装計画](IMPLEMENTATION_PLAN.md)、[検証計画](docs/TEST_PLAN.md)を参照してください。
 
-このアプリのPages公開、`apps.json`への登録、リリースタグ作成は今回の作業に含めていません。
+GitHub Pagesではブラウザ内のIndexedDBに作品を保存します。異なる端末・ブラウザとの同期はありません。
