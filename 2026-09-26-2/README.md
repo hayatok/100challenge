@@ -33,7 +33,7 @@ npm run build
 npm run check
 ```
 
-Playwright Chromiumが未導入なら `npm run setup` を先に実行してください。CIではアプリの依存関係を入れた後、同じsetupを実行します。`npm run check` は上記のlint、単体テスト、型チェックとbuild、ブラウザ試験をまとめます。E2Eは実際のHTML/MP4を `docs/verification/artifacts/` に出します。大きい動画とHTMLはGit管理対象外です。アプリ固有の試験はこのフォルダで実行します。rootの `npm test` はこのアプリの試験ではありません。
+Playwright Google Chromeが未導入なら `npm run setup` を先に実行してください。CIではアプリの依存関係を入れた後、同じsetupを実行します。`npm run check` は上記のlint、単体テスト、型チェックとbuild、ブラウザ試験をまとめます。E2Eは実際のHTML/MP4を `docs/verification/artifacts/` に出します。大きい動画とHTMLはGit管理対象外です。アプリ固有の試験はこのフォルダで実行します。rootの `npm test` はこのアプリの試験ではありません。
 
 実測結果、再生・復号・画面確認の範囲、未確認事項は[検証結果](docs/verification/RESULTS.md)に記録しています。仕様と当初の判断は[プロダクト仕様](docs/PRODUCT_SPEC.md)、[演出仕様](docs/MOTION_DESIGN.md)、[技術設計](docs/TECHNICAL_DESIGN.md)、[データ契約](docs/DATA_MODEL.md)、[実装計画](IMPLEMENTATION_PLAN.md)、[検証計画](docs/TEST_PLAN.md)を参照してください。
 
