@@ -8,6 +8,7 @@ import { loadCharacterLibrary, chooseDeathClip, type CharacterInstance, type Cha
 import { createCharacterMotion, type CharacterMotion } from "./character-motion.ts";
 import { CombatEffects } from "./effects.ts";
 import { createWeapon, animateWeapon } from "./weapon.ts";
+import { OverdriveLights } from "./overdrive.ts";
 import { StorefrontProps } from "./storefront.ts";
 import { createEnvironment } from "./environment.ts";
 import type { EnemyView, GameEvent, GameState } from "./game.ts";
@@ -79,6 +80,7 @@ export class World {
   private luckyFloor = new T.Mesh(new T.RingGeometry(.95,1,64),new T.MeshBasicMaterial({color:0xffa6d7,transparent:true,opacity:.45,side:T.DoubleSide,depthWrite:false}));
   private effects = new CombatEffects(this.scene);
   private storefront = new StorefrontProps();
+  private overdrive = new OverdriveLights();
   private keyLight = new T.DirectionalLight(0xbedaff,2.6);
   private cameraZ = 5;
   private elapsed = 0;
@@ -121,7 +123,7 @@ export class World {
     Object.assign(key.shadow.camera,{left:-8,right:8,top:8,bottom:-8,near:1,far:32});
     key.shadow.bias=-.0003;key.shadow.normalBias=.035;
     key.position.set(-4, 8, 5);
-    this.scene.add(key,key.target,this.storefront.root);
+    this.scene.add(key,key.target,this.storefront.root,this.overdrive.root);
     this.scene.add(this.camera, this.bossLight,this.luckyLight,this.luckyFill,this.luckyFloor);
     this.luckyFloor.rotation.x=-Math.PI/2;this.luckyFloor.visible=false;
     this.camera.position.set(0, 1.65, 5);
@@ -195,7 +197,7 @@ export class World {
     this.effects.finisher(new T.Vector3(0, 1.2, -4), 4, false);
     this.effects.confetti(new T.Vector3(0,1.5,-4),false);
     this.luckyFloor.visible=true;
-    this.effects.update(0);
+    this.effects.update(.0001);
     const warmTank = this.tankTemplate.clone();
     warmTank.position.set(0, 1, -2);
     this.scene.add(warmTank);
@@ -234,6 +236,7 @@ export class World {
     this.previousTier = 0;
     this.effects.reset();
     this.storefront.reset();
+    this.overdrive.reset();
     this.cameraZ = 5 - stage * 15;
   }
   private resize() {
@@ -337,7 +340,7 @@ export class World {
       this.revealRemaining = 2.2;
     }
     if (e.type === "rushStart") {this.rushing = true;this.celebration = 1.2;}
-    if (e.type === "rushEnd") {this.rushing = false;this.celebration = e.success ? 1 : 0;}
+    if (e.type === "rushEnd") {this.rushing = false;this.celebration = e.success ? 2 : 0;if(e.success)this.effects.finale(new T.Vector3(0,2,this.cameraZ-5),4,!this.motion);}
     if(e.type === "luckyStart" && e.enemyId && !this.actors.has(e.enemyId)) this.actor({id:e.enemyId,kind:"office",lane:0,progress:0,lucky:true});
     const a = e.enemyId ? this.actors.get(e.enemyId) : undefined;
     if(e.type === "luckyStep" && a){
@@ -346,7 +349,7 @@ export class World {
     }
     if(e.type === "luckyEnd" && a){
       a.luckyExit=.001;a.luckySuccess=!!e.success;a.danceStep=e.success?3:a.danceStep;a.sentencePose=e.success?1:0;
-      if(e.success){this.effects.confetti(a.root.position.clone().add(new T.Vector3(0,1.6,0)),!this.motion);this.celebration=.8;}
+      if(e.success){this.effects.confetti(a.root.position.clone().add(new T.Vector3(0,1.6,0)),!this.motion);this.effects.finale(a.root.position.clone().add(new T.Vector3(0,2,0)),4,!this.motion);this.celebration=2;}
     }
     if (e.type === "explosion" && a) {
       const origin = a.root.position.clone().add(new T.Vector3(0,1.35,0));
@@ -356,7 +359,7 @@ export class World {
     }
     if (e.type === "hit") {
       this.recoil = 1;
-      if (e.finisher && this.level >= 2) this.finishing = 1;
+      if (e.finisher) this.finishing = 1;
       this.impact = Math.max(this.impact, .2);
       const shell = new T.Mesh(this.shellGeo, this.shellMat);
       this.gun.getWorldPosition(shell.position);
@@ -379,14 +382,14 @@ export class World {
         this.effects.burst(hit, a.lucky ? 3 : this.level, false, !this.motion, a.lucky ? .45 : e.finisher ? 1.5 : .65);
         if (e.finisher) {
           this.impact = Math.max(this.impact, .5);
-          if (this.level >= 2) this.effects.finisher(hit, this.level, !this.motion);
+          this.effects.finisher(hit, this.level, !this.motion);
         }
         this.effects.tracer(this.muzzle.getWorldPosition(new T.Vector3()), hit, this.level);
       }
     }
     if (e.type === "kill" && a) {
       const milestone = !e.collateral && ((e.effectsLevel ?? 0) > this.previousTier || ((e.combo ?? 0) >= 20 && (e.combo ?? 0) % 5 === 0));
-      if (milestone) this.celebration = 1;
+      if (milestone) {this.celebration = 1.5;this.effects.finale(a.root.position.clone().add(new T.Vector3(0,2,0)),this.level,!this.motion);}
       this.previousTier = e.effectsLevel ?? this.level;
       if (a.boss && (e.phase ?? 0) < 2) {
         a.recovering = true; a.hit = 1; a.phase = Math.min(2, e.phase ?? 0);
@@ -395,16 +398,16 @@ export class World {
         return;
       }
       a.dead = 0.001;
-      a.hitstop = .04;
+      a.hitstop = this.motion ? .075 : .04;
       this.impact = a.boss ? 1.2 : .5 + this.level * .07;
       const weight = a.kind === "runner" ? 1.3 : a.kind === "worker" ? .48 : a.boss ? .12 : .9;
-      a.velocity.set(a.twist * .3 * weight, a.boss ? 0 : .45 * weight, -(1.4 + this.level * .18) * weight);
+      a.velocity.set(a.twist * .3 * weight, a.boss ? 0 : .45 * weight, -(2.8 + this.level * .65) * weight);
       const death = chooseDeathClip(a.character,a.hitSerial,a.deathVariant);
       if (death) {
         a.velocity.y = 0;
         this.playAction(a,death);
       }
-      this.effects.burst(a.root.position.clone().add(new T.Vector3(0, a.boss ? 1.9 : 1.3, 0)), this.level, true, !this.motion, a.boss ? 1.8 : e.collateral ? 1.4 : a.rush ? 1.25 : milestone ? 1.35 : .85);
+      this.effects.burst(a.root.position.clone().add(new T.Vector3(0, a.boss ? 1.9 : 1.3, 0)), this.level, true, !this.motion, a.boss ? 2.1 : e.collateral ? 1.6 : a.rush ? 1.7 : milestone ? 1.8 : 1.15);
       if(!a.boss&&!a.rush&&!e.collateral&&this.cameraZ>3){
         const origin=a.root.position.clone().add(new T.Vector3(0,1.1,0));
         const contact=this.storefront.strike(origin,!this.motion);
@@ -415,7 +418,7 @@ export class World {
       if (a.boss) { a.recovering = true; a.attacking = false; }
       else a.dead = 2.2;
     }
-    if (e.type === "bossPhase" && e.phase === 3) this.celebration = 1.6;
+    if (e.type === "clear") {this.celebration = 2.4;this.effects.finale(new T.Vector3(0,2,this.cameraZ-5),4,!this.motion);}
   }
   update(dt: number, state: GameState | null) {
     this.gun.visible = !!state;
@@ -549,8 +552,8 @@ export class World {
       -0.10 + (this.motion ? Math.sin(this.elapsed * 1.4) * 0.003 : 0);
     this.muzzle.visible = this.recoil > 0.45;
     if (delta > 0) this.muzzle.rotation.z = Math.random() * Math.PI;
-    this.muzzle.scale.setScalar(this.motion ? .75 + this.level * .04 + this.finishing * .45 : .4);
-    this.flash.intensity = this.recoil > 0.45 ? (this.motion ? 15 + this.level * 2 : 4) : 0;
+    this.muzzle.scale.setScalar(this.motion ? 1.05 + this.level * .12 + this.finishing * .95 : .4);
+    this.flash.intensity = this.recoil > 0.45 ? (this.motion ? 20 + this.level * 3 + this.finishing*12 : 4) : 0;
     this.impact = Math.max(0, this.impact - delta * 5);
     if (this.motion) {
       this.camera.position.x = Math.sin(this.elapsed * 87) * this.impact * .028;
@@ -573,8 +576,9 @@ export class World {
       }
     }
     const level = state?.effectsLevel ?? 0;
-    this.bloom.strength = this.motion ? .25 + level * .055 + this.celebration * .18 + (this.rushing ? .05 : 0) : .18;
+    this.bloom.strength = this.motion ? .25 + level * .055 + this.celebration * .27 + (this.rushing ? .14 : 0) : .18;
     this.environment?.update(this.elapsed, level, this.motion);
+    this.overdrive.update(this.elapsed,level,this.cameraZ,this.motion,this.rushing,this.celebration);
     this.composer.render();
   }
   project(id: number) {

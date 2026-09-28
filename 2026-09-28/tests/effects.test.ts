@@ -18,14 +18,15 @@ function pools(scene: T.Scene) {
   return { instances, sprites, rings };
 }
 
-test("a heavy burst cannot grow draw objects, and expired pools can be reused without disposing materials", () => withCanvas(() => {
+test("heavy combat and finales stay in fixed draw and fleck pools", () => withCanvas(() => {
   const scene = new T.Scene();
   const effects = new CombatEffects(scene);
   const { instances, sprites, rings } = pools(scene);
-  assert.equal(instances.length, 2, "flecks require two instanced draw objects");
-  assert.equal(sprites.length, 16);
-  assert.equal(rings.length, 10);
-  assert.equal(scene.children.length, 28);
+  assert.equal(instances.length, 2);
+  assert.ok(instances.every((mesh) => mesh.instanceMatrix.count === 600));
+  assert.equal(sprites.length, 24);
+  assert.equal(rings.length, 18);
+  assert.equal(scene.children.length, 44);
   const initialObjects = [...scene.children];
   const materials = [instances[0].material, ...sprites.map((s) => s.material), ...rings.map((r) => r.material)]
     .flatMap((material) => Array.isArray(material) ? material : [material]);
@@ -38,57 +39,94 @@ test("a heavy burst cannot grow draw objects, and expired pools can be reused wi
     effects.explosion(pos, false);
     effects.confetti(pos, false);
     effects.finisher(pos, 4, false);
+    effects.finale(pos, 4, false);
     effects.tracer(pos, pos.clone().add(new T.Vector3(3, 0, -2)), 4);
   }
-  effects.update(0.016);
-  assert.ok(instances.every((mesh) => mesh.count <= 300));
-  assert.ok(instances.reduce((sum, mesh) => sum + mesh.count, 0) <= 300, "all flecks share one 300-instance budget");
-  assert.ok(sprites.filter((s) => s.visible).length <= 16);
-  assert.ok(rings.filter((r) => r.visible).length <= 10);
-  assert.deepEqual(scene.children, initialObjects, "bursts create no new scene draw objects");
+  effects.update(.016);
+  assert.ok(instances.every((mesh) => mesh.count <= 600));
+  assert.ok(instances.reduce((sum, mesh) => sum + mesh.count, 0) <= 600);
+  assert.ok(sprites.filter((s) => s.visible).length <= 24);
+  assert.ok(rings.filter((r) => r.visible).length <= 18);
+  assert.deepEqual(scene.children, initialObjects, "events create no scene draw objects");
 
   effects.update(3);
-  assert.equal(instances.reduce((sum, mesh) => sum + mesh.count, 0), 0, "spent flecks leave no draw instances");
+  assert.equal(instances.reduce((sum, mesh) => sum + mesh.count, 0), 0);
   assert.ok(sprites.every((s) => !s.visible));
   assert.ok(rings.every((r) => !r.visible));
   effects.burst(new T.Vector3(0, 1, 0), 3, true, false);
-  effects.update(0);
-  assert.ok(instances.some((mesh) => mesh.count > 0), "expired pool accepts another burst");
+  effects.update(.001);
+  assert.ok(instances.some((mesh) => mesh.count > 0), "expired slots can be reused");
   effects.reset();
   assert.ok(instances.every((mesh) => mesh.count === 0));
   assert.ok(sprites.every((s) => !s.visible));
   assert.ok(rings.every((r) => !r.visible));
   assert.deepEqual(scene.children, initialObjects);
-  assert.equal(disposed, 0, "pooled materials remain allocated across reuse and reset");
+  assert.equal(disposed, 0, "pooled materials survive reuse and reset");
 }));
 
-test("stress updates leave finite instance transforms and colors, and tracer spans its endpoints", () => withCanvas(() => {
+test("paused updates do no simulation or upload work, including with a queued effect", () => withCanvas(() => {
+  const scene = new T.Scene();
+  const effects = new CombatEffects(scene);
+  const { instances, sprites, rings } = pools(scene);
+  const pos = new T.Vector3(0, 1, 0);
+  effects.finale(pos, 4, false);
+  effects.update(.01);
+  const counts = instances.map(mesh => mesh.count);
+  const positions = sprites.map(sprite => sprite.position.y);
+  const opacity = [...sprites.map(sprite => sprite.material.opacity), ...rings.map(ring => (ring.material as T.MeshBasicMaterial).opacity)];
+  const scales = rings.map(ring => ring.scale.x);
+  const uploadVersions = instances.map(mesh => [mesh.instanceMatrix.version, mesh.instanceColor!.version]);
+  effects.confetti(pos, false);
+  effects.update(0);
+  assert.deepEqual(instances.map(mesh => mesh.count), counts);
+  assert.deepEqual(sprites.map(sprite => sprite.position.y), positions);
+  assert.deepEqual([...sprites.map(sprite => sprite.material.opacity), ...rings.map(ring => (ring.material as T.MeshBasicMaterial).opacity)], opacity);
+  assert.deepEqual(rings.map(ring => ring.scale.x), scales);
+  assert.deepEqual(instances.map(mesh => [mesh.instanceMatrix.version, mesh.instanceColor!.version]), uploadVersions);
+  effects.update(.01);
+  assert.ok(instances.some((mesh, i) => mesh.instanceMatrix.version > uploadVersions[i][0]));
+}));
+
+test("tracer spans its endpoints and stress transforms remain finite", () => withCanvas(() => {
   const scene = new T.Scene();
   const effects = new CombatEffects(scene);
   const [shard, streak] = pools(scene).instances;
   const from = new T.Vector3(-2, 1.5, 3);
   const to = new T.Vector3(5, 1.5, -1);
   effects.tracer(from, to, 4);
-  effects.update(0);
+  effects.update(.001);
   assert.equal(streak.count, 1);
   const matrix = new T.Matrix4();
   streak.getMatrixAt(0, matrix);
-  const near = new T.Vector3(0, 0, -0.5).applyMatrix4(matrix);
-  const far = new T.Vector3(0, 0, 0.5).applyMatrix4(matrix);
-  assert.ok(near.distanceTo(from) < 1e-5, "tracer starts at the muzzle");
-  assert.ok(far.distanceTo(to) < 1e-5, "tracer reaches its target");
+  const near = new T.Vector3(0, 0, -.5).applyMatrix4(matrix);
+  const far = new T.Vector3(0, 0, .5).applyMatrix4(matrix);
+  assert.ok(near.distanceTo(from) < 1e-5);
+  assert.ok(far.distanceTo(to) < 1e-5);
+  const width = new T.Vector3(.5, 0, 0).applyMatrix4(matrix).distanceTo(new T.Vector3(-.5, 0, 0).applyMatrix4(matrix));
+  assert.ok(width > .05, "high-tier tracer is visibly thicker");
 
   for (let i = 0; i < 10; i++) {
     effects.burst(new T.Vector3(i, 1, -i), i % 5, true, false, 1.7);
-    effects.update(0.013);
+    effects.update(.013);
   }
   for (const mesh of [shard, streak]) {
     for (let i = 0; i < mesh.count; i++) {
       mesh.getMatrixAt(i, matrix);
-      assert.ok(matrix.elements.every(Number.isFinite), "each live fleck has a finite transform");
+      assert.ok(matrix.elements.every(Number.isFinite));
       const color = new T.Color();
       mesh.getColorAt(i, color);
-      assert.ok([color.r, color.g, color.b].every(Number.isFinite), "each live fleck has a finite color");
+      assert.ok([color.r, color.g, color.b].every(Number.isFinite));
     }
   }
+}));
+
+test("reduced finale keeps a compact flash and one ring", () => withCanvas(() => {
+  const scene = new T.Scene();
+  const effects = new CombatEffects(scene);
+  const { instances, sprites, rings } = pools(scene);
+  effects.finale(new T.Vector3(0, 1, -3), 4, true);
+  effects.update(.01);
+  assert.equal(instances.reduce((sum, mesh) => sum + mesh.count, 0), 0);
+  assert.equal(sprites.filter(sprite => sprite.visible).length, 1);
+  assert.equal(rings.filter(ring => ring.visible).length, 1);
 }));

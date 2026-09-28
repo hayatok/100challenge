@@ -56,3 +56,8 @@ The Lucky Zombie reuses the credited city rig with an original purple/gold palet
 Both use the unmodified 1K JPEG diffuse, OpenGL normal and roughness maps. Redistribution terms: https://polyhaven.com/license . Source URLs, byte counts and SHA-256 hashes are recorded in `docs/V07_MATERIALS.md`. Runtime tint, UV repetition and normal strength are adjusted by this game.
 
 The recessed coffee shop, striped awning, Japanese signs, merchandise tables and reusable can reactions are original geometry and canvas artwork. The street lighting uses Three.js RoomEnvironment, covered by the existing MIT notice. Zombie skin/clothing shading and pistol/arm materials and positioning are modified in code; the credited source models and rigs remain in use. Storefront impact cues layer the existing Kenney metal/glass recordings.
+
+
+## v0.8 additions
+
+Combo-reactive luminous arches and road strips, gold arcade frames and celebration typography, expanded pooled sparks/shockwaves/fireworks, and gold confetti are original procedural graphics. Reward arpeggios and fanfares are original Web Audio synthesis layered with the previously credited recordings. No new external media, models, fonts or dependencies were added.
