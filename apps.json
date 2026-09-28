@@ -179,5 +179,15 @@
     "category": "Webカメラ × 3D物理",
     "thumbnail": "reality-sandbox.svg",
     "accent": "#70e9d9"
+  },
+  {
+    "id": "2026-09-28",
+    "date": "2026-09-28",
+    "sequence": 1,
+    "name": "夜勤タイピング",
+    "description": "深夜の商店街で、一文字ごとに発砲。迫るゾンビをローマ字で撃退する3Dタイピングシューター。",
+    "category": "3Dタイピングゲーム",
+    "thumbnail": "nightshift-cover.png",
+    "accent": "#edc779"
   }
 ]
