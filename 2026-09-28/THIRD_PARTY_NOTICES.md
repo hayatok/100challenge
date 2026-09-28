@@ -46,3 +46,13 @@ The red explosive tanks, straps, warning bands and chest badge are original proc
 ## v0.6 additions
 
 The Lucky Zombie reuses the credited city rig with an original purple/gold palette. Both full-body dance loops, additive hit/death gestures, floor ring, lighting, confetti and phrases are authored for this game. Existing clips are selected/crossfaded; the city death clip is reversed, shortened and its hip-height curve adjusted. The 120 BPM lucky accompaniment and completion cues are original Web Audio synthesis, layered with the existing credited gun/impact recordings. No new third-party assets or dependencies were added.
+
+
+## v0.7 additions
+
+- **Worn Shutter**, **Dimitrios Savva**, https://polyhaven.com/a/worn_shutter , **CC0**.
+- **Worn Asphalt**, **Amal Kumar**, https://polyhaven.com/a/worn_asphalt , **CC0**.
+
+Both use the unmodified 1K JPEG diffuse, OpenGL normal and roughness maps. Redistribution terms: https://polyhaven.com/license . Source URLs, byte counts and SHA-256 hashes are recorded in `docs/V07_MATERIALS.md`. Runtime tint, UV repetition and normal strength are adjusted by this game.
+
+The recessed coffee shop, striped awning, Japanese signs, merchandise tables and reusable can reactions are original geometry and canvas artwork. The street lighting uses Three.js RoomEnvironment, covered by the existing MIT notice. Zombie skin/clothing shading and pistol/arm materials and positioning are modified in code; the credited source models and rigs remain in use. Storefront impact cues layer the existing Kenney metal/glass recordings.

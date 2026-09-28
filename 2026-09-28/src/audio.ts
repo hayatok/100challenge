@@ -354,6 +354,7 @@ export class GameAudio {
     this.lastMiss = c.currentTime;
     this.play("metal.ogg", 0.08, "accent", 0, 0.62, 0.13);
   }
+  storefrontImpact(): void { this.play("metal.ogg",.2,"impact",.04,.72,.32);this.play("glass.ogg",.14,"accent",.07,1.12,.35); }
   hurt(): void { this.play("body.ogg", 0.37, "impact", 0, 0.7, 0.3); this.subdrop(0.19); }
   celebrate(): void { this.kill(0); }
   tier(level: number): void {
