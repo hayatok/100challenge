@@ -789,7 +789,7 @@ body[data-level="3"] .combo, body[data-level="4"] .combo { filter: drop-shadow(0
 #milestone { position: fixed; left: 4%; top: 38%; opacity: 0; pointer-events: none; color: var(--combat); text-shadow: 0 3px 3px #081014, 0 0 30px #061115; }
 #milestone small { display: block; font-size: 10px; letter-spacing: 3px; margin-bottom: 8px; }
 #milestone strong { display: block; font: italic 64px/.95 Impact, "Arial Narrow", sans-serif; letter-spacing: -1px; max-width: 370px; }
-#score-pop { position: fixed; right: 44px; top: 282px; opacity: 0; font: italic 24px Impact, sans-serif; color: var(--combat); pointer-events: none; text-shadow: 0 2px 10px #000; }
+#score-pop { position: fixed; right: 44px; top: 320px; opacity: 0; font: italic 24px Impact, sans-serif; color: var(--combat); pointer-events: none; text-shadow: 0 2px 10px #000; }
 #score { display: inline-block; }
 #feedback { top: 26%; font-size: 22px; font-style: italic; }
 .target { max-width: 260px; padding: 8px 12px 12px; }
@@ -809,7 +809,7 @@ body[data-motion="false"] .combo { filter: none; }
   #milestone { top: 34%; }
   #milestone strong { font-size: 38px; max-width: 200px; }
   #milestone small { font-size: 8px; letter-spacing: 1px; }
-  #score-pop { right: 20px; top: 232px; font-size: 20px; }
+  #score-pop { right: 20px; top: 265px; font-size: 20px; }
   .fever-track { width: 140px; }
 }
 
@@ -835,3 +835,44 @@ body[data-level="3"] .combo, body[data-level="4"] .combo { filter: drop-shadow(0
 .result-record span { font-size: 9px; letter-spacing: 1px; color: #a6b6b4; }
 .result-record b { display: block; margin-top: 5px; font-size: 19px; color: var(--teal); }
 @media (max-width: 800px) { #boss-hud { top: 145px; width: 45vw; } #boss-hud b { font-size: 17px; } #boss-phase { font-size: 8px; } .result-hero .result-score { font-size: 32px; } }
+
+/* v0.5: the charge is a promise of a short, readable burst of play. */
+.charge-label { display:block; margin-top:8px; color:#acbdb4; font:8px ui-monospace,monospace; letter-spacing:2px; }
+.fever-track { margin-top:5px; }
+#rush-banner { position:fixed; top:105px; left:50%; transform:translateX(-50%); text-align:center; color:#ffdb86; text-shadow:0 3px 10px #000; pointer-events:none; }
+#rush-banner small { display:block; font-size:10px; letter-spacing:2px; }
+#rush-banner strong { display:block; font:italic 38px/1.2 Impact,sans-serif; letter-spacing:3px; }
+#rush-banner > span { display:block; margin-top:4px; font:10px ui-monospace,monospace; }
+#rush-pips { display:flex; justify-content:center; gap:6px; margin-top:6px; }
+#rush-pips i { width:38px; height:4px; background:#ffd779; box-shadow:0 0 8px #e5953850; }
+#rush-pips i.done { background:#71918e55; box-shadow:none; }
+body[data-rush="true"] { --combat:#ffd779; }
+body[data-rush="true"] #typing-panel { border-top-width:3px; background:linear-gradient(100deg,#23180ded,#182326f5,#23180ded); }
+.target.explosive { border:2px solid #ffae59; background:#281b12ee; }
+.target.explosive small { color:#ffd192; letter-spacing:1px; }
+.target.blast-linked { border-color:#eead73; border-style:dashed; }
+.target.blast-linked small { color:#f4c995; }
+.result-extra { display:flex; justify-content:space-between; gap:14px; margin-top:14px; font-size:12px; color:#a8bab1; }
+.result-extra b { color:var(--gold); margin-left:5px; }
+.next-goal { margin-top:20px; padding:14px 16px; border-left:3px solid var(--teal); background:#86b8ac0e; }
+.next-goal small { display:block; font-size:8px; letter-spacing:2px; color:var(--teal); }
+.next-goal > b { display:block; margin-top:6px; font-size:18px; color:#f1e2c0; }
+.next-goal p { margin:5px 0 0; font-size:11px; }
+@media(max-width:800px) { #rush-banner { top:205px; } #rush-banner strong { font-size:28px; } }
+@media(max-height:750px) { .modal-card:has(.next-goal) { padding-block:22px; } .next-goal { margin-top:12px; padding:10px 14px; } .modal-card:has(.next-goal) .primary { margin-top:14px; } }
+
+.result-actions { display:flex; justify-content:space-between; gap:12px; }
+.modal-card .result-actions .text-button { margin:6px 0 0; font-size:11px; }
+@media(min-width:801px) and (max-height:800px) {
+ .modal-card:has(.next-goal) { padding:20px 32px; max-height:calc(100vh - 32px); }
+ .modal-card:has(.next-goal) h2 { margin:5px 0; font-size:25px; }
+ .modal-card:has(.next-goal) > p { margin:5px 0; }
+ .result-hero { margin:12px 0; gap:18px; }
+ .result-grade { font-size:62px; }
+ .result-hero .result-score { font-size:40px; }
+ .result-record { margin:8px 0; padding:8px 0; }
+ .result-grid { padding:12px 0; }
+ .result-extra { margin-top:10px; }
+ .next-goal { margin-top:10px; padding:10px 12px; }
+ .modal-card:has(.next-goal) .primary { margin-top:10px; min-height:52px; padding-block:14px; }
+}

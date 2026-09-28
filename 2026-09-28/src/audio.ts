@@ -3,7 +3,7 @@ const FILES = ["darkness-road.ogg", "shot-1.mp3", "shot-2.mp3", "shot-3.mp3", "h
 type AudioFile = (typeof FILES)[number];
 type VoiceGroup = "gun" | "impact" | "accent";
 type Voice = { source: AudioBufferSourceNode; gain: GainNode; group: VoiceGroup };
-export type ShotOptions = { zone?: "body" | "head" | "limb"; finishing?: boolean; level?: number };
+export type ShotOptions = { zone?: "body" | "head" | "limb"; finishing?: boolean; level?: number; rush?: boolean };
 const clamp = (n: number, a: number, b: number) => Math.min(b, Math.max(a, Number.isFinite(n) ? n : a));
 
 export class GameAudio {
@@ -16,6 +16,8 @@ export class GameAudio {
   private impactBus!: BiquadFilterNode;
   private accentBus!: BiquadFilterNode;
   private filter!: BiquadFilterNode;
+  private rushFilter!: BiquadFilterNode;
+  private rushLayer!: GainNode;
   private musicSource: AudioBufferSourceNode | null = null;
   private musicSourceGain: GainNode | null = null;
   private musicStartedAt = 0;
@@ -30,6 +32,7 @@ export class GameAudio {
   private lastShot = -1;
   private lastMiss = -1;
   private lastBossPhase = 0;
+  private rushing = false;
   muted = false;
   musicVolume = 0.45;
   effectsVolume = 0.75;
@@ -47,6 +50,12 @@ export class GameAudio {
     this.filter = c.createBiquadFilter(); this.filter.type = "lowpass";
     this.filter.Q.value = 0.6; this.filter.frequency.value = 1300;
     this.filter.connect(this.musicDuck).connect(this.music).connect(this.master);
+    // The same looping recording supplies a quiet upper-mid pulse in a rush.
+    // Its gain moves smoothly, so entering a rush cannot restart or desync BGM.
+    this.rushFilter = c.createBiquadFilter(); this.rushFilter.type = "highpass";
+    this.rushFilter.frequency.value = 1750; this.rushFilter.Q.value = 0.5;
+    this.rushLayer = c.createGain(); this.rushLayer.gain.value = 0;
+    this.rushFilter.connect(this.rushLayer).connect(this.musicDuck);
     this.effects = c.createGain(); this.effects.connect(this.master);
     this.gunBus = c.createBiquadFilter(); this.gunBus.type = "highpass"; this.gunBus.frequency.value = 105;
     this.gunBus.connect(this.effects);
@@ -155,14 +164,15 @@ export class GameAudio {
     this.lastShot = c.currentTime;
     const file = (`shot-${this.shotIndex++ % 3 + 1}.mp3`) as AudioFile;
     const finishing = typeof options === "boolean" ? options : !!options.finishing;
+    const rush = typeof options === "boolean" ? this.rushing : (options.rush ?? this.rushing);
     const zone = typeof options === "boolean" ? "body" : options.zone ?? "body";
     const level = typeof options === "boolean" ? this.level : clamp(options.level ?? this.level, 0, 4);
-    this.play(file, finishing ? (rapid ? 0.65 : 0.76) + level * 0.012 : rapid ? 0.43 : 0.69,
+    this.play(file, finishing ? (rapid ? 0.65 : 0.76) + level * 0.012 + (rush ? 0.035 : 0) : rapid ? 0.43 : 0.69,
       "gun", 0, 0.98 + this.shotIndex % 3 * 0.025, finishing ? 0.34 : 0.31);
     if (finishing) {
       // A second recording gives the final shot a denser attack without
       // extending its tail. The fast metal click marks the slide's movement.
-      this.play("shot-3.mp3", 0.18 + level * 0.02, "gun", 0.009, 0.84, 0.19);
+      this.play("shot-3.mp3", 0.18 + level * 0.02 + (rush ? 0.035 : 0), "gun", 0.009, 0.84, 0.19);
       this.play("metal.ogg", 0.11 + level * 0.012, "accent", 0.011, 1.46, 0.12);
     }
     if (zone === "head") {
@@ -192,6 +202,35 @@ export class GameAudio {
     this.musicDuck.gain.setValueAtTime(this.musicDuck.gain.value, t);
     this.musicDuck.gain.linearRampToValueAtTime(depth, t + 0.012);
     this.musicDuck.gain.setTargetAtTime(1, t + 0.035, recovery / 3);
+  }
+  /** Call on every game tick. The state also applies when BGM starts later. */
+  setRush(active: boolean): void {
+    if (this.rushing === active) return;
+    this.rushing = active;
+    const c = this.context;
+    if (!c) return;
+    const t = c.currentTime;
+    this.rushLayer.gain.cancelScheduledValues(t);
+    this.rushLayer.gain.setTargetAtTime(active ? 0.26 : 0, t, active ? 0.18 : 0.24);
+    this.setFilterFrequency(t);
+  }
+  /** Brief upward signal at a four-word rush entrance. */
+  rushStart(): void {
+    this.play("metal.ogg", 0.16, "accent", 0, 1.22, 0.17);
+    this.play("bell.ogg", 0.22, "accent", 0.075, 1.28, 0.31);
+  }
+  /** Short, falling signal when the rush ends. */
+  rushEnd(): void {
+    this.play("metal.ogg", 0.12, "accent", 0, 0.68, 0.22);
+  }
+  /** One chain explosion cue; count changes weight, never the number of voices. */
+  explosion(count: number): void {
+    const weight = clamp(Math.floor(count), 1, 6);
+    this.play("body.ogg", 0.36 + weight * 0.035, "impact", 0, 0.79, 0.46);
+    this.play("metal.ogg", 0.18 + weight * 0.015, "accent", 0.025, 0.72, 0.38);
+    this.play("glass.ogg", 0.13 + weight * 0.012, "accent", 0.065, 0.92, 0.43);
+    this.subdrop(0.16 + weight * 0.012);
+    this.duckMusic(0.38, 0.62);
   }
   miss(): void {
     const c = this.context;
@@ -251,8 +290,12 @@ export class GameAudio {
     if (!c) return;
     const beat = 60 / 165;
     const next = this.musicSource ? c.currentTime + (beat - (c.currentTime - this.musicStartedAt) % beat) % beat : c.currentTime;
-    this.filter.frequency.cancelScheduledValues(c.currentTime);
-    this.filter.frequency.setTargetAtTime([1150, 1900, 3000, 5000, 10000][this.level], next, 0.12);
+    this.setFilterFrequency(next);
+  }
+  private setFilterFrequency(at: number): void {
+    if (!this.context) return;
+    this.filter.frequency.cancelScheduledValues(this.context.currentTime);
+    this.filter.frequency.setTargetAtTime([1150, 1900, 3000, 5000, 10000][this.level] * (this.rushing ? 1.35 : 1), at, 0.12);
   }
   setVolumes(music: number, effects: number, muted = this.muted): void {
     this.musicVolume = clamp(music, 0, 1);
@@ -272,7 +315,9 @@ export class GameAudio {
     const source = c.createBufferSource(), fade = c.createGain(); source.buffer = buffer; source.loop = true;
     fade.gain.setValueAtTime(0, c.currentTime);
     fade.gain.linearRampToValueAtTime(1, c.currentTime + 0.12);
-    source.connect(fade).connect(this.filter);
+    source.connect(fade);
+    fade.connect(this.filter);
+    fade.connect(this.rushFilter);
     const offset = this.musicOffset % buffer.duration;
     this.musicStartedAt = c.currentTime - offset;
     this.musicSource = source; this.musicSourceGain = fade; source.start(c.currentTime, offset);
@@ -280,7 +325,7 @@ export class GameAudio {
       source.disconnect(); fade.disconnect();
       if (this.musicSource === source) { this.musicSource = null; this.musicSourceGain = null; }
     };
-    this.filter.frequency.setTargetAtTime([1150, 1900, 3000, 5000, 10000][this.level], c.currentTime, 0.12);
+    this.setFilterFrequency(c.currentTime);
   }
   stop(immediate = true): void {
     this.active = false;
@@ -310,6 +355,7 @@ export class GameAudio {
     this.lastShot = -1; this.lastMiss = -1;
     this.lastBossPhase = 0;
     if (c) { this.musicDuck.gain.cancelScheduledValues(c.currentTime); this.musicDuck.gain.setValueAtTime(1, c.currentTime); }
+    this.setRush(false);
   }
   dispose(): void {
     this.stop(); void this.context?.close();

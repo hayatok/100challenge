@@ -12,6 +12,9 @@ import type { EnemyView, GameEvent, GameState } from "./game.ts";
 
 type Actor = {
   root: T.Group;
+  tank?: T.Group;
+  blastTargets: number[];
+  rush: boolean;
   age: number;
   entrance: number;
   motion: CharacterMotion;
@@ -50,6 +53,8 @@ export class World {
   private recoil = 0;
   private weaponModel?: T.Group;
   private finishing = 0;
+  private rushing = false;
+  private tankTemplate = this.createTank();
   private revealRemaining = 0;
   private impact = 0;
   private level = 0;
@@ -137,7 +142,7 @@ export class World {
     this.composer.addPass(this.bloom);
     this.composer.addPass(new OutputPass());
     this.resize();
-    window.addEventListener("resize", () => this.resize());
+    window.addEventListener("resize", () => { this.resize(); this.composer.render(); });
   }
   async load(onProgress: (text: string) => void) {
     onProgress("商店街の灯りを点けています");
@@ -160,12 +165,16 @@ export class World {
     this.muzzle.visible = true;
     this.effects.burst(new T.Vector3(0, 1.2, -4), 4, true, false);
     this.effects.finisher(new T.Vector3(0, 1.2, -4), 4, false);
+    this.effects.update(0);
+    const warmTank = this.tankTemplate.clone();
+    warmTank.position.set(0, 1, -2);
+    this.scene.add(warmTank);
     await this.renderer.compileAsync(this.scene, this.camera);
     this.renderer.render(this.scene, this.camera);
     // Allocate the post-processing targets and shot-only materials during loading.
     this.composer.render();
     this.muzzle.visible = false;
-    this.scene.remove(warmShell, warmShadow);
+    this.scene.remove(warmShell, warmShadow, warmTank);
     this.effects.reset();
     for (const model of warm) {
       this.scene.remove(model);
@@ -186,6 +195,7 @@ export class World {
     this.particles = [];
     this.recoil = 0;
     this.finishing = 0;
+    this.rushing = false;
     this.revealRemaining = 0;
     this.impact = 0;
     this.celebration = 0;
@@ -201,7 +211,24 @@ export class World {
     this.renderer.setSize(w, h);
     this.composer.setSize(w, h);
   }
-  private actor(e: Pick<EnemyView, "id" | "kind" | "lane" | "progress">) {
+  private createTank() {
+    const pack = new T.Group();
+    const red = new T.MeshStandardMaterial({color:0xa82317,roughness:.62,metalness:.25});
+    const steel = new T.MeshStandardMaterial({color:0x303332,roughness:.65,metalness:.5});
+    const warning = new T.MeshStandardMaterial({color:0xf9bd39,roughness:.68,emissive:0x8f3906,emissiveIntensity:.25});
+    const cylinder = new T.CylinderGeometry(.12,.12,.6,12);
+    const band = new T.CylinderGeometry(.127,.127,.09,12);
+    const valve = new T.BoxGeometry(.13,.055,.08);
+    for (const side of [-1,1]) {
+      const body = new T.Mesh(cylinder,red);body.position.set(side*.29,0,-.1);pack.add(body);
+      for(const y of [-.16,.17]){const belt=new T.Mesh(band,warning);belt.position.set(side*.29,y,-.1);pack.add(belt);}
+      const top=new T.Mesh(valve,steel);top.position.set(side*.29,.335,-.1);pack.add(top);
+      const strap=new T.Mesh(new T.BoxGeometry(.045,.52,.035),steel);strap.position.set(side*.19,0,.15);pack.add(strap);
+    }
+    const badge=new T.Mesh(new T.BoxGeometry(.2,.15,.035),warning);badge.position.set(0,.1,.19);pack.add(badge);
+    return pack;
+  }
+  private actor(e: Pick<EnemyView, "id" | "kind" | "lane" | "progress"> & Partial<Pick<EnemyView,"explosive"|"blastTargets"|"rush">>) {
     if (e.kind === "boss") {
       const previous = [...this.actors].find(([,actor]) => actor.boss && actor.recovering && !actor.dead);
       if (previous) {
@@ -232,6 +259,8 @@ export class World {
     }
     const a: Actor = {
       root,
+      blastTargets: e.blastTargets ?? [],
+      rush: !!e.rush,
       age: 0,
       entrance: e.lane || (e.id % 2 ? 1 : -1),
       model,
@@ -255,6 +284,7 @@ export class World {
       height,
       attacking: false,
     };
+    if (e.explosive) {a.tank = this.tankTemplate.clone(); root.add(a.tank);}
     this.scene.add(root);
     this.actors.set(e.id, a);
     return a;
@@ -267,7 +297,15 @@ export class World {
       preview.root.position.set(0, 0, -51);
       this.revealRemaining = 2.2;
     }
+    if (e.type === "rushStart") {this.rushing = true;this.celebration = 1.2;}
+    if (e.type === "rushEnd") {this.rushing = false;this.celebration = e.success ? 1 : 0;}
     const a = e.enemyId ? this.actors.get(e.enemyId) : undefined;
+    if (e.type === "explosion" && a) {
+      const origin = a.root.position.clone().add(new T.Vector3(0,1.35,0));
+      this.effects.explosion(origin,!this.motion);this.impact = .8;this.celebration = 1.1;
+      if(a.tank)a.tank.visible=false;
+      for(const id of a.blastTargets){const other=this.actors.get(id);if(other)this.effects.tracer(origin,other.root.position.clone().add(new T.Vector3(0,1.2,0)),2);}
+    }
     if (e.type === "hit") {
       this.recoil = 1;
       if (e.finisher && this.level >= 2) this.finishing = 1;
@@ -298,11 +336,11 @@ export class World {
       }
     }
     if (e.type === "kill" && a) {
-      const milestone = (e.effectsLevel ?? 0) > this.previousTier || ((e.combo ?? 0) >= 20 && (e.combo ?? 0) % 5 === 0);
+      const milestone = !e.collateral && ((e.effectsLevel ?? 0) > this.previousTier || ((e.combo ?? 0) >= 20 && (e.combo ?? 0) % 5 === 0));
       if (milestone) this.celebration = 1;
       this.previousTier = e.effectsLevel ?? this.level;
       if (a.boss && (e.phase ?? 0) < 2) {
-        a.recovering = true; a.hit = 1; a.phase = (e.phase ?? 0) + 1;
+        a.recovering = true; a.hit = 1; a.phase = Math.min(2, e.phase ?? 0);
         this.effects.burst(a.root.position.clone().add(new T.Vector3(0, 1.9, 0)), this.level, true, !this.motion, 1);
         this.impact = .6;
         return;
@@ -321,7 +359,7 @@ export class World {
         action.clampWhenFinished = true;
         action.play();
       }
-      this.effects.burst(a.root.position.clone().add(new T.Vector3(0, a.boss ? 1.9 : 1.3, 0)), this.level, true, !this.motion, a.boss ? 1.8 : milestone ? 1.35 : .85);
+      this.effects.burst(a.root.position.clone().add(new T.Vector3(0, a.boss ? 1.9 : 1.3, 0)), this.level, true, !this.motion, a.boss ? 1.8 : e.collateral ? 1.4 : a.rush ? 1.25 : milestone ? 1.35 : .85);
     }
     if (e.type === "attack" && a) {
       if (a.boss) { a.recovering = true; a.attacking = false; }
@@ -340,6 +378,7 @@ export class World {
     this.finishing = Math.max(0, this.finishing - delta * 5.5);
     this.celebration = Math.max(0, this.celebration - delta * .65);
     this.level = state?.effectsLevel ?? 0;
+    this.rushing = state?.rushing ?? false;
     this.previousTier = Math.min(this.previousTier, this.level);
     const stage = state?.stage ?? 0;
     const desired = 5 - stage * 15;
@@ -359,6 +398,8 @@ export class World {
         }
       }
       a.phase = e.kind === "boss" ? (state?.bossPhase ?? 0) : 0;
+      a.blastTargets = e.blastTargets;
+      a.rush = e.rush;
       a.progress = e.progress;
       a.lane = e.lane;
     }
@@ -398,13 +439,17 @@ export class World {
       } else {
         const distance = a.boss ? 7.8 - (a.recovering ? .1 : a.progress) * 5.0 : 6.6 - a.progress * 3.8;
         const z = this.cameraZ - distance;
-        const entry = this.motion ? 1 - T.MathUtils.smoothstep(a.age, 0, .85) : 0;
+        const entry = this.motion ? 1 - T.MathUtils.smoothstep(a.age, 0, a.rush ? .23 : .85) : 0;
         const laneX = a.lane * Math.min(1.75, distance * .35);
         const x = laneX + (a.boss ? 0 : entry * a.entrance * (3.1 - Math.abs(laneX)));
         const bossZ = this.revealRemaining > 0 ? -47.8 - 3.2 * (this.revealRemaining / 2.2) : z;
         a.root.position.set(x, 0, a.boss ? T.MathUtils.damp(a.root.position.z || bossZ, bossZ, 5, delta) : z - entry * .8);
         a.root.rotation.y = a.boss ? 0 : -entry * a.entrance * .32;
         a.root.rotation.z = Math.sin(this.elapsed * 31) * a.hit * 0.055;
+      }
+      if (a.tank && a.tank.visible) {
+        const chest = a.motion.target("chest");
+        if(chest){a.tank.position.copy(a.root.worldToLocal(chest));a.tank.rotation.x=a.model.rotation.x;}
       }
       a.shadow.position.set(a.root.position.x, .015, a.root.position.z);
       a.shadow.visible = !a.dead || a.dead < (a.boss ? 2.8 : 1.7);
@@ -436,7 +481,7 @@ export class World {
       this.camera.position.x = Math.sin(this.elapsed * 87) * this.impact * .028;
       this.camera.rotation.z = Math.cos(this.elapsed * 63) * this.impact * .009;
     }
-    this.camera.fov = T.MathUtils.damp(this.camera.fov, 55 + (this.motion ? this.impact * 2 : 0), 16, delta);
+    this.camera.fov = T.MathUtils.damp(this.camera.fov, 55 + (this.motion ? this.impact * 2 + (this.rushing ? 1.5 : 0) : 0), 16, delta);
     this.camera.updateProjectionMatrix();
     this.effects.update(delta);
     if (this.motion && this.recoil > 0)
@@ -453,7 +498,7 @@ export class World {
       }
     }
     const level = state?.effectsLevel ?? 0;
-    this.bloom.strength = this.motion ? .25 + level * .055 + this.celebration * .22 : .18;
+    this.bloom.strength = this.motion ? .25 + level * .055 + this.celebration * .18 + (this.rushing ? .05 : 0) : .18;
     this.environment?.update(this.elapsed, level, this.motion);
     this.composer.render();
   }

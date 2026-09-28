@@ -29,10 +29,10 @@ class Source extends Node {
 }
 class FakeAudioContext {
   state = "running"; currentTime = 0; destination = new Node();
-  gains: Node[] = []; sources: Source[] = []; oscillators: Source[] = [];
+  gains: Node[] = []; filters: Node[] = []; sources: Source[] = []; oscillators: Source[] = [];
   createGain() { const node = new Node(); this.gains.push(node); return node; }
   createDynamicsCompressor() { return new Node(); }
-  createBiquadFilter() { return new Node(); }
+  createBiquadFilter() { const node = new Node(); this.filters.push(node); return node; }
   createBufferSource() { const source = new Source(); this.sources.push(source); return source; }
   createOscillator() { const source = new Source(); this.oscillators.push(source); return source; }
   async decodeAudioData() { return { duration: 128 }; }
@@ -56,6 +56,11 @@ test("rapid shots stay bounded, kills alone duck music, and stop clears subdrops
     audio.start();
     const c = context!;
     assert.equal(c.sources.filter((s) => s.loop).length, 1);
+    const rushLayer = c.gains[3].gain;
+    audio.setRush(true);
+    audio.setRush(true);
+    assert.equal(rushLayer.events.filter((e) => e.kind === "target" && e.value === 0.26).length, 1, "rush state is idempotent");
+    assert.equal(c.sources.filter((s) => s.loop).length, 1, "rush does not restart the BGM");
     // The music duck is the gain immediately following the filter, created before effect buses.
     const duck = c.gains[2].gain;
     const baselineDucks = duck.events.length;
@@ -74,12 +79,29 @@ test("rapid shots stay bounded, kills alone duck music, and stop clears subdrops
     const finalVoices = c.sources.slice(beforeMute);
     assert.ok(finalVoices.every((s) => s.stops[0] <= c.currentTime + 0.36), "final shot layers have short tails");
     assert.ok(c.gains.slice(-4).every((g) => g.gain.events[0].value! < 0.9), "final shot layer gains stay bounded");
+    const beforeExplosion = c.sources.length;
+    audio.rushStart(); audio.rushEnd();
+    audio.explosion(999);
+    assert.equal(c.sources.length - beforeExplosion, 6, "rush signals and explosion use a fixed number of sample voices");
+    assert.ok(duck.events.some((e) => e.kind === "ramp" && e.value === 0.38), "explosion briefly ducks the BGM");
+    for (let i = 0; i < 40; i++) audio.explosion(i + 1);
+    assert.ok(c.sources.filter((s) => !s.loop && s.stops.length === 1).length <= 12, "explosion storms stay within the voice cap");
+    assert.ok(c.oscillators.filter((osc) => osc.stops.length === 1).length <= 2, "subdrops stay within their oscillator cap");
+    const beforePause = c.sources.length;
+    c.state = "suspended";
+    audio.explosion(4); audio.rushStart(); audio.shot({ rush: true });
+    assert.equal(c.sources.length, beforePause, "suspended audio context produces no new voices");
+    c.state = "running";
+    audio.setVolumes(0.2, 0.3);
+    assert.ok(c.gains[1].gain.events.some((e) => e.kind === "target" && e.value === 0.1), "music volume remains independently adjustable");
+    assert.ok(c.gains[4].gain.events.some((e) => e.kind === "target" && e.value === 0.3), "effects volume remains independently adjustable");
     audio.bossPhase(3);
     assert.ok(c.oscillators.length > 0);
     audio.stop();
     assert.ok(c.oscillators.every((osc) => osc.stops.some((t) => t === 0)), "stop halts active oscillators");
     const oldMusic = c.sources.find((s) => s.loop)!;
     assert.ok(oldMusic.stops.length > 0);
+    assert.ok(rushLayer.events.some((e) => e.kind === "target" && e.value === 0), "stop clears the musical rush layer");
     c.currentTime += 2;
     audio.start();
     const music = c.sources.filter((s) => s.loop);
