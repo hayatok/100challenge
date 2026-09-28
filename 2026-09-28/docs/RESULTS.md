@@ -1,3 +1,33 @@
+# Alpha 0.9 検証（2026-09-28）
+
+## 変更と環境
+承認UIコンセプトに沿うDOM/CSSの筐体リニューアル。中央ロゴ、赤黒の固定入力欄、金色の日本語演出、サービスパネル、勤務精算票。既存3D/音/採点ルールは維持。Chromium系のCodex in-app browser、Vite production preview（127.0.0.1:5180）で実操作。
+
+## 自動チェック
+- `npm run check`：69テスト、oxlint、TypeScript、production build成功。
+- 共有 `npm test`：38テスト成功。`git diff --check` 成功。
+- JS約849KBの既存chunk size警告あり。
+
+## 実ブラウザ
+- Enterで勤務開始、goの入力確認、固定プレートで正打・次文字の下線、FEVER2回、ラッキー3文、連鎖、ボス全段階、結果まで実キーイベントで通過。
+- 通常演出の練習一周と低モーションの練習一周は各9,650点 / 最大33連撃 / 正確率100% / 体力3 / FEVER2回 / 巻き込み4体 / ラッキー500点 / リトライ0 / S。
+- 1280×720、1440×900、1920×1080、1024×768でタイトルまたは戦闘を確認。スコアと操作ボタンの重なりを修正。長文を下部プレートに表示。
+- 375×812でタイトルと設定を操作。タイトル横幅375/375、設定351/351、結果349/349で横はみ出しなし。結果から再挑戦→休止→タイトルを操作。
+- Escape休止、勤務に戻る→goで復帰。同じ出題の再挑戦で最初の「路地裏の明細書」を再現。
+- 設定のTab終端→先頭循環、低モーション変更→Escape→reload後にオフ保持を確認。
+- 通し後のconsole error/warningは0。
+
+## 実画面
+- [タイトル](../art/verification/v09-title.png)
+- [戦闘](../art/verification/v09-combat.png)
+- [FEVER・低モーション](../art/verification/v09-fever-low-motion.png)
+- [勤務精算票](../art/verification/v09-result.png)
+
+## 限界
+自動キー入力による操作確認であり、人間の入力速度・爽快感・音の実機聴感の評価ではない。物理キーボード/IME、他ブラウザ、性能p95、回線断/WebGL喪失は今回未確認。3Dの背景・ゾンビは生成コンセプトと品質差があり、モデル差し替えは本版の対象外。公開後検証はIssue #130に追記する。
+
+---
+
 # Alpha 0.8 の検証記録
 
 2026-09-28 / macOS / Codex内蔵Chromium / ローカルproduction preview。公開後のActions・タグSHA・配信照合・通常勤務の結果は [Issue #130](https://github.com/hayatok/100challenge/issues/130) に記録する。
