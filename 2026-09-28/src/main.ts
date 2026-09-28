@@ -1,4 +1,6 @@
 import "./style.css";
+import "./fever.css";
+import { FeverShow } from "./fever.ts";
 import { CelebrationState } from "./spectacle.ts";
 import { Game, type GameState } from "./game.ts";
 import { World } from "./scene.ts";
@@ -45,7 +47,7 @@ app.innerHTML = `<div id="world" aria-hidden="true">
 </div>
 <footer>
 <span>生きて、定時で帰ろう。</span>
-<span>ALPHA 0.9 / 黒猫商店街</span>
+<span>ALPHA 0.9.1 / 黒猫商店街</span>
 </footer>
 </section>
 <section id="hud" hidden>
@@ -100,6 +102,15 @@ app.innerHTML = `<div id="world" aria-hidden="true">
 </b>
 <div id="boss-pips">
 </div>
+</div>
+<div id="fever-show" aria-hidden="true" hidden>
+<div class="fever-wash"></div><div class="fever-rays"></div>
+<div class="fever-rail rail-top"></div><div class="fever-rail rail-bottom"></div>
+<div class="fever-wing wing-left"><span>FEVER</span></div><div class="fever-wing wing-right"><span>FEVER</span></div>
+<div class="fever-orbit orbit-one"></div><div class="fever-orbit orbit-two"></div>
+<div class="fever-cutin"><small id="fever-cue-label">FEVER RUSH</small><strong id="fever-cue-title">限界残業</strong><span id="fever-cue-caption">短文4連戦、撃ち抜け。</span></div>
+<div class="fever-count"><strong id="fever-hit-count">0</strong><span>/ 4 撃破</span></div>
+<div class="fever-confetti">${Array.from({length:24},(_,i)=>`<i style="--i:${i};--x:${(i*37)%100}%"></i>`).join("")}</div>
 </div>
 <div id="spectacle-frame" aria-hidden="true">
 <div id="heat-marquee" class="heat-marquee">NIGHTSHIFT // OVERDRIVE // KEEP FIRING</div>
@@ -173,8 +184,10 @@ let history = save.results;
 let personalBests = save.personalBests;
 const audio = new GameAudio();
 const spectacle = new CelebrationState();
+const fever = new FeverShow();
+let feverRevision = -1;
 let renderedCelebration = spectacle.current;
-function resetSpectacle(){spectacle.reset();renderedCelebration=null;show("showtime",false);el("showtime").getAnimations().forEach(a=>a.cancel());}
+function resetSpectacle(){fever.reset();show("fever-show",false);document.body.dataset.fever="off";spectacle.reset();renderedCelebration=null;show("showtime",false);el("showtime").getAnimations().forEach(a=>a.cancel());}
 audio.setVolumes(preferences.music, preferences.effects);
 let world: World,
   game: Game | null = null;
@@ -552,6 +565,7 @@ function milestone(level: number) {
 function events() {
   for (const e of game?.drainEvents() ?? []) {
     spectacle.event(e);
+    fever.event(e);
     if(e.type === "kill" && !e.collateral && spectacle.rushing) audio.rushKill(spectacle.rushHits);
     if(world.event(e)) audio.storefrontImpact();
     if (e.type === "hit") {
@@ -636,6 +650,25 @@ function drawSpectacle(dt:number, s:GameState|null){
   const playing=screen==='game'&&!!s&&!['paused','countdown'].includes(s.mode);
   if(document.body.dataset.playing!==String(playing)) document.body.dataset.playing=String(playing);
   text("heat-marquee",s?.luckyActive?"LUCKY SHOW // BONUS TIME":s?.rushing?"FEVER RUSH // KEEP FIRING":s?.effectsLevel===4?"OVERDRIVE // LIMIT BREAK":`NIGHTSHIFT // HEAT LEVEL ${s?.effectsLevel??0}`);
+  fever.update(playing ? dt : 0);
+  const phase = fever.phase;
+  if (document.body.dataset.fever !== phase) document.body.dataset.fever = phase;
+  const feverRoot = el("fever-show");
+  show("fever-show", phase !== "off");
+  feverRoot.style.setProperty("--fever-impact", String(fever.pulse));
+  if (feverRevision !== fever.revision) {
+    feverRevision = fever.revision;
+    feverRoot.dataset.hits = String(fever.hits);
+    text("fever-hit-count", String(fever.hits));
+    text("fever-cue-label", phase === "complete" ? "FEVER COMPLETE" : phase === "end" ? "RUSH END" : "FEVER RUSH");
+    text("fever-cue-title", phase === "complete" ? "全員退勤" : phase === "end" ? "残業終了" : "限界残業");
+    text("fever-cue-caption", phase === "complete" ? "4 / 4 撃破・完全突破！" : phase === "end" ? "通常勤務へ" : "短文4連戦、撃ち抜け。");
+    el("fever-hit-count").getAnimations().forEach(a => a.cancel());
+    if (preferences.motion && fever.active && fever.hits > 0) el("fever-hit-count").animate(
+      [{transform:"scale(1.7) rotate(-12deg)"},{transform:"scale(1) rotate(0deg)"}],
+      {duration:450,easing:"cubic-bezier(.15,.75,.2,1)"},
+    );
+  }
   spectacle.update(playing?dt:0);
   const current=spectacle.current;
   if(current!==renderedCelebration){
@@ -645,6 +678,7 @@ function drawSpectacle(dt:number, s:GameState|null){
     if(current){
       text('show-title',current.title);text('show-caption',current.caption);text('show-badge',current.badge);
       el('showtime').dataset.theme=current.theme;
+      el('showtime').dataset.feverCue=String(['限界残業','一体撃破','二連撃','三連撃','四連撃','全員退勤','残業終了'].includes(current.title));
       el('showtime').animate(preferences.motion?[
         {opacity:0,transform:'translateY(18px) scale(1.28) rotate(-5deg)',offset:0},
         {opacity:1,transform:'translateY(0) scale(1) rotate(-3deg)',offset:.12},
@@ -653,7 +687,7 @@ function drawSpectacle(dt:number, s:GameState|null){
       ]:[{opacity:1},{opacity:1,offset:.8},{opacity:0}],{duration:current.remaining*1000,fill:'both',easing:'ease-out'});
     }
   }
-  for(const animation of el('showtime').getAnimations()){
+  for(const animation of [el('showtime'), el('fever-hit-count')].flatMap(node => node.getAnimations())){
     if(!playing&&animation.playState==='running')animation.pause();
     else if(playing&&animation.playState==='paused')animation.play();
   }
