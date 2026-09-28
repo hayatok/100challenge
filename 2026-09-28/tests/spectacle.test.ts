@@ -6,9 +6,9 @@ import {OverdriveLights} from '../src/overdrive.ts';
 test('rush success wins the same-batch kill celebration and failure never earns a completion',()=>{
  const s=new CelebrationState();s.event({id:1,type:'rushStart'});s.update(2);
  for(let i=1;i<=4;i++)s.event({id:1,type:'kill',combo:i,effectsLevel:1});
- assert.equal(s.rushHits,4);s.event({id:1,type:'rushEnd',success:true});assert.equal(s.current?.title,'FEVER COMPLETE');
- s.event({id:1,type:'kill',combo:6,effectsLevel:2});assert.equal(s.current?.title,'FEVER COMPLETE');
- s.reset();s.event({id:1,type:'rushStart'});s.event({id:1,type:'rushEnd',success:false});assert.equal(s.current?.title,'RUSH END');
+ assert.equal(s.rushHits,4);s.event({id:1,type:'rushEnd',success:true});assert.equal(s.current?.title,'全員退勤');
+ s.event({id:1,type:'kill',combo:6,effectsLevel:2});assert.equal(s.current?.title,'全員退勤');
+ s.reset();s.event({id:1,type:'rushStart'});s.event({id:1,type:'rushEnd',success:false});assert.equal(s.current?.title,'残業終了');
 });
 test('jackpot survives nearby kills, pauses its lifetime, and reset clears all presentation state',()=>{
  const s=new CelebrationState();s.event({id:1,type:'luckyEnd',success:true,scoreDelta:500});const reward=s.current;

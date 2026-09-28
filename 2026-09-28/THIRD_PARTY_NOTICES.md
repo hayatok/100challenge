@@ -61,3 +61,7 @@ The recessed coffee shop, striped awning, Japanese signs, merchandise tables and
 ## v0.8 additions
 
 Combo-reactive luminous arches and road strips, gold arcade frames and celebration typography, expanded pooled sparks/shockwaves/fireworks, and gold confetti are original procedural graphics. Reward arpeggios and fanfares are original Web Audio synthesis layered with the previously credited recordings. No new external media, models, fonts or dependencies were added.
+
+## Alpha 0.9 original UI
+
+The arcade title treatment, metal/rivet CSS framing, Japanese celebration lettering and receipt-style result UI are original DOM/CSS artwork, using the previously credited Noto fonts. The approved UI reference at `art/reference/ui-approved-v09.png` was generated with OpenAI's built-in image-generation tool for design discussion; it is not a runtime game background or a screenshot of the implementation. No additional external media or libraries were added.
