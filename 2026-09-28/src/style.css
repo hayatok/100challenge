@@ -876,3 +876,27 @@ body[data-rush="true"] #typing-panel { border-top-width:3px; background:linear-g
  .next-goal { margin-top:10px; padding:10px 12px; }
  .modal-card:has(.next-goal) .primary { margin-top:10px; min-height:52px; padding-block:14px; }
 }
+
+/* v0.6: the lucky encounter keeps its timer and reward away from the fixed input. */
+#lucky-banner { position:fixed; top:102px; left:50%; transform:translateX(-50%); width:340px; text-align:center; color:#ffb8f1; pointer-events:none; text-shadow:0 2px 14px #061014; }
+#lucky-banner>small { font-size:10px; letter-spacing:3px; }
+#lucky-banner>strong { display:block; font:italic 42px/1.1 Impact,sans-serif; color:#ffda85; margin-top:5px; }
+#lucky-banner>span { font:11px ui-monospace,monospace; }
+#lucky-banner>p { margin:5px 0 0; font-size:10px; color:#fff2db; }
+#lucky-pips { display:flex; justify-content:center; gap:6px; margin:10px 0 6px; }
+#lucky-pips i { width:40px; height:4px; background:#a075a4; }
+#lucky-pips i.active { background:#ffdd89; box-shadow:0 0 10px #ffcf64; }
+#lucky-pips i.done { background:#8bf0c8; }
+body[data-lucky="true"] { --combat:#ffc7ee; }
+body[data-lucky="true"] #typing-panel { border-top-color:#ffb6ea; background:#211624ef; }
+.target.lucky { border-color:#fcb5e5; background:#301c32ef; }
+.target.lucky .enemy-time { background:#f4abd7; }
+#feedback.lucky { color:#ffceef; }
+.result-lucky { display:flex; flex-wrap:wrap; justify-content:space-between; gap:5px 12px; padding:8px 0; font-size:10px; color:#ffb9df; }
+.result-lucky b { color:var(--gold); }
+@media(max-width:800px) { #lucky-banner { top:185px; width:280px; } #lucky-banner>strong { font-size:30px; } }
+@media(min-width:801px) and (max-height:800px) { .modal-card:has(.result-lucky) { padding-block:14px; } .modal-card:has(.result-lucky) .result-hero { margin:8px 0; } .modal-card:has(.result-lucky) .result-grid { padding:8px 0; } }
+
+body[data-lucky="true"] #feedback { left:auto; right:40px; top:360px; width:230px; transform:none; font-size:18px; text-align:right; }
+#lucky-banner { padding:8px 16px; background:linear-gradient(90deg,transparent,#111520e8 18%,#111520e8 82%,transparent); }
+#lucky-banner>span { display:block; color:#fff0fc; }

@@ -36,6 +36,7 @@ test("a heavy burst cannot grow draw objects, and expired pools can be reused wi
     const pos = new T.Vector3(i % 9, 1, i % 5);
     effects.burst(pos, 4, true, false, 1.7);
     effects.explosion(pos, false);
+    effects.confetti(pos, false);
     effects.finisher(pos, 4, false);
     effects.tracer(pos, pos.clone().add(new T.Vector3(3, 0, -2)), 4);
   }
@@ -46,7 +47,7 @@ test("a heavy burst cannot grow draw objects, and expired pools can be reused wi
   assert.ok(rings.filter((r) => r.visible).length <= 10);
   assert.deepEqual(scene.children, initialObjects, "bursts create no new scene draw objects");
 
-  effects.update(2);
+  effects.update(3);
   assert.equal(instances.reduce((sum, mesh) => sum + mesh.count, 0), 0, "spent flecks leave no draw instances");
   assert.ok(sprites.every((s) => !s.visible));
   assert.ok(rings.every((r) => !r.visible));

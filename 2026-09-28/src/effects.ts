@@ -1,6 +1,6 @@
 import * as T from "three";
 
-type Fleck = { pose: T.Object3D; v: T.Vector3; age: number; life: number; size: number; trail: boolean; tracer: boolean; color: T.Color };
+type Fleck = { pose: T.Object3D; v: T.Vector3; age: number; life: number; size: number; trail: boolean; tracer: boolean; color: T.Color; confetti?: boolean };
 type Pulse = { mesh: T.Mesh<T.RingGeometry, T.MeshBasicMaterial>; age: number; life: number; size: number };
 type Cloud = { sprite: T.Sprite; age: number; life: number; size: number; glow: boolean };
 const COLORS = [0xffc367, 0xffd876, 0xff814c, 0xe576ff, 0x72fff0].map(c => new T.Color(c));
@@ -58,6 +58,14 @@ export class CombatEffects {
     this.burst(pos,2,true,reduced,reduced?.8:1.7);
     if(!reduced){this.cloud(pos,false,2.2);this.pulse(new T.Vector3(pos.x,.07,pos.z),1,4.5,.65,true);}
   }
+  confetti(pos:T.Vector3,reduced:boolean,strength=1) {
+    const colors=[0xffdb71,0xff84cf,0x91f5dc,0xffffff];
+    for(let i=0;i<Math.round((reduced?14:72)*strength)&&this.bits.length<300;i++){
+      const pose=new T.Object3D();pose.position.copy(pos);pose.rotation.set(Math.random()*3,Math.random()*3,Math.random()*3);
+      const size=.035+Math.random()*.025;pose.scale.set(size,size*2.3,.008);
+      this.bits.push({pose,v:new T.Vector3((Math.random()-.5)*4,2+Math.random()*2,(Math.random()-.5)*2),age:0,life:1.8+Math.random(),size,trail:true,tracer:false,color:new T.Color(colors[i%4]),confetti:true});
+    }
+  }
   burst(pos:T.Vector3,tier:number,kill:boolean,reduced:boolean,strength=1) {
     const level=Math.max(0,Math.min(4,tier));
     const n=Math.round((reduced?(kill?10:2):kill?28+level*11:5+level*2)*strength);
@@ -91,7 +99,12 @@ export class CombatEffects {
     }
     for(let i=this.bits.length-1;i>=0;i--) {
       const p=this.bits[i];p.age+=dt;if(p.age>=p.life){this.bits.splice(i,1);continue;}
-      if(!p.tracer){p.v.y-=dt*5;p.pose.position.addScaledVector(p.v,dt);const s=p.size*Math.min(1,(1-p.age/p.life)*3);p.pose.scale.set(s,s,s*(p.trail?6:1));}
+      if(!p.tracer){
+        p.v.y-=dt*(p.confetti?2:5);p.pose.position.addScaledVector(p.v,dt);
+        const s=p.size*Math.min(1,(1-p.age/p.life)*3);
+        if(p.confetti){p.v.multiplyScalar(Math.exp(-dt*.6));p.pose.rotation.x+=dt*3;p.pose.rotation.y+=dt*2;p.pose.scale.set(s,s*2.3,.008);}
+        else p.pose.scale.set(s,s,s*(p.trail?6:1));
+      }
     }
     let shards=0,streaks=0;
     for(const p of this.bits){const mesh=p.trail?this.streak:this.shard;const i=p.trail?streaks++:shards++;p.pose.updateMatrix();mesh.setMatrixAt(i,p.pose.matrix);mesh.setColorAt(i,p.color);}

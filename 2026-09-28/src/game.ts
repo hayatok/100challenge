@@ -1,4 +1,4 @@
-import { BOSS_COUNTER_PHRASES, BOSS_PHRASES, OFFICE_PHRASES, PHRASES, RUNNER_PHRASES, RUSH_PHRASES, WORKER_PHRASES, type Phrase } from './content.ts';
+import { BOSS_COUNTER_PHRASES, BOSS_PHRASES, LUCKY_PHRASES, OFFICE_PHRASES, PHRASES, RUNNER_PHRASES, RUSH_PHRASES, WORKER_PHRASES, type Phrase } from './content.ts';
 import { TypingSession } from './typing.ts';
 
 export type Difficulty = 'relaxed' | 'normal' | 'fierce';
@@ -6,22 +6,23 @@ export type EnemyKind = 'office' | 'runner' | 'worker' | 'boss';
 export type GameMode = 'playing' | 'travel' | 'paused' | 'countdown' | 'defeat' | 'clear';
 export type GameOptions = { difficulty?: Difficulty; practice?: boolean; seed?: number };
 export type GameEvent = {
-  id: number; type: 'spawn'|'lock'|'hit'|'miss'|'kill'|'attack'|'travel'|'stage'|'bossPhase'|'pause'|'resume'|'defeat'|'clear'|'rushStart'|'rushEnd'|'explosion';
+  id: number; type: 'spawn'|'lock'|'hit'|'miss'|'kill'|'attack'|'travel'|'stage'|'bossPhase'|'pause'|'resume'|'defeat'|'clear'|'rushStart'|'rushEnd'|'explosion'|'luckyStart'|'luckyStep'|'luckyEnd';
   enemyId?: number; kind?: EnemyKind; stage?: number; phase?: number; key?: string; reason?: string;
   combo?: number; clean?: boolean; scoreDelta?: number; effectsLevel?: number;
   hitZone?: 'head'|'chest'|'shoulder'; finisher?: boolean;
-  collateral?: boolean; count?: number; success?: boolean;
+  collateral?: boolean; count?: number; success?: boolean; lucky?: boolean; step?: number; healing?: number;
 };
 export type EnemyView = {
   id: number; kind: EnemyKind; lane: -1|0|1; progress: number; remaining: number;
   phrase: string; reading: string; typed: string; guide: string; keys: string[];
   typingProgress: number; telegraph: boolean; locked: boolean; threatRank: number;
-  explosive: boolean; blastTargets: number[]; rush: boolean;
+  explosive: boolean; blastTargets: number[]; rush: boolean; lucky: boolean;
 };
 export type GameResults = {
   score: number; maxCombo: number; accuracy: number; correct: number; mistakes: number;
   clearTime: number; keysPerMinute: number; attempts: number; practice: boolean; difficulty: Difficulty;
   seed: number; rushes: number; chainKills: number;
+  luckyEncounters: number; luckyClears: number; luckyBonus: number;
 };
 export type GameState = {
   mode: GameMode; stage: number; bossPhase: number; health: number; score: number;
@@ -29,13 +30,15 @@ export type GameState = {
   lockedId: number|null; enemies: EnemyView[]; practice: boolean; difficulty: Difficulty;
   countdown: number; results: GameResults|null; attempts: number;
   rushCharge: number; rushing: boolean; rushRemaining: number; rushes: number; bossCounter: number;
+  luckyActive: boolean; luckyStep: number; luckyRemaining: number;
+  luckyEncounters: number; luckyClears: number; luckyBonus: number;
 };
 
 type Enemy = {
   id: number; kind: EnemyKind; lane: -1|0|1; phrase: Phrase; typing: TypingSession;
-  spawned: number; deadline: number; clean: boolean; explosive: boolean; rush: boolean;
+  spawned: number; deadline: number; clean: boolean; explosive: boolean; rush: boolean; lucky: boolean;
 };
-type Checkpoint = { score:number; maxCombo:number; correct:number; mistakes:number; battleTime:number; used:Set<number>; elapsed:number; rushCharge:number; rushes:number; chainKills:number };
+type Checkpoint = { score:number; maxCombo:number; correct:number; mistakes:number; battleTime:number; used:Set<number>; elapsed:number; rushCharge:number; rushes:number; chainKills:number; luckyEncounters:number; luckyClears:number; luckyBonus:number; luckyDone:boolean };
 const CPS: Record<Difficulty, number> = { relaxed:2, normal:3.5, fierce:5 };
 const STAGE_WAVES: readonly (readonly (readonly EnemyKind[])[])[] = [
   [['office'],['office'],['office'],['runner'],['office'],['worker']],
@@ -79,6 +82,16 @@ export class Game {
   private rushesValue = 0;
   private rushKillsValue = 0;
   private chainKillsValue = 0;
+  private luckyActiveValue = false;
+  private luckyPending = false;
+  private luckyDone = false;
+  private luckyStepValue = 0;
+  private luckyRemainingValue = 0;
+  private luckyDurationValue = 0;
+  private luckyEncountersValue = 0;
+  private luckyClearsValue = 0;
+  private luckyBonusValue = 0;
+  private luckyPhrases: readonly Phrase[] = [];
   private healthValue = 3;
   private scoreValue = 0;
   private comboValue = 0;
@@ -93,7 +106,7 @@ export class Game {
   private locked: number|null = null;
   private enemiesValue: Enemy[] = [];
   private used = new Set<number>();
-  private checkpoint: Checkpoint = {score:0,maxCombo:0,correct:0,mistakes:0,battleTime:0,elapsed:0,used:new Set(),rushCharge:0,rushes:0,chainKills:0};
+  private checkpoint: Checkpoint = {score:0,maxCombo:0,correct:0,mistakes:0,battleTime:0,elapsed:0,used:new Set(),rushCharge:0,rushes:0,chainKills:0,luckyEncounters:0,luckyClears:0,luckyBonus:0,luckyDone:false};
   private events: GameEvent[] = [];
   private nextEventId = 1;
   private nextEnemyId = 1;
@@ -161,7 +174,7 @@ export class Game {
       const lane = (kinds.length === 1 ? 0 : explosiveWave
         ? explosive ? 0 : otherIndices.indexOf(sourceIndex) === 0 ? -1 : 1
         : laneOrder[sourceIndex]) as -1|0|1;
-      const enemy: Enemy = {id:this.nextEnemyId++,kind,lane,phrase,typing,spawned:this.time,deadline,clean:true,explosive,rush:false};
+      const enemy: Enemy = {id:this.nextEnemyId++,kind,lane,phrase,typing,spawned:this.time,deadline,clean:true,explosive,rush:false,lucky:false};
       this.emit('spawn',{enemyId:enemy.id,kind,stage:this.stageValue});
       return enemy;
     });
@@ -172,7 +185,7 @@ export class Game {
     const phrase = RUSH_PHRASES[index];
     const typing = new TypingSession(phrase.reading);
     const deadline = this.time + 0.8 + typing.standardLength / CPS[this.difficulty] * 1.45;
-    const enemy: Enemy = {id:this.nextEnemyId++,kind:'runner',lane:([-1,0,1,0] as const)[4-this.rushRemainingValue],phrase,typing,spawned:this.time,deadline,clean:true,explosive:false,rush:true};
+    const enemy: Enemy = {id:this.nextEnemyId++,kind:'runner',lane:([-1,0,1,0] as const)[4-this.rushRemainingValue],phrase,typing,spawned:this.time,deadline,clean:true,explosive:false,rush:true,lucky:false};
     this.enemiesValue = [enemy];
     this.emit('spawn',{enemyId:enemy.id,kind:enemy.kind,stage:this.stageValue});
   }
@@ -185,9 +198,50 @@ export class Game {
     const typing = new TypingSession(phrase.reading);
     const timing = BOSS_TIMING[this.phase];
     const deadline = this.time + timing.read + typing.standardLength / CPS[this.difficulty] * timing.work;
-    const enemy: Enemy = {id:this.nextEnemyId++,kind:'boss',lane:0,phrase,typing,spawned:this.time,deadline,clean:true,explosive:false,rush:false};
+    const enemy: Enemy = {id:this.nextEnemyId++,kind:'boss',lane:0,phrase,typing,spawned:this.time,deadline,clean:true,explosive:false,rush:false,lucky:false};
     this.enemiesValue = [enemy];
     this.emit('spawn',{enemyId:enemy.id,kind:'boss',stage:3,phase:this.phase,count:this.bossCounterValue});
+  }
+
+  private luckyScheduledHere(): boolean {
+    if (this.luckyDone || (!this.practice && (this.seed & 1) !== 0)) return false;
+    const stage = (this.seed >>> 1) & 1;
+    const wave = stage === 0 ? 2 + ((this.seed >>> 2) % 3) : 1 + ((this.seed >>> 2) % 2);
+    return this.stageValue === stage && this.wave === wave;
+  }
+
+  private startLucky(): void {
+    this.luckyPending = false;
+    this.luckyDone = true;
+    this.luckyActiveValue = true;
+    this.luckyStepValue = 1;
+    this.luckyPhrases = LUCKY_PHRASES[(this.seed >>> 3) % LUCKY_PHRASES.length];
+    const workload = this.luckyPhrases.reduce((sum,phrase) => sum + new TypingSession(phrase.reading).standardLength,0);
+    this.luckyRemainingValue = 6 + workload / CPS[this.difficulty] * 2;
+    this.luckyDurationValue = this.luckyRemainingValue;
+    this.luckyEncountersValue++;
+    const phrase = this.luckyPhrases[0];
+    const enemy: Enemy = {id:this.nextEnemyId++,kind:'office',lane:0,phrase,typing:new TypingSession(phrase.reading),spawned:this.time,deadline:Infinity,clean:true,explosive:false,rush:false,lucky:true};
+    this.enemiesValue = [enemy];
+    this.emit('luckyStart',{enemyId:enemy.id,kind:'office',lucky:true,stage:this.stageValue,step:1});
+  }
+
+  private finishLucky(success: boolean): void {
+    const enemy = this.enemiesValue[0];
+    if (!this.luckyActiveValue || !enemy) return;
+    const scoreDelta = success ? 500 : 0;
+    const healing = success && this.healthValue < 3 ? 1 : 0;
+    this.scoreValue += scoreDelta;
+    this.healthValue += healing;
+    if (success) { this.luckyClearsValue++; this.luckyBonusValue += scoreDelta; }
+    this.emit('luckyEnd',{enemyId:enemy.id,kind:'office',lucky:true,success,scoreDelta,healing,step:this.luckyStepValue});
+    this.luckyActiveValue = false;
+    this.luckyStepValue = 0;
+    this.luckyRemainingValue = 0;
+    this.luckyDurationValue = 0;
+    this.enemiesValue = [];
+    this.locked = null;
+    this.advanceWave(success ? 2 : 0.8);
   }
 
   private beginTravel(seconds: number): void {
@@ -208,24 +262,32 @@ export class Game {
       if (this.rushRemainingValue > 0) { this.beginTravel(0.18); return; }
       this.rushingValue = false;
       this.emit('rushEnd',{count:this.rushesValue,success:this.rushKillsValue === 4});
-    } else if (this.rushChargeValue >= 100 && this.rushesValue < 2) {
-      this.rushingValue = true;
-      this.rushRemainingValue = 4;
-      this.rushKillsValue = 0;
-      this.rushChargeValue = 0;
-      this.rushesValue++;
-      this.emit('rushStart',{count:this.rushesValue});
-      this.beginTravel(0.35);
-      return;
+    } else {
+      if (this.luckyScheduledHere()) this.luckyPending = true;
+      if (this.rushChargeValue >= 100 && this.rushesValue < 2) {
+        this.rushingValue = true;
+        this.rushRemainingValue = 4;
+        this.rushKillsValue = 0;
+        this.rushChargeValue = 0;
+        this.rushesValue++;
+        this.emit('rushStart',{count:this.rushesValue});
+        this.beginTravel(0.35);
+        return;
+      }
     }
+    if (this.luckyPending) { this.startLucky(); return; }
+    this.advanceWave();
+  }
+
+  private advanceWave(travelSeconds?: number): void {
     this.wave++;
     if (this.wave >= STAGE_WAVES[this.stageValue].length) {
       this.stageValue++;
       this.wave = 0;
-      this.checkpoint = {score:this.scoreValue,maxCombo:this.maxComboValue,correct:this.correct,mistakes:this.mistakes,battleTime:this.battleTime,elapsed:this.elapsed,used:new Set(this.used),rushCharge:this.rushChargeValue,rushes:this.rushesValue,chainKills:this.chainKillsValue};
+      this.checkpoint = {score:this.scoreValue,maxCombo:this.maxComboValue,correct:this.correct,mistakes:this.mistakes,battleTime:this.battleTime,elapsed:this.elapsed,used:new Set(this.used),rushCharge:this.rushChargeValue,rushes:this.rushesValue,chainKills:this.chainKillsValue,luckyEncounters:this.luckyEncountersValue,luckyClears:this.luckyClearsValue,luckyBonus:this.luckyBonusValue,luckyDone:this.luckyDone};
       this.emit('stage',{stage:this.stageValue});
-      this.beginTravel(this.stageValue === 3 ? 2.2 : 1);
-    } else this.beginTravel(0.6);
+      this.beginTravel(this.stageValue === 3 ? 2.2 : travelSeconds ?? 1);
+    } else this.beginTravel(travelSeconds ?? 0.6);
   }
 
   private finish(mode: 'clear'|'defeat'): void {
@@ -237,6 +299,7 @@ export class Game {
       keysPerMinute:this.battleTime ? this.correct*60/this.battleTime : 0,
       attempts:this.attemptsValue,practice:this.practice,difficulty:this.difficulty,
       seed:this.seed,rushes:this.rushesValue,chainKills:this.chainKillsValue,
+      luckyEncounters:this.luckyEncountersValue,luckyClears:this.luckyClearsValue,luckyBonus:this.luckyBonusValue,
     };
     this.emit(mode,{stage:this.stageValue});
   }
@@ -294,6 +357,12 @@ export class Game {
       }
       return;
     }
+    if (this.luckyActiveValue) {
+      const overdue = dt > this.luckyRemainingValue + 1e-9;
+      this.luckyRemainingValue = Math.max(0,this.luckyRemainingValue-dt);
+      if (overdue) this.finishLucky(false);
+      return;
+    }
     this.time += dt;
     this.elapsed += dt;
     this.battleTime += dt;
@@ -324,6 +393,31 @@ export class Game {
   /** A single KeyboardEvent.key character. UI filters repeat, IME and shortcuts. */
   type(key: string): boolean {
     if (this.modeValue !== 'playing' || !/^[a-z'-]$/i.test(key)) return false;
+    if (this.luckyActiveValue) {
+      const enemy = this.enemiesValue[0];
+      if (!enemy) return false;
+      const normalized = key.toLowerCase();
+      if (!enemy.typing.type(normalized)) {
+        this.emit('miss',{enemyId:enemy.id,kind:'office',key:normalized,lucky:true});
+        return false;
+      }
+      if (this.locked === null) {
+        this.locked = enemy.id;
+        this.emit('lock',{enemyId:enemy.id,kind:'office',lucky:true});
+      }
+      const finisher = enemy.typing.complete;
+      this.emit('hit',{enemyId:enemy.id,kind:'office',key:normalized,lucky:true,finisher,hitZone:finisher ? 'head' : 'chest'});
+      if (finisher) {
+        if (this.luckyStepValue === 3) this.finishLucky(true);
+        else {
+          this.emit('luckyStep',{enemyId:enemy.id,kind:'office',lucky:true,step:this.luckyStepValue});
+          this.luckyStepValue++;
+          enemy.phrase = this.luckyPhrases[this.luckyStepValue-1];
+          enemy.typing = new TypingSession(enemy.phrase.reading);
+        }
+      }
+      return true;
+    }
     // If time passed a deadline, resolve attacks before assigning this key.
     if (!this.practice && this.enemiesValue.some(enemy => this.time > enemy.deadline)) this.update(0);
     if (this.modeValue !== 'playing' || !this.enemiesValue.length) return false;
@@ -417,6 +511,16 @@ export class Game {
     this.rushesValue = this.checkpoint.rushes;
     this.rushKillsValue = 0;
     this.chainKillsValue = this.checkpoint.chainKills;
+    this.luckyEncountersValue = this.checkpoint.luckyEncounters;
+    this.luckyClearsValue = this.checkpoint.luckyClears;
+    this.luckyBonusValue = this.checkpoint.luckyBonus;
+    this.luckyDone = this.checkpoint.luckyDone;
+    this.luckyPending = false;
+    this.luckyActiveValue = false;
+    this.luckyStepValue = 0;
+    this.luckyRemainingValue = 0;
+    this.luckyDurationValue = 0;
+    this.luckyPhrases = [];
     this.rushingValue = false;
     this.rushRemainingValue = 0;
     this.bossCounterValue = 0;
@@ -445,19 +549,21 @@ export class Game {
       difficulty:this.difficulty,countdown:this.countdown,results:this.finalResults,
       attempts:this.attemptsValue,
       rushCharge:this.rushChargeValue,rushing:this.rushingValue,rushRemaining:this.rushRemainingValue,rushes:this.rushesValue,bossCounter:this.phase === 1 ? this.bossCounterValue : 0,
+      luckyActive:this.luckyActiveValue,luckyStep:this.luckyStepValue,luckyRemaining:this.luckyRemainingValue,
+      luckyEncounters:this.luckyEncountersValue,luckyClears:this.luckyClearsValue,luckyBonus:this.luckyBonusValue,
       enemies:this.enemiesValue.map((enemy,index) => {
         const duration = enemy.deadline-enemy.spawned;
-        const progress = this.practice
+        const progress = enemy.lucky ? Math.min(1,Math.max(0,1-this.luckyRemainingValue/this.luckyDurationValue)) : this.practice
           ? Math.min(0.9,(this.time-enemy.spawned)/duration)
           : Math.min(1,Math.max(0,(this.time-enemy.spawned)/duration));
-        const remaining = this.practice ? Infinity : Math.max(0,enemy.deadline-this.time);
+        const remaining = enemy.lucky ? this.luckyRemainingValue : this.practice ? Infinity : Math.max(0,enemy.deadline-this.time);
         return {
           id:enemy.id,kind:enemy.kind,lane:enemy.lane,progress,remaining,
           phrase:enemy.phrase.text,reading:enemy.phrase.reading,
           typed:enemy.typing.typed,guide:enemy.typing.guide,keys:enemy.typing.keys,
-          typingProgress:enemy.typing.progress,telegraph:!this.practice && remaining <= (enemy.kind === 'boss' ? BOSS_TIMING[this.phase].telegraph : 0.8),
+          typingProgress:enemy.typing.progress,telegraph:!enemy.lucky && !this.practice && remaining <= (enemy.kind === 'boss' ? BOSS_TIMING[this.phase].telegraph : 0.8),
           locked:this.locked === enemy.id,threatRank:index+1,
-          explosive:enemy.explosive,blastTargets:enemy.explosive ? this.enemiesValue.filter(target => target.id !== enemy.id && target.kind !== 'boss' && Math.abs(target.lane-enemy.lane) <= 1).map(target => target.id) : [],rush:enemy.rush,
+          explosive:enemy.explosive,blastTargets:enemy.explosive ? this.enemiesValue.filter(target => target.id !== enemy.id && target.kind !== 'boss' && Math.abs(target.lane-enemy.lane) <= 1).map(target => target.id) : [],rush:enemy.rush,lucky:enemy.lucky,
         };
       }),
     };
