@@ -1,4 +1,4 @@
-import { BOSS_PHRASES, OFFICE_PHRASES, PHRASES, RUNNER_PHRASES, WORKER_PHRASES, type Phrase } from './content.ts';
+import { BOSS_COUNTER_PHRASES, BOSS_PHRASES, OFFICE_PHRASES, PHRASES, RUNNER_PHRASES, RUSH_PHRASES, WORKER_PHRASES, type Phrase } from './content.ts';
 import { TypingSession } from './typing.ts';
 
 export type Difficulty = 'relaxed' | 'normal' | 'fierce';
@@ -6,32 +6,36 @@ export type EnemyKind = 'office' | 'runner' | 'worker' | 'boss';
 export type GameMode = 'playing' | 'travel' | 'paused' | 'countdown' | 'defeat' | 'clear';
 export type GameOptions = { difficulty?: Difficulty; practice?: boolean; seed?: number };
 export type GameEvent = {
-  id: number; type: 'spawn'|'lock'|'hit'|'miss'|'kill'|'attack'|'travel'|'stage'|'bossPhase'|'pause'|'resume'|'defeat'|'clear';
+  id: number; type: 'spawn'|'lock'|'hit'|'miss'|'kill'|'attack'|'travel'|'stage'|'bossPhase'|'pause'|'resume'|'defeat'|'clear'|'rushStart'|'rushEnd'|'explosion';
   enemyId?: number; kind?: EnemyKind; stage?: number; phase?: number; key?: string; reason?: string;
   combo?: number; clean?: boolean; scoreDelta?: number; effectsLevel?: number;
   hitZone?: 'head'|'chest'|'shoulder'; finisher?: boolean;
+  collateral?: boolean; count?: number; success?: boolean;
 };
 export type EnemyView = {
   id: number; kind: EnemyKind; lane: -1|0|1; progress: number; remaining: number;
   phrase: string; reading: string; typed: string; guide: string; keys: string[];
   typingProgress: number; telegraph: boolean; locked: boolean; threatRank: number;
+  explosive: boolean; blastTargets: number[]; rush: boolean;
 };
 export type GameResults = {
   score: number; maxCombo: number; accuracy: number; correct: number; mistakes: number;
   clearTime: number; keysPerMinute: number; attempts: number; practice: boolean; difficulty: Difficulty;
+  seed: number; rushes: number; chainKills: number;
 };
 export type GameState = {
   mode: GameMode; stage: number; bossPhase: number; health: number; score: number;
   combo: number; maxCombo: number; effectsLevel: number; visualCombo: number;
   lockedId: number|null; enemies: EnemyView[]; practice: boolean; difficulty: Difficulty;
   countdown: number; results: GameResults|null; attempts: number;
+  rushCharge: number; rushing: boolean; rushRemaining: number; rushes: number; bossCounter: number;
 };
 
 type Enemy = {
   id: number; kind: EnemyKind; lane: -1|0|1; phrase: Phrase; typing: TypingSession;
-  spawned: number; deadline: number; clean: boolean;
+  spawned: number; deadline: number; clean: boolean; explosive: boolean; rush: boolean;
 };
-type Checkpoint = { score:number; maxCombo:number; correct:number; mistakes:number; battleTime:number; used:Set<number>; elapsed:number };
+type Checkpoint = { score:number; maxCombo:number; correct:number; mistakes:number; battleTime:number; used:Set<number>; elapsed:number; rushCharge:number; rushes:number; chainKills:number };
 const CPS: Record<Difficulty, number> = { relaxed:2, normal:3.5, fierce:5 };
 const STAGE_WAVES: readonly (readonly (readonly EnemyKind[])[])[] = [
   [['office'],['office'],['office'],['runner'],['office'],['worker']],
@@ -68,6 +72,13 @@ export class Game {
   private wave = 0;
   private phase = 0;
   private bossFailures = 0;
+  private bossCounterValue = 0;
+  private rushChargeValue = 0;
+  private rushingValue = false;
+  private rushRemainingValue = 0;
+  private rushesValue = 0;
+  private rushKillsValue = 0;
+  private chainKillsValue = 0;
   private healthValue = 3;
   private scoreValue = 0;
   private comboValue = 0;
@@ -82,7 +93,7 @@ export class Game {
   private locked: number|null = null;
   private enemiesValue: Enemy[] = [];
   private used = new Set<number>();
-  private checkpoint: Checkpoint = {score:0,maxCombo:0,correct:0,mistakes:0,battleTime:0,elapsed:0,used:new Set()};
+  private checkpoint: Checkpoint = {score:0,maxCombo:0,correct:0,mistakes:0,battleTime:0,elapsed:0,used:new Set(),rushCharge:0,rushes:0,chainKills:0};
   private events: GameEvent[] = [];
   private nextEventId = 1;
   private nextEnemyId = 1;
@@ -93,6 +104,7 @@ export class Game {
     if (!(this.difficulty in CPS)) throw new Error('Invalid difficulty');
     this.practice = options.practice ?? false;
     this.seed = options.seed ?? 1;
+    if (!Number.isInteger(this.seed) || this.seed < 0 || this.seed > 0xffffffff) throw new Error('Invalid seed');
     this.spawnWave();
   }
 
@@ -125,12 +137,16 @@ export class Game {
   }
 
   private spawnWave(): void {
+    if (this.rushingValue) { this.spawnRush(); return; }
     if (this.stageValue === 3) { this.spawnBoss(); return; }
     const kinds = STAGE_WAVES[this.stageValue]?.[this.wave];
     if (!kinds) throw new Error('Invalid wave');
     const occupied = new Set<string>();
     const order = WAVE_ORDERS[this.stageValue][this.wave];
     const laneOrder = (this.wave + this.stageValue) % 2 ? [1,-1,0] : [-1,1,0];
+    const explosiveWave = (this.stageValue === 1 && this.wave === 2) || (this.stageValue === 2 && (this.wave === 1 || this.wave === 2));
+    const carrierIndex = explosiveWave ? kinds.indexOf('worker') : -1;
+    const otherIndices = kinds.map((_,index) => index).filter(index => index !== carrierIndex);
     let workload = 0;
     this.enemiesValue = order.map((sourceIndex,index) => {
       const kind = kinds[sourceIndex];
@@ -140,21 +156,38 @@ export class Game {
       workload += length / CPS[this.difficulty];
       // Read time and accumulated work guarantee this advertised order is feasible.
       const deadline = this.time + 1.2 + workload * 1.6 + (index + 1) * 0.55;
-      const lane = (kinds.length === 1 ? 0 : laneOrder[sourceIndex]) as -1|0|1;
-      const enemy: Enemy = {id:this.nextEnemyId++,kind,lane,phrase,typing,spawned:this.time,deadline,clean:true};
+      // These authored carriers stand in the middle so the preview always has a reachable neighbour.
+      const explosive = sourceIndex === carrierIndex;
+      const lane = (kinds.length === 1 ? 0 : explosiveWave
+        ? explosive ? 0 : otherIndices.indexOf(sourceIndex) === 0 ? -1 : 1
+        : laneOrder[sourceIndex]) as -1|0|1;
+      const enemy: Enemy = {id:this.nextEnemyId++,kind,lane,phrase,typing,spawned:this.time,deadline,clean:true,explosive,rush:false};
       this.emit('spawn',{enemyId:enemy.id,kind,stage:this.stageValue});
       return enemy;
     });
   }
 
+  private spawnRush(): void {
+    const index = ((this.seed >>> 0) + this.rushesValue * 7 + (4-this.rushRemainingValue)) % RUSH_PHRASES.length;
+    const phrase = RUSH_PHRASES[index];
+    const typing = new TypingSession(phrase.reading);
+    const deadline = this.time + 0.8 + typing.standardLength / CPS[this.difficulty] * 1.45;
+    const enemy: Enemy = {id:this.nextEnemyId++,kind:'runner',lane:([-1,0,1,0] as const)[4-this.rushRemainingValue],phrase,typing,spawned:this.time,deadline,clean:true,explosive:false,rush:true};
+    this.enemiesValue = [enemy];
+    this.emit('spawn',{enemyId:enemy.id,kind:enemy.kind,stage:this.stageValue});
+  }
+
   private spawnBoss(): void {
-    const phrase = BOSS_PHRASES[this.phase * 4 + ((this.seed >>> 0) + this.bossFailures) % 4];
+    if (this.phase === 1 && this.bossCounterValue === 0) this.bossCounterValue = 1;
+    const phrase = this.phase === 1
+      ? BOSS_COUNTER_PHRASES[((this.seed >>> 0) + this.bossCounterValue-1) % BOSS_COUNTER_PHRASES.length]
+      : BOSS_PHRASES[this.phase * 4 + ((this.seed >>> 0) + this.bossFailures) % 4];
     const typing = new TypingSession(phrase.reading);
     const timing = BOSS_TIMING[this.phase];
     const deadline = this.time + timing.read + typing.standardLength / CPS[this.difficulty] * timing.work;
-    const enemy: Enemy = {id:this.nextEnemyId++,kind:'boss',lane:0,phrase,typing,spawned:this.time,deadline,clean:true};
+    const enemy: Enemy = {id:this.nextEnemyId++,kind:'boss',lane:0,phrase,typing,spawned:this.time,deadline,clean:true,explosive:false,rush:false};
     this.enemiesValue = [enemy];
-    this.emit('spawn',{enemyId:enemy.id,kind:'boss',stage:3,phase:this.phase});
+    this.emit('spawn',{enemyId:enemy.id,kind:'boss',stage:3,phase:this.phase,count:this.bossCounterValue});
   }
 
   private beginTravel(seconds: number): void {
@@ -167,14 +200,29 @@ export class Game {
     this.locked = null;
     if (this.stageValue === 3) {
       if (this.phase >= 3) { this.finish('clear'); return; }
-      this.beginTravel(BOSS_TIMING[this.phase-1].recovery);
+      this.beginTravel(this.phase === 1 && this.bossCounterValue > 1 ? 0.35 : BOSS_TIMING[this.phase-1].recovery);
+      return;
+    }
+    if (this.rushingValue) {
+      this.rushRemainingValue--;
+      if (this.rushRemainingValue > 0) { this.beginTravel(0.18); return; }
+      this.rushingValue = false;
+      this.emit('rushEnd',{count:this.rushesValue,success:this.rushKillsValue === 4});
+    } else if (this.rushChargeValue >= 100 && this.rushesValue < 2) {
+      this.rushingValue = true;
+      this.rushRemainingValue = 4;
+      this.rushKillsValue = 0;
+      this.rushChargeValue = 0;
+      this.rushesValue++;
+      this.emit('rushStart',{count:this.rushesValue});
+      this.beginTravel(0.35);
       return;
     }
     this.wave++;
     if (this.wave >= STAGE_WAVES[this.stageValue].length) {
       this.stageValue++;
       this.wave = 0;
-      this.checkpoint = {score:this.scoreValue,maxCombo:this.maxComboValue,correct:this.correct,mistakes:this.mistakes,battleTime:this.battleTime,elapsed:this.elapsed,used:new Set(this.used)};
+      this.checkpoint = {score:this.scoreValue,maxCombo:this.maxComboValue,correct:this.correct,mistakes:this.mistakes,battleTime:this.battleTime,elapsed:this.elapsed,used:new Set(this.used),rushCharge:this.rushChargeValue,rushes:this.rushesValue,chainKills:this.chainKillsValue};
       this.emit('stage',{stage:this.stageValue});
       this.beginTravel(this.stageValue === 3 ? 2.2 : 1);
     } else this.beginTravel(0.6);
@@ -188,6 +236,7 @@ export class Game {
       correct:this.correct,mistakes:this.mistakes,clearTime:this.elapsed,
       keysPerMinute:this.battleTime ? this.correct*60/this.battleTime : 0,
       attempts:this.attemptsValue,practice:this.practice,difficulty:this.difficulty,
+      seed:this.seed,rushes:this.rushesValue,chainKills:this.chainKillsValue,
     };
     this.emit(mode,{stage:this.stageValue});
   }
@@ -312,12 +361,30 @@ export class Game {
       }
       const scoreDelta = 100 + (enemy.clean ? 50+Math.min(this.comboValue,15)*10 : 0);
       this.scoreValue += scoreDelta;
+      if (enemy.rush) this.rushKillsValue++;
+      else if (enemy.kind !== 'boss' && this.rushesValue < 2) this.rushChargeValue = Math.min(100,this.rushChargeValue + 18 + (enemy.clean ? 7 : 0));
       this.emit('kill',{enemyId:enemy.id,kind:enemy.kind,phase:enemy.kind === 'boss' ? this.phase : undefined,
         combo:this.comboValue,clean:enemy.clean,scoreDelta,effectsLevel:this.effectsLevelValue,hitZone:'head',finisher:true});
+      if (enemy.explosive) {
+        const collateral = this.enemiesValue.filter(target => target.kind !== 'boss' && target.id !== this.locked && Math.abs(target.lane-enemy.lane) <= 1);
+        for (const target of collateral) {
+          this.enemiesValue = this.enemiesValue.filter(item => item.id !== target.id);
+          this.chainKillsValue++;
+          const bonus = 75;
+          this.scoreValue += bonus;
+          this.emit('kill',{enemyId:target.id,kind:target.kind,combo:this.comboValue,clean:false,collateral:true,scoreDelta:bonus,effectsLevel:this.effectsLevelValue});
+        }
+        this.emit('explosion',{enemyId:enemy.id,kind:enemy.kind,count:collateral.length});
+      }
       if (enemy.kind === 'boss') {
-        this.phase++;
+        if (this.phase === 1 && this.bossCounterValue < 3) {
+          this.emit('bossPhase',{phase:1,count:this.bossCounterValue});
+          this.bossCounterValue++;
+        } else {
+          this.phase++;
+          this.emit('bossPhase',{phase:this.phase,count:this.phase === 2 ? 3 : undefined});
+        }
         this.bossFailures = 0;
-        this.emit('bossPhase',{phase:this.phase});
       }
       if (!this.enemiesValue.length) this.waveFinished();
     }
@@ -346,6 +413,13 @@ export class Game {
     this.battleTime = this.checkpoint.battleTime;
     this.elapsed = this.checkpoint.elapsed;
     this.used = new Set(this.checkpoint.used);
+    this.rushChargeValue = this.checkpoint.rushCharge;
+    this.rushesValue = this.checkpoint.rushes;
+    this.rushKillsValue = 0;
+    this.chainKillsValue = this.checkpoint.chainKills;
+    this.rushingValue = false;
+    this.rushRemainingValue = 0;
+    this.bossCounterValue = 0;
     this.comboValue = 0;
     this.visualComboValue = 0;
     this.effectsLevelValue = 0;
@@ -370,6 +444,7 @@ export class Game {
       visualCombo:this.visualComboValue,lockedId:this.locked,practice:this.practice,
       difficulty:this.difficulty,countdown:this.countdown,results:this.finalResults,
       attempts:this.attemptsValue,
+      rushCharge:this.rushChargeValue,rushing:this.rushingValue,rushRemaining:this.rushRemainingValue,rushes:this.rushesValue,bossCounter:this.phase === 1 ? this.bossCounterValue : 0,
       enemies:this.enemiesValue.map((enemy,index) => {
         const duration = enemy.deadline-enemy.spawned;
         const progress = this.practice
@@ -382,6 +457,7 @@ export class Game {
           typed:enemy.typing.typed,guide:enemy.typing.guide,keys:enemy.typing.keys,
           typingProgress:enemy.typing.progress,telegraph:!this.practice && remaining <= (enemy.kind === 'boss' ? BOSS_TIMING[this.phase].telegraph : 0.8),
           locked:this.locked === enemy.id,threatRank:index+1,
+          explosive:enemy.explosive,blastTargets:enemy.explosive ? this.enemiesValue.filter(target => target.id !== enemy.id && target.kind !== 'boss' && Math.abs(target.lane-enemy.lane) <= 1).map(target => target.id) : [],rush:enemy.rush,
         };
       }),
     };

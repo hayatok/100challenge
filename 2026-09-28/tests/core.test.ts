@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { BOSS_PHRASES, OFFICE_PHRASES, PHRASES, RUNNER_PHRASES, WORKER_PHRASES } from '../src/content.ts';
+import { BOSS_COUNTER_PHRASES, BOSS_PHRASES, OFFICE_PHRASES, PHRASES, RUNNER_PHRASES, RUSH_PHRASES, WORKER_PHRASES } from '../src/content.ts';
 import { Game } from '../src/game.ts';
 import { TypingSession, validateReading } from '../src/typing.ts';
 
@@ -63,7 +63,7 @@ test('all authored content is distinct, typeable, and divided by enemy workload'
   assert.ok(office.reduce((a,b) => a+b,0)/office.length < worker.reduce((a,b) => a+b,0)/worker.length);
 });
 
-test('first keys in every simultaneous wave are disjoint and a full run clears 24 enemies plus three boss phases', () => {
+test('first keys stay disjoint and a full run resolves 24 normal slots, eight rush slots, and five boss phrases', () => {
   const game = new Game({seed:42});
   let normalKills = 0;
   let bossKills = 0;
@@ -84,15 +84,16 @@ test('first keys in every simultaneous wave are disjoint and a full run clears 2
     }
   }
   assert.ok(guard < 10000);
-  assert.equal(normalKills,24);
-  assert.equal(bossKills,3);
+  assert.equal(normalKills,32);
+  assert.equal(bossKills,5);
+  assert.equal(game.state.results?.rushes,2);
   assert.equal(game.state.results?.accuracy,1);
   assert.equal(game.state.results?.attempts,1);
-  assert.ok(game.state.score > 27*100);
+  assert.ok(game.state.score > 37*100);
 });
 
 test('seeded phrase assignment remains kind-correct and never blocks a planned spawn', () => {
-  const pools = {runner:new Set(RUNNER_PHRASES.map(item => item.text)),office:new Set(OFFICE_PHRASES.map(item => item.text)),worker:new Set(WORKER_PHRASES.map(item => item.text)),boss:new Set(BOSS_PHRASES.map(item => item.text))};
+  const pools = {runner:new Set([...RUNNER_PHRASES,...RUSH_PHRASES].map(item => item.text)),office:new Set(OFFICE_PHRASES.map(item => item.text)),worker:new Set(WORKER_PHRASES.map(item => item.text)),boss:new Set([...BOSS_PHRASES,...BOSS_COUNTER_PHRASES].map(item => item.text))};
   const seenBoss = new Set<string>();
   for (let seed=0;seed<128;seed++) {
     const game = new Game({seed});
@@ -114,7 +115,7 @@ test('seeded phrase assignment remains kind-correct and never blocks a planned s
     }
     assert.equal(game.state.mode,'clear',`seed ${seed}`);
   }
-  assert.equal(seenBoss.size,BOSS_PHRASES.length);
+  assert.ok(seenBoss.size >= BOSS_PHRASES.length);
 });
 
 test('a feasible typing order clears timed waves at each difficulty', () => {
@@ -264,6 +265,7 @@ function reachCleanCombo(game: Game, target: number): void {
 test('visual effects hold after a miss, step down every 0.8 seconds, and repeated misses do not extend the hold', () => {
   const game = new Game({practice:true,seed:42});
   reachCleanCombo(game,15);
+  if (game.state.mode === 'travel') game.update(1);
   assert.equal(game.state.effectsLevel,4);
   const score = game.state.score;
   const visual = game.state.visualCombo;
@@ -291,6 +293,7 @@ test('visual effects hold after a miss, step down every 0.8 seconds, and repeate
 test('recovered clean combo is a floor for decay and starts a new hold after a later break', () => {
   const game = new Game({practice:true,seed:42});
   reachCleanCombo(game,15);
+  if (game.state.mode === 'travel') game.update(1);
   assert.equal(game.type('q'),false);
   game.update(1.51);
   assert.equal(game.state.effectsLevel,3);
@@ -385,7 +388,7 @@ test('boss introduction and phase recoveries freeze combat, with increasing warn
   assert.equal(game.state.mode,'playing');
   const initial = game.state.enemies[0];
   assert.equal(initial.kind,'boss');
-  for (let phase=0;phase<3;phase++) {
+  for (const phase of [0,1,1,1,2]) {
     assert.equal(game.state.bossPhase,phase);
     const remaining = game.state.enemies[0].remaining;
     game.update(remaining-(phase === 0 ? 1.0 : phase === 1 ? 1.1 : 1.2)+0.001);
@@ -394,7 +397,7 @@ test('boss introduction and phase recoveries freeze combat, with increasing warn
       assert.equal(game.type(game.state.enemies[0].guide[0]),true);
     if (phase < 2) {
       assert.equal(game.state.mode,'travel');
-      game.update(phase === 0 ? 0.75 : 1.2);
+      game.update(phase === 0 ? 0.75 : game.state.bossPhase === 1 ? 0.35 : 1.2);
       assert.equal(game.state.mode,'playing');
     }
   }

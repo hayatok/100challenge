@@ -347,3 +347,26 @@ const BOSS_LINES = `
 私の代わりに店を閉めてくれ|わたしのかわりにみせをしめてくれ
 `;
 export const BOSS_PHRASES = parse(BOSS_LINES);
+
+// Short, distinct calls keep the release beats readable at full combat speed.
+export const RUSH_PHRASES = parse(`
+赤い灯|あかいひ
+裏口へ|うらぐちへ
+鍵を取れ|かぎをとれ
+静かに|しずかに
+通路を見ろ|つうろをみろ
+逃げ道だ|にげみちだ
+早く撃て|はやくうて
+夜が来る|よるがくる
+ライトを点け|らいとをつけ
+ドアを閉めろ|どあをしめろ
+`);
+
+export const BOSS_COUNTER_PHRASES = parse(`
+まだ帰れる|まだかえれる
+鍵は渡さない|かぎはわたさない
+朝は必ず来る|あさはかならずくる
+この手で閉める|このてでしめる
+終わらせる|おわらせる
+出口はあそこだ|でぐちはあそこだ
+`);

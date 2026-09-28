@@ -5,7 +5,7 @@ export type Preferences = {
   motion: boolean;
   practice: boolean;
 };
-export const RESULT_RULES_VERSION = 3;
+export const RESULT_RULES_VERSION = 4;
 export type SavedResult = {
   score: number;
   combo: number;
@@ -17,6 +17,10 @@ export type SavedResult = {
   retries: number;
   date: string;
   rulesVersion: number;
+  /** Original run seed, when recorded. A missing seed means replay is unavailable. */
+  seed?: number;
+  rushes?: number;
+  chainKills?: number;
 };
 export type SavedData = {
   preferences: Preferences;
@@ -35,6 +39,8 @@ const DIFFICULTIES = ["relaxed", "normal", "fierce"] as const;
 const record = (value: unknown): Record<string,unknown> => value !== null && typeof value === 'object' && !Array.isArray(value) ? value as Record<string,unknown> : {};
 const finiteNonnegative = (value: unknown): value is number => typeof value === 'number' && Number.isFinite(value) && value >= 0;
 const integerNonnegative = (value: unknown): value is number => finiteNonnegative(value) && Number.isInteger(value);
+const validSeed = (value: unknown): value is number => integerNonnegative(value) && value <= 0xffffffff;
+const validCount = (value: unknown): value is number => integerNonnegative(value) && value <= 10_000;
 function finiteVolume(value: unknown, fallback: number): number {
   return typeof value === "number" && Number.isFinite(value)
     ? Math.max(0, Math.min(1, value)) : fallback;
@@ -50,11 +56,17 @@ function validResult(value: unknown, fallbackVersion: number): SavedResult|null 
       typeof r.date !== 'string' || !Number.isFinite(Date.parse(r.date))) return null;
   const rulesVersion = r.rulesVersion ?? fallbackVersion;
   if (!Number.isInteger(rulesVersion) || (rulesVersion as number) < 1) return null;
-  return {
+  const result: SavedResult = {
     score:r.score,combo:r.combo,accuracy:r.accuracy,seconds:r.seconds,
     cleared:r.cleared,difficulty:r.difficulty as Preferences['difficulty'],
     practice:r.practice,retries:r.retries,date:r.date,rulesVersion:rulesVersion as number,
   };
+  // Optional v0.5 fields must never make older runs disappear. Invalid fields
+  // are omitted so an untrusted seed cannot become a replay control.
+  if (validSeed(r.seed)) result.seed = r.seed;
+  if (validCount(r.rushes)) result.rushes = r.rushes;
+  if (validCount(r.chainKills)) result.chainKills = r.chainKills;
+  return result;
 }
 
 export function resultKey(result: Pick<SavedResult,'difficulty'|'practice'|'rulesVersion'>): string {
@@ -78,7 +90,9 @@ export function readSave(): SavedData {
   try {
     const data = record(JSON.parse(localStorage.getItem(KEY) ?? "{}"));
     const p = record(data.preferences);
-    const fallbackVersion = data.version === 2 ? RESULT_RULES_VERSION : 2;
+    // Save container version 2 predates v0.5. Missing rulesVersion in that
+    // container belongs to v0.4 rules even after the current rules change.
+    const fallbackVersion = data.version === 2 ? 3 : 2;
     const results = Array.isArray(data.results)
       ? data.results.map(value => validResult(value,fallbackVersion)).filter((value): value is SavedResult => value !== null).slice(-10)
       : [];

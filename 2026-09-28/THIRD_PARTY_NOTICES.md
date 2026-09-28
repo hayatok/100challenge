@@ -37,3 +37,7 @@ See `docs/ALPHA_CHARACTER_ASSETS.md` for source and output hashes and conversion
 The city zombie is now used for residents, workers and the boss with shader-based skin/clothing recoloring, width/depth changes and additive joint animation. The Thin Zombie remains the runner. These are two authored rigs, not four new independently sourced models. The Granny and Creature files remain in the asset archive but are not loaded by v0.4.
 
 FPS Arms finger joints are curled to fit the pistol. The pistol slide is animated separately. Existing gunshot and metal samples are layered for final-key shots; no new third-party audio was added. The street geometry and wet-road canvas maps are authored for this game.
+
+## v0.5 additions
+
+The red explosive tanks, straps, warning bands and chest badge are original procedural 3D meshes. Rush and boss-counter phrases are authored for this game. Explosion and rush sounds layer and filter the existing credited recordings with synthesized low-frequency sweeps; no new third-party media or dependencies were added.
