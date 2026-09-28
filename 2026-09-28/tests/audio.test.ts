@@ -69,8 +69,11 @@ test("rapid shots stay bounded, kills alone duck music, and stop clears subdrops
     audio.shot({ finishing: true });
     assert.equal(c.sources.length, beforeMute, "muting suppresses new effects");
     audio.setVolumes(0.4, 0.6, false);
-    audio.shot({ finishing: true });
-    assert.ok(c.sources.length > beforeMute, "unmuting restores effects");
+    audio.shot({ finishing: true, level: 4 });
+    assert.equal(c.sources.length - beforeMute, 4, "final shot layers a bounded attack and click over the gun and hit");
+    const finalVoices = c.sources.slice(beforeMute);
+    assert.ok(finalVoices.every((s) => s.stops[0] <= c.currentTime + 0.36), "final shot layers have short tails");
+    assert.ok(c.gains.slice(-4).every((g) => g.gain.events[0].value! < 0.9), "final shot layer gains stay bounded");
     audio.bossPhase(3);
     assert.ok(c.oscillators.length > 0);
     audio.stop();

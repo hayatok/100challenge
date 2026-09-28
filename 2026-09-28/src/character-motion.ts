@@ -16,6 +16,10 @@ export type CharacterPoseState = {
 
 type RigNames = {
   hips: string;
+  leftThigh: string;
+  rightThigh: string;
+  leftShin: string;
+  rightShin: string;
   chest: string;
   upperChest: string;
   neck?: string;
@@ -26,30 +30,21 @@ type RigNames = {
   rightArm: string;
 };
 
-// Names and anatomical roles are from the four shipped GLB skeletons. In
-// particular, Creature's anonymous joint2/3/4 are torso/upper chest/head.
+// Names and anatomical roles are from the two rigged GLBs used in v0.4.
 const rigs: Record<CharacterAsset, RigNames> = {
   city: {
-    hips: "mixamorigHips", chest: "mixamorigSpine1", upperChest: "mixamorigSpine2",
-    neck: "mixamorigNeck", head: "mixamorigHead",
-    leftShoulder: "mixamorigLeftShoulder", rightShoulder: "mixamorigRightShoulder",
-    leftArm: "mixamorigLeftArm", rightArm: "mixamorigRightArm",
-  },
-  granny: {
-    hips: "mixamorigHips", chest: "mixamorigSpine1", upperChest: "mixamorigSpine2",
+    hips: "mixamorigHips", leftThigh: "mixamorigLeftUpLeg", rightThigh: "mixamorigRightUpLeg",
+    leftShin: "mixamorigLeftLeg", rightShin: "mixamorigRightLeg",
+    chest: "mixamorigSpine1", upperChest: "mixamorigSpine2",
     neck: "mixamorigNeck", head: "mixamorigHead",
     leftShoulder: "mixamorigLeftShoulder", rightShoulder: "mixamorigRightShoulder",
     leftArm: "mixamorigLeftArm", rightArm: "mixamorigRightArm",
   },
   thin: {
-    hips: "hips", chest: "spine", upperChest: "ribs", neck: "neck", head: "head",
+    hips: "hips", leftThigh: "thighL", rightThigh: "thighR", leftShin: "shinL", rightShin: "shinR",
+    chest: "spine", upperChest: "ribs", neck: "neck", head: "head",
     leftShoulder: "shoulderL", rightShoulder: "shoulderR",
     leftArm: "upper_armL", rightArm: "upper_armR",
-  },
-  creature: {
-    hips: "joint1", chest: "joint2", upperChest: "joint3", head: "joint4",
-    leftShoulder: "Clav_L", rightShoulder: "Clav_R",
-    leftArm: "joint14", rightArm: "joint14001",
   },
 };
 
@@ -60,9 +55,9 @@ const axisZ = new T.Vector3(0, 0, 1);
 export class CharacterMotion {
   private readonly bones: Partial<Record<keyof RigNames, T.Bone>> = {};
   private readonly saved = new Map<T.Bone, T.Quaternion>();
+  private readonly savedPositions = new Map<T.Bone, T.Vector3>();
   private readonly hasAttack: boolean;
   private readonly hasDeath: boolean;
-  private readonly asset: CharacterAsset;
   private readonly boss: boolean;
   private readonly model: T.Group;
   private readonly localAxis = new T.Vector3();
@@ -71,7 +66,6 @@ export class CharacterMotion {
 
   constructor(character: CharacterInstance, kind: EnemyKind) {
     this.model = character.model;
-    this.asset = character.asset;
     this.boss = kind === "boss";
     this.hasAttack = !!character.attack;
     this.hasDeath = !!character.death;
@@ -88,7 +82,7 @@ export class CharacterMotion {
     const bone = this.bones[role];
     if (!bone) return null;
     const point = bone.getWorldPosition(new T.Vector3());
-    if (zone === "head") point.y += (this.asset === "granny" ? 0.14 : 0.08) * this.model.scale.y;
+    if (zone === "head") point.y += 0.08 * this.model.scale.y;
     if (zone === "chest") point.y += 0.04 * this.model.scale.y;
     return point;
   }
@@ -96,7 +90,9 @@ export class CharacterMotion {
   /** Removes last frame's additive pose before the mixer writes its new pose. */
   step(mixer: T.AnimationMixer, delta: number, state: CharacterPoseState): void {
     this.restore();
-    mixer.update(delta);
+    // Freeze the last living stance during the boss's staged kneel. Keeping
+    // the walk cycle running would make the feet paddle through the ground.
+    mixer.update(this.boss && state.dead > 0 ? 0 : delta);
     this.model.updateWorldMatrix(true, true);
 
     const hit = T.MathUtils.clamp(state.hit, 0, 1);
@@ -104,16 +100,6 @@ export class CharacterMotion {
     const threat = T.MathUtils.clamp(state.threat, 0, 1);
     const death = state.dead > 0 ? T.MathUtils.smoothstep(state.dead, 0, 0.62) : 0;
     const phase = this.boss ? T.MathUtils.clamp(state.phase ?? 0, 0, 2) : 0;
-
-    // The shipped Granny walk folds at three upper-body joints. Straighten
-    // them separately so the glasses and face remain above the hairline while
-    // preserving the original stooped silhouette and step cycle.
-    if (this.asset === "granny") {
-      this.rotate("chest", axisX, -0.18);
-      this.rotate("upperChest", axisX, -0.23);
-      this.rotate("neck", axisX, -0.17);
-      this.rotate("head", axisX, -0.16);
-    }
 
     if (phase > 0 && death === 0) {
       this.rotate("chest", axisX, -0.035 * phase);
@@ -150,7 +136,25 @@ export class CharacterMotion {
       }
     }
 
-    if (!this.hasDeath && death > 0) {
+    if (this.boss && state.dead > 0) {
+      // One knee buckles, the other follows, then the upper body falls forward.
+      // Root motion is controlled by the scene, so this remains visible through
+      // the full three-second boss resolution instead of flying away.
+      const kneel = T.MathUtils.smoothstep(state.dead, 0.1, 0.95);
+      const collapse = T.MathUtils.smoothstep(state.dead, 1.05, 2.45);
+      this.translate("hips", 0, -0.32 * kneel - 0.13 * collapse, 0);
+      this.rotate("leftThigh", axisX, 0.84 * kneel);
+      this.rotate("leftShin", axisX, -1.18 * kneel);
+      this.rotate("rightThigh", axisX, 0.38 * kneel + 0.25 * collapse);
+      this.rotate("rightShin", axisX, -0.86 * kneel);
+      this.rotate("chest", axisX, 0.18 * kneel + 0.62 * collapse);
+      this.rotate("upperChest", axisX, 0.13 * kneel + 0.43 * collapse);
+      this.rotate("head", axisX, -0.18 * kneel + 0.28 * collapse);
+      this.rotate("leftArm", axisX, -0.28 * kneel + 0.72 * collapse);
+      this.rotate("rightArm", axisX, -0.36 * kneel + 0.64 * collapse);
+      this.rotate("leftShoulder", axisZ, -0.18 * collapse);
+      this.rotate("rightShoulder", axisZ, 0.18 * collapse);
+    } else if (!this.hasDeath && death > 0) {
       const jerk = Math.sin(Math.min(state.dead, 0.34) * 26) * (1 - death);
       this.rotate("chest", axisX, -0.22 * death - 0.08 * jerk);
       this.rotate("upperChest", axisZ, 0.2 * death);
@@ -169,7 +173,17 @@ export class CharacterMotion {
 
   private restore(): void {
     for (const [bone, original] of this.saved) bone.quaternion.copy(original);
+    for (const [bone, original] of this.savedPositions) bone.position.copy(original);
     this.saved.clear();
+    this.savedPositions.clear();
+  }
+
+  private translate(role: keyof RigNames, x: number, y: number, z: number): void {
+    const bone = this.bones[role];
+    if (!bone) return;
+    if (!this.savedPositions.has(bone)) this.savedPositions.set(bone, bone.position.clone());
+    bone.position.add(new T.Vector3(x, y, z));
+    bone.updateWorldMatrix(false, true);
   }
 
   private rotate(role: keyof RigNames, axis: T.Vector3, angle: number): void {

@@ -1,7 +1,7 @@
 import * as T from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
-/** Camera-local weapon. Its parent sits at (.29, -.32, -.65); muzzle is (0, .03, -.28). */
+/** Camera-local weapon. The scene owns aim/recoil; this group owns the moving slide. */
 export async function createWeapon(): Promise<T.Group> {
   const loader = new GLTFLoader();
   const [pistolAsset, armsAsset] = await Promise.all([
@@ -65,10 +65,24 @@ export async function createWeapon(): Promise<T.Group> {
     armMesh.frustumCulled = false;
   }
 
-  // Bring the right forearm up from the lower-right edge. The original skin is
-  // kept, so wrist and fingers still follow its authored skeleton and weights.
+  // The source rig has straight, spread fingers. Curl its existing phalanges
+  // around the grip; all skin stays bound to the original hand and forearm.
+  for (const [name, baseCurl, middleCurl] of [
+    ['index', 0.62, 0.2],
+    ['middle', 1.02, 0.38],
+    ['ring', 1.08, 0.42],
+    ['pinky', 1.12, 0.43],
+  ] as const) {
+    const base = arms.getObjectByName(`f_${name}.01.R`);
+    const middle = arms.getObjectByName(`f_${name}.02.R`);
+    if (base) base.rotation.z -= baseCurl;
+    if (middle) middle.rotation.z -= middleCurl;
+  }
+
+  // Bring the palm below the slide and beside the grip, so the curled fingers
+  // sit behind the trigger guard instead of reaching over the barrel.
   const lowerRight = new T.Group();
-  lowerRight.position.set(0.375, -0.33, 0.17);
+  lowerRight.position.set(0.415, -0.35, 0.11);
   lowerRight.rotation.z = Math.PI;
   const faceCamera = new T.Group();
   faceCamera.rotation.y = Math.PI;
@@ -78,4 +92,18 @@ export async function createWeapon(): Promise<T.Group> {
   weapon.add(lowerRight);
 
   return weapon;
+}
+
+/** Slide travels along source -X (toward the camera after the pistol's Y turn). */
+export function animateWeapon(weapon: T.Group, recoil: number, finishing = false, motion = true): void {
+  const pistol = weapon.getObjectByName('pistol');
+  if (!pistol) return;
+  const amount = T.MathUtils.clamp(recoil, 0, 1);
+  const travel = amount * (motion ? finishing ? 0.067 : 0.052 : 0.012);
+  for (const name of ['Pistol_Slide', 'Pistol_Slide4']) {
+    const slide = pistol.getObjectByName(name);
+    if (!slide) continue;
+    if (typeof slide.userData.restX !== 'number') slide.userData.restX = slide.position.x;
+    slide.position.x = slide.userData.restX - travel;
+  }
 }

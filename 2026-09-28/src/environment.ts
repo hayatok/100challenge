@@ -2,7 +2,7 @@ import * as THREE from 'three';
 
 /** The camera travels along -Z. The clear combat lane is approximately x=-2.8…2.8. */
 export interface ArcadeEnvironment {
-  update(time: number, level: number): void;
+  update(time: number, level: number, motion?: boolean): void;
   dispose(): void;
 }
 
@@ -74,6 +74,17 @@ function noiseTexture(kind: 'asphalt' | 'wall' | 'metal' | 'roof'): THREE.Canvas
     ctx.moveTo(181, 0); ctx.lineTo(184, 122); ctx.lineTo(218, 204); ctx.lineTo(202, 304);
     ctx.moveTo(397, 312); ctx.lineTo(382, 401); ctx.lineTo(418, 512);
     ctx.stroke();
+    // Fine aggregate alone reads as an even grey sheet at gameplay distance.
+    // Broad, overlapping oil and rain stains survive minification.
+    for (let i = 0; i < 34; i++) {
+      const x = grit() * size, y = grit() * size;
+      ctx.save(); ctx.translate(x, y); ctx.rotate((grit() - .5) * 1.6);
+      ctx.scale(.3 + grit() * .9, .8 + grit() * 2.1);
+      const stain = ctx.createRadialGradient(0, 0, 1, 0, 0, 22 + grit() * 46);
+      stain.addColorStop(0, grit() > .54 ? 'rgba(3,11,15,.32)' : 'rgba(107,120,113,.12)');
+      stain.addColorStop(1, 'rgba(3,11,15,0)');
+      ctx.fillStyle = stain; ctx.fillRect(-85, -85, 170, 170); ctx.restore();
+    }
   }
   if (kind === 'metal') {
     for (let y = 0; y < size; y += 24) {
@@ -90,6 +101,73 @@ function noiseTexture(kind: 'asphalt' | 'wall' | 'metal' | 'roof'): THREE.Canvas
     }
   }
   return canvasTexture(canvas);
+}
+
+function roadRoughnessTexture(): THREE.CanvasTexture {
+  const [canvas, ctx] = makeCanvas(512, 512);
+  ctx.fillStyle = '#b8b8b8'; ctx.fillRect(0, 0, 512, 512);
+  const next = random(8821);
+  for (let i = 0; i < 36; i++) {
+    const x = next() * 512, y = next() * 512;
+    ctx.save(); ctx.translate(x, y); ctx.rotate((next() - .5) * 1.8);
+    ctx.scale(.3 + next() * .8, .7 + next() * 2);
+    const radius = 14 + next() * 64;
+    const gradient = ctx.createRadialGradient(0, 0, 0, 0, 0, radius);
+    gradient.addColorStop(0, '#454545'); gradient.addColorStop(1, 'rgba(184,184,184,0)');
+    ctx.fillStyle = gradient; ctx.fillRect(-radius, -radius, radius * 2, radius * 2);
+    ctx.restore();
+  }
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+  texture.repeat.set(1.3, 5);
+  texture.anisotropy = 4;
+  return texture;
+}
+
+/** A single transparent road decal carries broken reflections for all practical lamps. */
+function reflectionTexture(): THREE.CanvasTexture {
+  const [canvas, ctx] = makeCanvas(512, 2048);
+  const next = random(2049);
+  const lights: [number, number, string][] = [
+    [-3.7, 1.5, '245,170,82'], [3.7, -3.4, '84,173,205'],
+    [3.7, -11.4, '84,173,205'], [-3.7, -17.2, '242,171,88'],
+    [-3.7, -25.4, '238,158,76'], [3.7, -31.4, '82,163,207'],
+    [3.7, -43.5, '83,161,202'], [0, -52.1, '235,167,91'],
+  ];
+  for (const [worldX, worldZ, color] of lights) {
+    // Light falls toward the playable road, instead of lining up exactly with
+    // the fixture on the shop wall.
+    const cx = (worldX * .65 + 4.7) / 9.4 * 512;
+    const cy = (worldZ - END_Z) / (START_Z - END_Z) * 2048;
+    // Dark puddles precede glints, so the colour belongs to wet patches rather
+    // than making a uniform luminous cloud across the carriageway.
+    for (let i = 0; i < 12; i++) {
+      const px = cx + (next() - .5) * 82;
+      const py = cy + (next() - .5) * 180;
+      const rx = 10 + next() * 24, ry = 9 + next() * 31;
+      ctx.fillStyle = 'rgba(3,10,14,.24)';
+      ctx.beginPath();
+      ctx.moveTo(px - rx, py);
+      ctx.bezierCurveTo(px - rx * .75, py - ry, px + rx * .5, py - ry * .7, px + rx, py);
+      ctx.bezierCurveTo(px + rx * .8, py + ry, px - rx * .6, py + ry * .8, px - rx, py);
+      ctx.fill();
+    }
+    for (let run = 0; run < 3; run++) {
+      const bandX = cx + (run - 1) * (13 + next() * 9);
+      for (let i = 0; i < 28; i++) {
+        const py = cy - 96 + i * 7.2 + (next() - .5) * 3;
+        const distance = Math.abs(py - cy) / 100;
+        const width = 6 + next() * (21 + 18 * (1 - distance));
+        ctx.fillStyle = `rgba(${color},${(.12 + next() * .38) * (1 - distance * .58)})`;
+        ctx.fillRect(bandX - width / 2 + (next() - .5) * 13, py,
+          width, .65 + next() * 2);
+      }
+    }
+  }
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.colorSpace = THREE.SRGBColorSpace;
+  texture.anisotropy = 4;
+  return texture;
 }
 
 function signTexture(lines: string[], tone: 'cream' | 'red' | 'blue' | 'dark', vertical = false): THREE.CanvasTexture {
@@ -160,13 +238,16 @@ export async function createEnvironment(scene: THREE.Scene): Promise<ArcadeEnvir
   const unitBox = ownGeometry(new THREE.BoxGeometry(1, 1, 1));
   const unitPlane = ownGeometry(new THREE.PlaneGeometry(1, 1));
   const cylinder = ownGeometry(new THREE.CylinderGeometry(1, 1, 1, 10));
+  const produceShape = ownGeometry(new THREE.IcosahedronGeometry(1, 0));
   const asphalt = ownTexture(noiseTexture('asphalt'));
-  asphalt.repeat.set(2.2, 18);
+  asphalt.repeat.set(1.6, 7);
+  const roadRoughness = ownTexture(roadRoughnessTexture());
+  const reflections = ownTexture(reflectionTexture());
   const wallTexture = ownTexture(noiseTexture('wall'));
   const shutterTexture = ownTexture(noiseTexture('metal'));
   const roofTexture = ownTexture(noiseTexture('roof'));
   const mat = {
-    road: ownMaterial(new THREE.MeshStandardMaterial({ map: asphalt, color: 0xb9c6ca, roughness: .55, metalness: .08 })),
+    road: ownMaterial(new THREE.MeshStandardMaterial({ map: asphalt, roughnessMap: roadRoughness, color: 0xc5caca, roughness: .92, metalness: .12 })),
     wall: ownMaterial(new THREE.MeshStandardMaterial({ map: wallTexture, color: 0xb6b2a8, roughness: .91 })),
     shutter: ownMaterial(new THREE.MeshStandardMaterial({ map: shutterTexture, color: 0x9caaa9, roughness: .61, metalness: .48, side: THREE.DoubleSide })),
     steel: ownMaterial(new THREE.MeshStandardMaterial({ color: 0x33424a, metalness: .72, roughness: .4 })),
@@ -175,7 +256,16 @@ export async function createEnvironment(scene: THREE.Scene): Promise<ArcadeEnvir
     concrete: ownMaterial(new THREE.MeshStandardMaterial({ color: 0x555e5b, roughness: .89 })),
     warm: ownMaterial(new THREE.MeshStandardMaterial({ color: 0xffd391, emissive: 0xffa532, emissiveIntensity: 1.65, roughness: .38 })),
     cold: ownMaterial(new THREE.MeshStandardMaterial({ color: 0xbeeaff, emissive: 0x3eabec, emissiveIntensity: 1.7, roughness: .38 })),
+    stripWarm: ownMaterial(new THREE.MeshStandardMaterial({ color: 0xa77d4f, emissive: 0xa26a2d, emissiveIntensity: .8, roughness: .7 })),
+    stripCold: ownMaterial(new THREE.MeshStandardMaterial({ color: 0x668d98, emissive: 0x286580, emissiveIntensity: .72, roughness: .7 })),
     black: ownMaterial(new THREE.MeshStandardMaterial({ color: 0x11191b, roughness: .84 })),
+    glass: ownMaterial(new THREE.MeshPhysicalMaterial({ color: 0x7aa4a1, metalness: .23, roughness: .24, transparent: true, opacity: .48, depthWrite: false, side: THREE.DoubleSide })),
+    shopInterior: ownMaterial(new THREE.MeshStandardMaterial({ color: 0x624530, emissive: 0x78411e, emissiveIntensity: .3, roughness: .92 })),
+    paper: ownMaterial(new THREE.MeshStandardMaterial({ color: 0xb9ab87, roughness: .98 })),
+    timber: ownMaterial(new THREE.MeshStandardMaterial({ color: 0x4a382c, roughness: .91 })),
+    red: ownMaterial(new THREE.MeshStandardMaterial({ color: 0x672d29, metalness: .28, roughness: .72 })),
+    produceGreen: ownMaterial(new THREE.MeshStandardMaterial({ color: 0x506d4c, roughness: .93 })),
+    produceOrange: ownMaterial(new THREE.MeshStandardMaterial({ color: 0xa56b3e, roughness: .92 })),
     puddle: ownMaterial(new THREE.MeshPhysicalMaterial({ color: 0x172025, metalness: .06, roughness: .27, clearcoat: .9, clearcoatRoughness: .14, transparent: true, opacity: .24, depthWrite: false, side: THREE.DoubleSide })),
   };
 
@@ -221,6 +311,12 @@ export async function createEnvironment(scene: THREE.Scene): Promise<ArcadeEnvir
   road.name = 'Wet asphalt'; road.rotation.x = -Math.PI / 2;
   road.position.set(0, -.02, (START_Z + END_Z) / 2);
   road.receiveShadow = true; root.add(road);
+  const roadLight = new THREE.Mesh(ownGeometry(new THREE.PlaneGeometry(9.3, START_Z - END_Z)),
+    ownMaterial(new THREE.MeshBasicMaterial({ map: reflections, transparent: true, opacity: .73, depthWrite: false, polygonOffset: true, polygonOffsetFactor: -1 })));
+  roadLight.name = 'Fragmented wet street reflections';
+  roadLight.rotation.x = -Math.PI / 2;
+  roadLight.position.set(0, -.012, (START_Z + END_Z) / 2);
+  root.add(roadLight);
   for (const side of [-1, 1]) {
     box('Raised sidewalk', side * 4.17, .045, (START_Z + END_Z) / 2, 1.1, .17, 83, mat.concrete);
     box('Granite gutter', side * 3.47, .024, (START_Z + END_Z) / 2, .11, .07, 83, mat.darkSteel);
@@ -302,6 +398,9 @@ export async function createEnvironment(scene: THREE.Scene): Promise<ArcadeEnvir
     if (i < 15) {
       // Panels are individually modelled, so light and silhouettes change with depth.
       for (let j = 0; j < 8; j++) {
+        // The service alley opens to the night sky. Missing inner panels leave
+        // the same 3D steel structure visible without another backdrop.
+        if (i >= 5 && i <= 7 && j >= 2 && j <= 5) continue;
         const x0 = -4.55 + j * 1.1375;
         const x1 = x0 + 1.1375;
         const y0 = 5.55 + 1.72 * (1 - (x0 / 4.55) ** 2);
@@ -345,19 +444,81 @@ export async function createEnvironment(scene: THREE.Scene): Promise<ArcadeEnvir
   const verticalSign = ownTexture(signTexture(['営業中'], 'blue', true));
   const signMaterials = signs.map((map, index) => ownMaterial(new THREE.MeshStandardMaterial({
     map, emissiveMap: map, emissive: index % 4 === 1 ? 0x1a9ac7 : 0xd09955,
-    emissiveIntensity: index % 4 === 1 ? .7 : .37,
+    emissiveIntensity: index % 4 === 1 ? .43 : .14,
     metalness: .1, roughness: .63, side: THREE.DoubleSide,
   })));
   const posterMaterials = [posterA, posterB].map(map => ownMaterial(new THREE.MeshStandardMaterial({ map, roughness: .96, side: THREE.DoubleSide })));
+
+  function shopWindow(side: number, z: number, contents: 'books' | 'coffee' | 'produce'): void {
+    const inward = side === -1 ? Math.PI / 2 : -Math.PI / 2;
+    // The shelf, display stock, glazing, and partly raised shutter have separate
+    // depths; from the moving camera this reads as a shop rather than a lit card.
+    plane('Warm recessed shop back', side * 4.455, 1.45, z, 5.1, 2.52, mat.shopInterior, inward);
+    box('Display floor', side * 4.18, .28, z, .55, .08, 5.1, mat.timber);
+    for (const height of [.81, 1.41, 1.99]) {
+      box('Display shelf', side * 4.17, height, z, .52, .055, 4.85, mat.timber);
+    }
+    const stock = contents === 'books' ? [mat.red, mat.paper, mat.steel] :
+      contents === 'coffee' ? [mat.paper, mat.timber, mat.rusty] : [mat.paper, mat.red, mat.concrete];
+    for (let row = 0; row < 3; row++) for (let index = 0; index < 11; index++) {
+      const place = z - 2.12 + index * .43;
+      const height = [.82, 1.42, 2][row];
+      if (contents === 'books') {
+        for (let spine = -1; spine <= 1; spine++) {
+          box('Second-hand book spine', side * 4.13, height + .15, place + spine * .095,
+            .17, .23 + ((index + row + spine + 3) % 3) * .065, .07,
+            stock[(index + row + spine + 3) % 3]);
+        }
+      } else if (contents === 'coffee') {
+        cylinderAt('Cafe tin and cup', side * 4.14, height + .11, place,
+          .065 + ((index + row) % 3) * .014, .17, stock[(index + row) % 3]);
+      } else {
+        box('Produce market tray', side * 4.13, height + .035, place,
+          .3, .07, .34, stock[(index + row) % 3]);
+        for (const shift of [-.09, .09]) {
+          const fruit = new THREE.Mesh(produceShape, (index + row) % 3 === 0 ? mat.produceOrange : mat.produceGreen);
+          fruit.name = 'Produce in shop window';
+          fruit.position.set(side * 4.13, height + .12, place + shift);
+          fruit.scale.set(.115, .09, .09);
+          root.add(fruit);
+        }
+      }
+    }
+    plane('Rain marked display glass', side * 3.995, 1.49, z, 5.1, 2.65, mat.glass, inward);
+    for (const dz of [-2.54, 0, 2.54]) {
+      box('Shopfront glazed mullion', side * 3.96, 1.49, z + dz, .09, 2.71, .08, mat.darkSteel);
+    }
+    for (const y of [.13, 2.86]) box('Shopfront horizontal frame', side * 3.96, y, z, .09, .08, 5.17, mat.darkSteel);
+    plane('Partly raised slatted shutter', side * 3.932, 2.73, z, 5.17, .37, mat.shutter, inward);
+    box('Display strip light', side * 4.08, 2.72, z, .09, .07, 4.82, mat.warm);
+  }
+
+  function damagedShutter(side: number, z: number): void {
+    const inward = side === -1 ? Math.PI / 2 : -Math.PI / 2;
+    plane('Battered shutter left leaf', side * 4.431, 1.4, z + 1.93, 1.65, 2.48, mat.shutter, inward);
+    plane('Battered shutter right leaf', side * 4.431, 1.4, z - 1.93, 1.65, 2.48, mat.shutter, inward);
+    plane('Bent shutter top', side * 4.431, 2.76, z, 5.53, .32, mat.shutter, inward);
+    for (const [dz, lean] of [[-1.06, -.2], [-.67, .13], [.96, .26]] as const) {
+      const spar = box('Twisted shutter slat', side * 4.16, .8 + Math.abs(dz) * .62, z + dz,
+        .12, .045, 1.8, mat.rusty);
+      spar.rotation.x = lean;
+    }
+    box('Threshold under broken shutter', side * 4.14, .22, z, .62, .13, 5.12, mat.concrete);
+  }
 
   for (let bay = 0; bay < BAY_COUNT; bay++) {
     const z = START_Z - (bay + .5) * BAY;
     for (const side of [-1, 1]) {
       const inward = side === -1 ? Math.PI / 2 : -Math.PI / 2;
       const n = (bay + (side === 1 ? 3 : 0)) % signs.length;
+      const display = bay === 0 && side === -1 ? 'books' :
+        bay === 2 && side === 1 ? 'coffee' : bay === 3 && side === -1 ? 'produce' : null;
+      const damaged = bay >= 4 && bay <= 8 && (bay + side) % 2 === 0;
       box('Stained plaster building facade', side * 4.75, 3.15, z, .46, 6.3, BAY - .04, mat.wall);
       box('Shop dark recess', side * 4.47, 1.52, z, .06, 2.86, 5.64, mat.black);
-      plane('Corrugated steel shop shutter', side * 4.431, 1.51, z, 5.53, 2.75, mat.shutter, inward);
+      if (display) shopWindow(side, z, display);
+      else if (damaged) damagedShutter(side, z);
+      else plane('Corrugated steel shop shutter', side * 4.431, 1.51, z, 5.53, 2.75, mat.shutter, inward);
       box('Rolled shutter housing', side * 4.39, 3.04, z, .29, .32, 5.72, mat.rusty);
       for (const dz of [-2.85, 2.85]) {
         box('Shop jamb', side * 4.38, 1.68, z + dz, .29, 3.34, .14, mat.darkSteel);
@@ -366,7 +527,7 @@ export async function createEnvironment(scene: THREE.Scene): Promise<ArcadeEnvir
       plane('Aged Japanese shop sign', side * 4.215, 3.78, z, 5.43, .66, signMaterials[n], inward);
       box('Marquee rain gutter', side * 4.25, 4.25, z, .62, .1, 5.9, mat.rusty);
       box('Store awning lip', side * 3.99, 3.38, z, .56, .08, 5.7, mat.steel);
-      if (bay % 2 === 0) box('Light grazing the shop sign', side * 4.065, 4.16, z, .045, .035, 4.66, bay % 4 ? mat.cold : mat.warm);
+      if (bay % 2 === 0) box('Light grazing the shop sign', side * 4.065, 4.16, z, .045, .035, 4.66, bay % 4 ? mat.stripCold : mat.stripWarm);
       // Sill lamps and shop notices set their own rhythm in the near and mid ground.
       if (bay % 2 === 0) {
         box('Warm wall lamp bracket', side * 4.16, 3.03, z + 2.31, .45, .06, .08, mat.darkSteel);
@@ -387,7 +548,7 @@ export async function createEnvironment(scene: THREE.Scene): Promise<ArcadeEnvir
           new THREE.Vector3(side * 4.27, 3.61, z - 2.42),
         ], .025, mat.black, 10);
       }
-      if (bay < 6) {
+      if (bay < 6 && !display && !damaged) {
         // Raised shutter ribs cast a small alternating highlight even without shadows.
         for (let y = .32; y < 2.9; y += .17) {
           box('Shutter extrusion', side * 4.399, y, z, .018, .016, 5.5, y % .34 < .17 ? mat.steel : mat.rusty);
@@ -409,6 +570,99 @@ export async function createEnvironment(scene: THREE.Scene): Promise<ArcadeEnvir
         ], .053, mat.steel, 12);
       }
     }
+  }
+
+  // Arrival: an older civic gateway, warmer shops and an information case.
+  const entranceSign = ownTexture(signTexture(['みやこ通り', '夜間入口'], 'cream'));
+  box('Arcade entrance lintel', 0, 5.1, 1.9, 9.05, .42, .52, mat.darkSteel);
+  box('Arcade entrance sign frame', 0, 4.49, 1.9, 4.75, .93, .22, mat.rusty);
+  plane('Weathered arcade entrance lettering', 0, 4.49, 2.025, 4.5, .78,
+    ownMaterial(new THREE.MeshStandardMaterial({ map: entranceSign, roughness: .72, emissiveMap: entranceSign, emissive: 0x5d4024, emissiveIntensity: .35 })));
+  for (const side of [-1, 1]) {
+    box('Entrance sconce arm', side * 3.86, 4.45, 2.2, .42, .06, .1, mat.darkSteel);
+    box('Entrance lantern frame', side * 3.78, 4.09, 2.2, .31, .57, .3, mat.rusty);
+    box('Entrance lantern frosted glass', side * 3.78, 4.09, 2.38, .22, .45, .025, mat.warm);
+    box('Old neighbourhood map case', side * 4.02, 1.47, -.05, .22, 1.53, 1.18, mat.darkSteel);
+    plane('Street notice map paper', side * 3.896, 1.5, -.05, 1.0, 1.32, posterMaterials[side === -1 ? 0 : 1],
+      side === -1 ? Math.PI / 2 : -Math.PI / 2);
+  }
+
+  // Middle arcade: a small market and cafe leave their stock outside the
+  // glazing; shelf depth and fabric awnings break up the shutter repetition.
+  for (const [x, z, accent] of [[-3.8, -12.7, mat.red], [3.82, -18.3, mat.timber]] as const) {
+    box('Night market display table', x, .76, z, .68, .09, 1.68, mat.timber);
+    for (const dz of [-.66, .66]) {
+      box('Market stand leg', x, .39, z + dz, .11, .7, .11, mat.timber);
+    }
+    box('Cloth market table edge', x - Math.sign(x) * .22, .68, z, .08, .31, 1.62, accent);
+    for (let item = 0; item < 7; item++) {
+      box('Market basket and goods', x, .88, z - .69 + item * .22,
+        .3, .15 + (item % 3) * .035, .17, item % 3 === 0 ? mat.paper : mat.rusty);
+    }
+  }
+  for (const [x, z] of [[3.77, -13.6], [-3.78, -21.6]] as const) {
+    cylinderAt('Cafe pavement stool', x, .46, z, .25, .07, mat.timber);
+    cylinderAt('Cafe stool post', x, .24, z, .04, .42, mat.darkSteel);
+    cylinderAt('Cafe round standing table', x - Math.sign(x) * .43, .8, z + .15, .31, .06, mat.timber);
+    cylinderAt('Cafe table foot', x - Math.sign(x) * .43, .4, z + .15, .04, .75, mat.darkSteel);
+  }
+
+  // Service alley: open roof, exposed infrastructure, cold utility light and
+  // discarded stock. Keep every solid prop outside |x| < 3.2.
+  for (const side of [-1, 1]) {
+    for (const z of [-25.7, -31.2, -36.5]) {
+      box('Service alley wall girder', side * 4.16, 2.6, z, .23, 4.35, .16, mat.rusty);
+      tube('Service alley descending conduit', [
+        new THREE.Vector3(side * 4.16, 5.27, z + 1.7),
+        new THREE.Vector3(side * 4.12, 3.48, z + .4),
+        new THREE.Vector3(side * 4.04, .5, z - .4),
+      ], .036, mat.darkSteel, 12);
+    }
+    for (const [z, height] of [[-27.3, .65], [-34.7, .9]] as const) {
+      box('Abandoned stock stack', side * 3.8, .18 + height / 2, z, .64, height, .8, mat.timber, .11);
+      box('Wet folded carton', side * 3.68, .2 + height, z + .24, .45, .04, .51, mat.paper, -.18);
+    }
+  }
+  for (const z of [-27.5, -32.7]) {
+    tube('Sagging overhead alley cable', [
+      new THREE.Vector3(-4.26, 5.3, z + .2),
+      new THREE.Vector3(0, 4.7, z),
+      new THREE.Vector3(4.26, 5.27, z - .2),
+    ], .025, mat.black, 16);
+  }
+  const alleyWarning = ownTexture(signTexture(['裏搬入口', '足元注意'], 'dark'));
+  box('Service alley directional sign casing', -3.87, 3.28, -31.7, .26, .58, 2.02, mat.rusty);
+  plane('Service alley directional sign', -3.711, 3.28, -31.7, 1.87, .48,
+    ownMaterial(new THREE.MeshStandardMaterial({ map: alleyWarning, side: THREE.DoubleSide, roughness: .8 })), Math.PI / 2);
+
+  // A real 3D end storefront sits behind the stage-three boss at z≈-48.
+  // Its dark doorway is deliberately open so the character can appear to
+  // emerge from it; the construction is too distant to block earlier fights.
+  const bossFrontZ = -52.65;
+  for (const side of [-1, 1]) {
+    box('Night loading shop masonry wing', side * 3.08, 2.8, bossFrontZ, 3.13, 5.6, .75, mat.wall);
+    box('Night loading facade steel pier', side * 1.49, 1.68, bossFrontZ + .44,
+      .19, 3.35, .22, mat.darkSteel);
+    box('Night loading shutter pile', side * 2.35, .97, bossFrontZ + .47,
+      1.19, 1.91, .09, mat.shutter);
+    box('Night loading shutter torn edge', side * 1.86, 1.78, bossFrontZ + .56,
+      .065, 1.3, .08, mat.rusty);
+  }
+  box('Night loading shop upper facade', 0, 4.43, bossFrontZ, 9.4, 2.35, .76, mat.wall);
+  box('Night loading recessed darkness', 0, 1.68, bossFrontZ - .45, 2.72, 3.35, .08, mat.black);
+  box('Night loading threshold', 0, .075, bossFrontZ + .52, 2.78, .15, .85, mat.concrete);
+  box('Night loading overhead lintel', 0, 3.46, bossFrontZ + .45, 3.05, .22, .2, mat.darkSteel);
+  box('Night loading damaged rolling shutter', 0, 3.2, bossFrontZ + .52, 2.75, .39, .09, mat.shutter);
+  const bossSign = ownTexture(signTexture(['夜間搬入口', 'KEEP OUT / 立入禁止'], 'dark'));
+  box('Night loading sign casing', 0, 4.55, bossFrontZ + .45, 4.88, .82, .2, mat.darkSteel);
+  plane('Night loading sign face', 0, 4.55, bossFrontZ + .56, 4.68, .65,
+    ownMaterial(new THREE.MeshStandardMaterial({ map: bossSign, emissiveMap: bossSign, emissive: 0x6f4324, emissiveIntensity: .37, roughness: .72 })));
+  box('Night loading security lamp', -1.58, 3.48, bossFrontZ + .69, .21, .2, .22, mat.warm);
+  for (const side of [-1, 1]) {
+    box('Night loading exterior flood bracket', side * 2.93, 3.62, bossFrontZ + .65,
+      .12, .07, .39, mat.darkSteel);
+    box('Night loading exterior flood glass', side * 2.93, 3.61, bossFrontZ + .9,
+      .22, .15, .11, side === -1 ? mat.warm : mat.cold);
   }
 
   // Cross-street identity sign hangs below the roof, supported by visible steel.
@@ -511,12 +765,17 @@ export async function createEnvironment(scene: THREE.Scene): Promise<ArcadeEnvir
   }
 
   // A limited practical light budget; the other lanterns glow with emissive maps.
-  const practicalLights: THREE.PointLight[] = [];
-  for (const [x, z, color, power] of [[-3.85, 1.5, 0xffbd75, 42], [3.75, -11.4, 0x6cbbdb, 29], [-3.75, -25.4, 0xffba6f, 38], [3.8, -43.5, 0x71b9dd, 30]] as const) {
+  const practicalLights: { light: THREE.PointLight; power: number }[] = [];
+  for (const [x, z, color, power] of [
+    [-3.85, 1.5, 0xffbd75, 30], [3.72, -3.4, 0x7bb9d2, 18],
+    [3.75, -11.4, 0x6cbbdb, 29], [-3.74, -17.2, 0xffbf81, 25],
+    [-3.75, -25.4, 0xffba6f, 38], [3.8, -31.4, 0x78b8d4, 27],
+    [3.8, -43.5, 0x71b9dd, 30], [0, -52.1, 0xe5a577, 18],
+  ] as const) {
     const light = new THREE.PointLight(color, power, 9.8, 2);
     light.position.set(x, 3.48, z);
     light.castShadow = false;
-    root.add(light); practicalLights.push(light);
+    root.add(light); practicalLights.push({ light, power });
   }
   for (let i = 0; i < 13; i++) {
     const z = 3.8 - i * 5.6;
@@ -562,18 +821,20 @@ export async function createEnvironment(scene: THREE.Scene): Promise<ArcadeEnvir
   if (!previousBackground) scene.background = new THREE.Color(0x101e26);
 
   return {
-    update(time: number, level: number): void {
+    update(time: number, level: number, motion = true): void {
       const tier = THREE.MathUtils.clamp(level, 0, 4);
       // Rare, gentle light breathing supports the combo escalation without flashing.
       for (let i = 0; i < practicalLights.length; i++) {
-        practicalLights[i].intensity = ([42, 29, 38, 30][i] + tier * 1.6) * (1 + Math.sin(time * .8 + i * 1.7) * .025);
+        const { light, power } = practicalLights[i];
+        light.intensity = (power + tier * 1.2) *
+          (motion ? 1 + Math.sin(time * .8 + i * 1.7) * .025 : 1);
       }
       mat.warm.emissiveIntensity = 1.65 + tier * .1;
       mat.cold.emissiveIntensity = 1.7 + tier * .07;
       for (let i = 0; i < moteCount; i++) {
         const j = i * 3;
-        motePositions[j] = moteBase[j] + Math.sin(time * .31 + i * 2.2) * .09;
-        motePositions[j + 1] = moteBase[j + 1] + Math.sin(time * .43 + i * 1.7) * .065;
+        motePositions[j] = moteBase[j] + (motion ? Math.sin(time * .31 + i * 2.2) * .09 : 0);
+        motePositions[j + 1] = moteBase[j + 1] + (motion ? Math.sin(time * .43 + i * 1.7) * .065 : 0);
       }
       moteGeometry.attributes.position.needsUpdate = true;
     },

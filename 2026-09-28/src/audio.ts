@@ -1,9 +1,9 @@
-/** Sample-led game sound. Provenance: docs/ALPHA_AUDIO.md; mix: docs/V03_AUDIO.md. */
+/** Sample-led game sound. Provenance: docs/ALPHA_AUDIO.md; mix: docs/V04_WEAPON_AUDIO.md. */
 const FILES = ["darkness-road.ogg", "shot-1.mp3", "shot-2.mp3", "shot-3.mp3", "hit.ogg", "body.ogg", "metal.ogg", "bell.ogg", "glass.ogg"] as const;
 type AudioFile = (typeof FILES)[number];
 type VoiceGroup = "gun" | "impact" | "accent";
 type Voice = { source: AudioBufferSourceNode; gain: GainNode; group: VoiceGroup };
-export type ShotOptions = { zone?: "body" | "head" | "limb"; finishing?: boolean };
+export type ShotOptions = { zone?: "body" | "head" | "limb"; finishing?: boolean; level?: number };
 const clamp = (n: number, a: number, b: number) => Math.min(b, Math.max(a, Number.isFinite(n) ? n : a));
 
 export class GameAudio {
@@ -145,7 +145,7 @@ export class GameAudio {
     osc.onended = () => { this.oscillators.delete(osc); osc.disconnect(); gain.disconnect(); };
   }
 
-  /** One accepted key. finishing strengthens the gun transient; kill() supplies the defeat sound. */
+  /** One accepted key. finishing adds a compact mechanical attack; kill() supplies the defeat sound. */
   shot(kill?: boolean): void;
   shot(options?: ShotOptions): void;
   shot(options: boolean | ShotOptions = false): void {
@@ -156,7 +156,15 @@ export class GameAudio {
     const file = (`shot-${this.shotIndex++ % 3 + 1}.mp3`) as AudioFile;
     const finishing = typeof options === "boolean" ? options : !!options.finishing;
     const zone = typeof options === "boolean" ? "body" : options.zone ?? "body";
-    this.play(file, rapid ? 0.43 : finishing ? 0.76 : 0.69, "gun", 0, 0.98 + this.shotIndex % 3 * 0.025, 0.31);
+    const level = typeof options === "boolean" ? this.level : clamp(options.level ?? this.level, 0, 4);
+    this.play(file, finishing ? (rapid ? 0.65 : 0.76) + level * 0.012 : rapid ? 0.43 : 0.69,
+      "gun", 0, 0.98 + this.shotIndex % 3 * 0.025, finishing ? 0.34 : 0.31);
+    if (finishing) {
+      // A second recording gives the final shot a denser attack without
+      // extending its tail. The fast metal click marks the slide's movement.
+      this.play("shot-3.mp3", 0.18 + level * 0.02, "gun", 0.009, 0.84, 0.19);
+      this.play("metal.ogg", 0.11 + level * 0.012, "accent", 0.011, 1.46, 0.12);
+    }
     if (zone === "head") {
       this.play("metal.ogg", rapid ? 0.09 : 0.15, "impact", 0.025, 1.24, 0.17);
     } else if (zone === "limb") {

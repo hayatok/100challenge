@@ -6,12 +6,42 @@ const COLORS = [0xffc367, 0xffd876, 0xff814c, 0xe576ff, 0x72fff0];
 /** Bounded, shared-geometry VFX. These advance on the visual clock, never the typing clock. */
 export class CombatEffects {
   private bits: Fleck[] = [];
+  private clouds: {sprite: T.Sprite; age: number; life: number; size: number; glow: boolean}[] = [];
+  private glowTexture: T.CanvasTexture;
+  private smokeTexture: T.CanvasTexture;
   private pulses: Pulse[] = [];
   private shard = new T.OctahedronGeometry(1, 0);
   private streak = new T.BoxGeometry(0.35, 0.35, 1);
   private ring = new T.RingGeometry(0.92, 1, 64);
   private materials = COLORS.map(color => new T.MeshBasicMaterial({color, toneMapped: false, blending: T.AdditiveBlending, transparent: true, depthWrite: false}));
-  constructor(private scene: T.Scene) {}
+  constructor(private scene: T.Scene) {
+    const radial = (smoke: boolean) => {
+      const canvas = document.createElement("canvas"); canvas.width = canvas.height = 128;
+      const c = canvas.getContext("2d")!;
+      const g = c.createRadialGradient(64,64,0,64,64,64);
+      g.addColorStop(0, smoke ? "rgba(110,120,119,.38)" : "rgba(255,255,245,1)");
+      g.addColorStop(.15, smoke ? "rgba(88,104,102,.28)" : "rgba(255,220,134,.8)");
+      g.addColorStop(.5, smoke ? "rgba(70,88,90,.16)" : "rgba(255,147,54,.12)");
+      g.addColorStop(1,"rgba(0,0,0,0)"); c.fillStyle=g; c.fillRect(0,0,128,128);
+      return new T.CanvasTexture(canvas);
+    };
+    this.glowTexture=radial(false); this.smokeTexture=radial(true);
+  }
+  /** A short local flash and lingering dust mark the high-combo final key. */
+  finisher(pos: T.Vector3, tier: number, reduced: boolean) {
+    const add = (glow: boolean) => {
+      if (this.clouds.length >= 16) {
+        const old=this.clouds.shift()!; this.scene.remove(old.sprite); old.sprite.material.dispose();
+      }
+      const material = new T.SpriteMaterial({map:glow ? this.glowTexture : this.smokeTexture,
+        color:glow ? 0xffedc4 : 0xb6c3c1, transparent:true, depthWrite:false,
+        blending:glow ? T.AdditiveBlending : T.NormalBlending, toneMapped:!glow});
+      const sprite=new T.Sprite(material); sprite.position.copy(pos); this.scene.add(sprite);
+      this.clouds.push({sprite,age:0,life:glow ? .16 : .7,size:reduced ? .35 : glow ? .85 + tier*.08 : .6,glow});
+    };
+    add(true); if(!reduced) add(false);
+    if(!reduced) this.pulse(pos,tier,.65+tier*.15,.28,false);
+  }
   burst(pos: T.Vector3, tier: number, kill: boolean, reduced: boolean, strength = 1) {
     const level = Math.max(0, Math.min(4, tier));
     const n = Math.round((reduced ? (kill ? 10 : 2) : kill ? 28 + level * 11 : 5 + level * 2) * strength);
@@ -54,6 +84,14 @@ export class CombatEffects {
     this.bits.push({mesh, v: new T.Vector3(), age: 0, life: .045, size: .012, streak: false});
   }
   update(dt: number) {
+    for(let i=this.clouds.length-1;i>=0;i--) {
+      const p=this.clouds[i]; p.age+=dt;
+      const t=Math.min(1,p.age/p.life);
+      p.sprite.material.opacity=p.glow ? (1-t)**2 : Math.sin(Math.PI*t)*.65;
+      p.sprite.scale.setScalar(p.size*(p.glow ? 1+t*.3 : .5+t*2));
+      if(!p.glow) p.sprite.position.y+=dt*.4;
+      if(t===1){this.scene.remove(p.sprite);p.sprite.material.dispose();this.clouds.splice(i,1);}
+    }
     for (let i = this.bits.length - 1; i >= 0; i--) {
       const p = this.bits[i];
       p.age += dt;
@@ -75,6 +113,8 @@ export class CombatEffects {
     }
   }
   reset() {
+    for(const p of this.clouds){this.scene.remove(p.sprite);p.sprite.material.dispose();}
+    this.clouds=[];
     for (const p of this.bits) this.scene.remove(p.mesh);
     for (const p of this.pulses) {this.scene.remove(p.mesh); p.mesh.material.dispose();}
     this.bits = []; this.pulses = [];

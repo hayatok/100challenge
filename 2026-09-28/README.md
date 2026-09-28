@@ -3,9 +3,11 @@
 深夜の商店街で、迫るゾンビをローマ字で撃退する一人称3Dタイピングシューター。
 一文字ごとに発砲し、単語完成で撃破。連続ノーミス撃破に応じて光と音楽が5段階で盛り上がります。
 
-**状態：Alpha 0.3。部位ごとの被弾・重さのある撃破、コンボのメリハリ、音のミックス、ボス3段階、ランクと自己ベストを追加。公開は未実施。**
+**状態：Alpha 0.4。街の密度と濡れた路面、着衣ゾンビの外観差分、銃のスライド、高コンボの最終打鍵、ボスの登場と決着を更新。**
 
-![アルファ版の実ゲーム画面](art/verification/alpha-enemies.png)
+[GitHub Pagesで遊ぶ](https://hayatok.github.io/100challenge/2026-09-28/)（PC・キーボード専用）。公開ワークフローと公開後の確認結果は [Issue #130](https://github.com/hayatok/100challenge/issues/130) に記録。
+
+![アルファ版の実ゲーム画面](art/verification/v04-alley.png)
 
 ## 実行
 
@@ -31,7 +33,7 @@ PCの物理キーボードが対象です。「出勤する」を押し、日本
 - `src/typing.ts` / `src/game.ts` / `src/content.ts`：描画と独立した入力・進行・出題。
 - `src/scene.ts` / `src/environment.ts` / `src/weapon.ts`：3D画面。
 
-24体の通常敵と3段階のボス、303件の通常出題と12件のボス出題、体力、区間リトライを実装しています。敵の役割ごとに文章の長さと別造形のモデルを割り当てます。命中反応・吹き飛び・衝撃波・火花・コンボ到達表示を5段階で変化させ、入力欄は固定します。
+24体の通常敵と3段階のボス、303件の通常出題と12件のボス出題、体力、区間リトライを実装しています。敵の役割ごとに文章の長さを変えます。現在は2種類の原型を使い、衣服・肌の配色と体格で4役を表現します。命中反応・吹き飛び・衝撃波・火花・コンボ到達表示を5段階で変化させ、入力欄は固定します。
 
 ## 品質と検証
 
@@ -46,3 +48,6 @@ PCの物理キーボードが対象です。「出勤する」を押し、日本
 課題：[実装 #130](https://github.com/hayatok/100challenge/issues/130)、[設計 #129](https://github.com/hayatok/100challenge/issues/129)。
 
 変更内容：[v0.3計画](docs/V03_PLAN.md) / [戦闘・記録](docs/V03_LOGIC.md) / [キャラクター](docs/V03_CHARACTERS.md) / [音](docs/V03_AUDIO.md)。検証と未確認事項：[RESULTS.md](docs/RESULTS.md)。
+
+
+v0.4：[計画](docs/V04_PLAN.md) / [街](docs/V04_ENVIRONMENT.md) / [人物](docs/V04_CHARACTERS.md) / [銃と音](docs/V04_WEAPON_AUDIO.md) / [演出](docs/V04_SCENE.md)。

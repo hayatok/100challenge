@@ -31,3 +31,9 @@ See `docs/ALPHA_AUDIO.md` for source and output hashes and reproducible processi
 - **3D Horror Game Monster**, **City Building Game Art**, CC0. https://opengameart.org/content/3d-horror-game-monster . FBX walk, idle and run combined as GLB, texture connected.
 
 See `docs/ALPHA_CHARACTER_ASSETS.md` for source and output hashes and conversion scripts. The in-game credits include required attribution and license links.
+
+## v0.4 runtime variations
+
+The city zombie is now used for residents, workers and the boss with shader-based skin/clothing recoloring, width/depth changes and additive joint animation. The Thin Zombie remains the runner. These are two authored rigs, not four new independently sourced models. The Granny and Creature files remain in the asset archive but are not loaded by v0.4.
+
+FPS Arms finger joints are curled to fit the pistol. The pistol slide is animated separately. Existing gunshot and metal samples are layered for final-key shots; no new third-party audio was added. The street geometry and wet-road canvas maps are authored for this game.
