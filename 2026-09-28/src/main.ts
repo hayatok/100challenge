@@ -6,7 +6,7 @@ import { readSave, writeSave, recordResult, betterResult, resultKey, RESULT_RULE
 import { gradeResult, previousComparable, compareResults } from "./results.ts";
 import { nextGoal } from "./goals.ts";
 const app = document.querySelector<HTMLDivElement>("#app")!;
-app.innerHTML = `<div id="world" aria-hidden="true"></div><div class="vignette"></div><div id="combat-glow" aria-hidden="true"></div><header><a class="brand" href="#">夜勤<span>NIGHTSHIFT / TYPING</span></a><div class="top-center">● 午前零時の商店街<span id="stage">AFTER HOURS — 00:13</span></div><button id="pause-button" aria-label="一時停止" hidden>Ⅱ</button><button id="sound-button" aria-label="音を切り替える">♪</button></header><div id="loading" class="center-card"><p class="eyebrow">OPENING THE NIGHT</p><h1>夜の準備中…</h1><p id="loading-text" role="status">商店街へ向かっています</p></div><section id="title" hidden><div class="title-copy"><p class="eyebrow">— A MIDNIGHT TYPING SHOOTER</p><h1><span>夜勤</span>タイピング<span class="period">。</span></h1><p class="title-sub">今夜の残業は、少し騒がしい。</p><p class="description">迫るゾンビを、打って撃て。<br>一文字で一発。打ち切って、とどめを。</p><button id="start-button" class="primary">出勤する <span>↗</span></button><div class="title-options"><button id="settings-button">装備と設定</button><button id="credits-button">クレジット</button></div><p class="keyboard-note">⌨ PC・キーボード専用 ／ 1 PLAY 約3–5分</p></div><div class="stamp">深夜勤務<b>歓迎</b><small>NO EXPERIENCE REQUIRED</small></div><footer><span>生きて、定時で帰ろう。</span><span>ALPHA 0.5 / 黒猫商店街</span></footer></section><section id="hud" hidden><div class="health-block"><p class="eyebrow" id="shift-label"></p><div id="health"></div><small id="practice-label"></small></div><div class="score-block"><div class="score-label">SCORE <b id="score">000000</b></div><div class="combo"><strong id="combo">0</strong><span>COMBO<small id="combo-word">KEEP TYPING</small></span></div><small class="charge-label">FEVER CHARGE</small><div class="fever-track"><div id="fever-fill"></div></div><small id="fever-next"></small></div><div id="rush-banner" hidden><small>短文を続けて、撃ち抜け。</small><strong>FEVER RUSH</strong><div id="rush-pips"></div><span id="rush-count"></span></div><div id="boss-hud" hidden><small>黒猫商店街・終業責任者</small><b>店長 <span id="boss-phase"></span></b><div id="boss-pips"></div></div><div id="targets"></div><div id="milestone" aria-hidden="true"><small id="milestone-caption"></small><strong id="milestone-word"></strong></div><div id="score-pop" aria-hidden="true"></div><div id="feedback" aria-live="polite"></div><div id="reticle" class="reticle">+</div><div id="typing-panel"><div class="panel-top"><span id="target-number"></span><span id="input-status"></span></div><div id="phrase"></div><div id="reading"></div><div id="romaji"></div><div class="deadline"><div id="deadline-bar"></div></div><div class="panel-bottom"><span>一文字、一発。</span><span>ESC 一時停止</span></div></div><div id="travel-message" hidden></div></section><div id="modal" class="modal" hidden><section class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modal-title"><div id="modal-content"></div></section></div><input id="key-capture" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="ゲーム入力。半角英字でタイプしてください"><div id="notice" role="status" hidden></div>`;
+app.innerHTML = `<div id="world" aria-hidden="true"></div><div class="vignette"></div><div id="combat-glow" aria-hidden="true"></div><header><a class="brand" href="#">夜勤<span>NIGHTSHIFT / TYPING</span></a><div class="top-center">● 午前零時の商店街<span id="stage">AFTER HOURS — 00:13</span></div><button id="pause-button" aria-label="一時停止" hidden>Ⅱ</button><button id="sound-button" aria-label="音を切り替える">♪</button></header><div id="loading" class="center-card"><p class="eyebrow">OPENING THE NIGHT</p><h1>夜の準備中…</h1><p id="loading-text" role="status">商店街へ向かっています</p></div><section id="title" hidden><div class="title-copy"><p class="eyebrow">— A MIDNIGHT TYPING SHOOTER</p><h1><span>夜勤</span>タイピング<span class="period">。</span></h1><p class="title-sub">今夜の残業は、少し騒がしい。</p><p class="description">迫るゾンビを、打って撃て。<br>一文字で一発。打ち切って、とどめを。</p><button id="start-button" class="primary">出勤する <span>↗</span></button><div class="title-options"><button id="settings-button">装備と設定</button><button id="credits-button">クレジット</button></div><p class="keyboard-note">⌨ PC・キーボード専用 ／ 1 PLAY 約3–5分</p></div><div class="stamp">深夜勤務<b>歓迎</b><small>NO EXPERIENCE REQUIRED</small></div><footer><span>生きて、定時で帰ろう。</span><span>ALPHA 0.6 / 黒猫商店街</span></footer></section><section id="hud" hidden><div class="health-block"><p class="eyebrow" id="shift-label"></p><div id="health"></div><small id="practice-label"></small></div><div class="score-block"><div class="score-label">SCORE <b id="score">000000</b></div><div class="combo"><strong id="combo">0</strong><span>COMBO<small id="combo-word">KEEP TYPING</small></span></div><small class="charge-label">FEVER CHARGE</small><div class="fever-track"><div id="fever-fill"></div></div><small id="fever-next"></small></div><div id="rush-banner" hidden><small>短文を続けて、撃ち抜け。</small><strong>FEVER RUSH</strong><div id="rush-pips"></div><span id="rush-count"></span></div><div id="lucky-banner" hidden><small>踊る深夜のボーナスタイム</small><strong>LUCKY SHIFT</strong><div id="lucky-pips"></div><span id="lucky-count"></span><p>3文完成で +500点・体力1回復</p></div><div id="boss-hud" hidden><small>黒猫商店街・終業責任者</small><b>店長 <span id="boss-phase"></span></b><div id="boss-pips"></div></div><div id="targets"></div><div id="milestone" aria-hidden="true"><small id="milestone-caption"></small><strong id="milestone-word"></strong></div><div id="score-pop" aria-hidden="true"></div><div id="feedback" aria-live="polite"></div><div id="reticle" class="reticle">+</div><div id="typing-panel"><div class="panel-top"><span id="target-number"></span><span id="input-status"></span></div><div id="phrase"></div><div id="reading"></div><div id="romaji"></div><div class="deadline"><div id="deadline-bar"></div></div><div class="panel-bottom"><span>一文字、一発。</span><span>ESC 一時停止</span></div></div><div id="travel-message" hidden></div></section><div id="modal" class="modal" hidden><section class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modal-title"><div id="modal-content"></div></section></div><input id="key-capture" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="ゲーム入力。半角英字でタイプしてください"><div id="notice" role="status" hidden></div>`;
 const el = <T extends HTMLElement = HTMLElement>(id: string) =>
   document.getElementById(id) as T;
 const show = (id: string, v: boolean) => {
@@ -30,6 +30,7 @@ let lastTime = performance.now(),
   feedbackUntil = 0,
   saved = false;
 let finishAt = 0, shownLevel = 0, announcedStage = -1;
+let luckyOutro: null | boolean = null;
 const input = el<HTMLInputElement>("key-capture");
 function notify(t: string) {
   el("notice").textContent = t;
@@ -70,6 +71,8 @@ function title() {
   document.body.dataset.level = "0";
   document.body.dataset.rush = "false";
   audio.setRush(false);
+  audio.setLucky(false);
+  document.body.dataset.lucky = "false";
   world.update(0, null);
   el("milestone").getAnimations().forEach(a => a.cancel());
   close();
@@ -92,7 +95,7 @@ function settings() {
       )
       .join(
         "",
-      )}</div><label class="toggle"><span>練習勤務<small>敵が攻撃しない。ゆっくり打てます。</small></span><input id="practice" type="checkbox" ${preferences.practice ? "checked" : ""}></label><label class="toggle"><span>画面の動き<small>オフで揺れ・強い発光を減らします。</small></span><input id="motion" type="checkbox" ${preferences.motion ? "checked" : ""}></label><label class="range">BGM<input id="music" type="range" min="0" max="100" value="${preferences.music * 100}"></label><label class="range">銃声・効果音<input id="effects" type="range" min="0" max="100" value="${preferences.effects * 100}"></label><button id="settings-close" class="primary">準備できた <span>✓</span></button>`,
+      )}</div><label class="toggle"><span>練習勤務<small>敵の攻撃なし。ラッキーは必ず登場（時間制限あり）。</small></span><input id="practice" type="checkbox" ${preferences.practice ? "checked" : ""}></label><label class="toggle"><span>画面の動き<small>オフで揺れ・強い発光を減らします。</small></span><input id="motion" type="checkbox" ${preferences.motion ? "checked" : ""}></label><label class="range">BGM<input id="music" type="range" min="0" max="100" value="${preferences.music * 100}"></label><label class="range">銃声・効果音<input id="effects" type="range" min="0" max="100" value="${preferences.effects * 100}"></label><button id="settings-close" class="primary">準備できた <span>✓</span></button>`,
     "settings",
   );
   el("modal")
@@ -137,7 +140,7 @@ function prepare() {
   screen = "input";
   check = "";
   modal(
-    `<p class="eyebrow">KEYBOARD CHECK</p><h2 id="modal-title">まず、弾を込めよう。</h2><p>日本語入力をオフにして、<b>go</b> と打ってください。</p><div id="check-letters">go</div><p id="check-status" class="note">そのままキーボードで入力できます。</p><p class="note">正しい文字 → 発砲 ／ 単語完成 → 撃破<br>打ち間違いは打ち直し不要。続きを打てばOK。<br>ゲージ満タンで短文4連戦。赤いタンクの敵は、倒すと隣も巻き込みます。</p><button id="check-back" class="text-button">タイトルに戻る</button>`,
+    `<p class="eyebrow">KEYBOARD CHECK</p><h2 id="modal-title">まず、弾を込めよう。</h2><p>日本語入力をオフにして、<b>go</b> と打ってください。</p><div id="check-letters">go</div><p id="check-status" class="note">そのままキーボードで入力できます。</p><p class="note">正しい文字 → 発砲 ／ 単語完成 → 撃破<br>打ち間違いは打ち直し不要。続きを打てばOK。<br>ゲージ満タンで短文4連戦。赤いタンクの敵は、倒すと隣も巻き込みます。<br>踊るラッキーゾンビはボーナス。見逃してもペナルティなし。</p><button id="check-back" class="text-button">タイトルに戻る</button>`,
     "input",
   );
   el("check-back").onclick = title;
@@ -158,9 +161,12 @@ function start(seed = Date.now() >>> 0) {
   saved = false;
   finishAt = 0;
   shownLevel = 0;
+  luckyOutro=null;
   for (const id of ["milestone", "score-pop", "combat-glow"]) el(id).getAnimations().forEach(a => a.cancel());
   text("feedback", "");
   audio.setRush(false);
+  audio.setLucky(false);
+  document.body.dataset.lucky = "false";
   announcedStage = -1;
   lastMode = "";
   signature = "";
@@ -214,6 +220,7 @@ function finish(s: GameState) {
     date: new Date().toISOString(),
     rulesVersion: RESULT_RULES_VERSION,
     seed: r.seed, rushes: r.rushes, chainKills: r.chainKills,
+    luckyEncounters:r.luckyEncounters,luckyClears:r.luckyClears,luckyBonus:r.luckyBonus,
   };
   const goal = nextGoal(result);
   const previous = previousComparable(history, result);
@@ -228,7 +235,7 @@ function finish(s: GameState) {
   const difficulty = {relaxed:"研修", normal:"通常", fierce:"残業"}[r.difficulty];
   persist();
   modal(
-    `<p class="eyebrow">${s.mode === "clear" ? "SHIFT COMPLETE" : "SHIFT INTERRUPTED"}${r.practice ? " / PRACTICE" : ""}</p><h2 id="modal-title">${s.mode === "clear" ? "お疲れさまでした。" : "今夜は、手強かった。"}</h2><p>${s.mode === "clear" ? "商店街に、いつもの静けさが戻った。" : "この区間から、もう一度。"}</p><div class="result-hero"><div class="result-grade"><small>RANK</small>${gradeResult(result)}</div><div class="result-score">${r.score.toLocaleString()}<small>SCORE / ${difficulty}${r.practice ? "・練習" : ""}</small></div></div><div class="result-record"><span>${newBest ? "NEW BEST" : "PERSONAL BEST"}<b>${best ? best.score.toLocaleString() : "未達成"}</b></span><span>前回とのスコア差<b>${delta}</b></span></div><div class="result-grid"><div><b>${r.maxCombo}</b><span>MAX COMBO</span></div><div><b>${r.correct + r.mistakes ? (r.accuracy * 100).toFixed(1) + "%" : "—"}</b><span>正確率</span></div><div><b>${Math.round(r.keysPerMinute)}</b><span>KEYS / MIN</span></div></div><div class="result-extra"><span>FEVER <b>${r.rushes}回</b></span><span>巻き込み撃破 <b>${r.chainKills}体</b></span></div><div class="next-goal"><small>NEXT SHIFT / 次の目標</small><b>${goal.title}</b><p>${goal.detail}</p></div><p class="note">${r.practice ? "練習記録は通常勤務と別に保存。 / " : ""}勤務時間 ${Math.floor(r.clearTime / 60)}分${Math.floor(r.clearTime % 60)}秒 / リトライ ${r.attempts - 1}回</p><button id="again" class="primary">${s.mode === "defeat" ? "この区間から再出勤" : "同じ出題でもう一度"} <span>↗</span></button><div class="result-actions">${s.mode === "clear" ? '<button id="new-run" class="text-button">新しい出題で出勤</button>' : ""}<button id="result-title" class="text-button">タイトルへ戻る</button></div>`,
+    `<p class="eyebrow">${s.mode === "clear" ? "SHIFT COMPLETE" : "SHIFT INTERRUPTED"}${r.practice ? " / PRACTICE" : ""}</p><h2 id="modal-title">${s.mode === "clear" ? "お疲れさまでした。" : "今夜は、手強かった。"}</h2><p>${s.mode === "clear" ? "商店街に、いつもの静けさが戻った。" : "この区間から、もう一度。"}</p><div class="result-hero"><div class="result-grade"><small>RANK</small>${gradeResult(result)}</div><div class="result-score">${r.score.toLocaleString()}<small>SCORE / ${difficulty}${r.practice ? "・練習" : ""}</small></div></div><div class="result-record"><span>${newBest ? "NEW BEST" : "PERSONAL BEST"}<b>${best ? best.score.toLocaleString() : "未達成"}</b></span><span>前回とのスコア差<b>${delta}</b></span></div><div class="result-grid"><div><b>${r.maxCombo}</b><span>MAX COMBO</span></div><div><b>${r.correct + r.mistakes ? (r.accuracy * 100).toFixed(1) + "%" : "—"}</b><span>正確率</span></div><div><b>${Math.round(r.keysPerMinute)}</b><span>KEYS / MIN</span></div></div><div class="result-extra"><span>FEVER <b>${r.rushes}回</b></span><span>巻き込み撃破 <b>${r.chainKills}体</b></span></div><div class="result-lucky">${r.luckyEncounters ? `LUCKY SHIFT <b>${r.luckyClears ? "大当たり" : "遭遇"}</b><span>ボーナス +${r.luckyBonus}</span>` : "今夜のラッキー遭遇なし"}</div><div class="next-goal"><small>NEXT SHIFT / 次の目標</small><b>${goal.title}</b><p>${goal.detail}</p></div><p class="note">${r.practice ? "練習記録は通常勤務と別に保存。 / " : ""}勤務時間 ${Math.floor(r.clearTime / 60)}分${Math.floor(r.clearTime % 60)}秒 / リトライ ${r.attempts - 1}回</p><button id="again" class="primary">${s.mode === "defeat" ? "この区間から再出勤" : "同じ出題でもう一度"} <span>↗</span></button><div class="result-actions">${s.mode === "clear" ? '<button id="new-run" class="text-button">新しい出題で出勤</button>' : ""}<button id="result-title" class="text-button">タイトルへ戻る</button></div>`,
     "result",
   );
   el("again").onclick = () => {
@@ -255,6 +262,7 @@ const stages = [
   "終点 / 店長、出勤",
 ];
 function draw(s: GameState) {
+  if(s.mode === "playing") luckyOutro=null;
   text("stage", `SHIFT 0${s.stage + 1} — ${stages[s.stage]}`);
   text("shift-label", `SHIFT 0${s.stage + 1} / ${stages[s.stage].split(" / ")[0]}`);
   text("score", String(s.score).padStart(6, "0"));
@@ -271,6 +279,13 @@ function draw(s: GameState) {
   text("practice-label", s.practice ? "PRACTICE / 攻撃なし" : "");
   document.body.dataset.level = String(s.effectsLevel);
   if(document.body.dataset.rush !== String(s.rushing)) document.body.dataset.rush = String(s.rushing);
+  if(document.body.dataset.lucky !== String(s.luckyActive)) document.body.dataset.lucky = String(s.luckyActive);
+  show("lucky-banner",s.luckyActive);
+  text("lucky-count",`あと ${Math.ceil(s.luckyRemaining)} 秒 / ${s.luckyStep} OF 3`);
+  if(el("lucky-pips").dataset.step !== String(s.luckyStep)){
+    el("lucky-pips").dataset.step=String(s.luckyStep);
+    el("lucky-pips").innerHTML=[1,2,3].map(i=>`<i class="${i<s.luckyStep?"done":i===s.luckyStep?"active":""}"></i>`).join("");
+  }
   const charge = s.rushing ? s.rushRemaining / 4 : s.rushCharge / 100;
   el("fever-fill").style.transform = `scaleX(${charge})`;
   text("fever-next", s.rushing ? `RUSH / 残り ${s.rushRemaining} 体` : s.stage === 3 ? "FINAL SHIFT / 店長を撃退せよ" : s.rushes >= 2 ? "FEVER 2 / 2 — 今夜のラッシュ終了" : s.rushCharge >= 100 ? "READY / この集団の後に突入" : `CHARGE ${Math.round(s.rushCharge)}% / 撃破でたまる`);
@@ -289,20 +304,20 @@ function draw(s: GameState) {
   const e = s.enemies.find((e) => e.id === s.lockedId) ?? s.enemies[0];
   const blastVictims = new Set(s.enemies.flatMap(e => e.explosive ? e.blastTargets : []));
   const sig = JSON.stringify([
-    s.enemies.map((e) => [e.id, e.phrase, e.keys, e.locked, e.threatRank, e.explosive, e.blastTargets]),
+    s.enemies.map((e) => [e.id, e.phrase, e.keys, e.locked, e.threatRank, e.explosive, e.blastTargets, e.lucky]),
     e?.typed,
     e?.guide,
-    s.mode, s.rushing, s.bossCounter,
+    s.mode, s.rushing, s.bossCounter, s.luckyActive, s.luckyStep,
   ]);
   if (sig !== signature) {
     signature = sig;
     el("targets").innerHTML = s.enemies
       .map(
         (e) =>
-          `<div class="target ${e.locked ? "locked" : ""} ${e.explosive ? "explosive" : blastVictims.has(e.id) ? "blast-linked" : ""}" data-enemy="${e.id}"><b>${e.keys.join("/").toUpperCase()}</b><span><small>${e.explosive ? `爆発ゾンビ / 巻き込み ${e.blastTargets.length}体` : blastVictims.has(e.id) ? "巻き込み対象" : e.rush ? "RUSH TARGET" : ({office:"徘徊者",runner:"疾走者",worker:"巨体",boss:"店長"})[e.kind]}${e.threatRank === 1 && s.enemies.length > 1 ? " / 接近中" : ""}</small>${e.phrase}</span><i class="enemy-time"></i></div>`,
+          `<div class="target ${e.locked ? "locked" : ""} ${e.lucky ? "lucky" : e.explosive ? "explosive" : blastVictims.has(e.id) ? "blast-linked" : ""}" data-enemy="${e.id}"><b>${e.keys.join("/").toUpperCase()}</b><span><small>${e.lucky ? "ラッキーゾンビ / 攻撃なし" : e.explosive ? `爆発ゾンビ / 巻き込み ${e.blastTargets.length}体` : blastVictims.has(e.id) ? "巻き込み対象" : e.rush ? "RUSH TARGET" : ({office:"徘徊者",runner:"疾走者",worker:"巨体",boss:"店長"})[e.kind]}${e.threatRank === 1 && s.enemies.length > 1 ? " / 接近中" : ""}</small>${e.phrase}</span><i class="enemy-time"></i></div>`,
       )
       .join("");
-    text("phrase", e?.phrase ?? (s.mode === "clear" ? "本日の勤務、終了。" : "次の勤務先へ"));
+    text("phrase", e?.phrase ?? (luckyOutro !== null ? luckyOutro ? "今夜の幸運、いただきました。" : "また今度、踊ろう。" : s.mode === "clear" ? "本日の勤務、終了。" : "次の勤務先へ"));
     text("reading", e?.reading ?? "");
     el("romaji").replaceChildren();
     if (e) {
@@ -313,10 +328,10 @@ function draw(s: GameState) {
       r.textContent = e.guide;
       el("romaji").append(t, r);
     }
-    text("input-status", s.lockedId
+    text("input-status", s.luckyActive ? "ミス・見逃しでコンボは切れません" : s.lockedId
       ? "LOCKED ON / そのまま打ち切れ"
       : e?.explosive ? "長文を打ち切って、一掃せよ" : s.enemies.length > 1 ? "接近中の敵を優先 / 一文字で狙う" : "最初の一文字で狙う");
-    text("target-number", s.stage === 3
+    text("target-number", s.luckyActive ? `LUCKY SHIFT / ${s.luckyStep} OF 3` : s.stage === 3
         ? `BOSS / ${Math.min(3, s.bossPhase + 1)} OF 3`
         : s.rushing ? `FEVER RUSH / ${5 - s.rushRemaining} OF 4` : e?.explosive ? `EXPLOSIVE / 隣の ${e.blastTargets.length} 体も撃破` : `TARGET ${String(e?.id ?? 0).padStart(2, "0")}`);
   }
@@ -327,14 +342,14 @@ function draw(s: GameState) {
       pos = world.project(enemy.id);
     if (label && pos) {
       label.style.left = `${enemy.kind === "boss" ? innerWidth * .27 : Math.max(140, Math.min(innerWidth - 140, pos.x))}px`;
-      label.style.top = `${Math.max(s.rushing ? 225 : enemy.kind === "boss" ? 205 : 175, pos.y)}px`;
+      label.style.top = `${Math.max(s.luckyActive ? 270 : s.rushing ? 225 : enemy.kind === "boss" ? 205 : 175, pos.y)}px`;
       label.classList.toggle("danger", enemy.telegraph);
       label.style.setProperty("--remaining", String(1 - enemy.progress));
     }
   }
   el("deadline-bar").style.transform = `scaleX(${e ? 1 - e.progress : 0})`;
-  el("deadline-bar").classList.toggle("danger", (e?.progress ?? 0) > 0.75);
-  show("travel-message", s.mode === "travel" || s.mode === "countdown");
+  el("deadline-bar").classList.toggle("danger", !s.luckyActive && (e?.progress ?? 0) > 0.75);
+  show("travel-message", (s.mode === "travel" && luckyOutro === null) || s.mode === "countdown");
   text("travel-message", s.mode === "countdown"
       ? "READY…"
       : s.rushing ? "FEVER RUSH / 短文4連戦" : s.stage === 3
@@ -372,7 +387,7 @@ function events() {
   for (const e of game?.drainEvents() ?? []) {
     world.event(e);
     if (e.type === "hit") {
-      audio.shot({rush: game!.state.rushing, zone: e.hitZone === "head" ? "head" : e.hitZone === "shoulder" ? "limb" : "body", finishing: e.finisher, level: e.effectsLevel ?? game!.state.effectsLevel});
+      audio.shot({lucky:e.lucky, rush: game!.state.rushing, zone: e.hitZone === "head" ? "head" : e.hitZone === "shoulder" ? "limb" : "body", finishing: e.finisher, level: e.effectsLevel ?? game!.state.effectsLevel});
       punch("reticle", 1.55);
 
     }
@@ -392,6 +407,20 @@ function events() {
       if (streak) { milestone(4); el("milestone-caption").textContent = `${combo} COMBO / まだ止まらない`; el("milestone-word").textContent = "UNSTOPPABLE"; audio.streak(combo); }
       shownLevel = level;
       if (preferences.motion) el("combat-glow").animate([{opacity: arrival || streak ? .42 : .14}, {opacity: 0}], {duration: 380});
+    }
+    if(e.type === "luckyStart") {
+      audio.luckyStart(); text("feedback","");el("score-pop").getAnimations().forEach(a=>a.cancel());milestone(3);text("milestone-caption","今夜は、ツイてる。");text("milestone-word","LUCKY SHIFT");
+    }
+    if(e.type === "luckyStep") { audio.luckyWord(e.step ?? 1);feedback(`${e.step} / 3 — NICE MOVES!`,"lucky"); }
+    if(e.type === "luckyEnd") {
+      luckyOutro=!!e.success;
+      audio.luckyEnd(!!e.success);
+      if(e.success){
+        milestone(3);text("milestone-caption",e.healing ? "大当たり / 体力 +1" : "大当たり / 体力は満タン");text("milestone-word","LUCKY CLEAR!");
+        text("score-pop",`BONUS +${e.scoreDelta ?? 500}`);
+        el("score-pop").getAnimations().forEach(a=>a.cancel());
+        el("score-pop").animate([{opacity:1},{opacity:0}],{duration:1600});punch("score",1.2);feedback("お疲れさまでした！","lucky");
+      } else feedback("また会う日まで！ / ペナルティなし","lucky");
     }
     if (e.type === "rushStart") {
       audio.rushStart(); milestone(4); text("milestone-caption", "ゲージ解放 / 短文4連戦"); text("milestone-word", "FEVER RUSH");
@@ -414,8 +443,8 @@ function events() {
     if (e.type === "bossPhase" && e.phase !== undefined && e.phase < 3) audio.bossPhase((e.phase + 1) as 1 | 2 | 3);
     if (e.type === "clear") audio.victory();
     if (e.type === "miss") {
-      audio.miss();
-      feedback("続きから、落ち着いて。", "miss");
+      if(!e.lucky) audio.miss();
+      feedback(e.lucky ? "続きからどうぞ！ / コンボ継続" : "続きから、落ち着いて。", e.lucky ? "lucky" : "miss");
     }
     if (e.type === "attack") {
       audio.hurt();
@@ -443,6 +472,7 @@ function tick(now: number) {
   if (s && screen === "game") draw(s);
   audio.setLevel(s?.effectsLevel ?? 0);
   audio.setRush(s?.rushing ?? false);
+  audio.setLucky(s?.luckyActive ?? false);
   if (s) shownLevel = Math.min(shownLevel, s.effectsLevel);
   if (now > feedbackUntil) el("feedback").textContent = "";
   requestAnimationFrame(tick);

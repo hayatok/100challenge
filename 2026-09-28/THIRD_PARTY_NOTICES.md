@@ -41,3 +41,8 @@ FPS Arms finger joints are curled to fit the pistol. The pistol slide is animate
 ## v0.5 additions
 
 The red explosive tanks, straps, warning bands and chest badge are original procedural 3D meshes. Rush and boss-counter phrases are authored for this game. Explosion and rush sounds layer and filter the existing credited recordings with synthesized low-frequency sweeps; no new third-party media or dependencies were added.
+
+
+## v0.6 additions
+
+The Lucky Zombie reuses the credited city rig with an original purple/gold palette. Both full-body dance loops, additive hit/death gestures, floor ring, lighting, confetti and phrases are authored for this game. Existing clips are selected/crossfaded; the city death clip is reversed, shortened and its hip-height curve adjusted. The 120 BPM lucky accompaniment and completion cues are original Web Audio synthesis, layered with the existing credited gun/impact recordings. No new third-party assets or dependencies were added.

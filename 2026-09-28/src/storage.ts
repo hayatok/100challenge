@@ -5,7 +5,7 @@ export type Preferences = {
   motion: boolean;
   practice: boolean;
 };
-export const RESULT_RULES_VERSION = 4;
+export const RESULT_RULES_VERSION = 5;
 export type SavedResult = {
   score: number;
   combo: number;
@@ -21,6 +21,9 @@ export type SavedResult = {
   seed?: number;
   rushes?: number;
   chainKills?: number;
+  luckyEncounters?: number;
+  luckyClears?: number;
+  luckyBonus?: number;
 };
 export type SavedData = {
   preferences: Preferences;
@@ -66,6 +69,13 @@ function validResult(value: unknown, fallbackVersion: number): SavedResult|null 
   if (validSeed(r.seed)) result.seed = r.seed;
   if (validCount(r.rushes)) result.rushes = r.rushes;
   if (validCount(r.chainKills)) result.chainKills = r.chainKills;
+  if (r.luckyEncounters === 0 || r.luckyEncounters === 1) {
+    result.luckyEncounters=r.luckyEncounters;
+    if ((r.luckyClears===0 || r.luckyClears===1) && r.luckyClears <= r.luckyEncounters) {
+      result.luckyClears=r.luckyClears;
+      if(r.luckyBonus === r.luckyClears*500) result.luckyBonus=r.luckyBonus;
+    }
+  }
   return result;
 }
 

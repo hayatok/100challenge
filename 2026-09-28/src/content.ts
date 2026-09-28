@@ -370,3 +370,10 @@ export const BOSS_COUNTER_PHRASES = parse(`
 終わらせる|おわらせる
 出口はあそこだ|でぐちはあそこだ
 `);
+
+// Three short beats form one harmless, time-limited dance encounter.
+export const LUCKY_PHRASES: readonly (readonly Phrase[])[] = Object.freeze([
+  parse(`今夜は有給|こんやはゆうきゅう\n踊って退勤|おどってたいきん\n朝まで休む|あさまでやすむ`),
+  parse(`骨まで陽気|ほねまでようき\n残業はなし|ざんぎょうはなし\n拍手で退勤|はくしゅでたいきん`),
+  parse(`シフトを返せ|しふとをかえせ\n足取り軽く|あしどりかるく\n夜明けに乾杯|よあけにかんぱい`),
+]);

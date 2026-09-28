@@ -30,14 +30,14 @@ test('legacy alpha results are retained as version 2 and never compared with new
   assert.equal(save.personalBests[resultKey(result(500))],undefined);
 });
 
-test('v0.4 results without a rule field stay in version 3 after the v0.5 upgrade',()=>{
+test('v0.4 results without a rule field stay in version 3 after later upgrades',()=>{
   installStorage();
   const prior = result(600,{rulesVersion:3});
   const {rulesVersion: _version,...withoutRules} = prior;
   void _version;
   content = JSON.stringify({version:2,results:[withoutRules]});
   const saved = readSave();
-  assert.equal(RESULT_RULES_VERSION,4);
+  assert.equal(RESULT_RULES_VERSION,5);
   assert.equal(saved.results[0].rulesVersion,3);
   assert.equal(saved.personalBests[resultKey(prior)]?.score,600);
   assert.equal(saved.personalBests[resultKey(result(0))],undefined);
@@ -104,4 +104,25 @@ test('defeat does not overwrite a cleared best and tie breaks use accuracy then 
   save = recordResult(save,result(500,{accuracy:0.97}));
   save = recordResult(save,result(500,{accuracy:0.97,seconds:100}));
   assert.equal(save.personalBests[resultKey(result(0))].seconds,100);
+});
+
+
+test('v0.6 bonus records round trip without reclassifying v0.5 scores',()=>{
+  installStorage();
+  const prior=result(9150,{rulesVersion:4,seed:42});
+  const fresh=result(9650,{luckyEncounters:1,luckyClears:1,luckyBonus:500});
+  assert.equal(writeSave(defaultPreferences(),[prior,fresh]),true);
+  const restored=readSave();
+  assert.deepEqual(restored.results,[prior,fresh]);
+  assert.equal(restored.personalBests[resultKey(prior)].score,9150);
+  assert.equal(restored.personalBests[resultKey(fresh)].luckyBonus,500);
+  content=JSON.stringify({version:2,results:[
+    {...fresh,luckyEncounters:2}, {...fresh,luckyEncounters:0,luckyClears:1},
+    {...fresh,luckyClears:0,luckyBonus:500}, {...fresh,luckyBonus:-500},
+  ]});
+  const invalid=readSave().results;
+  assert.equal(invalid[0].luckyEncounters,undefined);
+  assert.equal(invalid[1].luckyClears,undefined);
+  assert.equal(invalid[2].luckyBonus,undefined);
+  assert.equal(invalid[3].luckyBonus,undefined);
 });

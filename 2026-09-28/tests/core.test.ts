@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { BOSS_COUNTER_PHRASES, BOSS_PHRASES, OFFICE_PHRASES, PHRASES, RUNNER_PHRASES, RUSH_PHRASES, WORKER_PHRASES } from '../src/content.ts';
+import { BOSS_COUNTER_PHRASES, BOSS_PHRASES, LUCKY_PHRASES, OFFICE_PHRASES, PHRASES, RUNNER_PHRASES, RUSH_PHRASES, WORKER_PHRASES } from '../src/content.ts';
 import { Game } from '../src/game.ts';
 import { TypingSession, validateReading } from '../src/typing.ts';
 
@@ -93,7 +93,7 @@ test('first keys stay disjoint and a full run resolves 24 normal slots, eight ru
 });
 
 test('seeded phrase assignment remains kind-correct and never blocks a planned spawn', () => {
-  const pools = {runner:new Set([...RUNNER_PHRASES,...RUSH_PHRASES].map(item => item.text)),office:new Set(OFFICE_PHRASES.map(item => item.text)),worker:new Set(WORKER_PHRASES.map(item => item.text)),boss:new Set([...BOSS_PHRASES,...BOSS_COUNTER_PHRASES].map(item => item.text))};
+  const pools = {runner:new Set([...RUNNER_PHRASES,...RUSH_PHRASES].map(item => item.text)),office:new Set([...OFFICE_PHRASES,...LUCKY_PHRASES.flat()].map(item => item.text)),worker:new Set(WORKER_PHRASES.map(item => item.text)),boss:new Set([...BOSS_PHRASES,...BOSS_COUNTER_PHRASES].map(item => item.text))};
   const seenBoss = new Set<string>();
   for (let seed=0;seed<128;seed++) {
     const game = new Game({seed});
@@ -299,6 +299,7 @@ test('recovered clean combo is a floor for decay and starts a new hold after a l
   assert.equal(game.state.effectsLevel,3);
   reachCleanCombo(game,3);
   assert.equal(game.state.effectsLevel,3);
+  if (game.state.luckyActive) game.update(game.state.luckyRemaining+0.01);
   game.update(10);
   assert.equal(game.state.effectsLevel,1);
   assert.equal(game.state.combo,3);

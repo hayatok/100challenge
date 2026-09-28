@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { GameAudio } from "../src/audio.ts";
+import { GameAudio, LUCKY_BPM } from "../src/audio.ts";
 
 class Param {
   value = 1;
@@ -107,6 +107,74 @@ test("rapid shots stay bounded, kills alone duck music, and stop clears subdrops
     const music = c.sources.filter((s) => s.loop);
     assert.equal(music.length, 2);
     assert.ok(music[1].starts[0].offset > 0, "resume retains BGM position");
+    audio.dispose();
+  } finally {
+    globalThis.AudioContext = previousContext;
+    globalThis.fetch = previousFetch;
+    globalThis.document = previousDocument;
+  }
+});
+
+test("lucky groove stays bounded across frame ticks, obeys controls, and cancels on pause", async () => {
+  const previousContext = globalThis.AudioContext;
+  const previousFetch = globalThis.fetch;
+  const previousDocument = globalThis.document;
+  let context: FakeAudioContext | undefined;
+  globalThis.AudioContext = class extends FakeAudioContext {
+    constructor() { super(); context = this; }
+  } as unknown as typeof AudioContext;
+  globalThis.fetch = (async () => ({ ok: true, arrayBuffer: async () => new ArrayBuffer(1) })) as unknown as typeof fetch;
+  globalThis.document = { baseURI: "https://example.test/game/" } as Document;
+  try {
+    assert.equal(LUCKY_BPM, 120);
+    const audio = new GameAudio();
+    await audio.load(); audio.start();
+    const c = context!;
+    const duck = c.gains[2].gain, dance = c.gains[5].gain;
+    audio.setLucky(true);
+    const first = c.oscillators.length;
+    for (let i = 0; i < 60; i++) audio.setLucky(true);
+    assert.equal(c.oscillators.length, first, "frame ticks never duplicate a scheduled beat");
+    assert.ok(duck.events.some((e) => e.kind === "target" && e.value === 0.2));
+    assert.ok(dance.events.some((e) => e.kind === "target" && e.value === 0.45 * 0.43));
+    const beforeShot = c.sources.length, beforeKey = c.oscillators.length;
+    audio.shot({ lucky: true });
+    assert.equal(c.sources.length - beforeShot, 2, "lucky keys retain gun and body impact samples");
+    assert.equal(c.oscillators.length - beforeKey, 1, "a key adds one immediate musical reply");
+    audio.luckyWord(1);
+    assert.equal(c.oscillators.length - beforeKey, 3, "phrase completion has its own two-note cue");
+    for (let i = 0; i < 160; i++) { c.currentTime += 0.025; audio.setLucky(true); }
+    assert.ok(c.oscillators.filter((s) => s.stops.length === 1).length <= 32, "active synth nodes have a hard cap");
+    audio.setVolumes(0.2, 0.7);
+    assert.ok(dance.events.some((e) => e.kind === "target" && e.value === 0.2 * 0.43));
+    assert.ok(c.gains[4].gain.events.some((e) => e.kind === "target" && e.value === 0.7));
+    audio.setVolumes(0.2, 0.7, true);
+    const beforeMute = c.oscillators.length;
+    c.currentTime += 0.4; audio.setLucky(true); audio.shot({ lucky: true });
+    assert.equal(c.oscillators.length, beforeMute, "mute silences new groove and key tones");
+    audio.setVolumes(0.2, 0.7, false);
+    c.currentTime += 0.3; audio.setLucky(true);
+    assert.ok(c.oscillators.length > beforeMute, "unmute resumes the groove");
+    audio.stop();
+    assert.ok(c.oscillators.every((s) => s.stops.length > 1), "pause cancels every pending dance node");
+    assert.ok(duck.events.some((e) => e.kind === "target" && e.value === 1));
+    const afterStop = c.oscillators.length;
+    for (let i = 0; i < 10; i++) { c.currentTime += 0.5; audio.setLucky(true); }
+    assert.equal(c.oscillators.length, afterStop, "paused game ticks cannot schedule the lucky groove");
+    audio.start();
+    const afterResume = c.oscillators.length;
+    assert.ok(afterResume > afterStop && afterResume - afterStop <= 6,
+      "resume schedules one fresh short lookahead, not the paused backlog");
+    audio.setLucky(true);
+    assert.equal(c.oscillators.length, afterResume, "resumed frame tick does not double the groove");
+    audio.luckyEnd(false);
+    assert.ok(c.oscillators.length - afterStop <= 10 && c.oscillators.length - afterStop >= 2,
+      "new groove and gentle escape have bounded separate cues");
+    assert.ok(dance.events.some((e) => e.kind === "target" && e.value === 0));
+    const beforeWinSources = c.sources.length, beforeWinTones = c.oscillators.length;
+    audio.luckyStart(); audio.luckyEnd(true);
+    assert.equal(c.sources.length - beforeWinSources, 1, "success adds one restrained bell sample");
+    assert.ok(c.oscillators.length - beforeWinTones <= 13, "arrival and success stay within fixed synth voices");
     audio.dispose();
   } finally {
     globalThis.AudioContext = previousContext;

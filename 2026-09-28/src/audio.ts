@@ -3,7 +3,9 @@ const FILES = ["darkness-road.ogg", "shot-1.mp3", "shot-2.mp3", "shot-3.mp3", "h
 type AudioFile = (typeof FILES)[number];
 type VoiceGroup = "gun" | "impact" | "accent";
 type Voice = { source: AudioBufferSourceNode; gain: GainNode; group: VoiceGroup };
-export type ShotOptions = { zone?: "body" | "head" | "limb"; finishing?: boolean; level?: number; rush?: boolean };
+export type ShotOptions = { zone?: "body" | "head" | "limb"; finishing?: boolean; level?: number; rush?: boolean; lucky?: boolean };
+export const LUCKY_BPM = 120;
+const LUCKY_STEP = 60 / LUCKY_BPM / 2;
 const clamp = (n: number, a: number, b: number) => Math.min(b, Math.max(a, Number.isFinite(n) ? n : a));
 
 export class GameAudio {
@@ -12,6 +14,7 @@ export class GameAudio {
   private music!: GainNode;
   private musicDuck!: GainNode;
   private effects!: GainNode;
+  private luckyMusic!: GainNode;
   private gunBus!: BiquadFilterNode;
   private impactBus!: BiquadFilterNode;
   private accentBus!: BiquadFilterNode;
@@ -24,6 +27,10 @@ export class GameAudio {
   private musicOffset = 0;
   private voices: Voice[] = [];
   private oscillators = new Set<OscillatorNode>();
+  private luckyOscillators = new Set<OscillatorNode>();
+  private luckyActive = false;
+  private luckyNextTime = 0;
+  private luckyStep = 0;
   private buffers = new Map<AudioFile, AudioBuffer>();
   private loading: Promise<boolean> | null = null;
   private active = false;
@@ -63,6 +70,8 @@ export class GameAudio {
     this.impactBus.connect(this.effects);
     this.accentBus = c.createBiquadFilter(); this.accentBus.type = "highpass"; this.accentBus.frequency.value = 330;
     this.accentBus.connect(this.effects);
+    this.luckyMusic = c.createGain(); this.luckyMusic.gain.value = 0;
+    this.luckyMusic.connect(this.master);
     this.context = c; this.applyVolumes();
     return c;
   }
@@ -183,6 +192,7 @@ export class GameAudio {
       this.play("hit.ogg", rapid ? 0.1 : 0.16, "impact", 0.027, 0.96 + this.shotIndex % 4 * 0.025, 0.17);
     }
     if (typeof options === "boolean" && options) this.kill(0); // legacy behavior
+    if (typeof options !== "boolean" && options.lucky) this.luckyHit();
   }
   kill(combo = 0, kind: "normal" | "boss" = "normal"): void {
     this.play("body.ogg", kind === "boss" ? 0.56 : 0.38, "impact", 0, combo >= 10 ? 0.87 : 1, 0.29);
@@ -213,6 +223,112 @@ export class GameAudio {
     this.rushLayer.gain.cancelScheduledValues(t);
     this.rushLayer.gain.setTargetAtTime(active ? 0.26 : 0, t, active ? 0.18 : 0.24);
     this.setFilterFrequency(t);
+  }
+  /** The caller may repeat this every frame. Only a short lookahead is scheduled. */
+  setLucky(active: boolean): void {
+    if (this.luckyActive === active) {
+      if (active) this.scheduleLucky();
+      return;
+    }
+    this.luckyActive = active;
+    const c = this.context;
+    if (!c) return;
+    const t = c.currentTime;
+    this.musicDuck.gain.cancelScheduledValues(t);
+    this.musicDuck.gain.setTargetAtTime(active ? 0.2 : 1, t, active ? 0.09 : 0.22);
+    this.luckyMusic.gain.cancelScheduledValues(t);
+    this.luckyMusic.gain.setTargetAtTime(active && this.active && !this.muted ? this.musicVolume * 0.43 : 0, t, active ? 0.09 : 0.08);
+    if (active) {
+      this.luckyNextTime = t + 0.025;
+      this.luckyStep = 0;
+      this.scheduleLucky();
+    } else {
+      for (const osc of this.luckyOscillators) {
+        try { osc.stop(t); } catch { /* already ended */ }
+      }
+      this.luckyOscillators.clear();
+      this.luckyNextTime = 0;
+    }
+  }
+  private synth(frequency: number, volume: number, at: number, duration: number,
+    type: OscillatorType, musical = true, endFrequency?: number): void {
+    const c = this.context;
+    if (!c || c.state !== "running" || this.muted) return;
+    if (this.luckyOscillators.size >= 32) {
+      const oldest = this.luckyOscillators.values().next().value;
+      if (oldest) { this.luckyOscillators.delete(oldest); try { oldest.stop(c.currentTime); } catch { /* ended */ } }
+    }
+    const osc = c.createOscillator(), gain = c.createGain();
+    osc.type = type;
+    osc.frequency.setValueAtTime(frequency, at);
+    if (endFrequency) osc.frequency.exponentialRampToValueAtTime(endFrequency, at + duration);
+    gain.gain.setValueAtTime(0.0001, at);
+    gain.gain.linearRampToValueAtTime(clamp(volume, 0, 0.22), at + Math.min(0.009, duration / 4));
+    gain.gain.exponentialRampToValueAtTime(0.0001, at + duration);
+    osc.connect(gain).connect(musical ? this.luckyMusic : this.accentBus);
+    this.luckyOscillators.add(osc);
+    osc.onended = () => { this.luckyOscillators.delete(osc); osc.disconnect(); gain.disconnect(); };
+    osc.start(at); osc.stop(at + duration + 0.01);
+  }
+  private scheduleLucky(): void {
+    const c = this.context;
+    if (!this.luckyActive || !this.active || !c || c.state !== "running" || this.muted) return;
+    // A hidden tab can skip many beats. Resume at the present; never queue a backlog.
+    if (this.luckyNextTime < c.currentTime - LUCKY_STEP) this.luckyNextTime = c.currentTime + 0.02;
+    while (this.luckyNextTime < c.currentTime + 0.3) {
+      const at = this.luckyNextTime, step = this.luckyStep++ % 16;
+      // Two-bar A-minor loop: alternating bass, backbeat, bright offbeat chords.
+      if (step % 2 === 0) {
+        const bass = step < 8 ? (step % 4 === 0 ? 110 : 164.81) : (step % 4 === 0 ? 130.81 : 196);
+        this.synth(bass, 0.19, at, 0.19, "triangle");
+        this.synth(step % 4 === 0 ? 88 : 220, step % 4 === 0 ? 0.18 : 0.085,
+          at, 0.11, "sine", true, step % 4 === 0 ? 45 : 100);
+      } else {
+        const chord = step < 8 ? [261.63, 329.63] : [293.66, 349.23];
+        this.synth(chord[0], 0.057, at, 0.16, "triangle");
+        this.synth(chord[1], 0.046, at, 0.16, "triangle");
+      }
+      this.synth(step % 4 === 2 ? 860 : 1250, step % 4 === 2 ? 0.045 : 0.025,
+        at, 0.045, "triangle", true, 490);
+      this.luckyNextTime += LUCKY_STEP;
+    }
+  }
+  /** Arrival flourish. It remains immediate and does not gate input. */
+  luckyStart(): void {
+    this.setLucky(true);
+    const t = this.context?.currentTime;
+    if (t === undefined) return;
+    this.synth(523.25, 0.12, t, 0.15, "sine", false);
+    this.synth(659.25, 0.12, t + 0.09, 0.2, "sine", false);
+    this.synth(880, 0.1, t + 0.18, 0.26, "sine", false);
+  }
+  /** Accepted lucky key: gun and impact samples remain the primary sound. */
+  luckyHit(): void {
+    const t = this.context?.currentTime;
+    if (t === undefined || !this.luckyActive) return;
+    this.synth([523.25, 587.33, 659.25, 783.99][this.shotIndex % 4], 0.055, t, 0.105, "sine", false);
+  }
+  /** A completed phrase earns a brief ascending reply. */
+  luckyWord(step: number): void {
+    const t = this.context?.currentTime;
+    if (t === undefined) return;
+    const base = [587.33, 659.25, 783.99][clamp(Math.floor(step) - 1, 0, 2)];
+    this.synth(base, 0.12, t, 0.18, "sine", false);
+    this.synth(base * 1.25, 0.09, t + 0.085, 0.22, "sine", false);
+  }
+  /** success=false is a gentle exit, with no error or damage association. */
+  luckyEnd(success: boolean): void {
+    this.setLucky(false);
+    const t = this.context?.currentTime;
+    if (t === undefined) return;
+    if (success) {
+      for (const [i, note] of [659.25, 783.99, 1046.5, 1318.5].entries())
+        this.synth(note, 0.13, t + i * 0.105, 0.26, "sine", false);
+      this.play("bell.ogg", 0.23, "accent", 0.12, 1.28, 0.48);
+    } else {
+      this.synth(440, 0.065, t, 0.15, "sine", false);
+      this.synth(349.23, 0.05, t + 0.11, 0.19, "sine", false);
+    }
   }
   /** Brief upward signal at a four-word rush entrance. */
   rushStart(): void {
@@ -307,8 +423,9 @@ export class GameAudio {
     if (!c) return;
     this.music.gain.setTargetAtTime(this.muted ? 0 : this.musicVolume * 0.5, c.currentTime, 0.03);
     this.effects.gain.setTargetAtTime(this.muted ? 0 : this.effectsVolume, c.currentTime, 0.018);
+    this.luckyMusic.gain.setTargetAtTime(this.muted || !this.luckyActive || !this.active ? 0 : this.musicVolume * 0.43, c.currentTime, 0.03);
   }
-  start(): void { this.active = true; this.beginMusic(); }
+  start(): void { this.active = true; this.beginMusic(); this.applyVolumes(); this.scheduleLucky(); }
   private beginMusic(): void {
     const c = this.context, buffer = this.buffers.get("darkness-road.ogg");
     if (!this.active || !c || c.state !== "running" || !buffer || this.musicSource) return;
@@ -330,6 +447,12 @@ export class GameAudio {
   stop(immediate = true): void {
     this.active = false;
     const c = this.context;
+    this.setLucky(false);
+    // Arrival and phrase cues are also scheduled nodes, even after the groove ends.
+    for (const osc of this.luckyOscillators) {
+      try { osc.stop(c?.currentTime); } catch { /* already ended */ }
+    }
+    this.luckyOscillators.clear();
     if (c && this.musicSource) {
       const source = this.musicSource, fade = this.musicSourceGain;
       const duration = source.buffer?.duration ?? 128;
