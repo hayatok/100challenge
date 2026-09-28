@@ -28,6 +28,7 @@ export class GameAudio {
   private voices: Voice[] = [];
   private oscillators = new Set<OscillatorNode>();
   private luckyOscillators = new Set<OscillatorNode>();
+  private cueOscillators = new Set<OscillatorNode>();
   private luckyActive = false;
   private luckyNextTime = 0;
   private luckyStep = 0;
@@ -183,6 +184,11 @@ export class GameAudio {
       // extending its tail. The fast metal click marks the slide's movement.
       this.play("shot-3.mp3", 0.18 + level * 0.02 + (rush ? 0.035 : 0), "gun", 0.009, 0.84, 0.19);
       this.play("metal.ogg", 0.11 + level * 0.012, "accent", 0.011, 1.46, 0.12);
+      this.subdrop(rush ? 0.19 : 0.12);
+      if (level >= 2 || rush) {
+        const note = [523.25, 587.33, 659.25, 783.99][clamp(level - 1, 0, 3)];
+        this.synth(note, rush ? 0.105 : 0.07, c.currentTime + 0.018, 0.15, "triangle", false);
+      }
     }
     if (zone === "head") {
       this.play("metal.ogg", rapid ? 0.09 : 0.15, "impact", 0.025, 1.24, 0.17);
@@ -195,13 +201,19 @@ export class GameAudio {
     if (typeof options !== "boolean" && options.lucky) this.luckyHit();
   }
   kill(combo = 0, kind: "normal" | "boss" = "normal"): void {
-    this.play("body.ogg", kind === "boss" ? 0.56 : 0.38, "impact", 0, combo >= 10 ? 0.87 : 1, 0.29);
-    this.play("metal.ogg", kind === "boss" ? 0.27 : 0.15, "accent", 0.07, 0.95, 0.25);
-    if (combo >= 6) this.play("glass.ogg", 0.08 + Math.min(combo, 15) * 0.005, "accent", 0.045, 1.05, 0.28);
+    const tier = combo >= 15 ? 4 : combo >= 10 ? 3 : combo >= 6 ? 2 : combo >= 3 ? 1 : 0;
+    this.play("body.ogg", kind === "boss" ? 0.62 : 0.39 + tier * 0.035, "impact", 0, combo >= 10 ? 0.87 : 1, 0.32);
+    this.play("metal.ogg", kind === "boss" ? 0.31 : 0.16 + tier * 0.025, "accent", 0.055, 0.95 + tier * 0.05, 0.27);
+    if (tier >= 2) this.play("glass.ogg", 0.12 + tier * 0.025, "accent", 0.045, 1.05 + tier * 0.07, 0.32);
+    if (tier >= 1) {
+      const root = [0, 523.25, 587.33, 659.25, 783.99][tier];
+      this.fanfare(tier >= 3 ? [root, root * 1.25, root * 1.5] : [root, root * 1.25],
+        0.055 + tier * 0.01, 0.075, 0.19);
+    }
     if (kind === "boss") {
       this.subdrop(0.23);
       this.play("bell.ogg", 0.37, "accent", 0.12, 0.74, 0.55);
-    } else if (combo >= 10 && combo % 5 === 0) this.subdrop(0.12);
+    } else if (combo >= 10 && combo % 5 === 0) this.subdrop(0.14);
     this.duckMusic(kind === "boss" ? 0.48 : 0.68, kind === "boss" ? 0.55 : 0.23);
   }
   private duckMusic(depth: number, recovery: number): void {
@@ -254,9 +266,11 @@ export class GameAudio {
     type: OscillatorType, musical = true, endFrequency?: number): void {
     const c = this.context;
     if (!c || c.state !== "running" || this.muted) return;
-    if (this.luckyOscillators.size >= 32) {
-      const oldest = this.luckyOscillators.values().next().value;
-      if (oldest) { this.luckyOscillators.delete(oldest); try { oldest.stop(c.currentTime); } catch { /* ended */ } }
+    const pool = musical ? this.luckyOscillators : this.cueOscillators;
+    const limit = musical ? 32 : 24;
+    if (pool.size >= limit) {
+      const oldest = pool.values().next().value;
+      if (oldest) { pool.delete(oldest); try { oldest.stop(c.currentTime); } catch { /* ended */ } }
     }
     const osc = c.createOscillator(), gain = c.createGain();
     osc.type = type;
@@ -266,9 +280,15 @@ export class GameAudio {
     gain.gain.linearRampToValueAtTime(clamp(volume, 0, 0.22), at + Math.min(0.009, duration / 4));
     gain.gain.exponentialRampToValueAtTime(0.0001, at + duration);
     osc.connect(gain).connect(musical ? this.luckyMusic : this.accentBus);
-    this.luckyOscillators.add(osc);
-    osc.onended = () => { this.luckyOscillators.delete(osc); osc.disconnect(); gain.disconnect(); };
+    pool.add(osc);
+    osc.onended = () => { pool.delete(osc); osc.disconnect(); gain.disconnect(); };
     osc.start(at); osc.stop(at + duration + 0.01);
+  }
+  /** A short bright answer to an earned event. All notes use the effects slider. */
+  private fanfare(notes: readonly number[], volume: number, spacing = 0.095, duration = 0.25): void {
+    const at = this.context?.currentTime;
+    if (at === undefined) return;
+    notes.forEach((note, i) => this.synth(note, volume, at + i * spacing, duration, "triangle", false));
   }
   private scheduleLucky(): void {
     const c = this.context;
@@ -301,6 +321,7 @@ export class GameAudio {
     this.synth(523.25, 0.12, t, 0.15, "sine", false);
     this.synth(659.25, 0.12, t + 0.09, 0.2, "sine", false);
     this.synth(880, 0.1, t + 0.18, 0.26, "sine", false);
+    this.play("glass.ogg", 0.21, "accent", 0.17, 1.28, 0.33);
   }
   /** Accepted lucky key: gun and impact samples remain the primary sound. */
   luckyHit(): void {
@@ -315,6 +336,8 @@ export class GameAudio {
     const base = [587.33, 659.25, 783.99][clamp(Math.floor(step) - 1, 0, 2)];
     this.synth(base, 0.12, t, 0.18, "sine", false);
     this.synth(base * 1.25, 0.09, t + 0.085, 0.22, "sine", false);
+    this.play("bell.ogg", 0.17 + clamp(step, 1, 3) * 0.035, "accent", 0.08,
+      1.08 + clamp(step, 1, 3) * 0.13, 0.35);
   }
   /** success=false is a gentle exit, with no error or damage association. */
   luckyEnd(success: boolean): void {
@@ -322,9 +345,10 @@ export class GameAudio {
     const t = this.context?.currentTime;
     if (t === undefined) return;
     if (success) {
-      for (const [i, note] of [659.25, 783.99, 1046.5, 1318.5].entries())
-        this.synth(note, 0.13, t + i * 0.105, 0.26, "sine", false);
-      this.play("bell.ogg", 0.23, "accent", 0.12, 1.28, 0.48);
+      this.fanfare([659.25, 783.99, 1046.5, 1318.5, 1567.98], 0.15, 0.092, 0.34);
+      this.play("bell.ogg", 0.32, "accent", 0.12, 1.28, 0.6);
+      this.play("glass.ogg", 0.21, "accent", 0.32, 1.45, 0.42);
+      this.subdrop(0.2);
     } else {
       this.synth(440, 0.065, t, 0.15, "sine", false);
       this.synth(349.23, 0.05, t + 0.11, 0.19, "sine", false);
@@ -332,12 +356,28 @@ export class GameAudio {
   }
   /** Brief upward signal at a four-word rush entrance. */
   rushStart(): void {
-    this.play("metal.ogg", 0.16, "accent", 0, 1.22, 0.17);
-    this.play("bell.ogg", 0.22, "accent", 0.075, 1.28, 0.31);
+    this.play("metal.ogg", 0.27, "accent", 0, 1.12, 0.23);
+    this.play("bell.ogg", 0.31, "accent", 0.085, 1.31, 0.42);
+    this.fanfare([392, 523.25, 659.25, 783.99], 0.12, 0.07, 0.2);
+    this.subdrop(0.19);
   }
-  /** Short, falling signal when the rush ends. */
-  rushEnd(): void {
-    this.play("metal.ogg", 0.12, "accent", 0, 0.68, 0.22);
+  /** A completed four-kill rush pays out; an interrupted one exits gently. */
+  rushEnd(success = true): void {
+    if (!success) { this.play("metal.ogg", 0.12, "accent", 0, 0.68, 0.22); return; }
+    this.play("bell.ogg", 0.38, "accent", 0, 1.16, 0.65);
+    this.play("glass.ogg", 0.26, "accent", 0.2, 1.34, 0.46);
+    this.fanfare([783.99, 987.77, 1174.66, 1567.98, 1975.53], 0.16, 0.09, 0.35);
+    this.subdrop(0.22);
+    this.duckMusic(0.42, 0.75);
+  }
+  /** One ascending, four-step payoff after each rush kill. Step is 1–4. */
+  rushKill(step: number): void {
+    const index = clamp(Math.floor(step), 1, 4) - 1;
+    const roots = [523.25, 659.25, 783.99, 1046.5];
+    const root = roots[index];
+    this.fanfare(index === 3 ? [root, root * 1.25, root * 1.5] : [root, root * 1.25],
+      0.09 + index * 0.018, 0.075, 0.24);
+    this.play("bell.ogg", 0.18 + index * 0.055, "accent", 0.045, 1.1 + index * 0.13, 0.35);
   }
   /** One chain explosion cue; count changes weight, never the number of voices. */
   explosion(count: number): void {
@@ -362,12 +402,14 @@ export class GameAudio {
     if (l === 0) return;
     this.play("bell.ogg", 0.17 + l * 0.025, "accent", 0, 0.9 + l * 0.07, 0.4);
     if (l === 4) this.play("bell.ogg", 0.2, "accent", 0.14, 1.32, 0.45);
+    this.fanfare([523.25, 587.33, 659.25, 783.99].slice(0, l), 0.075 + l * 0.015, 0.09, 0.2);
   }
   /** Small variation for every fifth kill after the top tier has been reached. */
   streak(combo: number): void {
     if (combo < 20 || combo % 5 !== 0) return;
     this.play("bell.ogg", 0.23, "accent", 0.08, 1.3 + (combo / 5) % 2 * 0.09, 0.42);
     this.play("glass.ogg", 0.1, "accent", 0.16, 1.25, 0.29);
+    this.fanfare([783.99, 987.77, 1174.66], 0.12, 0.075, 0.22);
   }
   transition(stage: number): void {
     this.play("metal.ogg", 0.25, "accent", 0, 0.74, 0.33);
@@ -396,6 +438,7 @@ export class GameAudio {
     this.play("bell.ogg", 0.28, "accent", 0.17, 1.25, 0.56);
     this.play("bell.ogg", 0.3, "accent", 0.37, 1.5, 0.65);
     this.subdrop(0.18);
+    this.fanfare([523.25, 659.25, 783.99, 1046.5, 1318.5, 1567.98], 0.16, 0.095, 0.38);
     this.duckMusic(0.4, 0.85);
   }
 
@@ -454,6 +497,10 @@ export class GameAudio {
       try { osc.stop(c?.currentTime); } catch { /* already ended */ }
     }
     this.luckyOscillators.clear();
+    for (const osc of this.cueOscillators) {
+      try { osc.stop(c?.currentTime); } catch { /* already ended */ }
+    }
+    this.cueOscillators.clear();
     if (c && this.musicSource) {
       const source = this.musicSource, fade = this.musicSourceGain;
       const duration = source.buffer?.duration ?? 128;
@@ -466,16 +513,14 @@ export class GameAudio {
       try { source.stop(c.currentTime + (immediate ? 0.03 : 0.17)); } catch { /* already stopped */ }
       this.musicSource = null; this.musicSourceGain = null;
     }
-    if (immediate) {
-      for (const voice of this.voices.slice()) {
-        try { voice.source.stop(); } catch { /* already finished */ }
-      }
-      for (const osc of this.oscillators) {
-        try { osc.stop(); } catch { /* already finished */ }
-      }
-      this.voices = [];
-      this.oscillators.clear();
+    for (const voice of this.voices.slice()) {
+      try { voice.source.stop(); } catch { /* already finished */ }
     }
+    for (const osc of this.oscillators) {
+      try { osc.stop(); } catch { /* already finished */ }
+    }
+    this.voices = [];
+    this.oscillators.clear();
     this.lastShot = -1; this.lastMiss = -1;
     this.lastBossPhase = 0;
     if (c) { this.musicDuck.gain.cancelScheduledValues(c.currentTime); this.musicDuck.gain.setValueAtTime(1, c.currentTime); }

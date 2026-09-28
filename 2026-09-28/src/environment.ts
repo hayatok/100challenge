@@ -861,8 +861,8 @@ export async function createEnvironment(scene: THREE.Scene): Promise<ArcadeEnvir
         light.intensity = (power + tier * 1.2) *
           (motion ? 1 + Math.sin(time * .8 + i * 1.7) * .025 : 1);
       }
-      mat.warm.emissiveIntensity = 1.65 + tier * .1;
-      mat.cold.emissiveIntensity = 1.7 + tier * .07;
+      mat.warm.emissiveIntensity = 1.65 + tier * (motion ? .34 : .1);
+      mat.cold.emissiveIntensity = 1.7 + tier * (motion ? .3 : .07);
       for (let i = 0; i < moteCount; i++) {
         const j = i * 3;
         motePositions[j] = moteBase[j] + (motion ? Math.sin(time * .31 + i * 2.2) * .09 : 0);

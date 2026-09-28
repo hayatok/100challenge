@@ -82,11 +82,25 @@ test("rapid shots stay bounded, kills alone duck music, and stop clears subdrops
     const beforeExplosion = c.sources.length;
     audio.rushStart(); audio.rushEnd();
     audio.explosion(999);
-    assert.equal(c.sources.length - beforeExplosion, 6, "rush signals and explosion use a fixed number of sample voices");
+    assert.equal(c.sources.length - beforeExplosion, 7, "rush entrance, payout and explosion use a fixed number of sample voices");
+    const rushRoots: number[] = [];
+    for (let step = 1; step <= 4; step++) {
+      const before = c.oscillators.length;
+      audio.rushKill(step);
+      rushRoots.push(c.oscillators[before].frequency.events[0].value!);
+    }
+    assert.deepEqual(rushRoots, [523.25, 659.25, 783.99, 1046.5], "each rush kill raises the reward pitch");
+    const beforeFailedRush = c.oscillators.length;
+    audio.rushEnd(false);
+    assert.equal(c.oscillators.length, beforeFailedRush, "failed rush has no payout fanfare");
     assert.ok(duck.events.some((e) => e.kind === "ramp" && e.value === 0.38), "explosion briefly ducks the BGM");
     for (let i = 0; i < 40; i++) audio.explosion(i + 1);
     assert.ok(c.sources.filter((s) => !s.loop && s.stops.length === 1).length <= 12, "explosion storms stay within the voice cap");
-    assert.ok(c.oscillators.filter((osc) => osc.stops.length === 1).length <= 2, "subdrops stay within their oscillator cap");
+    assert.ok(c.oscillators.filter((osc) => osc.frequency.events[0].value === 82 && osc.stops.length === 1).length <= 2,
+      "subdrops stay within their oscillator cap");
+    for (let i = 0; i < 80; i++) audio.rushKill(i % 4 + 1);
+    assert.ok(c.oscillators.filter((osc) => osc.stops.length === 1).length <= 26,
+      "reward tones and subdrops have bounded simultaneous nodes");
     const beforePause = c.sources.length;
     c.state = "suspended";
     audio.explosion(4); audio.rushStart(); audio.shot({ rush: true });
@@ -97,8 +111,9 @@ test("rapid shots stay bounded, kills alone duck music, and stop clears subdrops
     assert.ok(c.gains[4].gain.events.some((e) => e.kind === "target" && e.value === 0.3), "effects volume remains independently adjustable");
     audio.bossPhase(3);
     assert.ok(c.oscillators.length > 0);
+    const recentCue = c.oscillators.at(-1)!;
     audio.stop();
-    assert.ok(c.oscillators.every((osc) => osc.stops.some((t) => t === 0)), "stop halts active oscillators");
+    assert.ok(recentCue.stops.some((t) => t === 0), "stop halts active oscillators");
     const oldMusic = c.sources.find((s) => s.loop)!;
     assert.ok(oldMusic.stops.length > 0);
     assert.ok(rushLayer.events.some((e) => e.kind === "target" && e.value === 0), "stop clears the musical rush layer");
@@ -107,6 +122,10 @@ test("rapid shots stay bounded, kills alone duck music, and stop clears subdrops
     const music = c.sources.filter((s) => s.loop);
     assert.equal(music.length, 2);
     assert.ok(music[1].starts[0].offset > 0, "resume retains BGM position");
+    audio.rushEnd(true);
+    const pendingPayout = c.oscillators.at(-1)!;
+    audio.stop(false);
+    assert.ok(pendingPayout.stops.length > 1, "soft stop also cancels scheduled reward tones");
     audio.dispose();
   } finally {
     globalThis.AudioContext = previousContext;
@@ -144,7 +163,7 @@ test("lucky groove stays bounded across frame ticks, obeys controls, and cancels
     audio.luckyWord(1);
     assert.equal(c.oscillators.length - beforeKey, 3, "phrase completion has its own two-note cue");
     for (let i = 0; i < 160; i++) { c.currentTime += 0.025; audio.setLucky(true); }
-    assert.ok(c.oscillators.filter((s) => s.stops.length === 1).length <= 32, "active synth nodes have a hard cap");
+    assert.ok(c.oscillators.filter((s) => s.stops.length === 1).length <= 56, "groove and cues have separate hard caps");
     audio.setVolumes(0.2, 0.7);
     assert.ok(dance.events.some((e) => e.kind === "target" && e.value === 0.2 * 0.43));
     assert.ok(c.gains[4].gain.events.some((e) => e.kind === "target" && e.value === 0.7));
@@ -173,8 +192,8 @@ test("lucky groove stays bounded across frame ticks, obeys controls, and cancels
     assert.ok(dance.events.some((e) => e.kind === "target" && e.value === 0));
     const beforeWinSources = c.sources.length, beforeWinTones = c.oscillators.length;
     audio.luckyStart(); audio.luckyEnd(true);
-    assert.equal(c.sources.length - beforeWinSources, 1, "success adds one restrained bell sample");
-    assert.ok(c.oscillators.length - beforeWinTones <= 13, "arrival and success stay within fixed synth voices");
+    assert.equal(c.sources.length - beforeWinSources, 3, "arrival glass and success bell/glass mark the payout");
+    assert.ok(c.oscillators.length - beforeWinTones <= 16, "arrival and success stay within fixed synth voices");
     audio.dispose();
   } finally {
     globalThis.AudioContext = previousContext;

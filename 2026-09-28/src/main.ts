@@ -1,4 +1,5 @@
 import "./style.css";
+import { CelebrationState } from "./spectacle.ts";
 import { Game, type GameState } from "./game.ts";
 import { World } from "./scene.ts";
 import { GameAudio } from "./audio.ts";
@@ -6,7 +7,7 @@ import { readSave, writeSave, recordResult, betterResult, resultKey, RESULT_RULE
 import { gradeResult, previousComparable, compareResults } from "./results.ts";
 import { nextGoal } from "./goals.ts";
 const app = document.querySelector<HTMLDivElement>("#app")!;
-app.innerHTML = `<div id="world" aria-hidden="true"></div><div class="vignette"></div><div id="combat-glow" aria-hidden="true"></div><header><a class="brand" href="#">夜勤<span>NIGHTSHIFT / TYPING</span></a><div class="top-center">● 午前零時の商店街<span id="stage">AFTER HOURS — 00:13</span></div><button id="pause-button" aria-label="一時停止" hidden>Ⅱ</button><button id="sound-button" aria-label="音を切り替える">♪</button></header><div id="loading" class="center-card"><p class="eyebrow">OPENING THE NIGHT</p><h1>夜の準備中…</h1><p id="loading-text" role="status">商店街へ向かっています</p></div><section id="title" hidden><div class="title-copy"><p class="eyebrow">— A MIDNIGHT TYPING SHOOTER</p><h1><span>夜勤</span>タイピング<span class="period">。</span></h1><p class="title-sub">今夜の残業は、少し騒がしい。</p><p class="description">迫るゾンビを、打って撃て。<br>一文字で一発。打ち切って、とどめを。</p><button id="start-button" class="primary">出勤する <span>↗</span></button><div class="title-options"><button id="settings-button">装備と設定</button><button id="credits-button">クレジット</button></div><p class="keyboard-note">⌨ PC・キーボード専用 ／ 1 PLAY 約3–5分</p></div><div class="stamp">深夜勤務<b>歓迎</b><small>NO EXPERIENCE REQUIRED</small></div><footer><span>生きて、定時で帰ろう。</span><span>ALPHA 0.7 / 黒猫商店街</span></footer></section><section id="hud" hidden><div class="health-block"><p class="eyebrow" id="shift-label"></p><div id="health"></div><small id="practice-label"></small></div><div class="score-block"><div class="score-label">SCORE <b id="score">000000</b></div><div class="combo"><strong id="combo">0</strong><span>COMBO<small id="combo-word">KEEP TYPING</small></span></div><small class="charge-label">FEVER CHARGE</small><div class="fever-track"><div id="fever-fill"></div></div><small id="fever-next"></small></div><div id="rush-banner" hidden><small>短文を続けて、撃ち抜け。</small><strong>FEVER RUSH</strong><div id="rush-pips"></div><span id="rush-count"></span></div><div id="lucky-banner" hidden><small>踊る深夜のボーナスタイム</small><strong>LUCKY SHIFT</strong><div id="lucky-pips"></div><span id="lucky-count"></span><p>3文完成で +500点・体力1回復</p></div><div id="boss-hud" hidden><small>黒猫商店街・終業責任者</small><b>店長 <span id="boss-phase"></span></b><div id="boss-pips"></div></div><div id="targets"></div><div id="milestone" aria-hidden="true"><small id="milestone-caption"></small><strong id="milestone-word"></strong></div><div id="score-pop" aria-hidden="true"></div><div id="feedback" aria-live="polite"></div><div id="reticle" class="reticle">+</div><div id="typing-panel"><div class="panel-top"><span id="target-number"></span><span id="input-status"></span></div><div id="phrase"></div><div id="reading"></div><div id="romaji"></div><div class="deadline"><div id="deadline-bar"></div></div><div class="panel-bottom"><span>一文字、一発。</span><span>ESC 一時停止</span></div></div><div id="travel-message" hidden></div></section><div id="modal" class="modal" hidden><section class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modal-title"><div id="modal-content"></div></section></div><input id="key-capture" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="ゲーム入力。半角英字でタイプしてください"><div id="notice" role="status" hidden></div>`;
+app.innerHTML = `<div id="world" aria-hidden="true"></div><div class="vignette"></div><div id="combat-glow" aria-hidden="true"></div><header><a class="brand" href="#">夜勤<span>NIGHTSHIFT / TYPING</span></a><div class="top-center">● 午前零時の商店街<span id="stage">AFTER HOURS — 00:13</span></div><button id="pause-button" aria-label="一時停止" hidden>Ⅱ</button><button id="sound-button" aria-label="音を切り替える">♪</button></header><div id="loading" class="center-card"><p class="eyebrow">OPENING THE NIGHT</p><h1>夜の準備中…</h1><p id="loading-text" role="status">商店街へ向かっています</p></div><section id="title" hidden><div class="title-copy"><p class="eyebrow">— A MIDNIGHT TYPING SHOOTER</p><h1><span>夜勤</span>タイピング<span class="period">。</span></h1><p class="title-sub">今夜の残業は、少し騒がしい。</p><p class="description">迫るゾンビを、打って撃て。<br>一文字で一発。打ち切って、とどめを。</p><button id="start-button" class="primary">出勤する <span>↗</span></button><div class="title-options"><button id="settings-button">装備と設定</button><button id="credits-button">クレジット</button></div><p class="keyboard-note">⌨ PC・キーボード専用 ／ 1 PLAY 約3–5分</p></div><div class="stamp">深夜勤務<b>歓迎</b><small>NO EXPERIENCE REQUIRED</small></div><footer><span>生きて、定時で帰ろう。</span><span>ALPHA 0.8 / 黒猫商店街</span></footer></section><section id="hud" hidden><div class="health-block"><p class="eyebrow" id="shift-label"></p><div id="health"></div><small id="practice-label"></small></div><div class="score-block"><div class="score-label">SCORE <b id="score">000000</b></div><div class="combo"><strong id="combo">0</strong><span>COMBO<small id="combo-word">KEEP TYPING</small></span></div><small class="charge-label">FEVER CHARGE</small><div class="fever-track"><div id="fever-fill"></div></div><small id="fever-next"></small></div><div id="rush-banner" hidden><small>短文を続けて、撃ち抜け。</small><strong>FEVER RUSH</strong><div id="rush-pips"></div><span id="rush-count"></span></div><div id="lucky-banner" hidden><small>踊る深夜のボーナスタイム</small><strong>LUCKY SHIFT</strong><div id="lucky-pips"></div><span id="lucky-count"></span><p>3文完成で +500点・体力1回復</p></div><div id="boss-hud" hidden><small>黒猫商店街・終業責任者</small><b>店長 <span id="boss-phase"></span></b><div id="boss-pips"></div></div><div id="spectacle-frame" aria-hidden="true"><div id="heat-marquee" class="heat-marquee">NIGHTSHIFT // OVERDRIVE // KEEP FIRING</div></div><div id="showtime" aria-hidden="true" hidden><div class="show-rays"></div><small id="show-badge"></small><strong id="show-title"></strong><span id="show-caption"></span></div><div id="targets"></div><div id="milestone" aria-hidden="true"><small id="milestone-caption"></small><strong id="milestone-word"></strong></div><div id="score-pop" aria-hidden="true"></div><div id="feedback" aria-live="polite"></div><div id="reticle" class="reticle">+</div><div id="typing-panel"><div class="panel-top"><span id="target-number"></span><span id="input-status"></span></div><div id="phrase"></div><div id="reading"></div><div id="romaji"></div><div class="deadline"><div id="deadline-bar"></div></div><div class="panel-bottom"><span>一文字、一発。</span><span>ESC 一時停止</span></div></div><div id="travel-message" hidden></div></section><div id="modal" class="modal" hidden><section class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modal-title"><div id="modal-content"></div></section></div><input id="key-capture" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="ゲーム入力。半角英字でタイプしてください"><div id="notice" role="status" hidden></div>`;
 const el = <T extends HTMLElement = HTMLElement>(id: string) =>
   document.getElementById(id) as T;
 const show = (id: string, v: boolean) => {
@@ -18,6 +19,9 @@ const preferences = save.preferences;
 let history = save.results;
 let personalBests = save.personalBests;
 const audio = new GameAudio();
+const spectacle = new CelebrationState();
+let renderedCelebration = spectacle.current;
+function resetSpectacle(){spectacle.reset();renderedCelebration=null;show("showtime",false);el("showtime").getAnimations().forEach(a=>a.cancel());}
 audio.setVolumes(preferences.music, preferences.effects);
 let world: World,
   game: Game | null = null;
@@ -63,6 +67,7 @@ function close() {
   modalKind = "";
 }
 function title() {
+  resetSpectacle();
   world.reset();
   audio.stop();
   game = null;
@@ -147,6 +152,7 @@ function prepare() {
   focus();
 }
 function start(seed = Date.now() >>> 0) {
+  resetSpectacle();
   world.reset();
   lastTime = performance.now();
   close();
@@ -272,7 +278,7 @@ function draw(s: GameState) {
     "NICE SHIFT",
     "ON FIRE",
     "OVERTIME",
-    "NIGHT FEVER",
+    "OVERDRIVE",
   ][s.effectsLevel]);
   text("health", "♥ ".repeat(s.health) + "♡ ".repeat(3 - s.health));
   el("health").setAttribute("aria-label", `体力 ${s.health} / 3`);
@@ -374,7 +380,7 @@ function punch(id: string, scale = 1.18) {
 }
 function milestone(level: number) {
   el("milestone-caption").textContent = `COMBO LEVEL ${level} / 勤務熱量上昇`;
-  el("milestone-word").textContent = ["", "NICE SHIFT", "ON FIRE", "OVERTIME", "NIGHT FEVER"][level];
+  el("milestone-word").textContent = ["", "NICE SHIFT", "ON FIRE", "OVERTIME", "OVERDRIVE"][level];
   el("milestone").getAnimations().forEach(a => a.cancel());
   el("milestone").animate(preferences.motion ? [
     {opacity: 0, translate: "-30px 0", scale: "1.15", offset: 0},
@@ -385,6 +391,8 @@ function milestone(level: number) {
 }
 function events() {
   for (const e of game?.drainEvents() ?? []) {
+    spectacle.event(e);
+    if(e.type === "kill" && !e.collateral && spectacle.rushing) audio.rushKill(spectacle.rushHits);
     if(world.event(e)) audio.storefrontImpact();
     if (e.type === "hit") {
       audio.shot({lucky:e.lucky, rush: game!.state.rushing, zone: e.hitZone === "head" ? "head" : e.hitZone === "shoulder" ? "limb" : "body", finishing: e.finisher, level: e.effectsLevel ?? game!.state.effectsLevel});
@@ -395,7 +403,7 @@ function events() {
       audio.kill(e.combo ?? game!.state.combo, e.kind === "boss" ? "boss" : "normal");
       const combo = e.combo ?? game!.state.combo;
       const level = e.effectsLevel ?? game!.state.effectsLevel;
-      feedback(e.kind === "boss" ? e.phase === 2 ? "SHIFT COMPLETE" : "ARMOR BREAK" : e.clean ? "CLEAN KILL" : "TAKE DOWN", "good");
+      feedback(e.kind === "boss" ? e.phase === 2 ? "SHIFT COMPLETE" : "ARMOR BREAK" : e.clean ? level >= 3 ? "OBLITERATED!" : "HEADSHOT!" : "TAKE DOWN!", "good");
       el("score-pop").textContent = `+${e.scoreDelta ?? 100}${combo >= 3 ? " / " + combo + " CHAIN" : ""}`;
       el("score-pop").getAnimations().forEach(a => a.cancel());
       el("score-pop").animate(preferences.motion ? [{opacity: 1, translate: "0 10px"}, {opacity: 0, translate: "0 -20px"}] : [{opacity: 1}, {opacity: 0}], {duration: 900});
@@ -426,7 +434,7 @@ function events() {
       audio.rushStart(); milestone(4); text("milestone-caption", "ゲージ解放 / 短文4連戦"); text("milestone-word", "FEVER RUSH");
     }
     if (e.type === "rushEnd") {
-      audio.rushEnd(); feedback(e.success ? "RUSH COMPLETE / 4体撃破" : "RUSH END / 通常戦へ", "good");
+      audio.rushEnd(!!e.success); feedback(e.success ? "RUSH COMPLETE / 4体撃破" : "RUSH END / 通常戦へ", "good");
     }
     if (e.type === "explosion") {
       audio.explosion(e.count ?? 0);
@@ -464,11 +472,38 @@ function advance(now: number) {
   }
   return Math.min(dt, 0.05);
 }
+function drawSpectacle(dt:number, s:GameState|null){
+  const playing=screen==='game'&&!!s&&!['paused','countdown'].includes(s.mode);
+  if(document.body.dataset.playing!==String(playing)) document.body.dataset.playing=String(playing);
+  text("heat-marquee",s?.luckyActive?"LUCKY SHOW // BONUS TIME":s?.rushing?"FEVER RUSH // KEEP FIRING":s?.effectsLevel===4?"OVERDRIVE // LIMIT BREAK":`NIGHTSHIFT // HEAT LEVEL ${s?.effectsLevel??0}`);
+  spectacle.update(playing?dt:0);
+  const current=spectacle.current;
+  if(current!==renderedCelebration){
+    renderedCelebration=current;
+    el('showtime').getAnimations().forEach(a=>a.cancel());
+    show('showtime',!!current);
+    if(current){
+      text('show-title',current.title);text('show-caption',current.caption);text('show-badge',current.badge);
+      el('showtime').dataset.theme=current.theme;
+      el('showtime').animate(preferences.motion?[
+        {opacity:0,transform:'translateY(18px) scale(1.28) rotate(-5deg)',offset:0},
+        {opacity:1,transform:'translateY(0) scale(1) rotate(-3deg)',offset:.12},
+        {opacity:1,transform:'translateY(0) scale(1.025) rotate(-3deg)',offset:.78},
+        {opacity:0,transform:'translateY(-16px) scale(.95) rotate(-3deg)',offset:1}
+      ]:[{opacity:1},{opacity:1,offset:.8},{opacity:0}],{duration:current.remaining*1000,fill:'both',easing:'ease-out'});
+    }
+  }
+  for(const animation of el('showtime').getAnimations()){
+    if(!playing&&animation.playState==='running')animation.pause();
+    else if(playing&&animation.playState==='paused')animation.play();
+  }
+}
 function tick(now: number) {
   const dt = advance(now);
   const s = game?.state ?? null;
   if(!document.hidden && screen === "game" && s?.mode !== "paused" && s?.mode !== "countdown") world.update(dt, s);
   events();
+  drawSpectacle(dt,s);
   if (s && screen === "game") draw(s);
   audio.setLevel(s?.effectsLevel ?? 0);
   audio.setRush(s?.rushing ?? false);
