@@ -37,7 +37,7 @@ test('v0.4 results without a rule field stay in version 3 after later upgrades',
   void _version;
   content = JSON.stringify({version:2,results:[withoutRules]});
   const saved = readSave();
-  assert.equal(RESULT_RULES_VERSION,5);
+  assert.equal(RESULT_RULES_VERSION,6);
   assert.equal(saved.results[0].rulesVersion,3);
   assert.equal(saved.personalBests[resultKey(prior)]?.score,600);
   assert.equal(saved.personalBests[resultKey(result(0))],undefined);

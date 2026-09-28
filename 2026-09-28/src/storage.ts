@@ -5,7 +5,7 @@ export type Preferences = {
   motion: boolean;
   practice: boolean;
 };
-export const RESULT_RULES_VERSION = 5;
+export const RESULT_RULES_VERSION = 6;
 export type SavedResult = {
   score: number;
   combo: number;

@@ -1,5 +1,6 @@
 import "./style.css";
 import "./fever.css";
+import "./journey.css";
 import { FeverShow } from "./fever.ts";
 import { CelebrationState } from "./spectacle.ts";
 import { Game, type GameState } from "./game.ts";
@@ -43,14 +44,17 @@ app.innerHTML = `<div id="world" aria-hidden="true">
 <button id="settings-button">設定</button>
 <button id="credits-button">クレジット</button>
 </div>
-<p class="keyboard-note">PC・キーボード専用 ／ 1 PLAY 約3–5分</p>
+<p class="keyboard-note">PC・キーボード専用 ／ 分岐のある短い一勤務</p>
 </div>
 <footer>
 <span>生きて、定時で帰ろう。</span>
-<span>ALPHA 0.9.1 / 黒猫商店街</span>
+<span>ALPHA 0.10 / 黒猫商店街</span>
 </footer>
 </section>
 <section id="hud" hidden>
+<div id="route-choice" hidden><p class="eyebrow">01 / 探る</p><h2>時計台へ、抜け道を探せ。</h2><p>店の奥で、何かが倒れる音がした。</p><div class="route-actions"><button id="route-service"><b>1</b> 搬入口へ<small>狭い裏道 / 素早い敵</small></button><button id="route-store"><b>2</b> 店内へ<small>灯りの先 / 重い足音</small></button></div><small>1・2キー、またはクリックで進路を選択</small></div>
+<div id="vista-panel" hidden><p class="eyebrow">04 / 息をつく</p><h2>夜明けまで、生き延びた。</h2><p>次は、時計台へ。</p><button id="vista-continue">勤務を終える <small>ENTER</small></button></div>
+<div id="journey-caption" aria-live="polite"></div>
 <div class="health-block">
 <p class="eyebrow" id="shift-label">
 </p>
@@ -109,7 +113,7 @@ app.innerHTML = `<div id="world" aria-hidden="true">
 <div class="fever-wing wing-left"><span>FEVER</span></div><div class="fever-wing wing-right"><span>FEVER</span></div>
 <div class="fever-orbit orbit-one"></div><div class="fever-orbit orbit-two"></div>
 <div class="fever-cutin"><small id="fever-cue-label">FEVER RUSH</small><strong id="fever-cue-title">限界残業</strong><span id="fever-cue-caption">短文4連戦、撃ち抜け。</span></div>
-<div class="fever-count"><strong id="fever-hit-count">0</strong><span>/ 4 撃破</span></div>
+<div class="fever-count"><strong id="fever-hit-count">0</strong><span>/ 4 群突破</span></div>
 <div class="fever-confetti">${Array.from({length:24},(_,i)=>`<i style="--i:${i};--x:${(i*37)%100}%"></i>`).join("")}</div>
 </div>
 <div id="spectacle-frame" aria-hidden="true">
@@ -186,6 +190,7 @@ const audio = new GameAudio();
 const spectacle = new CelebrationState();
 const fever = new FeverShow();
 let feverRevision = -1;
+const warnedEnemies=new Set<number>();
 let renderedCelebration = spectacle.current;
 function resetSpectacle(){fever.reset();show("fever-show",false);document.body.dataset.fever="off";spectacle.reset();renderedCelebration=null;show("showtime",false);el("showtime").getAnimations().forEach(a=>a.cancel());}
 audio.setVolumes(preferences.music, preferences.effects);
@@ -315,13 +320,14 @@ function prepare() {
   screen = "input";
   check = "";
   modal(
-    `<p class="eyebrow">装填確認</p><h2 id="modal-title">まず、弾を込めよう。</h2><p>日本語入力をオフにして、<b>go</b> と打ってください。</p><div id="check-letters">go</div><p id="check-status" class="note">そのままキーボードで入力できます。</p><p class="note">正しい文字 → 発砲 ／ 単語完成 → 撃破<br>打ち間違いは打ち直し不要。続きを打てばOK。<br>ゲージ満タンで短文4連戦。赤いタンクの敵は、倒すと隣も巻き込みます。<br>踊るラッキーゾンビはボーナス。見逃してもペナルティなし。</p><button id="check-back" class="text-button">タイトルに戻る</button>`,
+    `<p class="eyebrow">装填確認</p><h2 id="modal-title">まず、弾を込めよう。</h2><p>日本語入力をオフにして、<b>go</b> と打ってください。</p><div id="check-letters">go</div><p id="check-status" class="note">そのままキーボードで入力できます。</p><p class="note">正しい文字 → 発砲 ／ 単語完成 → 撃破<br>打ち間違いは打ち直し不要。続きを打てばOK。<br>1・2キーで進路を選択。広場のFEVERでは一語で3体を一掃。<br>踊るラッキーゾンビはボーナス。見逃してもペナルティなし。</p><button id="check-back" class="text-button">タイトルに戻る</button>`,
     "input",
   );
   el("check-back").onclick = title;
   focus();
 }
 function start(seed = Date.now() >>> 0) {
+  warnedEnemies.clear();
   resetSpectacle();
   world.reset();
   lastTime = performance.now();
@@ -329,7 +335,7 @@ function start(seed = Date.now() >>> 0) {
   game = new Game({
     difficulty: preferences.difficulty,
     practice: preferences.practice,
-    seed,
+    seed, journey: true,
   });
   world.update(0, game.state);
   lastTime = performance.now();
@@ -432,15 +438,24 @@ function finish(s: GameState) {
   el("result-title").onclick = title;
 }
 const stages = [
-  "入口 / ようこそ深夜へ",
-  "アーケード / まだ帰れない",
-  "裏通り / 残業の気配",
-  "終点 / 店長、出勤",
+  "裏路地 / 灯りの先へ",
+  "店内 / 重い足音",
+  "荷捌き広場 / 解き放て",
+  "広場の奥 / 最後の用心棒",
 ];
 function draw(s: GameState) {
   if(s.mode === "playing") luckyOutro=null;
-  text("stage", `SHIFT 0${s.stage + 1} — ${stages[s.stage]}`);
-  text("shift-label", `SHIFT 0${s.stage + 1} / ${stages[s.stage].split(" / ")[0]}`);
+  const exploring=s.mode==='explore', vista=s.mode==='vista';
+  const quiet=exploring||vista||s.mode==='clear'||world.moving;
+  document.body.dataset.quiet=String(quiet);
+  document.body.dataset.area=s.journey?.area??'alley';
+  show('route-choice',exploring);
+  show('vista-panel',vista&&!world.moving);
+  show('journey-caption',world.moving);
+  text('journey-caption',s.journey?.area==='roof'?'階段の先に、朝の気配。':s.journey?.area==='store'?'扉の向こうで、足音が止まった。':s.journey?.area==='service'?'狭い道から、誰かが駆けてくる。':s.journey?.area==='court'?'空が開けた。集団が、こちらを見た。':'灯りを頼りに、奥へ。');
+  const stageLabel=exploring?'裏路地 / 進路を選べ':(vista||s.mode==='clear')?'屋上 / 夜明けの気配':s.stage===1&&s.journey?.route==='service'?'搬入口 / 狭い抜け道':stages[s.stage];
+  text("stage", `SHIFT 0${s.stage + 1} — ${stageLabel}`);
+  text("shift-label", `SHIFT 0${s.stage + 1} / ${stageLabel.split(" / ")[0]}`);
   text("score", String(s.score).padStart(6, "0"));
   text("combo", String(s.combo));
   text("combo-word", [
@@ -464,20 +479,21 @@ function draw(s: GameState) {
   }
   const charge = s.rushing ? s.rushRemaining / 4 : s.rushCharge / 100;
   el("fever-fill").style.transform = `scaleX(${charge})`;
-  text("fever-next", s.rushing ? `RUSH / 残り ${s.rushRemaining} 体` : s.stage === 3 ? "FINAL SHIFT / 店長を撃退せよ" : s.rushes >= 2 ? "FEVER 2 / 2 — 今夜のラッシュ終了" : s.rushCharge >= 100 ? "READY / この集団の後に突入" : `CHARGE ${Math.round(s.rushCharge)}% / 撃破でたまる`);
+  text("fever-next", s.rushing ? `SHOTGUN / 残り ${s.rushRemaining} 群` : s.stage === 3 ? "FINAL SHIFT / 店長を撃退せよ" : s.journey && s.rushes >= 1 ? "一掃完了 / 時計台への道を開け" : s.rushes >= 2 ? "FEVER 2 / 2 — 今夜のラッシュ終了" : s.rushCharge >= 100 ? "READY / この集団の後に突入" : s.journey ? "広場でSHOTGUN解放" : `CHARGE ${Math.round(s.rushCharge)}% / 撃破でたまる`);
   show("rush-banner", s.rushing);
-  text("rush-count", `残り ${s.rushRemaining} / 4`);
+  text("rush-count", `一語で3体 / 残り ${s.rushRemaining} 群`);
   if (el("rush-pips").dataset.remaining !== String(s.rushRemaining)) {
     el("rush-pips").dataset.remaining = String(s.rushRemaining);
     el("rush-pips").innerHTML = [0,1,2,3].map(i => `<i class="${i < 4-s.rushRemaining ? "done" : ""}"></i>`).join("");
   }
-  show("boss-hud", s.stage === 3 && s.mode !== "clear");
+  show("boss-hud", s.stage === 3 && !quiet);
   text("boss-phase", ["01 / 開店準備", `02 / 反撃 ${s.bossCounter || 1}/3`, "03 / 最終通告"][Math.min(2, s.bossPhase)]);
   if (el("boss-pips").dataset.phase !== String(s.bossPhase)) {
     el("boss-pips").dataset.phase = String(s.bossPhase);
     el("boss-pips").innerHTML = [0,1,2].map(i => `<i class="${i < s.bossPhase ? "done" : i === s.bossPhase ? "active" : ""}"></i>`).join("");
   }
-  const e = s.enemies.find((e) => e.id === s.lockedId) ?? s.enemies[0];
+  const targets=s.enemies.filter(e=>!e.support);
+  const e = targets.find((e) => e.id === s.lockedId) ?? targets[0];
   const blastVictims = new Set(s.enemies.flatMap(e => e.explosive ? e.blastTargets : []));
   const sig = JSON.stringify([
     s.enemies.map((e) => [e.id, e.phrase, e.keys, e.locked, e.threatRank, e.explosive, e.blastTargets, e.lucky]),
@@ -487,7 +503,7 @@ function draw(s: GameState) {
   ]);
   if (sig !== signature) {
     signature = sig;
-    el("targets").innerHTML = s.enemies
+    el("targets").innerHTML = targets
       .map(
         (e) =>
           `<div class="target ${e.locked ? "locked" : ""} ${e.lucky ? "lucky" : e.explosive ? "explosive" : blastVictims.has(e.id) ? "blast-linked" : ""}" data-enemy="${e.id}"><b>${e.keys.join("/").toUpperCase()}</b><span><small>${e.lucky ? "ラッキーゾンビ / 攻撃なし" : e.explosive ? `爆発ゾンビ / 巻き込み ${e.blastTargets.length}体` : blastVictims.has(e.id) ? "巻き込み対象" : e.rush ? "RUSH TARGET" : ({office:"徘徊者",runner:"疾走者",worker:"巨体",boss:"店長"})[e.kind]}${e.threatRank === 1 && s.enemies.length > 1 ? " / 接近中" : ""}</small>${e.phrase}</span><i class="enemy-time"></i></div>`,
@@ -507,7 +523,7 @@ function draw(s: GameState) {
       r.append(current, document.createTextNode(e.guide.slice(1)));
       el("romaji").append(t, r);
     }
-    text("input-status", s.luckyActive ? "ミス・見逃しでコンボは切れません" : s.lockedId
+    text("input-status", s.rushing ? "中央を打ち切れ / ショットガンで3体一掃" : s.luckyActive ? "ミス・見逃しでコンボは切れません" : s.lockedId
       ? "照準固定 / そのまま打ち切れ"
       : e?.explosive ? "長文を打ち切って、一掃せよ" : s.enemies.length > 1 ? "接近中の敵を優先 / 一文字で狙う" : "最初の一文字で狙う");
     text("target-number", s.luckyActive ? `LUCKY SHIFT / ${s.luckyStep} OF 3` : s.stage === 3
@@ -535,7 +551,7 @@ function draw(s: GameState) {
         ? ["店長が出勤しました。", "まだ、帰らせてもらえない。", "これで、最後の残業だ。"][Math.min(2, s.bossPhase)]
         : "足音が、近づいてくる。");
   if (s.mode !== lastMode) {
-    if (s.mode === "playing" && lastMode === "countdown") audio.start();
+    if (lastMode === "countdown" && s.mode!=="paused") audio.start();
     if (s.mode === "clear" || s.mode === "defeat") finishAt = performance.now() + (s.mode === "clear" ? 3100 : 700);
     lastMode = s.mode;
   }
@@ -569,7 +585,7 @@ function events() {
     if(e.type === "kill" && !e.collateral && spectacle.rushing) audio.rushKill(spectacle.rushHits);
     if(world.event(e)) audio.storefrontImpact();
     if (e.type === "hit") {
-      audio.shot({lucky:e.lucky, rush: game!.state.rushing, zone: e.hitZone === "head" ? "head" : e.hitZone === "shoulder" ? "limb" : "body", finishing: e.finisher, level: e.effectsLevel ?? game!.state.effectsLevel});
+      audio.shot({lucky:e.lucky, rush: e.rush, zone: e.hitZone === "head" ? "head" : e.hitZone === "shoulder" ? "limb" : "body", finishing: e.finisher, level: e.effectsLevel ?? game!.state.effectsLevel});
       punch("reticle", 1.55);
 
     }
@@ -608,7 +624,7 @@ function events() {
       audio.rushStart(); milestone(4); text("milestone-caption", "ゲージ解放 / 短文4連戦"); text("milestone-word", "限界残業");
     }
     if (e.type === "rushEnd") {
-      audio.rushEnd(!!e.success); feedback(e.success ? "RUSH COMPLETE / 4体撃破" : "RUSH END / 通常戦へ", "good");
+      audio.rushEnd(!!e.success); feedback(e.success ? "RUSH COMPLETE / 4群を突破" : "RUSH END / 通常戦へ", "good");
     }
     if (e.type === "explosion") {
       audio.explosion(e.count ?? 0);
@@ -624,11 +640,14 @@ function events() {
     }
     if (e.type === "bossPhase" && e.phase !== undefined && e.phase < 3) audio.bossPhase((e.phase + 1) as 1 | 2 | 3);
     if (e.type === "clear") audio.victory();
+    if (e.type === "vista") { resetSpectacle(); audio.setSceneMood('vista'); }
+    if (e.type === "sweep") { audio.sweep(e.count??3); text('score-pop',`${e.count??3}体 一掃！`); punch('score',1.18); }
+
     if (e.type === "miss") {
       if(!e.lucky) audio.miss();
       feedback(e.lucky ? "続きからどうぞ！ / コンボ継続" : "続きから、落ち着いて。", e.lucky ? "lucky" : "miss");
     }
-    if (e.type === "attack") {
+    if (e.type === "attack" && !e.collateral) {
       audio.hurt();
       feedback("近づかれた！", "damage");
       document.body.classList.remove("hurt");
@@ -662,7 +681,7 @@ function drawSpectacle(dt:number, s:GameState|null){
     text("fever-hit-count", String(fever.hits));
     text("fever-cue-label", phase === "complete" ? "FEVER COMPLETE" : phase === "end" ? "RUSH END" : "FEVER RUSH");
     text("fever-cue-title", phase === "complete" ? "全員退勤" : phase === "end" ? "残業終了" : "限界残業");
-    text("fever-cue-caption", phase === "complete" ? "4 / 4 撃破・完全突破！" : phase === "end" ? "通常勤務へ" : "短文4連戦、撃ち抜け。");
+    text("fever-cue-caption", phase === "complete" ? "4群突破・道を切り開いた！" : phase === "end" ? "通常勤務へ" : "一語で3体、撃ち抜け。");
     el("fever-hit-count").getAnimations().forEach(a => a.cancel());
     if (preferences.motion && fever.active && fever.hits > 0) el("fever-hit-count").animate(
       [{transform:"scale(1.7) rotate(-12deg)"},{transform:"scale(1) rotate(0deg)"}],
@@ -700,6 +719,9 @@ function tick(now: number) {
   events();
   drawSpectacle(dt,s);
   if (s && screen === "game") draw(s);
+  audio.setSceneMood(!s||s.mode==='explore'||world.moving?'explore':s.mode==='vista'||s.mode==='clear'?'vista':s.rushing?'fever':'combat');
+  const threat=s?.enemies.find(e=>!e.support&&e.telegraph);
+  if(threat && !warnedEnemies.has(threat.id)){warnedEnemies.add(threat.id);audio.approach(.85);}
   audio.setLevel(s?.effectsLevel ?? 0);
   audio.setRush(s?.rushing ?? false);
   audio.setLucky(s?.luckyActive ?? false);
@@ -757,6 +779,12 @@ window.addEventListener("keydown", (e) => {
     }
     return;
   }
+  if(screen==='game' && game?.state.mode==='explore' && ['1','2'].includes(e.key)){
+    e.preventDefault();game.chooseRoute(e.key==='1'?'service':'store');focus();return;
+  }
+  if(screen==='game' && game?.state.mode==='vista' && e.key==='Enter' && !world.moving){
+    e.preventDefault();game.continueVista();return;
+  }
   if (
     screen === "game" &&
     game?.state.mode === "playing" &&
@@ -786,6 +814,9 @@ document.addEventListener("visibilitychange", () => {
   if (document.hidden) pause("画面を離れたため、一時停止しました。");
 });
 el("pause-button").onclick = () => pause();
+el('route-service').onclick=()=>{game?.chooseRoute('service');focus();};
+el('route-store').onclick=()=>{game?.chooseRoute('store');focus();};
+el('vista-continue').onclick=()=>{if(!world.moving)game?.continueVista();focus();};
 el("start-button").onclick = () => {
   void audio.unlock().then((ok) => {
     if (!ok) notify("音声を開始できませんでした。無音でプレイできます。");

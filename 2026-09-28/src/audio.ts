@@ -4,6 +4,7 @@ type AudioFile = (typeof FILES)[number];
 type VoiceGroup = "gun" | "impact" | "accent";
 type Voice = { source: AudioBufferSourceNode; gain: GainNode; group: VoiceGroup };
 export type ShotOptions = { zone?: "body" | "head" | "limb"; finishing?: boolean; level?: number; rush?: boolean; lucky?: boolean };
+export type SceneMood = "explore" | "combat" | "fever" | "vista";
 export const LUCKY_BPM = 120;
 const LUCKY_STEP = 60 / LUCKY_BPM / 2;
 const clamp = (n: number, a: number, b: number) => Math.min(b, Math.max(a, Number.isFinite(n) ? n : a));
@@ -21,6 +22,12 @@ export class GameAudio {
   private filter!: BiquadFilterNode;
   private rushFilter!: BiquadFilterNode;
   private rushLayer!: GainNode;
+  private ambience!: GainNode;
+  private ambienceFilter!: BiquadFilterNode;
+  private ambienceSource: AudioBufferSourceNode | null = null;
+  private ambienceBuffer: AudioBuffer | null = null;
+  private sceneMood: SceneMood = "combat";
+  private lastApproach = -1;
   private musicSource: AudioBufferSourceNode | null = null;
   private musicSourceGain: GainNode | null = null;
   private musicStartedAt = 0;
@@ -73,6 +80,10 @@ export class GameAudio {
     this.accentBus.connect(this.effects);
     this.luckyMusic = c.createGain(); this.luckyMusic.gain.value = 0;
     this.luckyMusic.connect(this.master);
+    this.ambienceFilter = c.createBiquadFilter(); this.ambienceFilter.type = "lowpass";
+    this.ambienceFilter.frequency.value = 680;
+    this.ambience = c.createGain(); this.ambience.gain.value = 0;
+    this.ambienceFilter.connect(this.ambience).connect(this.effects);
     this.context = c; this.applyVolumes();
     return c;
   }
@@ -92,7 +103,7 @@ export class GameAudio {
       } catch (error) { console.warn(`Audio unavailable: ${file}`, error); }
       finally { onProgress?.(++done, missing.length); }
     })).then(() => {
-      if (this.active) this.beginMusic();
+      if (this.active) { this.beginMusic(); this.beginAmbience(); }
       const complete = FILES.every((file) => this.buffers.has(file));
       if (!complete) this.loading = null; // a later user gesture may retry failed downloads
       return complete;
@@ -105,7 +116,7 @@ export class GameAudio {
       const c = this.init();
       await c.resume();
       void this.load();
-      if (this.active) this.beginMusic();
+      if (this.active) { this.beginMusic(); this.beginAmbience(); }
       return c.state === "running";
     } catch { return false; }
   }
@@ -388,6 +399,29 @@ export class GameAudio {
     this.subdrop(0.16 + weight * 0.012);
     this.duckMusic(0.38, 0.62);
   }
+  /** Sparse warning for a nearby threat. The caller chooses when the threshold is crossed. */
+  approach(intensity: number): void {
+    const c = this.context;
+    if (!this.active || !c || c.state !== "running" || c.currentTime - this.lastApproach < 0.45) return;
+    this.lastApproach = c.currentTime;
+    const weight = clamp(intensity, 0, 1);
+    this.play("body.ogg", 0.07 + weight * 0.09, "impact", 0, 0.58 + weight * 0.1, 0.19);
+    if (weight > 0.55) this.play("metal.ogg", 0.045 + weight * 0.045, "accent", 0.095, 0.55, 0.13);
+    this.subdrop(0.035 + weight * 0.055);
+  }
+  /** A single bounded shotgun/shell and group impact cue for a FEVER sweep. */
+  sweep(count: number): void {
+    const c = this.context;
+    if (!this.active || !c || c.state !== "running") return;
+    const weight = clamp(Math.floor(count), 1, 8);
+    this.play("shot-1.mp3", 0.72, "gun", 0, 0.78, 0.42);
+    this.play("shot-3.mp3", 0.33, "gun", 0.014, 0.68, 0.36);
+    this.play("metal.ogg", 0.22, "accent", 0.16, 0.94, 0.24);
+    this.play("body.ogg", 0.32 + weight * 0.035, "impact", 0.035, 0.7, 0.39);
+    this.play("glass.ogg", 0.11 + weight * 0.015, "accent", 0.085, 0.88, 0.34);
+    this.subdrop(0.14 + weight * 0.012);
+    this.duckMusic(0.42, 0.55);
+  }
   miss(): void {
     const c = this.context;
     if (!c || c.currentTime - this.lastMiss < 0.09) return;
@@ -465,11 +499,45 @@ export class GameAudio {
   private applyVolumes(): void {
     const c = this.context;
     if (!c) return;
-    this.music.gain.setTargetAtTime(this.muted ? 0 : this.musicVolume * 0.5, c.currentTime, 0.03);
+    const musicScale = { explore: 0.18, combat: 1, fever: 0.95, vista: 0.08 }[this.sceneMood];
+    this.music.gain.setTargetAtTime(this.muted ? 0 : this.musicVolume * 0.5 * musicScale, c.currentTime, 0.12);
     this.effects.gain.setTargetAtTime(this.muted ? 0 : this.effectsVolume, c.currentTime, 0.018);
     this.luckyMusic.gain.setTargetAtTime(this.muted || !this.luckyActive || !this.active ? 0 : this.musicVolume * 0.43, c.currentTime, 0.03);
+    this.ambience.gain.setTargetAtTime(this.muted || !this.active ? 0 :
+      this.sceneMood === "explore" ? 0.11 : this.sceneMood === "vista" ? 0.16 : this.sceneMood === "combat" ? 0.035 : 0.018,
+      c.currentTime, 0.2);
   }
-  start(): void { this.active = true; this.beginMusic(); this.applyVolumes(); this.scheduleLucky(); }
+  /** Changes the underlying bed without restarting the music or queuing future cues. */
+  setSceneMood(mood: SceneMood): void {
+    if (this.sceneMood === mood) return;
+    this.sceneMood = mood;
+    if (this.active) this.beginAmbience();
+    this.applyVolumes();
+  }
+  private beginAmbience(): void {
+    const c = this.context;
+    if (!this.active || !c || c.state !== "running" || this.ambienceSource || typeof c.createBuffer !== "function") return;
+    if (!this.ambienceBuffer) {
+      // Fixed-seed, low-passed noise makes a continuous rain/wind bed without an asset.
+      const length = c.sampleRate * 2;
+      const buffer = c.createBuffer(1, length, c.sampleRate);
+      const samples = buffer.getChannelData(0);
+      let seed = 18721, drift = 0;
+      for (let i = 0; i < length; i++) {
+        seed = (1664525 * seed + 1013904223) >>> 0;
+        const white = seed / 0xffffffff * 2 - 1;
+        drift = drift * 0.992 + white * 0.008;
+        samples[i] = white * 0.29 + drift * 0.71;
+      }
+      this.ambienceBuffer = buffer;
+    }
+    const source = c.createBufferSource(); source.buffer = this.ambienceBuffer; source.loop = true;
+    source.connect(this.ambienceFilter);
+    this.ambienceSource = source;
+    source.onended = () => { source.disconnect(); if (this.ambienceSource === source) this.ambienceSource = null; };
+    source.start();
+  }
+  start(): void { this.active = true; this.beginMusic(); this.beginAmbience(); this.applyVolumes(); this.scheduleLucky(); }
   private beginMusic(): void {
     const c = this.context, buffer = this.buffers.get("darkness-road.ogg");
     if (!this.active || !c || c.state !== "running" || !buffer || this.musicSource) return;
@@ -492,6 +560,13 @@ export class GameAudio {
     this.active = false;
     const c = this.context;
     this.setLucky(false);
+    if (this.ambienceSource) {
+      const source = this.ambienceSource;
+      this.ambienceSource = null;
+      try { source.stop(); } catch { /* already stopped */ }
+      source.disconnect();
+    }
+    this.applyVolumes();
     // Arrival and phrase cues are also scheduled nodes, even after the groove ends.
     for (const osc of this.luckyOscillators) {
       try { osc.stop(c?.currentTime); } catch { /* already ended */ }
@@ -522,6 +597,7 @@ export class GameAudio {
     this.voices = [];
     this.oscillators.clear();
     this.lastShot = -1; this.lastMiss = -1;
+    this.lastApproach = -1;
     this.lastBossPhase = 0;
     if (c) { this.musicDuck.gain.cancelScheduledValues(c.currentTime); this.musicDuck.gain.setValueAtTime(1, c.currentTime); }
     this.setRush(false);
@@ -529,5 +605,6 @@ export class GameAudio {
   dispose(): void {
     this.stop(); void this.context?.close();
     this.context = null; this.loading = null; this.buffers.clear();
+    this.ambienceBuffer = null;
   }
 }
