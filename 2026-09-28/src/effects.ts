@@ -106,9 +106,10 @@ export class CombatEffects {
     selected.sprite.scale.setScalar(size * .5);
   }
 
-  finisher(pos: T.Vector3, tier: number, reduced: boolean) {
+  finisher(pos: T.Vector3, tier: number, reduced: boolean, focused = false) {
     const level = Math.max(0, Math.min(4, tier | 0));
-    this.cloud(pos, true, reduced ? .38 : 1.05 + level * .2);
+    this.cloud(pos, true, reduced || focused ? .38 : 1.05 + level * .2);
+    if(focused){this.cloud(pos,false,.6);return;}
     if (reduced) return;
     this.cloud(pos, false, .7 + level * .1);
     this.pulse(pos, level, .85 + level * .25, .34, false);
@@ -141,7 +142,7 @@ export class CombatEffects {
     }
   }
 
-  burst(pos: T.Vector3, tier: number, kill: boolean, reduced: boolean, strength = 1) {
+  burst(pos: T.Vector3, tier: number, kill: boolean, reduced: boolean, strength = 1, grounded = false) {
     const level = Math.max(0, Math.min(4, tier | 0));
     const power = Math.max(0, Math.min(2.5, strength));
     const count = Math.min(180, Math.round((reduced ? (kill ? 12 : 3) : kill ? 38 + level * 16 : 8 + level * 3) * power));
@@ -159,6 +160,7 @@ export class CombatEffects {
       p.color.copy(i % 7 === 0 ? WHITE : COLORS[i % 5 === 0 ? 0 : level]);
     }
     if (!kill) return;
+    if(grounded){this.point.set(pos.x,.05,pos.z);this.pulse(this.point,level,reduced?.6:1.8,.3,true);return;}
     this.pulse(pos, level, reduced ? .7 : (1.5 + level * .38) * power, reduced ? .2 : .52, false);
     if (reduced) return;
     this.pulse(pos, 1, (2 + level * .45) * power, .64, false);

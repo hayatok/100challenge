@@ -40,6 +40,53 @@ export async function createWeapon(): Promise<T.Group> {
   });
   weapon.add(pistol);
 
+  // Built from primitives on the existing camera-local axis. The muzzle stays
+  // at (0, .03, -.28), the flash coordinate owned by scene.ts.
+  const shotgun = new T.Group();
+  shotgun.name = 'shotgun';
+  shotgun.scale.setScalar(.68);
+  shotgun.position.y=-.07;
+  shotgun.visible = false;
+  const blued = new T.MeshStandardMaterial({ color: 0x252b2d, metalness: .82, roughness: .36 });
+  const edge = new T.MeshStandardMaterial({ color: 0x707779, metalness: .9, roughness: .29 });
+  const recess = new T.MeshStandardMaterial({ color: 0x101617, metalness: .34, roughness: .8 });
+  const wood = new T.MeshStandardMaterial({ color: 0x4b3023, metalness: .03, roughness: .7 });
+  const grain = new T.MeshStandardMaterial({ color: 0x6e4932, metalness: .02, roughness: .67 });
+  function box(name: string, size: [number, number, number], position: [number, number, number], material: T.Material, parent = shotgun): T.Mesh {
+    const mesh = new T.Mesh(new T.BoxGeometry(...size), material);
+    mesh.name = name; mesh.position.set(...position); mesh.castShadow = true;
+    parent.add(mesh); return mesh;
+  }
+  function tube(name: string, radius: number, length: number, position: [number, number, number], material: T.Material, parent = shotgun): T.Mesh {
+    const mesh = new T.Mesh(new T.CylinderGeometry(radius, radius, length, 12), material);
+    mesh.name = name; mesh.rotation.x = Math.PI / 2; mesh.position.set(...position); mesh.castShadow = true;
+    parent.add(mesh); return mesh;
+  }
+  box('shotgun-receiver', [.155, .115, .17], [0, -.015, .035], blued);
+  box('shotgun-ejection-port', [.01, .044, .085], [.081, .008, .027], recess);
+  box('shotgun-port-lip', [.012, .007, .088], [.088, .033, .027], edge);
+  tube('shotgun-barrel', .034, .38, [0, .035, -.08], blued);
+  tube('shotgun-muzzle-ring', .039, .022, [0, .035, -.269], edge);
+  tube('shotgun-magazine-tube', .025, .32, [0, -.031, -.105], blued);
+  tube('shotgun-magazine-cap', .029, .018, [0, -.031, -.262], edge);
+  const pump = new T.Group(); pump.name = 'shotgun-pump'; shotgun.add(pump);
+  box('shotgun-pump-fore-end', [.125, .085, .12], [0, -.035, -.135], wood, pump);
+  for (let i = -2; i <= 2; i++) {
+    box(`shotgun-pump-rib-${i}`, [.128, .003, .004], [0, -.077, -.135 + i * .018], grain, pump);
+  }
+  box('shotgun-pump-band', [.13, .09, .012], [0, -.035, -.196], blued, pump);
+  const stock=box('shotgun-stock', [.09, .075, .18], [0, -.06, .203], wood);
+  stock.rotation.x=-.23;
+  box('shotgun-stock-comb', [.085, .025, .12], [0, -.025, .205], grain);
+  box('shotgun-butt-pad', [.10, .095, .018], [0, -.08, .3], recess);
+  const grip = box('shotgun-pistol-grip', [.077, .125, .07], [0, -.116, .10], wood);
+  grip.rotation.x = -.31;
+  const trigger = box('shotgun-trigger', [.009, .046, .012], [0, -.104, .008], edge);
+  trigger.rotation.x = -.2;
+  box('shotgun-trigger-guard-bottom', [.07, .008, .105], [0, -.147, .044], blued);
+  box('shotgun-front-sight', [.024, .019, .018], [0, .084, -.247], edge);
+  weapon.add(shotgun);
+
   // Keep the detailed right arm and hand from the FPS rig. Its source mesh has
   // both arms in one symmetric skin; left-half triangles belong to the right arm.
   const arms = armsAsset.scene;
@@ -106,11 +153,20 @@ export async function createWeapon(): Promise<T.Group> {
   return weapon;
 }
 
+export function setWeaponMode(weapon: T.Group, mode: 'pistol' | 'shotgun'): void {
+  const pistol = weapon.getObjectByName('pistol');
+  const shotgun = weapon.getObjectByName('shotgun');
+  if (pistol) pistol.visible = mode === 'pistol';
+  if (shotgun) shotgun.visible = mode === 'shotgun';
+}
+
 /** Slide travels along source -X (toward the camera after the pistol's Y turn). */
 export function animateWeapon(weapon: T.Group, recoil: number, finishing = false, motion = true): void {
   const pistol = weapon.getObjectByName('pistol');
-  if (!pistol) return;
   const amount = T.MathUtils.clamp(recoil, 0, 1);
+  const pump = weapon.getObjectByName('shotgun-pump');
+  if (pump) pump.position.z = amount * (motion ? finishing ? .092 : .061 : .014);
+  if (!pistol) return;
   const travel = amount * (motion ? finishing ? 0.067 : 0.052 : 0.012);
   for (const name of ['Pistol_Slide', 'Pistol_Slide4']) {
     const slide = pistol.getObjectByName(name);
