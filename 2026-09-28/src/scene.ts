@@ -2,11 +2,13 @@ import * as T from "three";
 import { EffectComposer } from "three/addons/postprocessing/EffectComposer.js";
 import { RenderPass } from "three/addons/postprocessing/RenderPass.js";
 import { UnrealBloomPass } from "three/addons/postprocessing/UnrealBloomPass.js";
+import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
 import { OutputPass } from "three/addons/postprocessing/OutputPass.js";
 import { loadCharacterLibrary, chooseDeathClip, type CharacterInstance, type CharacterLibrary } from "./characters.ts";
 import { createCharacterMotion, type CharacterMotion } from "./character-motion.ts";
 import { CombatEffects } from "./effects.ts";
 import { createWeapon, animateWeapon } from "./weapon.ts";
+import { StorefrontProps } from "./storefront.ts";
 import { createEnvironment } from "./environment.ts";
 import type { EnemyView, GameEvent, GameState } from "./game.ts";
 
@@ -76,6 +78,8 @@ export class World {
   private luckyFill = new T.PointLight(0xffd373,0,10,2);
   private luckyFloor = new T.Mesh(new T.RingGeometry(.95,1,64),new T.MeshBasicMaterial({color:0xffa6d7,transparent:true,opacity:.45,side:T.DoubleSide,depthWrite:false}));
   private effects = new CombatEffects(this.scene);
+  private storefront = new StorefrontProps();
+  private keyLight = new T.DirectionalLight(0xbedaff,2.6);
   private cameraZ = 5;
   private elapsed = 0;
   private particles: { mesh: T.Mesh; velocity: T.Vector3; life: number }[] = [];
@@ -102,22 +106,30 @@ export class World {
     this.renderer.toneMapping = T.ACESFilmicToneMapping;
     this.renderer.toneMappingExposure = 1.3;
     this.renderer.shadowMap.enabled = true;
-    this.renderer.shadowMap.type = T.PCFSoftShadowMap;
+    this.renderer.shadowMap.type = T.PCFShadowMap;
     container.append(this.renderer.domElement);
+    const studio=new RoomEnvironment();
+    const pmrem=new T.PMREMGenerator(this.renderer);
+    this.scene.environment=pmrem.fromScene(studio,.04).texture;
+    this.scene.environmentIntensity=.2;
+    studio.dispose();pmrem.dispose();
     this.scene.background = new T.Color("#121d23");
     this.scene.fog = new T.FogExp2("#152129", 0.027);
-    this.scene.add(new T.HemisphereLight(0xb5d4dd, 0x5b4c35, 2.1));
-    const key = new T.DirectionalLight(0xbedaff, 3.2);
+    this.scene.add(new T.HemisphereLight(0xb5d4dd, 0x5b4c35, 1.2));
+    const key = this.keyLight;
+    key.castShadow=true;key.shadow.mapSize.set(1024,1024);
+    Object.assign(key.shadow.camera,{left:-8,right:8,top:8,bottom:-8,near:1,far:32});
+    key.shadow.bias=-.0003;key.shadow.normalBias=.035;
     key.position.set(-4, 8, 5);
-    this.scene.add(key);
+    this.scene.add(key,key.target,this.storefront.root);
     this.scene.add(this.camera, this.bossLight,this.luckyLight,this.luckyFill,this.luckyFloor);
     this.luckyFloor.rotation.x=-Math.PI/2;this.luckyFloor.visible=false;
     this.camera.position.set(0, 1.65, 5);
-    const fill = new T.PointLight(0xffcc9b, 28, 20, 2);
+    const fill = new T.PointLight(0xffcc9b, 14, 20, 2);
     fill.position.set(0, 2, -1);
     this.camera.add(fill);
     this.camera.add(this.gun);
-    this.gun.position.set(0.48, -0.19, -0.65);
+    this.gun.position.set(0.48, -0.10, -0.65);
     const canvas = document.createElement("canvas");
     canvas.width = canvas.height = 128;
     const ctx = canvas.getContext("2d")!;
@@ -221,6 +233,7 @@ export class World {
     this.celebration = 0;
     this.previousTier = 0;
     this.effects.reset();
+    this.storefront.reset();
     this.cameraZ = 5 - stage * 15;
   }
   private resize() {
@@ -392,6 +405,11 @@ export class World {
         this.playAction(a,death);
       }
       this.effects.burst(a.root.position.clone().add(new T.Vector3(0, a.boss ? 1.9 : 1.3, 0)), this.level, true, !this.motion, a.boss ? 1.8 : e.collateral ? 1.4 : a.rush ? 1.25 : milestone ? 1.35 : .85);
+      if(!a.boss&&!a.rush&&!e.collateral&&this.cameraZ>3){
+        const origin=a.root.position.clone().add(new T.Vector3(0,1.1,0));
+        const contact=this.storefront.strike(origin,!this.motion);
+        if(contact){this.effects.tracer(origin,contact,2);this.effects.burst(contact,2,true,!this.motion,.6);return true;}
+      }
     }
     if (e.type === "attack" && a) {
       if (a.boss) { a.recovering = true; a.attacking = false; }
@@ -416,6 +434,9 @@ export class World {
     const desired = 5 - stage * 15;
     this.cameraZ = T.MathUtils.damp(this.cameraZ, desired, 2, delta);
     this.camera.position.set(0, 1.65, this.cameraZ);
+    this.keyLight.position.set(-4,8,this.cameraZ+2);this.keyLight.target.position.set(0,0,this.cameraZ-5);
+    this.keyLight.target.updateMatrixWorld();
+    this.storefront.update(delta,!this.motion);
     this.camera.rotation.set(0, 0, 0);
     const active = new Set<number>();
     for (const e of state?.enemies ?? []) {
@@ -525,7 +546,7 @@ export class World {
     );
     this.gun.position.z = -0.65 + this.recoil * (this.motion ? .06 : .015);
     this.gun.position.y =
-      -0.19 + (this.motion ? Math.sin(this.elapsed * 1.4) * 0.003 : 0);
+      -0.10 + (this.motion ? Math.sin(this.elapsed * 1.4) * 0.003 : 0);
     this.muzzle.visible = this.recoil > 0.45;
     if (delta > 0) this.muzzle.rotation.z = Math.random() * Math.PI;
     this.muzzle.scale.setScalar(this.motion ? .75 + this.level * .04 + this.finishing * .45 : .4);

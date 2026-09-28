@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { installSurface } from './surface-materials.ts';
 
 /** The camera travels along -Z. The clear combat lane is approximately x=-2.8…2.8. */
 export interface ArcadeEnvironment {
@@ -269,13 +270,20 @@ export async function createEnvironment(scene: THREE.Scene): Promise<ArcadeEnvir
     puddle: ownMaterial(new THREE.MeshPhysicalMaterial({ color: 0x172025, metalness: .06, roughness: .27, clearcoat: .9, clearcoatRoughness: .14, transparent: true, opacity: .24, depthWrite: false, side: THREE.DoubleSide })),
   };
 
+  await Promise.all([
+    installSurface(mat.road,'worn_asphalt',new THREE.Vector2(3.13,27.7),ownTexture),
+    installSurface(mat.shutter,'worn_shutter',new THREE.Vector2(3.9,1.9),ownTexture),
+  ]);
+  mat.road.color.set(0x737f82);mat.road.roughness=.8;mat.road.metalness=.04;
+  mat.shutter.color.set(0x899b9b);mat.shutter.normalScale.set(.32,.32);
+
   function box(name: string, x: number, y: number, z: number, sx: number, sy: number, sz: number, material: THREE.Material, rotationY = 0): THREE.Mesh {
     const mesh = new THREE.Mesh(unitBox, material);
     mesh.name = name;
     mesh.position.set(x, y, z);
     mesh.scale.set(sx, sy, sz);
     mesh.rotation.y = rotationY;
-    mesh.castShadow = false;
+    mesh.castShadow = z > -12 && z < 7 && /jamb|girder|awning|frame|housing/i.test(name);
     mesh.receiveShadow = true;
     root.add(mesh);
     return mesh;
@@ -449,12 +457,26 @@ export async function createEnvironment(scene: THREE.Scene): Promise<ArcadeEnvir
   })));
   const posterMaterials = [posterA, posterB].map(map => ownMaterial(new THREE.MeshStandardMaterial({ map, roughness: .96, side: THREE.DoubleSide })));
 
-  function shopWindow(side: number, z: number, contents: 'books' | 'coffee' | 'produce'): void {
+  function shopWindow(side: number, z: number, contents: 'books' | 'coffee' | 'produce', deep = false): void {
     const inward = side === -1 ? Math.PI / 2 : -Math.PI / 2;
     // The shelf, display stock, glazing, and partly raised shutter have separate
     // depths; from the moving camera this reads as a shop rather than a lit card.
-    plane('Warm recessed shop back', side * 4.455, 1.45, z, 5.1, 2.52, mat.shopInterior, inward);
-    box('Display floor', side * 4.18, .28, z, .55, .08, 5.1, mat.timber);
+    plane('Warm recessed shop back', side * (deep ? 7.15 : 4.455), 1.45, z, 5.1, 2.52, mat.shopInterior, inward);
+    box('Display floor', side * (deep ? 5.52 : 4.18), .28, z, deep ? 3.3 : .55, .08, 5.1, mat.timber);
+    if(deep){
+      box('Cafe ceiling',side*5.5,2.98,z,3.35,.12,5.5,mat.timber);
+      box('Cafe rear service counter',side*6.35,.77,z,1.15,.96,3.85,mat.darkSteel);
+      box('Cafe marble counter top',side*6.35,1.29,z,1.24,.07,4.05,mat.paper);
+      for(const dz of [-1.7,-.7,.4,1.4]){
+        cylinderAt('Cafe ceramic cup',side*6.14,1.41,z+dz,.085,.17,mat.paper);
+        cylinderAt('Cafe copper coffee urn',side*6.68,1.57,z+dz,.13,.49,mat.rusty);
+      }
+      for(const dz of [-1.5,1.45]){
+        cylinderAt('Cafe pendant shade',side*5.48,2.66,z+dz,.24,.18,mat.darkSteel);
+        cylinderAt('Cafe pendant bulb',side*5.48,2.54,z+dz,.12,.025,mat.warm);
+      }
+      const lamp=new THREE.PointLight(0xffba75,22,6,2);lamp.position.set(side*5.25,2.4,z);root.add(lamp);
+    }
     for (const height of [.81, 1.41, 1.99]) {
       box('Display shelf', side * 4.17, height, z, .52, .055, 4.85, mat.timber);
     }
@@ -511,12 +533,13 @@ export async function createEnvironment(scene: THREE.Scene): Promise<ArcadeEnvir
     for (const side of [-1, 1]) {
       const inward = side === -1 ? Math.PI / 2 : -Math.PI / 2;
       const n = (bay + (side === 1 ? 3 : 0)) % signs.length;
-      const display = bay === 0 && side === -1 ? 'books' :
+      const hero = bay === 1 && side === -1;
+      const display = hero ? 'coffee' : bay === 0 && side === -1 ? 'books' :
         bay === 2 && side === 1 ? 'coffee' : bay === 3 && side === -1 ? 'produce' : null;
       const damaged = bay >= 4 && bay <= 8 && (bay + side) % 2 === 0;
-      box('Stained plaster building facade', side * 4.75, 3.15, z, .46, 6.3, BAY - .04, mat.wall);
-      box('Shop dark recess', side * 4.47, 1.52, z, .06, 2.86, 5.64, mat.black);
-      if (display) shopWindow(side, z, display);
+      box('Stained plaster building facade', side * 4.75, hero ? 4.75 : 3.15, z, .46, hero ? 3.1 : 6.3, BAY - .04, mat.wall);
+      box('Shop dark recess', side * (hero ? 7.25 : 4.47), 1.52, z, .06, 2.86, 5.64, mat.black);
+      if (display) shopWindow(side, z, display,hero);
       else if (damaged) damagedShutter(side, z);
       else plane('Corrugated steel shop shutter', side * 4.431, 1.51, z, 5.53, 2.75, mat.shutter, inward);
       box('Rolled shutter housing', side * 4.39, 3.04, z, .29, .32, 5.72, mat.rusty);
@@ -572,6 +595,15 @@ export async function createEnvironment(scene: THREE.Scene): Promise<ArcadeEnvir
     }
   }
 
+  const cafeSign=ownTexture(signTexture(['純喫茶 よなか','珈琲と、終わらない夜'], 'cream'));
+  plane('Cafe hanging sign',-3.38,3.32,-1.02,1.02,.73,ownMaterial(new THREE.MeshStandardMaterial({map:cafeSign,roughness:.8})),.15);
+  box('Cafe sign bracket',-3.77,3.81,-1.03,.9,.06,.07,mat.rusty);
+  for(let i=0;i<14;i++){
+    const flap=box('Worn striped cafe awning',-3.85,3.08,-5.7+i*.4,.91,.055,.39,i%2?mat.paper:mat.red);
+    flap.rotation.z=-.2;
+    const edge=box('Cafe fabric valance',-3.4,2.94,-5.7+i*.4,.035,.25+(i%3)*.025,.39,i%2?mat.paper:mat.red);
+    edge.rotation.x=(i%3-1)*.045;
+  }
   // Arrival: an older civic gateway, warmer shops and an information case.
   const entranceSign = ownTexture(signTexture(['みやこ通り', '夜間入口'], 'cream'));
   box('Arcade entrance lintel', 0, 5.1, 1.9, 9.05, .42, .52, mat.darkSteel);

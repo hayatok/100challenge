@@ -23,6 +23,17 @@ export async function createWeapon(): Promise<T.Group> {
   pistol.position.set(0, -0.15, -0.10);
   pistol.traverse((object) => {
     if (object instanceof T.Mesh) {
+      const source=Array.isArray(object.material)?object.material:[object.material];
+      const materials=source.map(m=>{
+        const material=m.clone();
+        if(material instanceof T.MeshStandardMaterial){
+          material.color.multiplyScalar(.48);material.normalScale.set(.35,.35);
+          material.roughnessMap=null;material.roughness=.4;material.metalness=.78;
+          if(/Frame|Trigger|Magazine/.test(object.name)){material.roughness=.72;material.metalness=.22;}
+        }
+        return material;
+      });
+      object.material=Array.isArray(object.material)?materials:materials[0];
       object.castShadow = true;
       object.frustumCulled = false;
     }
@@ -56,7 +67,8 @@ export async function createWeapon(): Promise<T.Group> {
     if (sourceMaterial instanceof T.MeshStandardMaterial) {
       const glove = sourceMaterial.clone();
       glove.name = 'worn-dark-glove-and-sleeve';
-      glove.color.set(0x30383a);
+      glove.color.set(0x485356);
+      if(glove instanceof T.MeshPhysicalMaterial){glove.specularIntensity=.3;glove.specularColor.set(0xffffff);}
       glove.roughness = 0.9;
       glove.metalness = 0;
       armMesh.material = glove;
@@ -82,7 +94,7 @@ export async function createWeapon(): Promise<T.Group> {
   // Bring the palm below the slide and beside the grip, so the curled fingers
   // sit behind the trigger guard instead of reaching over the barrel.
   const lowerRight = new T.Group();
-  lowerRight.position.set(0.415, -0.35, 0.11);
+  lowerRight.position.set(0.415, -0.32, 0.11);
   lowerRight.rotation.z = Math.PI;
   const faceCamera = new T.Group();
   faceCamera.rotation.y = Math.PI;

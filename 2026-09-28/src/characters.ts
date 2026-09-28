@@ -70,17 +70,18 @@ function cityDeathFall(source: T.AnimationClip): T.AnimationClip {
   return fall;
 }
 
-type Palette = { outfit: [number, number, number]; skin: [number, number, number] };
+type Color = [number, number, number];
+type Palette = { shirt: Color; trousers: Color; skin: Color };
 
-// All three uniforms use Rikindle3D's actual skinned shirt/trousers mesh.
-// Remapping its blood-red albedo keeps seams, folds and wounds while giving
-// each enemy a readable civilian/worker identity under the arcade lights.
+// The source has separate skinned outfit and body surfaces, but its albedo is
+// predominantly red. The outfit includes both the shirt and trousers, so the
+// rest-pose vertex height separates those garments without adding a new rig.
 const palettes: Record<"clerk" | "nightClerk" | "worker" | "boss" | "lucky", Palette> = {
-  clerk: { outfit: [0.18, 0.22, 0.23], skin: [0.24, 0.29, 0.25] },
-  nightClerk: { outfit: [0.23, 0.18, 0.17], skin: [0.23, 0.27, 0.24] },
-  worker: { outfit: [0.27, 0.22, 0.13], skin: [0.23, 0.28, 0.23] },
-  boss: { outfit: [0.14, 0.15, 0.17], skin: [0.22, 0.24, 0.22] },
-  lucky: { outfit: [0.46, 0.18, 0.57], skin: [0.30, 0.29, 0.21] },
+  clerk: { shirt: [0.44, 0.45, 0.39], trousers: [0.085, 0.105, 0.12], skin: [0.34, 0.36, 0.30] },
+  nightClerk: { shirt: [0.27, 0.33, 0.36], trousers: [0.075, 0.09, 0.11], skin: [0.32, 0.35, 0.29] },
+  worker: { shirt: [0.39, 0.32, 0.20], trousers: [0.11, 0.12, 0.12], skin: [0.33, 0.35, 0.28] },
+  boss: { shirt: [0.20, 0.23, 0.24], trousers: [0.055, 0.065, 0.075], skin: [0.31, 0.34, 0.28] },
+  lucky: { shirt: [0.37, 0.16, 0.43], trousers: [0.17, 0.07, 0.22], skin: [0.36, 0.34, 0.27] },
 };
 
 function shadeCity(
@@ -99,24 +100,54 @@ function shadeCity(
       const material = original.clone();
       cache.set(key, material);
       if (!(material instanceof T.MeshStandardMaterial)) return material;
+      if (material instanceof T.MeshPhysicalMaterial) {
+        // The imported KHR_materials_specular requests 2x white specular.
+        material.specularColor.setRGB(0.28, 0.28, 0.28);
+        material.specularIntensity = 0.35;
+      }
       const isOutfit = /Outfit/i.test(material.name);
-      const color = isOutfit ? palette.outfit : palette.skin;
-      // The red texture has almost no green or blue. A multiplier cannot turn
-      // it into cloth or pallid skin; use its tonal detail instead.
-      const fragment = `
-        float sourceTone = max(diffuseColor.r, max(diffuseColor.g, diffuseColor.b));
-        float surfaceDetail = 0.05 + pow(sourceTone, 0.8) * 1.05;
-        diffuseColor.rgb = vec3(${color.join(",")}) * surfaceDetail;
+      const isBody = /Body/i.test(material.name);
+      // The third material is the actual eye and teeth geometry. Keep it
+      // lighter than the skin so the face remains legible at game distance.
+      if (!isOutfit && !isBody) {
+        material.color.setRGB(0.52, 0.49, 0.40);
+        material.metalness = 0;
+        material.roughness = 0.9;
+        return material;
+      }
+      // Green/blue carry the source's black grime. Excess red marks wounds;
+      // maxRGB had promoted every red wound to bright gray noise.
+      const color = isOutfit ? palette.shirt : palette.skin;
+      const fragment = isOutfit ? `
+        float grime = smoothstep(0.015, 0.16, (diffuseColor.g + diffuseColor.b) * 0.5);
+        float wound = smoothstep(0.18, 0.40, diffuseColor.r - diffuseColor.g);
+        float trousers = 1.0 - smoothstep(87.0, 103.0, vRestHeight);
+        vec3 uniformColor = mix(vec3(${color.join(",")}), vec3(${palette.trousers.join(",")}), trousers);
+        diffuseColor.rgb = mix(uniformColor * (0.52 + 0.46 * grime), vec3(0.21, 0.085, 0.070), wound * 0.42);
+      ` : `
+        float grime = smoothstep(0.04, 0.26, (diffuseColor.g + diffuseColor.b) * 0.5);
+        float wound = smoothstep(0.18, 0.42, diffuseColor.r - diffuseColor.g);
+        diffuseColor.rgb = mix(vec3(${color.join(",")}) * (0.43 + 0.52 * grime), vec3(0.24, 0.082, 0.067), wound * 0.52);
       `;
       material.color.setRGB(1, 1, 1);
       material.metalness = 0;
-      material.roughness = isOutfit ? 0.96 : 0.89;
+      material.roughnessMap = null;
+      material.roughness = isOutfit ? 0.94 : 0.82;
+      material.normalScale.set(0.32, 0.32);
       material.onBeforeCompile = (shader) => {
+        if (isOutfit) {
+          shader.vertexShader = shader.vertexShader
+            .replace("#include <common>", "#include <common>\nvarying float vRestHeight;")
+            .replace("#include <begin_vertex>", "#include <begin_vertex>\nvRestHeight = position.y;");
+          shader.fragmentShader = shader.fragmentShader.replace(
+            "#include <common>", "#include <common>\nvarying float vRestHeight;",
+          );
+        }
         shader.fragmentShader = shader.fragmentShader.replace(
           "#include <color_fragment>", `#include <color_fragment>${fragment}`,
         );
       };
-      material.customProgramCacheKey = () => `v04-${paletteName}-${isOutfit ? "cloth" : "skin"}`;
+      material.customProgramCacheKey = () => `v07-${paletteName}-${isOutfit ? "cloth" : "skin"}`;
       return material;
     });
     object.material = Array.isArray(object.material) ? materials : materials[0];
