@@ -35,3 +35,9 @@ body[data-fever="run"] #rush-banner { top:80px; padding:4px 20px; }
 body[data-rush="true"] #travel-message { visibility:hidden; }
 
 body[data-quiet="true"] #score-pop { display:none; }
+
+/* v0.11: keep the lower body, hands and shop floor in the gameplay frame. */
+#typing-panel { padding:7px 20px 8px; }
+#phrase { font-size:clamp(21px,2.05vw,29px);line-height:1.22;margin:3px 0 0; }
+#romaji { font-size:clamp(21px,2.25vw,31px);line-height:1.18;margin:3px 0 5px; }
+#reading { font-size:10px;line-height:1.3; }

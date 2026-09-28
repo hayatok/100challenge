@@ -77,11 +77,11 @@ type Palette = { shirt: Color; trousers: Color; skin: Color };
 // predominantly red. The outfit includes both the shirt and trousers, so the
 // rest-pose vertex height separates those garments without adding a new rig.
 const palettes: Record<"clerk" | "nightClerk" | "worker" | "boss" | "lucky", Palette> = {
-  clerk: { shirt: [0.44, 0.45, 0.39], trousers: [0.085, 0.105, 0.12], skin: [0.34, 0.36, 0.30] },
-  nightClerk: { shirt: [0.27, 0.33, 0.36], trousers: [0.075, 0.09, 0.11], skin: [0.32, 0.35, 0.29] },
-  worker: { shirt: [0.39, 0.32, 0.20], trousers: [0.11, 0.12, 0.12], skin: [0.33, 0.35, 0.28] },
-  boss: { shirt: [0.20, 0.23, 0.24], trousers: [0.055, 0.065, 0.075], skin: [0.31, 0.34, 0.28] },
-  lucky: { shirt: [0.37, 0.16, 0.43], trousers: [0.17, 0.07, 0.22], skin: [0.36, 0.34, 0.27] },
+  clerk: { shirt: [0.50, 0.53, 0.50], trousers: [0.095, 0.12, 0.14], skin: [0.37, 0.40, 0.36] },
+  nightClerk: { shirt: [0.31, 0.39, 0.43], trousers: [0.08, 0.105, 0.12], skin: [0.36, 0.39, 0.35] },
+  worker: { shirt: [0.42, 0.37, 0.29], trousers: [0.13, 0.14, 0.13], skin: [0.38, 0.40, 0.35] },
+  boss: { shirt: [0.28, 0.32, 0.32], trousers: [0.07, 0.08, 0.09], skin: [0.35, 0.38, 0.34] },
+  lucky: { shirt: [0.45, 0.25, 0.48], trousers: [0.20, 0.10, 0.24], skin: [0.38, 0.39, 0.34] },
 };
 
 function shadeCity(
@@ -110,30 +110,33 @@ function shadeCity(
       // The third material is the actual eye and teeth geometry. Keep it
       // lighter than the skin so the face remains legible at game distance.
       if (!isOutfit && !isBody) {
-        material.color.setRGB(0.52, 0.49, 0.40);
+        material.color.setRGB(0.44, 0.43, 0.38);
         material.metalness = 0;
         material.roughness = 0.9;
         return material;
       }
-      // Green/blue carry the source's black grime. Excess red marks wounds;
-      // maxRGB had promoted every red wound to bright gray noise.
+      // The baked maps are very red. Recover cloth/skin value from the dark
+      // channels while retaining the contrast of seams and wounds. The old
+      // near-constant color multiplier made all surfaces look like stone.
       const color = isOutfit ? palette.shirt : palette.skin;
       const fragment = isOutfit ? `
-        float grime = smoothstep(0.015, 0.16, (diffuseColor.g + diffuseColor.b) * 0.5);
-        float wound = smoothstep(0.18, 0.40, diffuseColor.r - diffuseColor.g);
-        float trousers = 1.0 - smoothstep(87.0, 103.0, vRestHeight);
+        float value = clamp(0.28 + 1.52 * sqrt(max(0.0, dot(diffuseColor.rgb, vec3(0.15, 0.47, 0.38)))), 0.26, 1.12);
+        float wound = smoothstep(0.23, 0.51, diffuseColor.r - max(diffuseColor.g, diffuseColor.b));
+        float trousers = 1.0 - smoothstep(0.90, 1.07, vRestHeight);
         vec3 uniformColor = mix(vec3(${color.join(",")}), vec3(${palette.trousers.join(",")}), trousers);
-        diffuseColor.rgb = mix(uniformColor * (0.52 + 0.46 * grime), vec3(0.21, 0.085, 0.070), wound * 0.42);
+        diffuseColor.rgb = mix(uniformColor * value, vec3(0.24, 0.055, 0.045), wound * 0.27);
       ` : `
-        float grime = smoothstep(0.04, 0.26, (diffuseColor.g + diffuseColor.b) * 0.5);
-        float wound = smoothstep(0.18, 0.42, diffuseColor.r - diffuseColor.g);
-        diffuseColor.rgb = mix(vec3(${color.join(",")}) * (0.43 + 0.52 * grime), vec3(0.24, 0.082, 0.067), wound * 0.52);
+        float value = clamp(0.34 + 1.42 * sqrt(max(0.0, dot(diffuseColor.rgb, vec3(0.14, 0.45, 0.41)))), 0.31, 1.14);
+        float wound = smoothstep(0.19, 0.48, diffuseColor.r - max(diffuseColor.g, diffuseColor.b));
+        diffuseColor.rgb = mix(vec3(${color.join(",")}) * value, vec3(0.30, 0.065, 0.052), wound * 0.48);
       `;
       material.color.setRGB(1, 1, 1);
       material.metalness = 0;
       material.roughnessMap = null;
       material.roughness = isOutfit ? 0.94 : 0.82;
-      material.normalScale.set(0.32, 0.32);
+      // The source normal map is a deep sculpt pass. At encounter distance it
+      // reads as rock, especially on the face; keep only its broad relief.
+      material.normalScale.set(isBody ? 0.025 : 0.06, isBody ? 0.025 : 0.06);
       material.onBeforeCompile = (shader) => {
         if (isOutfit) {
           shader.vertexShader = shader.vertexShader
@@ -147,7 +150,7 @@ function shadeCity(
           "#include <color_fragment>", `#include <color_fragment>${fragment}`,
         );
       };
-      material.customProgramCacheKey = () => `v07-${paletteName}-${isOutfit ? "cloth" : "skin"}`;
+      material.customProgramCacheKey = () => `v11-${paletteName}-${isOutfit ? "cloth" : "skin"}`;
       return material;
     });
     object.material = Array.isArray(object.material) ? materials : materials[0];

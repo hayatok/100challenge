@@ -152,7 +152,55 @@ export async function createDistrict(scene: THREE.Scene): Promise<District> {
     fruitOrange: ownMat(new THREE.MeshStandardMaterial({ color: 0xb57b42, roughness: .83 })),
     fruitGreen: ownMat(new THREE.MeshStandardMaterial({ color: 0x658151, roughness: .86 })),
     fruitPale: ownMat(new THREE.MeshStandardMaterial({ color: 0xd2b274, roughness: .85 })),
+    tile: ownMat(new THREE.MeshStandardMaterial({ color: 0x9baaa0, roughness: .68, metalness: .02 })),
+    tileDark: ownMat(new THREE.MeshStandardMaterial({ color: 0x64716d, roughness: .82 })),
+    cartonRed: ownMat(new THREE.MeshStandardMaterial({ color: 0x9e4236, roughness: .85 })),
+    cartonCream: ownMat(new THREE.MeshStandardMaterial({ color: 0xd4c99c, roughness: .9 })),
+    cartonYellow: ownMat(new THREE.MeshStandardMaterial({ color: 0xb69e51, roughness: .85 })),
+    bottleGreen: ownMat(new THREE.MeshStandardMaterial({ color: 0x315a49, roughness: .31, metalness: .12 })),
+    bottleBrown: ownMat(new THREE.MeshStandardMaterial({ color: 0x624331, roughness: .34, metalness: .1 })),
+    fluorescent: ownMat(new THREE.MeshStandardMaterial({ color: 0xd2e8db, emissive: 0xb4dbc5, emissiveIntensity: .38, roughness: .34 })),
+    warmGlass: ownMat(new THREE.MeshStandardMaterial({ color: 0xd7b58b, emissive: 0xae7040, emissiveIntensity: .18, roughness: .35 })),
+    darkGlass: ownMat(new THREE.MeshPhysicalMaterial({ color: 0x394d4e, roughness: .25, metalness: .15, transparent: true, opacity: .47, depthWrite: false, side: THREE.DoubleSide })),
   };
+  function groceryPackage(label: string, subline: string, background: string,
+    accent: string, ink: string): THREE.MeshStandardMaterial {
+    const canvas = document.createElement('canvas');
+    canvas.width = canvas.height = 256;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) throw new Error('Grocery package canvas is unavailable');
+    ctx.fillStyle = background;
+    ctx.fillRect(0, 0, 256, 256);
+    ctx.fillStyle = accent;
+    ctx.fillRect(0, 0, 256, 36);
+    ctx.fillRect(0, 216, 256, 40);
+    ctx.strokeStyle = ink;
+    ctx.globalAlpha = .32;
+    ctx.lineWidth = 4;
+    ctx.strokeRect(13, 51, 230, 148);
+    ctx.globalAlpha = 1;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillStyle = ink;
+    ctx.font = 'bold 71px "Yu Gothic", "Hiragino Kaku Gothic ProN", sans-serif';
+    ctx.fillText(label, 128, 123, 228);
+    ctx.font = 'bold 24px "Yu Gothic", "Hiragino Kaku Gothic ProN", sans-serif';
+    ctx.fillText(subline, 128, 181, 220);
+    ctx.fillStyle = background;
+    ctx.font = 'bold 19px sans-serif';
+    ctx.fillText('やまさか', 128, 18, 220);
+    const map = ownTex(new THREE.CanvasTexture(canvas));
+    map.colorSpace = THREE.SRGBColorSpace;
+    map.anisotropy = 4;
+    return ownMat(new THREE.MeshStandardMaterial({ map, roughness: .77, metalness: .04 }));
+  }
+  const groceryPacks = [
+    groceryPackage('緑茶', 'すっきり 500ml', '#eee9d1', '#395a3c', '#203b2d'),
+    groceryPackage('トマト', '完熟の甘み', '#f2e2bb', '#a74b36', '#8a2a22'),
+    groceryPackage('お米', '地元の朝ごはん', '#ede3c4', '#779077', '#3f5144'),
+    groceryPackage('みそ', '毎日の食卓に', '#dec79e', '#925f3e', '#55382d'),
+    groceryPackage('牛乳', '朝の新鮮便', '#f1eee2', '#507e8c', '#315e73'),
+  ];
   await Promise.all([
     installSurface(m.asphalt, 'worn_asphalt', new THREE.Vector2(2.5, 9), ownTex),
     installSurface(m.shutter, 'worn_shutter', new THREE.Vector2(2, 1.3), ownTex),
@@ -189,21 +237,56 @@ export async function createDistrict(scene: THREE.Scene): Promise<District> {
     parent.add(mesh);
     return mesh;
   }
+  function cable(parent: THREE.Object3D, name: string, points: Array<[number, number, number]>,
+    radius: number, material: THREE.Material): THREE.Mesh {
+    const curve = new THREE.CatmullRomCurve3(points.map(([x, y, z]) => new THREE.Vector3(x, y, z)));
+    const mesh = new THREE.Mesh(ownGeo(new THREE.TubeGeometry(curve, 20, radius, 5, false)), material);
+    mesh.name = name;
+    parent.add(mesh);
+    return mesh;
+  }
+  const bikeWheel = ownGeo(new THREE.TorusGeometry(1, .055, 6, 16));
+  function wheel(parent: THREE.Object3D, name: string, x: number, y: number, z: number,
+    radius: number, material: THREE.Material): THREE.Mesh {
+    const mesh = new THREE.Mesh(bikeWheel, material);
+    mesh.name = name;
+    mesh.rotation.y = Math.PI / 2;
+    mesh.position.set(x, y, z);
+    mesh.scale.setScalar(radius);
+    parent.add(mesh);
+    return mesh;
+  }
+  function beam(parent: THREE.Object3D, name: string, a: THREE.Vector3, b: THREE.Vector3,
+    thickness: number, material: THREE.Material): THREE.Mesh {
+    const mesh = new THREE.Mesh(cube, material);
+    mesh.name = name;
+    mesh.position.copy(a).add(b).multiplyScalar(.5);
+    mesh.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), b.clone().sub(a).normalize());
+    mesh.scale.set(thickness, a.distanceTo(b), thickness);
+    parent.add(mesh);
+    return mesh;
+  }
+  const signMaterials = new Map<string, THREE.Material>();
   function sign(parent: THREE.Object3D, name: string, words: string, x: number, y: number, z: number,
     width: number, height: number, face: 'front' | 'left' | 'right', background: string, ink: string): void {
-    const canvas = document.createElement('canvas');
-    canvas.width = 512; canvas.height = 192;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) throw new Error('District sign canvas is unavailable');
-    ctx.fillStyle = background; ctx.fillRect(0, 0, 512, 192);
-    ctx.strokeStyle = ink; ctx.lineWidth = 6; ctx.strokeRect(12, 12, 488, 168);
-    ctx.fillStyle = ink; ctx.font = 'bold 68px "Yu Gothic", "Hiragino Kaku Gothic ProN", sans-serif';
-    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-    ctx.fillText(words, 256, 96, 462);
-    const texture = ownTex(new THREE.CanvasTexture(canvas));
-    texture.colorSpace = THREE.SRGBColorSpace;
-    const material = ownMat(new THREE.MeshStandardMaterial({ map: texture, emissiveMap: texture,
-      emissive: 0xffffff, emissiveIntensity: .22, roughness: .72, side: THREE.DoubleSide }));
+    const key = `${words}|${background}|${ink}`;
+    let material = signMaterials.get(key);
+    if (!material) {
+      const canvas = document.createElement('canvas');
+      canvas.width = 512; canvas.height = 192;
+      const ctx = canvas.getContext('2d');
+      if (!ctx) throw new Error('District sign canvas is unavailable');
+      ctx.fillStyle = background; ctx.fillRect(0, 0, 512, 192);
+      ctx.strokeStyle = ink; ctx.lineWidth = 6; ctx.strokeRect(12, 12, 488, 168);
+      ctx.fillStyle = ink; ctx.font = 'bold 68px "Yu Gothic", "Hiragino Kaku Gothic ProN", sans-serif';
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText(words, 256, 96, 462);
+      const texture = ownTex(new THREE.CanvasTexture(canvas));
+      texture.colorSpace = THREE.SRGBColorSpace;
+      material = ownMat(new THREE.MeshStandardMaterial({ map: texture, emissiveMap: texture,
+        emissive: 0xffffff, emissiveIntensity: .14, roughness: .72, side: THREE.DoubleSide }));
+      signMaterials.set(key, material);
+    }
     const mesh = new THREE.Mesh(plane, material);
     mesh.name = name;
     mesh.position.set(x, y, z);
@@ -313,6 +396,56 @@ export async function createDistrict(scene: THREE.Scene): Promise<District> {
   lamp('alley', -2.8, 3.3, -3, 0xffc587, 24);
   lamp('alley', 3, 3.4, -9, 0x8dcbb3, 19);
   lamp('alley', 8.5, 3, -12, 0x8bdcaa, 15);
+  // Unequal street furniture and lit apartments break up the long flat facades.
+  for (const [side, z, color] of [[-1, 2.3, m.red], [1, -4.7, m.blue]] as const) {
+    const awning = box(areas.alley, 'Sagging shop awning', side * 3.08, 3.46, z,
+      1.57, .075, 2.8, color);
+    awning.rotation.z = side * -.11;
+    for (let stripe = -1; stripe <= 1; stripe++) {
+      box(areas.alley, 'Awning faded canvas stripe', side * 2.43, 3.32, z + stripe * .78,
+        .13, .08, .18, m.paper);
+    }
+    cable(areas.alley, 'Awning dangling power lead', [
+      [side * 3.67, 5.75, z - 1.1], [side * 3.2, 4.65, z - .4],
+      [side * 2.85, 3.58, z + .62],
+    ], .018, m.steel);
+  }
+  for (const [x, y, z] of [[-3.69, 6.08, 2.9], [3.69, 6.08, -5.5], [-3.69, 6.08, -8.7]]) {
+    box(areas.alley, 'Curtained inhabited upper window', x, y, z, .02, 1.05, 1.08, m.warmGlass);
+    box(areas.alley, 'Apartment half-drawn curtain', x + Math.sign(x) * -.025, y, z + .29,
+      .023, 1.02, .47, m.paper);
+  }
+  for (const z of [2.2, -2.8, -8.1]) {
+    cable(areas.alley, 'Sagging overhead cable', [
+      [-3.68, 6.8, z], [-1.8, 6.2, z + .12], [0, 6.02, z + .18],
+      [1.9, 6.22, z + .1], [3.68, 6.75, z],
+    ], .025, m.steel);
+  }
+  // One bicycle is parked against the brick side, clear of the player and branch turn.
+  for (const z of [3.32, 4.46]) wheel(areas.alley, 'Rain-wet bicycle wheel', -3.27, .54, z, .46, m.steel);
+  const bicycle = (y: number, z: number) => new THREE.Vector3(-3.27, y, z);
+  for (const [a, b] of [
+    [bicycle(.55, 3.32), bicycle(.97, 3.85)],
+    [bicycle(.97, 3.85), bicycle(.55, 4.46)],
+    [bicycle(.55, 4.46), bicycle(.55, 3.32)],
+    [bicycle(.55, 3.32), bicycle(1.2, 3.53)],
+    [bicycle(1.2, 3.53), bicycle(.97, 3.85)],
+  ]) beam(areas.alley, 'Bicycle steel frame', a, b, .055, m.rusty);
+  box(areas.alley, 'Bicycle saddle', -3.27, 1.23, 3.54, .34, .055, .28, m.steel);
+  box(areas.alley, 'Bicycle handlebar', -3.27, 1.23, 4.29, .5, .05, .06, m.can);
+  for (const [x, z, count] of [[3.23, 3.4, 2], [-3.26, -6.9, 3], [3.2, -9.15, 2]] as const) {
+    for (let i = 0; i < count; i++) {
+      box(areas.alley, 'Stacked market crate', x, .33 + i * .55, z + (i % 2) * .12,
+        .8, .58, .72, i % 2 ? m.wood : m.blue);
+      box(areas.alley, 'Crate recessed opening', x, .38 + i * .55, z + .374,
+        .53, .24, .02, m.steel);
+    }
+  }
+  box(areas.alley, 'Umbrella stand', 3.18, .62, -7.5, .44, 1.2, .44, m.rusty);
+  for (const z of [-7.56, -7.38]) {
+    beam(areas.alley, 'Forgotten umbrella', new THREE.Vector3(3.16, .4, z),
+      new THREE.Vector3(3.19, 1.42, z - .09), .04, m.can);
+  }
 
   // The grocery's local -Z axis is world +X. Its full-width entrance is open.
   const shop = areas.store;
@@ -322,37 +455,160 @@ export async function createDistrict(scene: THREE.Scene): Promise<District> {
   for (let i = 0; i < 15; i++) {
     box(shop, 'Tile grout line', 0, .004, -.4 - i, 8.5, .008, .018, m.concrete);
   }
+  for (let i = -4; i <= 4; i++) {
+    box(shop, 'Cross tile grout', i, .005, -7, .012, .009, 14, m.tileDark);
+  }
+  for (let i = 0; i < 36; i++) {
+    const x = (random() - .5) * 7.8;
+    const z = -.7 - random() * 12.3;
+    const mark = flat(shop, 'Scuffed grocery tile', x, .011, z,
+      .08 + random() * .28, .1 + random() * .42, i % 4 ? m.tileDark : m.puddle);
+    mark.rotation.z = random() * Math.PI;
+  }
   for (const side of [-1, 1]) {
     box(shop, 'Grocery wall', side * 4.35, 3.15, -7, .28, 6.3, 14, m.blue);
     box(shop, 'Grocery ceiling rim', side * 4.05, 5.8, -7, .3, .2, 14, m.steel);
+    box(shop, 'Store wall ceramic dado', side * 4.19, 1.05, -7, .035, 2.1, 13.7, m.tile);
+    box(shop, 'Store wall dado cap', side * 4.15, 2.12, -7, .08, .06, 13.8, m.steel);
+    if (side > 0) continue;
     for (let i = 0; i < 3; i++) {
       const z = -2.8 - i * 3.5;
-      box(shop, 'Produce shelf', side * 3.4, .62, z, 1.08, 1.05, 2.5, m.wood);
-      box(shop, 'Shelf steel toe', side * 3.4, .14, z, 1.12, .16, 2.55, m.steel);
-      box(shop, 'Produce crate front', side * 2.85, 1.3, z, .1, .3, 2.5, m.wood);
-      box(shop, 'Grocery shelving back', side * 4.09, 2.1, z, .1, 2.2, 2.54, m.steel);
-      for (const level of [1.76, 2.5]) {
-        box(shop, 'Grocery shelving tier', side * 3.5, level, z, 1.18, .075, 2.55, m.steel);
-        for (let j = 0; j < 5; j++) {
-          const zz = z - .85 + j * .42;
-          box(shop, 'Grocery carton with label', side * 3.45, level + .26, zz,
-            .3, .43, .28, (i + j) % 3 === 0 ? m.paper : m.blue);
-          box(shop, 'Carton printed label', side * 3.23, level + .28, zz,
-            .035, .16, .2, (i + j) % 3 === 0 ? m.red : m.paper);
-        }
+      box(shop, 'Open produce crate bottom', side * 3.4, .22, z, 1.08, .16, 2.5, m.wood);
+      for (const edge of [-1.21, 1.21]) {
+        box(shop, 'Open produce crate end slat', side * 3.4, .62, z + edge,
+          1.08, .68, .09, m.wood);
       }
+      box(shop, 'Shelf steel toe', side * 3.4, .14, z, 1.12, .16, 2.55, m.steel);
+      for (const height of [.43, .86]) {
+        box(shop, 'Open produce crate front slat', side * 2.85,
+          height, z, .1, .12, 2.5, m.wood);
+      }
+      box(shop, 'Grocery shelving back', side * 4.09, 2.1, z, .1, 2.2, 2.54, m.steel);
       for (let j = 0; j < 5; j++) {
         const produce = new THREE.Mesh(fruitShape,
           [m.fruitOrange, m.fruitGreen, m.fruitPale][(i + j) % 3]);
         produce.name = 'Uneven fresh produce pile';
-        produce.position.set(side * (3.05 + (j % 2) * .32), 1.15,
+        produce.position.set(side * (3.05 + (j % 2) * .32), .64 + (j % 2) * .11,
           z - .8 + j * .38);
         produce.scale.set(.23, .16, .2);
         shop.add(produce);
       }
-      box(shop, 'Shelf price strip', side * 2.81, 1.14, z, .06, .11, 2.5, m.paper);
+      sign(shop, 'Produce crate fresh price', `${[98, 128, 158][i]}円`,
+        -2.79, .96, z, .7, .23, 'right', '#dfd3a1', '#394233');
     }
   }
+  // The left wall is stocked to the ceiling with varied silhouettes and printed prices.
+  for (let bay = 0; bay < 3; bay++) {
+    const z = -2.8 - bay * 3.5;
+    for (const level of [1.82, 2.56, 3.28, 4.02]) {
+      box(shop, 'Upper aisle shelf', -3.63, level, z, .95, .055, 2.52, m.steel);
+      box(shop, 'Scuffed shelf metal edge', -3.13, level, z, .035, .055, 2.54, m.can);
+      for (const scratch of [-.91, -.13, .76]) {
+        box(shop, 'Chipped shelf edge paint', -3.106, level, z + scratch,
+          .007, .025, .14, m.rusty);
+      }
+      for (let item = 0; item < 8; item++) {
+        if ((bay * 7 + item * 3 + Math.round(level * 10)) % 13 === 0) continue;
+        const zz = z - 1.04 + item * .29;
+        const product = groceryPacks[(bay * 2 + item + Math.round(level)) % groceryPacks.length];
+        if (item % 3 === 0) {
+          round(shop, 'Stocked glass bottle', -3.19, level + .25, zz, .12, .44,
+            item % 2 ? m.bottleGreen : m.bottleBrown);
+          round(shop, 'Bottle printed paper wrap', -3.19, level + .25,
+            zz, .123, .23, product);
+          round(shop, 'Bottle cap', -3.19, level + .5, zz, .05, .055, m.can);
+        } else if (item % 4 === 0) {
+          round(shop, 'Tinned grocery', -3.21, level + .16, zz, .13, .3, m.can);
+          round(shop, 'Tin printed paper wrap', -3.21, level + .16, zz,
+            .133, .22, product);
+        } else {
+          box(shop, 'Fictional printed grocery packet', -3.25, level + .19,
+            zz, .27, .36 + (item % 2) * .08, .22, product);
+        }
+      }
+      for (let price = 0; price < 3; price++) {
+        sign(shop, 'Aisle price card', `${[98, 128, 178, 248][(bay + price + Math.round(level)) % 4]}`,
+          -3.1, level - .07, z - .78 + price * .8, .27, .14, 'right', '#e2d6ab', '#312d29');
+      }
+    }
+  }
+  // The right aisle is a refrigerated cabinet, with a visible frame, doors and stocked shelves.
+  for (let bay = 0; bay < 3; bay++) {
+    const z = -2.85 - bay * 3.54;
+    if (bay < 2) {
+      box(shop, 'Refrigerated produce case enamel base', 3.19, .94, z, 1.99, 1.72, 3.3, m.pale);
+      box(shop, 'Produce case vent grille', 2.17, .49, z, .03, .37, 2.85, m.steel);
+      for (const vent of [-.92, -.46, 0, .46, .92]) {
+        box(shop, 'Produce case vent opening', 2.14, .49, z + vent * 1.3,
+          .018, .2, .08, m.can);
+      }
+      box(shop, 'Produce case black basin', 3.17, 1.72, z, 1.84, .1, 3.1, m.steel);
+      for (let item = 0; item < 12; item++) {
+        const zz = z - 1.31 + (item % 6) * .52;
+        const x = 2.71 + Math.floor(item / 6) * .6;
+        const produce = new THREE.Mesh(fruitShape,
+          [m.fruitGreen, m.fruitPale, m.fruitOrange][(bay + item) % 3]);
+        produce.name = 'Refrigerated fresh produce';
+        produce.position.set(x, 1.86 + (item % 3) * .04, zz);
+        produce.scale.set(.3 + (item % 2) * .05, .21, .23);
+        shop.add(produce);
+      }
+      const slopedGlass = box(shop, 'Sloped produce case glazing', 2.86, 2.15,
+        z, 1.95, .025, 3.15, m.darkGlass);
+      slopedGlass.rotation.z = .39;
+      box(shop, 'Produce case upper cold light', 3.57, 2.51, z, .085, .09, 3.18, m.fluorescent);
+      box(shop, 'Produce case front lip', 2.03, 1.69, z, .12, .1, 3.25, m.can);
+      for (let price = 0; price < 3; price++) {
+        sign(shop, 'Fresh produce blackboard price', `${[128, 138, 158, 198][(bay + price) % 4]}円`,
+          2.0, 1.38, z - 1.08 + price * 1.05, .58, .28,
+          'left', '#28342f', '#ece3c6');
+      }
+      continue;
+    }
+    box(shop, 'Refrigerator enamel carcass', 3.45, 2.1, z, 1.18, 3.9, 3.32, m.pale);
+    box(shop, 'Refrigerator dark rear', 2.82, 2.12, z, .035, 3.42, 3.08, m.steel);
+    for (const level of [.63, 1.25, 1.86, 2.48, 3.1]) {
+      box(shop, 'Refrigerator wire shelf', 2.63, level, z, .46, .045, 3, m.can);
+      for (let item = 0; item < 8; item++) {
+        const zz = z - 1.26 + item * .36;
+        const tone = [m.cartonCream, m.bottleGreen, m.cartonRed, m.bottleBrown][(item + bay) % 4];
+        if (item % 3 === 0) {
+          round(shop, 'Refrigerated drink', 2.57, level + .19, zz, .085, .33, tone);
+          round(shop, 'Refrigerated bottle cap', 2.57, level + .38, zz, .04, .04, m.can);
+        } else {
+          box(shop, 'Refrigerated carton', 2.56, level + .2, zz, .22, .38, .23, tone);
+        }
+      }
+    }
+    for (const edge of [-1.55, 0, 1.55]) {
+      box(shop, 'Refrigerator door stile', 2.3, 2.14, z + edge, .15, 3.65, .08, m.can);
+    }
+    box(shop, 'Refrigerator top rail', 2.3, 4.0, z, .15, .12, 3.22, m.can);
+    box(shop, 'Refrigerator lower kickplate', 2.31, .22, z, .15, .36, 3.22, m.steel);
+    box(shop, 'Refrigerator door glazing', 2.27, 2.15, z, .018, 3.44, 3.04, m.darkGlass);
+    for (const edge of [-.8, .8]) box(shop, 'Refrigerator handle', 2.16, 2.1, z + edge, .06, .8, .06, m.can);
+    box(shop, 'Refrigerator cold strip', 2.15, 3.85, z, .055, .07, 2.93, m.fluorescent);
+  }
+  // A warm open back room gives the aisle depth without putting a wall in the enemy lane.
+  box(shop, 'Rear grocery wall left pier', -3.3, 2.7, -13.91, 2.2, 5.4, .2, m.tile);
+  box(shop, 'Rear grocery wall right pier', 3.25, 2.7, -13.91, 2.3, 5.4, .2, m.tile);
+  box(shop, 'Rear grocery wall header', 0, 4.65, -13.91, 4.4, 1.5, .2, m.tile);
+  box(shop, 'Back room door frame left', -2.12, 2.01, -13.8, .16, 4.02, .18, m.rusty);
+  box(shop, 'Back room door frame right', 2.12, 2.01, -13.8, .16, 4.02, .18, m.rusty);
+  box(shop, 'Back room door lintel', 0, 4.05, -13.8, 4.35, .12, .18, m.rusty);
+  flat(shop, 'Back room shadowed tile floor', 0, .01, -15, 4.1, 2.1, m.tileDark);
+  box(shop, 'Back room far plaster wall', 0, 2.05, -16.12, 4.13, 4.1, .12, m.wood);
+  for (const x of [-2.05, 2.05]) {
+    box(shop, 'Back room side wall', x, 2.05, -15, .12, 4.1, 2.18, m.concrete);
+  }
+  box(shop, 'Back room ceiling', 0, 4.12, -15, 4.1, .12, 2.2, m.rusty);
+  box(shop, 'Back room pendant shade', 0, 3.6, -15.33, .52, .14, .52, m.steel);
+  round(shop, 'Back room small warm bulb', 0, 3.49, -15.33, .11, .18, m.warmGlass);
+  for (const x of [-1.55, -.45, .9]) {
+    box(shop, 'Back room stacked provisions', x, .72, -14.78, .78, 1.42, .65,
+      x > 0 ? m.wood : m.cartonCream);
+  }
+  sign(shop, 'Back room stock notice', '搬入室', 0, 4.65, -13.78, 1.25, .38, 'front', '#574032', '#f5e5b8');
   // Entrance posts are at the edges, never across the player's line of travel.
   for (const side of [-1, 1]) {
     box(shop, 'Open entrance frame post', side * 4.15, 2.55, .12, .25, 5.1, .28, m.steel);
@@ -363,7 +619,26 @@ export async function createDistrict(scene: THREE.Scene): Promise<District> {
   sign(shop, 'Fictional grocery sign', 'みどり市場', 0, 4.12, .2, 4.5, .98, 'front', '#225044', '#dbefbd');
   for (const z of [-1.5, -5.7, -10]) {
     box(shop, 'Fluorescent housing', 0, 5.6, z, 5.2, .13, .5, m.steel);
-    box(shop, 'Fluorescent diffuser', 0, 5.48, z, 4.9, .06, .27, m.green);
+    box(shop, 'Fluorescent diffuser', 0, 5.48, z, 4.9, .06, .27, m.fluorescent);
+  }
+  for (const x of [-3.75, -2.55, 2.35, 3.9]) {
+    box(shop, 'Ceiling exposed service conduit', x, 5.78, -7, .065, .07, 13.5, m.steel);
+  }
+  for (const z of [-4.15, -8.7]) {
+    box(shop, 'Ceiling suspended price board brace', -2.05, 4.75, z, .04, .8, .04, m.can);
+    sign(shop, 'Aisle hanging price board', z > -5 ? '本日の特売' : '飲料・保存食',
+      -2.05, 4.35, z, 1.5, .38, 'front', '#485a43', '#f0eac7');
+  }
+  // The displacement is concentrated along the wall; the center remains a clear combat lane.
+  box(shop, 'Toppled blue shopping basket', 2.15, .18, -6.8, .9, .36, .6, m.blue).rotation.z = .18;
+  for (let i = 0; i < 7; i++) {
+    const x = (i % 2 ? 1 : -1) * (1.8 + random() * .65);
+    const z = -4.2 - i * 1.28;
+    const fallen = i % 3 === 0
+      ? round(shop, 'Fallen drink can', x, .105, z, .095, .27, m.can)
+      : box(shop, 'Dropped grocery packet', x, .07, z, .24, .11, .32,
+          i % 2 ? m.cartonRed : m.cartonCream);
+    fallen.rotation.set(random() * .35, random() * 2.5, random() * .6);
   }
   box(shop, 'Cash register counter', -3.1, .78, -12.4, 1.75, 1.35, 1.2, m.wood);
   box(shop, 'Register body', -3.1, 1.6, -12.2, .72, .46, .68, m.steel);
@@ -371,10 +646,19 @@ export async function createDistrict(scene: THREE.Scene): Promise<District> {
   lamp('store', 0, 4.85, -2, 0xb0ffc9, 21, 13);
   lamp('store', 0, 4.85, -8, 0x92e7c1, 22, 13);
   lamp('store', 0, 4.85, -12, 0x8adfbd, 17, 10);
+  lamp('store', 0, 3.48, -15.1, 0xffb66f, 8, 5.6);
 
   // A side service route continues straight from the alley into the same open district.
   flat(areas.service, 'Service passage asphalt', -6, -.025, -18, 7, 15, m.asphalt);
   box(areas.service, 'Service west wall', -10.2, 3, -18, .45, 6, 15, m.brick);
+  box(areas.service, 'Opposing service wall', -3.68, 3.4, -16.6, .42, 6.8, 10.5, m.brick);
+  box(areas.service, 'Opposing wall connected corner', -3.68, 3.4, -10.82,
+    .42, 6.8, 1.3, m.brick);
+  box(areas.service, 'Opposing wall grimy base', -3.91, .57, -16.6, .08, 1.13, 10.5, m.rusty);
+  for (const z of [-13.8, -18.2]) {
+    box(areas.service, 'High service casement', -3.95, 4.5, z, .07, 1.2, 1.1, m.darkGlass);
+    box(areas.service, 'Service casement bars', -4.04, 4.5, z, .08, .07, 1.16, m.steel);
+  }
   box(areas.service, 'Service east low wall', -2.6, 1.2, -25.5, .35, 2.4, 3, m.concrete);
   flat(areas.service, 'Service rear link pavement', 8.6, -.019, -22, 27, 3.6, m.asphalt);
   for (const x of [0, 7, 14]) {
@@ -383,7 +667,31 @@ export async function createDistrict(scene: THREE.Scene): Promise<District> {
   for (const z of [-16, -21]) {
     box(areas.service, 'Service loading shutter', -10, 1.8, z, .09, 3.3, 3.2, m.shutter);
     box(areas.service, 'Service shutter frame', -9.9, 2, z, .16, 3.8, 3.5, m.steel);
+    box(areas.service, 'Loading bay concrete threshold', -9.56, .16, z, .78, .31, 3.65, m.concrete);
+    box(areas.service, 'Rolling door warning chevron', -9.81, .4, z - 1.25,
+      .03, .52, .09, m.cartonYellow);
+    box(areas.service, 'Rolling door warning chevron', -9.81, .4, z + 1.25,
+      .03, .52, .09, m.cartonYellow);
   }
+  for (const [x, z, height] of [[-8.65, -13.8, 2], [-3.12, -15.7, 1], [-8.72, -23.1, 3]] as const) {
+    for (let level = 0; level < height; level++) {
+      box(areas.service, 'Delivery box pile', x + (level % 2) * .1,
+        .37 + level * .72, z, .85, .7, .75, level % 2 ? m.cartonCream : m.wood);
+      box(areas.service, 'Delivery box taped seam', x + (level % 2) * .1,
+        .73 + level * .72, z, .055, .012, .76, m.paper);
+    }
+  }
+  for (const z of [-14.4, -19.2, -23.8]) {
+    round(areas.service, 'Service refuse drum', -3.14, .55, z, .36, 1.08,
+      z === -19.2 ? m.blue : m.rusty);
+    round(areas.service, 'Service drum lid', -3.14, 1.12, z, .39, .06, m.steel);
+  }
+  cable(areas.service, 'Loading bay sagging cable', [
+    [-9.8, 5.55, -13], [-7.3, 5.12, -16], [-5.7, 4.7, -18.5],
+    [-4.0, 4.98, -21], [-3.83, 5.4, -21.5],
+  ], .03, m.steel);
+  box(areas.service, 'Service pipe riser', -9.76, 3.1, -18.5, .11, 6.2, .11, m.rusty);
+  box(areas.service, 'Service overhead pipe', -9.65, 5.62, -18.6, .12, .12, 12.5, m.rusty);
   box(areas.service, 'Service utility cabinet', -8.9, .95, -24, 1.45, 1.9, .85, m.blue);
   box(areas.service, 'Service lamp hood', -9.4, 3.55, -18, 1.0, .14, .58, m.steel);
   box(areas.service, 'Service lamp glass', -9.35, 3.44, -18, .8, .06, .42, m.amber);
@@ -401,6 +709,67 @@ export async function createDistrict(scene: THREE.Scene): Promise<District> {
       box(areas.court, 'Warehouse loading door', x + (x < 20 ? .3 : -.3), 1.7, z, .09, 3.3, 3.5, m.shutter);
       box(areas.court, 'Warehouse awning', x + (x < 20 ? .9 : -.9), 3.5, z, 1.4, .16, 4, m.steel);
       box(areas.court, 'High warehouse window', x + (x < 20 ? .3 : -.3), 5.4, z, .07, 1.08, 1.5, m.glass);
+    }
+  }
+  // The far warehouse closes the court composition; its open bay retains real depth.
+  box(areas.court, 'Rear warehouse left facade', 18.47, 3.82, -45.83,
+    4.5, 7.64, .5, m.concrete);
+  box(areas.court, 'Rear warehouse right facade', 25.42, 3.82, -45.83,
+    2.02, 7.64, .5, m.concrete);
+  box(areas.court, 'Rear warehouse doorway header', 22.35, 6.1, -45.83,
+    5.25, 3.08, .5, m.concrete);
+  box(areas.court, 'Rear warehouse black opening', 22.35, 2.23, -46.08,
+    4.92, 4.47, .06, m.steel);
+  box(areas.court, 'Rear warehouse recessed stock room', 22.35, 2.2, -47.5,
+    4.58, 4.4, .12, m.wood);
+  for (const x of [20.6, 22.35, 24.1]) {
+    box(areas.court, 'Lit loading bay stacked goods', x, .85, -46.65,
+      .98, 1.7, .9, x === 22.35 ? m.blue : m.cartonCream);
+  }
+  box(areas.court, 'Rear warehouse opening lintel', 22.35, 4.53, -45.54,
+    5.1, .22, .28, m.rusty);
+  box(areas.court, 'Rear warehouse lit lintel', 22.35, 4.4, -45.52,
+    2.9, .08, .12, m.warmGlass);
+  box(areas.court, 'Rear warehouse dented cornice', 21.95, 7.7, -45.83,
+    11.8, .23, .8, m.rusty);
+  sign(areas.court, 'Delivery warehouse facade name', 'やまさか商事', 20.55,
+    6.36, -45.48, 3.8, .71, 'front', '#c9c5aa', '#433b33');
+  sign(areas.court, 'Delivery warehouse fresh food claim', '食でつなぐ、明日へ', 20.55,
+    5.7, -45.47, 3.38, .36, 'front', '#bebcad', '#394641');
+  // A parked delivery lorry anchors the court while leaving the central rush lane open.
+  box(areas.court, 'Delivery lorry cargo box', 18.84, 2.17, -37.7, 3.05, 3.16, 5.4, m.red);
+  box(areas.court, 'Delivery lorry cargo lower rail', 20.43, .78, -37.7, .08, .16, 5.46, m.steel);
+  box(areas.court, 'Delivery lorry cab', 18.84, 1.35, -33.36, 2.8, 2.0, 2.48, m.red);
+  box(areas.court, 'Delivery lorry windscreen', 18.84, 1.95, -32.08, 2.43, .78, .06, m.darkGlass);
+  box(areas.court, 'Delivery lorry side window', 20.29, 1.92, -33.24, .045, .7, 1.15, m.darkGlass);
+  box(areas.court, 'Delivery lorry front bumper', 18.84, .48, -32.02, 2.92, .28, .15, m.steel);
+  box(areas.court, 'Delivery lorry left lamp', 17.9, .88, -31.92, .35, .25, .07, m.warmGlass);
+  box(areas.court, 'Delivery lorry right lamp', 19.71, .88, -31.92, .35, .25, .07, m.warmGlass);
+  for (const z of [-33.32, -39.18]) {
+    wheel(areas.court, 'Delivery lorry road wheel', 20.45, .63, z, .56, m.steel);
+    round(areas.court, 'Delivery lorry hub', 20.48, .63, z, .19, .1, m.can).rotation.z = Math.PI / 2;
+  }
+  sign(areas.court, 'Fictional delivery lorry painted mark', 'やまさか商事', 20.48, 2.37,
+    -37.72, 3.48, .68, 'right', '#833328', '#e7c7ac');
+  box(areas.court, 'Truck rear door seam', 18.84, 2.1, -40.42, .055, 2.95, .035, m.steel);
+  for (const z of [-29.5, -35.8, -41.4]) {
+    box(areas.court, 'Warehouse downpipe', 16.53, 3.48, z, .15, 6.95, .15, m.rusty);
+  }
+  for (const z of [-31.5, -39.7]) {
+    box(areas.court, 'Warehouse electrical switch cabinet', 16.61, 1.2, z,
+      .35, 1.2, .74, m.pale);
+    box(areas.court, 'Warehouse switch cabinet latch', 16.38, 1.21, z + .2,
+      .05, .1, .05, m.steel);
+  }
+  cable(areas.court, 'Delivery court high service wiring', [
+    [16.5, 6.85, -28], [19.8, 6.15, -29.3], [24.5, 5.8, -31],
+    [28.4, 6.18, -32.5], [31.4, 7, -33],
+  ], .035, m.steel);
+  for (const [x, z] of [[18.1, -32.7], [17.9, -36.6], [29.8, -43.3]] as const) {
+    box(areas.court, 'Irregular delivery pallet', x, .12, z, 1.16, .23, 1.08, m.wood);
+    for (let level = 0; level < 2; level++) {
+      box(areas.court, 'Pallet mixed shipping carton', x + (level % 2) * .19,
+        .43 + level * .58, z, .89, .56, .84, level % 2 ? m.cartonCream : m.wood);
     }
   }
   box(areas.court, 'Court loading dock', 18.2, .38, -38.5, 2.1, .75, 4.7, m.concrete);
@@ -460,13 +829,39 @@ export async function createDistrict(scene: THREE.Scene): Promise<District> {
   flat(areas.roof, 'Rooftop damp patch', 24, 7.027, -56, 4, 2.1, m.puddle);
   box(areas.roof, 'Rooftop left parapet', 15.7, 7.65, -59.5, .5, 1.3, 26, m.brick);
   box(areas.roof, 'Rooftop right parapet', 32.3, 7.65, -59.5, .5, 1.3, 26, m.brick);
+  for (const x of [15.7, 32.3]) {
+    box(areas.roof, 'Weathered parapet coping', x, 8.36, -59.5, .68, .13, 26.2, m.concrete);
+    for (const z of [-49.7, -55.8, -62.3, -68.5]) {
+      box(areas.roof, 'Parapet drain stain', x + (x < 24 ? .28 : -.28), 7.7, z,
+        .015, .55, .27, m.rusty);
+    }
+  }
   // The forward edge has a low rail so the clocktower remains visible.
   for (const x of [17, 20.5, 24, 27.5, 31]) {
     box(areas.roof, 'Rooftop forward rail post', x, 7.78, -72.2, .09, 1.55, .09, m.steel);
   }
   box(areas.roof, 'Rooftop forward handrail', 24, 8.5, -72.2, 15, .09, .09, m.steel);
-  box(areas.roof, 'Rooftop water tank stand', 30, 7.9, -61, 2.1, 1.6, 2.1, m.steel);
-  round(areas.roof, 'Rooftop water tank', 30, 9.4, -61, 1.16, 1.7, m.blue);
+  for (const x of [29.12, 30.88]) for (const z of [-61.88, -60.12]) {
+    box(areas.roof, 'Water tank raised support leg', x, 8.25, z, .13, 1.15, .13, m.rusty);
+  }
+  for (const x of [29.12, 30.88]) {
+    box(areas.roof, 'Water tank support crossbeam', x, 8.75, -61,
+      .12, .12, 1.88, m.rusty);
+  }
+  for (const z of [-61.88, -60.12]) {
+    box(areas.roof, 'Water tank support crossbeam', 30, 8.75, z,
+      1.88, .12, .12, m.rusty);
+  }
+  round(areas.roof, 'Rooftop water tank', 30, 9.38, -61, 1.16, 1.7, m.blue);
+  for (const y of [8.65, 9.48, 10.18]) {
+    round(areas.roof, 'Water tank reinforcing ring', 30, y, -61, 1.2, .075, m.can);
+  }
+  round(areas.roof, 'Rooftop water tank lid', 30, 10.29, -61, 1.22, .12, m.steel);
+  box(areas.roof, 'Tank sight gauge', 28.77, 9.32, -61, .065, 1.25, .09, m.can);
+  cable(areas.roof, 'Water tank outlet pipe', [
+    [30.7, 8.7, -61], [31.38, 8.25, -61], [31.3, 7.35, -61],
+    [31.2, 7.2, -63.3],
+  ], .075, m.rusty);
   box(areas.roof, 'Rooftop stairwell house', 18.2, 8.55, -55.7, 3.3, 3.1, 3.2, m.brick);
   box(areas.roof, 'Rooftop stairwell door frame', 18.2, 8.2, -53.99, 1.45, 2.3, .12, m.steel);
   box(areas.roof, 'Rooftop stairwell door', 18.2, 8.18, -53.9, 1.23, 2.13, .08, m.blue);
@@ -479,6 +874,20 @@ export async function createDistrict(scene: THREE.Scene): Promise<District> {
     box(areas.roof, 'Roof ventilation housing', 17.6, 7.65, z, 1.1, 1.25, 1.3, m.steel);
     box(areas.roof, 'Roof vent cowl', 17.6, 8.32, z, 1.4, .22, 1.4, m.rusty);
   }
+  for (const [x, z] of [[20.6, -62.7], [27.8, -67.5]] as const) {
+    box(areas.roof, 'Air-conditioning condenser', x, 7.56, z, 1.15, 1.1, .85, m.pale);
+    box(areas.roof, 'Condenser front grille', x, 7.6, z + .44, .87, .78, .02, m.steel);
+    for (let slat = -2; slat <= 2; slat++) {
+      box(areas.roof, 'Condenser grille slat', x, 7.6 + slat * .13,
+        z + .47, .83, .025, .018, m.can);
+    }
+  }
+  cable(areas.roof, 'Roofline utility cable', [
+    [16.1, 8.52, -58], [19.5, 7.45, -59], [25, 7.12, -60], [30.4, 8.14, -61],
+  ], .03, m.steel);
+  box(areas.roof, 'Stairwell weathered door lintel', 18.2, 9.37, -53.86, 1.66, .14, .26, m.concrete);
+  sign(areas.roof, 'Roof access sign', '屋上へ', 18.2, 9.49, -53.84,
+    1.08, .32, 'front', '#34423f', '#ebe0c4');
   lamp('roof', 30, 9.6, -60, 0xe6ac8b, 12, 11);
   lamp('roof', 18, 8.7, -68, 0xe8ac8c, 10, 12);
 
@@ -494,6 +903,12 @@ export async function createDistrict(scene: THREE.Scene): Promise<District> {
   box(landmark, 'Clocktower clock head', 15, 22, -85, 5.7, 4.4, 5.7, m.red);
   box(landmark, 'Clocktower clock surround', 15, 22, -82.12, 4.15, 4.08, .14, m.redGlow);
   box(landmark, 'Clocktower roof', 15, 24.5, -85, 6.4, .8, 6.4, m.steel);
+  const spireRoof = new THREE.Mesh(ownGeo(new THREE.ConeGeometry(1, 1, 4)), m.red);
+  spireRoof.name = 'Clocktower hipped roof silhouette';
+  spireRoof.position.set(15, 25.52, -85);
+  spireRoof.rotation.y = Math.PI / 4;
+  spireRoof.scale.set(4.75, 2.1, 4.75);
+  landmark.add(spireRoof);
   box(landmark, 'Clocktower beacon base', 15, 25.35, -85, 1.6, .9, 1.6, m.red);
   round(landmark, 'Clocktower red beacon', 15, 26.1, -85, .35, .55, m.redGlow);
   const face = new THREE.Mesh(disc, m.clockFace);
@@ -501,6 +916,17 @@ export async function createDistrict(scene: THREE.Scene): Promise<District> {
   face.position.set(15, 22, -82.1);
   face.scale.set(1.66, 1.66, 1);
   landmark.add(face);
+  const clockRim = new THREE.Mesh(ownGeo(new THREE.TorusGeometry(1.75, .115, 7, 32)), m.rusty);
+  clockRim.name = 'Clock face bronze rim';
+  clockRim.position.set(15, 22, -81.99);
+  landmark.add(clockRim);
+  for (const x of [12.42, 17.58]) {
+    box(landmark, 'Clock head recessed pier', x, 22, -82.06, .28, 4.55, .27, m.rusty);
+  }
+  box(landmark, 'Clocktower upper cornice ledge', 15, 24.03, -85, 6.55, .25, 6.55, m.rusty);
+  for (const y of [18.95, 20]) {
+    box(landmark, 'Clocktower head moulding', 15, y, -82.05, 5.8, .11, .22, m.rusty);
+  }
   for (let i = 0; i < 12; i++) {
     const theta = i / 12 * Math.PI * 2;
     const tick = box(landmark, 'Clock hour index', 15 + Math.sin(theta) * 1.36,
@@ -521,13 +947,69 @@ export async function createDistrict(scene: THREE.Scene): Promise<District> {
         3 + (i % 3) * 1.3, z + 2.94, .5, .72, .07, i % 4 ? m.amber : m.green);
     }
   }
+  // Layered residential silhouettes have different roof heights, setbacks and window rhythms.
+  const skylineBands = [
+    { z: -91, positions: [-15, -7, 1, 28, 37, 46, 55], base: 6.4 },
+    { z: -111, positions: [-23, -13, -3, 7, 25, 35, 45, 58], base: 9.2 },
+  ];
+  for (const [bandIndex, band] of skylineBands.entries()) {
+    for (const [index, x] of band.positions.entries()) {
+      const height = band.base + ((index * 7 + bandIndex * 3) % 6) * 1.65;
+      const width = 3.7 + ((index * 3 + bandIndex) % 4) * .68;
+      const z = band.z - (index % 3) * 2.7;
+      const tone = [m.blue, m.concrete, m.brick, m.rusty][(index + bandIndex) % 4];
+      box(landmark, 'Layered skyline residence', x, height / 2, z, width, height, 4.6, tone);
+      box(landmark, 'Skyline irregular roof coping', x, height + .1, z,
+        width + .18, .2, 4.95, m.steel);
+      if (index % 3 === 0) {
+        box(landmark, 'Skyline rooftop hut', x - width * .23,
+          height + .6, z - .2, width * .42, 1.15, 1.1, tone);
+      } else if (index % 3 === 1) {
+        box(landmark, 'Skyline aerial mast', x + width * .28,
+          height + 1.02, z, .065, 1.9, .065, m.steel);
+        box(landmark, 'Skyline aerial crossbar', x + width * .28,
+          height + 1.62, z, .9, .04, .04, m.steel);
+      }
+      for (let row = 0; row < 3; row++) {
+        if (row * 2.1 + 2.4 > height - .6) continue;
+        for (const side of [-1, 1]) {
+          const lit = (index * 5 + row * 3 + side + bandIndex) % 4 === 0;
+          box(landmark, 'Mismatched skyline apartment window',
+            x + side * width * .24, 2.4 + row * 2.1, z + 2.34,
+            .52, .68, .05, lit ? m.warmGlass : m.darkGlass);
+        }
+      }
+    }
+  }
+  for (const [x, z] of [[-8, -79], [34, -82], [47, -94]] as const) {
+    box(landmark, 'Rooftop utility pole', x, 9.2, z, .1, 8.2, .1, m.steel);
+    box(landmark, 'Rooftop utility pole arm', x, 12.3, z, 2.3, .085, .09, m.steel);
+  }
+  cable(landmark, 'Layered skyline overhead wire', [
+    [-8, 12.2, -79], [0, 10.95, -81], [13, 10.35, -83],
+    [26, 11.2, -83], [34, 12.2, -82],
+  ], .025, m.steel);
+  const hills = new THREE.Shape();
+  hills.moveTo(-65, -1);
+  for (let i = 0; i <= 40; i++) {
+    const x = -65 + i * 3.7;
+    const y = 5.5 + Math.sin(i * .53) * 1.15 + Math.sin(i * .17 + 1.2) * 2.2;
+    hills.lineTo(x, y);
+  }
+  hills.lineTo(83, -1);
+  hills.closePath();
+  const hillMaterial = ownMat(new THREE.MeshBasicMaterial({ color: 0x455365, side: THREE.DoubleSide }));
+  const hillMesh = new THREE.Mesh(ownGeo(new THREE.ShapeGeometry(hills)), hillMaterial);
+  hillMesh.name = 'Distant uneven hill horizon';
+  hillMesh.position.z = -128;
+  landmark.add(hillMesh);
 
   const previousFog = scene.fog;
   const previousBackground = scene.background;
   const fog = new THREE.FogExp2(0x17252a, .018);
   const background = new THREE.Color(0x17252a);
   scene.fog = fog;
-  const skyCanvas=document.createElement('canvas');skyCanvas.width=2;skyCanvas.height=128;
+  const skyCanvas=document.createElement('canvas');skyCanvas.width=1024;skyCanvas.height=512;
   const skyContext=skyCanvas.getContext('2d')!;
   const sky=new THREE.CanvasTexture(skyCanvas);sky.colorSpace=THREE.SRGBColorSpace;textures.add(sky);
   scene.background=sky;
@@ -559,11 +1041,29 @@ export async function createDistrict(scene: THREE.Scene): Promise<District> {
     background.setHex(palette[area][0]);
     fog.color.copy(background);
     if(skyArea!==area){
-      skyArea=area;const gradient=skyContext.createLinearGradient(0,0,0,128);
+      skyArea=area;const gradient=skyContext.createLinearGradient(0,0,0,512);
       gradient.addColorStop(0,area==='roof'?'#293b57':'#071117');
-      gradient.addColorStop(.65,area==='roof'?'#a07683':'#192b32');
-      gradient.addColorStop(1,area==='roof'?'#e7b48a':'#354047');
-      skyContext.fillStyle=gradient;skyContext.fillRect(0,0,2,128);sky.needsUpdate=true;
+      gradient.addColorStop(.56,area==='roof'?'#78677e':'#192b32');
+      gradient.addColorStop(1,area==='roof'?'#d69a78':'#354047');
+      skyContext.fillStyle=gradient;skyContext.fillRect(0,0,1024,512);
+      if (area === 'roof') {
+        for (let layer = 0; layer < 3; layer++) {
+          for (let i = 0; i < 45; i++) {
+            const x = (i * 189 + layer * 73) % 1120 - 40;
+            const y = 216 + layer * 72 + Math.sin(i * 1.83 + layer) * 23;
+            const width = 34 + (i * 13 % 65);
+            const height = 4 + i % 7;
+            const cloud = skyContext.createRadialGradient(x, y, 1, x, y, width);
+            cloud.addColorStop(0, layer === 2 ? 'rgba(46,51,72,.27)' : 'rgba(225,169,147,.19)');
+            cloud.addColorStop(1, 'rgba(58,62,82,0)');
+            skyContext.fillStyle = cloud;
+            skyContext.beginPath();
+            skyContext.ellipse(x, y, width, height, -.09, 0, Math.PI * 2);
+            skyContext.fill();
+          }
+        }
+      }
+      sky.needsUpdate=true;
     }
     fog.density = palette[area][1];
     const selected = area === 'alley'

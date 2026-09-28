@@ -3,6 +3,8 @@ import { EffectComposer } from "three/addons/postprocessing/EffectComposer.js";
 import { RenderPass } from "three/addons/postprocessing/RenderPass.js";
 import { UnrealBloomPass } from "three/addons/postprocessing/UnrealBloomPass.js";
 import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
+import { GTAOPass } from 'three/addons/postprocessing/GTAOPass.js';
+import { StreetAtmosphere } from './atmosphere.ts';
 import { OutputPass } from "three/addons/postprocessing/OutputPass.js";
 import { loadCharacterLibrary, chooseDeathClip, type CharacterInstance, type CharacterLibrary } from "./characters.ts";
 import { createCharacterMotion, type CharacterMotion } from "./character-motion.ts";
@@ -53,12 +55,18 @@ type Actor = {
   height: number;
   attacking: boolean;
 };
+class ContactShade extends GTAOPass {
+  override setSize(width:number,height:number){super.setSize(Math.max(1,Math.round(width*.55)),Math.max(1,Math.round(height*.55)));}
+}
 export class World {
   readonly renderer: T.WebGLRenderer;
   readonly camera = new T.PerspectiveCamera(55, 1, 0.08, 110);
   readonly scene = new T.Scene();
   private composer: EffectComposer;
   private bloom: UnrealBloomPass;
+  private atmosphere:StreetAtmosphere;
+  private ambience=new T.HemisphereLight(0x99bed1,0x302920,.42);
+  private playerFill=new T.PointLight(0xf2c39c,3.5,12,2);
   private environment!: Awaited<ReturnType<typeof createDistrict>>;
   private characters!: CharacterLibrary;
   private actors = new Map<number, Actor>();
@@ -108,20 +116,20 @@ export class World {
     });
     this.renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5));
     this.renderer.toneMapping = T.ACESFilmicToneMapping;
-    this.renderer.toneMappingExposure = 1.3;
+    this.renderer.toneMappingExposure = 1.05;
     this.renderer.shadowMap.enabled = true;
     this.renderer.shadowMap.type = T.PCFShadowMap;
     container.append(this.renderer.domElement);
     const studio=new RoomEnvironment();
     const pmrem=new T.PMREMGenerator(this.renderer);
     this.scene.environment=pmrem.fromScene(studio,.04).texture;
-    this.scene.environmentIntensity=.2;
+    this.scene.environmentIntensity=.32;
     studio.dispose();pmrem.dispose();
     this.scene.background = new T.Color("#121d23");
     this.scene.fog = new T.FogExp2("#152129", 0.027);
-    this.scene.add(new T.HemisphereLight(0xb5d4dd, 0x5b4c35, 1.2));
+    this.scene.add(this.ambience);
     const key = this.keyLight;
-    key.castShadow=true;key.shadow.mapSize.set(1024,1024);
+    key.castShadow=true;key.shadow.mapSize.set(2048,2048);
     Object.assign(key.shadow.camera,{left:-8,right:8,top:8,bottom:-8,near:1,far:32});
     key.shadow.bias=-.0003;key.shadow.normalBias=.035;
     key.position.set(-4, 8, 5);
@@ -129,7 +137,7 @@ export class World {
     this.scene.add(this.camera, this.bossLight,this.luckyLight,this.luckyFill,this.luckyFloor);
     this.luckyFloor.rotation.x=-Math.PI/2;this.luckyFloor.visible=false;
     this.camera.position.set(0, 1.65, 5);
-    const fill = new T.PointLight(0xffcc9b, 14, 20, 2);
+    const fill = this.playerFill;
     fill.position.set(0, 2, -1);
     this.camera.add(fill);
     this.camera.add(this.gun);
@@ -169,6 +177,11 @@ export class World {
     this.flash.position.copy(this.muzzle.position);
     this.composer = new EffectComposer(this.renderer);
     this.composer.addPass(new RenderPass(this.scene, this.camera));
+    const shade=new ContactShade(this.scene,this.camera,1,1);
+    shade.updateGtaoMaterial({radius:.45,thickness:.7,distanceFallOff:.7,samples:8});
+    shade.updatePdMaterial({samples:8,rings:2,radius:4});
+    shade.blendIntensity=.55;this.composer.addPass(shade);
+    this.atmosphere=new StreetAtmosphere(this.scene);
     this.bloom = new UnrealBloomPass(new T.Vector2(1, 1), 0.35, 0.4, 1.05);
     this.composer.addPass(this.bloom);
     this.composer.addPass(new OutputPass());
@@ -437,11 +450,18 @@ export class World {
     this.cameraZ=view.z;
     this.camera.position.set(view.x,view.y,view.z);
     this.camera.rotation.set(0,view.yaw,0);
-    this.keyLight.position.set(view.x-4,view.y+6,view.z+2);
+    const indoor=this.rail.area==='store';
+    const side=indoor?-2.2:-4,back=indoor?-.5:2;
+    this.keyLight.position.set(view.x+Math.cos(view.yaw)*side+Math.sin(view.yaw)*back,view.y+(indoor?1.35:6),view.z-Math.sin(view.yaw)*side+Math.cos(view.yaw)*back);
     this.keyLight.target.position.set(view.x-Math.sin(view.yaw)*5,view.y-1.65,view.z-Math.cos(view.yaw)*5);
     this.keyLight.target.updateMatrixWorld();
     const quiet=!state || ['explore','vista','clear'].includes(state.mode) || this.rail.moving;
-    this.keyLight.intensity=this.rail.area==='store'?1.3:this.rail.area==='roof'?1.6:2.1;
+    this.keyLight.intensity=this.rail.area==='store'?1.15:this.rail.area==='roof'?1.4:1.05;
+    this.keyLight.color.setHex(this.rail.area==='roof'?0xffccaa:0xb6cfe1);
+    this.ambience.intensity=this.rail.area==='store'?.18:this.rail.area==='roof'?.7:.4;
+    this.playerFill.intensity=this.rail.area==='store'?1.6:4.5;
+    this.scene.environmentIntensity=indoor?.16:.3;
+    this.atmosphere.update(delta,this.rail.area,view,this.motion);
     if(this.weaponModel)setWeaponMode(this.weaponModel,this.rushing?'shotgun':'pistol');
     const active = new Set<number>();
     for (const e of state?.enemies ?? []) {
@@ -549,14 +569,14 @@ export class World {
     const targetX=targetActor?targetActor.root.position.clone().sub(this.camera.position).applyAxisAngle(new T.Vector3(0,1,0),-view.yaw).x:0;
     this.gun.rotation.y = T.MathUtils.damp(
       this.gun.rotation.y,
-      T.MathUtils.clamp((0.48 - targetX) * 0.17, -0.24, 0.3),
+      T.MathUtils.clamp((0.4 - targetX) * 0.4, -0.24, 0.3),
       12,
       delta,
     );
-    this.gun.position.x=this.rushing?.32:.48;
+    this.gun.position.x=this.rushing?.22:.4;
     this.gun.position.z = (this.rushing?-.82:-.65) + this.recoil * (this.motion ? .06 : .015);
     this.gun.position.y =
-      T.MathUtils.damp(this.gun.position.y,quiet?-.43:-.10,8,delta) + (this.motion ? Math.sin(this.elapsed * 1.4) * 0.001 : 0);
+      T.MathUtils.damp(this.gun.position.y,quiet?-.62:-.025,8,delta) + (this.motion ? Math.sin(this.elapsed * 1.4) * 0.001 : 0);
     this.muzzle.visible = this.recoil > 0.45;
     if (delta > 0) this.muzzle.rotation.z = Math.random() * Math.PI;
     this.muzzle.scale.setScalar(this.motion ? 1.05 + this.level * .12 + this.finishing * .95 : .4);

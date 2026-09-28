@@ -192,6 +192,19 @@ export class CharacterMotion {
       this.rotate("head", axisX, -0.08 * reach);
     }
 
+    if (this.hasAttack && threat > 0 && death === 0) {
+      // The source attack can hold both arms almost straight sideways. Add a
+      // small weight shift and turn the arms toward the player so the warning
+      // reads as a reach rather than an accidental T pose.
+      const reach = threat * threat * (3 - 2 * threat);
+      const amount = state.reducedMotion ? 0.68 : 1;
+      this.rotate("chest", axisX, 0.11 * reach * amount);
+      this.rotate("upperChest", axisX, 0.07 * reach * amount);
+      this.rotate("leftArm", axisY, -0.25 * reach * amount);
+      this.rotate("rightArm", axisY, 0.25 * reach * amount);
+      this.rotate("head", axisX, -0.08 * reach * amount);
+    }
+
     if (hitStrength > 0 && death === 0) {
       const zone = state.hitZone ?? "chest";
       if (zone === "head") {
