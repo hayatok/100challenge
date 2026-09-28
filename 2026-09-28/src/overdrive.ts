@@ -21,7 +21,8 @@ export class OverdriveLights {
     const beat=motion?.78+.22*Math.sin(time*Math.PI*2*165/60):.55;
     this.fixtures.forEach(({group,material},i)=>{
       group.visible=i<active+2||celebration>0;
-      material.color.setHex(PALETTE[active]).multiplyScalar(motion?2.4:1);
+      material.color.setHex(rush && i%2 ? 0xff3b91 : PALETTE[active]).multiplyScalar(motion ? rush ? 3.1 : 2.4 : 1);
+      group.scale.setScalar(rush && motion ? 1 + .045 * Math.sin(time * 3 - i) : 1);
       const chase=motion?.72+.28*Math.sin(time*4-i*.8):.75;
       material.opacity=active===0?Math.min(.55,celebration*.5):Math.min(.94,(.25+active*.13)*chase+(motion?celebration*.2:0));
     });
