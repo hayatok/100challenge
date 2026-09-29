@@ -48,7 +48,7 @@ app.innerHTML = `<div id="world" aria-hidden="true">
 </div>
 <footer>
 <span>生きて、定時で帰ろう。</span>
-<span>ALPHA 0.11 / 黒猫商店街</span>
+<span>ALPHA 0.12 / 黒猫商店街</span>
 </footer>
 </section>
 <section id="hud" hidden>

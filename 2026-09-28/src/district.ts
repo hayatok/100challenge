@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { installSurface } from './surface-materials.ts';
+import { buildStoreInterior } from './store-interior.ts';
 
 export type DistrictArea = 'alley' | 'store' | 'service' | 'court' | 'roof';
 
@@ -25,7 +26,6 @@ export async function createDistrict(scene: THREE.Scene): Promise<District> {
   const plane = ownGeo(new THREE.PlaneGeometry(1, 1));
   const cylinder = ownGeo(new THREE.CylinderGeometry(1, 1, 1, 12));
   const disc = ownGeo(new THREE.CircleGeometry(1, 32));
-  const fruitShape = ownGeo(new THREE.IcosahedronGeometry(1, 1));
   const areas: Record<DistrictArea, THREE.Group> = {
     alley: new THREE.Group(), store: new THREE.Group(), service: new THREE.Group(),
     court: new THREE.Group(), roof: new THREE.Group(),
@@ -163,44 +163,6 @@ export async function createDistrict(scene: THREE.Scene): Promise<District> {
     warmGlass: ownMat(new THREE.MeshStandardMaterial({ color: 0xd7b58b, emissive: 0xae7040, emissiveIntensity: .18, roughness: .35 })),
     darkGlass: ownMat(new THREE.MeshPhysicalMaterial({ color: 0x394d4e, roughness: .25, metalness: .15, transparent: true, opacity: .47, depthWrite: false, side: THREE.DoubleSide })),
   };
-  function groceryPackage(label: string, subline: string, background: string,
-    accent: string, ink: string): THREE.MeshStandardMaterial {
-    const canvas = document.createElement('canvas');
-    canvas.width = canvas.height = 256;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) throw new Error('Grocery package canvas is unavailable');
-    ctx.fillStyle = background;
-    ctx.fillRect(0, 0, 256, 256);
-    ctx.fillStyle = accent;
-    ctx.fillRect(0, 0, 256, 36);
-    ctx.fillRect(0, 216, 256, 40);
-    ctx.strokeStyle = ink;
-    ctx.globalAlpha = .32;
-    ctx.lineWidth = 4;
-    ctx.strokeRect(13, 51, 230, 148);
-    ctx.globalAlpha = 1;
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillStyle = ink;
-    ctx.font = 'bold 71px "Yu Gothic", "Hiragino Kaku Gothic ProN", sans-serif';
-    ctx.fillText(label, 128, 123, 228);
-    ctx.font = 'bold 24px "Yu Gothic", "Hiragino Kaku Gothic ProN", sans-serif';
-    ctx.fillText(subline, 128, 181, 220);
-    ctx.fillStyle = background;
-    ctx.font = 'bold 19px sans-serif';
-    ctx.fillText('やまさか', 128, 18, 220);
-    const map = ownTex(new THREE.CanvasTexture(canvas));
-    map.colorSpace = THREE.SRGBColorSpace;
-    map.anisotropy = 4;
-    return ownMat(new THREE.MeshStandardMaterial({ map, roughness: .77, metalness: .04 }));
-  }
-  const groceryPacks = [
-    groceryPackage('緑茶', 'すっきり 500ml', '#eee9d1', '#395a3c', '#203b2d'),
-    groceryPackage('トマト', '完熟の甘み', '#f2e2bb', '#a74b36', '#8a2a22'),
-    groceryPackage('お米', '地元の朝ごはん', '#ede3c4', '#779077', '#3f5144'),
-    groceryPackage('みそ', '毎日の食卓に', '#dec79e', '#925f3e', '#55382d'),
-    groceryPackage('牛乳', '朝の新鮮便', '#f1eee2', '#507e8c', '#315e73'),
-  ];
   await Promise.all([
     installSurface(m.asphalt, 'worn_asphalt', new THREE.Vector2(2.5, 9), ownTex),
     installSurface(m.shutter, 'worn_shutter', new THREE.Vector2(2, 1.3), ownTex),
@@ -451,202 +413,11 @@ export async function createDistrict(scene: THREE.Scene): Promise<District> {
   const shop = areas.store;
   shop.position.set(10, 0, -12);
   shop.rotation.y = -Math.PI / 2;
-  flat(shop, 'Grocery tile floor', 0, -.012, -6.5, 8.7, 15, m.pale);
-  for (let i = 0; i < 15; i++) {
-    box(shop, 'Tile grout line', 0, .004, -.4 - i, 8.5, .008, .018, m.concrete);
-  }
-  for (let i = -4; i <= 4; i++) {
-    box(shop, 'Cross tile grout', i, .005, -7, .012, .009, 14, m.tileDark);
-  }
-  for (let i = 0; i < 36; i++) {
-    const x = (random() - .5) * 7.8;
-    const z = -.7 - random() * 12.3;
-    const mark = flat(shop, 'Scuffed grocery tile', x, .011, z,
-      .08 + random() * .28, .1 + random() * .42, i % 4 ? m.tileDark : m.puddle);
-    mark.rotation.z = random() * Math.PI;
-  }
-  for (const side of [-1, 1]) {
-    box(shop, 'Grocery wall', side * 4.35, 3.15, -7, .28, 6.3, 14, m.blue);
-    box(shop, 'Grocery ceiling rim', side * 4.05, 5.8, -7, .3, .2, 14, m.steel);
-    box(shop, 'Store wall ceramic dado', side * 4.19, 1.05, -7, .035, 2.1, 13.7, m.tile);
-    box(shop, 'Store wall dado cap', side * 4.15, 2.12, -7, .08, .06, 13.8, m.steel);
-    if (side > 0) continue;
-    for (let i = 0; i < 3; i++) {
-      const z = -2.8 - i * 3.5;
-      box(shop, 'Open produce crate bottom', side * 3.4, .22, z, 1.08, .16, 2.5, m.wood);
-      for (const edge of [-1.21, 1.21]) {
-        box(shop, 'Open produce crate end slat', side * 3.4, .62, z + edge,
-          1.08, .68, .09, m.wood);
-      }
-      box(shop, 'Shelf steel toe', side * 3.4, .14, z, 1.12, .16, 2.55, m.steel);
-      for (const height of [.43, .86]) {
-        box(shop, 'Open produce crate front slat', side * 2.85,
-          height, z, .1, .12, 2.5, m.wood);
-      }
-      box(shop, 'Grocery shelving back', side * 4.09, 2.1, z, .1, 2.2, 2.54, m.steel);
-      for (let j = 0; j < 5; j++) {
-        const produce = new THREE.Mesh(fruitShape,
-          [m.fruitOrange, m.fruitGreen, m.fruitPale][(i + j) % 3]);
-        produce.name = 'Uneven fresh produce pile';
-        produce.position.set(side * (3.05 + (j % 2) * .32), .64 + (j % 2) * .11,
-          z - .8 + j * .38);
-        produce.scale.set(.23, .16, .2);
-        shop.add(produce);
-      }
-      sign(shop, 'Produce crate fresh price', `${[98, 128, 158][i]}円`,
-        -2.79, .96, z, .7, .23, 'right', '#dfd3a1', '#394233');
-    }
-  }
-  // The left wall is stocked to the ceiling with varied silhouettes and printed prices.
-  for (let bay = 0; bay < 3; bay++) {
-    const z = -2.8 - bay * 3.5;
-    for (const level of [1.82, 2.56, 3.28, 4.02]) {
-      box(shop, 'Upper aisle shelf', -3.63, level, z, .95, .055, 2.52, m.steel);
-      box(shop, 'Scuffed shelf metal edge', -3.13, level, z, .035, .055, 2.54, m.can);
-      for (const scratch of [-.91, -.13, .76]) {
-        box(shop, 'Chipped shelf edge paint', -3.106, level, z + scratch,
-          .007, .025, .14, m.rusty);
-      }
-      for (let item = 0; item < 8; item++) {
-        if ((bay * 7 + item * 3 + Math.round(level * 10)) % 13 === 0) continue;
-        const zz = z - 1.04 + item * .29;
-        const product = groceryPacks[(bay * 2 + item + Math.round(level)) % groceryPacks.length];
-        if (item % 3 === 0) {
-          round(shop, 'Stocked glass bottle', -3.19, level + .25, zz, .12, .44,
-            item % 2 ? m.bottleGreen : m.bottleBrown);
-          round(shop, 'Bottle printed paper wrap', -3.19, level + .25,
-            zz, .123, .23, product);
-          round(shop, 'Bottle cap', -3.19, level + .5, zz, .05, .055, m.can);
-        } else if (item % 4 === 0) {
-          round(shop, 'Tinned grocery', -3.21, level + .16, zz, .13, .3, m.can);
-          round(shop, 'Tin printed paper wrap', -3.21, level + .16, zz,
-            .133, .22, product);
-        } else {
-          box(shop, 'Fictional printed grocery packet', -3.25, level + .19,
-            zz, .27, .36 + (item % 2) * .08, .22, product);
-        }
-      }
-      for (let price = 0; price < 3; price++) {
-        sign(shop, 'Aisle price card', `${[98, 128, 178, 248][(bay + price + Math.round(level)) % 4]}`,
-          -3.1, level - .07, z - .78 + price * .8, .27, .14, 'right', '#e2d6ab', '#312d29');
-      }
-    }
-  }
-  // The right aisle is a refrigerated cabinet, with a visible frame, doors and stocked shelves.
-  for (let bay = 0; bay < 3; bay++) {
-    const z = -2.85 - bay * 3.54;
-    if (bay < 2) {
-      box(shop, 'Refrigerated produce case enamel base', 3.19, .94, z, 1.99, 1.72, 3.3, m.pale);
-      box(shop, 'Produce case vent grille', 2.17, .49, z, .03, .37, 2.85, m.steel);
-      for (const vent of [-.92, -.46, 0, .46, .92]) {
-        box(shop, 'Produce case vent opening', 2.14, .49, z + vent * 1.3,
-          .018, .2, .08, m.can);
-      }
-      box(shop, 'Produce case black basin', 3.17, 1.72, z, 1.84, .1, 3.1, m.steel);
-      for (let item = 0; item < 12; item++) {
-        const zz = z - 1.31 + (item % 6) * .52;
-        const x = 2.71 + Math.floor(item / 6) * .6;
-        const produce = new THREE.Mesh(fruitShape,
-          [m.fruitGreen, m.fruitPale, m.fruitOrange][(bay + item) % 3]);
-        produce.name = 'Refrigerated fresh produce';
-        produce.position.set(x, 1.86 + (item % 3) * .04, zz);
-        produce.scale.set(.3 + (item % 2) * .05, .21, .23);
-        shop.add(produce);
-      }
-      const slopedGlass = box(shop, 'Sloped produce case glazing', 2.86, 2.15,
-        z, 1.95, .025, 3.15, m.darkGlass);
-      slopedGlass.rotation.z = .39;
-      box(shop, 'Produce case upper cold light', 3.57, 2.51, z, .085, .09, 3.18, m.fluorescent);
-      box(shop, 'Produce case front lip', 2.03, 1.69, z, .12, .1, 3.25, m.can);
-      for (let price = 0; price < 3; price++) {
-        sign(shop, 'Fresh produce blackboard price', `${[128, 138, 158, 198][(bay + price) % 4]}円`,
-          2.0, 1.38, z - 1.08 + price * 1.05, .58, .28,
-          'left', '#28342f', '#ece3c6');
-      }
-      continue;
-    }
-    box(shop, 'Refrigerator enamel carcass', 3.45, 2.1, z, 1.18, 3.9, 3.32, m.pale);
-    box(shop, 'Refrigerator dark rear', 2.82, 2.12, z, .035, 3.42, 3.08, m.steel);
-    for (const level of [.63, 1.25, 1.86, 2.48, 3.1]) {
-      box(shop, 'Refrigerator wire shelf', 2.63, level, z, .46, .045, 3, m.can);
-      for (let item = 0; item < 8; item++) {
-        const zz = z - 1.26 + item * .36;
-        const tone = [m.cartonCream, m.bottleGreen, m.cartonRed, m.bottleBrown][(item + bay) % 4];
-        if (item % 3 === 0) {
-          round(shop, 'Refrigerated drink', 2.57, level + .19, zz, .085, .33, tone);
-          round(shop, 'Refrigerated bottle cap', 2.57, level + .38, zz, .04, .04, m.can);
-        } else {
-          box(shop, 'Refrigerated carton', 2.56, level + .2, zz, .22, .38, .23, tone);
-        }
-      }
-    }
-    for (const edge of [-1.55, 0, 1.55]) {
-      box(shop, 'Refrigerator door stile', 2.3, 2.14, z + edge, .15, 3.65, .08, m.can);
-    }
-    box(shop, 'Refrigerator top rail', 2.3, 4.0, z, .15, .12, 3.22, m.can);
-    box(shop, 'Refrigerator lower kickplate', 2.31, .22, z, .15, .36, 3.22, m.steel);
-    box(shop, 'Refrigerator door glazing', 2.27, 2.15, z, .018, 3.44, 3.04, m.darkGlass);
-    for (const edge of [-.8, .8]) box(shop, 'Refrigerator handle', 2.16, 2.1, z + edge, .06, .8, .06, m.can);
-    box(shop, 'Refrigerator cold strip', 2.15, 3.85, z, .055, .07, 2.93, m.fluorescent);
-  }
-  // A warm open back room gives the aisle depth without putting a wall in the enemy lane.
-  box(shop, 'Rear grocery wall left pier', -3.3, 2.7, -13.91, 2.2, 5.4, .2, m.tile);
-  box(shop, 'Rear grocery wall right pier', 3.25, 2.7, -13.91, 2.3, 5.4, .2, m.tile);
-  box(shop, 'Rear grocery wall header', 0, 4.65, -13.91, 4.4, 1.5, .2, m.tile);
-  box(shop, 'Back room door frame left', -2.12, 2.01, -13.8, .16, 4.02, .18, m.rusty);
-  box(shop, 'Back room door frame right', 2.12, 2.01, -13.8, .16, 4.02, .18, m.rusty);
-  box(shop, 'Back room door lintel', 0, 4.05, -13.8, 4.35, .12, .18, m.rusty);
-  flat(shop, 'Back room shadowed tile floor', 0, .01, -15, 4.1, 2.1, m.tileDark);
-  box(shop, 'Back room far plaster wall', 0, 2.05, -16.12, 4.13, 4.1, .12, m.wood);
-  for (const x of [-2.05, 2.05]) {
-    box(shop, 'Back room side wall', x, 2.05, -15, .12, 4.1, 2.18, m.concrete);
-  }
-  box(shop, 'Back room ceiling', 0, 4.12, -15, 4.1, .12, 2.2, m.rusty);
-  box(shop, 'Back room pendant shade', 0, 3.6, -15.33, .52, .14, .52, m.steel);
-  round(shop, 'Back room small warm bulb', 0, 3.49, -15.33, .11, .18, m.warmGlass);
-  for (const x of [-1.55, -.45, .9]) {
-    box(shop, 'Back room stacked provisions', x, .72, -14.78, .78, 1.42, .65,
-      x > 0 ? m.wood : m.cartonCream);
-  }
-  sign(shop, 'Back room stock notice', '搬入室', 0, 4.65, -13.78, 1.25, .38, 'front', '#574032', '#f5e5b8');
-  // Entrance posts are at the edges, never across the player's line of travel.
-  for (const side of [-1, 1]) {
-    box(shop, 'Open entrance frame post', side * 4.15, 2.55, .12, .25, 5.1, .28, m.steel);
-  }
-  box(shop, 'Grocery ceiling', 0, 5.96, -7, 8.5, .18, 14, m.blue);
-  box(shop, 'Open entrance header', 0, 5.15, .12, 8.5, .25, .28, m.steel);
-  box(shop, 'Grocery green header light', 0, 4.8, .18, 7.7, .12, .08, m.green);
-  sign(shop, 'Fictional grocery sign', 'みどり市場', 0, 4.12, .2, 4.5, .98, 'front', '#225044', '#dbefbd');
-  for (const z of [-1.5, -5.7, -10]) {
-    box(shop, 'Fluorescent housing', 0, 5.6, z, 5.2, .13, .5, m.steel);
-    box(shop, 'Fluorescent diffuser', 0, 5.48, z, 4.9, .06, .27, m.fluorescent);
-  }
-  for (const x of [-3.75, -2.55, 2.35, 3.9]) {
-    box(shop, 'Ceiling exposed service conduit', x, 5.78, -7, .065, .07, 13.5, m.steel);
-  }
-  for (const z of [-4.15, -8.7]) {
-    box(shop, 'Ceiling suspended price board brace', -2.05, 4.75, z, .04, .8, .04, m.can);
-    sign(shop, 'Aisle hanging price board', z > -5 ? '本日の特売' : '飲料・保存食',
-      -2.05, 4.35, z, 1.5, .38, 'front', '#485a43', '#f0eac7');
-  }
-  // The displacement is concentrated along the wall; the center remains a clear combat lane.
-  box(shop, 'Toppled blue shopping basket', 2.15, .18, -6.8, .9, .36, .6, m.blue).rotation.z = .18;
-  for (let i = 0; i < 7; i++) {
-    const x = (i % 2 ? 1 : -1) * (1.8 + random() * .65);
-    const z = -4.2 - i * 1.28;
-    const fallen = i % 3 === 0
-      ? round(shop, 'Fallen drink can', x, .105, z, .095, .27, m.can)
-      : box(shop, 'Dropped grocery packet', x, .07, z, .24, .11, .32,
-          i % 2 ? m.cartonRed : m.cartonCream);
-    fallen.rotation.set(random() * .35, random() * 2.5, random() * .6);
-  }
-  box(shop, 'Cash register counter', -3.1, .78, -12.4, 1.75, 1.35, 1.2, m.wood);
-  box(shop, 'Register body', -3.1, 1.6, -12.2, .72, .46, .68, m.steel);
-  sign(shop, 'Grocery closing notice', '本日営業中', -4.15, 2.05, -5.8, 1.6, .54, 'left', '#ebe3b9', '#344b39');
-  lamp('store', 0, 4.85, -2, 0xb0ffc9, 21, 13);
-  lamp('store', 0, 4.85, -8, 0x92e7c1, 22, 13);
-  lamp('store', 0, 4.85, -12, 0x8adfbd, 17, 10);
-  lamp('store', 0, 3.48, -15.1, 0xffb66f, 8, 5.6);
+  buildStoreInterior(shop, ownGeo, ownMat, ownTex);
+  lamp('store', -.3, 3.3, -1.8, 0xd1e2d6, 9, 7);
+  lamp('store', -.3, 3.3, -5.8, 0xc9ddd1, 11, 8);
+  lamp('store', -.3, 3.3, -9.9, 0xc5d6c6, 8, 6);
+  lamp('store', -.28, 2.68, -12.7, 0xffb761, 22, 7);
 
   // A side service route continues straight from the alley into the same open district.
   flat(areas.service, 'Service passage asphalt', -6, -.025, -18, 7, 15, m.asphalt);
@@ -1035,7 +806,7 @@ export async function createDistrict(scene: THREE.Scene): Promise<District> {
     lastTime = time;
     lastArea = area;
     const palette: Record<DistrictArea, [number, number]> = {
-      alley: [0x16252c, .015], store: [0x132920, .012], service: [0x1b252a, .016],
+      alley: [0x16252c, .015], store: [0x1a211d, .007], service: [0x1b252a, .016],
       court: [0x263039, .013], roof: [0x60494a, .008],
     };
     background.setHex(palette[area][0]);

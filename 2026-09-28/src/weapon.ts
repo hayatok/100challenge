@@ -122,10 +122,7 @@ function makePistolGripHand(parent: T.Group): T.Group {
 /** Camera-local weapon. The scene owns aim/recoil; this group owns the moving slide. */
 export async function createWeapon(): Promise<T.Group> {
   const loader = new GLTFLoader();
-  const [pistolAsset, armsAsset] = await Promise.all([
-    loader.loadAsync(`${import.meta.env.BASE_URL}assets/weapons/pistol.glb`),
-    loader.loadAsync(`${import.meta.env.BASE_URL}assets/weapons/fps-arms.glb`),
-  ]);
+  const pistolAsset = await loader.loadAsync(`${import.meta.env.BASE_URL}assets/weapons/pistol.glb`);
 
   const weapon = new T.Group();
   weapon.name = 'first-person-weapon';
@@ -225,72 +222,19 @@ export async function createWeapon(): Promise<T.Group> {
   supportHand.position.x = .045;
   weapon.add(shotgun);
 
-  // Keep the detailed right arm and hand from the FPS rig. Its source mesh has
-  // both arms in one symmetric skin; left-half triangles belong to the right arm.
-  const arms = armsAsset.scene;
-  arms.name = 'right-gloved-arm';
-  const armMesh = arms.getObjectByName('caucasian_male_1Body');
-  if (armMesh instanceof T.SkinnedMesh) {
-    const geometry = armMesh.geometry.clone();
-    const index = geometry.getIndex();
-    const positions = geometry.getAttribute('position');
-    if (index && positions) {
-      const rightTriangles: number[] = [];
-      for (let i = 0; i < index.count; i += 3) {
-        const a = index.getX(i);
-        const b = index.getX(i + 1);
-        const c = index.getX(i + 2);
-        if (positions.getX(a) + positions.getX(b) + positions.getX(c) < 0) {
-          rightTriangles.push(a, b, c);
-        }
-      }
-      geometry.setIndex(rightTriangles);
-      geometry.computeBoundingSphere();
-    }
-    armMesh.geometry = geometry;
-    const sourceMaterial = armMesh.material;
-    if (sourceMaterial instanceof T.MeshStandardMaterial) {
-      const glove = sourceMaterial.clone();
-      glove.name = 'worn-dark-glove-and-sleeve';
-      glove.color.set(0x485356);
-      if(glove instanceof T.MeshPhysicalMaterial){glove.specularIntensity=.3;glove.specularColor.set(0xffffff);}
-      glove.roughness = 0.9;
-      glove.metalness = 0;
-      armMesh.material = glove;
-    }
-    armMesh.castShadow = true;
-    armMesh.frustumCulled = false;
-  }
-
-  // The source rig has straight, spread fingers. Curl its existing phalanges
-  // around the grip; all skin stays bound to the original hand and forearm.
-  for (const [name, baseCurl, middleCurl] of [
-    ['index', 0.62, 0.2],
-    ['middle', 1.02, 0.38],
-    ['ring', 1.08, 0.42],
-    ['pinky', 1.12, 0.43],
-  ] as const) {
-    const base = arms.getObjectByName(`f_${name}.01.R`);
-    const middle = arms.getObjectByName(`f_${name}.02.R`);
-    if (base) base.rotation.z -= baseCurl;
-    if (middle) middle.rotation.z -= middleCurl;
-  }
-
-  // Bring the palm below the slide and beside the grip, so the curled fingers
-  // sit behind the trigger guard instead of reaching over the barrel.
-  const lowerRight = new T.Group();
-  lowerRight.position.set(0.415, -0.32, 0.11);
-  lowerRight.rotation.z = Math.PI;
-  const faceCamera = new T.Group();
-  faceCamera.rotation.y = Math.PI;
-  arms.scale.setScalar(0.75);
-  faceCamera.add(arms);
-  lowerRight.add(faceCamera);
-  weapon.add(lowerRight);
-  lowerRight.name = 'pistol-rig-arm';
-  // A compact camera-facing hold covers the source rig's spread silhouette.
+  // Position the palm against the measured GLB grip, not beside empty space.
   const pistolGlove = makePistolGripHand(weapon);
-  pistolGlove.position.set(-.155, .035, -.07);
+  pistolGlove.position.set(-.018, .035, -.135);
+  const support = new T.Group();
+  support.name = 'pistol-support-hand';
+  const leather = new T.MeshStandardMaterial({color:0x444943,roughness:.83});
+  const sleeve = new T.MeshStandardMaterial({color:0x303c38,roughness:.96});
+  capsuleBetween(support,'support forearm',[-.23,-.34,.26],[-.055,-.15,.015],.042,sleeve);
+  const palm = rounded(support,'support palm',[.063,.092,.047],[-.045,-.13,.006],.021,leather);
+  palm.rotation.z=.28;
+  for(let i=0;i<3;i++) capsuleBetween(support,'support bent finger',[-.061,-.104-i*.023,-.008],[-.018,-.116-i*.023,-.047],.008,leather);
+  capsuleBetween(support,'support thumb',[-.061,-.1,.008],[-.028,-.077,-.057],.011,leather);
+  weapon.add(support);
 
   return weapon;
 }
@@ -299,11 +243,11 @@ export function setWeaponMode(weapon: T.Group, mode: 'pistol' | 'shotgun'): void
   const pistol = weapon.getObjectByName('pistol');
   const shotgun = weapon.getObjectByName('shotgun');
   const pistolGlove = weapon.getObjectByName('pistol-visible-glove');
-  const pistolRig = weapon.getObjectByName('pistol-rig-arm');
+  const support = weapon.getObjectByName('pistol-support-hand');
   if (pistol) pistol.visible = mode === 'pistol';
   if (shotgun) shotgun.visible = mode === 'shotgun';
   if (pistolGlove) pistolGlove.visible = mode === 'pistol';
-  if (pistolRig) pistolRig.visible = false;
+  if (support) support.visible = mode === 'pistol';
 }
 
 /** Slide travels along source -X (toward the camera after the pistol's Y turn). */
