@@ -456,11 +456,11 @@ export class World {
     this.keyLight.target.position.set(view.x-Math.sin(view.yaw)*5,view.y-1.65,view.z-Math.cos(view.yaw)*5);
     this.keyLight.target.updateMatrixWorld();
     const quiet=!state || ['explore','vista','clear'].includes(state.mode) || this.rail.moving;
-    this.keyLight.intensity=this.rail.area==='store'?1.15:this.rail.area==='roof'?1.4:1.05;
+    this.keyLight.intensity=this.rail.area==='store'?.7:this.rail.area==='roof'?1.4:1.05;
     this.keyLight.color.setHex(this.rail.area==='roof'?0xffccaa:0xb6cfe1);
-    this.ambience.intensity=this.rail.area==='store'?.18:this.rail.area==='roof'?.7:.4;
-    this.playerFill.intensity=this.rail.area==='store'?1.6:4.5;
-    this.scene.environmentIntensity=indoor?.16:.3;
+    this.ambience.intensity=this.rail.area==='store'?.12:this.rail.area==='roof'?.7:.4;
+    this.playerFill.intensity=this.rail.area==='store'?1.2:4.5;
+    this.scene.environmentIntensity=indoor?.22:.3;
     this.atmosphere.update(delta,this.rail.area,view,this.motion);
     if(this.weaponModel)setWeaponMode(this.weaponModel,this.rushing?'shotgun':'pistol');
     const active = new Set<number>();
@@ -569,14 +569,14 @@ export class World {
     const targetX=targetActor?targetActor.root.position.clone().sub(this.camera.position).applyAxisAngle(new T.Vector3(0,1,0),-view.yaw).x:0;
     this.gun.rotation.y = T.MathUtils.damp(
       this.gun.rotation.y,
-      T.MathUtils.clamp((0.4 - targetX) * 0.4, -0.24, 0.3),
+      this.rushing ? T.MathUtils.clamp((0.4 - targetX) * 0.4, -0.24, 0.3) : T.MathUtils.clamp((0.23 - targetX) * 0.2, -0.14, 0.16),
       12,
       delta,
     );
-    this.gun.position.x=this.rushing?.22:.4;
-    this.gun.position.z = (this.rushing?-.82:-.65) + this.recoil * (this.motion ? .06 : .015);
+    this.gun.position.x=this.rushing?.22:.23;
+    this.gun.position.z = (this.rushing?-.82:-.58) + this.recoil * (this.motion ? .06 : .015);
     this.gun.position.y =
-      T.MathUtils.damp(this.gun.position.y,quiet?-.62:-.025,8,delta) + (this.motion ? Math.sin(this.elapsed * 1.4) * 0.001 : 0);
+      T.MathUtils.damp(this.gun.position.y,quiet?-.62:this.rushing?-.025:-.055,8,delta) + (this.motion ? Math.sin(this.elapsed * 1.4) * 0.001 : 0);
     this.muzzle.visible = this.recoil > 0.45;
     if (delta > 0) this.muzzle.rotation.z = Math.random() * Math.PI;
     this.muzzle.scale.setScalar(this.motion ? 1.05 + this.level * .12 + this.finishing * .95 : .4);

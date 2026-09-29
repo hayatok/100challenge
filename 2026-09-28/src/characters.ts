@@ -1,6 +1,7 @@
 import * as T from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { clone } from "three/addons/utils/SkeletonUtils.js";
+import { tailorCityCharacter } from "./character-costume.ts";
 import type { EnemyKind } from "./game.ts";
 
 /** The authored rig used by a character, independent of its outfit variant. */
@@ -77,10 +78,10 @@ type Palette = { shirt: Color; trousers: Color; skin: Color };
 // predominantly red. The outfit includes both the shirt and trousers, so the
 // rest-pose vertex height separates those garments without adding a new rig.
 const palettes: Record<"clerk" | "nightClerk" | "worker" | "boss" | "lucky", Palette> = {
-  clerk: { shirt: [0.50, 0.53, 0.50], trousers: [0.095, 0.12, 0.14], skin: [0.37, 0.40, 0.36] },
-  nightClerk: { shirt: [0.31, 0.39, 0.43], trousers: [0.08, 0.105, 0.12], skin: [0.36, 0.39, 0.35] },
-  worker: { shirt: [0.42, 0.37, 0.29], trousers: [0.13, 0.14, 0.13], skin: [0.38, 0.40, 0.35] },
-  boss: { shirt: [0.28, 0.32, 0.32], trousers: [0.07, 0.08, 0.09], skin: [0.35, 0.38, 0.34] },
+  clerk: { shirt: [0.54, 0.52, 0.44], trousers: [0.095, 0.12, 0.14], skin: [0.43, 0.38, 0.30] },
+  nightClerk: { shirt: [0.31, 0.39, 0.43], trousers: [0.08, 0.105, 0.12], skin: [0.42, 0.38, 0.31] },
+  worker: { shirt: [0.52, 0.49, 0.40], trousers: [0.13, 0.14, 0.13], skin: [0.44, 0.39, 0.31] },
+  boss: { shirt: [0.28, 0.32, 0.32], trousers: [0.07, 0.08, 0.09], skin: [0.41, 0.36, 0.29] },
   lucky: { shirt: [0.45, 0.25, 0.48], trousers: [0.20, 0.10, 0.24], skin: [0.38, 0.39, 0.34] },
 };
 
@@ -94,6 +95,19 @@ function shadeCity(
     if (!(object instanceof T.Mesh)) return;
     const oldMaterials = Array.isArray(object.material) ? object.material : [object.material];
     const materials = oldMaterials.map((original) => {
+      if (original.name.startsWith("Nightshift")) {
+        if (!original.name.includes("work shirt") && !original.name.includes("shop apron")) return original;
+        const costumeKey=`${original.uuid}:${paletteName}`;
+        const previous=cache.get(costumeKey);if(previous)return previous;
+        const tailored=original.clone() as T.MeshStandardMaterial;
+        if(original.name.includes("work shirt")) {
+          tailored.color.setRGB(...palette.shirt).multiplyScalar(.92);
+          tailored.onBeforeCompile=original.onBeforeCompile;
+          tailored.customProgramCacheKey=()=>`shirt-${paletteName}`;
+        } else if(paletteName==='lucky') tailored.color.setRGB(.8,.5,1.7);
+        else if(paletteName==='boss') tailored.color.setRGB(.65,.6,.52);
+        cache.set(costumeKey,tailored);return tailored;
+      }
       const key = `${original.uuid}:${paletteName}`;
       const cached = cache.get(key);
       if (cached) return cached;
@@ -120,7 +134,7 @@ function shadeCity(
       // near-constant color multiplier made all surfaces look like stone.
       const color = isOutfit ? palette.shirt : palette.skin;
       const fragment = isOutfit ? `
-        float value = clamp(0.28 + 1.52 * sqrt(max(0.0, dot(diffuseColor.rgb, vec3(0.15, 0.47, 0.38)))), 0.26, 1.12);
+        float value = clamp(0.66 + 0.48 * sqrt(max(0.0, dot(diffuseColor.rgb, vec3(0.15, 0.47, 0.38)))), 0.26, 1.12);
         float wound = smoothstep(0.23, 0.51, diffuseColor.r - max(diffuseColor.g, diffuseColor.b));
         float trousers = 1.0 - smoothstep(0.90, 1.07, vRestHeight);
         vec3 uniformColor = mix(vec3(${color.join(",")}), vec3(${palette.trousers.join(",")}), trousers);
@@ -136,7 +150,7 @@ function shadeCity(
       material.roughness = isOutfit ? 0.94 : 0.82;
       // The source normal map is a deep sculpt pass. At encounter distance it
       // reads as rock, especially on the face; keep only its broad relief.
-      material.normalScale.set(isBody ? 0.025 : 0.06, isBody ? 0.025 : 0.06);
+      material.normalScale.set(isBody ? 0.025 : 0.018, isBody ? 0.025 : 0.018);
       material.onBeforeCompile = (shader) => {
         if (isOutfit) {
           shader.vertexShader = shader.vertexShader
@@ -150,7 +164,7 @@ function shadeCity(
           "#include <color_fragment>", `#include <color_fragment>${fragment}`,
         );
       };
-      material.customProgramCacheKey = () => `v11-${paletteName}-${isOutfit ? "cloth" : "skin"}`;
+      material.customProgramCacheKey = () => `v12-${paletteName}-${isOutfit ? "cloth" : "skin"}`;
       return material;
     });
     object.material = Array.isArray(object.material) ? materials : materials[0];
@@ -181,6 +195,7 @@ export async function loadCharacterLibrary(): Promise<CharacterLibrary> {
       }
     });
   }));
+  tailorCityCharacter(loaded.city.scene);
   const originalFall = loaded.city.animations.find((item) => item.name === "Zombie_Dying");
   if (originalFall) cityFall = cityDeathFall(originalFall);
 
