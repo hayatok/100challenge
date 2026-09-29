@@ -1,0 +1,30 @@
+/* Punch-clock tickets keep the scene visible around the controls. */
+.top-center > b { font:inherit; }
+.title-copy { padding-top:110px; padding-bottom:52px; }
+.title-kicker { margin-bottom:8px; }
+.arcade-logo .logo-night { font-size:clamp(72px,9vw,124px); }
+.arcade-logo .logo-typing { font-size:clamp(38px,5vw,67px); }
+.title-sub { margin-top:8px; }
+.description { margin:8px 0 16px; }
+.shift-tickets { display:flex; gap:12px; width:min(720px,100%); margin:0 auto 18px; }
+.shift-ticket { position:relative; display:flex; align-items:center; gap:13px; flex:1; min-width:0; padding:14px 15px; color:#c5beb0; background:#121d20ed; border:1px solid #667477; border-left:5px solid #596464; text-align:left; box-shadow:0 5px 15px #0006; }
+.shift-ticket[aria-pressed="true"] { color:#fff3d7; background:#302922f2; border-color:#dbc293; border-left-color:#f3c66f; }
+.shift-ticket:hover { background:#394039; }
+.shift-ticket:focus-visible { outline:3px solid #ffe7a8; outline-offset:3px; }
+.ticket-number { font:700 34px/1 monospace; color:#8a9492; }
+.shift-ticket[aria-pressed="true"] .ticket-number { color:#f2ca80; }
+.shift-ticket strong { display:block; font:700 clamp(14px,1.5vw,19px)/1.4 "Noto Serif JP",serif; }
+.shift-ticket small { display:block; font-size:11px; line-height:1.5; margin-top:5px; }
+.shift-ticket i { display:none; position:absolute; right:8px; top:-9px; background:#bb392b; color:#fff1d4; padding:2px 7px; font:700 10px/1.4 sans-serif; transform:rotate(-4deg); }
+.shift-ticket[aria-pressed="true"] i { display:block; }
+.keyboard-note { margin-top:10px; }
+#rest-panel { position:fixed; z-index:8; left:6%; bottom:12%; max-width:640px; color:#fff0d7; text-shadow:0 2px 8px #000; padding:22px 28px 24px; background:linear-gradient(90deg,#101b20ef,#101b2099); border-left:3px solid #d9b77a; }
+#rest-panel h2 { font:700 clamp(24px,3vw,42px)/1.4 "Noto Serif JP",serif; margin:8px 0; }
+#rest-panel p { line-height:1.7; margin:10px 0; }
+#rest-continue { margin-top:16px; background:#141d23ef; color:#fff0d7; border:1px solid #cdbb94; padding:14px 22px; }
+#rest-continue small { margin-left:20px; }
+#rest-continue:hover,#rest-continue:focus-visible { background:#49332a; outline:2px solid #ffe5a3; }
+body[data-quiet="true"] #fever-show,body[data-quiet="true"] #milestone { visibility:hidden; }
+@media(max-height:760px) and (min-width:801px){ .title-copy { padding-top:85px; padding-bottom:38px; }.arcade-logo .logo-night { font-size:90px; }.arcade-logo .logo-typing { font-size:50px; }.title-options { margin-top:8px; }.shift-ticket { padding:11px 14px; } }
+@media(max-width:800px){ .title-copy { padding:105px 0 48px; }.shift-ticket { gap:8px; padding:12px 10px; }.ticket-number { font-size:26px; }#rest-panel { left:5%; right:5%; bottom:10%; padding:18px; } }
+@media(max-width:480px){ .title-copy { padding-top:96px; width:calc(100% - 36px); }.arcade-logo .logo-night { font-size:64px; }.arcade-logo .logo-typing { font-size:36px; }.title-sub { font-size:13px; }.shift-tickets { flex-direction:column; gap:10px; margin-bottom:14px; }.shift-ticket { min-height:69px; padding:10px 14px; }.shift-ticket strong { font-size:17px; }.shift-ticket small { font-size:10px; margin-top:2px; }.description { margin:7px 0 14px; font-size:13px; }.keyboard-note { font-size:9px; }.route-actions { flex-direction:column; } }

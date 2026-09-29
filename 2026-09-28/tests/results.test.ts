@@ -4,6 +4,7 @@ import { gradeResult, previousComparable, compareResults } from '../src/results.
 import { RESULT_RULES_VERSION, type SavedResult } from '../src/storage.ts';
 
 const result = (overrides: Partial<SavedResult> = {}): SavedResult => ({
+  stageId:'shopping',route:'store',
   score:4500,combo:10,accuracy:0.95,seconds:180,cleared:true,
   difficulty:'normal',practice:false,retries:0,date:'2026-09-28T00:00:00.000Z',
   rulesVersion:RESULT_RULES_VERSION,...overrides,
@@ -32,4 +33,7 @@ test('previous comparison uses the same difficulty, practice, and rules',()=>{
   assert.equal(comparison?.secondsDelta,-20);
   assert.equal(compareResults(current,legacy),null);
   assert.equal(previousComparable([legacy,practice,fierce],current),null);
+  const station=result({stageId:'station',route:'waiting',score:9000});
+  assert.equal(previousComparable([station],current),null);
+  assert.equal(compareResults(current,station),null);
 });

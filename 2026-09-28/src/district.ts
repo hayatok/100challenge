@@ -1,10 +1,12 @@
 import * as THREE from 'three';
 import { installSurface } from './surface-materials.ts';
 import { buildStoreInterior } from './store-interior.ts';
-
-export type DistrictArea = 'alley' | 'store' | 'service' | 'court' | 'roof';
+import { buildStation } from './station.ts';
+import type { DistrictArea, StageId } from './stages.ts';
+export type { DistrictArea } from './stages.ts';
 
 export interface District {
+  setStage(stageId: StageId): void;
   update(time: number, area: DistrictArea, motion: boolean): void;
   strike(origin: THREE.Vector3, direction: THREE.Vector3): boolean;
   reset(): void;
@@ -16,6 +18,9 @@ export async function createDistrict(scene: THREE.Scene): Promise<District> {
   const root = new THREE.Group();
   root.name = 'Rain district';
   scene.add(root);
+  const station = buildStation();
+  scene.add(station.root);
+  station.root.visible = false;
   const geometries = new Set<THREE.BufferGeometry>();
   const materials = new Set<THREE.Material>();
   const textures = new Set<THREE.Texture>();
@@ -27,10 +32,14 @@ export async function createDistrict(scene: THREE.Scene): Promise<District> {
   const cylinder = ownGeo(new THREE.CylinderGeometry(1, 1, 1, 12));
   const disc = ownGeo(new THREE.CircleGeometry(1, 32));
   const areas: Record<DistrictArea, THREE.Group> = {
+    market: new THREE.Group(),
     alley: new THREE.Group(), store: new THREE.Group(), service: new THREE.Group(),
     court: new THREE.Group(), roof: new THREE.Group(),
+    forecourt: station.root, concourse: station.root, waiting: station.root,
+    maintenance: station.root, platform: station.root, dawn: station.root,
   };
   for (const [name, group] of Object.entries(areas)) {
+    if (group === station.root) continue;
     group.name = name;
     root.add(group);
   }
@@ -259,19 +268,78 @@ export async function createDistrict(scene: THREE.Scene): Promise<District> {
   }
   type Fixture = { position: THREE.Vector3; color: number; power: number; range: number; area: DistrictArea };
   const practical: Record<DistrictArea, Fixture[]> = {
-    alley: [], store: [], service: [], court: [], roof: [],
+    market: [], alley: [], store: [], service: [], court: [], roof: [],
+    forecourt: [], concourse: [], waiting: [], maintenance: [], platform: [], dawn: [],
   };
   // Four stable lights keep the shader variant unchanged across camera areas.
   const lightPool = Array.from({ length: 4 }, () => {
     const light = new THREE.PointLight(0xffffff, 0, 1, 2);
     light.castShadow = false;
-    root.add(light);
+    scene.add(light);
     return light;
   });
   function lamp(area: DistrictArea, x: number, y: number, z: number, color: number,
     power: number, range = 11): void {
     practical[area].push({ area, position: new THREE.Vector3(x, y, z), color, power, range });
   }
+
+  // The open market street is wider than the old alley. Two different shutter
+  // rhythms, deep storefronts and projecting awnings create a clear approach.
+  flat(areas.market, 'Broad market street asphalt', 0, -.025, 18.5, 16.8, 22, m.asphalt);
+  for (const side of [-1, 1]) {
+    const x = side * 6.4;
+    box(areas.market, 'Market row masonry mass', x, 3.95, 18.3, 5.0, 7.9, 21.4,
+      side < 0 ? m.brick : m.pale);
+    box(areas.market, 'Market continuous plinth', side * 3.82, .31, 18.3, .22, .62, 21.4, m.rusty);
+    box(areas.market, 'Market sidewalk curb', side * 3.72, .075, 18.3, .15, .15, 21.2, m.concrete);
+    for (const [index, z] of [11.5, 18.2, 24.9].entries()) {
+      box(areas.market, 'Market steel shop frame', side * 3.85, 1.84, z, .19, 3.56, 5.65, m.steel);
+      // Shutters stop above the pavement on alternating stores, leaving lit depth below.
+      const shutterHeight = index === 1 ? 2.65 : 2.2;
+      box(areas.market, 'Half-lowered shop shutter', side * 3.73,
+        3.53 - shutterHeight / 2, z, .055, shutterHeight, 5.3, m.shutter);
+      box(areas.market, 'Dark market counter recess', side * 3.76, .52, z,
+        .06, 1.0, 5.15, m.steel);
+      box(areas.market, 'Shop awning frame', side * 3.44, 3.84, z, 1.1, .12, 5.8, m.rusty);
+      box(areas.market, 'Shop awning weathered canvas', side * 3.18, 3.74, z,
+        1.5, .08, 5.65, index % 2 ? m.blue : m.red);
+      for (const edge of [-2.6, 2.6]) {
+        box(areas.market, 'Market awning support', side * 3.84, 3.45, z + edge,
+          .12, .58, .12, m.steel);
+      }
+      for (let seam = -2; seam <= 2; seam++) {
+        box(areas.market, 'Shutter raised seam', side * 3.69,
+          3.33 - seam * .36, z, .075, .035, 5.27, m.rusty);
+      }
+      sign(areas.market, 'Original late-night shop name',
+        side < 0 ? ['あさひ青果', '夜間荷受け', '木箱屋'][index] : ['紙灯文具', '時計修理', '小さな喫茶'][index],
+        side * 3.66, 4.56, z, 3.45, .65,
+        side < 0 ? 'left' : 'right', side < 0 ? '#354b43' : '#514439', '#e6d5ac');
+      box(areas.market, 'Second-floor inhabited window', side * 3.76, 6.17, z,
+        .08, 1.35, 1.26, index === 2 ? m.warmGlass : m.darkGlass);
+      box(areas.market, 'Second-floor window sill', side * 3.62, 5.43, z,
+        .28, .12, 1.48, m.concrete);
+    }
+    for (const z of [14, 27]) {
+      box(areas.market, 'Market produce crate', side * 3.99, .34, z, .7, .63, .78, m.wood);
+      box(areas.market, 'Crate raised lip', side * 3.99, .67, z, .75, .07, .81, m.rusty);
+      for (const dz of [-.23, 0, .23]) round(areas.market, 'Boxed produce', side * 3.99,
+        .74, z + dz, .11, .12, dz === 0 ? m.fruitOrange : m.fruitGreen);
+    }
+    for (const z of [10.5, 23.8]) {
+      box(areas.market, 'Market streetlamp post', side * 3.5, 2.47, z,
+        .1, 4.94, .1, m.steel);
+      box(areas.market, 'Streetlamp projecting arm', side * 3.21, 4.81, z,
+        .69, .09, .09, m.steel);
+      box(areas.market, 'Streetlamp warm glass', side * 2.92, 4.67, z,
+        .38, .16, .35, m.amber);
+    }
+  }
+  sign(areas.market, 'Fictional market clock and hours', '深夜0:00 / 搬入中',
+    -3.7, 5.05, 19.1, 2.8, .52, 'left', '#253b3c', '#f0d3a2');
+  lamp('market', -3, 4.7, 11, 0xf0bd83, 25, 13);
+  lamp('market', 3, 4.7, 20, 0xb1d3cb, 22, 13);
+  lamp('market', -3, 4.7, 25, 0xf0c896, 20, 12);
 
   // The alley is narrow and quiet. Open ends preserve the turning route and tower sightline.
   flat(landmark,'Connected district ground',12,-.06,-35,100,140,m.asphalt);
@@ -786,12 +854,22 @@ export async function createDistrict(scene: THREE.Scene): Promise<District> {
   scene.background=sky;
   let skyArea='';
   let lastTime = 0;
-  let lastArea: DistrictArea = 'alley';
+  let lastArea: DistrictArea = 'market';
+  let stageId: StageId = 'shopping';
+  function setStage(next: StageId): void {
+    if (stageId === next) return;
+    stageId = next;
+    root.visible = next === 'shopping';
+    station.root.visible = next === 'station';
+    lastArea = next === 'shopping' ? 'market' : 'forecourt';
+    skyArea = '';
+    for (const light of lightPool) light.intensity = 0;
+  }
   const ray = new THREE.Ray();
   const nearest = new THREE.Vector3();
   function reset(): void {
     lastTime = 0;
-    lastArea = 'alley';
+    lastArea = stageId === 'shopping' ? 'market' : 'forecourt';
     for (const prop of loose) {
       prop.mesh.position.copy(prop.home);
       prop.mesh.rotation.set(0, 0, 0);
@@ -806,18 +884,22 @@ export async function createDistrict(scene: THREE.Scene): Promise<District> {
     lastTime = time;
     lastArea = area;
     const palette: Record<DistrictArea, [number, number]> = {
-      alley: [0x16252c, .015], store: [0x1a211d, .007], service: [0x1b252a, .016],
+      market: [0x182931, .015], alley: [0x16252c, .015], store: [0x1a211d, .007], service: [0x1b252a, .016],
       court: [0x263039, .013], roof: [0x60494a, .008],
+      forecourt: [0x183039, .013], concourse: [0x182b2d, .006],
+      waiting: [0x183336, .007], maintenance: [0x302a26, .009],
+      platform: [0x1d3238, .012], dawn: [0x6c5350, .009],
     };
     background.setHex(palette[area][0]);
     fog.color.copy(background);
     if(skyArea!==area){
       skyArea=area;const gradient=skyContext.createLinearGradient(0,0,0,512);
-      gradient.addColorStop(0,area==='roof'?'#293b57':'#071117');
-      gradient.addColorStop(.56,area==='roof'?'#78677e':'#192b32');
-      gradient.addColorStop(1,area==='roof'?'#d69a78':'#354047');
+      const sunrise = area === 'roof' || area === 'dawn';
+      gradient.addColorStop(0,sunrise?'#293b57':'#071117');
+      gradient.addColorStop(.56,sunrise?'#78677e':'#192b32');
+      gradient.addColorStop(1,sunrise?'#d69a78':'#354047');
       skyContext.fillStyle=gradient;skyContext.fillRect(0,0,1024,512);
-      if (area === 'roof') {
+      if (sunrise) {
         for (let layer = 0; layer < 3; layer++) {
           for (let i = 0; i < 45; i++) {
             const x = (i * 189 + layer * 73) % 1120 - 40;
@@ -837,9 +919,9 @@ export async function createDistrict(scene: THREE.Scene): Promise<District> {
       sky.needsUpdate=true;
     }
     fog.density = palette[area][1];
-    const selected = area === 'alley'
-      ? [...practical.alley, practical.store[0]]
-      : practical[area];
+    const selected = stageId === 'shopping'
+      ? (area === 'alley' ? [...practical.alley, practical.store[0]] : practical[area])
+      : station.fixtures[area] ?? [];
     for (let index = 0; index < lightPool.length; index++) {
       const light = lightPool[index];
       const fixture = selected[index];
@@ -847,7 +929,9 @@ export async function createDistrict(scene: THREE.Scene): Promise<District> {
         light.intensity = 0;
         continue;
       }
-      light.position.copy(areas[fixture.area].localToWorld(fixture.position.clone()));
+      light.position.copy('area' in fixture
+        ? areas[fixture.area as DistrictArea].localToWorld(fixture.position.clone())
+        : fixture.position);
       light.color.setHex(fixture.color);
       light.distance = fixture.range;
       light.intensity = fixture.power * (motion ? 1 + Math.sin(time * .67 + index * 1.7) * .018 : 1);
@@ -874,7 +958,7 @@ export async function createDistrict(scene: THREE.Scene): Promise<District> {
     }
   }
   function strike(origin: THREE.Vector3, direction: THREE.Vector3): boolean {
-    if (lastArea !== 'court' || direction.lengthSq() < .000001) return false;
+    if (stageId !== 'shopping' || lastArea !== 'court' || direction.lengthSq() < .000001) return false;
     ray.set(origin, direction.clone().normalize());
     let hit: LooseProp | undefined;
     let bestDistance = Infinity;
@@ -894,13 +978,17 @@ export async function createDistrict(scene: THREE.Scene): Promise<District> {
     hit.age = 0;
     return true;
   }
-  update(0, 'alley', false);
+  update(0, 'market', false);
   return {
+    setStage,
     update,
     strike,
     reset,
     dispose(): void {
       scene.remove(root);
+      scene.remove(station.root);
+      for (const light of lightPool) scene.remove(light);
+      station.dispose();
       for (const texture of textures) texture.dispose();
       for (const material of materials) material.dispose();
       for (const geometry of geometries) geometry.dispose();

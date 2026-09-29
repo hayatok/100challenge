@@ -1,10 +1,12 @@
 import { BOSS_COUNTER_PHRASES, BOSS_PHRASES, LUCKY_PHRASES, OFFICE_PHRASES, PHRASES, RUNNER_PHRASES, RUSH_PHRASES, WORKER_PHRASES, type Phrase } from './content.ts';
 import { TypingSession } from './typing.ts';
+import { STAGE_PHRASES } from './stage-content.ts';
+import { STAGE_DEFINITIONS, isStageId, type DistrictArea, type JourneyRoute, type NormalEnemyKind, type StageId } from './stages.ts';
 
 export type Difficulty = 'relaxed' | 'normal' | 'fierce';
 export type EnemyKind = 'office' | 'runner' | 'worker' | 'boss';
-export type GameMode = 'playing' | 'travel' | 'paused' | 'countdown' | 'defeat' | 'clear' | 'explore' | 'vista';
-export type GameOptions = { difficulty?: Difficulty; practice?: boolean; seed?: number; journey?: boolean };
+export type GameMode = 'playing' | 'travel' | 'paused' | 'countdown' | 'defeat' | 'clear' | 'explore' | 'vista' | 'rest';
+export type GameOptions = { difficulty?: Difficulty; practice?: boolean; seed?: number; journey?: boolean; stageId?: StageId };
 export type GameEvent = {
   id: number; type: 'spawn'|'lock'|'hit'|'miss'|'kill'|'attack'|'travel'|'stage'|'bossPhase'|'pause'|'resume'|'defeat'|'clear'|'rushStart'|'rushEnd'|'explosion'|'sweep'|'vista'|'luckyStart'|'luckyStep'|'luckyEnd';
   enemyId?: number; kind?: EnemyKind; stage?: number; phase?: number; key?: string; reason?: string;
@@ -20,20 +22,21 @@ export type EnemyView = {
   support?: boolean;
 };
 export type GameResults = {
+  stageId: StageId;
   score: number; maxCombo: number; accuracy: number; correct: number; mistakes: number;
   clearTime: number; keysPerMinute: number; attempts: number; practice: boolean; difficulty: Difficulty;
   seed: number; rushes: number; chainKills: number;
   luckyEncounters: number; luckyClears: number; luckyBonus: number;
 };
 export type GameState = {
-  mode: GameMode; stage: number; bossPhase: number; health: number; score: number;
+  mode: GameMode; stageId: StageId; stage: number; bossPhase: number; health: number; score: number;
   combo: number; maxCombo: number; effectsLevel: number; visualCombo: number;
   lockedId: number|null; enemies: EnemyView[]; practice: boolean; difficulty: Difficulty;
   countdown: number; results: GameResults|null; attempts: number;
   rushCharge: number; rushing: boolean; rushRemaining: number; rushes: number; chainKills: number; bossCounter: number;
   luckyActive: boolean; luckyStep: number; luckyRemaining: number;
   luckyEncounters: number; luckyClears: number; luckyBonus: number;
-  journey?: {route:'store'|'service'|null; wave:number; travelProgress:number; area:'alley'|'store'|'service'|'court'|'roof'};
+  journey?: {route:JourneyRoute|null; wave:number; travelProgress:number; area:DistrictArea; completedPrompts:number; totalPrompts:number; rest:'midpoint'|'beforeBoss'|null};
 };
 
 type Enemy = {
@@ -41,71 +44,25 @@ type Enemy = {
   spawned: number; deadline: number; clean: boolean; explosive: boolean; rush: boolean; lucky: boolean;
   support?: boolean;
 };
-type Checkpoint = { score:number; maxCombo:number; correct:number; mistakes:number; battleTime:number; used:Set<number>; elapsed:number; rushCharge:number; rushes:number; chainKills:number; luckyEncounters:number; luckyClears:number; luckyBonus:number; luckyDone:boolean };
+type Checkpoint = { score:number; maxCombo:number; correct:number; mistakes:number; time:number; battleTime:number; used:Set<number>; elapsed:number; completedPrompts:number; rushCharge:number; rushes:number; chainKills:number; luckyEncounters:number; luckyClears:number; luckyBonus:number; luckyDone:boolean };
 const CPS: Record<Difficulty, number> = { relaxed:2, normal:3.5, fierce:5 };
 const STAGE_WAVES: readonly (readonly (readonly EnemyKind[])[])[] = [
   [['office'],['office'],['office'],['runner'],['office'],['worker']],
   [['office','runner'],['runner','worker'],['office','worker'],['runner','office']],
   [['runner','office'],['worker','runner'],['runner','office','worker'],['office','runner','worker']],
 ];
-const JOURNEY_WAVES: readonly (readonly (readonly EnemyKind[])[])[] = [
-  [['office'],['runner']],
-  [['worker'],['runner','office']],
-  [['runner','office','worker']],
+const JOURNEY_WAVES: readonly (readonly (readonly NormalEnemyKind[])[])[] = [
+  [['office'],['runner'],['office','runner'],['worker','office'],['office'],['runner'],['office','runner'],['worker','office']],
+  [['worker','office'],['runner','office'],['worker','runner'],['office','runner'],['worker','office'],['runner','office']],
+  [['office','runner'],['worker','office'],['runner','worker'],['runner','office','worker'],['office']],
 ];
-// Short, scene-specific calls let the first shots happen quickly. The large legacy
-// dictionary remains the source for non-journey runs.
-const JOURNEY_PHRASES: Record<'alley'|'store'|'service'|'court', Partial<Record<Exclude<EnemyKind,'boss'>, readonly Phrase[]>>> = {
-  alley: {
-    office: [
-      {text:'鍵がない',reading:'かぎがない'}, {text:'誰が呼んだ',reading:'だれがよんだ'},
-      {text:'奥にいる',reading:'おくにいる'}, {text:'光が消えた',reading:'ひかりがきえた'},
-    ],
-    runner: [
-      {text:'止まれ',reading:'とまれ'}, {text:'下がれ',reading:'さがれ'},
-      {text:'来るな',reading:'くるな'}, {text:'伏せて',reading:'ふせて'},
-    ],
-  },
-  store: {
-    worker: [
-      {text:'ここは閉店です',reading:'ここはへいてんです'}, {text:'通してください',reading:'とおしてください'},
-      {text:'シャッターを閉めろ',reading:'しゃったーをしめろ'}, {text:'どいてください',reading:'どいてください'},
-    ],
-    runner: [
-      {text:'レジへ',reading:'れじへ'}, {text:'逃げろ',reading:'にげろ'},
-      {text:'左だ',reading:'ひだりだ'}, {text:'走れ',reading:'はしれ'},
-    ],
-    office: [
-      {text:'まだ帰れない',reading:'まだかえれない'}, {text:'レジが空だ',reading:'れじがからだ'},
-      {text:'棚の奥だ',reading:'たなのおくだ'}, {text:'値札がない',reading:'ねふだがない'},
-    ],
-  },
-  service: {
-    runner: [
-      {text:'扉へ',reading:'とびらへ'}, {text:'右だ',reading:'みぎだ'},
-      {text:'危ない',reading:'あぶない'}, {text:'見えた',reading:'みえた'},
-    ],
-    office: [
-      {text:'伝票がない',reading:'でんぴょうがない'}, {text:'貨物がない',reading:'かもつがない'},
-      {text:'ここを開けて',reading:'ここをあけて'}, {text:'向こうにいる',reading:'むこうにいる'},
-    ],
-  },
-  court: {
-    runner: [
-      {text:'逃げ道だ',reading:'にげみちだ'}, {text:'近いぞ',reading:'ちかいぞ'},
-      {text:'伏せろ',reading:'ふせろ'}, {text:'今だ',reading:'いまだ'},
-    ],
-    office: [
-      {text:'赤い扉だ',reading:'あかいとびらだ'}, {text:'まだ開く',reading:'まだひらく'},
-      {text:'何か来る',reading:'なにかくる'}, {text:'声がする',reading:'こえがする'},
-    ],
-    worker: [
-      {text:'階段を上がれ',reading:'かいだんをあがれ'}, {text:'荷物を下ろせ',reading:'にもつをおろせ'},
-      {text:'入口を塞ぐな',reading:'いりぐちをふさぐな'}, {text:'店内で走るな',reading:'てんないではしるな'},
-    ],
-  },
+const SERVICE_WAVES: readonly (readonly NormalEnemyKind[])[] = [
+  ['runner','office'],['runner','office'],['office','worker'],['runner','office'],['runner','worker'],['office','runner'],
+];
+const hashPhrase = (n:number,seed:number):number => {
+  let x=(n+1)^seed; x=Math.imul(x^(x>>>16),0x7feb352d);x=Math.imul(x^(x>>>15),0x846ca68b);
+  return (x^(x>>>16))>>>0;
 };
-const JOURNEY_ALL_PHRASES = Object.values(JOURNEY_PHRASES).flatMap(area => Object.values(area).flat());
 const LEVELS = [3,6,10,15];
 const effectLevel = (combo: number): number => LEVELS.filter(level => combo >= level).length;
 // The listed order is the safe deadline order, not the only possible choice.
@@ -122,6 +79,7 @@ const BOSS_TIMING = [
 ] as const;
 
 export class Game {
+  readonly stageId: StageId;
   readonly difficulty: Difficulty;
   readonly practice: boolean;
   readonly seed: number;
@@ -134,8 +92,11 @@ export class Game {
   private countdown = 0;
   private travelTime = 0;
   private travelDuration = 0;
-  private routeValue: 'store'|'service'|null = null;
-  private areaValue: 'alley'|'store'|'service'|'court'|'roof' = 'alley';
+  private routeValue: JourneyRoute|null = null;
+  private areaValue: DistrictArea = 'market';
+  private restValue: 'midpoint'|'beforeBoss'|null = null;
+  private pendingRest: 'midpoint'|'beforeBoss'|null = null;
+  private completedPromptsValue = 0;
   private stageValue = 0;
   private wave = 0;
   private phase = 0;
@@ -171,27 +132,45 @@ export class Game {
   private locked: number|null = null;
   private enemiesValue: Enemy[] = [];
   private used = new Set<number>();
-  private checkpoint: Checkpoint = {score:0,maxCombo:0,correct:0,mistakes:0,battleTime:0,elapsed:0,used:new Set(),rushCharge:0,rushes:0,chainKills:0,luckyEncounters:0,luckyClears:0,luckyBonus:0,luckyDone:false};
+  private checkpoint: Checkpoint = {score:0,maxCombo:0,correct:0,mistakes:0,time:0,battleTime:0,elapsed:0,completedPrompts:0,used:new Set(),rushCharge:0,rushes:0,chainKills:0,luckyEncounters:0,luckyClears:0,luckyBonus:0,luckyDone:false};
   private events: GameEvent[] = [];
   private nextEventId = 1;
   private nextEnemyId = 1;
   private finalResults: GameResults|null = null;
 
   constructor(options: GameOptions = {}) {
+    if (!isStageId(options.stageId ?? 'shopping')) throw new Error('Invalid stageId');
+    this.stageId = options.stageId ?? 'shopping';
     this.difficulty = options.difficulty ?? 'normal';
     if (!(this.difficulty in CPS)) throw new Error('Invalid difficulty');
     this.practice = options.practice ?? false;
     this.journey = options.journey ?? false;
     this.seed = options.seed ?? 1;
     if (!Number.isInteger(this.seed) || this.seed < 0 || this.seed > 0xffffffff) throw new Error('Invalid seed');
+    this.areaValue=this.firstArea();
     if (this.journey) this.modeValue = 'explore';
     else this.spawnWave();
   }
 
-  chooseRoute(route: 'store'|'service'): boolean {
-    if (!this.journey || this.modeValue !== 'explore' || (route !== 'store' && route !== 'service')) return false;
+  private firstArea(): DistrictArea { return this.stageId==='shopping'?'market':'forecourt'; }
+  private secondArea(): DistrictArea { return this.stageId==='shopping'?'alley':'concourse'; }
+  private finalArea(): DistrictArea { return this.stageId==='shopping'?'court':'platform'; }
+  private vistaArea(): DistrictArea { return this.stageId==='shopping'?'roof':'dawn'; }
+
+  chooseRoute(route: JourneyRoute): boolean {
+    if (!this.journey || this.modeValue !== 'explore' || !STAGE_DEFINITIONS[this.stageId].routes.some(item=>item.id===route)) return false;
     this.routeValue = route;
     this.beginTravel(2);
+    return true;
+  }
+
+  continueRest(): boolean {
+    if (!this.journey || this.modeValue!=='rest' || !this.restValue) return false;
+    const kind=this.restValue;
+    this.restValue=null;
+    this.modeValue='playing';
+    if(kind==='midpoint') this.startCourtyardRush();
+    else this.spawnBoss();
     return true;
   }
 
@@ -217,13 +196,14 @@ export class Game {
 
   private pickPhrase(kind: Exclude<EnemyKind,'boss'>, occupied: Set<string>): Phrase {
     if (this.journey) {
-      const area = this.areaValue as keyof typeof JOURNEY_PHRASES;
-      const pool = JOURNEY_PHRASES[area]?.[kind];
+      const area = this.areaValue;
+      const pool = STAGE_PHRASES[this.stageId].areas[area]?.[kind];
       if (!pool?.length) throw new Error('No journey phrases for this area and role');
-      const order = pool.map(phrase => ({phrase,index:PHRASES.length + JOURNEY_ALL_PHRASES.indexOf(phrase)})).sort((a,b) => {
-        const hash = (n:number) => { let x = (n+1) ^ this.seed; x = Math.imul(x ^ (x>>>16), 0x7feb352d); x = Math.imul(x ^ (x>>>15), 0x846ca68b); return (x^(x>>>16))>>>0; };
-        return hash(a.index)-hash(b.index);
-      });
+      const areas: DistrictArea[]=['market','alley','store','service','court','forecourt','concourse','waiting','maintenance','platform'];
+      const roles: NormalEnemyKind[]=['runner','office','worker'];
+      const offset=(this.stageId==='station'?5000:0)+areas.indexOf(area)*300+roles.indexOf(kind)*100;
+      const order = pool.map((phrase,index) => ({phrase,index:offset+index}))
+        .sort((a,b) => hashPhrase(a.index,this.seed)-hashPhrase(b.index,this.seed));
       for (const allowUsed of [false,true]) for (const {phrase,index} of order) {
         if (!allowUsed && this.used.has(index)) continue;
         const keys = new TypingSession(phrase.reading).keys;
@@ -250,8 +230,8 @@ export class Game {
   private spawnWave(): void {
     if (this.rushingValue) { this.spawnRush(); return; }
     if (this.stageValue === 3) { this.spawnBoss(); return; }
-    const kinds = this.journey && this.stageValue === 1 && this.routeValue === 'service'
-      ? ([['runner'],['office','runner']] as const)[this.wave]
+    const kinds = this.journey && this.stageValue === 1 && (this.routeValue === 'service'||this.routeValue==='maintenance')
+      ? SERVICE_WAVES[this.wave]
       : (this.journey ? JOURNEY_WAVES : STAGE_WAVES)[this.stageValue]?.[this.wave];
     if (!kinds) throw new Error('Invalid wave');
     const occupied = new Set<string>();
@@ -268,7 +248,7 @@ export class Game {
       const length = typing.standardLength;
       workload += length / CPS[this.difficulty];
       // Read time and accumulated work guarantee this advertised order is feasible.
-      const deadline = this.time + 1.2 + workload * (this.journey && this.stageValue === 1 && this.routeValue === 'service' ? 1.45 : 1.6) + (index + 1) * 0.55;
+      const deadline = this.time + 1.2 + workload * (this.journey && this.stageValue === 1 && (this.routeValue === 'service'||this.routeValue==='maintenance') ? 1.45 : 1.6) + (index + 1) * 0.55;
       // These authored carriers stand in the middle so the preview always has a reachable neighbour.
       const explosive = sourceIndex === carrierIndex;
       const lane = (kinds.length === 1 ? 0 : explosiveWave
@@ -281,8 +261,9 @@ export class Game {
   }
 
   private spawnRush(): void {
-    const index = ((this.seed >>> 0) + this.rushesValue * 7 + (4-this.rushRemainingValue)) % RUSH_PHRASES.length;
-    const phrase = RUSH_PHRASES[index];
+    const pool=this.journey?STAGE_PHRASES[this.stageId].rush:RUSH_PHRASES;
+    const index = ((this.seed >>> 0) + this.rushesValue * 7 + (4-this.rushRemainingValue)) % pool.length;
+    const phrase = pool[index];
     const typing = new TypingSession(phrase.reading);
     const deadline = this.time + 0.8 + typing.standardLength / CPS[this.difficulty] * 1.45;
     const enemy: Enemy = {id:this.nextEnemyId++,kind:'runner',lane:this.journey ? 0 : ([-1,0,1,0] as const)[4-this.rushRemainingValue],phrase,typing,spawned:this.time,deadline,clean:true,explosive:false,rush:true,lucky:false};
@@ -299,9 +280,11 @@ export class Game {
 
   private spawnBoss(): void {
     if (this.phase === 1 && this.bossCounterValue === 0) this.bossCounterValue = 1;
+    const bossPool=this.journey?STAGE_PHRASES[this.stageId].boss:BOSS_PHRASES;
+    const counterPool=this.journey?STAGE_PHRASES[this.stageId].counters:BOSS_COUNTER_PHRASES;
     const phrase = this.phase === 1
-      ? BOSS_COUNTER_PHRASES[((this.seed >>> 0) + this.bossCounterValue-1) % BOSS_COUNTER_PHRASES.length]
-      : BOSS_PHRASES[this.phase * 4 + ((this.seed >>> 0) + this.bossFailures) % 4];
+      ? counterPool[((this.seed >>> 0) + this.bossCounterValue-1) % counterPool.length]
+      : bossPool[this.phase * 4 + ((this.seed >>> 0) + this.bossFailures) % 4];
     const typing = new TypingSession(phrase.reading);
     const timing = BOSS_TIMING[this.phase];
     const deadline = this.time + timing.read + typing.standardLength / CPS[this.difficulty] * timing.work;
@@ -311,7 +294,7 @@ export class Game {
   }
 
   private luckyScheduledHere(): boolean {
-    if (this.journey) return !this.luckyDone && this.stageValue === 1 && this.wave === 1 && (this.practice || (this.seed & 1) === 0);
+    if (this.journey) return !this.luckyDone && this.stageValue === 1 && this.wave === JOURNEY_WAVES[1].length-1 && (this.practice || (this.seed & 1) === 0);
     if (this.luckyDone || (!this.practice && (this.seed & 1) !== 0)) return false;
     const stage = (this.seed >>> 1) & 1;
     const wave = stage === 0 ? 2 + ((this.seed >>> 2) % 3) : 1 + ((this.seed >>> 2) % 2);
@@ -323,7 +306,8 @@ export class Game {
     this.luckyDone = true;
     this.luckyActiveValue = true;
     this.luckyStepValue = 1;
-    this.luckyPhrases = LUCKY_PHRASES[(this.seed >>> 3) % LUCKY_PHRASES.length];
+    const sets=this.journey?STAGE_PHRASES[this.stageId].lucky:LUCKY_PHRASES;
+    this.luckyPhrases = sets[(this.seed >>> 3) % sets.length];
     const workload = this.luckyPhrases.reduce((sum,phrase) => sum + new TypingSession(phrase.reading).standardLength,0);
     this.luckyRemainingValue = 6 + workload / CPS[this.difficulty] * 2;
     this.luckyDurationValue = this.luckyRemainingValue;
@@ -374,7 +358,7 @@ export class Game {
     if (this.stageValue === 3) {
       if (this.phase >= 3) {
         if (this.journey) {
-          this.areaValue = 'roof';
+          this.areaValue = this.vistaArea();
           this.modeValue = 'vista';
           this.emit('vista',{stage:3});
         } else this.finish('clear');
@@ -408,13 +392,19 @@ export class Game {
 
   private advanceWave(travelSeconds?: number): void {
     this.wave++;
+    if (this.journey && this.stageValue===0 && this.wave===4) {
+      this.areaValue=this.secondArea();
+      this.beginTravel(3);
+      return;
+    }
     if (this.wave >= (this.journey ? JOURNEY_WAVES : STAGE_WAVES)[this.stageValue].length) {
       this.stageValue++;
       this.wave = 0;
-      this.checkpoint = {score:this.scoreValue,maxCombo:this.maxComboValue,correct:this.correct,mistakes:this.mistakes,battleTime:this.battleTime,elapsed:this.elapsed,used:new Set(this.used),rushCharge:this.rushChargeValue,rushes:this.rushesValue,chainKills:this.chainKillsValue,luckyEncounters:this.luckyEncountersValue,luckyClears:this.luckyClearsValue,luckyBonus:this.luckyBonusValue,luckyDone:this.luckyDone};
+      this.checkpoint = {score:this.scoreValue,maxCombo:this.maxComboValue,correct:this.correct,mistakes:this.mistakes,time:this.time,battleTime:this.battleTime,elapsed:this.elapsed,completedPrompts:this.completedPromptsValue,used:new Set(this.used),rushCharge:this.rushChargeValue,rushes:this.rushesValue,chainKills:this.chainKillsValue,luckyEncounters:this.luckyEncountersValue,luckyClears:this.luckyClearsValue,luckyBonus:this.luckyBonusValue,luckyDone:this.luckyDone};
       this.emit('stage',{stage:this.stageValue});
       if (this.journey) {
-        this.areaValue = this.stageValue === 1 ? this.routeValue! : 'court';
+        this.areaValue = this.stageValue === 1 ? this.routeValue! : this.finalArea();
+        this.pendingRest=this.stageValue===2?'midpoint':this.stageValue===3?'beforeBoss':null;
         this.beginTravel(this.stageValue === 1 ? 3.8 : this.stageValue === 2 ? 4 : 2);
       } else this.beginTravel(this.stageValue === 3 ? 2.2 : travelSeconds ?? 1);
     } else this.beginTravel(travelSeconds ?? 0.6);
@@ -423,6 +413,7 @@ export class Game {
   private finish(mode: 'clear'|'defeat'): void {
     this.modeValue = mode;
     this.finalResults = {
+      stageId:this.stageId,
       score:this.scoreValue,maxCombo:this.maxComboValue,
       accuracy:this.correct+this.mistakes ? this.correct/(this.correct+this.mistakes) : 1,
       correct:this.correct,mistakes:this.mistakes,clearTime:this.elapsed,
@@ -464,7 +455,7 @@ export class Game {
   /** Advances active combat time. The caller pauses on focus or visibility loss. */
   update(dt: number): void {
     if (!Number.isFinite(dt) || dt < 0) throw new Error('dt must be nonnegative seconds');
-    if (this.modeValue === 'paused' || this.modeValue === 'clear' || this.modeValue === 'defeat' || this.modeValue === 'explore' || this.modeValue === 'vista') return;
+    if (this.modeValue === 'paused' || this.modeValue === 'clear' || this.modeValue === 'defeat' || this.modeValue === 'explore' || this.modeValue === 'vista' || this.modeValue === 'rest') return;
     if (this.modeValue === 'countdown') {
       this.countdown -= dt;
       if (this.countdown <= 1e-9) {
@@ -481,9 +472,15 @@ export class Game {
       if (this.travelTime <= 1e-9) {
         const surplus = Math.max(0,-this.travelTime);
         this.travelTime = 0;
-        this.modeValue = 'playing';
-        if (this.journey && this.stageValue === 2 && this.rushesValue === this.checkpoint.rushes && this.wave === 0) this.startCourtyardRush();
-        else this.spawnWave();
+        if (this.journey && this.pendingRest) {
+          this.modeValue='rest';
+          this.restValue=this.pendingRest;
+          this.pendingRest=null;
+        } else {
+          this.modeValue = 'playing';
+          if (this.journey && this.stageValue === 2 && this.rushesValue === this.checkpoint.rushes && this.wave === 0) this.startCourtyardRush();
+          else this.spawnWave();
+        }
         if (surplus) this.update(surplus);
       }
       return;
@@ -517,6 +514,8 @@ export class Game {
         const target = this.enemiesValue.find(item => item.id === this.locked);
         if (target) target.clean = false;
       }
+      if (this.journey && enemy.kind !== 'boss' && !enemy.rush && !enemy.lucky) this.completedPromptsValue++;
+      if (this.journey && enemy.rush) this.completedPromptsValue++;
       if (this.healthValue <= 0) { this.finish('defeat'); return; }
       if (enemy.kind === 'boss') {
         this.bossFailures++;
@@ -592,6 +591,7 @@ export class Game {
       }
       const scoreDelta = 100 + (enemy.clean ? 50+Math.min(this.comboValue,15)*10 : 0);
       this.scoreValue += scoreDelta;
+      if (this.journey) this.completedPromptsValue++;
       if (enemy.rush) this.rushKillsValue++;
       else if (enemy.kind !== 'boss' && this.rushesValue < 2) this.rushChargeValue = Math.min(100,this.rushChargeValue + 18 + (enemy.clean ? 7 : 0));
       this.emit('kill',{enemyId:enemy.id,kind:enemy.kind,phase:enemy.kind === 'boss' ? this.phase : undefined,
@@ -648,11 +648,13 @@ export class Game {
     this.attemptsValue++;
     this.healthValue = 3;
     this.scoreValue = this.checkpoint.score;
+    this.time=this.checkpoint.time;
     this.maxComboValue = this.checkpoint.maxCombo;
     this.correct = this.checkpoint.correct;
     this.mistakes = this.checkpoint.mistakes;
     this.battleTime = this.checkpoint.battleTime;
     this.elapsed = this.checkpoint.elapsed;
+    this.completedPromptsValue=this.checkpoint.completedPrompts;
     this.used = new Set(this.checkpoint.used);
     this.rushChargeValue = this.checkpoint.rushCharge;
     this.rushesValue = this.checkpoint.rushes;
@@ -668,6 +670,8 @@ export class Game {
     this.luckyRemainingValue = 0;
     this.luckyDurationValue = 0;
     this.luckyPhrases = [];
+    this.restValue=null;
+    this.pendingRest=null;
     this.rushingValue = false;
     this.rushRemainingValue = 0;
     this.bossCounterValue = 0;
@@ -683,15 +687,19 @@ export class Game {
     this.bossFailures = 0;
     this.finalResults = null;
     this.modeValue = 'playing';
-    if (this.journey) this.areaValue = this.stageValue === 0 ? 'alley' : this.stageValue === 1 ? this.routeValue! : 'court';
-    if (this.journey && this.stageValue === 2) this.startCourtyardRush();
-    else this.spawnWave();
+    this.travelTime=0;
+    this.travelDuration=1;
+    if (this.journey) this.areaValue = this.stageValue === 0 ? this.firstArea() : this.stageValue === 1 ? this.routeValue! : this.finalArea();
+    if (this.journey && this.stageValue >= 2) {
+      this.restValue=this.stageValue===2?'midpoint':'beforeBoss';
+      this.modeValue='rest';
+    } else this.spawnWave();
   }
-  restart(): Game { return new Game({difficulty:this.difficulty,practice:this.practice,seed:this.seed,journey:this.journey}); }
+  restart(): Game { return new Game({difficulty:this.difficulty,practice:this.practice,seed:this.seed,journey:this.journey,stageId:this.stageId}); }
 
   get state(): GameState {
     return {
-      mode:this.modeValue,stage:this.stageValue,bossPhase:this.phase,health:this.healthValue,
+      mode:this.modeValue,stageId:this.stageId,stage:this.stageValue,bossPhase:this.phase,health:this.healthValue,
       score:this.scoreValue,combo:this.comboValue,maxCombo:this.maxComboValue,
       effectsLevel:this.effectsLevelValue,
       visualCombo:this.visualComboValue,lockedId:this.locked,practice:this.practice,
@@ -701,7 +709,8 @@ export class Game {
       luckyActive:this.luckyActiveValue,luckyStep:this.luckyStepValue,luckyRemaining:this.luckyRemainingValue,
       luckyEncounters:this.luckyEncountersValue,luckyClears:this.luckyClearsValue,luckyBonus:this.luckyBonusValue,
       ...(this.journey ? {journey:{route:this.routeValue,wave:this.wave,travelProgress:this.modeValue === 'travel' || this.modeValue === 'paused' && this.beforePause === 'travel' || this.modeValue === 'countdown' && this.beforePause === 'travel'
-        ? Math.min(1,Math.max(0,1-this.travelTime/this.travelDuration)) : this.travelDuration ? 1 : 0,area:this.areaValue}} : {}),
+        ? Math.min(1,Math.max(0,1-this.travelTime/this.travelDuration)) : this.travelDuration ? 1 : 0,
+        area:this.areaValue,completedPrompts:this.completedPromptsValue,totalPrompts:STAGE_DEFINITIONS[this.stageId].requiredPrompts,rest:this.restValue}} : {}),
       enemies:this.enemiesValue.map((enemy,index) => {
         const duration = enemy.deadline-enemy.spawned;
         const progress = enemy.lucky ? Math.min(1,Math.max(0,1-this.luckyRemainingValue/this.luckyDurationValue)) : this.practice

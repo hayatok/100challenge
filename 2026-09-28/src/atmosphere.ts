@@ -1,6 +1,7 @@
 import * as T from 'three';
 import { Reflector } from 'three/addons/objects/Reflector.js';
-import type { DistrictArea, RailPose } from './rail.ts';
+import type { RailPose } from './rail.ts';
+import type { DistrictArea } from './stages.ts';
 
 /** A single low-resolution planar reflection and a fixed rain pool. */
 export class StreetAtmosphere {
@@ -44,9 +45,19 @@ export class StreetAtmosphere {
   }
   update(dt:number,area:DistrictArea,view:RailPose,motion:boolean){
     this.clock+=dt;
+    const station = area === 'forecourt' || area === 'concourse' || area === 'waiting' ||
+      area === 'maintenance' || area === 'platform' || area === 'dawn';
+    const indoor = area === 'store' || area === 'concourse' || area === 'waiting' ||
+      area === 'maintenance';
+    // The station reflector only covers the forecourt, never the lower track.
+    this.surface.visible = !station || area === 'forecourt';
+    this.surface.position.x = station ? 100 : 12;
+    this.surface.position.z = station ? 12 : -35;
+    this.surface.scale.set(station ? .2 : 1, station ? .18 : 1, 1);
     this.surface.position.y=area==='roof'?7.04:.017;
-    (this.surface.material as T.ShaderMaterial).uniforms.wetness.value=area==='store'?.1:area==='roof'?.22:.3;
-    this.rain.visible=motion&&area!=='store'&&area!=='roof';
+    (this.surface.material as T.ShaderMaterial).uniforms.wetness.value=
+      area === 'store' ? .1 : indoor ? .08 : area === 'roof' ? .22 : area === 'forecourt' ? .22 : .3;
+    this.rain.visible=motion&&!indoor&&area!=='roof'&&area!=='platform'&&area!=='dawn';
     if(!this.rain.visible)return;
     for(let i=0;i<180;i++){
       const x=view.x+Math.sin(i*127.1)*11,z=view.z-8+Math.sin(i*311.7)*11;
