@@ -26,6 +26,7 @@ export class GameAudio {
   private ambienceFilter!: BiquadFilterNode;
   private ambienceSource: AudioBufferSourceNode | null = null;
   private ambienceBuffer: AudioBuffer | null = null;
+  private sheltered = false;
   private sceneMood: SceneMood = "combat";
   private lastApproach = -1;
   private musicSource: AudioBufferSourceNode | null = null;
@@ -504,8 +505,14 @@ export class GameAudio {
     this.effects.gain.setTargetAtTime(this.muted ? 0 : this.effectsVolume, c.currentTime, 0.018);
     this.luckyMusic.gain.setTargetAtTime(this.muted || !this.luckyActive || !this.active ? 0 : this.musicVolume * 0.43, c.currentTime, 0.03);
     this.ambience.gain.setTargetAtTime(this.muted || !this.active ? 0 :
-      this.sceneMood === "explore" ? 0.11 : this.sceneMood === "vista" ? 0.16 : this.sceneMood === "combat" ? 0.035 : 0.018,
+      (this.sceneMood === "explore" ? 0.11 : this.sceneMood === "vista" ? 0.16 : this.sceneMood === "combat" ? 0.035 : 0.018) * (this.sheltered ? .2 : 1),
       c.currentTime, 0.2);
+  }
+  setSheltered(sheltered: boolean): void {
+    if (this.sheltered === sheltered) return;
+    this.sheltered = sheltered;
+    if (this.context) this.ambienceFilter.frequency.setTargetAtTime(sheltered ? 280 : 680, this.context.currentTime, .2);
+    this.applyVolumes();
   }
   /** Changes the underlying bed without restarting the music or queuing future cues. */
   setSceneMood(mood: SceneMood): void {

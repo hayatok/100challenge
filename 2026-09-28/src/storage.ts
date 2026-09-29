@@ -1,3 +1,5 @@
+import { STAGE_DEFINITIONS, isStageId, type JourneyRoute, type StageId } from './stages.ts';
+
 export type Preferences = {
   difficulty: "relaxed" | "normal" | "fierce";
   music: number;
@@ -5,8 +7,11 @@ export type Preferences = {
   motion: boolean;
   practice: boolean;
 };
-export const RESULT_RULES_VERSION = 6;
+export const RESULT_RULES_VERSION = 7;
 export type SavedResult = {
+  /** Absent on older records. Invalid v7 values are isolated under a legacy key. */
+  stageId?: StageId;
+  route?: JourneyRoute;
   score: number;
   combo: number;
   accuracy: number;
@@ -64,6 +69,10 @@ function validResult(value: unknown, fallbackVersion: number): SavedResult|null 
     cleared:r.cleared,difficulty:r.difficulty as Preferences['difficulty'],
     practice:r.practice,retries:r.retries,date:r.date,rulesVersion:rulesVersion as number,
   };
+  if (isStageId(r.stageId)) result.stageId=r.stageId;
+  if (result.stageId && STAGE_DEFINITIONS[result.stageId].routes.some(route=>route.id===r.route)) {
+    result.route=r.route as JourneyRoute;
+  }
   // Optional v0.5 fields must never make older runs disappear. Invalid fields
   // are omitted so an untrusted seed cannot become a replay control.
   if (validSeed(r.seed)) result.seed = r.seed;
@@ -79,8 +88,17 @@ function validResult(value: unknown, fallbackVersion: number): SavedResult|null 
   return result;
 }
 
-export function resultKey(result: Pick<SavedResult,'difficulty'|'practice'|'rulesVersion'>): string {
-  return `${result.rulesVersion}:${result.difficulty}:${result.practice ? 'practice' : 'standard'}`;
+export function resultKey(result: Pick<SavedResult,'difficulty'|'practice'|'rulesVersion'|'stageId'>): string {
+  const prefix=result.rulesVersion>=7 ? `${result.rulesVersion}:${isStageId(result.stageId)?result.stageId:'legacy'}` : result.rulesVersion;
+  return `${prefix}:${result.difficulty}:${result.practice ? 'practice' : 'standard'}`;
+}
+
+/** Only a current, fully identified journey result can reproduce its phrase sequence. */
+export function replayOptions(result: SavedResult): {seed:number;stageId:StageId;route:JourneyRoute;difficulty:Preferences['difficulty'];practice:boolean}|null {
+  if (result.rulesVersion!==RESULT_RULES_VERSION || !isStageId(result.stageId) ||
+      !STAGE_DEFINITIONS[result.stageId].routes.some(route=>route.id===result.route) ||
+      !validSeed(result.seed)) return null;
+  return {seed:result.seed,stageId:result.stageId,route:result.route!,difficulty:result.difficulty,practice:result.practice};
 }
 export function betterResult(candidate: SavedResult, current: SavedResult|null|undefined): boolean {
   if (!candidate.cleared) return false;

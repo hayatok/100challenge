@@ -10,6 +10,7 @@ import { loadCharacterLibrary, chooseDeathClip, type CharacterInstance, type Cha
 import { createCharacterMotion, type CharacterMotion } from "./character-motion.ts";
 import { CombatEffects } from "./effects.ts";
 import { createWeapon, animateWeapon, setWeaponMode } from "./weapon.ts";
+import type { StageId } from "./stages.ts";
 import { createDistrict } from "./district.ts";
 import { RailDirector, approachDistance } from "./rail.ts";
 import type { EnemyView, GameEvent, GameState } from "./game.ts";
@@ -222,7 +223,23 @@ export class World {
     setWeaponMode(this.weaponModel,'pistol');
     await this.renderer.compileAsync(this.scene, this.camera);
     this.renderer.render(this.scene, this.camera);
-    // Allocate the post-processing targets and shot-only materials during loading.
+    // Compile and draw the second setting at its actual position, including the
+    // reflection/AO passes and skinned characters, before gameplay starts.
+    this.environment.setStage("station");
+    this.environment.update(0,"forecourt",false);
+    this.camera.position.x=100;
+    this.keyLight.position.x+=100;this.keyLight.target.position.x=100;
+    for(const model of warm) model.position.x+=100;
+    for(const mesh of [warmShell,warmShadow,warmTank]) mesh.position.x+=100;
+    this.atmosphere.update(0,"forecourt",{x:100,y:1.65,z:5,yaw:0},false);
+    await this.renderer.compileAsync(this.scene, this.camera);
+    this.composer.render();
+    this.environment.setStage("shopping");
+    this.environment.update(0,"market",false);
+    this.camera.position.x=0;
+    this.keyLight.position.x-=100;this.keyLight.target.position.x=0;
+    this.atmosphere.update(0,"market",{x:0,y:1.65,z:5,yaw:0},false);
+    for(const model of warm) model.position.x-=100;
     this.composer.render();
     this.muzzle.visible = false;
     this.luckyFloor.visible=false;
@@ -233,7 +250,12 @@ export class World {
       model.traverse(o => { if (o instanceof T.SkinnedMesh) o.skeleton.dispose(); });
     }
   }
-  reset(_stage = 0) {
+  setStage(stageId: StageId) {
+    this.environment?.setStage(stageId);
+    this.rail.reset(stageId);
+    this.update(0, null);
+  }
+  reset(_stage = 0, stageId: StageId = "shopping") {
     for (const a of this.actors.values()) {
       this.scene.remove(a.root, a.shadow);
       a.motion.dispose();
@@ -255,7 +277,8 @@ export class World {
     this.previousTier = 0;
     this.effects.reset();
     this.environment?.reset();
-    this.rail.reset();
+    this.environment?.setStage(stageId);
+    this.rail.reset(stageId);
     this.cameraZ = 6;
   }
   private resize() {
@@ -450,16 +473,18 @@ export class World {
     this.cameraZ=view.z;
     this.camera.position.set(view.x,view.y,view.z);
     this.camera.rotation.set(0,view.yaw,0);
-    const indoor=this.rail.area==='store';
+    const close=['store','waiting','maintenance'].includes(this.rail.area);
+    const indoor=close||this.rail.area==='concourse';
+    const vista=['roof','dawn'].includes(this.rail.area);
     const side=indoor?-2.2:-4,back=indoor?-.5:2;
     this.keyLight.position.set(view.x+Math.cos(view.yaw)*side+Math.sin(view.yaw)*back,view.y+(indoor?1.35:6),view.z-Math.sin(view.yaw)*side+Math.cos(view.yaw)*back);
     this.keyLight.target.position.set(view.x-Math.sin(view.yaw)*5,view.y-1.65,view.z-Math.cos(view.yaw)*5);
     this.keyLight.target.updateMatrixWorld();
-    const quiet=!state || ['explore','vista','clear'].includes(state.mode) || this.rail.moving;
-    this.keyLight.intensity=this.rail.area==='store'?.7:this.rail.area==='roof'?1.4:1.05;
-    this.keyLight.color.setHex(this.rail.area==='roof'?0xffccaa:0xb6cfe1);
-    this.ambience.intensity=this.rail.area==='store'?.12:this.rail.area==='roof'?.7:.4;
-    this.playerFill.intensity=this.rail.area==='store'?1.2:4.5;
+    const quiet=!state || ['explore','rest','vista','clear'].includes(state.mode) || this.rail.moving;
+    this.keyLight.intensity=indoor?.7:vista?1.4:1.05;
+    this.keyLight.color.setHex(vista?0xffccaa:0xb6cfe1);
+    this.ambience.intensity=indoor?.12:vista?.7:.4;
+    this.playerFill.intensity=indoor?1.2:4.5;
     this.scene.environmentIntensity=indoor?.22:.3;
     this.atmosphere.update(delta,this.rail.area,view,this.motion);
     if(this.weaponModel)setWeaponMode(this.weaponModel,this.rushing?'shotgun':'pistol');
@@ -533,10 +558,10 @@ export class World {
         if (!a.boss && !a.character.death)
           a.root.rotation.x = -Math.min(a.boss ? .65 : 1.45, a.dead * (a.boss ? .35 : 1.5));
       } else {
-        const distance = approachDistance(a.recovering?0:a.progress,a.kind,this.rail.area==='store')+(a.support?1.1:0);
+        const distance = approachDistance(a.recovering?0:a.progress,a.kind,close)+(a.support?1.1:0);
         const entry = this.motion ? 1 - T.MathUtils.smoothstep(a.age, 0, a.rush ? .2 : .7) : 0;
         const laneX = a.lane * Math.min(a.rush?1.65:1.3, distance * .36);
-        const x = laneX + (a.boss || a.rush ? 0 : entry * a.entrance * (this.rail.area==='store'?1.2:2.1));
+        const x = laneX + (a.boss || a.rush ? 0 : entry * a.entrance * (close?1.2:2.1));
         const local=new T.Vector3(x,0,-distance-entry*.4).applyAxisAngle(new T.Vector3(0,1,0),view.yaw);
         a.root.position.set(view.x+local.x,0,view.z+local.z);
         a.root.rotation.y = view.yaw-(a.boss ? 0 : entry * a.entrance * .25);

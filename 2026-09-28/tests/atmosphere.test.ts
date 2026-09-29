@@ -27,3 +27,27 @@ test('reflection follows roof elevation and returns to street level',()=>{
  atmosphere.update(.1,'store',view,true);assert.equal(surface.position.y,.017);
  assert.equal((surface.material as T.ShaderMaterial).uniforms.wetness.value,.1);
 });
+
+test('station rain and wet reflection remain on the exposed forecourt',()=>{
+ const scene=new T.Scene();const atmosphere=new StreetAtmosphere(scene);
+ const surface=scene.getObjectByName('Wet ground reflections') as T.Mesh;
+ const rain=scene.getObjectByName('Rain around player') as T.LineSegments;
+ const stationView={x:100,y:1.65,z:10,yaw:0};
+ atmosphere.update(.1,'forecourt',stationView,true);
+ assert.equal(surface.visible,true);
+ assert.equal(surface.position.x,100);
+ assert.equal(surface.position.z,12);
+ assert.equal(rain.visible,true);
+ for(const area of ['concourse','waiting','maintenance','platform','dawn'] as const){
+  atmosphere.update(.1,area,stationView,true);
+  assert.equal(surface.visible,false,area);
+  assert.equal(rain.visible,false,area);
+ }
+ atmosphere.update(.1,'forecourt',stationView,false);
+ assert.equal(rain.visible,false);
+ atmosphere.update(.1,'alley',{x:0,y:1.65,z:0,yaw:0},true);
+ assert.equal(surface.visible,true);
+ assert.equal(surface.position.x,12);
+ assert.equal(surface.scale.x,1);
+ assert.equal(rain.visible,true);
+});

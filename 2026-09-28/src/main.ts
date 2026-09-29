@@ -1,12 +1,14 @@
 import "./style.css";
 import "./fever.css";
 import "./journey.css";
+import "./stages.css";
+import { STAGE_DEFINITIONS, type StageId, type JourneyRoute } from "./stages.ts";
 import { FeverShow } from "./fever.ts";
 import { CelebrationState } from "./spectacle.ts";
 import { Game, type GameState } from "./game.ts";
 import { World } from "./scene.ts";
 import { GameAudio } from "./audio.ts";
-import { readSave, writeSave, recordResult, betterResult, resultKey, RESULT_RULES_VERSION, type SavedResult } from "./storage.ts";
+import { readSave, writeSave, recordResult, betterResult, resultKey, replayOptions, RESULT_RULES_VERSION, type SavedResult } from "./storage.ts";
 import { gradeResult, previousComparable, compareResults } from "./results.ts";
 import { nextGoal } from "./goals.ts";
 const app = document.querySelector<HTMLDivElement>("#app")!;
@@ -19,7 +21,7 @@ app.innerHTML = `<div id="world" aria-hidden="true">
 <header>
 <a class="brand" href="#">夜勤<span>NIGHTSHIFT / TYPING</span>
 </a>
-<div class="top-center">● 午前零時の商店街<span id="stage">午前零時・営業中</span>
+<div class="top-center"><b id="stage-title">● 午前零時の商店街</b><span id="stage">午前零時・営業中</span>
 </div>
 <button id="pause-button" aria-label="一時停止" hidden>Ⅱ</button>
 <button id="sound-button" aria-label="音を切り替える">♪</button>
@@ -31,29 +33,31 @@ app.innerHTML = `<div id="world" aria-hidden="true">
 </div>
 <section id="title" hidden>
 <div class="title-copy">
-<p class="title-kicker">黒猫商店街・深夜営業</p>
+<p class="title-kicker" id="title-kicker">黒猫地区・深夜勤務</p>
 <h1 class="arcade-logo" aria-label="夜勤タイピング">
 <span class="logo-night">夜勤</span>
 <span class="logo-typing">タイピング</span>
 </h1>
-<p class="title-sub">午前零時の商店街</p>
+<p class="title-sub">二つの現場。朝までの勤務。</p>
 <p class="description">一文字、一発。朝まで、生き残れ。</p>
+<div class="shift-tickets" role="group" aria-label="ステージ選択">${Object.values(STAGE_DEFINITIONS).map(d=>`<button class="shift-ticket" data-stage-id="${d.id}" aria-pressed="${d.id==='shopping'}"><span class="ticket-number">0${d.number}</span><span><strong>${d.title}</strong><small>${d.subtitle}</small></span><i>出勤先</i></button>`).join('')}</div>
 <button id="start-button" class="primary">勤務開始<small>PRESS ENTER</small>
 </button>
 <div class="title-options">
 <button id="settings-button">設定</button>
 <button id="credits-button">クレジット</button>
 </div>
-<p class="keyboard-note">PC・キーボード専用 ／ 分岐のある短い一勤務</p>
+<p class="keyboard-note">PC・キーボード専用 ／ 2ステージ / 各43文・途中休息あり</p>
 </div>
 <footer>
 <span>生きて、定時で帰ろう。</span>
-<span>ALPHA 0.12 / 黒猫商店街</span>
+<span>ALPHA 0.13 / 夜勤案内</span>
 </footer>
 </section>
 <section id="hud" hidden>
-<div id="route-choice" hidden><p class="eyebrow">01 / 探る</p><h2>時計台へ、抜け道を探せ。</h2><p>店の奥で、何かが倒れる音がした。</p><div class="route-actions"><button id="route-service"><b>1</b> 搬入口へ<small>狭い裏道 / 素早い敵</small></button><button id="route-store"><b>2</b> 店内へ<small>灯りの先 / 重い足音</small></button></div><small>1・2キー、またはクリックで進路を選択</small></div>
-<div id="vista-panel" hidden><p class="eyebrow">04 / 息をつく</p><h2>夜明けまで、生き延びた。</h2><p>次は、時計台へ。</p><button id="vista-continue">勤務を終える <small>ENTER</small></button></div>
+<div id="route-choice" hidden><p class="eyebrow">01 / 探る</p><h2 id="route-title">抜け道を探せ。</h2><p>進路を選んで、奥へ進もう。</p><div class="route-actions"><button id="route-service"><b>1</b> 搬入口へ<small>狭い裏道 / 素早い敵</small></button><button id="route-store"><b>2</b> 店内へ<small>灯りの先 / 重い足音</small></button></div><small>1・2キー、またはクリックで進路を選択</small></div>
+<div id="vista-panel" hidden><p class="eyebrow">04 / 息をつく</p><h2 id="vista-title"></h2><p id="vista-detail"></p><button id="vista-continue">勤務を終える <small>ENTER</small></button></div>
+<div id="rest-panel" hidden><p class="eyebrow">休息 / 敵は来ません</p><h2 id="rest-title"></h2><p id="rest-detail"></p><button id="rest-continue"><span id="rest-action"></span><small>ENTER</small></button></div>
 <div id="journey-caption" aria-live="polite"></div>
 <div class="health-block">
 <p class="eyebrow" id="shift-label">
@@ -100,8 +104,8 @@ app.innerHTML = `<div id="world" aria-hidden="true">
 <p>3文完成で +500点・体力1回復</p>
 </div>
 <div id="boss-hud" hidden>
-<small>黒猫商店街・終業責任者</small>
-<b>店長 <span id="boss-phase">
+<small>終業責任者</small>
+<b><span id="boss-name">店長</span> <span id="boss-phase">
 </span>
 </b>
 <div id="boss-pips">
@@ -184,6 +188,8 @@ const show = (id: string, v: boolean) => {
 const text = (id: string, value: string) => { if(el(id).textContent !== value) el(id).textContent = value; };
 const save = readSave();
 const preferences = save.preferences;
+let selectedStage: StageId = "shopping";
+let replayRoute: JourneyRoute | null = null;
 let history = save.results;
 let personalBests = save.personalBests;
 const audio = new GameAudio();
@@ -242,7 +248,7 @@ function close() {
 }
 function title() {
   resetSpectacle();
-  world.reset();
+  world.reset(0, selectedStage);
   audio.stop();
   game = null;
   screen = "title";
@@ -258,8 +264,17 @@ function title() {
   show("title", true);
   show("hud", false);
   show("pause-button", false);
-  el("stage").textContent = "午前零時・営業中";
+  selectStage(selectedStage);
   el("start-button").focus();
+}
+function selectStage(stageId: StageId) {
+  selectedStage = stageId;
+  world.setStage(stageId);
+  const definition = STAGE_DEFINITIONS[stageId];
+  text('title-kicker',stageId==='shopping'?'黒猫商店街・深夜営業':'黒猫駅・最終列車終了');
+  text('stage-title', `● ${definition.title}`);
+  text('stage', `STAGE 0${definition.number} / 43文の勤務`);
+  document.querySelectorAll<HTMLButtonElement>('[data-stage-id]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.stageId===stageId)));
 }
 function settings() {
   modal(
@@ -308,7 +323,7 @@ function settings() {
 }
 function credits() {
   modal(
-    `<p class="eyebrow">制作・素材提供</p><h2 id="modal-title">クレジット</h2><p>企画・ゲーム・街・演出：NIGHTSHIFT TYPING</p><p>住人・作業員・店長の原型：Rikindle3D / Male City Zombie（CC0）<br><small>衣服と肌の配色・体格・補助動作を調整。</small><br>疾走ゾンビ：Rosswet Mobile / <a href="https://opengameart.org/content/thin-zombie-awake-zombie-asset" target="_blank" rel="noreferrer">Thin Zombie [Awake Zombie Asset]</a>（<a href="https://creativecommons.org/licenses/by/3.0/" target="_blank" rel="noreferrer">CC BY 3.0</a>）<br><small>GLB変換・テクスチャ再接続・動作選択・スケール調整。</small><br>拳銃：loafbrr_1 / Pistol（CC0）<br>腕：para / FPS Arms（CC0）</p><p>音楽：MintoDog / <a href="https://opengameart.org/content/darkness-roadremeke" target="_blank" rel="noreferrer">Darkness Road Remake</a>（CC0）<br>打撃・破片：Kenney / Impact Sounds（CC0）<br>銃声：© 2009 Vincent Sevedge / <a href="https://opengameart.org/content/gunshot-sounds" target="_blank" rel="noreferrer">Gunshot Sounds</a>（<a href="https://creativecommons.org/licenses/by/3.0/" target="_blank" rel="noreferrer">CC BY 3.0</a>）<br><small>銃声は切り出し・EQ・圧縮・音量調整をしています。</small></p><p class="note"><a href="./THIRD_PARTY_NOTICES.txt" target="_blank" rel="noreferrer">素材出典とライセンス情報</a>を同梱。元作品のキャラクター・音声・ロゴは使用していません。</p><button id="credits-close" class="primary">商店街へ戻る</button>`,
+    `<p class="eyebrow">制作・素材提供</p><h2 id="modal-title">クレジット</h2><p>企画・ゲーム・街・演出：NIGHTSHIFT TYPING</p><p>住人・作業員・店長の原型：Rikindle3D / Male City Zombie（CC0）<br><small>衣服と肌の配色・体格・補助動作を調整。</small><br>疾走ゾンビ：Rosswet Mobile / <a href="https://opengameart.org/content/thin-zombie-awake-zombie-asset" target="_blank" rel="noreferrer">Thin Zombie [Awake Zombie Asset]</a>（<a href="https://creativecommons.org/licenses/by/3.0/" target="_blank" rel="noreferrer">CC BY 3.0</a>）<br><small>GLB変換・テクスチャ再接続・動作選択・スケール調整。</small><br>拳銃：loafbrr_1 / Pistol（CC0）<br>腕：para / FPS Arms（CC0）</p><p>音楽：MintoDog / <a href="https://opengameart.org/content/darkness-roadremeke" target="_blank" rel="noreferrer">Darkness Road Remake</a>（CC0）<br>打撃・破片：Kenney / Impact Sounds（CC0）<br>銃声：© 2009 Vincent Sevedge / <a href="https://opengameart.org/content/gunshot-sounds" target="_blank" rel="noreferrer">Gunshot Sounds</a>（<a href="https://creativecommons.org/licenses/by/3.0/" target="_blank" rel="noreferrer">CC BY 3.0</a>）<br><small>銃声は切り出し・EQ・圧縮・音量調整をしています。</small></p><p class="note"><a href="./THIRD_PARTY_NOTICES.txt" target="_blank" rel="noreferrer">素材出典とライセンス情報</a>を同梱。元作品のキャラクター・音声・ロゴは使用していません。</p><button id="credits-close" class="primary">勤務案内へ戻る</button>`,
     "credits",
   );
   el("credits-close").onclick = () => {
@@ -320,22 +335,23 @@ function prepare() {
   screen = "input";
   check = "";
   modal(
-    `<p class="eyebrow">装填確認</p><h2 id="modal-title">まず、弾を込めよう。</h2><p>日本語入力をオフにして、<b>go</b> と打ってください。</p><div id="check-letters">go</div><p id="check-status" class="note">そのままキーボードで入力できます。</p><p class="note">正しい文字 → 発砲 ／ 単語完成 → 撃破<br>打ち間違いは打ち直し不要。続きを打てばOK。<br>1・2キーで進路を選択。広場のFEVERでは一語で3体を一掃。<br>踊るラッキーゾンビはボーナス。見逃してもペナルティなし。</p><button id="check-back" class="text-button">タイトルに戻る</button>`,
+    `<p class="eyebrow">装填確認</p><h2 id="modal-title">まず、弾を込めよう。</h2><p>日本語入力をオフにして、<b>go</b> と打ってください。</p><div id="check-letters">go</div><p id="check-status" class="note">そのままキーボードで入力できます。</p><p class="note">正しい文字 → 発砲 ／ 単語完成 → 撃破<br>打ち間違いは打ち直し不要。続きを打てばOK。<br>1・2キーで進路を選択。後半のFEVERでは一語で3体を一掃。<br>踊るラッキーゾンビはボーナス。見逃してもペナルティなし。</p><button id="check-back" class="text-button">タイトルに戻る</button>`,
     "input",
   );
   el("check-back").onclick = title;
   focus();
 }
-function start(seed = Date.now() >>> 0) {
+function start(seed = Date.now() >>> 0, route: JourneyRoute | null = null) {
+  replayRoute = route;
   warnedEnemies.clear();
   resetSpectacle();
-  world.reset();
+  world.reset(0, selectedStage);
   lastTime = performance.now();
   close();
   game = new Game({
     difficulty: preferences.difficulty,
     practice: preferences.practice,
-    seed, journey: true,
+    seed, journey: true, stageId: selectedStage,
   });
   world.update(0, game.state);
   lastTime = performance.now();
@@ -401,9 +417,11 @@ function finish(s: GameState) {
     retries: r.attempts - 1,
     date: new Date().toISOString(),
     rulesVersion: RESULT_RULES_VERSION,
+    stageId: r.stageId, route: s.journey?.route ?? undefined,
     seed: r.seed, rushes: r.rushes, chainKills: r.chainKills,
     luckyEncounters:r.luckyEncounters,luckyClears:r.luckyClears,luckyBonus:r.luckyBonus,
   };
+  const replay = replayOptions(result);
   const goal = nextGoal(result);
   const previous = previousComparable(history, result);
   const comparison = compareResults(result, previous);
@@ -417,14 +435,18 @@ function finish(s: GameState) {
   const difficulty = {relaxed:"研修", normal:"通常", fierce:"残業"}[r.difficulty];
   persist();
   modal(
-    `<div class="receipt-head"><p class="eyebrow">黒猫商店街 / 勤務精算票</p><h2 id="modal-title">${s.mode === "clear" ? "勤務終了" : "勤務中断"}</h2><p class="note">${difficulty}勤務${r.practice ? "・練習記録" : ""} / 本日もお疲れさまでした。</p></div><div class="result-hero"><div class="result-grade"><small>判定</small><strong>${gradeResult(result)}</strong><span class="result-verdict">${r.practice ? "練習終了" : s.mode === "clear" ? "全区間突破" : "再出勤求む"}</span></div><div class="result-score">${String(r.score).padStart(6,"0")}<small>勤務得点 / SCORE</small></div></div><div class="result-record" data-new-best="${newBest}"><span>${newBest ? "自己最高" : "最高記録"}<b>${best ? best.score.toLocaleString() : "未達成"}</b></span><span>前回との差<b>${delta}</b></span></div><div class="result-grid"><div><b>${r.maxCombo}</b><span>最大連撃</span></div><div><b>${r.correct + r.mistakes ? (r.accuracy * 100).toFixed(1) + "%" : "—"}</b><span>正確率</span></div><div><b>${Math.round(r.keysPerMinute)}</b><span>打鍵 / 分</span></div></div><div class="result-extra"><span>FEVER <b>${r.rushes}回</b></span><span>巻き込み撃破 <b>${r.chainKills}体</b></span></div><div class="result-lucky">${r.luckyEncounters ? `幸運出勤 <b>${r.luckyClears ? "大当り" : "遭遇"}</b><span>ボーナス +${r.luckyBonus}</span>` : "今夜のラッキー遭遇なし"}</div><div class="next-goal"><small>次の勤務目標</small><b>${goal.title}</b><p>${goal.detail}</p></div><p class="note receipt-time">${r.practice ? "練習記録は通常勤務と別に保存。<br>" : ""}勤務時間 ${Math.floor(r.clearTime / 60)}分${Math.floor(r.clearTime % 60)}秒 / リトライ ${r.attempts - 1}回</p><button id="again" class="primary">${s.mode === "defeat" ? "この区間から再出勤" : "もう一勤務"}<small>${s.mode === "defeat" ? "区間の最初から再開" : "同じ出題で再挑戦"}</small></button><div class="result-actions">${s.mode === "clear" ? '<button id="new-run" class="text-button">新しい出題で勤務</button>' : ""}<button id="result-title" class="text-button">タイトルへ</button></div>`,
+    `<div class="receipt-head"><p class="eyebrow">${STAGE_DEFINITIONS[r.stageId].title} / 勤務精算票</p><h2 id="modal-title">${s.mode === "clear" ? "勤務終了" : "勤務中断"}</h2><p class="note">${STAGE_DEFINITIONS[r.stageId].routes.find(route=>route.id===s.journey?.route)?.label ?? "進路未選択"} / ${difficulty}勤務${r.practice ? "・練習記録" : ""} / 本日もお疲れさまでした。</p></div><div class="result-hero"><div class="result-grade"><small>判定</small><strong>${gradeResult(result)}</strong><span class="result-verdict">${r.practice ? "練習終了" : s.mode === "clear" ? "全区間突破" : "再出勤求む"}</span></div><div class="result-score">${String(r.score).padStart(6,"0")}<small>勤務得点 / SCORE</small></div></div><div class="result-record" data-new-best="${newBest}"><span>${newBest ? "自己最高" : "最高記録"}<b>${best ? best.score.toLocaleString() : "未達成"}</b></span><span>前回との差<b>${delta}</b></span></div><div class="result-grid"><div><b>${r.maxCombo}</b><span>最大連撃</span></div><div><b>${r.correct + r.mistakes ? (r.accuracy * 100).toFixed(1) + "%" : "—"}</b><span>正確率</span></div><div><b>${Math.round(r.keysPerMinute)}</b><span>打鍵 / 分</span></div></div><div class="result-extra"><span>FEVER <b>${r.rushes}回</b></span><span>巻き込み撃破 <b>${r.chainKills}体</b></span></div><div class="result-lucky">${r.luckyEncounters ? `幸運出勤 <b>${r.luckyClears ? "大当り" : "遭遇"}</b><span>ボーナス +${r.luckyBonus}</span>` : "今夜のラッキー遭遇なし"}</div><div class="next-goal"><small>次の勤務目標</small><b>${goal.title}</b><p>${goal.detail}</p></div><p class="note receipt-time">${r.practice ? "練習記録は通常勤務と別に保存。<br>" : ""}勤務時間 ${Math.floor(r.clearTime / 60)}分${Math.floor(r.clearTime % 60)}秒 / リトライ ${r.attempts - 1}回</p><button id="again" class="primary">${s.mode === "defeat" ? "この区間から再出勤" : "もう一勤務"}<small>${s.mode === "defeat" ? "区間の最初から再開" : replay ? "同じ出題・同じ進路で再挑戦" : "新しい出題で勤務"}</small></button><div class="result-actions">${s.mode === "clear" ? '<button id="new-run" class="text-button">新しい出題で勤務</button>' : ""}<button id="result-title" class="text-button">タイトルへ</button></div>`,
     "result",
   );
   el("again").onclick = () => {
-    if (s.mode === "clear") start(r.seed);
+    if (s.mode === "clear") {
+      selectedStage=r.stageId;
+      if(replay){preferences.difficulty=replay.difficulty;preferences.practice=replay.practice;start(replay.seed,replay.route);}
+      else start();
+    }
     else {
       game?.retryCheckpoint();
-      world.reset(game?.state.stage);
+      world.reset(game?.state.stage, r.stageId);
       screen = "game";
       saved = false;
       finishAt = 0;
@@ -437,25 +459,33 @@ function finish(s: GameState) {
   if(s.mode === "clear") el("new-run").onclick = () => start();
   el("result-title").onclick = title;
 }
-const stages = [
-  "裏路地 / 灯りの先へ",
-  "店内 / 重い足音",
-  "荷捌き広場 / 解き放て",
-  "広場の奥 / 最後の用心棒",
-];
 function draw(s: GameState) {
   if(s.mode === "playing") luckyOutro=null;
-  const exploring=s.mode==='explore', vista=s.mode==='vista';
-  const quiet=exploring||vista||s.mode==='clear'||world.moving;
+  const definition=STAGE_DEFINITIONS[s.stageId];
+  const exploring=s.mode==='explore', vista=s.mode==='vista', resting=s.mode==='rest';
+  const area=s.journey?.area ?? 'alley';
+  const quiet=exploring||resting||vista||s.mode==='clear'||world.moving;
   document.body.dataset.quiet=String(quiet);
-  document.body.dataset.area=s.journey?.area??'alley';
+  document.body.dataset.area=area;
   show('route-choice',exploring);
+  if(exploring){
+    if(replayRoute && game?.chooseRoute(replayRoute)) replayRoute=null;
+    text('route-title',s.stageId==='station'?'ホームへの道を選べ。':'店の奥へ、抜け道を探せ。');
+    definition.routes.forEach((route,index)=>{
+      const button=el(index===0?'route-service':'route-store');
+      if(button.dataset.route!==route.id){button.dataset.route=route.id;button.innerHTML=`<b>${index+1}</b> ${route.label}へ<small>${route.detail}</small>`;}
+    });
+  }
   show('vista-panel',vista&&!world.moving);
+  text('vista-title',definition.vista.title);text('vista-detail',definition.vista.detail);
+  show('rest-panel',resting&&!world.moving);
+  if(s.journey?.rest){const rest=definition.rests[s.journey.rest];text('rest-title',rest.title);text('rest-detail',rest.detail);text('rest-action',rest.action);}
   show('journey-caption',world.moving);
-  text('journey-caption',s.journey?.area==='roof'?'階段の先に、朝の気配。':s.journey?.area==='store'?'扉の向こうで、足音が止まった。':s.journey?.area==='service'?'狭い道から、誰かが駆けてくる。':s.journey?.area==='court'?'空が開けた。集団が、こちらを見た。':'灯りを頼りに、奥へ。');
-  const stageLabel=exploring?'裏路地 / 進路を選べ':(vista||s.mode==='clear')?'屋上 / 夜明けの気配':s.stage===1&&s.journey?.route==='service'?'搬入口 / 狭い抜け道':stages[s.stage];
-  text("stage", `SHIFT 0${s.stage + 1} — ${stageLabel}`);
-  text("shift-label", `SHIFT 0${s.stage + 1} / ${stageLabel.split(" / ")[0]}`);
+  text('journey-caption',definition.captions[area]??'灯りを頼りに、奥へ。');
+  text('stage-title',`● ${definition.title}`);
+  text('stage',`STAGE 0${definition.number} — ${definition.areaLabels[area]??''}`);
+  text('shift-label',`${s.journey?.completedPrompts??0} / ${definition.requiredPrompts}文 — ${definition.areaLabels[area]??''}`);
+  text('boss-name',definition.bossName);
   text("score", String(s.score).padStart(6, "0"));
   text("combo", String(s.combo));
   text("combo-word", [
@@ -479,7 +509,7 @@ function draw(s: GameState) {
   }
   const charge = s.rushing ? s.rushRemaining / 4 : s.rushCharge / 100;
   el("fever-fill").style.transform = `scaleX(${charge})`;
-  text("fever-next", s.rushing ? `SHOTGUN / 残り ${s.rushRemaining} 群` : s.stage === 3 ? "FINAL SHIFT / 店長を撃退せよ" : s.journey && s.rushes >= 1 ? "一掃完了 / 時計台への道を開け" : s.rushes >= 2 ? "FEVER 2 / 2 — 今夜のラッシュ終了" : s.rushCharge >= 100 ? "READY / この集団の後に突入" : s.journey ? "広場でSHOTGUN解放" : `CHARGE ${Math.round(s.rushCharge)}% / 撃破でたまる`);
+  text("fever-next", s.rushing ? `SHOTGUN / 残り ${s.rushRemaining} 群` : s.stage === 3 ? `FINAL SHIFT / ${definition.bossName}を撃退せよ` : s.journey && s.rushes >= 1 ? "一掃完了 / 奥への道を開け" : s.rushes >= 2 ? "FEVER 2 / 2 — 今夜のラッシュ終了" : s.journey ? `一掃まで あと ${Math.max(0,24-(s.journey.completedPrompts??0))} 文` : s.rushCharge >= 100 ? "READY / この集団の後に突入" : `CHARGE ${Math.round(s.rushCharge)}% / 撃破でたまる`);
   show("rush-banner", s.rushing);
   text("rush-count", `一語で3体 / 残り ${s.rushRemaining} 群`);
   if (el("rush-pips").dataset.remaining !== String(s.rushRemaining)) {
@@ -487,7 +517,7 @@ function draw(s: GameState) {
     el("rush-pips").innerHTML = [0,1,2,3].map(i => `<i class="${i < 4-s.rushRemaining ? "done" : ""}"></i>`).join("");
   }
   show("boss-hud", s.stage === 3 && !quiet);
-  text("boss-phase", ["01 / 開店準備", `02 / 反撃 ${s.bossCounter || 1}/3`, "03 / 最終通告"][Math.min(2, s.bossPhase)]);
+  text("boss-phase", ["01 / 接近", `02 / 反撃 ${s.bossCounter || 1}/3`, "03 / 最終通告"][Math.min(2, s.bossPhase)]);
   if (el("boss-pips").dataset.phase !== String(s.bossPhase)) {
     el("boss-pips").dataset.phase = String(s.bossPhase);
     el("boss-pips").innerHTML = [0,1,2].map(i => `<i class="${i < s.bossPhase ? "done" : i === s.bossPhase ? "active" : ""}"></i>`).join("");
@@ -506,7 +536,7 @@ function draw(s: GameState) {
     el("targets").innerHTML = targets
       .map(
         (e) =>
-          `<div class="target ${e.locked ? "locked" : ""} ${e.lucky ? "lucky" : e.explosive ? "explosive" : blastVictims.has(e.id) ? "blast-linked" : ""}" data-enemy="${e.id}"><b>${e.keys.join("/").toUpperCase()}</b><span><small>${e.lucky ? "ラッキーゾンビ / 攻撃なし" : e.explosive ? `爆発ゾンビ / 巻き込み ${e.blastTargets.length}体` : blastVictims.has(e.id) ? "巻き込み対象" : e.rush ? "RUSH TARGET" : ({office:"徘徊者",runner:"疾走者",worker:"巨体",boss:"店長"})[e.kind]}${e.threatRank === 1 && s.enemies.length > 1 ? " / 接近中" : ""}</small>${e.phrase}</span><i class="enemy-time"></i></div>`,
+          `<div class="target ${e.locked ? "locked" : ""} ${e.lucky ? "lucky" : e.explosive ? "explosive" : blastVictims.has(e.id) ? "blast-linked" : ""}" data-enemy="${e.id}"><b>${e.keys.join("/").toUpperCase()}</b><span><small>${e.lucky ? "ラッキーゾンビ / 攻撃なし" : e.explosive ? `爆発ゾンビ / 巻き込み ${e.blastTargets.length}体` : blastVictims.has(e.id) ? "巻き込み対象" : e.rush ? "RUSH TARGET" : ({office:"徘徊者",runner:"疾走者",worker:"巨体",boss:definition.bossName})[e.kind]}${e.threatRank === 1 && s.enemies.length > 1 ? " / 接近中" : ""}</small>${e.phrase}</span><i class="enemy-time"></i></div>`,
       )
       .join("");
     text("phrase", e?.phrase ?? (luckyOutro !== null ? luckyOutro ? "今夜の幸運、いただきました。" : "また今度、踊ろう。" : s.mode === "clear" ? "本日の勤務、終了。" : "次の勤務先へ"));
@@ -548,7 +578,7 @@ function draw(s: GameState) {
   text("travel-message", s.mode === "countdown"
       ? "READY…"
       : s.rushing ? "FEVER RUSH / 短文4連戦" : s.stage === 3
-        ? ["店長が出勤しました。", "まだ、帰らせてもらえない。", "これで、最後の残業だ。"][Math.min(2, s.bossPhase)]
+        ? [`${definition.bossName}が出勤しました。`, "まだ、帰らせてもらえない。", "これで、最後の残業だ。"][Math.min(2, s.bossPhase)]
         : "足音が、近づいてくる。");
   if (s.mode !== lastMode) {
     if (lastMode === "countdown" && s.mode!=="paused") audio.start();
@@ -719,7 +749,8 @@ function tick(now: number) {
   events();
   drawSpectacle(dt,s);
   if (s && screen === "game") draw(s);
-  audio.setSceneMood(!s||s.mode==='explore'||world.moving?'explore':s.mode==='vista'||s.mode==='clear'?'vista':s.rushing?'fever':'combat');
+  audio.setSceneMood(!s||s.mode==='explore'||s.mode==='rest'||world.moving?'explore':s.mode==='vista'||s.mode==='clear'?'vista':s.rushing?'fever':'combat');
+  audio.setSheltered(['concourse','waiting','maintenance','store'].includes(world.area));
   const threat=s?.enemies.find(e=>!e.support&&e.telegraph);
   if(threat && !warnedEnemies.has(threat.id)){warnedEnemies.add(threat.id);audio.approach(.85);}
   audio.setLevel(s?.effectsLevel ?? 0);
@@ -780,7 +811,10 @@ window.addEventListener("keydown", (e) => {
     return;
   }
   if(screen==='game' && game?.state.mode==='explore' && ['1','2'].includes(e.key)){
-    e.preventDefault();game.chooseRoute(e.key==='1'?'service':'store');focus();return;
+    e.preventDefault();game.chooseRoute(STAGE_DEFINITIONS[game.stageId].routes[e.key==='1'?0:1].id);focus();return;
+  }
+  if(screen==='game' && game?.state.mode==='rest' && e.key==='Enter' && !world.moving){
+    e.preventDefault();game.continueRest();return;
   }
   if(screen==='game' && game?.state.mode==='vista' && e.key==='Enter' && !world.moving){
     e.preventDefault();game.continueVista();return;
@@ -814,8 +848,10 @@ document.addEventListener("visibilitychange", () => {
   if (document.hidden) pause("画面を離れたため、一時停止しました。");
 });
 el("pause-button").onclick = () => pause();
-el('route-service').onclick=()=>{game?.chooseRoute('service');focus();};
-el('route-store').onclick=()=>{game?.chooseRoute('store');focus();};
+el('route-service').onclick=()=>{game?.chooseRoute(STAGE_DEFINITIONS[game.stageId].routes[0].id);focus();};
+el('route-store').onclick=()=>{game?.chooseRoute(STAGE_DEFINITIONS[game.stageId].routes[1].id);focus();};
+el('rest-continue').onclick=()=>{if(!world.moving)game?.continueRest();focus();};
+document.querySelectorAll<HTMLButtonElement>('[data-stage-id]').forEach(b=>b.onclick=()=>selectStage(b.dataset.stageId as StageId));
 el('vista-continue').onclick=()=>{if(!world.moving)game?.continueVista();focus();};
 el("start-button").onclick = () => {
   void audio.unlock().then((ok) => {

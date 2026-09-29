@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { readSave, writeSave, defaultPreferences, recordResult, resultKey, RESULT_RULES_VERSION, type SavedResult } from '../src/storage.ts';
+import { readSave, writeSave, defaultPreferences, recordResult, resultKey, replayOptions, RESULT_RULES_VERSION, type SavedResult } from '../src/storage.ts';
 Object.defineProperty(globalThis,'matchMedia',{value:()=>({matches:false}),configurable:true});
 let content:string|null=null;
 Object.defineProperty(globalThis,'localStorage',{value:{getItem:()=>content,setItem:(_key:string,value:string)=>{content=value;}},configurable:true});
@@ -13,6 +13,7 @@ function installStorage() {
   Object.defineProperty(globalThis,'localStorage',{value:{getItem:()=>content,setItem:(_key:string,value:string)=>{content=value;}},configurable:true});
 }
 const result = (score:number, overrides:Partial<SavedResult> = {}): SavedResult => ({
+  stageId:'shopping',route:'store',
   score,combo:10,accuracy:0.95,seconds:120,cleared:true,difficulty:'normal',
   practice:false,retries:0,date:new Date(2026,8,28,0,0,score).toISOString(),
   rulesVersion:RESULT_RULES_VERSION,...overrides,
@@ -37,7 +38,7 @@ test('v0.4 results without a rule field stay in version 3 after later upgrades',
   void _version;
   content = JSON.stringify({version:2,results:[withoutRules]});
   const saved = readSave();
-  assert.equal(RESULT_RULES_VERSION,6);
+  assert.equal(RESULT_RULES_VERSION,7);
   assert.equal(saved.results[0].rulesVersion,3);
   assert.equal(saved.personalBests[resultKey(prior)]?.score,600);
   assert.equal(saved.personalBests[resultKey(result(0))],undefined);
@@ -125,4 +126,56 @@ test('v0.6 bonus records round trip without reclassifying v0.5 scores',()=>{
   assert.equal(invalid[1].luckyClears,undefined);
   assert.equal(invalid[2].luckyBonus,undefined);
   assert.equal(invalid[3].luckyBonus,undefined);
+});
+
+test('v7 stage keys isolate old, missing, and foreign-stage scores',()=>{
+  installStorage();
+  const shopping=result(500,{stageId:'shopping',route:'store'});
+  const station=result(700,{stageId:'station',route:'waiting'});
+  const legacy=result(999,{rulesVersion:6});
+  const missing=result(1000);
+  delete missing.stageId;
+  delete missing.route;
+  content=JSON.stringify({version:2,results:[shopping,station,legacy,missing]});
+  const saved=readSave();
+  assert.equal(resultKey(shopping),'7:shopping:normal:standard');
+  assert.equal(resultKey(station),'7:station:normal:standard');
+  assert.equal(resultKey(legacy),'6:normal:standard');
+  assert.equal(resultKey(missing),'7:legacy:normal:standard');
+  assert.equal(saved.personalBests[resultKey(shopping)].score,500);
+  assert.equal(saved.personalBests[resultKey(station)].score,700);
+  assert.equal(saved.personalBests[resultKey(missing)].score,1000);
+  assert.equal(replayOptions(shopping),null); // seed absent
+  assert.deepEqual(replayOptions(result(500,{seed:42})),{seed:42,stageId:'shopping',route:'store',difficulty:'normal',practice:false});
+  assert.equal(replayOptions(result(500,{seed:42,route:'waiting'})),null);
+  assert.equal(replayOptions(legacy),null);
+  assert.equal(replayOptions(missing),null);
+});
+
+test('v7 invalid stage and route metadata stay in history without entering current best or replay',()=>{
+  installStorage();
+  const valid=result(200,{seed:8});
+  content=JSON.stringify({version:2,results:[{...valid,stageId:'unknown',route:'store'}, {...valid,stageId:'station',route:'store'}]});
+  const saved=readSave();
+  assert.equal(saved.results.length,2);
+  assert.equal(saved.results[0].stageId,undefined);
+  assert.equal(saved.results[0].route,undefined);
+  assert.equal(saved.results[1].stageId,'station');
+  assert.equal(saved.results[1].route,undefined);
+  assert.equal(replayOptions(saved.results[0]),null);
+  assert.equal(replayOptions(saved.results[1]),null);
+  assert.equal(saved.personalBests['7:shopping:normal:standard'],undefined);
+});
+
+test('stage-specific bests survive the ten-result history cap',()=>{
+  installStorage();
+  let save=readSave();
+  save=recordResult(save,result(1200,{stageId:'shopping',route:'service'}));
+  save=recordResult(save,result(1400,{stageId:'station',route:'maintenance'}));
+  for(let i=0;i<12;i++)save=recordResult(save,result(100+i,{stageId:i%2?'station':'shopping',route:i%2?'waiting':'store'}));
+  assert.equal(writeSave(save.preferences,save.results,save.personalBests),true);
+  const restored=readSave();
+  assert.equal(restored.results.length,10);
+  assert.equal(restored.personalBests['7:shopping:normal:standard'].score,1200);
+  assert.equal(restored.personalBests['7:station:normal:standard'].score,1400);
 });
