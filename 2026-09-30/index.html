@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#f4f0e8" />
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+    <meta name="description" content="小さな町が育ち、にぎわいが移り、緑に戻る。近所の影響で変わるドット絵の街を、ただ眺める箱庭。" />
+    <title>まちの呼吸 — 眺める街のライフゲーム</title>
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="masthead">
+        <div class="brand">
+          <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>
+          <div><p class="eyebrow">A LITTLE TOWN, A LITTLE TIME</p><h1>まちの呼吸<span class="title-dot">。</span></h1></div>
+        </div>
+        <div class="masthead-right"><p>建てなくても、町は育つ。</p><span class="edition">眺める街のライフゲーム</span></div>
+      </header>
+
+      <main>
+        <section class="town-heading" aria-label="町と時間">
+          <div><p class="eyebrow">今日も、この町で。</p><h2 id="town-name">川のほとりの小さな町</h2></div>
+          <div class="calendar"><span class="season-dot" aria-hidden="true"></span><span id="calendar">1年目・春</span><span class="week" id="week">1週</span></div>
+        </section>
+
+        <div class="observatory">
+          <section class="town-view" aria-label="街の観察">
+            <div class="viewport" id="viewport">
+              <canvas id="town" width="960" height="640" tabindex="0" role="img" aria-label="ドット絵の街。クリックで地点を観察。矢印キーで地点を選び、Spaceで停止、プラスとマイナスで拡大縮小できます。">街の景色はCanvasで描画されます。人口や建物の状態は隣の観察欄で確認できます。</canvas>
+              <div class="view-label"><span class="live-dot" id="live-dot" aria-hidden="true"></span><span id="view-state">時間が流れています</span></div>
+              <div class="scene-caption"><span id="time-of-day">昼の景色</span><span class="caption-divider">/</span><span id="seed-label">町の種 4821</span></div>
+              <div class="loading" id="loading">小さな町をひらいています…</div>
+            </div>
+
+            <div class="controls">
+              <div class="time-controls">
+                <button type="button" class="pause-button" id="pause" aria-pressed="false"><span id="pause-icon" aria-hidden="true">Ⅱ</span><span id="pause-label">一時停止</span></button>
+                <div class="speed-control" role="group" aria-label="時間の速さ"><button type="button" data-speed="1" aria-pressed="true">1×</button><button type="button" data-speed="4" aria-pressed="false">4×</button><button type="button" data-speed="12" aria-pressed="false">12×</button></div>
+              </div>
+              <div class="camera-controls" role="group" aria-label="景色の操作"><button type="button" id="zoom-out" aria-label="縮小">−</button><span id="zoom-label">100%</span><button type="button" id="zoom-in" aria-label="拡大">＋</button><button type="button" class="fit-button" id="fit">全体を見る</button></div>
+            </div>
+            <p class="view-hint"><span class="hint-marker" aria-hidden="true">⌖</span> 気になる建物を選んで、暮らしをのぞいてみよう。<span class="drag-hint">ドラッグで移動</span></p>
+
+            <div class="town-numbers" aria-label="町の現在の状態">
+              <div class="number-item"><span class="number-label">暮らす人</span><p><strong id="population">—</strong><span>人</span></p></div>
+              <div class="number-item"><span class="number-label">住まい</span><p><strong id="homes">—</strong><span>軒</span></p></div>
+              <div class="number-item"><span class="number-label">お店</span><p><strong id="shops">—</strong><span>軒</span></p></div>
+              <div class="number-item"><span class="number-label">町の環境</span><p><strong id="environment">—</strong><span>/ 100</span></p></div>
+            </div>
+          </section>
+
+          <aside class="town-notebook" aria-label="町の観察ノート">
+            <section class="inspection">
+              <div class="section-label"><span class="small-cross" aria-hidden="true">＋</span><h3>この場所のこと</h3><span id="cell-coordinates">観察ノート</span></div>
+              <div class="inspect-heading"><span class="building-icon" id="building-icon" aria-hidden="true">⌂</span><div><h4 id="cell-name">小さな暮らしを、見つける。</h4><span id="cell-subtitle">建物や土地を選んでみてください</span></div></div>
+              <p class="cell-reason" id="cell-reason">家が増えるのにも、店が閉まるのにも、理由があります。近所とのつながりをのぞいてみましょう。</p>
+              <dl class="cell-details" id="cell-details" hidden><div><dt id="detail-label">暮らす人</dt><dd id="cell-population">—</dd></div><div><dt>この場所の年齢</dt><dd id="cell-age">—</dd></div><div><dt>活力</dt><dd id="cell-vitality">—</dd></div><div><dt>環境</dt><dd id="cell-environment">—</dd></div></dl>
+              <p class="inspection-footnote" id="inspection-footnote">道がつながると、暮らしもつながります。</p>
+            </section>
+
+            <section class="population-section" aria-label="人口の推移"><div class="section-label"><h3>暮らしの移り変わり</h3><span id="history-range">はじまり</span></div><svg id="population-chart" viewBox="0 0 300 78" role="img" aria-label="人口の推移。まだ記録がありません。"><path class="chart-baseline" d="M0 65H300"/><path id="chart-fill" class="chart-fill" d=""/><path id="chart-line" class="chart-line" d=""/></svg><div class="chart-legend"><span>これまで</span><span>いま</span></div></section>
+
+            <section class="journal"><div class="section-label"><h3>町のこぼれ話</h3><span>新しい順</span></div><ol id="events" class="events"><li class="empty-event">この町の物語が、ここから始まります。</li></ol></section>
+          </aside>
+        </div>
+
+        <section class="bottom-strip" aria-label="町の保存と再生成"><div class="save-state"><span class="save-dot" id="save-dot" aria-hidden="true"></span><span id="save-status" role="status">このブラウザに町を記録します</span></div><div class="secondary-actions"><button type="button" id="photo"><span aria-hidden="true">▣</span> 写真を撮る</button><button type="button" id="regenerate"><span aria-hidden="true">↻</span> 別の町を眺める</button><button type="button" id="undo" hidden>前の町に戻る</button></div></section>
+        <p id="notification" class="notification" role="status" hidden></p>
+        <section class="how-it-grows" aria-label="町の育ち方"><span class="how-label">町の育ち方</span><p>人が集まると店が生まれ、仕事が増えると家が育つ。<br class="mobile-break" />古くなった場所には緑が戻り、また、新しい暮らしが始まります。</p><details><summary>観察のヒント</summary><p>住宅は近くの仕事と環境、商店は近所の住民、農地や工場は道と働き手に影響されます。建物はゆっくり育ち、活力が下がると空き家になります。1週は通常2秒、48週で1年。昼夜は町の表情を眺めるための短い周期です。</p><p>街にフォーカスして矢印キーで地点を選択、Spaceで停止、＋/−でズーム、Escapeで選択解除。バックグラウンドでは時間が止まります。</p></details></section>
+      </main>
+      <footer><span>まちの呼吸 <span class="footer-dot">·</span> 小さな世界を、ゆっくり。</span><span>100challenge / 2026.09.30</span></footer>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

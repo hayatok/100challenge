@@ -1,0 +1,11 @@
+{
+  "success": true,
+  "basePath": "/2026-09-30/",
+  "before1x": 0,
+  "after1x": 2,
+  "after4x": 7,
+  "afterBackground": 7,
+  "backgroundCheck": "injected hidden state and visibilitychange in headless Chromium",
+  "production375NoOverflow": true,
+  "errors": []
+}
