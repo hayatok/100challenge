@@ -5,23 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#f4f0e8" />
     <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
-    <meta name="description" content="小さな町が育ち、にぎわいが移り、緑に戻る。近所の影響で変わるドット絵の街を、ただ眺める箱庭。" />
-    <title>まちの呼吸 — 暮らしを眺める小さな箱庭</title>
+    <meta name="description" content="小さな町が育ち、にぎわいが移り、緑に戻る。近所の影響で変わるドット絵の街へ恵みや災害を与える、自由な神様の箱庭。" />
+    <title>まちの呼吸 v0.2 — 神様の小さな箱庭</title>
   </head>
   <body>
     <div class="app-shell">
       <header class="masthead">
         <div class="brand">
           <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>
-          <div><p class="eyebrow">A LITTLE TOWN, A LITTLE TIME</p><h1>まちの呼吸<span class="title-dot">。</span></h1></div>
+          <div><p class="eyebrow">A LITTLE TOWN · v0.2</p><h1>まちの呼吸<span class="title-dot">。</span></h1></div>
         </div>
-        <div class="masthead-right"><p>川と森と、暮らしのつづき。</p><span class="edition">暮らしを眺める小さな箱庭</span></div>
+        <div class="masthead-right"><p>川と森と、暮らしのつづき。</p><span class="edition">v0.2 · 恵みも災いも、小さな箱庭</span></div>
       </header>
 
       <main>
         <section class="town-heading" aria-label="町と時間">
           <div><p class="eyebrow">今日も、この町で。</p><h2 id="town-name">川のほとりの小さな町</h2></div>
-          <div class="calendar"><span class="season-dot" aria-hidden="true"></span><span id="calendar">1年目・春</span><span class="week" id="week">1週</span></div>
+          <div class="calendar"><span class="season-dot" aria-hidden="true"></span><span id="calendar">1年目・春</span><span class="week" id="week">1日</span></div>
         </section>
 
         <div class="observatory">
@@ -40,6 +40,35 @@
               </div>
               <div class="camera-controls" role="group" aria-label="景色の操作"><button type="button" id="zoom-out" aria-label="縮小">−</button><span id="zoom-label">100%</span><button type="button" id="zoom-in" aria-label="拡大">＋</button><button type="button" class="fit-button" id="fit">全体を見る</button></div>
             </div>
+            <section class="god-tray" aria-label="神様の力">
+              <div class="god-heading"><h3>恵みも、災いも。</h3><span>回数や資源の制限なし</span></div>
+              <label class="mobile-power-picker">使う力<select id="power-picker"><option value="observe">⌖ 観察する</option><option value="rain">☂ 恵みの雨</option><option value="sun">☀ 日差し</option><option value="growth">♧ 芽吹き</option><option value="settle">⌂ 入植</option><option value="storm">≋ 嵐</option><option value="lightning">ϟ 雷</option><option value="earthquake">⌁ 地震</option><option value="meteor">✦ 隕石</option></select></label>
+              <div class="powers" role="group" aria-label="使う力">
+                <button type="button" id="observe" aria-pressed="true">⌖ 観察</button>
+                <button type="button" data-power="rain" aria-pressed="false">☂ 恵みの雨</button>
+                <button type="button" data-power="sun" aria-pressed="false">☀ 日差し</button>
+                <button type="button" data-power="growth" aria-pressed="false">♧ 芽吹き</button>
+                <button type="button" data-power="settle" aria-pressed="false">⌂ 入植</button>
+                <button type="button" data-power="storm" aria-pressed="false">≋ 嵐</button>
+                <button type="button" data-power="lightning" aria-pressed="false">ϟ 雷</button>
+                <button type="button" data-power="earthquake" aria-pressed="false">⌁ 地震</button>
+                <button type="button" data-power="meteor" aria-pressed="false">✦ 隕石</button>
+              </div>
+              <div id="power-settings" hidden>
+                <p id="power-description"></p>
+                <div class="power-settings">
+                  <label>広がり<select id="power-radius"><option value="3">小さな一角</option><option value="7" selected>ご近所</option><option value="15">ひとつの地区</option><option value="96">町全体</option></select></label>
+                  <label>強さ<select id="power-intensity"><option value="1" selected>小さく</option><option value="2">ほどほど</option><option value="3">大きく</option><option value="4">最大</option></select></label>
+                  <label>続く時間<select id="power-duration"><option value="10">短く（10秒）</option><option value="45" selected>一日（45秒）</option><option value="120">長く（120秒）</option></select></label>
+                </div>
+                <p id="power-target" class="power-target" aria-live="polite">地図で場所を選んでください。</p>
+                <button type="button" id="apply-power" disabled>ここへ使う</button>
+              </div>
+              <p id="active-powers" class="active-powers" hidden></p>
+              <div class="power-history"><span id="pending-count" role="status">予約はありません</span><button type="button" id="step-once">一歩進める</button><button type="button" id="cancel-powers" disabled>予約を取り消す</button><button type="button" id="restore-intervention" disabled>前の介入の前へ戻る</button></div>
+              <details class="world-options"><summary>自然と表示の設定</summary><div class="world-settings"><label>自然の災害<select id="natural-policy"><option value="off">なし（天気は移り変わる）</option><option value="gentle" selected>穏やか</option><option value="wild">荒れる世界</option><option value="apocalyptic">終末も起こる世界</option></select></label><label>地図の補助<select id="map-layer"><option value="none">景色を眺める</option><option value="water">浸水</option><option value="fire">火災</option><option value="supply">食の蓄え</option></select></label></div></details>
+              <p id="extinction-note" hidden>この町の暮らしは途絶えました。自然は続きます。介入前へ戻るか、芽吹きと入植で新しい暮らしを始められます。</p>
+            </section>
             <div class="life-controls" role="group" aria-label="暮らしの観察"><button type="button" id="watch-resident">住民の一日を追う</button><button type="button" id="routes" aria-pressed="false">道のつながり</button><span id="activity-label">町の朝が始まります</span></div>
             <p class="view-hint"><span class="hint-marker" aria-hidden="true">⌖</span> 家や歩く人を選んで、暮らしをのぞいてみよう。<span class="drag-hint">ドラッグで移動</span></p>
 
@@ -50,6 +79,7 @@
               <div class="number-item"><span class="number-label">町の環境</span><p><strong id="environment">—</strong><span>/ 100</span></p></div>
             </div>
             <div class="daily-life" aria-label="仕事と食のつながり"><div><span>仕事につながる人</span><strong id="employment">—</strong></div><div><span>町の食の蓄え</span><strong id="food">—</strong></div><div><span>お店に届いた買い物</span><strong id="visits">—</strong></div></div>
+            <p class="life-summary" id="life-summary"></p>
           </section>
 
           <aside class="town-notebook" aria-label="町の観察ノート">
@@ -70,7 +100,7 @@
 
         <section class="bottom-strip" aria-label="町の保存と再生成"><div class="save-state"><span class="save-dot" id="save-dot" aria-hidden="true"></span><span id="save-status" role="status">このブラウザに町を記録します</span></div><div class="secondary-actions"><button type="button" id="photo"><span aria-hidden="true">▣</span> 写真を撮る</button><button type="button" id="regenerate"><span aria-hidden="true">↻</span> 別の町を眺める</button><button type="button" id="undo" hidden>前の町に戻る</button></div></section>
         <p id="notification" class="notification" role="status" hidden></p>
-        <section class="how-it-grows" aria-label="町の育ち方"><span class="how-label">暮らしがつなぐ</span><p>道を歩いて仕事へ。帰り道には、お店へ。<br class="mobile-break" />人が届く場所には暮らしが育ち、雨が土をうるおすと畑と森も育ちます。</p><details><summary>観察のヒント</summary><p>「住民の一日を追う」でひとりの通勤や買い物を眺められます。道のつながりを表示すると、選んだ家や住民の経路が見えます。到達できる職場の定員と、実際に届いた買い物が家や店の活力に影響します。手入れできる建物は長持ちし、使われなくなった場所には少しずつ緑が戻ります。</p><p>雨と川が土に水を届け、畑は土の力を使って作物を育てます。林は若木から育ち、土を回復させます。1週は通常4秒、48週で1年。暮らしの一日は150秒に縮めて観察します。季節と一日は観察しやすい別の縮尺です。</p><p>矢印キーで地点を選択、Spaceで停止、＋/−でズーム、Escapeで観察解除。町の状態と住民の旅の途中をこのブラウザに保存し、バックグラウンドでは時間を止めます。</p></details></section>
+        <section class="how-it-grows" aria-label="町の育ち方"><span class="how-label">暮らしがつなぐ</span><p>道を歩いて仕事へ。帰り道には、お店へ。<br class="mobile-break" />人が届く場所には暮らしが育ち、雨が土をうるおすと畑と森も育ちます。</p><details><summary>観察のヒント</summary><p>「住民の一日を追う」でひとりの通勤や買い物を眺められます。道のつながりを表示すると、選んだ家や住民の経路が見えます。畑の働き手が食を作り、道路を通って店や家へ届きます。在庫のない店では買えません。食不足・通行止め・住まいの損傷が健康や定住に影響します。手入れできる建物は長持ちし、使われなくなった場所には少しずつ緑が戻ります。</p><p>雨と川が土に水を届け、畑は土の力を使って作物を育てます。林は若木から育ち、土を回復させます。一日は通常45秒、12日で一季節、48日で一年。暦・通勤・災害は同じ時計で進みます。</p><p>矢印キーで地点を選択、Spaceで停止、＋/−でズーム、Escapeで観察解除。町の状態と住民の旅の途中をこのブラウザに保存し、バックグラウンドでは時間を止めます。</p><p>力を選び、地図で場所を指定して「ここへ使う」。停止中は予約され、「一歩進める」か再開で適用します。隕石の「終末」を明示的に選ぶと全人口を失うこともあります。直前の介入の前へ戻れます。雨・芽吹きだけで人は増えず、滅亡後は入植を選べます。</p></details></section>
       </main>
       <footer><span>まちの呼吸 <span class="footer-dot">·</span> 小さな世界を、ゆっくり。</span><span>100challenge / 2026.09.30</span></footer>
     </div>
