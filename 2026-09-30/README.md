@@ -2,6 +2,8 @@
 
 建てなくても、町は育つ。住民が道を歩いて働き、買い物をし、雨が土と作物を育てる。暮らしと自然のつながりを眺める、2Dドット絵の箱庭です。
 
+[GitHub Pagesで眺める](https://hayatok.github.io/100challenge/2026-09-30/)
+
 ![成長した町](./public/town-cover.png)
 
 ## 起動
@@ -49,4 +51,4 @@ npm run preview # ビルドしたdist/を確認
 - `src/main.ts` / `src/style.css`: DOMの観察UI、固定ステップ、操作、保存。
 - [開発前の計画](./docs/PLAN.md)、[初版の検証結果](./docs/RESULTS.md)、[改善計画](./docs/IMPROVEMENT_PLAN.md)、[改善の確認記録](./docs/IMPROVEMENT_RESULTS.md)、[Issue #144](https://github.com/hayatok/100challenge/issues/144)。
 
-素材はCanvasのコードで制作したオリジナルです。外部の画像・音声素材や実行時ライブラリは使っていません。初版はChromiumで動作を確認しています。今回の改善版はブラウザ操作の許可待ちで実画面未確認です。READMEの画像と既存screenshotsは初版のものです。Safari・Firefox・スマートフォン実機も未確認です。
+素材はCanvasのコードで制作したオリジナルです。外部の画像・音声素材や実行時ライブラリは使っていません。初版はChromiumで動作を確認しています。今回の改善版はlocalhostへの保存済み拒否設定でブラウザ接続がブロックされ、実画面未確認です。READMEの画像と既存screenshotsは初版のものです。Safari・Firefox・スマートフォン実機も未確認です。
