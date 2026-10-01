@@ -59,7 +59,9 @@ export function synchronizeResidents(world: World): void {
     if (cell.kind !== 'house') return;
     const target = Math.max(1, Math.floor(cell.population / 2));
     for (let count = counts.get(home) ?? 0; count < target; count++) {
-      world.residents.push({ id: world.nextResidentId++, home, workplace: null, shop: null, x: cell.x, y: cell.y, route: [], routeIndex: 0, progress: 0, state: 'home', purpose: 'commute', destination: null, timer: (home + count * 7) % 12 * .35, color: (home + count) % 6, trips: 0 });
+      const departure = (home * 13 + count * 29) % 60 * .6;
+      const eveningWait = world.clock % 150 > 120 ? 150 - world.clock % 150 : 0;
+      world.residents.push({ id: world.nextResidentId++, home, workplace: null, shop: null, x: cell.x, y: cell.y, route: [], routeIndex: 0, progress: 0, state: 'home', purpose: 'commute', destination: null, timer: eveningWait + departure, color: (home + count) % 6, trips: 0 });
     }
   });
   const workplaces = world.cells.flatMap((cell, index) => jobCapacity(cell) ? [index] : []);
@@ -96,8 +98,16 @@ function depart(world: World, resident: Resident, destination: number, purpose: 
 function arrive(world: World, resident: Resident): void {
   const cell = world.cells[resident.destination!];
   resident.trips++;
-  if (resident.purpose === 'return') { resident.state = 'home'; resident.destination = null; resident.timer = resident.trips % 4 === 0 ? Math.max(3, 150 - world.clock % 150 + resident.id % 12) : Math.max(3, 65 - world.clock % 150 + resident.id % 10); return; }
-  if (resident.purpose === 'commute' && jobCapacity(cell)) { resident.state = 'work'; resident.timer = 6 + resident.id % 5; cell.employed = Math.min(10000, cell.employed + 1); world.economy.commutes = Math.min(100000, world.economy.commutes + 1); }
+  if (resident.purpose === 'return') {
+    resident.state = 'home'; resident.destination = null;
+    // Stagger household schedules through the morning and afternoon. The town
+    // has a quieter night, rather than every road emptying at one shared timer.
+    resident.timer = resident.trips % 4 === 0
+      ? Math.max(3, 150 - world.clock % 150 + resident.id % 40 * .6)
+      : Math.max(3, 65 + resident.id % 20 * 1.8 - world.clock % 150);
+    return;
+  }
+  if (resident.purpose === 'commute' && jobCapacity(cell)) { resident.state = 'work'; resident.timer = 20 + resident.id % 16; cell.employed = Math.min(10000, cell.employed + 1); world.economy.commutes = Math.min(100000, world.economy.commutes + 1); }
   else if (resident.purpose === 'shopping' && cell.kind === 'shop') { resident.state = 'shop'; resident.timer = 2 + resident.id % 3; cell.customers = Math.min(10000, cell.customers + 1); world.economy.visits = Math.min(100000, world.economy.visits + 1); world.economy.food = Math.max(0, world.economy.food - .2); }
   else { resident.state = 'park'; resident.timer = 2; }
 }

@@ -290,7 +290,15 @@ export function stepWorld(world: World): World {
 }
 
 export function serializeWorld(world: World): string {
-  return JSON.stringify(world);
+  // Creation and restore may insert properties in different orders. Canonicalize
+  // every plain object so equal state has an identical persisted representation.
+  return JSON.stringify(world, (_key, value: unknown) => {
+    if (value !== null && typeof value === 'object' && !Array.isArray(value)) {
+      const object = value as Record<string, unknown>;
+      return Object.fromEntries(Object.keys(object).sort().map(key => [key, object[key]]));
+    }
+    return value;
+  });
 }
 
 function invalid(detail: string): never { throw new Error(`保存した街を読み込めません: ${detail}`); }
