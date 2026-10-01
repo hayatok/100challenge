@@ -1,4 +1,4 @@
-import type { Camera, Cell, Point, RenderOptions, World } from './types';
+import type { Camera, Cell, Point, RenderOptions, Resident, World } from './types';
 
 export const CANVAS_WIDTH = 960;
 export const CANVAS_HEIGHT = 640;
@@ -13,10 +13,10 @@ interface WindowLight { x: number; y: number; width: number; height: number; see
 interface HitShape { cell: Cell; x: number; y: number; height: number; width: number }
 
 const PALETTES = [
-  { grass: ['#91b77a', '#94b97c', '#8eb478', '#98bb80'], tree: ['#446e4d', '#5a8753', '#78a360'], flower: '#f2d3ba', crop: '#97b65f' },
-  { grass: ['#88a972', '#8aad74', '#84a66d', '#8ead77'], tree: ['#385f48', '#507a4a', '#72944f'], flower: '#f2dfa5', crop: '#a7b66a' },
-  { grass: ['#a5ad76', '#a9af7a', '#a1a871', '#adb47d'], tree: ['#745c40', '#b3804e', '#d4a866'], flower: '#d9b276', crop: '#c3a369' },
-  { grass: ['#b6c3ac', '#bac7b1', '#b2bfa8', '#bdc9b6'], tree: ['#607568', '#7b9380', '#b3c4ad'], flower: '#e8e6d7', crop: '#a6ab83' },
+  { grass: ['#91b77a', '#94b97c', '#8eb478', '#98bb80'], tree: ['#4d977d', '#80bd8b', '#b8dca2'], flower: '#f2d3ba', crop: '#97b65f' },
+  { grass: ['#88a972', '#8aad74', '#84a66d', '#8ead77'], tree: ['#468d75', '#6db784', '#a5d59b'], flower: '#f2dfa5', crop: '#a7b66a' },
+  { grass: ['#a5ad76', '#a9af7a', '#a1a871', '#adb47d'], tree: ['#b08066', '#dfaa77', '#f2cb96'], flower: '#d9b276', crop: '#c3a369' },
+  { grass: ['#b6c3ac', '#bac7b1', '#b2bfa8', '#bdc9b6'], tree: ['#759c93', '#a9c4b0', '#e1e9d7'], flower: '#e8e6d7', crop: '#a6ab83' },
 ];
 
 /** Original, integer-rasterized artwork: the browser never antialiases sprite edges. */
@@ -29,8 +29,11 @@ export class TownRenderer {
   private readonly paint: CanvasRenderingContext2D;
   private cacheKey = '';
   private cachedWorld: World | null = null;
+  private palette = PALETTES[0]!;
   private windows: WindowLight[] = [];
   private shapes: HitShape[] = [];
+  private depthPixels = new Float32Array(CANVAS_WIDTH * CANVAS_HEIGHT);
+  private readonly sprite = document.createElement('canvas');
   private roads: Cell[] = [];
   private waters: Cell[] = [];
   private factories: Cell[] = [];
@@ -54,7 +57,7 @@ export class TownRenderer {
   }
 
   render(world: World, options: RenderOptions): void {
-    const key = `${world.seed}:${world.tick}:${world.size}`;
+    const key = `${world.seed}:${world.tick}:${world.size}:${world.weather.kind}`;
     if (this.cachedWorld !== world || key !== this.cacheKey) {
       this.cacheKey = key;
       this.cachedWorld = world;
@@ -64,8 +67,8 @@ export class TownRenderer {
     const { camera, selected } = options;
     // The day starts in morning light. Darkness is tied to the simulation clock,
     // so pausing also freezes this small observational day/night cycle.
-    const phase = (options.time % 150) / 150;
-    const night = Math.max(0, -Math.cos(phase * Math.PI * 2)) * 0.49;
+    const phase = (world.clock % 150) / 150;
+    const night = Math.max(0, -Math.cos((phase - .15) * Math.PI * 2)) * 0.49;
     ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.fillStyle = '#e5ebe0';
     ctx.fillRect(0, 0, this.width, this.height);
@@ -76,7 +79,7 @@ export class TownRenderer {
     ctx.translate(-CENTER_X, -CENTER_Y);
     ctx.imageSmoothingEnabled = false;
     ctx.drawImage(this.scene, 0, 0);
-    if (!options.reducedMotion) this.drawLife(ctx, world, options.time);
+    this.drawLife(ctx, world, options);
     ctx.restore();
     if (night > 0) {
       ctx.fillStyle = `rgba(22, 40, 60, ${night})`;
@@ -152,13 +155,22 @@ export class TownRenderer {
   private buildScene(world: World): void {
     const ctx = this.paint;
     ctx.clearRect(0, 0, this.width, this.height);
+    this.depthPixels.fill(-Infinity);
     this.windows = [];
     this.shapes = [];
     this.roads = [];
     this.waters = [];
     this.factories = [];
     const season = Math.floor(world.tick / 12) % 4;
-    const palette = PALETTES[season]!;
+    const amount = Math.min(1, (world.tick % 12) / 4);
+    const from = PALETTES[(season + 3) % 4]!, to = PALETTES[season]!;
+    const blend = (a: string, b: string): string => {
+      const left = Number.parseInt(a.slice(1), 16), right = Number.parseInt(b.slice(1), 16);
+      const channels = [16, 8, 0].map(shift => Math.round(((left >> shift) & 255) * (1 - amount) + ((right >> shift) & 255) * amount));
+      return '#' + channels.map(value => value.toString(16).padStart(2, '0')).join('');
+    };
+    this.palette = { grass: from.grass.map((color, i) => blend(color, to.grass[i]!)), tree: from.tree.map((color, i) => blend(color, to.tree[i]!)), flower: blend(from.flower, to.flower), crop: blend(from.crop, to.crop) };
+    const palette = this.palette;
     const span = (world.size - 1) * HALF_W;
     const top = this.mapTop(world) - HALF_H;
     const middle = top + world.size * HALF_H;
@@ -171,17 +183,17 @@ export class TownRenderer {
       const p = this.project(cell, world);
       const hash = this.hash(cell.x, cell.y, world.seed);
       const isWater = cell.terrain === 'water' || cell.kind === 'water';
-      this.diamond(ctx, p.x, p.y, HALF_W, HALF_H, isWater ? ['#6cabb4', '#70afb8', '#6aa8b2'][hash % 3]! : palette.grass[hash % 4]!);
+      this.diamond(ctx, p.x, p.y, HALF_W, HALF_H, isWater ? world.weather.temperature < 0 ? '#bbd4d0' : world.weather.rainfall > 50 ? '#739daa' : ['#73b8c2', '#79bdc4', '#70b3be'][hash % 3]! : cell.vegetation < 22 ? '#c3b991' : cell.moisture > 70 ? '#87b799' : palette.grass[hash % 4]!);
       if (isWater) {
         this.waters.push(cell);
         this.shore(ctx, cell, world, p);
-        if (hash % 5 === 0) this.rect(ctx, p.x - 3, p.y, 4, 1, '#8abcc0');
+        if (hash % 5 === 0) this.rect(ctx, p.x - 3, p.y, 4, 1, world.weather.temperature < 0 ? '#e3e9db' : '#a1d1d1');
       } else {
         if (hash % 4 === 0) {
           this.rect(ctx, p.x - 4, p.y, 2, 1, season === 3 ? '#cdd5c4' : '#779968');
           this.rect(ctx, p.x - 3, p.y - 1, 1, 1, season === 3 ? '#cdd5c4' : '#779968');
         }
-        if (cell.kind === 'grass' && hash % 11 === 0) {
+        if (cell.kind === 'grass' && cell.vegetation > 45 && hash % 11 === 0) {
           this.rect(ctx, p.x + 3, p.y, 1, 1, palette.flower);
           this.rect(ctx, p.x + 5, p.y + 1, 1, 1, palette.flower);
         }
@@ -203,16 +215,32 @@ export class TownRenderer {
         const cell = world.cells[y * world.size + x];
         if (!cell) continue;
         const p = this.project(cell, world);
+        if ((cell.kind === 'grass' && cell.development <= 25) || ['water', 'road'].includes(cell.kind) || (cell.kind === 'farm' && cell.variant % 5 !== 0)) continue;
+        this.sprite.width = 32;
+        this.sprite.height = 48;
+        const spriteCtx = this.sprite.getContext('2d')!;
+        spriteCtx.translate(16 - p.x, 40 - p.y);
         switch (cell.kind) {
-          case 'tree': this.tree(ctx, cell, p, season); break;
-          case 'house': this.house(ctx, cell, p, season); break;
-          case 'shop': this.shop(ctx, cell, p, season); break;
-          case 'factory': this.factory(ctx, cell, p); this.factories.push(cell); break;
-          case 'ruin': this.ruin(ctx, cell, p); break;
-          case 'park': this.park(ctx, cell, p, season); break;
-          case 'farm': if (cell.variant % 5 === 0) this.shed(ctx, cell, { x: p.x + 3, y: p.y - 1 }); break;
+          case 'grass': if (cell.development > 25) this.construction(spriteCtx, cell, p); break;
+          case 'tree': this.tree(spriteCtx, cell, p, season); break;
+          case 'house': this.house(spriteCtx, cell, p, season); break;
+          case 'shop': this.shop(spriteCtx, cell, p, season); break;
+          case 'factory': this.factory(spriteCtx, cell, p); this.factories.push(cell); break;
+          case 'ruin': this.ruin(spriteCtx, cell, p); break;
+          case 'park': this.park(spriteCtx, cell, p, season); break;
+          case 'farm': if (cell.variant % 5 === 0) this.shed(spriteCtx, cell, { x: p.x + 3, y: p.y - 1 }); break;
         }
-        if (['tree', 'house', 'shop', 'factory', 'ruin', 'park'].includes(cell.kind)) {
+        if (world.weather.kind === 'snow' && ['house', 'shop', 'factory'].includes(cell.kind)) {
+          this.line(spriteCtx, p.x - 5, p.y - this.spriteHeight(cell) + 2, p.x + 3, p.y - this.spriteHeight(cell) + 7, '#f3eee2');
+        }
+        ctx.drawImage(this.sprite, p.x - 16, p.y - 40);
+        const ink = spriteCtx.getImageData(0, 0, 32, 48).data;
+        for (let sy = 0; sy < 48; sy++) for (let sx = 0; sx < 32; sx++) {
+          if (!ink[(sy * 32 + sx) * 4 + 3]) continue;
+          const px = p.x - 16 + sx, py = p.y - 40 + sy;
+          if (px >= 0 && py >= 0 && px < this.width && py < this.height) this.depthPixels[py * this.width + px] = depth;
+        }
+        if (['tree', 'house', 'shop', 'factory', 'ruin', 'park'].includes(cell.kind) || (cell.kind === 'grass' && cell.development > 25)) {
           this.shapes.push({ cell, x: p.x, y: p.y, height: this.spriteHeight(cell), width: cell.kind === 'tree' ? 6 : 8 });
         }
       }
@@ -279,7 +307,14 @@ export class TownRenderer {
   }
 
   private tree(ctx: CanvasRenderingContext2D, cell: Cell, p: Point, season: number): void {
-    const colors = PALETTES[season]!.tree;
+    const colors = this.palette.tree;
+    if (cell.age < 8 || cell.vegetation < 30) {
+      this.rect(ctx, p.x, p.y - 5, 1, 6, '#9a8061');
+      this.rect(ctx, p.x - 3, p.y - 7, 6, 3, colors[1]!);
+      this.rect(ctx, p.x - 2, p.y - 8, 4, 1, colors[2]!);
+      this.rect(ctx, p.x - 2, p.y - 5, 4, 1, colors[0]!);
+      return;
+    }
     const evergreen = cell.variant % 4 === 0;
     this.diamond(ctx, p.x + 3, p.y + 2, 7, 3, '#738965');
     this.rect(ctx, p.x - 1, p.y - 8, 2, 9, '#6b6246');
@@ -290,24 +325,32 @@ export class TownRenderer {
       this.rect(ctx, p.x - 4, p.y - 9, 4, 1, season === 3 ? '#aabbac' : '#66895e');
       return;
     }
-    this.poly(ctx, [[p.x - 4, p.y - 19], [p.x + 3, p.y - 20], [p.x + 3, p.y - 18], [p.x + 6, p.y - 18], [p.x + 7, p.y - 13], [p.x + 6, p.y - 9], [p.x + 3, p.y - 7], [p.x - 3, p.y - 7], [p.x - 6, p.y - 10], [p.x - 7, p.y - 14], [p.x - 6, p.y - 17], [p.x - 4, p.y - 17]], colors[0]!);
-    this.poly(ctx, [[p.x - 5, p.y - 17], [p.x - 3, p.y - 20], [p.x + 2, p.y - 20], [p.x + 2, p.y - 18], [p.x + 4, p.y - 18], [p.x + 5, p.y - 14], [p.x + 2, p.y - 11], [p.x - 3, p.y - 11], [p.x - 5, p.y - 13]], colors[1]!);
-    this.rect(ctx, p.x - 3, p.y - 19, 4, 2, colors[2]!);
-    this.rect(ctx, p.x - 5, p.y - 16, 3, 2, colors[2]!);
-    this.rect(ctx, p.x + 1, p.y - 16, 2, 1, colors[2]!);
-    if (season === 0 && cell.variant % 7 === 0) {
-      this.rect(ctx, p.x - 3, p.y - 17, 2, 1, '#eac5b0');
-      this.rect(ctx, p.x + 2, p.y - 14, 1, 1, '#f4d9c2');
+    const blossom = season === 0 && cell.variant % 4 === 1;
+    const crown = blossom ? ['#c689a2', '#e5b0c0', '#f8d7dd'] : colors;
+    // Three overlapping stepped lobes, with a short clear trunk below them.
+    this.rect(ctx, p.x - 5, p.y - 15, 10, 7, crown[0]!);
+    this.rect(ctx, p.x - 7, p.y - 13, 14, 4, crown[0]!);
+    this.rect(ctx, p.x - 4, p.y - 18, 8, 10, crown[0]!);
+    this.rect(ctx, p.x - 6, p.y - 15, 11, 5, crown[1]!);
+    this.rect(ctx, p.x - 3, p.y - 19, 6, 8, crown[1]!);
+    this.rect(ctx, p.x - 5, p.y - 16, 4, 3, crown[2]!);
+    this.rect(ctx, p.x - 2, p.y - 19, 4, 2, crown[2]!);
+    this.rect(ctx, p.x + 2, p.y - 15, 2, 2, crown[2]!);
+    if (blossom) {
+      this.rect(ctx, p.x - 3, p.y - 12, 1, 1, '#fff0dc');
+      this.rect(ctx, p.x + 3, p.y - 16, 1, 1, '#fff0dc');
     }
   }
 
   private house(ctx: CanvasRenderingContext2D, cell: Cell, p: Point, season: number): void {
     const level = Math.max(1, Math.min(3, cell.level));
     const height = 8 + level * 3;
-    const roof = ['#b97453', '#a75b49', '#747d78', '#b59861'][Math.abs(cell.variant) % 4]!;
-    const dark = ['#8e5742', '#824637', '#57635d', '#8b734e'][Math.abs(cell.variant) % 4]!;
+    const roof = ['#d98e82', '#8baaba', '#aa9abd', '#d8b676'][Math.abs(cell.variant) % 4]!;
+    const dark = ['#ad706b', '#657e98', '#7c7097', '#aa895c'][Math.abs(cell.variant) % 4]!;
     this.shadow(ctx, p);
-    this.box(ctx, p, 7, 4, height, '#eddfb7', '#c2b698');
+    this.line(ctx, p.x - 9, p.y + 1, p.x - 2, p.y + 5, '#eee2c1');
+    for (let i = 0; i < 3; i++) this.rect(ctx, p.x - 9 + i * 3, p.y + i, 1, 4, '#f0e6cd');
+    this.box(ctx, p, 7, 4, height, ['#f4e5c6', '#eadbcf', '#e6ead5', '#f1d8c6'][cell.variant % 4]!, ['#d3bea9', '#c3b1ba', '#becbb2', '#d1b2a8'][cell.variant % 4]!);
     this.gable(ctx, p, height, roof, dark);
     if (level > 1) {
       this.window(ctx, p.x - 5, p.y - height + 5, 2, 3, cell.variant);
@@ -324,13 +367,16 @@ export class TownRenderer {
       this.rect(ctx, p.x - 6, p.y, 2, 1, season === 2 ? '#caab6d' : '#8fa968');
       this.rect(ctx, p.x - 5, p.y + 1, 1, 1, season === 0 ? '#e9bc98' : '#b9bd7b');
     }
+    this.rect(ctx, p.x + 2, p.y - 1, 4, 1, '#c48c75');
+    this.rect(ctx, p.x + 2, p.y - 2, 4, 1, '#7aab83');
+    this.rect(ctx, p.x + 3, p.y - 3, 1, 1, '#f2b5aa');
     if (cell.vitality < 35) this.rect(ctx, p.x + 3, p.y - 4, 2, 3, '#968c70');
   }
 
   private shop(ctx: CanvasRenderingContext2D, cell: Cell, p: Point, season: number): void {
     const h = 10 + Math.min(3, Math.max(1, cell.level)) * 2;
     this.shadow(ctx, p);
-    this.box(ctx, p, 8, 4, h, '#e2d5ad', '#b4b194');
+    this.box(ctx, p, 8, 4, h, '#f0dcbd', '#b4b194');
     this.gable(ctx, p, h, '#68858a', '#476970');
     this.window(ctx, p.x + 3, p.y - h + 5, 3, 3, cell.variant);
     this.window(ctx, p.x - 6, p.y - 4, 3, 4, cell.variant + 1);
@@ -340,19 +386,23 @@ export class TownRenderer {
     for (let i = 0; i < 4; i++) this.line(ctx, p.x - 8 + i * 2, p.y - 7 + i, p.x - 8 + i * 2, p.y - 4 + i, cell.variant % 2 ? '#b77356' : '#678b73');
     this.rect(ctx, p.x + 3, p.y - h + 1, 3, 2, '#c6a468');
     this.rect(ctx, p.x + 4, p.y - h + 1, 1, 1, '#f2dfab');
+    this.rect(ctx, p.x - 9, p.y + 2, 3, 4, '#647e83');
+    this.rect(ctx, p.x - 8, p.y + 3, 1, 2, '#f5d69c');
+    if (cell.customers > 0) this.rect(ctx, p.x + 5, p.y + 1, 2, 2, '#ecaa79');
     this.rect(ctx, p.x - 7, p.y + 1, 2, 2, '#8c7558');
     this.rect(ctx, p.x - 7, p.y, 2, 1, season === 2 ? '#d2ae65' : '#a4b46e');
   }
 
   private farm(ctx: CanvasRenderingContext2D, cell: Cell, p: Point, season: number): void {
-    this.diamond(ctx, p.x, p.y, 8, 4, '#977d57');
-    const crop = cell.vitality < 35 ? '#ab9a6e' : PALETTES[season]!.crop;
+    this.diamond(ctx, p.x, p.y, 8, 4, cell.moisture > 55 ? '#876d59' : '#b79973');
+    const growth = Math.max(0, Math.min(100, cell.crop));
+    const crop = cell.fertility < 25 ? '#b5a576' : growth > 75 ? '#dfc57e' : this.palette.crop;
     for (let i = -2; i <= 2; i++) {
       this.line(ctx, p.x - 5 + i * 2, p.y - 2 + i, p.x + i * 2, p.y + 1 + i, '#c1a271');
-      if (season !== 3 || i % 2 === 0) {
+      if (growth > 8 && (season !== 3 || i % 2 === 0)) {
         for (let j = 0; j < 3; j++) {
-          this.rect(ctx, p.x - 5 + i * 2 + j * 2, p.y - 3 + i + j, 1, 2, crop);
-          if (season === 1 || season === 2) this.rect(ctx, p.x - 5 + i * 2 + j * 2, p.y - 3 + i + j, 1, 1, '#d8c07b');
+          this.rect(ctx, p.x - 5 + i * 2 + j * 2, p.y - 2 - Math.floor(growth / 35) + i + j, growth > 40 ? 2 : 1, 1 + Math.floor(growth / 35), crop);
+          if (growth > 75) this.rect(ctx, p.x - 5 + i * 2 + j * 2, p.y - 3 + i + j, 1, 1, '#d8c07b');
         }
       }
     }
@@ -409,16 +459,18 @@ export class TownRenderer {
     if (cell.level > 1) this.rect(ctx, p.x + 2, p.y, 1, 1, '#bdb27b');
   }
 
-  private drawLife(ctx: CanvasRenderingContext2D, world: World, time: number): void {
+  private drawLife(ctx: CanvasRenderingContext2D, world: World, options: RenderOptions): void {
+    const time = options.reducedMotion ? 0 : world.clock;
     const waveStep = Math.floor(time * 2);
     for (const cell of this.waters) {
-      if (this.hash(cell.x, cell.y, world.seed) % 29 !== 0 || cell.kind === 'road') continue;
+      if (world.weather.temperature < 0 || this.hash(cell.x, cell.y, world.seed) % 29 !== 0 || cell.kind === 'road') continue;
       const p = this.project(cell, world);
       const offset = ((waveStep + cell.x) % 5) - 2;
       this.rect(ctx, p.x - 2 + offset, p.y, 3, 1, '#a3ced0');
       this.rect(ctx, p.x + 1 + offset, p.y + 1, 2, 1, '#88bec4');
     }
     for (const cell of this.factories) {
+      if (cell.employed === 0 || options.reducedMotion) continue;
       const p = this.project(cell, world);
       const h = 10 + Math.min(3, Math.max(1, cell.level)) * 2;
       for (let i = 0; i < 3; i++) {
@@ -431,34 +483,110 @@ export class TownRenderer {
       }
     }
     ctx.globalAlpha = 1;
-    // Each pedestrian traverses one existing road edge, then turns back. Every
-    // intermediate position is inside those two connected road diamonds.
-    const stride = Math.max(1, Math.floor(this.roads.length / 20));
-    for (let index = 0; index < this.roads.length; index += stride) {
-      const cell = this.roads[index]!;
-      const directions = [[1, 0], [0, 1], [-1, 0], [0, -1]];
-      let neighbor: Cell | undefined;
-      for (let d = 0; d < 4; d++) {
-        const dir = directions[(d + index) % 4]!;
-        const candidate = this.at(world, cell.x + dir[0]!, cell.y + dir[1]!);
-        if (candidate?.kind === 'road') { neighbor = candidate; break; }
+    const residents = world.residents.filter(r => r.state === 'travel' || r.state === 'park').sort((a, b) => a.x + a.y - b.x - b.y);
+    const followed = world.residents.find(r => r.id === options.followedResident);
+    if (options.showRoutes) {
+      const home = options.selected ? options.selected.y * world.size + options.selected.x : null;
+      const routes = followed ? [followed] : home !== null ? world.residents.filter(r => r.home === home).slice(0, 6) : residents.slice(0, 8);
+      if (!followed && home === null) {
+        for (const road of this.roads) {
+          const p = this.project(road, world);
+          this.rect(ctx, p.x, p.y, 1, 1, '#e5dab0');
+        }
       }
-      if (!neighbor) continue;
-      const a = this.project(cell, world);
-      const b = this.project(neighbor, world);
-      const phase = ((time / 5 + index * 0.137) % 2);
-      const t = phase <= 1 ? phase : 2 - phase;
-      const x = Math.round(a.x + (b.x - a.x) * t);
-      const y = Math.round(a.y + (b.y - a.y) * t) - (cell.terrain === 'water' ? 1 : 0);
-      this.rect(ctx, x, y - 4, 1, 1, '#e7c79a');
-      this.rect(ctx, x - 1, y - 3, 2, 2, ['#a25b48', '#eee1b4', '#486c79', '#70617d'][index % 4]!);
-      this.rect(ctx, x - 1, y - 1, 1, 1, '#535d51');
-      this.rect(ctx, x + (Math.floor(time * 4) % 2), y, 1, 1, '#535d51');
+      for (const resident of routes) for (let i = 1; i < resident.route.length; i++) {
+        const a = world.cells[resident.route[i - 1]!]!, b = world.cells[resident.route[i]!]!;
+        if (!a || !b) continue;
+        const pa = this.project(a, world), pb = this.project(b, world);
+        this.line(ctx, pa.x, pa.y, pb.x, pb.y, followed ? '#f4d584' : '#d5d5aa');
+      }
     }
+    for (const resident of residents) this.person(ctx, resident, world, options);
+    if (world.weather.kind !== 'clear' && !options.reducedMotion) {
+      for (let i = 0; i < 60; i++) {
+        const x = this.hash(i, 21, world.seed) % this.width;
+        const y = (this.hash(i, 35, world.seed) + Math.floor(world.clock * (world.weather.kind === 'snow' ? 9 : 40))) % this.height;
+        if (world.weather.kind === 'snow') this.rect(ctx, x, y, 2, 2, '#f5f1e7');
+        else this.line(ctx, x, y, x - 1, y + 3, '#a6cad1');
+      }
+    }
+  }
+
+  private person(ctx: CanvasRenderingContext2D, resident: Resident, world: World, options: RenderOptions): void {
+    const p = this.project(resident, world);
+    const x = Math.round(p.x), y = Math.round(p.y);
+    // Pixel-level painter mask retains every foreground leaf/roof edge while
+    // residents move continuously between tile centers. Only a 16x16 sprite is scanned.
+    const sprite = this.sprite;
+    sprite.width = 16; sprite.height = 16;
+    const ink = sprite.getContext('2d')!;
+    const step = options.reducedMotion ? 0 : Math.floor(world.clock * 7 + resident.id) % 2;
+    const clothes = ['#e9998b', '#699eba', '#e2bb62', '#a397c4', '#73ad95'][resident.color % 5]!;
+    const next = world.cells[resident.route[resident.routeIndex + 1] ?? -1];
+    const facing = next ? Math.sign((next.x - resident.x) - (next.y - resident.y)) : 1;
+    this.rect(ink, 6, 12, 5, 1, '#758d78');
+    this.rect(ink, 6, 10 + step, 2, 2, '#545c70');
+    this.rect(ink, 9, 11 - step, 2, 2, '#545c70');
+    this.rect(ink, 6, 6, 5, 5, clothes);
+    this.rect(ink, 5, 7 + step, 1, 3, '#efc5a2');
+    this.rect(ink, 11, 7 - step, 1, 3, '#efc5a2');
+    this.rect(ink, 6, 2, 5, 5, '#f3cfab');
+    this.rect(ink, 6, 1, 5, 2, '#766452');
+    this.rect(ink, facing < 0 ? 6 : 10, 4, 1, 1, '#5c5354');
+    this.rect(ink, facing < 0 ? 5 : 11, 5, 1, 1, '#eba69a');
+    if (resident.id % 3 === 0) {
+      this.rect(ink, 6, 0, 5, 2, '#e9ce89');
+      this.rect(ink, 5, 2, 7, 1, '#cda76d');
+    }
+    if (resident.purpose === 'shopping') {
+      this.rect(ink, facing < 0 ? 4 : 11, 9, 3, 3, '#dfb879');
+      this.rect(ink, facing < 0 ? 5 : 12, 8, 1, 1, '#8b705a');
+    } else if (resident.purpose === 'commute') this.rect(ink, facing < 0 ? 10 : 5, 7, 2, 4, '#718192');
+    const data = ink.getImageData(0, 0, 16, 16);
+    for (let py = 0; py < 16; py++) for (let px = 0; px < 16; px++) {
+      const wx = x - 8 + px, wy = y - 12 + py;
+      if (wx >= 0 && wy >= 0 && wx < this.width && wy < this.height && this.depthPixels[wy * this.width + wx]! > resident.x + resident.y + 0.2) data.data[(py * 16 + px) * 4 + 3] = 0;
+    }
+    ink.putImageData(data, 0, 0);
+    ctx.drawImage(sprite, x - 8, y - 12);
+    if (options.followedResident === resident.id) {
+      this.outlineDiamond(ctx, x, y + 2, 5, 2, '#fff0a7');
+      this.rect(ctx, x - 1, y - 17, 3, 2, '#fff0a7');
+      this.rect(ctx, x, y - 15, 1, 2, '#fff0a7');
+    }
+  }
+
+  pickResident(clientX: number, clientY: number, world: World, camera: Camera): number | null {
+    const bounds = this.canvas.getBoundingClientRect();
+    if (bounds.width <= 0 || bounds.height <= 0 || clientX < bounds.left || clientY < bounds.top || clientX > bounds.right || clientY > bounds.bottom) return null;
+    const x = ((clientX - bounds.left) * this.width / bounds.width - CENTER_X - camera.panX) / camera.zoom + CENTER_X;
+    const y = ((clientY - bounds.top) * this.height / bounds.height - CENTER_Y - camera.panY) / camera.zoom + CENTER_Y;
+    for (const resident of [...world.residents].reverse()) {
+      if (resident.state !== 'travel' && resident.state !== 'park') continue;
+      const p = this.project(resident, world);
+      if (Math.abs(x - p.x) <= 6 && y >= p.y - 13 && y <= p.y + 2) {
+        const px = Math.round(x), py = Math.round(y);
+        if (px >= 0 && py >= 0 && px < this.width && py < this.height && this.depthPixels[py * this.width + px]! <= resident.x + resident.y + 0.2) return resident.id;
+      }
+    }
+    return null;
+  }
+
+  private construction(ctx: CanvasRenderingContext2D, cell: Cell, p: Point): void {
+    const h = 3 + Math.floor(cell.development / 8);
+    this.diamond(ctx, p.x, p.y, 7, 4, '#d4bba0');
+    this.box(ctx, p, 6, 3, h, '#edcfb0', '#c5aa91');
+    for (const dx of [-7, 0, 7]) {
+      this.rect(ctx, p.x + dx, p.y - h - 6, 1, h + 8, '#aa8c69');
+    }
+    this.line(ctx, p.x - 7, p.y - h - 5, p.x, p.y - h - 1, '#e8c9a2');
+    this.line(ctx, p.x, p.y - h - 1, p.x + 7, p.y - h - 5, '#c5a37c');
+    this.rect(ctx, p.x - 5, p.y + 1, 3, 2, '#c48e78');
   }
 
   private spriteHeight(cell: Cell): number {
     switch (cell.kind) {
+      case 'grass': return cell.development > 25 ? 9 + Math.floor(cell.development / 8) : 0;
       case 'tree': case 'park': return 24;
       case 'house': return 17 + Math.max(1, Math.min(3, cell.level)) * 3;
       case 'shop': return 17 + Math.max(1, Math.min(3, cell.level)) * 2;

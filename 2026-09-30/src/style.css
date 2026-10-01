@@ -127,3 +127,21 @@ footer { display: flex; justify-content: space-between; gap: 16px; border-top: 1
 @media (max-width: 800px) { .observatory { grid-template-columns: 1fr; } .town-notebook { display: grid; grid-template-columns: 1fr 1fr; gap: 0 24px; } .inspection { grid-row: span 2; } .population-section { border-top: 0; } .journal { margin-bottom: 8px; } .masthead-right p { display: none; } .view-hint { margin-bottom: 16px; } .bottom-strip { flex-wrap: wrap; } .save-state { order: 2; } }
 @media (max-width: 520px) { .app-shell { padding: 20px 16px 16px; } .masthead { gap: 10px; padding-bottom: 16px; } .brand { gap: 10px; } .brand-mark { width: 38px; gap: 3px; transform: scale(.85); transform-origin: left center; margin-right: -5px; } .eyebrow { font-size: 8px; letter-spacing: .1em; } h1 { font-size: 30px; } .masthead-right { display: none; } .town-heading { padding-top: 18px; gap: 8px; align-items: center; } .town-heading h2 { font-size: 15px; } .calendar { font-size: 12px; gap: 5px; } .week { font-size: 10px; padding-left: 5px; } .season-dot { width: 7px; height: 7px; } .viewport { margin: 0 -4px; } .view-label { top: 8px; left: 8px; font-size: 9px; padding: 4px 7px; } .scene-caption { left: 8px; bottom: 8px; font-size: 9px; padding: 3px 6px; } .controls { justify-content: space-between; gap: 10px 6px; } .time-controls { gap: 7px; } .pause-button { min-width: 105px; padding: 8px 10px; font-size: 12px; } .speed-control button { min-width: 40px; padding: 8px; } .camera-controls { margin-left: auto; } .camera-controls .fit-button { padding: 8px 10px; } .view-hint { font-size: 11px; line-height: 1.9; } .number-item { padding: 0 9px; } .number-label { font-size: 10px; } .number-item strong { font-size: 24px; } .number-item p { gap: 3px; } .number-item p span { font-size: 9px; } .town-notebook { grid-template-columns: 1fr; gap: 0; } .inspection { grid-row: auto; } .population-section { border-top: 1px solid var(--ui-line); } .cell-reason { min-height: 0; } .cell-details { grid-template-columns: repeat(4, 1fr); gap: 8px; } .cell-details dt { font-size: 10px; } .cell-details dd { font-size: 12px; } .secondary-actions { justify-content: flex-start; gap: 6px; } .secondary-actions button { font-size: 11px; padding: 8px 10px; } .how-it-grows { grid-template-columns: 1fr; margin: 20px 0; } .how-it-grows details { grid-column: 1; } .mobile-break { display: initial; } footer { font-size: 9px; flex-wrap: wrap; gap: 4px; } }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; animation: none !important; } }
+
+/* The living town's information belongs beside the scene, with the common control tokens. */
+.life-controls { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.life-controls button { font-size: 12px; padding: 8px 12px; }
+.life-controls button[aria-pressed="true"] { background: #dce7ca; border-color: #426448; }
+#activity-label { font-size: 12px; color: var(--ui-muted); margin-left: auto; }
+.daily-life { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; padding-top: 16px; margin-top: 16px; border-top: 1px solid var(--ui-line); }
+.daily-life div { display: grid; gap: 4px; }
+.daily-life span { font-size: 11px; color: var(--ui-muted); }
+.daily-life strong { font-size: 15px; font-weight: 500; font-variant-numeric: tabular-nums; }
+.resident-note { border-bottom: 1px solid var(--ui-line); padding-bottom: 16px; }
+.resident-note .section-label button { margin-left: auto; padding: 4px 8px; min-height: 44px; font-size: 11px; }
+#resident-status { font-size: 14px; color: #426448; line-height: 1.8; }
+.resident-route, .cell-connections { font-size: 12px; line-height: 1.8; margin: 10px 0; color: var(--ui-muted); }
+.resident-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.resident-actions button { font-size: 11px; padding: 8px 10px; }
+@media (max-width: 800px) { .resident-note { grid-column: 1 / -1; } }
+@media (max-width: 520px) { #activity-label { width: 100%; margin-left: 0; } .daily-life { gap: 8px; } .daily-life strong { font-size: 13px; } }

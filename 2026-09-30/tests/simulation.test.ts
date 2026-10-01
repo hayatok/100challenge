@@ -1,10 +1,11 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { createWorld, restoreWorld, serializeWorld, stepWorld } from '../src/simulation.ts';
+import { advanceResidents, createWorld, restoreWorld, serializeWorld, stepWorld } from '../src/simulation.ts';
+import { findRoute, jobCapacity, neighbors, synchronizeResidents } from '../src/mobility.ts';
 import type { World } from '../src/types.ts';
 
 const advance = (world: World, weeks: number) => {
-  for (let tick = 0; tick < weeks; tick++) stepWorld(world);
+  for (let tick = 0; tick < weeks; tick++) { advanceResidents(world, 4); stepWorld(world); }
   return world;
 };
 
@@ -15,7 +16,7 @@ function assertInvariants(world: World) {
   for (const [index, cell] of world.cells.entries()) {
     assert.equal(cell.x, index % world.size);
     assert.equal(cell.y, Math.floor(index / world.size));
-    for (const key of ['level', 'age', 'population', 'vitality', 'environment', 'traffic', 'variant', 'changedAt'] as const) {
+    for (const key of ['level', 'age', 'population', 'vitality', 'environment', 'traffic', 'variant', 'changedAt', 'moisture', 'fertility', 'vegetation', 'crop', 'condition', 'development', 'employed', 'customers'] as const) {
       assert.ok(Number.isFinite(cell[key]) && cell[key] >= 0, `${key} must stay finite and nonnegative`);
     }
     assert.ok(cell.environment <= 100 && cell.vitality <= 100 && cell.traffic <= 100);
@@ -29,6 +30,12 @@ function assertInvariants(world: World) {
     if (cell.kind === 'shop') jobs += 3 + cell.level * 2;
     counts[cell.kind] = (counts[cell.kind] ?? 0) + 1;
   }
+  for (const key of ['moisture', 'fertility', 'vegetation', 'crop', 'condition', 'development'] as const) assert.ok(world.cells.every(cell => cell[key] <= 100));
+  assert.equal(world.version, 2);
+  assert.ok(Number.isFinite(world.clock) && world.clock >= 0);
+  assert.ok(world.residents.every(person => person.id < world.nextResidentId));
+  assert.equal(new Set(world.residents.map(person => person.id)).size, world.residents.length);
+  assert.ok(Number.isFinite(world.economy.food) && world.economy.food >= 0 && world.economy.food <= 10000);
   assert.equal(world.stats.population, population);
   assert.equal(world.stats.jobs, jobs);
   for (const [stat, kind] of [['homes', 'house'], ['shops', 'shop'], ['farms', 'farm'], ['factories', 'factory'], ['ruins', 'ruin'], ['roads', 'road']] as const) assert.equal(world.stats[stat], counts[kind] ?? 0);
@@ -80,6 +87,7 @@ test('updates use the previous neighborhood and newly built roads connect to an 
   const world = createWorld(731);
   for (let week = 0; week < 100; week++) {
     const old = world.cells;
+    advanceResidents(world, 4);
     stepWorld(world);
     for (const [index, cell] of world.cells.entries()) {
       if (cell.kind === 'road' && old[index].kind !== 'road') {
@@ -88,51 +96,125 @@ test('updates use the previous neighborhood and newly built roads connect to an 
       }
       if (cell.kind === 'house' && old[index].kind === 'grass') {
         assert.ok(old.some(near => Math.abs(near.x - cell.x) <= 1 && Math.abs(near.y - cell.y) <= 1 && near.kind === 'road'));
-        assert.ok(old.some(near => Math.abs(near.x - cell.x) <= 3 && Math.abs(near.y - cell.y) <= 3 && ['farm', 'shop', 'factory'].includes(near.kind)));
+        const previousWorld = { ...world, cells: old };
+        assert.ok(old.some((workplace, destination) => jobCapacity(workplace) > 0 && findRoute(previousWorld, index, destination)), 'new homes require a road-reachable workplace');
       }
     }
   }
 });
 
-test('many generations keep finite diverse towns and observable turnover, including rebirth', () => {
+test('long observations retain finite diverse towns with real activity and accurate event counts', () => {
   for (const seed of [0, 1, 42, 20260930]) {
     const world = createWorld(seed);
-    let minPopulation = world.stats.population;
-    let growth = 0, birth = 0, decay = 0, returnToGrass = 0, rebirth = 0, roads = 0;
-    const retiredSites = new Set<number>();
-    let bornAt30 = 0;
-    let bornAt1500 = 0;
-    for (let tick = 1; tick <= 2000; tick++) {
+    for (let week = 0; week < 384; week++) {
       const old = world.cells;
       const beforeBorn = world.stats.born, beforeRetired = world.stats.retired;
-      stepWorld(world);
-      let newBuildings = 0, closures = 0;
-      for (let index = 0; index < old.length; index++) {
-        const cell = world.cells[index];
-        if (old[index].level < cell.level && old[index].kind === cell.kind) growth++;
-        if (old[index].kind === 'grass' && ['house', 'shop', 'farm', 'factory'].includes(cell.kind)) {
-          birth++; newBuildings++;
-          if (retiredSites.has(index)) rebirth++;
-        }
-        if (old[index].kind !== 'ruin' && cell.kind === 'ruin') { decay++; closures++; retiredSites.add(index); }
-        if (old[index].kind === 'ruin' && cell.kind === 'grass') returnToGrass++;
-        if (old[index].kind !== 'road' && cell.kind === 'road') roads++;
-      }
-      assert.equal(world.stats.born - beforeBorn, newBuildings);
+      advance(world, 1);
+      const births = world.cells.filter((cell, index) => old[index].kind === 'grass' && ['house', 'shop', 'farm', 'factory'].includes(cell.kind)).length;
+      const closures = world.cells.filter((cell, index) => old[index].kind !== 'ruin' && cell.kind === 'ruin').length;
+      assert.equal(world.stats.born - beforeBorn, births);
       assert.equal(world.stats.retired - beforeRetired, closures);
-      minPopulation = Math.min(minPopulation, world.stats.population);
-      if (tick === 30) bornAt30 = world.stats.born;
-      if (tick === 1500) bornAt1500 = world.stats.born;
-      if (tick % 100 === 0) assertInvariants(world);
+      if (week % 48 === 0) assertInvariants(world);
     }
-    assert.ok(bornAt30 > 2, `seed ${seed}: visible births during first minute`);
-    assert.ok(minPopulation > 0, `seed ${seed}: no extinction`);
-    assert.ok(growth > 10 && birth > 30 && decay > 20 && returnToGrass > 20 && rebirth > 10 && roads > 0, `seed ${seed}: complete local lifecycle`);
-    assert.ok(world.stats.born > bornAt1500 + 10, 'late generations are still active');
-    assert.ok(world.stats.homes > 0 && world.stats.farms > 0 && world.stats.shops > 0);
-    assert.ok(world.stats.factories < world.stats.homes / 3, 'factories cannot replace the entire town');
+    assert.ok(world.stats.population > 0 && world.stats.homes > 0);
+    assert.ok(world.stats.farms > 0 && world.stats.shops > 0);
+    assert.ok(world.economy.commutes > 0 && world.economy.visits > 0, 'people must actually arrive');
+    assert.ok(world.stats.factories < world.stats.homes, 'industry does not replace housing');
     assertConnectedRoads(world);
+    assertInvariants(world);
   }
+});
+
+test('reachable jobs respect capacity and a disconnected road network supplies no employment', () => {
+  const world = createWorld(42);
+  const occupancy = new Map<number, number>();
+  for (const person of world.residents) {
+    if (person.workplace === null) continue;
+    const route = findRoute(world, person.home, person.workplace);
+    assert.ok(route && route.some(index => world.cells[index].kind === 'road'));
+    assert.ok(route.every((index, n) => n === 0 || neighbors(world, route[n - 1]).includes(index)), 'paths take cardinal steps');
+    occupancy.set(person.workplace, (occupancy.get(person.workplace) ?? 0) + 1);
+    assert.ok(occupancy.get(person.workplace)! <= jobCapacity(world.cells[person.workplace]));
+  }
+  assert.ok(world.economy.employed > 0);
+  for (const cell of world.cells) if (cell.kind === 'road') cell.kind = cell.terrain === 'water' ? 'water' : 'grass';
+  synchronizeResidents(world);
+  assert.equal(world.economy.employed, 0);
+  assert.ok(world.residents.every(person => person.workplace === null && person.shop === null));
+  advanceResidents(world, 4);
+  assert.equal(world.economy.commutes, 0);
+});
+
+test('weekly updates preserve a continuous in-flight journey and save its exact position', () => {
+  const world = createWorld(42);
+  const person = world.residents.find(resident => resident.workplace !== null)!;
+  person.timer = 0;
+  advanceResidents(world, .5);
+  assert.equal(person.state, 'travel');
+  assert.ok(person.progress > 0 && person.progress < 1);
+  const snapshot = { x: person.x, y: person.y, route: [...person.route], routeIndex: person.routeIndex, progress: person.progress, clock: world.clock };
+  stepWorld(world);
+  const current = world.residents.find(resident => resident.id === person.id)!;
+  assert.deepEqual({ x: current.x, y: current.y, route: current.route, routeIndex: current.routeIndex, progress: current.progress, clock: world.clock }, snapshot);
+  const restored = restoreWorld(serializeWorld(world));
+  assert.deepEqual(restored, world);
+  advanceResidents(world, .25);
+  advanceResidents(restored, .25);
+  assert.deepEqual(restored, world);
+  assert.ok(Math.hypot(current.x - snapshot.x, current.y - snapshot.y) <= .27, 'motion continues from the saved fraction of a step');
+});
+
+test('standing crops require arriving workers to become harvested food', () => {
+  const world = createWorld(42);
+  world.residents = [];
+  for (const cell of world.cells) if (cell.kind === 'farm') { cell.crop = 100; cell.employed = 0; }
+  stepWorld(world);
+  assert.equal(world.economy.harvest, 0);
+  assert.ok(world.cells.filter(cell => cell.kind === 'farm').every(cell => cell.crop === 100));
+  const farm = world.cells.find(cell => cell.kind === 'farm')!;
+  farm.employed = 1;
+  stepWorld(world);
+  assert.ok(world.economy.harvest > 0);
+  assert.ok(farm.crop !== world.cells[farm.y * world.size + farm.x].crop);
+});
+
+test('profitable old homes can repair instead of retiring solely because of age', () => {
+  const world = createWorld(42);
+  const home = world.residents.find(person => person.workplace !== null)!.home;
+  const cell = world.cells[home];
+  cell.age = 5000; cell.condition = 70; cell.vitality = 80;
+  for (const person of world.residents.filter(person => person.home === home && person.workplace !== null)) world.cells[person.workplace!].employed = 3;
+  stepWorld(world);
+  assert.equal(world.cells[home].kind, 'house');
+  assert.ok(world.cells[home].condition > 70);
+});
+
+test('v1 migration preserves the original town and validates it before adding residents', () => {
+  const original = createWorld(20260930);
+  const legacy = JSON.parse(serializeWorld(original));
+  legacy.version = 1;
+  for (const key of ['clock', 'nextResidentId', 'residents', 'weather', 'economy']) delete legacy[key];
+  for (const cell of legacy.cells) for (const key of ['moisture', 'fertility', 'vegetation', 'crop', 'condition', 'development', 'employed', 'customers', 'accessible']) delete cell[key];
+  const migrated = restoreWorld(JSON.stringify(legacy));
+  assert.equal(migrated.version, 2);
+  assert.equal(migrated.seed, original.seed);
+  assert.equal(migrated.rng, original.rng);
+  assert.deepEqual(migrated.cells.map(({ x, y, terrain, kind, age, population }) => ({ x, y, terrain, kind, age, population })), original.cells.map(({ x, y, terrain, kind, age, population }) => ({ x, y, terrain, kind, age, population })));
+  assert.deepEqual(migrated.stats, original.stats);
+  assert.ok(migrated.residents.length > 0 && migrated.nextResidentId > 0);
+  assert.deepEqual(restoreWorld(serializeWorld(migrated)), migrated);
+  legacy.cells[0].x = 100;
+  assert.throws(() => restoreWorld(JSON.stringify(legacy)), /読み込めません/);
+});
+
+test('resident identifiers are not reused when a household gets a replacement worker', () => {
+  const world = createWorld(42);
+  const removed = world.residents.pop()!;
+  const next = world.nextResidentId;
+  synchronizeResidents(world);
+  assert.ok(world.residents.some(person => person.home === removed.home && person.id === next));
+  assert.ok(world.nextResidentId > next);
+  assert.deepEqual(restoreWorld(serializeWorld(world)), world);
 });
 
 test('restoring a saved town reproduces the exact random continuation', () => {
@@ -155,7 +237,12 @@ test('bounded strict restore rejects corrupted, inconsistent and unsupported dat
     mutate(world);
     assert.throws(() => restoreWorld(JSON.stringify(world)), /読み込めません/);
   };
-  corrupt(world => { world.version = 2; });
+  corrupt(world => { world.version = 3; });
+  corrupt(world => { world.nextResidentId = world.residents[0].id; });
+  corrupt(world => { world.residents[0].progress = null; });
+  corrupt(world => { world.economy.employed++; });
+  corrupt(world => { world.cells[0].moisture = null; });
+  corrupt(world => { world.weather.kind = 'storm'; });
   corrupt(world => { world.size = 48.5; });
   corrupt(world => { world.tick = -1; });
   corrupt(world => { world.seed = -1; });

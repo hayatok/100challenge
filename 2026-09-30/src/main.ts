@@ -1,10 +1,11 @@
 import './style.css';
 import { createWorld, restoreWorld, serializeWorld, stepWorld } from './simulation.ts';
 import { TownRenderer } from './renderer.ts';
+import { advanceResidents } from './mobility.ts';
 import type { Camera, CellKind, Point, World } from './types.ts';
 
 const STORAGE_KEY = 'machi-no-kokyu:v1';
-const STEP_SECONDS = 2;
+const STEP_SECONDS = 4;
 const SEASONS = ['春', '夏', '秋', '冬'];
 const KIND_NAMES: Record<CellKind, string> = { grass: '草の広場', tree: '木々のある場所', water: '町を流れる川', road: '暮らしをつなぐ道', house: '住まい', shop: 'ご近所のお店', farm: '小さな農地', factory: '町の工場', ruin: '空き家', park: '緑の公園' };
 const KIND_ICONS: Record<CellKind, string> = { grass: '♧', tree: '♧', water: '≈', road: '╋', house: '⌂', shop: '▤', farm: '▥', factory: '▥', ruin: '⌂', park: '♧' };
@@ -53,8 +54,8 @@ let camera: Camera = { zoom: 1, panX: 0, panY: 0 };
 let selected: Point | null = null;
 let paused = reducedMotion.matches;
 let speed = 1;
-let accumulator = 0;
-let visualTime = world.tick * STEP_SECONDS;
+let accumulator = world.clock % STEP_SECONDS;
+let visualTime = world.clock;
 let lastFrame = 0;
 let lastRender = 0;
 let lastSavedTick = -1;
@@ -63,6 +64,10 @@ let previousVisualTime = 0;
 let previousPaused = false;
 let renderer: TownRenderer;
 let fatal = false;
+let followedResident: number | null = null;
+let followCamera = false;
+let showRoutes = false;
+let lastLifeUpdate = 0;
 
 function notify(message: string, error = false): void {
   notification.textContent = message;
@@ -71,7 +76,6 @@ function notify(message: string, error = false): void {
 }
 
 function saveTown(): void {
-  if (lastSavedTick === world.tick && !storageError) return;
   try {
     localStorage.setItem(STORAGE_KEY, serializeWorld(world));
     status.textContent = `このブラウザに記録済み · ${Math.floor(world.tick / 48) + 1}年目`;
@@ -92,6 +96,7 @@ function dateText(tick: number): string {
 function updateInspection(): void {
   const details = element('cell-details');
   if (!selected) {
+    element('cell-connections').hidden = true;
     element('cell-coordinates').textContent = '観察ノート';
     element('cell-name').textContent = '小さな暮らしを、見つける。';
     element('cell-subtitle').textContent = '建物や土地を選んでみてください';
@@ -109,6 +114,17 @@ function updateInspection(): void {
   const natural = ['grass', 'tree', 'water', 'road', 'park'].includes(cell.kind);
   element('cell-subtitle').textContent = natural ? (bridge ? '川の向こうの暮らしへ' : 'この場所も、町の一部です') : cell.kind === 'ruin' ? '次の暮らしを待つ場所' : `成長段階 ${cell.level} · ${cell.vitality >= 60 ? '元気に育っています' : cell.vitality >= 30 ? 'ゆっくり暮らしています' : '少し元気をなくしています'}`;
   element('cell-reason').textContent = cell.reason;
+  const connections = element('cell-connections');
+  connections.hidden = false;
+  const inhabitants = world.residents.filter(resident => resident.home === selected!.y * world.size + selected!.x);
+  const assignedWorkers = world.residents.filter(resident => resident.workplace === selected!.y * world.size + selected!.x).length;
+  connections.textContent = cell.kind === 'house'
+    ? `${cell.accessible ? '道につながっています' : '道への出口がありません'} · 働き先のある人 ${inhabitants.filter(resident => resident.workplace !== null).length} / ${inhabitants.length}人`
+    : cell.kind === 'shop' ? `働き先にする人 ${assignedWorkers}人 · 最近の買い物 ${Math.round(cell.customers)}回（時間とともに減衰）`
+    : cell.kind === 'factory' ? `働き先にする人 ${assignedWorkers}人 · 建物の状態 ${Math.round(cell.condition)} / 100`
+    : cell.kind === 'farm' ? `水分 ${Math.round(cell.moisture)} · 土の力 ${Math.round(cell.fertility)} · 作物の生育 ${Math.round(cell.crop)} / 100`
+    : cell.kind === 'grass' || cell.kind === 'tree' || cell.kind === 'park' ? `水分 ${Math.round(cell.moisture)} · 土の力 ${Math.round(cell.fertility)} · 緑の回復 ${Math.round(cell.vegetation)} / 100`
+    : cell.kind === 'road' ? `最近の人通り ${Math.round(cell.traffic)} / 100` : cell.kind === 'ruin' ? '草が育ち、土と緑が回復するのを待っています。' : '雨が川と岸辺の土をうるおします。';
   element('detail-label').textContent = cell.kind === 'house' ? '暮らす人' : '成長段階';
   element('cell-population').textContent = cell.kind === 'house' ? `${cell.population}人` : natural || cell.kind === 'ruin' ? '—' : `${cell.level}`;
   element('cell-age').textContent = natural ? '—' : cell.age < 48 ? `${cell.age}週` : `${(cell.age / 48).toFixed(1)}年`;
@@ -133,6 +149,7 @@ function updateChart(): void {
 }
 
 function selectCell(point: Point | null, focus = false): void {
+  followCamera = false;
   selected = point;
   if (point && focus && camera.zoom > 1) camera = renderer.focus(point, world, camera);
   updateInspection();
@@ -187,13 +204,59 @@ function updateUI(): void {
   updateChart();
   updateJournal();
   updateControls();
+  updateLife();
+}
+
+function locationName(index: number | null): string {
+  if (index === null) return 'まだ決まっていません';
+  const cell = world.cells[index];
+  return `${KIND_NAMES[cell.kind]}（${cell.x + 1}, ${cell.y + 1}）`;
+}
+
+function updateLife(): void {
+  const moving = world.residents.filter(resident => resident.state === 'travel').length;
+  element('activity-label').textContent = `${moving}人が道を歩いています`;
+  element('employment').textContent = `${world.economy.employed} / ${world.economy.workers}人`;
+  element('food').textContent = `${Math.round(world.economy.food)}（目安）`;
+  element('visits').textContent = `${world.economy.visits}回`;
+  element('weather-label').textContent = `${world.weather.kind === 'rain' ? '雨' : world.weather.kind === 'snow' ? '雪' : '晴れ'} · ${Math.round(world.weather.temperature)}℃`;
+  const resident = world.residents.find(person => person.id === followedResident);
+  element('resident-note').hidden = !resident;
+  if (!resident) { followedResident = null; followCamera = false; return; }
+  element('resident-name').textContent = `住民 ${resident.id + 1} の一日`;
+  const purpose = { commute: '仕事へ', shopping: '買い物へ', stroll: '散歩へ', return: '家へ' }[resident.purpose];
+  element('resident-status').textContent = resident.state === 'travel' ? `${purpose}、道を歩いています。`
+    : resident.state === 'work' ? '仕事場で、町の暮らしを支えています。'
+    : resident.state === 'shop' ? 'お店で、今日の買い物をしています。'
+    : resident.state === 'park' ? '緑のそばで、ひと休み。' : '家で次の外出を待っています。';
+  element('resident-route').textContent = `住まい: ${locationName(resident.home)}。働き先: ${locationName(resident.workplace)}。${resident.state === 'travel' ? `行き先: ${locationName(resident.destination)}。` : ''}到着した旅 ${resident.trips}回。`;
+  element<HTMLButtonElement>('resident-destination').disabled = resident.destination === null;
+}
+
+function watchResident(id: number): void {
+  followedResident = id;
+  followCamera = true;
+  showRoutes = true;
+  element('routes').setAttribute('aria-pressed', 'true');
+  const resident = world.residents.find(person => person.id === id);
+  if (resident) {
+    camera.zoom = Math.max(2, camera.zoom);
+    camera = renderer.focus(resident, world, camera);
+    selected = null;
+  }
+  updateInspection();
+  updateControls();
+  updateLife();
+  draw();
 }
 
 function draw(): void {
   if (!renderer || fatal) return;
-  renderer.render(world, { camera, selected, time: visualTime, reducedMotion: reducedMotion.matches });
+  const resident = world.residents.find(person => person.id === followedResident);
+  if (followCamera && resident && !drag) camera = renderer.focus(resident, world, camera);
+  renderer.render(world, { camera, selected, time: visualTime, reducedMotion: reducedMotion.matches, followedResident, showRoutes });
   const phase = visualTime % 150 / 150;
-  element('time-of-day').textContent = phase < .2 || phase >= .8 ? '昼の景色' : phase < .3 ? '夕方の景色' : phase < .7 ? '夜の景色' : '朝の景色';
+  element('time-of-day').textContent = phase < .1 || phase >= .88 ? '朝の景色' : phase < .45 ? '昼の景色' : phase < .58 ? '夕方の景色' : '夜の景色';
 }
 
 function togglePause(): void {
@@ -223,9 +286,36 @@ for (const button of speedButtons) button.addEventListener('click', () => {
 element('zoom-in').addEventListener('click', () => zoomTo(camera.zoom + .25));
 element('zoom-out').addEventListener('click', () => zoomTo(camera.zoom - .25));
 element('fit').addEventListener('click', () => {
+  followCamera = false;
   camera = { zoom: 1, panX: 0, panY: 0 };
   updateControls();
   draw();
+});
+element('watch-resident').addEventListener('click', () => {
+  const moving = world.residents.filter(person => person.state === 'travel');
+  const candidates = moving.length ? moving : world.residents;
+  if (!candidates.length) { notify('今は町に外へ出る住民がいません。時間を進めてみてください。'); return; }
+  const index = candidates.findIndex(person => person.id === followedResident);
+  watchResident(candidates[(index + 1) % candidates.length].id);
+});
+element('routes').addEventListener('click', () => {
+  showRoutes = !showRoutes;
+  element('routes').setAttribute('aria-pressed', String(showRoutes));
+  draw();
+});
+element('stop-follow').addEventListener('click', () => {
+  followedResident = null;
+  followCamera = false;
+  updateLife();
+  draw();
+});
+element('resident-home').addEventListener('click', () => {
+  const resident = world.residents.find(person => person.id === followedResident);
+  if (resident) selectCell(world.cells[resident.home], true);
+});
+element('resident-destination').addEventListener('click', () => {
+  const resident = world.residents.find(person => person.id === followedResident);
+  if (resident?.destination !== null && resident?.destination !== undefined) selectCell(world.cells[resident.destination], true);
 });
 
 let drag: { id: number; x: number; y: number; panX: number; panY: number; moved: boolean } | null = null;
@@ -239,6 +329,7 @@ canvas.addEventListener('pointermove', event => {
   if (!drag || drag.id !== event.pointerId) return;
   if (Math.hypot(event.clientX - drag.x, event.clientY - drag.y) > 6) drag.moved = true;
   if (!drag.moved) return;
+  followCamera = false;
   const rect = canvas.getBoundingClientRect();
   camera.panX = Math.max(-canvas.width * camera.zoom, Math.min(canvas.width * camera.zoom, drag.panX + (event.clientX - drag.x) * canvas.width / rect.width));
   camera.panY = Math.max(-canvas.height * camera.zoom, Math.min(canvas.height * camera.zoom, drag.panY + (event.clientY - drag.y) * canvas.height / rect.height));
@@ -247,7 +338,11 @@ canvas.addEventListener('pointermove', event => {
 });
 canvas.addEventListener('pointerup', event => {
   if (!drag || drag.id !== event.pointerId) return;
-  if (!drag.moved) selectCell(renderer.pick(event.clientX, event.clientY, world, camera));
+  if (!drag.moved) {
+    const resident = renderer.pickResident(event.clientX, event.clientY, world, camera);
+    if (resident !== null) watchResident(resident);
+    else selectCell(renderer.pick(event.clientX, event.clientY, world, camera));
+  }
   drag = null;
   canvas.classList.remove('dragging');
 });
@@ -262,7 +357,7 @@ canvas.addEventListener('keydown', event => {
   if (event.key === ' ') { event.preventDefault(); togglePause(); }
   else if (event.key === '+' || event.key === '=') { event.preventDefault(); zoomTo(camera.zoom + .25); }
   else if (event.key === '-') { event.preventDefault(); zoomTo(camera.zoom - .25); }
-  else if (event.key === 'Escape') selectCell(null);
+  else if (event.key === 'Escape') { followedResident = null; selectCell(null); updateLife(); }
   else if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(event.key)) {
     event.preventDefault();
     const point = selected ?? { x: Math.floor(world.size / 2), y: Math.floor(world.size / 2) };
@@ -280,10 +375,12 @@ element('regenerate').addEventListener('click', () => {
     previousVisualTime = visualTime;
     previousPaused = paused;
     world = next;
+    followedResident = null;
+    followCamera = false;
     selected = null;
     camera = { zoom: 1, panX: 0, panY: 0 };
-    accumulator = 0;
-    visualTime = 0;
+    accumulator = world.clock % STEP_SECONDS;
+    visualTime = world.clock;
     lastSavedTick = -1;
     undoButton.hidden = false;
     updateUI();
@@ -298,9 +395,11 @@ undoButton.addEventListener('click', () => {
   if (!previousTown) return;
   try {
     world = restoreWorld(previousTown);
+    followedResident = null;
+    followCamera = false;
     visualTime = previousVisualTime;
     paused = previousPaused;
-    accumulator = 0;
+    accumulator = world.clock % STEP_SECONDS;
     selected = null;
     camera = { zoom: 1, panX: 0, panY: 0 };
     previousTown = null;
@@ -343,19 +442,28 @@ function frame(timestamp: number): void {
   const delta = lastFrame ? Math.min(.25, Math.max(0, (timestamp - lastFrame) / 1000)) : 0;
   lastFrame = timestamp;
   if (!paused && !document.hidden && !fatal) {
-    visualTime += delta * speed;
-    accumulator += delta * speed;
     let changed = false;
     try {
-      while (accumulator >= STEP_SECONDS) {
-        world = stepWorld(world);
-        accumulator -= STEP_SECONDS;
-        changed = true;
+      // Advance people on both sides of the weekly boundary. Their journey never
+      // resets when soil, demand or a building is updated.
+      let remaining = delta * speed;
+      while (remaining > 0) {
+        const slice = Math.min(remaining, STEP_SECONDS - accumulator);
+        advanceResidents(world, slice);
+        accumulator += slice;
+        remaining -= slice;
+        if (accumulator >= STEP_SECONDS - 1e-8) {
+          world = stepWorld(world);
+          accumulator = 0;
+          changed = true;
+        }
       }
+      visualTime = world.clock;
       if (changed) {
         updateUI();
         if (world.tick - lastSavedTick >= 5) saveTown();
       }
+      if (timestamp - lastLifeUpdate > 500) { updateLife(); lastLifeUpdate = timestamp; }
     } catch {
       paused = true;
       updateControls();
@@ -376,6 +484,7 @@ function frame(timestamp: number): void {
 
 try {
   renderer = new TownRenderer(canvas);
+  camera = renderer.focus({ x: Math.floor(world.size * .25), y: Math.floor(world.size * .52) - 1 }, world, { zoom: 1.5, panX: 0, panY: 0 });
   updateUI();
   draw();
   element('loading').hidden = true;
