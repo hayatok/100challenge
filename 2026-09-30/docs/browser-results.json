@@ -1,0 +1,136 @@
+{
+  "success": true,
+  "tickAt1x": 0,
+  "tickAt12x": 14,
+  "selectedName": "住まい",
+  "photoBytes": 141439,
+  "layouts": [
+    {
+      "width": 768,
+      "scroll": 768,
+      "viewport": 768,
+      "controls": [
+        {
+          "text": "▷時間を進める",
+          "width": 136.015625,
+          "height": 44
+        },
+        {
+          "text": "1×",
+          "width": 43,
+          "height": 44
+        },
+        {
+          "text": "4×",
+          "width": 43,
+          "height": 44
+        },
+        {
+          "text": "12×",
+          "width": 48.4375,
+          "height": 44
+        },
+        {
+          "text": "−",
+          "width": 44,
+          "height": 44
+        },
+        {
+          "text": "＋",
+          "width": 44,
+          "height": 44
+        },
+        {
+          "text": "全体を見る",
+          "width": 88.015625,
+          "height": 44
+        }
+      ]
+    },
+    {
+      "width": 390,
+      "scroll": 390,
+      "viewport": 390,
+      "controls": [
+        {
+          "text": "▷時間を進める",
+          "width": 122.015625,
+          "height": 44
+        },
+        {
+          "text": "1×",
+          "width": 40,
+          "height": 44
+        },
+        {
+          "text": "4×",
+          "width": 40,
+          "height": 44
+        },
+        {
+          "text": "12×",
+          "width": 44.4375,
+          "height": 44
+        },
+        {
+          "text": "−",
+          "width": 44,
+          "height": 44
+        },
+        {
+          "text": "＋",
+          "width": 44,
+          "height": 44
+        },
+        {
+          "text": "全体を見る",
+          "width": 84.015625,
+          "height": 44
+        }
+      ]
+    },
+    {
+      "width": 320,
+      "scroll": 320,
+      "viewport": 320,
+      "controls": [
+        {
+          "text": "▷時間を進める",
+          "width": 122.015625,
+          "height": 44
+        },
+        {
+          "text": "1×",
+          "width": 40,
+          "height": 44
+        },
+        {
+          "text": "4×",
+          "width": 40,
+          "height": 44
+        },
+        {
+          "text": "12×",
+          "width": 44.4375,
+          "height": 44
+        },
+        {
+          "text": "−",
+          "width": 44,
+          "height": 44
+        },
+        {
+          "text": "＋",
+          "width": 44,
+          "height": 44
+        },
+        {
+          "text": "全体を見る",
+          "width": 84.015625,
+          "height": 44
+        }
+      ]
+    }
+  ],
+  "errors": []
+}
