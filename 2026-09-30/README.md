@@ -51,4 +51,4 @@ npm run preview # ビルドしたdist/を確認
 - `src/main.ts` / `src/style.css`: DOMの観察UI、固定ステップ、操作、保存。
 - [開発前の計画](./docs/PLAN.md)、[初版の検証結果](./docs/RESULTS.md)、[改善計画](./docs/IMPROVEMENT_PLAN.md)、[改善の確認記録](./docs/IMPROVEMENT_RESULTS.md)、[Issue #144](https://github.com/hayatok/100challenge/issues/144)。
 
-素材はCanvasのコードで制作したオリジナルです。外部の画像・音声素材や実行時ライブラリは使っていません。初版はChromiumで動作を確認しています。今回の改善版はlocalhostへの保存済み拒否設定でブラウザ接続がブロックされ、実画面未確認です。READMEの画像と既存screenshotsは初版のものです。Safari・Firefox・スマートフォン実機も未確認です。
+素材はCanvasのコードで制作したオリジナルです。外部の画像・音声素材や実行時ライブラリは使っていません。初版はChromiumで動作を確認しています。改善版はGitHub Pagesの公開URLで、アプリ内ブラウザによる停止・倍速・住民追跡・住まいの観察・保存復元と390px幅の表示を確認しました。[公開の確認記録](./docs/RELEASE_2026-10-01.md)。READMEの画像と既存screenshotsは初版のものです。Safari・Firefox・スマートフォン実機も未確認です。
