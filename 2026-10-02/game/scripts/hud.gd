@@ -12,6 +12,8 @@ const MONO = preload("res://assets/fonts/DejaVuSansMono.ttf")
 const JP = preload("res://assets/fonts/NotoSansCJKjp-Medium.otf")
 var game
 var buttons: Array[Rect2] = []
+var button_state := ""
+const PAUSE_HITBOX := Rect2(1056,648,200,64)
 var ui_scale := 1.0
 var origin := Vector2.ZERO
 var t := 0.0
@@ -33,6 +35,7 @@ func _draw() -> void:
     origin = (size-Vector2(1280,720)*ui_scale)*0.5
     draw_set_transform(origin,0,Vector2.ONE*ui_scale)
     buttons.clear()
+    button_state = game.state
     _edge_shading()
     match game.state:
         "title": _title()
@@ -124,10 +127,15 @@ func menu_labels() -> Array[String]:
     return []
 
 func button_at(pos: Vector2) -> int:
+    if button_state != game.state: return -1
     var point := (pos-origin)/maxf(ui_scale,0.001)
     for i in range(buttons.size()):
         if buttons[i].has_point(point): return i
     return -1
+
+func pause_at(pos: Vector2) -> bool:
+    # Make the existing footer action tappable without adding another panel.
+    return PAUSE_HITBOX.has_point((pos-origin)/maxf(ui_scale,0.001))
 
 func _title() -> void:
     draw_rect(Rect2(0,0,550,720),Color(INK,0.85))
@@ -225,7 +233,7 @@ func _gameplay() -> void:
     _target_card()
     text("TAB  標的変更",Vector2(32,698),12,MUTED)
     text("BACKSPACE  リセット",Vector2(181,698),12,MUTED)
-    right("ESC  一時停止",Vector2(1248,698),12,MUTED)
+    right("ESC / TAP  一時停止",Vector2(1248,698),12,MUTED)
 
 func _route_strip(info: Dictionary) -> void:
     var progress: float = clampf(float(_value("route_progress",game.elapsed/75.0)),0,1)

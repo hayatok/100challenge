@@ -49,6 +49,7 @@ func run() -> void:
     game.start_run()
     check(game.hud.menu_actions() == ["begin"], "Briefing has a real clickable start action")
     check(game.hud.menu_labels().size() == 1, "Briefing start has a touch-readable label")
+    game.hud.button_state = "intermission"
     game.hud.ui_scale = 0.5
     game.hud.origin = Vector2(0,40)
     game.hud.buttons.assign([Rect2(76,608,550,58)])
@@ -80,7 +81,7 @@ func run() -> void:
     game.web_action("text", "A")
     check(touch_enemy.purge.typed == "a" and game.total_keys == 1, "Soft keyboard accepts uppercase once")
     var touch_snapshot: Dictionary = game.web_snapshot()
-    check(touch_snapshot.target == "雨" and touch_snapshot.typed == "a" and touch_snapshot.remaining == "me", "Mobile target readout mirrors matcher progress")
+    check(touch_snapshot == {"state":"playing"}, "Browser snapshot carries no duplicate HUD readout")
     game.web_action("reset")
     check(touch_enemy.purge.typed.is_empty(), "Touch reset clears selected input")
     game.web_action("text", "ame")
@@ -88,8 +89,7 @@ func run() -> void:
     game.web_action("focus_lost")
     check(game.state == "paused", "Leaving mobile page pauses combat")
     game.web_action("menu", "1")
-    var touch_settings: Dictionary = game.web_snapshot()
-    check(not touch_settings.actions[0].enabled and not touch_settings.actions[1].enabled, "Paused difficulty and language remain locked on mobile")
+    check(game.settings_origin == "paused", "Touch settings retains paused origin")
     var touch_difficulty: int = game.difficulty
     game.web_action("menu", "0")
     check(game.difficulty == touch_difficulty, "Mobile bridge enforces locked settings")
@@ -99,6 +99,30 @@ func run() -> void:
     game.web_action("menu", "5")
     game.web_action("menu", "2")
     check(game.state == "intermission" and game.kills == 0, "Touch retry rolls back checkpoint and returns to briefing")
+    game.hud.ui_scale = 1.0
+    game.hud.origin = Vector2.ZERO
+    game.hud.button_state = "intermission"
+    game.hud.buttons.assign([Rect2(76,608,550,58)])
+    var viewport_size: Vector2 = game.get_viewport().get_visible_rect().size
+    var begin_point := Vector2(300,630)/viewport_size
+    game.web_action("tap", JSON.stringify({"x":begin_point.x,"y":begin_point.y}))
+    check(game.state == "playing", "Synchronous canvas tap uses the existing briefing START hitbox")
+    check(game.hud.button_at(Vector2(300,630)) == -1, "Stale briefing hitbox cannot trigger a different-state action")
+    var pause_point := Vector2(1180,680)/viewport_size
+    game.web_action("tap", JSON.stringify({"x":pause_point.x,"y":pause_point.y}))
+    check(game.state == "paused", "Existing game HUD pause footer is tappable")
+    game.hud.button_state = "paused"
+    game.hud.buttons.assign([Rect2(436,257,408,55)])
+    var resume_point := Vector2(600,280)/viewport_size
+    game.web_action("tap", JSON.stringify({"x":resume_point.x,"y":resume_point.y}))
+    check(game.state == "playing", "Synchronous canvas tap resumes from the existing game menu")
+    for bad_point in ['{}','[]','invalid','{"x":-1,"y":0.9}','{"x":0.9,"y":2}','{"x":"0.9","y":0.9}']:
+        game.web_action("tap", bad_point)
+    check(game.state == "playing", "Malformed or out-of-canvas taps do not activate HUD controls")
+    game.hud.ui_scale = 0.5
+    game.hud.origin = Vector2(0,40)
+    check(game.hud.pause_at(Vector2(590,380)), "Pause hit testing follows HUD scale and letterbox offset")
+    game.hud.buttons.clear()
     print("=== ROMAJI FAIRNESS ===")
     var aliases := 0
     for word in game.WORDS + game.CUTS + [{"kana":"あめ"},{"kana":"ろじ"}]:
