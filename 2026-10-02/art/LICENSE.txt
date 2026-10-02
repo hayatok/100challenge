@@ -1,0 +1,9 @@
+BLACK RELAY original asset kit
+
+All original geometry, original procedural Blender source and original material definitions in this directory are dedicated to the public domain under CC0 1.0 Universal.
+
+To the extent possible under law, the author has waived all copyright and related or neighboring rights to this original asset kit. The work is provided without warranty.
+
+License text: https://creativecommons.org/publicdomain/zero/1.0/legalcode
+
+No third-party asset files are incorporated in the GLB models. Blender and Godot are separate applications governed by their own licenses and are not included in this asset kit.

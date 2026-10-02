@@ -1,0 +1,20 @@
+BLACK RELAY / 黒の中継局 — original project audio
+
+Provenance
+All WAV files in this folder are original procedural audio created specifically
+for this project from numerical oscillators, deterministic noise, envelopes,
+filters, modal synthesis and delay taps. No recorded material, external sample
+library, downloaded sound, commercial audio service output or third-party melody
+was used. The exact source is ../../../scripts/generate_audio.py relative to
+this file, and audio_manifest.json records checksums and technical measurements.
+
+Rights record
+These are project-created assets produced at the project owner's request. Their
+use, modification and distribution follow the project's ownership and licensing
+terms. There is no additional third-party audio attribution requirement, sample
+license, royalty or vendor restriction attached to this pack. This provenance
+record does not impose a new public-domain dedication, Creative Commons license,
+or separate license on the project owner's work.
+
+This file covers original audio only; fonts, engine binaries and other assets
+may carry their own notices and are not covered by this record.

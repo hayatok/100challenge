@@ -1,0 +1,159 @@
+{
+  "project": "BLACK RELAY / \u9ed2\u306e\u4e2d\u7d99\u5c40",
+  "generator": "Blender 4.3.2, source/generate_black_relay.py",
+  "license": "CC0-1.0; original geometry and materials dedicated to the public domain",
+  "third_party_assets": [],
+  "coordinates": "Godot +Y up, front +Z, 1 unit = 1m, ground at y=0",
+  "animation": "Named separated component pivots; no baked animation. Runtime transforms are safe.",
+  "assets": [
+    {
+      "file": "models/enemy_walker.glb",
+      "bytes": 179748,
+      "vertices": 1462,
+      "triangles": 2464,
+      "components": [
+        "arm_L",
+        "arm_R",
+        "body",
+        "head",
+        "leg_L",
+        "leg_R"
+      ],
+      "dimensions_blender": [
+        1.139,
+        0.456,
+        1.885
+      ],
+      "front_godot": "+Z",
+      "up_godot": "+Y",
+      "origin": "Ground centre",
+      "textures": "None; original PBR materials"
+    },
+    {
+      "file": "models/enemy_crawler.glb",
+      "bytes": 141288,
+      "vertices": 1122,
+      "triangles": 1960,
+      "components": [
+        "body.001",
+        "core",
+        "head.001",
+        "leg_L_0",
+        "leg_L_2",
+        "leg_R_0",
+        "leg_R_2",
+        "spool",
+        "tail"
+      ],
+      "dimensions_blender": [
+        1.574,
+        1.558,
+        0.774
+      ],
+      "front_godot": "+Z",
+      "up_godot": "+Y",
+      "origin": "Ground centre",
+      "textures": "None; original PBR materials"
+    },
+    {
+      "file": "models/enemy_beacon.glb",
+      "bytes": 203472,
+      "vertices": 1658,
+      "triangles": 2952,
+      "components": [
+        "body.002",
+        "core.001",
+        "head.002",
+        "mask_left",
+        "mask_right"
+      ],
+      "dimensions_blender": [
+        1.398,
+        0.725,
+        2.265
+      ],
+      "front_godot": "+Z",
+      "up_godot": "+Y",
+      "origin": "Ground centre",
+      "textures": "None; original PBR materials"
+    },
+    {
+      "file": "models/boss_relay.glb",
+      "bytes": 350340,
+      "vertices": 2594,
+      "triangles": 4602,
+      "components": [
+        "body.003",
+        "core.002",
+        "halo",
+        "head.003",
+        "mask_left.001",
+        "mask_right.001"
+      ],
+      "dimensions_blender": [
+        3.28,
+        1.953,
+        4.06
+      ],
+      "front_godot": "+Z",
+      "up_godot": "+Y",
+      "origin": "Ground centre",
+      "textures": "None; original PBR materials"
+    },
+    {
+      "file": "models/relay_cabinet.glb",
+      "bytes": 97300,
+      "vertices": 744,
+      "triangles": 1316,
+      "components": [
+        "body.004"
+      ],
+      "dimensions_blender": [
+        0.84,
+        0.683,
+        2.172
+      ],
+      "front_godot": "+Z",
+      "up_godot": "+Y",
+      "origin": "Ground centre",
+      "textures": "None; original PBR materials"
+    },
+    {
+      "file": "models/hazard_gate.glb",
+      "bytes": 128796,
+      "vertices": 880,
+      "triangles": 1608,
+      "components": [
+        "frame",
+        "gate_panel"
+      ],
+      "dimensions_blender": [
+        3.68,
+        0.471,
+        3.225
+      ],
+      "front_godot": "+Z",
+      "up_godot": "+Y",
+      "origin": "Ground centre",
+      "textures": "None; original PBR materials"
+    },
+    {
+      "file": "models/conduit_bundle.glb",
+      "bytes": 29520,
+      "vertices": 282,
+      "triangles": 484,
+      "components": [
+        "body.005"
+      ],
+      "dimensions_blender": [
+        0.58,
+        1.368,
+        1.695
+      ],
+      "front_godot": "+Z",
+      "up_godot": "+Y",
+      "origin": "Ground centre",
+      "textures": "None; original PBR materials"
+    }
+  ]
+}

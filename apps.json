@@ -199,5 +199,15 @@
     "category": "観察型箱庭ゲーム",
     "thumbnail": "town-cover.png",
     "accent": "#617b50"
+  },
+  {
+    "id": "2026-10-02",
+    "date": "2026-10-02",
+    "sequence": 1,
+    "name": "BLACK RELAY / 黒雨の街",
+    "description": "一語、一撃。人間型ゾンビが迫る商店街を進む、Godot製3Dタイピング・レールシューター。",
+    "category": "3Dタイピングホラー",
+    "thumbnail": "black-relay-cover.png",
+    "accent": "#ffad42"
   }
 ]
