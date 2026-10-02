@@ -46,3 +46,8 @@ Old station milestone: `docs/screenshots/black-relay-switchyard.png`.
 New ordinary encounter: `builds/urban-normal/black_relay_capture.png`.
 New staged close encounter: `builds/urban-near/black_relay_capture.png`.
 These are comparison inputs, not certification that one game is better.
+
+
+## Mobile control follow-up
+
+The later Web-only tap/soft-keyboard change and its current validation are recorded in MOBILE_QA.md. Earlier screenshots and source manifests above describe the pre-mobile urban milestone, not an iPhone playtest.

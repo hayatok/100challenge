@@ -22,6 +22,8 @@ if(['editor','play'].includes(command)){
  if(command==='test')process.stdout.write(output);
  else console.log(`Godot ${version}: ${command} passed`);
  if(command==='build'||command==='debug'){
+  if(!readFileSync(path.join(root,'dist/index.js'),'utf8').includes('function _godot_audio_resume('))throw Error('Review mobile audio unlock for this Godot Web template.');
+  copyFileSync(path.join(root,'game/web_mobile.js'),path.join(root,'dist/web_mobile.js'));
   const out=path.join(root,'dist');copyFileSync(path.join(root,'public/black-relay-cover.png'),path.join(out,'black-relay-cover.png'));mkdirSync(path.join(out,'licenses'),{recursive:true});
   for(const [source,target] of [['THIRD_PARTY_NOTICES.md','THIRD_PARTY_NOTICES.txt'],['game/assets/fonts/LICENSE.txt','licenses/Noto-OFL.txt'],['game/assets/fonts/DEJAVU-LICENSE.txt','licenses/DejaVu.txt'],['docs/licenses/GODOT-LICENSE.txt','licenses/Godot.txt']])copyFileSync(path.join(root,source),path.join(out,target));
   const text=readFileSync(path.join(root,'THIRD_PARTY_NOTICES.md'),'utf8').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;');
