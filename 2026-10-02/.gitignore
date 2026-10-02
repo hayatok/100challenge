@@ -1,0 +1,7 @@
+node_modules/
+dist/
+builds/
+.cache/
+game/.godot/
+*.blend1
+__pycache__/

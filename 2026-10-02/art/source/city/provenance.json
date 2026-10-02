@@ -1,0 +1,140 @@
+{
+  "checked_date": "2026-10-02",
+  "assets": [
+    {
+      "asset": "Male City Zombie, Ready for use in Game Engines.",
+      "author": "Rikindle3D",
+      "page": "https://opengameart.org/content/male-city-zombie-ready-for-use-in-game-engines",
+      "license": "CC0 1.0",
+      "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "archive": "Male City Zombie.7z",
+      "archive_sha256": "2858c0c4968740b372108afc64ba009ef4d0e0425edbb5dc3dc50d46f4d0a661",
+      "evidence": "Official author page explicitly selects CC0, directly reread 2026-10-02. Author archive reread; no embedded textual license; archive hash identical to licensed source used for repository conversion."
+    },
+    {
+      "asset": "Pistol",
+      "author": "loafbrr_1",
+      "page": "https://opengameart.org/content/pistol-5",
+      "license": "CC0 1.0",
+      "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "archive": "pistolfbxgltftexturesblend_1.zip",
+      "archive_sha256": "3aa9970b4b601fc37a6e6034bfe53f1ebc00fd56cc0a2abb6542abf34e7754f0",
+      "evidence": "Official author page explicitly selects CC0 and archive README explicitly states Creative Commons 0, reread 2026-10-02. The page documents resolution of an earlier mistaken license wording."
+    },
+    {
+      "asset": "fps arms (rigged only)",
+      "author": "para; base mesh and texture from MakeHuman team",
+      "page": "https://opengameart.org/content/fps-arms-rigged-only",
+      "license": "CC0 1.0",
+      "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "underlying_asset_license": "https://static.makehumancommunity.org/about/license.html",
+      "archive": "fps arms.7z",
+      "archive_sha256": "31f6c7bd5caea8856c4aafca8461f38a3c8bfdd3d8f05c898e403b9475e54562",
+      "evidence": "Official author page explicitly selects CC0 and credits MakeHuman mesh/texture; official MakeHuman license checked for core assets. Author archive reread; no embedded textual license. Hash identical to repository conversion source."
+    },
+    {
+      "asset": "Thin Zombie [Awake Zombie Asset]",
+      "author": "Rosswet Mobile (submitted by dogchicken)",
+      "page": "https://opengameart.org/content/thin-zombie-awake-zombie-asset",
+      "license": "CC BY 3.0 Unported",
+      "license_url": "https://creativecommons.org/licenses/by/3.0/",
+      "evidence": "Official author page explicitly selects CC-BY 3.0 and attribution instructions name Rosswet Mobile, reread 2026-10-02. Official license permits copying and adaptations, with attribution, license link and modification disclosure."
+    },
+    {
+      "asset": "Worn Asphalt",
+      "author": "Amal Kumar",
+      "page": "https://polyhaven.com/a/worn_asphalt",
+      "license": "CC0 1.0",
+      "license_url": "https://polyhaven.com/license",
+      "evidence": "Official Poly Haven license read 2026-10-02 explicitly permits commercial use and redistribution; maps are unmodified source 1K bytes from repository licensed download."
+    },
+    {
+      "asset": "Worn Shutter",
+      "author": "Dimitrios Savva",
+      "page": "https://polyhaven.com/a/worn_shutter",
+      "license": "CC0 1.0",
+      "license_url": "https://polyhaven.com/license",
+      "evidence": "Official Poly Haven license read 2026-10-02 explicitly permits commercial use and redistribution; maps are unmodified source 1K bytes from repository licensed download."
+    },
+    {
+      "asset": "Gunshot Sounds",
+      "author": "Vincent Sevedge, copyright 2009; OGA uploader Tabasco",
+      "page": "https://opengameart.org/content/gunshot-sounds",
+      "license": "CC BY 3.0 Unported (conservative archive license)",
+      "license_url": "https://creativecommons.org/licenses/by/3.0/",
+      "archive": "sounds.zip",
+      "archive_sha256": "5b3960083a94e18ee47bc84376615a476debc884b18f25b93ea4b6ab3f278e4f",
+      "evidence": "Official listing currently says CC0, but author archive reread 2026-10-02 explicitly states copyright 2009 Vincent Sevedge and CC BY 3.0. Exact archive notice retained in licenses/GUNSHOT-ARCHIVE-LICENSE.txt. Use stricter CC BY 3.0."
+    },
+    {
+      "asset": "Impact Sounds",
+      "author": "Kenney",
+      "page": "https://kenney.nl/assets/impact-sounds",
+      "license": "CC0 1.0",
+      "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "evidence": "Official Kenney asset page explicitly selects Creative Commons CC0, reread 2026-10-02."
+    }
+  ],
+  "runtime_files": [
+    {
+      "path": "game/assets/models/city/pistol_hands.glb",
+      "bytes": 2166472,
+      "sha256": "f514555f50e8045f14c9977693181a0b3fb4d11e665014e0366c56f0bf40e8a2"
+    },
+    {
+      "path": "game/assets/models/city/thin_zombie.glb",
+      "bytes": 1784688,
+      "sha256": "612e5467a0486fd51b52b79ef693db4ba8656c8ba93fa0fbbf1062cbbb303021"
+    },
+    {
+      "path": "game/assets/models/city/zombie_city.glb",
+      "bytes": 6258780,
+      "sha256": "ad4d1e14c6f64a926772bfda5dbcf89dea9e316652e0c08a305a7bb94fe0d24e"
+    },
+    {
+      "path": "game/assets/materials/worn_asphalt/diffuse.jpg",
+      "bytes": 914719,
+      "sha256": "3bf71ad290730092ad2aee85e246b2e43318bc1f32261826ba91250e815b5f72"
+    },
+    {
+      "path": "game/assets/materials/worn_asphalt/normal.jpg",
+      "bytes": 1503498,
+      "sha256": "5f835d192dac296674229a763553f356f5e206bb7f6d812bca5b0f38fc5302a4"
+    },
+    {
+      "path": "game/assets/materials/worn_asphalt/roughness.jpg",
+      "bytes": 480395,
+      "sha256": "ad63ece01a94cb43f57a9d628fa9d28a560bffc8878749998ad3601831ab843f"
+    },
+    {
+      "path": "game/assets/materials/worn_shutter/diffuse.jpg",
+      "bytes": 560285,
+      "sha256": "1e1a84c4f2ce5d005c9c3e8860d23370e2ad6dcc4040cd972803ad700e516a08"
+    },
+    {
+      "path": "game/assets/materials/worn_shutter/normal.jpg",
+      "bytes": 717669,
+      "sha256": "924e3948a4f654322ddb595b9abca4b0b491d70fd69453f479c108d5ac815c93"
+    },
+    {
+      "path": "game/assets/materials/worn_shutter/roughness.jpg",
+      "bytes": 223894,
+      "sha256": "8ac4d81745ed173e1cb34da52b6cd429a476245df7cef6285416f4ba7c137dd6"
+    },
+    {
+      "path": "game/assets/audio/shot.mp3",
+      "bytes": 12094,
+      "sha256": "47d5f550aef0b537c5c98c0c83cde0b19e69f37661ede5f2249f287f553ec01d"
+    },
+    {
+      "path": "game/assets/audio/impact_body.ogg",
+      "bytes": 10861,
+      "sha256": "f92f5cb6ba4ff2766497292ffd90865654317eeca976f5652e0708dbdcdc0dd9"
+    },
+    {
+      "path": "game/assets/audio/impact_metal.ogg",
+      "bytes": 5634,
+      "sha256": "b914c8f1eb7c0f34bb165d7c77f4be0351f6be0660c13c53e65424e262e2c093"
+    }
+  ]
+}
