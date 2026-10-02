@@ -31,3 +31,10 @@ Reduced motion disables camera bob/shake, preserving necessary route traversal. 
 ## Boundaries
 
 No account, telemetry, purchases or online score board. No commercial franchise assets. No claim to a full campaign or commercial-scale art budget. User requested Web publication for hands-on assessment and reduced further local rendering tests; final browser assessment belongs to that deployment pass.
+
+
+## Mobile Web controls
+
+The desktop HUD keeps its 1280×720 safe frame. Touch browsers add native HTML buttons and a real text input, with a mirrored current word outside the scaled canvas so it remains readable above the software keyboard. Controls are at least 44 CSS pixels and retain the game's charcoal/ivory/amber color roles, an intentional game-specific exception to the shared light UI palette. The briefing also has an actual clickable START button in the Godot HUD.
+
+The browser input is focused synchronously by a player gesture, never by the frame loop. VisualViewport resize/scroll updates keep controls inside the visible area; short landscape layouts may scroll. Character input uses committed input/composition events, not synthetic keyboard events. ASCII romaji and English are accepted by the existing matcher; kana text is not automatically converted into a correct answer. Paste/drop and predictive replacement are blocked. Backspace/reset clears the selected target, matching desktop behavior. Leaving the page pauses the encounter; returning requires an explicit resume.

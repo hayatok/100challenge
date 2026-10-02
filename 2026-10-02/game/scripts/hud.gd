@@ -98,10 +98,29 @@ func button(label: String, rect: Rect2, index: int, primary := false, locked := 
 func menu_actions() -> Array:
     match game.state:
         "title": return ["start","settings"]
+        "intermission": return ["begin"]
         "settings": return ["difficulty","language","volume","motion","contrast","back"]
         "paused": return ["resume","settings","checkpoint","title"]
         "victory": return ["retry","title"]
         "defeat": return ["checkpoint","retry","title"]
+    return []
+
+func menu_labels() -> Array[String]:
+    match game.state:
+        "title": return ["脱出を始める / START RUN", "設定 / SETTINGS"]
+        "intermission": return ["街へ出る / START"]
+        "paused": return ["再開 / RESUME", "設定 / SETTINGS", "このルートをやり直す", "タイトルへ戻る"]
+        "victory": return ["もう一度 / RETRY", "タイトルへ戻る"]
+        "defeat": return ["このルートをやり直す", "最初から / RETRY", "タイトルへ戻る"]
+        "settings":
+            var locked: bool = game.settings_origin == "paused"
+            return [
+                "難易度: タイトルで変更" if locked else "難易度: " + ["ASSIST", "STANDARD", "OVERDRIVE"][game.difficulty],
+                "入力: タイトルで変更" if locked else "入力: " + ["日本語ローマ字", "ENGLISH WORDS"][game.language],
+                "音量: %d%%" % roundi(game.volume * 100),
+                "動きを減らす: " + ("ON" if game.reduced_motion else "OFF"),
+                "文字コントラスト: " + ("HIGH" if game.high_contrast else "STANDARD"),
+                "戻る / BACK"]
     return []
 
 func button_at(pos: Vector2) -> int:
@@ -168,8 +187,8 @@ func _briefing() -> void:
     text("TAB で標的変更。ミスしても入力の進みは残る",Vector2(124,475),20,MUTED)
     draw_rect(Rect2(76,525,1128,1),Color("455258"))
     text("出口まで進み、残った影をすべて倒せ。",Vector2(77,571),18,IVORY)
-    var fade: float = 1.0 if game.reduced_motion else 0.8+sin(t*2.0)*0.2
-    text("[ SPACE / ENTER ]  街へ出る",Vector2(76,649),22,Color(AMBER,fade),true)
+    button("街へ出る  /  START",Rect2(76,608,550,58),0,true)
+    text("クリック / タップ / SPACE / ENTER",Vector2(77,694),13,MUTED)
     right("ESC 一時停止  /  IME をオフ",Vector2(1204,649),13,MUTED)
 
 func _gameplay() -> void:

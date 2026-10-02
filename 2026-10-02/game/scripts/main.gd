@@ -4,6 +4,7 @@ const Enemy = preload("res://scripts/enemy.gd")
 const World = preload("res://scripts/world.gd")
 const Hud = preload("res://scripts/hud.gd")
 const Romaji = preload("res://scripts/romaji.gd")
+const WebInput = preload("res://scripts/web_input.gd")
 const WORDS := [
 {"text":"残響","kana":"ざんきょう","en":"echo"}, {"text":"空白","kana":"くうはく","en":"hollow"},
 {"text":"無言","kana":"むごん","en":"unheard"}, {"text":"断線","kana":"だんせん","en":"signal"},
@@ -133,6 +134,10 @@ func _ready() -> void:
     _make_weapon()
     _make_crowd()
     get_tree().root.focus_exited.connect(_focus_lost)
+    if OS.has_feature("web"):
+        var web_input := WebInput.new()
+        web_input.game = self
+        add_child(web_input)
     var qa_stage := -1
     for argument in OS.get_cmdline_user_args():
         if argument == "--qa-encounter":
@@ -317,11 +322,7 @@ func _input(event: InputEvent) -> void:
             get_viewport().set_input_as_handled()
             return
         if event.keycode == KEY_BACKSPACE:
-            if is_instance_valid(selected):
-                selected.active_word = ""
-                selected.cut.clear()
-                selected.purge.clear()
-                toast("入力をリセット", "PROGRESS CLEARED",Color("8bc6c9"),1.0)
+            reset_target_input()
             return
         if event.unicode > 0:
             var letter := String.chr(event.unicode).to_lower()
@@ -354,6 +355,7 @@ func activate_menu(index: int) -> void:
         return
     match action:
         "start", "retry": start_run()
+        "begin": begin_stage()
         "resume": state = previous_state
         "settings":
             settings_origin = state
@@ -383,6 +385,55 @@ func activate_menu(index: int) -> void:
             AudioServer.set_bus_volume_db(0,linear_to_db(maxf(volume,0.0001)))
             AudioServer.set_bus_mute(0,volume < 0.001)
     menu_hover = -1
+
+func reset_target_input() -> void:
+    if state != "playing" or not is_instance_valid(selected) or selected.dead:
+        return
+    selected.active_word = ""
+    selected.cut.clear()
+    selected.purge.clear()
+    toast("入力をリセット", "PROGRESS CLEARED",Color("8bc6c9"),1.0)
+
+# The browser bridge uses the same actions and matcher as physical keyboards.
+# Only committed ASCII is accepted: Japanese IME text is never transliterated
+# into a free correct word, and input outside a running encounter is discarded.
+func web_action(action: String, value := "") -> void:
+    match action:
+        "text":
+            if state != "playing" or value.is_empty() or value.length() > 64: return
+            var letters := value.to_lower()
+            for letter in letters:
+                if not "abcdefghijklmnopqrstuvwxyz'-".contains(letter): return
+            for letter in letters:
+                if state != "playing": break
+                type_letter(letter)
+        "begin":
+            if state == "intermission": begin_stage()
+        "menu":
+            if value.is_valid_int(): activate_menu(int(value))
+        "pause", "focus_lost":
+            if state == "playing":
+                previous_state = state
+                state = "paused"
+                menu_index = 0
+        "cycle":
+            if state == "playing": cycle_target()
+        "reset": reset_target_input()
+
+func web_snapshot() -> Dictionary:
+    var actions: Array[Dictionary] = []
+    var labels: Array[String] = hud.menu_labels()
+    for i in range(labels.size()):
+        actions.append({"label": labels[i], "enabled": not (state == "settings" and settings_origin == "paused" and i < 2)})
+    var snapshot := {"state": state, "previous_state": previous_state, "actions": actions,
+        "target": "", "typed": "", "remaining": "", "cut": "", "hp": hp, "score": score}
+    if state in ["playing", "paused"] and is_instance_valid(selected) and not selected.dead:
+        snapshot.target = selected.purge_text
+        snapshot.typed = selected.purge.typed
+        snapshot.remaining = selected.purge.hint().substr(selected.purge.typed.length())
+        if selected.can_cut():
+            snapshot.cut = "CUT: " + selected.cut.typed + " | " + selected.cut.hint().substr(selected.cut.typed.length())
+    return snapshot
 
 func start_run() -> void:
     _refresh_record()
@@ -686,6 +737,11 @@ func rank_name() -> String:
     return "C"
 
 func _focus_lost() -> void:
+    # Moving focus from the canvas into the mobile HTML input is not leaving
+    # the game. Actual window blur / hidden-tab events are bridged separately.
+    if OS.has_feature("web"):
+        var document = JavaScriptBridge.get_interface("document")
+        if document != null and document.hasFocus(): return
     if state == "playing" and not demo_mode:
         previous_state = state
         state = "paused"
