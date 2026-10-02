@@ -33,8 +33,12 @@ Reduced motion disables camera bob/shake, preserving necessary route traversal. 
 No account, telemetry, purchases or online score board. No commercial franchise assets. No claim to a full campaign or commercial-scale art budget. User requested Web publication for hands-on assessment and reduced further local rendering tests; final browser assessment belongs to that deployment pass.
 
 
-## Mobile Web controls
+## Mobile Web keyboard
 
-The desktop HUD keeps its 1280×720 safe frame. Touch browsers add native HTML buttons and a real text input, with a mirrored current word outside the scaled canvas so it remains readable above the software keyboard. Controls are at least 44 CSS pixels and retain the game's charcoal/ivory/amber color roles, an intentional game-specific exception to the shared light UI palette. The briefing also has an actual clickable START button in the Godot HUD.
+The Godot HUD is the only visible game UI on all devices. There are no separate HTML menus, mirrored words, combat panels, keyboard buttons or visible text fields on touch browsers. The existing briefing START and pause-menu actions remain tappable; the existing pause footer gains a hitbox. Enemy taps still select a target.
 
-The browser input is focused synchronously by a player gesture, never by the frame loop. VisualViewport resize/scroll updates keep controls inside the visible area; short landscape layouts may scroll. Character input uses committed input/composition events, not synthetic keyboard events. ASCII romaji and English are accepted by the existing matcher; kana text is not automatically converted into a correct answer. Paste/drop and predictive replacement are blocked. Backspace/reset clears the selected target, matching desktop behavior. Leaving the page pauses the encounter; returning requires an explicit resume.
+A transparent 1×1 CSS-pixel HTML input provides the native keyboard. It stays in the visible viewport with a 16px font and `pointer-events:none`; it cannot cover the game or intercept touches. The canvas handles a single touch gesture synchronously through JavaScriptBridge, using the same Godot HUD hit tests and target-selection code as mouse input. The handled touch prevents the engine's duplicate buffered touch-to-mouse path. Cancelled gestures, drags and multiple fingers activate nothing; desktop mouse and keyboard inputs keep their existing path.
+
+After the in-game action confirms a playing state, focus happens inside that same touchend gesture. Tapping the game reopens a dismissed keyboard, including when iOS retains the input as activeElement. State/frame updates never focus it. VisualViewport resize/scroll fits the canvas above the keyboard without a separate control layer.
+
+Character input uses committed input/composition events, not synthetic keyboard events. ASCII romaji and English go through the existing matcher; kana text is not automatically converted into a correct answer. Paste/drop and predictive replacement remain blocked. Backspace resets the selected target. Leaving the page pauses the encounter; returning requires the existing in-game resume action.

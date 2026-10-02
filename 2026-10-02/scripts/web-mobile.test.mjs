@@ -9,23 +9,26 @@ const SENTINEL = '\u200b';
 
 class Target {
   listeners = new Map();
-  addEventListener(type, fn) {
+  addEventListener(type, fn, options) {
     if (!this.listeners.has(type)) this.listeners.set(type, []);
-    this.listeners.get(type).push(fn);
+    this.listeners.get(type).push({fn, options});
   }
   emit(type, properties = {}) {
     const event = {type, defaultPrevented: false, propagationStopped: false,
       preventDefault() { this.defaultPrevented = true; },
-      stopPropagation() { this.propagationStopped = true; }, ...properties};
-    for (const listener of this.listeners.get(type) || []) listener(event);
+      stopPropagation() { this.propagationStopped = true; },
+      stopImmediatePropagation() { this.propagationStopped = true; this.immediateStopped = true; }, ...properties};
+    for (const {fn} of this.listeners.get(type) || []) { fn(event); if (event.immediateStopped) break; }
     return event;
   }
 }
 class Element extends Target {
   constructor(doc) {
     super(); this.doc = doc; this.children = []; this.hidden = false; this.disabled = false;
-    this.textContent = ''; this.value = ''; this.className = ''; this.focusCalls = []; this.style = {};
+    this.textContent = ''; this.value = ''; this.className = ''; this.focusCalls = []; this.style = {}; this.attributes = {};
   }
+  setAttribute(name, value) { this.attributes[name] = value; }
+  getBoundingClientRect() { return {left: 0, top: 0, width: 390, height: 800}; }
   appendChild(child) { this.children.push(child); }
   replaceChildren(...children) { this.children = children; }
   focus(options) {
@@ -62,56 +65,58 @@ function harness({touch = true, bind = true} = {}) {
   const input = elements['mobile-input'];
   const update = (state = 'playing', extra = {}) => bridge.update(JSON.stringify({state, actions: [],
     target: '残響 / ざんきょう', typed: 'za', remaining: 'nkyou', cut: 'CUT: i | to', hp: 6, score: 20, ...extra}));
-  function start() { update(); elements['mobile-keyboard'].emit('click'); calls.length = 0; }
+  function tap(x = 100, y = 200) {
+    const point = {identifier: 1, clientX: x, clientY: y};
+    const startEvent = elements.canvas.emit('touchstart', {touches: [point], changedTouches: [point]});
+    const endEvent = elements.canvas.emit('touchend', {touches: [], changedTouches: [point]});
+    return {startEvent, endEvent};
+  }
+  function start() { update(); tap(); calls.length = 0; }
   function insert(value, extra = {}) {
     input.value = SENTINEL + value;
     return input.emit('input', {data: value, inputType: 'insertText', isComposing: false, ...extra});
   }
-  return {document, window, elements, bridge, input, calls, classes, css, update, start, insert,
+  return {document, window, elements, bridge, input, calls, classes, css, update, start, insert, tap,
     flush() { while (timers.length) timers.shift()(); },
     handle(fn) { handler = fn; }};
 }
 
-test('coarse pointer enables touch UI; desktop stays unchanged until opt-in', () => {
-  const mobile = harness(); assert.equal(mobile.bridge.isEnabled(), true);
-  assert.equal(mobile.elements['mobile-ui'].hidden, false); assert(mobile.classes.has('mobile-mode'));
-  const desktop = harness({touch: false}); desktop.update();
-  assert.equal(desktop.bridge.isEnabled(), false); assert.equal(desktop.elements['mobile-ui'].hidden, true);
-  assert.equal(desktop.elements['mobile-toggle'].hidden, false); assert.equal(desktop.input.focusCalls.length, 0);
-  desktop.elements['mobile-toggle'].emit('click');
-  assert.equal(desktop.bridge.isEnabled(), true); assert.equal(desktop.bridge.ownsFocus(), true);
+test('touch detection enables only the keyboard bridge; desktop input stays unchanged', () => {
+  const mobile = harness(); assert.equal(mobile.bridge.isEnabled(), true); assert(mobile.classes.has('mobile-mode'));
+  const desktop = harness({touch: false}); desktop.update(); desktop.tap();
+  assert.equal(desktop.bridge.isEnabled(), false); assert.equal(desktop.input.disabled, true);
+  assert.equal(desktop.input.focusCalls.length, 0); assert.equal(desktop.calls.length, 0);
 });
 
-test('updates never autofocus, and keyboard tap focuses in the click stack', () => {
-  const h = harness(); h.update(); h.update();
-  assert.equal(h.input.focusCalls.length, 0);
-  h.elements['mobile-keyboard'].emit('click');
-  assert.equal(h.bridge.ownsFocus(), true); assert.equal(h.input.focusCalls[0].preventScroll, true);
+test('updates never autofocus; a canvas tap focuses synchronously and reopens a dismissed keyboard', () => {
+  const h = harness(); h.update(); h.update(); assert.equal(h.input.focusCalls.length, 0);
+  h.tap(); assert.equal(h.bridge.ownsFocus(), true); assert.equal(h.input.focusCalls[0].preventScroll, true);
   h.update(); assert.equal(h.input.focusCalls.length, 1);
+  h.tap(); assert.equal(h.input.focusCalls.length, 2); // Dismissal can retain activeElement on iOS.
+  h.input.blur(); h.tap(); assert.equal(h.bridge.ownsFocus(), true);
 });
 
-test('start → briefing → begin and resume focus synchronously after game callback', () => {
-  const h = harness(); h.update('title', {actions: [{label: 'START', enabled: true}, {label: 'SETTINGS', enabled: true}]});
-  h.handle((action, value) => {
-    if (action === 'menu' && value === '0') h.update(h.elements['mobile-heading'].textContent.includes('PAUSED') ? 'playing' : 'intermission');
-    if (action === 'begin') h.update('playing');
-  });
-  h.elements['mobile-actions'].children[0].emit('click');
-  assert.deepEqual(h.calls, [['menu', '0']]); assert.equal(h.bridge.ownsFocus(), false);
-  assert.equal(h.elements['mobile-begin'].hidden, false);
-  h.elements['mobile-begin'].emit('click'); assert.equal(h.bridge.ownsFocus(), true);
-  h.update('paused', {actions: [{label: '再開 / RESUME', enabled: true}]});
-  assert.equal(h.bridge.ownsFocus(), false);
-  h.elements['mobile-actions'].children[0].emit('click'); assert.equal(h.bridge.ownsFocus(), true);
+test('in-game start, briefing, pause and resume taps focus only after the synchronous game callback', () => {
+  const h = harness(); h.update('title');
+  let nextState = 'intermission';
+  h.handle((action) => { if (action === 'tap') h.update(nextState); });
+  h.tap(); assert.equal(h.bridge.ownsFocus(), false);
+  nextState = 'playing'; h.tap(); assert.equal(h.bridge.ownsFocus(), true);
+  nextState = 'paused'; h.tap(); assert.equal(h.bridge.ownsFocus(), false);
+  const count = h.input.focusCalls.length;
+  h.update('paused'); assert.equal(h.input.focusCalls.length, count);
+  nextState = 'playing'; h.tap(); assert.equal(h.bridge.ownsFocus(), true);
 });
 
-test('menu labels and disabled settings are rendered; stable updates retain buttons', () => {
-  const h = harness(); const actions = [{label: '音量 72%', enabled: true}, {label: '難易度 LOCK', enabled: false}];
-  h.update('settings', {actions}); const button = h.elements['mobile-actions'].children[0];
-  assert.equal(button.textContent, '音量 72%');
-  const locked = h.elements['mobile-actions'].children[1]; assert.equal(locked.disabled, true);
-  locked.emit('click'); assert.equal(h.calls.length, 0);
-  h.update('settings', {actions}); assert.equal(h.elements['mobile-actions'].children[0], button);
+test('touch is consumed once before Godot can queue an emulated mouse action', () => {
+  const h = harness(); h.update(); let engineCalls = 0;
+  for (const type of ['touchstart', 'touchend']) h.elements.canvas.addEventListener(type, () => engineCalls++);
+  const {startEvent, endEvent} = h.tap();
+  assert(startEvent.defaultPrevented && endEvent.defaultPrevented);
+  assert(startEvent.immediateStopped && endEvent.immediateStopped);
+  assert.equal(engineCalls, 0); assert.equal(h.calls.length, 1); assert.equal(h.calls[0][0], 'tap');
+  const options = h.elements.canvas.listeners.get('touchstart')[0].options;
+  assert.equal(options.capture, true); assert.equal(options.passive, false);
 });
 
 test('normal input forwards one lowercase letter; keydown does not duplicate it', () => {
@@ -152,7 +157,7 @@ test('Japanese composition is ignored and clearly asks for an English keyboard',
   const h = harness(); h.start(); h.input.emit('compositionstart'); h.insert('ざ', {isComposing: true});
   h.input.emit('compositionend', {data: 'ざんきょう'});
   h.input.emit('input', {inputType: 'insertFromComposition', data: 'ざんきょう'});
-  assert.equal(h.calls.length, 0); assert.match(h.elements['mobile-input-hint'].textContent, /English keyboard/);
+  assert.equal(h.calls.length, 0); assert.match(h.input.attributes['aria-description'], /English keyboard/);
 });
 
 test('paste, drop, replacement and fallback transfer input cannot submit a free word', () => {
@@ -163,7 +168,7 @@ test('paste, drop, replacement and fallback transfer input cannot submit a free 
     h.insert('zankyou', {inputType});
   }
   h.insert('zankyou'); assert.equal(h.calls.length, 0);
-  assert.match(h.elements['mobile-input-hint'].textContent, /no paste or prediction/);
+  assert.match(h.input.attributes['aria-description'], /no paste or prediction/);
 });
 
 test('Backspace resets once via beforeinput; uncancelable fallback does not duplicate', () => {
@@ -193,14 +198,12 @@ test('text is gated by playing state and real input focus', () => {
   h.update('defeat'); assert.equal(h.bridge.ownsFocus(), false); assert.equal(h.input.disabled, true);
 });
 
-test('combat tap controls preserve focus and use the same game actions', () => {
-  const h = harness(); h.start();
-  const cycle = h.elements['mobile-cycle']; assert(cycle.emit('pointerdown').defaultPrevented);
-  cycle.emit('click'); h.elements['mobile-reset'].emit('click');
-  assert.deepEqual(h.calls, [['cycle', ''], ['reset', '']]); assert.equal(h.bridge.ownsFocus(), true);
-  h.handle((action) => { if (action === 'pause') h.update('paused'); });
-  h.elements['mobile-pause'].emit('click'); assert.equal(h.bridge.ownsFocus(), false);
-  assert.deepEqual(h.calls.at(-1), ['pause', '']);
+test('canvas tap maps actual bounds and viewport offsets without an input touch overlay', () => {
+  const h = harness(); h.update();
+  h.elements.canvas.getBoundingClientRect = () => ({left: 12, top: 24, width: 780, height: 325});
+  h.tap(402, 186.5); assert.deepEqual(JSON.parse(h.calls[0][1]), {x: 0.5, y: 0.5});
+  assert.equal(h.bridge.ownsFocus(), true);
+  h.tap(2, 10); assert.equal(h.calls.length, 1);
 });
 
 test('window loss and backgrounding pause once; return never reopens the keyboard', () => {
@@ -210,7 +213,7 @@ test('window loss and backgrounding pause once; return never reopens the keyboar
   const focusCount = h.input.focusCalls.length;
   h.document.hidden = false; h.document.emit('visibilitychange'); h.window.emit('focus');
   assert.equal(h.input.focusCalls.length, focusCount);
-  h.update(); h.elements['mobile-keyboard'].emit('click'); assert.equal(h.bridge.ownsFocus(), true);
+  h.update(); h.tap(); assert.equal(h.bridge.ownsFocus(), true);
 });
 
 test('desktop backgrounding also reaches the Godot focus-loss handler', () => {
@@ -230,26 +233,24 @@ test('visualViewport keyboard resize and scroll set height and offset CSS variab
   assert.equal(h.css.get('--br-visual-left'), '12px'); assert.equal(h.css.get('--br-visual-width'), '390px');
 });
 
-test('payload shows typed target, optional cut, hp and score; invalid payload is ignored', () => {
-  const h = harness(); h.update(); assert.equal(h.elements['mobile-typed'].textContent, 'za');
-  assert.equal(h.elements['mobile-remaining'].textContent, 'nkyou');
-  assert.equal(h.elements['mobile-cut'].textContent, 'CUT: i | to');
-  assert.equal(h.elements['mobile-hp'].textContent, 'HP 6'); assert.equal(h.elements['mobile-score'].textContent, 'SCORE 20');
-  assert.equal(h.bridge.update('{'), false); assert.equal(h.bridge.update('{"state":"invalid"}'), false);
-  h.update('playing', {target: '', typed: '', remaining: '', cut: ''});
-  assert.equal(h.elements['mobile-cut'].hidden, true); assert.match(h.elements['mobile-target'].textContent, /Keep moving/);
+test('invalid snapshots are rejected and browser DOM never mirrors game readouts', () => {
+  const h = harness(); h.update(); assert.equal(h.bridge.update('{'), false);
+  assert.equal(h.bridge.update('{"state":"invalid"}'), false);
+  assert.equal(h.input.focusCalls.length, 0);
+  assert.deepEqual(Object.keys(h.elements).filter((id) => id.startsWith('mobile-')), ['mobile-input']);
 });
 
-test('HTML preserves desktop controls and accessible mobile input essentials', () => {
-  assert.match(shell, /<canvas id="canvas" tabindex="0"/);
-  assert.match(shell, /src="web_mobile\.js"/);
-  assert.match(shell, /font-size:16px/); assert.match(shell, /min-height:44px/);
+test('HTML keeps a tiny focusable input with zero visible panels or hit-test area', () => {
+  assert.match(shell, /<canvas id="canvas" tabindex="0"/); assert.match(shell, /src="web_mobile\.js"/);
+  assert.doesNotMatch(shell, /mobile-(ui|play|menu|toggle|actions|word|keyboard|begin|cycle|reset|pause|target)/);
+  const style = shell.match(/#mobile-input\{([^}]+)\}/)[1];
+  for (const declaration of ['width:1px', 'height:1px', 'opacity:0', 'pointer-events:none', 'font-size:16px', 'border:0', 'padding:0']) assert(style.includes(declaration));
+  assert.doesNotMatch(style, /display:none|visibility:hidden|inset:0/);
   assert.match(shell, /autocorrect="off" autocapitalize="none" spellcheck="false"/);
-  assert.match(shell, /aria-describedby="mobile-input-hint"/);
+  assert.match(shell, /tabindex="-1" aria-label="ローマ字入力 \/ Use an English keyboard/);
   assert.doesNotMatch(shell, /\bautofocus\b/);
   assert.match(shell, /if\(!window\.BlackRelayMobile \|\| !window\.BlackRelayMobile\.isEnabled\(\)\)/);
 });
-
 
 test('composition trailing insertText that reapplies the DOM value is consumed once', () => {
   const h = harness(); h.start(); h.input.emit('compositionstart'); h.input.emit('compositionend', {data: 'a'});
@@ -264,9 +265,17 @@ test('independent physical key clears composition dedup; held repeat is prevente
   const repeat = h.input.emit('keydown', {key: 'a', repeat: true}); assert(repeat.defaultPrevented);
 });
 
-test('intermission exposes one accessible begin button despite the canvas action list', () => {
-  const h = harness(); h.update('intermission', {actions: [{label: '街へ出る / START', enabled: true}]});
-  assert.equal(h.elements['mobile-actions'].children.length, 0); assert.equal(h.elements['mobile-begin'].hidden, false);
+test('cancelled gestures, drags and multi-touch never activate the game or focus the input', () => {
+  const h = harness(); h.update(); const point = {identifier: 1, clientX: 100, clientY: 200};
+  const canvas = h.elements.canvas;
+  canvas.emit('touchstart', {touches: [point]}); canvas.emit('touchcancel');
+  canvas.emit('touchend', {touches: [], changedTouches: [point]});
+  canvas.emit('touchstart', {touches: [point]});
+  canvas.emit('touchmove', {touches: [{...point, clientX: 160}]});
+  canvas.emit('touchend', {touches: [], changedTouches: [point]});
+  canvas.emit('touchstart', {touches: [point, {...point, identifier: 2}]});
+  canvas.emit('touchend', {touches: [], changedTouches: [point]});
+  assert.equal(h.calls.length, 0); assert.equal(h.input.focusCalls.length, 0);
 });
 
 test('desktop adaptive canvas dimensions are not overwritten by visualViewport changes', () => {
@@ -289,15 +298,25 @@ test('cancelled ASCII composition never submits its abandoned preedit', () => {
 
 test('switching targets while composing cancels the pending commit safely', () => {
   const h = harness(); h.start(); h.input.emit('compositionstart'); h.insert('a', {isComposing: true});
-  h.elements['mobile-cycle'].emit('click'); h.input.emit('compositionend', {data: 'a'}); h.insert('a');
-  assert.deepEqual(h.calls, [['cycle', '']]); h.flush(); h.insert('b');
-  assert.deepEqual(h.calls, [['cycle', ''], ['text', 'b']]);
+  h.tap(); h.input.emit('compositionend', {data: 'a'}); h.insert('a');
+  assert.equal(h.calls.length, 1); assert.equal(h.calls[0][0], 'tap'); h.flush(); h.insert('b');
+  assert.deepEqual(h.calls[1], ['text', 'b']);
 });
 
-test('loading or missing-WebGL state exposes no playable touch controls', () => {
-  const h = harness({bind: false}); assert.equal(h.elements['mobile-ui'].hidden, true);
-  assert.equal(h.elements['mobile-toggle'].hidden, true); assert.equal(h.input.disabled, true);
-  assert.equal(h.elements.status.hidden, false);
-  assert.match(shell, /#status\{[^}]*z-index:3/);
-  assert.match(shell, /#mobile-ui\{[^}]*z-index:2/);
+test('loading or missing-WebGL state leaves input disabled and canvas events untouched', () => {
+  const h = harness({bind: false}); assert.equal(h.input.disabled, true);
+  assert.equal(h.elements.status.hidden, false); const {startEvent, endEvent} = h.tap();
+  assert.equal(startEvent.defaultPrevented, false); assert.equal(endEvent.defaultPrevented, false);
+  assert.equal(h.calls.length, 0); assert.equal(h.input.focusCalls.length, 0);
+});
+
+
+test('touch gesture across event-loop turns cancels the old IME commit when the target changes', () => {
+  const h = harness(); h.start(); h.input.emit('compositionstart'); h.insert('a', {isComposing: true});
+  const point = {identifier: 1, clientX: 100, clientY: 200};
+  h.elements.canvas.emit('touchstart', {touches: [point]}); h.flush();
+  h.elements.canvas.emit('touchend', {touches: [], changedTouches: [point]});
+  h.input.emit('compositionend', {data: 'a'}); h.insert('a', {inputType: 'insertFromComposition'});
+  assert.equal(h.calls.length, 1); assert.equal(h.calls[0][0], 'tap');
+  h.flush(); h.insert('b'); assert.deepEqual(h.calls[1], ['text', 'b']);
 });

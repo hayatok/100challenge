@@ -286,11 +286,7 @@ func _input(event: InputEvent) -> void:
     if event is InputEventMouseMotion:
         menu_hover = hud.button_at(event.position)
     if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
-        var button: int = hud.button_at(event.position)
-        if button >= 0:
-            activate_menu(button)
-        elif state == "playing":
-            _select_at(event.position)
+        activate_pointer(event.position)
     if not event is InputEventKey or not event.pressed or event.echo:
         return
     if "--qa-input-log" in OS.get_cmdline_user_args(): print("NATIVE KEY code=",event.keycode," unicode=",event.unicode," state=",state)
@@ -343,6 +339,17 @@ func _input(event: InputEvent) -> void:
         elif event.keycode in [KEY_LEFT,KEY_RIGHT] and state == "settings":
             activate_menu(menu_index)
         get_viewport().set_input_as_handled()
+
+# Both physical mouse and the synchronous Web touch bridge use the drawn HUD.
+func activate_pointer(position: Vector2) -> void:
+    if state == "playing" and hud.pause_at(position):
+        web_action("pause")
+        return
+    var button: int = hud.button_at(position)
+    if button >= 0:
+        activate_menu(button)
+    elif state == "playing":
+        _select_at(position)
 
 func activate_menu(index: int) -> void:
     var actions: Array = hud.menu_actions()
@@ -399,6 +406,16 @@ func reset_target_input() -> void:
 # into a free correct word, and input outside a running encounter is discarded.
 func web_action(action: String, value := "") -> void:
     match action:
+        "tap":
+            var json := JSON.new()
+            if json.parse(value) != OK: return
+            var point = json.data
+            if not point is Dictionary: return
+            if not point.get("x") is float or not point.get("y") is float: return
+            var x: float = point.x
+            var y: float = point.y
+            if not is_finite(x) or not is_finite(y) or x < 0 or x > 1 or y < 0 or y > 1: return
+            activate_pointer(Vector2(x,y)*get_viewport().get_visible_rect().size)
         "text":
             if state != "playing" or value.is_empty() or value.length() > 64: return
             var letters := value.to_lower()
@@ -421,19 +438,9 @@ func web_action(action: String, value := "") -> void:
         "reset": reset_target_input()
 
 func web_snapshot() -> Dictionary:
-    var actions: Array[Dictionary] = []
-    var labels: Array[String] = hud.menu_labels()
-    for i in range(labels.size()):
-        actions.append({"label": labels[i], "enabled": not (state == "settings" and settings_origin == "paused" and i < 2)})
-    var snapshot := {"state": state, "previous_state": previous_state, "actions": actions,
-        "target": "", "typed": "", "remaining": "", "cut": "", "hp": hp, "score": score}
-    if state in ["playing", "paused"] and is_instance_valid(selected) and not selected.dead:
-        snapshot.target = selected.purge_text
-        snapshot.typed = selected.purge.typed
-        snapshot.remaining = selected.purge.hint().substr(selected.purge.typed.length())
-        if selected.can_cut():
-            snapshot.cut = "CUT: " + selected.cut.typed + " | " + selected.cut.hint().substr(selected.cut.typed.length())
-    return snapshot
+    # The browser only needs the state to gate keyboard focus/input. All words,
+    # scores and controls remain exclusively in the existing game HUD.
+    return {"state": state}
 
 func start_run() -> void:
     _refresh_record()

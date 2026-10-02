@@ -1,43 +1,38 @@
-# Mobile Web input verification
+# Mobile Web keyboard verification
 
-## Change and input contract
+## Focused correction
 
-The title already had clickable controls; the briefing after it was keyboard-only. The briefing now has a real START hitbox and action, with Space/Enter retained. Touch-to-mouse emulation uses the same handler.
+The prior HTML touch menu and combat panel covered the game on the user's iPhone. They are removed, including the duplicate word/health/score readouts, action buttons and visible input field. Only the existing Godot game UI and the native keyboard remain during play.
 
-Touch browsers also get HTML menu/combat controls and a real text input. The input opens only from a player gesture (start/resume/input button), never from a frame update. It sends committed ASCII romaji through the existing matcher. Japanese kana conversion is rejected with an English-keyboard instruction, not transliterated into a free correct answer. Paste/drop/prediction replacement are rejected; Backspace/reset clears the selected target. Per-target progress, optional CUT, terminal n/nn, score profiles and difficulty locks remain unchanged.
+The shell retains a transparent 1×1 CSS-pixel, 16px-font input with `pointer-events:none`. It is focusable while playing, stays inside the visible viewport, and cannot intercept a game tap. It is not `display:none`, offscreen or a full-canvas overlay.
 
-An external word readout keeps typed/remaining letters readable above the keyboard. Window blur or a hidden tab pauses combat; returning never automatically resumes or reopens the keyboard. Desktop canvas controls and the loading/WebGL error screen remain available.
+- Start, briefing, settings, resume and retry use the existing Godot HUD
+- The existing pause footer now has a hitbox; enemy taps retain normal target selection
+- Touch is handled once on the canvas, synchronously via JavaScriptBridge, before Godot's buffered touch-to-mouse path can duplicate it or steal focus
+- The resulting playing state is published before focus, within the same touchend gesture
+- Tapping the game reopens the keyboard even if iOS retains activeElement after dismissal
+- State/frame updates, window return and viewport resize never reopen the keyboard
+- Cancelled touches, drags and multi-touch do not activate controls
+- Desktop mouse and physical keyboard paths remain; Backspace resets and Tab/Enter in the input cycles targets
+- ASCII commits, IME-tail deduplication, kana rejection, transfer/prediction rejection and pause-on-background remain
 
-## Why a browser text input
+No new dependency, service, workflow, credential or permission is required. The existing pinned Godot 4.7.2 audio-resume adapter also runs for synchronous canvas taps, since those bypass the engine's own touch handler.
 
-- Godot's Web virtual-keyboard export option is still marked experimental: <https://docs.godotengine.org/en/stable/classes/class_editorexportplatformweb.html#class-editorexportplatformweb-property-html-experimental-virtual-keyboard>
-- iOS WebKit restricts showing the software keyboard without a direct user gesture: <https://bugs.webkit.org/show_bug.cgi?id=195884>
-- A retained JavaScriptBridge callback synchronously handles the action and publishes the new state, allowing focus in that same gesture: <https://docs.godotengine.org/en/stable/classes/class_javascriptbridge.html>
-- VisualViewport resize/scroll events reflect the visible area around a software keyboard: <https://developer.mozilla.org/en-US/docs/Web/API/VisualViewport>
+## Verified for this correction
 
-No third-party library, network service, analytics, extra permission, workflow change or new credential is required.
-
-DOM buttons bypass Godot canvas input handlers, including their audio unlock. The synchronous menu/begin callback therefore invokes the pinned 4.7.2 template's `_godot_audio_resume()` through a guarded, engine-local JavaScriptBridge eval. This is a small version-specific adapter, not a public Engine API. The export step asserts that the hook exists and must be reviewed when the engine version changes. It does not generate gameplay key events or move focus through the canvas. Audible behavior still needs device validation.
-
-## Verified
-
-- Godot 4.7.2 headless import and gameplay suite: 4,386 assertions passed, including 19 new touch/web regressions
-- New gameplay tests exercise scaled pointer hit-testing into briefing START, repeat-start guard, pause freeze, resume, reset, checkpoint retry, uppercase/IME input gating, target mirroring and locked settings
-- Existing 2,120 romaji aliases and all six language/difficulty playthroughs still pass
+- 29 dependency-free Node event/DOM tests: gesture-only focus, repeated reopen, synchronous start/pause/resume, one handled touch, viewport coordinate mapping, interrupted gestures, IME commit ordering/deduplication, transfer rejection, desktop behavior and background pause
+- Static shell/style regression: no mobile menu/panel/word/actions or visible keyboard button; exactly one mobile input, with a 1×1 box, opacity 0, pointer-events none, no border/padding, and no display/visibility hiding
+- Godot 4.7.2 headless import and gameplay regression: 4,392 assertions, including existing 2,120 romaji aliases and all six language/difficulty playthroughs
+- Godot additions cover synchronous existing START/resume hit tests, pause footer, stale-menu hitbox rejection, invalid tap payloads, scaled/offset hit testing and no browser HUD readout
 - Root repository tests: 38 passed
-- Existing audio format/headroom/loop and combat-mix checks passed
+- App `npm run check`: audio checks, Node tests, import, gameplay regressions and Web release export
 
-- Browser event harness: 28 dependency-free Node tests passed (input/composition ordering, transfer rejection, repeated-key rejection, gesture-only focus, desktop blur, menu state, and visual viewport sizing)
-- Full app `npm run check`: audio checks, browser event tests, Godot import, gameplay regressions and Web release export passed
-- Exported `index.js` contains the pinned audio-resume adapter; `web_mobile.js` is copied next to the generated HTML
-- Baseline hosted page was opened in the cloud browser and shows its existing WebGL2 compatibility error. The local shell harness returned `ERR_BLOCKED_BY_CLIENT`; that route was stopped without an alternative bypass. Final portrait/landscape shell pixels are therefore not verified here.
+## Verification limits
 
-## Not established by these tests
+The cloud browser previously reported missing WebGL2 for the hosted game. The local browser harness previously returned `ERR_BLOCKED_BY_CLIENT`, an access restriction that is not bypassed. This correction therefore verifies mobile UI absence with source DOM and box/style checks, not new rendered mobile screenshots. No iPhone Safari or Android soft keyboard, audible device behavior, subjective playability or GPU performance is claimed verified.
 
-This cloud browser has no WebGL2, so the real exported game's rendering cannot be played here. The execution shell has no X11/Wayland display; native runtime launch was attempted and could not create a display. Neither limitation was bypassed. Headless game checks and a simulated browser callback do not establish actual iPhone Safari/Android keyboard event ordering, keyboard visibility, WebGL performance, subjective playability or in-game audio quality.
-
-The requested minimal local testing scope is retained. No additional native platform builds or expensive software-rendered replay are needed for this Web-only control fix.
+The user's requested minimal local testing scope is retained: no additional native exports or software-rendered replay. A build/CI pass does not establish actual device behavior or live deployment.
 
 ## Device check after deployment
 
-On the published page, reload once, tap START and then 出発, and select the English keyboard. Type the first safe target, hide/reopen the keyboard, switch/reset targets, pause/resume, and retry. Check portrait and landscape with the keyboard open. If the page reports missing WebGL2, input changes cannot make that browser render the game.
+Reload the published page, tap START and 出発 in the game, and select the English keyboard. Check that no separate mobile panel covers the scene. Type the first safe target, hide/reopen the keyboard by tapping the game, tap an enemy to select it, use Backspace, and use the in-game pause footer/resume/retry. Check portrait and landscape with the keyboard open. Publication still requires the existing manual Pages workflow after merge.
