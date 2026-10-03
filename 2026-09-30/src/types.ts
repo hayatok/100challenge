@@ -24,13 +24,25 @@ export interface Cell {
   employed: number;
   customers: number;
   accessible: boolean;
+  elevation: number;
+  waterDepth: number;
+  fire: number;
+  snow: number;
+  rubble: number;
+  crater: number;
+  stock: number;
+  materials: number;
+  work: number;
+  region: number;
+  closed: boolean;
+  buildingPlan: 'house' | 'shop' | 'farm' | 'factory' | null;
 }
 
 export interface TownEvent {
   tick: number;
   x: number;
   y: number;
-  kind: 'birth' | 'growth' | 'decline' | 'nature' | 'road';
+  kind: 'birth' | 'growth' | 'decline' | 'nature' | 'road' | 'god' | 'disaster' | 'supply' | 'refuge';
   text: string;
 }
 
@@ -53,9 +65,15 @@ export interface HistoryPoint {
   population: number;
 }
 
-export type TripPurpose = 'commute' | 'shopping' | 'stroll' | 'return';
+export type TripPurpose = 'commute' | 'shopping' | 'stroll' | 'return' | 'refuge' | 'repair';
 export interface Resident {
   id: number;
+  role: 'worker' | 'dependent';
+  health: number;
+  hunger: number;
+  food: number;
+  shelter: number | null;
+  displaced: boolean;
   home: number;
   workplace: number | null;
   shop: number | null;
@@ -64,7 +82,7 @@ export interface Resident {
   route: number[];
   routeIndex: number;
   progress: number;
-  state: 'home' | 'travel' | 'work' | 'shop' | 'park';
+  state: 'home' | 'travel' | 'work' | 'shop' | 'park' | 'shelter' | 'wait' | 'repair';
   purpose: TripPurpose;
   destination: number | null;
   timer: number;
@@ -72,9 +90,16 @@ export interface Resident {
   trips: number;
 }
 export interface Weather {
-  kind: 'clear' | 'rain' | 'snow';
+  kind: 'clear' | 'cloudy' | 'rain' | 'storm' | 'snow';
   temperature: number;
   rainfall: number;
+  cloud: number;
+  windX: number;
+  windY: number;
+  remaining: number;
+  frontX: number;
+  frontY: number;
+  frontRadius: number;
 }
 export interface Economy {
   workers: number;
@@ -83,9 +108,30 @@ export interface Economy {
   harvest: number;
   visits: number;
   commutes: number;
+  materials: number;
+  starving: number;
+  evacuated: number;
+  deaths: number;
+  births: number;
+  arrivals: number;
+  departures: number;
+  failedPurchases: number;
 }
 export interface World {
-  version: 2;
+  version: 3;
+  step: number;
+  remainder: number;
+  revision: number;
+  topologyVersion: number;
+  hazardRng: number;
+  nextCommandId: number;
+  pending: PowerCommand[];
+  effects: ActiveEffect[];
+  shipments: Shipment[];
+  nextShipmentId: number;
+  naturalPolicy: NaturalPolicy;
+  migrationGrace: number;
+  legacyCalendar?: { tick: number; history: HistoryPoint[] };
   clock: number;
   nextResidentId: number;
   residents: Resident[];
@@ -119,4 +165,14 @@ export interface RenderOptions {
   reducedMotion: boolean;
   followedResident?: number | null;
   showRoutes?: boolean;
+  preview?: PowerPreview | null;
+  layer?: 'none' | 'water' | 'fire' | 'supply';
 }
+
+export type PowerKind = 'rain' | 'sun' | 'storm' | 'lightning' | 'earthquake' | 'meteor' | 'growth' | 'settle';
+export type NaturalPolicy = 'off' | 'gentle' | 'wild' | 'apocalyptic';
+export interface PowerPreview { kind: PowerKind; center: Point; radius: number; intensity: number }
+export interface PowerInput { kind: PowerKind; target: Point; radius: number; intensity: number; duration: number; source?: 'god' | 'nature' }
+export interface PowerCommand extends PowerInput { id: number; atStep: number; source: 'god' | 'nature'; seed: number }
+export interface ActiveEffect extends PowerCommand { remaining: number; elapsed: number }
+export interface Shipment { id: number; from: number; to: number; food: number; materials: number; route: number[]; routeIndex: number; progress: number; blocked: boolean }

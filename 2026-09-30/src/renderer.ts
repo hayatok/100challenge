@@ -1,4 +1,7 @@
 import type { Camera, Cell, Point, RenderOptions, Resident, World } from './types';
+import { DAY_SECONDS, SIM_STEP } from './constants.ts';
+import { isPassable } from './disasters.ts';
+import { walkingSpeed } from './mobility.ts';
 
 export const CANVAS_WIDTH = 960;
 export const CANVAS_HEIGHT = 640;
@@ -11,6 +14,7 @@ const MAP_TOP = 82;
 type Vertex = readonly [number, number];
 interface WindowLight { x: number; y: number; width: number; height: number; seed: number }
 interface HitShape { cell: Cell; x: number; y: number; height: number; width: number }
+interface DrawPosition extends Point { routeIndex: number }
 
 const PALETTES = [
   { grass: ['#91b77a', '#94b97c', '#8eb478', '#98bb80'], tree: ['#4d977d', '#80bd8b', '#b8dca2'], flower: '#f2d3ba', crop: '#97b65f' },
@@ -28,6 +32,7 @@ export class TownRenderer {
   private readonly scene: HTMLCanvasElement;
   private readonly paint: CanvasRenderingContext2D;
   private cacheKey = '';
+  private appearanceKey = '';
   private cachedWorld: World | null = null;
   private palette = PALETTES[0]!;
   private windows: WindowLight[] = [];
@@ -37,6 +42,8 @@ export class TownRenderer {
   private roads: Cell[] = [];
   private waters: Cell[] = [];
   private factories: Cell[] = [];
+  private reducedMotion = true;
+  private followedResident: number | null = null;
 
   constructor(canvas: HTMLCanvasElement) {
     this.canvas = canvas;
@@ -57,17 +64,22 @@ export class TownRenderer {
   }
 
   render(world: World, options: RenderOptions): void {
-    const key = `${world.seed}:${world.tick}:${world.size}:${world.weather.kind}`;
+    this.reducedMotion = options.reducedMotion;
+    this.followedResident = options.followedResident ?? null;
+    const day = Math.floor(world.clock / DAY_SECONDS);
+    const key = `${world.seed}:${world.revision}:${world.size}:${day}:${world.weather.temperature < 0}:${world.weather.rainfall > 50}`;
     if (this.cachedWorld !== world || key !== this.cacheKey) {
+      const appearance = this.sceneAppearance(world, day);
+      if (this.cachedWorld !== world || appearance !== this.appearanceKey) this.buildScene(world);
       this.cacheKey = key;
+      this.appearanceKey = appearance;
       this.cachedWorld = world;
-      this.buildScene(world);
     }
     const ctx = this.ctx;
     const { camera, selected } = options;
     // The day starts in morning light. Darkness is tied to the simulation clock,
     // so pausing also freezes this small observational day/night cycle.
-    const phase = (world.clock % 150) / 150;
+    const phase = (world.clock % DAY_SECONDS) / DAY_SECONDS;
     const night = Math.max(0, -Math.cos((phase - .15) * Math.PI * 2)) * 0.49;
     ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.fillStyle = '#e5ebe0';
@@ -96,11 +108,13 @@ export class TownRenderer {
       ctx.globalAlpha = 1;
       ctx.restore();
     }
-    if (selected) {
+    if (selected || options.preview || world.pending.length || (options.layer && options.layer !== 'none')) {
       ctx.save();
       ctx.translate(CENTER_X + camera.panX, CENTER_Y + camera.panY);
       ctx.scale(camera.zoom, camera.zoom);
       ctx.translate(-CENTER_X, -CENTER_Y);
+      this.drawMapOverlays(ctx, world, options);
+      if (selected) {
       const p = this.project(selected, world);
       this.outlineDiamond(ctx, p.x, p.y, HALF_W + 1, HALF_H + 1, '#364b3c');
       this.outlineDiamond(ctx, p.x, p.y - 1, HALF_W, HALF_H, '#fff1bd');
@@ -108,6 +122,7 @@ export class TownRenderer {
       const cell = world.cells[selected.y * world.size + selected.x];
       const h = cell ? this.spriteHeight(cell) : 0;
       this.poly(ctx, [[p.x - 3, p.y - h - 8], [p.x + 3, p.y - h - 8], [p.x, p.y - h - 4]], '#fff1bd');
+      }
       ctx.restore();
     }
   }
@@ -152,6 +167,29 @@ export class TownRenderer {
     return { x: CENTER_X + (point.x - point.y) * HALF_W, y: this.mapTop(world) + (point.x + point.y) * HALF_H };
   }
 
+  private sceneAppearance(world: World, day: number): string {
+    // Revision observes each mutation; quantized visual state determines whether
+    // the expensive terrain raster actually needs rebuilding at high simulation speeds.
+    let hash = 2166136261;
+    const mix = (value: number) => { hash = Math.imul(hash ^ value, 16777619); };
+    for (const cell of world.cells) {
+      mix(cell.kind.charCodeAt(0) * 256 + cell.kind.charCodeAt(1));
+      mix(cell.terrain === 'water' ? 1 : 0); mix(cell.level); mix(cell.variant);
+      mix((cell.age < 8 ? 1 : 0) | (cell.age > 10 ? 2 : 0) | (cell.vitality < 35 ? 4 : 0));
+      mix((cell.moisture > 70 ? 1 : 0) | (cell.moisture > 55 ? 2 : 0) | (cell.fertility < 25 ? 4 : 0));
+      mix((cell.vegetation < 22 ? 1 : 0) | (cell.vegetation < 30 ? 2 : 0) | (cell.vegetation > 45 ? 4 : 0) | (cell.vegetation > 60 ? 8 : 0) | (cell.vegetation > 20 ? 16 : 0));
+      mix(Math.floor(cell.crop / 35) * 8 + (cell.crop > 8 ? 1 : 0) + (cell.crop > 40 ? 2 : 0) + (cell.crop > 75 ? 4 : 0));
+      mix(Math.floor(cell.development / 8) * 2 + (cell.development > 25 ? 1 : 0));
+      mix((cell.condition < 75 ? 1 : 0) | (cell.condition < 40 ? 2 : 0) | (cell.condition < 70 ? 4 : 0) | (cell.closed ? 8 : 0) | (cell.condition < 95 && cell.work > .1 && cell.materials > 0 ? 16 : 0));
+      mix(Math.round(cell.snow * 4)); mix(Math.round(cell.waterDepth * 4));
+      mix(cell.crater > .1 ? 1 : 0); mix(cell.rubble > 0 ? 1 + Math.min(5, Math.floor(cell.rubble / 15)) : 0);
+      mix(cell.elevation >= 4 ? 1 : 0);
+      mix(cell.stock > .5 ? 1 + Math.min(3, Math.ceil(cell.stock / 15)) : 0); mix(cell.materials > .5 ? 1 : 0);
+      mix(cell.buildingPlan?.charCodeAt(0) ?? 0); mix(cell.customers > 0 ? 1 : 0);
+    }
+    return `${world.seed}:${world.size}:${day}:${world.weather.temperature < 0}:${world.weather.rainfall > 50}:${hash >>> 0}`;
+  }
+
   private buildScene(world: World): void {
     const ctx = this.paint;
     ctx.clearRect(0, 0, this.width, this.height);
@@ -161,8 +199,9 @@ export class TownRenderer {
     this.roads = [];
     this.waters = [];
     this.factories = [];
-    const season = Math.floor(world.tick / 12) % 4;
-    const amount = Math.min(1, (world.tick % 12) / 4);
+    const day = Math.floor(world.clock / DAY_SECONDS);
+    const season = Math.floor(day / 12) % 4;
+    const amount = Math.min(1, (day % 12) / 4);
     const from = PALETTES[(season + 3) % 4]!, to = PALETTES[season]!;
     const blend = (a: string, b: string): string => {
       const left = Number.parseInt(a.slice(1), 16), right = Number.parseInt(b.slice(1), 16);
@@ -207,6 +246,7 @@ export class TownRenderer {
         this.road(ctx, cell, world, p);
       }
       if (cell.kind === 'farm') this.farm(ctx, cell, p, season);
+      this.groundState(ctx, cell, p);
     }
     // Diagonal painter order prevents tall trees/buildings from being cut by a later row.
     for (let depth = 0; depth <= (world.size - 1) * 2; depth++) {
@@ -215,24 +255,25 @@ export class TownRenderer {
         const cell = world.cells[y * world.size + x];
         if (!cell) continue;
         const p = this.project(cell, world);
-        if ((cell.kind === 'grass' && cell.development <= 25) || ['water', 'road'].includes(cell.kind) || (cell.kind === 'farm' && cell.variant % 5 !== 0)) continue;
+        if ((cell.kind === 'grass' && cell.development <= 25 && !cell.buildingPlan) || ['water', 'road'].includes(cell.kind) || (cell.kind === 'farm' && cell.variant % 5 !== 0)) continue;
         this.sprite.width = 32;
         this.sprite.height = 48;
         const spriteCtx = this.sprite.getContext('2d')!;
         spriteCtx.translate(16 - p.x, 40 - p.y);
         switch (cell.kind) {
-          case 'grass': if (cell.development > 25) this.construction(spriteCtx, cell, p); break;
+          case 'grass': if (cell.development > 25 || cell.buildingPlan) this.construction(spriteCtx, cell, p); break;
           case 'tree': this.tree(spriteCtx, cell, p, season); break;
           case 'house': this.house(spriteCtx, cell, p, season); break;
           case 'shop': this.shop(spriteCtx, cell, p, season); break;
           case 'factory': this.factory(spriteCtx, cell, p); this.factories.push(cell); break;
-          case 'ruin': this.ruin(spriteCtx, cell, p); break;
+          case 'ruin': this.ruin(spriteCtx, cell, p); if (cell.buildingPlan) this.construction(spriteCtx, cell, p); break;
           case 'park': this.park(spriteCtx, cell, p, season); break;
           case 'farm': if (cell.variant % 5 === 0) this.shed(spriteCtx, cell, { x: p.x + 3, y: p.y - 1 }); break;
         }
-        if (world.weather.kind === 'snow' && ['house', 'shop', 'factory'].includes(cell.kind)) {
+        if (Math.round(cell.snow * 4) > 0 && ['house', 'shop', 'factory'].includes(cell.kind)) {
           this.line(spriteCtx, p.x - 5, p.y - this.spriteHeight(cell) + 2, p.x + 3, p.y - this.spriteHeight(cell) + 7, '#f3eee2');
         }
+        this.buildingState(spriteCtx, cell, p);
         ctx.drawImage(this.sprite, p.x - 16, p.y - 40);
         const ink = spriteCtx.getImageData(0, 0, 32, 48).data;
         for (let sy = 0; sy < 48; sy++) for (let sx = 0; sx < 32; sx++) {
@@ -240,7 +281,7 @@ export class TownRenderer {
           const px = p.x - 16 + sx, py = p.y - 40 + sy;
           if (px >= 0 && py >= 0 && px < this.width && py < this.height) this.depthPixels[py * this.width + px] = depth;
         }
-        if (['tree', 'house', 'shop', 'factory', 'ruin', 'park'].includes(cell.kind) || (cell.kind === 'grass' && cell.development > 25)) {
+        if (['tree', 'house', 'shop', 'factory', 'ruin', 'park'].includes(cell.kind) || (cell.kind === 'grass' && (cell.development > 25 || cell.buildingPlan))) {
           this.shapes.push({ cell, x: p.x, y: p.y, height: this.spriteHeight(cell), width: cell.kind === 'tree' ? 6 : 8 });
         }
       }
@@ -303,6 +344,91 @@ export class TownRenderer {
       this.rect(ctx, p.x + 6, p.y - 4, 1, 5, '#7e7359');
     } else if ((cell.x + cell.y) % 3 === 0) {
       this.rect(ctx, p.x - 2, p.y, 2, 1, '#d8cfac');
+    }
+    if (cell.condition < 70) {
+      this.line(ctx, p.x - 4, p.y - 2, p.x - 1, p.y, '#6e7467');
+      this.line(ctx, p.x - 1, p.y, p.x - 2, p.y + 2, '#6e7467');
+    }
+    if (cell.closed) {
+      this.rect(ctx, p.x - 5, p.y - 1, 10, 2, '#8b7058');
+      for (const dx of [-4, 0, 4]) this.rect(ctx, p.x + dx, p.y - 1, 2, 1, '#f5d19a');
+      this.rect(ctx, p.x - 5, p.y + 1, 1, 3, '#74634f');
+      this.rect(ctx, p.x + 4, p.y + 1, 1, 3, '#74634f');
+    }
+  }
+
+  private groundState(ctx: CanvasRenderingContext2D, cell: Cell, p: Point): void {
+    const snow = Math.round(cell.snow * 4) / 4, water = Math.round(cell.waterDepth * 4) / 4;
+    if (cell.elevation >= 4 && cell.terrain !== 'water' && cell.kind === 'grass' && (cell.x + cell.y) % 3 === 0) {
+      this.line(ctx, p.x - 5, p.y + 1, p.x, p.y + 4, '#9ca67a');
+      this.line(ctx, p.x - 4, p.y + 1, p.x, p.y + 3, '#bec599');
+    }
+    if (cell.crater > .1) {
+      this.diamond(ctx, p.x, p.y, 8, 4, '#9b8a75');
+      this.diamond(ctx, p.x, p.y + 1, 6, 3, '#665f55');
+      this.line(ctx, p.x - 7, p.y, p.x, p.y - 4, '#c0ac88');
+    }
+    if (snow > 0) {
+      ctx.globalAlpha = Math.min(.85, .25 + snow * .15);
+      this.diamond(ctx, p.x, p.y, 8, 4, '#eeeede');
+      ctx.globalAlpha = 1;
+    }
+    // Water stays on the ground, so a flooded home keeps its recognizable roof.
+    if (water > 0 && cell.terrain !== 'water') {
+      ctx.globalAlpha = Math.min(.72, .25 + water * .15);
+      this.diamond(ctx, p.x, p.y, 9, 5, '#659fb8');
+      ctx.globalAlpha = 1;
+      this.line(ctx, p.x - 5, p.y, p.x - 1, p.y + 2, '#acd3d3');
+      if (water > 1.5) this.line(ctx, p.x + 1, p.y + 2, p.x + 5, p.y, '#acd3d3');
+    }
+    if (cell.rubble > 0) {
+      const pieces = Math.min(6, 1 + Math.floor(cell.rubble / 15));
+      for (let i = 0; i < pieces; i++) {
+        const hash = this.hash(i, cell.variant, cell.x + cell.y * 48);
+        const dx = hash % 11 - 5, dy = (hash >>> 4) % 5 - 1;
+        this.rect(ctx, p.x + dx, p.y + dy, 2 + i % 2, 2, i % 2 ? '#a58a74' : '#8c8775');
+        this.rect(ctx, p.x + dx, p.y + dy, 2, 1, '#c0b39a');
+      }
+    }
+    if ((cell.kind === 'ruin' || cell.crater > 0) && cell.vegetation > 20) {
+      this.rect(ctx, p.x - 5, p.y + 1, 1, 3, '#658c57');
+      this.rect(ctx, p.x - 6, p.y + 1, 3, 1, '#9dbb7a');
+      if (cell.vegetation > 60) this.rect(ctx, p.x + 4, p.y, 3, 2, '#8fad6e');
+    }
+    if (cell.kind === 'farm') this.stockCrates(ctx, cell, p);
+  }
+
+  private stockCrates(ctx: CanvasRenderingContext2D, cell: Cell, p: Point): void {
+    if (cell.stock > .5) {
+      this.rect(ctx, p.x - 8, p.y + 1, 4, 3, '#a77951');
+      this.rect(ctx, p.x - 8, p.y + 1, 4, 1, '#deb77b');
+      this.rect(ctx, p.x - 7, p.y, Math.min(3, Math.ceil(cell.stock / 15)), 1, '#a8bf71');
+    }
+    if (cell.materials > .5) {
+      this.rect(ctx, p.x + 4, p.y + 1, 4, 3, '#879397');
+      this.rect(ctx, p.x + 4, p.y + 1, 4, 1, '#c2c6b4');
+      this.line(ctx, p.x + 4, p.y + 3, p.x + 7, p.y + 3, '#6b7b7f');
+    }
+  }
+
+  private buildingState(ctx: CanvasRenderingContext2D, cell: Cell, p: Point): void {
+    if (['house', 'shop', 'factory'].includes(cell.kind)) {
+      if (cell.condition < 75) {
+        const roof = p.y - this.spriteHeight(cell) + 6;
+        this.line(ctx, p.x - 3, roof, p.x - 1, roof + 3, '#706653');
+        this.line(ctx, p.x - 1, roof + 3, p.x - 2, roof + 5, '#706653');
+        if (cell.condition < 40) this.rect(ctx, p.x + 1, roof + 3, 3, 2, '#645d53');
+      }
+      if (cell.closed) {
+        this.line(ctx, p.x - 1, p.y - 3, p.x + 1, p.y, '#d7b791');
+        this.line(ctx, p.x + 1, p.y - 3, p.x - 1, p.y, '#d7b791');
+      }
+      this.stockCrates(ctx, cell, p);
+    }
+    if (cell.work > .1 && cell.condition < 95 && cell.materials > 0) {
+      this.rect(ctx, p.x + 7, p.y - 9, 1, 12, '#b99468');
+      this.rect(ctx, p.x + 4, p.y - 8, 1, 12, '#b99468');
+      for (let dy = -7; dy < 3; dy += 3) this.rect(ctx, p.x + 4, p.y + dy, 4, 1, '#d8bb83');
     }
   }
 
@@ -461,6 +587,7 @@ export class TownRenderer {
 
   private drawLife(ctx: CanvasRenderingContext2D, world: World, options: RenderOptions): void {
     const time = options.reducedMotion ? 0 : world.clock;
+    this.drawWeather(ctx, world, options);
     const waveStep = Math.floor(time * 2);
     for (const cell of this.waters) {
       if (world.weather.temperature < 0 || this.hash(cell.x, cell.y, world.seed) % 29 !== 0 || cell.kind === 'road') continue;
@@ -483,57 +610,282 @@ export class TownRenderer {
       }
     }
     ctx.globalAlpha = 1;
-    const residents = world.residents.filter(r => r.state === 'travel' || r.state === 'park').sort((a, b) => a.x + a.y - b.x - b.y);
+    const residents = world.residents.filter(r => this.visibleResident(r, options.followedResident))
+      .map(resident => ({ resident, position: this.drawPosition(world, resident, options.reducedMotion) }))
+      .sort((a, b) => a.position.x + a.position.y - b.position.x - b.position.y);
     const followed = world.residents.find(r => r.id === options.followedResident);
     if (options.showRoutes) {
       const home = options.selected ? options.selected.y * world.size + options.selected.x : null;
-      const routes = followed ? [followed] : home !== null ? world.residents.filter(r => r.home === home).slice(0, 6) : residents.slice(0, 8);
+      const routes = followed ? [followed] : home !== null ? world.residents.filter(r => r.home === home).slice(0, 6) : residents.slice(0, 8).map(actor => actor.resident);
       if (!followed && home === null) {
         for (const road of this.roads) {
           const p = this.project(road, world);
           this.rect(ctx, p.x, p.y, 1, 1, '#e5dab0');
         }
       }
-      for (const resident of routes) for (let i = 1; i < resident.route.length; i++) {
-        const a = world.cells[resident.route[i - 1]!]!, b = world.cells[resident.route[i]!]!;
-        if (!a || !b) continue;
-        const pa = this.project(a, world), pb = this.project(b, world);
-        this.line(ctx, pa.x, pa.y, pb.x, pb.y, followed ? '#f4d584' : '#d5d5aa');
+      for (const resident of routes) {
+        const position = this.drawPosition(world, resident, options.reducedMotion);
+        for (let i = position.routeIndex + 1; i < resident.route.length; i++) {
+          const a = i === position.routeIndex + 1 ? position : world.cells[resident.route[i - 1]!]!, b = world.cells[resident.route[i]!]!;
+          if (!a || !b) continue;
+          const pa = this.project(a, world), pb = this.project(b, world);
+          this.line(ctx, pa.x, pa.y, pb.x, pb.y, followed ? '#f4d584' : '#d5d5aa');
+        }
       }
     }
-    for (const resident of residents) this.person(ctx, resident, world, options);
-    if (world.weather.kind !== 'clear' && !options.reducedMotion) {
-      for (let i = 0; i < 60; i++) {
-        const x = this.hash(i, 21, world.seed) % this.width;
-        const y = (this.hash(i, 35, world.seed) + Math.floor(world.clock * (world.weather.kind === 'snow' ? 9 : 40))) % this.height;
-        if (world.weather.kind === 'snow') this.rect(ctx, x, y, 2, 2, '#f5f1e7');
-        else this.line(ctx, x, y, x - 1, y + 3, '#a6cad1');
+    this.drawShipments(ctx, world);
+    for (const actor of residents) this.person(ctx, actor.resident, actor.position, world, options);
+    this.drawHazards(ctx, world, options);
+  }
+
+  private drawWeather(ctx: CanvasRenderingContext2D, world: World, options: RenderOptions): void {
+    const weather = world.weather;
+    if (weather.kind === 'clear' || weather.frontRadius <= 0) return;
+    const center = { x: weather.frontX, y: weather.frontY };
+    ctx.globalAlpha = Math.min(.17, weather.cloud / 650);
+    for (const cell of world.cells) {
+      if (Math.hypot(cell.x - center.x, cell.y - center.y) > weather.frontRadius) continue;
+      const p = this.project(cell, world);
+      this.diamond(ctx, p.x, p.y, 9, 5, '#52677c');
+    }
+    ctx.globalAlpha = 1;
+    // Stepped clouds sit just above their local shadow, leaving most roofs clear.
+    for (let i = 0; i < 3; i++) {
+      const p = this.project({ x: center.x + (i - 1) * weather.frontRadius * .6, y: center.y }, world);
+      const drift = options.reducedMotion ? 0 : Math.round(Math.sin(world.clock * .12 + i) * 3);
+      ctx.globalAlpha = .28;
+      this.rect(ctx, p.x - 15 + drift, p.y - 34, 32, 5, '#edf0e3');
+      this.rect(ctx, p.x - 9 + drift, p.y - 38, 21, 5, '#edf0e3');
+      ctx.globalAlpha = 1;
+    }
+    if (weather.kind !== 'cloudy') this.precipitation(ctx, world, center, weather.frontRadius, weather.kind === 'snow', options, world.seed);
+    if (weather.kind === 'storm') {
+      const p = this.project(center, world);
+      const dx = Math.round((weather.windX - weather.windY) * 7), dy = Math.round((weather.windX + weather.windY) * 4);
+      for (let i = 0; i < 5; i++) {
+        const offset = options.reducedMotion ? 0 : Math.floor(world.clock * 3) % 18;
+        this.line(ctx, p.x - 26 + i * 12 + offset, p.y - 12 + i * 5, p.x - 26 + i * 12 + offset + dx, p.y - 12 + i * 5 + dy, '#d2ded4');
       }
     }
   }
 
-  private person(ctx: CanvasRenderingContext2D, resident: Resident, world: World, options: RenderOptions): void {
-    const p = this.project(resident, world);
+  private precipitation(ctx: CanvasRenderingContext2D, world: World, center: Point, radius: number, snow: boolean, options: RenderOptions, seed: number): void {
+    const time = options.reducedMotion ? 0 : world.clock;
+    const count = Math.min(75, Math.max(12, Math.round(radius * 4)));
+    for (let i = 0; i < count; i++) {
+      const hash = this.hash(i, 35, seed);
+      const angle = (hash % 628) / 100;
+      const distance = Math.sqrt(((hash >>> 10) % 1000) / 1000) * radius;
+      const point = { x: center.x + Math.cos(angle) * distance, y: center.y + Math.sin(angle) * distance };
+      if (point.x < 0 || point.y < 0 || point.x >= world.size || point.y >= world.size) continue;
+      if (!this.precipitatingAt(world, point)) continue;
+      const p = this.project(point, world);
+      const fall = (hash % 23 + Math.floor(time * (snow ? 5 : 24))) % 23;
+      const x = p.x + Math.round(world.weather.windX * fall * .3), y = p.y - 23 + fall;
+      if (snow) this.rect(ctx, x, y, 2, 2, '#f5f1e7');
+      else this.line(ctx, x, y, x + Math.round(world.weather.windX * 2) - 1, y + 3, '#a6cad1');
+    }
+  }
+
+  private drawHazards(ctx: CanvasRenderingContext2D, world: World, options: RenderOptions): void {
+    const time = options.reducedMotion ? 0 : world.clock;
+    for (const cell of world.cells) {
+      if (cell.fire <= .1) continue;
+      const p = this.project(cell, world), h = Math.min(15, this.spriteHeight(cell));
+      const flicker = options.reducedMotion ? 0 : Math.floor(time * 4 + cell.variant) % 3;
+      this.rect(ctx, p.x - 3, p.y - h - 4, 6, 6, '#bd6859');
+      this.rect(ctx, p.x - 2, p.y - h - 6 - flicker, 4, 7 + flicker, '#e9a268');
+      this.rect(ctx, p.x, p.y - h - 4, 2, 4, '#f6d591');
+      for (let i = 0; i < 2; i++) {
+        const drift = options.reducedMotion ? i * 5 : (time * 3 + i * 7 + cell.variant) % 14;
+        ctx.globalAlpha = .5 - drift / 40;
+        this.rect(ctx, p.x - 2 + drift * .3 + world.weather.windX * 2, p.y - h - 8 - drift, 4 + i * 2, 3, '#8b8b82');
+      }
+      ctx.globalAlpha = 1;
+    }
+    for (const effect of world.effects) {
+      if (effect.remaining <= 0) continue;
+      const p = this.project(effect.target, world);
+      const elapsed = options.reducedMotion ? 0 : effect.elapsed;
+      if (effect.kind === 'rain' || effect.kind === 'storm') {
+        this.precipitation(ctx, world, effect.target, effect.radius, false, options, effect.seed);
+      } else if (effect.kind === 'lightning') {
+        const bolt: Vertex[] = [[p.x - 3, p.y - 30], [p.x + 1, p.y - 19], [p.x - 2, p.y - 19], [p.x + 2, p.y - 8], [p.x - 1, p.y - 12], [p.x - 4, p.y - 23], [p.x - 1, p.y - 23]];
+        // A fixed pixel bolt communicates the strike without a flashing screen.
+        this.poly(ctx, bolt, options.reducedMotion ? '#d0b984' : '#f2d792');
+        this.outlineDiamond(ctx, p.x, p.y, 5, 3, '#a88063');
+      } else if (effect.kind === 'meteor') {
+        const approach = options.reducedMotion ? 0 : Math.max(0, 1 - elapsed / 1.2);
+        const x = p.x - approach * 35, y = p.y - approach * 55 - 7;
+        for (let i = 1; i <= 5; i++) this.rect(ctx, x - i * 3, y - i * 4, 4, 3, i < 3 ? '#edb878' : '#c8b495');
+        this.rect(ctx, x - 3, y - 3, 6, 6, '#a06e5d');
+        this.rect(ctx, x - 2, y - 2, 3, 2, '#e7bf84');
+      } else if (effect.kind === 'earthquake') {
+        for (let i = -2; i <= 2; i++) {
+          const a = this.project({ x: effect.target.x + i * effect.radius / 3, y: effect.target.y + i % 2 }, world);
+          this.line(ctx, a.x - 5, a.y, a.x, a.y + 2, '#796d60');
+          this.line(ctx, a.x, a.y + 2, a.x + 3, a.y + 1, '#796d60');
+        }
+      } else if (effect.kind === 'growth') {
+        for (let i = -1; i <= 1; i++) {
+          this.rect(ctx, p.x + i * 7, p.y - 3 - Math.abs(i), 1, 5, '#648854');
+          this.rect(ctx, p.x + i * 7 - 2, p.y - 3 - Math.abs(i), 5, 2, '#b7d396');
+        }
+      } else if (effect.kind === 'settle') {
+        this.rect(ctx, p.x + 4, p.y - 13, 1, 14, '#8c765b');
+        this.rect(ctx, p.x + 5, p.y - 13, 5, 4, '#e6c58c');
+      } else if (effect.kind === 'sun') {
+        this.outlineDiamond(ctx, p.x, p.y - 24, 5, 5, '#d8b77b');
+        this.rect(ctx, p.x - 2, p.y - 26, 4, 4, '#edd6a0');
+      }
+    }
+  }
+
+  private drawShipments(ctx: CanvasRenderingContext2D, world: World): void {
+    for (const shipment of world.shipments) {
+      const from = world.cells[shipment.route[shipment.routeIndex] ?? shipment.from];
+      const to = world.cells[shipment.route[shipment.routeIndex + 1] ?? shipment.route[shipment.routeIndex] ?? shipment.from];
+      if (!from || !to) continue;
+      const progress = Math.max(0, Math.min(1, shipment.progress));
+      const point = { x: from.x + (to.x - from.x) * progress, y: from.y + (to.y - from.y) * progress };
+      const p = this.project(point, world);
+      this.sprite.width = 16; this.sprite.height = 16;
+      const ink = this.sprite.getContext('2d')!;
+      this.rect(ink, 4, 8, 8, 4, '#ad8963');
+      this.rect(ink, 5, 12, 2, 2, '#61686b');
+      this.rect(ink, 10, 12, 2, 2, '#61686b');
+      if (shipment.food > 0) this.rect(ink, 5, 6, 4, 3, '#b5be7c');
+      if (shipment.materials > 0) this.rect(ink, 9, 6, 3, 3, '#a9b1aa');
+      if (shipment.blocked) {
+        this.rect(ink, 8, 1, 1, 3, '#b76c58');
+        this.rect(ink, 8, 5, 1, 1, '#b76c58');
+      }
+      this.compositeActor(ctx, ink, Math.round(p.x), Math.round(p.y), point.x + point.y);
+    }
+  }
+
+  private visibleResident(resident: Resident, followed?: number | null): boolean {
+    return resident.state !== 'home' || resident.id === followed;
+  }
+
+  private drawPosition(world: World, resident: Resident, reducedMotion: boolean): DrawPosition {
+    const position = { x: resident.x, y: resident.y, routeIndex: resident.routeIndex };
+    if (reducedMotion || resident.state !== 'travel' || resident.health <= 0 || !Number.isFinite(world.remainder) || world.remainder <= 0) return position;
+    let remaining = Math.min(world.remainder, SIM_STEP) * walkingSpeed(world, resident);
+    let progress = resident.progress;
+    // Walk checked route segments using only local variables. Position prediction
+    // never causes arrivals, traffic updates, RNG draws or a crossing of a closed road.
+    while (remaining > 0 && position.routeIndex < resident.route.length - 1) {
+      const a = world.cells[resident.route[position.routeIndex]!], b = world.cells[resident.route[position.routeIndex + 1]!];
+      if (!a || !b || !isPassable(b) || Math.abs(a.x - b.x) + Math.abs(a.y - b.y) !== 1) break;
+      const advance = Math.min(remaining, 1 - progress);
+      progress += advance; remaining -= advance;
+      position.x = a.x + (b.x - a.x) * progress;
+      position.y = a.y + (b.y - a.y) * progress;
+      if (progress < 1) break;
+      position.routeIndex++; progress = 0;
+    }
+    return position;
+  }
+
+  private precipitatingAt(world: World, point: Point): boolean {
+    const weather = world.weather;
+    let rain = weather.rainfall > 0 && Math.hypot(point.x - weather.frontX, point.y - weather.frontY) <= weather.frontRadius;
+    // Match command order: sunlight clears earlier rain only inside its circle;
+    // a later rain command can wet that same place again.
+    for (const effect of world.effects) {
+      if (effect.remaining <= 0 || Math.hypot(point.x - effect.target.x, point.y - effect.target.y) > effect.radius) continue;
+      if (effect.kind === 'sun') rain = false;
+      else if (effect.kind === 'rain' || effect.kind === 'storm') rain = true;
+    }
+    return rain;
+  }
+
+  private drawMapOverlays(ctx: CanvasRenderingContext2D, world: World, options: RenderOptions): void {
+    const layer = options.layer ?? 'none';
+    if (layer !== 'none') {
+      for (const cell of world.cells) {
+        const p = this.project(cell, world);
+        if (layer === 'water' && cell.waterDepth > .1) {
+          ctx.globalAlpha = Math.min(.55, .15 + cell.waterDepth * .12);
+          this.diamond(ctx, p.x, p.y, 8, 4, '#538aa9');
+          ctx.globalAlpha = 1;
+          // Bars distinguish shallow puddles from impassable floodwater.
+          for (let i = 0; i < Math.min(3, Math.ceil(cell.waterDepth)); i++) this.rect(ctx, p.x - 2 + i * 2, p.y, 1, 2, '#e4efdd');
+        } else if (layer === 'fire' && cell.fire > .1) {
+          ctx.globalAlpha = Math.min(.6, .2 + cell.fire / 150);
+          this.diamond(ctx, p.x, p.y, 8, 4, '#b8755b');
+          ctx.globalAlpha = 1;
+          this.rect(ctx, p.x - 1, p.y - 2, 2, 4, '#f4d293');
+        } else if (layer === 'supply' && ['house', 'shop', 'farm', 'factory'].includes(cell.kind)) {
+          const available = cell.stock > 1 || cell.materials > 1;
+          this.outlineDiamond(ctx, p.x, p.y + 1, 7, 3, cell.closed ? '#b36e5c' : available ? '#bddd9c' : '#beae91');
+          if (available) this.rect(ctx, p.x - 2, p.y, Math.min(5, 1 + Math.floor((cell.stock + cell.materials) / 20)), 1, '#edf0b4');
+          else this.line(ctx, p.x - 2, p.y - 1, p.x + 2, p.y + 2, '#a98776');
+        }
+      }
+    }
+    for (const command of world.pending) {
+      ctx.globalAlpha = .65;
+      this.dottedRadius(ctx, world, command.target, command.radius, '#dbc9a4', 6);
+      const p = this.project(command.target, world);
+      this.rect(ctx, p.x - 2, p.y - 2, 4, 4, '#dbc9a4');
+      this.rect(ctx, p.x, p.y - 1, 1, 2, '#746958');
+      ctx.globalAlpha = 1;
+    }
+    const preview = options.preview;
+    if (!preview) return;
+    const radius = Math.max(0, preview.radius);
+    const destructive = ['storm', 'lightning', 'earthquake', 'meteor'].includes(preview.kind);
+    const color = destructive ? '#e7b39a' : '#d6e7b9';
+    ctx.globalAlpha = .15;
+    for (const cell of world.cells) {
+      if (Math.hypot(cell.x - preview.center.x, cell.y - preview.center.y) > radius) continue;
+      const p = this.project(cell, world);
+      this.diamond(ctx, p.x, p.y, 9, 5, color);
+    }
+    ctx.globalAlpha = 1;
+    this.dottedRadius(ctx, world, preview.center, radius, color, 10);
+    const p = this.project(preview.center, world);
+    this.line(ctx, p.x - 4, p.y, p.x + 4, p.y, '#fff1cf');
+    this.line(ctx, p.x, p.y - 4, p.x, p.y + 4, '#fff1cf');
+    // A central pip count keeps selected strength visible without large effects.
+    for (let i = 0; i < Math.min(4, Math.max(1, Math.ceil(preview.intensity))); i++) this.rect(ctx, p.x - 3 + i * 2, p.y + 6, 1, 2, color);
+  }
+
+  private dottedRadius(ctx: CanvasRenderingContext2D, world: World, center: Point, radius: number, color: string, density: number): void {
+    const dots = Math.min(240, Math.max(16, Math.ceil(radius * density)));
+    for (let i = 0; i < dots; i++) {
+      const angle = i / dots * Math.PI * 2;
+      const p = this.project({ x: center.x + Math.cos(angle) * radius, y: center.y + Math.sin(angle) * radius }, world);
+      this.rect(ctx, p.x - 1, p.y - 1, 3, 3, '#536050');
+      this.rect(ctx, p.x, p.y, 2, 2, color);
+    }
+  }
+
+  private person(ctx: CanvasRenderingContext2D, resident: Resident, position: DrawPosition, world: World, options: RenderOptions): void {
+    const p = this.project(position, world);
     const x = Math.round(p.x), y = Math.round(p.y);
     // Pixel-level painter mask retains every foreground leaf/roof edge while
     // residents move continuously between tile centers. Only a 16x16 sprite is scanned.
     const sprite = this.sprite;
     sprite.width = 16; sprite.height = 16;
     const ink = sprite.getContext('2d')!;
-    const step = options.reducedMotion ? 0 : Math.floor(world.clock * 7 + resident.id) % 2;
+    const step = options.reducedMotion || resident.state !== 'travel' ? 0 : Math.floor((world.clock + world.remainder) * 7 + resident.id) % 2;
     const clothes = ['#e9998b', '#699eba', '#e2bb62', '#a397c4', '#73ad95'][resident.color % 5]!;
-    const next = world.cells[resident.route[resident.routeIndex + 1] ?? -1];
-    const facing = next ? Math.sign((next.x - resident.x) - (next.y - resident.y)) : 1;
+    const next = world.cells[resident.route[position.routeIndex + 1] ?? -1];
+    const facing = next ? Math.sign((next.x - position.x) - (next.y - position.y)) : 1;
     this.rect(ink, 6, 12, 5, 1, '#758d78');
     this.rect(ink, 6, 10 + step, 2, 2, '#545c70');
     this.rect(ink, 9, 11 - step, 2, 2, '#545c70');
-    this.rect(ink, 6, 6, 5, 5, clothes);
+    const dependent = resident.role === 'dependent' ? 2 : 0;
+    this.rect(ink, 6, 6 + dependent, 5, 5 - dependent, clothes);
     this.rect(ink, 5, 7 + step, 1, 3, '#efc5a2');
     this.rect(ink, 11, 7 - step, 1, 3, '#efc5a2');
-    this.rect(ink, 6, 2, 5, 5, '#f3cfab');
-    this.rect(ink, 6, 1, 5, 2, '#766452');
-    this.rect(ink, facing < 0 ? 6 : 10, 4, 1, 1, '#5c5354');
-    this.rect(ink, facing < 0 ? 5 : 11, 5, 1, 1, '#eba69a');
+    this.rect(ink, 6, 2 + dependent, 5, 5, '#f3cfab');
+    this.rect(ink, 6, 1 + dependent, 5, 2, '#766452');
+    this.rect(ink, facing < 0 ? 6 : 10, 4 + dependent, 1, 1, '#5c5354');
+    this.rect(ink, facing < 0 ? 5 : 11, 5 + dependent, 1, 1, '#eba69a');
     if (resident.id % 3 === 0) {
       this.rect(ink, 6, 0, 5, 2, '#e9ce89');
       this.rect(ink, 5, 2, 7, 1, '#cda76d');
@@ -542,13 +894,28 @@ export class TownRenderer {
       this.rect(ink, facing < 0 ? 4 : 11, 9, 3, 3, '#dfb879');
       this.rect(ink, facing < 0 ? 5 : 12, 8, 1, 1, '#8b705a');
     } else if (resident.purpose === 'commute') this.rect(ink, facing < 0 ? 10 : 5, 7, 2, 4, '#718192');
-    const data = ink.getImageData(0, 0, 16, 16);
-    for (let py = 0; py < 16; py++) for (let px = 0; px < 16; px++) {
-      const wx = x - 8 + px, wy = y - 12 + py;
-      if (wx >= 0 && wy >= 0 && wx < this.width && wy < this.height && this.depthPixels[wy * this.width + wx]! > resident.x + resident.y + 0.2) data.data[(py * 16 + px) * 4 + 3] = 0;
+    if (resident.displaced || resident.purpose === 'refuge' || resident.state === 'shelter') {
+      this.rect(ink, facing < 0 ? 3 : 11, 7, 3, 5, '#bc917b');
+      this.rect(ink, facing < 0 ? 4 : 12, 6, 1, 1, '#756852');
+      this.rect(ink, facing < 0 ? 3 : 11, 8, 3, 1, '#e1c59a');
     }
-    ink.putImageData(data, 0, 0);
-    ctx.drawImage(sprite, x - 8, y - 12);
+    if (resident.purpose === 'repair' || resident.state === 'repair') {
+      this.rect(ink, facing < 0 ? 3 : 12, 6, 1, 6, '#937251');
+      this.rect(ink, facing < 0 ? 2 : 11, 5, 3, 2, '#aebbb1');
+      this.rect(ink, 5, 2 + dependent, 7, 1, '#e8c381');
+    }
+    if (this.precipitatingAt(world, position)) {
+      this.rect(ink, 12, 2, 1, 8, '#807567');
+      this.rect(ink, 5, 1, 10, 2, '#adc7bd');
+      this.rect(ink, 7, 0, 6, 1, '#d9e3c9');
+      this.rect(ink, 4, 3, 12, 1, '#779a9b');
+    }
+    this.compositeActor(ctx, ink, x, y, position.x + position.y);
+    if (resident.state === 'wait' || resident.health < 35 || resident.hunger > 70) {
+      const color = resident.state === 'wait' ? '#947964' : '#b36e5c';
+      this.rect(ctx, x, y - 17, 1, 3, color);
+      this.rect(ctx, x, y - 13, 1, 1, color);
+    }
     if (options.followedResident === resident.id) {
       this.outlineDiamond(ctx, x, y + 2, 5, 2, '#fff0a7');
       this.rect(ctx, x - 1, y - 17, 3, 2, '#fff0a7');
@@ -556,17 +923,29 @@ export class TownRenderer {
     }
   }
 
+  private compositeActor(ctx: CanvasRenderingContext2D, ink: CanvasRenderingContext2D, x: number, y: number, depth: number): void {
+    const data = ink.getImageData(0, 0, 16, 16);
+    for (let py = 0; py < 16; py++) for (let px = 0; px < 16; px++) {
+      const wx = x - 8 + px, wy = y - 12 + py;
+      if (wx >= 0 && wy >= 0 && wx < this.width && wy < this.height && this.depthPixels[wy * this.width + wx]! > depth + 0.2) data.data[(py * 16 + px) * 4 + 3] = 0;
+    }
+    ink.putImageData(data, 0, 0);
+    ctx.drawImage(this.sprite, x - 8, y - 12);
+  }
+
   pickResident(clientX: number, clientY: number, world: World, camera: Camera): number | null {
     const bounds = this.canvas.getBoundingClientRect();
-    if (bounds.width <= 0 || bounds.height <= 0 || clientX < bounds.left || clientY < bounds.top || clientX > bounds.right || clientY > bounds.bottom) return null;
+    if (bounds.width <= 0 || bounds.height <= 0 || clientX < bounds.left || clientY < bounds.top || clientX > bounds.left + bounds.width || clientY > bounds.top + bounds.height) return null;
     const x = ((clientX - bounds.left) * this.width / bounds.width - CENTER_X - camera.panX) / camera.zoom + CENTER_X;
     const y = ((clientY - bounds.top) * this.height / bounds.height - CENTER_Y - camera.panY) / camera.zoom + CENTER_Y;
-    for (const resident of [...world.residents].reverse()) {
-      if (resident.state !== 'travel' && resident.state !== 'park') continue;
-      const p = this.project(resident, world);
+    const actors = world.residents.filter(resident => this.visibleResident(resident, this.followedResident))
+      .map(resident => ({ resident, position: this.drawPosition(world, resident, this.reducedMotion) }))
+      .sort((a, b) => a.position.x + a.position.y - b.position.x - b.position.y);
+    for (const { resident, position } of actors.reverse()) {
+      const p = this.project(position, world);
       if (Math.abs(x - p.x) <= 6 && y >= p.y - 13 && y <= p.y + 2) {
         const px = Math.round(x), py = Math.round(y);
-        if (px >= 0 && py >= 0 && px < this.width && py < this.height && this.depthPixels[py * this.width + px]! <= resident.x + resident.y + 0.2) return resident.id;
+        if (px >= 0 && py >= 0 && px < this.width && py < this.height && this.depthPixels[py * this.width + px]! <= position.x + position.y + 0.2) return resident.id;
       }
     }
     return null;
@@ -582,16 +961,23 @@ export class TownRenderer {
     this.line(ctx, p.x - 7, p.y - h - 5, p.x, p.y - h - 1, '#e8c9a2');
     this.line(ctx, p.x, p.y - h - 1, p.x + 7, p.y - h - 5, '#c5a37c');
     this.rect(ctx, p.x - 5, p.y + 1, 3, 2, '#c48e78');
+    this.stockCrates(ctx, cell, p);
+    if (cell.buildingPlan) {
+      this.rect(ctx, p.x + 2, p.y - h - 4, 4, 3, '#eee0b8');
+      this.rect(ctx, p.x + 3, p.y - h - 3, 2, 1, cell.buildingPlan === 'factory' ? '#839998' : cell.buildingPlan === 'farm' ? '#a4b56f' : '#bc927c');
+      this.rect(ctx, p.x - 2, p.y + 1, 1, 4, '#987759');
+      this.rect(ctx, p.x - 3, p.y, 3, 2, '#aeb9af');
+    }
   }
 
   private spriteHeight(cell: Cell): number {
     switch (cell.kind) {
-      case 'grass': return cell.development > 25 ? 9 + Math.floor(cell.development / 8) : 0;
+      case 'grass': return cell.development > 25 || cell.buildingPlan ? 9 + Math.floor(cell.development / 8) : 0;
       case 'tree': case 'park': return 24;
       case 'house': return 17 + Math.max(1, Math.min(3, cell.level)) * 3;
       case 'shop': return 17 + Math.max(1, Math.min(3, cell.level)) * 2;
       case 'factory': return 22 + Math.max(1, Math.min(3, cell.level)) * 2;
-      case 'ruin': return 10;
+      case 'ruin': return cell.buildingPlan ? Math.max(10, 9 + Math.floor(cell.development / 8)) : 10;
       default: return 0;
     }
   }

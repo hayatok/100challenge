@@ -1,268 +1,127 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { advanceResidents, createWorld, restoreWorld, serializeWorld, stepWorld } from '../src/simulation.ts';
-import { findRoute, jobCapacity, neighbors, synchronizeResidents } from '../src/mobility.ts';
-import type { World } from '../src/types.ts';
-
-const advance = (world: World, weeks: number) => {
-  for (let tick = 0; tick < weeks; tick++) { advanceResidents(world, 4); stepWorld(world); }
-  return world;
-};
+import { advanceWorld, createWorld, restoreWorld, serializeWorld, stepWorld } from '../src/simulation.ts';
+import { advanceResidents, depart, findRoute, jobCapacity, neighbors, newResident, synchronizeResidents, walkingSpeed } from '../src/mobility.ts';
+import { queuePower } from '../src/disasters.ts';
+import { DAY_SECONDS, SIM_STEP, EVENT_LIMIT } from '../src/constants.ts';
+import type { CellKind, World } from '../src/types.ts';
 
 function assertInvariants(world: World) {
-  let population = 0;
-  let jobs = 0;
-  const counts: Record<string, number> = {};
-  for (const [index, cell] of world.cells.entries()) {
-    assert.equal(cell.x, index % world.size);
-    assert.equal(cell.y, Math.floor(index / world.size));
-    for (const key of ['level', 'age', 'population', 'vitality', 'environment', 'traffic', 'variant', 'changedAt', 'moisture', 'fertility', 'vegetation', 'crop', 'condition', 'development', 'employed', 'customers'] as const) {
-      assert.ok(Number.isFinite(cell[key]) && cell[key] >= 0, `${key} must stay finite and nonnegative`);
-    }
-    assert.ok(cell.environment <= 100 && cell.vitality <= 100 && cell.traffic <= 100);
-    assert.ok(cell.changedAt <= world.tick);
-    assert.ok(cell.reason.length > 0);
-    if (cell.terrain === 'water') assert.ok(cell.kind === 'water' || cell.kind === 'road');
-    if (cell.kind !== 'house') assert.equal(cell.population, 0);
-    population += cell.population;
-    if (cell.kind === 'farm') jobs += 5 + cell.level * 3;
-    if (cell.kind === 'factory') jobs += 12 + cell.level * 5;
-    if (cell.kind === 'shop') jobs += 3 + cell.level * 2;
-    counts[cell.kind] = (counts[cell.kind] ?? 0) + 1;
+  assert.equal(world.version,3);assert.equal(world.stats.population,world.residents.length);
+  assert.equal(world.clock,world.step*SIM_STEP);assert.equal(world.tick,Math.floor(world.clock/DAY_SECONDS));
+  assert.equal(new Set(world.residents.map(p=>p.id)).size,world.residents.length);
+  for(const [i,c] of world.cells.entries()) {
+    assert.equal(c.x,i%world.size);assert.equal(c.y,Math.floor(i/world.size));assert.ok(c.changedAt<=world.tick);
+    for(const key of ['stock','materials','condition','development','moisture','crop','rubble'] as const)assert.ok(Number.isFinite(c[key])&&c[key]>=0);
+    if(c.kind==='house')assert.equal(c.population,world.residents.filter(p=>p.home===i).length);else assert.equal(c.population,0);
   }
-  for (const key of ['moisture', 'fertility', 'vegetation', 'crop', 'condition', 'development'] as const) assert.ok(world.cells.every(cell => cell[key] <= 100));
-  assert.equal(world.version, 2);
-  assert.ok(Number.isFinite(world.clock) && world.clock >= 0);
-  assert.ok(world.residents.every(person => person.id < world.nextResidentId));
-  assert.equal(new Set(world.residents.map(person => person.id)).size, world.residents.length);
-  assert.ok(Number.isFinite(world.economy.food) && world.economy.food >= 0 && world.economy.food <= 10000);
-  assert.equal(world.stats.population, population);
-  assert.equal(world.stats.jobs, jobs);
-  for (const [stat, kind] of [['homes', 'house'], ['shops', 'shop'], ['farms', 'farm'], ['factories', 'factory'], ['ruins', 'ruin'], ['roads', 'road']] as const) assert.equal(world.stats[stat], counts[kind] ?? 0);
-  assert.ok(world.events.length <= 18 && world.history.length <= 180);
-  assert.deepEqual(world.history.at(-1), { tick: world.tick, population });
+  assert.equal(world.stats.jobs,world.cells.reduce((s,c)=>s+jobCapacity(c),0));
+  assert.ok(world.events.length<=EVENT_LIMIT&&world.history.length<=180);
+  assert.deepEqual(restoreWorld(serializeWorld(world)),world);
 }
-
-function assertConnectedRoads(world: World) {
-  const roads = world.cells.flatMap((cell, index) => cell.kind === 'road' ? [index] : []);
-  const seen = new Set([roads[0]]);
-  const queue = [roads[0]];
-  for (let current = 0; current < queue.length; current++) {
-    const index = queue[current];
-    const { x, y } = world.cells[index];
-    const neighbors = [x > 0 ? index - 1 : -1, x + 1 < world.size ? index + 1 : -1, y > 0 ? index - world.size : -1, y + 1 < world.size ? index + world.size : -1];
-    for (const neighbor of neighbors) {
-      if (neighbor >= 0 && world.cells[neighbor].kind === 'road' && !seen.has(neighbor)) { seen.add(neighbor); queue.push(neighbor); }
-    }
-  }
-  assert.equal(seen.size, roads.length, 'every road must connect through cardinal neighbors');
+function lineWorld():World {
+  const w=createWorld(42,24);w.naturalPolicy='off';w.residents=[];w.nextResidentId=0;w.shipments=[];w.events=[];w.history=[{tick:0,population:0}];
+  for(const c of w.cells)Object.assign(c,{terrain:'land',kind:'grass',level:0,population:0,vitality:0,condition:0,stock:0,materials:0,work:0,fire:0,waterDepth:0,rubble:0,closed:false,buildingPlan:null});
+  for(let y=0;y<24;y++)Object.assign(w.cells[y*24+12],{terrain:'water',kind:'water',waterDepth:1});
+  for(let x=2;x<=21;x++)Object.assign(w.cells[12*24+x],{kind:'road',condition:90,closed:false});
+  w.topologyVersion++;advanceWorld(w,.25);return w;
 }
+function building(w:World,x:number,y:number,kind:CellKind):number {const i=y*w.size+x;Object.assign(w.cells[i],{kind,level:1,condition:90,vitality:80,stock:0,materials:0,closed:false});w.topologyVersion++;return i;}
 
-test('seed reproduces terrain, hamlets and future, including seed zero', () => {
-  for (const seed of [0, 42, 0xffffffff]) {
-    assert.equal(serializeWorld(advance(createWorld(seed), 80)), serializeWorld(advance(createWorld(seed), 80)));
+test('seed, fixed deltas, save continuation and command checkpoint are deterministic',()=>{
+  for(const seed of [0,42,0xffffffff]) {
+    const a=createWorld(seed),b=createWorld(seed);advanceWorld(a,81.7);for(let n=0;n<817;n++)advanceWorld(b,.1);
+    assert.equal(serializeWorld(a),serializeWorld(b));const c=restoreWorld(serializeWorld(a));advanceWorld(a,90);advanceWorld(c,90);assert.equal(serializeWorld(a),serializeWorld(c));
   }
-  assert.notEqual(serializeWorld(createWorld(42)), serializeWorld(createWorld(43)));
-  for (const seed of [-1, 1.5, NaN, Infinity, 0x100000000]) assert.throws(() => createWorld(seed), /種/);
-  for (const size of [23, 65, NaN, 48.5]) assert.throws(() => createWorld(1, size), /大きさ/);
+  const w=createWorld(9);queuePower(w,{kind:'rain',target:{x:10,y:10},radius:3,intensity:1,duration:2});let captured=-1;
+  advanceWorld(w,.25,before=>{captured=before.step;assert.equal(before.clock,0);assert.equal(before.pending.length,1);});assert.equal(captured,0);assert.equal(w.step,1);
+  for(const s of [-1,1.5,NaN,Infinity,0x100000000])assert.throws(()=>createWorld(s),/種/);for(const s of [23,65,48.5])assert.throws(()=>createWorld(1,s),/大きさ/);
 });
-
-test('initial river crossing connects two green hamlets and growth stays on land', () => {
-  for (const size of [24, 48, 64]) {
-    const world = createWorld(20260930, size);
-    const terrain = world.cells.map(cell => cell.terrain);
-    assert.ok(world.cells.some(cell => cell.kind === 'tree'));
-    assert.ok(world.cells.some(cell => cell.terrain === 'water' && cell.kind === 'road'), 'river has a bridge');
-    assert.ok(world.cells.some(cell => cell.kind === 'house' && cell.x < size / 2));
-    assert.ok(world.cells.some(cell => cell.kind === 'house' && cell.x > size / 2));
-    assertConnectedRoads(world);
-    advance(world, 200);
-    assert.deepEqual(world.cells.map(cell => cell.terrain), terrain);
-    assertConnectedRoads(world);
-    assertInvariants(world);
-  }
+test('one visible person represents one resident; assignments respect roads and capacity',()=>{
+  const w=createWorld(42);assert.equal(w.residents.length,w.cells.reduce((s,c)=>s+c.population,0));assert.ok(w.residents.some(p=>p.role==='dependent'));
+  const used=new Map<number,number>();for(const p of w.residents){if(p.role==='dependent')assert.equal(p.workplace,null);if(p.workplace===null)continue;used.set(p.workplace,(used.get(p.workplace)??0)+1);assert.ok(used.get(p.workplace)!<=jobCapacity(w.cells[p.workplace]));const route=findRoute(w,p.home,p.workplace)!;assert.ok(route);assert.ok(route.every((i,n)=>n===0||neighbors(w,route[n-1]).includes(i)));}
+  const old=w.residents.pop()!;const count=w.residents.length;synchronizeResidents(w);assert.equal(w.residents.length,count,'housing never silently respawns the lost resident');assert.ok(w.residents.every(p=>p.id!==old.id));
 });
-
-test('updates use the previous neighborhood and newly built roads connect to an old road', () => {
-  const world = createWorld(731);
-  for (let week = 0; week < 100; week++) {
-    const old = world.cells;
-    advanceResidents(world, 4);
-    stepWorld(world);
-    for (const [index, cell] of world.cells.entries()) {
-      if (cell.kind === 'road' && old[index].kind !== 'road') {
-        const { x, y } = cell;
-        assert.ok([x > 0 ? index - 1 : -1, x + 1 < world.size ? index + 1 : -1, y > 0 ? index - world.size : -1, y + 1 < world.size ? index + world.size : -1].some(neighbor => neighbor >= 0 && old[neighbor].kind === 'road'));
-      }
-      if (cell.kind === 'house' && old[index].kind === 'grass') {
-        assert.ok(old.some(near => Math.abs(near.x - cell.x) <= 1 && Math.abs(near.y - cell.y) <= 1 && near.kind === 'road'));
-        const previousWorld = { ...world, cells: old };
-        assert.ok(old.some((workplace, destination) => jobCapacity(workplace) > 0 && findRoute(previousWorld, index, destination)), 'new homes require a road-reachable workplace');
-      }
-    }
-  }
+test('quarter steps carry walking time across tile boundaries at the shared walking speed',()=>{
+  const w=lineWorld(),home=building(w,8,11,'house'),work=building(w,11,11,'farm'),p=newResident(w,home);w.residents=[p];assert.ok(depart(w,p,work,'commute'));p.route=[home,home+24,home+25,home+26,home+27,work];
+  assert.equal(walkingSpeed(w,p),1.3);for(let n=0;n<12;n++)advanceResidents(w,.25);
+  assert.equal(p.routeIndex,3);assert.ok(Math.abs(p.progress-.9)<1e-10);assert.ok(Math.abs(p.x-10.9)<1e-10);assert.equal(p.y,12);
+  for(let n=0;n<4;n++)advanceResidents(w,.25);assert.equal(p.state,'work');assert.equal(p.x,11);assert.equal(p.y,11);assert.equal(p.routeIndex,p.route.length-1);
+  assert.ok(Math.abs(p.timer-(DAY_SECONDS*.28-(4-5/1.3)))<1e-10,'time remaining after arrival advances the visit timer');
+  const a=lineWorld(),b=lineWorld();for(const world of [a,b]){const h=building(world,8,11,'house'),f=building(world,16,11,'farm'),person=newResident(world,h);world.residents=[person];depart(world,person,f,'commute');}
+  advanceWorld(a,3.25);for(let n=0;n<13;n++)advanceWorld(b,.25);assert.equal(serializeWorld(a),serializeWorld(b));
 });
-
-test('long observations retain finite diverse towns with real activity and accurate event counts', () => {
-  for (const seed of [0, 1, 42, 20260930]) {
-    const world = createWorld(seed);
-    for (let week = 0; week < 384; week++) {
-      const old = world.cells;
-      const beforeBorn = world.stats.born, beforeRetired = world.stats.retired;
-      advance(world, 1);
-      const births = world.cells.filter((cell, index) => old[index].kind === 'grass' && ['house', 'shop', 'farm', 'factory'].includes(cell.kind)).length;
-      const closures = world.cells.filter((cell, index) => old[index].kind !== 'ruin' && cell.kind === 'ruin').length;
-      assert.equal(world.stats.born - beforeBorn, births);
-      assert.equal(world.stats.retired - beforeRetired, closures);
-      if (week % 48 === 0) assertInvariants(world);
-    }
-    assert.ok(world.stats.population > 0 && world.stats.homes > 0);
-    assert.ok(world.stats.farms > 0 && world.stats.shops > 0);
-    assert.ok(world.economy.commutes > 0 && world.economy.visits > 0, 'people must actually arrive');
-    assert.ok(world.stats.factories < world.stats.homes, 'industry does not replace housing');
-    assertConnectedRoads(world);
-    assertInvariants(world);
-  }
+test('a broken bridge stops an existing fractional trip and survives save/load without reverse teleport',()=>{
+  const w=lineWorld(),home=building(w,8,11,'house'),work=building(w,16,11,'farm');const p=newResident(w,home);w.residents=[p];p.workplace=work;assert.ok(depart(w,p,work,'commute'));
+  while(p.route[p.routeIndex+1]!==12*24+12)advanceResidents(w,.25);
+  advanceResidents(w,.25);assert.ok(p.progress>0);const bridge=w.cells[12*24+12];bridge.condition=0;bridge.closed=true;w.topologyVersion++;
+  const position={x:p.x,y:p.y,progress:p.progress,routeIndex:p.routeIndex};advanceWorld(w,.5);assert.equal(p.state,'wait');assert.deepEqual({x:p.x,y:p.y,progress:p.progress,routeIndex:p.routeIndex},position);
+  const restored=restoreWorld(serializeWorld(w));advanceWorld(w,1);advanceWorld(restored,1);assert.equal(serializeWorld(w),serializeWorld(restored));assert.deepEqual({x:p.x,y:p.y,progress:p.progress,routeIndex:p.routeIndex},position);
+  bridge.condition=90;bridge.closed=false;w.topologyVersion++;advanceWorld(w,.25);assert.equal(p.state,'travel');assert.ok(p.x>position.x);
 });
-
-test('reachable jobs respect capacity and a disconnected road network supplies no employment', () => {
-  const world = createWorld(42);
-  const occupancy = new Map<number, number>();
-  for (const person of world.residents) {
-    if (person.workplace === null) continue;
-    const route = findRoute(world, person.home, person.workplace);
-    assert.ok(route && route.some(index => world.cells[index].kind === 'road'));
-    assert.ok(route.every((index, n) => n === 0 || neighbors(world, route[n - 1]).includes(index)), 'paths take cardinal steps');
-    occupancy.set(person.workplace, (occupancy.get(person.workplace) ?? 0) + 1);
-    assert.ok(occupancy.get(person.workplace)! <= jobCapacity(world.cells[person.workplace]));
-  }
-  assert.ok(world.economy.employed > 0);
-  for (const cell of world.cells) if (cell.kind === 'road') cell.kind = cell.terrain === 'water' ? 'water' : 'grass';
-  synchronizeResidents(world);
-  assert.equal(world.economy.employed, 0);
-  assert.ok(world.residents.every(person => person.workplace === null && person.shop === null));
-  advanceResidents(world, 4);
-  assert.equal(world.economy.commutes, 0);
+test('food and materials require actual resident labour, never decaying arrival counters',()=>{
+  const w=createWorld(42);w.naturalPolicy='off';w.residents=[];for(const c of w.cells)c.materials=0;for(const c of w.cells)if(c.kind==='farm'){c.crop=100;c.stock=0;c.employed=100;}else if(c.kind==='factory'){c.materials=0;c.employed=100;}
+  stepWorld(w);assert.equal(w.economy.harvest,0);assert.equal(w.economy.food,w.cells.reduce((s,c)=>s+c.stock,0));assert.ok(w.cells.filter(c=>c.kind==='factory').every(c=>c.materials===0));
+  const live=createWorld(42);live.naturalPolicy='off';advanceWorld(live,DAY_SECONDS*2);assert.ok(live.economy.harvest>0);const factoryWorld=lineWorld(), factory=building(factoryWorld,8,11,'factory');factoryWorld.cells[factory].condition=100;const worker=newResident(factoryWorld,factory);worker.destination=factory;worker.state='work';worker.timer=999;factoryWorld.residents=[worker];advanceWorld(factoryWorld,1);assert.ok(factoryWorld.cells[factory].materials>0);assert.ok(factoryWorld.cells[factory].work>0);assert.ok(live.economy.commutes>0);
 });
-
-test('weekly updates preserve a continuous in-flight journey and save its exact position', () => {
-  const world = createWorld(42);
-  const person = world.residents.find(resident => resident.workplace !== null)!;
-  person.timer = 0;
-  advanceResidents(world, .5);
-  assert.equal(person.state, 'travel');
-  assert.ok(person.progress > 0 && person.progress < 1);
-  const snapshot = { x: person.x, y: person.y, route: [...person.route], routeIndex: person.routeIndex, progress: person.progress, clock: world.clock };
-  stepWorld(world);
-  const current = world.residents.find(resident => resident.id === person.id)!;
-  assert.deepEqual({ x: current.x, y: current.y, route: current.route, routeIndex: current.routeIndex, progress: current.progress, clock: world.clock }, snapshot);
-  const restored = restoreWorld(serializeWorld(world));
-  assert.deepEqual(restored, world);
-  advanceResidents(world, .25);
-  advanceResidents(restored, .25);
-  assert.deepEqual(restored, world);
-  assert.ok(Math.hypot(current.x - snapshot.x, current.y - snapshot.y) <= .27, 'motion continues from the saved fraction of a step');
+test('only stocked purchases count, simultaneous shoppers share exactly the available stock',()=>{
+  const w=lineWorld(),home=building(w,7,11,'house'),shop=building(w,8,11,'shop');
+  const people=[newResident(w,home),newResident(w,home)];w.residents=people;for(const p of people){p.food=0;p.destination=shop;p.x=8;p.y=11;p.route=[home,home+24,shop+24,shop];p.routeIndex=3;p.state='shop';p.timer=0;p.shop=shop;}
+  w.cells[shop].stock=2;advanceWorld(w,.25);assert.equal(w.economy.visits,2);assert.equal(w.cells[shop].stock,0);assert.equal(people[0].food,people[1].food);assert.ok(people[0].food<1&&people[0].food>.99);
+  for(const p of people){p.destination=shop;p.x=8;p.y=11;p.route=[shop];p.routeIndex=0;p.progress=0;p.state='shop';p.timer=0;}
+  const before=w.economy.visits;advanceWorld(w,.25);assert.equal(w.economy.visits,before);assert.equal(w.economy.failedPurchases,2);
 });
-
-test('standing crops require arriving workers to become harvested food', () => {
-  const world = createWorld(42);
-  world.residents = [];
-  for (const cell of world.cells) if (cell.kind === 'farm') { cell.crop = 100; cell.employed = 0; }
-  stepWorld(world);
-  assert.equal(world.economy.harvest, 0);
-  assert.ok(world.cells.filter(cell => cell.kind === 'farm').every(cell => cell.crop === 100));
-  const farm = world.cells.find(cell => cell.kind === 'farm')!;
-  farm.employed = 1;
-  stepWorld(world);
-  assert.ok(world.economy.harvest > 0);
-  assert.ok(farm.crop !== world.cells[farm.y * world.size + farm.x].crop);
+test('cargo retains conserved stock and cannot feed across a broken bridge',()=>{
+  const w=lineWorld(),farm=building(w,8,11,'farm'),shop=building(w,16,11,'shop');w.cells[farm].stock=40;const route=findRoute(w,farm,shop)!;
+  w.shipments=[{id:0,from:farm,to:shop,food:10,materials:0,route,routeIndex:route.indexOf(12*24+11),progress:.4,blocked:false}];w.nextShipmentId=1;w.cells[farm].stock-=10;const bridge=w.cells[12*24+12];bridge.condition=0;bridge.closed=true;w.topologyVersion++;
+  advanceWorld(w,10);assert.equal(w.cells[shop].stock,0);assert.equal(w.shipments[0].food,10);assert.equal(w.shipments[0].progress,.4);assert.equal(w.shipments[0].blocked,true);assert.equal(w.economy.food,40);assertInvariants(w);
 });
-
-test('profitable old homes can repair instead of retiring solely because of age', () => {
-  const world = createWorld(42);
-  const home = world.residents.find(person => person.workplace !== null)!.home;
-  const cell = world.cells[home];
-  cell.age = 5000; cell.condition = 70; cell.vitality = 80;
-  for (const person of world.residents.filter(person => person.home === home && person.workplace !== null)) world.cells[person.workplace!].employed = 3;
-  stepWorld(world);
-  assert.equal(world.cells[home].kind, 'house');
-  assert.ok(world.cells[home].condition > 70);
+test('hunger has a grace period, then reduces health and can end society without automatic respawn',()=>{
+  const w=lineWorld(),home=building(w,8,11,'house');const p=newResident(w,home,'dependent');p.food=0;w.residents=[p];w.migrationGrace=45;
+  advanceWorld(w,45);assert.equal(p.health,100);assert.ok(p.hunger>1);advanceWorld(w,45);assert.ok(p.health<100);
+  advanceWorld(w,45*15);assert.equal(w.residents.length,0);const clock=w.clock;const vegetation=w.cells[0].vegetation;advanceWorld(w,45*2);assert.ok(w.clock>clock);assert.equal(w.residents.length,0);assert.ok(w.cells[0].vegetation!==vegetation||w.cells[0].moisture!==55);
+  queuePower(w,{kind:'growth',target:{x:6,y:6},radius:4,intensity:2,duration:10});advanceWorld(w,1);assert.equal(w.residents.length,0);
+  queuePower(w,{kind:'settle',target:{x:6,y:6},radius:4,intensity:1,duration:1});advanceWorld(w,.25);assert.ok(w.residents.length>0);assert.ok(w.economy.food>0&&w.economy.materials>0);assert.ok(w.stats.farms>0&&w.stats.homes>0);assertInvariants(w);
 });
-
-test('v1 migration preserves the original town and validates it before adding residents', () => {
-  const original = createWorld(20260930);
-  const legacy = JSON.parse(serializeWorld(original));
-  legacy.version = 1;
-  for (const key of ['clock', 'nextResidentId', 'residents', 'weather', 'economy']) delete legacy[key];
-  for (const cell of legacy.cells) for (const key of ['moisture', 'fertility', 'vegetation', 'crop', 'condition', 'development', 'employed', 'customers', 'accessible']) delete cell[key];
-  const migrated = restoreWorld(JSON.stringify(legacy));
-  assert.equal(migrated.version, 2);
-  assert.equal(migrated.seed, original.seed);
-  assert.equal(migrated.rng, original.rng);
-  assert.deepEqual(migrated.cells.map(({ x, y, terrain, kind, age, population }) => ({ x, y, terrain, kind, age, population })), original.cells.map(({ x, y, terrain, kind, age, population }) => ({ x, y, terrain, kind, age, population })));
-  assert.deepEqual(migrated.stats, original.stats);
-  assert.ok(migrated.residents.length > 0 && migrated.nextResidentId > 0);
-  assert.deepEqual(restoreWorld(serializeWorld(migrated)), migrated);
-  legacy.cells[0].x = 100;
-  assert.throws(() => restoreWorld(JSON.stringify(legacy)), /読み込めません/);
+test('dead residents stay dead after migration grace; survivors evacuate on roads and ruins rebuild with labour',()=>{
+  const extinct=createWorld(4821);extinct.migrationGrace=0;queuePower(extinct,{kind:'meteor',target:{x:24,y:24},radius:48,intensity:4,duration:0});advanceWorld(extinct,.25);assert.equal(extinct.residents.length,0);assert.equal(extinct.economy.deaths,96);
+  const w=lineWorld(),home=building(w,8,11,'house'),park=building(w,10,11,'park');w.cells[park].level=0;w.cells[park].vitality=0;const person=newResident(w,home);w.residents=[person];Object.assign(w.cells[home],{kind:'ruin',level:0,vitality:0,population:0,condition:0,rubble:5,closed:true});w.topologyVersion++;
+  advanceWorld(w,.25);assert.equal(person.displaced,true);assert.equal(person.state,'travel');assert.ok(Math.abs(person.x-8)<.001,'evacuation begins from the lost home');advanceWorld(w,10);assert.equal(person.shelter,park);assert.equal(person.state,'shelter');
+  const road=12*24+8;w.cells[home].buildingPlan='house';w.cells[home].development=90;w.cells[road].materials=20;person.route=[road];person.routeIndex=0;person.progress=0;person.x=8;person.y=12;person.destination=road;person.state='repair';person.timer=999;advanceWorld(w,15);assert.equal(w.cells[home].kind,'house');assert.equal(w.cells[home].closed,false);assert.equal(w.cells[home].rubble,0);
 });
-
-test('resident identifiers are not reused when a household gets a replacement worker', () => {
-  const world = createWorld(42);
-  const removed = world.residents.pop()!;
-  const next = world.nextResidentId;
-  synchronizeResidents(world);
-  assert.ok(world.residents.some(person => person.home === removed.home && person.id === next));
-  assert.ok(world.nextResidentId > next);
-  assert.deepEqual(restoreWorld(serializeWorld(world)), world);
+test('repair and construction use present workers plus delivered materials; age alone causes no free repair',()=>{
+  const w=lineWorld(),home=building(w,8,11,'house');w.cells[home].condition=60;w.cells[home].age=5000;const p=newResident(w,home);p.food=10;p.timer=999;w.residents=[p];w.migrationGrace=0;
+  advanceWorld(w,1);assert.equal(w.cells[home].condition,60);w.cells[home].materials=2;advanceWorld(w,1);assert.ok(w.cells[home].condition>60);assert.ok(w.cells[home].materials<2);
+  const road=12*24+9,target=11*24+9;w.cells[target].buildingPlan='house';w.cells[target].development=90;w.cells[road].materials=20;
+  p.route=[road];p.routeIndex=0;p.progress=0;p.x=9;p.y=12;p.destination=road;p.state='repair';p.timer=999;advanceWorld(w,20);assert.equal(w.cells[target].kind,'house');assert.equal(w.cells[target].population,0,'building completion does not create people');assert.ok(w.cells[road].materials<20);
 });
-
-test('restoring a saved town reproduces the exact random continuation', () => {
-  for (const tick of [0, 1, 250]) {
-    const original = advance(createWorld(975), tick);
-    const restored = restoreWorld(serializeWorld(original));
-    assert.deepEqual(restored, original);
-    advance(original, 50);
-    advance(restored, 50);
-    assert.equal(serializeWorld(restored), serializeWorld(original));
+test('surviving local materials can rebuild a lost factory without fabricated resource grants',()=>{
+  const w=createWorld(4821);w.naturalPolicy='off';for(const c of w.cells)if(c.kind==='factory')Object.assign(c,{kind:'ruin',level:0,vitality:0,population:0,condition:0,rubble:5,materials:0,closed:true});w.topologyVersion++;
+  advanceWorld(w,DAY_SECONDS*8);assert.ok(w.stats.factories>0,'reachable household reserves bootstrap material production');assert.ok(w.stats.born>0);assert.ok(w.economy.materials>0);assertInvariants(w);
+});
+test('ordinary undisturbed towns keep real activity and can grow through arrivals for two years',()=>{
+  for(const seed of [0,42]) {const w=createWorld(seed);w.naturalPolicy='off';advanceWorld(w,DAY_SECONDS*96);assert.ok(w.stats.population>96);assert.ok(w.economy.commutes>0&&w.economy.visits>0);assert.ok(w.stats.farms>0&&w.stats.homes>0);assert.equal(w.economy.deaths,0);assertInvariants(w);}
+});
+test('extinct wet land regrows from nearby trees while dry land withers, without automatic settlers',()=>{
+  const w=lineWorld();for(let y=3;y<11;y++)for(let x=3;x<11;x++)Object.assign(w.cells[y*24+x],{kind:x%3===0&&y%3===0?'tree':'grass',moisture:80,fertility:85,vegetation:90});
+  const dry=w.cells[3*24+19];dry.moisture=0;dry.vegetation=80;const trees=w.cells.filter(c=>c.kind==='tree').length;advanceWorld(w,DAY_SECONDS*10);assert.ok(w.cells.filter(c=>c.kind==='tree').length>trees);assert.ok(dry.vegetation<80);assert.equal(w.residents.length,0);assertInvariants(w);
+});
+test('rain and greenery recover scorched land; a safe wooded plot can host a new settlement',()=>{
+  const w=createWorld(42);w.naturalPolicy='off';w.migrationGrace=0;queuePower(w,{kind:'meteor',target:{x:24,y:24},radius:48,intensity:4,duration:0});advanceWorld(w,.25);assert.equal(w.residents.length,0);
+  for(const [kind,duration] of [['rain',15],['growth',60],['sun',30]] as const){queuePower(w,{kind,target:{x:6,y:6},radius:6,intensity:4,duration});advanceWorld(w,duration);assert.equal(w.residents.length,0);}
+  // Mature woodland remains a valid plot; settlers clear only their small footprint.
+  for(let y=4;y<=8;y++)for(let x=4;x<=8;x++){const c=w.cells[y*48+x];if(c.terrain==='land'&&c.fire<1&&c.waterDepth<1.6){c.kind='tree';c.level=0;c.vitality=0;}}
+  queuePower(w,{kind:'settle',target:{x:6,y:6},radius:6,intensity:1,duration:1});advanceWorld(w,.25);assert.equal(w.residents.length,12);assert.ok(w.economy.food>0&&w.economy.materials>0);assertInvariants(w);
+});
+test('V1 and V2 migration preserve population, identities, old calendar and convert timer units',()=>{
+  const original=createWorld(7);for(const version of [1,2]) {const old=JSON.parse(serializeWorld(original));old.version=version;old.tick=37;old.clock=150;old.history=[{tick:36,population:96},{tick:37,population:96}];old.events=[];for(const c of old.cells){c.age=50;c.changedAt=30;}
+    if(version===1)for(const key of ['residents','nextResidentId','clock','weather','economy'])delete old[key];else {old.residents=old.residents.filter((_:unknown,n:number)=>n%2===0);old.residents[0].timer=30;}
+    const migrated=restoreWorld(JSON.stringify(old));assert.equal(migrated.stats.population,96);assert.equal(migrated.residents.length,96);assert.equal(migrated.legacyCalendar!.tick,37);assert.deepEqual(migrated.legacyCalendar!.history,old.history);assert.equal(migrated.cells[0].age,50*4/DAY_SECONDS);assert.equal(migrated.cells[0].changedAt,Math.floor(30*4/DAY_SECONDS));assert.ok(migrated.migrationGrace>0);if(version===2){assert.equal(migrated.residents[0].id,old.residents[0].id);assert.equal(migrated.residents[0].timer,9);}assertInvariants(migrated);
   }
 });
-
-test('bounded strict restore rejects corrupted, inconsistent and unsupported data', () => {
-  assert.throws(() => restoreWorld('{bad'), /JSON/);
-  assert.throws(() => restoreWorld('x'.repeat(4_000_001)), /大き/);
-  const original = serializeWorld(advance(createWorld(7), 50));
-  const corrupt = (mutate: (world: any) => void) => {
-    const world = JSON.parse(original);
-    mutate(world);
-    assert.throws(() => restoreWorld(JSON.stringify(world)), /読み込めません/);
-  };
-  corrupt(world => { world.version = 3; });
-  corrupt(world => { world.nextResidentId = world.residents[0].id; });
-  corrupt(world => { world.residents[0].progress = null; });
-  corrupt(world => { world.economy.employed++; });
-  corrupt(world => { world.cells[0].moisture = null; });
-  corrupt(world => { world.weather.kind = 'storm'; });
-  corrupt(world => { world.size = 48.5; });
-  corrupt(world => { world.tick = -1; });
-  corrupt(world => { world.seed = -1; });
-  corrupt(world => { world.rng = 0x100000000; });
-  corrupt(world => { world.rng = null; });
-  corrupt(world => { world.cells.pop(); });
-  corrupt(world => { world.cells[0].x = 1; });
-  corrupt(world => { world.cells[0].kind = 'castle'; });
-  corrupt(world => { world.cells[0].environment = -1; });
-  corrupt(world => { world.cells[0].environment = null; });
-  corrupt(world => { world.cells[0].level = 4; });
-  corrupt(world => { world.cells[0].changedAt = 51; });
-  corrupt(world => { world.cells[0].reason = 'x'.repeat(501); });
-  corrupt(world => { const cell = world.cells.find((cell: any) => cell.terrain === 'water'); cell.kind = 'house'; });
-  corrupt(world => { world.stats.population++; });
-  corrupt(world => { world.stats.born = -1; });
-  corrupt(world => { world.stats.environment = '80'; });
-  corrupt(world => { world.events = Array.from({ length: 19 }, () => world.events[0]); });
-  corrupt(world => { world.events[0].kind = 'mystery'; });
-  corrupt(world => { world.history = []; });
-  corrupt(world => { world.history.at(-1).population++; });
-  corrupt(world => { world.history[0].tick = 20; });
+test('V3 validates bounded fields, finite positions, identity, stock totals and disconnected saved journeys',()=>{
+  const initial=serializeWorld(createWorld(7));const corrupt=(change:(w:any)=>void)=>{const w=JSON.parse(initial);change(w);assert.throws(()=>restoreWorld(JSON.stringify(w)),/読み込めません/);};
+  assert.throws(()=>restoreWorld('{bad'),/JSON/);assert.throws(()=>restoreWorld('x'.repeat(12_000_001)),/大き/);
+  for(const change of [(w:any)=>w.version=4,(w:any)=>w.size=48.5,(w:any)=>w.clock=1,(w:any)=>w.rng=null,(w:any)=>w.cells.pop(),(w:any)=>w.cells[0].x=1,(w:any)=>w.cells[0].buildingPlan='castle',(w:any)=>w.cells[0].stock=-1,(w:any)=>w.residents[0].progress=null,(w:any)=>w.residents[1].id=w.residents[0].id,(w:any)=>w.residents[0].health=101,(w:any)=>w.residents[0].home=100000,(w:any)=>w.economy.food++,(w:any)=>w.stats.population++,(w:any)=>w.pending=[{id:0}],(w:any)=>w.history=[]])corrupt(change);
+  const queued=createWorld(7);queuePower(queued,{kind:'rain',target:{x:10,y:10},radius:3,intensity:1,duration:2});const valid=serializeWorld(queued);for(const mutate of [(c:any)=>c.intensity=100,(c:any)=>c.duration=3601,(c:any)=>c.duration=.3,(c:any)=>c.radius=100,(c:any)=>c.target.x=10.5,(c:any)=>c.atStep=0]){const saved=JSON.parse(valid);mutate(saved.pending[0]);assert.throws(()=>restoreWorld(JSON.stringify(saved)),/読み込めません/);}
 });

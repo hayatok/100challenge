@@ -145,3 +145,31 @@ footer { display: flex; justify-content: space-between; gap: 16px; border-top: 1
 .resident-actions button { font-size: 11px; padding: 8px 10px; }
 @media (max-width: 800px) { .resident-note { grid-column: 1 / -1; } }
 @media (max-width: 520px) { #activity-label { width: 100%; margin-left: 0; } .daily-life { gap: 8px; } .daily-life strong { font-size: 13px; } }
+
+.god-tray { margin-top: 16px; padding: 16px; border: 1px solid var(--ui-line); border-radius: 4px; background: var(--ui-surface); }
+.god-heading { display:flex; justify-content:space-between; align-items:baseline; gap:10px; margin-bottom:12px; }
+.god-heading h3 { font-size:15px; }
+.god-heading span { font-size:11px; color:var(--ui-muted); }
+.powers { display:flex; flex-wrap:wrap; gap:6px; }
+.powers button { font-size:12px; padding:8px 10px; }
+.powers button[aria-pressed="true"] { background:var(--ui-ink); color:var(--ui-surface); }
+#power-description, .power-target, #extinction-note { font-size:12px; line-height:1.8; margin:12px 0; }
+.power-settings, .world-settings { display:flex; flex-wrap:wrap; gap:10px; margin:12px 0; }
+.god-tray label { display:grid; gap:4px; font-size:11px; color:var(--ui-muted); min-width:0; }
+select { min-height:44px; max-width:100%; border:1px solid var(--ui-line); border-radius:4px; padding:7px 9px; font:inherit; color:var(--ui-ink); background:var(--ui-surface); }
+select:focus-visible { outline:3px solid var(--ui-accent); outline-offset:2px; }
+#apply-power { background:var(--ui-accent); color:white; border-color:#7e2d26; font-size:13px; width:100%; }
+#apply-power:disabled { background:#e8e4dc; color:#74736e; border-color:var(--ui-line); }
+.power-history { display:flex; flex-wrap:wrap; gap:6px; margin-top:12px; align-items:center; }
+.power-history span { flex-basis:100%; font-size:11px; color:var(--ui-muted); }
+.power-history button { font-size:11px; padding:8px 10px; border:1px solid var(--ui-line); }
+#extinction-note { background:#f3e4d0; padding:12px; border-left:3px solid var(--ui-accent); }
+.life-summary { font-size:12px; color:var(--ui-muted); margin-top:12px; line-height:1.8; }
+@media(max-width:520px) { .god-tray { padding:12px; } .god-heading { align-items:flex-start; flex-direction:column; gap:2px; } .power-settings { display:grid; grid-template-columns:1fr 1fr; } .power-settings label:last-child { grid-column:1 / -1; } .world-settings { display:grid; grid-template-columns:1fr; } .powers button { flex:1 0 28%; } }
+
+.mobile-power-picker { display:none !important; }
+.world-options { margin-top:12px; font-size:12px; }
+.world-options summary { padding:12px 0; min-height:44px; }
+@media(max-width:520px) { .mobile-power-picker { display:grid !important; } .powers { display:none; } }
+
+.active-powers { font-size:11px; line-height:1.8; margin-top:12px; color:var(--ui-success); }
