@@ -2,7 +2,7 @@
 
 恵みも災いも与えられる、小さな世界の神様。住民が働き、食を運び、暮らしを育てる町へ雨や雷、地震、隕石を与え、その後の発展・荒廃・復興を眺めるドット絵の箱庭です。力に回数・資源・クールダウンの制限はありません。
 
-[GitHub Pages](https://hayatok.github.io/100challenge/2026-09-30/) は現在v0.1の公開版です。v0.2の開発・確認記録は [V02_RESULTS.md](./docs/V02_RESULTS.md) に記録します。
+[GitHub Pagesで遊ぶ](https://hayatok.github.io/100challenge/2026-09-30/)。v0.2の開発・確認記録は [V02_RESULTS.md](./docs/V02_RESULTS.md) に記録します。
 
 ![初版の街](./public/town-cover.png)
 
