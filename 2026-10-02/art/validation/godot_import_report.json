@@ -1,0 +1,72 @@
+{
+	"assets": [
+		{
+			"asset": "enemy_walker",
+			"emissive_surfaces": 2,
+			"exported_vertices": 4492,
+			"loaded": true,
+			"material_surfaces": 27,
+			"mesh_nodes": 6
+		},
+		{
+			"asset": "enemy_crawler",
+			"emissive_surfaces": 2,
+			"exported_vertices": 3408,
+			"loaded": true,
+			"material_surfaces": 23,
+			"mesh_nodes": 9
+		},
+		{
+			"asset": "enemy_beacon",
+			"emissive_surfaces": 4,
+			"exported_vertices": 5555,
+			"loaded": true,
+			"material_surfaces": 19,
+			"mesh_nodes": 5
+		},
+		{
+			"asset": "boss_relay",
+			"emissive_surfaces": 6,
+			"exported_vertices": 9600,
+			"loaded": true,
+			"material_surfaces": 28,
+			"mesh_nodes": 6
+		},
+		{
+			"asset": "relay_cabinet",
+			"emissive_surfaces": 2,
+			"exported_vertices": 2572,
+			"loaded": true,
+			"material_surfaces": 7,
+			"mesh_nodes": 1
+		},
+		{
+			"asset": "hazard_gate",
+			"emissive_surfaces": 2,
+			"exported_vertices": 3504,
+			"loaded": true,
+			"material_surfaces": 8,
+			"mesh_nodes": 2
+		},
+		{
+			"asset": "conduit_bundle",
+			"emissive_surfaces": 0,
+			"exported_vertices": 729,
+			"loaded": true,
+			"material_surfaces": 3,
+			"mesh_nodes": 1
+		}
+	],
+	"engine": {
+		"build": "official",
+		"hash": "ed1daf0bf001b61586d9930840f2f1394092c079",
+		"hex": 263938,
+		"major": 4,
+		"minor": 7,
+		"patch": 2,
+		"status": "stable",
+		"string": "4.7.2-stable (official)",
+		"timestamp": 0
+	},
+	"failures": 0
+}

@@ -1,0 +1,70 @@
+{
+  "project": "BLACK RELAY wet-city zombie slice",
+  "format": "48kHz PCM16 mono WAV",
+  "generation": "Original deterministic NumPy DSP. No voice recordings, dialogue, external samples or melodies.",
+  "license_record": "ORIGINAL_AUDIO_LICENSE.txt",
+  "seed": 2980847654,
+  "assets": {
+    "zombie_breath.wav": {
+      "sample_rate": 48000,
+      "channels": 1,
+      "sample_width": 2,
+      "frames": 50400,
+      "duration_seconds": 1.05,
+      "peak_dbfs": -16.4998,
+      "rms_dbfs": -28.9542,
+      "dc_offset": 2.930656312003968e-07,
+      "below_50hz_energy_fraction": 0.0001192,
+      "above_8000hz_energy_fraction": 1e-07,
+      "onset_ms": 0.521,
+      "bytes": 100844,
+      "sha256": "7ee9f00730299e55220b3dd3713db362c926126eda972a95fd904c4fdba32db3",
+      "looping": false,
+      "description": "Original nonverbal low throat groan with a raspy wet exhalation; no recorded voice, dialogue or recognizable speech.",
+      "first_last_sample_max": 0.0
+    },
+    "footstep_wet.wav": {
+      "sample_rate": 48000,
+      "channels": 1,
+      "sample_width": 2,
+      "frames": 14400,
+      "duration_seconds": 0.3,
+      "peak_dbfs": -18.0005,
+      "rms_dbfs": -37.301,
+      "dc_offset": 1.7645094129774306e-05,
+      "below_50hz_energy_fraction": 0.0009669,
+      "above_8000hz_energy_fraction": 3.4e-06,
+      "onset_ms": 0.208,
+      "bytes": 28844,
+      "sha256": "cb2718d79c06ce68895bc6b8d6b086cb476d16789bd576393c7e66b3dbebdbc5",
+      "looping": false,
+      "description": "Original compact rubber/boot sole contact, damp asphalt thud and restrained shallow-puddle splash.",
+      "first_last_sample_max": 0.0
+    }
+  },
+  "city_mix_stress_test": {
+    "performed": true,
+    "duration_seconds": 12,
+    "master_db": -3,
+    "typing_characters_per_second": 20,
+    "shots": 19,
+    "peak_dbfs": -6.6986,
+    "rms_dbfs": -24.5649,
+    "clip_count": 0,
+    "playback_gains_db": {
+      "ambience": -6,
+      "typing": -3,
+      "shot": -5,
+      "impact_body": -9,
+      "kill": -12,
+      "zombie_breath": -6,
+      "footstep_wet": -8,
+      "hurt": -1,
+      "cut": -1,
+      "error": 0,
+      "confirm": -6
+    },
+    "note": "Deterministic synthetic overlap including decoded licensed sounds. Does not establish subjective comfort or unbounded-polyphony safety."
+  },
+  "subjective_listening": "Not claimed; final in-game speaker/headphone audition is required."
+}

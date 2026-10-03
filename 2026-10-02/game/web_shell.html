@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,interactive-widget=resizes-content">
+<meta name="description" content="BLACK RELAY 黒雨の街。一語、一撃。商店街を抜けろ。オリジナル3Dタイピングホラー。">
+<title>BLACK RELAY | 黒雨の街</title>
+$GODOT_HEAD_INCLUDE
+<style>
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#071117;color:#e0e5d8;font-family:ui-monospace,SFMono-Regular,Consolas,monospace}canvas{display:block;width:100%;height:100%;outline:none;touch-action:none}#status{position:fixed;inset:0;display:grid;place-content:center;padding:32px;background:radial-gradient(ellipse at 70% 25%,#16343b,#071117 70%);z-index:3}#status[hidden]{display:none}.shell{width:min(560px,90vw)}.eyebrow{color:#ffad42;letter-spacing:.13em;font-size:12px}h1{font-size:clamp(45px,9vw,78px);line-height:1.05;letter-spacing:.05em;margin:25px 0 12px}h2{font:500 22px system-ui,sans-serif;letter-spacing:.32em;margin:0 0 44px;color:#a8bdbc}#message{font-size:14px;line-height:1.8;color:#a8bdbc;min-height:3.6em}progress{width:100%;height:5px;accent-color:#ffad42;border:0;background:#233b42}progress::-webkit-progress-bar{background:#233b42}progress::-webkit-progress-value{background:#ffad42}.help{font:13px/1.9 system-ui,sans-serif;color:#829da3;margin-top:28px}button{font:inherit;background:#ffad42;color:#071117;border:2px solid #f9c785;padding:15px 22px;cursor:pointer;margin-top:22px}button:focus-visible{outline:3px solid #86d4d0;outline-offset:5px}noscript{position:fixed;inset:0;padding:50px;background:#071117;z-index:5}#mobile{display:none;color:#ffad42}.mobile-mode #mobile{display:block}
+#credits{position:fixed;right:10px;top:5px;z-index:2;color:#b7c0bd;font:10px system-ui;text-decoration:none;background:#071117b0;padding:3px 7px}#credits:focus-visible{outline:2px solid #ffad42}
+/* The native keyboard needs a focusable input, never a visible or touchable panel. */
+[hidden]{display:none!important}#mobile-input{position:fixed;left:calc(var(--br-visual-left,0px) + 1px);top:calc(var(--br-visual-top,0px) + 1px);width:1px;height:1px;min-width:0;min-height:0;margin:0;padding:0;border:0;outline:none;opacity:0;pointer-events:none;caret-color:transparent;font-size:16px;background:transparent;color:transparent}
+.mobile-mode canvas{position:absolute;top:var(--br-visual-top,0px);left:var(--br-visual-left,0px);height:var(--br-visual-height,100dvh)}.mobile-mode #status{padding:max(16px,env(safe-area-inset-top)) 16px;overflow:auto}.mobile-mode #status h1{font-size:clamp(38px,12vw,60px);margin:12px 0}.mobile-mode #status h2{margin-bottom:16px}
+</style>
+</head><body>
+<canvas id="canvas" tabindex="0" aria-label="BLACK RELAY タイピングホラー。ローマ字入力、Tabで標的変更、Escで一時停止。"></canvas>
+<div id="status" role="status"><div class="shell"><p class="eyebrow">KUROAME // STREET ESCAPE</p><h1>BLACK<br>RELAY</h1><h2>黒雨の街</h2><p id="message">商店街を読み込み中…</p><progress id="progress"></progress><button id="retry" hidden>接続をやり直す / RETRY</button><p class="help">PC と物理キーボードを推奨。日本語 IME をオフにして入力。<br>ヘッドホン推奨。音量と画面の揺れはゲーム内で調整できます。</p><p id="mobile" class="help">スマートフォンは英字キーボードで入力。ゲーム内の出発・再開をタップ。閉じたキーボードはゲーム画面をタップして戻せます。</p></div></div>
+<input id="mobile-input" type="text" lang="en" inputmode="text" enterkeyhint="next" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" tabindex="-1" aria-label="ローマ字入力 / Use an English keyboard (a–z)" disabled>
+<script src="web_mobile.js"></script>
+<a id="credits" href="credits.html" target="_blank" rel="noopener">Credits / ライセンス</a>
+<noscript>BLACK RELAY の実行には JavaScript と WebGL 2 が必要です。</noscript>
+<script>
+function showLoadError(error){const message=document.getElementById('message');message.textContent='接続できませんでした。通信と WebGL 2 対応を確認し、もう一度お試しください。';document.getElementById('progress').hidden=true;document.getElementById('retry').hidden=false;document.getElementById('retry').onclick=()=>location.reload();if(error)console.error(error);}
+</script>
+<script src="$GODOT_URL" onerror="showLoadError()"></script>
+<script>
+if(typeof Engine!=='undefined'){
+ const config=$GODOT_CONFIG;
+ if(window.BlackRelayMobile && window.BlackRelayMobile.isEnabled())config.canvasResizePolicy=0;
+ const engine=new Engine(config);
+ const missing=Engine.getMissingFeatures({threads:$GODOT_THREADS_ENABLED});
+ if(missing.length){showLoadError(new Error(missing.join(', ')));}
+ else engine.startGame({onProgress(current,total){if(total>0){const progress=document.getElementById('progress');progress.max=total;progress.value=current;document.getElementById('message').textContent='商店街を読み込み中… '+Math.round(current/total*100)+'%';}}}).then(()=>{document.getElementById('status').hidden=true;if(!window.BlackRelayMobile || !window.BlackRelayMobile.isEnabled())document.getElementById('canvas').focus();}).catch(showLoadError);
+}
+</script></body></html>
