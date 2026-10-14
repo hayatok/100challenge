@@ -1,0 +1,41 @@
+[
+  {
+    "revision": "v0.3",
+    "revision_date": "2026-10-15",
+    "revision_timezone": "Asia/Tokyo",
+    "id": "01-play",
+    "label": "通常プレイ・ボクセル要素追加",
+    "path": "01-play.png",
+    "source_mockup": "../01-play.png",
+    "original_path": "/workspace/generated_images/exec-49b73d69-46fc-465c-b5f1-1ae83cbf134f.png",
+    "intent": "Subtle selective voxel accents on office props and particles; rounded cartoon characters and existing screen state.",
+    "purpose": "Generated screen mockup for art-direction planning; not implemented gameplay.",
+    "prompt": "Edit the attached exact Japanese videogame screen mockup for 「全力退勤」 with a SUBTLE, selective amount of 3D VOXEL ART. Treat this as a small focused art-direction revision: about 85% of the existing rounded cartoon 3D look and about 15% cuboid/voxel accents. Keep the whole composition, camera, sunset office, route, elevator, all characters, original facial expressions, exact poses, teal chair, curved red fire extinguisher, bold comic effects, all Japanese HUD text, numbers, typography, buttons and screen framing unchanged and crisp.\n\nAdd deliberately handcrafted small CUBOID details to only a FEW secondary office props: the paper cartons and selected edges of a drawer cabinet get slightly stepped block-built geometry; the leaves of ONE peripheral potted plant become small clustered green cuboids. The surrounding desks and architecture keep the same smooth rounded toy forms. Introduce a modest handful of clearly three-dimensional tiny cube particles among the existing paper/powder/confetti effects. The dominant effect remains the original lively paper and soft white powder. This is a carefully balanced mix with small voxel accents, visibly readable close up, not a global replacement of the art direction.\n\nMain character and coworkers retain their smooth rounded faces, curved hair locks, flexible smooth limbs, expressive eyes and mouths. The office chair cushion and extinguisher stay smooth and recognizable. Lighting remains soft warm cinematic toy lighting with original saturated reds, golden yellows and mint furniture. Sharp high-resolution 16:9 rendered 3D. Maintain the absurd slapstick energy and clarity of every original HUD element.\nFor this normal gameplay screen specifically: retain 「退勤タイム 00:12.84」, 「被害総額 ¥1,280,000」, 「3連鎖 ×3」, 「定時ラッシュ！」, 「残圧 72%」, 「出口まで18m」 and the arrow/SPACE control instructions. Put a few small white/orange cuboid particles at the outer rear edge of the extinguisher plume; the hero and path remain unobscured. A paper carton close to the left aisle, a drawer cabinet at right edge, and the right-side potted plant are the restrained voxel accents."
+  },
+  {
+    "revision": "v0.3",
+    "revision_date": "2026-10-15",
+    "revision_timezone": "Asia/Tokyo",
+    "id": "02-impact",
+    "label": "大衝突・ボクセル要素追加",
+    "path": "02-impact.png",
+    "source_mockup": "../02-impact.png",
+    "original_path": "/workspace/generated_images/exec-0c03aa23-316b-4c63-9e1b-da7db60eaf13.png",
+    "intent": "Subtle selective voxel accents on office props and particles; rounded cartoon characters and existing screen state.",
+    "purpose": "Generated screen mockup for art-direction planning; not implemented gameplay.",
+    "prompt": "Edit the attached exact Japanese videogame screen mockup for 「全力退勤」 with a SUBTLE, selective amount of 3D VOXEL ART. Treat this as a small focused art-direction revision: about 85% of the existing rounded cartoon 3D look and about 15% cuboid/voxel accents. Keep the whole composition, camera, sunset office, route, elevator, all characters, original facial expressions, exact poses, teal chair, curved red fire extinguisher, bold comic effects, all Japanese HUD text, numbers, typography, buttons and screen framing unchanged and crisp.\n\nAdd deliberately handcrafted small CUBOID details to only a FEW secondary office props: the paper cartons and selected edges of a drawer cabinet get slightly stepped block-built geometry; the leaves of ONE peripheral potted plant become small clustered green cuboids. The surrounding desks and architecture keep the same smooth rounded toy forms. Introduce a modest handful of clearly three-dimensional tiny cube particles among the existing paper/powder/confetti effects. The dominant effect remains the original lively paper and soft white powder. This is a carefully balanced mix with small voxel accents, visibly readable close up, not a global replacement of the art direction.\n\nMain character and coworkers retain their smooth rounded faces, curved hair locks, flexible smooth limbs, expressive eyes and mouths. The office chair cushion and extinguisher stay smooth and recognizable. Lighting remains soft warm cinematic toy lighting with original saturated reds, golden yellows and mint furniture. Sharp high-resolution 16:9 rendered 3D. Maintain the absurd slapstick energy and clarity of every original HUD element.\nFor this impact screen specifically: retain 「退勤タイム 00:14.02」, 「被害総額 ¥1,640,000」, 「7連鎖 ×3」, 「書類、全提出！」, 「+¥150,000」, 「残圧48%」, 「出口まで12m」 and the arrow/SPACE control instructions. Add a modest scattering of little cream, blue and yellow cuboid fragments at the edges of the paper-cart burst. Give the impacted paper cart's lower frame and a nearby paper carton slight block-stepped detail. The many big sheets of paper remain real thin flat sheets with their printing. Retain the hero's comical bulging eyes, shocked face and curved chair, and the exact big red comic lettering."
+  },
+  {
+    "revision": "v0.3",
+    "revision_date": "2026-10-15",
+    "revision_timezone": "Asia/Tokyo",
+    "id": "03-result",
+    "label": "退勤成功・ボクセル要素追加",
+    "path": "03-result.png",
+    "source_mockup": "../03-result.png",
+    "original_path": "/workspace/generated_images/exec-7074b813-32ca-4da1-bd0b-2e4e35879d52.png",
+    "intent": "Subtle selective voxel accents on office props and particles; rounded cartoon characters and existing screen state.",
+    "purpose": "Generated screen mockup for art-direction planning; not implemented gameplay.",
+    "prompt": "Edit the attached exact Japanese videogame screen mockup for 「全力退勤」 with a SUBTLE, selective amount of 3D VOXEL ART. Treat this as a small focused art-direction revision: about 85% of the existing rounded cartoon 3D look and about 15% cuboid/voxel accents. Keep the whole composition, camera, sunset office, route, elevator, all characters, original facial expressions, exact poses, teal chair, curved red fire extinguisher, bold comic effects, all Japanese HUD text, numbers, typography, buttons and screen framing unchanged and crisp.\n\nAdd deliberately handcrafted small CUBOID details to only a FEW secondary office props: the paper cartons and selected edges of a drawer cabinet get slightly stepped block-built geometry; the leaves of ONE peripheral potted plant become small clustered green cuboids. The surrounding desks and architecture keep the same smooth rounded toy forms. Introduce a modest handful of clearly three-dimensional tiny cube particles among the existing paper/powder/confetti effects. The dominant effect remains the original lively paper and soft white powder. This is a carefully balanced mix with small voxel accents, visibly readable close up, not a global replacement of the art direction.\n\nMain character and coworkers retain their smooth rounded faces, curved hair locks, flexible smooth limbs, expressive eyes and mouths. The office chair cushion and extinguisher stay smooth and recognizable. Lighting remains soft warm cinematic toy lighting with original saturated reds, golden yellows and mint furniture. Sharp high-resolution 16:9 rendered 3D. Maintain the absurd slapstick energy and clarity of every original HUD element.\nFor this victory screen specifically: retain the giant 「退勤成功！」 stamp, 「退勤タイム 00:24.86」, 「SSS 爆速帰宅」, 「自己ベスト！」, 「被害総額 ¥2,860,000」, 「最大連鎖7」, 「もう一度」, 「タイトルへ」 and 「総務には内緒。」. Mix a small number of 3D golden cube sparkles into the original star and paper confetti near the edges. Make only a peripheral paper carton, one small plant and a cabinet at the edge subtly block-crafted. Keep the jubilant smooth round employee, tears of joy, raised curved fire extinguisher trophy, red tie and one missing shoe exactly as before. Preserve the paper-shaped result panel and all UI typography."
+  }
+]

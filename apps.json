@@ -209,5 +209,15 @@
     "category": "3Dタイピングホラー",
     "thumbnail": "black-relay-cover.png",
     "accent": "#ffad42"
+  },
+  {
+    "id": "2026-10-14",
+    "date": "2026-10-14",
+    "sequence": 1,
+    "name": "全力退勤",
+    "description": "消火器でオフィスチェアを走らせ、書類をまき散らして最速退勤する3D物理コメディ。",
+    "category": "3D物理コメディ",
+    "thumbnail": "zenryoku-taikin-cover.png",
+    "accent": "#E63B2F"
   }
 ]

@@ -1,0 +1,6 @@
+.cache/
+game/.godot/
+dist/
+builds/
+node_modules/
+game/**/*.uid
