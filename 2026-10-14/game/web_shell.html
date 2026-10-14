@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>全力退勤 — 定時だ。飛べ。</title>
+<meta name="description" content="消火器の反動でオフィスチェアを走らせ、書類をまき散らしながら最速退勤！">
+<style>
+html,body{margin:0;width:100%;height:100%;background:#20201e;overflow:hidden;font-family:system-ui,'Noto Sans JP',sans-serif}canvas{display:block;width:100%;height:100%;outline:none}#loading{position:fixed;inset:0;display:grid;place-content:center;color:#20201e;background:#f4f0e8;text-align:center;z-index:5}h1{color:#b73529;font-size:clamp(40px,7vw,80px);margin:0 0 8px}p{font-size:18px}progress{width:min(75vw,360px);height:16px;accent-color:#b73529;margin:12px auto}button{min-height:44px;background:#b73529;border:2px solid #20201e;color:white;border-radius:4px;font:inherit;padding:8px 24px;cursor:pointer}#error{display:none;white-space:pre-line;max-width:600px;padding:24px}a{color:#b73529}
+</style>
+$GODOT_HEAD_INCLUDE
+</head>
+<body>
+<canvas id="canvas" tabindex="0" aria-label="全力退勤。左右矢印かA・Dで旋回、Spaceで噴射、Rで再挑戦、Escでポーズ。"></canvas>
+<div id="loading"><h1>全力退勤</h1><p>定時だ。飛べ。</p><progress id="progress"></progress><p id="status">オフィスを準備しています…</p><div id="error"></div></div>
+<script src="$GODOT_URL"></script>
+<script>
+const engine=new Engine($GODOT_CONFIG);
+const loading=document.getElementById('loading');
+engine.startGame({
+ canvas:document.getElementById('canvas'),
+ onProgress(current,total){const bar=document.getElementById('progress');if(total>0){bar.max=total;bar.value=current;}},
+ onExit(){document.getElementById('status').textContent='おつかれさまでした。';loading.style.display='grid';}
+}).then(()=>{loading.style.display='none';document.getElementById('canvas').focus();}).catch(error=>{
+ document.getElementById('status').textContent='ゲームを起動できませんでした。';
+ const box=document.getElementById('error');box.style.display='block';box.textContent='WebGL 2に対応したブラウザで、もう一度開いてください。\n';
+ const button=document.createElement('button');button.textContent='再読み込み';button.onclick=()=>location.reload();box.append(button);
+ console.error(error);
+});
+</script>
+</body>
+</html>
