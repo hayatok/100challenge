@@ -1,0 +1,244 @@
+{
+  "models": [
+    {
+      "name": "employee",
+      "label": "主役の会社員",
+      "reference": "art/assets/v0.4/01-employee.png",
+      "generator": "scripts/modeling/build_hero.py",
+      "blend": "art/models/employee.blend",
+      "glb": "game/assets/models/employee.glb",
+      "max_triangles": 15000,
+      "max_surfaces": 13,
+      "required_nodes": [
+        "Head",
+        "Tie",
+        "ArmLeft",
+        "ArmRight",
+        "LegLeft",
+        "LegRight",
+        "Mouth",
+        "EyesOpen",
+        "EyesHappy",
+        "Brows",
+        "Cheeks",
+        "Tears"
+      ]
+    },
+    {
+      "name": "chair",
+      "label": "オフィスチェア",
+      "reference": "art/assets/v0.4/02-chair-extinguisher.png",
+      "generator": "scripts/modeling/build_vehicle.py",
+      "blend": "art/models/chair.blend",
+      "glb": "game/assets/models/chair.glb",
+      "max_triangles": 5000,
+      "max_surfaces": 2,
+      "required_nodes": [
+        "SeatPivot"
+      ]
+    },
+    {
+      "name": "extinguisher",
+      "label": "消火器",
+      "reference": "art/assets/v0.4/02-chair-extinguisher.png",
+      "generator": "scripts/modeling/build_vehicle.py",
+      "blend": "art/models/extinguisher.blend",
+      "glb": "game/assets/models/extinguisher.glb",
+      "max_triangles": 4000,
+      "max_surfaces": 1,
+      "required_nodes": [
+        "NozzleTip"
+      ]
+    },
+    {
+      "name": "paper_box",
+      "label": "コピー用紙箱",
+      "reference": "art/assets/v0.4/03-breakables.png",
+      "generator": "scripts/modeling/build_breakables.py",
+      "blend": "art/models/paper_box.blend",
+      "glb": "game/assets/models/paper_box.glb",
+      "max_triangles": 4000,
+      "max_surfaces": 1,
+      "required_nodes": []
+    },
+    {
+      "name": "paper_tower",
+      "label": "書類の塔",
+      "reference": "art/assets/v0.4/03-breakables.png",
+      "generator": "scripts/modeling/build_breakables.py",
+      "blend": "art/models/paper_tower.blend",
+      "glb": "game/assets/models/paper_tower.glb",
+      "max_triangles": 4000,
+      "max_surfaces": 1,
+      "required_nodes": []
+    },
+    {
+      "name": "paper_cart",
+      "label": "書類ワゴン",
+      "reference": "art/assets/v0.4/03-breakables.png",
+      "generator": "scripts/modeling/build_breakables.py",
+      "blend": "art/models/paper_cart.blend",
+      "glb": "game/assets/models/paper_cart.glb",
+      "max_triangles": 4000,
+      "max_surfaces": 1,
+      "required_nodes": []
+    },
+    {
+      "name": "desk",
+      "label": "机",
+      "reference": "art/assets/v0.4/04-furniture-computer.png",
+      "generator": "scripts/modeling/build_furniture.py",
+      "blend": "art/models/desk.blend",
+      "glb": "game/assets/models/desk.glb",
+      "max_triangles": 4000,
+      "max_surfaces": 1,
+      "required_nodes": []
+    },
+    {
+      "name": "cabinet",
+      "label": "キャビネット",
+      "reference": "art/assets/v0.4/04-furniture-computer.png",
+      "generator": "scripts/modeling/build_furniture.py",
+      "blend": "art/models/cabinet.blend",
+      "glb": "game/assets/models/cabinet.glb",
+      "max_triangles": 4000,
+      "max_surfaces": 1,
+      "required_nodes": []
+    },
+    {
+      "name": "computer",
+      "label": "PC・キーボード・マウス",
+      "reference": "art/assets/v0.4/04-furniture-computer.png",
+      "generator": "scripts/modeling/build_furniture.py",
+      "blend": "art/models/computer.blend",
+      "glb": "game/assets/models/computer.glb",
+      "max_triangles": 4000,
+      "max_surfaces": 1,
+      "required_nodes": []
+    },
+    {
+      "name": "colleague",
+      "label": "眠そうな同僚",
+      "reference": "art/assets/v0.4/05-colleague.png",
+      "generator": "scripts/modeling/build_decor.py",
+      "blend": "art/models/colleague.blend",
+      "glb": "game/assets/models/colleague.glb",
+      "max_triangles": 9000,
+      "max_surfaces": 1,
+      "required_nodes": []
+    },
+    {
+      "name": "cat_mug",
+      "label": "猫マグ",
+      "reference": "art/assets/v0.4/06-desk-toys.png",
+      "generator": "scripts/modeling/build_decor.py",
+      "blend": "art/models/cat_mug.blend",
+      "glb": "game/assets/models/cat_mug.glb",
+      "max_triangles": 2500,
+      "max_surfaces": 1,
+      "required_nodes": []
+    },
+    {
+      "name": "stapler",
+      "label": "ワニのホチキス",
+      "reference": "art/assets/v0.4/06-desk-toys.png",
+      "generator": "scripts/modeling/build_decor.py",
+      "blend": "art/models/stapler.blend",
+      "glb": "game/assets/models/stapler.glb",
+      "max_triangles": 2500,
+      "max_surfaces": 1,
+      "required_nodes": []
+    },
+    {
+      "name": "plant",
+      "label": "植物",
+      "reference": "art/assets/v0.4/06-desk-toys.png",
+      "generator": "scripts/modeling/build_decor.py",
+      "blend": "art/models/plant.blend",
+      "glb": "game/assets/models/plant.glb",
+      "max_triangles": 2500,
+      "max_surfaces": 1,
+      "required_nodes": []
+    },
+    {
+      "name": "elevator",
+      "label": "出口のエレベーター",
+      "reference": "art/assets/v0.4/07-exit-clock.png",
+      "generator": "scripts/modeling/build_environment.py",
+      "blend": "art/models/elevator.blend",
+      "glb": "game/assets/models/elevator.glb",
+      "max_triangles": 4000,
+      "max_surfaces": 1,
+      "required_nodes": []
+    },
+    {
+      "name": "clock",
+      "label": "17時の時計",
+      "reference": "art/assets/v0.4/07-exit-clock.png",
+      "generator": "scripts/modeling/build_environment.py",
+      "blend": "art/models/clock.blend",
+      "glb": "game/assets/models/clock.glb",
+      "max_triangles": 2500,
+      "max_surfaces": 1,
+      "required_nodes": []
+    },
+    {
+      "name": "window_module",
+      "label": "壁と窓",
+      "reference": "art/assets/v0.4/08-office-modules.png",
+      "generator": "scripts/modeling/build_environment.py",
+      "blend": "art/models/window_module.blend",
+      "glb": "game/assets/models/window_module.glb",
+      "max_triangles": 2500,
+      "max_surfaces": 1,
+      "required_nodes": []
+    },
+    {
+      "name": "floor_module",
+      "label": "床と案内",
+      "reference": "art/assets/v0.4/08-office-modules.png",
+      "generator": "scripts/modeling/build_environment.py",
+      "blend": "art/models/floor_module.blend",
+      "glb": "game/assets/models/floor_module.glb",
+      "max_triangles": 2500,
+      "max_surfaces": 2,
+      "required_nodes": [
+        "BaseTiles",
+        "Wayfinding"
+      ]
+    },
+    {
+      "name": "fx_paper",
+      "label": "飛ぶ紙片",
+      "reference": "art/assets/v0.4/09-fx-objects.png",
+      "generator": "scripts/modeling/build_fx.py",
+      "blend": "art/models/fx_paper.blend",
+      "glb": "game/assets/models/fx_paper.glb",
+      "max_triangles": 1000,
+      "max_surfaces": 1,
+      "required_nodes": []
+    },
+    {
+      "name": "fx_powder",
+      "label": "噴射の粉",
+      "reference": "art/assets/v0.4/09-fx-objects.png",
+      "generator": "scripts/modeling/build_fx.py",
+      "blend": "art/models/fx_powder.blend",
+      "glb": "game/assets/models/fx_powder.glb",
+      "max_triangles": 450,
+      "max_surfaces": 1,
+      "required_nodes": []
+    },
+    {
+      "name": "fx_cube",
+      "label": "立方体のアクセント",
+      "reference": "art/assets/v0.4/09-fx-objects.png",
+      "generator": "scripts/modeling/build_fx.py",
+      "blend": "art/models/fx_cube.blend",
+      "glb": "game/assets/models/fx_cube.glb",
+      "max_triangles": 250,
+      "max_surfaces": 1,
+      "required_nodes": []
+    }
+  ]
+}

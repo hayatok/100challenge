@@ -106,21 +106,21 @@ func _light_office() -> void:
 	environment.background_mode = Environment.BG_COLOR
 	environment.background_color = Color("f2bf8c")
 	environment.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
-	environment.ambient_light_color = Color("fff1d7")
-	environment.ambient_light_energy = 0.22
+	environment.ambient_light_color = Color("fff4e5")
+	environment.ambient_light_energy = 0.38
 	environment.tonemap_mode = Environment.TONE_MAPPER_LINEAR
 	environment_node.environment = environment
 	add_child(environment_node)
 	var sun := DirectionalLight3D.new()
-	sun.light_color = Color("ffe0b5")
-	sun.light_energy = 0.42
+	sun.light_color = Color("fff0d9")
+	sun.light_energy = 0.35
 	sun.rotation_degrees = Vector3(-52.0, -28.0, 0.0)
 	sun.shadow_enabled = true
 	sun.directional_shadow_max_distance = 42.0
 	add_child(sun)
 	var fill := DirectionalLight3D.new()
 	fill.light_color = Color("beddd9")
-	fill.light_energy = 0.08
+	fill.light_energy = 0.12
 	fill.rotation_degrees = Vector3(-35.0, 140.0, 0.0)
 	add_child(fill)
 
@@ -154,7 +154,7 @@ func _process(delta: float) -> void:
 		var pose_strength := 0.35 if effect_level == "控えめ" else 1.0
 		actor.update_pose(delta, player.get_speed() * pose_strength, (turn if mode == "playing" else 0.0) * pose_strength, player.boosting and mode == "playing", impact_amount * pose_strength, rules.rush_timer > 0.0 and effect_level != "控えめ", mode == "result")
 		var backward: Vector3 = player.global_basis.z.normalized()
-		effects.set_exhaust(player.global_position + Vector3(0, 1.0, 0) + backward * 0.5, backward, player.boosting and mode == "playing", rules.rush_timer > 0.0)
+		effects.set_exhaust(actor.nozzle_position(), backward, player.boosting and mode == "playing", rules.rush_timer > 0.0)
 	_update_camera(delta)
 	_present()
 	if _qa_enabled:
@@ -284,8 +284,8 @@ func _impact_reaction(speed: float) -> void:
 
 func _update_camera(delta: float) -> void:
 	var target: Vector3 = player.get_global_transform_interpolated().origin
-	var offset := Vector3(8.8, 12.8, 11.5)
-	var look := target + Vector3(0, 0.7, -5.0)
+	var offset := Vector3(7.4, 10.8, 10.0)
+	var look := target + Vector3(0, 0.8, -4.5)
 	if mode == "title" or mode == "result":
 		offset = Vector3(7.0, 5.3, 7.5)
 		look = target + Vector3(-1.9, 1.1, 0.0)

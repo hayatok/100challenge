@@ -1,14 +1,15 @@
 extends Node3D
 
+const AssetLibrary := preload("res://scripts/asset_library.gd")
+
 const SAMPLE_RATE := 22050
 const MAX_PARTICLES := 80
-const PARTICLE_COLORS := [Color("fff8df"), Color("ffffff"), Color("ffc94d"), Color("ef8660"), Color("61a99f")]
 
 var _particles: Array[Dictionary] = []
-var _materials: Array[StandardMaterial3D] = []
-var _powder_mesh: SphereMesh
-var _paper_mesh: BoxMesh
-var _cube_mesh: BoxMesh
+var _material: StandardMaterial3D
+var _powder_mesh: Mesh
+var _paper_mesh: Mesh
+var _cube_mesh: Mesh
 var _quality := "派手"
 var _music_volume := 0.45
 var _sfx_volume := 0.75
@@ -32,22 +33,11 @@ func setup() -> void:
 		return
 	_ready_once = true
 	_rng.randomize()
-	# One shared mesh and material per shape/color: no particle physics or shadows.
-	_powder_mesh = SphereMesh.new()
-	_powder_mesh.radius = 0.19
-	_powder_mesh.height = 0.38
-	_powder_mesh.radial_segments = 6
-	_powder_mesh.rings = 3
-	_paper_mesh = BoxMesh.new()
-	_paper_mesh.size = Vector3(0.25, 0.015, 0.35)
-	_cube_mesh = BoxMesh.new()
-	_cube_mesh.size = Vector3.ONE * 0.12
-	for color in PARTICLE_COLORS:
-		var material := StandardMaterial3D.new()
-		material.albedo_color = color
-		material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
-		material.cull_mode = BaseMaterial3D.CULL_DISABLED
-		_materials.append(material)
+	# Small modeled shapes share an unshaded vertex-color material and no shadows.
+	_powder_mesh = AssetLibrary.particle_mesh("fx_powder")
+	_paper_mesh = AssetLibrary.particle_mesh("fx_paper")
+	_cube_mesh = AssetLibrary.particle_mesh("fx_cube")
+	_material = AssetLibrary.particle_material()
 	_noise = _audio("Extinguisher", _make_noise(), -19.0)
 	_impact = _audio("PaperImpact", _make_impact(), -10.0)
 	_impact.max_polyphony = 3
@@ -107,12 +97,12 @@ func _limit() -> int:
 func _density() -> float:
 	return 0.25 if _quality == "控えめ" else (0.65 if _quality == "標準" else 1.0)
 
-func _spawn(at: Vector3, velocity: Vector3, kind: int, duration: float, color_index: int = 0) -> void:
+func _spawn(at: Vector3, velocity: Vector3, kind: int, duration: float) -> void:
 	if not _ready_once or _particles.size() >= _limit():
 		return
 	var node := MeshInstance3D.new()
 	node.mesh = _powder_mesh if kind == 0 else (_paper_mesh if kind == 1 else _cube_mesh)
-	node.material_override = _materials[clampi(color_index, 0, _materials.size() - 1)]
+	node.material_override = _material
 	node.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	add_child(node)
 	node.global_position = at
@@ -129,7 +119,7 @@ func burst(at: Vector3, strength: float = 1.0) -> void:
 		var angle := _rng.randf_range(0, TAU)
 		var velocity := Vector3(cos(angle) * _rng.randf_range(1.2, 3.0), _rng.randf_range(1.5, 3.4), sin(angle) * _rng.randf_range(1.2, 3.0))
 		var kind := 2 if index % 7 == 0 else 1
-		_spawn(at + Vector3(0, 0.55, 0), velocity, kind, _rng.randf_range(0.65, 1.25), 2 if kind == 2 else index % 2)
+		_spawn(at + Vector3(0, 0.55, 0), velocity, kind, _rng.randf_range(0.65, 1.25))
 	_impact.pitch_scale = _rng.randf_range(0.9, 1.1)
 	if _audio_enabled:
 		_impact.play()
@@ -148,7 +138,7 @@ func celebrate(at: Vector3) -> void:
 		var side := -1.0 if index % 2 == 0 else 1.0
 		var origin := at + Vector3(side * 1.2, 0.7, 0)
 		var velocity := Vector3(side * _rng.randf_range(0.6, 2.8), _rng.randf_range(2.5, 5.0), _rng.randf_range(-0.8, 1.7))
-		_spawn(origin, velocity, 2 if index % 5 == 0 else 1, _rng.randf_range(1.0, 1.8), 2 + index % 3)
+		_spawn(origin, velocity, 2 if index % 5 == 0 else 1, _rng.randf_range(1.0, 1.8))
 	_noise.stop()
 	_spraying = false
 	if _audio_enabled:
@@ -185,10 +175,10 @@ func _process(delta: float) -> void:
 		while _exhaust_clock >= period:
 			_exhaust_clock -= period
 			var jitter := Vector3(_rng.randf_range(-0.14, 0.14), _rng.randf_range(-0.1, 0.1), _rng.randf_range(-0.14, 0.14))
-			var origin := _at + _backward * 0.85 + Vector3(0, 0.7, 0)
-			_spawn(origin + jitter, _backward * _rng.randf_range(2.0, 4.0) + Vector3(0, 0.4, 0) + jitter, 0, _rng.randf_range(0.3, 0.65), 1)
+			var origin := _at
+			_spawn(origin + jitter, _backward * _rng.randf_range(2.0, 4.0) + Vector3(0, 0.4, 0) + jitter, 0, _rng.randf_range(0.3, 0.65))
 			if _rush and _rng.randf() < 0.22:
-				_spawn(origin, _backward * 3 + Vector3(_rng.randf_range(-1, 1), 1, 0), 2, 0.45, 2)
+				_spawn(origin, _backward * 3 + Vector3(_rng.randf_range(-1, 1), 1, 0), 2, 0.45)
 	else:
 		_exhaust_clock = 0.0
 

@@ -39,6 +39,9 @@ func _run() -> void:
 	_check(str(Rules.ranking(30.01)["rank"]) == "SS", "Time boundary is exact")
 	rules.reset()
 	_check(rules.seen.is_empty() and rules.damage == 0 and not rules.started, "Retry resets all rules")
+	var asset_checks = load("res://tests/asset_checks.gd").new()
+	var asset_failures: Array[String] = asset_checks.run()
+	failures.append_array(asset_failures)
 	var checks = load("res://tests/player_checks.gd").new()
 	var player_failures: Array[String] = await checks.run(self)
 	failures.append_array(player_failures)
@@ -49,7 +52,7 @@ func _run() -> void:
 	var integration_failures: Array[String] = await integration_checks.run(self)
 	failures.append_array(integration_failures)
 	if failures.is_empty():
-		print("PASS: rules (", count, "), player real-physics, office route/destruction and pause/restart integration checks")
+		print("PASS: rules (", count, "), model colors/sharing, player real-physics, office route/destruction and pause/restart integration checks")
 		call_deferred("quit", 0)
 	else:
 		for error: String in failures: print("FAIL: ", error)

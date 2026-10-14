@@ -1,0 +1,99 @@
+{
+  "created_date": "2026-10-15",
+  "timezone": "Asia/Tokyo",
+  "tool": "image_gen.imagegen",
+  "purpose": "Generated modeling references, not screenshots of the running game.",
+  "sheets": [
+    {
+      "sheet": "01-employee.png",
+      "generated_file": "/workspace/generated_images/exec-d7e7d440-cbbf-4847-95bc-04a20fa3e260.png",
+      "views": [
+        "front",
+        "right side",
+        "back"
+      ],
+      "brief": "Three-view chibi salaryman turnaround: huge shouting mouth with two teeth and tongue, thick cheeks, worried pupils, swept sculpted locks, rolled sleeves, loose red tie, navy trousers, oversized shoes and tilted employee ID. Shared rounded toy-office style; used as style reference for the following eight sheets.",
+      "reference_image": "art/screens/v0.3/01-play.png"
+    },
+    {
+      "sheet": "02-chair-extinguisher.png",
+      "prompt": "Brand new modeling reference sheet for the original Japanese absurd office-chair escape game Zenryoku Taikin / 全力退勤. Match the attached employee turnaround's warm ivory studio background, expressive chunky molded toy/vinyl/clay forms, beveled edges, clean substantial silhouettes, restrained sculpted detail, soft contact shadows, and palette (ivory #F4F0E8, tomato #E63B2F, teal #3E8F87, navy #26323F, golden yellow #F6B45F; tiny magenta/cyan accents). This is a coherent comic game asset, NOT photorealism and NOT a gameplay scene. No HUD, no office backdrop, no thin fragile detail. Every row shows EXACTLY the SAME object in 3 columns FRONT / RIGHT SIDE / BACK. Orthographic or very mild orthographic studio cameras; matching scale and baseline within each row, no cropping. Full objects visible. Labels are short and unobtrusive. Practical lightweight Blender-model shapes, no dramatic illustration motion or effects.\nTwo rows, six large clear render panels. Top row: an absurdly overstuffed teal ergonomic office chair. Thick asymmetrical marshmallow cushion and backrest with navy piping, a few broad seams, big dark padded armrests, a sturdy lift with a huge orange adjustment paddle, five slightly bent navy star legs ending in fat paired black casters; like a tiny office racing vehicle, recognizable and hilariously overconfident. No person. Bottom row: a squat oversized tomato-red fire extinguisher with rounded shoulders and base, black foot ring, brass valve, exaggerated broad squeeze levers, a readable cream pressure dial with colored arc, chunky white instruction label with simple red extinguisher pictogram and stripes, a thick curved dark hose and trumpet-like nozzle aimed rearward. No flames or powder. Both must match the employee's adult comic toy world.",
+      "generated_file": "/workspace/generated_images/exec-13b22292-891d-4de6-b747-8aa8e80f5743.png",
+      "views": [
+        "front",
+        "right side",
+        "back"
+      ]
+    },
+    {
+      "sheet": "03-breakables.png",
+      "prompt": "Brand new modeling reference sheet for the original Japanese absurd office-chair escape game Zenryoku Taikin / 全力退勤. Match the attached employee turnaround's warm ivory studio background, expressive chunky molded toy/vinyl/clay forms, beveled edges, clean substantial silhouettes, restrained sculpted detail, soft contact shadows, and palette (ivory #F4F0E8, tomato #E63B2F, teal #3E8F87, navy #26323F, golden yellow #F6B45F; tiny magenta/cyan accents). This is a coherent comic game asset, NOT photorealism and NOT a gameplay scene. No HUD, no office backdrop, no thin fragile detail. Every row shows EXACTLY the SAME object in 3 columns FRONT / RIGHT SIDE / BACK. Orthographic or very mild orthographic studio cameras; matching scale and baseline within each row, no cropping. Full objects visible. Labels are short and unobtrusive. Practical lightweight Blender-model shapes, no dramatic illustration motion or effects.\nThree rows, nine panels; each row is its own complete model. Row one PAPER BOX: a squat bulging cardboard box, broad tape cross, folded flap corners, a cream ream of paper bursting just above the top, tiny red stamped mark and teal label. Row two PAPER TOWER: a hilariously tall crooked tower of thick individual cream paper reams and 3 chunky teal/navy binders with red/yellow tabs, slightly leaning alternating layers, a teal square base; looks impossible but intact, NOT debris or explosion. Row three PAPER CART: a small teal two-shelf office cart with thick frame, chunky large rubber wheels and curved handle; shelves visibly bow from absurd piles of reams, boxes and binders, one stack leans, visible paper edges and red stamped labels. Clear distinctions between cardboard, layered paper, folders and cart. Cute office bureaucratic absurdity, not faces on all objects.",
+      "generated_file": "/workspace/generated_images/exec-b49e8cb1-8d8b-417d-a903-1b01cc5153a1.png",
+      "views": [
+        "front",
+        "right side",
+        "back"
+      ]
+    },
+    {
+      "sheet": "04-furniture-computer.png",
+      "prompt": "Brand new modeling reference sheet for the original Japanese absurd office-chair escape game Zenryoku Taikin / 全力退勤. Match the attached employee turnaround's warm ivory studio background, expressive chunky molded toy/vinyl/clay forms, beveled edges, clean substantial silhouettes, restrained sculpted detail, soft contact shadows, and palette (ivory #F4F0E8, tomato #E63B2F, teal #3E8F87, navy #26323F, golden yellow #F6B45F; tiny magenta/cyan accents). This is a coherent comic game asset, NOT photorealism and NOT a gameplay scene. No HUD, no office backdrop, no thin fragile detail. Every row shows EXACTLY the SAME object in 3 columns FRONT / RIGHT SIDE / BACK. Orthographic or very mild orthographic studio cameras; matching scale and baseline within each row, no cropping. Full objects visible. Labels are short and unobtrusive. Practical lightweight Blender-model shapes, no dramatic illustration motion or effects.\nThree rows, nine panels; full object per row. Row one DESK: rounded cream thick tabletop with teal edge, a teal fat drawer pedestal on one side, two mildly splayed sturdy legs on the other, gold oversized loop handles, a few sculpted drawer seams, a small red stamp-like label; EMPTY tabletop so the model is separate from props. Row two CABINET: waist-high wide squat teal file cabinet island, three distinct slightly bulging drawer doors, oversized gold loop handles, navy kickplate, thick ivory rounded top, subtle crooked office label. Row three COMPUTER KIT: retro bulky navy-and-teal desktop monitor, rounded ivory screen rim and chunky stand, simple playful colored work-chart symbols on cyan display (no readable UI required); paired thick rounded keyboard with oversized cream keycaps and an enormous tomato-red Enter key, plus a teal mouse. Show the whole matched computer-plus-keyboard kit in each of the three views. Comically thick toy objects with obvious modeled structure rather than simple stacked cuboids.",
+      "generated_file": "/workspace/generated_images/exec-68e7ccc6-4079-46ce-9bbb-8d5a30570615.png",
+      "views": [
+        "front",
+        "right side",
+        "back"
+      ]
+    },
+    {
+      "sheet": "05-colleague.png",
+      "prompt": "New finished 3D-asset modeling reference sheet for original Japanese absurd comedy game Zenryoku Taikin / 全力退勤. The supplied employee sheet defines the coherent world: chunky molded clay/vinyl toy shapes, rounded beveled edges and thick silhouettes, clean restrained sculpted detail, soft warm grounding shadow, no photorealism, no fine noisy textures. Ivory #F4F0E8, tomato red #E63B2F, teal #3E8F87, navy #26323F, gold #F6B45F, small magenta/cyan accents. Ivory studio background, no office scene or HUD. Every row depicts ONE identical complete asset in 3 equally sized columns FRONT / RIGHT SIDE / BACK, matching scale/baseline per row and visible whole object. Modelling-friendly geometry, clear material/color separation.\nOne row, three LARGE full-body views of a comic adult office colleague in a relaxed seated working pose (include a simple matching teal chair so pose makes sense), holding a small cream cat coffee mug. She has a huge rounded adult chibi head, a smooth chestnut asymmetric bob hair silhouette, very heavy half-closed sleepy eyelids, slightly lopsided smug indifferent smile, plump cheeks, cream shirt with pink rolled cuffs, teal vest, navy baggy trousers and big black shoes, crooked small ID badge. Utterly oblivious to ridiculous chaos, much calmer than the panic employee, but clearly the same game's anatomy and sculpted toy quality. Same hands, feet and hair design across all three views. Do not make a featureless block person.",
+      "generated_file": "/workspace/generated_images/exec-5143205e-ee4b-4f07-ad45-c7988fad164e.png",
+      "views": [
+        "front",
+        "right side",
+        "back"
+      ]
+    },
+    {
+      "sheet": "06-desk-toys.png",
+      "prompt": "New finished 3D-asset modeling reference sheet for original Japanese absurd comedy game Zenryoku Taikin / 全力退勤. The supplied employee sheet defines the coherent world: chunky molded clay/vinyl toy shapes, rounded beveled edges and thick silhouettes, clean restrained sculpted detail, soft warm grounding shadow, no photorealism, no fine noisy textures. Ivory #F4F0E8, tomato red #E63B2F, teal #3E8F87, navy #26323F, gold #F6B45F, small magenta/cyan accents. Ivory studio background, no office scene or HUD. Every row depicts ONE identical complete asset in 3 equally sized columns FRONT / RIGHT SIDE / BACK, matching scale/baseline per row and visible whole object. Modelling-friendly geometry, clear material/color separation.\nThree rows, nine views. Row one CAT MUG: fat ivory ceramic-looking toy mug, cat ears built into rim, black oval eyes, tiny triangular pink nose/cheeks and simple mouth, warm brown coffee clearly inside, a thick curled teal cat-tail handle on its side, two little paw forms low on front. Row two GIANT STAPLER: oversized tomato-red stapler, bulging upper shell and navy base, visibly open jaws with two chunky ivory tooth-like staple forms, two gold screw heads that comically suggest eyes, exaggerated spring/metal hinge; recognizably an office stapler with a silly crocodile-mouth silhouette. Row three PLANT: crooked potted office plant in squat round ivory pot with teal/red stamp-like mark, thick bent dark branch, most leaves fat rounded broad leaf shapes, a FEW cuboid leaf tips and tiny stepped cubes as subtle voxel accent. Avoid turning whole plant/character into voxel art. These are modeled objects, not flat printed illustrations.",
+      "generated_file": "/workspace/generated_images/exec-2868726e-c697-4a3c-9b84-80bc000fc606.png",
+      "views": [
+        "front",
+        "right side",
+        "back"
+      ]
+    },
+    {
+      "sheet": "07-exit-clock.png",
+      "prompt": "New finished 3D-asset modeling reference sheet for original Japanese absurd comedy game Zenryoku Taikin / 全力退勤. The supplied employee sheet defines the coherent world: chunky molded clay/vinyl toy shapes, rounded beveled edges and thick silhouettes, clean restrained sculpted detail, soft warm grounding shadow, no photorealism, no fine noisy textures. Ivory #F4F0E8, tomato red #E63B2F, teal #3E8F87, navy #26323F, gold #F6B45F, small magenta/cyan accents. Ivory studio background, no office scene or HUD. Every row depicts ONE identical complete asset in 3 equally sized columns FRONT / RIGHT SIDE / BACK, matching scale/baseline per row and visible whole object. Modelling-friendly geometry, clear material/color separation.\nTwo rows, six views. Row one EXIT ELEVATOR: a broad open toy-office elevator entry module, thick softly beveled teal/gold frame, chunky green EXIT sign above the doorway with a small simple running-person arrow icon, two opened dark-teal doors at sides leaving a generous gap, low green threshold, rounded floor buttons on one side, comic tiny gold celebratory bulbs as trim. Warm orange sunset panel inside the back. Front, true side and back views of exactly this same structural module, not different rooms, no character. Row two OFFICE CLOCK: a fat round ivory clock with thick teal rim and chunky gold tick marks, simple oversized navy hands set to 17:00, slightly crooked hands make a playful exhausted-expression hint, a little red rectangular '17:00' label under the center, side thickness and wall mount visible from back. No extra clock variants or faces.",
+      "generated_file": "/workspace/generated_images/exec-f87bb88b-4362-4305-8105-0202beee841c.png",
+      "views": [
+        "front",
+        "right side",
+        "back"
+      ]
+    },
+    {
+      "sheet": "08-office-modules.png",
+      "prompt": "New finished 3D-asset modeling reference sheet for original Japanese absurd comedy game Zenryoku Taikin / 全力退勤. The supplied employee sheet defines the coherent world: chunky molded clay/vinyl toy shapes, rounded beveled edges and thick silhouettes, clean restrained sculpted detail, soft warm grounding shadow, no photorealism, no fine noisy textures. Ivory #F4F0E8, tomato red #E63B2F, teal #3E8F87, navy #26323F, gold #F6B45F, small magenta/cyan accents. Ivory studio background, no office scene or HUD. Every row depicts ONE identical complete asset in 3 equally sized columns FRONT / RIGHT SIDE / BACK, matching scale/baseline per row and visible whole object. Modelling-friendly geometry, clear material/color separation.\nTwo rows, six views. Row one WALL WINDOW MODULE: freestanding short wall segment for a toy office, mint/teal lower panel with thick ivory rounded skirting and bevel seams; above is a broad chunky warm golden window frame, soft orange/pink sunset glazing with simple stepped navy city silhouette behind it. Round structural corners, clear toy construction. Same module shown front, side with real thickness, and back, no full building. Row two FLOOR AND WAYFINDING MODULE: a single thick warm cream tiled office floor square with shallow broad seams and beveled rim, teal running lane strip with two thick green forward chevron markings, one small tomato-red time stamp decal; front/top three-quarter, true side showing thin layered thickness, and back/top three-quarter. Keep colors calm enough that the employee and red extinguisher remain the focus. Shapes are practical for a repeated modular Godot environment.",
+      "generated_file": "/workspace/generated_images/exec-b0bff77e-2083-4001-bcbd-84e5dfe7fda4.png",
+      "views": [
+        "front",
+        "right side",
+        "back"
+      ]
+    },
+    {
+      "sheet": "09-fx-objects.png",
+      "prompt": "New finished 3D-asset modeling reference sheet for original Japanese absurd comedy game Zenryoku Taikin / 全力退勤. The supplied employee sheet defines the coherent world: chunky molded clay/vinyl toy shapes, rounded beveled edges and thick silhouettes, clean restrained sculpted detail, soft warm grounding shadow, no photorealism, no fine noisy textures. Ivory #F4F0E8, tomato red #E63B2F, teal #3E8F87, navy #26323F, gold #F6B45F, small magenta/cyan accents. Ivory studio background, no office scene or HUD. Every row depicts ONE identical complete asset in 3 equally sized columns FRONT / RIGHT SIDE / BACK, matching scale/baseline per row and visible whole object. Modelling-friendly geometry, clear material/color separation.\nThree rows, nine views of SMALL reusable game FX meshes as physical model references. Row one PAPER: a single cream office document with one exaggerated bent corner and slight broad curl, thick clear silhouette, two simple teal bars and a tomato-red stamp mark; same sheet front, side showing gentle curvature, and back. Row two POWDER PUFF: ONE soft chunky cloud-like white extinguisher powder puff shaped from 4 merged rounded lobes into a coherent silhouette; same puff front/side/back, no giant smoke scene, tiny cyan-gray shaded underside. Row three CONFETTI CUBE: ONE small gold rounded-bevel cube with a red diagonal accent on one face, front/side/back of same cube, subtle voxel-like stepped edge, a tactile toy particle. No bursts or trails; these are individual modeling objects that will be emitted sparingly around the main character.",
+      "generated_file": "/workspace/generated_images/exec-9391741f-3350-4581-b876-459756fe58e7.png",
+      "views": [
+        "front",
+        "right side",
+        "back"
+      ]
+    }
+  ]
+}

@@ -10,8 +10,9 @@ from playwright.sync_api import sync_playwright
 parser=argparse.ArgumentParser()
 parser.add_argument('--url',default='http://127.0.0.1:4184/?qa=1')
 parser.add_argument('--headless',action='store_true')
+parser.add_argument('--out',type=Path,default=Path(__file__).resolve().parent.parent/'docs/verification')
 args=parser.parse_args()
-out=Path(__file__).resolve().parent.parent/'docs/verification'
+out=args.out
 out.mkdir(parents=True,exist_ok=True)
 
 with sync_playwright() as p:
@@ -51,7 +52,7 @@ with sync_playwright() as p:
 
     # Follow the same visible office route using controls; never teleport or
     # modify game state. Feedback is read through an opt-in QA-only snapshot.
-    targets=[(-0.9,32),(1.0,29),(0,16),(4,-4),(4,-12),(-2,-24),(-2,-32),(0,-48),(0,-64)]
+    targets=[(-0.9,32),(1.0,29),(0,16),(4,-4),(4,-12),(-2,-24),(-2,-32),(0,-48),(0,-58),(0,-61),(0,-64)]
     target=0
     held=set()
     recovering=False
@@ -64,9 +65,15 @@ with sync_playwright() as p:
             break
         assert state['mode']=='playing',f"Unexpected state {state['mode']}"
         x,_,z=state['player']
+        # Approach the opening from in front. A low-FPS feedback delay can
+        # overshoot to the outside of a pillar; recover with ordinary controls.
+        if target>=len(targets)-2 and abs(x)>2.0 and z<-60.5:
+            target=len(targets)-3
         tx,tz=targets[target]
         distance=math.hypot(tx-x,tz-z)
-        if target<len(targets)-1 and (distance<2.2 or (z<tz+0.5 and abs(x-tx)<5)):
+        clearance=1.3 if target>=len(targets)-3 else 5.0
+        arrival=1.2 if target>=len(targets)-3 else 2.2
+        if target<len(targets)-1 and (distance<arrival or (z<tz+0.5 and abs(x-tx)<clearance)):
             target+=1
             tx,tz=targets[target]
         desired=math.atan2(-(tx-x),-(tz-z))
