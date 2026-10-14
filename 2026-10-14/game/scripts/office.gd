@@ -2,6 +2,8 @@ extends Node3D
 ## Authored miniature office. Props are deliberately non-solid: a fast chair
 ## scatters them, while only the furniture and room shell can stop the player.
 
+const AssetLibrary := preload("res://scripts/asset_library.gd")
+
 var spawn_position := Vector3(0.0, 0.0, 42.0)
 var goal_position := Vector3(0.0, 0.0, -64.0)
 var _built := false
@@ -124,113 +126,60 @@ func _flat_distance(a: Vector3, b: Vector3) -> float:
 	return Vector2(a.x, a.z).distance_to(Vector2(b.x, b.z))
 
 func _build_shell() -> void:
-	_solid(self, Vector3(0, -0.3, -10), Vector3(18.5, 0.6, 120), "cream")
-	# Broad tile seams: enough scale cues without hundreds of floor meshes.
-	for z in range(-68, 49, 8):
-		_mesh(self, "box", Vector3(0, 0.007, z), Vector3(18.0, 0.012, 0.045), "tile")
-	for x in [-8.0, -4.0, 0.0, 4.0, 8.0]:
-		_mesh(self, "box", Vector3(x, 0.008, -10), Vector3(0.035, 0.013, 118), "tile")
-	_solid(self, Vector3(-9.3, 1.0, -10), Vector3(0.5, 2.0, 120), "mint_light")
+	# The collision shell keeps its original dimensions; decorative GLBs are non-solid.
+	_solid(self, Vector3(0, -0.3, -10), Vector3(18.5, 0.6, 120), "cream", false)
+	for z in range(-64, 49, 8):
+		for x in [-6.0, 0.0, 6.0]:
+			var floor_tile := _model(self, "floor_module", Vector3(x, -0.131, z))
+			floor_tile.find_child("Wayfinding", true, false).free()
+			floor_tile.scale.x = 0.75
+	_solid(self, Vector3(-9.3, 1.0, -10), Vector3(0.5, 2.0, 120), "mint_light", false)
 	_solid(self, Vector3(9.3, 0.45, -10), Vector3(0.5, 0.9, 120), "mint_light")
 	_solid(self, Vector3(0, 0.7, 49.7), Vector3(18.5, 1.4, 0.6), "mint")
-	# Sunset glazing runs down the left side; low right wall never hides the chair.
 	for i in range(12):
-		var z := 44.0 - float(i) * 9.2
-		_mesh(self, "box", Vector3(-9.0, 4.0, z), Vector3(0.09, 4.4, 8.8), "orange", true)
-		_mesh(self, "box", Vector3(-8.9, 3.4, z), Vector3(0.07, 1.3, 8.75), "pink", true)
-		_mesh(self, "box", Vector3(-8.78, 4.1, z + 4.4), Vector3(0.2, 4.8, 0.2), "gold")
-		# A stepped silhouette of the city, visible within the glowing windows.
-		_mesh(self, "box", Vector3(-8.82, 2.65, z - 1.5), Vector3(0.08, 1.1 + (i % 3) * 0.45, 2.6), "blue")
-	_mesh(self, "sphere", Vector3(-8.74, 4.5, -52), Vector3(0.12, 1.8, 1.8), "sun", true)
+		_model(self, "window_module", Vector3(-9.0, 0, 44.0 - float(i) * 9.2), -PI * 0.5)
 
 func _build_route() -> void:
+	# Reuse the modeled strip, following the actual navigable bends rather than
+	# leaving the floor module's straight arrows on every background tile.
 	for i in range(_route.size() - 1):
 		var start := _route[i]
 		var end := _route[i + 1]
 		var direction := end - start
-		var lane := _mesh(self, "box", (start + end) * 0.5 + Vector3(0, 0.022, 0),
-			Vector3(4.4, 0.025, direction.length() + 0.4), "white")
-		lane.rotation.y = atan2(-direction.x, -direction.z)
-		var steps := maxi(1, int(direction.length() / 5.0))
+		var steps := maxi(1, ceili(direction.length() / 8.0))
 		for step in range(steps):
-			var point := start.lerp(end, (float(step) + 0.55) / float(steps))
-			var arrow := Node3D.new()
-			add_child(arrow)
-			arrow.position = point + Vector3(0, 0.055, 0)
-			arrow.rotation.y = atan2(-direction.x, -direction.z)
-			var left := _mesh(arrow, "box", Vector3(-0.35, 0, 0), Vector3(0.17, 0.025, 1.0), "green")
-			left.rotation.y = -0.8
-			var right := _mesh(arrow, "box", Vector3(0.35, 0, 0), Vector3(0.17, 0.025, 1.0), "green")
-			right.rotation.y = 0.8
+			var center := start.lerp(end, (float(step) + 0.5) / float(steps))
+			var strip := _model(self, "floor_module", center + Vector3(0, -0.131, 0), atan2(-direction.x, -direction.z))
+			strip.find_child("BaseTiles", true, false).free()
+			strip.scale = Vector3(4.4 / 2.6, 1.0, direction.length() / float(steps) / 8.0)
 
 func _desk(at: Vector3, colleague: bool, special: bool) -> void:
 	var desk := Node3D.new()
 	add_child(desk)
 	desk.position = at
 	_solid(desk, Vector3(0, 0.85, 0), Vector3(3.4, 1.7, 2.6), "mint", false)
-	_mesh(desk, "rounded", Vector3(0, 1.68, 0), Vector3(3.6, 0.23, 2.8), "white")
-	_mesh(desk, "rounded", Vector3(-1.1, 0.9, 0.1), Vector3(1.1, 1.4, 2.35), "mint")
-	for y in [0.65, 1.12]:
-		_mesh(desk, "box", Vector3(-1.1, y, 1.3), Vector3(0.32, 0.08, 0.06), "gold")
-	for x in [1.25]:
-		_mesh(desk, "cylinder", Vector3(x, 0.8, 0), Vector3(0.16, 1.6, 0.16), "teal")
-	_mesh(desk, "rounded", Vector3(0.35, 2.22, -0.45), Vector3(1.45, 0.9, 0.13), "ink")
-	_mesh(desk, "box", Vector3(0.35, 2.22, -0.365), Vector3(1.23, 0.67, 0.04), "screen", true)
-	_mesh(desk, "box", Vector3(0.1, 2.34, -0.336), Vector3(0.6, 0.07, 0.012), "white", true)
-	_mesh(desk, "box", Vector3(0.35, 1.91, -0.45), Vector3(0.12, 0.4, 0.13), "ink")
-	_mesh(desk, "rounded", Vector3(0.35, 1.83, 0.4), Vector3(1.25, 0.07, 0.44), "ink")
-	_mesh(desk, "box", Vector3(-0.9, 1.85, -0.7), Vector3(0.7, 0.16, 0.65), "paper")
-	_cat_mug(desk, Vector3(1.25, 1.82, 0.8))
+	_model(desk, "desk", Vector3.ZERO)
+	# The computer's keyboard and screen face the seated colleague at +Z.
+	_model(desk, "computer", Vector3(0.35, 1.80, -0.45), PI)
+	_model(desk, "cat_mug", Vector3(1.25, 1.80, 0.8), PI)
 	if special:
-		_stapler(desk, Vector3(-0.8, 1.82, 0.55))
+		_model(desk, "stapler", Vector3(-0.8, 1.80, 0.35), PI)
 	if colleague:
 		_colleague(desk, Vector3(0.3, 0, 2.0))
 
 func _colleague(parent: Node3D, at: Vector3) -> void:
-	var person := Node3D.new()
-	parent.add_child(person)
-	person.position = at
-	_mesh(person, "rounded", Vector3(0, 0.85, 0.1), Vector3(1.1, 0.2, 1.0), "teal")
-	_mesh(person, "rounded", Vector3(0, 1.28, 0.48), Vector3(1.0, 1.0, 0.2), "teal")
-	_mesh(person, "sphere", Vector3(0, 1.47, 0), Vector3(0.95, 1.1, 0.65), "white")
-	_mesh(person, "sphere", Vector3(0, 2.2, -0.04), Vector3(0.94, 0.92, 0.86), "skin")
-	_mesh(person, "sphere", Vector3(0, 2.48, 0.03), Vector3(1.0, 0.48, 0.9), "hair")
-	# Relaxed horizontal eyelids face their monitor: oblivious to the carnage.
-	for x in [-0.21, 0.21]:
-		_mesh(person, "box", Vector3(x, 2.22, -0.447), Vector3(0.2, 0.045, 0.028), "ink")
-		_mesh(person, "sphere", Vector3(x * 2.0, 1.61, -0.4), Vector3(0.25, 0.25, 0.55), "skin")
-	_mesh(person, "box", Vector3(0, 1.45, -0.34), Vector3(0.14, 0.55, 0.05), "blue")
-	_mesh(person, "box", Vector3(0, 1.76, -0.72), Vector3(0.65, 0.03, 0.65), "paper")
+	var chair := _model(parent, "chair", at)
+	chair.scale = Vector3.ONE * 0.88
+	var person := _model(chair, "colleague", Vector3(0, 1.0, -0.04))
+	person.name = "SleepyColleague"
 
 func _filing_island(at: Vector3, size: Vector3) -> void:
-	_solid(self, at + Vector3(0, size.y * 0.5, 0), size, "mint")
-	_mesh(self, "rounded", at + Vector3(0, size.y + 0.1, 0), Vector3(size.x + 0.15, 0.2, size.z + 0.15), "white")
-	for x in [-2.0, 0.0, 2.0]:
-		_mesh(self, "box", at + Vector3(x, 0.8, size.z * 0.5 + 0.035), Vector3(0.48, 0.12, 0.05), "gold")
-		_mesh(self, "box", at + Vector3(x, size.y + 0.38, 0.3), Vector3(0.7, 0.5, 0.9), "paper")
-
-func _cat_mug(parent: Node3D, at: Vector3) -> void:
-	_mesh(parent, "cylinder", at + Vector3(0, 0.21, 0), Vector3(0.38, 0.42, 0.38), "white")
-	_mesh(parent, "cylinder", at + Vector3(0, 0.425, 0), Vector3(0.3, 0.015, 0.3), "hair")
-	var handle := _mesh(parent, "torus", at + Vector3(0.23, 0.25, 0), Vector3(0.25, 0.25, 0.25), "white")
-	handle.rotation.x = PI * 0.5
-	for x in [-0.12, 0.12]:
-		_mesh(parent, "sphere", at + Vector3(x, 0.46, 0), Vector3(0.11, 0.16, 0.1), "white")
-		_mesh(parent, "sphere", at + Vector3(x * 0.6, 0.28, 0.183), Vector3(0.035, 0.045, 0.024), "ink")
-
-func _stapler(parent: Node3D, at: Vector3) -> void:
-	_mesh(parent, "rounded", at + Vector3(0, 0.09, 0), Vector3(0.62, 0.18, 1.55), "ink")
-	var top := _mesh(parent, "rounded", at + Vector3(0, 0.37, 0), Vector3(0.67, 0.45, 1.6), "red")
-	top.rotation.x = -0.13
-	_mesh(parent, "box", at + Vector3(0, 0.19, -0.58), Vector3(0.5, 0.14, 0.3), "gold")
+	_solid(self, at + Vector3(0, size.y * 0.5, 0), size, "mint", false)
+	var cabinet := _model(self, "cabinet", at, PI)
+	cabinet.scale = Vector3(size.x / 5.9, 1.0, size.z / 3.14)
 
 func _plant(at: Vector3) -> void:
-	_mesh(self, "cylinder", at + Vector3(0, 0.42, 0), Vector3(0.95, 0.84, 0.95), "white")
-	_mesh(self, "cylinder", at + Vector3(0, 1.2, 0), Vector3(0.16, 1.6, 0.16), "hair")
-	for i in range(7):
-		var angle := float(i) * 2.4
-		var p := at + Vector3(cos(angle) * 0.46, 1.75 + float(i % 3) * 0.28, sin(angle) * 0.46)
-		_mesh(self, "box", p, Vector3(0.65, 0.62, 0.65), "leaf_light" if i % 2 == 0 else "leaf")
+	_model(self, "plant", at)
 
 func _build_props() -> void:
 	# Paper trail introduces destruction without a required obstacle. Closely
@@ -258,34 +207,20 @@ func _make_prop(at: Vector3, type: int, index: int) -> void:
 	var base := 10000
 	var text := "コピー用紙、放出！"
 	var radius := 0.65
-	if type == 0:
-		_mesh(prop, "box", Vector3(0, 0.5, 0), Vector3(1.0, 1.0, 0.9), "box")
-		_mesh(prop, "box", Vector3(0, 1.01, 0), Vector3(1.02, 0.13, 0.93), "paper")
-		_mesh(prop, "box", Vector3(0, 0.55, 0.459), Vector3(0.5, 0.35, 0.018), "white")
-		_mesh(prop, "box", Vector3(0, 0.54, 0.476), Vector3(0.3, 0.06, 0.012), "teal")
-	elif type == 1:
+	var model_name := "paper_box"
+	if type == 1:
 		kind = "tower"
 		base = 50000
 		text = "書類、全提出！"
 		radius = 0.82
-		_mesh(prop, "rounded", Vector3(0, 0.18, 0), Vector3(1.15, 0.36, 1.0), "mint")
-		for i in range(7):
-			var offset := sin(float(i) * 1.9 + index) * 0.13
-			var stack := _mesh(prop, "box", Vector3(offset, 0.48 + float(i) * 0.28, 0), Vector3(1.0, 0.24, 0.82), "paper" if i % 3 else "blue")
-			stack.rotation.y = offset * 0.5
-	else:
+		model_name = "paper_tower"
+	elif type == 2:
 		kind = "wagon"
 		base = 100000
 		text = "総務、見てない！"
 		radius = 1.0
-		for y in [0.3, 1.0]:
-			_mesh(prop, "rounded", Vector3(0, y, 0), Vector3(1.45, 0.18, 1.0), "mint")
-		for x in [-0.6, 0.6]:
-			_mesh(prop, "cylinder", Vector3(x, 0.68, 0), Vector3(0.1, 0.9, 0.1), "ink")
-			_mesh(prop, "sphere", Vector3(x, 0.13, 0.28), Vector3(0.25, 0.25, 0.25), "ink")
-		_mesh(prop, "box", Vector3(-0.3, 1.32, 0), Vector3(0.65, 0.45, 0.85), "paper")
-		_mesh(prop, "box", Vector3(0.38, 1.45, 0), Vector3(0.4, 0.75, 0.72), "blue")
-		_mesh(prop, "box", Vector3(0.38, 1.55, 0.37), Vector3(0.23, 0.25, 0.018), "white")
+		model_name = "paper_cart"
+	_model(prop, model_name, Vector3.ZERO, PI + sin(float(index) * 1.7) * 0.06)
 	_props.append({"id": "prop_%02d" % index, "base": base, "progress": 42.0 - at.z,
 		"position": at, "kind": kind, "text": text, "radius": radius,
 		"node": prop, "broken": false})
@@ -293,25 +228,21 @@ func _make_prop(at: Vector3, type: int, index: int) -> void:
 func _build_exit() -> void:
 	_solid(self, Vector3(-6.4, 2.2, -67.5), Vector3(6.5, 4.4, 0.7), "mint_light")
 	_solid(self, Vector3(6.4, 2.2, -67.5), Vector3(6.5, 4.4, 0.7), "mint_light")
-	_solid(self, Vector3(0, 2.2, -68.8), Vector3(6.1, 4.4, 0.5), "teal")
-	_mesh(self, "box", Vector3(0, 0.045, -64.5), Vector3(5.8, 0.065, 7.5), "green", true)
+	_solid(self, Vector3(0, 2.2, -68.8), Vector3(6.1, 4.4, 0.5), "teal", false)
 	for x in [-3.15, 3.15]:
-		_solid(self, Vector3(x, 2.4, -65.5), Vector3(0.35, 4.8, 6.0), "gold")
-		_mesh(self, "box", Vector3(x * 0.89, 2.2, -68.4), Vector3(0.35, 4.25, 0.1), "sun", true)
-	_mesh(self, "rounded", Vector3(0, 4.9, -63.0), Vector3(6.5, 1.0, 0.45), "green", true)
-	_label(self, "EXIT  /  退勤", Vector3(0, 4.94, -62.74), 0.019, false, COLORS["white"])
-	_mesh(self, "box", Vector3(0, 4.2, -65.6), Vector3(6.25, 0.2, 6.0), "gold")
-	_mesh(self, "box", Vector3(0, 2.25, -68.47), Vector3(5.25, 3.65, 0.04), "orange", true)
-	_mesh(self, "sphere", Vector3(0, 2.9, -68.41), Vector3(1.6, 1.6, 0.06), "sun", true)
+		_solid(self, Vector3(x, 2.4, -65.5), Vector3(0.35, 4.8, 6.0), "gold", false)
+	_model(self, "elevator", Vector3(0, 0, -65.5))
 	_label(self, "おつかれさま！", Vector3(0, 0.1, -61.2), 0.025, true, COLORS["teal"])
-	_mesh(self, "rounded", Vector3(3.6, 2.0, -62.8), Vector3(0.6, 1.15, 0.2), "ink")
-	_mesh(self, "sphere", Vector3(3.6, 2.2, -62.66), Vector3(0.2, 0.2, 0.05), "green", true)
 
 func _clock(at: Vector3) -> void:
-	var face := _mesh(self, "cylinder", at, Vector3(1.5, 0.12, 1.5), "white")
-	face.rotation.z = PI * 0.5
-	_mesh(self, "box", at + Vector3(0.08, 0.22, 0), Vector3(0.04, 0.52, 0.07), "ink")
-	_mesh(self, "box", at + Vector3(0.1, 0.02, 0.21), Vector3(0.05, 0.07, 0.52), "ink")
+	_model(self, "clock", at, -PI * 0.5)
+
+func _model(parent: Node3D, asset_name: String, at: Vector3, yaw: float = 0.0) -> Node3D:
+	var root := AssetLibrary.model(asset_name)
+	parent.add_child(root)
+	root.position = at
+	root.rotation.y = yaw
+	return root
 
 func _label(parent: Node3D, content: String, at: Vector3, pixel_size: float, flat: bool, color: Color) -> void:
 	var label := Label3D.new()
@@ -397,7 +328,8 @@ func _mesh(parent: Node3D, kind: String, at: Vector3, size: Vector3, color: Stri
 	return instance
 
 func _batch_static_visuals() -> void:
-	# All authored rotations are final now. Prop descendants retain their own
+	# Group by material and 16m district so distant detailed toys can be culled.
+	# Prop descendants retain their own
 	# geometry so hiding a broken object never hides another object or a desk.
 	var prop_roots := {}
 	for prop in _props:
@@ -405,7 +337,7 @@ func _batch_static_visuals() -> void:
 		prop_roots[node.get_instance_id()] = true
 	var groups := {}
 	var removed := 0
-	var authored_mesh_count := _mesh_count
+	var authored_mesh_count := find_children("*", "MeshInstance3D", true, false).size()
 	for child in find_children("*", "MeshInstance3D", true, false):
 		var instance := child as MeshInstance3D
 		var ancestor := instance.get_parent() as Node3D
@@ -420,7 +352,8 @@ func _batch_static_visuals() -> void:
 		if is_prop:
 			continue
 		var material := instance.material_override
-		var key := "%s:%s" % [material.get_instance_id(), instance.cast_shadow]
+		var district := floori(relative.origin.z / 16.0)
+		var key := "%s:%s:%s" % [material.get_instance_id(), instance.cast_shadow, district]
 		if not groups.has(key):
 			var builder := SurfaceTool.new()
 			builder.begin(Mesh.PRIMITIVE_TRIANGLES)

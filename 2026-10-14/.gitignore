@@ -4,3 +4,8 @@ dist/
 builds/
 node_modules/
 game/**/*.uid
+
+# Editable Blender sources are tracked; automatic backups and Python caches are not.
+*.blend1
+*.blend2
+__pycache__/

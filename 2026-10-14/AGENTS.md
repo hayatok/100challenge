@@ -4,7 +4,7 @@
 
 ## 現在の制作段階
 
-ユーザーは「全力退勤」を選び、派手な演出と少量のボクセル要素を含む画風を決め、クラウドでの開発開始を依頼している。現在はGodotによる一面のプレイ可能な初期実装。アート、生成モック、仕様、ゲーム本体、実画面の検証記録をこのフォルダに置く。
+ユーザーは「全力退勤」を選び、派手な演出と少量のボクセル要素を含む画風を決め、クラウドでの開発開始を依頼している。現在はGodotによる一面のプレイ可能な実装と、3視点の参考画像に沿ったBlenderアセットv0.4。アート、生成モック、仕様、ゲーム本体、実画面の検証記録をこのフォルダに置く。
 
 ## ゲームの軸
 
@@ -23,6 +23,7 @@
 - `README.md` に制作状況、`docs/ART_DIRECTION.md` に画像とゲームの見せ方の関係を記録する。
 - `art/zenryoku-taikin-concept.png` は生成した初稿の保存版。上書きせず、改稿は別ファイルとして残す。
 - `art/screens/` は通常プレイ・大衝突・退勤成功の仕様検討用モック。生成条件は同フォルダの `generation.json` に置く。
+- `art/assets/v0.4/` はモデルごとの3視点参考画像。`art/models/` はBlender原本、`scripts/modeling/` は制作ソース、`game/assets/models/` は実行用GLB。対応は `docs/ASSET_REWORK.md`。画像を見てからモデリングし、参考画像と実際のモデルを別々に保存する。
 - 最新のモックは `art/screens/v0.3/`。改稿は版ごとの別フォルダに保存し、READMEと仕様の参照を更新する。初期モックと各版の生成条件を保持する。
 - コンセプトアートを実際のゲーム画面や実装済み素材と扱わない。操作時のカメラと衝突範囲の読みやすさはプロトタイプで確認する。
 - ゲーム固有の配色は作品部分に使い、メニューや操作部品は共通 UI 方針を参照する。
@@ -34,9 +35,12 @@
 `npm ci && npm run setup` で依存とGodot・Webテンプレートを準備する。Node.js 24、Linuxではcurlとunzipを使う。`GODOT_BIN` で4.6.3の実行ファイルを指定できる。
 
 - `npm run dev`：Godotエディタ。`npm run play`：ネイティブで起動。
-- `npm run check`：headless import、ルール・実物理・経路・統合テスト、Webビルド。
+- `npm run assets:build`：Blenderで20モデルを再生成（Blender 4.3.2で制作）。
+- `npm run assets:check`：Python 3でGLB、参考画像、制作ソースとモデル上限を確認。
+- `npm run check`：モデル検査、headless import、ルール・実物理・経路・統合テスト、Webビルド。
 - `npm run preview`：ビルド済み `dist/` を4184番で配信。
-- `python3 scripts/browser-qa.py`：別途Python PlaywrightとChromiumが必要。実際のキー・メニューでゴール、ポーズ、リトライ、記録保存を確認する。状態変更やテレポートで通しプレイを代替しない。
+- `godot --path game --script res://tools/render_assets.gd`：実GLBを3方向から描画し `docs/verification/v0.4/models/` へ保存。ネイティブ画面が必要。
+- `python3 scripts/browser-qa.py --out docs/verification/v0.4`：別途Python PlaywrightとChromiumが必要。実際のキー・メニューでゴール、ポーズ、リトライ、記録保存を確認する。状態変更やテレポートで通しプレイを代替しない。
 
 メニューを動かすmainとHUDは `PROCESS_MODE_ALWAYS`。物理のplayer、officeとeffectsは必ず `PROCESS_MODE_PAUSABLE` を明示し、親からALWAYSを継承させない。ポーズで残圧・座標・公式タイマーが止まる統合テストを維持する。
 
