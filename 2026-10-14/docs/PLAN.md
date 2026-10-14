@@ -75,4 +75,4 @@
 - [x] 頂点色と丸い輪郭で統一し、編集可能なBlender原本と制作スクリプトを用意。
 - [x] Godotの見た目をGLBへ置き換え、背景を区画ごとにまとめる。
 - [x] 実GLBの3視点、実画面の可読性と通しプレイを確認。
-- [ ] モデル検査・アプリcheck・CIを通し、GitHub Pagesを更新。
+- [x] モデル検査・アプリcheck・CIを通過。GitHub Pagesの公開状態は [Issue #159](https://github.com/hayatok/100challenge/issues/159) に記録。
