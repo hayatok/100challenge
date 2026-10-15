@@ -2,6 +2,39 @@
 
 2026-10-15（Asia/Tokyo）。クラウドのLinux、Godot 4.6.3、Chromium、Mesa llvmpipeによるソフトウェア描画で確認した。PCキーボードと横画面が対象。
 
+## 操作に応える職場 v0.6 の検証
+
+変更前の [プレイ](verification/v0.6/before-play.png) と [タイトル](verification/v0.6/before-title.png) を保存し、[操作と社員の反応の見本](../art/screens/v0.6/01-action-reaction.png) を先に生成・共有してから実装した。発生条件は [INTERACTION_DESIGN.md](INTERACTION_DESIGN.md)。生成画像、固定場面の実行レンダー、実キーの通しプレイを分けて保存している。
+
+`npm run check` は20モデル、Godot import、ルール13件、日本語表示と共有メッシュ、実物理・経路・破壊、社員の反応、噴射と方向別の破壊、演出の容量と寿命、実シーンの統合、Web出力を通過。ルート38件も通過した。新しい検証は次のとおり。
+
+- 実際の最初の破壊位置から近い1人が反応し、遠い4人は眠そうな姿勢を保つ。半径12m、同時最大2人、遅延・クールダウン、破壊IDの再通知防止、強い破壊による姿勢の強化と開始時計の維持を確認。
+- 顔・椅子・頭・マグの変化と元の姿勢への復帰、控えめの振り向きと「！」、ポーズでの遅延・経過時間・クールダウンの停止、再挑戦での全初期化を確認。
+- 後方につながる噴射の開始、実速度・ラッシュ・旋回への追従、150ms以内の解除、移動したノズル間の補間、不連続移動時に古い尾を残さないことを確認。斜めの拡縮で形が歪まないことも検査。
+- 紙の塔・箱・ワゴンの方向、紙と金色片の比率、強さによる星形の大きさ、低fpsで短いピークを一度描くこと、7バッチと1噴射ノード、80／52／20と予約枠を確認。
+- 噴射を押したままゴールし、キーのリピートと解除が結果の再挑戦へ流れないことを確認。到着方向にかかわらず成功の顔を見せ、確定した位置・向き・記録は保持し、フォーカス喪失で見た目の旋回も止まることを確認。
+
+最終Web版を実キー・メニューで操作し、31.229秒・SS「定時の覇者」・被害総額¥1,710,000・最大6連鎖・17個の破壊で退勤した。最初の反応の読み取りでは7.94m先の1人が驚き、他4人は開始0回。通しプレイでは社員の開始回数が順に1／1／0／2／1で、同時に2人を超えない。ラッシュは世界内とHUDが各2回、成功は1回。ポーズで社員・噴射・粒子・HUDも停止し、Rと結果ボタンは前の反応を初期化した。記録の再読み込み、控えめと消音、別タブへの移動と明示的な再開も通過。ブラウザエラーは0件。[browser-report.json](verification/v0.6/browser-report.json) に各状態を保存する。状態変更やテレポートは使っていない。
+
+| v0.6の実ブラウザ画面 | 確認した内容 |
+| --- | --- |
+| [タイトル](verification/v0.6/cloud-title.png) | 既存の漫画調の文字と枠、開始・設定 |
+| [噴射](verification/v0.6/cloud-boost.png) | 連続した白い形と青緑の縁、主役と進路 |
+| [破壊と社員の反応](verification/v0.6/cloud-reaction.png) | 方向のある紙と星形、近くの社員の表情とマグ |
+| [ラッシュ](verification/v0.6/cloud-play.png) | 一回の通知と局所演出、反応する社員と眠そうな社員 |
+| [ポーズ](verification/v0.6/cloud-pause.png) | 操作と全演出の時計の停止 |
+| [成功直後](verification/v0.6/cloud-success.png) | 判子と祝い、押し続けた噴射を離しても結果を維持 |
+| [結果720p](verification/v0.6/cloud-result.png)・[1080p](verification/v0.6/cloud-result-1080.png)・[960×540](verification/v0.6/cloud-result-compact.png) | 成功の顔、記録、文字の欠け・重なり、再挑戦 |
+| [設定](verification/v0.6/cloud-settings.png)・[控えめ](verification/v0.6/cloud-subdued.png) | 実部品の操作、低演出でも残る小さい噴射と情報 |
+
+同僚の造形は4可動グループへ分け、8,696三角形・4面・1共有素材。20モデル合計67,305三角形・1,930,264バイトで、他19モデルは変更していない。[モデル測定](verification/v0.6/model-report.json) と更新後の [正面](verification/v0.6/models/colleague-front.png)・[側面](verification/v0.6/models/colleague-side.png)・[背面](verification/v0.6/models/colleague-back.png) を保存。動く社員は静的背景の合成から除外し、椅子と一言を含め最大6つの表示ノード、影と物理ボディは増やしていない。
+
+姿勢を比較する固定場面も保存した。[通常の顔](verification/v0.6/staged-colleagues/closeup-sleepy.png)・[驚きとマグ](verification/v0.6/staged-colleagues/closeup-startled.png)・[控えめ](verification/v0.6/staged-colleagues/closeup-subdued.png)、[通常カメラの前](verification/v0.6/staged-colleagues/normal-before.png)・[反応後](verification/v0.6/staged-colleagues/normal-reaction.png) と [条件・状態](verification/v0.6/staged-colleagues/report.json)。`godot --audio-driver Dummy --path game --script res://tools/render_reactions.gd` で再生成できる。これらは実行したモデルの固定場面で、実キー操作の証拠とは分ける。
+
+噴射と破壊の固定時刻の診断は [後方噴射](verification/v0.6/staged-fx/rear-jet.png)・[旋回した噴射](verification/v0.6/staged-fx/turning-jet.png)・[接触の星形と扇](verification/v0.6/staged-fx/impact.png)。[条件](verification/v0.6/staged-fx/capture.json) に記したとおり、独立コピーのv0.5背景に新しい演出と現在のカメラを置いた画像。全要素を統合した確認は上の実ブラウザ記録を使う。
+
+最終の通しプレイのサンプルは65〜125回の描画、5〜13fps。ソフトウェア描画と検証操作の遅れを含むため、熟練者のタイムや実PCの性能ではない。実GPUでの60fpsと初見の操作感は未確認。移動・残圧・衝突形状・得点・時間ランクは従来の値を維持している。CIと公開の完了記録は [Issue #159](https://github.com/hayatok/100challenge/issues/159) に置く。
+
 ## 演出・HUD v0.5 の検証
 
 エフェクトの見本とラッシュ・衝突・結果・タイトルの4画面を先に生成して共有し、画像を確認してから実装した。仕様と対応は [FX_DESIGN.md](FX_DESIGN.md)。生成モックと実画面を分けて保存している。

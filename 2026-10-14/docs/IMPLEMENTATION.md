@@ -31,6 +31,8 @@ Godot 4.6.3、Compatibility描画、単一スレッドWeb書き出し。`game/ma
 - 公開変数 `spawn_position: Vector3`、`goal_position: Vector3`。
 - `build()`：固定のオフィスと物体を生成。
 - `reset_props()`：破壊物を元に戻す。
+- `react_to_breaks(rewards: Array, player_at: Vector3, speed: float) -> Dictionary`：受理済みの新しい破壊地点から12m以内の近い最大2人を反応させる。同時に待機・反応する人数も2人まで。返り値はaccepted/upgraded/suppressed/selected。
+- `set_feedback_quality(level: String)`、`debug_feedback_snapshot()`：社員の控えめ設定と、JSONで読める検証用状態。
 - `try_break(at: Vector3, speed: float) -> Array[Dictionary]`：接触した未破壊の物を処理してイベントを返す。id/base/progress/position/kind/textキーを含める。見た目の破壊済み状態はoffice内で管理。speedがほぼ0なら破壊しない。
 - `is_goal(at: Vector3) -> bool`、`distance_to_goal(at: Vector3) -> float`。
 - 家具はStaticBody3D、layer2、mask1。破壊物は通れる判定で、紙の大量の物理ボディを作らない。
@@ -66,8 +68,8 @@ Godot 4.6.3、Compatibility描画、単一スレッドWeb書き出し。`game/ma
 `extends Node3D`。紙・粉・小さな立方体、短い音、ラッシュの演出。
 
 - `setup()`、`set_quality(level: String)`、`set_volumes(music: float, sfx: float)`。
-- `set_exhaust(at: Vector3, backward: Vector3, spraying: bool, rush: bool)`。
-- `burst(at: Vector3, strength: float = 1.0)`、`play_combo(count: int)`、`celebrate(at: Vector3)`。
+- `set_exhaust(at: Vector3, backward: Vector3, spraying: bool, rush: bool, speed: float = 0.0)`。
+- `burst(at: Vector3, strength: float = 1.0, forward: Vector3 = Vector3.ZERO, kind: String = "paper")`、`play_combo(count: int)`、`celebrate(at: Vector3)`。小道具はtower/box/wagonを渡す。
 - `impact(at: Vector3, normal: Vector3, strength: float = 1.0)`、`start_rush(at: Vector3)`。
 - 主役と前方を塞がない量。通常は80程度を目安に同時粒子へ上限、控えめは約25%。音声は生成した短い音でよい。ゲーム時間の止め方はmainが管理する。
 - 7種類の共有MultiMeshで粉・紙・立方体・星形・輪・軌跡・リボンを描く。粉と小道具はGLB、星形などは `scripts/fx/graphic_meshes.gd` の共有メッシュ。上限80／52／20のうち28／20／6をイベント用に予約し、重要なイベントは古い噴射から置き換える。
@@ -79,7 +81,7 @@ Godot 4.6.3、Compatibility描画、単一スレッドWeb書き出し。`game/ma
 
 `_present_breaks` は各小道具の破裂を残し、同時破壊の連鎖音を最後の値へまとめる。ラッシュ通知と音は `reward.rush_started` にだけ反応する。successはresultへpresentしてから送る。固定家具への衝突には、playerが返した接触位置と法線を使う。
 
-プレイのフォーカス喪失は明示的な再開を要するポーズ。結果の短い判子・祝いは非アクティブ時に停止し、フォーカスが戻るとその続きから再開する。タイトルと結果のカメラは、紙のUIの右に主役が大きく見える距離へ寄せる。プレイのカメラ・移動・ルールは維持する。
+プレイのフォーカス喪失は明示的な再開を要するポーズ。結果の短い判子・祝いは非アクティブ時に停止し、フォーカスが戻るとその続きから再開する。タイトルと結果のカメラは、紙のUIの右に主役が大きく見える距離へ寄せる。v0.6のプレイカメラは主役との距離を少し縮め、向きは固定して進路と近隣の反応を見せる。移動・ルールは維持する。
 
 描画の監視とブラウザQAのため、開発時だけ使う状態出力を用意する。製品の画面へ実装用のログやテスト項目を置かない。
 
@@ -92,3 +94,15 @@ Godot 4.6.3、Compatibility描画、単一スレッドWeb書き出し。`game/ma
 粒子は曲がった紙、つながった4つの膨らみを持つ粉、角を丸めた金色の立方体をGLBから一度読み込む。メッシュを共有し、頂点色のunshaded素材・影なし・物理ボディなしで既存の上限80個を維持する。
 
 `npm run assets:build` はBlenderから全モデルを再生成する任意の制作コマンド。出力GLBを追跡するため、通常の起動とCIにBlenderは不要。`npm run assets:check` はPythonの標準ライブラリだけで20モデルの属性、法線、有限座標、色、素材、可動ノードとポリゴン上限を検査する。
+
+## 操作に応える職場 v0.6
+
+`colleague.gd` は既存の眠そうな同僚を、Body、Head、ArmMug、FaceNeutralの4グループで読み込む。頭とマグの腕は上体の子。通常の顔を広い目と開いた口の共有メッシュへ切り替え、椅子の旋回、上体の反動、猫マグの持ち上げを破壊位置に向けて動かす。固定椅子は元の2面を一度だけ1つの共有メッシュへ合成。反応中も椅子と短いLabel3Dを含め最大6描画ノード、影・物理ボディは追加しない。officeの静的背景合成は同僚の枝全体を除外する。
+
+officeは破壊IDを記憶し、近い社員を距離順に選ぶ。遅延は0.05〜0.26秒、動作は1.4秒、個人のクールダウンは2.8秒。速度7m/s以上、10万円以上、3連鎖以上かラッシュ開始で強い反応になる。進行中の反応を強めても経過時間と開始回数を戻さない。`reset_props()` が姿勢・顔・一言・全時計・破壊IDを初期化する。
+
+噴射は7つの粒子バッチに加え、1つの閉じた白い連続メッシュを作成時から保持する。小さいノズル口から丸い尾へ広げ、実速度・ラッシュ・開始時の短い脈動で長さと幅を変える。変換の各軸をローカル方向へ拡縮し、旋回中の斜めの形が歪むのを防ぐ。前後のノズル位置を補間して粉を出し、開始・解除・6m以上の不連続移動で古い尾を切る。解除後150ms以内に形を引き、成功・再挑戦で消す。
+
+破壊はルールが受理した各小道具の種類・位置と実速度・移動方向を使う。接触の後ろの星形と輪、前へ曲がる紙の扇、箱の金色片の比率を変え、80／52／20とイベント予約枠を維持する。社員・噴射・粒子の全時計はPAUSABLEで停止する。検証は単体の反応・実シーンの統合・実キーのブラウザ操作を分ける。
+
+結果ではactorの見た目だけを短く旋回し、どの到着方向でも既存の勝利の顔をカメラへ向ける。物理のplayerの座標・向きと確定したタイムを変えない。ゴールをまたいでSpaceが押されていた場合は、そのリピートと最初の解除をmainの `_input` でGUIより先に消費し、新しくフォーカスした再挑戦ボタンの誤作動を防ぐ。新たなクリック・Enter・Rはそのまま使える。

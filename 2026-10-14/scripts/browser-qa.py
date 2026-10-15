@@ -43,7 +43,18 @@ with sync_playwright() as p:
     page.wait_for_function('window.__taikin.pressure < 72 && window.__taikin.speed > 3')
     boost=page.evaluate('window.__taikin')
     assert boost['fx']['counts']['powder']>0,'Spray has no visible powder batch'
+    assert boost['fx']['jet_core_visible'] and boost['fx']['jet_core_length']>0,'Spray has no connected rear jet'
     page.screenshot(path=str(out/'cloud-boost.png'))
+    # Keep using the real spray control until the first local destruction.
+    # Observe employee motion without triggering poses through the QA channel.
+    page.wait_for_function('window.__taikin.office.coworkers.some(p => p.state === "startled" && p.mug_lift > .04)',timeout=20000)
+    reaction=page.evaluate('window.__taikin')
+    reacting=[person for person in reaction['office']['coworkers'] if person['state']!='sleepy']
+    assert 1<=len(reacting)<=2,'Local destruction must wake at most two nearby employees'
+    assert all(person['distance']<=12 and person['starts']==1 for person in reacting)
+    assert any(person['expression']=='startled' and person['callout'] for person in reacting)
+    assert any(person['starts']==0 for person in reaction['office']['coworkers']),'Distant employees all reacted'
+    page.screenshot(path=str(out/'cloud-reaction.png'))
     page.keyboard.up('Space')
     page.keyboard.press('Escape')
     page.wait_for_function('window.__taikin.mode === "paused"')
@@ -58,6 +69,8 @@ with sync_playwright() as p:
         assert abs(paused['hud'][key]-still['hud'][key])<.001,f'HUD {key} changed during pause'
     for key in ['particle_clock','life_total']:
         assert abs(paused['fx'][key]-still['fx'][key])<.001,f'FX {key} changed during pause'
+    assert paused['office']==still['office'],'Employee poses, onset delays or cooldowns changed during pause'
+    assert abs(paused['fx']['jet_core_length']-still['fx']['jet_core_length'])<.001,'Jet retracted during pause'
     page.screenshot(path=str(out/'cloud-pause.png'))
     page.keyboard.press('Escape')
     page.wait_for_function('window.__taikin.mode === "playing"')
@@ -66,6 +79,8 @@ with sync_playwright() as p:
     restart=page.evaluate('window.__taikin')
     assert abs(restart['player'][2]-42)<0.01 and restart['broken']==0
     assert restart['fx']['rush_starts']==0 and restart['hud']['rush_starts']==0 and restart['hud']['success_starts']==0
+    assert restart['office']['seen_events']==0 and all(person['starts']==0 and person['state']=='sleepy' for person in restart['office']['coworkers'])
+    assert not restart['fx']['jet_core_visible'],'Restart retained the connected jet'
 
     # Follow the same visible office route using controls; never teleport or
     # modify game state. Feedback is read through an opt-in QA-only snapshot.
@@ -76,11 +91,16 @@ with sync_playwright() as p:
     first_image=False
     start=time.monotonic()
     samples=[]
+    employee_reactions=[]
     while time.monotonic()-start<180:
         state=page.evaluate('window.__taikin')
         if state['mode']=='result':
             break
         assert state['mode']=='playing',f"Unexpected state {state['mode']}"
+        active=[person for person in state['office']['coworkers'] if person['state']!='sleepy']
+        assert len(active)<=2,'More than two employees reacted simultaneously'
+        if active and (not employee_reactions or state['elapsed']-employee_reactions[-1]['elapsed']>.3):
+            employee_reactions.append({'elapsed':state['elapsed'],'coworkers':state['office']['coworkers']})
         x,_,z=state['player']
         # Approach the opening from in front. A low-FPS feedback delay can
         # overshoot to the outside of a pillar; recover with ordinary controls.
@@ -106,6 +126,9 @@ with sync_playwright() as p:
         goal_approach=target>=len(targets)-3
         speed_limit=2.8 if goal_approach else 9.0
         if not recovering and state['speed']<speed_limit and not (abs(error)>.55 and state['speed']>4):keys.add('Space')
+        # Finish with spray held, then release on the result: this must never
+        # leak through to the newly focused Retry button.
+        if target==len(targets)-1 and abs(x)<1.5 and z<-61.2:keys.add('Space')
         for key in held-keys:page.keyboard.up(key)
         for key in keys-held:page.keyboard.down(key)
         held=keys
@@ -124,8 +147,10 @@ with sync_playwright() as p:
     assert result['damage']>0 and result['max_combo']>=3,'Destruction chain was not exercised'
     assert result['best_time']>0,'Successful run was not saved'
     assert result['hud']['success_starts']==1,'Success stamp was missing or repeated'
+    assert abs(result['actor_yaw'])<.15,'Victory portrait still hides the face at this arrival heading'
     assert result['fx']['rush_starts']==result['hud']['rush_starts'],'World and HUD rush entries diverged'
     assert first_image,'Rush visual was not exercised'
+    assert employee_reactions,'Full run did not exercise nearby employee responses'
     page.screenshot(path=str(out/'cloud-result.png'))
     page.set_viewport_size({'width':1920,'height':1080})
     page.wait_for_timeout(500)
@@ -139,6 +164,8 @@ with sync_playwright() as p:
     page.wait_for_function('window.__taikin.mode === "playing" && window.__taikin.elapsed === 0')
     retry_button=page.evaluate('window.__taikin')
     assert retry_button['fx']['particles']==0 and retry_button['hud']['success_starts']==0,'Result retry retained previous effects'
+    assert retry_button['office']['seen_events']==0 and all(person['starts']==0 and person['expression']=='sleepy' for person in retry_button['office']['coworkers'])
+    assert not retry_button['fx']['jet_core_visible'],'Result retry retained the live jet'
     page.reload(wait_until='domcontentloaded')
     page.wait_for_function('window.__taikin && window.__taikin.mode === "title"',timeout=90000)
     reloaded=page.evaluate('window.__taikin')
@@ -174,6 +201,8 @@ with sync_playwright() as p:
     subdued=page.evaluate('window.__taikin')
     assert subdued['fx']['particles']<=20 and subdued['fx']['counts']['streak']==0
     assert subdued['hud']['combo_scale']==[1,1] and subdued['hud']['damage_scale']==[1,1],'Subdued UI still bounces'
+    assert subdued['office']['quality']=='控えめ' and all(person['quality']=='控えめ' for person in subdued['office']['coworkers'])
+    assert subdued['fx']['jet_core_visible'] and subdued['fx']['jet_core_length']<boost['fx']['jet_core_length'],'Subdued must retain a smaller connected jet'
     page.screenshot(path=str(out/'cloud-subdued.png'))
     page.keyboard.up('Space')
     # Focus loss must require explicit resume and leave the chair/time frozen.
@@ -190,13 +219,14 @@ with sync_playwright() as p:
     assert abs(blur_before['pressure']-blur_after['pressure'])<0.01 and abs(blur_before['elapsed']-blur_after['elapsed'])<0.001
     assert abs(blur_before['hud']['animation_clock']-blur_after['hud']['animation_clock'])<.001
     assert abs(blur_before['fx']['particle_clock']-blur_after['fx']['particle_clock'])<.001
+    assert blur_before['office']==blur_after['office'],'Focus loss did not freeze employee response clocks'
     other.close()
     page.bring_to_front()
     page.keyboard.press('Escape')
     page.wait_for_function('window.__taikin.mode === "playing"')
     assert not errors,f'Browser errors: {errors}'
     renderer=page.evaluate('''() => { const gl=document.querySelector('canvas').getContext('webgl2'); const e=gl.getExtension('WEBGL_debug_renderer_info'); return e ? gl.getParameter(e.UNMASKED_RENDERER_WEBGL) : gl.getParameter(gl.RENDERER); }''')
-    report={'browser':browser.version,'renderer':renderer,'viewport':[1280,720],'boost':boost,'result':result,'pause_before':paused,'pause_after':still,'restart':restart,'retry_button':retry_button,'reload_best':reloaded['best_time'],'settings':settings,'subdued':subdued,'blur_before':blur_before,'blur_after':blur_after,'errors':errors,'samples':samples}
+    report={'browser':browser.version,'renderer':renderer,'viewport':[1280,720],'boost':boost,'reaction':reaction,'employee_reactions':employee_reactions,'result':result,'pause_before':paused,'pause_after':still,'restart':restart,'retry_button':retry_button,'reload_best':reloaded['best_time'],'settings':settings,'subdued':subdued,'blur_before':blur_before,'blur_after':blur_after,'errors':errors,'samples':samples}
     (out/'browser-report.json').write_text(json.dumps(report,ensure_ascii=False,indent=2))
     print(json.dumps({'PASS':True,'result':result,'errors':errors},ensure_ascii=False),flush=True)
     browser.close()

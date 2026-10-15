@@ -248,7 +248,7 @@ def hair_shell(root):
 
 def colleague():
     reset_scene();root=node('SeatedColleague')
-    # The only hierarchy is this rigid root; the shared chair belongs to runtime.
+    # Motion groups retain the reference sculpt; the shared chair is runtime-owned.
     rounded_box('Trouser pelvis',(.73,.27,.61),(0,.035,.04),NAVY,root,bevel=.13,segments=3)
     rounded_box('White blouse',(.83,.71,.55),(0,.46,0),P['white'],root,bevel=.18,segments=3)
     rounded_box('Teal vest',(.75,.69,.64),(0,.43,.025),'#247C85',root,bevel=.16,segments=3)
@@ -257,6 +257,7 @@ def colleague():
     inner=triangle_prism('Pink inner collar',[(-.15,.76),(.15,.76),(0,.565)],.009,'#FFC3CF',root,bevel=.006);inner.location=vec((0,0,-.33))
     for side in [-1,1]:
         rounded_box('Pointed folded collar',(.23,.13,.05),(side*.197,.766,-.332),P['white'],root,bevel=.045,segments=2,rotation=(0,0,side*.40))
+    before_head=set(root.children_recursive)
     cylinder('Neck',.15,.21,(0,.885,0),P['skin'],root,vertices=16,bevel=.025)
     ellipsoid('Connected round adult head',(1.025,.985,.865),(0,1.30,-.025),P['skin'],root,segments=24,rings=16)
     for side in [-1,1]:
@@ -275,6 +276,7 @@ def colleague():
             tube('Rosy cheek stripe',[(side*.329+dx,1.205,-.40),(side*.341+dx,1.235,-.408)],.008,P['pink'],root,sides=5)
     ellipsoid('Soft little nose',(.145,.103,.132),(0,1.245,-.468),'#F4A56F',root,segments=16,rings=8)
     tube('Small content smile',[(-.111,1.145,-.435),(-.066,1.115,-.457),(0,1.107,-.465),(.066,1.115,-.457),(.105,1.141,-.442)],.009,'#BD654E',root,sides=6)
+    head_parts=set(root.children_recursive)-before_head
     # Crossed trousers bend forward from the pelvis and down towards the floor.
     tube('Lower relaxed leg',[(.21,.00,-.01),(.23,-.03,-.40),(.20,-.25,-.61),(.19,-.735,-.66)],.15,NAVY,root,radii=[.20,.19,.17,.145],sides=12)
     tube('Crossed upper leg',[(-.23,.05,-.04),(-.20,.15,-.34),(.04,.15,-.56),(.30,-.06,-.68),(.40,-.29,-.79)],.16,NAVY,root,radii=[.20,.20,.195,.17,.145],sides=12)
@@ -289,6 +291,7 @@ def colleague():
     ellipsoid('Relaxed right palm',(.21,.18,.18),(.59,.17,-.41),P['skin'],root,segments=12,rings=8)
     for i in range(4):
         tube('Relaxed hand finger',[(.515+i*.047,.16,-.421),(.53+i*.047,.09,-.455),(.535+i*.047,.065,-.432)],.022,P['skin'],root,sides=6)
+    before_arm=set(root.children_recursive)
     tube('Left white sleeve',[(-.35,.67,0),(-.49,.53,-.07),(-.54,.40,-.12)],.13,P['white'],root,radii=[.15,.14,.125],sides=12)
     tube('Pink rolled left cuff',[(-.535,.433,-.115),(-.56,.366,-.15)],.137,'#F6A6B9',root,sides=12)
     tube('Lifted left forearm',[(-.57,.39,-.16),(-.64,.52,-.29),(-.66,.78,-.37)],.10,P['skin'],root,radii=[.11,.10,.09],sides=12)
@@ -296,6 +299,7 @@ def colleague():
     held=cat_mug(root,(-.56,.72,-.55),.64,handle_side=-1)
     for i in range(3):
         tube('Mug curled finger',[(-.693,.875-i*.041,-.43),(-.73,.859-i*.041,-.492),(-.69,.841-i*.041,-.52)],.021,P['skin'],root,sides=6)
+    arm_parts=set(root.children_recursive)-before_arm
     tube('Teal lanyard left',[(-.24,.756,-.33),(-.17,.61,-.35),(0,.43,-.345)],.014,P['teal'],root,sides=6)
     tube('Teal lanyard right',[(.24,.756,-.33),(.17,.61,-.35),(0,.43,-.345)],.014,P['teal'],root,sides=6)
     rounded_box('ID clip',(.068,.105,.028),(0,.431,-.36),SHOE,root,bevel=.008)
@@ -305,13 +309,33 @@ def colleague():
     ellipsoid('ID portrait head',(.036,.046,.004),(-.064,.029,-.03),P['skin'],badge,segments=8,rings=4)
     rounded_box('ID portrait vest',(.057,.044,.005),(-.064,-.018,-.03),P['teal'],badge,bevel=.013)
     for y in [-.041,.001,.043]:rounded_box('ID text line',(.082,.011,.004),(.043,y,-.031),'#8A9092',badge,bevel=.002)
-    # Collapse all static child assemblies before merging: one rigid mesh.
+    # Keep four rigid groups, each with one shared vertex-color surface. Reparent
+    # with world matrices intact, so the original reference silhouette is unchanged.
+    body=node('Body',root)
+    head=node('Head',body,(0,.885,0))
+    arm=node('ArmMug',body,(-.35,.67,0))
+    face=node('FaceNeutral',head)
+    face_prefixes=('Half closed upper lid','Small indifferent pupil','Pupil glint',
+                   'Heavy eyelid line','Patient eyebrow','Small content smile')
     bpy.context.view_layer.update()
+    pivots={body,head,arm,face}
     for obj in list(root.children_recursive):
-        if obj.type=='MESH' and obj.parent!=root:
-            matrix=obj.matrix_world.copy();obj.parent=root;obj.matrix_world=matrix
+        if obj.type!='MESH':continue
+        target=arm if obj in arm_parts else head if obj in head_parts else body
+        if obj in head_parts and obj.name.startswith(face_prefixes):target=face
+        matrix=obj.matrix_world.copy();obj.parent=target;obj.matrix_world=matrix
     for obj in list(root.children_recursive):
-        if obj.type=='EMPTY':bpy.data.objects.remove(obj,do_unlink=True)
+        if obj.type=='EMPTY' and obj not in pivots:bpy.data.objects.remove(obj,do_unlink=True)
+    merge_rigid(root)
+    # Apply the same budget proportionally across groups; never simplify just the
+    # first group after a future rebuild. Four pivots do not add reference polygons.
+    count=mesh_stats(root)['triangles']
+    if count>8800:
+        for obj in [o for o in root.children_recursive if o.type=='MESH']:
+            bpy.context.view_layer.objects.active=obj
+            mod=obj.modifiers.new('Reference motion budget','DECIMATE')
+            mod.ratio=8700/count
+            bpy.ops.object.modifier_apply(modifier=mod.name)
     return root
 
 
