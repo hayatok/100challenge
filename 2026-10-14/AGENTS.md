@@ -4,7 +4,7 @@
 
 ## 現在の制作段階
 
-ユーザーは「全力退勤」を選び、派手な演出と少量のボクセル要素を含む画風を決め、クラウドでの開発開始を依頼している。現在はGodotによる一面のプレイ可能な実装と、3視点の参考画像に沿ったBlenderアセットv0.4。アート、生成モック、仕様、ゲーム本体、実画面の検証記録をこのフォルダに置く。
+ユーザーは「全力退勤」を選び、派手な演出と少量のボクセル要素を含む画風を決め、クラウドでの開発開始を依頼している。現在はGodotによる一面、3視点の参考画像に沿ったBlenderアセットv0.4と、エフェクトの見本・画面イメージを先に作った漫画調の演出・UI v0.5。アート、生成モック、仕様、ゲーム本体、実画面の検証記録をこのフォルダに置く。
 
 ## ゲームの軸
 
@@ -24,7 +24,7 @@
 - `art/zenryoku-taikin-concept.png` は生成した初稿の保存版。上書きせず、改稿は別ファイルとして残す。
 - `art/screens/` は通常プレイ・大衝突・退勤成功の仕様検討用モック。生成条件は同フォルダの `generation.json` に置く。
 - `art/assets/v0.4/` はモデルごとの3視点参考画像。`art/models/` はBlender原本、`scripts/modeling/` は制作ソース、`game/assets/models/` は実行用GLB。対応は `docs/ASSET_REWORK.md`。画像を見てからモデリングし、参考画像と実際のモデルを別々に保存する。
-- 最新のモックは `art/screens/v0.3/`。改稿は版ごとの別フォルダに保存し、READMEと仕様の参照を更新する。初期モックと各版の生成条件を保持する。
+- 最新のモックは `art/screens/v0.5/`。エフェクトの見本とプレイ・衝突・結果・タイトルの4画面で、条件は `docs/FX_DESIGN.md`。改稿は版ごとの別フォルダに保存し、READMEと仕様の参照を更新する。初期モックと各版の生成条件を保持する。
 - コンセプトアートを実際のゲーム画面や実装済み素材と扱わない。操作時のカメラと衝突範囲の読みやすさはプロトタイプで確認する。
 - ゲーム固有の配色は作品部分に使い、メニューや操作部品は共通 UI 方針を参照する。
 - `game/` がGodot 4.6.3のプロジェクト。Compatibility描画、単一スレッドWeb出力を使う。接続と責務は `docs/IMPLEMENTATION.md` を参照する。
@@ -40,8 +40,10 @@
 - `npm run check`：モデル検査、headless import、ルール・実物理・経路・統合テスト、Webビルド。
 - `npm run preview`：ビルド済み `dist/` を4184番で配信。
 - `godot --path game --script res://tools/render_assets.gd`：実GLBを3方向から描画し `docs/verification/v0.4/models/` へ保存。ネイティブ画面が必要。
-- `python3 scripts/browser-qa.py --out docs/verification/v0.4`：別途Python PlaywrightとChromiumが必要。実際のキー・メニューでゴール、ポーズ、リトライ、記録保存を確認する。状態変更やテレポートで通しプレイを代替しない。
+- `python3 scripts/browser-qa.py --out docs/verification/v0.5`：別途Python PlaywrightとChromiumが必要。実際のキー・メニューでゴール、ポーズ、リトライ、記録保存を確認する。状態変更やテレポートで通しプレイを代替しない。
 
 メニューを動かすmainとHUDは `PROCESS_MODE_ALWAYS`。物理のplayer、officeとeffectsは必ず `PROCESS_MODE_PAUSABLE` を明示し、親からALWAYSを継承させない。ポーズで残圧・座標・公式タイマーが止まる統合テストを維持する。
+
+新しい演出の時計もポーズとフォーカス喪失で止める。ラッシュの開始は `reward.rush_started` で一回だけ送り、同時破壊の音は最終連鎖へまとめる。successはresultへ遷移してから表示し、再描画でやり直さない。粒子は7種類の共有MultiMesh、上限80／52／20と重要演出の予約枠を維持する。同じplayingへの再挑戦でも `hud.reset_run()` を呼ぶ。
 
 PC横画面1280×720と1920×1080を中心に実画面を確認する。生成モックと実際の画面は区別する。ソフトウェア描画のクラウドで操作を確認しても、実GPUでの速度や面白さの評価を完了扱いにしない。検証記録は `docs/VERIFICATION.md` と `docs/verification/` へ置く。

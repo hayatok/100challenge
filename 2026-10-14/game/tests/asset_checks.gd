@@ -3,9 +3,13 @@ extends RefCounted
 ## being duplicated for every office instance.
 
 const AssetLibrary := preload("res://scripts/asset_library.gd")
+const DisplayFont := preload("res://assets/fonts/TaikinComic-Black.otf")
 
 func run() -> Array[String]:
 	var failures: Array[String] = []
+	for character in "全力退勤定時だ飛べ書類全提出壁成功自己ベスト被害総額最大連鎖消火器残圧設定再開派手標準控えめ¥0123456789×↑→！":
+		if not DisplayFont.has_char(character.unicode_at(0)):
+			failures.append("Display font lacks required game character: " + character)
 	var employee := AssetLibrary.model("employee")
 	var head := employee.find_child("Head_Geometry", true, false) as MeshInstance3D
 	var has_skin := false

@@ -30,6 +30,7 @@ var _hit_times: Array[float] = []
 var _last_hit := -1.0
 var _qa_enabled := false
 var _qa_timer := 0.0
+var _result_focus_paused := false
 var _clock_ms := 0
 var _web_window: JavaScriptObject
 var _web_document: JavaScriptObject
@@ -78,16 +79,26 @@ func _ready() -> void:
 		_web_document = JavaScriptBridge.get_interface("document")
 		_web_focus_callback = JavaScriptBridge.create_callback(_on_web_focus)
 		_web_window.addEventListener("blur", _web_focus_callback)
+		_web_window.addEventListener("focus", _web_focus_callback)
 		_web_document.addEventListener("visibilitychange", _web_focus_callback)
 	_present()
 
 func _on_web_focus(_arguments: Array) -> void:
-	if mode == "playing" and (bool(_web_document.hidden) or not bool(_web_document.hasFocus())):
+	_set_window_focus(not bool(_web_document.hidden) and bool(_web_document.hasFocus()))
+
+func _set_window_focus(focused: bool) -> void:
+	if mode == "playing" and not focused:
 		pause_game()
+	elif mode == "result":
+		# The result remains usable immediately. Its short celebration resumes
+		# automatically when the page regains focus; play still needs explicit resume.
+		_result_focus_paused = not focused
+		get_tree().paused = not focused
 
 func _exit_tree() -> void:
 	if _web_focus_callback != null:
 		_web_window.removeEventListener("blur", _web_focus_callback)
+		_web_window.removeEventListener("focus", _web_focus_callback)
 		_web_document.removeEventListener("visibilitychange", _web_focus_callback)
 
 func _configure_inputs() -> void:
@@ -149,7 +160,7 @@ func _process(delta: float) -> void:
 		player.set_controls(turn, spraying)
 	else:
 		player.set_controls(0.0, false)
-	if mode != "paused":
+	if mode != "paused" and not _result_focus_paused:
 		impact_amount = maxf(0.0, impact_amount - delta * 2.6)
 		var pose_strength := 0.35 if effect_level == "控えめ" else 1.0
 		actor.update_pose(delta, player.get_speed() * pose_strength, (turn if mode == "playing" else 0.0) * pose_strength, player.boosting and mode == "playing", impact_amount * pose_strength, rules.rush_timer > 0.0 and effect_level != "控えめ", mode == "result")
@@ -168,20 +179,28 @@ func _physics_process(_delta: float) -> void:
 		return
 	var broken: Array = office.try_break(player.global_position, player.get_speed())
 	var rewards: Array = rules.register_breaks(broken)
+	_present_breaks(rewards)
+	if office.is_goal(player.global_position):
+		finish_game()
+
+func _present_breaks(rewards: Array) -> void:
+	# Each prop keeps its contact effect, while a simultaneous batch has one
+	# final combo cue and one rush-entry cue. A running rush is not a new entry.
 	if not rewards.is_empty():
 		var total_added := 0
+		var rush_started := false
 		for item: Dictionary in rewards:
 			effects.burst(item.get("position", player.global_position), 0.8 if int(item.get("base", 0)) < 50000 else 1.2)
-			effects.play_combo(int(item["combo"]))
 			total_added += int(item["added"])
+			rush_started = rush_started or bool(item.get("rush_started", false))
 		var last: Dictionary = rewards.back()
-		if rules.rush_timer > 0.0:
+		effects.play_combo(int(last["combo"]))
+		if rush_started:
+			effects.start_rush(actor.nozzle_position())
 			hud.burst("定時ラッシュ！", "+¥" + _money(total_added), "rush")
 		else:
 			hud.burst(str(last.get("text", "書類、全提出！")), "+¥" + _money(total_added), "impact")
 		_impact_reaction(player.get_speed())
-	if office.is_goal(player.global_position):
-		finish_game()
 
 func _unhandled_key_input(event: InputEvent) -> void:
 	if not event is InputEventKey or not event.pressed or event.echo:
@@ -201,11 +220,14 @@ func _unhandled_key_input(event: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 
 func _notification(what: int) -> void:
-	if what in [NOTIFICATION_APPLICATION_FOCUS_OUT, NOTIFICATION_WM_WINDOW_FOCUS_OUT] and mode == "playing":
-		pause_game()
+	if what in [NOTIFICATION_APPLICATION_FOCUS_OUT, NOTIFICATION_WM_WINDOW_FOCUS_OUT]:
+		_set_window_focus(false)
+	elif what in [NOTIFICATION_APPLICATION_FOCUS_IN, NOTIFICATION_WM_WINDOW_FOCUS_IN]:
+		_set_window_focus(true)
 
 func start_game() -> void:
 	get_tree().paused = false
+	_result_focus_paused = false
 	mode = "playing"
 	rules.reset()
 	office.reset_props()
@@ -219,6 +241,7 @@ func start_game() -> void:
 	save_error = false
 	result.clear()
 	_create_effects()
+	hud.reset_run()
 	_clock_ms = Time.get_ticks_msec()
 	_present()
 	hud.burst("定時だ。飛べ。", "", "start")
@@ -241,6 +264,7 @@ func resume_game() -> void:
 
 func show_title() -> void:
 	get_tree().paused = false
+	_result_focus_paused = false
 	mode = "title"
 	player.set_active(false)
 	player.reset_at(office.spawn_position)
@@ -260,17 +284,18 @@ func finish_game() -> void:
 	best_combo = maxi(best_combo, rules.max_combo)
 	_save_record()
 	effects.celebrate(player.global_position + Vector3(0, 1, 0))
-	hud.burst("退勤成功！", "自己ベスト！" if new_best else "おつかれさまでした！", "success")
+	# Enter the result screen before requesting its stamp animation.
 	_present()
+	hud.burst("退勤成功！", "自己ベスト！" if new_best else "おつかれさまでした！", "success")
 
-func _on_impact(speed: float, _at: Vector3, _normal: Vector3) -> void:
+func _on_impact(speed: float, at: Vector3, normal: Vector3) -> void:
 	if mode != "playing" or speed < 1.4:
 		return
 	if rules.elapsed - _last_hit < 0.25:
 		return
 	_last_hit = rules.elapsed
 	_impact_reaction(speed)
-	effects.burst(player.global_position + Vector3(0, 0.8, 0), 0.5)
+	effects.impact(at + Vector3.UP * 0.65, normal, clampf(speed / 6.0, 0.6, 1.2))
 	hud.burst("壁、定時です！", "", "impact")
 
 func _impact_reaction(speed: float) -> void:
@@ -283,12 +308,15 @@ func _impact_reaction(speed: float) -> void:
 		_hit_times.append(rules.elapsed)
 
 func _update_camera(delta: float) -> void:
+	if mode == "paused" or _result_focus_paused:
+		return
 	var target: Vector3 = player.get_global_transform_interpolated().origin
 	var offset := Vector3(7.4, 10.8, 10.0)
 	var look := target + Vector3(0, 0.8, -4.5)
 	if mode == "title" or mode == "result":
-		offset = Vector3(7.0, 5.3, 7.5)
-		look = target + Vector3(-1.9, 1.1, 0.0)
+		# Menus give the comic employee a larger place beside the paper UI.
+		offset = Vector3(5.8, 4.4, 6.2)
+		look = target + Vector3(-3.0, 1.1, 0.0)
 	var wanted := target + offset
 	camera.global_position = camera.global_position.lerp(wanted, 1.0 - exp(-delta * 4.0))
 	if mode != "paused":
@@ -339,7 +367,7 @@ func _save_record() -> void:
 
 func _publish_qa() -> void:
 	var p: Vector3 = player.global_position
-	var state := {"mode": mode, "elapsed": rules.elapsed, "pressure": player.pressure, "speed": player.get_speed(), "damage": rules.damage, "combo": rules.combo, "max_combo": rules.max_combo, "yaw": player.rotation.y, "player": [p.x, p.y, p.z], "rank": result.get("rank", ""), "broken": rules.seen.size(), "best_time": best_time, "quality": effect_level, "music_volume": music_volume, "sfx_volume": sfx_volume, "fps": Engine.get_frames_per_second(), "draw_calls": RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_DRAW_CALLS_IN_FRAME)}
+	var state := {"mode": mode, "elapsed": rules.elapsed, "pressure": player.pressure, "speed": player.get_speed(), "damage": rules.damage, "combo": rules.combo, "max_combo": rules.max_combo, "yaw": player.rotation.y, "player": [p.x, p.y, p.z], "rank": result.get("rank", ""), "broken": rules.seen.size(), "best_time": best_time, "quality": effect_level, "music_volume": music_volume, "sfx_volume": sfx_volume, "rush": rules.rush_timer > 0.0, "hud": hud.debug_snapshot(), "fx": effects.debug_snapshot(), "fps": Engine.get_frames_per_second(), "draw_calls": RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_DRAW_CALLS_IN_FRAME)}
 	JavaScriptBridge.eval("window.__taikin = " + JSON.stringify(state) + ";")
 
 static func _money(value: int) -> String:

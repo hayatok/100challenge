@@ -1,6 +1,6 @@
 {
   "name": "zenryoku-taikin",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -12,6 +12,7 @@
     "build": "node scripts/godot.mjs build",
     "check": "npm run assets:check && node scripts/godot.mjs import && npm test && npm run build",
     "assets:build": "node scripts/build-models.mjs",
-    "assets:check": "python3 scripts/modeling/check_models.py"
+    "assets:check": "python3 scripts/modeling/check_models.py",
+    "assets:font": "python3 scripts/build-display-font.py"
   }
 }

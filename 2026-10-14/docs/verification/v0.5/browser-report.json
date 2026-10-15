@@ -1,0 +1,6336 @@
+{
+  "browser": "154.0.8037.57",
+  "renderer": "ANGLE (Mesa, llvmpipe (LLVM 19.1.7 256 bits), OpenGL 4.5)",
+  "viewport": [
+    1280,
+    720
+  ],
+  "boost": {
+    "best_time": -1,
+    "broken": 0,
+    "combo": 0,
+    "damage": 0,
+    "draw_calls": 89,
+    "elapsed": 4.152,
+    "fps": 3,
+    "fx": {
+      "audio_enabled": true,
+      "batch_meshes": 7,
+      "combo_cues": 0,
+      "counts": {
+        "cube": 0,
+        "paper": 0,
+        "powder": 26,
+        "ribbon": 0,
+        "ring": 0,
+        "star": 0,
+        "streak": 6
+      },
+      "exhaust": 32,
+      "last_combo": 0,
+      "life_total": 10.8978666666667,
+      "limit": 80,
+      "particle_clock": 1.61226666666667,
+      "particles": 32,
+      "reserved": 28,
+      "rush_starts": 0,
+      "spraying": true
+    },
+    "hud": {
+      "animation_clock": 1.61226666666667,
+      "best_stamp_visible": true,
+      "bonus_text": "",
+      "burst_kind": "start",
+      "burst_left": 0,
+      "celebration_age": 2,
+      "combo_rect": "[P: (1460.0, 217.0), S: (425.0, 166.0)]",
+      "combo_scale": [
+        1,
+        1
+      ],
+      "controls": {
+        "pause_restart": [
+          643,
+          583,
+          303,
+          98
+        ],
+        "pause_resume": [
+          643,
+          447,
+          634,
+          110
+        ],
+        "pause_settings": [
+          969,
+          583,
+          308,
+          98
+        ],
+        "pause_title": [
+          643,
+          708,
+          634,
+          98
+        ],
+        "playing_pause": [
+          1658,
+          790,
+          222,
+          90
+        ],
+        "result_retry": [
+          102,
+          925,
+          495,
+          91
+        ],
+        "result_title": [
+          619,
+          925,
+          273,
+          91
+        ],
+        "settings_close": [
+          600,
+          825,
+          715,
+          88
+        ],
+        "settings_music": [
+          600,
+          513,
+          715,
+          90
+        ],
+        "settings_quality": [
+          973,
+          315,
+          338,
+          88
+        ],
+        "settings_sfx": [
+          600,
+          695,
+          715,
+          90
+        ],
+        "title_credits": [
+          454,
+          980,
+          340,
+          88
+        ],
+        "title_settings": [
+          108,
+          980,
+          321,
+          88
+        ],
+        "title_start": [
+          85,
+          825,
+          732,
+          130
+        ]
+      },
+      "counter_age": 2.61226666666667,
+      "damage_age": 2.61226666666667,
+      "damage_scale": [
+        1,
+        1
+      ],
+      "exit_rect": "[P: (783.0, 22.0), S: (354.0, 77.0)]",
+      "focused": true,
+      "mode": "playing",
+      "notice_rect": "[P: (502.0, 118.0), S: (916.0, 215.0)]",
+      "notice_text": "定時だ。飛べ。",
+      "notice_visible": false,
+      "pause_rect": "[P: (1658.0, 790.0), S: (222.0, 90.0)]",
+      "phase": 1.61226666666667,
+      "pressure_rect": "[P: (20.0, 865.0), S: (541.0, 181.0)]",
+      "quality": "派手",
+      "retry_rect": "[P: (102.0, 925.0), S: (495.0, 91.0)]",
+      "root_offset": [
+        0,
+        0
+      ],
+      "root_scale": [
+        1,
+        1
+      ],
+      "rush_guard": 0,
+      "rush_starts": 0,
+      "settings_visible": false,
+      "stamp_age": 1,
+      "stamp_scale": [
+        1,
+        1
+      ],
+      "start_rect": "[P: (85.0, 825.0), S: (732.0, 130.0)]",
+      "success_starts": 0,
+      "timer_rect": "[P: (34.0, 31.0), S: (438.0, 174.0)]",
+      "viewport": [
+        1920,
+        1080
+      ]
+    },
+    "max_combo": 0,
+    "mode": "playing",
+    "music_volume": 0.45,
+    "player": [
+      0,
+      0,
+      37.8030052185059
+    ],
+    "pressure": 69.9999999999997,
+    "quality": "派手",
+    "rank": "",
+    "rush": false,
+    "sfx_volume": 0.75,
+    "speed": 6.86999559402466,
+    "yaw": 0
+  },
+  "result": {
+    "best_time": 53.745,
+    "broken": 13,
+    "combo": 0,
+    "damage": 1490000,
+    "draw_calls": 57,
+    "elapsed": 53.745,
+    "fps": 8,
+    "fx": {
+      "audio_enabled": true,
+      "batch_meshes": 7,
+      "combo_cues": 8,
+      "counts": {
+        "cube": 0,
+        "paper": 0,
+        "powder": 0,
+        "ribbon": 0,
+        "ring": 0,
+        "star": 0,
+        "streak": 0
+      },
+      "exhaust": 0,
+      "last_combo": 1,
+      "life_total": 0,
+      "limit": 80,
+      "particle_clock": 37.6309,
+      "particles": 0,
+      "reserved": 28,
+      "rush_starts": 2,
+      "spraying": false
+    },
+    "hud": {
+      "animation_clock": 37.6309,
+      "best_stamp_visible": true,
+      "bonus_text": "",
+      "burst_kind": "success",
+      "burst_left": 0,
+      "celebration_age": 1.3673,
+      "combo_rect": "[P: (1460.0, 217.0), S: (425.0, 166.0)]",
+      "combo_scale": [
+        1,
+        1
+      ],
+      "controls": {
+        "pause_restart": [
+          643,
+          583,
+          303,
+          98
+        ],
+        "pause_resume": [
+          643,
+          447,
+          634,
+          110
+        ],
+        "pause_settings": [
+          969,
+          583,
+          308,
+          98
+        ],
+        "pause_title": [
+          643,
+          708,
+          634,
+          98
+        ],
+        "playing_pause": [
+          1658,
+          790,
+          222,
+          90
+        ],
+        "result_retry": [
+          102,
+          925,
+          495,
+          91
+        ],
+        "result_title": [
+          619,
+          925,
+          273,
+          91
+        ],
+        "settings_close": [
+          600,
+          825,
+          715,
+          88
+        ],
+        "settings_music": [
+          600,
+          513,
+          715,
+          90
+        ],
+        "settings_quality": [
+          973,
+          315,
+          338,
+          88
+        ],
+        "settings_sfx": [
+          600,
+          695,
+          715,
+          90
+        ],
+        "title_credits": [
+          454,
+          980,
+          340,
+          88
+        ],
+        "title_settings": [
+          108,
+          980,
+          321,
+          88
+        ],
+        "title_start": [
+          85,
+          825,
+          732,
+          130
+        ]
+      },
+      "counter_age": 1,
+      "damage_age": 1,
+      "damage_scale": [
+        1,
+        1
+      ],
+      "exit_rect": "[P: (783.0, 22.0), S: (354.0, 77.0)]",
+      "focused": true,
+      "mode": "result",
+      "notice_rect": "[P: (502.0, 118.0), S: (916.0, 215.0)]",
+      "notice_text": "",
+      "notice_visible": false,
+      "pause_rect": "[P: (1658.0, 790.0), S: (222.0, 90.0)]",
+      "phase": 0,
+      "pressure_rect": "[P: (20.0, 865.0), S: (541.0, 181.0)]",
+      "quality": "派手",
+      "retry_rect": "[P: (102.0, 925.0), S: (495.0, 91.0)]",
+      "root_offset": [
+        0,
+        0
+      ],
+      "root_scale": [
+        1,
+        1
+      ],
+      "rush_guard": 0,
+      "rush_starts": 2,
+      "settings_visible": false,
+      "stamp_age": 1.3673,
+      "stamp_scale": [
+        1,
+        1
+      ],
+      "start_rect": "[P: (85.0, 825.0), S: (732.0, 130.0)]",
+      "success_starts": 1,
+      "timer_rect": "[P: (34.0, 31.0), S: (438.0, 174.0)]",
+      "viewport": [
+        1920,
+        1080
+      ]
+    },
+    "max_combo": 6,
+    "mode": "result",
+    "music_volume": 0.45,
+    "player": [
+      -1.11738562583923,
+      0,
+      -62.5071716308594
+    ],
+    "pressure": 90.8333333333332,
+    "quality": "派手",
+    "rank": "S",
+    "rush": false,
+    "sfx_volume": 0.75,
+    "speed": 4.34483575820923,
+    "yaw": 0.247006371617317
+  },
+  "pause_before": {
+    "best_time": -1,
+    "broken": 2,
+    "combo": 0,
+    "damage": 110000,
+    "draw_calls": 107,
+    "elapsed": 7.844,
+    "fps": 2,
+    "fx": {
+      "audio_enabled": true,
+      "batch_meshes": 7,
+      "combo_cues": 1,
+      "counts": {
+        "cube": 8,
+        "paper": 35,
+        "powder": 24,
+        "ribbon": 0,
+        "ring": 0,
+        "star": 0,
+        "streak": 6
+      },
+      "exhaust": 30,
+      "last_combo": 2,
+      "life_total": 20.1954806434949,
+      "limit": 80,
+      "particle_clock": 3.06773333333333,
+      "particles": 73,
+      "reserved": 28,
+      "rush_starts": 0,
+      "spraying": true
+    },
+    "hud": {
+      "animation_clock": 3.06773333333333,
+      "best_stamp_visible": true,
+      "bonus_text": "+¥110,000",
+      "burst_kind": "impact",
+      "burst_left": 0.1903,
+      "celebration_age": 2,
+      "combo_rect": "[P: (1460.0, 217.0), S: (425.0, 166.0)]",
+      "combo_scale": [
+        1,
+        1
+      ],
+      "controls": {
+        "pause_restart": [
+          643,
+          583,
+          303,
+          98
+        ],
+        "pause_resume": [
+          643,
+          447,
+          634,
+          110
+        ],
+        "pause_settings": [
+          969,
+          583,
+          308,
+          98
+        ],
+        "pause_title": [
+          643,
+          708,
+          634,
+          98
+        ],
+        "playing_pause": [
+          1658,
+          790,
+          222,
+          90
+        ],
+        "result_retry": [
+          102,
+          925,
+          495,
+          91
+        ],
+        "result_title": [
+          619,
+          925,
+          273,
+          91
+        ],
+        "settings_close": [
+          600,
+          825,
+          715,
+          88
+        ],
+        "settings_music": [
+          600,
+          513,
+          715,
+          90
+        ],
+        "settings_quality": [
+          973,
+          315,
+          338,
+          88
+        ],
+        "settings_sfx": [
+          600,
+          695,
+          715,
+          90
+        ],
+        "title_credits": [
+          454,
+          980,
+          340,
+          88
+        ],
+        "title_settings": [
+          108,
+          980,
+          321,
+          88
+        ],
+        "title_start": [
+          85,
+          825,
+          732,
+          130
+        ]
+      },
+      "counter_age": 0.7247,
+      "damage_age": 0.7197,
+      "damage_scale": [
+        1,
+        1
+      ],
+      "exit_rect": "[P: (783.0, 22.0), S: (354.0, 77.0)]",
+      "focused": true,
+      "mode": "paused",
+      "notice_rect": "[P: (502.0, 118.0), S: (916.0, 215.0)]",
+      "notice_text": "書類、全提出！",
+      "notice_visible": false,
+      "pause_rect": "[P: (1658.0, 790.0), S: (222.0, 90.0)]",
+      "phase": 3.06773333333333,
+      "pressure_rect": "[P: (20.0, 865.0), S: (541.0, 181.0)]",
+      "quality": "派手",
+      "retry_rect": "[P: (102.0, 925.0), S: (495.0, 91.0)]",
+      "root_offset": [
+        0,
+        0
+      ],
+      "root_scale": [
+        1,
+        1
+      ],
+      "rush_guard": 0,
+      "rush_starts": 0,
+      "settings_visible": false,
+      "stamp_age": 1,
+      "stamp_scale": [
+        1,
+        1
+      ],
+      "start_rect": "[P: (85.0, 825.0), S: (732.0, 130.0)]",
+      "success_starts": 0,
+      "timer_rect": "[P: (34.0, 31.0), S: (438.0, 174.0)]",
+      "viewport": [
+        1920,
+        1080
+      ]
+    },
+    "max_combo": 2,
+    "mode": "paused",
+    "music_volume": 0.45,
+    "player": [
+      0,
+      0,
+      26.9334030151367
+    ],
+    "pressure": 36.6666666666664,
+    "quality": "派手",
+    "rank": "",
+    "rush": false,
+    "sfx_volume": 0.75,
+    "speed": 9,
+    "yaw": 0
+  },
+  "pause_after": {
+    "best_time": -1,
+    "broken": 2,
+    "combo": 0,
+    "damage": 110000,
+    "draw_calls": 107,
+    "elapsed": 7.844,
+    "fps": 2,
+    "fx": {
+      "audio_enabled": true,
+      "batch_meshes": 7,
+      "combo_cues": 1,
+      "counts": {
+        "cube": 8,
+        "paper": 35,
+        "powder": 24,
+        "ribbon": 0,
+        "ring": 0,
+        "star": 0,
+        "streak": 6
+      },
+      "exhaust": 30,
+      "last_combo": 2,
+      "life_total": 20.1954806434949,
+      "limit": 80,
+      "particle_clock": 3.06773333333333,
+      "particles": 73,
+      "reserved": 28,
+      "rush_starts": 0,
+      "spraying": true
+    },
+    "hud": {
+      "animation_clock": 3.06773333333333,
+      "best_stamp_visible": true,
+      "bonus_text": "+¥110,000",
+      "burst_kind": "impact",
+      "burst_left": 0.1903,
+      "celebration_age": 2,
+      "combo_rect": "[P: (1460.0, 217.0), S: (425.0, 166.0)]",
+      "combo_scale": [
+        1,
+        1
+      ],
+      "controls": {
+        "pause_restart": [
+          643,
+          583,
+          303,
+          98
+        ],
+        "pause_resume": [
+          643,
+          447,
+          634,
+          110
+        ],
+        "pause_settings": [
+          969,
+          583,
+          308,
+          98
+        ],
+        "pause_title": [
+          643,
+          708,
+          634,
+          98
+        ],
+        "playing_pause": [
+          1658,
+          790,
+          222,
+          90
+        ],
+        "result_retry": [
+          102,
+          925,
+          495,
+          91
+        ],
+        "result_title": [
+          619,
+          925,
+          273,
+          91
+        ],
+        "settings_close": [
+          600,
+          825,
+          715,
+          88
+        ],
+        "settings_music": [
+          600,
+          513,
+          715,
+          90
+        ],
+        "settings_quality": [
+          973,
+          315,
+          338,
+          88
+        ],
+        "settings_sfx": [
+          600,
+          695,
+          715,
+          90
+        ],
+        "title_credits": [
+          454,
+          980,
+          340,
+          88
+        ],
+        "title_settings": [
+          108,
+          980,
+          321,
+          88
+        ],
+        "title_start": [
+          85,
+          825,
+          732,
+          130
+        ]
+      },
+      "counter_age": 0.7247,
+      "damage_age": 0.7197,
+      "damage_scale": [
+        1,
+        1
+      ],
+      "exit_rect": "[P: (783.0, 22.0), S: (354.0, 77.0)]",
+      "focused": true,
+      "mode": "paused",
+      "notice_rect": "[P: (502.0, 118.0), S: (916.0, 215.0)]",
+      "notice_text": "書類、全提出！",
+      "notice_visible": false,
+      "pause_rect": "[P: (1658.0, 790.0), S: (222.0, 90.0)]",
+      "phase": 3.06773333333333,
+      "pressure_rect": "[P: (20.0, 865.0), S: (541.0, 181.0)]",
+      "quality": "派手",
+      "retry_rect": "[P: (102.0, 925.0), S: (495.0, 91.0)]",
+      "root_offset": [
+        0,
+        0
+      ],
+      "root_scale": [
+        1,
+        1
+      ],
+      "rush_guard": 0,
+      "rush_starts": 0,
+      "settings_visible": false,
+      "stamp_age": 1,
+      "stamp_scale": [
+        1,
+        1
+      ],
+      "start_rect": "[P: (85.0, 825.0), S: (732.0, 130.0)]",
+      "success_starts": 0,
+      "timer_rect": "[P: (34.0, 31.0), S: (438.0, 174.0)]",
+      "viewport": [
+        1920,
+        1080
+      ]
+    },
+    "max_combo": 2,
+    "mode": "paused",
+    "music_volume": 0.45,
+    "player": [
+      0,
+      0,
+      26.9334030151367
+    ],
+    "pressure": 36.6666666666664,
+    "quality": "派手",
+    "rank": "",
+    "rush": false,
+    "sfx_volume": 0.75,
+    "speed": 9,
+    "yaw": 0
+  },
+  "restart": {
+    "best_time": -1,
+    "broken": 0,
+    "combo": 0,
+    "damage": 0,
+    "draw_calls": 74,
+    "elapsed": 0,
+    "fps": 3,
+    "fx": {
+      "audio_enabled": true,
+      "batch_meshes": 7,
+      "combo_cues": 0,
+      "counts": {
+        "cube": 0,
+        "paper": 0,
+        "powder": 0,
+        "ribbon": 0,
+        "ring": 0,
+        "star": 0,
+        "streak": 0
+      },
+      "exhaust": 0,
+      "last_combo": 0,
+      "life_total": 0,
+      "limit": 80,
+      "particle_clock": 0.2757,
+      "particles": 0,
+      "reserved": 28,
+      "rush_starts": 0,
+      "spraying": false
+    },
+    "hud": {
+      "animation_clock": 0.2757,
+      "best_stamp_visible": true,
+      "bonus_text": "",
+      "burst_kind": "start",
+      "burst_left": 0.7201,
+      "celebration_age": 2,
+      "combo_rect": "[P: (1460.0, 217.0), S: (425.0, 166.0)]",
+      "combo_scale": [
+        1,
+        1
+      ],
+      "controls": {
+        "pause_restart": [
+          643,
+          583,
+          303,
+          98
+        ],
+        "pause_resume": [
+          643,
+          447,
+          634,
+          110
+        ],
+        "pause_settings": [
+          969,
+          583,
+          308,
+          98
+        ],
+        "pause_title": [
+          643,
+          708,
+          634,
+          98
+        ],
+        "playing_pause": [
+          1658,
+          790,
+          222,
+          90
+        ],
+        "result_retry": [
+          102,
+          925,
+          495,
+          91
+        ],
+        "result_title": [
+          619,
+          925,
+          273,
+          91
+        ],
+        "settings_close": [
+          600,
+          825,
+          715,
+          88
+        ],
+        "settings_music": [
+          600,
+          513,
+          715,
+          90
+        ],
+        "settings_quality": [
+          973,
+          315,
+          338,
+          88
+        ],
+        "settings_sfx": [
+          600,
+          695,
+          715,
+          90
+        ],
+        "title_credits": [
+          454,
+          980,
+          340,
+          88
+        ],
+        "title_settings": [
+          108,
+          980,
+          321,
+          88
+        ],
+        "title_start": [
+          85,
+          825,
+          732,
+          130
+        ]
+      },
+      "counter_age": 1.2757,
+      "damage_age": 1.2757,
+      "damage_scale": [
+        1,
+        1
+      ],
+      "exit_rect": "[P: (783.0, 22.0), S: (354.0, 77.0)]",
+      "focused": true,
+      "mode": "playing",
+      "notice_rect": "[P: (502.0, 118.0), S: (916.0, 215.0)]",
+      "notice_text": "定時だ。飛べ。",
+      "notice_visible": true,
+      "pause_rect": "[P: (1658.0, 790.0), S: (222.0, 90.0)]",
+      "phase": 0.2757,
+      "pressure_rect": "[P: (20.0, 865.0), S: (541.0, 181.0)]",
+      "quality": "派手",
+      "retry_rect": "[P: (102.0, 925.0), S: (495.0, 91.0)]",
+      "root_offset": [
+        0,
+        0
+      ],
+      "root_scale": [
+        1,
+        1
+      ],
+      "rush_guard": 0,
+      "rush_starts": 0,
+      "settings_visible": false,
+      "stamp_age": 1,
+      "stamp_scale": [
+        1,
+        1
+      ],
+      "start_rect": "[P: (85.0, 825.0), S: (732.0, 130.0)]",
+      "success_starts": 0,
+      "timer_rect": "[P: (34.0, 31.0), S: (438.0, 174.0)]",
+      "viewport": [
+        1920,
+        1080
+      ]
+    },
+    "max_combo": 0,
+    "mode": "playing",
+    "music_volume": 0.45,
+    "player": [
+      0,
+      0,
+      42
+    ],
+    "pressure": 100,
+    "quality": "派手",
+    "rank": "",
+    "rush": false,
+    "sfx_volume": 0.75,
+    "speed": 0,
+    "yaw": 0
+  },
+  "retry_button": {
+    "best_time": 53.745,
+    "broken": 0,
+    "combo": 0,
+    "damage": 0,
+    "draw_calls": 40,
+    "elapsed": 0,
+    "fps": 10,
+    "fx": {
+      "audio_enabled": true,
+      "batch_meshes": 7,
+      "combo_cues": 0,
+      "counts": {
+        "cube": 0,
+        "paper": 0,
+        "powder": 0,
+        "ribbon": 0,
+        "ring": 0,
+        "star": 0,
+        "streak": 0
+      },
+      "exhaust": 0,
+      "last_combo": 0,
+      "life_total": 0,
+      "limit": 80,
+      "particle_clock": 0.130766666666667,
+      "particles": 0,
+      "reserved": 28,
+      "rush_starts": 0,
+      "spraying": false
+    },
+    "hud": {
+      "animation_clock": 0.130766666666667,
+      "best_stamp_visible": true,
+      "bonus_text": "",
+      "burst_kind": "start",
+      "burst_left": 0.85,
+      "celebration_age": 2,
+      "combo_rect": "[P: (1460.0, 217.0), S: (425.0, 166.0)]",
+      "combo_scale": [
+        1,
+        1
+      ],
+      "controls": {
+        "pause_restart": [
+          643,
+          583,
+          303,
+          98
+        ],
+        "pause_resume": [
+          643,
+          447,
+          634,
+          110
+        ],
+        "pause_settings": [
+          969,
+          583,
+          308,
+          98
+        ],
+        "pause_title": [
+          643,
+          708,
+          634,
+          98
+        ],
+        "playing_pause": [
+          1658,
+          790,
+          222,
+          90
+        ],
+        "result_retry": [
+          102,
+          925,
+          495,
+          91
+        ],
+        "result_title": [
+          619,
+          925,
+          273,
+          91
+        ],
+        "settings_close": [
+          600,
+          825,
+          715,
+          88
+        ],
+        "settings_music": [
+          600,
+          513,
+          715,
+          90
+        ],
+        "settings_quality": [
+          973,
+          315,
+          338,
+          88
+        ],
+        "settings_sfx": [
+          600,
+          695,
+          715,
+          90
+        ],
+        "title_credits": [
+          454,
+          980,
+          340,
+          88
+        ],
+        "title_settings": [
+          108,
+          980,
+          321,
+          88
+        ],
+        "title_start": [
+          85,
+          825,
+          732,
+          130
+        ]
+      },
+      "counter_age": 1.13076666666667,
+      "damage_age": 1.13076666666667,
+      "damage_scale": [
+        1,
+        1
+      ],
+      "exit_rect": "[P: (783.0, 22.0), S: (354.0, 77.0)]",
+      "focused": true,
+      "mode": "playing",
+      "notice_rect": "[P: (502.0, 118.0), S: (916.0, 215.0)]",
+      "notice_text": "定時だ。飛べ。",
+      "notice_visible": true,
+      "pause_rect": "[P: (1658.0, 790.0), S: (222.0, 90.0)]",
+      "phase": 0.130766666666667,
+      "pressure_rect": "[P: (20.0, 865.0), S: (541.0, 181.0)]",
+      "quality": "派手",
+      "retry_rect": "[P: (102.0, 925.0), S: (495.0, 91.0)]",
+      "root_offset": [
+        0,
+        0
+      ],
+      "root_scale": [
+        1,
+        1
+      ],
+      "rush_guard": 0,
+      "rush_starts": 0,
+      "settings_visible": false,
+      "stamp_age": 1,
+      "stamp_scale": [
+        1,
+        1
+      ],
+      "start_rect": "[P: (85.0, 825.0), S: (732.0, 130.0)]",
+      "success_starts": 0,
+      "timer_rect": "[P: (34.0, 31.0), S: (438.0, 174.0)]",
+      "viewport": [
+        1920,
+        1080
+      ]
+    },
+    "max_combo": 0,
+    "mode": "playing",
+    "music_volume": 0.45,
+    "player": [
+      0,
+      0,
+      42
+    ],
+    "pressure": 100,
+    "quality": "派手",
+    "rank": "",
+    "rush": false,
+    "sfx_volume": 0.75,
+    "speed": 0,
+    "yaw": 0
+  },
+  "reload_best": 53.745,
+  "settings": {
+    "best_time": 53.745,
+    "broken": 0,
+    "combo": 0,
+    "damage": 0,
+    "draw_calls": 75,
+    "elapsed": 0,
+    "fps": 7,
+    "fx": {
+      "audio_enabled": true,
+      "batch_meshes": 7,
+      "combo_cues": 0,
+      "counts": {
+        "cube": 0,
+        "paper": 0,
+        "powder": 0,
+        "ribbon": 0,
+        "ring": 0,
+        "star": 0,
+        "streak": 0
+      },
+      "exhaust": 0,
+      "last_combo": 0,
+      "life_total": 0,
+      "limit": 20,
+      "particle_clock": 8.77643333333334,
+      "particles": 0,
+      "reserved": 6,
+      "rush_starts": 0,
+      "spraying": false
+    },
+    "hud": {
+      "animation_clock": 0,
+      "best_stamp_visible": true,
+      "bonus_text": "",
+      "burst_kind": "",
+      "burst_left": 0,
+      "celebration_age": 2,
+      "combo_rect": "[P: (1460.0, 217.0), S: (425.0, 166.0)]",
+      "combo_scale": [
+        1,
+        1
+      ],
+      "controls": {
+        "pause_restart": [
+          643,
+          583,
+          303,
+          98
+        ],
+        "pause_resume": [
+          643,
+          447,
+          634,
+          110
+        ],
+        "pause_settings": [
+          969,
+          583,
+          308,
+          98
+        ],
+        "pause_title": [
+          643,
+          708,
+          634,
+          98
+        ],
+        "playing_pause": [
+          1658,
+          790,
+          222,
+          90
+        ],
+        "result_retry": [
+          102,
+          925,
+          495,
+          91
+        ],
+        "result_title": [
+          619,
+          925,
+          273,
+          91
+        ],
+        "settings_close": [
+          600,
+          825,
+          715,
+          88
+        ],
+        "settings_music": [
+          600,
+          513,
+          715,
+          90
+        ],
+        "settings_quality": [
+          973,
+          315,
+          338,
+          88
+        ],
+        "settings_sfx": [
+          600,
+          695,
+          715,
+          90
+        ],
+        "title_credits": [
+          454,
+          980,
+          340,
+          88
+        ],
+        "title_settings": [
+          108,
+          980,
+          321,
+          88
+        ],
+        "title_start": [
+          85,
+          825,
+          732,
+          130
+        ]
+      },
+      "counter_age": 1,
+      "damage_age": 1,
+      "damage_scale": [
+        1,
+        1
+      ],
+      "exit_rect": "[P: (783.0, 22.0), S: (354.0, 77.0)]",
+      "focused": true,
+      "mode": "title",
+      "notice_rect": "[P: (502.0, 118.0), S: (916.0, 215.0)]",
+      "notice_text": "",
+      "notice_visible": false,
+      "pause_rect": "[P: (1658.0, 790.0), S: (222.0, 90.0)]",
+      "phase": 0,
+      "pressure_rect": "[P: (20.0, 865.0), S: (541.0, 181.0)]",
+      "quality": "控えめ",
+      "retry_rect": "[P: (102.0, 925.0), S: (495.0, 91.0)]",
+      "root_offset": [
+        0,
+        0
+      ],
+      "root_scale": [
+        1,
+        1
+      ],
+      "rush_guard": 0,
+      "rush_starts": 0,
+      "settings_visible": true,
+      "stamp_age": 1,
+      "stamp_scale": [
+        1,
+        1
+      ],
+      "start_rect": "[P: (85.0, 825.0), S: (732.0, 130.0)]",
+      "success_starts": 0,
+      "timer_rect": "[P: (34.0, 31.0), S: (438.0, 174.0)]",
+      "viewport": [
+        1920,
+        1080
+      ]
+    },
+    "max_combo": 0,
+    "mode": "title",
+    "music_volume": 0,
+    "player": [
+      0,
+      0,
+      42
+    ],
+    "pressure": 100,
+    "quality": "控えめ",
+    "rank": "",
+    "rush": false,
+    "sfx_volume": 0,
+    "speed": 0,
+    "yaw": 0
+  },
+  "subdued": {
+    "best_time": 53.745,
+    "broken": 0,
+    "combo": 0,
+    "damage": 0,
+    "draw_calls": 87,
+    "elapsed": 0.841,
+    "fps": 7,
+    "fx": {
+      "audio_enabled": true,
+      "batch_meshes": 7,
+      "combo_cues": 0,
+      "counts": {
+        "cube": 0,
+        "paper": 0,
+        "powder": 4,
+        "ribbon": 0,
+        "ring": 0,
+        "star": 0,
+        "streak": 0
+      },
+      "exhaust": 4,
+      "last_combo": 0,
+      "life_total": 2.02866666666667,
+      "limit": 20,
+      "particle_clock": 0.806966666666667,
+      "particles": 4,
+      "reserved": 6,
+      "rush_starts": 0,
+      "spraying": true
+    },
+    "hud": {
+      "animation_clock": 0.806966666666667,
+      "best_stamp_visible": true,
+      "bonus_text": "",
+      "burst_kind": "start",
+      "burst_left": 0.1742,
+      "celebration_age": 2,
+      "combo_rect": "[P: (1460.0, 217.0), S: (425.0, 166.0)]",
+      "combo_scale": [
+        1,
+        1
+      ],
+      "controls": {
+        "pause_restart": [
+          643,
+          583,
+          303,
+          98
+        ],
+        "pause_resume": [
+          643,
+          447,
+          634,
+          110
+        ],
+        "pause_settings": [
+          969,
+          583,
+          308,
+          98
+        ],
+        "pause_title": [
+          643,
+          708,
+          634,
+          98
+        ],
+        "playing_pause": [
+          1658,
+          790,
+          222,
+          90
+        ],
+        "result_retry": [
+          102,
+          925,
+          495,
+          91
+        ],
+        "result_title": [
+          619,
+          925,
+          273,
+          91
+        ],
+        "settings_close": [
+          600,
+          825,
+          715,
+          88
+        ],
+        "settings_music": [
+          600,
+          513,
+          715,
+          90
+        ],
+        "settings_quality": [
+          973,
+          315,
+          338,
+          88
+        ],
+        "settings_sfx": [
+          600,
+          695,
+          715,
+          90
+        ],
+        "title_credits": [
+          454,
+          980,
+          340,
+          88
+        ],
+        "title_settings": [
+          108,
+          980,
+          321,
+          88
+        ],
+        "title_start": [
+          85,
+          825,
+          732,
+          130
+        ]
+      },
+      "counter_age": 1.80696666666667,
+      "damage_age": 1.80696666666667,
+      "damage_scale": [
+        1,
+        1
+      ],
+      "exit_rect": "[P: (783.0, 22.0), S: (354.0, 77.0)]",
+      "focused": true,
+      "mode": "playing",
+      "notice_rect": "[P: (502.0, 118.0), S: (916.0, 215.0)]",
+      "notice_text": "定時だ。飛べ。",
+      "notice_visible": true,
+      "pause_rect": "[P: (1658.0, 790.0), S: (222.0, 90.0)]",
+      "phase": 0.806966666666667,
+      "pressure_rect": "[P: (20.0, 865.0), S: (541.0, 181.0)]",
+      "quality": "控えめ",
+      "retry_rect": "[P: (102.0, 925.0), S: (495.0, 91.0)]",
+      "root_offset": [
+        0,
+        0
+      ],
+      "root_scale": [
+        1,
+        1
+      ],
+      "rush_guard": 0,
+      "rush_starts": 0,
+      "settings_visible": false,
+      "stamp_age": 1,
+      "stamp_scale": [
+        1,
+        1
+      ],
+      "start_rect": "[P: (85.0, 825.0), S: (732.0, 130.0)]",
+      "success_starts": 0,
+      "timer_rect": "[P: (34.0, 31.0), S: (438.0, 174.0)]",
+      "viewport": [
+        1920,
+        1080
+      ]
+    },
+    "max_combo": 0,
+    "mode": "playing",
+    "music_volume": 0,
+    "player": [
+      0,
+      0,
+      41.5130043029785
+    ],
+    "pressure": 89.9999999999999,
+    "quality": "控えめ",
+    "rank": "",
+    "rush": false,
+    "sfx_volume": 0,
+    "speed": 2.31000065803528,
+    "yaw": 0
+  },
+  "blur_before": {
+    "best_time": 53.745,
+    "broken": 0,
+    "combo": 0,
+    "damage": 0,
+    "draw_calls": 103,
+    "elapsed": 2.725,
+    "fps": 5,
+    "fx": {
+      "audio_enabled": true,
+      "batch_meshes": 7,
+      "combo_cues": 0,
+      "counts": {
+        "cube": 0,
+        "paper": 0,
+        "powder": 6,
+        "ribbon": 0,
+        "ring": 0,
+        "star": 0,
+        "streak": 0
+      },
+      "exhaust": 6,
+      "last_combo": 0,
+      "life_total": 2.065,
+      "limit": 20,
+      "particle_clock": 2.27443333333333,
+      "particles": 6,
+      "reserved": 6,
+      "rush_starts": 0,
+      "spraying": false
+    },
+    "hud": {
+      "animation_clock": 2.27443333333333,
+      "best_stamp_visible": true,
+      "bonus_text": "",
+      "burst_kind": "start",
+      "burst_left": 0,
+      "celebration_age": 2,
+      "combo_rect": "[P: (1460.0, 217.0), S: (425.0, 166.0)]",
+      "combo_scale": [
+        1,
+        1
+      ],
+      "controls": {
+        "pause_restart": [
+          643,
+          583,
+          303,
+          98
+        ],
+        "pause_resume": [
+          643,
+          447,
+          634,
+          110
+        ],
+        "pause_settings": [
+          969,
+          583,
+          308,
+          98
+        ],
+        "pause_title": [
+          643,
+          708,
+          634,
+          98
+        ],
+        "playing_pause": [
+          1658,
+          790,
+          222,
+          90
+        ],
+        "result_retry": [
+          102,
+          925,
+          495,
+          91
+        ],
+        "result_title": [
+          619,
+          925,
+          273,
+          91
+        ],
+        "settings_close": [
+          600,
+          825,
+          715,
+          88
+        ],
+        "settings_music": [
+          600,
+          513,
+          715,
+          90
+        ],
+        "settings_quality": [
+          973,
+          315,
+          338,
+          88
+        ],
+        "settings_sfx": [
+          600,
+          695,
+          715,
+          90
+        ],
+        "title_credits": [
+          454,
+          980,
+          340,
+          88
+        ],
+        "title_settings": [
+          108,
+          980,
+          321,
+          88
+        ],
+        "title_start": [
+          85,
+          825,
+          732,
+          130
+        ]
+      },
+      "counter_age": 3.27443333333333,
+      "damage_age": 3.27443333333333,
+      "damage_scale": [
+        1,
+        1
+      ],
+      "exit_rect": "[P: (783.0, 22.0), S: (354.0, 77.0)]",
+      "focused": true,
+      "mode": "paused",
+      "notice_rect": "[P: (502.0, 118.0), S: (916.0, 215.0)]",
+      "notice_text": "定時だ。飛べ。",
+      "notice_visible": false,
+      "pause_rect": "[P: (1658.0, 790.0), S: (222.0, 90.0)]",
+      "phase": 2.27443333333333,
+      "pressure_rect": "[P: (20.0, 865.0), S: (541.0, 181.0)]",
+      "quality": "控えめ",
+      "retry_rect": "[P: (102.0, 925.0), S: (495.0, 91.0)]",
+      "root_offset": [
+        0,
+        0
+      ],
+      "root_scale": [
+        1,
+        1
+      ],
+      "rush_guard": 0,
+      "rush_starts": 0,
+      "settings_visible": false,
+      "stamp_age": 1,
+      "stamp_scale": [
+        1,
+        1
+      ],
+      "start_rect": "[P: (85.0, 825.0), S: (732.0, 130.0)]",
+      "success_starts": 0,
+      "timer_rect": "[P: (34.0, 31.0), S: (438.0, 174.0)]",
+      "viewport": [
+        1920,
+        1080
+      ]
+    },
+    "max_combo": 0,
+    "mode": "paused",
+    "music_volume": 0,
+    "player": [
+      0,
+      0,
+      33.4014205932617
+    ],
+    "pressure": 66.6666666666663,
+    "quality": "控えめ",
+    "rank": "",
+    "rush": false,
+    "sfx_volume": 0,
+    "speed": 8.76000213623047,
+    "yaw": 0
+  },
+  "blur_after": {
+    "best_time": 53.745,
+    "broken": 0,
+    "combo": 0,
+    "damage": 0,
+    "draw_calls": 103,
+    "elapsed": 2.725,
+    "fps": 5,
+    "fx": {
+      "audio_enabled": true,
+      "batch_meshes": 7,
+      "combo_cues": 0,
+      "counts": {
+        "cube": 0,
+        "paper": 0,
+        "powder": 6,
+        "ribbon": 0,
+        "ring": 0,
+        "star": 0,
+        "streak": 0
+      },
+      "exhaust": 6,
+      "last_combo": 0,
+      "life_total": 2.065,
+      "limit": 20,
+      "particle_clock": 2.27443333333333,
+      "particles": 6,
+      "reserved": 6,
+      "rush_starts": 0,
+      "spraying": false
+    },
+    "hud": {
+      "animation_clock": 2.27443333333333,
+      "best_stamp_visible": true,
+      "bonus_text": "",
+      "burst_kind": "start",
+      "burst_left": 0,
+      "celebration_age": 2,
+      "combo_rect": "[P: (1460.0, 217.0), S: (425.0, 166.0)]",
+      "combo_scale": [
+        1,
+        1
+      ],
+      "controls": {
+        "pause_restart": [
+          643,
+          583,
+          303,
+          98
+        ],
+        "pause_resume": [
+          643,
+          447,
+          634,
+          110
+        ],
+        "pause_settings": [
+          969,
+          583,
+          308,
+          98
+        ],
+        "pause_title": [
+          643,
+          708,
+          634,
+          98
+        ],
+        "playing_pause": [
+          1658,
+          790,
+          222,
+          90
+        ],
+        "result_retry": [
+          102,
+          925,
+          495,
+          91
+        ],
+        "result_title": [
+          619,
+          925,
+          273,
+          91
+        ],
+        "settings_close": [
+          600,
+          825,
+          715,
+          88
+        ],
+        "settings_music": [
+          600,
+          513,
+          715,
+          90
+        ],
+        "settings_quality": [
+          973,
+          315,
+          338,
+          88
+        ],
+        "settings_sfx": [
+          600,
+          695,
+          715,
+          90
+        ],
+        "title_credits": [
+          454,
+          980,
+          340,
+          88
+        ],
+        "title_settings": [
+          108,
+          980,
+          321,
+          88
+        ],
+        "title_start": [
+          85,
+          825,
+          732,
+          130
+        ]
+      },
+      "counter_age": 3.27443333333333,
+      "damage_age": 3.27443333333333,
+      "damage_scale": [
+        1,
+        1
+      ],
+      "exit_rect": "[P: (783.0, 22.0), S: (354.0, 77.0)]",
+      "focused": true,
+      "mode": "paused",
+      "notice_rect": "[P: (502.0, 118.0), S: (916.0, 215.0)]",
+      "notice_text": "定時だ。飛べ。",
+      "notice_visible": false,
+      "pause_rect": "[P: (1658.0, 790.0), S: (222.0, 90.0)]",
+      "phase": 2.27443333333333,
+      "pressure_rect": "[P: (20.0, 865.0), S: (541.0, 181.0)]",
+      "quality": "控えめ",
+      "retry_rect": "[P: (102.0, 925.0), S: (495.0, 91.0)]",
+      "root_offset": [
+        0,
+        0
+      ],
+      "root_scale": [
+        1,
+        1
+      ],
+      "rush_guard": 0,
+      "rush_starts": 0,
+      "settings_visible": false,
+      "stamp_age": 1,
+      "stamp_scale": [
+        1,
+        1
+      ],
+      "start_rect": "[P: (85.0, 825.0), S: (732.0, 130.0)]",
+      "success_starts": 0,
+      "timer_rect": "[P: (34.0, 31.0), S: (438.0, 174.0)]",
+      "viewport": [
+        1920,
+        1080
+      ]
+    },
+    "max_combo": 0,
+    "mode": "paused",
+    "music_volume": 0,
+    "player": [
+      0,
+      0,
+      33.4014205932617
+    ],
+    "pressure": 66.6666666666663,
+    "quality": "控えめ",
+    "rank": "",
+    "rush": false,
+    "sfx_volume": 0,
+    "speed": 8.76000213623047,
+    "yaw": 0
+  },
+  "errors": [],
+  "samples": [
+    {
+      "best_time": -1,
+      "broken": 0,
+      "combo": 0,
+      "damage": 0,
+      "draw_calls": 79,
+      "elapsed": 0,
+      "fps": 2,
+      "fx": {
+        "audio_enabled": true,
+        "batch_meshes": 7,
+        "combo_cues": 0,
+        "counts": {
+          "cube": 0,
+          "paper": 0,
+          "powder": 0,
+          "ribbon": 0,
+          "ring": 0,
+          "star": 0,
+          "streak": 0
+        },
+        "exhaust": 0,
+        "last_combo": 0,
+        "life_total": 0,
+        "limit": 80,
+        "particle_clock": 0.548533333333333,
+        "particles": 0,
+        "reserved": 28,
+        "rush_starts": 0,
+        "spraying": false
+      },
+      "hud": {
+        "animation_clock": 0.548533333333333,
+        "best_stamp_visible": true,
+        "bonus_text": "",
+        "burst_kind": "start",
+        "burst_left": 0.447266666666667,
+        "celebration_age": 2,
+        "combo_rect": "[P: (1460.0, 217.0), S: (425.0, 166.0)]",
+        "combo_scale": [
+          1,
+          1
+        ],
+        "controls": {
+          "pause_restart": [
+            643,
+            583,
+            303,
+            98
+          ],
+          "pause_resume": [
+            643,
+            447,
+            634,
+            110
+          ],
+          "pause_settings": [
+            969,
+            583,
+            308,
+            98
+          ],
+          "pause_title": [
+            643,
+            708,
+            634,
+            98
+          ],
+          "playing_pause": [
+            1658,
+            790,
+            222,
+            90
+          ],
+          "result_retry": [
+            102,
+            925,
+            495,
+            91
+          ],
+          "result_title": [
+            619,
+            925,
+            273,
+            91
+          ],
+          "settings_close": [
+            600,
+            825,
+            715,
+            88
+          ],
+          "settings_music": [
+            600,
+            513,
+            715,
+            90
+          ],
+          "settings_quality": [
+            973,
+            315,
+            338,
+            88
+          ],
+          "settings_sfx": [
+            600,
+            695,
+            715,
+            90
+          ],
+          "title_credits": [
+            454,
+            980,
+            340,
+            88
+          ],
+          "title_settings": [
+            108,
+            980,
+            321,
+            88
+          ],
+          "title_start": [
+            85,
+            825,
+            732,
+            130
+          ]
+        },
+        "counter_age": 1.54853333333333,
+        "damage_age": 1.54853333333333,
+        "damage_scale": [
+          1,
+          1
+        ],
+        "exit_rect": "[P: (783.0, 22.0), S: (354.0, 77.0)]",
+        "focused": true,
+        "mode": "playing",
+        "notice_rect": "[P: (502.0, 118.0), S: (916.0, 215.0)]",
+        "notice_text": "定時だ。飛べ。",
+        "notice_visible": true,
+        "pause_rect": "[P: (1658.0, 790.0), S: (222.0, 90.0)]",
+        "phase": 0.548533333333333,
+        "pressure_rect": "[P: (20.0, 865.0), S: (541.0, 181.0)]",
+        "quality": "派手",
+        "retry_rect": "[P: (102.0, 925.0), S: (495.0, 91.0)]",
+        "root_offset": [
+          0,
+          0
+        ],
+        "root_scale": [
+          1,
+          1
+        ],
+        "rush_guard": 0,
+        "rush_starts": 0,
+        "settings_visible": false,
+        "stamp_age": 1,
+        "stamp_scale": [
+          1,
+          1
+        ],
+        "start_rect": "[P: (85.0, 825.0), S: (732.0, 130.0)]",
+        "success_starts": 0,
+        "timer_rect": "[P: (34.0, 31.0), S: (438.0, 174.0)]",
+        "viewport": [
+          1920,
+          1080
+        ]
+      },
+      "max_combo": 0,
+      "mode": "playing",
+      "music_volume": 0.45,
+      "player": [
+        0,
+        0,
+        42
+      ],
+      "pressure": 100,
+      "quality": "派手",
+      "rank": "",
+      "rush": false,
+      "sfx_volume": 0.75,
+      "speed": 0,
+      "yaw": 0
+    },
+    {
+      "best_time": -1,
+      "broken": 0,
+      "combo": 0,
+      "damage": 0,
+      "draw_calls": 85,
+      "elapsed": 2.027,
+      "fps": 2,
+      "fx": {
+        "audio_enabled": true,
+        "batch_meshes": 7,
+        "combo_cues": 0,
+        "counts": {
+          "cube": 0,
+          "paper": 0,
+          "powder": 16,
+          "ribbon": 0,
+          "ring": 0,
+          "star": 0,
+          "streak": 6
+        },
+        "exhaust": 22,
+        "last_combo": 0,
+        "life_total": 9.02616666666666,
+        "limit": 80,
+        "particle_clock": 1.33866666666667,
+        "particles": 22,
+        "reserved": 28,
+        "rush_starts": 0,
+        "spraying": true
+      },
+      "hud": {
+        "animation_clock": 1.33866666666667,
+        "best_stamp_visible": true,
+        "bonus_text": "",
+        "burst_kind": "start",
+        "burst_left": 0,
+        "celebration_age": 2,
+        "combo_rect": "[P: (1460.0, 217.0), S: (425.0, 166.0)]",
+        "combo_scale": [
+          1,
+          1
+        ],
+        "controls": {
+          "pause_restart": [
+            643,
+            583,
+            303,
+            98
+          ],
+          "pause_resume": [
+            643,
+            447,
+            634,
+            110
+          ],
+          "pause_settings": [
+            969,
+            583,
+            308,
+            98
+          ],
+          "pause_title": [
+            643,
+            708,
+            634,
+            98
+          ],
+          "playing_pause": [
+            1658,
+            790,
+            222,
+            90
+          ],
+          "result_retry": [
+            102,
+            925,
+            495,
+            91
+          ],
+          "result_title": [
+            619,
+            925,
+            273,
+            91
+          ],
+          "settings_close": [
+            600,
+            825,
+            715,
+            88
+          ],
+          "settings_music": [
+            600,
+            513,
+            715,
+            90
+          ],
+          "settings_quality": [
+            973,
+            315,
+            338,
+            88
+          ],
+          "settings_sfx": [
+            600,
+            695,
+            715,
+            90
+          ],
+          "title_credits": [
+            454,
+            980,
+            340,
+            88
+          ],
+          "title_settings": [
+            108,
+            980,
+            321,
+            88
+          ],
+          "title_start": [
+            85,
+            825,
+            732,
+            130
+          ]
+        },
+        "counter_age": 2.33866666666667,
+        "damage_age": 2.33866666666667,
+        "damage_scale": [
+          1,
+          1
+        ],
+        "exit_rect": "[P: (783.0, 22.0), S: (354.0, 77.0)]",
+        "focused": true,
+        "mode": "playing",
+        "notice_rect": "[P: (502.0, 118.0), S: (916.0, 215.0)]",
+        "notice_text": "定時だ。飛べ。",
+        "notice_visible": false,
+        "pause_rect": "[P: (1658.0, 790.0), S: (222.0, 90.0)]",
+        "phase": 1.33866666666667,
+        "pressure_rect": "[P: (20.0, 865.0), S: (541.0, 181.0)]",
+        "quality": "派手",
+        "retry_rect": "[P: (102.0, 925.0), S: (495.0, 91.0)]",
+        "root_offset": [
+          0,
+          0
+        ],
+        "root_scale": [
+          1,
+          1
+        ],
+        "rush_guard": 0,
+        "rush_starts": 0,
+        "settings_visible": false,
+        "stamp_age": 1,
+        "stamp_scale": [
+          1,
+          1
+        ],
+        "start_rect": "[P: (85.0, 825.0), S: (732.0, 130.0)]",
+        "success_starts": 0,
+        "timer_rect": "[P: (34.0, 31.0), S: (438.0, 174.0)]",
+        "viewport": [
+          1920,
+          1080
+        ]
+      },
+      "max_combo": 0,
+      "mode": "playing",
+      "music_volume": 0.45,
+      "player": [
+        0,
+        0,
+        41.1479988098145
+      ],
+      "pressure": 86.6666666666665,
+      "quality": "派手",
+      "rank": "",
+      "rush": false,
+      "sfx_volume": 0.75,
+      "speed": 3.07000088691711,
+      "yaw": 0
+    },
+    {
+      "best_time": -1,
+      "broken": 0,
+      "combo": 0,
+      "damage": 0,
+      "draw_calls": 89,
+      "elapsed": 4.418,
+      "fps": 2,
+      "fx": {
+        "audio_enabled": true,
+        "batch_meshes": 7,
+        "combo_cues": 0,
+        "counts": {
+          "cube": 0,
+          "paper": 0,
+          "powder": 26,
+          "ribbon": 0,
+          "ring": 0,
+          "star": 0,
+          "streak": 6
+        },
+        "exhaust": 32,
+        "last_combo": 0,
+        "life_total": 11.0376666666667,
+        "limit": 80,
+        "particle_clock": 2.13486666666667,
+        "particles": 32,
+        "reserved": 28,
+        "rush_starts": 0,
+        "spraying": true
+      },
+      "hud": {
+        "animation_clock": 2.13486666666667,
+        "best_stamp_visible": true,
+        "bonus_text": "",
+        "burst_kind": "start",
+        "burst_left": 0,
+        "celebration_age": 2,
+        "combo_rect": "[P: (1460.0, 217.0), S: (425.0, 166.0)]",
+        "combo_scale": [
+          1,
+          1
+        ],
+        "controls": {
+          "pause_restart": [
+            643,
+            583,
+            303,
+            98
+          ],
+          "pause_resume": [
+            643,
+            447,
+            634,
+            110
+          ],
+          "pause_settings": [
+            969,
+            583,
+            308,
+            98
+          ],
+          "pause_title": [
+            643,
+            708,
+            634,
+            98
+          ],
+          "playing_pause": [
+            1658,
+            790,
+            222,
+            90
+          ],
+          "result_retry": [
+            102,
+            925,
+            495,
+            91
+          ],
+          "result_title": [
+            619,
+            925,
+            273,
+            91
+          ],
+          "settings_close": [
+            600,
+            825,
+            715,
+            88
+          ],
+          "settings_music": [
+            600,
+            513,
+            715,
+            90
+          ],
+          "settings_quality": [
+            973,
+            315,
+            338,
+            88
+          ],
+          "settings_sfx": [
+            600,
+            695,
+            715,
+            90
+          ],
+          "title_credits": [
+            454,
+            980,
+            340,
+            88
+          ],
+          "title_settings": [
+            108,
+            980,
+            321,
+            88
+          ],
+          "title_start": [
+            85,
+            825,
+            732,
+            130
+          ]
+        },
+        "counter_age": 3.13486666666667,
+        "damage_age": 3.13486666666667,
+        "damage_scale": [
+          1,
+          1
+        ],
+        "exit_rect": "[P: (783.0, 22.0), S: (354.0, 77.0)]",
+        "focused": true,
+        "mode": "playing",
+        "notice_rect": "[P: (502.0, 118.0), S: (916.0, 215.0)]",
+        "notice_text": "定時だ。飛べ。",
+        "notice_visible": false,
+        "pause_rect": "[P: (1658.0, 790.0), S: (222.0, 90.0)]",
+        "phase": 2.13486666666667,
+        "pressure_rect": "[P: (20.0, 865.0), S: (541.0, 181.0)]",
+        "quality": "派手",
+        "retry_rect": "[P: (102.0, 925.0), S: (495.0, 91.0)]",
+        "root_offset": [
+          0,
+          0
+        ],
+        "root_scale": [
+          1,
+          1
+        ],
+        "rush_guard": 0,
+        "rush_starts": 0,
+        "settings_visible": false,
+        "stamp_age": 1,
+        "stamp_scale": [
+          1,
+          1
+        ],
+        "start_rect": "[P: (85.0, 825.0), S: (732.0, 130.0)]",
+        "success_starts": 0,
+        "timer_rect": "[P: (34.0, 31.0), S: (438.0, 174.0)]",
+        "viewport": [
+          1920,
+          1080
+        ]
+      },
+      "max_combo": 0,
+      "mode": "playing",
+      "music_volume": 0.45,
+      "player": [
+        0,
+        0,
+        36.8299980163574
+      ],
+      "pressure": 66.6666666666663,
+      "quality": "派手",
+      "rank": "",
+      "rush": false,
+      "sfx_volume": 0.75,
+      "speed": 7.62999391555786,
+      "yaw": 0
+    },
+    {
+      "best_time": -1,
+      "broken": 2,
+      "combo": 2,
+      "damage": 110000,
+      "draw_calls": 98,
+      "elapsed": 6.72,
+      "fps": 2,
+      "fx": {
+        "audio_enabled": true,
+        "batch_meshes": 7,
+        "combo_cues": 1,
+        "counts": {
+          "cube": 8,
+          "paper": 36,
+          "powder": 22,
+          "ribbon": 0,
+          "ring": 4,
+          "star": 2,
+          "streak": 3
+        },
+        "exhaust": 25,
+        "last_combo": 2,
+        "life_total": 40.8729895727793,
+        "limit": 80,
+        "particle_clock": 2.9378,
+        "particles": 75,
+        "reserved": 28,
+        "rush_starts": 0,
+        "spraying": false
+      },
+      "hud": {
+        "animation_clock": 2.9378,
+        "best_stamp_visible": true,
+        "bonus_text": "+¥110,000",
+        "burst_kind": "impact",
+        "burst_left": 0.7135,
+        "celebration_age": 2,
+        "combo_rect": "[P: (1460.0, 217.0), S: (425.0, 166.0)]",
+        "combo_scale": [
+          1,
+          1
+        ],
+        "controls": {
+          "pause_restart": [
+            643,
+            583,
+            303,
+            98
+          ],
+          "pause_resume": [
+            643,
+            447,
+            634,
+            110
+          ],
+          "pause_settings": [
+            969,
+            583,
+            308,
+            98
+          ],
+          "pause_title": [
+            643,
+            708,
+            634,
+            98
+          ],
+          "playing_pause": [
+            1658,
+            790,
+            222,
+            90
+          ],
+          "result_retry": [
+            102,
+            925,
+            495,
+            91
+          ],
+          "result_title": [
+            619,
+            925,
+            273,
+            91
+          ],
+          "settings_close": [
+            600,
+            825,
+            715,
+            88
+          ],
+          "settings_music": [
+            600,
+            513,
+            715,
+            90
+          ],
+          "settings_quality": [
+            973,
+            315,
+            338,
+            88
+          ],
+          "settings_sfx": [
+            600,
+            695,
+            715,
+            90
+          ],
+          "title_credits": [
+            454,
+            980,
+            340,
+            88
+          ],
+          "title_settings": [
+            108,
+            980,
+            321,
+            88
+          ],
+          "title_start": [
+            85,
+            825,
+            732,
+            130
+          ]
+        },
+        "counter_age": 0.2015,
+        "damage_age": 0.1965,
+        "damage_scale": [
+          1,
+          1
+        ],
+        "exit_rect": "[P: (783.0, 22.0), S: (354.0, 77.0)]",
+        "focused": true,
+        "mode": "playing",
+        "notice_rect": "[P: (502.0, 118.0), S: (916.0, 215.0)]",
+        "notice_text": "書類、全提出！",
+        "notice_visible": true,
+        "pause_rect": "[P: (1658.0, 790.0), S: (222.0, 90.0)]",
+        "phase": 2.9378,
+        "pressure_rect": "[P: (20.0, 865.0), S: (541.0, 181.0)]",
+        "quality": "派手",
+        "retry_rect": "[P: (102.0, 925.0), S: (495.0, 91.0)]",
+        "root_offset": [
+          0,
+          0
+        ],
+        "root_scale": [
+          1,
+          1
+        ],
+        "rush_guard": 0,
+        "rush_starts": 0,
+        "settings_visible": false,
+        "stamp_age": 1,
+        "stamp_scale": [
+          1,
+          1
+        ],
+        "start_rect": "[P: (85.0, 825.0), S: (732.0, 130.0)]",
+        "success_starts": 0,
+        "timer_rect": "[P: (34.0, 31.0), S: (438.0, 174.0)]",
+        "viewport": [
+          1920,
+          1080
+        ]
+      },
+      "max_combo": 2,
+      "mode": "playing",
+      "music_volume": 0.45,
+      "player": [
+        0,
+        0,
+        30.6014022827148
+      ],
+      "pressure": 66.6666666666663,
+      "quality": "派手",
+      "rank": "",
+      "rush": false,
+      "sfx_volume": 0.75,
+      "speed": 8.52000427246094,
+      "yaw": 0
+    },
+    {
+      "best_time": -1,
+      "broken": 6,
+      "combo": 6,
+      "damage": 890000,
+      "draw_calls": 97,
+      "elapsed": 8.969,
+      "fps": 5,
+      "fx": {
+        "audio_enabled": true,
+        "batch_meshes": 7,
+        "combo_cues": 4,
+        "counts": {
+          "cube": 14,
+          "paper": 60,
+          "powder": 0,
+          "ribbon": 0,
+          "ring": 4,
+          "star": 2,
+          "streak": 0
+        },
+        "exhaust": 0,
+        "last_combo": 6,
+        "life_total": 55.3957017226855,
+        "limit": 80,
+        "particle_clock": 4.5454,
+        "particles": 80,
+        "reserved": 28,
+        "rush_starts": 1,
+        "spraying": false
+      },
+      "hud": {
+        "animation_clock": 4.5454,
+        "best_stamp_visible": true,
+        "bonus_text": "+¥450,000",
+        "burst_kind": "impact",
+        "burst_left": 0.85,
+        "celebration_age": 2,
+        "combo_rect": "[P: (1460.0, 217.0), S: (425.0, 166.0)]",
+        "combo_scale": [
+          1,
+          1
+        ],
+        "controls": {
+          "pause_restart": [
+            643,
+            583,
+            303,
+            98
+          ],
+          "pause_resume": [
+            643,
+            447,
+            634,
+            110
+          ],
+          "pause_settings": [
+            969,
+            583,
+            308,
+            98
+          ],
+          "pause_title": [
+            643,
+            708,
+            634,
+            98
+          ],
+          "playing_pause": [
+            1658,
+            790,
+            222,
+            90
+          ],
+          "result_retry": [
+            102,
+            925,
+            495,
+            91
+          ],
+          "result_title": [
+            619,
+            925,
+            273,
+            91
+          ],
+          "settings_close": [
+            600,
+            825,
+            715,
+            88
+          ],
+          "settings_music": [
+            600,
+            513,
+            715,
+            90
+          ],
+          "settings_quality": [
+            973,
+            315,
+            338,
+            88
+          ],
+          "settings_sfx": [
+            600,
+            695,
+            715,
+            90
+          ],
+          "title_credits": [
+            454,
+            980,
+            340,
+            88
+          ],
+          "title_settings": [
+            108,
+            980,
+            321,
+            88
+          ],
+          "title_start": [
+            85,
+            825,
+            732,
+            130
+          ]
+        },
+        "counter_age": 0.065,
+        "damage_age": 0.06,
+        "damage_scale": [
+          1,
+          1
+        ],
+        "exit_rect": "[P: (783.0, 22.0), S: (354.0, 77.0)]",
+        "focused": true,
+        "mode": "playing",
+        "notice_rect": "[P: (502.0, 118.0), S: (916.0, 215.0)]",
+        "notice_text": "総務、見てない！",
+        "notice_visible": true,
+        "pause_rect": "[P: (1658.0, 790.0), S: (222.0, 90.0)]",
+        "phase": 4.5454,
+        "pressure_rect": "[P: (20.0, 865.0), S: (541.0, 181.0)]",
+        "quality": "派手",
+        "retry_rect": "[P: (102.0, 925.0), S: (495.0, 91.0)]",
+        "root_offset": [
+          0,
+          0
+        ],
+        "root_scale": [
+          1,
+          1
+        ],
+        "rush_guard": 0,
+        "rush_starts": 1,
+        "settings_visible": false,
+        "stamp_age": 1,
+        "stamp_scale": [
+          1,
+          1
+        ],
+        "start_rect": "[P: (85.0, 825.0), S: (732.0, 130.0)]",
+        "success_starts": 0,
+        "timer_rect": "[P: (34.0, 31.0), S: (438.0, 174.0)]",
+        "viewport": [
+          1920,
+          1080
+        ]
+      },
+      "max_combo": 6,
+      "mode": "playing",
+      "music_volume": 0.45,
+      "player": [
+        0,
+        0,
+        19.0908126831055
+      ],
+      "pressure": 100,
+      "quality": "派手",
+      "rank": "",
+      "rush": false,
+      "sfx_volume": 0.75,
+      "speed": 7.86000776290894,
+      "yaw": 0
+    },
+    {
+      "best_time": -1,
+      "broken": 6,
+      "combo": 0,
+      "damage": 890000,
+      "draw_calls": 87,
+      "elapsed": 11.675,
+      "fps": 2,
+      "fx": {
+        "audio_enabled": true,
+        "batch_meshes": 7,
+        "combo_cues": 4,
+        "counts": {
+          "cube": 4,
+          "paper": 17,
+          "powder": 19,
+          "ribbon": 0,
+          "ring": 0,
+          "star": 0,
+          "streak": 6
+        },
+        "exhaust": 25,
+        "last_combo": 6,
+        "life_total": 13.1761806261381,
+        "limit": 80,
+        "particle_clock": 5.6113,
+        "particles": 46,
+        "reserved": 28,
+        "rush_starts": 1,
+        "spraying": true
+      },
+      "hud": {
+        "animation_clock": 5.6113,
+        "best_stamp_visible": true,
+        "bonus_text": "+¥450,000",
+        "burst_kind": "impact",
+        "burst_left": 0,
+        "celebration_age": 2,
+        "combo_rect": "[P: (1460.0, 217.0), S: (425.0, 166.0)]",
+        "combo_scale": [
+          1,
+          1
+        ],
+        "controls": {
+          "pause_restart": [
+            643,
+            583,
+            303,
+            98
+          ],
+          "pause_resume": [
+            643,
+            447,
+            634,
+            110
+          ],
+          "pause_settings": [
+            969,
+            583,
+            308,
+            98
+          ],
+          "pause_title": [
+            643,
+            708,
+            634,
+            98
+          ],
+          "playing_pause": [
+            1658,
+            790,
+            222,
+            90
+          ],
+          "result_retry": [
+            102,
+            925,
+            495,
+            91
+          ],
+          "result_title": [
+            619,
+            925,
+            273,
+            91
+          ],
+          "settings_close": [
+            600,
+            825,
+            715,
+            88
+          ],
+          "settings_music": [
+            600,
+            513,
+            715,
+            90
+          ],
+          "settings_quality": [
+            973,
+            315,
+            338,
+            88
+          ],
+          "settings_sfx": [
+            600,
+            695,
+            715,
+            90
+          ],
+          "title_credits": [
+            454,
+            980,
+            340,
+            88
+          ],
+          "title_settings": [
+            108,
+            980,
+            321,
+            88
+          ],
+          "title_start": [
+            85,
+            825,
+            732,
+            130
+          ]
+        },
+        "counter_age": 0.9968,
+        "damage_age": 0.9918,
+        "damage_scale": [
+          1,
+          1
+        ],
+        "exit_rect": "[P: (783.0, 22.0), S: (354.0, 77.0)]",
+        "focused": true,
+        "mode": "playing",
+        "notice_rect": "[P: (502.0, 118.0), S: (916.0, 215.0)]",
+        "notice_text": "総務、見てない！",
+        "notice_visible": false,
+        "pause_rect": "[P: (1658.0, 790.0), S: (222.0, 90.0)]",
+        "phase": 5.6113,
+        "pressure_rect": "[P: (20.0, 865.0), S: (541.0, 181.0)]",
+        "quality": "派手",
+        "retry_rect": "[P: (102.0, 925.0), S: (495.0, 91.0)]",
+        "root_offset": [
+          0,
+          0
+        ],
+        "root_scale": [
+          1,
+          1
+        ],
+        "rush_guard": 0,
+        "rush_starts": 1,
+        "settings_visible": false,
+        "stamp_age": 1,
+        "stamp_scale": [
+          1,
+          1
+        ],
+        "start_rect": "[P: (85.0, 825.0), S: (732.0, 130.0)]",
+        "success_starts": 0,
+        "timer_rect": "[P: (34.0, 31.0), S: (438.0, 174.0)]",
+        "viewport": [
+          1920,
+          1080
+        ]
+      },
+      "max_combo": 6,
+      "mode": "playing",
+      "music_volume": 0.45,
+      "player": [
+        0,
+        0,
+        10.079571723938
+      ],
+      "pressure": 79.9999999999998,
+      "quality": "派手",
+      "rank": "",
+      "rush": false,
+      "sfx_volume": 0.75,
+      "speed": 9,
+      "yaw": 0
+    },
+    {
+      "best_time": -1,
+      "broken": 6,
+      "combo": 0,
+      "damage": 890000,
+      "draw_calls": 83,
+      "elapsed": 13.836,
+      "fps": 3,
+      "fx": {
+        "audio_enabled": true,
+        "batch_meshes": 7,
+        "combo_cues": 4,
+        "counts": {
+          "cube": 0,
+          "paper": 0,
+          "powder": 13,
+          "ribbon": 0,
+          "ring": 0,
+          "star": 0,
+          "streak": 0
+        },
+        "exhaust": 13,
+        "last_combo": 6,
+        "life_total": 2.98186666666667,
+        "limit": 80,
+        "particle_clock": 6.41266666666667,
+        "particles": 13,
+        "reserved": 28,
+        "rush_starts": 1,
+        "spraying": true
+      },
+      "hud": {
+        "animation_clock": 6.41266666666667,
+        "best_stamp_visible": true,
+        "bonus_text": "+¥450,000",
+        "burst_kind": "impact",
+        "burst_left": 0,
+        "celebration_age": 2,
+        "combo_rect": "[P: (1460.0, 217.0), S: (425.0, 166.0)]",
+        "combo_scale": [
+          1,
+          1
+        ],
+        "controls": {
+          "pause_restart": [
+            643,
+            583,
+            303,
+            98
+          ],
+          "pause_resume": [
+            643,
+            447,
+            634,
+            110
+          ],
+          "pause_settings": [
+            969,
+            583,
+            308,
+            98
+          ],
+          "pause_title": [
+            643,
+            708,
+            634,
+            98
+          ],
+          "playing_pause": [
+            1658,
+            790,
+            222,
+            90
+          ],
+          "result_retry": [
+            102,
+            925,
+            495,
+            91
+          ],
+          "result_title": [
+            619,
+            925,
+            273,
+            91
+          ],
+          "settings_close": [
+            600,
+            825,
+            715,
+            88
+          ],
+          "settings_music": [
+            600,
+            513,
+            715,
+            90
+          ],
+          "settings_quality": [
+            973,
+            315,
+            338,
+            88
+          ],
+          "settings_sfx": [
+            600,
+            695,
+            715,
+            90
+          ],
+          "title_credits": [
+            454,
+            980,
+            340,
+            88
+          ],
+          "title_settings": [
+            108,
+            980,
+            321,
+            88
+          ],
+          "title_start": [
+            85,
+            825,
+            732,
+            130
+          ]
+        },
+        "counter_age": 1.79816666666667,
+        "damage_age": 1.79316666666667,
+        "damage_scale": [
+          1,
+          1
+        ],
+        "exit_rect": "[P: (783.0, 22.0), S: (354.0, 77.0)]",
+        "focused": true,
+        "mode": "playing",
+        "notice_rect": "[P: (502.0, 118.0), S: (916.0, 215.0)]",
+        "notice_text": "総務、見てない！",
+        "notice_visible": false,
+        "pause_rect": "[P: (1658.0, 790.0), S: (222.0, 90.0)]",
+        "phase": 6.41266666666667,
+        "pressure_rect": "[P: (20.0, 865.0), S: (541.0, 181.0)]",
+        "quality": "派手",
+        "retry_rect": "[P: (102.0, 925.0), S: (495.0, 91.0)]",
+        "root_offset": [
+          0,
+          0
+        ],
+        "root_scale": [
+          1,
+          1
+        ],
+        "rush_guard": 0,
+        "rush_starts": 1,
+        "settings_visible": false,
+        "stamp_age": 1,
+        "stamp_scale": [
+          1,
+          1
+        ],
+        "start_rect": "[P: (85.0, 825.0), S: (732.0, 130.0)]",
+        "success_starts": 0,
+        "timer_rect": "[P: (34.0, 31.0), S: (438.0, 174.0)]",
+        "viewport": [
+          1920,
+          1080
+        ]
+      },
+      "max_combo": 6,
+      "mode": "playing",
+      "music_volume": 0.45,
+      "player": [
+        0.0419840589165688,
+        0,
+        3.40566062927246
+      ],
+      "pressure": 96.6666666666666,
+      "quality": "派手",
+      "rank": "",
+      "rush": false,
+      "sfx_volume": 0.75,
+      "speed": 8.40400218963623,
+      "yaw": -0.599999904632568
+    },
+    {
+      "best_time": -1,
+      "broken": 8,
+      "combo": 2,
+      "damage": 1140000,
+      "draw_calls": 80,
+      "elapsed": 16.206,
+      "fps": 4,
+      "fx": {
+        "audio_enabled": true,
+        "batch_meshes": 7,
+        "combo_cues": 5,
+        "counts": {
+          "cube": 10,
+          "paper": 42,
+          "powder": 15,
+          "ribbon": 0,
+          "ring": 4,
+          "star": 2,
+          "streak": 0
+        },
+        "exhaust": 15,
+        "last_combo": 2,
+        "life_total": 50.9340198050181,
+        "limit": 80,
+        "particle_clock": 7.47023333333333,
+        "particles": 73,
+        "reserved": 28,
+        "rush_starts": 1,
+        "spraying": false
+      },
+      "hud": {
+        "animation_clock": 7.47023333333333,
+        "best_stamp_visible": true,
+        "bonus_text": "+¥250,000",
+        "burst_kind": "impact",
+        "burst_left": 0.85,
+        "celebration_age": 2,
+        "combo_rect": "[P: (1460.0, 217.0), S: (425.0, 166.0)]",
+        "combo_scale": [
+          1,
+          1
+        ],
+        "controls": {
+          "pause_restart": [
+            643,
+            583,
+            303,
+            98
+          ],
+          "pause_resume": [
+            643,
+            447,
+            634,
+            110
+          ],
+          "pause_settings": [
+            969,
+            583,
+            308,
+            98
+          ],
+          "pause_title": [
+            643,
+            708,
+            634,
+            98
+          ],
+          "playing_pause": [
+            1658,
+            790,
+            222,
+            90
+          ],
+          "result_retry": [
+            102,
+            925,
+            495,
+            91
+          ],
+          "result_title": [
+            619,
+            925,
+            273,
+            91
+          ],
+          "settings_close": [
+            600,
+            825,
+            715,
+            88
+          ],
+          "settings_music": [
+            600,
+            513,
+            715,
+            90
+          ],
+          "settings_quality": [
+            973,
+            315,
+            338,
+            88
+          ],
+          "settings_sfx": [
+            600,
+            695,
+            715,
+            90
+          ],
+          "title_credits": [
+            454,
+            980,
+            340,
+            88
+          ],
+          "title_settings": [
+            108,
+            980,
+            321,
+            88
+          ],
+          "title_start": [
+            85,
+            825,
+            732,
+            130
+          ]
+        },
+        "counter_age": 0.065,
+        "damage_age": 0.06,
+        "damage_scale": [
+          1,
+          1
+        ],
+        "exit_rect": "[P: (783.0, 22.0), S: (354.0, 77.0)]",
+        "focused": true,
+        "mode": "playing",
+        "notice_rect": "[P: (502.0, 118.0), S: (916.0, 215.0)]",
+        "notice_text": "総務、見てない！",
+        "notice_visible": true,
+        "pause_rect": "[P: (1658.0, 790.0), S: (222.0, 90.0)]",
+        "phase": 7.47023333333333,
+        "pressure_rect": "[P: (20.0, 865.0), S: (541.0, 181.0)]",
+        "quality": "派手",
+        "retry_rect": "[P: (102.0, 925.0), S: (495.0, 91.0)]",
+        "root_offset": [
+          0,
+          0
+        ],
+        "root_scale": [
+          1,
+          1
+        ],
+        "rush_guard": 0,
+        "rush_starts": 1,
+        "settings_visible": false,
+        "stamp_age": 1,
+        "stamp_scale": [
+          1,
+          1
+        ],
+        "start_rect": "[P: (85.0, 825.0), S: (732.0, 130.0)]",
+        "success_starts": 0,
+        "timer_rect": "[P: (34.0, 31.0), S: (438.0, 174.0)]",
+        "viewport": [
+          1920,
+          1080
+        ]
+      },
+      "max_combo": 6,
+      "mode": "playing",
+      "music_volume": 0.45,
+      "player": [
+        1.82103359699249,
+        0,
+        -5.02274656295776
+      ],
+      "pressure": 100,
+      "quality": "派手",
+      "rank": "",
+      "rush": false,
+      "sfx_volume": 0.75,
+      "speed": 8.19000434875488,
+      "yaw": -0.599999904632568
+    },
+    {
+      "best_time": -1,
+      "broken": 10,
+      "combo": 4,
+      "damage": 1320000,
+      "draw_calls": 86,
+      "elapsed": 18.704,
+      "fps": 3,
+      "fx": {
+        "audio_enabled": true,
+        "batch_meshes": 7,
+        "combo_cues": 6,
+        "counts": {
+          "cube": 8,
+          "paper": 36,
+          "powder": 0,
+          "ribbon": 8,
+          "ring": 0,
+          "star": 0,
+          "streak": 0
+        },
+        "exhaust": 0,
+        "last_combo": 4,
+        "life_total": 21.9170247157097,
+        "limit": 80,
+        "particle_clock": 8.8107,
+        "particles": 52,
+        "reserved": 28,
+        "rush_starts": 2,
+        "spraying": false
+      },
+      "hud": {
+        "animation_clock": 8.8107,
+        "best_stamp_visible": true,
+        "bonus_text": "+¥180,000",
+        "burst_kind": "rush",
+        "burst_left": 0.7954,
+        "celebration_age": 2,
+        "combo_rect": "[P: (1460.0, 217.0), S: (425.0, 166.0)]",
+        "combo_scale": [
+          1,
+          1
+        ],
+        "controls": {
+          "pause_restart": [
+            643,
+            583,
+            303,
+            98
+          ],
+          "pause_resume": [
+            643,
+            447,
+            634,
+            110
+          ],
+          "pause_settings": [
+            969,
+            583,
+            308,
+            98
+          ],
+          "pause_title": [
+            643,
+            708,
+            634,
+            98
+          ],
+          "playing_pause": [
+            1658,
+            790,
+            222,
+            90
+          ],
+          "result_retry": [
+            102,
+            925,
+            495,
+            91
+          ],
+          "result_title": [
+            619,
+            925,
+            273,
+            91
+          ],
+          "settings_close": [
+            600,
+            825,
+            715,
+            88
+          ],
+          "settings_music": [
+            600,
+            513,
+            715,
+            90
+          ],
+          "settings_quality": [
+            973,
+            315,
+            338,
+            88
+          ],
+          "settings_sfx": [
+            600,
+            695,
+            715,
+            90
+          ],
+          "title_credits": [
+            454,
+            980,
+            340,
+            88
+          ],
+          "title_settings": [
+            108,
+            980,
+            321,
+            88
+          ],
+          "title_start": [
+            85,
+            825,
+            732,
+            130
+          ]
+        },
+        "counter_age": 0.4696,
+        "damage_age": 0.4646,
+        "damage_scale": [
+          1,
+          1
+        ],
+        "exit_rect": "[P: (783.0, 22.0), S: (354.0, 77.0)]",
+        "focused": true,
+        "mode": "playing",
+        "notice_rect": "[P: (502.0, 118.0), S: (916.0, 215.0)]",
+        "notice_text": "定時ラッシュ！",
+        "notice_visible": true,
+        "pause_rect": "[P: (1658.0, 790.0), S: (222.0, 90.0)]",
+        "phase": 8.8107,
+        "pressure_rect": "[P: (20.0, 865.0), S: (541.0, 181.0)]",
+        "quality": "派手",
+        "retry_rect": "[P: (102.0, 925.0), S: (495.0, 91.0)]",
+        "root_offset": [
+          0,
+          0
+        ],
+        "root_scale": [
+          1,
+          1
+        ],
+        "rush_guard": 0.0954,
+        "rush_starts": 2,
+        "settings_visible": false,
+        "stamp_age": 1,
+        "stamp_scale": [
+          1,
+          1
+        ],
+        "start_rect": "[P: (85.0, 825.0), S: (732.0, 130.0)]",
+        "success_starts": 0,
+        "timer_rect": "[P: (34.0, 31.0), S: (438.0, 174.0)]",
+        "viewport": [
+          1920,
+          1080
+        ]
+      },
+      "max_combo": 6,
+      "mode": "playing",
+      "music_volume": 0.45,
+      "player": [
+        4.58141279220581,
+        0,
+        -15.3794841766357
+      ],
+      "pressure": 100,
+      "quality": "派手",
+      "rank": "",
+      "rush": true,
+      "sfx_volume": 0.75,
+      "speed": 7.70999765396118,
+      "yaw": 1.8402934642836e-07
+    },
+    {
+      "best_time": -1,
+      "broken": 10,
+      "combo": 0,
+      "damage": 1320000,
+      "draw_calls": 82,
+      "elapsed": 21.099,
+      "fps": 4,
+      "fx": {
+        "audio_enabled": true,
+        "batch_meshes": 7,
+        "combo_cues": 6,
+        "counts": {
+          "cube": 2,
+          "paper": 7,
+          "powder": 16,
+          "ribbon": 0,
+          "ring": 0,
+          "star": 0,
+          "streak": 2
+        },
+        "exhaust": 18,
+        "last_combo": 4,
+        "life_total": 9.94988716052374,
+        "limit": 80,
+        "particle_clock": 9.87726666666667,
+        "particles": 27,
+        "reserved": 28,
+        "rush_starts": 2,
+        "spraying": true
+      },
+      "hud": {
+        "animation_clock": 9.87726666666667,
+        "best_stamp_visible": true,
+        "bonus_text": "",
+        "burst_kind": "impact",
+        "burst_left": 0.452566666666667,
+        "celebration_age": 2,
+        "combo_rect": "[P: (1460.0, 217.0), S: (425.0, 166.0)]",
+        "combo_scale": [
+          1,
+          1
+        ],
+        "controls": {
+          "pause_restart": [
+            643,
+            583,
+            303,
+            98
+          ],
+          "pause_resume": [
+            643,
+            447,
+            634,
+            110
+          ],
+          "pause_settings": [
+            969,
+            583,
+            308,
+            98
+          ],
+          "pause_title": [
+            643,
+            708,
+            634,
+            98
+          ],
+          "playing_pause": [
+            1658,
+            790,
+            222,
+            90
+          ],
+          "result_retry": [
+            102,
+            925,
+            495,
+            91
+          ],
+          "result_title": [
+            619,
+            925,
+            273,
+            91
+          ],
+          "settings_close": [
+            600,
+            825,
+            715,
+            88
+          ],
+          "settings_music": [
+            600,
+            513,
+            715,
+            90
+          ],
+          "settings_quality": [
+            973,
+            315,
+            338,
+            88
+          ],
+          "settings_sfx": [
+            600,
+            695,
+            715,
+            90
+          ],
+          "title_credits": [
+            454,
+            980,
+            340,
+            88
+          ],
+          "title_settings": [
+            108,
+            980,
+            321,
+            88
+          ],
+          "title_start": [
+            85,
+            825,
+            732,
+            130
+          ]
+        },
+        "counter_age": 1.53616666666667,
+        "damage_age": 1.53116666666667,
+        "damage_scale": [
+          1,
+          1
+        ],
+        "exit_rect": "[P: (783.0, 22.0), S: (354.0, 77.0)]",
+        "focused": true,
+        "mode": "playing",
+        "notice_rect": "[P: (502.0, 118.0), S: (916.0, 215.0)]",
+        "notice_text": "壁、定時です！",
+        "notice_visible": true,
+        "pause_rect": "[P: (1658.0, 790.0), S: (222.0, 90.0)]",
+        "phase": 9.87726666666667,
+        "pressure_rect": "[P: (20.0, 865.0), S: (541.0, 181.0)]",
+        "quality": "派手",
+        "retry_rect": "[P: (102.0, 925.0), S: (495.0, 91.0)]",
+        "root_offset": [
+          0,
+          0
+        ],
+        "root_scale": [
+          1,
+          1
+        ],
+        "rush_guard": 0,
+        "rush_starts": 2,
+        "settings_visible": false,
+        "stamp_age": 1,
+        "stamp_scale": [
+          1,
+          1
+        ],
+        "start_rect": "[P: (85.0, 825.0), S: (732.0, 130.0)]",
+        "success_starts": 0,
+        "timer_rect": "[P: (34.0, 31.0), S: (438.0, 174.0)]",
+        "viewport": [
+          1920,
+          1080
+        ]
+      },
+      "max_combo": 6,
+      "mode": "playing",
+      "music_volume": 0.45,
+      "player": [
+        5.71930360794067,
+        0,
+        -18.407299041748
+      ],
+      "pressure": 93.3333333333333,
+      "quality": "派手",
+      "rank": "",
+      "rush": false,
+      "sfx_volume": 0.75,
+      "speed": 0.965302765369415,
+      "yaw": 1.52389466762543
+    },
+    {
+      "best_time": -1,
+      "broken": 12,
+      "combo": 2,
+      "damage": 1440000,
+      "draw_calls": 75,
+      "elapsed": 23.7,
+      "fps": 3,
+      "fx": {
+        "audio_enabled": true,
+        "batch_meshes": 7,
+        "combo_cues": 7,
+        "counts": {
+          "cube": 8,
+          "paper": 36,
+          "powder": 24,
+          "ribbon": 0,
+          "ring": 4,
+          "star": 2,
+          "streak": 6
+        },
+        "exhaust": 30,
+        "last_combo": 2,
+        "life_total": 50.0920018273989,
+        "limit": 80,
+        "particle_clock": 10.9427,
+        "particles": 80,
+        "reserved": 28,
+        "rush_starts": 2,
+        "spraying": true
+      },
+      "hud": {
+        "animation_clock": 10.9427,
+        "best_stamp_visible": true,
+        "bonus_text": "+¥120,000",
+        "burst_kind": "impact",
+        "burst_left": 0.85,
+        "celebration_age": 2,
+        "combo_rect": "[P: (1460.0, 217.0), S: (425.0, 166.0)]",
+        "combo_scale": [
+          1,
+          1
+        ],
+        "controls": {
+          "pause_restart": [
+            643,
+            583,
+            303,
+            98
+          ],
+          "pause_resume": [
+            643,
+            447,
+            634,
+            110
+          ],
+          "pause_settings": [
+            969,
+            583,
+            308,
+            98
+          ],
+          "pause_title": [
+            643,
+            708,
+            634,
+            98
+          ],
+          "playing_pause": [
+            1658,
+            790,
+            222,
+            90
+          ],
+          "result_retry": [
+            102,
+            925,
+            495,
+            91
+          ],
+          "result_title": [
+            619,
+            925,
+            273,
+            91
+          ],
+          "settings_close": [
+            600,
+            825,
+            715,
+            88
+          ],
+          "settings_music": [
+            600,
+            513,
+            715,
+            90
+          ],
+          "settings_quality": [
+            973,
+            315,
+            338,
+            88
+          ],
+          "settings_sfx": [
+            600,
+            695,
+            715,
+            90
+          ],
+          "title_credits": [
+            454,
+            980,
+            340,
+            88
+          ],
+          "title_settings": [
+            108,
+            980,
+            321,
+            88
+          ],
+          "title_start": [
+            85,
+            825,
+            732,
+            130
+          ]
+        },
+        "counter_age": 0.065,
+        "damage_age": 0.06,
+        "damage_scale": [
+          1,
+          1
+        ],
+        "exit_rect": "[P: (783.0, 22.0), S: (354.0, 77.0)]",
+        "focused": true,
+        "mode": "playing",
+        "notice_rect": "[P: (502.0, 118.0), S: (916.0, 215.0)]",
+        "notice_text": "コピー用紙、放出！",
+        "notice_visible": true,
+        "pause_rect": "[P: (1658.0, 790.0), S: (222.0, 90.0)]",
+        "phase": 10.9427,
+        "pressure_rect": "[P: (20.0, 865.0), S: (541.0, 181.0)]",
+        "quality": "派手",
+        "retry_rect": "[P: (102.0, 925.0), S: (495.0, 91.0)]",
+        "root_offset": [
+          0,
+          0
+        ],
+        "root_scale": [
+          1,
+          1
+        ],
+        "rush_guard": 0,
+        "rush_starts": 2,
+        "settings_visible": false,
+        "stamp_age": 1,
+        "stamp_scale": [
+          1,
+          1
+        ],
+        "start_rect": "[P: (85.0, 825.0), S: (732.0, 130.0)]",
+        "success_starts": 0,
+        "timer_rect": "[P: (34.0, 31.0), S: (438.0, 174.0)]",
+        "viewport": [
+          1920,
+          1080
+        ]
+      },
+      "max_combo": 6,
+      "mode": "playing",
+      "music_volume": 0.45,
+      "player": [
+        2.3396098613739,
+        0,
+        -19.2067947387695
+      ],
+      "pressure": 66.6666666666663,
+      "quality": "派手",
+      "rank": "",
+      "rush": false,
+      "sfx_volume": 0.75,
+      "speed": 5.67638969421387,
+      "yaw": 0.623894155025482
+    },
+    {
+      "best_time": -1,
+      "broken": 12,
+      "combo": 0,
+      "damage": 1440000,
+      "draw_calls": 78,
+      "elapsed": 26.183,
+      "fps": 3,
+      "fx": {
+        "audio_enabled": true,
+        "batch_meshes": 7,
+        "combo_cues": 7,
+        "counts": {
+          "cube": 7,
+          "paper": 34,
+          "powder": 26,
+          "ribbon": 0,
+          "ring": 0,
+          "star": 0,
+          "streak": 6
+        },
+        "exhaust": 32,
+        "last_combo": 2,
+        "life_total": 20.1432660398165,
+        "limit": 80,
+        "particle_clock": 11.7441,
+        "particles": 73,
+        "reserved": 28,
+        "rush_starts": 2,
+        "spraying": true
+      },
+      "hud": {
+        "animation_clock": 11.7441,
+        "best_stamp_visible": true,
+        "bonus_text": "+¥120,000",
+        "burst_kind": "impact",
+        "burst_left": 0.184766666666666,
+        "celebration_age": 2,
+        "combo_rect": "[P: (1460.0, 217.0), S: (425.0, 166.0)]",
+        "combo_scale": [
+          1,
+          1
+        ],
+        "controls": {
+          "pause_restart": [
+            643,
+            583,
+            303,
+            98
+          ],
+          "pause_resume": [
+            643,
+            447,
+            634,
+            110
+          ],
+          "pause_settings": [
+            969,
+            583,
+            308,
+            98
+          ],
+          "pause_title": [
+            643,
+            708,
+            634,
+            98
+          ],
+          "playing_pause": [
+            1658,
+            790,
+            222,
+            90
+          ],
+          "result_retry": [
+            102,
+            925,
+            495,
+            91
+          ],
+          "result_title": [
+            619,
+            925,
+            273,
+            91
+          ],
+          "settings_close": [
+            600,
+            825,
+            715,
+            88
+          ],
+          "settings_music": [
+            600,
+            513,
+            715,
+            90
+          ],
+          "settings_quality": [
+            973,
+            315,
+            338,
+            88
+          ],
+          "settings_sfx": [
+            600,
+            695,
+            715,
+            90
+          ],
+          "title_credits": [
+            454,
+            980,
+            340,
+            88
+          ],
+          "title_settings": [
+            108,
+            980,
+            321,
+            88
+          ],
+          "title_start": [
+            85,
+            825,
+            732,
+            130
+          ]
+        },
+        "counter_age": 0.730233333333333,
+        "damage_age": 0.725233333333334,
+        "damage_scale": [
+          1,
+          1
+        ],
+        "exit_rect": "[P: (783.0, 22.0), S: (354.0, 77.0)]",
+        "focused": true,
+        "mode": "playing",
+        "notice_rect": "[P: (502.0, 118.0), S: (916.0, 215.0)]",
+        "notice_text": "コピー用紙、放出！",
+        "notice_visible": true,
+        "pause_rect": "[P: (1658.0, 790.0), S: (222.0, 90.0)]",
+        "phase": 11.7441,
+        "pressure_rect": "[P: (20.0, 865.0), S: (541.0, 181.0)]",
+        "quality": "派手",
+        "retry_rect": "[P: (102.0, 925.0), S: (495.0, 91.0)]",
+        "root_offset": [
+          0,
+          0
+        ],
+        "root_scale": [
+          1,
+          1
+        ],
+        "rush_guard": 0,
+        "rush_starts": 2,
+        "settings_visible": false,
+        "stamp_age": 1,
+        "stamp_scale": [
+          1,
+          1
+        ],
+        "start_rect": "[P: (85.0, 825.0), S: (732.0, 130.0)]",
+        "success_starts": 0,
+        "timer_rect": "[P: (34.0, 31.0), S: (438.0, 174.0)]",
+        "viewport": [
+          1920,
+          1080
+        ]
+      },
+      "max_combo": 6,
+      "mode": "playing",
+      "music_volume": 0.45,
+      "player": [
+        -2.51050472259521,
+        0,
+        -22.3593063354492
+      ],
+      "pressure": 46.6666666666664,
+      "quality": "派手",
+      "rank": "",
+      "rush": false,
+      "sfx_volume": 0.75,
+      "speed": 8.99999904632568,
+      "yaw": 0.623893797397614
+    },
+    {
+      "best_time": -1,
+      "broken": 12,
+      "combo": 0,
+      "damage": 1440000,
+      "draw_calls": 71,
+      "elapsed": 28.231,
+      "fps": 3,
+      "fx": {
+        "audio_enabled": true,
+        "batch_meshes": 7,
+        "combo_cues": 7,
+        "counts": {
+          "cube": 2,
+          "paper": 7,
+          "powder": 16,
+          "ribbon": 0,
+          "ring": 2,
+          "star": 1,
+          "streak": 6
+        },
+        "exhaust": 22,
+        "last_combo": 2,
+        "life_total": 17.4490658232371,
+        "limit": 80,
+        "particle_clock": 12.8146333333333,
+        "particles": 34,
+        "reserved": 28,
+        "rush_starts": 2,
+        "spraying": true
+      },
+      "hud": {
+        "animation_clock": 12.8146333333333,
+        "best_stamp_visible": true,
+        "bonus_text": "",
+        "burst_kind": "impact",
+        "burst_left": 0.85,
+        "celebration_age": 2,
+        "combo_rect": "[P: (1460.0, 217.0), S: (425.0, 166.0)]",
+        "combo_scale": [
+          1,
+          1
+        ],
+        "controls": {
+          "pause_restart": [
+            643,
+            583,
+            303,
+            98
+          ],
+          "pause_resume": [
+            643,
+            447,
+            634,
+            110
+          ],
+          "pause_settings": [
+            969,
+            583,
+            308,
+            98
+          ],
+          "pause_title": [
+            643,
+            708,
+            634,
+            98
+          ],
+          "playing_pause": [
+            1658,
+            790,
+            222,
+            90
+          ],
+          "result_retry": [
+            102,
+            925,
+            495,
+            91
+          ],
+          "result_title": [
+            619,
+            925,
+            273,
+            91
+          ],
+          "settings_close": [
+            600,
+            825,
+            715,
+            88
+          ],
+          "settings_music": [
+            600,
+            513,
+            715,
+            90
+          ],
+          "settings_quality": [
+            973,
+            315,
+            338,
+            88
+          ],
+          "settings_sfx": [
+            600,
+            695,
+            715,
+            90
+          ],
+          "title_credits": [
+            454,
+            980,
+            340,
+            88
+          ],
+          "title_settings": [
+            108,
+            980,
+            321,
+            88
+          ],
+          "title_start": [
+            85,
+            825,
+            732,
+            130
+          ]
+        },
+        "counter_age": 1.80076666666667,
+        "damage_age": 1.79576666666667,
+        "damage_scale": [
+          1,
+          1
+        ],
+        "exit_rect": "[P: (783.0, 22.0), S: (354.0, 77.0)]",
+        "focused": true,
+        "mode": "playing",
+        "notice_rect": "[P: (502.0, 118.0), S: (916.0, 215.0)]",
+        "notice_text": "壁、定時です！",
+        "notice_visible": true,
+        "pause_rect": "[P: (1658.0, 790.0), S: (222.0, 90.0)]",
+        "phase": 12.8146333333333,
+        "pressure_rect": "[P: (20.0, 865.0), S: (541.0, 181.0)]",
+        "quality": "派手",
+        "retry_rect": "[P: (102.0, 925.0), S: (495.0, 91.0)]",
+        "root_offset": [
+          0,
+          0
+        ],
+        "root_scale": [
+          1,
+          1
+        ],
+        "rush_guard": 0,
+        "rush_starts": 2,
+        "settings_visible": false,
+        "stamp_age": 1,
+        "stamp_scale": [
+          1,
+          1
+        ],
+        "start_rect": "[P: (85.0, 825.0), S: (732.0, 130.0)]",
+        "success_starts": 0,
+        "timer_rect": "[P: (34.0, 31.0), S: (438.0, 174.0)]",
+        "viewport": [
+          1920,
+          1080
+        ]
+      },
+      "max_combo": 6,
+      "mode": "playing",
+      "music_volume": 0.45,
+      "player": [
+        -8.4939489364624,
+        0,
+        -27.1198978424072
+      ],
+      "pressure": 59.9999999999996,
+      "quality": "派手",
+      "rank": "",
+      "rush": false,
+      "sfx_volume": 0.75,
+      "speed": 4.81335735321045,
+      "yaw": -1.20984888076782
+    },
+    {
+      "best_time": -1,
+      "broken": 12,
+      "combo": 0,
+      "damage": 1440000,
+      "draw_calls": 71,
+      "elapsed": 30.276,
+      "fps": 5,
+      "fx": {
+        "audio_enabled": true,
+        "batch_meshes": 7,
+        "combo_cues": 7,
+        "counts": {
+          "cube": 0,
+          "paper": 0,
+          "powder": 20,
+          "ribbon": 0,
+          "ring": 0,
+          "star": 0,
+          "streak": 2
+        },
+        "exhaust": 22,
+        "last_combo": 2,
+        "life_total": 5.607,
+        "limit": 80,
+        "particle_clock": 14.1474333333333,
+        "particles": 22,
+        "reserved": 28,
+        "rush_starts": 2,
+        "spraying": false
+      },
+      "hud": {
+        "animation_clock": 14.1474333333333,
+        "best_stamp_visible": true,
+        "bonus_text": "",
+        "burst_kind": "impact",
+        "burst_left": 0,
+        "celebration_age": 2,
+        "combo_rect": "[P: (1460.0, 217.0), S: (425.0, 166.0)]",
+        "combo_scale": [
+          1,
+          1
+        ],
+        "controls": {
+          "pause_restart": [
+            643,
+            583,
+            303,
+            98
+          ],
+          "pause_resume": [
+            643,
+            447,
+            634,
+            110
+          ],
+          "pause_settings": [
+            969,
+            583,
+            308,
+            98
+          ],
+          "pause_title": [
+            643,
+            708,
+            634,
+            98
+          ],
+          "playing_pause": [
+            1658,
+            790,
+            222,
+            90
+          ],
+          "result_retry": [
+            102,
+            925,
+            495,
+            91
+          ],
+          "result_title": [
+            619,
+            925,
+            273,
+            91
+          ],
+          "settings_close": [
+            600,
+            825,
+            715,
+            88
+          ],
+          "settings_music": [
+            600,
+            513,
+            715,
+            90
+          ],
+          "settings_quality": [
+            973,
+            315,
+            338,
+            88
+          ],
+          "settings_sfx": [
+            600,
+            695,
+            715,
+            90
+          ],
+          "title_credits": [
+            454,
+            980,
+            340,
+            88
+          ],
+          "title_settings": [
+            108,
+            980,
+            321,
+            88
+          ],
+          "title_start": [
+            85,
+            825,
+            732,
+            130
+          ]
+        },
+        "counter_age": 3.13356666666667,
+        "damage_age": 3.12856666666667,
+        "damage_scale": [
+          1,
+          1
+        ],
+        "exit_rect": "[P: (783.0, 22.0), S: (354.0, 77.0)]",
+        "focused": true,
+        "mode": "playing",
+        "notice_rect": "[P: (502.0, 118.0), S: (916.0, 215.0)]",
+        "notice_text": "壁、定時です！",
+        "notice_visible": false,
+        "pause_rect": "[P: (1658.0, 790.0), S: (222.0, 90.0)]",
+        "phase": 14.1474333333333,
+        "pressure_rect": "[P: (20.0, 865.0), S: (541.0, 181.0)]",
+        "quality": "派手",
+        "retry_rect": "[P: (102.0, 925.0), S: (495.0, 91.0)]",
+        "root_offset": [
+          0,
+          0
+        ],
+        "root_scale": [
+          1,
+          1
+        ],
+        "rush_guard": 0,
+        "rush_starts": 2,
+        "settings_visible": false,
+        "stamp_age": 1,
+        "stamp_scale": [
+          1,
+          1
+        ],
+        "start_rect": "[P: (85.0, 825.0), S: (732.0, 130.0)]",
+        "success_starts": 0,
+        "timer_rect": "[P: (34.0, 31.0), S: (438.0, 174.0)]",
+        "viewport": [
+          1920,
+          1080
+        ]
+      },
+      "max_combo": 6,
+      "mode": "playing",
+      "music_volume": 0.45,
+      "player": [
+        -5.11302185058594,
+        0,
+        -36.605281829834
+      ],
+      "pressure": 56.6666666666665,
+      "quality": "派手",
+      "rank": "",
+      "rush": false,
+      "sfx_volume": 0.75,
+      "speed": 8.28000259399414,
+      "yaw": -1.20984935760498
+    },
+    {
+      "best_time": -1,
+      "broken": 12,
+      "combo": 0,
+      "damage": 1440000,
+      "draw_calls": 69,
+      "elapsed": 32.456,
+      "fps": 8,
+      "fx": {
+        "audio_enabled": true,
+        "batch_meshes": 7,
+        "combo_cues": 7,
+        "counts": {
+          "cube": 0,
+          "paper": 0,
+          "powder": 19,
+          "ribbon": 0,
+          "ring": 0,
+          "star": 0,
+          "streak": 0
+        },
+        "exhaust": 19,
+        "last_combo": 2,
+        "life_total": 6.1319,
+        "limit": 80,
+        "particle_clock": 16.1611666666667,
+        "particles": 19,
+        "reserved": 28,
+        "rush_starts": 2,
+        "spraying": true
+      },
+      "hud": {
+        "animation_clock": 16.1611666666667,
+        "best_stamp_visible": true,
+        "bonus_text": "",
+        "burst_kind": "impact",
+        "burst_left": 0,
+        "celebration_age": 2,
+        "combo_rect": "[P: (1460.0, 217.0), S: (425.0, 166.0)]",
+        "combo_scale": [
+          1,
+          1
+        ],
+        "controls": {
+          "pause_restart": [
+            643,
+            583,
+            303,
+            98
+          ],
+          "pause_resume": [
+            643,
+            447,
+            634,
+            110
+          ],
+          "pause_settings": [
+            969,
+            583,
+            308,
+            98
+          ],
+          "pause_title": [
+            643,
+            708,
+            634,
+            98
+          ],
+          "playing_pause": [
+            1658,
+            790,
+            222,
+            90
+          ],
+          "result_retry": [
+            102,
+            925,
+            495,
+            91
+          ],
+          "result_title": [
+            619,
+            925,
+            273,
+            91
+          ],
+          "settings_close": [
+            600,
+            825,
+            715,
+            88
+          ],
+          "settings_music": [
+            600,
+            513,
+            715,
+            90
+          ],
+          "settings_quality": [
+            973,
+            315,
+            338,
+            88
+          ],
+          "settings_sfx": [
+            600,
+            695,
+            715,
+            90
+          ],
+          "title_credits": [
+            454,
+            980,
+            340,
+            88
+          ],
+          "title_settings": [
+            108,
+            980,
+            321,
+            88
+          ],
+          "title_start": [
+            85,
+            825,
+            732,
+            130
+          ]
+        },
+        "counter_age": 5.1473,
+        "damage_age": 5.1423,
+        "damage_scale": [
+          1,
+          1
+        ],
+        "exit_rect": "[P: (783.0, 22.0), S: (354.0, 77.0)]",
+        "focused": true,
+        "mode": "playing",
+        "notice_rect": "[P: (502.0, 118.0), S: (916.0, 215.0)]",
+        "notice_text": "壁、定時です！",
+        "notice_visible": false,
+        "pause_rect": "[P: (1658.0, 790.0), S: (222.0, 90.0)]",
+        "phase": 16.1611666666667,
+        "pressure_rect": "[P: (20.0, 865.0), S: (541.0, 181.0)]",
+        "quality": "派手",
+        "retry_rect": "[P: (102.0, 925.0), S: (495.0, 91.0)]",
+        "root_offset": [
+          0,
+          0
+        ],
+        "root_scale": [
+          1,
+          1
+        ],
+        "rush_guard": 0,
+        "rush_starts": 2,
+        "settings_visible": false,
+        "stamp_age": 1,
+        "stamp_scale": [
+          1,
+          1
+        ],
+        "start_rect": "[P: (85.0, 825.0), S: (732.0, 130.0)]",
+        "success_starts": 0,
+        "timer_rect": "[P: (34.0, 31.0), S: (438.0, 174.0)]",
+        "viewport": [
+          1920,
+          1080
+        ]
+      },
+      "max_combo": 6,
+      "mode": "playing",
+      "music_volume": 0.45,
+      "player": [
+        2.59029817581177,
+        0,
+        -43.7041244506836
+      ],
+      "pressure": 91.2499999999994,
+      "quality": "派手",
+      "rank": "",
+      "rush": false,
+      "sfx_volume": 0.75,
+      "speed": 5.08712244033813,
+      "yaw": -0.12338874489069
+    },
+    {
+      "best_time": -1,
+      "broken": 12,
+      "combo": 0,
+      "damage": 1440000,
+      "draw_calls": 64,
+      "elapsed": 34.46,
+      "fps": 11,
+      "fx": {
+        "audio_enabled": true,
+        "batch_meshes": 7,
+        "combo_cues": 7,
+        "counts": {
+          "cube": 0,
+          "paper": 0,
+          "powder": 0,
+          "ribbon": 0,
+          "ring": 0,
+          "star": 0,
+          "streak": 0
+        },
+        "exhaust": 0,
+        "last_combo": 2,
+        "life_total": 0,
+        "limit": 80,
+        "particle_clock": 18.2133666666667,
+        "particles": 0,
+        "reserved": 28,
+        "rush_starts": 2,
+        "spraying": false
+      },
+      "hud": {
+        "animation_clock": 18.2133666666667,
+        "best_stamp_visible": true,
+        "bonus_text": "",
+        "burst_kind": "impact",
+        "burst_left": 0,
+        "celebration_age": 2,
+        "combo_rect": "[P: (1460.0, 217.0), S: (425.0, 166.0)]",
+        "combo_scale": [
+          1,
+          1
+        ],
+        "controls": {
+          "pause_restart": [
+            643,
+            583,
+            303,
+            98
+          ],
+          "pause_resume": [
+            643,
+            447,
+            634,
+            110
+          ],
+          "pause_settings": [
+            969,
+            583,
+            308,
+            98
+          ],
+          "pause_title": [
+            643,
+            708,
+            634,
+            98
+          ],
+          "playing_pause": [
+            1658,
+            790,
+            222,
+            90
+          ],
+          "result_retry": [
+            102,
+            925,
+            495,
+            91
+          ],
+          "result_title": [
+            619,
+            925,
+            273,
+            91
+          ],
+          "settings_close": [
+            600,
+            825,
+            715,
+            88
+          ],
+          "settings_music": [
+            600,
+            513,
+            715,
+            90
+          ],
+          "settings_quality": [
+            973,
+            315,
+            338,
+            88
+          ],
+          "settings_sfx": [
+            600,
+            695,
+            715,
+            90
+          ],
+          "title_credits": [
+            454,
+            980,
+            340,
+            88
+          ],
+          "title_settings": [
+            108,
+            980,
+            321,
+            88
+          ],
+          "title_start": [
+            85,
+            825,
+            732,
+            130
+          ]
+        },
+        "counter_age": 7.1995,
+        "damage_age": 7.1945,
+        "damage_scale": [
+          1,
+          1
+        ],
+        "exit_rect": "[P: (783.0, 22.0), S: (354.0, 77.0)]",
+        "focused": true,
+        "mode": "playing",
+        "notice_rect": "[P: (502.0, 118.0), S: (916.0, 215.0)]",
+        "notice_text": "壁、定時です！",
+        "notice_visible": false,
+        "pause_rect": "[P: (1658.0, 790.0), S: (222.0, 90.0)]",
+        "phase": 18.2133666666667,
+        "pressure_rect": "[P: (20.0, 865.0), S: (541.0, 181.0)]",
+        "quality": "派手",
+        "retry_rect": "[P: (102.0, 925.0), S: (495.0, 91.0)]",
+        "root_offset": [
+          0,
+          0
+        ],
+        "root_scale": [
+          1,
+          1
+        ],
+        "rush_guard": 0,
+        "rush_starts": 2,
+        "settings_visible": false,
+        "stamp_age": 1,
+        "stamp_scale": [
+          1,
+          1
+        ],
+        "start_rect": "[P: (85.0, 825.0), S: (732.0, 130.0)]",
+        "success_starts": 0,
+        "timer_rect": "[P: (34.0, 31.0), S: (438.0, 174.0)]",
+        "viewport": [
+          1920,
+          1080
+        ]
+      },
+      "max_combo": 6,
+      "mode": "playing",
+      "music_volume": 0.45,
+      "player": [
+        6.92852163314819,
+        0,
+        -54.4027481079102
+      ],
+      "pressure": 100,
+      "quality": "派手",
+      "rank": "",
+      "rush": false,
+      "sfx_volume": 0.75,
+      "speed": 4.22774982452393,
+      "yaw": 0.139111265540123
+    },
+    {
+      "best_time": -1,
+      "broken": 12,
+      "combo": 0,
+      "damage": 1440000,
+      "draw_calls": 65,
+      "elapsed": 36.633,
+      "fps": 14,
+      "fx": {
+        "audio_enabled": true,
+        "batch_meshes": 7,
+        "combo_cues": 7,
+        "counts": {
+          "cube": 0,
+          "paper": 0,
+          "powder": 19,
+          "ribbon": 0,
+          "ring": 0,
+          "star": 0,
+          "streak": 3
+        },
+        "exhaust": 22,
+        "last_combo": 2,
+        "life_total": 6.1213,
+        "limit": 80,
+        "particle_clock": 20.3681666666667,
+        "particles": 22,
+        "reserved": 28,
+        "rush_starts": 2,
+        "spraying": false
+      },
+      "hud": {
+        "animation_clock": 20.3681666666667,
+        "best_stamp_visible": true,
+        "bonus_text": "",
+        "burst_kind": "impact",
+        "burst_left": 0,
+        "celebration_age": 2,
+        "combo_rect": "[P: (1460.0, 217.0), S: (425.0, 166.0)]",
+        "combo_scale": [
+          1,
+          1
+        ],
+        "controls": {
+          "pause_restart": [
+            643,
+            583,
+            303,
+            98
+          ],
+          "pause_resume": [
+            643,
+            447,
+            634,
+            110
+          ],
+          "pause_settings": [
+            969,
+            583,
+            308,
+            98
+          ],
+          "pause_title": [
+            643,
+            708,
+            634,
+            98
+          ],
+          "playing_pause": [
+            1658,
+            790,
+            222,
+            90
+          ],
+          "result_retry": [
+            102,
+            925,
+            495,
+            91
+          ],
+          "result_title": [
+            619,
+            925,
+            273,
+            91
+          ],
+          "settings_close": [
+            600,
+            825,
+            715,
+            88
+          ],
+          "settings_music": [
+            600,
+            513,
+            715,
+            90
+          ],
+          "settings_quality": [
+            973,
+            315,
+            338,
+            88
+          ],
+          "settings_sfx": [
+            600,
+            695,
+            715,
+            90
+          ],
+          "title_credits": [
+            454,
+            980,
+            340,
+            88
+          ],
+          "title_settings": [
+            108,
+            980,
+            321,
+            88
+          ],
+          "title_start": [
+            85,
+            825,
+            732,
+            130
+          ]
+        },
+        "counter_age": 9.3543,
+        "damage_age": 9.3493,
+        "damage_scale": [
+          1,
+          1
+        ],
+        "exit_rect": "[P: (783.0, 22.0), S: (354.0, 77.0)]",
+        "focused": true,
+        "mode": "playing",
+        "notice_rect": "[P: (502.0, 118.0), S: (916.0, 215.0)]",
+        "notice_text": "壁、定時です！",
+        "notice_visible": false,
+        "pause_rect": "[P: (1658.0, 790.0), S: (222.0, 90.0)]",
+        "phase": 20.3681666666667,
+        "pressure_rect": "[P: (20.0, 865.0), S: (541.0, 181.0)]",
+        "quality": "派手",
+        "retry_rect": "[P: (102.0, 925.0), S: (495.0, 91.0)]",
+        "root_offset": [
+          0,
+          0
+        ],
+        "root_scale": [
+          1,
+          1
+        ],
+        "rush_guard": 0,
+        "rush_starts": 2,
+        "settings_visible": false,
+        "stamp_age": 1,
+        "stamp_scale": [
+          1,
+          1
+        ],
+        "start_rect": "[P: (85.0, 825.0), S: (732.0, 130.0)]",
+        "success_starts": 0,
+        "timer_rect": "[P: (34.0, 31.0), S: (438.0, 174.0)]",
+        "viewport": [
+          1920,
+          1080
+        ]
+      },
+      "max_combo": 6,
+      "mode": "playing",
+      "music_volume": 0.45,
+      "player": [
+        5.94078207015991,
+        0,
+        -60.0671539306641
+      ],
+      "pressure": 92.4999999999997,
+      "quality": "派手",
+      "rank": "",
+      "rush": false,
+      "sfx_volume": 0.75,
+      "speed": 4.34294605255127,
+      "yaw": 2.01411175727844
+    },
+    {
+      "best_time": -1,
+      "broken": 12,
+      "combo": 0,
+      "damage": 1440000,
+      "draw_calls": 70,
+      "elapsed": 38.766,
+      "fps": 2,
+      "fx": {
+        "audio_enabled": true,
+        "batch_meshes": 7,
+        "combo_cues": 7,
+        "counts": {
+          "cube": 2,
+          "paper": 7,
+          "powder": 5,
+          "ribbon": 0,
+          "ring": 2,
+          "star": 1,
+          "streak": 0
+        },
+        "exhaust": 5,
+        "last_combo": 2,
+        "life_total": 9.24519930353165,
+        "limit": 80,
+        "particle_clock": 21.5765,
+        "particles": 17,
+        "reserved": 28,
+        "rush_starts": 2,
+        "spraying": true
+      },
+      "hud": {
+        "animation_clock": 21.5765,
+        "best_stamp_visible": true,
+        "bonus_text": "",
+        "burst_kind": "impact",
+        "burst_left": 0.7077,
+        "celebration_age": 2,
+        "combo_rect": "[P: (1460.0, 217.0), S: (425.0, 166.0)]",
+        "combo_scale": [
+          1,
+          1
+        ],
+        "controls": {
+          "pause_restart": [
+            643,
+            583,
+            303,
+            98
+          ],
+          "pause_resume": [
+            643,
+            447,
+            634,
+            110
+          ],
+          "pause_settings": [
+            969,
+            583,
+            308,
+            98
+          ],
+          "pause_title": [
+            643,
+            708,
+            634,
+            98
+          ],
+          "playing_pause": [
+            1658,
+            790,
+            222,
+            90
+          ],
+          "result_retry": [
+            102,
+            925,
+            495,
+            91
+          ],
+          "result_title": [
+            619,
+            925,
+            273,
+            91
+          ],
+          "settings_close": [
+            600,
+            825,
+            715,
+            88
+          ],
+          "settings_music": [
+            600,
+            513,
+            715,
+            90
+          ],
+          "settings_quality": [
+            973,
+            315,
+            338,
+            88
+          ],
+          "settings_sfx": [
+            600,
+            695,
+            715,
+            90
+          ],
+          "title_credits": [
+            454,
+            980,
+            340,
+            88
+          ],
+          "title_settings": [
+            108,
+            980,
+            321,
+            88
+          ],
+          "title_start": [
+            85,
+            825,
+            732,
+            130
+          ]
+        },
+        "counter_age": 10.5626333333333,
+        "damage_age": 10.5576333333333,
+        "damage_scale": [
+          1,
+          1
+        ],
+        "exit_rect": "[P: (783.0, 22.0), S: (354.0, 77.0)]",
+        "focused": true,
+        "mode": "playing",
+        "notice_rect": "[P: (502.0, 118.0), S: (916.0, 215.0)]",
+        "notice_text": "壁、定時です！",
+        "notice_visible": true,
+        "pause_rect": "[P: (1658.0, 790.0), S: (222.0, 90.0)]",
+        "phase": 21.5765,
+        "pressure_rect": "[P: (20.0, 865.0), S: (541.0, 181.0)]",
+        "quality": "派手",
+        "retry_rect": "[P: (102.0, 925.0), S: (495.0, 91.0)]",
+        "root_offset": [
+          0,
+          0
+        ],
+        "root_scale": [
+          1,
+          1
+        ],
+        "rush_guard": 0,
+        "rush_starts": 2,
+        "settings_visible": false,
+        "stamp_age": 1,
+        "stamp_scale": [
+          1,
+          1
+        ],
+        "start_rect": "[P: (85.0, 825.0), S: (732.0, 130.0)]",
+        "success_starts": 0,
+        "timer_rect": "[P: (34.0, 31.0), S: (438.0, 174.0)]",
+        "viewport": [
+          1920,
+          1080
+        ]
+      },
+      "max_combo": 6,
+      "mode": "playing",
+      "music_volume": 0.45,
+      "player": [
+        2.76046633720398,
+        0,
+        -61.8485717773438
+      ],
+      "pressure": 97.0833333333333,
+      "quality": "派手",
+      "rank": "",
+      "rush": false,
+      "sfx_volume": 0.75,
+      "speed": 2.2115638256073,
+      "yaw": 1.97479021549225
+    },
+    {
+      "best_time": -1,
+      "broken": 12,
+      "combo": 0,
+      "damage": 1440000,
+      "draw_calls": 67,
+      "elapsed": 40.992,
+      "fps": 11,
+      "fx": {
+        "audio_enabled": true,
+        "batch_meshes": 7,
+        "combo_cues": 7,
+        "counts": {
+          "cube": 0,
+          "paper": 0,
+          "powder": 15,
+          "ribbon": 0,
+          "ring": 0,
+          "star": 0,
+          "streak": 6
+        },
+        "exhaust": 21,
+        "last_combo": 2,
+        "life_total": 8.6525,
+        "limit": 80,
+        "particle_clock": 23.4361,
+        "particles": 21,
+        "reserved": 28,
+        "rush_starts": 2,
+        "spraying": true
+      },
+      "hud": {
+        "animation_clock": 23.4361,
+        "best_stamp_visible": true,
+        "bonus_text": "",
+        "burst_kind": "impact",
+        "burst_left": 0,
+        "celebration_age": 2,
+        "combo_rect": "[P: (1460.0, 217.0), S: (425.0, 166.0)]",
+        "combo_scale": [
+          1,
+          1
+        ],
+        "controls": {
+          "pause_restart": [
+            643,
+            583,
+            303,
+            98
+          ],
+          "pause_resume": [
+            643,
+            447,
+            634,
+            110
+          ],
+          "pause_settings": [
+            969,
+            583,
+            308,
+            98
+          ],
+          "pause_title": [
+            643,
+            708,
+            634,
+            98
+          ],
+          "playing_pause": [
+            1658,
+            790,
+            222,
+            90
+          ],
+          "result_retry": [
+            102,
+            925,
+            495,
+            91
+          ],
+          "result_title": [
+            619,
+            925,
+            273,
+            91
+          ],
+          "settings_close": [
+            600,
+            825,
+            715,
+            88
+          ],
+          "settings_music": [
+            600,
+            513,
+            715,
+            90
+          ],
+          "settings_quality": [
+            973,
+            315,
+            338,
+            88
+          ],
+          "settings_sfx": [
+            600,
+            695,
+            715,
+            90
+          ],
+          "title_credits": [
+            454,
+            980,
+            340,
+            88
+          ],
+          "title_settings": [
+            108,
+            980,
+            321,
+            88
+          ],
+          "title_start": [
+            85,
+            825,
+            732,
+            130
+          ]
+        },
+        "counter_age": 12.4222333333333,
+        "damage_age": 12.4172333333333,
+        "damage_scale": [
+          1,
+          1
+        ],
+        "exit_rect": "[P: (783.0, 22.0), S: (354.0, 77.0)]",
+        "focused": true,
+        "mode": "playing",
+        "notice_rect": "[P: (502.0, 118.0), S: (916.0, 215.0)]",
+        "notice_text": "壁、定時です！",
+        "notice_visible": false,
+        "pause_rect": "[P: (1658.0, 790.0), S: (222.0, 90.0)]",
+        "phase": 23.4361,
+        "pressure_rect": "[P: (20.0, 865.0), S: (541.0, 181.0)]",
+        "quality": "派手",
+        "retry_rect": "[P: (102.0, 925.0), S: (495.0, 91.0)]",
+        "root_offset": [
+          0,
+          0
+        ],
+        "root_scale": [
+          1,
+          1
+        ],
+        "rush_guard": 0,
+        "rush_starts": 2,
+        "settings_visible": false,
+        "stamp_age": 1,
+        "stamp_scale": [
+          1,
+          1
+        ],
+        "start_rect": "[P: (85.0, 825.0), S: (732.0, 130.0)]",
+        "success_starts": 0,
+        "timer_rect": "[P: (34.0, 31.0), S: (438.0, 174.0)]",
+        "viewport": [
+          1920,
+          1080
+        ]
+      },
+      "max_combo": 6,
+      "mode": "playing",
+      "music_volume": 0.45,
+      "player": [
+        -2.54098463058472,
+        0,
+        -59.1512870788574
+      ],
+      "pressure": 87.4999999999999,
+      "quality": "派手",
+      "rank": "",
+      "rush": false,
+      "sfx_volume": 0.75,
+      "speed": 4.1100640296936,
+      "yaw": 0.47478911280632
+    },
+    {
+      "best_time": -1,
+      "broken": 12,
+      "combo": 0,
+      "damage": 1440000,
+      "draw_calls": 65,
+      "elapsed": 43.04,
+      "fps": 7,
+      "fx": {
+        "audio_enabled": true,
+        "batch_meshes": 7,
+        "combo_cues": 7,
+        "counts": {
+          "cube": 0,
+          "paper": 0,
+          "powder": 18,
+          "ribbon": 0,
+          "ring": 0,
+          "star": 0,
+          "streak": 7
+        },
+        "exhaust": 25,
+        "last_combo": 2,
+        "life_total": 9.1919,
+        "limit": 80,
+        "particle_clock": 25.3701,
+        "particles": 25,
+        "reserved": 28,
+        "rush_starts": 2,
+        "spraying": true
+      },
+      "hud": {
+        "animation_clock": 25.3701,
+        "best_stamp_visible": true,
+        "bonus_text": "",
+        "burst_kind": "impact",
+        "burst_left": 0,
+        "celebration_age": 2,
+        "combo_rect": "[P: (1460.0, 217.0), S: (425.0, 166.0)]",
+        "combo_scale": [
+          1,
+          1
+        ],
+        "controls": {
+          "pause_restart": [
+            643,
+            583,
+            303,
+            98
+          ],
+          "pause_resume": [
+            643,
+            447,
+            634,
+            110
+          ],
+          "pause_settings": [
+            969,
+            583,
+            308,
+            98
+          ],
+          "pause_title": [
+            643,
+            708,
+            634,
+            98
+          ],
+          "playing_pause": [
+            1658,
+            790,
+            222,
+            90
+          ],
+          "result_retry": [
+            102,
+            925,
+            495,
+            91
+          ],
+          "result_title": [
+            619,
+            925,
+            273,
+            91
+          ],
+          "settings_close": [
+            600,
+            825,
+            715,
+            88
+          ],
+          "settings_music": [
+            600,
+            513,
+            715,
+            90
+          ],
+          "settings_quality": [
+            973,
+            315,
+            338,
+            88
+          ],
+          "settings_sfx": [
+            600,
+            695,
+            715,
+            90
+          ],
+          "title_credits": [
+            454,
+            980,
+            340,
+            88
+          ],
+          "title_settings": [
+            108,
+            980,
+            321,
+            88
+          ],
+          "title_start": [
+            85,
+            825,
+            732,
+            130
+          ]
+        },
+        "counter_age": 14.3562333333333,
+        "damage_age": 14.3512333333333,
+        "damage_scale": [
+          1,
+          1
+        ],
+        "exit_rect": "[P: (783.0, 22.0), S: (354.0, 77.0)]",
+        "focused": true,
+        "mode": "playing",
+        "notice_rect": "[P: (502.0, 118.0), S: (916.0, 215.0)]",
+        "notice_text": "壁、定時です！",
+        "notice_visible": false,
+        "pause_rect": "[P: (1658.0, 790.0), S: (222.0, 90.0)]",
+        "phase": 25.3701,
+        "pressure_rect": "[P: (20.0, 865.0), S: (541.0, 181.0)]",
+        "quality": "派手",
+        "retry_rect": "[P: (102.0, 925.0), S: (495.0, 91.0)]",
+        "root_offset": [
+          0,
+          0
+        ],
+        "root_scale": [
+          1,
+          1
+        ],
+        "rush_guard": 0,
+        "rush_starts": 2,
+        "settings_visible": false,
+        "stamp_age": 1,
+        "stamp_scale": [
+          1,
+          1
+        ],
+        "start_rect": "[P: (85.0, 825.0), S: (732.0, 130.0)]",
+        "success_starts": 0,
+        "timer_rect": "[P: (34.0, 31.0), S: (438.0, 174.0)]",
+        "viewport": [
+          1920,
+          1080
+        ]
+      },
+      "max_combo": 6,
+      "mode": "playing",
+      "music_volume": 0.45,
+      "player": [
+        -7.31745958328247,
+        0,
+        -61.8867492675781
+      ],
+      "pressure": 87.0833333333332,
+      "quality": "派手",
+      "rank": "",
+      "rush": false,
+      "sfx_volume": 0.75,
+      "speed": 2.99132037162781,
+      "yaw": -1.21271133422852
+    },
+    {
+      "best_time": -1,
+      "broken": 12,
+      "combo": 0,
+      "damage": 1440000,
+      "draw_calls": 70,
+      "elapsed": 45.296,
+      "fps": 12,
+      "fx": {
+        "audio_enabled": true,
+        "batch_meshes": 7,
+        "combo_cues": 7,
+        "counts": {
+          "cube": 2,
+          "paper": 7,
+          "powder": 19,
+          "ribbon": 0,
+          "ring": 0,
+          "star": 0,
+          "streak": 4
+        },
+        "exhaust": 23,
+        "last_combo": 2,
+        "life_total": 11.2087855323791,
+        "limit": 80,
+        "particle_clock": 27.6337,
+        "particles": 32,
+        "reserved": 28,
+        "rush_starts": 2,
+        "spraying": true
+      },
+      "hud": {
+        "animation_clock": 27.6337,
+        "best_stamp_visible": true,
+        "bonus_text": "",
+        "burst_kind": "impact",
+        "burst_left": 0.4372,
+        "celebration_age": 2,
+        "combo_rect": "[P: (1460.0, 217.0), S: (425.0, 166.0)]",
+        "combo_scale": [
+          1,
+          1
+        ],
+        "controls": {
+          "pause_restart": [
+            643,
+            583,
+            303,
+            98
+          ],
+          "pause_resume": [
+            643,
+            447,
+            634,
+            110
+          ],
+          "pause_settings": [
+            969,
+            583,
+            308,
+            98
+          ],
+          "pause_title": [
+            643,
+            708,
+            634,
+            98
+          ],
+          "playing_pause": [
+            1658,
+            790,
+            222,
+            90
+          ],
+          "result_retry": [
+            102,
+            925,
+            495,
+            91
+          ],
+          "result_title": [
+            619,
+            925,
+            273,
+            91
+          ],
+          "settings_close": [
+            600,
+            825,
+            715,
+            88
+          ],
+          "settings_music": [
+            600,
+            513,
+            715,
+            90
+          ],
+          "settings_quality": [
+            973,
+            315,
+            338,
+            88
+          ],
+          "settings_sfx": [
+            600,
+            695,
+            715,
+            90
+          ],
+          "title_credits": [
+            454,
+            980,
+            340,
+            88
+          ],
+          "title_settings": [
+            108,
+            980,
+            321,
+            88
+          ],
+          "title_start": [
+            85,
+            825,
+            732,
+            130
+          ]
+        },
+        "counter_age": 16.6198333333333,
+        "damage_age": 16.6148333333333,
+        "damage_scale": [
+          1,
+          1
+        ],
+        "exit_rect": "[P: (783.0, 22.0), S: (354.0, 77.0)]",
+        "focused": true,
+        "mode": "playing",
+        "notice_rect": "[P: (502.0, 118.0), S: (916.0, 215.0)]",
+        "notice_text": "壁、定時です！",
+        "notice_visible": true,
+        "pause_rect": "[P: (1658.0, 790.0), S: (222.0, 90.0)]",
+        "phase": 27.6337,
+        "pressure_rect": "[P: (20.0, 865.0), S: (541.0, 181.0)]",
+        "quality": "派手",
+        "retry_rect": "[P: (102.0, 925.0), S: (495.0, 91.0)]",
+        "root_offset": [
+          0,
+          0
+        ],
+        "root_scale": [
+          1,
+          1
+        ],
+        "rush_guard": 0,
+        "rush_starts": 2,
+        "settings_visible": false,
+        "stamp_age": 1,
+        "stamp_scale": [
+          1,
+          1
+        ],
+        "start_rect": "[P: (85.0, 825.0), S: (732.0, 130.0)]",
+        "success_starts": 0,
+        "timer_rect": "[P: (34.0, 31.0), S: (438.0, 174.0)]",
+        "viewport": [
+          1920,
+          1080
+        ]
+      },
+      "max_combo": 6,
+      "mode": "playing",
+      "music_volume": 0.45,
+      "player": [
+        -4.07297468185425,
+        0,
+        -62.2040214538574
+      ],
+      "pressure": 89.1666666666662,
+      "quality": "派手",
+      "rank": "",
+      "rush": false,
+      "sfx_volume": 0.75,
+      "speed": 2.99602150917053,
+      "yaw": -3.09049224853516
+    },
+    {
+      "best_time": -1,
+      "broken": 13,
+      "combo": 1,
+      "damage": 1490000,
+      "draw_calls": 67,
+      "elapsed": 47.427,
+      "fps": 11,
+      "fx": {
+        "audio_enabled": true,
+        "batch_meshes": 7,
+        "combo_cues": 8,
+        "counts": {
+          "cube": 5,
+          "paper": 21,
+          "powder": 22,
+          "ribbon": 0,
+          "ring": 2,
+          "star": 1,
+          "streak": 6
+        },
+        "exhaust": 28,
+        "last_combo": 1,
+        "life_total": 33.7546755764961,
+        "limit": 80,
+        "particle_clock": 29.7433,
+        "particles": 57,
+        "reserved": 28,
+        "rush_starts": 2,
+        "spraying": true
+      },
+      "hud": {
+        "animation_clock": 29.7433,
+        "best_stamp_visible": true,
+        "bonus_text": "+¥50,000",
+        "burst_kind": "impact",
+        "burst_left": 0.85,
+        "celebration_age": 2,
+        "combo_rect": "[P: (1460.0, 217.0), S: (425.0, 166.0)]",
+        "combo_scale": [
+          1,
+          1
+        ],
+        "controls": {
+          "pause_restart": [
+            643,
+            583,
+            303,
+            98
+          ],
+          "pause_resume": [
+            643,
+            447,
+            634,
+            110
+          ],
+          "pause_settings": [
+            969,
+            583,
+            308,
+            98
+          ],
+          "pause_title": [
+            643,
+            708,
+            634,
+            98
+          ],
+          "playing_pause": [
+            1658,
+            790,
+            222,
+            90
+          ],
+          "result_retry": [
+            102,
+            925,
+            495,
+            91
+          ],
+          "result_title": [
+            619,
+            925,
+            273,
+            91
+          ],
+          "settings_close": [
+            600,
+            825,
+            715,
+            88
+          ],
+          "settings_music": [
+            600,
+            513,
+            715,
+            90
+          ],
+          "settings_quality": [
+            973,
+            315,
+            338,
+            88
+          ],
+          "settings_sfx": [
+            600,
+            695,
+            715,
+            90
+          ],
+          "title_credits": [
+            454,
+            980,
+            340,
+            88
+          ],
+          "title_settings": [
+            108,
+            980,
+            321,
+            88
+          ],
+          "title_start": [
+            85,
+            825,
+            732,
+            130
+          ]
+        },
+        "counter_age": 0.065,
+        "damage_age": 0.06,
+        "damage_scale": [
+          1,
+          1
+        ],
+        "exit_rect": "[P: (783.0, 22.0), S: (354.0, 77.0)]",
+        "focused": true,
+        "mode": "playing",
+        "notice_rect": "[P: (502.0, 118.0), S: (916.0, 215.0)]",
+        "notice_text": "書類、全提出！",
+        "notice_visible": true,
+        "pause_rect": "[P: (1658.0, 790.0), S: (222.0, 90.0)]",
+        "phase": 29.7433,
+        "pressure_rect": "[P: (20.0, 865.0), S: (541.0, 181.0)]",
+        "quality": "派手",
+        "retry_rect": "[P: (102.0, 925.0), S: (495.0, 91.0)]",
+        "root_offset": [
+          0,
+          0
+        ],
+        "root_scale": [
+          1,
+          1
+        ],
+        "rush_guard": 0,
+        "rush_starts": 2,
+        "settings_visible": false,
+        "stamp_age": 1,
+        "stamp_scale": [
+          1,
+          1
+        ],
+        "start_rect": "[P: (85.0, 825.0), S: (732.0, 130.0)]",
+        "success_starts": 0,
+        "timer_rect": "[P: (34.0, 31.0), S: (438.0, 174.0)]",
+        "viewport": [
+          1920,
+          1080
+        ]
+      },
+      "max_combo": 6,
+      "mode": "playing",
+      "music_volume": 0.45,
+      "player": [
+        -2.28151869773865,
+        0,
+        -56.5632362365723
+      ],
+      "pressure": 79.1666666666664,
+      "quality": "派手",
+      "rank": "",
+      "rush": false,
+      "sfx_volume": 0.75,
+      "speed": 5.1978063583374,
+      "yaw": -1.96549499034882
+    },
+    {
+      "best_time": -1,
+      "broken": 13,
+      "combo": 0,
+      "damage": 1490000,
+      "draw_calls": 64,
+      "elapsed": 49.58,
+      "fps": 11,
+      "fx": {
+        "audio_enabled": true,
+        "batch_meshes": 7,
+        "combo_cues": 8,
+        "counts": {
+          "cube": 0,
+          "paper": 0,
+          "powder": 5,
+          "ribbon": 0,
+          "ring": 0,
+          "star": 0,
+          "streak": 0
+        },
+        "exhaust": 5,
+        "last_combo": 1,
+        "life_total": 2.4,
+        "limit": 80,
+        "particle_clock": 31.9052,
+        "particles": 5,
+        "reserved": 28,
+        "rush_starts": 2,
+        "spraying": true
+      },
+      "hud": {
+        "animation_clock": 31.9052,
+        "best_stamp_visible": true,
+        "bonus_text": "+¥50,000",
+        "burst_kind": "impact",
+        "burst_left": 0,
+        "celebration_age": 2,
+        "combo_rect": "[P: (1460.0, 217.0), S: (425.0, 166.0)]",
+        "combo_scale": [
+          1,
+          1
+        ],
+        "controls": {
+          "pause_restart": [
+            643,
+            583,
+            303,
+            98
+          ],
+          "pause_resume": [
+            643,
+            447,
+            634,
+            110
+          ],
+          "pause_settings": [
+            969,
+            583,
+            308,
+            98
+          ],
+          "pause_title": [
+            643,
+            708,
+            634,
+            98
+          ],
+          "playing_pause": [
+            1658,
+            790,
+            222,
+            90
+          ],
+          "result_retry": [
+            102,
+            925,
+            495,
+            91
+          ],
+          "result_title": [
+            619,
+            925,
+            273,
+            91
+          ],
+          "settings_close": [
+            600,
+            825,
+            715,
+            88
+          ],
+          "settings_music": [
+            600,
+            513,
+            715,
+            90
+          ],
+          "settings_quality": [
+            973,
+            315,
+            338,
+            88
+          ],
+          "settings_sfx": [
+            600,
+            695,
+            715,
+            90
+          ],
+          "title_credits": [
+            454,
+            980,
+            340,
+            88
+          ],
+          "title_settings": [
+            108,
+            980,
+            321,
+            88
+          ],
+          "title_start": [
+            85,
+            825,
+            732,
+            130
+          ]
+        },
+        "counter_age": 2.1263,
+        "damage_age": 2.1213,
+        "damage_scale": [
+          1,
+          1
+        ],
+        "exit_rect": "[P: (783.0, 22.0), S: (354.0, 77.0)]",
+        "focused": true,
+        "mode": "playing",
+        "notice_rect": "[P: (502.0, 118.0), S: (916.0, 215.0)]",
+        "notice_text": "書類、全提出！",
+        "notice_visible": false,
+        "pause_rect": "[P: (1658.0, 790.0), S: (222.0, 90.0)]",
+        "phase": 31.9052,
+        "pressure_rect": "[P: (20.0, 865.0), S: (541.0, 181.0)]",
+        "quality": "派手",
+        "retry_rect": "[P: (102.0, 925.0), S: (495.0, 91.0)]",
+        "root_offset": [
+          0,
+          0
+        ],
+        "root_scale": [
+          1,
+          1
+        ],
+        "rush_guard": 0,
+        "rush_starts": 2,
+        "settings_visible": false,
+        "stamp_age": 1,
+        "stamp_scale": [
+          1,
+          1
+        ],
+        "start_rect": "[P: (85.0, 825.0), S: (732.0, 130.0)]",
+        "success_starts": 0,
+        "timer_rect": "[P: (34.0, 31.0), S: (438.0, 174.0)]",
+        "viewport": [
+          1920,
+          1080
+        ]
+      },
+      "max_combo": 6,
+      "mode": "playing",
+      "music_volume": 0.45,
+      "player": [
+        4.35460615158081,
+        0,
+        -51.9194221496582
+      ],
+      "pressure": 97.9166666666666,
+      "quality": "派手",
+      "rank": "",
+      "rush": false,
+      "sfx_volume": 0.75,
+      "speed": 1.59503972530365,
+      "yaw": 0.134506151080132
+    },
+    {
+      "best_time": -1,
+      "broken": 13,
+      "combo": 0,
+      "damage": 1490000,
+      "draw_calls": 63,
+      "elapsed": 51.876,
+      "fps": 10,
+      "fx": {
+        "audio_enabled": true,
+        "batch_meshes": 7,
+        "combo_cues": 8,
+        "counts": {
+          "cube": 0,
+          "paper": 0,
+          "powder": 0,
+          "ribbon": 0,
+          "ring": 0,
+          "star": 0,
+          "streak": 0
+        },
+        "exhaust": 0,
+        "last_combo": 1,
+        "life_total": 0,
+        "limit": 80,
+        "particle_clock": 34.2096,
+        "particles": 0,
+        "reserved": 28,
+        "rush_starts": 2,
+        "spraying": false
+      },
+      "hud": {
+        "animation_clock": 34.2096,
+        "best_stamp_visible": true,
+        "bonus_text": "+¥50,000",
+        "burst_kind": "impact",
+        "burst_left": 0,
+        "celebration_age": 2,
+        "combo_rect": "[P: (1460.0, 217.0), S: (425.0, 166.0)]",
+        "combo_scale": [
+          1,
+          1
+        ],
+        "controls": {
+          "pause_restart": [
+            643,
+            583,
+            303,
+            98
+          ],
+          "pause_resume": [
+            643,
+            447,
+            634,
+            110
+          ],
+          "pause_settings": [
+            969,
+            583,
+            308,
+            98
+          ],
+          "pause_title": [
+            643,
+            708,
+            634,
+            98
+          ],
+          "playing_pause": [
+            1658,
+            790,
+            222,
+            90
+          ],
+          "result_retry": [
+            102,
+            925,
+            495,
+            91
+          ],
+          "result_title": [
+            619,
+            925,
+            273,
+            91
+          ],
+          "settings_close": [
+            600,
+            825,
+            715,
+            88
+          ],
+          "settings_music": [
+            600,
+            513,
+            715,
+            90
+          ],
+          "settings_quality": [
+            973,
+            315,
+            338,
+            88
+          ],
+          "settings_sfx": [
+            600,
+            695,
+            715,
+            90
+          ],
+          "title_credits": [
+            454,
+            980,
+            340,
+            88
+          ],
+          "title_settings": [
+            108,
+            980,
+            321,
+            88
+          ],
+          "title_start": [
+            85,
+            825,
+            732,
+            130
+          ]
+        },
+        "counter_age": 4.4307,
+        "damage_age": 4.4257,
+        "damage_scale": [
+          1,
+          1
+        ],
+        "exit_rect": "[P: (783.0, 22.0), S: (354.0, 77.0)]",
+        "focused": true,
+        "mode": "playing",
+        "notice_rect": "[P: (502.0, 118.0), S: (916.0, 215.0)]",
+        "notice_text": "書類、全提出！",
+        "notice_visible": false,
+        "pause_rect": "[P: (1658.0, 790.0), S: (222.0, 90.0)]",
+        "phase": 34.2096,
+        "pressure_rect": "[P: (20.0, 865.0), S: (541.0, 181.0)]",
+        "quality": "派手",
+        "retry_rect": "[P: (102.0, 925.0), S: (495.0, 91.0)]",
+        "root_offset": [
+          0,
+          0
+        ],
+        "root_scale": [
+          1,
+          1
+        ],
+        "rush_guard": 0,
+        "rush_starts": 2,
+        "settings_visible": false,
+        "stamp_age": 1,
+        "stamp_scale": [
+          1,
+          1
+        ],
+        "start_rect": "[P: (85.0, 825.0), S: (732.0, 130.0)]",
+        "success_starts": 0,
+        "timer_rect": "[P: (34.0, 31.0), S: (438.0, 174.0)]",
+        "viewport": [
+          1920,
+          1080
+        ]
+      },
+      "max_combo": 6,
+      "mode": "playing",
+      "music_volume": 0.45,
+      "player": [
+        -0.563380241394043,
+        0,
+        -56.8156929016113
+      ],
+      "pressure": 100,
+      "quality": "派手",
+      "rank": "",
+      "rush": false,
+      "sfx_volume": 0.75,
+      "speed": 2.76189255714417,
+      "yaw": 0.584506392478943
+    }
+  ]
+}

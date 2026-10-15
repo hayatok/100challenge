@@ -26,12 +26,24 @@ with sync_playwright() as p:
     page.on('console',lambda message:errors.append(message.text) if message.type=='error' else None)
     page.goto(args.url,wait_until='domcontentloaded',timeout=90000)
     page.wait_for_function('window.__taikin && window.__taikin.mode === "title"',timeout=90000)
+    def click_control(name, fraction_x=.5, fraction_y=.5):
+        state=page.evaluate('window.__taikin.hud')
+        x,y,w,h=state['controls'][name]
+        sx,sy=state['root_scale']
+        ox,oy=state['root_offset']
+        canvas=page.locator('canvas').bounding_box()
+        vw,vh=state['viewport']
+        page.mouse.click(canvas['x']+(ox+(x+w*fraction_x)*sx)*canvas['width']/vw,
+                         canvas['y']+(oy+(y+h*fraction_y)*sy)*canvas['height']/vh)
     page.wait_for_timeout(1000)
     page.screenshot(path=str(out/'cloud-title.png'))
-    page.keyboard.press('Enter')
+    click_control('title_start')
     page.wait_for_function('window.__taikin.mode === "playing"')
     page.keyboard.down('Space')
     page.wait_for_function('window.__taikin.pressure < 72 && window.__taikin.speed > 3')
+    boost=page.evaluate('window.__taikin')
+    assert boost['fx']['counts']['powder']>0,'Spray has no visible powder batch'
+    page.screenshot(path=str(out/'cloud-boost.png'))
     page.keyboard.up('Space')
     page.keyboard.press('Escape')
     page.wait_for_function('window.__taikin.mode === "paused"')
@@ -42,6 +54,10 @@ with sync_playwright() as p:
     assert abs(paused['pressure']-still['pressure'])<0.01,'Pressure changed during pause'
     assert abs(paused['elapsed']-still['elapsed'])<0.001,'Timer changed during pause'
     assert all(abs(a-b)<0.001 for a,b in zip(paused['player'],still['player'])),'Chair moved during pause'
+    for key in ['animation_clock','phase','burst_left','counter_age','damage_age']:
+        assert abs(paused['hud'][key]-still['hud'][key])<.001,f'HUD {key} changed during pause'
+    for key in ['particle_clock','life_total']:
+        assert abs(paused['fx'][key]-still['fx'][key])<.001,f'FX {key} changed during pause'
     page.screenshot(path=str(out/'cloud-pause.png'))
     page.keyboard.press('Escape')
     page.wait_for_function('window.__taikin.mode === "playing"')
@@ -49,10 +65,11 @@ with sync_playwright() as p:
     page.wait_for_function('window.__taikin.elapsed === 0 && window.__taikin.damage === 0 && window.__taikin.pressure === 100')
     restart=page.evaluate('window.__taikin')
     assert abs(restart['player'][2]-42)<0.01 and restart['broken']==0
+    assert restart['fx']['rush_starts']==0 and restart['hud']['rush_starts']==0 and restart['hud']['success_starts']==0
 
     # Follow the same visible office route using controls; never teleport or
     # modify game state. Feedback is read through an opt-in QA-only snapshot.
-    targets=[(-0.9,32),(1.0,29),(0,16),(4,-4),(4,-12),(-2,-24),(-2,-32),(0,-48),(0,-58),(0,-61),(0,-64)]
+    targets=[(0,28),(0,16),(4,-4),(4,-12),(-2,-24),(-2,-32),(0,-48),(0,-58),(0,-61),(0,-64)]
     target=0
     held=set()
     recovering=False
@@ -79,27 +96,36 @@ with sync_playwright() as p:
         desired=math.atan2(-(tx-x),-(tz-z))
         error=(desired-state['yaw']+math.pi)%(2*math.pi)-math.pi
         keys=set()
-        if error>0.085:keys.add('ArrowLeft')
-        elif error<-.085:keys.add('ArrowRight')
+        # A held key spans whole rendered frames. Leave a wider steering
+        # tolerance on the software renderer and approach the door slowly.
+        deadband=.12+min(.16,.45/max(1,state['fps']))
+        if error>deadband:keys.add('ArrowLeft')
+        elif error<-deadband:keys.add('ArrowRight')
         if state['pressure']<18:recovering=True
         if state['pressure']>86:recovering=False
-        if not recovering and not (abs(error)>.55 and state['speed']>4):keys.add('Space')
+        goal_approach=target>=len(targets)-3
+        speed_limit=2.8 if goal_approach else 9.0
+        if not recovering and state['speed']<speed_limit and not (abs(error)>.55 and state['speed']>4):keys.add('Space')
         for key in held-keys:page.keyboard.up(key)
         for key in keys-held:page.keyboard.down(key)
         held=keys
-        if not first_image and state['max_combo']>=3:
+        if not first_image and state['rush'] and state['hud']['burst_kind']=='rush':
             page.screenshot(path=str(out/'cloud-play.png'))
             first_image=True
         if len(samples)==0 or state['elapsed']-samples[-1]['elapsed']>2:
             samples.append(state)
-            print(json.dumps({'pilot':state},ensure_ascii=False),flush=True)
+            print(json.dumps({'pilot':{k:state[k] for k in ['elapsed','player','speed','pressure','damage','max_combo','fps','draw_calls']}},ensure_ascii=False),flush=True)
         page.wait_for_timeout(100)
     for key in held:page.keyboard.up(key)
+    page.screenshot(path=str(out/'cloud-success.png'))
     page.wait_for_timeout(500)
     result=page.evaluate('window.__taikin')
     assert result['mode']=='result',f"Did not reach the elevator: {result}"
     assert result['damage']>0 and result['max_combo']>=3,'Destruction chain was not exercised'
     assert result['best_time']>0,'Successful run was not saved'
+    assert result['hud']['success_starts']==1,'Success stamp was missing or repeated'
+    assert result['fx']['rush_starts']==result['hud']['rush_starts'],'World and HUD rush entries diverged'
+    assert first_image,'Rush visual was not exercised'
     page.screenshot(path=str(out/'cloud-result.png'))
     page.set_viewport_size({'width':1920,'height':1080})
     page.wait_for_timeout(500)
@@ -108,28 +134,47 @@ with sync_playwright() as p:
     page.wait_for_timeout(400)
     page.screenshot(path=str(out/'cloud-result-compact.png'))
     page.set_viewport_size({'width':1280,'height':720})
+    page.wait_for_timeout(1000)
+    click_control('result_retry')
+    page.wait_for_function('window.__taikin.mode === "playing" && window.__taikin.elapsed === 0')
+    retry_button=page.evaluate('window.__taikin')
+    assert retry_button['fx']['particles']==0 and retry_button['hud']['success_starts']==0,'Result retry retained previous effects'
     page.reload(wait_until='domcontentloaded')
     page.wait_for_function('window.__taikin && window.__taikin.mode === "title"',timeout=90000)
     reloaded=page.evaluate('window.__taikin')
     assert abs(reloaded['best_time']-result['best_time'])<0.01,'Best time did not survive reload'
     # Use the settings menu and its real OptionButton/sliders.
     page.wait_for_timeout(800)
-    page.mouse.click(140,595)
+    click_control('title_settings')
     page.wait_for_timeout(800)
-    page.mouse.click(741,258)
+    page.wait_for_function('window.__taikin.hud.settings_visible')
+    click_control('settings_quality')
     page.wait_for_timeout(800)
-    page.mouse.click(741,362)
+    # A freshly opened PopupMenu has no highlighted row. Traverse all three
+    # real items rather than relying on a platform-specific End shortcut.
+    page.keyboard.press('ArrowDown')
+    page.wait_for_timeout(150)
+    page.keyboard.press('ArrowDown')
+    page.wait_for_timeout(150)
+    page.keyboard.press('ArrowDown')
+    page.wait_for_timeout(150)
+    page.keyboard.press('Enter')
     page.wait_for_function('window.__taikin.quality === "控えめ"')
-    page.mouse.click(421,366)
-    page.mouse.click(421,464)
+    click_control('settings_music',0.02)
+    click_control('settings_sfx',0.02)
     page.wait_for_function('window.__taikin.music_volume <= 0.01 && window.__taikin.sfx_volume <= 0.01')
     settings=page.evaluate('window.__taikin')
     page.screenshot(path=str(out/'cloud-settings.png'))
-    page.mouse.click(640,544)
-    page.keyboard.press('Enter')
+    click_control('settings_close')
+    page.wait_for_function('!window.__taikin.hud.settings_visible')
+    click_control('title_start')
     page.wait_for_function('window.__taikin.mode === "playing"')
     page.keyboard.down('Space')
     page.wait_for_function('window.__taikin.pressure < 90')
+    subdued=page.evaluate('window.__taikin')
+    assert subdued['fx']['particles']<=20 and subdued['fx']['counts']['streak']==0
+    assert subdued['hud']['combo_scale']==[1,1] and subdued['hud']['damage_scale']==[1,1],'Subdued UI still bounces'
+    page.screenshot(path=str(out/'cloud-subdued.png'))
     page.keyboard.up('Space')
     # Focus loss must require explicit resume and leave the chair/time frozen.
     # Playwright otherwise forces document.hasFocus() true on every page.
@@ -143,13 +188,15 @@ with sync_playwright() as p:
     page.wait_for_timeout(500)
     blur_after=page.evaluate('window.__taikin')
     assert abs(blur_before['pressure']-blur_after['pressure'])<0.01 and abs(blur_before['elapsed']-blur_after['elapsed'])<0.001
+    assert abs(blur_before['hud']['animation_clock']-blur_after['hud']['animation_clock'])<.001
+    assert abs(blur_before['fx']['particle_clock']-blur_after['fx']['particle_clock'])<.001
     other.close()
     page.bring_to_front()
     page.keyboard.press('Escape')
     page.wait_for_function('window.__taikin.mode === "playing"')
     assert not errors,f'Browser errors: {errors}'
     renderer=page.evaluate('''() => { const gl=document.querySelector('canvas').getContext('webgl2'); const e=gl.getExtension('WEBGL_debug_renderer_info'); return e ? gl.getParameter(e.UNMASKED_RENDERER_WEBGL) : gl.getParameter(gl.RENDERER); }''')
-    report={'browser':browser.version,'renderer':renderer,'viewport':[1280,720],'result':result,'pause_before':paused,'pause_after':still,'restart':restart,'reload_best':reloaded['best_time'],'settings':settings,'blur_before':blur_before,'blur_after':blur_after,'errors':errors,'samples':samples}
+    report={'browser':browser.version,'renderer':renderer,'viewport':[1280,720],'boost':boost,'result':result,'pause_before':paused,'pause_after':still,'restart':restart,'retry_button':retry_button,'reload_best':reloaded['best_time'],'settings':settings,'subdued':subdued,'blur_before':blur_before,'blur_after':blur_after,'errors':errors,'samples':samples}
     (out/'browser-report.json').write_text(json.dumps(report,ensure_ascii=False,indent=2))
     print(json.dumps({'PASS':True,'result':result,'errors':errors},ensure_ascii=False),flush=True)
     browser.close()
