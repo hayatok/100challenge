@@ -3,6 +3,9 @@ extends Node3D
 ## scatters them, while only the furniture and room shell can stop the player.
 
 const AssetLibrary := preload("res://scripts/asset_library.gd")
+const Colleague := preload("res://scripts/colleague.gd")
+const REACTION_RADIUS := 12.0
+const MAX_REACTIONS := 2
 
 var spawn_position := Vector3(0.0, 0.0, 42.0)
 var goal_position := Vector3(0.0, 0.0, -64.0)
@@ -11,6 +14,9 @@ var _props: Array[Dictionary] = []
 var _materials: Dictionary = {}
 var _meshes: Dictionary = {}
 var _mesh_count := 0
+var _colleagues: Array[Node3D] = []
+var _reaction_seen: Dictionary = {}
+var _feedback_quality := "派手"
 var _route: Array[Vector3] = [
 	Vector3(0, 0, 42), Vector3(0, 0, 16), Vector3(4, 0, -4),
 	Vector3(4, 0, -12), Vector3(-2, 0, -24), Vector3(-2, 0, -32), Vector3(0, 0, -48),
@@ -25,6 +31,9 @@ const COLORS := {
 	"green": Color("3fd780"), "leaf": Color("67a84f"), "leaf_light": Color("a7c45b"),
 	"skin": Color("f2c09d"), "hair": Color("4b342d"), "gold": Color("e5b84d")
 }
+
+func _init() -> void:
+	process_mode = Node.PROCESS_MODE_PAUSABLE
 
 func build() -> void:
 	if _built:
@@ -55,10 +64,84 @@ func build() -> void:
 	set_meta("prop_count", _props.size())
 
 func reset_props() -> void:
+	_reaction_seen.clear()
+	for colleague in _colleagues:
+		colleague.reset_reaction()
 	for prop in _props:
 		prop["broken"] = false
 		var node: Node3D = prop["node"]
 		node.show()
+
+func set_feedback_quality(level: String) -> void:
+	_feedback_quality = level
+	for colleague in _colleagues:
+		colleague.set_feedback_quality(level)
+
+func react_to_breaks(rewards: Array, player_at: Vector3, speed: float) -> Dictionary:
+	var result := {"accepted": 0, "upgraded": 0, "suppressed": 0, "selected": 0}
+	if rewards.is_empty() or (is_inside_tree() and get_tree().paused):
+		return result
+	var fresh: Array[Dictionary] = []
+	for reward in rewards:
+		if not reward is Dictionary:
+			continue
+		var id := str(reward.get("id", ""))
+		if not id.is_empty() and _reaction_seen.has(id):
+			continue
+		var at = reward.get("position", player_at)
+		if not at is Vector3:
+			continue
+		if not id.is_empty():
+			_reaction_seen[id] = true
+		var strength := 1
+		if speed >= 7.0 or int(reward.get("base", 0)) >= 100000 \
+			or int(reward.get("combo", 0)) >= 3 or bool(reward.get("rush_started", false)):
+			strength = 2
+		fresh.append({"position": at, "strength": strength})
+	if fresh.is_empty():
+		return result
+	var candidates: Array[Dictionary] = []
+	for colleague in _colleagues:
+		var nearest := REACTION_RADIUS + 0.001
+		var impact := Vector3.ZERO
+		var strength := 1
+		for event in fresh:
+			var at: Vector3 = event["position"]
+			var distance := _flat_distance(colleague.global_position, at)
+			if distance <= REACTION_RADIUS and distance < nearest:
+				nearest = distance
+				impact = at
+				strength = int(event["strength"])
+		if nearest <= REACTION_RADIUS:
+			candidates.append({"colleague": colleague, "distance": nearest,
+				"impact": impact, "strength": strength})
+	candidates.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
+		return float(a["distance"]) < float(b["distance"]))
+	var responding := 0
+	for colleague in _colleagues:
+		if colleague.is_reacting():
+			responding += 1
+	for index in range(mini(MAX_REACTIONS, candidates.size())):
+		var candidate: Dictionary = candidates[index]
+		var colleague: Node3D = candidate["colleague"]
+		result["selected"] += 1
+		if responding >= MAX_REACTIONS and not colleague.is_reacting():
+			result["suppressed"] += 1
+			continue
+		var delay := 0.05 + float(candidate["distance"]) * 0.012 + float(index) * 0.035
+		var response: String = colleague.react(candidate["impact"], candidate["strength"], delay)
+		result[response] += 1
+		if response == "accepted":
+			responding += 1
+	return result
+
+func debug_feedback_snapshot() -> Dictionary:
+	var coworkers: Array[Dictionary] = []
+	for colleague in _colleagues:
+		coworkers.append(colleague.debug_snapshot())
+	return {"quality": _feedback_quality, "radius": REACTION_RADIUS,
+		"max_reactions": MAX_REACTIONS, "seen_events": _reaction_seen.size(),
+		"coworkers": coworkers}
 
 func try_break(at: Vector3, speed: float) -> Array[Dictionary]:
 	var events: Array[Dictionary] = []
@@ -168,10 +251,12 @@ func _desk(at: Vector3, colleague: bool, special: bool) -> void:
 		_colleague(desk, Vector3(0.3, 0, 2.0))
 
 func _colleague(parent: Node3D, at: Vector3) -> void:
-	var chair := _model(parent, "chair", at)
-	chair.scale = Vector3.ONE * 0.88
-	var person := _model(chair, "colleague", Vector3(0, 1.0, -0.04))
-	person.name = "SleepyColleague"
+	var colleague := Colleague.new()
+	parent.add_child(colleague)
+	colleague.position = at
+	colleague.build("Coworker_%02d" % _colleagues.size())
+	colleague.set_feedback_quality(_feedback_quality)
+	_colleagues.append(colleague)
 
 func _filing_island(at: Vector3, size: Vector3) -> void:
 	_solid(self, at + Vector3(0, size.y * 0.5, 0), size, "mint", false)
@@ -335,6 +420,10 @@ func _batch_static_visuals() -> void:
 	for prop in _props:
 		var node: Node3D = prop["node"]
 		prop_roots[node.get_instance_id()] = true
+	# These five small hierarchies retain their shared meshes for local motion.
+	# Including the chair keeps swivel/lean attached to the employee.
+	for colleague in _colleagues:
+		prop_roots[colleague.get_instance_id()] = true
 	var groups := {}
 	var removed := 0
 	var authored_mesh_count := find_children("*", "MeshInstance3D", true, false).size()

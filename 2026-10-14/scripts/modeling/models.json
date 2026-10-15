@@ -124,8 +124,13 @@
       "blend": "art/models/colleague.blend",
       "glb": "game/assets/models/colleague.glb",
       "max_triangles": 9000,
-      "max_surfaces": 1,
-      "required_nodes": []
+      "max_surfaces": 4,
+      "required_nodes": [
+        "Body",
+        "Head",
+        "ArmMug",
+        "FaceNeutral"
+      ]
     },
     {
       "name": "cat_mug",

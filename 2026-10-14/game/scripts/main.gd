@@ -31,6 +31,7 @@ var _last_hit := -1.0
 var _qa_enabled := false
 var _qa_timer := 0.0
 var _result_focus_paused := false
+var _result_spray_held := false
 var _clock_ms := 0
 var _web_window: JavaScriptObject
 var _web_document: JavaScriptObject
@@ -44,6 +45,7 @@ func _ready() -> void:
 	office.process_mode = Node.PROCESS_MODE_PAUSABLE
 	add_child(office)
 	office.build()
+	office.set_feedback_quality(effect_level)
 	player = PlayerScript.new()
 	player.process_mode = Node.PROCESS_MODE_PAUSABLE
 	add_child(player)
@@ -163,9 +165,12 @@ func _process(delta: float) -> void:
 	if mode != "paused" and not _result_focus_paused:
 		impact_amount = maxf(0.0, impact_amount - delta * 2.6)
 		var pose_strength := 0.35 if effect_level == "控えめ" else 1.0
+		# Let any arrival heading settle into the authored victory portrait.
+		# Only the visual child turns; the finished chair position/time stay fixed.
+		actor.rotation.y = lerp_angle(actor.rotation.y, -player.rotation.y, 1.0 - exp(-delta * 7.0)) if mode == "result" else 0.0
 		actor.update_pose(delta, player.get_speed() * pose_strength, (turn if mode == "playing" else 0.0) * pose_strength, player.boosting and mode == "playing", impact_amount * pose_strength, rules.rush_timer > 0.0 and effect_level != "控えめ", mode == "result")
 		var backward: Vector3 = player.global_basis.z.normalized()
-		effects.set_exhaust(actor.nozzle_position(), backward, player.boosting and mode == "playing", rules.rush_timer > 0.0)
+		effects.set_exhaust(actor.nozzle_position(), backward, player.boosting and mode == "playing", rules.rush_timer > 0.0, player.get_speed())
 	_update_camera(delta)
 	_present()
 	if _qa_enabled:
@@ -189,8 +194,15 @@ func _present_breaks(rewards: Array) -> void:
 	if not rewards.is_empty():
 		var total_added := 0
 		var rush_started := false
+		var speed: float = player.get_speed()
+		var direction: Vector3 = player.velocity
+		direction.y = 0.0
+		direction = direction.normalized() if direction.length_squared() > 0.1 else -player.global_basis.z.normalized()
+		office.react_to_breaks(rewards, player.global_position, speed)
 		for item: Dictionary in rewards:
-			effects.burst(item.get("position", player.global_position), 0.8 if int(item.get("base", 0)) < 50000 else 1.2)
+			var size := 0.8 if int(item.get("base", 0)) < 50000 else 1.2
+			var strength := size * lerpf(0.75, 1.25, clampf(speed / 9.0, 0.0, 1.0))
+			effects.burst(item.get("position", player.global_position), strength, direction, str(item.get("kind", "paper")))
 			total_added += int(item["added"])
 			rush_started = rush_started or bool(item.get("rush_started", false))
 		var last: Dictionary = rewards.back()
@@ -201,6 +213,14 @@ func _present_breaks(rewards: Array) -> void:
 		else:
 			hud.burst(str(last.get("text", "書類、全提出！")), "+¥" + _money(total_added), "impact")
 		_impact_reaction(player.get_speed())
+
+func _input(event: InputEvent) -> void:
+	# A held spray key must not activate the newly focused Retry button.
+	# Consume its repeats and release before GUI input; fresh menu input still works.
+	if mode == "result" and _result_spray_held and event is InputEventKey and (event.keycode == KEY_SPACE or event.physical_keycode == KEY_SPACE):
+		get_viewport().set_input_as_handled()
+		if not event.pressed:
+			_result_spray_held = false
 
 func _unhandled_key_input(event: InputEvent) -> void:
 	if not event is InputEventKey or not event.pressed or event.echo:
@@ -228,10 +248,12 @@ func _notification(what: int) -> void:
 func start_game() -> void:
 	get_tree().paused = false
 	_result_focus_paused = false
+	_result_spray_held = false
 	mode = "playing"
 	rules.reset()
 	office.reset_props()
 	player.reset_at(office.spawn_position)
+	actor.rotation.y = 0.0
 	player.set_active(true)
 	impact_amount = 0.0
 	shake = 0.0
@@ -265,9 +287,11 @@ func resume_game() -> void:
 func show_title() -> void:
 	get_tree().paused = false
 	_result_focus_paused = false
+	_result_spray_held = false
 	mode = "title"
 	player.set_active(false)
 	player.reset_at(office.spawn_position)
+	actor.rotation.y = 0.0
 	office.reset_props()
 	rules.reset()
 	_create_effects()
@@ -276,6 +300,7 @@ func show_title() -> void:
 func finish_game() -> void:
 	if mode != "playing": return
 	result = rules.finish()
+	_result_spray_held = Input.is_action_pressed("spray") or Input.is_physical_key_pressed(KEY_SPACE)
 	mode = "result"
 	player.set_active(false)
 	new_best = best_time < 0.0 or rules.elapsed < best_time
@@ -311,7 +336,7 @@ func _update_camera(delta: float) -> void:
 	if mode == "paused" or _result_focus_paused:
 		return
 	var target: Vector3 = player.get_global_transform_interpolated().origin
-	var offset := Vector3(7.4, 10.8, 10.0)
+	var offset := Vector3(6.4, 9.3, 8.6)
 	var look := target + Vector3(0, 0.8, -4.5)
 	if mode == "title" or mode == "result":
 		# Menus give the comic employee a larger place beside the paper UI.
@@ -327,6 +352,8 @@ func _update_camera(delta: float) -> void:
 
 func _settings_changed(level: String, music: float, sfx: float) -> void:
 	effect_level = level
+	if is_instance_valid(office):
+		office.set_feedback_quality(level)
 	music_volume = music
 	sfx_volume = sfx
 	if is_instance_valid(effects):
@@ -367,7 +394,7 @@ func _save_record() -> void:
 
 func _publish_qa() -> void:
 	var p: Vector3 = player.global_position
-	var state := {"mode": mode, "elapsed": rules.elapsed, "pressure": player.pressure, "speed": player.get_speed(), "damage": rules.damage, "combo": rules.combo, "max_combo": rules.max_combo, "yaw": player.rotation.y, "player": [p.x, p.y, p.z], "rank": result.get("rank", ""), "broken": rules.seen.size(), "best_time": best_time, "quality": effect_level, "music_volume": music_volume, "sfx_volume": sfx_volume, "rush": rules.rush_timer > 0.0, "hud": hud.debug_snapshot(), "fx": effects.debug_snapshot(), "fps": Engine.get_frames_per_second(), "draw_calls": RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_DRAW_CALLS_IN_FRAME)}
+	var state := {"mode": mode, "elapsed": rules.elapsed, "pressure": player.pressure, "speed": player.get_speed(), "damage": rules.damage, "combo": rules.combo, "max_combo": rules.max_combo, "yaw": player.rotation.y, "actor_yaw": actor.global_rotation.y, "player": [p.x, p.y, p.z], "rank": result.get("rank", ""), "broken": rules.seen.size(), "best_time": best_time, "quality": effect_level, "music_volume": music_volume, "sfx_volume": sfx_volume, "rush": rules.rush_timer > 0.0, "hud": hud.debug_snapshot(), "fx": effects.debug_snapshot(), "office": office.debug_feedback_snapshot(), "fps": Engine.get_frames_per_second(), "draw_calls": RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_DRAW_CALLS_IN_FRAME)}
 	JavaScriptBridge.eval("window.__taikin = " + JSON.stringify(state) + ";")
 
 static func _money(value: int) -> String:

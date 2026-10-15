@@ -1,0 +1,18 @@
+{
+  "engine": "Godot 4.6.3 stable",
+  "commands": {
+    "npm run check": "passed: model validation, import, rules, shared colors/fonts, real physics, route/destruction, employee reactions, jet and directional impacts, FX limits/lifecycle, integrated scene, Web export",
+    "repository npm test": "passed: 38 tests",
+    "python3 -m py_compile scripts/browser-qa.py": "passed",
+    "native model renderer": "passed: colleague front/side/back, new --out path",
+    "native reaction renderer": "passed: fixed runtime poses, no script errors",
+    "DISPLAY=:102 python3 scripts/browser-qa.py --out docs/verification/v0.6": "passed: actual keyboard/menu, result, held spray release, save/reload, settings, pause/retry/blur, 720p/1080p/960x540",
+    "git diff --check": "passed"
+  },
+  "browser_report": "browser-report.json",
+  "model_report": "model-report.json",
+  "limitations": [
+    "Cloud software rendering; real-GPU frame rate and first-time player usability unverified.",
+    "Fixed-time native diagnostics are separate from browser input through-play."
+  ]
+}

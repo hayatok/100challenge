@@ -1,5 +1,5 @@
 extends Node3D
-## Pausable, bounded world feedback. Seven shared mesh batches; no particle nodes.
+## Pausable, bounded feedback: seven batches plus one connected rear jet mesh.
 
 const AssetLibrary := preload("res://scripts/asset_library.gd")
 const GraphicMeshes := preload("res://scripts/fx/graphic_meshes.gd")
@@ -25,6 +25,21 @@ var _rush := false
 var _at := Vector3.ZERO
 var _backward := Vector3.BACK
 var _exhaust_clock := 0.0
+var _jet_core: MeshInstance3D
+var _jet_amount := 0.0
+var _jet_pulse := 0.0
+var _jet_speed := 0.0
+var _jet_length := 0.0
+var _jet_width := 0.0
+var _sample_at := Vector3.ZERO
+var _sample_backward := Vector3.BACK
+var _sample_valid := false
+var _cue_kind := ""
+var _cue_strength := 0.0
+var _cue_direction := Vector3.ZERO
+var _cue_star_size := 0.0
+var _cue_paper_count := 0
+var _cue_cube_count := 0
 var _rush_starts := 0
 var _combo_cues := 0
 var _last_combo := 0
@@ -69,6 +84,15 @@ func setup() -> void:
 		batch.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 		add_child(batch)
 		_batches.append(batch)
+	_jet_core = MeshInstance3D.new()
+	_jet_core.name = "ConnectedRearJet"
+	_jet_core.mesh = GraphicMeshes.jet_core()
+	var jet_material := AssetLibrary.particle_material().duplicate() as StandardMaterial3D
+	jet_material.next_pass = _outline(Color("20afc2"), 0.028)
+	_jet_core.material_override = jet_material
+	_jet_core.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	_jet_core.visible = false
+	add_child(_jet_core)
 	_noise = _audio("Extinguisher", _make_noise(), -19.0)
 	_onset = _audio("JetSnap", _make_snap(), -19.0)
 	_impact = _audio("PaperImpact", _make_impact(), -10.0)
@@ -111,6 +135,7 @@ func set_quality(level: String) -> void:
 				_particles.remove_at(index)
 	while _particles.size() > _limit():
 		_retire_one()
+	_update_jet_core(0.0)
 	_publish_batches()
 
 func set_volumes(music: float, sfx: float) -> void:
@@ -129,26 +154,70 @@ func _apply_volume(player: AudioStreamPlayer, value: float) -> void:
 	elif player == _music and _audio_enabled and not player.playing:
 		player.play()
 
-func set_exhaust(at: Vector3, backward: Vector3, spraying: bool, rush: bool) -> void:
+func set_exhaust(at: Vector3, backward: Vector3, spraying: bool, rush: bool, speed: float = 0.0) -> void:
+	var discontinuity := _sample_valid and at.distance_squared_to(_at) > 36.0
+	var onset := spraying and not _spraying
+	var released := not spraying and _spraying
 	_at = at
 	_backward = backward.normalized() if backward.length_squared() > 0.001 else Vector3.BACK
-	var onset := spraying and not _spraying
+	_jet_speed = maxf(0.0, speed)
 	_spraying = spraying
 	_rush = rush
 	if not _ready_once:
 		return
-	if onset:
+	if onset or released or discontinuity:
+		_clear_exhaust()
+		_sample_at = _at
+		_sample_backward = _backward
+		_sample_valid = spraying
 		_exhaust_clock = 0.0
+	if discontinuity:
+		_jet_amount = 0.0
+	if onset:
+		_jet_amount = 0.5
+		_jet_pulse = 0.10
 		for index in (2 if _quality == "控えめ" else 5):
 			var distance := 0.12 + float(index) * 0.22
-			_spawn(_at + _backward * distance, _backward * 3.3, POWDER, 0.48, 0.45 + distance * 0.7, 0)
+			_spawn(_at + _backward * distance, _backward * 3.3, POWDER, 0.42, 0.55 + distance * 0.7, 0)
 		if _audio_enabled and _sfx_volume > 0.0:
 			_onset.play()
 		_publish_batches()
+	_update_jet_core(0.0)
 	if _audio_enabled and _sfx_volume > 0.0 and spraying and not _noise.playing:
 		_noise.play()
 	elif not spraying:
 		_noise.stop()
+
+func _clear_exhaust() -> void:
+	for index in range(_particles.size() - 1, -1, -1):
+		if int(_particles[index]["priority"]) == 0:
+			_particles.remove_at(index)
+
+func _update_jet_core(delta: float) -> void:
+	if not is_instance_valid(_jet_core):
+		return
+	if _spraying:
+		_jet_amount = lerpf(_jet_amount, 1.0, 1.0 - exp(-delta * 42.0))
+	else:
+		_jet_amount = maxf(0.0, _jet_amount - delta * 8.0)
+	_jet_pulse = maxf(0.0, _jet_pulse - delta)
+	var speed_ratio := clampf(_jet_speed / 10.0, 0.0, 1.0)
+	var pulse := 1.0 + 0.12 * (_jet_pulse / 0.10)
+	var subdued := _quality == "控えめ"
+	_jet_length = minf(3.0, (1.1 + speed_ratio * 1.35 + (0.4 if _rush else 0.0)) * pulse) * _jet_amount
+	_jet_width = (0.72 + speed_ratio * 0.38 + (0.16 if _rush else 0.0)) * pulse * _jet_amount
+	if subdued:
+		_jet_length *= 0.52
+		_jet_width *= 0.48
+	_jet_core.visible = _jet_amount > 0.01
+	if not _jet_core.visible:
+		return
+	var side := Vector3.UP.cross(_backward).normalized()
+	if side.length_squared() < 0.01:
+		side = Vector3.RIGHT
+	var up := _backward.cross(side).normalized()
+	var basis := Basis(side * _jet_width, up * _jet_width, _backward * _jet_length)
+	_jet_core.transform = Transform3D(basis, _at + _backward * 0.04)
 
 func _limit() -> int:
 	return 20 if _quality == "控えめ" else (52 if _quality == "標準" else MAX_PARTICLES)
@@ -172,7 +241,7 @@ func _retire_one() -> void:
 	if not _particles.is_empty():
 		_particles.pop_front()
 
-func _spawn(at: Vector3, velocity: Vector3, kind: int, duration: float, size: float = 1.0, priority: int = 1, basis: Basis = Basis.IDENTITY, color: Color = Color.WHITE) -> void:
+func _spawn(at: Vector3, velocity: Vector3, kind: int, duration: float, size: float = 1.0, priority: int = 1, basis: Basis = Basis.IDENTITY, color: Color = Color.WHITE, aspect: Vector2 = Vector2.ONE) -> void:
 	if not _ready_once:
 		return
 	if priority == 0:
@@ -188,53 +257,78 @@ func _spawn(at: Vector3, velocity: Vector3, kind: int, duration: float, size: fl
 	var spin := Vector3(_rng.randf_range(-3, 3), _rng.randf_range(-4, 4), _rng.randf_range(-3, 3))
 	if kind == STAR or kind == RING or kind == STREAK:
 		spin = Vector3.ZERO
-	_particles.append({"position": at, "velocity": velocity, "life": duration, "duration": duration, "kind": kind, "size": size, "spin": spin, "basis": basis, "color": color, "priority": priority, "new": true})
+	_particles.append({"position": at, "velocity": velocity, "life": duration, "duration": duration, "kind": kind, "size": size, "spin": spin, "basis": basis, "color": color, "priority": priority, "new": true, "aspect": aspect})
 
 func _camera_basis() -> Basis:
 	var camera := get_viewport().get_camera_3d()
 	return camera.global_basis.orthonormalized() if camera != null else Basis.IDENTITY
 
-func _contact(at: Vector3, strength: float) -> void:
-	var size := (0.38 if _quality == "控えめ" else 0.78) * clampf(strength, 0.6, 1.5)
-	_spawn(at, Vector3.ZERO, STAR, 0.16, size, 2)
-	_spawn(at, Vector3.ZERO, RING, 0.18, size * 1.35, 2, Basis.IDENTITY, Color("ffd45b"))
+func _contact(at: Vector3, strength: float, direction: Vector3 = Vector3.ZERO) -> void:
+	var size := (0.40 if _quality == "控えめ" else 1.28) * clampf(strength, 0.55, 1.6)
+	var camera_basis := _camera_basis()
+	var angle := atan2(direction.dot(camera_basis.y), direction.dot(camera_basis.x)) if direction.length_squared() > 0.01 else 0.0
+	var basis := camera_basis.rotated(camera_basis.z, angle)
+	# Place the peak behind the contact; never lift it across the actor's face.
+	var center := at - direction * 0.14 - camera_basis.z * 0.09
+	_spawn(center, Vector3.ZERO, STAR, 0.17, size, 2, basis, Color.WHITE, Vector2(1.15, 0.84))
+	_spawn(center, Vector3.ZERO, RING, 0.20, size * 1.05, 2, basis, Color("ffd45b"), Vector2(1.15, 0.84))
 	if _quality != "控えめ":
-		_spawn(at, Vector3.ZERO, RING, 0.18, size * 1.65, 2, Basis.IDENTITY, Color("c4faff"))
+		_spawn(center, Vector3.ZERO, RING, 0.20, size * 1.24, 2, basis, Color("c4faff"), Vector2(1.15, 0.84))
+	_cue_star_size = size
 
-func _paper_fan(at: Vector3, normal: Vector3, strength: float, amount: int) -> void:
-	var forward := normal.normalized() if normal.length_squared() > 0.01 else Vector3.BACK
+func _paper_fan(at: Vector3, heading: Vector3, strength: float, amount: int, kind: String = "paper") -> void:
+	var forward := heading.normalized() if heading.length_squared() > 0.01 else -_backward
 	var side := forward.cross(Vector3.UP).normalized()
 	if side.length_squared() < 0.01:
 		side = Vector3.RIGHT
+	var camera_basis := _camera_basis()
+	_cue_paper_count = 0
+	_cue_cube_count = 0
 	for index in amount:
 		var spread := lerpf(-1.0, 1.0, float(index) / maxf(1, amount - 1))
-		var velocity := side * spread * _rng.randf_range(2.0, 3.4) + forward * _rng.randf_range(0.2, 1.2) + Vector3.UP * _rng.randf_range(1.4, 3.2)
+		var arc := sqrt(maxf(0.0, 1.0 - spread * spread))
+		var wide := 1.15 if kind in ["tower", "paper"] else (0.75 if kind == "box" else 1.0)
+		var velocity := side * spread * 3.2 * wide + forward * (1.5 + arc * 1.0) + Vector3.UP * (1.3 + arc * 1.8)
 		if _quality == "控えめ":
-			velocity *= 0.45
-		var kind := CUBE if index % 6 == 0 else PAPER
-		var basis := _camera_basis().rotated(_camera_basis().z, spread * 0.65)
-		if kind == PAPER:
+			velocity *= 0.38
+		var cube_every := 3 if kind == "box" else (5 if kind in ["wagon", "cart"] else 9)
+		var particle_kind := CUBE if index % cube_every == 0 else PAPER
+		var basis := camera_basis.rotated(camera_basis.z, spread * 0.85)
+		if particle_kind == PAPER:
 			basis = basis * Basis(Vector3.UP, PI)
-		var spread_size := 0.22 if _quality == "控えめ" else 0.85
-		var origin := at + side * spread * spread_size + Vector3.UP * (0.18 + (1.0 - absf(spread)) * spread_size)
-		var size := _rng.randf_range(1.5, 2.15) if kind == PAPER else _rng.randf_range(2.0, 2.8)
-		_spawn(origin, velocity * clampf(strength, 0.6, 1.3), kind, _rng.randf_range(0.65, 1.12), size, 1, basis)
+			_cue_paper_count += 1
+		else:
+			_cue_cube_count += 1
+		var fan_size := (0.23 if _quality == "控えめ" else 1.10) * strength
+		var origin := at + side * spread * fan_size * wide + forward * arc * fan_size * 0.3 + Vector3.UP * (0.10 + arc * fan_size)
+		var size := _rng.randf_range(1.7, 2.3) if particle_kind == PAPER else _rng.randf_range(2.3, 3.0)
+		_spawn(origin, velocity * clampf(strength, 0.55, 1.5), particle_kind, _rng.randf_range(0.65, 1.05), size, 1, basis)
 
-func burst(at: Vector3, strength: float = 1.0) -> void:
+func burst(at: Vector3, strength: float = 1.0, forward: Vector3 = Vector3.ZERO, kind: String = "paper") -> void:
 	if not _ready_once:
 		return
-	var center := at + Vector3.UP * 0.55
-	_contact(center, strength)
-	_paper_fan(center, _backward, strength, roundi(22 * _density() * clampf(strength, 0.6, 1.5)))
+	var magnitude := clampf(strength, 0.55, 1.4) * (1.13 if kind in ["wagon", "cart"] else (0.86 if kind == "box" else 1.0))
+	var direction := forward.normalized() if forward.length_squared() > 0.01 else -_backward
+	var center := at + Vector3.UP * 1.0
+	_cue_kind = kind
+	_cue_strength = magnitude
+	_cue_direction = direction
+	_contact(center, magnitude, direction)
+	# Shape and proportions carry subtype: the total budget never grows.
+	_paper_fan(center, direction, magnitude, roundi(22 * _density() * clampf(magnitude, 0.6, 1.5)), kind)
 	_play_impact()
 	_publish_batches()
 
 func impact(at: Vector3, normal: Vector3, strength: float = 1.0) -> void:
 	if not _ready_once:
 		return
-	var center := at + normal.normalized() * 0.08
-	_contact(center, strength)
-	_paper_fan(center, normal, strength, roundi(9 * _density()))
+	var direction := normal.normalized() if normal.length_squared() > 0.01 else _backward
+	var center := at + direction * 0.08
+	_cue_kind = "fixed"
+	_cue_strength = strength
+	_cue_direction = direction
+	_contact(center, strength, direction)
+	_paper_fan(center, direction, strength, roundi(9 * _density()))
 	_play_impact()
 	_publish_batches()
 
@@ -287,6 +381,11 @@ func celebrate(at: Vector3) -> void:
 		_spawn(origin, velocity, kind, _rng.randf_range(0.9, 1.2), size, 2, basis, color)
 	_noise.stop()
 	_spraying = false
+	_sample_valid = false
+	_jet_amount = 0.0
+	_jet_pulse = 0.0
+	_clear_exhaust()
+	_update_jet_core(0.0)
 	_exhaust_clock = 0.0
 	if _audio_enabled and _sfx_volume > 0.0:
 		_victory.play()
@@ -296,6 +395,7 @@ func _process(delta: float) -> void:
 	if not _ready_once:
 		return
 	_particle_clock += delta
+	_update_jet_core(delta)
 	for index in range(_particles.size() - 1, -1, -1):
 		var particle: Dictionary = _particles[index]
 		# Births keep a complete peak render, even after a long/slow frame.
@@ -327,12 +427,22 @@ func _process(delta: float) -> void:
 		var emissions := mini(4, int(_exhaust_clock / period))
 		_exhaust_clock = fmod(_exhaust_clock, period)
 		for index in emissions:
+			# Sample the swept nozzle path, so steering never emits a bead cluster
+			# only at the new pose. An off/on or teleport starts a fresh segment.
+			var fraction := float(index + 1) / maxf(1.0, emissions)
+			var origin := _sample_at.lerp(_at, fraction) if _sample_valid else _at
+			var direction := _sample_backward.lerp(_backward, fraction).normalized() if _sample_valid else _backward
+			if direction.length_squared() < 0.01:
+				direction = _backward
 			var jitter := Vector3(_rng.randf_range(-0.07, 0.07), _rng.randf_range(-0.06, 0.06), _rng.randf_range(-0.07, 0.07))
-			_spawn(_at + _backward * 0.12 + jitter, _backward * (4.1 if _rush else 3.7) + Vector3.UP * 0.18, POWDER, 0.68, _rng.randf_range(0.48, 0.66), 0)
+			_spawn(origin + direction * 0.18 + jitter, direction * (4.1 if _rush else 3.7) + Vector3.UP * 0.18, POWDER, 0.48, _rng.randf_range(0.66, 0.90), 0)
 			if _quality != "控えめ" and index % 2 == 0:
-				var axis := _backward.cross(Vector3.UP).normalized()
-				var basis := Basis(axis, _backward, axis.cross(_backward)).orthonormalized()
-				_spawn(_at + axis * _rng.randf_range(-0.2, 0.2), _backward * 4.3, STREAK, 0.19, _rng.randf_range(0.75, 1.15), 0, basis)
+				var axis := direction.cross(Vector3.UP).normalized()
+				var basis := Basis(axis, direction, axis.cross(direction)).orthonormalized()
+				_spawn(origin + axis * _rng.randf_range(-0.2, 0.2), direction * 4.3, STREAK, 0.16, _rng.randf_range(0.75, 1.15), 0, basis)
+		_sample_at = _at
+		_sample_backward = _backward
+		_sample_valid = true
 	else:
 		_exhaust_clock = 0.0
 	_publish_batches()
@@ -341,7 +451,6 @@ func _publish_batches() -> void:
 	if _batches.is_empty():
 		return
 	var counts := [0, 0, 0, 0, 0, 0, 0]
-	var camera_basis := _camera_basis()
 	for particle in _particles:
 		var kind := int(particle["kind"])
 		var age := float(particle["duration"]) - float(particle["life"])
@@ -349,11 +458,13 @@ func _publish_batches() -> void:
 		var fade := minf(1.0, float(particle["life"]) / (0.08 if kind == STAR or kind == RING else 0.16))
 		if kind == POWDER:
 			# Powder grows continuously: a narrow nozzle opens into a 2–3m rear cone.
-			size *= 1.0 + age * (4.7 if _quality != "控えめ" else 1.3)
+			size *= 1.0 + age * (3.4 if _quality != "控えめ" else 1.3)
 		elif kind == RING:
 			size *= 1.0 + age * 2.1
-		var basis: Basis = camera_basis if kind == STAR or kind == RING else particle["basis"]
-		var transform := Transform3D(basis.scaled(Vector3.ONE * size * fade), particle["position"])
+		var basis: Basis = particle["basis"]
+		var aspect: Vector2 = particle["aspect"]
+		var scaled_basis := Basis(basis.x * aspect.x, basis.y * aspect.y, basis.z).scaled(Vector3.ONE * size * fade)
+		var transform := Transform3D(scaled_basis, particle["position"])
 		var slot := int(counts[kind])
 		_batches[kind].multimesh.set_instance_transform(slot, transform)
 		_batches[kind].multimesh.set_instance_color(slot, particle["color"])
@@ -371,7 +482,13 @@ func debug_snapshot() -> Dictionary:
 		life_total += float(particle["life"])
 		if int(particle["priority"]) == 0:
 			exhaust_count += 1
-	return {"particles": _particles.size(), "limit": _limit(), "counts": counts, "exhaust": exhaust_count, "reserved": _reserve(), "batch_meshes": _batches.size(), "rush_starts": _rush_starts, "combo_cues": _combo_cues, "last_combo": _last_combo, "particle_clock": _particle_clock, "life_total": life_total, "spraying": _spraying, "audio_enabled": _audio_enabled}
+	return {"particles": _particles.size(), "limit": _limit(), "counts": counts, "exhaust": exhaust_count, "reserved": _reserve(), "batch_meshes": _batches.size(), "rush_starts": _rush_starts, "combo_cues": _combo_cues, "last_combo": _last_combo, "particle_clock": _particle_clock, "life_total": life_total, "spraying": _spraying, "audio_enabled": _audio_enabled,
+		"jet_core_visible": is_instance_valid(_jet_core) and _jet_core.visible, "jet_core_length": _jet_length, "jet_core_width": _jet_width,
+		"jet_core_start": _vector_values(_at + _backward * 0.04), "jet_core_end": _vector_values(_at + _backward * (_jet_length + 0.04)), "jet_speed": _jet_speed, "jet_direction": _vector_values(_backward),
+		"cue_kind": _cue_kind, "cue_strength": _cue_strength, "cue_direction": _vector_values(_cue_direction), "cue_star_size": _cue_star_size, "cue_paper_count": _cue_paper_count, "cue_cube_count": _cue_cube_count}
+
+func _vector_values(value: Vector3) -> Array[float]:
+	return [value.x, value.y, value.z]
 
 func _notification(what: int) -> void:
 	if not _ready_once:

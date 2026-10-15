@@ -1,0 +1,237 @@
+{
+  "camera_offset": [
+    6.4,
+    9.3,
+    8.6
+  ],
+  "closeup_strong": {
+    "callout": true,
+    "callout_text": "！ マグ死守！",
+    "chair_yaw": -0.398970693349838,
+    "cooldown": 2.4,
+    "delay": 0.0,
+    "distance": 5.0,
+    "elapsed": 0.35,
+    "expression": "startled",
+    "id": "Coworker_00",
+    "impact": [
+      3.0,
+      0.0,
+      -4.0
+    ],
+    "mug_lift": 0.2875,
+    "position": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "quality": "派手",
+    "recoil": 0.1875,
+    "starts": 1,
+    "state": "startled",
+    "strength": 2,
+    "target_yaw": -0.643501108793284,
+    "upgrades": 0,
+    "visible_meshes": 6
+  },
+  "closeup_subdued": {
+    "callout": true,
+    "callout_text": "！",
+    "chair_yaw": -0.398970693349838,
+    "cooldown": 2.4,
+    "delay": 0.0,
+    "distance": 5.0,
+    "elapsed": 0.35,
+    "expression": "startled",
+    "id": "Coworker_00",
+    "impact": [
+      3.0,
+      0.0,
+      -4.0
+    ],
+    "mug_lift": 0.05175,
+    "position": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "quality": "控えめ",
+    "recoil": 0.03375,
+    "starts": 1,
+    "state": "startled",
+    "strength": 2,
+    "target_yaw": -0.643501108793284,
+    "upgrades": 0,
+    "visible_meshes": 6
+  },
+  "kind": "fixed-time native runtime poses; not input through-play",
+  "normal_contact": [
+    2,
+    0,
+    10
+  ],
+  "normal_result": {
+    "accepted": 2,
+    "selected": 2,
+    "suppressed": 0,
+    "upgraded": 0
+  },
+  "normal_snapshot": {
+    "coworkers": [
+      {
+        "callout": false,
+        "callout_text": "",
+        "chair_yaw": 0.0,
+        "cooldown": 0.0,
+        "delay": 0.0,
+        "distance": 0.0,
+        "elapsed": 0.0,
+        "expression": "sleepy",
+        "id": "Coworker_00",
+        "impact": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "mug_lift": 0.0,
+        "position": [
+          -6.09999990463257,
+          0.0,
+          38.0
+        ],
+        "quality": "派手",
+        "recoil": 0.0,
+        "starts": 0,
+        "state": "sleepy",
+        "strength": 0,
+        "target_yaw": 0.0,
+        "upgrades": 0,
+        "visible_meshes": 5
+      },
+      {
+        "callout": true,
+        "callout_text": "！ えっ！？",
+        "chair_yaw": 0.298385500907898,
+        "cooldown": 2.4,
+        "delay": 0.0,
+        "distance": 10.1533250808716,
+        "elapsed": 0.193160099029541,
+        "expression": "startled",
+        "id": "Coworker_01",
+        "impact": [
+          2.0,
+          0.0,
+          10.0
+        ],
+        "mug_lift": 0.2875,
+        "position": [
+          6.70000028610229,
+          0.0,
+          19.0
+        ],
+        "quality": "派手",
+        "recoil": 0.1875,
+        "starts": 1,
+        "state": "startled",
+        "strength": 2,
+        "target_yaw": 0.481266955875836,
+        "upgrades": 0,
+        "visible_meshes": 6
+      },
+      {
+        "callout": true,
+        "callout_text": "！ マグ死守！",
+        "chair_yaw": -1.2582859992981,
+        "cooldown": 2.4,
+        "delay": 0.0,
+        "distance": 9.03382587432861,
+        "elapsed": 0.241594089508057,
+        "expression": "startled",
+        "id": "Coworker_02",
+        "impact": [
+          2.0,
+          0.0,
+          10.0
+        ],
+        "mug_lift": 0.2875,
+        "position": [
+          -6.09999990463257,
+          0.0,
+          6.0
+        ],
+        "quality": "派手",
+        "recoil": 0.1875,
+        "starts": 1,
+        "state": "startled",
+        "strength": 2,
+        "target_yaw": -2.02949346248966,
+        "upgrades": 0,
+        "visible_meshes": 6
+      },
+      {
+        "callout": false,
+        "callout_text": "",
+        "chair_yaw": 0.0,
+        "cooldown": 0.0,
+        "delay": 0.0,
+        "distance": 0.0,
+        "elapsed": 0.0,
+        "expression": "sleepy",
+        "id": "Coworker_03",
+        "impact": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "mug_lift": 0.0,
+        "position": [
+          6.70000028610229,
+          0.0,
+          -19.0
+        ],
+        "quality": "派手",
+        "recoil": 0.0,
+        "starts": 0,
+        "state": "sleepy",
+        "strength": 0,
+        "target_yaw": 0.0,
+        "upgrades": 0,
+        "visible_meshes": 5
+      },
+      {
+        "callout": false,
+        "callout_text": "",
+        "chair_yaw": 0.0,
+        "cooldown": 0.0,
+        "delay": 0.0,
+        "distance": 0.0,
+        "elapsed": 0.0,
+        "expression": "sleepy",
+        "id": "Coworker_04",
+        "impact": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "mug_lift": 0.0,
+        "position": [
+          -6.09999990463257,
+          0.0,
+          -38.0
+        ],
+        "quality": "派手",
+        "recoil": 0.0,
+        "starts": 0,
+        "state": "sleepy",
+        "strength": 0,
+        "target_yaw": 0.0,
+        "upgrades": 0,
+        "visible_meshes": 5
+      }
+    ],
+    "max_reactions": 2,
+    "quality": "派手",
+    "radius": 12.0,
+    "seen_events": 2
+  }
+}

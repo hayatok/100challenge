@@ -1,0 +1,20 @@
+{
+  "kind": "fixed-time native runtime diagnostic; not input through-play",
+  "engine": "Godot 4.6.3 Compatibility",
+  "renderer": "Mesa llvmpipe",
+  "play_camera_offset": [
+    6.4,
+    9.3,
+    8.6
+  ],
+  "vfx_source": "v0.6 current branch",
+  "office_main": "v0.5 baseline isolated copy with current play camera; colleague integration checked separately in real browser",
+  "jet": {
+    "speed": 8.0,
+    "rush": true,
+    "length_m": 2.58,
+    "width_m": 1.18,
+    "batch_meshes": 7
+  },
+  "source_images": "/tmp/taikin-fx-jet-{0.0,-0.8}.png; /tmp/taikin-fx-impact.png"
+}

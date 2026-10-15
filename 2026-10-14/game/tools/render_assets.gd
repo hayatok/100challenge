@@ -2,7 +2,8 @@ extends SceneTree
 ## Render imported GLBs from three views. Run with a native graphics display.
 
 const AssetLibrary := preload("res://scripts/asset_library.gd")
-const OUTPUT := "res://../docs/verification/v0.4/models/"
+var output := "res://../docs/verification/v0.4/models/"
+var selected := PackedStringArray()
 var viewport: SubViewport
 var camera: Camera3D
 var stage: Node3D
@@ -11,7 +12,12 @@ func _initialize() -> void:
 	call_deferred("_render")
 
 func _render() -> void:
-	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(OUTPUT))
+	for argument in OS.get_cmdline_user_args():
+		if argument.begins_with("--out="):
+			output = argument.trim_prefix("--out=").trim_suffix("/") + "/"
+		else:
+			selected.append(argument)
+	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(output))
 	viewport = SubViewport.new()
 	viewport.size = Vector2i(480, 480)
 	viewport.msaa_3d = Viewport.MSAA_2X
@@ -45,7 +51,7 @@ func _render() -> void:
 	var manifest: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://../scripts/modeling/models.json"))
 	for entry in manifest["models"]:
 		var asset_name: String = entry["name"]
-		if not OS.get_cmdline_user_args().is_empty() and not OS.get_cmdline_user_args().has(asset_name):
+		if not selected.is_empty() and not selected.has(asset_name):
 			continue
 		var model := AssetLibrary.model(asset_name)
 		stage.add_child(model)
@@ -68,7 +74,7 @@ func _render() -> void:
 			camera.look_at(center)
 			await process_frame
 			await RenderingServer.frame_post_draw
-			var error := viewport.get_texture().get_image().save_png(OUTPUT + asset_name + "-" + label + ".png")
+			var error := viewport.get_texture().get_image().save_png(output + asset_name + "-" + label + ".png")
 			assert(error == OK, "Failed to save model view")
 		model.free()
 		print("Rendered imported GLB: ", asset_name)

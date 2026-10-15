@@ -1,0 +1,22 @@
+
+> zenryoku-taikin@0.6.0 check
+> npm run assets:check && node scripts/godot.mjs import && npm test && npm run build
+
+
+> zenryoku-taikin@0.6.0 assets:check
+> python3 scripts/modeling/check_models.py
+
+Model checks passed: 20 assets, 67,305 triangles, 1,930,264 bytes
+Godot 4.6.3: import passed
+
+> zenryoku-taikin@0.6.0 test
+> node scripts/godot.mjs test
+
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+PASS: rules (13), model colors/sharing, player real-physics, office route/destruction, nearby colleague reactions, connected jet/directional impacts, bounded FX lifecycle and rush/pause/success/retry integration checks
+
+> zenryoku-taikin@0.6.0 build
+> node scripts/godot.mjs build
+
+Godot 4.6.3: build passed

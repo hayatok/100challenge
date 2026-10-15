@@ -66,7 +66,13 @@
 | 噴射の粉 | [参考シート](../art/assets/v0.4/09-fx-objects.png) | [GLB](../game/assets/models/fx_powder.glb) / [Blender](../art/models/fx_powder.blend) | [正面](verification/v0.4/models/fx_powder-front.png) / [側面](verification/v0.4/models/fx_powder-side.png) / [背面](verification/v0.4/models/fx_powder-back.png) | 420 |
 | 立方体のアクセント | [参考シート](../art/assets/v0.4/09-fx-objects.png) | [GLB](../game/assets/models/fx_cube.glb) / [Blender](../art/models/fx_cube.blend) | [正面](verification/v0.4/models/fx_cube-front.png) / [側面](verification/v0.4/models/fx_cube-side.png) / [背面](verification/v0.4/models/fx_cube-back.png) | 176 |
 
-20モデル合計67,405三角形、GLB合計1,928,716バイト（約1.84MiB）。各モデルは1素材。主役の表情・手足は13グループ、椅子と床は各2グループ、その他は1グループにまとめた。
+v0.4完成時は20モデル合計67,405三角形、GLB合計1,928,716バイト（約1.84MiB）。各モデルは1素材。主役の表情・手足は13グループ、椅子と床は各2グループ、その他は1グループにまとめた。下のv0.6では同僚だけを可動化し、v0.4のレンダーと測定を比較用に残す。
+
+### v0.6：同僚のリアクション
+
+[新しい反応の見本](../art/screens/v0.6/01-action-reaction.png) を確認してから、既存の猫マグと眠そうな社員をBody／Head／ArmMug／FaceNeutralへ分けた。上体・頭・マグの腕を動かし、通常の顔と驚いた顔を切り替える。造形の制作元は同じ `build_decor.py` のcolleague()。他の19モデルは変更していない。
+
+現在の同僚は8,696三角形、4面、1共有素材、238,316バイト。20モデル合計67,305三角形、1,930,264バイト。更新後の実GLBの [正面](verification/v0.6/models/colleague-front.png)・[側面](verification/v0.6/models/colleague-side.png)・[背面](verification/v0.6/models/colleague-back.png)、[反応の固定場面](verification/v0.6/staged-colleagues/normal-reaction.png)、実ブラウザ操作は [検証記録](VERIFICATION.md) に分けて保存する。
 
 ## 作り直す手順
 

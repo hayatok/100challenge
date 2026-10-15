@@ -22,9 +22,9 @@ static func star() -> Mesh:
 	var tool := SurfaceTool.new()
 	tool.begin(Mesh.PRIMITIVE_TRIANGLES)
 	var points := PackedVector2Array()
-	for index in 28:
-		var angle := TAU * index / 28.0
-		var radius := (1.0 + 0.18 * sin(index * 2.4)) if index % 2 == 0 else 0.34
+	for index in 20:
+		var angle := TAU * index / 20.0
+		var radius := (1.0 + 0.14 * sin(index * 2.4)) if index % 2 == 0 else 0.50
 		points.append(Vector2(cos(angle), sin(angle)) * radius)
 	_polygon(tool, points, PINK, -0.035, Vector2(-0.13, -0.09))
 	_polygon(tool, points, NAVY, -0.02)
@@ -37,6 +37,36 @@ static func star() -> Mesh:
 		core.append(point * 0.41)
 	_polygon(tool, core, IVORY, 0.012)
 	return tool.commit()
+
+static func jet_core() -> Mesh:
+	# Closed connected scallops in local +Z: tiny nozzle, widening cloudy tail.
+	# Built once. Runtime changes only this mesh instance's transform.
+	var tool := SurfaceTool.new()
+	tool.begin(Mesh.PRIMITIVE_TRIANGLES)
+	var profile := PackedVector2Array([Vector2(0.0, 0.025), Vector2(0.12, 0.065), Vector2(0.25, 0.13), Vector2(0.36, 0.18), Vector2(0.43, 0.15), Vector2(0.53, 0.28), Vector2(0.60, 0.24), Vector2(0.70, 0.38), Vector2(0.77, 0.32), Vector2(0.80, 0.46), Vector2(0.86, 0.44), Vector2(0.92, 0.37), Vector2(0.965, 0.25), Vector2(0.99, 0.12), Vector2(1.0, 0.02)])
+	var spokes := 12
+	for ring_index in profile.size() - 1:
+		for spoke in spokes:
+			var vertices: Array[Vector3] = []
+			for corner in [Vector2i(ring_index, spoke), Vector2i(ring_index, (spoke + 1) % spokes), Vector2i(ring_index + 1, spoke), Vector2i(ring_index + 1, (spoke + 1) % spokes)]:
+				var angle: float = TAU * corner.y / spokes
+				var sample: Vector2 = profile[corner.x]
+				var radius := sample.y * (1.0 + 0.10 * sin(angle * 3.0 + sample.x * 8.0))
+				vertices.append(Vector3(cos(angle) * radius, sin(angle) * radius, sample.x))
+			_jet_triangle(tool, vertices[0], vertices[2], vertices[1])
+			_jet_triangle(tool, vertices[1], vertices[2], vertices[3])
+	for spoke in spokes:
+		var angle := TAU * spoke / spokes
+		var next := TAU * (spoke + 1) / spokes
+		_jet_triangle(tool, Vector3.ZERO, Vector3(cos(angle), sin(angle), 0) * profile[0].y, Vector3(cos(next), sin(next), 0) * profile[0].y)
+		_jet_triangle(tool, Vector3(0, 0, 1), Vector3(cos(next) * 0.02, sin(next) * 0.02, 1), Vector3(cos(angle) * 0.02, sin(angle) * 0.02, 1))
+	return tool.commit()
+
+static func _jet_triangle(tool: SurfaceTool, a: Vector3, b: Vector3, c: Vector3) -> void:
+	tool.set_color(Color.WHITE)
+	tool.set_normal((c - a).cross(b - a).normalized())
+	for vertex in [a, b, c]:
+		tool.add_vertex(vertex)
 
 static func ring() -> Mesh:
 	var tool := SurfaceTool.new()
