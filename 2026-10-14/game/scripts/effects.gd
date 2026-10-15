@@ -301,7 +301,7 @@ func _paper_fan(at: Vector3, heading: Vector3, strength: float, amount: int, kin
 			_cue_cube_count += 1
 		var fan_size := (0.23 if _quality == "控えめ" else 1.10) * strength
 		var origin := at + side * spread * fan_size * wide + forward * arc * fan_size * 0.3 + Vector3.UP * (0.10 + arc * fan_size)
-		var size := _rng.randf_range(1.7, 2.3) if particle_kind == PAPER else _rng.randf_range(2.3, 3.0)
+		var size := _rng.randf_range(1.4, 1.9) if particle_kind == PAPER else _rng.randf_range(2.3, 3.0)
 		_spawn(origin, velocity * clampf(strength, 0.55, 1.5), particle_kind, _rng.randf_range(0.65, 1.05), size, 1, basis)
 
 func burst(at: Vector3, strength: float = 1.0, forward: Vector3 = Vector3.ZERO, kind: String = "paper") -> void:
@@ -315,7 +315,10 @@ func burst(at: Vector3, strength: float = 1.0, forward: Vector3 = Vector3.ZERO, 
 	_cue_direction = direction
 	_contact(center, magnitude, direction)
 	# Shape and proportions carry subtype: the total budget never grows.
-	_paper_fan(center, direction, magnitude, roundi(22 * _density() * clampf(magnitude, 0.6, 1.5)), kind)
+	# Authored cargo now falls too. Leave room to see those moving objects,
+	# the employee faces and the next contact during a three-stage chain.
+	var count := 14 if kind in ["wagon", "cart"] else (16 if kind == "tower" else (12 if kind == "box" else 22))
+	_paper_fan(center, direction, magnitude, roundi(count * _density() * clampf(magnitude, 0.6, 1.5)), kind)
 	_play_impact()
 	_publish_batches()
 

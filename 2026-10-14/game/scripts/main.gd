@@ -179,10 +179,12 @@ func _process(delta: float) -> void:
 			_qa_timer = 0.15
 			_publish_qa()
 
-func _physics_process(_delta: float) -> void:
+func _physics_process(delta: float) -> void:
 	if mode != "playing" or not rules.started:
 		return
-	var broken: Array = office.try_break(player.global_position, player.get_speed())
+	var direction: Vector3 = player.velocity.normalized() if player.get_speed() > 0.1 else -player.global_basis.z
+	var broken: Array = office.advance_destruction(delta)
+	broken.append_array(office.try_break(player.global_position, player.get_speed(), direction))
 	var rewards: Array = rules.register_breaks(broken)
 	_present_breaks(rewards)
 	if office.is_goal(player.global_position):
@@ -194,15 +196,18 @@ func _present_breaks(rewards: Array) -> void:
 	if not rewards.is_empty():
 		var total_added := 0
 		var rush_started := false
+		var direct_contact := false
 		var speed: float = player.get_speed()
 		var direction: Vector3 = player.velocity
 		direction.y = 0.0
 		direction = direction.normalized() if direction.length_squared() > 0.1 else -player.global_basis.z.normalized()
 		office.react_to_breaks(rewards, player.global_position, speed)
 		for item: Dictionary in rewards:
+			var impact_speed := float(item.get("impact_speed", speed))
 			var size := 0.8 if int(item.get("base", 0)) < 50000 else 1.2
-			var strength := size * lerpf(0.75, 1.25, clampf(speed / 9.0, 0.0, 1.0))
-			effects.burst(item.get("position", player.global_position), strength, direction, str(item.get("kind", "paper")))
+			var strength := size * lerpf(0.75, 1.25, clampf(impact_speed / 9.0, 0.0, 1.0))
+			effects.burst(item.get("position", player.global_position), strength, item.get("direction", direction), str(item.get("kind", "paper")))
+			direct_contact = direct_contact or int(item.get("depth", 0)) == 0
 			total_added += int(item["added"])
 			rush_started = rush_started or bool(item.get("rush_started", false))
 		var last: Dictionary = rewards.back()
@@ -212,7 +217,8 @@ func _present_breaks(rewards: Array) -> void:
 			hud.burst("定時ラッシュ！", "+¥" + _money(total_added), "rush")
 		else:
 			hud.burst(str(last.get("text", "書類、全提出！")), "+¥" + _money(total_added), "impact")
-		_impact_reaction(player.get_speed())
+		if direct_contact:
+			_impact_reaction(player.get_speed())
 
 func _input(event: InputEvent) -> void:
 	# A held spray key must not activate the newly focused Retry button.
@@ -300,6 +306,7 @@ func show_title() -> void:
 func finish_game() -> void:
 	if mode != "playing": return
 	result = rules.finish()
+	office.stop_propagation()
 	_result_spray_held = Input.is_action_pressed("spray") or Input.is_physical_key_pressed(KEY_SPACE)
 	mode = "result"
 	player.set_active(false)

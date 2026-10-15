@@ -3,6 +3,7 @@ import argparse
 import json
 import math
 import os
+import sys
 import time
 from pathlib import Path
 from playwright.sync_api import sync_playwright
@@ -16,9 +17,10 @@ out=args.out
 out.mkdir(parents=True,exist_ok=True)
 
 with sync_playwright() as p:
-    headless=args.headless or not os.environ.get('DISPLAY')
-    gpu=['--use-gl=angle','--use-angle=swiftshader','--enable-unsafe-swiftshader'] if headless else ['--use-gl=angle','--use-angle=gl','--ignore-gpu-blocklist']
-    browser=p.chromium.launch(executable_path=os.environ.get('CHROMIUM_BIN','/usr/bin/chromium'),headless=headless,args=['--no-sandbox',*gpu])
+    headless=args.headless or (sys.platform != 'darwin' and not os.environ.get('DISPLAY'))
+    gpu=[] if sys.platform == 'darwin' else (['--use-gl=angle','--use-angle=swiftshader','--enable-unsafe-swiftshader'] if headless else ['--use-gl=angle','--use-angle=gl','--ignore-gpu-blocklist'])
+    executable=os.environ.get('CHROMIUM_BIN') or ('/usr/bin/chromium' if sys.platform.startswith('linux') else p.chromium.executable_path)
+    browser=p.chromium.launch(executable_path=executable,headless=headless,args=['--no-sandbox',*gpu])
     context=browser.new_context(viewport={'width':1280,'height':720})
     page=context.new_page()
     errors=[]
@@ -36,7 +38,7 @@ with sync_playwright() as p:
         page.mouse.click(canvas['x']+(ox+(x+w*fraction_x)*sx)*canvas['width']/vw,
                          canvas['y']+(oy+(y+h*fraction_y)*sy)*canvas['height']/vh)
     page.wait_for_timeout(1000)
-    page.screenshot(path=str(out/'cloud-title.png'))
+    page.screenshot(path=str(out/'local-title.png'))
     click_control('title_start')
     page.wait_for_function('window.__taikin.mode === "playing"')
     page.keyboard.down('Space')
@@ -44,18 +46,39 @@ with sync_playwright() as p:
     boost=page.evaluate('window.__taikin')
     assert boost['fx']['counts']['powder']>0,'Spray has no visible powder batch'
     assert boost['fx']['jet_core_visible'] and boost['fx']['jet_core_length']>0,'Spray has no connected rear jet'
-    page.screenshot(path=str(out/'cloud-boost.png'))
-    # Keep using the real spray control until the first local destruction.
-    # Observe employee motion without triggering poses through the QA channel.
-    page.wait_for_function('window.__taikin.office.coworkers.some(p => p.state === "startled" && p.mug_lift > .04)',timeout=20000)
+    page.screenshot(path=str(out/'local-boost.png'))
+    # The exported game's QA bridge is read-only. Drive only real keyboard
+    # input and observe successive contacts rather than forcing test poses.
+    page.wait_for_function('window.__taikin.office.destruction.history.some(e => e.id === "prop_00")',timeout=20000,polling=30)
+    wagon_contact=page.evaluate('window.__taikin')
+    page.screenshot(path=str(out/'local-wagon-contact.png'))
+    page.wait_for_function('window.__taikin.office.destruction.history.some(e => e.id === "prop_01" && e.source === "prop_00")',timeout=10000,polling=30)
+    tower_contact=page.evaluate('window.__taikin')
+    page.screenshot(path=str(out/'local-tower-contact.png'))
+    def chain_visible():
+        page.wait_for_function('''window.__taikin.office.destruction.props[2].visual.elapsed > .1 &&
+            window.__taikin.office.coworkers.some(p => p.role === "mug" && p.state === "startled" && p.mug_lift > .04) &&
+            window.__taikin.office.coworkers.some(p => p.role === "stamp" && p.approval_visible && p.stamps === 1)''',timeout=20000,polling=30)
+    chain_visible()
     reaction=page.evaluate('window.__taikin')
     reacting=[person for person in reaction['office']['coworkers'] if person['state']!='sleepy']
     assert 1<=len(reacting)<=2,'Local destruction must wake at most two nearby employees'
     assert all(person['distance']<=12 and person['starts']==1 for person in reacting)
     assert any(person['expression']=='startled' and person['callout'] for person in reacting)
+    assert {person['role'] for person in reacting}=={'mug','stamp'},'Distinct coworker roles were not exercised together'
+    assert any(person['stamps']==1 and person['approval_visible'] for person in reacting if person['role']=='stamp')
+    history=reaction['office']['destruction']['history'][:3]
+    assert [event['kind'] for event in history]==['wagon','tower','box']
+    assert [event['depth'] for event in history]==[0,1,2]
+    assert history[1]['source']==history[0]['id'] and history[2]['source']==history[1]['id']
+    assert all(.34<=b['at']-a['at']<=.38 for a,b in zip(history,history[1:])), 'Contacts did not preserve the visible delay'
+    wagon_visual=reaction['office']['destruction']['props'][0]['visual']
+    assert wagon_visual['broken'] and not wagon_visual['intact_visible'] and (wagon_visual['processing'] or wagon_visual['settled_visible']), 'Wagon collapse disappeared'
     assert any(person['starts']==0 for person in reaction['office']['coworkers']),'Distant employees all reacted'
-    page.screenshot(path=str(out/'cloud-reaction.png'))
+    page.screenshot(path=str(out/'local-reaction.png'))
     page.keyboard.up('Space')
+    page.wait_for_function('window.__taikin.office.destruction.props.slice(0,3).every(p => p.visual.settled_visible)',timeout=10000,polling=30)
+    settled=page.evaluate('window.__taikin')
     page.keyboard.press('Escape')
     page.wait_for_function('window.__taikin.mode === "paused"')
     page.wait_for_timeout(300)
@@ -71,7 +94,7 @@ with sync_playwright() as p:
         assert abs(paused['fx'][key]-still['fx'][key])<.001,f'FX {key} changed during pause'
     assert paused['office']==still['office'],'Employee poses, onset delays or cooldowns changed during pause'
     assert abs(paused['fx']['jet_core_length']-still['fx']['jet_core_length'])<.001,'Jet retracted during pause'
-    page.screenshot(path=str(out/'cloud-pause.png'))
+    page.screenshot(path=str(out/'local-pause.png'))
     page.keyboard.press('Escape')
     page.wait_for_function('window.__taikin.mode === "playing"')
     page.keyboard.press('r')
@@ -81,6 +104,8 @@ with sync_playwright() as p:
     assert restart['fx']['rush_starts']==0 and restart['hud']['rush_starts']==0 and restart['hud']['success_starts']==0
     assert restart['office']['seen_events']==0 and all(person['starts']==0 and person['state']=='sleepy' for person in restart['office']['coworkers'])
     assert not restart['fx']['jet_core_visible'],'Restart retained the connected jet'
+    assert restart['office']['destruction']['pending']==0 and not restart['office']['destruction']['history']
+    assert all(p['visual']['intact_visible'] and not p['visual']['settled_visible'] for p in restart['office']['destruction']['props'])
 
     # Follow the same visible office route using controls; never teleport or
     # modify game state. Feedback is read through an opt-in QA-only snapshot.
@@ -133,14 +158,14 @@ with sync_playwright() as p:
         for key in keys-held:page.keyboard.down(key)
         held=keys
         if not first_image and state['rush'] and state['hud']['burst_kind']=='rush':
-            page.screenshot(path=str(out/'cloud-play.png'))
+            page.screenshot(path=str(out/'local-play.png'))
             first_image=True
         if len(samples)==0 or state['elapsed']-samples[-1]['elapsed']>2:
             samples.append(state)
             print(json.dumps({'pilot':{k:state[k] for k in ['elapsed','player','speed','pressure','damage','max_combo','fps','draw_calls']}},ensure_ascii=False),flush=True)
         page.wait_for_timeout(100)
     for key in held:page.keyboard.up(key)
-    page.screenshot(path=str(out/'cloud-success.png'))
+    page.screenshot(path=str(out/'local-success.png'))
     page.wait_for_timeout(500)
     result=page.evaluate('window.__taikin')
     assert result['mode']=='result',f"Did not reach the elevator: {result}"
@@ -151,13 +176,14 @@ with sync_playwright() as p:
     assert result['fx']['rush_starts']==result['hud']['rush_starts'],'World and HUD rush entries diverged'
     assert first_image,'Rush visual was not exercised'
     assert employee_reactions,'Full run did not exercise nearby employee responses'
-    page.screenshot(path=str(out/'cloud-result.png'))
+    assert not result['office']['destruction']['active'] and result['office']['destruction']['pending']==0,'Goal left propagation running'
+    page.screenshot(path=str(out/'local-result.png'))
     page.set_viewport_size({'width':1920,'height':1080})
     page.wait_for_timeout(500)
-    page.screenshot(path=str(out/'cloud-result-1080.png'))
+    page.screenshot(path=str(out/'local-result-1080.png'))
     page.set_viewport_size({'width':960,'height':540})
     page.wait_for_timeout(400)
-    page.screenshot(path=str(out/'cloud-result-compact.png'))
+    page.screenshot(path=str(out/'local-result-compact.png'))
     page.set_viewport_size({'width':1280,'height':720})
     page.wait_for_timeout(1000)
     click_control('result_retry')
@@ -166,6 +192,18 @@ with sync_playwright() as p:
     assert retry_button['fx']['particles']==0 and retry_button['hud']['success_starts']==0,'Result retry retained previous effects'
     assert retry_button['office']['seen_events']==0 and all(person['starts']==0 and person['expression']=='sleepy' for person in retry_button['office']['coworkers'])
     assert not retry_button['fx']['jet_core_visible'],'Result retry retained the live jet'
+    # Reproduce the same real first collision at the other supported widths.
+    responsive_reactions=[]
+    for width,height in [(1920,1080),(960,540)]:
+        page.set_viewport_size({'width':width,'height':height})
+        page.keyboard.press('r')
+        page.wait_for_function('window.__taikin.mode === "playing" && window.__taikin.elapsed === 0')
+        page.keyboard.down('Space')
+        chain_visible()
+        responsive_reactions.append(page.evaluate('window.__taikin'))
+        page.screenshot(path=str(out/f'local-reaction-{width}.png'))
+        page.keyboard.up('Space')
+    page.set_viewport_size({'width':1280,'height':720})
     page.reload(wait_until='domcontentloaded')
     page.wait_for_function('window.__taikin && window.__taikin.mode === "title"',timeout=90000)
     reloaded=page.evaluate('window.__taikin')
@@ -191,7 +229,7 @@ with sync_playwright() as p:
     click_control('settings_sfx',0.02)
     page.wait_for_function('window.__taikin.music_volume <= 0.01 && window.__taikin.sfx_volume <= 0.01')
     settings=page.evaluate('window.__taikin')
-    page.screenshot(path=str(out/'cloud-settings.png'))
+    page.screenshot(path=str(out/'local-settings.png'))
     click_control('settings_close')
     page.wait_for_function('!window.__taikin.hud.settings_visible')
     click_control('title_start')
@@ -203,7 +241,7 @@ with sync_playwright() as p:
     assert subdued['hud']['combo_scale']==[1,1] and subdued['hud']['damage_scale']==[1,1],'Subdued UI still bounces'
     assert subdued['office']['quality']=='控えめ' and all(person['quality']=='控えめ' for person in subdued['office']['coworkers'])
     assert subdued['fx']['jet_core_visible'] and subdued['fx']['jet_core_length']<boost['fx']['jet_core_length'],'Subdued must retain a smaller connected jet'
-    page.screenshot(path=str(out/'cloud-subdued.png'))
+    page.screenshot(path=str(out/'local-subdued.png'))
     page.keyboard.up('Space')
     # Focus loss must require explicit resume and leave the chair/time frozen.
     # Playwright otherwise forces document.hasFocus() true on every page.
@@ -226,7 +264,16 @@ with sync_playwright() as p:
     page.wait_for_function('window.__taikin.mode === "playing"')
     assert not errors,f'Browser errors: {errors}'
     renderer=page.evaluate('''() => { const gl=document.querySelector('canvas').getContext('webgl2'); const e=gl.getExtension('WEBGL_debug_renderer_info'); return e ? gl.getParameter(e.UNMASKED_RENDERER_WEBGL) : gl.getParameter(gl.RENDERER); }''')
-    report={'browser':browser.version,'renderer':renderer,'viewport':[1280,720],'boost':boost,'reaction':reaction,'employee_reactions':employee_reactions,'result':result,'pause_before':paused,'pause_after':still,'restart':restart,'retry_button':retry_button,'reload_best':reloaded['best_time'],'settings':settings,'subdued':subdued,'blur_before':blur_before,'blur_after':blur_after,'errors':errors,'samples':samples}
+    report={'browser':browser.version,'renderer':renderer,'platform':sys.platform,'headless':headless,'viewport':[1280,720],'boost':boost,'wagon_contact':wagon_contact,'tower_contact':tower_contact,'reaction':reaction,'settled':settled,'responsive_reactions':responsive_reactions,'employee_reactions':employee_reactions,'result':result,'pause_before':paused,'pause_after':still,'restart':restart,'retry_button':retry_button,'reload_best':reloaded['best_time'],'settings':settings,'subdued':subdued,'blur_before':blur_before,'blur_after':blur_after,'errors':errors,'samples':samples}
+    # Keep lifecycle and causal evidence without repeating every imported
+    # transform group of all 24 props in every sampled frame.
+    def compact(value):
+        if isinstance(value,dict):
+            return {key:compact(item) for key,item in value.items() if key!='groups'}
+        if isinstance(value,list):
+            return [compact(item) for item in value]
+        return value
+    report=compact(report)
     (out/'browser-report.json').write_text(json.dumps(report,ensure_ascii=False,indent=2))
-    print(json.dumps({'PASS':True,'result':result,'errors':errors},ensure_ascii=False),flush=True)
+    print(json.dumps({'PASS':True,'elapsed':result['elapsed'],'damage':result['damage'],'max_combo':result['max_combo'],'renderer':renderer,'errors':errors},ensure_ascii=False),flush=True)
     browser.close()

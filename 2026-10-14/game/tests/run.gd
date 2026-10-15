@@ -48,6 +48,12 @@ func _run() -> void:
 	var office_checks = load("res://tests/office_checks.gd").new()
 	var office_failures: Array[String] = await office_checks.run(self)
 	failures.append_array(office_failures)
+	var chain_checks = load("res://tests/chain_checks.gd").new()
+	failures.append_array(await chain_checks.run(self))
+	var breakable_checks = load("res://tests/breakable_visual_checks.gd").new()
+	failures.append_array(await breakable_checks.run(self))
+	var personality_checks = load("res://tests/personality_checks.gd").new()
+	failures.append_array(await personality_checks.run(self))
 	var reaction_checks = load("res://tests/reaction_checks.gd").new()
 	failures.append_array(await reaction_checks.run(self))
 	var effects_checks = load("res://tests/effects_checks.gd").new()
@@ -59,7 +65,7 @@ func _run() -> void:
 	var integration_failures: Array[String] = await integration_checks.run(self)
 	failures.append_array(integration_failures)
 	if failures.is_empty():
-		print("PASS: rules (", count, "), model colors/sharing, player real-physics, office route/destruction, nearby colleague reactions, connected jet/directional impacts, bounded FX lifecycle and rush/pause/success/retry integration checks")
+		print("PASS: rules (", count, "), model colors/sharing, player real-physics, office route, staged wagon/tower/box propagation and remnants, mug/stamp personalities, nearby colleague reactions, connected jet/directional impacts, bounded FX lifecycle and rush/pause/success/retry integration checks")
 		call_deferred("quit", 0)
 	else:
 		for error: String in failures: print("FAIL: ", error)

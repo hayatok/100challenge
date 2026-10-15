@@ -1,6 +1,7 @@
 """Build v0.4 breakables from the generated three-view toy-office reference.
 
-Blender 4.3.2, Godot coordinates throughout. Each prop is one rigid colored mesh.
+Blender 4.3.2+, Godot coordinates throughout. Preserve v0.4 silhouettes;
+v0.7 adds a few named rigid groups for staged, nonphysical collapse.
 Run: blender --background --python scripts/modeling/build_breakables.py
 """
 from pathlib import Path
@@ -74,7 +75,7 @@ def perimeter(w, d, radius=.055):
     return points
 
 
-def loaf(name, size, pos, color, root, lean=0, yaw=0, bulge=.025):
+def loaf(name, size, pos, color, root, lean=0, yaw=0, bulge=.025, hollow=False):
     w, h, d = size
     vertices = []
     for y, scale in [(-h/2, .92), (-h/2+.04, 1), (0, 1+bulge), (h/2-.04, 1), (h/2, .93)]:
@@ -85,7 +86,19 @@ def loaf(name, size, pos, color, root, lean=0, yaw=0, bulge=.025):
     for j in range(4):
         for i in range(n):
             faces.append((j*n+i,j*n+(i+1)%n,(j+1)*n+(i+1)%n,(j+1)*n+i))
-    faces.append(tuple(range(4*n,5*n)))
+    if hollow:
+        # Preserve the bulging outside; a real cardboard rim and warm inner
+        # floor remain visible when the papers spill and the carton crushes.
+        for y in [h/2, -h/2+.065]:
+            for x,z in perimeter(w*.86,d*.84,min(.06,w*.08,d*.08)):
+                vertices.append((x,y,z))
+        for i in range(n):
+            j=(i+1)%n
+            faces.append((4*n+i,4*n+j,5*n+j,5*n+i))
+            faces.append((5*n+i,5*n+j,6*n+j,6*n+i))
+        faces.append(tuple(range(6*n,7*n)))
+    else:
+        faces.append(tuple(range(4*n,5*n)))
     return mesh(name,vertices,faces,color,root,pos,(0,yaw,0),True)
 
 
@@ -182,7 +195,7 @@ def box(name='PaperBox',scale=1,pos=(0,0,0),root=None,loaded=True,details=True):
     if own: root=node(name)
     # Build in local pivot, then bake placement for cart cargo reuse.
     pivot=node(name+'_Local',root,pos)
-    loaf(name+'_BulgingCarton',(1,.86,.79),(0,.43,0),CARDBOARD,pivot,bulge=.025)
+    loaf(name+'_BulgingCarton',(1,.86,.79),(0,.43,0),CARDBOARD,pivot,bulge=.025,hollow=own and loaded)
     for side in ([-1,1] if loaded else []):
         # folded side flaps hang visibly outward; top is open around the paper.
         rounded_box(name+'_FoldedSide',(.19,.035,.78),(side*.49,.82,0),'#CB925C',pivot,
@@ -277,11 +290,73 @@ def cart():
     return root
 
 
+def motion_groups(root, filename):
+    """Keep original world geometry, but author meaningful destruction pivots.
+
+    export_glb merges geometry by parent, so every group is still one shared
+    vertex-colored surface. The runtime batches intact and settled poses.
+    """
+    bpy.context.view_layer.update()
+    original = [obj for obj in root.children_recursive if obj.type == 'MESH']
+    if filename == 'paper_box':
+        origins = {'CartonBody': (0, 0, 0), 'FlapLeft': (-.49, .82, 0),
+                   'FlapRight': (.49, .82, 0), 'FlapFront': (0, .835, -.365),
+                   'FlapBack': (0, .835, .365),
+                   'PaperLow': (0, .89, 0), 'PaperMiddle': (0, .99, 0),
+                   'PaperTop': (0, 1.09, 0)}
+        def classify(obj):
+            logical = Vector((obj.location.x, obj.location.z, -obj.location.y))
+            if 'FoldedSide' in obj.name:
+                return 'FlapLeft' if logical.x < 0 else 'FlapRight'
+            if 'FoldedLip' in obj.name:
+                return 'FlapFront' if logical.z < 0 else 'FlapBack'
+            if 'LoosePapers_Layer' in obj.name:
+                layer = int(obj.name.split('Layer')[1][:2])
+                return ['PaperLow', 'PaperMiddle', 'PaperTop'][min(2, layer // 4)]
+            return 'CartonBody'
+    elif filename == 'paper_tower':
+        origins = {'TowerBase': (0, 0, 0), 'TowerLow': (0, .17, 0),
+                   'TowerMiddle': (0, .76, 0), 'TowerUpper': (0, 1.37, 0),
+                   'TowerCrown': (0, 1.98, 0)}
+        def classify(obj):
+            if obj.name.startswith('WobblyPaper'):
+                return ['TowerLow', 'TowerMiddle', 'TowerUpper', 'TowerCrown'][int(obj.name[11])]
+            if obj.name.startswith('FatBinder'):
+                return ['TowerLow', 'TowerMiddle', 'TowerUpper'][int(obj.name[9])]
+            return 'TowerBase'
+    else:
+        origins = {'CartFrame': (0, 0, 0), 'CasterLoose': (.535, .19, -.365),
+                   'CastersFixed': (0, .19, 0), 'CargoPaper': (0, .8, 0),
+                   'CargoBinders': (0, .8, 0), 'CargoCartons': (0, .8, 0)}
+        def classify(obj):
+            if any(obj.name.startswith(prefix) for prefix in ['RubberCaster', 'WheelInset', 'AxleCap', 'CasterFork']):
+                logical = Vector((obj.location.x, obj.location.z, -obj.location.y))
+                # wheel/fork meshes are baked around authored positions.
+                center = sum((v.co for v in obj.data.vertices), Vector()) / len(obj.data.vertices)
+                logical = Vector((center.x + obj.location.x, center.z + obj.location.z,
+                                  -center.y - obj.location.y))
+                return 'CasterLoose' if logical.x > 0 and logical.z < 0 else 'CastersFixed'
+            if 'PaperCargo' in obj.name or obj.name.startswith('TopStackStamp'):
+                return 'CargoPaper'
+            if any(key in obj.name for key in ['NavyFile', 'TealFile']):
+                return 'CargoBinders'
+            if 'Carton' in obj.name:
+                return 'CargoCartons'
+            return 'CartFrame'
+    groups = {name: node(name, root, origin) for name, origin in origins.items()}
+    bpy.context.view_layer.update()
+    for obj in original:
+        world = obj.matrix_world.copy()
+        obj.parent = groups[classify(obj)]
+        obj.matrix_world = world
+    return root
+
+
 def main():
     bpy.context.preferences.filepaths.save_version=0
     for filename,builder in [('paper_box',box),('paper_tower',tower),('paper_cart',cart)]:
         reset_scene()
-        root=builder()
+        root=motion_groups(builder(), filename)
         export_glb(root,APP/'game/assets/models'/f'{filename}.glb',APP/'art/models'/f'{filename}.blend')
         # Report world-space Godot extents, including every detail.
         bpy.context.view_layer.update()

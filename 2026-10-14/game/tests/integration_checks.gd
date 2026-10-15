@@ -21,9 +21,10 @@ func run(tree: SceneTree) -> Array[String]:
 		failures.append("Third chain must start world and HUD rush exactly once")
 	await tree.create_timer(0.3).timeout
 	var reacted: Dictionary = scene.office.debug_feedback_snapshot()
-	if reacted.seen_events != 3 or reacted.coworkers[0].starts != 1 or reacted.coworkers[0].expression != "startled":
-		failures.append("Main forwards accepted break positions to the nearby employee")
-	for person: Dictionary in reacted.coworkers.slice(1):
+	if reacted.seen_events != 3 or reacted.coworkers[0].starts != 1 or reacted.coworkers[0].expression != "startled" \
+		or reacted.coworkers[1].starts != 1 or reacted.coworkers[1].role != "stamp":
+		failures.append("Main forwards accepted break positions to nearby mug and stamp employees")
+	for person: Dictionary in reacted.coworkers.slice(2):
 		if person.starts != 0:
 			failures.append("Main must not wake distant employees when a local prop breaks")
 	scene._present_breaks(scene.rules.register_breaks(events))

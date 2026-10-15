@@ -4,8 +4,12 @@ extends Node3D
 
 const AssetLibrary := preload("res://scripts/asset_library.gd")
 const Colleague := preload("res://scripts/colleague.gd")
+const Breakable := preload("res://scripts/breakable.gd")
 const REACTION_RADIUS := 12.0
 const MAX_REACTIONS := 2
+const CHAIN_DELAY := 0.35
+const CHAIN_RANGE := 3.1
+const MAX_CHAIN_DEPTH := 2
 
 var spawn_position := Vector3(0.0, 0.0, 42.0)
 var goal_position := Vector3(0.0, 0.0, -64.0)
@@ -17,6 +21,10 @@ var _mesh_count := 0
 var _colleagues: Array[Node3D] = []
 var _reaction_seen: Dictionary = {}
 var _feedback_quality := "派手"
+var _chain_clock := 0.0
+var _chain_pending: Array[Dictionary] = []
+var _chain_history: Array[Dictionary] = []
+var _propagation_active := true
 var _route: Array[Vector3] = [
 	Vector3(0, 0, 42), Vector3(0, 0, 16), Vector3(4, 0, -4),
 	Vector3(4, 0, -12), Vector3(-2, 0, -24), Vector3(-2, 0, -32), Vector3(0, 0, -48),
@@ -44,8 +52,12 @@ func build() -> void:
 	# Side desks leave a generous introduction and uninterrupted sightlines.
 	var rows := [36.0, 20.0, 4.0, -18.0, -40.0]
 	for i in range(rows.size()):
-		_desk(Vector3(-6.4, 0, rows[i]), i % 2 == 0, i == 0)
-		_desk(Vector3(6.4, 0, rows[i] - 3.0), i % 2 != 0, i == 2)
+		var left_row: float = 25.0 if i == 0 else rows[i]
+		var right_row: float = 25.0 if i == 0 else rows[i] - 3.0
+		var side: float = 4.6 if i == 0 else 6.4
+		_desk(Vector3(-side, 0, left_row), i % 2 == 0, i == 0)
+		# Two distinct reactions frame the introductory wagon; the total remains five.
+		_desk(Vector3(side, 0, right_row), i == 0 or i == 3, i == 2)
 	# Waist-high filing islands shape two broad bends; neither spans the room.
 	_filing_island(Vector3(-3.6, 0, 0.0), Vector3(6.2, 1.45, 3.5))
 	_filing_island(Vector3(3.4, 0, -24.0), Vector3(6.0, 1.45, 3.5))
@@ -64,18 +76,24 @@ func build() -> void:
 	set_meta("prop_count", _props.size())
 
 func reset_props() -> void:
+	_chain_clock = 0.0
+	_chain_pending.clear()
+	_chain_history.clear()
+	_propagation_active = true
 	_reaction_seen.clear()
 	for colleague in _colleagues:
 		colleague.reset_reaction()
 	for prop in _props:
 		prop["broken"] = false
-		var node: Node3D = prop["node"]
-		node.show()
+		prop["reserved"] = false
+		prop["node"].reset_visual()
 
 func set_feedback_quality(level: String) -> void:
 	_feedback_quality = level
 	for colleague in _colleagues:
 		colleague.set_feedback_quality(level)
+	for prop in _props:
+		prop["node"].set_feedback_quality(level)
 
 func react_to_breaks(rewards: Array, player_at: Vector3, speed: float) -> Dictionary:
 	var result := {"accepted": 0, "upgraded": 0, "suppressed": 0, "selected": 0}
@@ -94,7 +112,7 @@ func react_to_breaks(rewards: Array, player_at: Vector3, speed: float) -> Dictio
 		if not id.is_empty():
 			_reaction_seen[id] = true
 		var strength := 1
-		if speed >= 7.0 or int(reward.get("base", 0)) >= 100000 \
+		if float(reward.get("impact_speed", speed)) >= 7.0 or int(reward.get("base", 0)) >= 100000 \
 			or int(reward.get("combo", 0)) >= 3 or bool(reward.get("rush_started", false)):
 			strength = 2
 		fresh.append({"position": at, "strength": strength})
@@ -141,47 +159,97 @@ func debug_feedback_snapshot() -> Dictionary:
 		coworkers.append(colleague.debug_snapshot())
 	return {"quality": _feedback_quality, "radius": REACTION_RADIUS,
 		"max_reactions": MAX_REACTIONS, "seen_events": _reaction_seen.size(),
-		"coworkers": coworkers}
+		"coworkers": coworkers, "destruction": debug_destruction_snapshot()}
 
-func try_break(at: Vector3, speed: float) -> Array[Dictionary]:
+func try_break(at: Vector3, speed: float, direction: Vector3 = Vector3.FORWARD) -> Array[Dictionary]:
 	var events: Array[Dictionary] = []
-	if speed <= 1.0:
+	if speed <= 1.0 or not _propagation_active or (is_inside_tree() and get_tree().paused):
 		return events
-	var seeds: Array[int] = []
+	direction.y = 0.0
+	direction = direction.normalized() if direction.length_squared() > 0.001 else Vector3.FORWARD
 	for i in range(_props.size()):
 		var prop: Dictionary = _props[i]
-		if not prop["broken"] and _flat_distance(at, prop["position"]) <= float(prop["radius"]) + 0.65:
-			seeds.append(i)
-	var hits: Array[int] = seeds.duplicate()
-	# Only one neighbouring prop per direct impact; no runaway recursive chain.
-	if speed > 2.5:
-		for index in seeds:
-			var closest := -1
-			var nearest := 2.8
-			for j in range(_props.size()):
-				if _props[j]["broken"] or hits.has(j):
-					continue
-				var distance := _flat_distance(_props[index]["position"], _props[j]["position"])
-				if distance < nearest:
-					closest = j
-					nearest = distance
-			if closest >= 0:
-				hits.append(closest)
-	for index in hits:
-		var prop: Dictionary = _props[index]
-		if prop["broken"]:
-			continue
-		prop["broken"] = true
-		var node: Node3D = prop["node"]
-		node.hide()
-		events.append({"id": prop["id"], "base": prop["base"],
-			"progress": prop["progress"], "position": prop["position"],
-			"kind": prop["kind"], "text": prop["text"]})
-	events.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
-		if a["progress"] == b["progress"]:
-			return a["id"] < b["id"]
-		return a["progress"] < b["progress"])
+		if not prop["broken"] and not prop["reserved"] \
+			and _flat_distance(at, prop["position"]) <= float(prop["radius"]) + 0.65:
+			events.append(_break_prop(i, direction, speed, 0, str(prop["id"]), ""))
 	return events
+
+func advance_destruction(delta: float) -> Array[Dictionary]:
+	var events: Array[Dictionary] = []
+	if not _propagation_active or (is_inside_tree() and get_tree().paused):
+		return events
+	_chain_clock += maxf(0.0, delta)
+	# A due contact can schedule one further contact. Process only this tick's
+	# original queue, so even a long frame retains the visible intermediate stage.
+	var queued := _chain_pending.duplicate()
+	_chain_pending.clear()
+	for contact in queued:
+		if float(contact["due"]) > _chain_clock + 0.00001:
+			_chain_pending.append(contact)
+			continue
+		var index := int(contact["target"])
+		if _props[index]["broken"]:
+			continue
+		events.append(_break_prop(index, contact["direction"], contact["speed"],
+			contact["depth"], contact["root"], contact["source"]))
+	return events
+
+func _break_prop(index: int, direction: Vector3, speed: float, depth: int,
+	root_id: String, source_id: String) -> Dictionary:
+	var prop: Dictionary = _props[index]
+	prop["broken"] = true
+	prop["reserved"] = false
+	var travel := Vector3.ZERO
+	var target := -1
+	if speed > 2.5 and depth < MAX_CHAIN_DEPTH:
+		target = _next_chain_target(index, direction)
+	if target >= 0:
+		travel = _props[target]["position"] - prop["position"]
+		_props[target]["reserved"] = true
+		_chain_pending.append({"target": target, "due": _chain_clock + CHAIN_DELAY,
+			"direction": travel.normalized(), "speed": speed * 0.85,
+			"depth": depth + 1, "root": root_id, "source": prop["id"]})
+	prop["node"].begin_break(travel.normalized() if travel.length_squared() > 0.001 else direction, travel)
+	var event := {"id": prop["id"], "base": prop["base"],
+		"progress": prop["progress"], "position": prop["position"],
+		"kind": prop["kind"], "text": prop["text"], "direction": direction,
+		"impact_speed": speed, "depth": depth, "chain_root": root_id, "source_id": source_id}
+	_chain_history.append({"id": prop["id"], "kind": prop["kind"], "at": _chain_clock,
+		"depth": depth, "root": root_id, "source": source_id,
+		"position": _vector(prop["position"])})
+	return event
+
+func _next_chain_target(index: int, direction: Vector3) -> int:
+	var prop: Dictionary = _props[index]
+	var next_kind := "tower" if prop["kind"] == "wagon" else ("box" if prop["kind"] == "tower" else "")
+	if next_kind.is_empty() or index + 1 >= _props.size():
+		return -1
+	# Authored triplets cannot transmit through a wall or into a different row.
+	var target: Dictionary = _props[index + 1]
+	if target["group"] != prop["group"] or target["kind"] != next_kind \
+		or target["broken"] or target["reserved"] or target["progress"] <= prop["progress"]:
+		return -1
+	var path: Vector3 = target["position"] - prop["position"]
+	if path.length() > CHAIN_RANGE or direction.dot(path.normalized()) < 0.45:
+		return -1
+	return index + 1
+
+func stop_propagation() -> void:
+	_propagation_active = false
+	_chain_pending.clear()
+	for prop in _props:
+		prop["reserved"] = false
+
+func debug_destruction_snapshot() -> Dictionary:
+	var props: Array[Dictionary] = []
+	for prop in _props:
+		props.append({"id": prop["id"], "kind": prop["kind"], "position": _vector(prop["position"]),
+			"broken": prop["broken"], "reserved": prop["reserved"], "visual": prop["node"].debug_snapshot()})
+	return {"clock": _chain_clock, "pending": _chain_pending.size(),
+		"active": _propagation_active, "history": _chain_history.duplicate(true), "props": props}
+
+func _vector(value: Vector3) -> Array:
+	return [value.x, value.y, value.z]
 
 func is_goal(at: Vector3) -> bool:
 	return absf(at.x - goal_position.x) < 2.9 and at.z <= -62.5 and at.z >= -68.0 and absf(at.y) < 3.0
@@ -240,6 +308,10 @@ func _desk(at: Vector3, colleague: bool, special: bool) -> void:
 	var desk := Node3D.new()
 	add_child(desk)
 	desk.position = at
+	# The approval desk faces back toward the camera and the arriving paper.
+	# Its rectangular collider keeps the same occupied space under a half turn.
+	if colleague and _colleagues.size() % 2 == 1:
+		desk.rotation.y = PI
 	_solid(desk, Vector3(0, 0.85, 0), Vector3(3.4, 1.7, 2.6), "mint", false)
 	_model(desk, "desk", Vector3.ZERO)
 	# The computer's keyboard and screen face the seated colleague at +Z.
@@ -254,7 +326,7 @@ func _colleague(parent: Node3D, at: Vector3) -> void:
 	var colleague := Colleague.new()
 	parent.add_child(colleague)
 	colleague.position = at
-	colleague.build("Coworker_%02d" % _colleagues.size())
+	colleague.build("Coworker_%02d" % _colleagues.size(), "stamp" if _colleagues.size() % 2 == 1 else "mug")
 	colleague.set_feedback_quality(_feedback_quality)
 	_colleagues.append(colleague)
 
@@ -267,24 +339,23 @@ func _plant(at: Vector3) -> void:
 	_model(self, "plant", at)
 
 func _build_props() -> void:
-	# Paper trail introduces destruction without a required obstacle. Closely
-	# paired props can scatter together, and the exit vista is kept quieter.
+	# Eight finite, forward-facing domino gags. The clear route is unchanged;
+	# props and their floor remnants never add collision bodies.
 	var placements := [
-		Vector3(-0.9, 0, 32), Vector3(0.95, 0, 30.4), Vector3(-1.1, 0, 25),
-		Vector3(1.0, 0, 23), Vector3(-0.85, 0, 18), Vector3(1.05, 0, 16),
-		Vector3(2.0, 0, 10), Vector3(3.2, 0, 8), Vector3(3.6, 0, 3),
-		Vector3(5.2, 0, 1.3), Vector3(3.1, 0, -5), Vector3(4.8, 0, -7),
-		Vector3(3.9, 0, -12), Vector3(2.3, 0, -14), Vector3(1.0, 0, -20),
-		Vector3(-0.8, 0, -22), Vector3(-2.1, 0, -28), Vector3(-3.5, 0, -30),
-		Vector3(-2.7, 0, -36), Vector3(-0.8, 0, -38),
-		Vector3(-1.15, 0, -49), Vector3(0.95, 0, -51),
-		Vector3(-0.95, 0, -56), Vector3(1.1, 0, -58)
+		Vector3(-0.9, 0, 32), Vector3(1.4, 0, 30.2), Vector3(2.2, 0, 28.9),
+		Vector3(-0.4, 0, 18.5), Vector3(0.4, 0, 16.4), Vector3(1, 0, 14.9),
+		Vector3(2, 0, 10), Vector3(3, 0, 8.1), Vector3(3.7, 0, 6.7),
+		Vector3(3.1, 0, -5), Vector3(3.8, 0, -7), Vector3(4.3, 0, -8.5),
+		Vector3(-0.8, 0, -20), Vector3(-1.7, 0, -22), Vector3(-2.3, 0, -23.5),
+		Vector3(-2.1, 0, -28), Vector3(-2.6, 0, -30.1), Vector3(-2.9, 0, -31.6),
+		Vector3(-1.15, 0, -49), Vector3(-0.55, 0, -51), Vector3(0, 0, -52.5),
+		Vector3(-0.95, 0, -56), Vector3(-0.35, 0, -58.1), Vector3(0.15, 0, -59.6)
 	]
 	for i in range(placements.size()):
-		_make_prop(placements[i], i % 3, i)
+		_make_prop(placements[i], [2, 1, 0][i % 3], i)
 
 func _make_prop(at: Vector3, type: int, index: int) -> void:
-	var prop := Node3D.new()
+	var prop := Breakable.new()
 	add_child(prop)
 	prop.position = at
 	prop.name = "Breakable_%02d" % index
@@ -292,23 +363,21 @@ func _make_prop(at: Vector3, type: int, index: int) -> void:
 	var base := 10000
 	var text := "コピー用紙、放出！"
 	var radius := 0.65
-	var model_name := "paper_box"
 	if type == 1:
 		kind = "tower"
 		base = 50000
 		text = "書類、全提出！"
 		radius = 0.82
-		model_name = "paper_tower"
 	elif type == 2:
 		kind = "wagon"
 		base = 100000
 		text = "総務、見てない！"
 		radius = 1.0
-		model_name = "paper_cart"
-	_model(prop, model_name, Vector3.ZERO, PI + sin(float(index) * 1.7) * 0.06)
+	prop.build(kind, index)
+	prop.set_feedback_quality(_feedback_quality)
 	_props.append({"id": "prop_%02d" % index, "base": base, "progress": 42.0 - at.z,
 		"position": at, "kind": kind, "text": text, "radius": radius,
-		"node": prop, "broken": false})
+		"node": prop, "broken": false, "reserved": false, "group": floori(float(index) / 3.0)})
 
 func _build_exit() -> void:
 	_solid(self, Vector3(-6.4, 2.2, -67.5), Vector3(6.5, 4.4, 0.7), "mint_light")

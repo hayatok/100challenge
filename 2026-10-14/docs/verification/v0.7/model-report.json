@@ -1,0 +1,378 @@
+{
+  "models": [
+    {
+      "name": "employee",
+      "reference": "art/assets/v0.4/01-employee.png",
+      "path": "game/assets/models/employee.glb",
+      "bytes": 383464,
+      "triangles": 14486,
+      "surfaces": 13,
+      "vertices": 7892,
+      "materials": 1,
+      "unique_colors": 40,
+      "nodes": [
+        "ArmLeft_Geometry",
+        "ArmLeft",
+        "ArmRight_Geometry",
+        "ArmRight",
+        "Employee_Geometry",
+        "Brows_Geometry",
+        "Brows",
+        "Cheeks_Geometry",
+        "Cheeks",
+        "EyesHappy_Geometry",
+        "EyesHappy",
+        "EyesOpen_Geometry",
+        "EyesOpen",
+        "Head_Geometry",
+        "Mouth_Geometry",
+        "Mouth",
+        "Tears_Geometry",
+        "Tears",
+        "Head",
+        "LegLeft_Geometry",
+        "LegLeft",
+        "LegRight_Geometry",
+        "LegRight",
+        "Tie_Geometry",
+        "Tie",
+        "Employee"
+      ]
+    },
+    {
+      "name": "chair",
+      "reference": "art/assets/v0.4/02-chair-extinguisher.png",
+      "path": "game/assets/models/chair.glb",
+      "bytes": 131244,
+      "triangles": 4988,
+      "surfaces": 2,
+      "vertices": 2756,
+      "materials": 1,
+      "unique_colors": 7,
+      "nodes": [
+        "Chair_Geometry",
+        "SeatPivot_Geometry",
+        "SeatPivot",
+        "Chair"
+      ]
+    },
+    {
+      "name": "extinguisher",
+      "reference": "art/assets/v0.4/02-chair-extinguisher.png",
+      "path": "game/assets/models/extinguisher.glb",
+      "bytes": 93512,
+      "triangles": 3540,
+      "surfaces": 1,
+      "vertices": 1970,
+      "materials": 1,
+      "unique_colors": 7,
+      "nodes": [
+        "Extinguisher_Geometry",
+        "NozzleTip",
+        "Extinguisher"
+      ]
+    },
+    {
+      "name": "paper_box",
+      "reference": "art/assets/v0.4/03-breakables.png",
+      "path": "game/assets/models/paper_box.glb",
+      "bytes": 55608,
+      "triangles": 1260,
+      "surfaces": 8,
+      "vertices": 1208,
+      "materials": 1,
+      "unique_colors": 11,
+      "nodes": [
+        "CartonBody_Geometry",
+        "CartonBody",
+        "PaperBox_FoldedLip.001",
+        "FlapBack",
+        "PaperBox_FoldedLip",
+        "FlapFront",
+        "PaperBox_FoldedSide",
+        "FlapLeft",
+        "PaperBox_FoldedSide.001",
+        "FlapRight",
+        "PaperLow_Geometry",
+        "PaperLow",
+        "PaperMiddle_Geometry",
+        "PaperMiddle",
+        "PaperTop_Geometry",
+        "PaperTop",
+        "PaperBox"
+      ]
+    },
+    {
+      "name": "paper_tower",
+      "reference": "art/assets/v0.4/03-breakables.png",
+      "path": "game/assets/models/paper_tower.glb",
+      "bytes": 119464,
+      "triangles": 2624,
+      "surfaces": 5,
+      "vertices": 2732,
+      "materials": 1,
+      "unique_colors": 11,
+      "nodes": [
+        "TowerBase_Geometry",
+        "TowerBase",
+        "TowerCrown_Geometry",
+        "TowerCrown",
+        "TowerLow_Geometry",
+        "TowerLow",
+        "TowerMiddle_Geometry",
+        "TowerMiddle",
+        "TowerUpper_Geometry",
+        "TowerUpper",
+        "PaperTower"
+      ]
+    },
+    {
+      "name": "paper_cart",
+      "reference": "art/assets/v0.4/03-breakables.png",
+      "path": "game/assets/models/paper_cart.glb",
+      "bytes": 138404,
+      "triangles": 3996,
+      "surfaces": 6,
+      "vertices": 3008,
+      "materials": 1,
+      "unique_colors": 16,
+      "nodes": [
+        "CargoBinders_Geometry",
+        "CargoBinders",
+        "CargoCartons_Geometry",
+        "CargoCartons",
+        "CargoPaper_Geometry",
+        "CargoPaper",
+        "CartFrame_Geometry",
+        "CartFrame",
+        "CasterLoose_Geometry",
+        "CasterLoose",
+        "CastersFixed_Geometry",
+        "CastersFixed",
+        "PaperCart"
+      ]
+    },
+    {
+      "name": "desk",
+      "reference": "art/assets/v0.4/04-furniture-computer.png",
+      "path": "game/assets/models/desk.glb",
+      "bytes": 88744,
+      "triangles": 3374,
+      "surfaces": 1,
+      "vertices": 1868,
+      "materials": 1,
+      "unique_colors": 8,
+      "nodes": [
+        "Desk_Geometry",
+        "Desk"
+      ]
+    },
+    {
+      "name": "cabinet",
+      "reference": "art/assets/v0.4/04-furniture-computer.png",
+      "path": "game/assets/models/cabinet.glb",
+      "bytes": 76060,
+      "triangles": 2858,
+      "surfaces": 1,
+      "vertices": 1601,
+      "materials": 1,
+      "unique_colors": 7,
+      "nodes": [
+        "Cabinet_Geometry",
+        "Cabinet"
+      ]
+    },
+    {
+      "name": "computer",
+      "reference": "art/assets/v0.4/04-furniture-computer.png",
+      "path": "game/assets/models/computer.glb",
+      "bytes": 99760,
+      "triangles": 3968,
+      "surfaces": 1,
+      "vertices": 2074,
+      "materials": 1,
+      "unique_colors": 10,
+      "nodes": [
+        "Computer_Geometry",
+        "Computer"
+      ]
+    },
+    {
+      "name": "colleague",
+      "reference": "art/assets/v0.4/05-colleague.png",
+      "path": "game/assets/models/colleague.glb",
+      "bytes": 238316,
+      "triangles": 8696,
+      "surfaces": 4,
+      "vertices": 5054,
+      "materials": 1,
+      "unique_colors": 23,
+      "nodes": [
+        "ArmMug_Geometry",
+        "ArmMug",
+        "Body_Geometry",
+        "FaceNeutral_Geometry",
+        "FaceNeutral",
+        "Head_Geometry",
+        "Head",
+        "Body",
+        "SeatedColleague"
+      ]
+    },
+    {
+      "name": "cat_mug",
+      "reference": "art/assets/v0.4/06-desk-toys.png",
+      "path": "game/assets/models/cat_mug.glb",
+      "bytes": 61112,
+      "triangles": 2198,
+      "surfaces": 1,
+      "vertices": 1298,
+      "materials": 1,
+      "unique_colors": 9,
+      "nodes": [
+        "CatMugRoot_Geometry",
+        "CatMugRoot"
+      ]
+    },
+    {
+      "name": "stapler",
+      "reference": "art/assets/v0.4/06-desk-toys.png",
+      "path": "game/assets/models/stapler.glb",
+      "bytes": 59888,
+      "triangles": 2300,
+      "surfaces": 1,
+      "vertices": 1244,
+      "materials": 1,
+      "unique_colors": 9,
+      "nodes": [
+        "CrocodileStapler_Geometry",
+        "CrocodileStapler"
+      ]
+    },
+    {
+      "name": "plant",
+      "reference": "art/assets/v0.4/06-desk-toys.png",
+      "path": "game/assets/models/plant.glb",
+      "bytes": 67128,
+      "triangles": 2297,
+      "surfaces": 1,
+      "vertices": 1447,
+      "materials": 1,
+      "unique_colors": 12,
+      "nodes": [
+        "BentOfficePlant_Geometry",
+        "BentOfficePlant"
+      ]
+    },
+    {
+      "name": "elevator",
+      "reference": "art/assets/v0.4/07-exit-clock.png",
+      "path": "game/assets/models/elevator.glb",
+      "bytes": 102464,
+      "triangles": 3846,
+      "surfaces": 1,
+      "vertices": 2172,
+      "materials": 1,
+      "unique_colors": 12,
+      "nodes": [
+        "Elevator_Geometry",
+        "Elevator"
+      ]
+    },
+    {
+      "name": "clock",
+      "reference": "art/assets/v0.4/07-exit-clock.png",
+      "path": "game/assets/models/clock.glb",
+      "bytes": 64116,
+      "triangles": 2280,
+      "surfaces": 1,
+      "vertices": 1368,
+      "materials": 1,
+      "unique_colors": 7,
+      "nodes": [
+        "Clock_Geometry",
+        "Clock"
+      ]
+    },
+    {
+      "name": "window_module",
+      "reference": "art/assets/v0.4/08-office-modules.png",
+      "path": "game/assets/models/window_module.glb",
+      "bytes": 62832,
+      "triangles": 2436,
+      "surfaces": 1,
+      "vertices": 1304,
+      "materials": 1,
+      "unique_colors": 8,
+      "nodes": [
+        "WindowModule_Geometry",
+        "WindowModule"
+      ]
+    },
+    {
+      "name": "floor_module",
+      "reference": "art/assets/v0.4/08-office-modules.png",
+      "path": "game/assets/models/floor_module.glb",
+      "bytes": 57256,
+      "triangles": 1216,
+      "surfaces": 2,
+      "vertices": 1328,
+      "materials": 1,
+      "unique_colors": 7,
+      "nodes": [
+        "BaseTiles_Geometry",
+        "BaseTiles",
+        "Wayfinding_Geometry",
+        "Wayfinding",
+        "FloorModule"
+      ]
+    },
+    {
+      "name": "fx_paper",
+      "reference": "art/assets/v0.4/09-fx-objects.png",
+      "path": "game/assets/models/fx_paper.glb",
+      "bytes": 25956,
+      "triangles": 410,
+      "surfaces": 1,
+      "vertices": 619,
+      "materials": 1,
+      "unique_colors": 4,
+      "nodes": [
+        "FXPaper_Geometry",
+        "FXPaper"
+      ]
+    },
+    {
+      "name": "fx_powder",
+      "reference": "art/assets/v0.4/09-fx-objects.png",
+      "path": "game/assets/models/fx_powder.glb",
+      "bytes": 11352,
+      "triangles": 420,
+      "surfaces": 1,
+      "vertices": 212,
+      "materials": 1,
+      "unique_colors": 96,
+      "nodes": [
+        "FXPowder_Geometry",
+        "FXPowder"
+      ]
+    },
+    {
+      "name": "fx_cube",
+      "reference": "art/assets/v0.4/09-fx-objects.png",
+      "path": "game/assets/models/fx_cube.glb",
+      "bytes": 7308,
+      "triangles": 176,
+      "surfaces": 1,
+      "vertices": 140,
+      "materials": 1,
+      "unique_colors": 3,
+      "nodes": [
+        "FXCube_Geometry",
+        "FXCube"
+      ]
+    }
+  ],
+  "total_triangles": 67369,
+  "total_bytes": 1943988
+}

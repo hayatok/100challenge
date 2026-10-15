@@ -23,10 +23,10 @@ func run(tree: SceneTree) -> Array[String]:
 	var broken := office.try_break(contact, 6.0)
 	var first := office.react_to_breaks(broken, contact, 6.0)
 	var waiting := office.debug_feedback_snapshot()
-	_expect(first["accepted"] == 1 and first["selected"] == 1,
-		"Actual introductory destruction wakes only the nearby employee")
-	_expect(_state_count(waiting, "waiting") == 1 and _state_count(waiting, "sleepy") == 4,
-		"Four farther employees keep their sleepy reference pose")
+	_expect(first["accepted"] == 2 and first["selected"] == 2,
+		"Introductory wagon wakes the two nearby employees with distinct roles")
+	_expect(_state_count(waiting, "waiting") == 2 and _state_count(waiting, "sleepy") == 3,
+		"Three farther employees keep their sleepy reference pose")
 	_expect(float(waiting["coworkers"][0]["delay"]) >= 0.05
 		and float(waiting["coworkers"][0]["delay"]) <= 0.26,
 		"Distance-based reaction onset remains within a short bounded delay")
@@ -43,15 +43,22 @@ func run(tree: SceneTree) -> Array[String]:
 		and absf(float(normal["chair_yaw"])) > 0.1 and normal_mug > 0.1,
 		"Chair turns toward the destruction while the cat mug rises")
 	_expect(int(normal["visible_meshes"]) <= 6, "Reaction stays within six visible meshes including chair and indicator")
+	# The real wagon is already a strong event. Start a weak accepted event in
+	# a fresh run to independently test an in-place strength upgrade.
+	office.reset_props()
+	office.react_to_breaks([_event(str(broken[0]["id"]), contact, 10000)], contact, 5.0)
+	_advance(people, 0.4)
+	normal = office.debug_feedback_snapshot()["coworkers"][0]
+	normal_mug = float(normal["mug_lift"])
 	var upgrade := office.react_to_breaks([_event("upgrade", contact, 100000)], contact, 6.0)
 	var stronger: Dictionary = office.debug_feedback_snapshot()["coworkers"][0]
-	_expect(upgrade["upgraded"] == 1 and stronger["strength"] == 2
+	_expect(upgrade["upgraded"] == 2 and stronger["strength"] == 2
 		and stronger["starts"] == normal["starts"] and stronger["elapsed"] == normal["elapsed"],
 		"A stronger fresh break upgrades the existing pose without restarting it")
 	_expect(stronger["mug_lift"] > normal_mug and stronger["upgrades"] == 1,
 		"A stronger impact materially increases mug protection")
 	var weak := office.react_to_breaks([_event("weak", contact, 10000)], contact, 5.0)
-	_expect(weak["suppressed"] == 1, "Small repeated destruction cannot replay an active response")
+	_expect(weak["suppressed"] == 2, "Small repeated destruction cannot replay either active response")
 	_expect(office.react_to_breaks(broken, contact, 9.0)["selected"] == 0,
 		"The same reward IDs cannot replay or upgrade")
 	_advance(people, 1.7)
@@ -59,7 +66,7 @@ func run(tree: SceneTree) -> Array[String]:
 	_expect(recovered["state"] == "sleepy" and not recovered["callout"]
 		and is_zero_approx(float(recovered["chair_yaw"])) and is_zero_approx(float(recovered["mug_lift"])),
 		"Response returns the chair, sleepy face, mug and callout to their reference pose")
-	_expect(office.react_to_breaks([_event("cooldown", contact, 100000)], contact, 9.0)["suppressed"] == 1,
+	_expect(office.react_to_breaks([_event("cooldown", contact, 100000)], contact, 9.0)["suppressed"] == 2,
 		"Individual cooldown also prevents another onset after the visible pose ends")
 	_advance(people, 1.0)
 	_expect(office.react_to_breaks(broken, contact, 9.0)["selected"] == 0,

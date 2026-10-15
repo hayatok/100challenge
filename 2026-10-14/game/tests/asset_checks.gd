@@ -7,6 +7,10 @@ const DisplayFont := preload("res://assets/fonts/TaikinComic-Black.otf")
 
 func run() -> Array[String]:
 	var failures: Array[String] = []
+	var reaction_font := load("res://assets/fonts/NotoSansCJKjp-Medium.otf") as Font
+	for character in "マグ死守承認！":
+		if not reaction_font.has_char(character.unicode_at(0)):
+			failures.append("Spatial reaction font lacks required character: " + character)
 	for character in "全力退勤定時だ飛べ書類全提出壁成功自己ベスト被害総額最大連鎖消火器残圧設定再開派手標準控えめ¥0123456789×↑→！":
 		if not DisplayFont.has_char(character.unicode_at(0)):
 			failures.append("Display font lacks required game character: " + character)
