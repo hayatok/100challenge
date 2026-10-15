@@ -1,0 +1,58 @@
+{
+  "date": "2026-10-15",
+  "timezone": "Asia/Tokyo",
+  "version": "0.7.0",
+  "godot": "4.6.3.stable.official.7d41c59c4",
+  "checks": {
+    "npm run check": "passed (20 models, import, real physics, causal chain, collapse lifecycle, personalities, integration, Web export)",
+    "root npm test": "passed 38 tests",
+    "git diff --check": "passed",
+    "python3 -m py_compile scripts/browser-qa.py": "passed",
+    "browser-qa": "passed; real keyboard/menu input; read-only QA bridge"
+  },
+  "browser": {
+    "browser": "153.0.8010.12",
+    "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M5, Unspecified Version)",
+    "platform": "darwin",
+    "headless": true
+  },
+  "result": {
+    "elapsed": 23.7329999999996,
+    "rank": "SSS",
+    "damage": 1320000,
+    "max_combo": 6,
+    "broken": 14
+  },
+  "screen_sizes": [
+    [
+      1280,
+      720
+    ],
+    [
+      1920,
+      1080
+    ],
+    [
+      960,
+      540
+    ]
+  ],
+  "errors": [],
+  "manual_browser": "Codex in-app browser: actual spray, 3-chain, mug/stamp reactions, R, Esc, title return",
+  "published": false,
+  "tested_files": {
+    "game/scripts/actor.gd": "35cff145504ca8bb26e595fd6e7a64b457936ac247b36a695c3eef47136ae652",
+    "game/scripts/asset_library.gd": "13b6bec87bb3565f151b5dab1da183025db36f5b05c46cc29f7992383d83af3f",
+    "game/scripts/breakable.gd": "c22eef79e8a98bb6638648c6419184a70b9a8eabe031bac16cdc1b4a8fbd6c44",
+    "game/scripts/colleague.gd": "d9dbaef25fdb2c680d080b4c7056c4187e1172d87d7659e205246cca88999f2c",
+    "game/scripts/effects.gd": "5e079c949ebd75663e4953f27f7225b5ff14b0d014d8ae67c180fb1499672ff3",
+    "game/scripts/hud.gd": "4799e900f10c233a4bd206eaacfd0479f7dd9b7d4811ae5c44226162188202bc",
+    "game/scripts/main.gd": "895e0967459813e5de4209f2be927c5e3d1afc4347acdad76f7345bf48ad52ea",
+    "game/scripts/office.gd": "fe876dfe4c0e76725739b7bb8f11518f173dfa09bbd509b42112274ba251e93c",
+    "game/scripts/player.gd": "ae400b81c4db804aa43ecdf4ba3389fb87feaa1f8b34c9044e062176f3ad6231",
+    "game/scripts/rules.gd": "a4fbbfb4234f75745a04ab5e16a0ec2aa1e9db7bab8ab947ee5ea116c1168726",
+    "game/assets/models/paper_box.glb": "7b80c605c30201fb2f11a8f5c56e3f68bcd0aee8abc1721fee3c3bdd1c8f38b6",
+    "game/assets/models/paper_cart.glb": "21b1c2379fadd27bd1be72a32b6ef3c4056beac940cea3081e5d1e105cdc4c63",
+    "game/assets/models/paper_tower.glb": "1eac36bd13908dd46ced9134eaecdfd5639ee26e3f6a75643f048366ea3867d5"
+  }
+}

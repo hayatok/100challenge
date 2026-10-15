@@ -33,10 +33,18 @@ Godot 4.6.3、Compatibility描画、単一スレッドWeb書き出し。`game/ma
 - `reset_props()`：破壊物を元に戻す。
 - `react_to_breaks(rewards: Array, player_at: Vector3, speed: float) -> Dictionary`：受理済みの新しい破壊地点から12m以内の近い最大2人を反応させる。同時に待機・反応する人数も2人まで。返り値はaccepted/upgraded/suppressed/selected。
 - `set_feedback_quality(level: String)`、`debug_feedback_snapshot()`：社員の控えめ設定と、JSONで読める検証用状態。
-- `try_break(at: Vector3, speed: float) -> Array[Dictionary]`：接触した未破壊の物を処理してイベントを返す。id/base/progress/position/kind/textキーを含める。見た目の破壊済み状態はoffice内で管理。speedがほぼ0なら破壊しない。
+- `try_break(at: Vector3, speed: float, direction: Vector3 = Vector3.FORWARD) -> Array[Dictionary]`：直接当たった未破壊・未予約の物だけを処理。id/base/progress/position/kind/textに加え、direction/impact_speed/depth/chain_root/source_idを返す。
+- `advance_destruction(delta: float) -> Array[Dictionary]`：ポーズしていないプレイの物理更新から一度だけ呼ぶ。0.35秒で到達した次の接触を返す。24個を8組に分け、同じ組のワゴン→塔→箱に最大2段だけ伝える。
+- `stop_propagation()`：ゴールで未確定の接触予約を消し、記録確定後の破壊を防ぐ。
 - `is_goal(at: Vector3) -> bool`、`distance_to_goal(at: Vector3) -> float`。
 - 家具はStaticBody3D、layer2、mask1。破壊物は通れる判定で、紙の大量の物理ボディを作らない。
 - 色はクリーム床、青緑の家具、オレンジの夕日、緑の出口。小物の一部だけボクセル感を加える。
+
+## breakable.gd / colleague.gd（v0.7）
+
+`breakable.gd` は加点原点を動かさず、可動群を持つ3種類のGLBを崩す。`build(kind, index)`、`begin_break(direction, travel)`、`reset_visual()`、`set_feedback_quality(level)`、`debug_snapshot()` が接続面。ワゴンの移動と塔の曲がる向きは次の実接触へ合わせる。元の形と静止後は各1面へ合成し、崩壊中だけ複数の可動群を描く。非衝突・影なしで、静止後の時計を止める。
+
+`colleague.gd` の `build(id, personality = "mug")` で猫マグ／承認役を選ぶ。承認役は元のマグ腕を隠し、共有の袖・手・印鑑を使い、机上の紙へ0.48秒で接触する。`react`、`reset_reaction` と既存の強化・再発生間隔を使う。近い最大2人だけをofficeが選び、JSONで読める役・接触・朱印の状態を返す。
 
 ## actor.gd
 

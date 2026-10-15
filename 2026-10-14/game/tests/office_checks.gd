@@ -21,8 +21,11 @@ func run(tree: SceneTree) -> Array[String]:
 	_expect(office.try_break(contact, 0.0).is_empty() and office.try_break(contact, 1.0).is_empty(),
 		"Idle and slow contact cannot destroy office props")
 	var first := office.try_break(contact, 6.0)
-	_expect(contact_model != null and not contact_model.visible, "An impacted prop disappears from the intact office")
-	_expect(first.size() >= 2, "A fast paper impact must scatter a neighbouring prop")
+	_expect(contact_model != null and not contact_model.debug_snapshot()["intact_visible"], "Impacted wagon leaves its intact pose")
+	_expect(first.size() == 1, "A wagon impact begins before its delayed neighbour contacts")
+	first.append_array(office.advance_destruction(0.35))
+	first.append_array(office.advance_destruction(0.35))
+	_expect(first.size() == 3, "A fast wagon impact must transmit to a tower and box")
 	var ids := {}
 	for event in first:
 		_expect(not ids.has(event["id"]), "Contact chain cannot award the same prop twice")
@@ -33,8 +36,10 @@ func run(tree: SceneTree) -> Array[String]:
 			"A destroyed prop stays spent when the chair returns")
 	_expect(office.try_break(contact, 6.0).is_empty(), "Repeating an impact cannot produce more damage")
 	office.reset_props()
-	_expect(contact_model != null and contact_model.visible, "Retry restores the broken prop visually")
+	_expect(contact_model != null and contact_model.debug_snapshot()["intact_visible"], "Retry restores the broken prop visually")
 	var restored := office.try_break(contact, 6.0)
+	restored.append_array(office.advance_destruction(0.35))
+	restored.append_array(office.advance_destruction(0.35))
 	var restored_ids := {}
 	for event in restored:
 		restored_ids[event["id"]] = true

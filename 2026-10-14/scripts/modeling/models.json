@@ -58,8 +58,17 @@
       "blend": "art/models/paper_box.blend",
       "glb": "game/assets/models/paper_box.glb",
       "max_triangles": 4000,
-      "max_surfaces": 1,
-      "required_nodes": []
+      "max_surfaces": 8,
+      "required_nodes": [
+        "CartonBody",
+        "FlapLeft",
+        "FlapRight",
+        "FlapFront",
+        "FlapBack",
+        "PaperLow",
+        "PaperMiddle",
+        "PaperTop"
+      ]
     },
     {
       "name": "paper_tower",
@@ -69,8 +78,14 @@
       "blend": "art/models/paper_tower.blend",
       "glb": "game/assets/models/paper_tower.glb",
       "max_triangles": 4000,
-      "max_surfaces": 1,
-      "required_nodes": []
+      "max_surfaces": 5,
+      "required_nodes": [
+        "TowerBase",
+        "TowerLow",
+        "TowerMiddle",
+        "TowerUpper",
+        "TowerCrown"
+      ]
     },
     {
       "name": "paper_cart",
@@ -80,8 +95,15 @@
       "blend": "art/models/paper_cart.blend",
       "glb": "game/assets/models/paper_cart.glb",
       "max_triangles": 4000,
-      "max_surfaces": 1,
-      "required_nodes": []
+      "max_surfaces": 6,
+      "required_nodes": [
+        "CartFrame",
+        "CasterLoose",
+        "CastersFixed",
+        "CargoPaper",
+        "CargoBinders",
+        "CargoCartons"
+      ]
     },
     {
       "name": "desk",
