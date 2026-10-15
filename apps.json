@@ -219,5 +219,15 @@
     "category": "3D物理コメディ",
     "thumbnail": "zenryoku-taikin-cover.png",
     "accent": "#E63B2F"
+  },
+  {
+    "id": "2026-10-15",
+    "date": "2026-10-15",
+    "sequence": 1,
+    "name": "表のコピペ救出",
+    "description": "スクショの表を端末内で認識。元画像と並べて修正し、Excelやスプレッドシートへコピーできる作業机。",
+    "category": "画像OCR / 表の取り出し",
+    "thumbnail": "table-rescue-cover.svg",
+    "accent": "#B73529"
   }
 ]
