@@ -2,7 +2,7 @@
 
 ## 破壊連鎖と同僚の個性 v0.7
 
-[CHAIN_REACTION_DESIGN.md](CHAIN_REACTION_DESIGN.md) に今回の目的・制約・完了条件・実装順を記録する。公開更新・タグ作成は今回の範囲に含めない。
+[CHAIN_REACTION_DESIGN.md](CHAIN_REACTION_DESIGN.md) に今回の目的・制約・完了条件・実装順を記録する。ローカル検証後、2026-10-15にユーザーからコミットとGitHub Pages公開の追加承認を受けた。PR・mainのCIを確認し、既存の公開ワークフローをmainから実行して公開URLを再検証する。公開結果はIssue #159とGitHub Projectへ記録する。
 
 - [x] ユーザー確認済みの実装前イメージを保存し、現行版を実操作で確認。
 - [x] ワゴン→書類の塔→紙箱の段階的な伝播と、崩壊後の形・床の残骸。

@@ -4,7 +4,7 @@
 
 ## 破壊連鎖と同僚の個性 v0.7 の検証
 
-2026-10-15（Asia/Tokyo）。[生成した画面イメージ](../art/screens/v0.7/01-chain-reaction.png) をユーザーが確認してから実装した。変更前は公開v0.6をアプリ内ブラウザで開始・噴射・破壊・Escで操作し、物体が消える既存の表現を確認した。現在の仕様は [CHAIN_REACTION_DESIGN.md](CHAIN_REACTION_DESIGN.md)。今回はローカル検証までで、公開更新・タグ作成は行っていない。
+2026-10-15（Asia/Tokyo）。[生成した画面イメージ](../art/screens/v0.7/01-chain-reaction.png) をユーザーが確認してから実装した。変更前は公開v0.6をアプリ内ブラウザで開始・噴射・破壊・Escで操作し、物体が消える既存の表現を確認した。現在の仕様は [CHAIN_REACTION_DESIGN.md](CHAIN_REACTION_DESIGN.md)。以下はローカル検証の結果。続くユーザーの追加依頼でコミットとPages公開を進め、公開版のSHA・CI・Pages・配信物と実操作の確認結果を [Issue #159](https://github.com/hayatok/100challenge/issues/159) へ記録する。
 
 `npm run check` はGodot 4.6.3で成功。20モデル、import、ルール13件、共有メッシュと日本語字形、実物理・通路、時間差の伝播と一度だけの加点、崩壊・残骸、猫マグと承認印、ポーズ・成功・再挑戦の統合、Webビルドを通過。ルートの `npm test` は38件成功。差分の空白検査とPython構文も通過。[チェック一覧](verification/v0.7/checks.json) と [モデル測定](verification/v0.7/model-report.json) に保存する。
 
