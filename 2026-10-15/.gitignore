@@ -1,0 +1,6 @@
+node_modules/
+dist/
+public/ocr-runtime/
+public/ocr-models/
+.vite/
+*.tsbuildinfo

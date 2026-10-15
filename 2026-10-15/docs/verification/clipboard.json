@@ -1,0 +1,15 @@
+[
+  {
+    "entries": [
+      {
+        "mimeType": "text/plain",
+        "text": "品名\t数量\t単価\t金額\r\nリングノート\t3\t120\t360\r\nボールペン\t2\t150\t300\r\nクリアファイル\t0012\t80\t\r\n合計\t\t\t660"
+      },
+      {
+        "mimeType": "text/html",
+        "text": "<table><tbody><tr><td style=\"mso-number-format:'\\@';white-space:pre-wrap\">品名</td><td style=\"mso-number-format:'\\@';white-space:pre-wrap\">数量</td><td style=\"mso-number-format:'\\@';white-space:pre-wrap\">単価</td><td style=\"mso-number-format:'\\@';white-space:pre-wrap\">金額</td></tr><tr><td style=\"mso-number-format:'\\@';white-space:pre-wrap\">リングノート</td><td style=\"mso-number-format:'\\@';white-space:pre-wrap\">3</td><td style=\"mso-number-format:'\\@';white-space:pre-wrap\">120</td><td style=\"mso-number-format:'\\@';white-space:pre-wrap\">360</td></tr><tr><td style=\"mso-number-format:'\\@';white-space:pre-wrap\">ボールペン</td><td style=\"mso-number-format:'\\@';white-space:pre-wrap\">2</td><td style=\"mso-number-format:'\\@';white-space:pre-wrap\">150</td><td style=\"mso-number-format:'\\@';white-space:pre-wrap\">300</td></tr><tr><td style=\"mso-number-format:'\\@';white-space:pre-wrap\">クリアファイル</td><td style=\"mso-number-format:'\\@';white-space:pre-wrap\">0012</td><td style=\"mso-number-format:'\\@';white-space:pre-wrap\">80</td><td style=\"mso-number-format:'\\@';white-space:pre-wrap\"></td></tr><tr><td style=\"mso-number-format:'\\@';white-space:pre-wrap\">合計</td><td style=\"mso-number-format:'\\@';white-space:pre-wrap\"></td><td style=\"mso-number-format:'\\@';white-space:pre-wrap\"></td><td style=\"mso-number-format:'\\@';white-space:pre-wrap\">660</td></tr></tbody></table>"
+      }
+    ],
+    "presentationStyle": "unspecified"
+  }
+]
