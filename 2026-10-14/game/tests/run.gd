@@ -48,11 +48,14 @@ func _run() -> void:
 	var office_checks = load("res://tests/office_checks.gd").new()
 	var office_failures: Array[String] = await office_checks.run(self)
 	failures.append_array(office_failures)
+	var effects_checks = load("res://tests/effects_checks.gd").new()
+	var effects_failures: Array[String] = await effects_checks.run(self)
+	failures.append_array(effects_failures)
 	var integration_checks = load("res://tests/integration_checks.gd").new()
 	var integration_failures: Array[String] = await integration_checks.run(self)
 	failures.append_array(integration_failures)
 	if failures.is_empty():
-		print("PASS: rules (", count, "), model colors/sharing, player real-physics, office route/destruction and pause/restart integration checks")
+		print("PASS: rules (", count, "), model colors/sharing, player real-physics, office route/destruction, bounded FX lifecycle and rush/pause/success/retry integration checks")
 		call_deferred("quit", 0)
 	else:
 		for error: String in failures: print("FAIL: ", error)

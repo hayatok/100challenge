@@ -1,0 +1,10 @@
+{
+  "font": "TaikinComic Black",
+  "derived_from": "Noto Sans CJK JP Black 2.004",
+  "license": "SIL Open Font License 1.1",
+  "source": "https://raw.githubusercontent.com/notofonts/noto-cjk/165c01b46ea533872e002e0785ff17e44f6d97d8/Sans/OTF/Japanese/NotoSansCJKjp-Black.otf",
+  "source_sha256": "cd66686594a861a42fe752990a406fcedafb51b3a91d6639f30f8948f7a10b4d",
+  "bytes": 566904,
+  "glyphs": 2783,
+  "purpose": "Heavy readable comic HUD headings. Subset and renamed; normal game/CI uses the committed font."
+}

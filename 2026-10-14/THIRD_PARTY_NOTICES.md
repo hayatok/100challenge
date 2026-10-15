@@ -14,4 +14,6 @@ Godot Engine contributors / Juan Linietsky / Ariel Manzur。MIT License。
 
 Noto Fonts / Adobe。日本語の表示に `NotoSansCJKjp-Medium.otf` を使用しています。SIL Open Font License 1.1。
 
+v0.5の大きい見出しには、Noto Sans CJK JP Black 2.004から必要な文字を抽出して改名した `TaikinComic-Black.otf` を使用しています。変更はサブセット化とファミリー名・PostScript名の改名で、原本の著作権とライセンス情報を保持しています。出典とSHA-256は [DISPLAY_FONT.json](game/assets/fonts/DISPLAY_FONT.json)、再生成は `npm run assets:font`（PythonのfontToolsが制作時だけ必要）。通常の起動・CI・配布にfontToolsは不要です。
+
 ライセンス全文は [LICENSE.txt](game/assets/fonts/LICENSE.txt)。Web配布では `licenses/NOTO-OFL.txt` として同梱します。

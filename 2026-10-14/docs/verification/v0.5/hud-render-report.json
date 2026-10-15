@@ -1,0 +1,88 @@
+{
+  "renderer": "Godot 4.6.3 Compatibility / OpenGL 4.5 / Mesa 25.0.7 llvmpipe LLVM 19.1.7",
+  "resolution": [
+    1280,
+    720
+  ],
+  "method": "Standalone native HUD-only project on DISPLAY=:99. Same hud.gd, fixed representative real-value data and unchanged viewport. Baseline pre-batching comic_surface.gd versus optimized cached ArrayMesh helper. For each title/playing-rush/result/paused mode, wait 35 rendered frames, skip first 6, average RenderingServer RENDERING_INFO_TOTAL_DRAW_CALLS_IN_FRAME over 29 frames. Snapshot at frame 7. No 3D/effects; this isolates UI draw submissions. Timing includes frame scheduling and is not full-world FPS.",
+  "modes": {
+    "title": {
+      "baseline": {
+        "draw_calls": 549,
+        "frame_ms": 17.8224827586207
+      },
+      "optimized": {
+        "draw_calls": 27,
+        "frame_ms": 10.9431034482759
+      },
+      "draw_call_reduction_pct": 95.082
+    },
+    "playing": {
+      "baseline": {
+        "draw_calls": 576,
+        "frame_ms": 15.1022413793103
+      },
+      "optimized": {
+        "draw_calls": 39,
+        "frame_ms": 9.13875862068966
+      },
+      "draw_call_reduction_pct": 93.229
+    },
+    "result": {
+      "baseline": {
+        "draw_calls": 472,
+        "frame_ms": 20.5686551724138
+      },
+      "optimized": {
+        "draw_calls": 30,
+        "frame_ms": 13.9397586206897
+      },
+      "draw_call_reduction_pct": 93.644
+    },
+    "paused": {
+      "baseline": {
+        "draw_calls": 747,
+        "frame_ms": 24.4070344827586
+      },
+      "optimized": {
+        "draw_calls": 48,
+        "frame_ms": 14.1566206896552
+      },
+      "draw_call_reduction_pct": 93.574
+    }
+  },
+  "pixelcomparison": {
+    "method": "Absolute RGB differences between baseline/optimized frame7 PNGs, mean over all RGB channels (0..255), fraction of pixels whose maximum channel difference exceeds10. Title is static; playing/result/paused can differ in animation phase because timing differs.",
+    "modes": {
+      "title": {
+        "mean_absolute_channel_difference": 0.151086,
+        "pixels_over_10_pct": 0.827691,
+        "baseline_png": "hud-metrics/title-baseline.png",
+        "optimized_png": "hud-metrics/title-optimized.png"
+      },
+      "playing": {
+        "mean_absolute_channel_difference": 1.769209,
+        "pixels_over_10_pct": 3.294054,
+        "baseline_png": "hud-metrics/playing-baseline.png",
+        "optimized_png": "hud-metrics/playing-optimized.png"
+      },
+      "result": {
+        "mean_absolute_channel_difference": 2.480584,
+        "pixels_over_10_pct": 3.55957,
+        "baseline_png": "hud-metrics/result-baseline.png",
+        "optimized_png": "hud-metrics/result-optimized.png"
+      },
+      "paused": {
+        "mean_absolute_channel_difference": 0.34019,
+        "pixels_over_10_pct": 1.782769,
+        "baseline_png": "hud-metrics/paused-baseline.png",
+        "optimized_png": "hud-metrics/paused-optimized.png"
+      }
+    }
+  },
+  "cache": "Mesh key includes kind,size,fill,accent; meter filled segment count and low-pressure color; speed-edge phase/intensity/rush/reduced state; celebration phase/reduced state. Static objects reuse mesh. Live labels/buttons/settings controls are unchanged.",
+  "source_files": [
+    "game/scripts/ui/comic_surface.gd",
+    "game/scripts/hud.gd"
+  ]
+}

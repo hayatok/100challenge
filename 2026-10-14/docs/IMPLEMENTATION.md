@@ -51,11 +51,15 @@ Godot 4.6.3、Compatibility描画、単一スレッドWeb書き出し。`game/ma
 - signal `start_requested`、`restart_requested`、`resume_requested`、`title_requested`。
 - signal `settings_changed(effect_level: String, music_volume: float, sfx_volume: float)`。
 - `build()`。
+- `reset_run()`。playingからplayingへの再挑戦でも通知・数字の跳ね・ラッシュと成功の時計を初期化する。
 - `present(mode: String, data: Dictionary)`。modeはtitle/playing/paused/result。
 - data：elapsed/damage/combo/multiplier/pressure/distance/max_combo/rank/rank_text/best_time/new_best/save_error。
 - `burst(text: String, bonus: String = "", kind: String = "impact")`。
-- 字体は`res://assets/fonts/NotoSansCJKjp-Medium.otf`。1920×1080基準でscale対応、1280×720でも読めること。
+- 本文は `NotoSansCJKjp-Medium.otf`、大きい文字は改名・サブセット化した `TaikinComic-Black.otf`。`scripts/ui/comic_surface.gd` が紙の切れ込み、クリップ、二重線、金の印、メーターなどをCanvasへ描く。1920×1080基準でscale対応。
+- 装飾は色付きの三角形を部品ごとのArrayMeshへまとめる。静的な枠をキャッシュし、色・寸法・メーターの段・低残圧の色、速線と祝いの位相が変わる際だけ更新する。文字・Button・OptionButton・SliderはGodotの実部品で保持する。
+- 点・罫線・バーコード・輪郭を一つの頂点色付きArrayMeshへまとめ、静的な飾りをキャッシュする。形・色・寸法・メーターの段階、動く速線と祝いの状態が変わったときだけ更新する。文字とボタンはGodotの実際のControlのまま保つ。
 - 結果は主記録のタイム、時間ランク、被害総額、最大連鎖。「もう一度」を主操作。
+- resultへの遷移で判子の時計を一度だけ始める。successの通知や毎フレームのpresentで入口をやり直さない。通知・数字・判子と速線の時計はポーズとフォーカス喪失で止める。控えめは跳ねと速線を止め、文字と記録を残す。
 
 ## effects.gd
 
@@ -64,11 +68,18 @@ Godot 4.6.3、Compatibility描画、単一スレッドWeb書き出し。`game/ma
 - `setup()`、`set_quality(level: String)`、`set_volumes(music: float, sfx: float)`。
 - `set_exhaust(at: Vector3, backward: Vector3, spraying: bool, rush: bool)`。
 - `burst(at: Vector3, strength: float = 1.0)`、`play_combo(count: int)`、`celebrate(at: Vector3)`。
+- `impact(at: Vector3, normal: Vector3, strength: float = 1.0)`、`start_rush(at: Vector3)`。
 - 主役と前方を塞がない量。通常は80程度を目安に同時粒子へ上限、控えめは約25%。音声は生成した短い音でよい。ゲーム時間の止め方はmainが管理する。
+- 7種類の共有MultiMeshで粉・紙・立方体・星形・輪・軌跡・リボンを描く。粉と小道具はGLB、星形などは `scripts/fx/graphic_meshes.gd` の共有メッシュ。上限80／52／20のうち28／20／6をイベント用に予約し、重要なイベントは古い噴射から置き換える。
+- 発生直後の一描画を保持し、低いfpsでも短い星形のピークを一度表示する。紙の輪郭は薄い専用縁として合成し、モデルの文字・罫線へinverted hullを使わない。
 
 ## メイン側
 
 `rules.gd`は時間、同時破壊の安定した順序、有限加点、倍率、ラッシュ、ランクを管理し、頭なしテストで確認する。`main.gd`が入力・プレイヤー・ワールド・アート・UI・演出・記録を接続する。プレイとブラウザの非アクティブ化では正しくポーズする。
+
+`_present_breaks` は各小道具の破裂を残し、同時破壊の連鎖音を最後の値へまとめる。ラッシュ通知と音は `reward.rush_started` にだけ反応する。successはresultへpresentしてから送る。固定家具への衝突には、playerが返した接触位置と法線を使う。
+
+プレイのフォーカス喪失は明示的な再開を要するポーズ。結果の短い判子・祝いは非アクティブ時に停止し、フォーカスが戻るとその続きから再開する。タイトルと結果のカメラは、紙のUIの右に主役が大きく見える距離へ寄せる。プレイのカメラ・移動・ルールは維持する。
 
 描画の監視とブラウザQAのため、開発時だけ使う状態出力を用意する。製品の画面へ実装用のログやテスト項目を置かない。
 
