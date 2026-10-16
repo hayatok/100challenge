@@ -1,0 +1,360 @@
+{
+  "schema_version": "1",
+  "kind": "data",
+  "table": {
+    "id": "0002119625",
+    "statistics_code": "00500300",
+    "statistics_name": "食料需給表",
+    "organization": "農林水産省",
+    "title": "年度別食料需給表 令和４年度食料需給表（概算値）、令和３年度食料需給表（確定値）",
+    "cycle": "年度次",
+    "survey_date": "202204-202303",
+    "open_date": "2025-03-31",
+    "updated_date": "2025-04-08",
+    "collect_area": "該当なし",
+    "total_records": 3258
+  },
+  "dimensions": [
+    {
+      "id": "cat01",
+      "name": "(H001-04-2-002)類別・品目別",
+      "values": [
+        {
+          "code": "1002",
+          "name": "穀類_米",
+          "level": "2",
+          "parent_code": "1001"
+        },
+        {
+          "code": "1012",
+          "name": "でん粉",
+          "level": "1"
+        },
+        {
+          "code": "1020",
+          "name": "果実_うんしゅうみかん",
+          "level": "2",
+          "parent_code": "1019"
+        }
+      ]
+    },
+    {
+      "id": "cat02",
+      "name": "(H001-04-1-002)食料需給表",
+      "values": [
+        {
+          "code": "1016",
+          "name": "１人当たり供給純食料_１年当たり数量",
+          "level": "1",
+          "unit": "kg"
+        },
+        {
+          "code": "1018",
+          "name": "１人当たり供給純食料_１日当たり_熱量",
+          "level": "1",
+          "unit": "kcal"
+        }
+      ]
+    },
+    {
+      "id": "cat03",
+      "name": "(H001-04-1-003)年度別",
+      "values": [
+        {
+          "code": "1001",
+          "name": "令和４年度食料需給表（概算値）",
+          "level": "1"
+        },
+        {
+          "code": "1002",
+          "name": "令和３年度食料需給表（確定値）",
+          "level": "1"
+        }
+      ]
+    }
+  ],
+  "page": {
+    "total": 12,
+    "from": 1,
+    "to": 12,
+    "truncated": false
+  },
+  "records": [
+    {
+      "table_id": "0002119625",
+      "dimensions": {
+        "cat01": {
+          "code": "1002",
+          "name": "穀類_米"
+        },
+        "cat02": {
+          "code": "1016",
+          "name": "１人当たり供給純食料_１年当たり数量"
+        },
+        "cat03": {
+          "code": "1001",
+          "name": "令和４年度食料需給表（概算値）"
+        }
+      },
+      "unit": "kg",
+      "value": {
+        "raw": "50.9",
+        "number": 50.9,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0002119625",
+      "dimensions": {
+        "cat01": {
+          "code": "1002",
+          "name": "穀類_米"
+        },
+        "cat02": {
+          "code": "1016",
+          "name": "１人当たり供給純食料_１年当たり数量"
+        },
+        "cat03": {
+          "code": "1002",
+          "name": "令和３年度食料需給表（確定値）"
+        }
+      },
+      "unit": "kg",
+      "value": {
+        "raw": "51.4",
+        "number": 51.4,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0002119625",
+      "dimensions": {
+        "cat01": {
+          "code": "1002",
+          "name": "穀類_米"
+        },
+        "cat02": {
+          "code": "1018",
+          "name": "１人当たり供給純食料_１日当たり_熱量"
+        },
+        "cat03": {
+          "code": "1001",
+          "name": "令和４年度食料需給表（概算値）"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "476.5",
+        "number": 476.5,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0002119625",
+      "dimensions": {
+        "cat01": {
+          "code": "1002",
+          "name": "穀類_米"
+        },
+        "cat02": {
+          "code": "1018",
+          "name": "１人当たり供給純食料_１日当たり_熱量"
+        },
+        "cat03": {
+          "code": "1002",
+          "name": "令和３年度食料需給表（確定値）"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "481.8",
+        "number": 481.8,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0002119625",
+      "dimensions": {
+        "cat01": {
+          "code": "1012",
+          "name": "でん粉"
+        },
+        "cat02": {
+          "code": "1016",
+          "name": "１人当たり供給純食料_１年当たり数量"
+        },
+        "cat03": {
+          "code": "1001",
+          "name": "令和４年度食料需給表（概算値）"
+        }
+      },
+      "unit": "kg",
+      "value": {
+        "raw": "15.7",
+        "number": 15.7,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0002119625",
+      "dimensions": {
+        "cat01": {
+          "code": "1012",
+          "name": "でん粉"
+        },
+        "cat02": {
+          "code": "1016",
+          "name": "１人当たり供給純食料_１年当たり数量"
+        },
+        "cat03": {
+          "code": "1002",
+          "name": "令和３年度食料需給表（確定値）"
+        }
+      },
+      "unit": "kg",
+      "value": {
+        "raw": "15.1",
+        "number": 15.1,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0002119625",
+      "dimensions": {
+        "cat01": {
+          "code": "1012",
+          "name": "でん粉"
+        },
+        "cat02": {
+          "code": "1018",
+          "name": "１人当たり供給純食料_１日当たり_熱量"
+        },
+        "cat03": {
+          "code": "1001",
+          "name": "令和４年度食料需給表（概算値）"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "154.5",
+        "number": 154.5,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0002119625",
+      "dimensions": {
+        "cat01": {
+          "code": "1012",
+          "name": "でん粉"
+        },
+        "cat02": {
+          "code": "1018",
+          "name": "１人当たり供給純食料_１日当たり_熱量"
+        },
+        "cat03": {
+          "code": "1002",
+          "name": "令和３年度食料需給表（確定値）"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "149.3",
+        "number": 149.3,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0002119625",
+      "dimensions": {
+        "cat01": {
+          "code": "1020",
+          "name": "果実_うんしゅうみかん"
+        },
+        "cat02": {
+          "code": "1016",
+          "name": "１人当たり供給純食料_１年当たり数量"
+        },
+        "cat03": {
+          "code": "1001",
+          "name": "令和４年度食料需給表（概算値）"
+        }
+      },
+      "unit": "kg",
+      "value": {
+        "raw": "3.4",
+        "number": 3.4,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0002119625",
+      "dimensions": {
+        "cat01": {
+          "code": "1020",
+          "name": "果実_うんしゅうみかん"
+        },
+        "cat02": {
+          "code": "1016",
+          "name": "１人当たり供給純食料_１年当たり数量"
+        },
+        "cat03": {
+          "code": "1002",
+          "name": "令和３年度食料需給表（確定値）"
+        }
+      },
+      "unit": "kg",
+      "value": {
+        "raw": "3.7",
+        "number": 3.7,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0002119625",
+      "dimensions": {
+        "cat01": {
+          "code": "1020",
+          "name": "果実_うんしゅうみかん"
+        },
+        "cat02": {
+          "code": "1018",
+          "name": "１人当たり供給純食料_１日当たり_熱量"
+        },
+        "cat03": {
+          "code": "1001",
+          "name": "令和４年度食料需給表（概算値）"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "4.5",
+        "number": 4.5,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0002119625",
+      "dimensions": {
+        "cat01": {
+          "code": "1020",
+          "name": "果実_うんしゅうみかん"
+        },
+        "cat02": {
+          "code": "1018",
+          "name": "１人当たり供給純食料_１日当たり_熱量"
+        },
+        "cat03": {
+          "code": "1002",
+          "name": "令和３年度食料需給表（確定値）"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "4.9",
+        "number": 4.9,
+        "kind": "number"
+      }
+    }
+  ]
+}

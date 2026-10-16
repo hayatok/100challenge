@@ -1,0 +1,2630 @@
+{
+  "schema_version": "1",
+  "kind": "data",
+  "table": {
+    "id": "0003138532",
+    "statistics_code": "00450071",
+    "statistics_name": "毎月勤労統計調査",
+    "organization": "厚生労働省",
+    "title": "指数及び増減率 就業形態別現金給与総額　指数及び増減率",
+    "cycle": "月次",
+    "survey_date": "0",
+    "open_date": "2016-03-31",
+    "updated_date": "2021-10-12",
+    "collect_area": "該当なし",
+    "total_records": 208620
+  },
+  "dimensions": [
+    {
+      "id": "tab",
+      "name": "表章項目",
+      "values": [
+        {
+          "code": "3002",
+          "name": "指数(平成17年平均＝100)"
+        }
+      ]
+    },
+    {
+      "id": "cat01",
+      "name": "調査月",
+      "values": [
+        {
+          "code": "91",
+          "name": "年平均",
+          "level": "1"
+        }
+      ]
+    },
+    {
+      "id": "cat02",
+      "name": "事業所規模",
+      "values": [
+        {
+          "code": "T",
+          "name": "5人以上",
+          "level": "1"
+        }
+      ]
+    },
+    {
+      "id": "cat03",
+      "name": "就業形態",
+      "values": [
+        {
+          "code": "00",
+          "name": "就業形態計",
+          "level": "1"
+        }
+      ]
+    },
+    {
+      "id": "cat04",
+      "name": "産業分類(200203改定)",
+      "values": [
+        {
+          "code": "TL",
+          "name": "TL_調査産業計",
+          "level": "1"
+        }
+      ]
+    },
+    {
+      "id": "area",
+      "name": "全国",
+      "values": [
+        {
+          "code": "00000",
+          "name": "全国",
+          "level": "1"
+        }
+      ]
+    },
+    {
+      "id": "time",
+      "name": "調査年",
+      "values": [
+        {
+          "code": "1952000000",
+          "name": "1952年",
+          "level": "1"
+        },
+        {
+          "code": "1953000000",
+          "name": "1953年",
+          "level": "1"
+        },
+        {
+          "code": "1954000000",
+          "name": "1954年",
+          "level": "1"
+        },
+        {
+          "code": "1955000000",
+          "name": "1955年",
+          "level": "1"
+        },
+        {
+          "code": "1956000000",
+          "name": "1956年",
+          "level": "1"
+        },
+        {
+          "code": "1957000000",
+          "name": "1957年",
+          "level": "1"
+        },
+        {
+          "code": "1958000000",
+          "name": "1958年",
+          "level": "1"
+        },
+        {
+          "code": "1959000000",
+          "name": "1959年",
+          "level": "1"
+        },
+        {
+          "code": "1960000000",
+          "name": "1960年",
+          "level": "1"
+        },
+        {
+          "code": "1961000000",
+          "name": "1961年",
+          "level": "1"
+        },
+        {
+          "code": "1962000000",
+          "name": "1962年",
+          "level": "1"
+        },
+        {
+          "code": "1963000000",
+          "name": "1963年",
+          "level": "1"
+        },
+        {
+          "code": "1964000000",
+          "name": "1964年",
+          "level": "1"
+        },
+        {
+          "code": "1965000000",
+          "name": "1965年",
+          "level": "1"
+        },
+        {
+          "code": "1966000000",
+          "name": "1966年",
+          "level": "1"
+        },
+        {
+          "code": "1967000000",
+          "name": "1967年",
+          "level": "1"
+        },
+        {
+          "code": "1968000000",
+          "name": "1968年",
+          "level": "1"
+        },
+        {
+          "code": "1969000000",
+          "name": "1969年",
+          "level": "1"
+        },
+        {
+          "code": "1970000000",
+          "name": "1970年",
+          "level": "1"
+        },
+        {
+          "code": "1971000000",
+          "name": "1971年",
+          "level": "1"
+        },
+        {
+          "code": "1972000000",
+          "name": "1972年",
+          "level": "1"
+        },
+        {
+          "code": "1973000000",
+          "name": "1973年",
+          "level": "1"
+        },
+        {
+          "code": "1974000000",
+          "name": "1974年",
+          "level": "1"
+        },
+        {
+          "code": "1975000000",
+          "name": "1975年",
+          "level": "1"
+        },
+        {
+          "code": "1976000000",
+          "name": "1976年",
+          "level": "1"
+        },
+        {
+          "code": "1977000000",
+          "name": "1977年",
+          "level": "1"
+        },
+        {
+          "code": "1978000000",
+          "name": "1978年",
+          "level": "1"
+        },
+        {
+          "code": "1979000000",
+          "name": "1979年",
+          "level": "1"
+        },
+        {
+          "code": "1980000000",
+          "name": "1980年",
+          "level": "1"
+        },
+        {
+          "code": "1981000000",
+          "name": "1981年",
+          "level": "1"
+        },
+        {
+          "code": "1982000000",
+          "name": "1982年",
+          "level": "1"
+        },
+        {
+          "code": "1983000000",
+          "name": "1983年",
+          "level": "1"
+        },
+        {
+          "code": "1984000000",
+          "name": "1984年",
+          "level": "1"
+        },
+        {
+          "code": "1985000000",
+          "name": "1985年",
+          "level": "1"
+        },
+        {
+          "code": "1986000000",
+          "name": "1986年",
+          "level": "1"
+        },
+        {
+          "code": "1987000000",
+          "name": "1987年",
+          "level": "1"
+        },
+        {
+          "code": "1988000000",
+          "name": "1988年",
+          "level": "1"
+        },
+        {
+          "code": "1989000000",
+          "name": "1989年",
+          "level": "1"
+        },
+        {
+          "code": "1990000000",
+          "name": "1990年",
+          "level": "1"
+        },
+        {
+          "code": "1991000000",
+          "name": "1991年",
+          "level": "1"
+        },
+        {
+          "code": "1992000000",
+          "name": "1992年",
+          "level": "1"
+        },
+        {
+          "code": "1993000000",
+          "name": "1993年",
+          "level": "1"
+        },
+        {
+          "code": "1994000000",
+          "name": "1994年",
+          "level": "1"
+        },
+        {
+          "code": "1995000000",
+          "name": "1995年",
+          "level": "1"
+        },
+        {
+          "code": "1996000000",
+          "name": "1996年",
+          "level": "1"
+        },
+        {
+          "code": "1997000000",
+          "name": "1997年",
+          "level": "1"
+        },
+        {
+          "code": "1998000000",
+          "name": "1998年",
+          "level": "1"
+        },
+        {
+          "code": "1999000000",
+          "name": "1999年",
+          "level": "1"
+        },
+        {
+          "code": "2000000000",
+          "name": "2000年",
+          "level": "1"
+        },
+        {
+          "code": "2001000000",
+          "name": "2001年",
+          "level": "1"
+        },
+        {
+          "code": "2002000000",
+          "name": "2002年",
+          "level": "1"
+        },
+        {
+          "code": "2003000000",
+          "name": "2003年",
+          "level": "1"
+        },
+        {
+          "code": "2004000000",
+          "name": "2004年",
+          "level": "1"
+        },
+        {
+          "code": "2005000000",
+          "name": "2005年",
+          "level": "1"
+        },
+        {
+          "code": "2006000000",
+          "name": "2006年",
+          "level": "1"
+        },
+        {
+          "code": "2007000000",
+          "name": "2007年",
+          "level": "1"
+        },
+        {
+          "code": "2008000000",
+          "name": "2008年",
+          "level": "1"
+        },
+        {
+          "code": "2009000000",
+          "name": "2009年",
+          "level": "1"
+        }
+      ]
+    }
+  ],
+  "page": {
+    "total": 58,
+    "from": 1,
+    "to": 58,
+    "truncated": false
+  },
+  "records": [
+    {
+      "table_id": "0003138532",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "91",
+          "name": "年平均"
+        },
+        "cat02": {
+          "code": "T",
+          "name": "5人以上"
+        },
+        "cat03": {
+          "code": "00",
+          "name": "就業形態計"
+        },
+        "cat04": {
+          "code": "TL",
+          "name": "TL_調査産業計"
+        },
+        "tab": {
+          "code": "3002",
+          "name": "指数(平成17年平均＝100)"
+        },
+        "time": {
+          "code": "1952000000",
+          "name": "1952年"
+        }
+      },
+      "value": {
+        "raw": "-",
+        "number": null,
+        "kind": "special",
+        "note": "皆無または定義上該当数字がないもの"
+      }
+    },
+    {
+      "table_id": "0003138532",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "91",
+          "name": "年平均"
+        },
+        "cat02": {
+          "code": "T",
+          "name": "5人以上"
+        },
+        "cat03": {
+          "code": "00",
+          "name": "就業形態計"
+        },
+        "cat04": {
+          "code": "TL",
+          "name": "TL_調査産業計"
+        },
+        "tab": {
+          "code": "3002",
+          "name": "指数(平成17年平均＝100)"
+        },
+        "time": {
+          "code": "1953000000",
+          "name": "1953年"
+        }
+      },
+      "value": {
+        "raw": "-",
+        "number": null,
+        "kind": "special",
+        "note": "皆無または定義上該当数字がないもの"
+      }
+    },
+    {
+      "table_id": "0003138532",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "91",
+          "name": "年平均"
+        },
+        "cat02": {
+          "code": "T",
+          "name": "5人以上"
+        },
+        "cat03": {
+          "code": "00",
+          "name": "就業形態計"
+        },
+        "cat04": {
+          "code": "TL",
+          "name": "TL_調査産業計"
+        },
+        "tab": {
+          "code": "3002",
+          "name": "指数(平成17年平均＝100)"
+        },
+        "time": {
+          "code": "1954000000",
+          "name": "1954年"
+        }
+      },
+      "value": {
+        "raw": "-",
+        "number": null,
+        "kind": "special",
+        "note": "皆無または定義上該当数字がないもの"
+      }
+    },
+    {
+      "table_id": "0003138532",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "91",
+          "name": "年平均"
+        },
+        "cat02": {
+          "code": "T",
+          "name": "5人以上"
+        },
+        "cat03": {
+          "code": "00",
+          "name": "就業形態計"
+        },
+        "cat04": {
+          "code": "TL",
+          "name": "TL_調査産業計"
+        },
+        "tab": {
+          "code": "3002",
+          "name": "指数(平成17年平均＝100)"
+        },
+        "time": {
+          "code": "1955000000",
+          "name": "1955年"
+        }
+      },
+      "value": {
+        "raw": "-",
+        "number": null,
+        "kind": "special",
+        "note": "皆無または定義上該当数字がないもの"
+      }
+    },
+    {
+      "table_id": "0003138532",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "91",
+          "name": "年平均"
+        },
+        "cat02": {
+          "code": "T",
+          "name": "5人以上"
+        },
+        "cat03": {
+          "code": "00",
+          "name": "就業形態計"
+        },
+        "cat04": {
+          "code": "TL",
+          "name": "TL_調査産業計"
+        },
+        "tab": {
+          "code": "3002",
+          "name": "指数(平成17年平均＝100)"
+        },
+        "time": {
+          "code": "1956000000",
+          "name": "1956年"
+        }
+      },
+      "value": {
+        "raw": "-",
+        "number": null,
+        "kind": "special",
+        "note": "皆無または定義上該当数字がないもの"
+      }
+    },
+    {
+      "table_id": "0003138532",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "91",
+          "name": "年平均"
+        },
+        "cat02": {
+          "code": "T",
+          "name": "5人以上"
+        },
+        "cat03": {
+          "code": "00",
+          "name": "就業形態計"
+        },
+        "cat04": {
+          "code": "TL",
+          "name": "TL_調査産業計"
+        },
+        "tab": {
+          "code": "3002",
+          "name": "指数(平成17年平均＝100)"
+        },
+        "time": {
+          "code": "1957000000",
+          "name": "1957年"
+        }
+      },
+      "value": {
+        "raw": "-",
+        "number": null,
+        "kind": "special",
+        "note": "皆無または定義上該当数字がないもの"
+      }
+    },
+    {
+      "table_id": "0003138532",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "91",
+          "name": "年平均"
+        },
+        "cat02": {
+          "code": "T",
+          "name": "5人以上"
+        },
+        "cat03": {
+          "code": "00",
+          "name": "就業形態計"
+        },
+        "cat04": {
+          "code": "TL",
+          "name": "TL_調査産業計"
+        },
+        "tab": {
+          "code": "3002",
+          "name": "指数(平成17年平均＝100)"
+        },
+        "time": {
+          "code": "1958000000",
+          "name": "1958年"
+        }
+      },
+      "value": {
+        "raw": "-",
+        "number": null,
+        "kind": "special",
+        "note": "皆無または定義上該当数字がないもの"
+      }
+    },
+    {
+      "table_id": "0003138532",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "91",
+          "name": "年平均"
+        },
+        "cat02": {
+          "code": "T",
+          "name": "5人以上"
+        },
+        "cat03": {
+          "code": "00",
+          "name": "就業形態計"
+        },
+        "cat04": {
+          "code": "TL",
+          "name": "TL_調査産業計"
+        },
+        "tab": {
+          "code": "3002",
+          "name": "指数(平成17年平均＝100)"
+        },
+        "time": {
+          "code": "1959000000",
+          "name": "1959年"
+        }
+      },
+      "value": {
+        "raw": "-",
+        "number": null,
+        "kind": "special",
+        "note": "皆無または定義上該当数字がないもの"
+      }
+    },
+    {
+      "table_id": "0003138532",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "91",
+          "name": "年平均"
+        },
+        "cat02": {
+          "code": "T",
+          "name": "5人以上"
+        },
+        "cat03": {
+          "code": "00",
+          "name": "就業形態計"
+        },
+        "cat04": {
+          "code": "TL",
+          "name": "TL_調査産業計"
+        },
+        "tab": {
+          "code": "3002",
+          "name": "指数(平成17年平均＝100)"
+        },
+        "time": {
+          "code": "1960000000",
+          "name": "1960年"
+        }
+      },
+      "value": {
+        "raw": "-",
+        "number": null,
+        "kind": "special",
+        "note": "皆無または定義上該当数字がないもの"
+      }
+    },
+    {
+      "table_id": "0003138532",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "91",
+          "name": "年平均"
+        },
+        "cat02": {
+          "code": "T",
+          "name": "5人以上"
+        },
+        "cat03": {
+          "code": "00",
+          "name": "就業形態計"
+        },
+        "cat04": {
+          "code": "TL",
+          "name": "TL_調査産業計"
+        },
+        "tab": {
+          "code": "3002",
+          "name": "指数(平成17年平均＝100)"
+        },
+        "time": {
+          "code": "1961000000",
+          "name": "1961年"
+        }
+      },
+      "value": {
+        "raw": "-",
+        "number": null,
+        "kind": "special",
+        "note": "皆無または定義上該当数字がないもの"
+      }
+    },
+    {
+      "table_id": "0003138532",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "91",
+          "name": "年平均"
+        },
+        "cat02": {
+          "code": "T",
+          "name": "5人以上"
+        },
+        "cat03": {
+          "code": "00",
+          "name": "就業形態計"
+        },
+        "cat04": {
+          "code": "TL",
+          "name": "TL_調査産業計"
+        },
+        "tab": {
+          "code": "3002",
+          "name": "指数(平成17年平均＝100)"
+        },
+        "time": {
+          "code": "1962000000",
+          "name": "1962年"
+        }
+      },
+      "value": {
+        "raw": "-",
+        "number": null,
+        "kind": "special",
+        "note": "皆無または定義上該当数字がないもの"
+      }
+    },
+    {
+      "table_id": "0003138532",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "91",
+          "name": "年平均"
+        },
+        "cat02": {
+          "code": "T",
+          "name": "5人以上"
+        },
+        "cat03": {
+          "code": "00",
+          "name": "就業形態計"
+        },
+        "cat04": {
+          "code": "TL",
+          "name": "TL_調査産業計"
+        },
+        "tab": {
+          "code": "3002",
+          "name": "指数(平成17年平均＝100)"
+        },
+        "time": {
+          "code": "1963000000",
+          "name": "1963年"
+        }
+      },
+      "value": {
+        "raw": "-",
+        "number": null,
+        "kind": "special",
+        "note": "皆無または定義上該当数字がないもの"
+      }
+    },
+    {
+      "table_id": "0003138532",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "91",
+          "name": "年平均"
+        },
+        "cat02": {
+          "code": "T",
+          "name": "5人以上"
+        },
+        "cat03": {
+          "code": "00",
+          "name": "就業形態計"
+        },
+        "cat04": {
+          "code": "TL",
+          "name": "TL_調査産業計"
+        },
+        "tab": {
+          "code": "3002",
+          "name": "指数(平成17年平均＝100)"
+        },
+        "time": {
+          "code": "1964000000",
+          "name": "1964年"
+        }
+      },
+      "value": {
+        "raw": "-",
+        "number": null,
+        "kind": "special",
+        "note": "皆無または定義上該当数字がないもの"
+      }
+    },
+    {
+      "table_id": "0003138532",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "91",
+          "name": "年平均"
+        },
+        "cat02": {
+          "code": "T",
+          "name": "5人以上"
+        },
+        "cat03": {
+          "code": "00",
+          "name": "就業形態計"
+        },
+        "cat04": {
+          "code": "TL",
+          "name": "TL_調査産業計"
+        },
+        "tab": {
+          "code": "3002",
+          "name": "指数(平成17年平均＝100)"
+        },
+        "time": {
+          "code": "1965000000",
+          "name": "1965年"
+        }
+      },
+      "value": {
+        "raw": "-",
+        "number": null,
+        "kind": "special",
+        "note": "皆無または定義上該当数字がないもの"
+      }
+    },
+    {
+      "table_id": "0003138532",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "91",
+          "name": "年平均"
+        },
+        "cat02": {
+          "code": "T",
+          "name": "5人以上"
+        },
+        "cat03": {
+          "code": "00",
+          "name": "就業形態計"
+        },
+        "cat04": {
+          "code": "TL",
+          "name": "TL_調査産業計"
+        },
+        "tab": {
+          "code": "3002",
+          "name": "指数(平成17年平均＝100)"
+        },
+        "time": {
+          "code": "1966000000",
+          "name": "1966年"
+        }
+      },
+      "value": {
+        "raw": "-",
+        "number": null,
+        "kind": "special",
+        "note": "皆無または定義上該当数字がないもの"
+      }
+    },
+    {
+      "table_id": "0003138532",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "91",
+          "name": "年平均"
+        },
+        "cat02": {
+          "code": "T",
+          "name": "5人以上"
+        },
+        "cat03": {
+          "code": "00",
+          "name": "就業形態計"
+        },
+        "cat04": {
+          "code": "TL",
+          "name": "TL_調査産業計"
+        },
+        "tab": {
+          "code": "3002",
+          "name": "指数(平成17年平均＝100)"
+        },
+        "time": {
+          "code": "1967000000",
+          "name": "1967年"
+        }
+      },
+      "value": {
+        "raw": "-",
+        "number": null,
+        "kind": "special",
+        "note": "皆無または定義上該当数字がないもの"
+      }
+    },
+    {
+      "table_id": "0003138532",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "91",
+          "name": "年平均"
+        },
+        "cat02": {
+          "code": "T",
+          "name": "5人以上"
+        },
+        "cat03": {
+          "code": "00",
+          "name": "就業形態計"
+        },
+        "cat04": {
+          "code": "TL",
+          "name": "TL_調査産業計"
+        },
+        "tab": {
+          "code": "3002",
+          "name": "指数(平成17年平均＝100)"
+        },
+        "time": {
+          "code": "1968000000",
+          "name": "1968年"
+        }
+      },
+      "value": {
+        "raw": "-",
+        "number": null,
+        "kind": "special",
+        "note": "皆無または定義上該当数字がないもの"
+      }
+    },
+    {
+      "table_id": "0003138532",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "91",
+          "name": "年平均"
+        },
+        "cat02": {
+          "code": "T",
+          "name": "5人以上"
+        },
+        "cat03": {
+          "code": "00",
+          "name": "就業形態計"
+        },
+        "cat04": {
+          "code": "TL",
+          "name": "TL_調査産業計"
+        },
+        "tab": {
+          "code": "3002",
+          "name": "指数(平成17年平均＝100)"
+        },
+        "time": {
+          "code": "1969000000",
+          "name": "1969年"
+        }
+      },
+      "value": {
+        "raw": "-",
+        "number": null,
+        "kind": "special",
+        "note": "皆無または定義上該当数字がないもの"
+      }
+    },
+    {
+      "table_id": "0003138532",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "91",
+          "name": "年平均"
+        },
+        "cat02": {
+          "code": "T",
+          "name": "5人以上"
+        },
+        "cat03": {
+          "code": "00",
+          "name": "就業形態計"
+        },
+        "cat04": {
+          "code": "TL",
+          "name": "TL_調査産業計"
+        },
+        "tab": {
+          "code": "3002",
+          "name": "指数(平成17年平均＝100)"
+        },
+        "time": {
+          "code": "1970000000",
+          "name": "1970年"
+        }
+      },
+      "value": {
+        "raw": "-",
+        "number": null,
+        "kind": "special",
+        "note": "皆無または定義上該当数字がないもの"
+      }
+    },
+    {
+      "table_id": "0003138532",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "91",
+          "name": "年平均"
+        },
+        "cat02": {
+          "code": "T",
+          "name": "5人以上"
+        },
+        "cat03": {
+          "code": "00",
+          "name": "就業形態計"
+        },
+        "cat04": {
+          "code": "TL",
+          "name": "TL_調査産業計"
+        },
+        "tab": {
+          "code": "3002",
+          "name": "指数(平成17年平均＝100)"
+        },
+        "time": {
+          "code": "1971000000",
+          "name": "1971年"
+        }
+      },
+      "value": {
+        "raw": "-",
+        "number": null,
+        "kind": "special",
+        "note": "皆無または定義上該当数字がないもの"
+      }
+    },
+    {
+      "table_id": "0003138532",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "91",
+          "name": "年平均"
+        },
+        "cat02": {
+          "code": "T",
+          "name": "5人以上"
+        },
+        "cat03": {
+          "code": "00",
+          "name": "就業形態計"
+        },
+        "cat04": {
+          "code": "TL",
+          "name": "TL_調査産業計"
+        },
+        "tab": {
+          "code": "3002",
+          "name": "指数(平成17年平均＝100)"
+        },
+        "time": {
+          "code": "1972000000",
+          "name": "1972年"
+        }
+      },
+      "value": {
+        "raw": "-",
+        "number": null,
+        "kind": "special",
+        "note": "皆無または定義上該当数字がないもの"
+      }
+    },
+    {
+      "table_id": "0003138532",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "91",
+          "name": "年平均"
+        },
+        "cat02": {
+          "code": "T",
+          "name": "5人以上"
+        },
+        "cat03": {
+          "code": "00",
+          "name": "就業形態計"
+        },
+        "cat04": {
+          "code": "TL",
+          "name": "TL_調査産業計"
+        },
+        "tab": {
+          "code": "3002",
+          "name": "指数(平成17年平均＝100)"
+        },
+        "time": {
+          "code": "1973000000",
+          "name": "1973年"
+        }
+      },
+      "value": {
+        "raw": "-",
+        "number": null,
+        "kind": "special",
+        "note": "皆無または定義上該当数字がないもの"
+      }
+    },
+    {
+      "table_id": "0003138532",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "91",
+          "name": "年平均"
+        },
+        "cat02": {
+          "code": "T",
+          "name": "5人以上"
+        },
+        "cat03": {
+          "code": "00",
+          "name": "就業形態計"
+        },
+        "cat04": {
+          "code": "TL",
+          "name": "TL_調査産業計"
+        },
+        "tab": {
+          "code": "3002",
+          "name": "指数(平成17年平均＝100)"
+        },
+        "time": {
+          "code": "1974000000",
+          "name": "1974年"
+        }
+      },
+      "value": {
+        "raw": "-",
+        "number": null,
+        "kind": "special",
+        "note": "皆無または定義上該当数字がないもの"
+      }
+    },
+    {
+      "table_id": "0003138532",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "91",
+          "name": "年平均"
+        },
+        "cat02": {
+          "code": "T",
+          "name": "5人以上"
+        },
+        "cat03": {
+          "code": "00",
+          "name": "就業形態計"
+        },
+        "cat04": {
+          "code": "TL",
+          "name": "TL_調査産業計"
+        },
+        "tab": {
+          "code": "3002",
+          "name": "指数(平成17年平均＝100)"
+        },
+        "time": {
+          "code": "1975000000",
+          "name": "1975年"
+        }
+      },
+      "value": {
+        "raw": "-",
+        "number": null,
+        "kind": "special",
+        "note": "皆無または定義上該当数字がないもの"
+      }
+    },
+    {
+      "table_id": "0003138532",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "91",
+          "name": "年平均"
+        },
+        "cat02": {
+          "code": "T",
+          "name": "5人以上"
+        },
+        "cat03": {
+          "code": "00",
+          "name": "就業形態計"
+        },
+        "cat04": {
+          "code": "TL",
+          "name": "TL_調査産業計"
+        },
+        "tab": {
+          "code": "3002",
+          "name": "指数(平成17年平均＝100)"
+        },
+        "time": {
+          "code": "1976000000",
+          "name": "1976年"
+        }
+      },
+      "value": {
+        "raw": "-",
+        "number": null,
+        "kind": "special",
+        "note": "皆無または定義上該当数字がないもの"
+      }
+    },
+    {
+      "table_id": "0003138532",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "91",
+          "name": "年平均"
+        },
+        "cat02": {
+          "code": "T",
+          "name": "5人以上"
+        },
+        "cat03": {
+          "code": "00",
+          "name": "就業形態計"
+        },
+        "cat04": {
+          "code": "TL",
+          "name": "TL_調査産業計"
+        },
+        "tab": {
+          "code": "3002",
+          "name": "指数(平成17年平均＝100)"
+        },
+        "time": {
+          "code": "1977000000",
+          "name": "1977年"
+        }
+      },
+      "value": {
+        "raw": "-",
+        "number": null,
+        "kind": "special",
+        "note": "皆無または定義上該当数字がないもの"
+      }
+    },
+    {
+      "table_id": "0003138532",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "91",
+          "name": "年平均"
+        },
+        "cat02": {
+          "code": "T",
+          "name": "5人以上"
+        },
+        "cat03": {
+          "code": "00",
+          "name": "就業形態計"
+        },
+        "cat04": {
+          "code": "TL",
+          "name": "TL_調査産業計"
+        },
+        "tab": {
+          "code": "3002",
+          "name": "指数(平成17年平均＝100)"
+        },
+        "time": {
+          "code": "1978000000",
+          "name": "1978年"
+        }
+      },
+      "value": {
+        "raw": "-",
+        "number": null,
+        "kind": "special",
+        "note": "皆無または定義上該当数字がないもの"
+      }
+    },
+    {
+      "table_id": "0003138532",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "91",
+          "name": "年平均"
+        },
+        "cat02": {
+          "code": "T",
+          "name": "5人以上"
+        },
+        "cat03": {
+          "code": "00",
+          "name": "就業形態計"
+        },
+        "cat04": {
+          "code": "TL",
+          "name": "TL_調査産業計"
+        },
+        "tab": {
+          "code": "3002",
+          "name": "指数(平成17年平均＝100)"
+        },
+        "time": {
+          "code": "1979000000",
+          "name": "1979年"
+        }
+      },
+      "value": {
+        "raw": "-",
+        "number": null,
+        "kind": "special",
+        "note": "皆無または定義上該当数字がないもの"
+      }
+    },
+    {
+      "table_id": "0003138532",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "91",
+          "name": "年平均"
+        },
+        "cat02": {
+          "code": "T",
+          "name": "5人以上"
+        },
+        "cat03": {
+          "code": "00",
+          "name": "就業形態計"
+        },
+        "cat04": {
+          "code": "TL",
+          "name": "TL_調査産業計"
+        },
+        "tab": {
+          "code": "3002",
+          "name": "指数(平成17年平均＝100)"
+        },
+        "time": {
+          "code": "1980000000",
+          "name": "1980年"
+        }
+      },
+      "value": {
+        "raw": "-",
+        "number": null,
+        "kind": "special",
+        "note": "皆無または定義上該当数字がないもの"
+      }
+    },
+    {
+      "table_id": "0003138532",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "91",
+          "name": "年平均"
+        },
+        "cat02": {
+          "code": "T",
+          "name": "5人以上"
+        },
+        "cat03": {
+          "code": "00",
+          "name": "就業形態計"
+        },
+        "cat04": {
+          "code": "TL",
+          "name": "TL_調査産業計"
+        },
+        "tab": {
+          "code": "3002",
+          "name": "指数(平成17年平均＝100)"
+        },
+        "time": {
+          "code": "1981000000",
+          "name": "1981年"
+        }
+      },
+      "value": {
+        "raw": "-",
+        "number": null,
+        "kind": "special",
+        "note": "皆無または定義上該当数字がないもの"
+      }
+    },
+    {
+      "table_id": "0003138532",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "91",
+          "name": "年平均"
+        },
+        "cat02": {
+          "code": "T",
+          "name": "5人以上"
+        },
+        "cat03": {
+          "code": "00",
+          "name": "就業形態計"
+        },
+        "cat04": {
+          "code": "TL",
+          "name": "TL_調査産業計"
+        },
+        "tab": {
+          "code": "3002",
+          "name": "指数(平成17年平均＝100)"
+        },
+        "time": {
+          "code": "1982000000",
+          "name": "1982年"
+        }
+      },
+      "value": {
+        "raw": "-",
+        "number": null,
+        "kind": "special",
+        "note": "皆無または定義上該当数字がないもの"
+      }
+    },
+    {
+      "table_id": "0003138532",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "91",
+          "name": "年平均"
+        },
+        "cat02": {
+          "code": "T",
+          "name": "5人以上"
+        },
+        "cat03": {
+          "code": "00",
+          "name": "就業形態計"
+        },
+        "cat04": {
+          "code": "TL",
+          "name": "TL_調査産業計"
+        },
+        "tab": {
+          "code": "3002",
+          "name": "指数(平成17年平均＝100)"
+        },
+        "time": {
+          "code": "1983000000",
+          "name": "1983年"
+        }
+      },
+      "value": {
+        "raw": "-",
+        "number": null,
+        "kind": "special",
+        "note": "皆無または定義上該当数字がないもの"
+      }
+    },
+    {
+      "table_id": "0003138532",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "91",
+          "name": "年平均"
+        },
+        "cat02": {
+          "code": "T",
+          "name": "5人以上"
+        },
+        "cat03": {
+          "code": "00",
+          "name": "就業形態計"
+        },
+        "cat04": {
+          "code": "TL",
+          "name": "TL_調査産業計"
+        },
+        "tab": {
+          "code": "3002",
+          "name": "指数(平成17年平均＝100)"
+        },
+        "time": {
+          "code": "1984000000",
+          "name": "1984年"
+        }
+      },
+      "value": {
+        "raw": "-",
+        "number": null,
+        "kind": "special",
+        "note": "皆無または定義上該当数字がないもの"
+      }
+    },
+    {
+      "table_id": "0003138532",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "91",
+          "name": "年平均"
+        },
+        "cat02": {
+          "code": "T",
+          "name": "5人以上"
+        },
+        "cat03": {
+          "code": "00",
+          "name": "就業形態計"
+        },
+        "cat04": {
+          "code": "TL",
+          "name": "TL_調査産業計"
+        },
+        "tab": {
+          "code": "3002",
+          "name": "指数(平成17年平均＝100)"
+        },
+        "time": {
+          "code": "1985000000",
+          "name": "1985年"
+        }
+      },
+      "value": {
+        "raw": "-",
+        "number": null,
+        "kind": "special",
+        "note": "皆無または定義上該当数字がないもの"
+      }
+    },
+    {
+      "table_id": "0003138532",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "91",
+          "name": "年平均"
+        },
+        "cat02": {
+          "code": "T",
+          "name": "5人以上"
+        },
+        "cat03": {
+          "code": "00",
+          "name": "就業形態計"
+        },
+        "cat04": {
+          "code": "TL",
+          "name": "TL_調査産業計"
+        },
+        "tab": {
+          "code": "3002",
+          "name": "指数(平成17年平均＝100)"
+        },
+        "time": {
+          "code": "1986000000",
+          "name": "1986年"
+        }
+      },
+      "value": {
+        "raw": "-",
+        "number": null,
+        "kind": "special",
+        "note": "皆無または定義上該当数字がないもの"
+      }
+    },
+    {
+      "table_id": "0003138532",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "91",
+          "name": "年平均"
+        },
+        "cat02": {
+          "code": "T",
+          "name": "5人以上"
+        },
+        "cat03": {
+          "code": "00",
+          "name": "就業形態計"
+        },
+        "cat04": {
+          "code": "TL",
+          "name": "TL_調査産業計"
+        },
+        "tab": {
+          "code": "3002",
+          "name": "指数(平成17年平均＝100)"
+        },
+        "time": {
+          "code": "1987000000",
+          "name": "1987年"
+        }
+      },
+      "value": {
+        "raw": "-",
+        "number": null,
+        "kind": "special",
+        "note": "皆無または定義上該当数字がないもの"
+      }
+    },
+    {
+      "table_id": "0003138532",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "91",
+          "name": "年平均"
+        },
+        "cat02": {
+          "code": "T",
+          "name": "5人以上"
+        },
+        "cat03": {
+          "code": "00",
+          "name": "就業形態計"
+        },
+        "cat04": {
+          "code": "TL",
+          "name": "TL_調査産業計"
+        },
+        "tab": {
+          "code": "3002",
+          "name": "指数(平成17年平均＝100)"
+        },
+        "time": {
+          "code": "1988000000",
+          "name": "1988年"
+        }
+      },
+      "value": {
+        "raw": "-",
+        "number": null,
+        "kind": "special",
+        "note": "皆無または定義上該当数字がないもの"
+      }
+    },
+    {
+      "table_id": "0003138532",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "91",
+          "name": "年平均"
+        },
+        "cat02": {
+          "code": "T",
+          "name": "5人以上"
+        },
+        "cat03": {
+          "code": "00",
+          "name": "就業形態計"
+        },
+        "cat04": {
+          "code": "TL",
+          "name": "TL_調査産業計"
+        },
+        "tab": {
+          "code": "3002",
+          "name": "指数(平成17年平均＝100)"
+        },
+        "time": {
+          "code": "1989000000",
+          "name": "1989年"
+        }
+      },
+      "value": {
+        "raw": "-",
+        "number": null,
+        "kind": "special",
+        "note": "皆無または定義上該当数字がないもの"
+      }
+    },
+    {
+      "table_id": "0003138532",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "91",
+          "name": "年平均"
+        },
+        "cat02": {
+          "code": "T",
+          "name": "5人以上"
+        },
+        "cat03": {
+          "code": "00",
+          "name": "就業形態計"
+        },
+        "cat04": {
+          "code": "TL",
+          "name": "TL_調査産業計"
+        },
+        "tab": {
+          "code": "3002",
+          "name": "指数(平成17年平均＝100)"
+        },
+        "time": {
+          "code": "1990000000",
+          "name": "1990年"
+        }
+      },
+      "value": {
+        "raw": "96.4",
+        "number": 96.4,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003138532",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "91",
+          "name": "年平均"
+        },
+        "cat02": {
+          "code": "T",
+          "name": "5人以上"
+        },
+        "cat03": {
+          "code": "00",
+          "name": "就業形態計"
+        },
+        "cat04": {
+          "code": "TL",
+          "name": "TL_調査産業計"
+        },
+        "tab": {
+          "code": "3002",
+          "name": "指数(平成17年平均＝100)"
+        },
+        "time": {
+          "code": "1991000000",
+          "name": "1991年"
+        }
+      },
+      "value": {
+        "raw": "100.7",
+        "number": 100.7,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003138532",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "91",
+          "name": "年平均"
+        },
+        "cat02": {
+          "code": "T",
+          "name": "5人以上"
+        },
+        "cat03": {
+          "code": "00",
+          "name": "就業形態計"
+        },
+        "cat04": {
+          "code": "TL",
+          "name": "TL_調査産業計"
+        },
+        "tab": {
+          "code": "3002",
+          "name": "指数(平成17年平均＝100)"
+        },
+        "time": {
+          "code": "1992000000",
+          "name": "1992年"
+        }
+      },
+      "value": {
+        "raw": "102.7",
+        "number": 102.7,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003138532",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "91",
+          "name": "年平均"
+        },
+        "cat02": {
+          "code": "T",
+          "name": "5人以上"
+        },
+        "cat03": {
+          "code": "00",
+          "name": "就業形態計"
+        },
+        "cat04": {
+          "code": "TL",
+          "name": "TL_調査産業計"
+        },
+        "tab": {
+          "code": "3002",
+          "name": "指数(平成17年平均＝100)"
+        },
+        "time": {
+          "code": "1993000000",
+          "name": "1993年"
+        }
+      },
+      "value": {
+        "raw": "102.9",
+        "number": 102.9,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003138532",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "91",
+          "name": "年平均"
+        },
+        "cat02": {
+          "code": "T",
+          "name": "5人以上"
+        },
+        "cat03": {
+          "code": "00",
+          "name": "就業形態計"
+        },
+        "cat04": {
+          "code": "TL",
+          "name": "TL_調査産業計"
+        },
+        "tab": {
+          "code": "3002",
+          "name": "指数(平成17年平均＝100)"
+        },
+        "time": {
+          "code": "1994000000",
+          "name": "1994年"
+        }
+      },
+      "value": {
+        "raw": "104.5",
+        "number": 104.5,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003138532",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "91",
+          "name": "年平均"
+        },
+        "cat02": {
+          "code": "T",
+          "name": "5人以上"
+        },
+        "cat03": {
+          "code": "00",
+          "name": "就業形態計"
+        },
+        "cat04": {
+          "code": "TL",
+          "name": "TL_調査産業計"
+        },
+        "tab": {
+          "code": "3002",
+          "name": "指数(平成17年平均＝100)"
+        },
+        "time": {
+          "code": "1995000000",
+          "name": "1995年"
+        }
+      },
+      "value": {
+        "raw": "105.6",
+        "number": 105.6,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003138532",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "91",
+          "name": "年平均"
+        },
+        "cat02": {
+          "code": "T",
+          "name": "5人以上"
+        },
+        "cat03": {
+          "code": "00",
+          "name": "就業形態計"
+        },
+        "cat04": {
+          "code": "TL",
+          "name": "TL_調査産業計"
+        },
+        "tab": {
+          "code": "3002",
+          "name": "指数(平成17年平均＝100)"
+        },
+        "time": {
+          "code": "1996000000",
+          "name": "1996年"
+        }
+      },
+      "value": {
+        "raw": "106.8",
+        "number": 106.8,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003138532",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "91",
+          "name": "年平均"
+        },
+        "cat02": {
+          "code": "T",
+          "name": "5人以上"
+        },
+        "cat03": {
+          "code": "00",
+          "name": "就業形態計"
+        },
+        "cat04": {
+          "code": "TL",
+          "name": "TL_調査産業計"
+        },
+        "tab": {
+          "code": "3002",
+          "name": "指数(平成17年平均＝100)"
+        },
+        "time": {
+          "code": "1997000000",
+          "name": "1997年"
+        }
+      },
+      "value": {
+        "raw": "108.5",
+        "number": 108.5,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003138532",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "91",
+          "name": "年平均"
+        },
+        "cat02": {
+          "code": "T",
+          "name": "5人以上"
+        },
+        "cat03": {
+          "code": "00",
+          "name": "就業形態計"
+        },
+        "cat04": {
+          "code": "TL",
+          "name": "TL_調査産業計"
+        },
+        "tab": {
+          "code": "3002",
+          "name": "指数(平成17年平均＝100)"
+        },
+        "time": {
+          "code": "1998000000",
+          "name": "1998年"
+        }
+      },
+      "value": {
+        "raw": "107.0",
+        "number": 107.0,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003138532",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "91",
+          "name": "年平均"
+        },
+        "cat02": {
+          "code": "T",
+          "name": "5人以上"
+        },
+        "cat03": {
+          "code": "00",
+          "name": "就業形態計"
+        },
+        "cat04": {
+          "code": "TL",
+          "name": "TL_調査産業計"
+        },
+        "tab": {
+          "code": "3002",
+          "name": "指数(平成17年平均＝100)"
+        },
+        "time": {
+          "code": "1999000000",
+          "name": "1999年"
+        }
+      },
+      "value": {
+        "raw": "105.5",
+        "number": 105.5,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003138532",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "91",
+          "name": "年平均"
+        },
+        "cat02": {
+          "code": "T",
+          "name": "5人以上"
+        },
+        "cat03": {
+          "code": "00",
+          "name": "就業形態計"
+        },
+        "cat04": {
+          "code": "TL",
+          "name": "TL_調査産業計"
+        },
+        "tab": {
+          "code": "3002",
+          "name": "指数(平成17年平均＝100)"
+        },
+        "time": {
+          "code": "2000000000",
+          "name": "2000年"
+        }
+      },
+      "value": {
+        "raw": "105.6",
+        "number": 105.6,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003138532",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "91",
+          "name": "年平均"
+        },
+        "cat02": {
+          "code": "T",
+          "name": "5人以上"
+        },
+        "cat03": {
+          "code": "00",
+          "name": "就業形態計"
+        },
+        "cat04": {
+          "code": "TL",
+          "name": "TL_調査産業計"
+        },
+        "tab": {
+          "code": "3002",
+          "name": "指数(平成17年平均＝100)"
+        },
+        "time": {
+          "code": "2001000000",
+          "name": "2001年"
+        }
+      },
+      "value": {
+        "raw": "103.9",
+        "number": 103.9,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003138532",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "91",
+          "name": "年平均"
+        },
+        "cat02": {
+          "code": "T",
+          "name": "5人以上"
+        },
+        "cat03": {
+          "code": "00",
+          "name": "就業形態計"
+        },
+        "cat04": {
+          "code": "TL",
+          "name": "TL_調査産業計"
+        },
+        "tab": {
+          "code": "3002",
+          "name": "指数(平成17年平均＝100)"
+        },
+        "time": {
+          "code": "2002000000",
+          "name": "2002年"
+        }
+      },
+      "value": {
+        "raw": "100.9",
+        "number": 100.9,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003138532",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "91",
+          "name": "年平均"
+        },
+        "cat02": {
+          "code": "T",
+          "name": "5人以上"
+        },
+        "cat03": {
+          "code": "00",
+          "name": "就業形態計"
+        },
+        "cat04": {
+          "code": "TL",
+          "name": "TL_調査産業計"
+        },
+        "tab": {
+          "code": "3002",
+          "name": "指数(平成17年平均＝100)"
+        },
+        "time": {
+          "code": "2003000000",
+          "name": "2003年"
+        }
+      },
+      "value": {
+        "raw": "100.1",
+        "number": 100.1,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003138532",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "91",
+          "name": "年平均"
+        },
+        "cat02": {
+          "code": "T",
+          "name": "5人以上"
+        },
+        "cat03": {
+          "code": "00",
+          "name": "就業形態計"
+        },
+        "cat04": {
+          "code": "TL",
+          "name": "TL_調査産業計"
+        },
+        "tab": {
+          "code": "3002",
+          "name": "指数(平成17年平均＝100)"
+        },
+        "time": {
+          "code": "2004000000",
+          "name": "2004年"
+        }
+      },
+      "value": {
+        "raw": "99.4",
+        "number": 99.4,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003138532",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "91",
+          "name": "年平均"
+        },
+        "cat02": {
+          "code": "T",
+          "name": "5人以上"
+        },
+        "cat03": {
+          "code": "00",
+          "name": "就業形態計"
+        },
+        "cat04": {
+          "code": "TL",
+          "name": "TL_調査産業計"
+        },
+        "tab": {
+          "code": "3002",
+          "name": "指数(平成17年平均＝100)"
+        },
+        "time": {
+          "code": "2005000000",
+          "name": "2005年"
+        }
+      },
+      "value": {
+        "raw": "100.0",
+        "number": 100.0,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003138532",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "91",
+          "name": "年平均"
+        },
+        "cat02": {
+          "code": "T",
+          "name": "5人以上"
+        },
+        "cat03": {
+          "code": "00",
+          "name": "就業形態計"
+        },
+        "cat04": {
+          "code": "TL",
+          "name": "TL_調査産業計"
+        },
+        "tab": {
+          "code": "3002",
+          "name": "指数(平成17年平均＝100)"
+        },
+        "time": {
+          "code": "2006000000",
+          "name": "2006年"
+        }
+      },
+      "value": {
+        "raw": "100.2",
+        "number": 100.2,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003138532",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "91",
+          "name": "年平均"
+        },
+        "cat02": {
+          "code": "T",
+          "name": "5人以上"
+        },
+        "cat03": {
+          "code": "00",
+          "name": "就業形態計"
+        },
+        "cat04": {
+          "code": "TL",
+          "name": "TL_調査産業計"
+        },
+        "tab": {
+          "code": "3002",
+          "name": "指数(平成17年平均＝100)"
+        },
+        "time": {
+          "code": "2007000000",
+          "name": "2007年"
+        }
+      },
+      "value": {
+        "raw": "99.2",
+        "number": 99.2,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003138532",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "91",
+          "name": "年平均"
+        },
+        "cat02": {
+          "code": "T",
+          "name": "5人以上"
+        },
+        "cat03": {
+          "code": "00",
+          "name": "就業形態計"
+        },
+        "cat04": {
+          "code": "TL",
+          "name": "TL_調査産業計"
+        },
+        "tab": {
+          "code": "3002",
+          "name": "指数(平成17年平均＝100)"
+        },
+        "time": {
+          "code": "2008000000",
+          "name": "2008年"
+        }
+      },
+      "value": {
+        "raw": "98.9",
+        "number": 98.9,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003138532",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "91",
+          "name": "年平均"
+        },
+        "cat02": {
+          "code": "T",
+          "name": "5人以上"
+        },
+        "cat03": {
+          "code": "00",
+          "name": "就業形態計"
+        },
+        "cat04": {
+          "code": "TL",
+          "name": "TL_調査産業計"
+        },
+        "tab": {
+          "code": "3002",
+          "name": "指数(平成17年平均＝100)"
+        },
+        "time": {
+          "code": "2009000000",
+          "name": "2009年"
+        }
+      },
+      "value": {
+        "raw": "95.1",
+        "number": 95.1,
+        "kind": "number"
+      }
+    }
+  ]
+}

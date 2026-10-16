@@ -219,5 +219,15 @@
     "category": "3D物理コメディ",
     "thumbnail": "zenryoku-taikin-cover.png",
     "accent": "#E63B2F"
+  },
+  {
+    "id": "2026-10-16-2",
+    "date": "2026-10-16",
+    "sequence": 2,
+    "name": "箱庭日本",
+    "description": "史実と統計の時代の流れの中で、ランダムな暮らしを眺める日本の箱庭シミュレータ。",
+    "category": "観察 / シミュレーション",
+    "thumbnail": "assets/japan-cover.svg",
+    "accent": "#B73529"
   }
 ]

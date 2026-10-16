@@ -1,0 +1,27 @@
+{
+  "command": [
+    "/Users/hayatok/.local/bin/estat",
+    "data",
+    "get",
+    "0003162194",
+    "--filter",
+    "tab=00100",
+    "--filter",
+    "cat04=100",
+    "--page-size",
+    "50",
+    "--max-records",
+    "50",
+    "--timeout",
+    "25s",
+    "-o",
+    "json"
+  ],
+  "started_at": "2026-10-16T07:36:19.687989+00:00",
+  "finished_at": "2026-10-16T07:36:20.121210+00:00",
+  "exit_code": 0,
+  "json_valid": true,
+  "output_path": "evidence/estat/economy/media_devices_data.json",
+  "sha256": "02cefc2aff5eb46bf7fe06e7ecc9ce56d8f3c8232ca12e666949399ef692e650",
+  "stderr": ""
+}

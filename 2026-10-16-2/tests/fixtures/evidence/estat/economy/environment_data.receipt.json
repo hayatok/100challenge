@@ -1,0 +1,29 @@
+{
+  "command": [
+    "/Users/hayatok/.local/bin/estat",
+    "data",
+    "get",
+    "0000010102",
+    "--filter",
+    "tab=00001",
+    "--filter",
+    "cat01=B4101",
+    "--filter",
+    "area=01000,13000,47000",
+    "--page-size",
+    "200",
+    "--max-records",
+    "200",
+    "--timeout",
+    "25s",
+    "-o",
+    "json"
+  ],
+  "started_at": "2026-10-16T07:36:18.967445+00:00",
+  "finished_at": "2026-10-16T07:36:19.554109+00:00",
+  "exit_code": 0,
+  "json_valid": true,
+  "output_path": "evidence/estat/economy/environment_data.json",
+  "sha256": "50610b73b9d1e526757c40b7ef8ebfab59d7ed82984955556e877f0a9f2308b7",
+  "stderr": ""
+}

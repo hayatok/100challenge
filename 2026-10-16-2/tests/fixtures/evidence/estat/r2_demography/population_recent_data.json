@@ -1,0 +1,234 @@
+{
+  "schema_version": "1",
+  "kind": "data",
+  "table": {
+    "id": "0003443838",
+    "statistics_code": "00200524",
+    "statistics_name": "人口推計",
+    "organization": "総務省",
+    "title": "概算値 年齢（５歳階級），男女，月別人口－総人口（各月１日現在）-令和２年国勢調査基準-",
+    "cycle": "月次",
+    "survey_date": "0",
+    "open_date": "2026-09-24",
+    "updated_date": "2026-10-14",
+    "collect_area": "全国",
+    "total_records": 4698
+  },
+  "dimensions": [
+    {
+      "id": "tab",
+      "name": "表章項目",
+      "values": [
+        {
+          "code": "001",
+          "name": "人口",
+          "unit": "万人"
+        }
+      ]
+    },
+    {
+      "id": "cat01",
+      "name": "人口",
+      "values": [
+        {
+          "code": "001",
+          "name": "総人口",
+          "level": "1"
+        }
+      ]
+    },
+    {
+      "id": "cat02",
+      "name": "男女別",
+      "values": [
+        {
+          "code": "000",
+          "name": "男女計",
+          "level": "1"
+        }
+      ]
+    },
+    {
+      "id": "cat03",
+      "name": "年齢5歳階級",
+      "values": [
+        {
+          "code": "01000",
+          "name": "総数",
+          "level": "1"
+        }
+      ]
+    },
+    {
+      "id": "cat04",
+      "name": "概算値",
+      "values": [
+        {
+          "code": "01",
+          "name": "概算値",
+          "level": "1"
+        }
+      ]
+    },
+    {
+      "id": "area",
+      "name": "全国",
+      "values": [
+        {
+          "code": "00000",
+          "name": "全国",
+          "level": "1"
+        }
+      ]
+    },
+    {
+      "id": "time",
+      "name": "時間軸（年月日現在）",
+      "values": [
+        {
+          "code": "2026000707",
+          "name": "2026年7月",
+          "level": "4",
+          "parent_code": "2026000709"
+        },
+        {
+          "code": "2026000808",
+          "name": "2026年8月",
+          "level": "4",
+          "parent_code": "2026000709"
+        },
+        {
+          "code": "2026000909",
+          "name": "2026年9月",
+          "level": "4",
+          "parent_code": "2026000709"
+        }
+      ]
+    }
+  ],
+  "page": {
+    "total": 3,
+    "from": 1,
+    "to": 3,
+    "truncated": false
+  },
+  "records": [
+    {
+      "table_id": "0003443838",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "001",
+          "name": "総人口"
+        },
+        "cat02": {
+          "code": "000",
+          "name": "男女計"
+        },
+        "cat03": {
+          "code": "01000",
+          "name": "総数"
+        },
+        "cat04": {
+          "code": "01",
+          "name": "概算値"
+        },
+        "tab": {
+          "code": "001",
+          "name": "人口"
+        },
+        "time": {
+          "code": "2026000707",
+          "name": "2026年7月"
+        }
+      },
+      "unit": "万人",
+      "value": {
+        "raw": "12293",
+        "number": 12293,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003443838",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "001",
+          "name": "総人口"
+        },
+        "cat02": {
+          "code": "000",
+          "name": "男女計"
+        },
+        "cat03": {
+          "code": "01000",
+          "name": "総数"
+        },
+        "cat04": {
+          "code": "01",
+          "name": "概算値"
+        },
+        "tab": {
+          "code": "001",
+          "name": "人口"
+        },
+        "time": {
+          "code": "2026000808",
+          "name": "2026年8月"
+        }
+      },
+      "unit": "万人",
+      "value": {
+        "raw": "12268",
+        "number": 12268,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003443838",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "001",
+          "name": "総人口"
+        },
+        "cat02": {
+          "code": "000",
+          "name": "男女計"
+        },
+        "cat03": {
+          "code": "01000",
+          "name": "総数"
+        },
+        "cat04": {
+          "code": "01",
+          "name": "概算値"
+        },
+        "tab": {
+          "code": "001",
+          "name": "人口"
+        },
+        "time": {
+          "code": "2026000909",
+          "name": "2026年9月"
+        }
+      },
+      "unit": "万人",
+      "value": {
+        "raw": "12265",
+        "number": 12265,
+        "kind": "number"
+      }
+    }
+  ]
+}

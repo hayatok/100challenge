@@ -1,0 +1,25 @@
+{
+  "command": [
+    "/Users/hayatok/.local/bin/estat",
+    "data",
+    "get",
+    "0003136193",
+    "--filter",
+    "cat01=100,110,120,160,190",
+    "--filter",
+    "cat02=1",
+    "--max-records",
+    "5",
+    "--timeout",
+    "30s",
+    "-o",
+    "json"
+  ],
+  "started_at": "2026-10-16T07:27:41.951076+00:00",
+  "finished_at": "2026-10-16T07:27:43.020394+00:00",
+  "exit_code": 0,
+  "json_valid": true,
+  "output_path": "evidence/estat/stats_demography/family_care_sample.json",
+  "sha256": "c1d98e4b0a1f51c92d7805055ec0094a81fcbe4a19a455e34d28fbfbb4989890",
+  "stderr": ""
+}

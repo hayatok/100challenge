@@ -1,0 +1,25 @@
+{
+  "command": [
+    "/Users/hayatok/.local/bin/estat",
+    "data",
+    "get",
+    "0000010109",
+    "--filter",
+    "cat01=I1101,I1102",
+    "--filter",
+    "area=00000",
+    "--max-records",
+    "100",
+    "--timeout",
+    "30s",
+    "-o",
+    "json"
+  ],
+  "started_at": "2026-10-16T07:27:41.892390+00:00",
+  "finished_at": "2026-10-16T07:27:43.319477+00:00",
+  "exit_code": 0,
+  "json_valid": true,
+  "output_path": "evidence/estat/stats_demography/life_ssd_series.json",
+  "sha256": "e7c1c9fb8132aa518ff59fe5d1d4e23893b2f48dc6171f8e4a2aea8c5127bebc",
+  "stderr": ""
+}

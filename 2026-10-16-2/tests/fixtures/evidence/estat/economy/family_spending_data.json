@@ -1,0 +1,5448 @@
+{
+  "schema_version": "1",
+  "kind": "data",
+  "table": {
+    "id": "0002070003",
+    "statistics_code": "00200561",
+    "statistics_name": "家計調査",
+    "organization": "総務省",
+    "title": "用途分類 用途分類（総数）",
+    "cycle": "年次",
+    "survey_date": "0",
+    "open_date": "2026-02-06",
+    "updated_date": "2026-05-19",
+    "collect_area": "該当なし",
+    "total_records": 1831665
+  },
+  "dimensions": [
+    {
+      "id": "tab",
+      "name": "表章項目",
+      "values": [
+        {
+          "code": "01",
+          "name": "金額"
+        }
+      ]
+    },
+    {
+      "id": "cat01",
+      "name": "用途分類",
+      "values": [
+        {
+          "code": "059",
+          "name": "消費支出",
+          "level": "3",
+          "unit": "円",
+          "parent_code": "058"
+        },
+        {
+          "code": "060",
+          "name": "食料",
+          "level": "4",
+          "unit": "円",
+          "parent_code": "059"
+        },
+        {
+          "code": "102",
+          "name": "住居",
+          "level": "4",
+          "unit": "円",
+          "parent_code": "059"
+        },
+        {
+          "code": "152",
+          "name": "教育",
+          "level": "4",
+          "unit": "円",
+          "parent_code": "059"
+        }
+      ]
+    },
+    {
+      "id": "cat02",
+      "name": "世帯区分（年次－二人以上の世帯）",
+      "values": [
+        {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）",
+          "level": "1"
+        }
+      ]
+    },
+    {
+      "id": "area",
+      "name": "地域区分",
+      "values": [
+        {
+          "code": "00000",
+          "name": "全国",
+          "level": "1"
+        }
+      ]
+    },
+    {
+      "id": "time",
+      "name": "時間軸（年次）",
+      "values": [
+        {
+          "code": "1985000000",
+          "name": "1985年",
+          "level": "1"
+        },
+        {
+          "code": "1986000000",
+          "name": "1986年",
+          "level": "1"
+        },
+        {
+          "code": "1987000000",
+          "name": "1987年",
+          "level": "1"
+        },
+        {
+          "code": "1988000000",
+          "name": "1988年",
+          "level": "1"
+        },
+        {
+          "code": "1989000000",
+          "name": "1989年",
+          "level": "1"
+        },
+        {
+          "code": "1990000000",
+          "name": "1990年",
+          "level": "1"
+        },
+        {
+          "code": "1991000000",
+          "name": "1991年",
+          "level": "1"
+        },
+        {
+          "code": "1992000000",
+          "name": "1992年",
+          "level": "1"
+        },
+        {
+          "code": "1993000000",
+          "name": "1993年",
+          "level": "1"
+        },
+        {
+          "code": "1994000000",
+          "name": "1994年",
+          "level": "1"
+        },
+        {
+          "code": "1995000000",
+          "name": "1995年",
+          "level": "1"
+        },
+        {
+          "code": "1996000000",
+          "name": "1996年",
+          "level": "1"
+        },
+        {
+          "code": "1997000000",
+          "name": "1997年",
+          "level": "1"
+        },
+        {
+          "code": "1998000000",
+          "name": "1998年",
+          "level": "1"
+        },
+        {
+          "code": "1999000000",
+          "name": "1999年",
+          "level": "1"
+        },
+        {
+          "code": "2000000000",
+          "name": "2000年",
+          "level": "1"
+        },
+        {
+          "code": "2001000000",
+          "name": "2001年",
+          "level": "1"
+        },
+        {
+          "code": "2002000000",
+          "name": "2002年",
+          "level": "1"
+        },
+        {
+          "code": "2003000000",
+          "name": "2003年",
+          "level": "1"
+        },
+        {
+          "code": "2004000000",
+          "name": "2004年",
+          "level": "1"
+        },
+        {
+          "code": "2005000000",
+          "name": "2005年",
+          "level": "1"
+        },
+        {
+          "code": "2006000000",
+          "name": "2006年",
+          "level": "1"
+        },
+        {
+          "code": "2007000000",
+          "name": "2007年",
+          "level": "1"
+        },
+        {
+          "code": "2008000000",
+          "name": "2008年",
+          "level": "1"
+        },
+        {
+          "code": "2009000000",
+          "name": "2009年",
+          "level": "1"
+        },
+        {
+          "code": "2010000000",
+          "name": "2010年",
+          "level": "1"
+        },
+        {
+          "code": "2011000000",
+          "name": "2011年",
+          "level": "1"
+        },
+        {
+          "code": "2012000000",
+          "name": "2012年",
+          "level": "1"
+        },
+        {
+          "code": "2013000000",
+          "name": "2013年",
+          "level": "1"
+        },
+        {
+          "code": "2014000000",
+          "name": "2014年",
+          "level": "1"
+        },
+        {
+          "code": "2015000000",
+          "name": "2015年",
+          "level": "1"
+        },
+        {
+          "code": "2016000000",
+          "name": "2016年",
+          "level": "1"
+        },
+        {
+          "code": "2017000000",
+          "name": "2017年",
+          "level": "1"
+        },
+        {
+          "code": "2018000000",
+          "name": "2018年",
+          "level": "1"
+        },
+        {
+          "code": "2019000000",
+          "name": "2019年",
+          "level": "1"
+        },
+        {
+          "code": "2020000000",
+          "name": "2020年",
+          "level": "1"
+        },
+        {
+          "code": "2021000000",
+          "name": "2021年",
+          "level": "1"
+        },
+        {
+          "code": "2022000000",
+          "name": "2022年",
+          "level": "1"
+        },
+        {
+          "code": "2023000000",
+          "name": "2023年",
+          "level": "1"
+        },
+        {
+          "code": "2024000000",
+          "name": "2024年",
+          "level": "1"
+        },
+        {
+          "code": "2025000000",
+          "name": "2025年",
+          "level": "1"
+        }
+      ]
+    }
+  ],
+  "page": {
+    "total": 164,
+    "from": 1,
+    "to": 164,
+    "truncated": false
+  },
+  "records": [
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "059",
+          "name": "消費支出"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "1985000000",
+          "name": "1985年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "-",
+        "number": null,
+        "kind": "special",
+        "note": "該当数字がないもの"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "059",
+          "name": "消費支出"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "1986000000",
+          "name": "1986年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "-",
+        "number": null,
+        "kind": "special",
+        "note": "該当数字がないもの"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "059",
+          "name": "消費支出"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "1987000000",
+          "name": "1987年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "-",
+        "number": null,
+        "kind": "special",
+        "note": "該当数字がないもの"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "059",
+          "name": "消費支出"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "1988000000",
+          "name": "1988年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "-",
+        "number": null,
+        "kind": "special",
+        "note": "該当数字がないもの"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "059",
+          "name": "消費支出"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "1989000000",
+          "name": "1989年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "-",
+        "number": null,
+        "kind": "special",
+        "note": "該当数字がないもの"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "059",
+          "name": "消費支出"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "1990000000",
+          "name": "1990年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "-",
+        "number": null,
+        "kind": "special",
+        "note": "該当数字がないもの"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "059",
+          "name": "消費支出"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "1991000000",
+          "name": "1991年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "-",
+        "number": null,
+        "kind": "special",
+        "note": "該当数字がないもの"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "059",
+          "name": "消費支出"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "1992000000",
+          "name": "1992年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "-",
+        "number": null,
+        "kind": "special",
+        "note": "該当数字がないもの"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "059",
+          "name": "消費支出"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "1993000000",
+          "name": "1993年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "-",
+        "number": null,
+        "kind": "special",
+        "note": "該当数字がないもの"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "059",
+          "name": "消費支出"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "1994000000",
+          "name": "1994年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "-",
+        "number": null,
+        "kind": "special",
+        "note": "該当数字がないもの"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "059",
+          "name": "消費支出"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "1995000000",
+          "name": "1995年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "-",
+        "number": null,
+        "kind": "special",
+        "note": "該当数字がないもの"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "059",
+          "name": "消費支出"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "1996000000",
+          "name": "1996年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "-",
+        "number": null,
+        "kind": "special",
+        "note": "該当数字がないもの"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "059",
+          "name": "消費支出"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "1997000000",
+          "name": "1997年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "-",
+        "number": null,
+        "kind": "special",
+        "note": "該当数字がないもの"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "059",
+          "name": "消費支出"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "1998000000",
+          "name": "1998年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "-",
+        "number": null,
+        "kind": "special",
+        "note": "該当数字がないもの"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "059",
+          "name": "消費支出"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "1999000000",
+          "name": "1999年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "-",
+        "number": null,
+        "kind": "special",
+        "note": "該当数字がないもの"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "059",
+          "name": "消費支出"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "2000000000",
+          "name": "2000年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "317328",
+        "number": 317328,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "059",
+          "name": "消費支出"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "2001000000",
+          "name": "2001年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "309054",
+        "number": 309054,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "059",
+          "name": "消費支出"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "2002000000",
+          "name": "2002年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "305953",
+        "number": 305953,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "059",
+          "name": "消費支出"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "2003000000",
+          "name": "2003年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "301841",
+        "number": 301841,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "059",
+          "name": "消費支出"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "2004000000",
+          "name": "2004年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "302975",
+        "number": 302975,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "059",
+          "name": "消費支出"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "2005000000",
+          "name": "2005年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "300531",
+        "number": 300531,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "059",
+          "name": "消費支出"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "2006000000",
+          "name": "2006年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "294943",
+        "number": 294943,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "059",
+          "name": "消費支出"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "2007000000",
+          "name": "2007年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "297782",
+        "number": 297782,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "059",
+          "name": "消費支出"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "2008000000",
+          "name": "2008年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "296932",
+        "number": 296932,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "059",
+          "name": "消費支出"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "2009000000",
+          "name": "2009年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "291737",
+        "number": 291737,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "059",
+          "name": "消費支出"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "2010000000",
+          "name": "2010年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "290244",
+        "number": 290244,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "059",
+          "name": "消費支出"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "2011000000",
+          "name": "2011年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "282966",
+        "number": 282966,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "059",
+          "name": "消費支出"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "2012000000",
+          "name": "2012年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "286169",
+        "number": 286169,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "059",
+          "name": "消費支出"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "2013000000",
+          "name": "2013年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "290454",
+        "number": 290454,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "059",
+          "name": "消費支出"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "2014000000",
+          "name": "2014年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "291194",
+        "number": 291194,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "059",
+          "name": "消費支出"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "2015000000",
+          "name": "2015年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "287373",
+        "number": 287373,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "059",
+          "name": "消費支出"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "2016000000",
+          "name": "2016年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "282188",
+        "number": 282188,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "059",
+          "name": "消費支出"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "2017000000",
+          "name": "2017年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "283027",
+        "number": 283027,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "059",
+          "name": "消費支出"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "2018000000",
+          "name": "2018年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "287315",
+        "number": 287315,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "059",
+          "name": "消費支出"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "2019000000",
+          "name": "2019年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "293379",
+        "number": 293379,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "059",
+          "name": "消費支出"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "2020000000",
+          "name": "2020年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "277926",
+        "number": 277926,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "059",
+          "name": "消費支出"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "2021000000",
+          "name": "2021年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "279024",
+        "number": 279024,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "059",
+          "name": "消費支出"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "2022000000",
+          "name": "2022年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "290865",
+        "number": 290865,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "059",
+          "name": "消費支出"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "2023000000",
+          "name": "2023年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "293997",
+        "number": 293997,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "059",
+          "name": "消費支出"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "2024000000",
+          "name": "2024年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "300243",
+        "number": 300243,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "059",
+          "name": "消費支出"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "2025000000",
+          "name": "2025年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "314001",
+        "number": 314001,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "060",
+          "name": "食料"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "1985000000",
+          "name": "1985年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "-",
+        "number": null,
+        "kind": "special",
+        "note": "該当数字がないもの"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "060",
+          "name": "食料"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "1986000000",
+          "name": "1986年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "-",
+        "number": null,
+        "kind": "special",
+        "note": "該当数字がないもの"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "060",
+          "name": "食料"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "1987000000",
+          "name": "1987年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "-",
+        "number": null,
+        "kind": "special",
+        "note": "該当数字がないもの"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "060",
+          "name": "食料"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "1988000000",
+          "name": "1988年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "-",
+        "number": null,
+        "kind": "special",
+        "note": "該当数字がないもの"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "060",
+          "name": "食料"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "1989000000",
+          "name": "1989年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "-",
+        "number": null,
+        "kind": "special",
+        "note": "該当数字がないもの"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "060",
+          "name": "食料"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "1990000000",
+          "name": "1990年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "-",
+        "number": null,
+        "kind": "special",
+        "note": "該当数字がないもの"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "060",
+          "name": "食料"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "1991000000",
+          "name": "1991年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "-",
+        "number": null,
+        "kind": "special",
+        "note": "該当数字がないもの"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "060",
+          "name": "食料"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "1992000000",
+          "name": "1992年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "-",
+        "number": null,
+        "kind": "special",
+        "note": "該当数字がないもの"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "060",
+          "name": "食料"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "1993000000",
+          "name": "1993年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "-",
+        "number": null,
+        "kind": "special",
+        "note": "該当数字がないもの"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "060",
+          "name": "食料"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "1994000000",
+          "name": "1994年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "-",
+        "number": null,
+        "kind": "special",
+        "note": "該当数字がないもの"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "060",
+          "name": "食料"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "1995000000",
+          "name": "1995年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "-",
+        "number": null,
+        "kind": "special",
+        "note": "該当数字がないもの"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "060",
+          "name": "食料"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "1996000000",
+          "name": "1996年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "-",
+        "number": null,
+        "kind": "special",
+        "note": "該当数字がないもの"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "060",
+          "name": "食料"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "1997000000",
+          "name": "1997年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "-",
+        "number": null,
+        "kind": "special",
+        "note": "該当数字がないもの"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "060",
+          "name": "食料"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "1998000000",
+          "name": "1998年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "-",
+        "number": null,
+        "kind": "special",
+        "note": "該当数字がないもの"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "060",
+          "name": "食料"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "1999000000",
+          "name": "1999年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "-",
+        "number": null,
+        "kind": "special",
+        "note": "該当数字がないもの"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "060",
+          "name": "食料"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "2000000000",
+          "name": "2000年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "73954",
+        "number": 73954,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "060",
+          "name": "食料"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "2001000000",
+          "name": "2001年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "71770",
+        "number": 71770,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "060",
+          "name": "食料"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "2002000000",
+          "name": "2002年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "71210",
+        "number": 71210,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "060",
+          "name": "食料"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "2003000000",
+          "name": "2003年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "69910",
+        "number": 69910,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "060",
+          "name": "食料"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "2004000000",
+          "name": "2004年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "69640",
+        "number": 69640,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "060",
+          "name": "食料"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "2005000000",
+          "name": "2005年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "68699",
+        "number": 68699,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "060",
+          "name": "食料"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "2006000000",
+          "name": "2006年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "68111",
+        "number": 68111,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "060",
+          "name": "食料"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "2007000000",
+          "name": "2007年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "68536",
+        "number": 68536,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "060",
+          "name": "食料"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "2008000000",
+          "name": "2008年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "69001",
+        "number": 69001,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "060",
+          "name": "食料"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "2009000000",
+          "name": "2009年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "68322",
+        "number": 68322,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "060",
+          "name": "食料"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "2010000000",
+          "name": "2010年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "67563",
+        "number": 67563,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "060",
+          "name": "食料"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "2011000000",
+          "name": "2011年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "66904",
+        "number": 66904,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "060",
+          "name": "食料"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "2012000000",
+          "name": "2012年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "67275",
+        "number": 67275,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "060",
+          "name": "食料"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "2013000000",
+          "name": "2013年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "68604",
+        "number": 68604,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "060",
+          "name": "食料"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "2014000000",
+          "name": "2014年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "69926",
+        "number": 69926,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "060",
+          "name": "食料"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "2015000000",
+          "name": "2015年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "71844",
+        "number": 71844,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "060",
+          "name": "食料"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "2016000000",
+          "name": "2016年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "72934",
+        "number": 72934,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "060",
+          "name": "食料"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "2017000000",
+          "name": "2017年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "72866",
+        "number": 72866,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "060",
+          "name": "食料"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "2018000000",
+          "name": "2018年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "73977",
+        "number": 73977,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "060",
+          "name": "食料"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "2019000000",
+          "name": "2019年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "75258",
+        "number": 75258,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "060",
+          "name": "食料"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "2020000000",
+          "name": "2020年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "76440",
+        "number": 76440,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "060",
+          "name": "食料"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "2021000000",
+          "name": "2021年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "75761",
+        "number": 75761,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "060",
+          "name": "食料"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "2022000000",
+          "name": "2022年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "77474",
+        "number": 77474,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "060",
+          "name": "食料"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "2023000000",
+          "name": "2023年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "81738",
+        "number": 81738,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "060",
+          "name": "食料"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "2024000000",
+          "name": "2024年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "85040",
+        "number": 85040,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "060",
+          "name": "食料"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "2025000000",
+          "name": "2025年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "89754",
+        "number": 89754,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "102",
+          "name": "住居"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "1985000000",
+          "name": "1985年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "-",
+        "number": null,
+        "kind": "special",
+        "note": "該当数字がないもの"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "102",
+          "name": "住居"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "1986000000",
+          "name": "1986年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "-",
+        "number": null,
+        "kind": "special",
+        "note": "該当数字がないもの"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "102",
+          "name": "住居"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "1987000000",
+          "name": "1987年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "-",
+        "number": null,
+        "kind": "special",
+        "note": "該当数字がないもの"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "102",
+          "name": "住居"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "1988000000",
+          "name": "1988年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "-",
+        "number": null,
+        "kind": "special",
+        "note": "該当数字がないもの"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "102",
+          "name": "住居"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "1989000000",
+          "name": "1989年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "-",
+        "number": null,
+        "kind": "special",
+        "note": "該当数字がないもの"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "102",
+          "name": "住居"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "1990000000",
+          "name": "1990年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "-",
+        "number": null,
+        "kind": "special",
+        "note": "該当数字がないもの"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "102",
+          "name": "住居"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "1991000000",
+          "name": "1991年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "-",
+        "number": null,
+        "kind": "special",
+        "note": "該当数字がないもの"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "102",
+          "name": "住居"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "1992000000",
+          "name": "1992年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "-",
+        "number": null,
+        "kind": "special",
+        "note": "該当数字がないもの"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "102",
+          "name": "住居"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "1993000000",
+          "name": "1993年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "-",
+        "number": null,
+        "kind": "special",
+        "note": "該当数字がないもの"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "102",
+          "name": "住居"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "1994000000",
+          "name": "1994年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "-",
+        "number": null,
+        "kind": "special",
+        "note": "該当数字がないもの"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "102",
+          "name": "住居"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "1995000000",
+          "name": "1995年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "-",
+        "number": null,
+        "kind": "special",
+        "note": "該当数字がないもの"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "102",
+          "name": "住居"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "1996000000",
+          "name": "1996年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "-",
+        "number": null,
+        "kind": "special",
+        "note": "該当数字がないもの"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "102",
+          "name": "住居"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "1997000000",
+          "name": "1997年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "-",
+        "number": null,
+        "kind": "special",
+        "note": "該当数字がないもの"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "102",
+          "name": "住居"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "1998000000",
+          "name": "1998年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "-",
+        "number": null,
+        "kind": "special",
+        "note": "該当数字がないもの"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "102",
+          "name": "住居"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "1999000000",
+          "name": "1999年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "-",
+        "number": null,
+        "kind": "special",
+        "note": "該当数字がないもの"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "102",
+          "name": "住居"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "2000000000",
+          "name": "2000年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "20522",
+        "number": 20522,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "102",
+          "name": "住居"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "2001000000",
+          "name": "2001年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "19679",
+        "number": 19679,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "102",
+          "name": "住居"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "2002000000",
+          "name": "2002年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "19957",
+        "number": 19957,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "102",
+          "name": "住居"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "2003000000",
+          "name": "2003年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "20027",
+        "number": 20027,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "102",
+          "name": "住居"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "2004000000",
+          "name": "2004年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "19230",
+        "number": 19230,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "102",
+          "name": "住居"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "2005000000",
+          "name": "2005年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "19254",
+        "number": 19254,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "102",
+          "name": "住居"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "2006000000",
+          "name": "2006年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "18115",
+        "number": 18115,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "102",
+          "name": "住居"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "2007000000",
+          "name": "2007年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "17934",
+        "number": 17934,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "102",
+          "name": "住居"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "2008000000",
+          "name": "2008年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "16897",
+        "number": 16897,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "102",
+          "name": "住居"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "2009000000",
+          "name": "2009年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "17024",
+        "number": 17024,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "102",
+          "name": "住居"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "2010000000",
+          "name": "2010年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "18179",
+        "number": 18179,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "102",
+          "name": "住居"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "2011000000",
+          "name": "2011年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "18874",
+        "number": 18874,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "102",
+          "name": "住居"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "2012000000",
+          "name": "2012年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "18231",
+        "number": 18231,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "102",
+          "name": "住居"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "2013000000",
+          "name": "2013年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "18262",
+        "number": 18262,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "102",
+          "name": "住居"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "2014000000",
+          "name": "2014年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "17919",
+        "number": 17919,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "102",
+          "name": "住居"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "2015000000",
+          "name": "2015年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "17931",
+        "number": 17931,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "102",
+          "name": "住居"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "2016000000",
+          "name": "2016年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "16679",
+        "number": 16679,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "102",
+          "name": "住居"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "2017000000",
+          "name": "2017年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "16555",
+        "number": 16555,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "102",
+          "name": "住居"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "2018000000",
+          "name": "2018年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "16915",
+        "number": 16915,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "102",
+          "name": "住居"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "2019000000",
+          "name": "2019年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "17094",
+        "number": 17094,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "102",
+          "name": "住居"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "2020000000",
+          "name": "2020年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "17365",
+        "number": 17365,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "102",
+          "name": "住居"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "2021000000",
+          "name": "2021年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "18329",
+        "number": 18329,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "102",
+          "name": "住居"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "2022000000",
+          "name": "2022年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "18645",
+        "number": 18645,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "102",
+          "name": "住居"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "2023000000",
+          "name": "2023年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "18006",
+        "number": 18006,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "102",
+          "name": "住居"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "2024000000",
+          "name": "2024年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "18074",
+        "number": 18074,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "102",
+          "name": "住居"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "2025000000",
+          "name": "2025年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "18665",
+        "number": 18665,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "152",
+          "name": "教育"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "1985000000",
+          "name": "1985年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "-",
+        "number": null,
+        "kind": "special",
+        "note": "該当数字がないもの"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "152",
+          "name": "教育"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "1986000000",
+          "name": "1986年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "-",
+        "number": null,
+        "kind": "special",
+        "note": "該当数字がないもの"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "152",
+          "name": "教育"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "1987000000",
+          "name": "1987年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "-",
+        "number": null,
+        "kind": "special",
+        "note": "該当数字がないもの"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "152",
+          "name": "教育"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "1988000000",
+          "name": "1988年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "-",
+        "number": null,
+        "kind": "special",
+        "note": "該当数字がないもの"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "152",
+          "name": "教育"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "1989000000",
+          "name": "1989年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "-",
+        "number": null,
+        "kind": "special",
+        "note": "該当数字がないもの"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "152",
+          "name": "教育"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "1990000000",
+          "name": "1990年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "-",
+        "number": null,
+        "kind": "special",
+        "note": "該当数字がないもの"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "152",
+          "name": "教育"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "1991000000",
+          "name": "1991年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "-",
+        "number": null,
+        "kind": "special",
+        "note": "該当数字がないもの"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "152",
+          "name": "教育"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "1992000000",
+          "name": "1992年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "-",
+        "number": null,
+        "kind": "special",
+        "note": "該当数字がないもの"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "152",
+          "name": "教育"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "1993000000",
+          "name": "1993年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "-",
+        "number": null,
+        "kind": "special",
+        "note": "該当数字がないもの"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "152",
+          "name": "教育"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "1994000000",
+          "name": "1994年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "-",
+        "number": null,
+        "kind": "special",
+        "note": "該当数字がないもの"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "152",
+          "name": "教育"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "1995000000",
+          "name": "1995年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "-",
+        "number": null,
+        "kind": "special",
+        "note": "該当数字がないもの"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "152",
+          "name": "教育"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "1996000000",
+          "name": "1996年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "-",
+        "number": null,
+        "kind": "special",
+        "note": "該当数字がないもの"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "152",
+          "name": "教育"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "1997000000",
+          "name": "1997年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "-",
+        "number": null,
+        "kind": "special",
+        "note": "該当数字がないもの"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "152",
+          "name": "教育"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "1998000000",
+          "name": "1998年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "-",
+        "number": null,
+        "kind": "special",
+        "note": "該当数字がないもの"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "152",
+          "name": "教育"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "1999000000",
+          "name": "1999年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "-",
+        "number": null,
+        "kind": "special",
+        "note": "該当数字がないもの"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "152",
+          "name": "教育"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "2000000000",
+          "name": "2000年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "13921",
+        "number": 13921,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "152",
+          "name": "教育"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "2001000000",
+          "name": "2001年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "12929",
+        "number": 12929,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "152",
+          "name": "教育"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "2002000000",
+          "name": "2002年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "12852",
+        "number": 12852,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "152",
+          "name": "教育"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "2003000000",
+          "name": "2003年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "13009",
+        "number": 13009,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "152",
+          "name": "教育"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "2004000000",
+          "name": "2004年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "13229",
+        "number": 13229,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "152",
+          "name": "教育"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "2005000000",
+          "name": "2005年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "12475",
+        "number": 12475,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "152",
+          "name": "教育"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "2006000000",
+          "name": "2006年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "12650",
+        "number": 12650,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "152",
+          "name": "教育"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "2007000000",
+          "name": "2007年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "12748",
+        "number": 12748,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "152",
+          "name": "教育"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "2008000000",
+          "name": "2008年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "12727",
+        "number": 12727,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "152",
+          "name": "教育"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "2009000000",
+          "name": "2009年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "12909",
+        "number": 12909,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "152",
+          "name": "教育"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "2010000000",
+          "name": "2010年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "11734",
+        "number": 11734,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "152",
+          "name": "教育"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "2011000000",
+          "name": "2011年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "11630",
+        "number": 11630,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "152",
+          "name": "教育"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "2012000000",
+          "name": "2012年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "11610",
+        "number": 11610,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "152",
+          "name": "教育"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "2013000000",
+          "name": "2013年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "11539",
+        "number": 11539,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "152",
+          "name": "教育"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "2014000000",
+          "name": "2014年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "10936",
+        "number": 10936,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "152",
+          "name": "教育"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "2015000000",
+          "name": "2015年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "10995",
+        "number": 10995,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "152",
+          "name": "教育"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "2016000000",
+          "name": "2016年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "11310",
+        "number": 11310,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "152",
+          "name": "教育"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "2017000000",
+          "name": "2017年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "11062",
+        "number": 11062,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "152",
+          "name": "教育"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "2018000000",
+          "name": "2018年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "11785",
+        "number": 11785,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "152",
+          "name": "教育"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "2019000000",
+          "name": "2019年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "11492",
+        "number": 11492,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "152",
+          "name": "教育"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "2020000000",
+          "name": "2020年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "10290",
+        "number": 10290,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "152",
+          "name": "教育"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "2021000000",
+          "name": "2021年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "11902",
+        "number": 11902,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "152",
+          "name": "教育"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "2022000000",
+          "name": "2022年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "11436",
+        "number": 11436,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "152",
+          "name": "教育"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "2023000000",
+          "name": "2023年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "10446",
+        "number": 10446,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "152",
+          "name": "教育"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "2024000000",
+          "name": "2024年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "11703",
+        "number": 11703,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0002070003",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "152",
+          "name": "教育"
+        },
+        "cat02": {
+          "code": "03",
+          "name": "二人以上の世帯（2000年～）"
+        },
+        "tab": {
+          "code": "01",
+          "name": "金額"
+        },
+        "time": {
+          "code": "2025000000",
+          "name": "2025年"
+        }
+      },
+      "unit": "円",
+      "value": {
+        "raw": "11936",
+        "number": 11936,
+        "kind": "number"
+      }
+    }
+  ]
+}

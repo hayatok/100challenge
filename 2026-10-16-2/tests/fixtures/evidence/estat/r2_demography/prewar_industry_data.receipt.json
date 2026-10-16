@@ -1,0 +1,30 @@
+{
+  "command": [
+    "/Users/hayatok/.local/bin/estat",
+    "data",
+    "get",
+    "0003410396",
+    "--filter",
+    "tab=334",
+    "--filter",
+    "cat01=100,120,140,180",
+    "--filter",
+    "cat02=100,120",
+    "--filter",
+    "time=1920000000,1930000000,1940000000,1950000000",
+    "--max-records",
+    "40",
+    "--timeout",
+    "30s",
+    "-o",
+    "json"
+  ],
+  "started_at": "2026-10-16T09:12:04.447259+00:00",
+  "finished_at": "2026-10-16T09:12:05.027319+00:00",
+  "exit_code": 0,
+  "json_valid": true,
+  "redacted_fields": 0,
+  "output_path": "evidence/estat/r2_demography/prewar_industry_data.json",
+  "sha256": "468a077776a4375757a5c4727fe2d9e44a0a885092c7043435a3c52bc5918c39",
+  "stderr": ""
+}

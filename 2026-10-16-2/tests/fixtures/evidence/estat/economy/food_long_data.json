@@ -1,0 +1,4212 @@
+{
+  "schema_version": "1",
+  "kind": "data",
+  "table": {
+    "id": "0004011200",
+    "statistics_code": "00500300",
+    "statistics_name": "食料需給表",
+    "organization": "農林水産省",
+    "title": "項目別累年表 項目別累年表",
+    "cycle": "年度次",
+    "survey_date": "201504-201603",
+    "open_date": "2019-03-13",
+    "updated_date": "2024-01-15",
+    "collect_area": "該当なし",
+    "total_records": 47544
+  },
+  "dimensions": [
+    {
+      "id": "cat01",
+      "name": "食料需給_項目",
+      "values": [
+        {
+          "code": "180",
+          "name": "国民１人・１年当たり供給純食料",
+          "level": "1",
+          "unit": "kg"
+        },
+        {
+          "code": "200",
+          "name": "国民１人・１日当たり供給熱量",
+          "level": "1",
+          "unit": "kcal"
+        }
+      ]
+    },
+    {
+      "id": "cat02",
+      "name": "類別・品目別",
+      "values": [
+        {
+          "code": "0130",
+          "name": "米",
+          "level": "2",
+          "parent_code": "0110"
+        },
+        {
+          "code": "2920",
+          "name": "合計",
+          "level": "1"
+        }
+      ]
+    },
+    {
+      "id": "time",
+      "name": "時間軸(年度次)",
+      "values": [
+        {
+          "code": "1960100000",
+          "name": "1960年度",
+          "level": "1"
+        },
+        {
+          "code": "1961100000",
+          "name": "1961年度",
+          "level": "1"
+        },
+        {
+          "code": "1962100000",
+          "name": "1962年度",
+          "level": "1"
+        },
+        {
+          "code": "1963100000",
+          "name": "1963年度",
+          "level": "1"
+        },
+        {
+          "code": "1964100000",
+          "name": "1964年度",
+          "level": "1"
+        },
+        {
+          "code": "1965100000",
+          "name": "1965年度",
+          "level": "1"
+        },
+        {
+          "code": "1966100000",
+          "name": "1966年度",
+          "level": "1"
+        },
+        {
+          "code": "1967100000",
+          "name": "1967年度",
+          "level": "1"
+        },
+        {
+          "code": "1968100000",
+          "name": "1968年度",
+          "level": "1"
+        },
+        {
+          "code": "1969100000",
+          "name": "1969年度",
+          "level": "1"
+        },
+        {
+          "code": "1970100000",
+          "name": "1970年度",
+          "level": "1"
+        },
+        {
+          "code": "1971100000",
+          "name": "1971年度",
+          "level": "1"
+        },
+        {
+          "code": "1972100000",
+          "name": "1972年度",
+          "level": "1"
+        },
+        {
+          "code": "1973100000",
+          "name": "1973年度",
+          "level": "1"
+        },
+        {
+          "code": "1974100000",
+          "name": "1974年度",
+          "level": "1"
+        },
+        {
+          "code": "1975100000",
+          "name": "1975年度",
+          "level": "1"
+        },
+        {
+          "code": "1976100000",
+          "name": "1976年度",
+          "level": "1"
+        },
+        {
+          "code": "1977100000",
+          "name": "1977年度",
+          "level": "1"
+        },
+        {
+          "code": "1978100000",
+          "name": "1978年度",
+          "level": "1"
+        },
+        {
+          "code": "1979100000",
+          "name": "1979年度",
+          "level": "1"
+        },
+        {
+          "code": "1980100000",
+          "name": "1980年度",
+          "level": "1"
+        },
+        {
+          "code": "1981100000",
+          "name": "1981年度",
+          "level": "1"
+        },
+        {
+          "code": "1982100000",
+          "name": "1982年度",
+          "level": "1"
+        },
+        {
+          "code": "1983100000",
+          "name": "1983年度",
+          "level": "1"
+        },
+        {
+          "code": "1984100000",
+          "name": "1984年度",
+          "level": "1"
+        },
+        {
+          "code": "1985100000",
+          "name": "1985年度",
+          "level": "1"
+        },
+        {
+          "code": "1986100000",
+          "name": "1986年度",
+          "level": "1"
+        },
+        {
+          "code": "1987100000",
+          "name": "1987年度",
+          "level": "1"
+        },
+        {
+          "code": "1988100000",
+          "name": "1988年度",
+          "level": "1"
+        },
+        {
+          "code": "1989100000",
+          "name": "1989年度",
+          "level": "1"
+        },
+        {
+          "code": "1990100000",
+          "name": "1990年度",
+          "level": "1"
+        },
+        {
+          "code": "1991100000",
+          "name": "1991年度",
+          "level": "1"
+        },
+        {
+          "code": "1992100000",
+          "name": "1992年度",
+          "level": "1"
+        },
+        {
+          "code": "1993100000",
+          "name": "1993年度",
+          "level": "1"
+        },
+        {
+          "code": "1994100000",
+          "name": "1994年度",
+          "level": "1"
+        },
+        {
+          "code": "1995100000",
+          "name": "1995年度",
+          "level": "1"
+        },
+        {
+          "code": "1996100000",
+          "name": "1996年度",
+          "level": "1"
+        },
+        {
+          "code": "1997100000",
+          "name": "1997年度",
+          "level": "1"
+        },
+        {
+          "code": "1998100000",
+          "name": "1998年度",
+          "level": "1"
+        },
+        {
+          "code": "1999100000",
+          "name": "1999年度",
+          "level": "1"
+        },
+        {
+          "code": "2000100000",
+          "name": "2000年度",
+          "level": "1"
+        },
+        {
+          "code": "2001100000",
+          "name": "2001年度",
+          "level": "1"
+        },
+        {
+          "code": "2002100000",
+          "name": "2002年度",
+          "level": "1"
+        },
+        {
+          "code": "2003100000",
+          "name": "2003年度",
+          "level": "1"
+        },
+        {
+          "code": "2004100000",
+          "name": "2004年度",
+          "level": "1"
+        },
+        {
+          "code": "2005100000",
+          "name": "2005年度",
+          "level": "1"
+        },
+        {
+          "code": "2006100000",
+          "name": "2006年度",
+          "level": "1"
+        },
+        {
+          "code": "2007100000",
+          "name": "2007年度",
+          "level": "1"
+        },
+        {
+          "code": "2008100000",
+          "name": "2008年度",
+          "level": "1"
+        },
+        {
+          "code": "2009100000",
+          "name": "2009年度",
+          "level": "1"
+        },
+        {
+          "code": "2010100000",
+          "name": "2010年度",
+          "level": "1"
+        },
+        {
+          "code": "2011100000",
+          "name": "2011年度",
+          "level": "1"
+        },
+        {
+          "code": "2012100000",
+          "name": "2012年度",
+          "level": "1"
+        },
+        {
+          "code": "2013100000",
+          "name": "2013年度",
+          "level": "1"
+        },
+        {
+          "code": "2014100000",
+          "name": "2014年度",
+          "level": "1"
+        },
+        {
+          "code": "2015100000",
+          "name": "2015年度",
+          "level": "1"
+        }
+      ]
+    }
+  ],
+  "page": {
+    "total": 168,
+    "from": 1,
+    "to": 168,
+    "truncated": false
+  },
+  "records": [
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "180",
+          "name": "国民１人・１年当たり供給純食料"
+        },
+        "cat02": {
+          "code": "0130",
+          "name": "米"
+        },
+        "time": {
+          "code": "1960100000",
+          "name": "1960年度"
+        }
+      },
+      "unit": "kg",
+      "value": {
+        "raw": "114.9",
+        "number": 114.9,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "180",
+          "name": "国民１人・１年当たり供給純食料"
+        },
+        "cat02": {
+          "code": "0130",
+          "name": "米"
+        },
+        "time": {
+          "code": "1961100000",
+          "name": "1961年度"
+        }
+      },
+      "unit": "kg",
+      "value": {
+        "raw": "117.4",
+        "number": 117.4,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "180",
+          "name": "国民１人・１年当たり供給純食料"
+        },
+        "cat02": {
+          "code": "0130",
+          "name": "米"
+        },
+        "time": {
+          "code": "1962100000",
+          "name": "1962年度"
+        }
+      },
+      "unit": "kg",
+      "value": {
+        "raw": "118.3",
+        "number": 118.3,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "180",
+          "name": "国民１人・１年当たり供給純食料"
+        },
+        "cat02": {
+          "code": "0130",
+          "name": "米"
+        },
+        "time": {
+          "code": "1963100000",
+          "name": "1963年度"
+        }
+      },
+      "unit": "kg",
+      "value": {
+        "raw": "117.3",
+        "number": 117.3,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "180",
+          "name": "国民１人・１年当たり供給純食料"
+        },
+        "cat02": {
+          "code": "0130",
+          "name": "米"
+        },
+        "time": {
+          "code": "1964100000",
+          "name": "1964年度"
+        }
+      },
+      "unit": "kg",
+      "value": {
+        "raw": "115.8",
+        "number": 115.8,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "180",
+          "name": "国民１人・１年当たり供給純食料"
+        },
+        "cat02": {
+          "code": "0130",
+          "name": "米"
+        },
+        "time": {
+          "code": "1965100000",
+          "name": "1965年度"
+        }
+      },
+      "unit": "kg",
+      "value": {
+        "raw": "111.7",
+        "number": 111.7,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "180",
+          "name": "国民１人・１年当たり供給純食料"
+        },
+        "cat02": {
+          "code": "0130",
+          "name": "米"
+        },
+        "time": {
+          "code": "1966100000",
+          "name": "1966年度"
+        }
+      },
+      "unit": "kg",
+      "value": {
+        "raw": "105.8",
+        "number": 105.8,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "180",
+          "name": "国民１人・１年当たり供給純食料"
+        },
+        "cat02": {
+          "code": "0130",
+          "name": "米"
+        },
+        "time": {
+          "code": "1967100000",
+          "name": "1967年度"
+        }
+      },
+      "unit": "kg",
+      "value": {
+        "raw": "103.4",
+        "number": 103.4,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "180",
+          "name": "国民１人・１年当たり供給純食料"
+        },
+        "cat02": {
+          "code": "0130",
+          "name": "米"
+        },
+        "time": {
+          "code": "1968100000",
+          "name": "1968年度"
+        }
+      },
+      "unit": "kg",
+      "value": {
+        "raw": "100.1",
+        "number": 100.1,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "180",
+          "name": "国民１人・１年当たり供給純食料"
+        },
+        "cat02": {
+          "code": "0130",
+          "name": "米"
+        },
+        "time": {
+          "code": "1969100000",
+          "name": "1969年度"
+        }
+      },
+      "unit": "kg",
+      "value": {
+        "raw": "97.0",
+        "number": 97.0,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "180",
+          "name": "国民１人・１年当たり供給純食料"
+        },
+        "cat02": {
+          "code": "0130",
+          "name": "米"
+        },
+        "time": {
+          "code": "1970100000",
+          "name": "1970年度"
+        }
+      },
+      "unit": "kg",
+      "value": {
+        "raw": "95.1",
+        "number": 95.1,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "180",
+          "name": "国民１人・１年当たり供給純食料"
+        },
+        "cat02": {
+          "code": "0130",
+          "name": "米"
+        },
+        "time": {
+          "code": "1971100000",
+          "name": "1971年度"
+        }
+      },
+      "unit": "kg",
+      "value": {
+        "raw": "93.1",
+        "number": 93.1,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "180",
+          "name": "国民１人・１年当たり供給純食料"
+        },
+        "cat02": {
+          "code": "0130",
+          "name": "米"
+        },
+        "time": {
+          "code": "1972100000",
+          "name": "1972年度"
+        }
+      },
+      "unit": "kg",
+      "value": {
+        "raw": "91.5",
+        "number": 91.5,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "180",
+          "name": "国民１人・１年当たり供給純食料"
+        },
+        "cat02": {
+          "code": "0130",
+          "name": "米"
+        },
+        "time": {
+          "code": "1973100000",
+          "name": "1973年度"
+        }
+      },
+      "unit": "kg",
+      "value": {
+        "raw": "90.8",
+        "number": 90.8,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "180",
+          "name": "国民１人・１年当たり供給純食料"
+        },
+        "cat02": {
+          "code": "0130",
+          "name": "米"
+        },
+        "time": {
+          "code": "1974100000",
+          "name": "1974年度"
+        }
+      },
+      "unit": "kg",
+      "value": {
+        "raw": "89.7",
+        "number": 89.7,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "180",
+          "name": "国民１人・１年当たり供給純食料"
+        },
+        "cat02": {
+          "code": "0130",
+          "name": "米"
+        },
+        "time": {
+          "code": "1975100000",
+          "name": "1975年度"
+        }
+      },
+      "unit": "kg",
+      "value": {
+        "raw": "88.0",
+        "number": 88.0,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "180",
+          "name": "国民１人・１年当たり供給純食料"
+        },
+        "cat02": {
+          "code": "0130",
+          "name": "米"
+        },
+        "time": {
+          "code": "1976100000",
+          "name": "1976年度"
+        }
+      },
+      "unit": "kg",
+      "value": {
+        "raw": "86.2",
+        "number": 86.2,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "180",
+          "name": "国民１人・１年当たり供給純食料"
+        },
+        "cat02": {
+          "code": "0130",
+          "name": "米"
+        },
+        "time": {
+          "code": "1977100000",
+          "name": "1977年度"
+        }
+      },
+      "unit": "kg",
+      "value": {
+        "raw": "83.4",
+        "number": 83.4,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "180",
+          "name": "国民１人・１年当たり供給純食料"
+        },
+        "cat02": {
+          "code": "0130",
+          "name": "米"
+        },
+        "time": {
+          "code": "1978100000",
+          "name": "1978年度"
+        }
+      },
+      "unit": "kg",
+      "value": {
+        "raw": "81.6",
+        "number": 81.6,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "180",
+          "name": "国民１人・１年当たり供給純食料"
+        },
+        "cat02": {
+          "code": "0130",
+          "name": "米"
+        },
+        "time": {
+          "code": "1979100000",
+          "name": "1979年度"
+        }
+      },
+      "unit": "kg",
+      "value": {
+        "raw": "79.8",
+        "number": 79.8,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "180",
+          "name": "国民１人・１年当たり供給純食料"
+        },
+        "cat02": {
+          "code": "0130",
+          "name": "米"
+        },
+        "time": {
+          "code": "1980100000",
+          "name": "1980年度"
+        }
+      },
+      "unit": "kg",
+      "value": {
+        "raw": "78.9",
+        "number": 78.9,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "180",
+          "name": "国民１人・１年当たり供給純食料"
+        },
+        "cat02": {
+          "code": "0130",
+          "name": "米"
+        },
+        "time": {
+          "code": "1981100000",
+          "name": "1981年度"
+        }
+      },
+      "unit": "kg",
+      "value": {
+        "raw": "77.8",
+        "number": 77.8,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "180",
+          "name": "国民１人・１年当たり供給純食料"
+        },
+        "cat02": {
+          "code": "0130",
+          "name": "米"
+        },
+        "time": {
+          "code": "1982100000",
+          "name": "1982年度"
+        }
+      },
+      "unit": "kg",
+      "value": {
+        "raw": "76.4",
+        "number": 76.4,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "180",
+          "name": "国民１人・１年当たり供給純食料"
+        },
+        "cat02": {
+          "code": "0130",
+          "name": "米"
+        },
+        "time": {
+          "code": "1983100000",
+          "name": "1983年度"
+        }
+      },
+      "unit": "kg",
+      "value": {
+        "raw": "75.7",
+        "number": 75.7,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "180",
+          "name": "国民１人・１年当たり供給純食料"
+        },
+        "cat02": {
+          "code": "0130",
+          "name": "米"
+        },
+        "time": {
+          "code": "1984100000",
+          "name": "1984年度"
+        }
+      },
+      "unit": "kg",
+      "value": {
+        "raw": "75.2",
+        "number": 75.2,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "180",
+          "name": "国民１人・１年当たり供給純食料"
+        },
+        "cat02": {
+          "code": "0130",
+          "name": "米"
+        },
+        "time": {
+          "code": "1985100000",
+          "name": "1985年度"
+        }
+      },
+      "unit": "kg",
+      "value": {
+        "raw": "74.6",
+        "number": 74.6,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "180",
+          "name": "国民１人・１年当たり供給純食料"
+        },
+        "cat02": {
+          "code": "0130",
+          "name": "米"
+        },
+        "time": {
+          "code": "1986100000",
+          "name": "1986年度"
+        }
+      },
+      "unit": "kg",
+      "value": {
+        "raw": "73.4",
+        "number": 73.4,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "180",
+          "name": "国民１人・１年当たり供給純食料"
+        },
+        "cat02": {
+          "code": "0130",
+          "name": "米"
+        },
+        "time": {
+          "code": "1987100000",
+          "name": "1987年度"
+        }
+      },
+      "unit": "kg",
+      "value": {
+        "raw": "72.0",
+        "number": 72.0,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "180",
+          "name": "国民１人・１年当たり供給純食料"
+        },
+        "cat02": {
+          "code": "0130",
+          "name": "米"
+        },
+        "time": {
+          "code": "1988100000",
+          "name": "1988年度"
+        }
+      },
+      "unit": "kg",
+      "value": {
+        "raw": "71.0",
+        "number": 71.0,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "180",
+          "name": "国民１人・１年当たり供給純食料"
+        },
+        "cat02": {
+          "code": "0130",
+          "name": "米"
+        },
+        "time": {
+          "code": "1989100000",
+          "name": "1989年度"
+        }
+      },
+      "unit": "kg",
+      "value": {
+        "raw": "70.4",
+        "number": 70.4,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "180",
+          "name": "国民１人・１年当たり供給純食料"
+        },
+        "cat02": {
+          "code": "0130",
+          "name": "米"
+        },
+        "time": {
+          "code": "1990100000",
+          "name": "1990年度"
+        }
+      },
+      "unit": "kg",
+      "value": {
+        "raw": "70.0",
+        "number": 70.0,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "180",
+          "name": "国民１人・１年当たり供給純食料"
+        },
+        "cat02": {
+          "code": "0130",
+          "name": "米"
+        },
+        "time": {
+          "code": "1991100000",
+          "name": "1991年度"
+        }
+      },
+      "unit": "kg",
+      "value": {
+        "raw": "69.9",
+        "number": 69.9,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "180",
+          "name": "国民１人・１年当たり供給純食料"
+        },
+        "cat02": {
+          "code": "0130",
+          "name": "米"
+        },
+        "time": {
+          "code": "1992100000",
+          "name": "1992年度"
+        }
+      },
+      "unit": "kg",
+      "value": {
+        "raw": "69.7",
+        "number": 69.7,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "180",
+          "name": "国民１人・１年当たり供給純食料"
+        },
+        "cat02": {
+          "code": "0130",
+          "name": "米"
+        },
+        "time": {
+          "code": "1993100000",
+          "name": "1993年度"
+        }
+      },
+      "unit": "kg",
+      "value": {
+        "raw": "69.1",
+        "number": 69.1,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "180",
+          "name": "国民１人・１年当たり供給純食料"
+        },
+        "cat02": {
+          "code": "0130",
+          "name": "米"
+        },
+        "time": {
+          "code": "1994100000",
+          "name": "1994年度"
+        }
+      },
+      "unit": "kg",
+      "value": {
+        "raw": "66.2",
+        "number": 66.2,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "180",
+          "name": "国民１人・１年当たり供給純食料"
+        },
+        "cat02": {
+          "code": "0130",
+          "name": "米"
+        },
+        "time": {
+          "code": "1995100000",
+          "name": "1995年度"
+        }
+      },
+      "unit": "kg",
+      "value": {
+        "raw": "67.8",
+        "number": 67.8,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "180",
+          "name": "国民１人・１年当たり供給純食料"
+        },
+        "cat02": {
+          "code": "0130",
+          "name": "米"
+        },
+        "time": {
+          "code": "1996100000",
+          "name": "1996年度"
+        }
+      },
+      "unit": "kg",
+      "value": {
+        "raw": "67.3",
+        "number": 67.3,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "180",
+          "name": "国民１人・１年当たり供給純食料"
+        },
+        "cat02": {
+          "code": "0130",
+          "name": "米"
+        },
+        "time": {
+          "code": "1997100000",
+          "name": "1997年度"
+        }
+      },
+      "unit": "kg",
+      "value": {
+        "raw": "66.7",
+        "number": 66.7,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "180",
+          "name": "国民１人・１年当たり供給純食料"
+        },
+        "cat02": {
+          "code": "0130",
+          "name": "米"
+        },
+        "time": {
+          "code": "1998100000",
+          "name": "1998年度"
+        }
+      },
+      "unit": "kg",
+      "value": {
+        "raw": "65.2",
+        "number": 65.2,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "180",
+          "name": "国民１人・１年当たり供給純食料"
+        },
+        "cat02": {
+          "code": "0130",
+          "name": "米"
+        },
+        "time": {
+          "code": "1999100000",
+          "name": "1999年度"
+        }
+      },
+      "unit": "kg",
+      "value": {
+        "raw": "65.2",
+        "number": 65.2,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "180",
+          "name": "国民１人・１年当たり供給純食料"
+        },
+        "cat02": {
+          "code": "0130",
+          "name": "米"
+        },
+        "time": {
+          "code": "2000100000",
+          "name": "2000年度"
+        }
+      },
+      "unit": "kg",
+      "value": {
+        "raw": "64.6",
+        "number": 64.6,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "180",
+          "name": "国民１人・１年当たり供給純食料"
+        },
+        "cat02": {
+          "code": "0130",
+          "name": "米"
+        },
+        "time": {
+          "code": "2001100000",
+          "name": "2001年度"
+        }
+      },
+      "unit": "kg",
+      "value": {
+        "raw": "63.6",
+        "number": 63.6,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "180",
+          "name": "国民１人・１年当たり供給純食料"
+        },
+        "cat02": {
+          "code": "0130",
+          "name": "米"
+        },
+        "time": {
+          "code": "2002100000",
+          "name": "2002年度"
+        }
+      },
+      "unit": "kg",
+      "value": {
+        "raw": "62.7",
+        "number": 62.7,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "180",
+          "name": "国民１人・１年当たり供給純食料"
+        },
+        "cat02": {
+          "code": "0130",
+          "name": "米"
+        },
+        "time": {
+          "code": "2003100000",
+          "name": "2003年度"
+        }
+      },
+      "unit": "kg",
+      "value": {
+        "raw": "61.9",
+        "number": 61.9,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "180",
+          "name": "国民１人・１年当たり供給純食料"
+        },
+        "cat02": {
+          "code": "0130",
+          "name": "米"
+        },
+        "time": {
+          "code": "2004100000",
+          "name": "2004年度"
+        }
+      },
+      "unit": "kg",
+      "value": {
+        "raw": "61.5",
+        "number": 61.5,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "180",
+          "name": "国民１人・１年当たり供給純食料"
+        },
+        "cat02": {
+          "code": "0130",
+          "name": "米"
+        },
+        "time": {
+          "code": "2005100000",
+          "name": "2005年度"
+        }
+      },
+      "unit": "kg",
+      "value": {
+        "raw": "61.4",
+        "number": 61.4,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "180",
+          "name": "国民１人・１年当たり供給純食料"
+        },
+        "cat02": {
+          "code": "0130",
+          "name": "米"
+        },
+        "time": {
+          "code": "2006100000",
+          "name": "2006年度"
+        }
+      },
+      "unit": "kg",
+      "value": {
+        "raw": "61.0",
+        "number": 61.0,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "180",
+          "name": "国民１人・１年当たり供給純食料"
+        },
+        "cat02": {
+          "code": "0130",
+          "name": "米"
+        },
+        "time": {
+          "code": "2007100000",
+          "name": "2007年度"
+        }
+      },
+      "unit": "kg",
+      "value": {
+        "raw": "61.2",
+        "number": 61.2,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "180",
+          "name": "国民１人・１年当たり供給純食料"
+        },
+        "cat02": {
+          "code": "0130",
+          "name": "米"
+        },
+        "time": {
+          "code": "2008100000",
+          "name": "2008年度"
+        }
+      },
+      "unit": "kg",
+      "value": {
+        "raw": "58.8",
+        "number": 58.8,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "180",
+          "name": "国民１人・１年当たり供給純食料"
+        },
+        "cat02": {
+          "code": "0130",
+          "name": "米"
+        },
+        "time": {
+          "code": "2009100000",
+          "name": "2009年度"
+        }
+      },
+      "unit": "kg",
+      "value": {
+        "raw": "58.3",
+        "number": 58.3,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "180",
+          "name": "国民１人・１年当たり供給純食料"
+        },
+        "cat02": {
+          "code": "0130",
+          "name": "米"
+        },
+        "time": {
+          "code": "2010100000",
+          "name": "2010年度"
+        }
+      },
+      "unit": "kg",
+      "value": {
+        "raw": "59.5",
+        "number": 59.5,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "180",
+          "name": "国民１人・１年当たり供給純食料"
+        },
+        "cat02": {
+          "code": "0130",
+          "name": "米"
+        },
+        "time": {
+          "code": "2011100000",
+          "name": "2011年度"
+        }
+      },
+      "unit": "kg",
+      "value": {
+        "raw": "57.8",
+        "number": 57.8,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "180",
+          "name": "国民１人・１年当たり供給純食料"
+        },
+        "cat02": {
+          "code": "0130",
+          "name": "米"
+        },
+        "time": {
+          "code": "2012100000",
+          "name": "2012年度"
+        }
+      },
+      "unit": "kg",
+      "value": {
+        "raw": "56.3",
+        "number": 56.3,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "180",
+          "name": "国民１人・１年当たり供給純食料"
+        },
+        "cat02": {
+          "code": "0130",
+          "name": "米"
+        },
+        "time": {
+          "code": "2013100000",
+          "name": "2013年度"
+        }
+      },
+      "unit": "kg",
+      "value": {
+        "raw": "56.9",
+        "number": 56.9,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "180",
+          "name": "国民１人・１年当たり供給純食料"
+        },
+        "cat02": {
+          "code": "0130",
+          "name": "米"
+        },
+        "time": {
+          "code": "2014100000",
+          "name": "2014年度"
+        }
+      },
+      "unit": "kg",
+      "value": {
+        "raw": "55.5",
+        "number": 55.5,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "180",
+          "name": "国民１人・１年当たり供給純食料"
+        },
+        "cat02": {
+          "code": "0130",
+          "name": "米"
+        },
+        "time": {
+          "code": "2015100000",
+          "name": "2015年度"
+        }
+      },
+      "unit": "kg",
+      "value": {
+        "raw": "54.6",
+        "number": 54.6,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "200",
+          "name": "国民１人・１日当たり供給熱量"
+        },
+        "cat02": {
+          "code": "0130",
+          "name": "米"
+        },
+        "time": {
+          "code": "1960100000",
+          "name": "1960年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "1105.5",
+        "number": 1105.5,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "200",
+          "name": "国民１人・１日当たり供給熱量"
+        },
+        "cat02": {
+          "code": "0130",
+          "name": "米"
+        },
+        "time": {
+          "code": "1961100000",
+          "name": "1961年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "1129.4",
+        "number": 1129.4,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "200",
+          "name": "国民１人・１日当たり供給熱量"
+        },
+        "cat02": {
+          "code": "0130",
+          "name": "米"
+        },
+        "time": {
+          "code": "1962100000",
+          "name": "1962年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "1137.4",
+        "number": 1137.4,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "200",
+          "name": "国民１人・１日当たり供給熱量"
+        },
+        "cat02": {
+          "code": "0130",
+          "name": "米"
+        },
+        "time": {
+          "code": "1963100000",
+          "name": "1963年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "1124.7",
+        "number": 1124.7,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "200",
+          "name": "国民１人・１日当たり供給熱量"
+        },
+        "cat02": {
+          "code": "0130",
+          "name": "米"
+        },
+        "time": {
+          "code": "1964100000",
+          "name": "1964年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "1114.3",
+        "number": 1114.3,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "200",
+          "name": "国民１人・１日当たり供給熱量"
+        },
+        "cat02": {
+          "code": "0130",
+          "name": "米"
+        },
+        "time": {
+          "code": "1965100000",
+          "name": "1965年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "1089.7",
+        "number": 1089.7,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "200",
+          "name": "国民１人・１日当たり供給熱量"
+        },
+        "cat02": {
+          "code": "0130",
+          "name": "米"
+        },
+        "time": {
+          "code": "1966100000",
+          "name": "1966年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "1032.1",
+        "number": 1032.1,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "200",
+          "name": "国民１人・１日当たり供給熱量"
+        },
+        "cat02": {
+          "code": "0130",
+          "name": "米"
+        },
+        "time": {
+          "code": "1967100000",
+          "name": "1967年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "1005.8",
+        "number": 1005.8,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "200",
+          "name": "国民１人・１日当たり供給熱量"
+        },
+        "cat02": {
+          "code": "0130",
+          "name": "米"
+        },
+        "time": {
+          "code": "1968100000",
+          "name": "1968年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "976.6",
+        "number": 976.6,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "200",
+          "name": "国民１人・１日当たり供給熱量"
+        },
+        "cat02": {
+          "code": "0130",
+          "name": "米"
+        },
+        "time": {
+          "code": "1969100000",
+          "name": "1969年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "946.4",
+        "number": 946.4,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "200",
+          "name": "国民１人・１日当たり供給熱量"
+        },
+        "cat02": {
+          "code": "0130",
+          "name": "米"
+        },
+        "time": {
+          "code": "1970100000",
+          "name": "1970年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "927.2",
+        "number": 927.2,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "200",
+          "name": "国民１人・１日当たり供給熱量"
+        },
+        "cat02": {
+          "code": "0130",
+          "name": "米"
+        },
+        "time": {
+          "code": "1971100000",
+          "name": "1971年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "905.1",
+        "number": 905.1,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "200",
+          "name": "国民１人・１日当たり供給熱量"
+        },
+        "cat02": {
+          "code": "0130",
+          "name": "米"
+        },
+        "time": {
+          "code": "1972100000",
+          "name": "1972年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "892.4",
+        "number": 892.4,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "200",
+          "name": "国民１人・１日当たり供給熱量"
+        },
+        "cat02": {
+          "code": "0130",
+          "name": "米"
+        },
+        "time": {
+          "code": "1973100000",
+          "name": "1973年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "885.2",
+        "number": 885.2,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "200",
+          "name": "国民１人・１日当たり供給熱量"
+        },
+        "cat02": {
+          "code": "0130",
+          "name": "米"
+        },
+        "time": {
+          "code": "1974100000",
+          "name": "1974年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "875.0",
+        "number": 875.0,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "200",
+          "name": "国民１人・１日当たり供給熱量"
+        },
+        "cat02": {
+          "code": "0130",
+          "name": "米"
+        },
+        "time": {
+          "code": "1975100000",
+          "name": "1975年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "856.4",
+        "number": 856.4,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "200",
+          "name": "国民１人・１日当たり供給熱量"
+        },
+        "cat02": {
+          "code": "0130",
+          "name": "米"
+        },
+        "time": {
+          "code": "1976100000",
+          "name": "1976年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "841.0",
+        "number": 841.0,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "200",
+          "name": "国民１人・１日当たり供給熱量"
+        },
+        "cat02": {
+          "code": "0130",
+          "name": "米"
+        },
+        "time": {
+          "code": "1977100000",
+          "name": "1977年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "813.1",
+        "number": 813.1,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "200",
+          "name": "国民１人・１日当たり供給熱量"
+        },
+        "cat02": {
+          "code": "0130",
+          "name": "米"
+        },
+        "time": {
+          "code": "1978100000",
+          "name": "1978年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "795.7",
+        "number": 795.7,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "200",
+          "name": "国民１人・１日当たり供給熱量"
+        },
+        "cat02": {
+          "code": "0130",
+          "name": "米"
+        },
+        "time": {
+          "code": "1979100000",
+          "name": "1979年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "775.8",
+        "number": 775.8,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "200",
+          "name": "国民１人・１日当たり供給熱量"
+        },
+        "cat02": {
+          "code": "0130",
+          "name": "米"
+        },
+        "time": {
+          "code": "1980100000",
+          "name": "1980年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "769.8",
+        "number": 769.8,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "200",
+          "name": "国民１人・１日当たり供給熱量"
+        },
+        "cat02": {
+          "code": "0130",
+          "name": "米"
+        },
+        "time": {
+          "code": "1981100000",
+          "name": "1981年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "758.7",
+        "number": 758.7,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "200",
+          "name": "国民１人・１日当たり供給熱量"
+        },
+        "cat02": {
+          "code": "0130",
+          "name": "米"
+        },
+        "time": {
+          "code": "1982100000",
+          "name": "1982年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "745.2",
+        "number": 745.2,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "200",
+          "name": "国民１人・１日当たり供給熱量"
+        },
+        "cat02": {
+          "code": "0130",
+          "name": "米"
+        },
+        "time": {
+          "code": "1983100000",
+          "name": "1983年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "736.2",
+        "number": 736.2,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "200",
+          "name": "国民１人・１日当たり供給熱量"
+        },
+        "cat02": {
+          "code": "0130",
+          "name": "米"
+        },
+        "time": {
+          "code": "1984100000",
+          "name": "1984年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "733.7",
+        "number": 733.7,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "200",
+          "name": "国民１人・１日当たり供給熱量"
+        },
+        "cat02": {
+          "code": "0130",
+          "name": "米"
+        },
+        "time": {
+          "code": "1985100000",
+          "name": "1985年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "727.3",
+        "number": 727.3,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "200",
+          "name": "国民１人・１日当たり供給熱量"
+        },
+        "cat02": {
+          "code": "0130",
+          "name": "米"
+        },
+        "time": {
+          "code": "1986100000",
+          "name": "1986年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "716.2",
+        "number": 716.2,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "200",
+          "name": "国民１人・１日当たり供給熱量"
+        },
+        "cat02": {
+          "code": "0130",
+          "name": "米"
+        },
+        "time": {
+          "code": "1987100000",
+          "name": "1987年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "699.9",
+        "number": 699.9,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "200",
+          "name": "国民１人・１日当たり供給熱量"
+        },
+        "cat02": {
+          "code": "0130",
+          "name": "米"
+        },
+        "time": {
+          "code": "1988100000",
+          "name": "1988年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "692.3",
+        "number": 692.3,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "200",
+          "name": "国民１人・１日当たり供給熱量"
+        },
+        "cat02": {
+          "code": "0130",
+          "name": "米"
+        },
+        "time": {
+          "code": "1989100000",
+          "name": "1989年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "686.4",
+        "number": 686.4,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "200",
+          "name": "国民１人・１日当たり供給熱量"
+        },
+        "cat02": {
+          "code": "0130",
+          "name": "米"
+        },
+        "time": {
+          "code": "1990100000",
+          "name": "1990年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "683.0",
+        "number": 683.0,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "200",
+          "name": "国民１人・１日当たり供給熱量"
+        },
+        "cat02": {
+          "code": "0130",
+          "name": "米"
+        },
+        "time": {
+          "code": "1991100000",
+          "name": "1991年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "679.8",
+        "number": 679.8,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "200",
+          "name": "国民１人・１日当たり供給熱量"
+        },
+        "cat02": {
+          "code": "0130",
+          "name": "米"
+        },
+        "time": {
+          "code": "1992100000",
+          "name": "1992年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "679.6",
+        "number": 679.6,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "200",
+          "name": "国民１人・１日当たり供給熱量"
+        },
+        "cat02": {
+          "code": "0130",
+          "name": "米"
+        },
+        "time": {
+          "code": "1993100000",
+          "name": "1993年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "674.4",
+        "number": 674.4,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "200",
+          "name": "国民１人・１日当たり供給熱量"
+        },
+        "cat02": {
+          "code": "0130",
+          "name": "米"
+        },
+        "time": {
+          "code": "1994100000",
+          "name": "1994年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "645.4",
+        "number": 645.4,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "200",
+          "name": "国民１人・１日当たり供給熱量"
+        },
+        "cat02": {
+          "code": "0130",
+          "name": "米"
+        },
+        "time": {
+          "code": "1995100000",
+          "name": "1995年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "659.6",
+        "number": 659.6,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "200",
+          "name": "国民１人・１日当たり供給熱量"
+        },
+        "cat02": {
+          "code": "0130",
+          "name": "米"
+        },
+        "time": {
+          "code": "1996100000",
+          "name": "1996年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "656.1",
+        "number": 656.1,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "200",
+          "name": "国民１人・１日当たり供給熱量"
+        },
+        "cat02": {
+          "code": "0130",
+          "name": "米"
+        },
+        "time": {
+          "code": "1997100000",
+          "name": "1997年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "650.8",
+        "number": 650.8,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "200",
+          "name": "国民１人・１日当たり供給熱量"
+        },
+        "cat02": {
+          "code": "0130",
+          "name": "米"
+        },
+        "time": {
+          "code": "1998100000",
+          "name": "1998年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "635.5",
+        "number": 635.5,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "200",
+          "name": "国民１人・１日当たり供給熱量"
+        },
+        "cat02": {
+          "code": "0130",
+          "name": "米"
+        },
+        "time": {
+          "code": "1999100000",
+          "name": "1999年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "633.7",
+        "number": 633.7,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "200",
+          "name": "国民１人・１日当たり供給熱量"
+        },
+        "cat02": {
+          "code": "0130",
+          "name": "米"
+        },
+        "time": {
+          "code": "2000100000",
+          "name": "2000年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "630.0",
+        "number": 630.0,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "200",
+          "name": "国民１人・１日当たり供給熱量"
+        },
+        "cat02": {
+          "code": "0130",
+          "name": "米"
+        },
+        "time": {
+          "code": "2001100000",
+          "name": "2001年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "620.3",
+        "number": 620.3,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "200",
+          "name": "国民１人・１日当たり供給熱量"
+        },
+        "cat02": {
+          "code": "0130",
+          "name": "米"
+        },
+        "time": {
+          "code": "2002100000",
+          "name": "2002年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "611.6",
+        "number": 611.6,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "200",
+          "name": "国民１人・１日当たり供給熱量"
+        },
+        "cat02": {
+          "code": "0130",
+          "name": "米"
+        },
+        "time": {
+          "code": "2003100000",
+          "name": "2003年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "602.1",
+        "number": 602.1,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "200",
+          "name": "国民１人・１日当たり供給熱量"
+        },
+        "cat02": {
+          "code": "0130",
+          "name": "米"
+        },
+        "time": {
+          "code": "2004100000",
+          "name": "2004年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "599.6",
+        "number": 599.6,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "200",
+          "name": "国民１人・１日当たり供給熱量"
+        },
+        "cat02": {
+          "code": "0130",
+          "name": "米"
+        },
+        "time": {
+          "code": "2005100000",
+          "name": "2005年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "598.9",
+        "number": 598.9,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "200",
+          "name": "国民１人・１日当たり供給熱量"
+        },
+        "cat02": {
+          "code": "0130",
+          "name": "米"
+        },
+        "time": {
+          "code": "2006100000",
+          "name": "2006年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "594.5",
+        "number": 594.5,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "200",
+          "name": "国民１人・１日当たり供給熱量"
+        },
+        "cat02": {
+          "code": "0130",
+          "name": "米"
+        },
+        "time": {
+          "code": "2007100000",
+          "name": "2007年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "595.7",
+        "number": 595.7,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "200",
+          "name": "国民１人・１日当たり供給熱量"
+        },
+        "cat02": {
+          "code": "0130",
+          "name": "米"
+        },
+        "time": {
+          "code": "2008100000",
+          "name": "2008年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "573.9",
+        "number": 573.9,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "200",
+          "name": "国民１人・１日当たり供給熱量"
+        },
+        "cat02": {
+          "code": "0130",
+          "name": "米"
+        },
+        "time": {
+          "code": "2009100000",
+          "name": "2009年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "568.2",
+        "number": 568.2,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "200",
+          "name": "国民１人・１日当たり供給熱量"
+        },
+        "cat02": {
+          "code": "0130",
+          "name": "米"
+        },
+        "time": {
+          "code": "2010100000",
+          "name": "2010年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "580.4",
+        "number": 580.4,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "200",
+          "name": "国民１人・１日当たり供給熱量"
+        },
+        "cat02": {
+          "code": "0130",
+          "name": "米"
+        },
+        "time": {
+          "code": "2011100000",
+          "name": "2011年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "562.5",
+        "number": 562.5,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "200",
+          "name": "国民１人・１日当たり供給熱量"
+        },
+        "cat02": {
+          "code": "0130",
+          "name": "米"
+        },
+        "time": {
+          "code": "2012100000",
+          "name": "2012年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "548.7",
+        "number": 548.7,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "200",
+          "name": "国民１人・１日当たり供給熱量"
+        },
+        "cat02": {
+          "code": "0130",
+          "name": "米"
+        },
+        "time": {
+          "code": "2013100000",
+          "name": "2013年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "555.0",
+        "number": 555.0,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "200",
+          "name": "国民１人・１日当たり供給熱量"
+        },
+        "cat02": {
+          "code": "0130",
+          "name": "米"
+        },
+        "time": {
+          "code": "2014100000",
+          "name": "2014年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "544.2",
+        "number": 544.2,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "200",
+          "name": "国民１人・１日当たり供給熱量"
+        },
+        "cat02": {
+          "code": "0130",
+          "name": "米"
+        },
+        "time": {
+          "code": "2015100000",
+          "name": "2015年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "533.9",
+        "number": 533.9,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "200",
+          "name": "国民１人・１日当たり供給熱量"
+        },
+        "cat02": {
+          "code": "2920",
+          "name": "合計"
+        },
+        "time": {
+          "code": "1960100000",
+          "name": "1960年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "2290.6",
+        "number": 2290.6,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "200",
+          "name": "国民１人・１日当たり供給熱量"
+        },
+        "cat02": {
+          "code": "2920",
+          "name": "合計"
+        },
+        "time": {
+          "code": "1961100000",
+          "name": "1961年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "2337.7",
+        "number": 2337.7,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "200",
+          "name": "国民１人・１日当たり供給熱量"
+        },
+        "cat02": {
+          "code": "2920",
+          "name": "合計"
+        },
+        "time": {
+          "code": "1962100000",
+          "name": "1962年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "2372.5",
+        "number": 2372.5,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "200",
+          "name": "国民１人・１日当たり供給熱量"
+        },
+        "cat02": {
+          "code": "2920",
+          "name": "合計"
+        },
+        "time": {
+          "code": "1963100000",
+          "name": "1963年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "2384.8",
+        "number": 2384.8,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "200",
+          "name": "国民１人・１日当たり供給熱量"
+        },
+        "cat02": {
+          "code": "2920",
+          "name": "合計"
+        },
+        "time": {
+          "code": "1964100000",
+          "name": "1964年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "2404.2",
+        "number": 2404.2,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "200",
+          "name": "国民１人・１日当たり供給熱量"
+        },
+        "cat02": {
+          "code": "2920",
+          "name": "合計"
+        },
+        "time": {
+          "code": "1965100000",
+          "name": "1965年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "2458.7",
+        "number": 2458.7,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "200",
+          "name": "国民１人・１日当たり供給熱量"
+        },
+        "cat02": {
+          "code": "2920",
+          "name": "合計"
+        },
+        "time": {
+          "code": "1966100000",
+          "name": "1966年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "2481.2",
+        "number": 2481.2,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "200",
+          "name": "国民１人・１日当たり供給熱量"
+        },
+        "cat02": {
+          "code": "2920",
+          "name": "合計"
+        },
+        "time": {
+          "code": "1967100000",
+          "name": "1967年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "2496.8",
+        "number": 2496.8,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "200",
+          "name": "国民１人・１日当たり供給熱量"
+        },
+        "cat02": {
+          "code": "2920",
+          "name": "合計"
+        },
+        "time": {
+          "code": "1968100000",
+          "name": "1968年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "2505.6",
+        "number": 2505.6,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "200",
+          "name": "国民１人・１日当たり供給熱量"
+        },
+        "cat02": {
+          "code": "2920",
+          "name": "合計"
+        },
+        "time": {
+          "code": "1969100000",
+          "name": "1969年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "2503.8",
+        "number": 2503.8,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "200",
+          "name": "国民１人・１日当たり供給熱量"
+        },
+        "cat02": {
+          "code": "2920",
+          "name": "合計"
+        },
+        "time": {
+          "code": "1970100000",
+          "name": "1970年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "2529.8",
+        "number": 2529.8,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "200",
+          "name": "国民１人・１日当たり供給熱量"
+        },
+        "cat02": {
+          "code": "2920",
+          "name": "合計"
+        },
+        "time": {
+          "code": "1971100000",
+          "name": "1971年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "2531.1",
+        "number": 2531.1,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "200",
+          "name": "国民１人・１日当たり供給熱量"
+        },
+        "cat02": {
+          "code": "2920",
+          "name": "合計"
+        },
+        "time": {
+          "code": "1972100000",
+          "name": "1972年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "2558.1",
+        "number": 2558.1,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "200",
+          "name": "国民１人・１日当たり供給熱量"
+        },
+        "cat02": {
+          "code": "2920",
+          "name": "合計"
+        },
+        "time": {
+          "code": "1973100000",
+          "name": "1973年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "2569.7",
+        "number": 2569.7,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "200",
+          "name": "国民１人・１日当たり供給熱量"
+        },
+        "cat02": {
+          "code": "2920",
+          "name": "合計"
+        },
+        "time": {
+          "code": "1974100000",
+          "name": "1974年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "2541.7",
+        "number": 2541.7,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "200",
+          "name": "国民１人・１日当たり供給熱量"
+        },
+        "cat02": {
+          "code": "2920",
+          "name": "合計"
+        },
+        "time": {
+          "code": "1975100000",
+          "name": "1975年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "2518.3",
+        "number": 2518.3,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "200",
+          "name": "国民１人・１日当たり供給熱量"
+        },
+        "cat02": {
+          "code": "2920",
+          "name": "合計"
+        },
+        "time": {
+          "code": "1976100000",
+          "name": "1976年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "2533.8",
+        "number": 2533.8,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "200",
+          "name": "国民１人・１日当たり供給熱量"
+        },
+        "cat02": {
+          "code": "2920",
+          "name": "合計"
+        },
+        "time": {
+          "code": "1977100000",
+          "name": "1977年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "2554.1",
+        "number": 2554.1,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "200",
+          "name": "国民１人・１日当たり供給熱量"
+        },
+        "cat02": {
+          "code": "2920",
+          "name": "合計"
+        },
+        "time": {
+          "code": "1978100000",
+          "name": "1978年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "2559.0",
+        "number": 2559.0,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "200",
+          "name": "国民１人・１日当たり供給熱量"
+        },
+        "cat02": {
+          "code": "2920",
+          "name": "合計"
+        },
+        "time": {
+          "code": "1979100000",
+          "name": "1979年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "2557.3",
+        "number": 2557.3,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "200",
+          "name": "国民１人・１日当たり供給熱量"
+        },
+        "cat02": {
+          "code": "2920",
+          "name": "合計"
+        },
+        "time": {
+          "code": "1980100000",
+          "name": "1980年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "2562.5",
+        "number": 2562.5,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "200",
+          "name": "国民１人・１日当たり供給熱量"
+        },
+        "cat02": {
+          "code": "2920",
+          "name": "合計"
+        },
+        "time": {
+          "code": "1981100000",
+          "name": "1981年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "2561.9",
+        "number": 2561.9,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "200",
+          "name": "国民１人・１日当たり供給熱量"
+        },
+        "cat02": {
+          "code": "2920",
+          "name": "合計"
+        },
+        "time": {
+          "code": "1982100000",
+          "name": "1982年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "2561.8",
+        "number": 2561.8,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "200",
+          "name": "国民１人・１日当たり供給熱量"
+        },
+        "cat02": {
+          "code": "2920",
+          "name": "合計"
+        },
+        "time": {
+          "code": "1983100000",
+          "name": "1983年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "2565.5",
+        "number": 2565.5,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "200",
+          "name": "国民１人・１日当たり供給熱量"
+        },
+        "cat02": {
+          "code": "2920",
+          "name": "合計"
+        },
+        "time": {
+          "code": "1984100000",
+          "name": "1984年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "2580.2",
+        "number": 2580.2,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "200",
+          "name": "国民１人・１日当たり供給熱量"
+        },
+        "cat02": {
+          "code": "2920",
+          "name": "合計"
+        },
+        "time": {
+          "code": "1985100000",
+          "name": "1985年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "2596.5",
+        "number": 2596.5,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "200",
+          "name": "国民１人・１日当たり供給熱量"
+        },
+        "cat02": {
+          "code": "2920",
+          "name": "合計"
+        },
+        "time": {
+          "code": "1986100000",
+          "name": "1986年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "2620.9",
+        "number": 2620.9,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "200",
+          "name": "国民１人・１日当たり供給熱量"
+        },
+        "cat02": {
+          "code": "2920",
+          "name": "合計"
+        },
+        "time": {
+          "code": "1987100000",
+          "name": "1987年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "2623.9",
+        "number": 2623.9,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "200",
+          "name": "国民１人・１日当たり供給熱量"
+        },
+        "cat02": {
+          "code": "2920",
+          "name": "合計"
+        },
+        "time": {
+          "code": "1988100000",
+          "name": "1988年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "2636.9",
+        "number": 2636.9,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "200",
+          "name": "国民１人・１日当たり供給熱量"
+        },
+        "cat02": {
+          "code": "2920",
+          "name": "合計"
+        },
+        "time": {
+          "code": "1989100000",
+          "name": "1989年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "2641.5",
+        "number": 2641.5,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "200",
+          "name": "国民１人・１日当たり供給熱量"
+        },
+        "cat02": {
+          "code": "2920",
+          "name": "合計"
+        },
+        "time": {
+          "code": "1990100000",
+          "name": "1990年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "2640.1",
+        "number": 2640.1,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "200",
+          "name": "国民１人・１日当たり供給熱量"
+        },
+        "cat02": {
+          "code": "2920",
+          "name": "合計"
+        },
+        "time": {
+          "code": "1991100000",
+          "name": "1991年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "2628.7",
+        "number": 2628.7,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "200",
+          "name": "国民１人・１日当たり供給熱量"
+        },
+        "cat02": {
+          "code": "2920",
+          "name": "合計"
+        },
+        "time": {
+          "code": "1992100000",
+          "name": "1992年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "2634.9",
+        "number": 2634.9,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "200",
+          "name": "国民１人・１日当たり供給熱量"
+        },
+        "cat02": {
+          "code": "2920",
+          "name": "合計"
+        },
+        "time": {
+          "code": "1993100000",
+          "name": "1993年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "2624.5",
+        "number": 2624.5,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "200",
+          "name": "国民１人・１日当たり供給熱量"
+        },
+        "cat02": {
+          "code": "2920",
+          "name": "合計"
+        },
+        "time": {
+          "code": "1994100000",
+          "name": "1994年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "2645.3",
+        "number": 2645.3,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "200",
+          "name": "国民１人・１日当たり供給熱量"
+        },
+        "cat02": {
+          "code": "2920",
+          "name": "合計"
+        },
+        "time": {
+          "code": "1995100000",
+          "name": "1995年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "2653.8",
+        "number": 2653.8,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "200",
+          "name": "国民１人・１日当たり供給熱量"
+        },
+        "cat02": {
+          "code": "2920",
+          "name": "合計"
+        },
+        "time": {
+          "code": "1996100000",
+          "name": "1996年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "2670.4",
+        "number": 2670.4,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "200",
+          "name": "国民１人・１日当たり供給熱量"
+        },
+        "cat02": {
+          "code": "2920",
+          "name": "合計"
+        },
+        "time": {
+          "code": "1997100000",
+          "name": "1997年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "2651.7",
+        "number": 2651.7,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "200",
+          "name": "国民１人・１日当たり供給熱量"
+        },
+        "cat02": {
+          "code": "2920",
+          "name": "合計"
+        },
+        "time": {
+          "code": "1998100000",
+          "name": "1998年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "2603.3",
+        "number": 2603.3,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "200",
+          "name": "国民１人・１日当たり供給熱量"
+        },
+        "cat02": {
+          "code": "2920",
+          "name": "合計"
+        },
+        "time": {
+          "code": "1999100000",
+          "name": "1999年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "2620.6",
+        "number": 2620.6,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "200",
+          "name": "国民１人・１日当たり供給熱量"
+        },
+        "cat02": {
+          "code": "2920",
+          "name": "合計"
+        },
+        "time": {
+          "code": "2000100000",
+          "name": "2000年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "2642.9",
+        "number": 2642.9,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "200",
+          "name": "国民１人・１日当たり供給熱量"
+        },
+        "cat02": {
+          "code": "2920",
+          "name": "合計"
+        },
+        "time": {
+          "code": "2001100000",
+          "name": "2001年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "2631.1",
+        "number": 2631.1,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "200",
+          "name": "国民１人・１日当たり供給熱量"
+        },
+        "cat02": {
+          "code": "2920",
+          "name": "合計"
+        },
+        "time": {
+          "code": "2002100000",
+          "name": "2002年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "2600.3",
+        "number": 2600.3,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "200",
+          "name": "国民１人・１日当たり供給熱量"
+        },
+        "cat02": {
+          "code": "2920",
+          "name": "合計"
+        },
+        "time": {
+          "code": "2003100000",
+          "name": "2003年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "2587.7",
+        "number": 2587.7,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "200",
+          "name": "国民１人・１日当たり供給熱量"
+        },
+        "cat02": {
+          "code": "2920",
+          "name": "合計"
+        },
+        "time": {
+          "code": "2004100000",
+          "name": "2004年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "2564.0",
+        "number": 2564.0,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "200",
+          "name": "国民１人・１日当たり供給熱量"
+        },
+        "cat02": {
+          "code": "2920",
+          "name": "合計"
+        },
+        "time": {
+          "code": "2005100000",
+          "name": "2005年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "2572.8",
+        "number": 2572.8,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "200",
+          "name": "国民１人・１日当たり供給熱量"
+        },
+        "cat02": {
+          "code": "2920",
+          "name": "合計"
+        },
+        "time": {
+          "code": "2006100000",
+          "name": "2006年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "2546.5",
+        "number": 2546.5,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "200",
+          "name": "国民１人・１日当たり供給熱量"
+        },
+        "cat02": {
+          "code": "2920",
+          "name": "合計"
+        },
+        "time": {
+          "code": "2007100000",
+          "name": "2007年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "2545.5",
+        "number": 2545.5,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "200",
+          "name": "国民１人・１日当たり供給熱量"
+        },
+        "cat02": {
+          "code": "2920",
+          "name": "合計"
+        },
+        "time": {
+          "code": "2008100000",
+          "name": "2008年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "2464.2",
+        "number": 2464.2,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "200",
+          "name": "国民１人・１日当たり供給熱量"
+        },
+        "cat02": {
+          "code": "2920",
+          "name": "合計"
+        },
+        "time": {
+          "code": "2009100000",
+          "name": "2009年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "2429.0",
+        "number": 2429.0,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "200",
+          "name": "国民１人・１日当たり供給熱量"
+        },
+        "cat02": {
+          "code": "2920",
+          "name": "合計"
+        },
+        "time": {
+          "code": "2010100000",
+          "name": "2010年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "2446.6",
+        "number": 2446.6,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "200",
+          "name": "国民１人・１日当たり供給熱量"
+        },
+        "cat02": {
+          "code": "2920",
+          "name": "合計"
+        },
+        "time": {
+          "code": "2011100000",
+          "name": "2011年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "2437.6",
+        "number": 2437.6,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "200",
+          "name": "国民１人・１日当たり供給熱量"
+        },
+        "cat02": {
+          "code": "2920",
+          "name": "合計"
+        },
+        "time": {
+          "code": "2012100000",
+          "name": "2012年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "2430.5",
+        "number": 2430.5,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "200",
+          "name": "国民１人・１日当たり供給熱量"
+        },
+        "cat02": {
+          "code": "2920",
+          "name": "合計"
+        },
+        "time": {
+          "code": "2013100000",
+          "name": "2013年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "2424.9",
+        "number": 2424.9,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "200",
+          "name": "国民１人・１日当たり供給熱量"
+        },
+        "cat02": {
+          "code": "2920",
+          "name": "合計"
+        },
+        "time": {
+          "code": "2014100000",
+          "name": "2014年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "2422.5",
+        "number": 2422.5,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004011200",
+      "dimensions": {
+        "cat01": {
+          "code": "200",
+          "name": "国民１人・１日当たり供給熱量"
+        },
+        "cat02": {
+          "code": "2920",
+          "name": "合計"
+        },
+        "time": {
+          "code": "2015100000",
+          "name": "2015年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "2417.5",
+        "number": 2417.5,
+        "kind": "number"
+      }
+    }
+  ]
+}

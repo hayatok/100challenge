@@ -1,0 +1,27 @@
+{
+  "command": [
+    "/Users/hayatok/.local/bin/estat",
+    "data",
+    "get",
+    "0004011200",
+    "--filter",
+    "cat01=180,200",
+    "--filter",
+    "cat02=0130,2920",
+    "--page-size",
+    "300",
+    "--max-records",
+    "300",
+    "--timeout",
+    "25s",
+    "-o",
+    "json"
+  ],
+  "started_at": "2026-10-16T07:36:19.688070+00:00",
+  "finished_at": "2026-10-16T07:36:20.121740+00:00",
+  "exit_code": 0,
+  "json_valid": true,
+  "output_path": "evidence/estat/economy/food_long_data.json",
+  "sha256": "c9e1cda269e05a7bd7cd47f380f7a91f91f90d774afefe0e2d75ffb2351c0185",
+  "stderr": ""
+}

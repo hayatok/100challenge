@@ -1,0 +1,266 @@
+{
+  "version": 1,
+  "cutoff": "2026-10-16",
+  "drivers": [
+    {
+      "id": "population",
+      "label": "人口",
+      "status": "allowed_with_notes",
+      "worldTarget": "模型に描く人の規模",
+      "seriesIds": [
+        "SD-STAT016:area=00000:cat01=A1101:tab=00001"
+      ],
+      "notes": [
+        "各年10月1日の総人口。年度平均人口ではない。",
+        "国勢調査と人口推計を含む。外国人の範囲、基準人口の補正・組替えの詳細は原注記を留保。",
+        "1975年より前の人口は作らない。最新観測より後は観測年付きの過去の模型としてのみ参照。"
+      ],
+      "boundaries": [],
+      "selectionPolicy": {
+        "exactYearFirst": true,
+        "allowHistoricalSnapshot": true,
+        "showObservationYear": true,
+        "treatSnapshotAsCurrent": false,
+        "interpolate": false,
+        "missingRawStopsSnapshot": true
+      },
+      "authorRuleNote": "描画の数や縮尺は作者が設定する。全国値を架空個人の確率に変換しない。",
+      "limitation": "10月1日の全国人口。1975年より前の値は、この資料にはありません。"
+    },
+    {
+      "id": "industry",
+      "label": "働く場所",
+      "status": "allowed_with_notes",
+      "worldTarget": "田畑・工房・工場の量",
+      "seriesIds": [
+        "SD2-STAT001:cat01=120:cat02=100:tab=334",
+        "SD2-STAT001:cat01=180:cat02=100:tab=334",
+        "SD-STAT005:area=00000:cat01=001:cat02=0:cat03=00:tab=01",
+        "SD2-STAT002:area=00000:cat01=A009:cat02=0:cat03=00:tab=01",
+        "SD-STAT005:area=00000:cat01=010:cat02=0:cat03=00:tab=01"
+      ],
+      "notes": [
+        "国勢調査の旧産業1920/1930/1940/1950と労働力調査は別系列。",
+        "人と万人を同じ数として混ぜない。旧*製造業A009と010製造業も接続しない。",
+        "労働力調査は対象年齢・対象領域等の詳細が未確定。全国の掲載値を示す過去の断面に限定。",
+        "農業・製造業だけでは全産業の構成にならない。他産業の人数を差引きで作らない。"
+      ],
+      "boundaries": [
+        {
+          "year": 1953,
+          "reason": "国勢調査と労働力調査の別系列"
+        },
+        {
+          "year": 2003,
+          "reason": "*製造業A009から010への分類境界、接続禁止"
+        }
+      ],
+      "selectionPolicy": {
+        "exactYearFirst": true,
+        "allowHistoricalSnapshot": true,
+        "showObservationYear": true,
+        "treatSnapshotAsCurrent": false,
+        "interpolate": false,
+        "missingRawStopsSnapshot": true
+      },
+      "authorRuleNote": "描画の数や縮尺は作者が設定する。全国値を架空個人の確率に変換しない。",
+      "limitation": "調査や産業の分け方が変わります。違う分類の値をひと続きにはしません。"
+    },
+    {
+      "id": "housing",
+      "label": "住まい",
+      "status": "allowed_with_notes",
+      "worldTarget": "家の数と空き家の灯り",
+      "seriesIds": [
+        "EST13:area=00000:cat01=H1100:tab=00001",
+        "EST13:area=00000:cat01=H110202:tab=00001"
+      ],
+      "notes": [
+        "1978～2023年の5年刻みの取得値。毎年の戸数を補間しない。",
+        "SSD年度表示と住宅・土地統計調査の原調査日の対応は未確定。",
+        "空き家数から実在の場所・個人の不在を割り当てない。"
+      ],
+      "boundaries": [],
+      "selectionPolicy": {
+        "exactYearFirst": true,
+        "allowHistoricalSnapshot": true,
+        "showObservationYear": true,
+        "treatSnapshotAsCurrent": false,
+        "interpolate": false,
+        "missingRawStopsSnapshot": true
+      },
+      "authorRuleNote": "描画の数や縮尺は作者が設定する。全国値を架空個人の確率に変換しない。",
+      "limitation": "住宅と空き家の数は5年ごとの値。間の年の戸数は分かりません。"
+    },
+    {
+      "id": "water",
+      "label": "水道",
+      "status": "allowed_with_notes",
+      "worldTarget": "町の水道設備の模型",
+      "seriesIds": [
+        "EST13:area=00000:cat01=H530101:tab=00001"
+      ],
+      "notes": [
+        "1975～2023年度の上水道給水人口。電化率や全水道普及率ではない。",
+        "原調査日とSSD年度ラベルの対応は未確認。人口と安易に割って普及率を作らない。"
+      ],
+      "boundaries": [],
+      "selectionPolicy": {
+        "exactYearFirst": true,
+        "allowHistoricalSnapshot": true,
+        "showObservationYear": true,
+        "treatSnapshotAsCurrent": false,
+        "interpolate": false,
+        "missingRawStopsSnapshot": true
+      },
+      "authorRuleNote": "描画の数や縮尺は作者が設定する。全国値を架空個人の確率に変換しない。",
+      "limitation": "上水道で給水される人口。電気の普及や、水道全体の普及率ではありません。"
+    },
+    {
+      "id": "education",
+      "label": "学ぶ場所",
+      "status": "allowed_with_notes",
+      "worldTarget": "学校と通学の模型",
+      "seriesIds": [
+        "SD-STAT003:area=00000:cat01=0000000020:tab=0000000450",
+        "SD-STAT003:area=00000:cat01=0000000120:tab=0000000450"
+      ],
+      "notes": [
+        "1948～2016年、国公私立合計の小学校/大学の在学者数を別系列。",
+        "大学には大学院・専攻科・別科などを含み、通信教育を含まない。",
+        "学校種の変更を無条件接続せず、個人の進学率・試験合格確率にしない。"
+      ],
+      "boundaries": [],
+      "selectionPolicy": {
+        "exactYearFirst": true,
+        "allowHistoricalSnapshot": true,
+        "showObservationYear": true,
+        "treatSnapshotAsCurrent": false,
+        "interpolate": false,
+        "missingRawStopsSnapshot": true
+      },
+      "authorRuleNote": "描画の数や縮尺は作者が設定する。全国値を架空個人の確率に変換しない。",
+      "limitation": "全国の在学者数。模型の一人ひとりが進学する確率ではありません。"
+    },
+    {
+      "id": "rice",
+      "label": "食の供給",
+      "status": "allowed_with_notes",
+      "worldTarget": "米屋や食卓の米の模型",
+      "seriesIds": [
+        "E2ST02:cat01=1002"
+      ],
+      "notes": [
+        "国民1人1年当たり供給純食料の米、kg。摂取量・購入量ではない。",
+        "1971年度以前は沖縄除外。2024年調査表の最終収録は2023年度。",
+        "食品成分表等の改定境界と2018年度の純旅客用控除で比較を切る。"
+      ],
+      "boundaries": [
+        {
+          "year": 1965,
+          "reason": "成分表改定"
+        },
+        {
+          "year": 1972,
+          "reason": "沖縄の対象範囲変更"
+        },
+        {
+          "year": 1985,
+          "reason": "成分表改定"
+        },
+        {
+          "year": 2009,
+          "reason": "成分表改定"
+        },
+        {
+          "year": 2014,
+          "reason": "成分表改定"
+        },
+        {
+          "year": 2018,
+          "reason": "純旅客用控除"
+        },
+        {
+          "year": 2019,
+          "reason": "成分表改定"
+        },
+        {
+          "year": 2022,
+          "reason": "成分表改定"
+        }
+      ],
+      "selectionPolicy": {
+        "exactYearFirst": true,
+        "allowHistoricalSnapshot": true,
+        "showObservationYear": true,
+        "treatSnapshotAsCurrent": false,
+        "interpolate": false,
+        "missingRawStopsSnapshot": true
+      },
+      "authorRuleNote": "描画の数や縮尺は作者が設定する。全国値を架空個人の確率に変換しない。",
+      "limitation": "国内に供給された米の量。実際に一人が食べた量ではありません。"
+    },
+    {
+      "id": "prices",
+      "label": "買物と物価",
+      "status": "allowed_with_notes",
+      "worldTarget": "商店の値札の表示",
+      "seriesIds": [
+        "E2ST01:area=00000:cat01=0001:tab=1",
+        "E2ST01:area=00000:cat01=0002:tab=1"
+      ],
+      "notes": [
+        "全国・暦年平均、2025年=100の公式接続指数。金額ではない。",
+        "1970～2025年だけ。旧2005/2020年基準とは別系列。品目とウエイトは変わる。",
+        "個人の家計・購買量や商店の工事費へ変換しない。"
+      ],
+      "boundaries": [],
+      "selectionPolicy": {
+        "exactYearFirst": true,
+        "allowHistoricalSnapshot": true,
+        "showObservationYear": true,
+        "treatSnapshotAsCurrent": false,
+        "interpolate": false,
+        "missingRawStopsSnapshot": true
+      },
+      "authorRuleNote": "描画の数や縮尺は作者が設定する。全国値を架空個人の確率に変換しない。",
+      "limitation": "2025年を100とした物価の指数。値札の金額ではありません。"
+    },
+    {
+      "id": "bus",
+      "label": "移動",
+      "status": "allowed_with_notes",
+      "worldTarget": "走る乗合バスの模型",
+      "seriesIds": [
+        "EST05:area=00001:cat01=00001"
+      ],
+      "notes": [
+        "合計区分の乗合バス輸送人員。単位原表は「千」、千人の輸送人員を表す。",
+        "2010年10月～2020年3月の月次114観測。区域コードを都道府県コードと混同しない。",
+        "年平均や年計を独自算出しない。選択年の末月など参照する月と原timeLabelを明示する。"
+      ],
+      "boundaries": [],
+      "selectionPolicy": {
+        "exactYearFirst": true,
+        "allowHistoricalSnapshot": true,
+        "showObservationYear": true,
+        "treatSnapshotAsCurrent": false,
+        "interpolate": false,
+        "missingRawStopsSnapshot": true
+      },
+      "authorRuleNote": "描画の数や縮尺は作者が設定する。全国値を架空個人の確率に変換しない。",
+      "limitation": "乗合バスの月ごとの輸送人員。年の合計や平均ではありません。"
+    }
+  ],
+  "rules": [
+    "史実と統計は固定。seedは架空の模型の暮らしだけを変える。",
+    "過去の観測を参照する模型には、観測年・原時間ラベルを表示する。",
+    "原表の欠測記号と未取得年は0にせず、境界をまたぐ補間・外挿をしない。"
+  ],
+  "archiveOnlyNotes": [
+    "旧CPI、家計円、熱量は基準・量の違いを保持した別系列。",
+    "携帯電話の構成は2002～2004年だけで全通信普及の長期系列にはならない。",
+    "家庭電力・燃料は2015年試験調査の1期で、長期の電化率にはしない。",
+    "国勢人口長期表は歴史的領域・調査基準の留保があるため主駆動は保留。"
+  ]
+}

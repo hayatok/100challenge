@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f4f0e8">
+  <meta name="description" content="史実と統計の時代の流れの中で、架空の人々の暮らしを眺める日本の箱庭。1900年から2026年まで。">
+  <title>箱庭日本 — 時代は流れる。暮らしは、ひとつずつ。</title>
+  <link rel="icon" href="./assets/japan-cover.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./src/style.css">
+  <script type="module" src="./src/app.js"></script>
+</head>
+<body>
+  <a href="#playback" class="skip-link">時間の操作へ</a>
+  <header class="masthead">
+    <a class="brand" href="./"><span class="brand-seal" aria-hidden="true">日</span><h1>箱庭日本</h1></a>
+    <p>時代は流れる。暮らしは、ひとつずつ。</p>
+    <nav aria-label="作品について"><button type="button" id="open-archive" disabled>記録をたどる <span aria-hidden="true">↗</span></button><button type="button" id="open-about" class="quiet-button" disabled>この箱庭について</button></nav>
+  </header>
+  <div id="loading" class="load-message" role="status"><span class="loading-island" aria-hidden="true">✦</span><h2>日本の箱庭をひらいています</h2><p>一世紀の記録と、小さな暮らしを用意しています。</p></div>
+  <div id="load-error" class="load-message" hidden role="alert"><h2>箱庭をひらけませんでした</h2><p>読み込みが途中で止まったようです。もう一度お試しください。</p><button type="button" id="retry" class="primary-button">もう一度ひらく</button></div>
+  <main id="app" hidden>
+    <section class="world-layout" aria-label="時代が流れる箱庭">
+      <div class="world-column">
+        <div class="world-frame">
+          <canvas id="world-canvas" tabindex="0" role="img" aria-label="日本列島に12の架空の町が並ぶ、動く箱庭。町の選択は下の場所欄でもできます。"></canvas>
+          <div class="year-stamp"><p id="era-label">明治33年</p><div><strong id="year-label">1900</strong><span>年</span></div><p><span id="month-label">1</span>月 <span id="play-state" class="play-state">時代が流れています</span></p></div>
+          <div class="view-switch" role="group" aria-label="箱庭の見方"><button type="button" id="view-japan" aria-pressed="true">日本全景</button><button type="button" id="view-place" aria-pressed="false">町をのぞく</button></div>
+          <div id="scene-title" class="scene-title"><span class="eyebrow">一世紀を、眺めよう。</span><p>町をのぞく。人を見守る。</p></div>
+          <div class="map-caption"><span id="scene-caption">12の架空の町で、日本の暮らしを描いています。</span><span id="motion-note"></span></div>
+        </div>
+        <div id="vital-records" class="vital-records" aria-label="この年の出生と死亡の記録"></div>
+        <section id="playback" class="playback" aria-label="時間の操作">
+          <div class="playback-row">
+            <button id="toggle-play" type="button" class="primary-button" aria-label="時間を止める">Ⅱ 止める</button>
+            <label class="speed-control" for="speed">速さ <select id="speed"><option value="1">1倍</option><option value="4">4倍</option><option value="12">12倍</option></select></label>
+            <label class="year-entry" for="year-input">見る年 <input id="year-input" type="number" min="1900" max="2026" value="1900" step="1"></label>
+            <button type="button" id="reroll" title="歴史は同じまま、別の人々の暮らしに切り替えます">↻ 別の暮らし</button>
+          </div>
+          <label class="timeline-control" for="year-range"><span class="sr-only">1900年から2026年の間を移動する</span><input id="year-range" type="range" min="1900" max="2026" step="1" value="1900"><span class="timeline-marks"><span>1900</span><span>1930</span><span>1960</span><span>1990</span><span>2026</span></span></label>
+          <p id="time-message" class="time-message" role="status">眺めているだけで、時代が進みます。</p>
+        </section>
+      </div>
+      <aside class="observation-column" aria-label="気になる暮らし">
+        <div class="place-control"><span class="eyebrow">小さな暮らし、大きな時代。</span><label for="place-select">眺める場所</label><select id="place-select"></select></div>
+        <section class="person-panel" aria-labelledby="person-heading"><div class="panel-heading"><h2 id="person-heading">この人を見守る</h2><button type="button" id="next-person" class="quiet-button">別の人 →</button></div><div id="person-content"></div></section>
+        <section class="history-panel" aria-labelledby="history-heading"><div class="panel-heading"><h2 id="history-heading">時代の便り</h2><button id="next-history" type="button" class="quiet-button" aria-label="次の時代の便り">→</button><span id="history-year" class="small"></span></div><div id="history-content"></div><button type="button" id="more-history" class="inline-link">この時代の出来事を読む ↗</button></section>
+      </aside>
+    </section>
+    <section class="numbers-section" aria-labelledby="numbers-heading">
+      <div class="section-heading"><div><p class="eyebrow">数字の向こうに、風景がある。</p><h2 id="numbers-heading">模型が参考にしている記録</h2></div><p>数字を押すと、出典と風景とのつながりが見られます。</p></div>
+      <div id="macro-grid" class="macro-grid"></div>
+      <p id="basis-note" class="basis-note"></p>
+    </section>
+    <section class="living-section" aria-labelledby="living-heading"><div class="section-heading"><div><p class="eyebrow">本当にあった、誰かの日々。</p><h2 id="living-heading">当時の暮らしの記録</h2></div><div class="living-actions"><button type="button" id="next-living" class="inline-link">別の記録 →</button><button type="button" id="more-living" class="inline-link">各地の記録をたどる ↗</button></div></div><div id="living-content" class="living-content"></div></section>
+    <footer class="footer"><p><strong>箱庭日本</strong><br>1900 — 2026</p><p>歴史と統計は同じ。人々の暮らしは、毎回少し違います。<br>地形は現在の輪郭を参考にしています。町と人物は架空です。</p><div><label class="motion-setting"><input id="reduce-motion" type="checkbox">動きを減らす</label><span id="save-status" class="small">この端末に続きを保存します。</span></div></footer>
+  </main>
+  <dialog id="detail-dialog" aria-labelledby="detail-title"><div class="dialog-top"><span class="eyebrow">記録の向こうへ</span><button type="button" id="detail-close">閉じる ×</button></div><h2 id="detail-title"></h2><div id="detail-body"></div></dialog>
+  <dialog id="archive-dialog" aria-labelledby="archive-title"><div class="dialog-top"><span class="eyebrow">1900 — 2026</span><button type="button" id="archive-close">閉じる ×</button></div><h2 id="archive-title">日本の記録をたどる</h2><p class="archive-intro">41の統計表、177の出来事、85の暮らしの記録から。数字のない年や、確かめきれていないことも残しています。</p><nav class="archive-tabs" aria-label="記録の種類"><button type="button" data-section="statistics" aria-pressed="true">統計</button><button type="button" data-section="events" aria-pressed="false">出来事</button><button type="button" data-section="living" aria-pressed="false">暮らし</button><button type="button" data-section="sources" aria-pressed="false">出典</button><button type="button" data-section="gaps" aria-pressed="false">未確認のこと</button></nav><div class="archive-filters"><label for="archive-search">言葉で探す<input type="search" id="archive-search" placeholder="人口、農村、物価、沖縄…"></label><label for="archive-year">年を絞る<input type="number" min="1900" max="2026" id="archive-year" placeholder="すべての年"></label><button id="archive-clear" type="button">絞り込みを戻す</button></div><p id="archive-count" class="small" role="status"></p><div id="archive-results"></div></dialog>
+  <div id="announcement" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+  <noscript><p>この箱庭を眺めるには、ブラウザのJavaScriptを有効にしてください。</p></noscript>
+</body>
+</html>

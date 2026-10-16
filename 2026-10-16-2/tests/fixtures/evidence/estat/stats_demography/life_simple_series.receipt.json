@@ -1,0 +1,27 @@
+{
+  "command": [
+    "/Users/hayatok/.local/bin/estat",
+    "data",
+    "get",
+    "0003109558",
+    "--filter",
+    "tab=150",
+    "--filter",
+    "cat01=300000",
+    "--filter",
+    "cat02=10,20",
+    "--max-records",
+    "40",
+    "--timeout",
+    "30s",
+    "-o",
+    "json"
+  ],
+  "started_at": "2026-10-16T07:28:37.206048+00:00",
+  "finished_at": "2026-10-16T07:28:37.558485+00:00",
+  "exit_code": 0,
+  "json_valid": true,
+  "output_path": "evidence/estat/stats_demography/life_simple_series.json",
+  "sha256": "ab168fd9f790d713ac34b54a308e1ee433b2badf773b74650ae4c1428f43c86d",
+  "stderr": ""
+}
