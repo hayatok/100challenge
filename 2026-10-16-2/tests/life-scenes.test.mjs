@@ -188,3 +188,34 @@ test('appointments put actual visible relatives, schoolmates and neighbors toget
   }
   assert.ok(encounters>1000);for(const kind of ['parent','child','family','schoolmate','neighbor'])assert.ok(kinds.has(kind),kind);
 });
+
+test('simultaneous conversations spread across town venues without forming one central crowd',async()=>{
+  const {routineAt,DAILY_CYCLE_SECONDS}=await import('../app/src/routines.js');
+  const projected=p=>({x:(p.x-p.y)*320,y:(p.x+p.y-1)*174});
+  const distance=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y);
+  for(const seed of [1,42,771,829])for(const year of [1900,1945,1985,2026]){
+    const s=snapshot(createSimulation(archive,drivers,{year,month:7,seed}));
+    for(const residents of Object.values(s.world.placePeople))for(let day=0;day<3;day++){
+      const people=residents.map(p=>routineAt(p,day*DAILY_CYCLE_SECONDS+76));
+      const groups=new Map();for(const p of people){if(!groups.has(p.meetingId))groups.set(p.meetingId,[]);groups.get(p.meetingId).push(p);}
+      assert.ok(groups.size>=7,'28 residents need several independently visible conversations');
+      const centers=[...groups.values()].map(g=>projected(g[0]));
+      for(const group of groups.values()){
+        assert.ok(group.length>=2&&group.length<=4,'a meeting remains a pair or small family group');
+        assert.ok(group.every(p=>p.meetingVenue?.id===group[0].meetingVenue.id));
+        assert.ok(group.every(p=>p.x>=0&&p.x<=1&&p.y>=0&&p.y<=1),'all venues remain inside the town coordinate bounds');
+        assert.ok(group.every(p=>p.scene.destinationKind==='meeting'&&p.scene.venueLabel===p.meetingVenue.label));
+        for(const p of group){
+          assert.ok(group.every(q=>distance(projected(p),projected(q))<1e-9),'companions really meet at one venue');
+          if(p.role==='child')assert.ok(p.companions.some(q=>q.age>=16),'a small child meets a family caregiver');
+          const nearby=people.filter(q=>distance(projected(p),projected(q))<40);
+          assert.ok(nearby.length<=4,'no more than four residents occupy one 80px-wide conversation area');
+        }
+      }
+      for(let i=0;i<centers.length;i++)for(let j=i+1;j<centers.length;j++)assert.ok(distance(centers[i],centers[j])>=80,'independent groups must leave room for figures and gestures');
+      const kinds=new Set(people.map(p=>p.meetingVenue.kind));assert.ok(kinds.size>=3,'meetings use different kinds of places');
+      assert.ok(Math.max(...centers.map(p=>p.x))-Math.min(...centers.map(p=>p.x))>=350,'use the west and east of town');
+      assert.ok(Math.max(...centers.map(p=>p.y))-Math.min(...centers.map(p=>p.y))>=170,'use front and rear districts');
+    }
+  }
+});

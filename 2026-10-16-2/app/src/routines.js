@@ -81,27 +81,52 @@ const fallbackAnchors={water:{x:.24,y:.67},farm:{x:.7,y:.67},coast:{x:.94,y:.24}
 const sceneOf=rule=>({...rule,sourceMaterialIds:rule.sourceMaterialIds??(rule.sourceMaterialId?[rule.sourceMaterialId]:[]),fictional:true,sourceNote:rule.sourceNote??'人物・場面・町への置き分けは作者の創作です。'});
 // Each visible resident has a real, local appointment. Grouping is authored,
 // never inferred from national population or employment observations.
+// These meeting places describe authored doorstep, garden, shopfront and public
+// space around the town. They do not add measured facilities or change counts.
+const MEETING_VENUES=Object.freeze([
+  ['west-door','home-front','西の家々の前',-120,-105],['north-garden','garden','家々の庭先',0,-105],
+  ['north-door','home-front','北の家々の前',120,-105],['west-shop','shop-front','西の店先',-200,-35],
+  ['small-square','square','小さな広場',-80,-35],['workshop-front','shop-front','工房の軒先',40,-35],
+  ['east-garden','garden','東の庭先',160,-35],['west-garden','garden','西の庭先',-160,35],
+  ['south-door','home-front','南の家々の前',-40,35],['east-shop','shop-front','東の店先',80,35],
+  ['quiet-square','square','通りの休み場',200,35],['south-garden','garden','南の庭先',-120,105],
+  ['garden-path','garden','畑わきの庭先',0,105],['south-square','square','南の小広場',120,105],
+].map(([id,kind,label,localX,localY])=>Object.freeze({id,kind,label,anchor:Object.freeze({x:.5+(localY/174+localX/320)/2,y:.5+(localY/174-localX/320)/2})})));
+const projectedDistance=(a,b)=>Math.hypot(((a.x-a.y)-(b.x-b.y))*320,((a.x+a.y)-(b.x+b.y))*174);
 export function createMeetings(people,year,seed){
   const result=Object.fromEntries(people.map(p=>[p.id,[]]));
+  const partition=members=>{
+    const groups=[];for(let i=0;i<members.length;i+=3)groups.push(members.slice(i,i+3));
+    if(groups.length>1&&groups.at(-1).length===1)groups.at(-1).unshift(groups.at(-2).pop());
+    return groups;
+  };
   for(let day=0;day<3;day++){
-    const groups=[];
-    if(day===0){for(const familyId of [...new Set(people.map(p=>p.familyId))].sort())groups.push(people.filter(p=>p.familyId===familyId));}
-    else {
-      const reserved=new Set();
-      for(const familyId of [...new Set(people.filter(p=>year-p.birthYear<6).map(p=>p.familyId))].sort()){
-        const children=people.filter(p=>p.familyId===familyId&&year-p.birthYear<6),parents=people.filter(p=>p.familyId===familyId&&year-p.birthYear>=16);
-        const caregiver=parents.find(p=>children.some(c=>c.parentIds.includes(p.id)))??parents[0];
-        const group=[...children,...(caregiver?[caregiver]:[])];groups.push(group);for(const p of group)reserved.add(p.id);
-      }
-      const peers=people.filter(p=>!reserved.has(p.id)).sort((a,b)=>day===1?a.birthYear-b.birthYear||a.order-b.order:hash(`${seed}|${a.id}-meet`)-hash(`${seed}|${b.id}-meet`));
-      for(let i=0;i<peers.length;i+=3){const group=peers.slice(i,i+3);if(group.length===1&&groups.length)groups.at(-1).push(...group);else groups.push(group);}
+    const groups=[],reserved=new Set();
+    // Small children meet a family caregiver at every appointment, including
+    // the family day. Remaining relatives form pairs/triads instead of crowds.
+    for(const familyId of [...new Set(people.filter(p=>year-p.birthYear<6).map(p=>p.familyId))].sort()){
+      const children=people.filter(p=>p.familyId===familyId&&year-p.birthYear<6),parents=people.filter(p=>p.familyId===familyId&&year-p.birthYear>=16);
+      const caregiver=parents.find(p=>children.some(c=>c.parentIds.includes(p.id)))??parents[0];
+      const group=[...children,...(caregiver?[caregiver]:[])];groups.push(group);for(const p of group)reserved.add(p.id);
     }
+    const available=people.filter(p=>!reserved.has(p.id));
+    if(day===0){for(const familyId of [...new Set(available.map(p=>p.familyId))].sort())groups.push(...partition(available.filter(p=>p.familyId===familyId).sort((a,b)=>a.birthYear-b.birthYear||a.order-b.order)));}
+    else groups.push(...partition(available.sort((a,b)=>day===1?a.birthYear-b.birthYear||a.order-b.order:hash(`${seed}|${a.id}-meet`)-hash(`${seed}|${b.id}-meet`))));
+    // Do not schedule a conversation alone if one person remains in a family.
+    for(let i=groups.length-1;i>=0;i--)if(groups[i].length===1&&groups.length>1){const person=groups[i][0],target=groups.find((g,j)=>j!==i&&g.length<3&&g.some(q=>q.familyId===person.familyId))??groups.find((g,j)=>j!==i&&g.length<3)??groups.find((g,j)=>j!==i);target.push(person);groups.splice(i,1);}
+    const usedVenues=[];
     groups.forEach((group,index)=>{
-      const meetingId=`${people[0]?.placeId}-${year}-day${day}-group${index}`,angle=index/Math.max(1,groups.length)*Math.PI*2,anchor={x:.48+Math.cos(angle)*.105,y:.48+Math.sin(angle)*.105};
+      const preferred=group.some(p=>year-p.birthYear<6)?['garden','home-front']:day===0?['home-front','garden']:group.every(p=>personaAt(p,year,seed).role==='student')?['square','garden']:['shop-front','square'];
+      const venues=MEETING_VENUES.filter(v=>!usedVenues.includes(v)).map(venue=>({venue,distance:usedVenues.length?Math.min(...usedVenues.map(v=>projectedDistance(v.anchor,venue.anchor))):Infinity,preference:preferred.includes(venue.kind)?1:0,tie:hash(`${seed}|${people[0]?.placeId}-${day}-${venue.id}`)}));
+      // All candidate pairs are at least 80 local pixels apart; farthest-first
+      // spreads the first groups too, rather than filling one street first.
+      venues.sort((a,b)=>b.distance-a.distance||b.preference-a.preference||a.tie-b.tie);
+      const venue=venues[0]?.venue??MEETING_VENUES[index%MEETING_VENUES.length];usedVenues.push(venue);
+      const meetingId=`${people[0]?.placeId}-${year}-day${day}-group${index}`,anchor=venue.anchor;
       for(const p of group){
         const others=group.filter(q=>q.id!==p.id).sort((a,b)=>Number(p.parentIds.includes(b.id)||p.childrenIds.includes(b.id))-Number(p.parentIds.includes(a.id)||p.childrenIds.includes(a.id))||a.order-b.order).slice(0,2);
         const companions=others.map(q=>({id:q.id,name:q.name,placeId:q.placeId,age:year-q.birthYear,...personaAt(q,year,seed),kind:p.parentIds.includes(q.id)?'parent':p.childrenIds.includes(q.id)?'child':p.siblingIds.includes(q.id)||p.familyId===q.familyId?'family':Math.abs(p.birthYear-q.birthYear)<=3&&personaAt(p,year,seed).role==='student'&&personaAt(q,year,seed).role==='student'?'schoolmate':'neighbor'}));
-        result[p.id][day]={meetingId,anchor,companions,memberIds:group.map(p=>p.id).sort(),fictional:true};
+        result[p.id][day]={meetingId,anchor,venue:{id:venue.id,kind:venue.kind,label:venue.label},companions,memberIds:group.map(p=>p.id).sort(),fictional:true};
       }
     });
   }
@@ -110,7 +135,7 @@ export function createMeetings(people,year,seed){
 export function createRoutine(person,featured,seed,year,month,targets={},relationships=[],meetings=null){
   const eligible=ROUTINE_ACTIONS.filter(a=>routineEligible(a,person,year,month));
   let meetingAnchor=null;
-  const anchor=kind=>kind==='home'?person.home:kind==='square'&&meetingAnchor?meetingAnchor:targets?.[kind]??fallbackAnchors[kind]??person.home;
+  const anchor=kind=>kind==='home'?person.home:kind==='meeting'&&meetingAnchor?meetingAnchor:targets?.[kind]??fallbackAnchors[kind]??person.home;
   const relationIds=kind=>relationships.filter(r=>r.kind===kind).map(r=>r.id);
   const key=`${person.id}-${year}-${month}`;
   const days=Array.from({length:3},(_,day)=>{
@@ -127,9 +152,10 @@ export function createRoutine(person,featured,seed,year,month,targets={},relatio
     travel(errand.destinationKind,person.role==='child'?'家族と近所へ出る':'仕事や学びのあと、用事へ向かう','errand',person.role==='child'?'parent':null);add(errand.pose==='walk'?{...errand,pose:errand.prop==='letter'?'talk':'work',activity:({water:'井戸で水を汲む',shop:'店で用事を済ませる',school:'学校で用事を済ませる',post:'便りを郵便へ出す',home:'持ち帰った物を片づける'})[errand.destinationKind]??errand.activity}:errand,8,'errand');
     const hobby=select('hobby');travel(hobby.destinationKind,'自分の楽しみへ少し寄り道','hobby',hobby.relation);add(hobby,9,'hobby');
     const meeting=meetings?.[day]??null;meetingAnchor=meeting?.anchor??fallbackAnchors.square;
-    const social={id:'neighbor-chat',conversationEnergy:person.personality==='話好き'?1.4:1,activity:person.role==='child'?'家族に見つけたものを見せる':'顔なじみに今日の話をする',text:person.role==='child'?'拾った葉を家族に見せる。帰る前に、もう一度道をのぞく。':'近所の人と顔を合わせ、今日の小さな用事の話をする。',prop:null,pose:'talk',destinationKind:'square'};
+    const venueLabel=meeting?.venue.label??'広場';
+    const social={id:'neighbor-chat',conversationEnergy:person.personality==='話好き'?1.4:1,activity:person.role==='child'?`${venueLabel}で家族に見つけたものを見せる`:`${venueLabel}で顔なじみと話す`,text:person.role==='child'?`${venueLabel}で拾った葉を家族に見せる。帰る前に、もう一度道をのぞく。`:`${venueLabel}で顔なじみと会い、今日の小さな用事の話をする。`,prop:null,pose:'talk',destinationKind:'meeting',venueKind:meeting?.venue.kind??'square',venueLabel};
     travel(social.destinationKind,'顔なじみのいる場所へ向かう','social',person.role==='child'?'parent':'neighbor');add(social,6,'social',person.role==='child'?'parent':'neighbor');
-    if(meeting){const stage=stages.at(-1);stage.meetingId=meeting.meetingId;stage.companions=meeting.companions;stage.companionIds=meeting.companions.map(c=>c.id);stage.memberIds=meeting.memberIds;stage.facingId=meeting.companions[0]?.id??null;}
+    if(meeting){const stage=stages.at(-1);stage.meetingId=meeting.meetingId;stage.meetingVenue=meeting.venue;stage.companions=meeting.companions;stage.companionIds=meeting.companions.map(c=>c.id);stage.memberIds=meeting.memberIds;stage.facingId=meeting.companions[0]?.id??null;}
     travel('home','用事を済ませ、家へ帰る','return','family');add({id:'evening',activity:'家で夕方の支度をする',text:'持ち帰ったものを置き、家族と夕方の支度をする。今日も町でいくつかの用事が済んだ。',prop:'food',pose:'care',destinationKind:'home'},8,'evening','family');
     add({id:'night',activity:'家で一日を振り返る',text:'道具を片づけて、ひと休み。家族と話し、明日の用事に備える。',prop:person.hobbyKey==='reading'?'book':null,pose:'rest',destinationKind:'home'},5,'night','family');
     const socialIndex=stages.findIndex(stage=>stage.phase==='social'&&stage.scene.pose==='talk');
@@ -149,5 +175,5 @@ export function routineAt(person,clockSeconds=0){
   const clock=dayClockAt(clockSeconds),stages=person.routine.days[clock.dayIndex%person.routine.days.length],phaseSeconds=clock.phase*DAILY_CYCLE_SECONDS;
   const stageIndex=Math.max(0,stages.findIndex(stage=>phaseSeconds<stage.endsAt)),stage=stages[stageIndex],progress=Math.max(0,Math.min(1,(phaseSeconds-stage.startsAt)/(stage.endsAt-stage.startsAt)));
   const routeProgress=stage.scene.pose==='walk'?progress:1;
-  return {...person,...clock,x:stage.from.x+(stage.to.x-stage.from.x)*routeProgress,y:stage.from.y+(stage.to.y-stage.from.y)*routeProgress,from:stage.from,to:stage.to,progress,scene:stage.scene,activity:stage.scene.activity,stageIndex,stage,sceneStages:stages,nextStage:stages[(stageIndex+1)%stages.length],companionIds:stage.companionIds,companions:stage.companions??[],meetingId:stage.meetingId??null,memberIds:stage.memberIds??[],facingId:stage.facingId??null};
+  return {...person,...clock,x:stage.from.x+(stage.to.x-stage.from.x)*routeProgress,y:stage.from.y+(stage.to.y-stage.from.y)*routeProgress,from:stage.from,to:stage.to,progress,scene:stage.scene,activity:stage.scene.activity,stageIndex,stage,sceneStages:stages,nextStage:stages[(stageIndex+1)%stages.length],companionIds:stage.companionIds,companions:stage.companions??[],meetingId:stage.meetingId??null,meetingVenue:stage.meetingVenue??null,memberIds:stage.memberIds??[],facingId:stage.facingId??null};
 }

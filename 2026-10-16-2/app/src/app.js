@@ -186,7 +186,7 @@ function renderRoutineUI() {
   $('routine-description').textContent=runtime.scene?.text||'';
   $('routine-next').innerHTML=runtime.companions?.length?`いっしょに：${runtime.companions.map(q=>`<button type="button" class="inline-link" data-person="${esc(q.id)}">${esc(q.name)}</button>`).join('、')}`:esc(runtime.nextStage?`このあと：${runtime.nextStage.scene.activity}`:'');
   $('routine-progress-bar').style.width=`${Math.round((runtime.progress||0)*100)}%`;
-  const stages=runtime.sceneStages||[],places={home:'家',farm:'畑',workshop:'工房',shop:'店',office:'仕事場',school:'学校',factory:'工場',post:'郵便',water:'井戸',square:'広場',coast:'浜',river:'川',path:'道',clinic:'診療所'};
+  const stages=runtime.sceneStages||[],places={home:'家',farm:'畑',workshop:'工房',shop:'店',office:'仕事場',school:'学校',factory:'工場',post:'郵便',water:'井戸',square:'広場',coast:'浜',river:'川',path:'道',clinic:'診療所',meeting:'待ち合わせ'};
   const phaseLabels={morning:'朝',work:p.role==='student'?'学び':'仕事',midday:'昼',errand:'用事',hobby:'楽しみ',social:'交流',evening:'帰宅',night:'夜'};
   const shown=stages.filter((s,i)=>s.scene.pose!=='walk'&&!stages.slice(0,i).some(before=>before.scene.pose!=='walk'&&before.phase===s.phase));
   const planStamp=`${p.id}-${current.year}-${current.month}-${clock.dayIndex}`;
