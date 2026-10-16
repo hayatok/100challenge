@@ -37,4 +37,4 @@ npm run preview
 
 原史料の写真・原簿・映像は同梱せず、独自の要約と出典リンクを示します。確認水準と欠測を保持します。元の調査台帳と歴史閲覧版は `../2026-10-16/` に保存し、旧配置パズルは撤回・削除しています。
 
-詳細は [追加調査の採用計画](docs/RESEARCH_ADOPTION_V3.md)、[データとの対応](docs/DATA_BINDINGS.md)、[模型と日常の規則](docs/MICRO_LIFE.md)、[アートと地理資料](docs/ART.md)、[検証記録](docs/VERIFICATION.md) を参照してください。ローカル実装・検証のみで、公開・配備・マージ・タグ作成は行っていません。
+詳細は [追加調査の採用計画](docs/RESEARCH_ADOPTION_V3.md)、[データとの対応](docs/DATA_BINDINGS.md)、[模型と日常の規則](docs/MICRO_LIFE.md)、[アートと地理資料](docs/ART.md)、[検証記録](docs/VERIFICATION.md) を参照してください。2026-10-17の公開指示に基づきGitHub Pagesへの公開を進めています。公開の記録は [RELEASE.md](docs/RELEASE.md) に残します。
