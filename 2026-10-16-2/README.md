@@ -2,12 +2,14 @@
 
 史実と政府統計は固定したまま、架空の町と人々の暮らしを眺めるローカル作品。1900年から2026年10月まで自動で時間が流れます。
 
+[公開版をひらく](https://hayatok.github.io/100challenge/2026-10-16-2/)
+
 ## 起動
 
 Node.js 22以上。追加ライブラリ・APIキー・ネット接続は不要です。
 
 ```sh
-cd /Users/hayatok/Documents/dev/100challenge/2026-10-16-2
+cd 2026-10-16-2
 npm run dev
 ```
 
@@ -37,4 +39,4 @@ npm run preview
 
 原史料の写真・原簿・映像は同梱せず、独自の要約と出典リンクを示します。確認水準と欠測を保持します。元の調査台帳と歴史閲覧版は `../2026-10-16/` に保存し、旧配置パズルは撤回・削除しています。
 
-詳細は [追加調査の採用計画](docs/RESEARCH_ADOPTION_V3.md)、[データとの対応](docs/DATA_BINDINGS.md)、[模型と日常の規則](docs/MICRO_LIFE.md)、[アートと地理資料](docs/ART.md)、[検証記録](docs/VERIFICATION.md) を参照してください。2026-10-17の公開指示に基づきGitHub Pagesへの公開を進めています。公開の記録は [RELEASE.md](docs/RELEASE.md) に残します。
+詳細は [追加調査の採用計画](docs/RESEARCH_ADOPTION_V3.md)、[データとの対応](docs/DATA_BINDINGS.md)、[模型と日常の規則](docs/MICRO_LIFE.md)、[アートと地理資料](docs/ART.md)、[検証記録](docs/VERIFICATION.md) を参照してください。GitHub Pagesで公開しています。公開の記録は [RELEASE.md](docs/RELEASE.md) を参照してください。
