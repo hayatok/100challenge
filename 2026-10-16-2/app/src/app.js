@@ -1,7 +1,7 @@
 import { PLACES, createSimulation, snapshot, seek, advance, reroll, selectPerson, selectPlace } from './model.js';
 import { createRenderer } from './renderer.js';
 import { STORAGE_KEY, parseSaved, serializeSaved, escapeHTML as esc, safeURL } from './storage.js';
-import { observationTime, pointsThrough, materialStatus, recordNotes } from './presentation.js';
+import { observationTime, pointsThrough, materialStatus, recordNotes, readableResearchText, eraLabel } from './presentation.js';
 
 const $ = id => document.getElementById(id);
 const number = new Intl.NumberFormat('ja-JP', { maximumFractionDigits: 3 });
@@ -23,15 +23,10 @@ let lastUIStamp = '', livingPage = 0, lastHistoryIndex = 0, lastCuration = 0, sa
 const dialogs = [$('detail-dialog'), $('archive-dialog')];
 
 function announce(message) { $('announcement').textContent = message; }
-function era(year) {
-  const eras = [[2019, '令和'], [1989, '平成'], [1926, '昭和'], [1912, '大正'], [1868, '明治']];
-  const [start, name] = eras.find(([start]) => year >= start);
-  return `${name}${year === start ? '元' : year - start + 1}年`;
-}
 function sourceHTML(id, locator = '') {
   const source = sources.get(id); if (!source) return '<p class="small">出典の詳しい情報がありません。</p>';
   const url = safeURL(source.url);
-  return `<div class="source-entry">${url ? `<a href="${esc(url)}" target="_blank" rel="noopener noreferrer">${esc(source.title)} ↗</a>` : `<strong>${esc(source.title)}</strong>`}<p>${esc(source.institution || '')}${source.checked_at ? ` ／ 確認日 ${esc(String(source.checked_at).slice(0, 10))}` : ''}</p>${locator ? `<p>参照箇所：${esc(locator)}</p>` : ''}${source.perspective_limit ? `<p>${esc(source.perspective_limit)}</p>` : ''}</div>`;
+  return `<div class="source-entry">${url ? `<a href="${esc(url)}" target="_blank" rel="noopener noreferrer">${esc(source.title)} ↗</a>` : `<strong>${esc(source.title)}</strong>`}<p>${esc(source.institution || '')}${source.checked_at ? ` ／ 確認日 ${esc(String(source.checked_at).slice(0, 10))}` : ''}</p>${locator ? `<p>参照箇所：${esc(readableResearchText(locator))}</p>` : ''}${source.perspective_limit ? `<p>${esc(readableResearchText(source.perspective_limit))}</p>` : ''}</div>`;
 }
 function formatValue(observation) {
   if (observation.value === null || !Number.isFinite(observation.value)) return '—';
@@ -139,7 +134,7 @@ function renderUI(force = false) {
   const stamp = `${current.year}-${current.month}-${sim.personId}-${sim.placeId}-${sim.seed}-${view}`;
   if (!force && stamp === lastUIStamp) return;
   lastUIStamp = stamp;
-  $('year-label').textContent = current.year; $('era-label').textContent = era(current.year); $('month-label').textContent = current.month;
+  $('year-label').textContent = current.year; $('era-label').textContent = eraLabel(current.year, current.month); $('month-label').textContent = current.month;
   if (document.activeElement !== $('year-input')) $('year-input').value = current.year;
   $('year-range').value = current.year; $('place-select').value = sim.placeId;
   $('scene-caption').textContent = view === 'japan' ? '12の架空の町で、日本の暮らしを描いています。' : `${current.selectedPlace.region} ／ ${current.selectedPlace.name}。人物を押すと、その暮らしを追えます。`;
@@ -228,7 +223,7 @@ function renderArchive() {
     if (archiveSection === 'events') return `<article class="archive-result"><span class="small">${esc(item.date_start)}${item.date_end ? `–${esc(item.date_end)}` : ''} ／ ${esc(item.geography)}</span><h3>${esc(item.title)}</h3><p>${esc(item.summary)}</p><button type="button" data-event="${esc(item.id)}">詳しい記録と出典 →</button><button type="button" data-jump="${esc(String(item.date_start).slice(0, 4))}">この年を眺める</button></article>`;
     if (archiveSection === 'living') return `<article class="archive-result"><span class="small">${esc(period(item.period_start, item.period_end))} ／ ${esc(item.geography)}</span><h3>${esc(item.title)}</h3><p>${esc(item.what_it_shows)}</p><p>${esc(materialStatus(item))}</p><button type="button" data-living="${esc(item.id)}">誰の記録か、出典を読む →</button></article>`;
     if (archiveSection === 'sources') return `<article class="archive-result">${sourceHTML(item.id)}<p>${esc(period(item.scope_start, item.scope_end))} ／ ${esc(item.geography || '')}</p></article>`;
-    return `<article class="archive-result"><span class="small">${esc(period(item.period_start, item.period_end))} ／ ${esc(item.geography)}</span><h3>${esc(item.description)}</h3>${item.finding ? `<p>分かったこと：${esc(item.finding)}</p>` : ''}<p>まだ確かめきれていない理由：${esc(item.remaining_reason || item.next_action || 'この範囲は調査が済んでいません。')}</p>${(item.source_ids || []).map(id => sourceHTML(id)).join('')}</article>`;
+    return `<article class="archive-result"><span class="small">${esc(period(item.period_start, item.period_end))} ／ ${esc(item.geography)}</span><h3>${esc(readableResearchText(item.description))}</h3>${item.finding ? `<p>分かったこと：${esc(readableResearchText(item.finding))}</p>` : ''}<p>まだ確かめきれていない理由：${esc(readableResearchText(item.remaining_reason || item.next_action || 'この範囲は調査が済んでいません。'))}</p>${(item.source_ids || []).map(id => sourceHTML(id)).join('')}</article>`;
   }).join('') + (pool.length > archiveLimit ? '<button type="button" id="more-archive" class="more-records">次の30件を表示</button>' : '');
 }
 function openArchive(section = 'statistics', year = '') {
