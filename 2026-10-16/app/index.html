@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f4f0e8">
+  <meta name="description" content="生まれ年から、日本の暮らしをたどる。1900年から現在までの統計、出来事、ひとりひとりの記録を行き来する歴史作品。">
+  <title>時代のとなりで — 生まれ年から、日本をたどる</title>
+  <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./src/style.css">
+  <link rel="preload" as="image" href="./assets/art/rural-day.png">
+  <script src="./vendor/d3.min.js" defer></script>
+  <script type="module" src="./src/app.mjs"></script>
+</head>
+<body>
+  <a href="#year-control" class="skip-link">年の操作へ</a>
+  <div class="page-shell">
+    <header class="masthead">
+      <a class="wordmark" href="./" aria-label="時代のとなりで ホーム"><span class="book-seal" aria-hidden="true">時</span><h1>時代のとなりで</h1></a>
+      <p class="masthead-sub">生まれ年から、日本の暮らしをたどる</p>
+      <button type="button" id="about-open" class="text-button">読み方 <span aria-hidden="true">↗</span></button>
+    </header>
+    <div id="load-status" class="load-status" role="status"><span class="loading-mark" aria-hidden="true"></span>ページをひらいています。</div>
+    <div id="load-error" class="load-error" hidden role="alert"><h2>ページをひらけませんでした</h2><p>読み込みが途中で止まったようです。もう一度お試しください。</p><button type="button" id="retry" class="primary-button">もう一度ひらく</button></div>
+    <main id="main-content" hidden aria-busy="true">
+      <section class="year-hero" aria-label="選んだ年と暮らしのイラスト">
+        <div class="year-story">
+          <p class="eyebrow">時代の一ページ</p>
+          <h2 class="hero-year"><span id="current-year">1935</span><span class="year-suffix">年</span></h2>
+          <p id="era" class="era">昭和10年</p>
+          <div class="birth-control"><label for="birth-year">生まれた年</label><input id="birth-year" type="number" min="1900" max="2026" step="1" value="1900" aria-describedby="birth-error"><span>年</span></div>
+          <p id="birth-error" class="input-error" role="alert" hidden></p>
+          <p id="age-label" class="age-label">1900年生まれなら、35歳になる年</p>
+          <p class="hero-copy">社会の数字の向こうに、<br>ひとりひとりの暮らしがある。</p>
+        </div>
+        <figure class="scene-frame">
+          <img id="scene-image" src="./assets/art/rural-day.png" width="1672" height="940" alt="畑仕事と食卓がつながる農村の暮らしを描いたイラスト" fetchpriority="high">
+          <figcaption><span id="scene-caption">農村の日々</span><span>暮らしを想像するイラスト</span></figcaption>
+        </figure>
+      </section>
+      <section id="year-control" class="year-controls" aria-labelledby="time-heading">
+        <div class="time-heading"><h2 id="time-heading">時間をめくる</h2><p>年を動かすと、記録が変わります。</p></div>
+        <div class="year-navigation">
+          <button id="previous-year" type="button" class="square-button" aria-label="前年へ">←</button>
+          <label class="year-entry" for="view-year">見る年<input id="view-year" type="number" min="1900" max="2026" step="1" value="1935"></label>
+          <label class="year-slider"><span class="sr-only">見る年を動かす</span><input id="year-range" type="range" min="1900" max="2026" step="1" value="1935"><span class="range-labels"><span>1900</span><span>2026</span></span></label>
+          <button id="next-year" type="button" class="square-button" aria-label="翌年へ">→</button>
+        </div>
+        <p id="year-error" class="input-error" role="alert" hidden></p>
+        <figure class="time-figure"><svg id="record-timeline" role="img"></svg><figcaption>しるしのある年に、出来事や暮らしの記録があります。</figcaption></figure>
+        <nav class="chapter-links" aria-label="記録のある年へ">
+          <button type="button" data-year="1919"><span>1919</span>一冊の家計簿</button>
+          <button type="button" data-year="1935"><span>1935</span>二つの農家</button>
+          <button type="button" data-year="1945"><span>1945</span>戦争の終わる年</button>
+          <button type="button" data-year="1973"><span>1973</span>暮らしと物価</button>
+          <button type="button" data-year="1999"><span>1999</span>つながる日常</button>
+          <button type="button" data-year="2026"><span>2026</span>現在へ</button>
+        </nav>
+      </section>
+
+      <div class="reading-columns">
+        <section class="living-section" aria-labelledby="living-heading">
+          <div class="section-heading"><span class="section-number" aria-hidden="true">一</span><h2 id="living-heading">暮らしを読む</h2><span id="living-count" class="section-meta"></span></div>
+          <div id="living-records"></div>
+        </section>
+        <section class="numbers-section" aria-labelledby="numbers-heading">
+          <div class="section-heading"><span class="section-number" aria-hidden="true">二</span><h2 id="numbers-heading">社会を見渡す</h2></div>
+          <div class="metric-picker"><label for="metric">数字で見るもの</label><select id="metric"><option value="vital">出生と死亡</option><option value="cpi">物価 — 総合と食料</option><option value="household">家計 — 消費支出</option></select></div>
+          <div id="stat-values" class="stat-values"></div>
+          <div id="chart-legend" class="chart-legend" aria-label="グラフの表示"></div>
+          <figure class="chart-figure"><svg id="statistics-chart" role="img"></svg><div id="chart-tooltip" class="chart-tooltip" role="tooltip" hidden></div><figcaption id="chart-caption"></figcaption></figure>
+          <p id="stat-scope" class="stat-scope"></p>
+          <button type="button" id="stat-source" class="source-button">出典と数字の読み方 <span aria-hidden="true">↗</span></button>
+        </section>
+      </div>
+
+      <section class="events-section" aria-labelledby="events-heading">
+        <div class="section-heading"><span class="section-number" aria-hidden="true">三</span><h2 id="events-heading">この年の出来事</h2><span id="events-count" class="section-meta"></span></div>
+        <div id="events-list" class="events-list"></div>
+        <button id="more-events" type="button" class="secondary-button" hidden></button>
+      </section>
+
+      <section class="memory-shelf" aria-labelledby="memory-heading">
+        <div class="shelf-intro"><p class="eyebrow">時代の余白に</p><h2 id="memory-heading">年を決めきれない記憶も。</h2><p>体験した年や期間がはっきりしない記録を、<br class="desktop-break">その人の言葉の背景とともに読む。</p></div>
+        <details id="memory-details"><summary>地方の暮らしの記録をひらく <span id="memory-count"></span></summary><div id="memory-records" class="memory-records"></div></details>
+      </section>
+    </main>
+    <footer class="page-footer"><span class="footer-title">時代のとなりで</span><p>1900–2026<br>2026年10月16日までに確認した資料から。</p><p>文章・グラフ・イラスト：本作品</p></footer>
+  </div>
+  <dialog id="source-dialog" aria-labelledby="source-heading">
+    <div class="dialog-top"><p class="eyebrow">ページの手がかり</p><button id="source-close" type="button" class="secondary-button">閉じる ×</button></div>
+    <h2 id="source-heading"></h2><div id="source-body"></div>
+  </dialog>
+  <div id="announcement" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+  <noscript><p class="noscript">この作品を読むには、ブラウザのJavaScriptを有効にしてください。</p></noscript>
+</body>
+</html>

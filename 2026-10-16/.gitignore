@@ -1,0 +1,5 @@
+node_modules/
+dist/
+.app-build-tmp/
+evidence/local-app/
+data/revisions/20261016-v2/living/evidence/tsukishima-kyoin1.pdf
