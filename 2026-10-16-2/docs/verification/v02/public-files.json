@@ -1,0 +1,218 @@
+{
+  "version": 1,
+  "checkedAt": "2026-10-16T17:11:41.521988+00:00",
+  "repository": "hayatok/100challenge",
+  "intendedCommit": "1b87d0fc87a2785877aa0b8eb2ef34f5bbd5c6ba",
+  "run": {
+    "id": 38935972964,
+    "status": "completed",
+    "conclusion": "success",
+    "headSha": "1b87d0fc87a2785877aa0b8eb2ef34f5bbd5c6ba",
+    "buildConclusion": "success",
+    "deployConclusion": "success"
+  },
+  "artifact": {
+    "id": 12061875181,
+    "name": "github-pages",
+    "sizeInBytes": 305524415,
+    "runId": 38935972964,
+    "headSha": "1b87d0fc87a2785877aa0b8eb2ef34f5bbd5c6ba",
+    "tarFile": "download-38935972964/artifact.tar",
+    "tarBytes": 607907840,
+    "tarSha256": "2cec5e75917009a0622754dd4f4a7ddf694c2462cc97863b13092268ea786314"
+  },
+  "httpCheckedAt": "2026-10-16T17:04:00.983600+00:00",
+  "publicBase": "https://hayatok.github.io/100challenge/2026-10-16-2/",
+  "payloadFiles": 13,
+  "manifestFiles": 1,
+  "totalAppArtifactFiles": 14,
+  "allAppArtifactFilesCompared": true,
+  "allFilesMatch": true,
+  "files": [
+    {
+      "path": "assets/japan-cover.svg",
+      "url": "https://hayatok.github.io/100challenge/2026-10-16-2/assets/japan-cover.svg",
+      "httpStatus": 200,
+      "artifactBytes": 35078,
+      "publicBytes": 35078,
+      "artifactSha256": "fe76881d8f40b80dceb53e6efe515ecc75d49568bd2d7b2e2a7ecb401cdde2e6",
+      "publicSha256": "fe76881d8f40b80dceb53e6efe515ecc75d49568bd2d7b2e2a7ecb401cdde2e6",
+      "matches": true
+    },
+    {
+      "path": "assets/map-attribution.txt",
+      "url": "https://hayatok.github.io/100challenge/2026-10-16-2/assets/map-attribution.txt",
+      "httpStatus": 200,
+      "artifactBytes": 1598,
+      "publicBytes": 1598,
+      "artifactSha256": "b3978e3e3f4f49f2a509359b7a20a8863c06c3cb175fa9b942fcbb6b14a4ddd5",
+      "publicSha256": "b3978e3e3f4f49f2a509359b7a20a8863c06c3cb175fa9b942fcbb6b14a4ddd5",
+      "matches": true
+    },
+    {
+      "path": "build-manifest.json",
+      "url": "https://hayatok.github.io/100challenge/2026-10-16-2/build-manifest.json",
+      "httpStatus": 200,
+      "artifactBytes": 2015,
+      "publicBytes": 2015,
+      "artifactSha256": "04553659014b0eaac8d06a25c7c2a7538f8d4488c1c7a96bf2f5b72b504951d9",
+      "publicSha256": "04553659014b0eaac8d06a25c7c2a7538f8d4488c1c7a96bf2f5b72b504951d9",
+      "matches": true
+    },
+    {
+      "path": "data/archive.json",
+      "url": "https://hayatok.github.io/100challenge/2026-10-16-2/data/archive.json",
+      "httpStatus": 200,
+      "artifactBytes": 16329292,
+      "publicBytes": 16329292,
+      "artifactSha256": "b08c8b32ba07d33c5186478cb27574ef90016522cfcbfb9860d927f397a9cefb",
+      "publicSha256": "b08c8b32ba07d33c5186478cb27574ef90016522cfcbfb9860d927f397a9cefb",
+      "matches": true
+    },
+    {
+      "path": "data/drivers.json",
+      "url": "https://hayatok.github.io/100challenge/2026-10-16-2/data/drivers.json",
+      "httpStatus": 200,
+      "artifactBytes": 30153,
+      "publicBytes": 30153,
+      "artifactSha256": "4f7c6ab03a81891009fd04eb0743eff965fc13927d59128bd6a0f543139c13eb",
+      "publicSha256": "4f7c6ab03a81891009fd04eb0743eff965fc13927d59128bd6a0f543139c13eb",
+      "matches": true
+    },
+    {
+      "path": "data/japan.geo.json",
+      "url": "https://hayatok.github.io/100challenge/2026-10-16-2/data/japan.geo.json",
+      "httpStatus": 200,
+      "artifactBytes": 23394,
+      "publicBytes": 23394,
+      "artifactSha256": "99d09c80bd40769cd970de09ebd091da53bfaf34c04cffc1c1db26cd81d808dc",
+      "publicSha256": "99d09c80bd40769cd970de09ebd091da53bfaf34c04cffc1c1db26cd81d808dc",
+      "matches": true
+    },
+    {
+      "path": "index.html",
+      "url": "https://hayatok.github.io/100challenge/2026-10-16-2/index.html",
+      "httpStatus": 200,
+      "artifactBytes": 9198,
+      "publicBytes": 9198,
+      "artifactSha256": "005022c7026a1bbf5affb7ccc2f1f43b02d8a4db3a1c2354acc031c0fc429611",
+      "publicSha256": "005022c7026a1bbf5affb7ccc2f1f43b02d8a4db3a1c2354acc031c0fc429611",
+      "matches": true
+    },
+    {
+      "path": "src/app.js",
+      "url": "https://hayatok.github.io/100challenge/2026-10-16-2/src/app.js",
+      "httpStatus": 200,
+      "artifactBytes": 49980,
+      "publicBytes": 49980,
+      "artifactSha256": "9f41580de4b7d3c5f956b7c0458ff07103b4067d549e8a5dc8fb1a379ac7b135",
+      "publicSha256": "9f41580de4b7d3c5f956b7c0458ff07103b4067d549e8a5dc8fb1a379ac7b135",
+      "matches": true
+    },
+    {
+      "path": "src/life-scenes.js",
+      "url": "https://hayatok.github.io/100challenge/2026-10-16-2/src/life-scenes.js",
+      "httpStatus": 200,
+      "artifactBytes": 10654,
+      "publicBytes": 10654,
+      "artifactSha256": "8d0b2b88906de9eef52d2a92ee1478672ed4dbc254366ee08f33a12fe5922977",
+      "publicSha256": "8d0b2b88906de9eef52d2a92ee1478672ed4dbc254366ee08f33a12fe5922977",
+      "matches": true
+    },
+    {
+      "path": "src/model.js",
+      "url": "https://hayatok.github.io/100challenge/2026-10-16-2/src/model.js",
+      "httpStatus": 200,
+      "artifactBytes": 24314,
+      "publicBytes": 24314,
+      "artifactSha256": "f56159b65d47d975dfc8c79da78c4ce2cc386376dd35d3808f67451048369b98",
+      "publicSha256": "f56159b65d47d975dfc8c79da78c4ce2cc386376dd35d3808f67451048369b98",
+      "matches": true
+    },
+    {
+      "path": "src/presentation.js",
+      "url": "https://hayatok.github.io/100challenge/2026-10-16-2/src/presentation.js",
+      "httpStatus": 200,
+      "artifactBytes": 5385,
+      "publicBytes": 5385,
+      "artifactSha256": "d163749e75c933b6142914975440f5bac17777e7d98889eb8c2ca6a160edd38b",
+      "publicSha256": "d163749e75c933b6142914975440f5bac17777e7d98889eb8c2ca6a160edd38b",
+      "matches": true
+    },
+    {
+      "path": "src/renderer.js",
+      "url": "https://hayatok.github.io/100challenge/2026-10-16-2/src/renderer.js",
+      "httpStatus": 200,
+      "artifactBytes": 31964,
+      "publicBytes": 31964,
+      "artifactSha256": "c153a8dccdb1c763757cd597571dabbacf98d6dd58a0b3083757afab81384e36",
+      "publicSha256": "c153a8dccdb1c763757cd597571dabbacf98d6dd58a0b3083757afab81384e36",
+      "matches": true
+    },
+    {
+      "path": "src/storage.js",
+      "url": "https://hayatok.github.io/100challenge/2026-10-16-2/src/storage.js",
+      "httpStatus": 200,
+      "artifactBytes": 1429,
+      "publicBytes": 1429,
+      "artifactSha256": "beafea73085296d0bc52da6e269ca31734bb1650291d63d42726dce59741cfa4",
+      "publicSha256": "beafea73085296d0bc52da6e269ca31734bb1650291d63d42726dce59741cfa4",
+      "matches": true
+    },
+    {
+      "path": "src/style.css",
+      "url": "https://hayatok.github.io/100challenge/2026-10-16-2/src/style.css",
+      "httpStatus": 200,
+      "artifactBytes": 22728,
+      "publicBytes": 22728,
+      "artifactSha256": "82381990b9ae0a69d24e065dd53789dab1e84295f0f76287a1d685df829e74db",
+      "publicSha256": "82381990b9ae0a69d24e065dd53789dab1e84295f0f76287a1d685df829e74db",
+      "matches": true
+    }
+  ],
+  "catalog": {
+    "url": "https://hayatok.github.io/100challenge/apps.json",
+    "httpStatus": 200,
+    "bytes": 8441,
+    "sha256": "35230f0ac96277a5ff492dd933afa22ae919140ca8b39f58a5474daa6afa7708",
+    "artifactRegistration": {
+      "id": "2026-10-16-2",
+      "date": "2026-10-16",
+      "sequence": 2,
+      "name": "箱庭日本",
+      "description": "史実と統計の時代の流れの中で、ランダムな暮らしを眺める日本の箱庭シミュレータ。",
+      "category": "観察 / シミュレーション",
+      "thumbnail": "assets/japan-cover.svg",
+      "accent": "#B73529"
+    },
+    "publicRegistration": {
+      "id": "2026-10-16-2",
+      "date": "2026-10-16",
+      "sequence": 2,
+      "name": "箱庭日本",
+      "description": "史実と統計の時代の流れの中で、ランダムな暮らしを眺める日本の箱庭シミュレータ。",
+      "category": "観察 / シミュレーション",
+      "thumbnail": "assets/japan-cover.svg",
+      "accent": "#B73529"
+    },
+    "registrationMatches": true
+  },
+  "excludedPrivateResearchPathsInArtifact": [],
+  "negativeHttpChecks": [
+    {
+      "url": "https://hayatok.github.io/100challenge/2026-10-16-2/docs/DATA_BINDINGS.md",
+      "httpStatus": 404,
+      "absentFromArtifact": true
+    },
+    {
+      "url": "https://hayatok.github.io/100challenge/2026-10-16-2/tests/fixtures/evidence/estat/r3_economy/energy_timeseries_data.receipt.json",
+      "httpStatus": 404,
+      "absentFromArtifact": true
+    }
+  ],
+  "notes": [
+    "本体13ファイルとbuild-manifest.jsonの計14ファイルを、同一配備runのtar成果物と公開HTTP応答で照合。",
+    "署名付きdownload URLや認証情報は記録していない。",
+    "研究用fixtures/docsはアプリ配信範囲に含まれず、代表URLも404を確認。"
+  ]
+}

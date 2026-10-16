@@ -11,7 +11,7 @@
 
 既存 `.github/workflows/deploy-pages.yml` をmainで手動実行する。変更アプリだけを検査・buildし、前回成功したPages成果物から他アプリを保持して完全なサイトを組み立てる。リリースタグの追加は必要ない。
 
-予定URL： https://hayatok.github.io/100challenge/2026-10-16-2/
+公開URL： https://hayatok.github.io/100challenge/2026-10-16-2/
 
 ## 公開物の確認
 
@@ -19,4 +19,15 @@
 
 ## 実施結果
 
-PR、CI、配備SHA、成果物の照合、公開版の操作結果は完了時にここへ追記する。ローカルの確認は [VERIFICATION.md](VERIFICATION.md) に記録済み。
+2026-10-17に公開を完了した。ローカルの確認は [VERIFICATION.md](VERIFICATION.md)、公開版の実操作は [public-browser.json](verification/v02/public-browser.json)、配信物の照合は [public-files.json](verification/v02/public-files.json) に記録した。
+
+- 実装PR：[173](https://github.com/hayatok/100challenge/pull/173)、main統合SHA `1b87d0fc87a2785877aa0b8eb2ef34f5bbd5c6ba`。
+- PR CI：[38935228550](https://github.com/hayatok/100challenge/actions/runs/38935228550)、main CI：[38935711531](https://github.com/hayatok/100challenge/actions/runs/38935711531) とも成功。
+- Pages：[38935972964](https://github.com/hayatok/100challenge/actions/runs/38935972964)、build/deployとも成功。配備SHAは上記main統合SHAと一致。リリースタグは追加していない。
+- 同runの成果物ID `12061875181`。本体13ファイル＋manifestの計14ファイルが全てHTTP 200で、成果物と公開版のバイト数・SHA-256が一致。カタログ登録も一致。
+- 対象アプリの配信物にdocs/tests/fixtures/evidence/scriptsは含まれず、代表docs/fixture URLは404。
+- 公開カタログからアプリを開き、1440×900と390×844で町・日常・次世代・出典・原欠測・資料庫・年代・全景・動きを減らす設定を操作。横overflowなし。
+- 暮らし切替で統計/出生死亡/史実の文字列が不変、人物は変化。保存復元、資料閲覧中の停止と再開、自動進行、2026年10月の終端、最初からの再生、キーボードでの年代移動を確認。console warning/errorは0件。
+- 年代不詳の記憶は全期間で読め、1943年の年別には自動割当されない。収録件数53表/184出来事/105生活史料/259出典/未解決94件を画面で確認。
+
+公開確認の写真は [1440px](verification/v02/public-town-1440.jpg) と [390px](verification/v02/public-mobile-390.jpg)。実機スマートフォン、別ブラウザ、長時間のメモリ推移と利用者の継続観察の面白さは未確認。公開後の記録更新は文書だけで、上記配備のアプリ本体を変更しない。
