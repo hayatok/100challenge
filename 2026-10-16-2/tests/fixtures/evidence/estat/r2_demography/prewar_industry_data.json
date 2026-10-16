@@ -1,0 +1,973 @@
+{
+  "schema_version": "1",
+  "kind": "data",
+  "table": {
+    "id": "0003410396",
+    "statistics_code": "00200521",
+    "statistics_name": "国勢調査",
+    "organization": "総務省",
+    "title": "【参考】産業（旧大分類），男女別就業者数及び人口構成比［産業別］（15歳以上就業者）－全国（大正9年～平成12年）　※平成14年3月改訂前",
+    "cycle": "-",
+    "survey_date": "200001-200012",
+    "open_date": "2023-12-01",
+    "updated_date": "2026-09-29",
+    "collect_area": "該当なし",
+    "total_records": 1512
+  },
+  "dimensions": [
+    {
+      "id": "tab",
+      "name": "表章項目",
+      "values": [
+        {
+          "code": "334",
+          "name": "就業者数",
+          "unit": "人"
+        }
+      ]
+    },
+    {
+      "id": "cat01",
+      "name": "産業大分類（平成14年3月改訂前）",
+      "values": [
+        {
+          "code": "100",
+          "name": "総数",
+          "level": "1"
+        },
+        {
+          "code": "120",
+          "name": "A農業",
+          "level": "3",
+          "parent_code": "110"
+        },
+        {
+          "code": "140",
+          "name": "C漁業",
+          "level": "3",
+          "parent_code": "110"
+        },
+        {
+          "code": "180",
+          "name": "F製造業",
+          "level": "3",
+          "parent_code": "150"
+        }
+      ]
+    },
+    {
+      "id": "cat02",
+      "name": "男女_時系列",
+      "values": [
+        {
+          "code": "100",
+          "name": "総数",
+          "level": "1"
+        },
+        {
+          "code": "120",
+          "name": "女",
+          "level": "1"
+        }
+      ]
+    },
+    {
+      "id": "time",
+      "name": "時間軸（調査年）",
+      "values": [
+        {
+          "code": "1920000000",
+          "name": "1920年",
+          "level": "1"
+        },
+        {
+          "code": "1930000000",
+          "name": "1930年",
+          "level": "1"
+        },
+        {
+          "code": "1940000000",
+          "name": "1940年",
+          "level": "1"
+        },
+        {
+          "code": "1950000000",
+          "name": "1950年",
+          "level": "1"
+        }
+      ]
+    }
+  ],
+  "page": {
+    "total": 32,
+    "from": 1,
+    "to": 32,
+    "truncated": false
+  },
+  "records": [
+    {
+      "table_id": "0003410396",
+      "dimensions": {
+        "cat01": {
+          "code": "100",
+          "name": "総数"
+        },
+        "cat02": {
+          "code": "100",
+          "name": "総数"
+        },
+        "tab": {
+          "code": "334",
+          "name": "就業者数"
+        },
+        "time": {
+          "code": "1920000000",
+          "name": "1920年"
+        }
+      },
+      "unit": "人",
+      "value": {
+        "raw": "27261106",
+        "number": 27261106,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003410396",
+      "dimensions": {
+        "cat01": {
+          "code": "100",
+          "name": "総数"
+        },
+        "cat02": {
+          "code": "100",
+          "name": "総数"
+        },
+        "tab": {
+          "code": "334",
+          "name": "就業者数"
+        },
+        "time": {
+          "code": "1930000000",
+          "name": "1930年"
+        }
+      },
+      "unit": "人",
+      "value": {
+        "raw": "29619640",
+        "number": 29619640,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003410396",
+      "dimensions": {
+        "cat01": {
+          "code": "100",
+          "name": "総数"
+        },
+        "cat02": {
+          "code": "100",
+          "name": "総数"
+        },
+        "tab": {
+          "code": "334",
+          "name": "就業者数"
+        },
+        "time": {
+          "code": "1940000000",
+          "name": "1940年"
+        }
+      },
+      "unit": "人",
+      "value": {
+        "raw": "32482516",
+        "number": 32482516,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003410396",
+      "dimensions": {
+        "cat01": {
+          "code": "100",
+          "name": "総数"
+        },
+        "cat02": {
+          "code": "100",
+          "name": "総数"
+        },
+        "tab": {
+          "code": "334",
+          "name": "就業者数"
+        },
+        "time": {
+          "code": "1950000000",
+          "name": "1950年"
+        }
+      },
+      "unit": "人",
+      "value": {
+        "raw": "36024872",
+        "number": 36024872,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003410396",
+      "dimensions": {
+        "cat01": {
+          "code": "100",
+          "name": "総数"
+        },
+        "cat02": {
+          "code": "120",
+          "name": "女"
+        },
+        "tab": {
+          "code": "334",
+          "name": "就業者数"
+        },
+        "time": {
+          "code": "1920000000",
+          "name": "1920年"
+        }
+      },
+      "unit": "人",
+      "value": {
+        "raw": "10274199",
+        "number": 10274199,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003410396",
+      "dimensions": {
+        "cat01": {
+          "code": "100",
+          "name": "総数"
+        },
+        "cat02": {
+          "code": "120",
+          "name": "女"
+        },
+        "tab": {
+          "code": "334",
+          "name": "就業者数"
+        },
+        "time": {
+          "code": "1930000000",
+          "name": "1930年"
+        }
+      },
+      "unit": "人",
+      "value": {
+        "raw": "10589403",
+        "number": 10589403,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003410396",
+      "dimensions": {
+        "cat01": {
+          "code": "100",
+          "name": "総数"
+        },
+        "cat02": {
+          "code": "120",
+          "name": "女"
+        },
+        "tab": {
+          "code": "334",
+          "name": "就業者数"
+        },
+        "time": {
+          "code": "1940000000",
+          "name": "1940年"
+        }
+      },
+      "unit": "人",
+      "value": {
+        "raw": "12752888",
+        "number": 12752888,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003410396",
+      "dimensions": {
+        "cat01": {
+          "code": "100",
+          "name": "総数"
+        },
+        "cat02": {
+          "code": "120",
+          "name": "女"
+        },
+        "tab": {
+          "code": "334",
+          "name": "就業者数"
+        },
+        "time": {
+          "code": "1950000000",
+          "name": "1950年"
+        }
+      },
+      "unit": "人",
+      "value": {
+        "raw": "13941546",
+        "number": 13941546,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003410396",
+      "dimensions": {
+        "cat01": {
+          "code": "120",
+          "name": "A農業"
+        },
+        "cat02": {
+          "code": "100",
+          "name": "総数"
+        },
+        "tab": {
+          "code": "334",
+          "name": "就業者数"
+        },
+        "time": {
+          "code": "1920000000",
+          "name": "1920年"
+        }
+      },
+      "unit": "人",
+      "value": {
+        "raw": "13948776",
+        "number": 13948776,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003410396",
+      "dimensions": {
+        "cat01": {
+          "code": "120",
+          "name": "A農業"
+        },
+        "cat02": {
+          "code": "100",
+          "name": "総数"
+        },
+        "tab": {
+          "code": "334",
+          "name": "就業者数"
+        },
+        "time": {
+          "code": "1930000000",
+          "name": "1930年"
+        }
+      },
+      "unit": "人",
+      "value": {
+        "raw": "13955316",
+        "number": 13955316,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003410396",
+      "dimensions": {
+        "cat01": {
+          "code": "120",
+          "name": "A農業"
+        },
+        "cat02": {
+          "code": "100",
+          "name": "総数"
+        },
+        "tab": {
+          "code": "334",
+          "name": "就業者数"
+        },
+        "time": {
+          "code": "1940000000",
+          "name": "1940年"
+        }
+      },
+      "unit": "人",
+      "value": {
+        "raw": "13557098",
+        "number": 13557098,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003410396",
+      "dimensions": {
+        "cat01": {
+          "code": "120",
+          "name": "A農業"
+        },
+        "cat02": {
+          "code": "100",
+          "name": "総数"
+        },
+        "tab": {
+          "code": "334",
+          "name": "就業者数"
+        },
+        "time": {
+          "code": "1950000000",
+          "name": "1950年"
+        }
+      },
+      "unit": "人",
+      "value": {
+        "raw": "16361576",
+        "number": 16361576,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003410396",
+      "dimensions": {
+        "cat01": {
+          "code": "120",
+          "name": "A農業"
+        },
+        "cat02": {
+          "code": "120",
+          "name": "女"
+        },
+        "tab": {
+          "code": "334",
+          "name": "就業者数"
+        },
+        "time": {
+          "code": "1920000000",
+          "name": "1920年"
+        }
+      },
+      "unit": "人",
+      "value": {
+        "raw": "6346229",
+        "number": 6346229,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003410396",
+      "dimensions": {
+        "cat01": {
+          "code": "120",
+          "name": "A農業"
+        },
+        "cat02": {
+          "code": "120",
+          "name": "女"
+        },
+        "tab": {
+          "code": "334",
+          "name": "就業者数"
+        },
+        "time": {
+          "code": "1930000000",
+          "name": "1930年"
+        }
+      },
+      "unit": "人",
+      "value": {
+        "raw": "6365359",
+        "number": 6365359,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003410396",
+      "dimensions": {
+        "cat01": {
+          "code": "120",
+          "name": "A農業"
+        },
+        "cat02": {
+          "code": "120",
+          "name": "女"
+        },
+        "tab": {
+          "code": "334",
+          "name": "就業者数"
+        },
+        "time": {
+          "code": "1940000000",
+          "name": "1940年"
+        }
+      },
+      "unit": "人",
+      "value": {
+        "raw": "7183931",
+        "number": 7183931,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003410396",
+      "dimensions": {
+        "cat01": {
+          "code": "120",
+          "name": "A農業"
+        },
+        "cat02": {
+          "code": "120",
+          "name": "女"
+        },
+        "tab": {
+          "code": "334",
+          "name": "就業者数"
+        },
+        "time": {
+          "code": "1950000000",
+          "name": "1950年"
+        }
+      },
+      "unit": "人",
+      "value": {
+        "raw": "8436645",
+        "number": 8436645,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003410396",
+      "dimensions": {
+        "cat01": {
+          "code": "140",
+          "name": "C漁業"
+        },
+        "cat02": {
+          "code": "100",
+          "name": "総数"
+        },
+        "tab": {
+          "code": "334",
+          "name": "就業者数"
+        },
+        "time": {
+          "code": "1920000000",
+          "name": "1920年"
+        }
+      },
+      "unit": "人",
+      "value": {
+        "raw": "533761",
+        "number": 533761,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003410396",
+      "dimensions": {
+        "cat01": {
+          "code": "140",
+          "name": "C漁業"
+        },
+        "cat02": {
+          "code": "100",
+          "name": "総数"
+        },
+        "tab": {
+          "code": "334",
+          "name": "就業者数"
+        },
+        "time": {
+          "code": "1930000000",
+          "name": "1930年"
+        }
+      },
+      "unit": "人",
+      "value": {
+        "raw": "568436",
+        "number": 568436,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003410396",
+      "dimensions": {
+        "cat01": {
+          "code": "140",
+          "name": "C漁業"
+        },
+        "cat02": {
+          "code": "100",
+          "name": "総数"
+        },
+        "tab": {
+          "code": "334",
+          "name": "就業者数"
+        },
+        "time": {
+          "code": "1940000000",
+          "name": "1940年"
+        }
+      },
+      "unit": "人",
+      "value": {
+        "raw": "542958",
+        "number": 542958,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003410396",
+      "dimensions": {
+        "cat01": {
+          "code": "140",
+          "name": "C漁業"
+        },
+        "cat02": {
+          "code": "100",
+          "name": "総数"
+        },
+        "tab": {
+          "code": "334",
+          "name": "就業者数"
+        },
+        "time": {
+          "code": "1950000000",
+          "name": "1950年"
+        }
+      },
+      "unit": "人",
+      "value": {
+        "raw": "690400",
+        "number": 690400,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003410396",
+      "dimensions": {
+        "cat01": {
+          "code": "140",
+          "name": "C漁業"
+        },
+        "cat02": {
+          "code": "120",
+          "name": "女"
+        },
+        "tab": {
+          "code": "334",
+          "name": "就業者数"
+        },
+        "time": {
+          "code": "1920000000",
+          "name": "1920年"
+        }
+      },
+      "unit": "人",
+      "value": {
+        "raw": "36933",
+        "number": 36933,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003410396",
+      "dimensions": {
+        "cat01": {
+          "code": "140",
+          "name": "C漁業"
+        },
+        "cat02": {
+          "code": "120",
+          "name": "女"
+        },
+        "tab": {
+          "code": "334",
+          "name": "就業者数"
+        },
+        "time": {
+          "code": "1930000000",
+          "name": "1930年"
+        }
+      },
+      "unit": "人",
+      "value": {
+        "raw": "52709",
+        "number": 52709,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003410396",
+      "dimensions": {
+        "cat01": {
+          "code": "140",
+          "name": "C漁業"
+        },
+        "cat02": {
+          "code": "120",
+          "name": "女"
+        },
+        "tab": {
+          "code": "334",
+          "name": "就業者数"
+        },
+        "time": {
+          "code": "1940000000",
+          "name": "1940年"
+        }
+      },
+      "unit": "人",
+      "value": {
+        "raw": "66574",
+        "number": 66574,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003410396",
+      "dimensions": {
+        "cat01": {
+          "code": "140",
+          "name": "C漁業"
+        },
+        "cat02": {
+          "code": "120",
+          "name": "女"
+        },
+        "tab": {
+          "code": "334",
+          "name": "就業者数"
+        },
+        "time": {
+          "code": "1950000000",
+          "name": "1950年"
+        }
+      },
+      "unit": "人",
+      "value": {
+        "raw": "66589",
+        "number": 66589,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003410396",
+      "dimensions": {
+        "cat01": {
+          "code": "180",
+          "name": "F製造業"
+        },
+        "cat02": {
+          "code": "100",
+          "name": "総数"
+        },
+        "tab": {
+          "code": "334",
+          "name": "就業者数"
+        },
+        "time": {
+          "code": "1920000000",
+          "name": "1920年"
+        }
+      },
+      "unit": "人",
+      "value": {
+        "raw": "4461458",
+        "number": 4461458,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003410396",
+      "dimensions": {
+        "cat01": {
+          "code": "180",
+          "name": "F製造業"
+        },
+        "cat02": {
+          "code": "100",
+          "name": "総数"
+        },
+        "tab": {
+          "code": "334",
+          "name": "就業者数"
+        },
+        "time": {
+          "code": "1930000000",
+          "name": "1930年"
+        }
+      },
+      "unit": "人",
+      "value": {
+        "raw": "4707581",
+        "number": 4707581,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003410396",
+      "dimensions": {
+        "cat01": {
+          "code": "180",
+          "name": "F製造業"
+        },
+        "cat02": {
+          "code": "100",
+          "name": "総数"
+        },
+        "tab": {
+          "code": "334",
+          "name": "就業者数"
+        },
+        "time": {
+          "code": "1940000000",
+          "name": "1940年"
+        }
+      },
+      "unit": "人",
+      "value": {
+        "raw": "6863667",
+        "number": 6863667,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003410396",
+      "dimensions": {
+        "cat01": {
+          "code": "180",
+          "name": "F製造業"
+        },
+        "cat02": {
+          "code": "100",
+          "name": "総数"
+        },
+        "tab": {
+          "code": "334",
+          "name": "就業者数"
+        },
+        "time": {
+          "code": "1950000000",
+          "name": "1950年"
+        }
+      },
+      "unit": "人",
+      "value": {
+        "raw": "5703296",
+        "number": 5703296,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003410396",
+      "dimensions": {
+        "cat01": {
+          "code": "180",
+          "name": "F製造業"
+        },
+        "cat02": {
+          "code": "120",
+          "name": "女"
+        },
+        "tab": {
+          "code": "334",
+          "name": "就業者数"
+        },
+        "time": {
+          "code": "1920000000",
+          "name": "1920年"
+        }
+      },
+      "unit": "人",
+      "value": {
+        "raw": "1569451",
+        "number": 1569451,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003410396",
+      "dimensions": {
+        "cat01": {
+          "code": "180",
+          "name": "F製造業"
+        },
+        "cat02": {
+          "code": "120",
+          "name": "女"
+        },
+        "tab": {
+          "code": "334",
+          "name": "就業者数"
+        },
+        "time": {
+          "code": "1930000000",
+          "name": "1930年"
+        }
+      },
+      "unit": "人",
+      "value": {
+        "raw": "1444859",
+        "number": 1444859,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003410396",
+      "dimensions": {
+        "cat01": {
+          "code": "180",
+          "name": "F製造業"
+        },
+        "cat02": {
+          "code": "120",
+          "name": "女"
+        },
+        "tab": {
+          "code": "334",
+          "name": "就業者数"
+        },
+        "time": {
+          "code": "1940000000",
+          "name": "1940年"
+        }
+      },
+      "unit": "人",
+      "value": {
+        "raw": "1898748",
+        "number": 1898748,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003410396",
+      "dimensions": {
+        "cat01": {
+          "code": "180",
+          "name": "F製造業"
+        },
+        "cat02": {
+          "code": "120",
+          "name": "女"
+        },
+        "tab": {
+          "code": "334",
+          "name": "就業者数"
+        },
+        "time": {
+          "code": "1950000000",
+          "name": "1950年"
+        }
+      },
+      "unit": "人",
+      "value": {
+        "raw": "1651907",
+        "number": 1651907,
+        "kind": "number"
+      }
+    }
+  ]
+}

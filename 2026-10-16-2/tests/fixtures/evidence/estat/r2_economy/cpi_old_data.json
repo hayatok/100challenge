@@ -1,0 +1,251 @@
+{
+  "schema_version": "1",
+  "kind": "data",
+  "table": {
+    "id": "0002050001",
+    "statistics_code": "00200573",
+    "statistics_name": "消費者物価指数",
+    "organization": "総務省",
+    "title": "消費者物価指数（平成17年基準）",
+    "cycle": "-",
+    "survey_date": "0",
+    "open_date": "2012-01-27",
+    "updated_date": "2026-01-30",
+    "collect_area": "該当なし",
+    "total_records": 10785241
+  },
+  "dimensions": [
+    {
+      "id": "tab",
+      "name": "表章項目",
+      "values": [
+        {
+          "code": "1",
+          "name": "指数"
+        }
+      ]
+    },
+    {
+      "id": "cat01",
+      "name": "平成17年基準品目",
+      "values": [
+        {
+          "code": "0001",
+          "name": "0001 総合",
+          "level": "1"
+        }
+      ]
+    },
+    {
+      "id": "area",
+      "name": "地域",
+      "values": [
+        {
+          "code": "00000",
+          "name": "全国",
+          "level": "1"
+        }
+      ]
+    },
+    {
+      "id": "time",
+      "name": "時間軸（年・月）",
+      "values": [
+        {
+          "code": "2010000000",
+          "name": "2010年",
+          "level": "1"
+        },
+        {
+          "code": "2005000000",
+          "name": "2005年",
+          "level": "1"
+        },
+        {
+          "code": "2000000000",
+          "name": "2000年",
+          "level": "1"
+        },
+        {
+          "code": "1990000000",
+          "name": "1990年",
+          "level": "1"
+        },
+        {
+          "code": "1980000000",
+          "name": "1980年",
+          "level": "1"
+        },
+        {
+          "code": "1970000000",
+          "name": "1970年",
+          "level": "1"
+        }
+      ]
+    }
+  ],
+  "page": {
+    "total": 6,
+    "from": 1,
+    "to": 6,
+    "truncated": false
+  },
+  "records": [
+    {
+      "table_id": "0002050001",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0001",
+          "name": "0001 総合"
+        },
+        "tab": {
+          "code": "1",
+          "name": "指数"
+        },
+        "time": {
+          "code": "2010000000",
+          "name": "2010年"
+        }
+      },
+      "value": {
+        "raw": "99.6",
+        "number": 99.6,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0002050001",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0001",
+          "name": "0001 総合"
+        },
+        "tab": {
+          "code": "1",
+          "name": "指数"
+        },
+        "time": {
+          "code": "2005000000",
+          "name": "2005年"
+        }
+      },
+      "value": {
+        "raw": "100.0",
+        "number": 100.0,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0002050001",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0001",
+          "name": "0001 総合"
+        },
+        "tab": {
+          "code": "1",
+          "name": "指数"
+        },
+        "time": {
+          "code": "2000000000",
+          "name": "2000年"
+        }
+      },
+      "value": {
+        "raw": "102.2",
+        "number": 102.2,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0002050001",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0001",
+          "name": "0001 総合"
+        },
+        "tab": {
+          "code": "1",
+          "name": "指数"
+        },
+        "time": {
+          "code": "1990000000",
+          "name": "1990年"
+        }
+      },
+      "value": {
+        "raw": "94.1",
+        "number": 94.1,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0002050001",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0001",
+          "name": "0001 総合"
+        },
+        "tab": {
+          "code": "1",
+          "name": "指数"
+        },
+        "time": {
+          "code": "1980000000",
+          "name": "1980年"
+        }
+      },
+      "value": {
+        "raw": "76.9",
+        "number": 76.9,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0002050001",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0001",
+          "name": "0001 総合"
+        },
+        "tab": {
+          "code": "1",
+          "name": "指数"
+        },
+        "time": {
+          "code": "1970000000",
+          "name": "1970年"
+        }
+      },
+      "value": {
+        "raw": "32.5",
+        "number": 32.5,
+        "kind": "number"
+      }
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "command": [
+    "/Users/hayatok/.local/bin/estat",
+    "data",
+    "get",
+    "0004047565",
+    "--filter",
+    "cat01=1002",
+    "--all-pages",
+    "--max-records",
+    "100",
+    "-o",
+    "json",
+    "--timeout",
+    "25s"
+  ],
+  "started_at": "2026-10-16T09:23:49.458765+00:00",
+  "finished_at": "2026-10-16T09:23:49.750582+00:00",
+  "exit_code": 0,
+  "json_valid": true,
+  "redacted_fields": 0,
+  "output_path": "evidence/estat/r2_economy/food_new_pure_data.json",
+  "sha256": "000bcdccd0542b00f941261b294c7e6ecff965bbfe885f38756c5a4a70f50be1",
+  "stderr": ""
+}

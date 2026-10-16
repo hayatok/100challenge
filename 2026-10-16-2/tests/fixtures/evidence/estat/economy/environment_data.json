@@ -1,0 +1,4377 @@
+{
+  "schema_version": "1",
+  "kind": "data",
+  "table": {
+    "id": "0000010102",
+    "statistics_code": "00200502",
+    "statistics_name": "社会・人口統計体系",
+    "organization": "総務省",
+    "title": "Ｂ　自然環境",
+    "cycle": "年度次",
+    "survey_date": "0",
+    "open_date": "2026-02-20",
+    "updated_date": "2026-06-19",
+    "collect_area": "全国",
+    "total_records": 67824
+  },
+  "dimensions": [
+    {
+      "id": "tab",
+      "name": "観測値",
+      "values": [
+        {
+          "code": "00001",
+          "name": "観測値",
+          "level": "1"
+        }
+      ]
+    },
+    {
+      "id": "cat01",
+      "name": "Ｂ　自然環境",
+      "values": [
+        {
+          "code": "B4101",
+          "name": "B4101_年平均気温",
+          "level": "1",
+          "unit": "℃"
+        }
+      ]
+    },
+    {
+      "id": "area",
+      "name": "地域",
+      "values": [
+        {
+          "code": "01000",
+          "name": "北海道",
+          "level": "2"
+        },
+        {
+          "code": "13000",
+          "name": "東京都",
+          "level": "2"
+        },
+        {
+          "code": "47000",
+          "name": "沖縄県",
+          "level": "2"
+        }
+      ]
+    },
+    {
+      "id": "time",
+      "name": "調査年",
+      "values": [
+        {
+          "code": "1975100000",
+          "name": "1975年度",
+          "level": "1"
+        },
+        {
+          "code": "1976100000",
+          "name": "1976年度",
+          "level": "1"
+        },
+        {
+          "code": "1977100000",
+          "name": "1977年度",
+          "level": "1"
+        },
+        {
+          "code": "1978100000",
+          "name": "1978年度",
+          "level": "1"
+        },
+        {
+          "code": "1979100000",
+          "name": "1979年度",
+          "level": "1"
+        },
+        {
+          "code": "1980100000",
+          "name": "1980年度",
+          "level": "1"
+        },
+        {
+          "code": "1981100000",
+          "name": "1981年度",
+          "level": "1"
+        },
+        {
+          "code": "1982100000",
+          "name": "1982年度",
+          "level": "1"
+        },
+        {
+          "code": "1983100000",
+          "name": "1983年度",
+          "level": "1"
+        },
+        {
+          "code": "1984100000",
+          "name": "1984年度",
+          "level": "1"
+        },
+        {
+          "code": "1985100000",
+          "name": "1985年度",
+          "level": "1"
+        },
+        {
+          "code": "1986100000",
+          "name": "1986年度",
+          "level": "1"
+        },
+        {
+          "code": "1987100000",
+          "name": "1987年度",
+          "level": "1"
+        },
+        {
+          "code": "1988100000",
+          "name": "1988年度",
+          "level": "1"
+        },
+        {
+          "code": "1989100000",
+          "name": "1989年度",
+          "level": "1"
+        },
+        {
+          "code": "1990100000",
+          "name": "1990年度",
+          "level": "1"
+        },
+        {
+          "code": "1991100000",
+          "name": "1991年度",
+          "level": "1"
+        },
+        {
+          "code": "1992100000",
+          "name": "1992年度",
+          "level": "1"
+        },
+        {
+          "code": "1993100000",
+          "name": "1993年度",
+          "level": "1"
+        },
+        {
+          "code": "1994100000",
+          "name": "1994年度",
+          "level": "1"
+        },
+        {
+          "code": "1995100000",
+          "name": "1995年度",
+          "level": "1"
+        },
+        {
+          "code": "1996100000",
+          "name": "1996年度",
+          "level": "1"
+        },
+        {
+          "code": "1997100000",
+          "name": "1997年度",
+          "level": "1"
+        },
+        {
+          "code": "1998100000",
+          "name": "1998年度",
+          "level": "1"
+        },
+        {
+          "code": "1999100000",
+          "name": "1999年度",
+          "level": "1"
+        },
+        {
+          "code": "2000100000",
+          "name": "2000年度",
+          "level": "1"
+        },
+        {
+          "code": "2001100000",
+          "name": "2001年度",
+          "level": "1"
+        },
+        {
+          "code": "2002100000",
+          "name": "2002年度",
+          "level": "1"
+        },
+        {
+          "code": "2003100000",
+          "name": "2003年度",
+          "level": "1"
+        },
+        {
+          "code": "2004100000",
+          "name": "2004年度",
+          "level": "1"
+        },
+        {
+          "code": "2005100000",
+          "name": "2005年度",
+          "level": "1"
+        },
+        {
+          "code": "2006100000",
+          "name": "2006年度",
+          "level": "1"
+        },
+        {
+          "code": "2007100000",
+          "name": "2007年度",
+          "level": "1"
+        },
+        {
+          "code": "2008100000",
+          "name": "2008年度",
+          "level": "1"
+        },
+        {
+          "code": "2009100000",
+          "name": "2009年度",
+          "level": "1"
+        },
+        {
+          "code": "2010100000",
+          "name": "2010年度",
+          "level": "1"
+        },
+        {
+          "code": "2011100000",
+          "name": "2011年度",
+          "level": "1"
+        },
+        {
+          "code": "2012100000",
+          "name": "2012年度",
+          "level": "1"
+        },
+        {
+          "code": "2013100000",
+          "name": "2013年度",
+          "level": "1"
+        },
+        {
+          "code": "2014100000",
+          "name": "2014年度",
+          "level": "1"
+        },
+        {
+          "code": "2015100000",
+          "name": "2015年度",
+          "level": "1"
+        },
+        {
+          "code": "2016100000",
+          "name": "2016年度",
+          "level": "1"
+        },
+        {
+          "code": "2017100000",
+          "name": "2017年度",
+          "level": "1"
+        },
+        {
+          "code": "2018100000",
+          "name": "2018年度",
+          "level": "1"
+        },
+        {
+          "code": "2019100000",
+          "name": "2019年度",
+          "level": "1"
+        },
+        {
+          "code": "2020100000",
+          "name": "2020年度",
+          "level": "1"
+        },
+        {
+          "code": "2021100000",
+          "name": "2021年度",
+          "level": "1"
+        },
+        {
+          "code": "2022100000",
+          "name": "2022年度",
+          "level": "1"
+        },
+        {
+          "code": "2023100000",
+          "name": "2023年度",
+          "level": "1"
+        },
+        {
+          "code": "2024100000",
+          "name": "2024年度",
+          "level": "1"
+        }
+      ]
+    }
+  ],
+  "page": {
+    "total": 150,
+    "from": 1,
+    "to": 150,
+    "truncated": false
+  },
+  "records": [
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "01000",
+          "name": "北海道"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1975100000",
+          "name": "1975年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "8.3",
+        "number": 8.3,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "01000",
+          "name": "北海道"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1976100000",
+          "name": "1976年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "7.9",
+        "number": 7.9,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "01000",
+          "name": "北海道"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1977100000",
+          "name": "1977年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "7.8",
+        "number": 7.8,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "01000",
+          "name": "北海道"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1978100000",
+          "name": "1978年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "8.2",
+        "number": 8.2,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "01000",
+          "name": "北海道"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1979100000",
+          "name": "1979年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "8.4",
+        "number": 8.4,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "01000",
+          "name": "北海道"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1980100000",
+          "name": "1980年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "7.9",
+        "number": 7.9,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "01000",
+          "name": "北海道"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1981100000",
+          "name": "1981年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "7.8",
+        "number": 7.8,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "01000",
+          "name": "北海道"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1982100000",
+          "name": "1982年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "8.9",
+        "number": 8.9,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "01000",
+          "name": "北海道"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1983100000",
+          "name": "1983年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "8.3",
+        "number": 8.3,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "01000",
+          "name": "北海道"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1984100000",
+          "name": "1984年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "8.1",
+        "number": 8.1,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "01000",
+          "name": "北海道"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1985100000",
+          "name": "1985年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "8.3",
+        "number": 8.3,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "01000",
+          "name": "北海道"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1986100000",
+          "name": "1986年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "7.7",
+        "number": 7.7,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "01000",
+          "name": "北海道"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1987100000",
+          "name": "1987年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "8.2",
+        "number": 8.2,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "01000",
+          "name": "北海道"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1988100000",
+          "name": "1988年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "8.2",
+        "number": 8.2,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "01000",
+          "name": "北海道"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1989100000",
+          "name": "1989年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "9.4",
+        "number": 9.4,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "01000",
+          "name": "北海道"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1990100000",
+          "name": "1990年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "10.1",
+        "number": 10.1,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "01000",
+          "name": "北海道"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1991100000",
+          "name": "1991年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "9.5",
+        "number": 9.5,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "01000",
+          "name": "北海道"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1992100000",
+          "name": "1992年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "8.8",
+        "number": 8.8,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "01000",
+          "name": "北海道"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1993100000",
+          "name": "1993年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "8.7",
+        "number": 8.7,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "01000",
+          "name": "北海道"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1994100000",
+          "name": "1994年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "9.5",
+        "number": 9.5,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "01000",
+          "name": "北海道"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1995100000",
+          "name": "1995年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "9.2",
+        "number": 9.2,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "01000",
+          "name": "北海道"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1996100000",
+          "name": "1996年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "8.3",
+        "number": 8.3,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "01000",
+          "name": "北海道"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1997100000",
+          "name": "1997年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "9.1",
+        "number": 9.1,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "01000",
+          "name": "北海道"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1998100000",
+          "name": "1998年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "8.8",
+        "number": 8.8,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "01000",
+          "name": "北海道"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1999100000",
+          "name": "1999年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "9.4",
+        "number": 9.4,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "01000",
+          "name": "北海道"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2000100000",
+          "name": "2000年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "9.0",
+        "number": 9.0,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "01000",
+          "name": "北海道"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2001100000",
+          "name": "2001年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "8.3",
+        "number": 8.3,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "01000",
+          "name": "北海道"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2002100000",
+          "name": "2002年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "9.1",
+        "number": 9.1,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "01000",
+          "name": "北海道"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2003100000",
+          "name": "2003年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "8.8",
+        "number": 8.8,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "01000",
+          "name": "北海道"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2004100000",
+          "name": "2004年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "9.7",
+        "number": 9.7,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "01000",
+          "name": "北海道"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2005100000",
+          "name": "2005年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "8.9",
+        "number": 8.9,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "01000",
+          "name": "北海道"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2006100000",
+          "name": "2006年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "9.1",
+        "number": 9.1,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "01000",
+          "name": "北海道"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2007100000",
+          "name": "2007年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "9.4",
+        "number": 9.4,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "01000",
+          "name": "北海道"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2008100000",
+          "name": "2008年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "9.5",
+        "number": 9.5,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "01000",
+          "name": "北海道"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2009100000",
+          "name": "2009年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "9.4",
+        "number": 9.4,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "01000",
+          "name": "北海道"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2010100000",
+          "name": "2010年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "9.8",
+        "number": 9.8,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "01000",
+          "name": "北海道"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2011100000",
+          "name": "2011年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "9.3",
+        "number": 9.3,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "01000",
+          "name": "北海道"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2012100000",
+          "name": "2012年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "9.3",
+        "number": 9.3,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "01000",
+          "name": "北海道"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2013100000",
+          "name": "2013年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "9.2",
+        "number": 9.2,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "01000",
+          "name": "北海道"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2014100000",
+          "name": "2014年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "9.3",
+        "number": 9.3,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "01000",
+          "name": "北海道"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2015100000",
+          "name": "2015年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "10.0",
+        "number": 10.0,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "01000",
+          "name": "北海道"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2016100000",
+          "name": "2016年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "9.3",
+        "number": 9.3,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "01000",
+          "name": "北海道"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2017100000",
+          "name": "2017年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "9.1",
+        "number": 9.1,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "01000",
+          "name": "北海道"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2018100000",
+          "name": "2018年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "9.5",
+        "number": 9.5,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "01000",
+          "name": "北海道"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2019100000",
+          "name": "2019年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "9.8",
+        "number": 9.8,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "01000",
+          "name": "北海道"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2020100000",
+          "name": "2020年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "10.0",
+        "number": 10.0,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "01000",
+          "name": "北海道"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2021100000",
+          "name": "2021年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "10.2",
+        "number": 10.2,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "01000",
+          "name": "北海道"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2022100000",
+          "name": "2022年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "10.2",
+        "number": 10.2,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "01000",
+          "name": "北海道"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2023100000",
+          "name": "2023年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "11.0",
+        "number": 11.0,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "01000",
+          "name": "北海道"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2024100000",
+          "name": "2024年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "10.5",
+        "number": 10.5,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "13000",
+          "name": "東京都"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1975100000",
+          "name": "1975年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "15.6",
+        "number": 15.6,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "13000",
+          "name": "東京都"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1976100000",
+          "name": "1976年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "15.0",
+        "number": 15.0,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "13000",
+          "name": "東京都"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1977100000",
+          "name": "1977年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "15.8",
+        "number": 15.8,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "13000",
+          "name": "東京都"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1978100000",
+          "name": "1978年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "16.1",
+        "number": 16.1,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "13000",
+          "name": "東京都"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1979100000",
+          "name": "1979年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "16.9",
+        "number": 16.9,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "13000",
+          "name": "東京都"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1980100000",
+          "name": "1980年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "15.4",
+        "number": 15.4,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "13000",
+          "name": "東京都"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1981100000",
+          "name": "1981年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "15.0",
+        "number": 15.0,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "13000",
+          "name": "東京都"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1982100000",
+          "name": "1982年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "16.0",
+        "number": 16.0,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "13000",
+          "name": "東京都"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1983100000",
+          "name": "1983年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "15.7",
+        "number": 15.7,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "13000",
+          "name": "東京都"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1984100000",
+          "name": "1984年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "14.9",
+        "number": 14.9,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "13000",
+          "name": "東京都"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1985100000",
+          "name": "1985年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "15.7",
+        "number": 15.7,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "13000",
+          "name": "東京都"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1986100000",
+          "name": "1986年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "15.2",
+        "number": 15.2,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "13000",
+          "name": "東京都"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1987100000",
+          "name": "1987年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "16.3",
+        "number": 16.3,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "13000",
+          "name": "東京都"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1988100000",
+          "name": "1988年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "15.4",
+        "number": 15.4,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "13000",
+          "name": "東京都"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1989100000",
+          "name": "1989年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "16.4",
+        "number": 16.4,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "13000",
+          "name": "東京都"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1990100000",
+          "name": "1990年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "17.0",
+        "number": 17.0,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "13000",
+          "name": "東京都"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1991100000",
+          "name": "1991年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "16.4",
+        "number": 16.4,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "13000",
+          "name": "東京都"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1992100000",
+          "name": "1992年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "16.0",
+        "number": 16.0,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "13000",
+          "name": "東京都"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1993100000",
+          "name": "1993年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "15.5",
+        "number": 15.5,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "13000",
+          "name": "東京都"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1994100000",
+          "name": "1994年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "16.9",
+        "number": 16.9,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "13000",
+          "name": "東京都"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1995100000",
+          "name": "1995年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "16.3",
+        "number": 16.3,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "13000",
+          "name": "東京都"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1996100000",
+          "name": "1996年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "15.8",
+        "number": 15.8,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "13000",
+          "name": "東京都"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1997100000",
+          "name": "1997年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "16.7",
+        "number": 16.7,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "13000",
+          "name": "東京都"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1998100000",
+          "name": "1998年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "16.7",
+        "number": 16.7,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "13000",
+          "name": "東京都"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1999100000",
+          "name": "1999年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "17.0",
+        "number": 17.0,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "13000",
+          "name": "東京都"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2000100000",
+          "name": "2000年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "16.9",
+        "number": 16.9,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "13000",
+          "name": "東京都"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2001100000",
+          "name": "2001年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "16.5",
+        "number": 16.5,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "13000",
+          "name": "東京都"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2002100000",
+          "name": "2002年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "16.7",
+        "number": 16.7,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "13000",
+          "name": "東京都"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2003100000",
+          "name": "2003年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "16.0",
+        "number": 16.0,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "13000",
+          "name": "東京都"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2004100000",
+          "name": "2004年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "17.3",
+        "number": 17.3,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "13000",
+          "name": "東京都"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2005100000",
+          "name": "2005年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "16.2",
+        "number": 16.2,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "13000",
+          "name": "東京都"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2006100000",
+          "name": "2006年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "16.4",
+        "number": 16.4,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "13000",
+          "name": "東京都"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2007100000",
+          "name": "2007年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "17.0",
+        "number": 17.0,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "13000",
+          "name": "東京都"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2008100000",
+          "name": "2008年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "16.4",
+        "number": 16.4,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "13000",
+          "name": "東京都"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2009100000",
+          "name": "2009年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "16.7",
+        "number": 16.7,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "13000",
+          "name": "東京都"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2010100000",
+          "name": "2010年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "16.9",
+        "number": 16.9,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "13000",
+          "name": "東京都"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2011100000",
+          "name": "2011年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "16.5",
+        "number": 16.5,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "13000",
+          "name": "東京都"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2012100000",
+          "name": "2012年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "16.3",
+        "number": 16.3,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "13000",
+          "name": "東京都"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2013100000",
+          "name": "2013年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "17.1",
+        "number": 17.1,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "13000",
+          "name": "東京都"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2014100000",
+          "name": "2014年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "16.6",
+        "number": 16.6,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "13000",
+          "name": "東京都"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2015100000",
+          "name": "2015年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "16.4",
+        "number": 16.4,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "13000",
+          "name": "東京都"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2016100000",
+          "name": "2016年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "16.4",
+        "number": 16.4,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "13000",
+          "name": "東京都"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2017100000",
+          "name": "2017年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "15.8",
+        "number": 15.8,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "13000",
+          "name": "東京都"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2018100000",
+          "name": "2018年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "16.8",
+        "number": 16.8,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "13000",
+          "name": "東京都"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2019100000",
+          "name": "2019年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "16.5",
+        "number": 16.5,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "13000",
+          "name": "東京都"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2020100000",
+          "name": "2020年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "16.5",
+        "number": 16.5,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "13000",
+          "name": "東京都"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2021100000",
+          "name": "2021年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "16.6",
+        "number": 16.6,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "13000",
+          "name": "東京都"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2022100000",
+          "name": "2022年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "16.4",
+        "number": 16.4,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "13000",
+          "name": "東京都"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2023100000",
+          "name": "2023年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "17.6",
+        "number": 17.6,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "13000",
+          "name": "東京都"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2024100000",
+          "name": "2024年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "17.6",
+        "number": 17.6,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "47000",
+          "name": "沖縄県"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1975100000",
+          "name": "1975年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "22.2",
+        "number": 22.2,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "47000",
+          "name": "沖縄県"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1976100000",
+          "name": "1976年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "22.0",
+        "number": 22.0,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "47000",
+          "name": "沖縄県"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1977100000",
+          "name": "1977年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "22.6",
+        "number": 22.6,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "47000",
+          "name": "沖縄県"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1978100000",
+          "name": "1978年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "22.1",
+        "number": 22.1,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "47000",
+          "name": "沖縄県"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1979100000",
+          "name": "1979年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "22.3",
+        "number": 22.3,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "47000",
+          "name": "沖縄県"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1980100000",
+          "name": "1980年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "22.5",
+        "number": 22.5,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "47000",
+          "name": "沖縄県"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1981100000",
+          "name": "1981年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "22.2",
+        "number": 22.2,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "47000",
+          "name": "沖縄県"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1982100000",
+          "name": "1982年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "22.6",
+        "number": 22.6,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "47000",
+          "name": "沖縄県"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1983100000",
+          "name": "1983年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "22.9",
+        "number": 22.9,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "47000",
+          "name": "沖縄県"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1984100000",
+          "name": "1984年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "22.3",
+        "number": 22.3,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "47000",
+          "name": "沖縄県"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1985100000",
+          "name": "1985年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "22.5",
+        "number": 22.5,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "47000",
+          "name": "沖縄県"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1986100000",
+          "name": "1986年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "22.2",
+        "number": 22.2,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "47000",
+          "name": "沖縄県"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1987100000",
+          "name": "1987年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "23.1",
+        "number": 23.1,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "47000",
+          "name": "沖縄県"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1988100000",
+          "name": "1988年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "23.0",
+        "number": 23.0,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "47000",
+          "name": "沖縄県"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1989100000",
+          "name": "1989年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "22.7",
+        "number": 22.7,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "47000",
+          "name": "沖縄県"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1990100000",
+          "name": "1990年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "23.0",
+        "number": 23.0,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "47000",
+          "name": "沖縄県"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1991100000",
+          "name": "1991年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "23.4",
+        "number": 23.4,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "47000",
+          "name": "沖縄県"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1992100000",
+          "name": "1992年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "22.9",
+        "number": 22.9,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "47000",
+          "name": "沖縄県"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1993100000",
+          "name": "1993年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "23.1",
+        "number": 23.1,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "47000",
+          "name": "沖縄県"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1994100000",
+          "name": "1994年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "23.0",
+        "number": 23.0,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "47000",
+          "name": "沖縄県"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1995100000",
+          "name": "1995年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "22.6",
+        "number": 22.6,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "47000",
+          "name": "沖縄県"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1996100000",
+          "name": "1996年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "22.8",
+        "number": 22.8,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "47000",
+          "name": "沖縄県"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1997100000",
+          "name": "1997年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "23.0",
+        "number": 23.0,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "47000",
+          "name": "沖縄県"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1998100000",
+          "name": "1998年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "24.4",
+        "number": 24.4,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "47000",
+          "name": "沖縄県"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1999100000",
+          "name": "1999年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "23.5",
+        "number": 23.5,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "47000",
+          "name": "沖縄県"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2000100000",
+          "name": "2000年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "23.0",
+        "number": 23.0,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "47000",
+          "name": "沖縄県"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2001100000",
+          "name": "2001年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "23.4",
+        "number": 23.4,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "47000",
+          "name": "沖縄県"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2002100000",
+          "name": "2002年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "23.2",
+        "number": 23.2,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "47000",
+          "name": "沖縄県"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2003100000",
+          "name": "2003年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "23.4",
+        "number": 23.4,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "47000",
+          "name": "沖縄県"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2004100000",
+          "name": "2004年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "23.4",
+        "number": 23.4,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "47000",
+          "name": "沖縄県"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2005100000",
+          "name": "2005年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "23.1",
+        "number": 23.1,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "47000",
+          "name": "沖縄県"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2006100000",
+          "name": "2006年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "23.5",
+        "number": 23.5,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "47000",
+          "name": "沖縄県"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2007100000",
+          "name": "2007年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "23.5",
+        "number": 23.5,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "47000",
+          "name": "沖縄県"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2008100000",
+          "name": "2008年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "23.4",
+        "number": 23.4,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "47000",
+          "name": "沖縄県"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2009100000",
+          "name": "2009年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "23.4",
+        "number": 23.4,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "47000",
+          "name": "沖縄県"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2010100000",
+          "name": "2010年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "23.1",
+        "number": 23.1,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "47000",
+          "name": "沖縄県"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2011100000",
+          "name": "2011年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "22.9",
+        "number": 22.9,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "47000",
+          "name": "沖縄県"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2012100000",
+          "name": "2012年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "23.0",
+        "number": 23.0,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "47000",
+          "name": "沖縄県"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2013100000",
+          "name": "2013年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "23.3",
+        "number": 23.3,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "47000",
+          "name": "沖縄県"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2014100000",
+          "name": "2014年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "23.1",
+        "number": 23.1,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "47000",
+          "name": "沖縄県"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2015100000",
+          "name": "2015年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "23.6",
+        "number": 23.6,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "47000",
+          "name": "沖縄県"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2016100000",
+          "name": "2016年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "24.1",
+        "number": 24.1,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "47000",
+          "name": "沖縄県"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2017100000",
+          "name": "2017年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "23.6",
+        "number": 23.6,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "47000",
+          "name": "沖縄県"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2018100000",
+          "name": "2018年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "23.5",
+        "number": 23.5,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "47000",
+          "name": "沖縄県"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2019100000",
+          "name": "2019年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "23.9",
+        "number": 23.9,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "47000",
+          "name": "沖縄県"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2020100000",
+          "name": "2020年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "23.8",
+        "number": 23.8,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "47000",
+          "name": "沖縄県"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2021100000",
+          "name": "2021年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "23.6",
+        "number": 23.6,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "47000",
+          "name": "沖縄県"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2022100000",
+          "name": "2022年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "23.7",
+        "number": 23.7,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "47000",
+          "name": "沖縄県"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2023100000",
+          "name": "2023年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "23.8",
+        "number": 23.8,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010102",
+      "dimensions": {
+        "area": {
+          "code": "47000",
+          "name": "沖縄県"
+        },
+        "cat01": {
+          "code": "B4101",
+          "name": "B4101_年平均気温"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2024100000",
+          "name": "2024年度"
+        }
+      },
+      "unit": "℃",
+      "value": {
+        "raw": "24.4",
+        "number": 24.4,
+        "kind": "number"
+      }
+    }
+  ]
+}

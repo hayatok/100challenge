@@ -1,0 +1,729 @@
+{
+  "schema_version": "1",
+  "kind": "data",
+  "table": {
+    "id": "0003162194",
+    "statistics_code": "00200356",
+    "statistics_name": "通信利用動向調査",
+    "organization": "総務省",
+    "title": "問１（１）携帯電話の保有構成（対象：全世帯） 世帯人員 平成17年以前",
+    "cycle": "年次",
+    "survey_date": "0",
+    "open_date": "2016-12-28",
+    "updated_date": "2019-01-28",
+    "collect_area": "該当なし",
+    "total_records": 252
+  },
+  "dimensions": [
+    {
+      "id": "tab",
+      "name": "表章項目",
+      "values": [
+        {
+          "code": "00100",
+          "name": "回答数割合",
+          "unit": "%"
+        }
+      ]
+    },
+    {
+      "id": "cat01",
+      "name": "携帯電話の保有構成",
+      "values": [
+        {
+          "code": "100",
+          "name": "合計",
+          "level": "1"
+        },
+        {
+          "code": "110",
+          "name": "すべてを保有",
+          "level": "2",
+          "parent_code": "100"
+        },
+        {
+          "code": "120",
+          "name": "インターネット対応型、インターネット非対応型のみ保有",
+          "level": "2",
+          "parent_code": "100"
+        },
+        {
+          "code": "130",
+          "name": "インターネット非対応型、第3世代携帯電話のみ保有",
+          "level": "2",
+          "parent_code": "100"
+        },
+        {
+          "code": "140",
+          "name": "インターネット対応型、第3世代携帯電話のみ保有",
+          "level": "2",
+          "parent_code": "100"
+        },
+        {
+          "code": "150",
+          "name": "インターネット非対応型のみ保有",
+          "level": "2",
+          "parent_code": "100"
+        },
+        {
+          "code": "160",
+          "name": "インターネット対応型のみ保有",
+          "level": "2",
+          "parent_code": "100"
+        },
+        {
+          "code": "170",
+          "name": "第3世代携帯電話のみ保有",
+          "level": "2",
+          "parent_code": "100"
+        },
+        {
+          "code": "180",
+          "name": "保有していない",
+          "level": "2",
+          "parent_code": "100"
+        },
+        {
+          "code": "190",
+          "name": "不明",
+          "level": "2",
+          "parent_code": "100"
+        }
+      ]
+    },
+    {
+      "id": "cat04",
+      "name": "世帯人員_1",
+      "values": [
+        {
+          "code": "100",
+          "name": "合計",
+          "level": "1"
+        }
+      ]
+    },
+    {
+      "id": "time",
+      "name": "時間軸(年次)",
+      "values": [
+        {
+          "code": "2004000000",
+          "name": "2004年",
+          "level": "1"
+        },
+        {
+          "code": "2003000000",
+          "name": "2003年",
+          "level": "1"
+        },
+        {
+          "code": "2002000000",
+          "name": "2002年",
+          "level": "1"
+        }
+      ]
+    }
+  ],
+  "page": {
+    "total": 22,
+    "from": 1,
+    "to": 22,
+    "truncated": false
+  },
+  "records": [
+    {
+      "table_id": "0003162194",
+      "dimensions": {
+        "cat01": {
+          "code": "100",
+          "name": "合計"
+        },
+        "cat04": {
+          "code": "100",
+          "name": "合計"
+        },
+        "tab": {
+          "code": "00100",
+          "name": "回答数割合"
+        },
+        "time": {
+          "code": "2004000000",
+          "name": "2004年"
+        }
+      },
+      "unit": "%",
+      "value": {
+        "raw": "100.0",
+        "number": 100.0,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003162194",
+      "dimensions": {
+        "cat01": {
+          "code": "100",
+          "name": "合計"
+        },
+        "cat04": {
+          "code": "100",
+          "name": "合計"
+        },
+        "tab": {
+          "code": "00100",
+          "name": "回答数割合"
+        },
+        "time": {
+          "code": "2003000000",
+          "name": "2003年"
+        }
+      },
+      "unit": "%",
+      "value": {
+        "raw": "100.0",
+        "number": 100.0,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003162194",
+      "dimensions": {
+        "cat01": {
+          "code": "100",
+          "name": "合計"
+        },
+        "cat04": {
+          "code": "100",
+          "name": "合計"
+        },
+        "tab": {
+          "code": "00100",
+          "name": "回答数割合"
+        },
+        "time": {
+          "code": "2002000000",
+          "name": "2002年"
+        }
+      },
+      "unit": "%",
+      "value": {
+        "raw": "100.0",
+        "number": 100.0,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003162194",
+      "dimensions": {
+        "cat01": {
+          "code": "110",
+          "name": "すべてを保有"
+        },
+        "cat04": {
+          "code": "100",
+          "name": "合計"
+        },
+        "tab": {
+          "code": "00100",
+          "name": "回答数割合"
+        },
+        "time": {
+          "code": "2004000000",
+          "name": "2004年"
+        }
+      },
+      "unit": "%",
+      "value": {
+        "raw": "2.8",
+        "number": 2.8,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003162194",
+      "dimensions": {
+        "cat01": {
+          "code": "110",
+          "name": "すべてを保有"
+        },
+        "cat04": {
+          "code": "100",
+          "name": "合計"
+        },
+        "tab": {
+          "code": "00100",
+          "name": "回答数割合"
+        },
+        "time": {
+          "code": "2003000000",
+          "name": "2003年"
+        }
+      },
+      "unit": "%",
+      "value": {
+        "raw": "16.9",
+        "number": 16.9,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003162194",
+      "dimensions": {
+        "cat01": {
+          "code": "110",
+          "name": "すべてを保有"
+        },
+        "cat04": {
+          "code": "100",
+          "name": "合計"
+        },
+        "tab": {
+          "code": "00100",
+          "name": "回答数割合"
+        },
+        "time": {
+          "code": "2002000000",
+          "name": "2002年"
+        }
+      },
+      "unit": "%",
+      "value": {
+        "raw": "16.7",
+        "number": 16.7,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003162194",
+      "dimensions": {
+        "cat01": {
+          "code": "120",
+          "name": "インターネット対応型、インターネット非対応型のみ保有"
+        },
+        "cat04": {
+          "code": "100",
+          "name": "合計"
+        },
+        "tab": {
+          "code": "00100",
+          "name": "回答数割合"
+        },
+        "time": {
+          "code": "2004000000",
+          "name": "2004年"
+        }
+      },
+      "unit": "%",
+      "value": {
+        "raw": "16.4",
+        "number": 16.4,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003162194",
+      "dimensions": {
+        "cat01": {
+          "code": "130",
+          "name": "インターネット非対応型、第3世代携帯電話のみ保有"
+        },
+        "cat04": {
+          "code": "100",
+          "name": "合計"
+        },
+        "tab": {
+          "code": "00100",
+          "name": "回答数割合"
+        },
+        "time": {
+          "code": "2004000000",
+          "name": "2004年"
+        }
+      },
+      "unit": "%",
+      "value": {
+        "raw": "2.8",
+        "number": 2.8,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003162194",
+      "dimensions": {
+        "cat01": {
+          "code": "140",
+          "name": "インターネット対応型、第3世代携帯電話のみ保有"
+        },
+        "cat04": {
+          "code": "100",
+          "name": "合計"
+        },
+        "tab": {
+          "code": "00100",
+          "name": "回答数割合"
+        },
+        "time": {
+          "code": "2004000000",
+          "name": "2004年"
+        }
+      },
+      "unit": "%",
+      "value": {
+        "raw": "4.3",
+        "number": 4.3,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003162194",
+      "dimensions": {
+        "cat01": {
+          "code": "150",
+          "name": "インターネット非対応型のみ保有"
+        },
+        "cat04": {
+          "code": "100",
+          "name": "合計"
+        },
+        "tab": {
+          "code": "00100",
+          "name": "回答数割合"
+        },
+        "time": {
+          "code": "2004000000",
+          "name": "2004年"
+        }
+      },
+      "unit": "%",
+      "value": {
+        "raw": "36.5",
+        "number": 36.5,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003162194",
+      "dimensions": {
+        "cat01": {
+          "code": "150",
+          "name": "インターネット非対応型のみ保有"
+        },
+        "cat04": {
+          "code": "100",
+          "name": "合計"
+        },
+        "tab": {
+          "code": "00100",
+          "name": "回答数割合"
+        },
+        "time": {
+          "code": "2003000000",
+          "name": "2003年"
+        }
+      },
+      "unit": "%",
+      "value": {
+        "raw": "39.6",
+        "number": 39.6,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003162194",
+      "dimensions": {
+        "cat01": {
+          "code": "150",
+          "name": "インターネット非対応型のみ保有"
+        },
+        "cat04": {
+          "code": "100",
+          "name": "合計"
+        },
+        "tab": {
+          "code": "00100",
+          "name": "回答数割合"
+        },
+        "time": {
+          "code": "2002000000",
+          "name": "2002年"
+        }
+      },
+      "unit": "%",
+      "value": {
+        "raw": "31.1",
+        "number": 31.1,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003162194",
+      "dimensions": {
+        "cat01": {
+          "code": "160",
+          "name": "インターネット対応型のみ保有"
+        },
+        "cat04": {
+          "code": "100",
+          "name": "合計"
+        },
+        "tab": {
+          "code": "00100",
+          "name": "回答数割合"
+        },
+        "time": {
+          "code": "2004000000",
+          "name": "2004年"
+        }
+      },
+      "unit": "%",
+      "value": {
+        "raw": "23.4",
+        "number": 23.4,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003162194",
+      "dimensions": {
+        "cat01": {
+          "code": "160",
+          "name": "インターネット対応型のみ保有"
+        },
+        "cat04": {
+          "code": "100",
+          "name": "合計"
+        },
+        "tab": {
+          "code": "00100",
+          "name": "回答数割合"
+        },
+        "time": {
+          "code": "2003000000",
+          "name": "2003年"
+        }
+      },
+      "unit": "%",
+      "value": {
+        "raw": "37.3",
+        "number": 37.3,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003162194",
+      "dimensions": {
+        "cat01": {
+          "code": "160",
+          "name": "インターネット対応型のみ保有"
+        },
+        "cat04": {
+          "code": "100",
+          "name": "合計"
+        },
+        "tab": {
+          "code": "00100",
+          "name": "回答数割合"
+        },
+        "time": {
+          "code": "2002000000",
+          "name": "2002年"
+        }
+      },
+      "unit": "%",
+      "value": {
+        "raw": "38.4",
+        "number": 38.4,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003162194",
+      "dimensions": {
+        "cat01": {
+          "code": "170",
+          "name": "第3世代携帯電話のみ保有"
+        },
+        "cat04": {
+          "code": "100",
+          "name": "合計"
+        },
+        "tab": {
+          "code": "00100",
+          "name": "回答数割合"
+        },
+        "time": {
+          "code": "2004000000",
+          "name": "2004年"
+        }
+      },
+      "unit": "%",
+      "value": {
+        "raw": "4.9",
+        "number": 4.9,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003162194",
+      "dimensions": {
+        "cat01": {
+          "code": "180",
+          "name": "保有していない"
+        },
+        "cat04": {
+          "code": "100",
+          "name": "合計"
+        },
+        "tab": {
+          "code": "00100",
+          "name": "回答数割合"
+        },
+        "time": {
+          "code": "2004000000",
+          "name": "2004年"
+        }
+      },
+      "unit": "%",
+      "value": {
+        "raw": "6.9",
+        "number": 6.9,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003162194",
+      "dimensions": {
+        "cat01": {
+          "code": "180",
+          "name": "保有していない"
+        },
+        "cat04": {
+          "code": "100",
+          "name": "合計"
+        },
+        "tab": {
+          "code": "00100",
+          "name": "回答数割合"
+        },
+        "time": {
+          "code": "2003000000",
+          "name": "2003年"
+        }
+      },
+      "unit": "%",
+      "value": {
+        "raw": "4.6",
+        "number": 4.6,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003162194",
+      "dimensions": {
+        "cat01": {
+          "code": "180",
+          "name": "保有していない"
+        },
+        "cat04": {
+          "code": "100",
+          "name": "合計"
+        },
+        "tab": {
+          "code": "00100",
+          "name": "回答数割合"
+        },
+        "time": {
+          "code": "2002000000",
+          "name": "2002年"
+        }
+      },
+      "unit": "%",
+      "value": {
+        "raw": "11.0",
+        "number": 11.0,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003162194",
+      "dimensions": {
+        "cat01": {
+          "code": "190",
+          "name": "不明"
+        },
+        "cat04": {
+          "code": "100",
+          "name": "合計"
+        },
+        "tab": {
+          "code": "00100",
+          "name": "回答数割合"
+        },
+        "time": {
+          "code": "2004000000",
+          "name": "2004年"
+        }
+      },
+      "unit": "%",
+      "value": {
+        "raw": "2.0",
+        "number": 2.0,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003162194",
+      "dimensions": {
+        "cat01": {
+          "code": "190",
+          "name": "不明"
+        },
+        "cat04": {
+          "code": "100",
+          "name": "合計"
+        },
+        "tab": {
+          "code": "00100",
+          "name": "回答数割合"
+        },
+        "time": {
+          "code": "2003000000",
+          "name": "2003年"
+        }
+      },
+      "unit": "%",
+      "value": {
+        "raw": "1.5",
+        "number": 1.5,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003162194",
+      "dimensions": {
+        "cat01": {
+          "code": "190",
+          "name": "不明"
+        },
+        "cat04": {
+          "code": "100",
+          "name": "合計"
+        },
+        "tab": {
+          "code": "00100",
+          "name": "回答数割合"
+        },
+        "time": {
+          "code": "2002000000",
+          "name": "2002年"
+        }
+      },
+      "unit": "%",
+      "value": {
+        "raw": "2.9",
+        "number": 2.9,
+        "kind": "number"
+      }
+    }
+  ]
+}

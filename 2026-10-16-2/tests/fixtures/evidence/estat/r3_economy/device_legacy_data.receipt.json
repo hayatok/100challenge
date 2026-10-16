@@ -1,0 +1,31 @@
+{
+  "command": [
+    "/Users/hayatok/.local/bin/estat",
+    "data",
+    "get",
+    "0003166994",
+    "--filter",
+    "tab=00100",
+    "--filter",
+    "cat01=110",
+    "--filter",
+    "cat04=100",
+    "--filter",
+    "cat08=120,170,290",
+    "--all-pages",
+    "--max-records",
+    "100",
+    "--timeout",
+    "25s",
+    "-o",
+    "json"
+  ],
+  "started_at": "2026-10-16T15:00:10.186272+00:00",
+  "finished_at": "2026-10-16T15:00:11.104443+00:00",
+  "exit_code": 0,
+  "json_valid": true,
+  "redacted_fields": 0,
+  "output_path": "evidence/estat/r3_economy/device_legacy_data.json",
+  "sha256": "b3e5827e593be1656a8c594c963c540aa582c9eae10cf766717717c36a25bcb1",
+  "stderr": ""
+}

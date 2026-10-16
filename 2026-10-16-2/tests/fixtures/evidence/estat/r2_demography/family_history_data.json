@@ -1,0 +1,1058 @@
+{
+  "schema_version": "1",
+  "kind": "data",
+  "table": {
+    "id": "0003410421",
+    "statistics_code": "00200521",
+    "statistics_name": "国勢調査",
+    "organization": "総務省",
+    "title": "世帯の種類別世帯数及び世帯人員－全国，都道府県（大正9年～令和2年）　その２　普通世帯及び準世帯（大正9年，昭和5年～令和2年）",
+    "cycle": "-",
+    "survey_date": "202001-202012",
+    "open_date": "2022-03-31",
+    "updated_date": "2026-09-29",
+    "collect_area": "該当なし",
+    "total_records": 6300
+  },
+  "dimensions": [
+    {
+      "id": "tab",
+      "name": "表章項目",
+      "values": [
+        {
+          "code": "040",
+          "name": "世帯数",
+          "unit": "世帯"
+        },
+        {
+          "code": "050",
+          "name": "世帯人員",
+          "unit": "人"
+        },
+        {
+          "code": "1390",
+          "name": "１世帯当たり人員",
+          "unit": "人"
+        }
+      ]
+    },
+    {
+      "id": "cat01",
+      "name": "世帯の種類_時系列",
+      "values": [
+        {
+          "code": "100",
+          "name": "総数",
+          "level": "1"
+        },
+        {
+          "code": "130",
+          "name": "普通世帯",
+          "level": "2",
+          "parent_code": "100"
+        },
+        {
+          "code": "140",
+          "name": "準世帯",
+          "level": "2",
+          "parent_code": "100"
+        }
+      ]
+    },
+    {
+      "id": "area",
+      "name": "地域_時系列",
+      "values": [
+        {
+          "code": "00000",
+          "name": "全国",
+          "level": "1"
+        }
+      ]
+    },
+    {
+      "id": "time",
+      "name": "時間軸（調査年）",
+      "values": [
+        {
+          "code": "1920000000",
+          "name": "1920年",
+          "level": "1"
+        },
+        {
+          "code": "1930000000",
+          "name": "1930年",
+          "level": "1"
+        },
+        {
+          "code": "1940000000",
+          "name": "1940年",
+          "level": "1"
+        },
+        {
+          "code": "1950000000",
+          "name": "1950年",
+          "level": "1"
+        },
+        {
+          "code": "2020000000",
+          "name": "2020年",
+          "level": "1"
+        }
+      ]
+    }
+  ],
+  "page": {
+    "total": 35,
+    "from": 1,
+    "to": 35,
+    "truncated": false
+  },
+  "records": [
+    {
+      "table_id": "0003410421",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "100",
+          "name": "総数"
+        },
+        "tab": {
+          "code": "040",
+          "name": "世帯数"
+        },
+        "time": {
+          "code": "1920000000",
+          "name": "1920年"
+        }
+      },
+      "unit": "世帯",
+      "value": {
+        "raw": "11220849",
+        "number": 11220849,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003410421",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "100",
+          "name": "総数"
+        },
+        "tab": {
+          "code": "040",
+          "name": "世帯数"
+        },
+        "time": {
+          "code": "1930000000",
+          "name": "1930年"
+        }
+      },
+      "unit": "世帯",
+      "value": {
+        "raw": "12705278",
+        "number": 12705278,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003410421",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "100",
+          "name": "総数"
+        },
+        "tab": {
+          "code": "040",
+          "name": "世帯数"
+        },
+        "time": {
+          "code": "1940000000",
+          "name": "1940年"
+        }
+      },
+      "unit": "世帯",
+      "value": {
+        "raw": "14342282",
+        "number": 14342282,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003410421",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "100",
+          "name": "総数"
+        },
+        "tab": {
+          "code": "040",
+          "name": "世帯数"
+        },
+        "time": {
+          "code": "1950000000",
+          "name": "1950年"
+        }
+      },
+      "unit": "世帯",
+      "value": {
+        "raw": "16580129",
+        "number": 16580129,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003410421",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "100",
+          "name": "総数"
+        },
+        "tab": {
+          "code": "040",
+          "name": "世帯数"
+        },
+        "time": {
+          "code": "2020000000",
+          "name": "2020年"
+        }
+      },
+      "unit": "世帯",
+      "value": {
+        "raw": "55830154",
+        "number": 55830154,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003410421",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "130",
+          "name": "普通世帯"
+        },
+        "tab": {
+          "code": "040",
+          "name": "世帯数"
+        },
+        "time": {
+          "code": "1920000000",
+          "name": "1920年"
+        }
+      },
+      "unit": "世帯",
+      "value": {
+        "raw": "11122120",
+        "number": 11122120,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003410421",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "130",
+          "name": "普通世帯"
+        },
+        "tab": {
+          "code": "040",
+          "name": "世帯数"
+        },
+        "time": {
+          "code": "1930000000",
+          "name": "1930年"
+        }
+      },
+      "unit": "世帯",
+      "value": {
+        "raw": "12600276",
+        "number": 12600276,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003410421",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "130",
+          "name": "普通世帯"
+        },
+        "tab": {
+          "code": "040",
+          "name": "世帯数"
+        },
+        "time": {
+          "code": "1940000000",
+          "name": "1940年"
+        }
+      },
+      "unit": "世帯",
+      "value": {
+        "raw": "14213947",
+        "number": 14213947,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003410421",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "130",
+          "name": "普通世帯"
+        },
+        "tab": {
+          "code": "040",
+          "name": "世帯数"
+        },
+        "time": {
+          "code": "1950000000",
+          "name": "1950年"
+        }
+      },
+      "unit": "世帯",
+      "value": {
+        "raw": "16617458",
+        "number": 16617458,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003410421",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "130",
+          "name": "普通世帯"
+        },
+        "tab": {
+          "code": "040",
+          "name": "世帯数"
+        },
+        "time": {
+          "code": "2020000000",
+          "name": "2020年"
+        }
+      },
+      "unit": "世帯",
+      "value": {
+        "raw": "54634372",
+        "number": 54634372,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003410421",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "140",
+          "name": "準世帯"
+        },
+        "tab": {
+          "code": "040",
+          "name": "世帯数"
+        },
+        "time": {
+          "code": "1920000000",
+          "name": "1920年"
+        }
+      },
+      "unit": "世帯",
+      "value": {
+        "raw": "98729",
+        "number": 98729,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003410421",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "140",
+          "name": "準世帯"
+        },
+        "tab": {
+          "code": "040",
+          "name": "世帯数"
+        },
+        "time": {
+          "code": "1930000000",
+          "name": "1930年"
+        }
+      },
+      "unit": "世帯",
+      "value": {
+        "raw": "105002",
+        "number": 105002,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003410421",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "140",
+          "name": "準世帯"
+        },
+        "tab": {
+          "code": "040",
+          "name": "世帯数"
+        },
+        "time": {
+          "code": "1940000000",
+          "name": "1940年"
+        }
+      },
+      "unit": "世帯",
+      "value": {
+        "raw": "128335",
+        "number": 128335,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003410421",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "140",
+          "name": "準世帯"
+        },
+        "tab": {
+          "code": "040",
+          "name": "世帯数"
+        },
+        "time": {
+          "code": "1950000000",
+          "name": "1950年"
+        }
+      },
+      "unit": "世帯",
+      "value": {
+        "raw": "154739",
+        "number": 154739,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003410421",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "140",
+          "name": "準世帯"
+        },
+        "tab": {
+          "code": "040",
+          "name": "世帯数"
+        },
+        "time": {
+          "code": "2020000000",
+          "name": "2020年"
+        }
+      },
+      "unit": "世帯",
+      "value": {
+        "raw": "1195782",
+        "number": 1195782,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003410421",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "100",
+          "name": "総数"
+        },
+        "tab": {
+          "code": "050",
+          "name": "世帯人員"
+        },
+        "time": {
+          "code": "1920000000",
+          "name": "1920年"
+        }
+      },
+      "unit": "人",
+      "value": {
+        "raw": "55963053",
+        "number": 55963053,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003410421",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "100",
+          "name": "総数"
+        },
+        "tab": {
+          "code": "050",
+          "name": "世帯人員"
+        },
+        "time": {
+          "code": "1930000000",
+          "name": "1930年"
+        }
+      },
+      "unit": "人",
+      "value": {
+        "raw": "64450005",
+        "number": 64450005,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003410421",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "100",
+          "name": "総数"
+        },
+        "tab": {
+          "code": "050",
+          "name": "世帯人員"
+        },
+        "time": {
+          "code": "1940000000",
+          "name": "1940年"
+        }
+      },
+      "unit": "人",
+      "value": {
+        "raw": "73114308",
+        "number": 73114308,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003410421",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "100",
+          "name": "総数"
+        },
+        "tab": {
+          "code": "050",
+          "name": "世帯人員"
+        },
+        "time": {
+          "code": "1950000000",
+          "name": "1950年"
+        }
+      },
+      "unit": "人",
+      "value": {
+        "raw": "84114574",
+        "number": 84114574,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003410421",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "100",
+          "name": "総数"
+        },
+        "tab": {
+          "code": "050",
+          "name": "世帯人員"
+        },
+        "time": {
+          "code": "2020000000",
+          "name": "2020年"
+        }
+      },
+      "unit": "人",
+      "value": {
+        "raw": "126146099",
+        "number": 126146099,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003410421",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "130",
+          "name": "普通世帯"
+        },
+        "tab": {
+          "code": "050",
+          "name": "世帯人員"
+        },
+        "time": {
+          "code": "1920000000",
+          "name": "1920年"
+        }
+      },
+      "unit": "人",
+      "value": {
+        "raw": "54336356",
+        "number": 54336356,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003410421",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "130",
+          "name": "普通世帯"
+        },
+        "tab": {
+          "code": "050",
+          "name": "世帯人員"
+        },
+        "time": {
+          "code": "1930000000",
+          "name": "1930年"
+        }
+      },
+      "unit": "人",
+      "value": {
+        "raw": "62760821",
+        "number": 62760821,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003410421",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "130",
+          "name": "普通世帯"
+        },
+        "tab": {
+          "code": "050",
+          "name": "世帯人員"
+        },
+        "time": {
+          "code": "1940000000",
+          "name": "1940年"
+        }
+      },
+      "unit": "人",
+      "value": {
+        "raw": "70960786",
+        "number": 70960786,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003410421",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "130",
+          "name": "普通世帯"
+        },
+        "tab": {
+          "code": "050",
+          "name": "世帯人員"
+        },
+        "time": {
+          "code": "1950000000",
+          "name": "1950年"
+        }
+      },
+      "unit": "人",
+      "value": {
+        "raw": "81629177",
+        "number": 81629177,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003410421",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "130",
+          "name": "普通世帯"
+        },
+        "tab": {
+          "code": "050",
+          "name": "世帯人員"
+        },
+        "time": {
+          "code": "2020000000",
+          "name": "2020年"
+        }
+      },
+      "unit": "人",
+      "value": {
+        "raw": "122092418",
+        "number": 122092418,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003410421",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "140",
+          "name": "準世帯"
+        },
+        "tab": {
+          "code": "050",
+          "name": "世帯人員"
+        },
+        "time": {
+          "code": "1920000000",
+          "name": "1920年"
+        }
+      },
+      "unit": "人",
+      "value": {
+        "raw": "1626697",
+        "number": 1626697,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003410421",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "140",
+          "name": "準世帯"
+        },
+        "tab": {
+          "code": "050",
+          "name": "世帯人員"
+        },
+        "time": {
+          "code": "1930000000",
+          "name": "1930年"
+        }
+      },
+      "unit": "人",
+      "value": {
+        "raw": "1689184",
+        "number": 1689184,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003410421",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "140",
+          "name": "準世帯"
+        },
+        "tab": {
+          "code": "050",
+          "name": "世帯人員"
+        },
+        "time": {
+          "code": "1940000000",
+          "name": "1940年"
+        }
+      },
+      "unit": "人",
+      "value": {
+        "raw": "2153522",
+        "number": 2153522,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003410421",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "140",
+          "name": "準世帯"
+        },
+        "tab": {
+          "code": "050",
+          "name": "世帯人員"
+        },
+        "time": {
+          "code": "1950000000",
+          "name": "1950年"
+        }
+      },
+      "unit": "人",
+      "value": {
+        "raw": "1570460",
+        "number": 1570460,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003410421",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "140",
+          "name": "準世帯"
+        },
+        "tab": {
+          "code": "050",
+          "name": "世帯人員"
+        },
+        "time": {
+          "code": "2020000000",
+          "name": "2020年"
+        }
+      },
+      "unit": "人",
+      "value": {
+        "raw": "4053681",
+        "number": 4053681,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003410421",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "130",
+          "name": "普通世帯"
+        },
+        "tab": {
+          "code": "1390",
+          "name": "１世帯当たり人員"
+        },
+        "time": {
+          "code": "1920000000",
+          "name": "1920年"
+        }
+      },
+      "unit": "人",
+      "value": {
+        "raw": "4.8854315544",
+        "number": 4.8854315544,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003410421",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "130",
+          "name": "普通世帯"
+        },
+        "tab": {
+          "code": "1390",
+          "name": "１世帯当たり人員"
+        },
+        "time": {
+          "code": "1930000000",
+          "name": "1930年"
+        }
+      },
+      "unit": "人",
+      "value": {
+        "raw": "4.980908434",
+        "number": 4.980908434,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003410421",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "130",
+          "name": "普通世帯"
+        },
+        "tab": {
+          "code": "1390",
+          "name": "１世帯当たり人員"
+        },
+        "time": {
+          "code": "1940000000",
+          "name": "1940年"
+        }
+      },
+      "unit": "人",
+      "value": {
+        "raw": "4.9923350635",
+        "number": 4.9923350635,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003410421",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "130",
+          "name": "普通世帯"
+        },
+        "tab": {
+          "code": "1390",
+          "name": "１世帯当たり人員"
+        },
+        "time": {
+          "code": "1950000000",
+          "name": "1950年"
+        }
+      },
+      "unit": "人",
+      "value": {
+        "raw": "4.9696949052",
+        "number": 4.9696949052,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003410421",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "130",
+          "name": "普通世帯"
+        },
+        "tab": {
+          "code": "1390",
+          "name": "１世帯当たり人員"
+        },
+        "time": {
+          "code": "2020000000",
+          "name": "2020年"
+        }
+      },
+      "unit": "人",
+      "value": {
+        "raw": "2.23472",
+        "number": 2.23472,
+        "kind": "number"
+      }
+    }
+  ]
+}

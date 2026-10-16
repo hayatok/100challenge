@@ -1,0 +1,27 @@
+{
+  "command": [
+    "/Users/hayatok/.local/bin/estat",
+    "data",
+    "get",
+    "0003026375",
+    "--filter",
+    "cat01=1,10,18",
+    "--filter",
+    "cat02=1",
+    "--filter",
+    "cat03=1",
+    "--max-records",
+    "3",
+    "--timeout",
+    "30s",
+    "-o",
+    "json"
+  ],
+  "started_at": "2026-10-16T07:27:00.431853+00:00",
+  "finished_at": "2026-10-16T07:27:00.851330+00:00",
+  "exit_code": 0,
+  "json_valid": true,
+  "output_path": "evidence/estat/stats_demography/health_sample.json",
+  "sha256": "d2ae16c9f391fb178b3a04340c33f54194fa0467ddfe373e2c2ed060980171cf",
+  "stderr": ""
+}

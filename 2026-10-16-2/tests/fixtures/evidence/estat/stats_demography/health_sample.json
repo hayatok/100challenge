@@ -1,0 +1,187 @@
+{
+  "schema_version": "1",
+  "kind": "data",
+  "table": {
+    "id": "0003026375",
+    "statistics_code": "00450061",
+    "statistics_name": "国民生活基礎調査",
+    "organization": "厚生労働省",
+    "title": "有訴者率（人口千対），年齢（５歳階級）・症状（複数回答）・性別",
+    "cycle": "-",
+    "survey_date": "0",
+    "open_date": "2024-03-25",
+    "updated_date": "2026-10-08",
+    "collect_area": "該当なし",
+    "total_records": 2838
+  },
+  "dimensions": [
+    {
+      "id": "tab",
+      "name": "表章項目",
+      "values": [
+        {
+          "code": "4990",
+          "name": "有訴者率",
+          "unit": "人口千対"
+        }
+      ]
+    },
+    {
+      "id": "cat01",
+      "name": "年齢_004",
+      "values": [
+        {
+          "code": "1",
+          "name": "総数",
+          "level": "1"
+        },
+        {
+          "code": "10",
+          "name": "40～44",
+          "level": "2",
+          "parent_code": "1"
+        },
+        {
+          "code": "18",
+          "name": "80～84",
+          "level": "2",
+          "parent_code": "1"
+        }
+      ]
+    },
+    {
+      "id": "cat02",
+      "name": "性_002",
+      "values": [
+        {
+          "code": "1",
+          "name": "総数",
+          "level": "1"
+        }
+      ]
+    },
+    {
+      "id": "cat03",
+      "name": "症状_001",
+      "values": [
+        {
+          "code": "1",
+          "name": "有訴者率",
+          "level": "1"
+        }
+      ]
+    },
+    {
+      "id": "time",
+      "name": "調査年度",
+      "values": [
+        {
+          "code": "1",
+          "name": "平成１９年",
+          "level": "1"
+        }
+      ]
+    }
+  ],
+  "page": {
+    "total": 3,
+    "from": 1,
+    "to": 3,
+    "truncated": false
+  },
+  "records": [
+    {
+      "table_id": "0003026375",
+      "dimensions": {
+        "cat01": {
+          "code": "1",
+          "name": "総数"
+        },
+        "cat02": {
+          "code": "1",
+          "name": "総数"
+        },
+        "cat03": {
+          "code": "1",
+          "name": "有訴者率"
+        },
+        "tab": {
+          "code": "4990",
+          "name": "有訴者率"
+        },
+        "time": {
+          "code": "1",
+          "name": "平成１９年"
+        }
+      },
+      "unit": "人口千対",
+      "value": {
+        "raw": "327.6",
+        "number": 327.6,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003026375",
+      "dimensions": {
+        "cat01": {
+          "code": "10",
+          "name": "40～44"
+        },
+        "cat02": {
+          "code": "1",
+          "name": "総数"
+        },
+        "cat03": {
+          "code": "1",
+          "name": "有訴者率"
+        },
+        "tab": {
+          "code": "4990",
+          "name": "有訴者率"
+        },
+        "time": {
+          "code": "1",
+          "name": "平成１９年"
+        }
+      },
+      "unit": "人口千対",
+      "value": {
+        "raw": "292.9",
+        "number": 292.9,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003026375",
+      "dimensions": {
+        "cat01": {
+          "code": "18",
+          "name": "80～84"
+        },
+        "cat02": {
+          "code": "1",
+          "name": "総数"
+        },
+        "cat03": {
+          "code": "1",
+          "name": "有訴者率"
+        },
+        "tab": {
+          "code": "4990",
+          "name": "有訴者率"
+        },
+        "time": {
+          "code": "1",
+          "name": "平成１９年"
+        }
+      },
+      "unit": "人口千対",
+      "value": {
+        "raw": "556",
+        "number": 556,
+        "kind": "number"
+      }
+    }
+  ]
+}

@@ -1,0 +1,581 @@
+{
+  "schema_version": "1",
+  "kind": "data",
+  "table": {
+    "id": "0003166994",
+    "statistics_code": "00200356",
+    "statistics_name": "通信利用動向調査",
+    "organization": "総務省",
+    "title": "情報通信機器の保有状況（全世帯） 世帯主年齢",
+    "cycle": "年次",
+    "survey_date": "0",
+    "open_date": "2016-12-28",
+    "updated_date": "2019-02-04",
+    "collect_area": "該当なし",
+    "total_records": 3317
+  },
+  "dimensions": [
+    {
+      "id": "tab",
+      "name": "表章項目",
+      "values": [
+        {
+          "code": "00100",
+          "name": "回答数割合",
+          "unit": "%"
+        }
+      ]
+    },
+    {
+      "id": "cat01",
+      "name": "保有状況",
+      "values": [
+        {
+          "code": "110",
+          "name": "保有している",
+          "level": "2",
+          "parent_code": "100"
+        }
+      ]
+    },
+    {
+      "id": "cat04",
+      "name": "世帯主年齢_1",
+      "values": [
+        {
+          "code": "100",
+          "name": "合計",
+          "level": "1"
+        }
+      ]
+    },
+    {
+      "id": "cat08",
+      "name": "情報通信機器",
+      "values": [
+        {
+          "code": "120",
+          "name": "FAX",
+          "level": "2",
+          "parent_code": "100"
+        },
+        {
+          "code": "170",
+          "name": "携帯電話",
+          "level": "3",
+          "parent_code": "130"
+        },
+        {
+          "code": "290",
+          "name": "パソコン",
+          "level": "2",
+          "parent_code": "100"
+        }
+      ]
+    },
+    {
+      "id": "time",
+      "name": "時間軸(年次)",
+      "values": [
+        {
+          "code": "2000000000",
+          "name": "2000年",
+          "level": "1"
+        },
+        {
+          "code": "1999000000",
+          "name": "1999年",
+          "level": "1"
+        },
+        {
+          "code": "1998000000",
+          "name": "1998年",
+          "level": "1"
+        },
+        {
+          "code": "1997000000",
+          "name": "1997年",
+          "level": "1"
+        },
+        {
+          "code": "1996000000",
+          "name": "1996年",
+          "level": "1"
+        }
+      ]
+    }
+  ],
+  "page": {
+    "total": 15,
+    "from": 1,
+    "to": 15,
+    "truncated": false
+  },
+  "records": [
+    {
+      "table_id": "0003166994",
+      "dimensions": {
+        "cat01": {
+          "code": "110",
+          "name": "保有している"
+        },
+        "cat04": {
+          "code": "100",
+          "name": "合計"
+        },
+        "cat08": {
+          "code": "120",
+          "name": "FAX"
+        },
+        "tab": {
+          "code": "00100",
+          "name": "回答数割合"
+        },
+        "time": {
+          "code": "2000000000",
+          "name": "2000年"
+        }
+      },
+      "unit": "%",
+      "value": {
+        "raw": "40.4",
+        "number": 40.4,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003166994",
+      "dimensions": {
+        "cat01": {
+          "code": "110",
+          "name": "保有している"
+        },
+        "cat04": {
+          "code": "100",
+          "name": "合計"
+        },
+        "cat08": {
+          "code": "120",
+          "name": "FAX"
+        },
+        "tab": {
+          "code": "00100",
+          "name": "回答数割合"
+        },
+        "time": {
+          "code": "1999000000",
+          "name": "1999年"
+        }
+      },
+      "unit": "%",
+      "value": {
+        "raw": "34.2",
+        "number": 34.2,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003166994",
+      "dimensions": {
+        "cat01": {
+          "code": "110",
+          "name": "保有している"
+        },
+        "cat04": {
+          "code": "100",
+          "name": "合計"
+        },
+        "cat08": {
+          "code": "120",
+          "name": "FAX"
+        },
+        "tab": {
+          "code": "00100",
+          "name": "回答数割合"
+        },
+        "time": {
+          "code": "1998000000",
+          "name": "1998年"
+        }
+      },
+      "unit": "%",
+      "value": {
+        "raw": "31.9",
+        "number": 31.9,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003166994",
+      "dimensions": {
+        "cat01": {
+          "code": "110",
+          "name": "保有している"
+        },
+        "cat04": {
+          "code": "100",
+          "name": "合計"
+        },
+        "cat08": {
+          "code": "120",
+          "name": "FAX"
+        },
+        "tab": {
+          "code": "00100",
+          "name": "回答数割合"
+        },
+        "time": {
+          "code": "1997000000",
+          "name": "1997年"
+        }
+      },
+      "unit": "%",
+      "value": {
+        "raw": "26.4",
+        "number": 26.4,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003166994",
+      "dimensions": {
+        "cat01": {
+          "code": "110",
+          "name": "保有している"
+        },
+        "cat04": {
+          "code": "100",
+          "name": "合計"
+        },
+        "cat08": {
+          "code": "120",
+          "name": "FAX"
+        },
+        "tab": {
+          "code": "00100",
+          "name": "回答数割合"
+        },
+        "time": {
+          "code": "1996000000",
+          "name": "1996年"
+        }
+      },
+      "unit": "%",
+      "value": {
+        "raw": "20.7",
+        "number": 20.7,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003166994",
+      "dimensions": {
+        "cat01": {
+          "code": "110",
+          "name": "保有している"
+        },
+        "cat04": {
+          "code": "100",
+          "name": "合計"
+        },
+        "cat08": {
+          "code": "170",
+          "name": "携帯電話"
+        },
+        "tab": {
+          "code": "00100",
+          "name": "回答数割合"
+        },
+        "time": {
+          "code": "2000000000",
+          "name": "2000年"
+        }
+      },
+      "unit": "%",
+      "value": {
+        "raw": "75.4",
+        "number": 75.4,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003166994",
+      "dimensions": {
+        "cat01": {
+          "code": "110",
+          "name": "保有している"
+        },
+        "cat04": {
+          "code": "100",
+          "name": "合計"
+        },
+        "cat08": {
+          "code": "170",
+          "name": "携帯電話"
+        },
+        "tab": {
+          "code": "00100",
+          "name": "回答数割合"
+        },
+        "time": {
+          "code": "1999000000",
+          "name": "1999年"
+        }
+      },
+      "unit": "%",
+      "value": {
+        "raw": "64.2",
+        "number": 64.2,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003166994",
+      "dimensions": {
+        "cat01": {
+          "code": "110",
+          "name": "保有している"
+        },
+        "cat04": {
+          "code": "100",
+          "name": "合計"
+        },
+        "cat08": {
+          "code": "170",
+          "name": "携帯電話"
+        },
+        "tab": {
+          "code": "00100",
+          "name": "回答数割合"
+        },
+        "time": {
+          "code": "1998000000",
+          "name": "1998年"
+        }
+      },
+      "unit": "%",
+      "value": {
+        "raw": "57.7",
+        "number": 57.7,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003166994",
+      "dimensions": {
+        "cat01": {
+          "code": "110",
+          "name": "保有している"
+        },
+        "cat04": {
+          "code": "100",
+          "name": "合計"
+        },
+        "cat08": {
+          "code": "170",
+          "name": "携帯電話"
+        },
+        "tab": {
+          "code": "00100",
+          "name": "回答数割合"
+        },
+        "time": {
+          "code": "1997000000",
+          "name": "1997年"
+        }
+      },
+      "unit": "%",
+      "value": {
+        "raw": "46.0",
+        "number": 46.0,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003166994",
+      "dimensions": {
+        "cat01": {
+          "code": "110",
+          "name": "保有している"
+        },
+        "cat04": {
+          "code": "100",
+          "name": "合計"
+        },
+        "cat08": {
+          "code": "170",
+          "name": "携帯電話"
+        },
+        "tab": {
+          "code": "00100",
+          "name": "回答数割合"
+        },
+        "time": {
+          "code": "1996000000",
+          "name": "1996年"
+        }
+      },
+      "unit": "%",
+      "value": {
+        "raw": "24.9",
+        "number": 24.9,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003166994",
+      "dimensions": {
+        "cat01": {
+          "code": "110",
+          "name": "保有している"
+        },
+        "cat04": {
+          "code": "100",
+          "name": "合計"
+        },
+        "cat08": {
+          "code": "290",
+          "name": "パソコン"
+        },
+        "tab": {
+          "code": "00100",
+          "name": "回答数割合"
+        },
+        "time": {
+          "code": "2000000000",
+          "name": "2000年"
+        }
+      },
+      "unit": "%",
+      "value": {
+        "raw": "50.5",
+        "number": 50.5,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003166994",
+      "dimensions": {
+        "cat01": {
+          "code": "110",
+          "name": "保有している"
+        },
+        "cat04": {
+          "code": "100",
+          "name": "合計"
+        },
+        "cat08": {
+          "code": "290",
+          "name": "パソコン"
+        },
+        "tab": {
+          "code": "00100",
+          "name": "回答数割合"
+        },
+        "time": {
+          "code": "1999000000",
+          "name": "1999年"
+        }
+      },
+      "unit": "%",
+      "value": {
+        "raw": "37.7",
+        "number": 37.7,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003166994",
+      "dimensions": {
+        "cat01": {
+          "code": "110",
+          "name": "保有している"
+        },
+        "cat04": {
+          "code": "100",
+          "name": "合計"
+        },
+        "cat08": {
+          "code": "290",
+          "name": "パソコン"
+        },
+        "tab": {
+          "code": "00100",
+          "name": "回答数割合"
+        },
+        "time": {
+          "code": "1998000000",
+          "name": "1998年"
+        }
+      },
+      "unit": "%",
+      "value": {
+        "raw": "32.6",
+        "number": 32.6,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003166994",
+      "dimensions": {
+        "cat01": {
+          "code": "110",
+          "name": "保有している"
+        },
+        "cat04": {
+          "code": "100",
+          "name": "合計"
+        },
+        "cat08": {
+          "code": "290",
+          "name": "パソコン"
+        },
+        "tab": {
+          "code": "00100",
+          "name": "回答数割合"
+        },
+        "time": {
+          "code": "1997000000",
+          "name": "1997年"
+        }
+      },
+      "unit": "%",
+      "value": {
+        "raw": "28.8",
+        "number": 28.8,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003166994",
+      "dimensions": {
+        "cat01": {
+          "code": "110",
+          "name": "保有している"
+        },
+        "cat04": {
+          "code": "100",
+          "name": "合計"
+        },
+        "cat08": {
+          "code": "290",
+          "name": "パソコン"
+        },
+        "tab": {
+          "code": "00100",
+          "name": "回答数割合"
+        },
+        "time": {
+          "code": "1996000000",
+          "name": "1996年"
+        }
+      },
+      "unit": "%",
+      "value": {
+        "raw": "22.3",
+        "number": 22.3,
+        "kind": "number"
+      }
+    }
+  ]
+}

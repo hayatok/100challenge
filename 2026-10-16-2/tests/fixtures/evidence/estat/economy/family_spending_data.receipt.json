@@ -1,0 +1,31 @@
+{
+  "command": [
+    "/Users/hayatok/.local/bin/estat",
+    "data",
+    "get",
+    "0002070003",
+    "--filter",
+    "tab=01",
+    "--filter",
+    "cat01=059,060,102,152",
+    "--filter",
+    "cat02=03",
+    "--filter",
+    "area=00000",
+    "--page-size",
+    "200",
+    "--max-records",
+    "200",
+    "--timeout",
+    "25s",
+    "-o",
+    "json"
+  ],
+  "started_at": "2026-10-16T07:35:17.527589+00:00",
+  "finished_at": "2026-10-16T07:35:18.176085+00:00",
+  "exit_code": 0,
+  "json_valid": true,
+  "output_path": "evidence/estat/economy/family_spending_data.json",
+  "sha256": "294428ef1bc5d857c5b4ac25533986fd9652627254083d626272fad428adf301",
+  "stderr": ""
+}

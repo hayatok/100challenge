@@ -1,0 +1,602 @@
+{
+  "schema_version": "1",
+  "kind": "data",
+  "table": {
+    "id": "0003457505",
+    "statistics_code": "00200533",
+    "statistics_name": "社会生活基本調査",
+    "organization": "総務省",
+    "title": "曜日,男女,年齢,行動の種類別総平均時間(夫・妻)－全国，都道府県",
+    "cycle": "-",
+    "survey_date": "202101-202112",
+    "open_date": "2022-08-31",
+    "updated_date": "2026-09-03",
+    "collect_area": "全国",
+    "total_records": 110400
+  },
+  "dimensions": [
+    {
+      "id": "tab",
+      "name": "表章項目",
+      "values": [
+        {
+          "code": "202108A07B06",
+          "name": "総平均時間",
+          "unit": "分"
+        }
+      ]
+    },
+    {
+      "id": "cat01",
+      "name": "曜日",
+      "values": [
+        {
+          "code": "2",
+          "name": "2_平日",
+          "level": "1"
+        }
+      ]
+    },
+    {
+      "id": "cat02",
+      "name": "男女",
+      "values": [
+        {
+          "code": "1",
+          "name": "1_夫",
+          "level": "1"
+        },
+        {
+          "code": "2",
+          "name": "2_妻",
+          "level": "1"
+        }
+      ]
+    },
+    {
+      "id": "cat03",
+      "name": "年齢",
+      "values": [
+        {
+          "code": "3",
+          "name": "3_35～44歳",
+          "level": "1"
+        }
+      ]
+    },
+    {
+      "id": "cat04",
+      "name": "行動の種類",
+      "values": [
+        {
+          "code": "01",
+          "name": "01_睡眠",
+          "level": "1"
+        },
+        {
+          "code": "04",
+          "name": "04_通勤・通学",
+          "level": "1"
+        },
+        {
+          "code": "05",
+          "name": "05_仕事",
+          "level": "1"
+        },
+        {
+          "code": "07",
+          "name": "07_家事",
+          "level": "1"
+        },
+        {
+          "code": "08",
+          "name": "08_介護・看護",
+          "level": "1"
+        },
+        {
+          "code": "09",
+          "name": "09_育児",
+          "level": "1"
+        }
+      ]
+    },
+    {
+      "id": "area",
+      "name": "地域区分",
+      "values": [
+        {
+          "code": "00000",
+          "name": "全国",
+          "level": "1"
+        }
+      ]
+    },
+    {
+      "id": "time",
+      "name": "時間軸",
+      "values": [
+        {
+          "code": "2021000000",
+          "name": "2021年",
+          "level": "1"
+        }
+      ]
+    }
+  ],
+  "page": {
+    "total": 12,
+    "from": 1,
+    "to": 12,
+    "truncated": false
+  },
+  "records": [
+    {
+      "table_id": "0003457505",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "2",
+          "name": "2_平日"
+        },
+        "cat02": {
+          "code": "1",
+          "name": "1_夫"
+        },
+        "cat03": {
+          "code": "3",
+          "name": "3_35～44歳"
+        },
+        "cat04": {
+          "code": "01",
+          "name": "01_睡眠"
+        },
+        "tab": {
+          "code": "202108A07B06",
+          "name": "総平均時間"
+        },
+        "time": {
+          "code": "2021000000",
+          "name": "2021年"
+        }
+      },
+      "unit": "分",
+      "value": {
+        "raw": "451",
+        "number": 451,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003457505",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "2",
+          "name": "2_平日"
+        },
+        "cat02": {
+          "code": "1",
+          "name": "1_夫"
+        },
+        "cat03": {
+          "code": "3",
+          "name": "3_35～44歳"
+        },
+        "cat04": {
+          "code": "04",
+          "name": "04_通勤・通学"
+        },
+        "tab": {
+          "code": "202108A07B06",
+          "name": "総平均時間"
+        },
+        "time": {
+          "code": "2021000000",
+          "name": "2021年"
+        }
+      },
+      "unit": "分",
+      "value": {
+        "raw": "61",
+        "number": 61,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003457505",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "2",
+          "name": "2_平日"
+        },
+        "cat02": {
+          "code": "1",
+          "name": "1_夫"
+        },
+        "cat03": {
+          "code": "3",
+          "name": "3_35～44歳"
+        },
+        "cat04": {
+          "code": "05",
+          "name": "05_仕事"
+        },
+        "tab": {
+          "code": "202108A07B06",
+          "name": "総平均時間"
+        },
+        "time": {
+          "code": "2021000000",
+          "name": "2021年"
+        }
+      },
+      "unit": "分",
+      "value": {
+        "raw": "542",
+        "number": 542,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003457505",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "2",
+          "name": "2_平日"
+        },
+        "cat02": {
+          "code": "1",
+          "name": "1_夫"
+        },
+        "cat03": {
+          "code": "3",
+          "name": "3_35～44歳"
+        },
+        "cat04": {
+          "code": "07",
+          "name": "07_家事"
+        },
+        "tab": {
+          "code": "202108A07B06",
+          "name": "総平均時間"
+        },
+        "time": {
+          "code": "2021000000",
+          "name": "2021年"
+        }
+      },
+      "unit": "分",
+      "value": {
+        "raw": "19",
+        "number": 19,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003457505",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "2",
+          "name": "2_平日"
+        },
+        "cat02": {
+          "code": "1",
+          "name": "1_夫"
+        },
+        "cat03": {
+          "code": "3",
+          "name": "3_35～44歳"
+        },
+        "cat04": {
+          "code": "08",
+          "name": "08_介護・看護"
+        },
+        "tab": {
+          "code": "202108A07B06",
+          "name": "総平均時間"
+        },
+        "time": {
+          "code": "2021000000",
+          "name": "2021年"
+        }
+      },
+      "unit": "分",
+      "value": {
+        "raw": "1",
+        "number": 1,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003457505",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "2",
+          "name": "2_平日"
+        },
+        "cat02": {
+          "code": "1",
+          "name": "1_夫"
+        },
+        "cat03": {
+          "code": "3",
+          "name": "3_35～44歳"
+        },
+        "cat04": {
+          "code": "09",
+          "name": "09_育児"
+        },
+        "tab": {
+          "code": "202108A07B06",
+          "name": "総平均時間"
+        },
+        "time": {
+          "code": "2021000000",
+          "name": "2021年"
+        }
+      },
+      "unit": "分",
+      "value": {
+        "raw": "20",
+        "number": 20,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003457505",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "2",
+          "name": "2_平日"
+        },
+        "cat02": {
+          "code": "2",
+          "name": "2_妻"
+        },
+        "cat03": {
+          "code": "3",
+          "name": "3_35～44歳"
+        },
+        "cat04": {
+          "code": "01",
+          "name": "01_睡眠"
+        },
+        "tab": {
+          "code": "202108A07B06",
+          "name": "総平均時間"
+        },
+        "time": {
+          "code": "2021000000",
+          "name": "2021年"
+        }
+      },
+      "unit": "分",
+      "value": {
+        "raw": "448",
+        "number": 448,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003457505",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "2",
+          "name": "2_平日"
+        },
+        "cat02": {
+          "code": "2",
+          "name": "2_妻"
+        },
+        "cat03": {
+          "code": "3",
+          "name": "3_35～44歳"
+        },
+        "cat04": {
+          "code": "04",
+          "name": "04_通勤・通学"
+        },
+        "tab": {
+          "code": "202108A07B06",
+          "name": "総平均時間"
+        },
+        "time": {
+          "code": "2021000000",
+          "name": "2021年"
+        }
+      },
+      "unit": "分",
+      "value": {
+        "raw": "30",
+        "number": 30,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003457505",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "2",
+          "name": "2_平日"
+        },
+        "cat02": {
+          "code": "2",
+          "name": "2_妻"
+        },
+        "cat03": {
+          "code": "3",
+          "name": "3_35～44歳"
+        },
+        "cat04": {
+          "code": "05",
+          "name": "05_仕事"
+        },
+        "tab": {
+          "code": "202108A07B06",
+          "name": "総平均時間"
+        },
+        "time": {
+          "code": "2021000000",
+          "name": "2021年"
+        }
+      },
+      "unit": "分",
+      "value": {
+        "raw": "250",
+        "number": 250,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003457505",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "2",
+          "name": "2_平日"
+        },
+        "cat02": {
+          "code": "2",
+          "name": "2_妻"
+        },
+        "cat03": {
+          "code": "3",
+          "name": "3_35～44歳"
+        },
+        "cat04": {
+          "code": "07",
+          "name": "07_家事"
+        },
+        "tab": {
+          "code": "202108A07B06",
+          "name": "総平均時間"
+        },
+        "time": {
+          "code": "2021000000",
+          "name": "2021年"
+        }
+      },
+      "unit": "分",
+      "value": {
+        "raw": "204",
+        "number": 204,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003457505",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "2",
+          "name": "2_平日"
+        },
+        "cat02": {
+          "code": "2",
+          "name": "2_妻"
+        },
+        "cat03": {
+          "code": "3",
+          "name": "3_35～44歳"
+        },
+        "cat04": {
+          "code": "08",
+          "name": "08_介護・看護"
+        },
+        "tab": {
+          "code": "202108A07B06",
+          "name": "総平均時間"
+        },
+        "time": {
+          "code": "2021000000",
+          "name": "2021年"
+        }
+      },
+      "unit": "分",
+      "value": {
+        "raw": "3",
+        "number": 3,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003457505",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "2",
+          "name": "2_平日"
+        },
+        "cat02": {
+          "code": "2",
+          "name": "2_妻"
+        },
+        "cat03": {
+          "code": "3",
+          "name": "3_35～44歳"
+        },
+        "cat04": {
+          "code": "09",
+          "name": "09_育児"
+        },
+        "tab": {
+          "code": "202108A07B06",
+          "name": "総平均時間"
+        },
+        "time": {
+          "code": "2021000000",
+          "name": "2021年"
+        }
+      },
+      "unit": "分",
+      "value": {
+        "raw": "94",
+        "number": 94,
+        "kind": "number"
+      }
+    }
+  ]
+}

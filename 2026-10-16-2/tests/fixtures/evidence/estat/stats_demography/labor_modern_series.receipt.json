@@ -1,0 +1,31 @@
+{
+  "command": [
+    "/Users/hayatok/.local/bin/estat",
+    "data",
+    "get",
+    "0002060004",
+    "--filter",
+    "cat01=000",
+    "--filter",
+    "cat02=0",
+    "--filter",
+    "cat03=08",
+    "--filter",
+    "cat04=00",
+    "--filter",
+    "area=00000",
+    "--max-records",
+    "750",
+    "--timeout",
+    "30s",
+    "-o",
+    "json"
+  ],
+  "started_at": "2026-10-16T07:27:41.828898+00:00",
+  "finished_at": "2026-10-16T07:27:42.779912+00:00",
+  "exit_code": 0,
+  "json_valid": true,
+  "output_path": "evidence/estat/stats_demography/labor_modern_series.json",
+  "sha256": "e31714cc40f99de4e500163f211ce20336a0efaa5db31e23d07f31586b0df876",
+  "stderr": ""
+}

@@ -1,0 +1,500 @@
+{
+  "schema_version": "1",
+  "kind": "data",
+  "table": {
+    "id": "0003404754",
+    "statistics_code": "00200521",
+    "statistics_name": "国勢調査",
+    "organization": "総務省",
+    "title": "全国の人口，人口増減，面積及び人口密度（大正9年～平成17年）",
+    "cycle": "-",
+    "survey_date": "200501-200512",
+    "open_date": "2020-05-22",
+    "updated_date": "2026-09-29",
+    "collect_area": "該当なし",
+    "total_records": 95
+  },
+  "dimensions": [
+    {
+      "id": "tab",
+      "name": "表章項目",
+      "values": [
+        {
+          "code": "020",
+          "name": "人口",
+          "unit": "人"
+        }
+      ]
+    },
+    {
+      "id": "time",
+      "name": "時間軸（調査年）",
+      "values": [
+        {
+          "code": "1920000000",
+          "name": "1920年",
+          "level": "1"
+        },
+        {
+          "code": "1925000000",
+          "name": "1925年",
+          "level": "1"
+        },
+        {
+          "code": "1930000000",
+          "name": "1930年",
+          "level": "1"
+        },
+        {
+          "code": "1935000000",
+          "name": "1935年",
+          "level": "1"
+        },
+        {
+          "code": "1940000000",
+          "name": "1940年",
+          "level": "1"
+        },
+        {
+          "code": "1945000000",
+          "name": "1945年",
+          "level": "1"
+        },
+        {
+          "code": "1947000000",
+          "name": "1947年",
+          "level": "1"
+        },
+        {
+          "code": "1950000000",
+          "name": "1950年",
+          "level": "1"
+        },
+        {
+          "code": "1955000000",
+          "name": "1955年",
+          "level": "1"
+        },
+        {
+          "code": "1960000000",
+          "name": "1960年",
+          "level": "1"
+        },
+        {
+          "code": "1965000000",
+          "name": "1965年",
+          "level": "1"
+        },
+        {
+          "code": "1970000000",
+          "name": "1970年",
+          "level": "1"
+        },
+        {
+          "code": "1975000000",
+          "name": "1975年",
+          "level": "1"
+        },
+        {
+          "code": "1980000000",
+          "name": "1980年",
+          "level": "1"
+        },
+        {
+          "code": "1985000000",
+          "name": "1985年",
+          "level": "1"
+        },
+        {
+          "code": "1990000000",
+          "name": "1990年",
+          "level": "1"
+        },
+        {
+          "code": "1995000000",
+          "name": "1995年",
+          "level": "1"
+        },
+        {
+          "code": "2000000000",
+          "name": "2000年",
+          "level": "1"
+        },
+        {
+          "code": "2005000000",
+          "name": "2005年",
+          "level": "1"
+        }
+      ]
+    }
+  ],
+  "page": {
+    "total": 19,
+    "from": 1,
+    "to": 19,
+    "truncated": false
+  },
+  "records": [
+    {
+      "table_id": "0003404754",
+      "dimensions": {
+        "tab": {
+          "code": "020",
+          "name": "人口"
+        },
+        "time": {
+          "code": "1920000000",
+          "name": "1920年"
+        }
+      },
+      "unit": "人",
+      "value": {
+        "raw": "55963053",
+        "number": 55963053,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003404754",
+      "dimensions": {
+        "tab": {
+          "code": "020",
+          "name": "人口"
+        },
+        "time": {
+          "code": "1925000000",
+          "name": "1925年"
+        }
+      },
+      "unit": "人",
+      "value": {
+        "raw": "59736822",
+        "number": 59736822,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003404754",
+      "dimensions": {
+        "tab": {
+          "code": "020",
+          "name": "人口"
+        },
+        "time": {
+          "code": "1930000000",
+          "name": "1930年"
+        }
+      },
+      "unit": "人",
+      "value": {
+        "raw": "64450005",
+        "number": 64450005,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003404754",
+      "dimensions": {
+        "tab": {
+          "code": "020",
+          "name": "人口"
+        },
+        "time": {
+          "code": "1935000000",
+          "name": "1935年"
+        }
+      },
+      "unit": "人",
+      "value": {
+        "raw": "69254148",
+        "number": 69254148,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003404754",
+      "dimensions": {
+        "tab": {
+          "code": "020",
+          "name": "人口"
+        },
+        "time": {
+          "code": "1940000000",
+          "name": "1940年"
+        }
+      },
+      "unit": "人",
+      "value": {
+        "raw": "73114308",
+        "number": 73114308,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003404754",
+      "dimensions": {
+        "tab": {
+          "code": "020",
+          "name": "人口"
+        },
+        "time": {
+          "code": "1945000000",
+          "name": "1945年"
+        }
+      },
+      "unit": "人",
+      "value": {
+        "raw": "71998104",
+        "number": 71998104,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003404754",
+      "dimensions": {
+        "tab": {
+          "code": "020",
+          "name": "人口"
+        },
+        "time": {
+          "code": "1947000000",
+          "name": "1947年"
+        }
+      },
+      "unit": "人",
+      "value": {
+        "raw": "78101473",
+        "number": 78101473,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003404754",
+      "dimensions": {
+        "tab": {
+          "code": "020",
+          "name": "人口"
+        },
+        "time": {
+          "code": "1950000000",
+          "name": "1950年"
+        }
+      },
+      "unit": "人",
+      "value": {
+        "raw": "84114574",
+        "number": 84114574,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003404754",
+      "dimensions": {
+        "tab": {
+          "code": "020",
+          "name": "人口"
+        },
+        "time": {
+          "code": "1955000000",
+          "name": "1955年"
+        }
+      },
+      "unit": "人",
+      "value": {
+        "raw": "90076594",
+        "number": 90076594,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003404754",
+      "dimensions": {
+        "tab": {
+          "code": "020",
+          "name": "人口"
+        },
+        "time": {
+          "code": "1960000000",
+          "name": "1960年"
+        }
+      },
+      "unit": "人",
+      "value": {
+        "raw": "94301623",
+        "number": 94301623,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003404754",
+      "dimensions": {
+        "tab": {
+          "code": "020",
+          "name": "人口"
+        },
+        "time": {
+          "code": "1965000000",
+          "name": "1965年"
+        }
+      },
+      "unit": "人",
+      "value": {
+        "raw": "99209137",
+        "number": 99209137,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003404754",
+      "dimensions": {
+        "tab": {
+          "code": "020",
+          "name": "人口"
+        },
+        "time": {
+          "code": "1970000000",
+          "name": "1970年"
+        }
+      },
+      "unit": "人",
+      "value": {
+        "raw": "104665171",
+        "number": 104665171,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003404754",
+      "dimensions": {
+        "tab": {
+          "code": "020",
+          "name": "人口"
+        },
+        "time": {
+          "code": "1975000000",
+          "name": "1975年"
+        }
+      },
+      "unit": "人",
+      "value": {
+        "raw": "111939643",
+        "number": 111939643,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003404754",
+      "dimensions": {
+        "tab": {
+          "code": "020",
+          "name": "人口"
+        },
+        "time": {
+          "code": "1980000000",
+          "name": "1980年"
+        }
+      },
+      "unit": "人",
+      "value": {
+        "raw": "117060396",
+        "number": 117060396,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003404754",
+      "dimensions": {
+        "tab": {
+          "code": "020",
+          "name": "人口"
+        },
+        "time": {
+          "code": "1985000000",
+          "name": "1985年"
+        }
+      },
+      "unit": "人",
+      "value": {
+        "raw": "121048923",
+        "number": 121048923,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003404754",
+      "dimensions": {
+        "tab": {
+          "code": "020",
+          "name": "人口"
+        },
+        "time": {
+          "code": "1990000000",
+          "name": "1990年"
+        }
+      },
+      "unit": "人",
+      "value": {
+        "raw": "123611167",
+        "number": 123611167,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003404754",
+      "dimensions": {
+        "tab": {
+          "code": "020",
+          "name": "人口"
+        },
+        "time": {
+          "code": "1995000000",
+          "name": "1995年"
+        }
+      },
+      "unit": "人",
+      "value": {
+        "raw": "125570246",
+        "number": 125570246,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003404754",
+      "dimensions": {
+        "tab": {
+          "code": "020",
+          "name": "人口"
+        },
+        "time": {
+          "code": "2000000000",
+          "name": "2000年"
+        }
+      },
+      "unit": "人",
+      "value": {
+        "raw": "126925843",
+        "number": 126925843,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003404754",
+      "dimensions": {
+        "tab": {
+          "code": "020",
+          "name": "人口"
+        },
+        "time": {
+          "code": "2005000000",
+          "name": "2005年"
+        }
+      },
+      "unit": "人",
+      "value": {
+        "raw": "127767994",
+        "number": 127767994,
+        "kind": "number"
+      }
+    }
+  ]
+}

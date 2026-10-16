@@ -1,0 +1,33 @@
+{
+  "command": [
+    "/Users/hayatok/.local/bin/estat",
+    "data",
+    "get",
+    "0004008363",
+    "--filter",
+    "cat01=0",
+    "--filter",
+    "cat02=0",
+    "--filter",
+    "cat03=0,1,2",
+    "--filter",
+    "cat04=0",
+    "--filter",
+    "cat05=0,1",
+    "--filter",
+    "area=00000",
+    "--max-records",
+    "6",
+    "--timeout",
+    "30s",
+    "-o",
+    "json"
+  ],
+  "started_at": "2026-10-16T07:26:59.929093+00:00",
+  "finished_at": "2026-10-16T07:27:00.405564+00:00",
+  "exit_code": 0,
+  "json_valid": true,
+  "output_path": "evidence/estat/stats_demography/caregivers_sample.json",
+  "sha256": "78a5afd656bda94194da46518646d8ec9bc69354a4cacf1a7f960e008530b45a",
+  "stderr": ""
+}

@@ -1,0 +1,3705 @@
+{
+  "schema_version": "1",
+  "kind": "data",
+  "table": {
+    "id": "0003037311",
+    "statistics_code": "00200531",
+    "statistics_name": "労働力調査",
+    "organization": "総務省",
+    "title": "産業，従業上の地位別就業者数（2011年～）-第12・13回改定産業分類による",
+    "cycle": "年次",
+    "survey_date": "0",
+    "open_date": "2026-01-30",
+    "updated_date": "2026-09-01",
+    "collect_area": "全国",
+    "total_records": 100468
+  },
+  "dimensions": [
+    {
+      "id": "tab",
+      "name": "表章項目",
+      "values": [
+        {
+          "code": "01",
+          "name": "実数(人口)",
+          "unit": "万人"
+        }
+      ]
+    },
+    {
+      "id": "cat01",
+      "name": "産業分類",
+      "values": [
+        {
+          "code": "00",
+          "name": "全産業",
+          "level": "1"
+        },
+        {
+          "code": "01",
+          "name": "農業，林業",
+          "level": "1"
+        },
+        {
+          "code": "10",
+          "name": "製造業",
+          "level": "2"
+        }
+      ]
+    },
+    {
+      "id": "cat02",
+      "name": "性別",
+      "values": [
+        {
+          "code": "0",
+          "name": "総数",
+          "level": "1"
+        }
+      ]
+    },
+    {
+      "id": "cat03",
+      "name": "従業上の地位",
+      "values": [
+        {
+          "code": "00",
+          "name": "総数",
+          "level": "1"
+        },
+        {
+          "code": "06",
+          "name": "家族従業者",
+          "level": "2"
+        }
+      ]
+    },
+    {
+      "id": "cat04",
+      "name": "年齢階級",
+      "values": [
+        {
+          "code": "00",
+          "name": "15歳以上",
+          "level": "1"
+        }
+      ]
+    },
+    {
+      "id": "area",
+      "name": "地域",
+      "values": [
+        {
+          "code": "00000",
+          "name": "全国",
+          "level": "1"
+        }
+      ]
+    },
+    {
+      "id": "time",
+      "name": "時間軸（年次）",
+      "values": [
+        {
+          "code": "2011000000",
+          "name": "2011年",
+          "level": "1"
+        },
+        {
+          "code": "2012000000",
+          "name": "2012年",
+          "level": "1"
+        },
+        {
+          "code": "2013000000",
+          "name": "2013年",
+          "level": "1"
+        },
+        {
+          "code": "2014000000",
+          "name": "2014年",
+          "level": "1"
+        },
+        {
+          "code": "2015000000",
+          "name": "2015年",
+          "level": "1"
+        },
+        {
+          "code": "2016000000",
+          "name": "2016年",
+          "level": "1"
+        },
+        {
+          "code": "2017000000",
+          "name": "2017年",
+          "level": "1"
+        },
+        {
+          "code": "2018000000",
+          "name": "2018年",
+          "level": "1"
+        },
+        {
+          "code": "2019000000",
+          "name": "2019年",
+          "level": "1"
+        },
+        {
+          "code": "2020000000",
+          "name": "2020年",
+          "level": "1"
+        },
+        {
+          "code": "2021000000",
+          "name": "2021年",
+          "level": "1"
+        },
+        {
+          "code": "2022000000",
+          "name": "2022年",
+          "level": "1"
+        },
+        {
+          "code": "2023000000",
+          "name": "2023年",
+          "level": "1"
+        },
+        {
+          "code": "2024000000",
+          "name": "2024年",
+          "level": "1"
+        },
+        {
+          "code": "2025000000",
+          "name": "2025年",
+          "level": "1"
+        }
+      ]
+    }
+  ],
+  "page": {
+    "total": 90,
+    "from": 1,
+    "to": 90,
+    "truncated": false
+  },
+  "records": [
+    {
+      "table_id": "0003037311",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "00",
+          "name": "全産業"
+        },
+        "cat02": {
+          "code": "0",
+          "name": "総数"
+        },
+        "cat03": {
+          "code": "00",
+          "name": "総数"
+        },
+        "cat04": {
+          "code": "00",
+          "name": "15歳以上"
+        },
+        "tab": {
+          "code": "01",
+          "name": "実数(人口)"
+        },
+        "time": {
+          "code": "2011000000",
+          "name": "2011年"
+        }
+      },
+      "unit": "万人",
+      "value": {
+        "raw": "…",
+        "number": null,
+        "kind": "special",
+        "note": "東日本大震災の影響により、岩手県、宮城県及び福島県において、調査の実施が困難となりました。このため、平成23年3月分から8月分までの期間を含む全国及び東北地域の結果については掲載していません。"
+      }
+    },
+    {
+      "table_id": "0003037311",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "00",
+          "name": "全産業"
+        },
+        "cat02": {
+          "code": "0",
+          "name": "総数"
+        },
+        "cat03": {
+          "code": "00",
+          "name": "総数"
+        },
+        "cat04": {
+          "code": "00",
+          "name": "15歳以上"
+        },
+        "tab": {
+          "code": "01",
+          "name": "実数(人口)"
+        },
+        "time": {
+          "code": "2012000000",
+          "name": "2012年"
+        }
+      },
+      "unit": "万人",
+      "value": {
+        "raw": "6270",
+        "number": 6270,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003037311",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "00",
+          "name": "全産業"
+        },
+        "cat02": {
+          "code": "0",
+          "name": "総数"
+        },
+        "cat03": {
+          "code": "00",
+          "name": "総数"
+        },
+        "cat04": {
+          "code": "00",
+          "name": "15歳以上"
+        },
+        "tab": {
+          "code": "01",
+          "name": "実数(人口)"
+        },
+        "time": {
+          "code": "2013000000",
+          "name": "2013年"
+        }
+      },
+      "unit": "万人",
+      "value": {
+        "raw": "6311",
+        "number": 6311,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003037311",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "00",
+          "name": "全産業"
+        },
+        "cat02": {
+          "code": "0",
+          "name": "総数"
+        },
+        "cat03": {
+          "code": "00",
+          "name": "総数"
+        },
+        "cat04": {
+          "code": "00",
+          "name": "15歳以上"
+        },
+        "tab": {
+          "code": "01",
+          "name": "実数(人口)"
+        },
+        "time": {
+          "code": "2014000000",
+          "name": "2014年"
+        }
+      },
+      "unit": "万人",
+      "value": {
+        "raw": "6351",
+        "number": 6351,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003037311",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "00",
+          "name": "全産業"
+        },
+        "cat02": {
+          "code": "0",
+          "name": "総数"
+        },
+        "cat03": {
+          "code": "00",
+          "name": "総数"
+        },
+        "cat04": {
+          "code": "00",
+          "name": "15歳以上"
+        },
+        "tab": {
+          "code": "01",
+          "name": "実数(人口)"
+        },
+        "time": {
+          "code": "2015000000",
+          "name": "2015年"
+        }
+      },
+      "unit": "万人",
+      "value": {
+        "raw": "6376",
+        "number": 6376,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003037311",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "00",
+          "name": "全産業"
+        },
+        "cat02": {
+          "code": "0",
+          "name": "総数"
+        },
+        "cat03": {
+          "code": "00",
+          "name": "総数"
+        },
+        "cat04": {
+          "code": "00",
+          "name": "15歳以上"
+        },
+        "tab": {
+          "code": "01",
+          "name": "実数(人口)"
+        },
+        "time": {
+          "code": "2016000000",
+          "name": "2016年"
+        }
+      },
+      "unit": "万人",
+      "value": {
+        "raw": "6440",
+        "number": 6440,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003037311",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "00",
+          "name": "全産業"
+        },
+        "cat02": {
+          "code": "0",
+          "name": "総数"
+        },
+        "cat03": {
+          "code": "00",
+          "name": "総数"
+        },
+        "cat04": {
+          "code": "00",
+          "name": "15歳以上"
+        },
+        "tab": {
+          "code": "01",
+          "name": "実数(人口)"
+        },
+        "time": {
+          "code": "2017000000",
+          "name": "2017年"
+        }
+      },
+      "unit": "万人",
+      "value": {
+        "raw": "6530",
+        "number": 6530,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003037311",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "00",
+          "name": "全産業"
+        },
+        "cat02": {
+          "code": "0",
+          "name": "総数"
+        },
+        "cat03": {
+          "code": "00",
+          "name": "総数"
+        },
+        "cat04": {
+          "code": "00",
+          "name": "15歳以上"
+        },
+        "tab": {
+          "code": "01",
+          "name": "実数(人口)"
+        },
+        "time": {
+          "code": "2018000000",
+          "name": "2018年"
+        }
+      },
+      "unit": "万人",
+      "value": {
+        "raw": "6682",
+        "number": 6682,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003037311",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "00",
+          "name": "全産業"
+        },
+        "cat02": {
+          "code": "0",
+          "name": "総数"
+        },
+        "cat03": {
+          "code": "00",
+          "name": "総数"
+        },
+        "cat04": {
+          "code": "00",
+          "name": "15歳以上"
+        },
+        "tab": {
+          "code": "01",
+          "name": "実数(人口)"
+        },
+        "time": {
+          "code": "2019000000",
+          "name": "2019年"
+        }
+      },
+      "unit": "万人",
+      "value": {
+        "raw": "6750",
+        "number": 6750,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003037311",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "00",
+          "name": "全産業"
+        },
+        "cat02": {
+          "code": "0",
+          "name": "総数"
+        },
+        "cat03": {
+          "code": "00",
+          "name": "総数"
+        },
+        "cat04": {
+          "code": "00",
+          "name": "15歳以上"
+        },
+        "tab": {
+          "code": "01",
+          "name": "実数(人口)"
+        },
+        "time": {
+          "code": "2020000000",
+          "name": "2020年"
+        }
+      },
+      "unit": "万人",
+      "value": {
+        "raw": "6710",
+        "number": 6710,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003037311",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "00",
+          "name": "全産業"
+        },
+        "cat02": {
+          "code": "0",
+          "name": "総数"
+        },
+        "cat03": {
+          "code": "00",
+          "name": "総数"
+        },
+        "cat04": {
+          "code": "00",
+          "name": "15歳以上"
+        },
+        "tab": {
+          "code": "01",
+          "name": "実数(人口)"
+        },
+        "time": {
+          "code": "2021000000",
+          "name": "2021年"
+        }
+      },
+      "unit": "万人",
+      "value": {
+        "raw": "6713",
+        "number": 6713,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003037311",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "00",
+          "name": "全産業"
+        },
+        "cat02": {
+          "code": "0",
+          "name": "総数"
+        },
+        "cat03": {
+          "code": "00",
+          "name": "総数"
+        },
+        "cat04": {
+          "code": "00",
+          "name": "15歳以上"
+        },
+        "tab": {
+          "code": "01",
+          "name": "実数(人口)"
+        },
+        "time": {
+          "code": "2022000000",
+          "name": "2022年"
+        }
+      },
+      "unit": "万人",
+      "value": {
+        "raw": "6723",
+        "number": 6723,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003037311",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "00",
+          "name": "全産業"
+        },
+        "cat02": {
+          "code": "0",
+          "name": "総数"
+        },
+        "cat03": {
+          "code": "00",
+          "name": "総数"
+        },
+        "cat04": {
+          "code": "00",
+          "name": "15歳以上"
+        },
+        "tab": {
+          "code": "01",
+          "name": "実数(人口)"
+        },
+        "time": {
+          "code": "2023000000",
+          "name": "2023年"
+        }
+      },
+      "unit": "万人",
+      "value": {
+        "raw": "6747",
+        "number": 6747,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003037311",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "00",
+          "name": "全産業"
+        },
+        "cat02": {
+          "code": "0",
+          "name": "総数"
+        },
+        "cat03": {
+          "code": "00",
+          "name": "総数"
+        },
+        "cat04": {
+          "code": "00",
+          "name": "15歳以上"
+        },
+        "tab": {
+          "code": "01",
+          "name": "実数(人口)"
+        },
+        "time": {
+          "code": "2024000000",
+          "name": "2024年"
+        }
+      },
+      "unit": "万人",
+      "value": {
+        "raw": "6781",
+        "number": 6781,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003037311",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "00",
+          "name": "全産業"
+        },
+        "cat02": {
+          "code": "0",
+          "name": "総数"
+        },
+        "cat03": {
+          "code": "00",
+          "name": "総数"
+        },
+        "cat04": {
+          "code": "00",
+          "name": "15歳以上"
+        },
+        "tab": {
+          "code": "01",
+          "name": "実数(人口)"
+        },
+        "time": {
+          "code": "2025000000",
+          "name": "2025年"
+        }
+      },
+      "unit": "万人",
+      "value": {
+        "raw": "6828",
+        "number": 6828,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003037311",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "00",
+          "name": "全産業"
+        },
+        "cat02": {
+          "code": "0",
+          "name": "総数"
+        },
+        "cat03": {
+          "code": "06",
+          "name": "家族従業者"
+        },
+        "cat04": {
+          "code": "00",
+          "name": "15歳以上"
+        },
+        "tab": {
+          "code": "01",
+          "name": "実数(人口)"
+        },
+        "time": {
+          "code": "2011000000",
+          "name": "2011年"
+        }
+      },
+      "unit": "万人",
+      "value": {
+        "raw": "…",
+        "number": null,
+        "kind": "special",
+        "note": "東日本大震災の影響により、岩手県、宮城県及び福島県において、調査の実施が困難となりました。このため、平成23年3月分から8月分までの期間を含む全国及び東北地域の結果については掲載していません。"
+      }
+    },
+    {
+      "table_id": "0003037311",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "00",
+          "name": "全産業"
+        },
+        "cat02": {
+          "code": "0",
+          "name": "総数"
+        },
+        "cat03": {
+          "code": "06",
+          "name": "家族従業者"
+        },
+        "cat04": {
+          "code": "00",
+          "name": "15歳以上"
+        },
+        "tab": {
+          "code": "01",
+          "name": "実数(人口)"
+        },
+        "time": {
+          "code": "2012000000",
+          "name": "2012年"
+        }
+      },
+      "unit": "万人",
+      "value": {
+        "raw": "180",
+        "number": 180,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003037311",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "00",
+          "name": "全産業"
+        },
+        "cat02": {
+          "code": "0",
+          "name": "総数"
+        },
+        "cat03": {
+          "code": "06",
+          "name": "家族従業者"
+        },
+        "cat04": {
+          "code": "00",
+          "name": "15歳以上"
+        },
+        "tab": {
+          "code": "01",
+          "name": "実数(人口)"
+        },
+        "time": {
+          "code": "2013000000",
+          "name": "2013年"
+        }
+      },
+      "unit": "万人",
+      "value": {
+        "raw": "174",
+        "number": 174,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003037311",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "00",
+          "name": "全産業"
+        },
+        "cat02": {
+          "code": "0",
+          "name": "総数"
+        },
+        "cat03": {
+          "code": "06",
+          "name": "家族従業者"
+        },
+        "cat04": {
+          "code": "00",
+          "name": "15歳以上"
+        },
+        "tab": {
+          "code": "01",
+          "name": "実数(人口)"
+        },
+        "time": {
+          "code": "2014000000",
+          "name": "2014年"
+        }
+      },
+      "unit": "万人",
+      "value": {
+        "raw": "168",
+        "number": 168,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003037311",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "00",
+          "name": "全産業"
+        },
+        "cat02": {
+          "code": "0",
+          "name": "総数"
+        },
+        "cat03": {
+          "code": "06",
+          "name": "家族従業者"
+        },
+        "cat04": {
+          "code": "00",
+          "name": "15歳以上"
+        },
+        "tab": {
+          "code": "01",
+          "name": "実数(人口)"
+        },
+        "time": {
+          "code": "2015000000",
+          "name": "2015年"
+        }
+      },
+      "unit": "万人",
+      "value": {
+        "raw": "162",
+        "number": 162,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003037311",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "00",
+          "name": "全産業"
+        },
+        "cat02": {
+          "code": "0",
+          "name": "総数"
+        },
+        "cat03": {
+          "code": "06",
+          "name": "家族従業者"
+        },
+        "cat04": {
+          "code": "00",
+          "name": "15歳以上"
+        },
+        "tab": {
+          "code": "01",
+          "name": "実数(人口)"
+        },
+        "time": {
+          "code": "2016000000",
+          "name": "2016年"
+        }
+      },
+      "unit": "万人",
+      "value": {
+        "raw": "153",
+        "number": 153,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003037311",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "00",
+          "name": "全産業"
+        },
+        "cat02": {
+          "code": "0",
+          "name": "総数"
+        },
+        "cat03": {
+          "code": "06",
+          "name": "家族従業者"
+        },
+        "cat04": {
+          "code": "00",
+          "name": "15歳以上"
+        },
+        "tab": {
+          "code": "01",
+          "name": "実数(人口)"
+        },
+        "time": {
+          "code": "2017000000",
+          "name": "2017年"
+        }
+      },
+      "unit": "万人",
+      "value": {
+        "raw": "151",
+        "number": 151,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003037311",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "00",
+          "name": "全産業"
+        },
+        "cat02": {
+          "code": "0",
+          "name": "総数"
+        },
+        "cat03": {
+          "code": "06",
+          "name": "家族従業者"
+        },
+        "cat04": {
+          "code": "00",
+          "name": "15歳以上"
+        },
+        "tab": {
+          "code": "01",
+          "name": "実数(人口)"
+        },
+        "time": {
+          "code": "2018000000",
+          "name": "2018年"
+        }
+      },
+      "unit": "万人",
+      "value": {
+        "raw": "151",
+        "number": 151,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003037311",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "00",
+          "name": "全産業"
+        },
+        "cat02": {
+          "code": "0",
+          "name": "総数"
+        },
+        "cat03": {
+          "code": "06",
+          "name": "家族従業者"
+        },
+        "cat04": {
+          "code": "00",
+          "name": "15歳以上"
+        },
+        "tab": {
+          "code": "01",
+          "name": "実数(人口)"
+        },
+        "time": {
+          "code": "2019000000",
+          "name": "2019年"
+        }
+      },
+      "unit": "万人",
+      "value": {
+        "raw": "144",
+        "number": 144,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003037311",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "00",
+          "name": "全産業"
+        },
+        "cat02": {
+          "code": "0",
+          "name": "総数"
+        },
+        "cat03": {
+          "code": "06",
+          "name": "家族従業者"
+        },
+        "cat04": {
+          "code": "00",
+          "name": "15歳以上"
+        },
+        "tab": {
+          "code": "01",
+          "name": "実数(人口)"
+        },
+        "time": {
+          "code": "2020000000",
+          "name": "2020年"
+        }
+      },
+      "unit": "万人",
+      "value": {
+        "raw": "140",
+        "number": 140,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003037311",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "00",
+          "name": "全産業"
+        },
+        "cat02": {
+          "code": "0",
+          "name": "総数"
+        },
+        "cat03": {
+          "code": "06",
+          "name": "家族従業者"
+        },
+        "cat04": {
+          "code": "00",
+          "name": "15歳以上"
+        },
+        "tab": {
+          "code": "01",
+          "name": "実数(人口)"
+        },
+        "time": {
+          "code": "2021000000",
+          "name": "2021年"
+        }
+      },
+      "unit": "万人",
+      "value": {
+        "raw": "139",
+        "number": 139,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003037311",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "00",
+          "name": "全産業"
+        },
+        "cat02": {
+          "code": "0",
+          "name": "総数"
+        },
+        "cat03": {
+          "code": "06",
+          "name": "家族従業者"
+        },
+        "cat04": {
+          "code": "00",
+          "name": "15歳以上"
+        },
+        "tab": {
+          "code": "01",
+          "name": "実数(人口)"
+        },
+        "time": {
+          "code": "2022000000",
+          "name": "2022年"
+        }
+      },
+      "unit": "万人",
+      "value": {
+        "raw": "133",
+        "number": 133,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003037311",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "00",
+          "name": "全産業"
+        },
+        "cat02": {
+          "code": "0",
+          "name": "総数"
+        },
+        "cat03": {
+          "code": "06",
+          "name": "家族従業者"
+        },
+        "cat04": {
+          "code": "00",
+          "name": "15歳以上"
+        },
+        "tab": {
+          "code": "01",
+          "name": "実数(人口)"
+        },
+        "time": {
+          "code": "2023000000",
+          "name": "2023年"
+        }
+      },
+      "unit": "万人",
+      "value": {
+        "raw": "126",
+        "number": 126,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003037311",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "00",
+          "name": "全産業"
+        },
+        "cat02": {
+          "code": "0",
+          "name": "総数"
+        },
+        "cat03": {
+          "code": "06",
+          "name": "家族従業者"
+        },
+        "cat04": {
+          "code": "00",
+          "name": "15歳以上"
+        },
+        "tab": {
+          "code": "01",
+          "name": "実数(人口)"
+        },
+        "time": {
+          "code": "2024000000",
+          "name": "2024年"
+        }
+      },
+      "unit": "万人",
+      "value": {
+        "raw": "119",
+        "number": 119,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003037311",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "00",
+          "name": "全産業"
+        },
+        "cat02": {
+          "code": "0",
+          "name": "総数"
+        },
+        "cat03": {
+          "code": "06",
+          "name": "家族従業者"
+        },
+        "cat04": {
+          "code": "00",
+          "name": "15歳以上"
+        },
+        "tab": {
+          "code": "01",
+          "name": "実数(人口)"
+        },
+        "time": {
+          "code": "2025000000",
+          "name": "2025年"
+        }
+      },
+      "unit": "万人",
+      "value": {
+        "raw": "115",
+        "number": 115,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003037311",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "01",
+          "name": "農業，林業"
+        },
+        "cat02": {
+          "code": "0",
+          "name": "総数"
+        },
+        "cat03": {
+          "code": "00",
+          "name": "総数"
+        },
+        "cat04": {
+          "code": "00",
+          "name": "15歳以上"
+        },
+        "tab": {
+          "code": "01",
+          "name": "実数(人口)"
+        },
+        "time": {
+          "code": "2011000000",
+          "name": "2011年"
+        }
+      },
+      "unit": "万人",
+      "value": {
+        "raw": "…",
+        "number": null,
+        "kind": "special",
+        "note": "東日本大震災の影響により、岩手県、宮城県及び福島県において、調査の実施が困難となりました。このため、平成23年3月分から8月分までの期間を含む全国及び東北地域の結果については掲載していません。"
+      }
+    },
+    {
+      "table_id": "0003037311",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "01",
+          "name": "農業，林業"
+        },
+        "cat02": {
+          "code": "0",
+          "name": "総数"
+        },
+        "cat03": {
+          "code": "00",
+          "name": "総数"
+        },
+        "cat04": {
+          "code": "00",
+          "name": "15歳以上"
+        },
+        "tab": {
+          "code": "01",
+          "name": "実数(人口)"
+        },
+        "time": {
+          "code": "2012000000",
+          "name": "2012年"
+        }
+      },
+      "unit": "万人",
+      "value": {
+        "raw": "224",
+        "number": 224,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003037311",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "01",
+          "name": "農業，林業"
+        },
+        "cat02": {
+          "code": "0",
+          "name": "総数"
+        },
+        "cat03": {
+          "code": "00",
+          "name": "総数"
+        },
+        "cat04": {
+          "code": "00",
+          "name": "15歳以上"
+        },
+        "tab": {
+          "code": "01",
+          "name": "実数(人口)"
+        },
+        "time": {
+          "code": "2013000000",
+          "name": "2013年"
+        }
+      },
+      "unit": "万人",
+      "value": {
+        "raw": "217",
+        "number": 217,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003037311",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "01",
+          "name": "農業，林業"
+        },
+        "cat02": {
+          "code": "0",
+          "name": "総数"
+        },
+        "cat03": {
+          "code": "00",
+          "name": "総数"
+        },
+        "cat04": {
+          "code": "00",
+          "name": "15歳以上"
+        },
+        "tab": {
+          "code": "01",
+          "name": "実数(人口)"
+        },
+        "time": {
+          "code": "2014000000",
+          "name": "2014年"
+        }
+      },
+      "unit": "万人",
+      "value": {
+        "raw": "209",
+        "number": 209,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003037311",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "01",
+          "name": "農業，林業"
+        },
+        "cat02": {
+          "code": "0",
+          "name": "総数"
+        },
+        "cat03": {
+          "code": "00",
+          "name": "総数"
+        },
+        "cat04": {
+          "code": "00",
+          "name": "15歳以上"
+        },
+        "tab": {
+          "code": "01",
+          "name": "実数(人口)"
+        },
+        "time": {
+          "code": "2015000000",
+          "name": "2015年"
+        }
+      },
+      "unit": "万人",
+      "value": {
+        "raw": "208",
+        "number": 208,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003037311",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "01",
+          "name": "農業，林業"
+        },
+        "cat02": {
+          "code": "0",
+          "name": "総数"
+        },
+        "cat03": {
+          "code": "00",
+          "name": "総数"
+        },
+        "cat04": {
+          "code": "00",
+          "name": "15歳以上"
+        },
+        "tab": {
+          "code": "01",
+          "name": "実数(人口)"
+        },
+        "time": {
+          "code": "2016000000",
+          "name": "2016年"
+        }
+      },
+      "unit": "万人",
+      "value": {
+        "raw": "202",
+        "number": 202,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003037311",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "01",
+          "name": "農業，林業"
+        },
+        "cat02": {
+          "code": "0",
+          "name": "総数"
+        },
+        "cat03": {
+          "code": "00",
+          "name": "総数"
+        },
+        "cat04": {
+          "code": "00",
+          "name": "15歳以上"
+        },
+        "tab": {
+          "code": "01",
+          "name": "実数(人口)"
+        },
+        "time": {
+          "code": "2017000000",
+          "name": "2017年"
+        }
+      },
+      "unit": "万人",
+      "value": {
+        "raw": "201",
+        "number": 201,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003037311",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "01",
+          "name": "農業，林業"
+        },
+        "cat02": {
+          "code": "0",
+          "name": "総数"
+        },
+        "cat03": {
+          "code": "00",
+          "name": "総数"
+        },
+        "cat04": {
+          "code": "00",
+          "name": "15歳以上"
+        },
+        "tab": {
+          "code": "01",
+          "name": "実数(人口)"
+        },
+        "time": {
+          "code": "2018000000",
+          "name": "2018年"
+        }
+      },
+      "unit": "万人",
+      "value": {
+        "raw": "210",
+        "number": 210,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003037311",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "01",
+          "name": "農業，林業"
+        },
+        "cat02": {
+          "code": "0",
+          "name": "総数"
+        },
+        "cat03": {
+          "code": "00",
+          "name": "総数"
+        },
+        "cat04": {
+          "code": "00",
+          "name": "15歳以上"
+        },
+        "tab": {
+          "code": "01",
+          "name": "実数(人口)"
+        },
+        "time": {
+          "code": "2019000000",
+          "name": "2019年"
+        }
+      },
+      "unit": "万人",
+      "value": {
+        "raw": "207",
+        "number": 207,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003037311",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "01",
+          "name": "農業，林業"
+        },
+        "cat02": {
+          "code": "0",
+          "name": "総数"
+        },
+        "cat03": {
+          "code": "00",
+          "name": "総数"
+        },
+        "cat04": {
+          "code": "00",
+          "name": "15歳以上"
+        },
+        "tab": {
+          "code": "01",
+          "name": "実数(人口)"
+        },
+        "time": {
+          "code": "2020000000",
+          "name": "2020年"
+        }
+      },
+      "unit": "万人",
+      "value": {
+        "raw": "200",
+        "number": 200,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003037311",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "01",
+          "name": "農業，林業"
+        },
+        "cat02": {
+          "code": "0",
+          "name": "総数"
+        },
+        "cat03": {
+          "code": "00",
+          "name": "総数"
+        },
+        "cat04": {
+          "code": "00",
+          "name": "15歳以上"
+        },
+        "tab": {
+          "code": "01",
+          "name": "実数(人口)"
+        },
+        "time": {
+          "code": "2021000000",
+          "name": "2021年"
+        }
+      },
+      "unit": "万人",
+      "value": {
+        "raw": "195",
+        "number": 195,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003037311",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "01",
+          "name": "農業，林業"
+        },
+        "cat02": {
+          "code": "0",
+          "name": "総数"
+        },
+        "cat03": {
+          "code": "00",
+          "name": "総数"
+        },
+        "cat04": {
+          "code": "00",
+          "name": "15歳以上"
+        },
+        "tab": {
+          "code": "01",
+          "name": "実数(人口)"
+        },
+        "time": {
+          "code": "2022000000",
+          "name": "2022年"
+        }
+      },
+      "unit": "万人",
+      "value": {
+        "raw": "192",
+        "number": 192,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003037311",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "01",
+          "name": "農業，林業"
+        },
+        "cat02": {
+          "code": "0",
+          "name": "総数"
+        },
+        "cat03": {
+          "code": "00",
+          "name": "総数"
+        },
+        "cat04": {
+          "code": "00",
+          "name": "15歳以上"
+        },
+        "tab": {
+          "code": "01",
+          "name": "実数(人口)"
+        },
+        "time": {
+          "code": "2023000000",
+          "name": "2023年"
+        }
+      },
+      "unit": "万人",
+      "value": {
+        "raw": "187",
+        "number": 187,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003037311",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "01",
+          "name": "農業，林業"
+        },
+        "cat02": {
+          "code": "0",
+          "name": "総数"
+        },
+        "cat03": {
+          "code": "00",
+          "name": "総数"
+        },
+        "cat04": {
+          "code": "00",
+          "name": "15歳以上"
+        },
+        "tab": {
+          "code": "01",
+          "name": "実数(人口)"
+        },
+        "time": {
+          "code": "2024000000",
+          "name": "2024年"
+        }
+      },
+      "unit": "万人",
+      "value": {
+        "raw": "180",
+        "number": 180,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003037311",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "01",
+          "name": "農業，林業"
+        },
+        "cat02": {
+          "code": "0",
+          "name": "総数"
+        },
+        "cat03": {
+          "code": "00",
+          "name": "総数"
+        },
+        "cat04": {
+          "code": "00",
+          "name": "15歳以上"
+        },
+        "tab": {
+          "code": "01",
+          "name": "実数(人口)"
+        },
+        "time": {
+          "code": "2025000000",
+          "name": "2025年"
+        }
+      },
+      "unit": "万人",
+      "value": {
+        "raw": "174",
+        "number": 174,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003037311",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "01",
+          "name": "農業，林業"
+        },
+        "cat02": {
+          "code": "0",
+          "name": "総数"
+        },
+        "cat03": {
+          "code": "06",
+          "name": "家族従業者"
+        },
+        "cat04": {
+          "code": "00",
+          "name": "15歳以上"
+        },
+        "tab": {
+          "code": "01",
+          "name": "実数(人口)"
+        },
+        "time": {
+          "code": "2011000000",
+          "name": "2011年"
+        }
+      },
+      "unit": "万人",
+      "value": {
+        "raw": "…",
+        "number": null,
+        "kind": "special",
+        "note": "東日本大震災の影響により、岩手県、宮城県及び福島県において、調査の実施が困難となりました。このため、平成23年3月分から8月分までの期間を含む全国及び東北地域の結果については掲載していません。"
+      }
+    },
+    {
+      "table_id": "0003037311",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "01",
+          "name": "農業，林業"
+        },
+        "cat02": {
+          "code": "0",
+          "name": "総数"
+        },
+        "cat03": {
+          "code": "06",
+          "name": "家族従業者"
+        },
+        "cat04": {
+          "code": "00",
+          "name": "15歳以上"
+        },
+        "tab": {
+          "code": "01",
+          "name": "実数(人口)"
+        },
+        "time": {
+          "code": "2012000000",
+          "name": "2012年"
+        }
+      },
+      "unit": "万人",
+      "value": {
+        "raw": "68",
+        "number": 68,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003037311",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "01",
+          "name": "農業，林業"
+        },
+        "cat02": {
+          "code": "0",
+          "name": "総数"
+        },
+        "cat03": {
+          "code": "06",
+          "name": "家族従業者"
+        },
+        "cat04": {
+          "code": "00",
+          "name": "15歳以上"
+        },
+        "tab": {
+          "code": "01",
+          "name": "実数(人口)"
+        },
+        "time": {
+          "code": "2013000000",
+          "name": "2013年"
+        }
+      },
+      "unit": "万人",
+      "value": {
+        "raw": "64",
+        "number": 64,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003037311",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "01",
+          "name": "農業，林業"
+        },
+        "cat02": {
+          "code": "0",
+          "name": "総数"
+        },
+        "cat03": {
+          "code": "06",
+          "name": "家族従業者"
+        },
+        "cat04": {
+          "code": "00",
+          "name": "15歳以上"
+        },
+        "tab": {
+          "code": "01",
+          "name": "実数(人口)"
+        },
+        "time": {
+          "code": "2014000000",
+          "name": "2014年"
+        }
+      },
+      "unit": "万人",
+      "value": {
+        "raw": "60",
+        "number": 60,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003037311",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "01",
+          "name": "農業，林業"
+        },
+        "cat02": {
+          "code": "0",
+          "name": "総数"
+        },
+        "cat03": {
+          "code": "06",
+          "name": "家族従業者"
+        },
+        "cat04": {
+          "code": "00",
+          "name": "15歳以上"
+        },
+        "tab": {
+          "code": "01",
+          "name": "実数(人口)"
+        },
+        "time": {
+          "code": "2015000000",
+          "name": "2015年"
+        }
+      },
+      "unit": "万人",
+      "value": {
+        "raw": "59",
+        "number": 59,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003037311",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "01",
+          "name": "農業，林業"
+        },
+        "cat02": {
+          "code": "0",
+          "name": "総数"
+        },
+        "cat03": {
+          "code": "06",
+          "name": "家族従業者"
+        },
+        "cat04": {
+          "code": "00",
+          "name": "15歳以上"
+        },
+        "tab": {
+          "code": "01",
+          "name": "実数(人口)"
+        },
+        "time": {
+          "code": "2016000000",
+          "name": "2016年"
+        }
+      },
+      "unit": "万人",
+      "value": {
+        "raw": "56",
+        "number": 56,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003037311",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "01",
+          "name": "農業，林業"
+        },
+        "cat02": {
+          "code": "0",
+          "name": "総数"
+        },
+        "cat03": {
+          "code": "06",
+          "name": "家族従業者"
+        },
+        "cat04": {
+          "code": "00",
+          "name": "15歳以上"
+        },
+        "tab": {
+          "code": "01",
+          "name": "実数(人口)"
+        },
+        "time": {
+          "code": "2017000000",
+          "name": "2017年"
+        }
+      },
+      "unit": "万人",
+      "value": {
+        "raw": "54",
+        "number": 54,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003037311",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "01",
+          "name": "農業，林業"
+        },
+        "cat02": {
+          "code": "0",
+          "name": "総数"
+        },
+        "cat03": {
+          "code": "06",
+          "name": "家族従業者"
+        },
+        "cat04": {
+          "code": "00",
+          "name": "15歳以上"
+        },
+        "tab": {
+          "code": "01",
+          "name": "実数(人口)"
+        },
+        "time": {
+          "code": "2018000000",
+          "name": "2018年"
+        }
+      },
+      "unit": "万人",
+      "value": {
+        "raw": "57",
+        "number": 57,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003037311",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "01",
+          "name": "農業，林業"
+        },
+        "cat02": {
+          "code": "0",
+          "name": "総数"
+        },
+        "cat03": {
+          "code": "06",
+          "name": "家族従業者"
+        },
+        "cat04": {
+          "code": "00",
+          "name": "15歳以上"
+        },
+        "tab": {
+          "code": "01",
+          "name": "実数(人口)"
+        },
+        "time": {
+          "code": "2019000000",
+          "name": "2019年"
+        }
+      },
+      "unit": "万人",
+      "value": {
+        "raw": "55",
+        "number": 55,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003037311",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "01",
+          "name": "農業，林業"
+        },
+        "cat02": {
+          "code": "0",
+          "name": "総数"
+        },
+        "cat03": {
+          "code": "06",
+          "name": "家族従業者"
+        },
+        "cat04": {
+          "code": "00",
+          "name": "15歳以上"
+        },
+        "tab": {
+          "code": "01",
+          "name": "実数(人口)"
+        },
+        "time": {
+          "code": "2020000000",
+          "name": "2020年"
+        }
+      },
+      "unit": "万人",
+      "value": {
+        "raw": "54",
+        "number": 54,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003037311",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "01",
+          "name": "農業，林業"
+        },
+        "cat02": {
+          "code": "0",
+          "name": "総数"
+        },
+        "cat03": {
+          "code": "06",
+          "name": "家族従業者"
+        },
+        "cat04": {
+          "code": "00",
+          "name": "15歳以上"
+        },
+        "tab": {
+          "code": "01",
+          "name": "実数(人口)"
+        },
+        "time": {
+          "code": "2021000000",
+          "name": "2021年"
+        }
+      },
+      "unit": "万人",
+      "value": {
+        "raw": "53",
+        "number": 53,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003037311",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "01",
+          "name": "農業，林業"
+        },
+        "cat02": {
+          "code": "0",
+          "name": "総数"
+        },
+        "cat03": {
+          "code": "06",
+          "name": "家族従業者"
+        },
+        "cat04": {
+          "code": "00",
+          "name": "15歳以上"
+        },
+        "tab": {
+          "code": "01",
+          "name": "実数(人口)"
+        },
+        "time": {
+          "code": "2022000000",
+          "name": "2022年"
+        }
+      },
+      "unit": "万人",
+      "value": {
+        "raw": "50",
+        "number": 50,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003037311",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "01",
+          "name": "農業，林業"
+        },
+        "cat02": {
+          "code": "0",
+          "name": "総数"
+        },
+        "cat03": {
+          "code": "06",
+          "name": "家族従業者"
+        },
+        "cat04": {
+          "code": "00",
+          "name": "15歳以上"
+        },
+        "tab": {
+          "code": "01",
+          "name": "実数(人口)"
+        },
+        "time": {
+          "code": "2023000000",
+          "name": "2023年"
+        }
+      },
+      "unit": "万人",
+      "value": {
+        "raw": "47",
+        "number": 47,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003037311",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "01",
+          "name": "農業，林業"
+        },
+        "cat02": {
+          "code": "0",
+          "name": "総数"
+        },
+        "cat03": {
+          "code": "06",
+          "name": "家族従業者"
+        },
+        "cat04": {
+          "code": "00",
+          "name": "15歳以上"
+        },
+        "tab": {
+          "code": "01",
+          "name": "実数(人口)"
+        },
+        "time": {
+          "code": "2024000000",
+          "name": "2024年"
+        }
+      },
+      "unit": "万人",
+      "value": {
+        "raw": "43",
+        "number": 43,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003037311",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "01",
+          "name": "農業，林業"
+        },
+        "cat02": {
+          "code": "0",
+          "name": "総数"
+        },
+        "cat03": {
+          "code": "06",
+          "name": "家族従業者"
+        },
+        "cat04": {
+          "code": "00",
+          "name": "15歳以上"
+        },
+        "tab": {
+          "code": "01",
+          "name": "実数(人口)"
+        },
+        "time": {
+          "code": "2025000000",
+          "name": "2025年"
+        }
+      },
+      "unit": "万人",
+      "value": {
+        "raw": "41",
+        "number": 41,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003037311",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "10",
+          "name": "製造業"
+        },
+        "cat02": {
+          "code": "0",
+          "name": "総数"
+        },
+        "cat03": {
+          "code": "00",
+          "name": "総数"
+        },
+        "cat04": {
+          "code": "00",
+          "name": "15歳以上"
+        },
+        "tab": {
+          "code": "01",
+          "name": "実数(人口)"
+        },
+        "time": {
+          "code": "2011000000",
+          "name": "2011年"
+        }
+      },
+      "unit": "万人",
+      "value": {
+        "raw": "…",
+        "number": null,
+        "kind": "special",
+        "note": "東日本大震災の影響により、岩手県、宮城県及び福島県において、調査の実施が困難となりました。このため、平成23年3月分から8月分までの期間を含む全国及び東北地域の結果については掲載していません。"
+      }
+    },
+    {
+      "table_id": "0003037311",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "10",
+          "name": "製造業"
+        },
+        "cat02": {
+          "code": "0",
+          "name": "総数"
+        },
+        "cat03": {
+          "code": "00",
+          "name": "総数"
+        },
+        "cat04": {
+          "code": "00",
+          "name": "15歳以上"
+        },
+        "tab": {
+          "code": "01",
+          "name": "実数(人口)"
+        },
+        "time": {
+          "code": "2012000000",
+          "name": "2012年"
+        }
+      },
+      "unit": "万人",
+      "value": {
+        "raw": "1032",
+        "number": 1032,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003037311",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "10",
+          "name": "製造業"
+        },
+        "cat02": {
+          "code": "0",
+          "name": "総数"
+        },
+        "cat03": {
+          "code": "00",
+          "name": "総数"
+        },
+        "cat04": {
+          "code": "00",
+          "name": "15歳以上"
+        },
+        "tab": {
+          "code": "01",
+          "name": "実数(人口)"
+        },
+        "time": {
+          "code": "2013000000",
+          "name": "2013年"
+        }
+      },
+      "unit": "万人",
+      "value": {
+        "raw": "1039",
+        "number": 1039,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003037311",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "10",
+          "name": "製造業"
+        },
+        "cat02": {
+          "code": "0",
+          "name": "総数"
+        },
+        "cat03": {
+          "code": "00",
+          "name": "総数"
+        },
+        "cat04": {
+          "code": "00",
+          "name": "15歳以上"
+        },
+        "tab": {
+          "code": "01",
+          "name": "実数(人口)"
+        },
+        "time": {
+          "code": "2014000000",
+          "name": "2014年"
+        }
+      },
+      "unit": "万人",
+      "value": {
+        "raw": "1040",
+        "number": 1040,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003037311",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "10",
+          "name": "製造業"
+        },
+        "cat02": {
+          "code": "0",
+          "name": "総数"
+        },
+        "cat03": {
+          "code": "00",
+          "name": "総数"
+        },
+        "cat04": {
+          "code": "00",
+          "name": "15歳以上"
+        },
+        "tab": {
+          "code": "01",
+          "name": "実数(人口)"
+        },
+        "time": {
+          "code": "2015000000",
+          "name": "2015年"
+        }
+      },
+      "unit": "万人",
+      "value": {
+        "raw": "1035",
+        "number": 1035,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003037311",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "10",
+          "name": "製造業"
+        },
+        "cat02": {
+          "code": "0",
+          "name": "総数"
+        },
+        "cat03": {
+          "code": "00",
+          "name": "総数"
+        },
+        "cat04": {
+          "code": "00",
+          "name": "15歳以上"
+        },
+        "tab": {
+          "code": "01",
+          "name": "実数(人口)"
+        },
+        "time": {
+          "code": "2016000000",
+          "name": "2016年"
+        }
+      },
+      "unit": "万人",
+      "value": {
+        "raw": "1041",
+        "number": 1041,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003037311",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "10",
+          "name": "製造業"
+        },
+        "cat02": {
+          "code": "0",
+          "name": "総数"
+        },
+        "cat03": {
+          "code": "00",
+          "name": "総数"
+        },
+        "cat04": {
+          "code": "00",
+          "name": "15歳以上"
+        },
+        "tab": {
+          "code": "01",
+          "name": "実数(人口)"
+        },
+        "time": {
+          "code": "2017000000",
+          "name": "2017年"
+        }
+      },
+      "unit": "万人",
+      "value": {
+        "raw": "1052",
+        "number": 1052,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003037311",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "10",
+          "name": "製造業"
+        },
+        "cat02": {
+          "code": "0",
+          "name": "総数"
+        },
+        "cat03": {
+          "code": "00",
+          "name": "総数"
+        },
+        "cat04": {
+          "code": "00",
+          "name": "15歳以上"
+        },
+        "tab": {
+          "code": "01",
+          "name": "実数(人口)"
+        },
+        "time": {
+          "code": "2018000000",
+          "name": "2018年"
+        }
+      },
+      "unit": "万人",
+      "value": {
+        "raw": "1064",
+        "number": 1064,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003037311",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "10",
+          "name": "製造業"
+        },
+        "cat02": {
+          "code": "0",
+          "name": "総数"
+        },
+        "cat03": {
+          "code": "00",
+          "name": "総数"
+        },
+        "cat04": {
+          "code": "00",
+          "name": "15歳以上"
+        },
+        "tab": {
+          "code": "01",
+          "name": "実数(人口)"
+        },
+        "time": {
+          "code": "2019000000",
+          "name": "2019年"
+        }
+      },
+      "unit": "万人",
+      "value": {
+        "raw": "1068",
+        "number": 1068,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003037311",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "10",
+          "name": "製造業"
+        },
+        "cat02": {
+          "code": "0",
+          "name": "総数"
+        },
+        "cat03": {
+          "code": "00",
+          "name": "総数"
+        },
+        "cat04": {
+          "code": "00",
+          "name": "15歳以上"
+        },
+        "tab": {
+          "code": "01",
+          "name": "実数(人口)"
+        },
+        "time": {
+          "code": "2020000000",
+          "name": "2020年"
+        }
+      },
+      "unit": "万人",
+      "value": {
+        "raw": "1051",
+        "number": 1051,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003037311",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "10",
+          "name": "製造業"
+        },
+        "cat02": {
+          "code": "0",
+          "name": "総数"
+        },
+        "cat03": {
+          "code": "00",
+          "name": "総数"
+        },
+        "cat04": {
+          "code": "00",
+          "name": "15歳以上"
+        },
+        "tab": {
+          "code": "01",
+          "name": "実数(人口)"
+        },
+        "time": {
+          "code": "2021000000",
+          "name": "2021年"
+        }
+      },
+      "unit": "万人",
+      "value": {
+        "raw": "1045",
+        "number": 1045,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003037311",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "10",
+          "name": "製造業"
+        },
+        "cat02": {
+          "code": "0",
+          "name": "総数"
+        },
+        "cat03": {
+          "code": "00",
+          "name": "総数"
+        },
+        "cat04": {
+          "code": "00",
+          "name": "15歳以上"
+        },
+        "tab": {
+          "code": "01",
+          "name": "実数(人口)"
+        },
+        "time": {
+          "code": "2022000000",
+          "name": "2022年"
+        }
+      },
+      "unit": "万人",
+      "value": {
+        "raw": "1044",
+        "number": 1044,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003037311",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "10",
+          "name": "製造業"
+        },
+        "cat02": {
+          "code": "0",
+          "name": "総数"
+        },
+        "cat03": {
+          "code": "00",
+          "name": "総数"
+        },
+        "cat04": {
+          "code": "00",
+          "name": "15歳以上"
+        },
+        "tab": {
+          "code": "01",
+          "name": "実数(人口)"
+        },
+        "time": {
+          "code": "2023000000",
+          "name": "2023年"
+        }
+      },
+      "unit": "万人",
+      "value": {
+        "raw": "1055",
+        "number": 1055,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003037311",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "10",
+          "name": "製造業"
+        },
+        "cat02": {
+          "code": "0",
+          "name": "総数"
+        },
+        "cat03": {
+          "code": "00",
+          "name": "総数"
+        },
+        "cat04": {
+          "code": "00",
+          "name": "15歳以上"
+        },
+        "tab": {
+          "code": "01",
+          "name": "実数(人口)"
+        },
+        "time": {
+          "code": "2024000000",
+          "name": "2024年"
+        }
+      },
+      "unit": "万人",
+      "value": {
+        "raw": "1046",
+        "number": 1046,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003037311",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "10",
+          "name": "製造業"
+        },
+        "cat02": {
+          "code": "0",
+          "name": "総数"
+        },
+        "cat03": {
+          "code": "00",
+          "name": "総数"
+        },
+        "cat04": {
+          "code": "00",
+          "name": "15歳以上"
+        },
+        "tab": {
+          "code": "01",
+          "name": "実数(人口)"
+        },
+        "time": {
+          "code": "2025000000",
+          "name": "2025年"
+        }
+      },
+      "unit": "万人",
+      "value": {
+        "raw": "1033",
+        "number": 1033,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003037311",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "10",
+          "name": "製造業"
+        },
+        "cat02": {
+          "code": "0",
+          "name": "総数"
+        },
+        "cat03": {
+          "code": "06",
+          "name": "家族従業者"
+        },
+        "cat04": {
+          "code": "00",
+          "name": "15歳以上"
+        },
+        "tab": {
+          "code": "01",
+          "name": "実数(人口)"
+        },
+        "time": {
+          "code": "2011000000",
+          "name": "2011年"
+        }
+      },
+      "unit": "万人",
+      "value": {
+        "raw": "…",
+        "number": null,
+        "kind": "special",
+        "note": "東日本大震災の影響により、岩手県、宮城県及び福島県において、調査の実施が困難となりました。このため、平成23年3月分から8月分までの期間を含む全国及び東北地域の結果については掲載していません。"
+      }
+    },
+    {
+      "table_id": "0003037311",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "10",
+          "name": "製造業"
+        },
+        "cat02": {
+          "code": "0",
+          "name": "総数"
+        },
+        "cat03": {
+          "code": "06",
+          "name": "家族従業者"
+        },
+        "cat04": {
+          "code": "00",
+          "name": "15歳以上"
+        },
+        "tab": {
+          "code": "01",
+          "name": "実数(人口)"
+        },
+        "time": {
+          "code": "2012000000",
+          "name": "2012年"
+        }
+      },
+      "unit": "万人",
+      "value": {
+        "raw": "11",
+        "number": 11,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003037311",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "10",
+          "name": "製造業"
+        },
+        "cat02": {
+          "code": "0",
+          "name": "総数"
+        },
+        "cat03": {
+          "code": "06",
+          "name": "家族従業者"
+        },
+        "cat04": {
+          "code": "00",
+          "name": "15歳以上"
+        },
+        "tab": {
+          "code": "01",
+          "name": "実数(人口)"
+        },
+        "time": {
+          "code": "2013000000",
+          "name": "2013年"
+        }
+      },
+      "unit": "万人",
+      "value": {
+        "raw": "11",
+        "number": 11,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003037311",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "10",
+          "name": "製造業"
+        },
+        "cat02": {
+          "code": "0",
+          "name": "総数"
+        },
+        "cat03": {
+          "code": "06",
+          "name": "家族従業者"
+        },
+        "cat04": {
+          "code": "00",
+          "name": "15歳以上"
+        },
+        "tab": {
+          "code": "01",
+          "name": "実数(人口)"
+        },
+        "time": {
+          "code": "2014000000",
+          "name": "2014年"
+        }
+      },
+      "unit": "万人",
+      "value": {
+        "raw": "10",
+        "number": 10,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003037311",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "10",
+          "name": "製造業"
+        },
+        "cat02": {
+          "code": "0",
+          "name": "総数"
+        },
+        "cat03": {
+          "code": "06",
+          "name": "家族従業者"
+        },
+        "cat04": {
+          "code": "00",
+          "name": "15歳以上"
+        },
+        "tab": {
+          "code": "01",
+          "name": "実数(人口)"
+        },
+        "time": {
+          "code": "2015000000",
+          "name": "2015年"
+        }
+      },
+      "unit": "万人",
+      "value": {
+        "raw": "9",
+        "number": 9,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003037311",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "10",
+          "name": "製造業"
+        },
+        "cat02": {
+          "code": "0",
+          "name": "総数"
+        },
+        "cat03": {
+          "code": "06",
+          "name": "家族従業者"
+        },
+        "cat04": {
+          "code": "00",
+          "name": "15歳以上"
+        },
+        "tab": {
+          "code": "01",
+          "name": "実数(人口)"
+        },
+        "time": {
+          "code": "2016000000",
+          "name": "2016年"
+        }
+      },
+      "unit": "万人",
+      "value": {
+        "raw": "9",
+        "number": 9,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003037311",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "10",
+          "name": "製造業"
+        },
+        "cat02": {
+          "code": "0",
+          "name": "総数"
+        },
+        "cat03": {
+          "code": "06",
+          "name": "家族従業者"
+        },
+        "cat04": {
+          "code": "00",
+          "name": "15歳以上"
+        },
+        "tab": {
+          "code": "01",
+          "name": "実数(人口)"
+        },
+        "time": {
+          "code": "2017000000",
+          "name": "2017年"
+        }
+      },
+      "unit": "万人",
+      "value": {
+        "raw": "9",
+        "number": 9,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003037311",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "10",
+          "name": "製造業"
+        },
+        "cat02": {
+          "code": "0",
+          "name": "総数"
+        },
+        "cat03": {
+          "code": "06",
+          "name": "家族従業者"
+        },
+        "cat04": {
+          "code": "00",
+          "name": "15歳以上"
+        },
+        "tab": {
+          "code": "01",
+          "name": "実数(人口)"
+        },
+        "time": {
+          "code": "2018000000",
+          "name": "2018年"
+        }
+      },
+      "unit": "万人",
+      "value": {
+        "raw": "9",
+        "number": 9,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003037311",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "10",
+          "name": "製造業"
+        },
+        "cat02": {
+          "code": "0",
+          "name": "総数"
+        },
+        "cat03": {
+          "code": "06",
+          "name": "家族従業者"
+        },
+        "cat04": {
+          "code": "00",
+          "name": "15歳以上"
+        },
+        "tab": {
+          "code": "01",
+          "name": "実数(人口)"
+        },
+        "time": {
+          "code": "2019000000",
+          "name": "2019年"
+        }
+      },
+      "unit": "万人",
+      "value": {
+        "raw": "9",
+        "number": 9,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003037311",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "10",
+          "name": "製造業"
+        },
+        "cat02": {
+          "code": "0",
+          "name": "総数"
+        },
+        "cat03": {
+          "code": "06",
+          "name": "家族従業者"
+        },
+        "cat04": {
+          "code": "00",
+          "name": "15歳以上"
+        },
+        "tab": {
+          "code": "01",
+          "name": "実数(人口)"
+        },
+        "time": {
+          "code": "2020000000",
+          "name": "2020年"
+        }
+      },
+      "unit": "万人",
+      "value": {
+        "raw": "7",
+        "number": 7,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003037311",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "10",
+          "name": "製造業"
+        },
+        "cat02": {
+          "code": "0",
+          "name": "総数"
+        },
+        "cat03": {
+          "code": "06",
+          "name": "家族従業者"
+        },
+        "cat04": {
+          "code": "00",
+          "name": "15歳以上"
+        },
+        "tab": {
+          "code": "01",
+          "name": "実数(人口)"
+        },
+        "time": {
+          "code": "2021000000",
+          "name": "2021年"
+        }
+      },
+      "unit": "万人",
+      "value": {
+        "raw": "7",
+        "number": 7,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003037311",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "10",
+          "name": "製造業"
+        },
+        "cat02": {
+          "code": "0",
+          "name": "総数"
+        },
+        "cat03": {
+          "code": "06",
+          "name": "家族従業者"
+        },
+        "cat04": {
+          "code": "00",
+          "name": "15歳以上"
+        },
+        "tab": {
+          "code": "01",
+          "name": "実数(人口)"
+        },
+        "time": {
+          "code": "2022000000",
+          "name": "2022年"
+        }
+      },
+      "unit": "万人",
+      "value": {
+        "raw": "6",
+        "number": 6,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003037311",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "10",
+          "name": "製造業"
+        },
+        "cat02": {
+          "code": "0",
+          "name": "総数"
+        },
+        "cat03": {
+          "code": "06",
+          "name": "家族従業者"
+        },
+        "cat04": {
+          "code": "00",
+          "name": "15歳以上"
+        },
+        "tab": {
+          "code": "01",
+          "name": "実数(人口)"
+        },
+        "time": {
+          "code": "2023000000",
+          "name": "2023年"
+        }
+      },
+      "unit": "万人",
+      "value": {
+        "raw": "5",
+        "number": 5,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003037311",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "10",
+          "name": "製造業"
+        },
+        "cat02": {
+          "code": "0",
+          "name": "総数"
+        },
+        "cat03": {
+          "code": "06",
+          "name": "家族従業者"
+        },
+        "cat04": {
+          "code": "00",
+          "name": "15歳以上"
+        },
+        "tab": {
+          "code": "01",
+          "name": "実数(人口)"
+        },
+        "time": {
+          "code": "2024000000",
+          "name": "2024年"
+        }
+      },
+      "unit": "万人",
+      "value": {
+        "raw": "6",
+        "number": 6,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003037311",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "10",
+          "name": "製造業"
+        },
+        "cat02": {
+          "code": "0",
+          "name": "総数"
+        },
+        "cat03": {
+          "code": "06",
+          "name": "家族従業者"
+        },
+        "cat04": {
+          "code": "00",
+          "name": "15歳以上"
+        },
+        "tab": {
+          "code": "01",
+          "name": "実数(人口)"
+        },
+        "time": {
+          "code": "2025000000",
+          "name": "2025年"
+        }
+      },
+      "unit": "万人",
+      "value": {
+        "raw": "5",
+        "number": 5,
+        "kind": "number"
+      }
+    }
+  ]
+}

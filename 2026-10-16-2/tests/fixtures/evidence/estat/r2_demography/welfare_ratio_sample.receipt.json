@@ -1,0 +1,28 @@
+{
+  "command": [
+    "/Users/hayatok/.local/bin/estat",
+    "data",
+    "get",
+    "0000010210",
+    "--filter",
+    "cat01=#J01107",
+    "--filter",
+    "area=00000,02000,13000",
+    "--filter",
+    "time=1975100000,2000100000,2023100000",
+    "--max-records",
+    "10",
+    "--timeout",
+    "30s",
+    "-o",
+    "json"
+  ],
+  "started_at": "2026-10-16T09:21:50.762684+00:00",
+  "finished_at": "2026-10-16T09:21:51.307653+00:00",
+  "exit_code": 0,
+  "json_valid": true,
+  "redacted_fields": 0,
+  "output_path": "evidence/estat/r2_demography/welfare_ratio_sample.json",
+  "sha256": "6ddf133e9ebd076de7ef044c6670ef0aa6e7de45e8b11644fe41ed29110fed9d",
+  "stderr": ""
+}

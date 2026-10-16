@@ -1,0 +1,25 @@
+{
+  "command": [
+    "/Users/hayatok/.local/bin/estat",
+    "data",
+    "get",
+    "0003411881",
+    "--filter",
+    "cat01=00100,00110,00120",
+    "--all-pages",
+    "--max-records",
+    "1000",
+    "--timeout",
+    "30s",
+    "-o",
+    "json"
+  ],
+  "started_at": "2026-10-16T15:02:16.140203+00:00",
+  "finished_at": "2026-10-16T15:02:16.606462+00:00",
+  "exit_code": 0,
+  "json_valid": true,
+  "redacted_fields": 0,
+  "output_path": "evidence/estat/r3_demography/population_baseline_data.json",
+  "sha256": "dbdffb5ad5fcf17c8df18824cb07f1a758bf933cc6c88602f1a30e7533f424fe",
+  "stderr": ""
+}

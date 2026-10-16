@@ -1,0 +1,30 @@
+{
+  "command": [
+    "/Users/hayatok/.local/bin/estat",
+    "data",
+    "get",
+    "0003410421",
+    "--filter",
+    "tab=040,050,1390",
+    "--filter",
+    "cat01=100,130,140",
+    "--filter",
+    "area=00000",
+    "--filter",
+    "time=1920000000,1930000000,1940000000,1950000000,2020000000",
+    "--max-records",
+    "50",
+    "--timeout",
+    "30s",
+    "-o",
+    "json"
+  ],
+  "started_at": "2026-10-16T09:16:11.246091+00:00",
+  "finished_at": "2026-10-16T09:16:11.596253+00:00",
+  "exit_code": 0,
+  "json_valid": true,
+  "redacted_fields": 0,
+  "output_path": "evidence/estat/r2_demography/family_history_data.json",
+  "sha256": "5c31339d87de6bc32f25d62266a8b67db81a5be20e69800f59e0d372c51b6f52",
+  "stderr": ""
+}

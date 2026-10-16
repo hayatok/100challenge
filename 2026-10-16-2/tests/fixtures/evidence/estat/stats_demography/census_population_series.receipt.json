@@ -1,0 +1,23 @@
+{
+  "command": [
+    "/Users/hayatok/.local/bin/estat",
+    "data",
+    "get",
+    "0003404754",
+    "--filter",
+    "tab=020",
+    "--max-records",
+    "25",
+    "--timeout",
+    "30s",
+    "-o",
+    "json"
+  ],
+  "started_at": "2026-10-16T07:38:13.247208+00:00",
+  "finished_at": "2026-10-16T07:38:13.617273+00:00",
+  "exit_code": 0,
+  "json_valid": true,
+  "output_path": "evidence/estat/stats_demography/census_population_series.json",
+  "sha256": "9133f725950cce9f281e3087612d7d9b0e7f2d123960c0b2fb81968494151394",
+  "stderr": ""
+}

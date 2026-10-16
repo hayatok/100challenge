@@ -1,0 +1,2804 @@
+{
+  "schema_version": "1",
+  "kind": "data",
+  "table": {
+    "id": "0004047567",
+    "statistics_code": "00500300",
+    "statistics_name": "食料需給表",
+    "organization": "農林水産省",
+    "title": "項目別累年表 国民１人・１日当たり供給熱量",
+    "cycle": "年度次",
+    "survey_date": "202304-202403",
+    "open_date": "2026-03-31",
+    "updated_date": "2026-04-16",
+    "collect_area": "該当なし",
+    "total_records": 4220
+  },
+  "dimensions": [
+    {
+      "id": "cat01",
+      "name": "(H001-05-2-004)類別・品目別",
+      "values": [
+        {
+          "code": "1002",
+          "name": "穀類_米",
+          "level": "2",
+          "unit": "kcal",
+          "parent_code": "1001"
+        },
+        {
+          "code": "1066",
+          "name": "合計",
+          "level": "1",
+          "unit": "kcal"
+        }
+      ]
+    },
+    {
+      "id": "cat02",
+      "name": "(H001-05-1-004)年度",
+      "values": [
+        {
+          "code": "1001",
+          "name": "1960年度",
+          "level": "1"
+        },
+        {
+          "code": "1002",
+          "name": "1961年度",
+          "level": "1"
+        },
+        {
+          "code": "1003",
+          "name": "1962年度",
+          "level": "1"
+        },
+        {
+          "code": "1004",
+          "name": "1963年度",
+          "level": "1"
+        },
+        {
+          "code": "1005",
+          "name": "1964年度",
+          "level": "1"
+        },
+        {
+          "code": "1006",
+          "name": "1965年度",
+          "level": "1"
+        },
+        {
+          "code": "1007",
+          "name": "1966年度",
+          "level": "1"
+        },
+        {
+          "code": "1008",
+          "name": "1967年度",
+          "level": "1"
+        },
+        {
+          "code": "1009",
+          "name": "1968年度",
+          "level": "1"
+        },
+        {
+          "code": "1010",
+          "name": "1969年度",
+          "level": "1"
+        },
+        {
+          "code": "1011",
+          "name": "1970年度",
+          "level": "1"
+        },
+        {
+          "code": "1012",
+          "name": "1971年度",
+          "level": "1"
+        },
+        {
+          "code": "1013",
+          "name": "1972年度",
+          "level": "1"
+        },
+        {
+          "code": "1014",
+          "name": "1973年度",
+          "level": "1"
+        },
+        {
+          "code": "1015",
+          "name": "1974年度",
+          "level": "1"
+        },
+        {
+          "code": "1016",
+          "name": "1975年度",
+          "level": "1"
+        },
+        {
+          "code": "1017",
+          "name": "1976年度",
+          "level": "1"
+        },
+        {
+          "code": "1018",
+          "name": "1977年度",
+          "level": "1"
+        },
+        {
+          "code": "1019",
+          "name": "1978年度",
+          "level": "1"
+        },
+        {
+          "code": "1020",
+          "name": "1979年度",
+          "level": "1"
+        },
+        {
+          "code": "1021",
+          "name": "1980年度",
+          "level": "1"
+        },
+        {
+          "code": "1022",
+          "name": "1981年度",
+          "level": "1"
+        },
+        {
+          "code": "1023",
+          "name": "1982年度",
+          "level": "1"
+        },
+        {
+          "code": "1024",
+          "name": "1983年度",
+          "level": "1"
+        },
+        {
+          "code": "1025",
+          "name": "1984年度",
+          "level": "1"
+        },
+        {
+          "code": "1026",
+          "name": "1985年度",
+          "level": "1"
+        },
+        {
+          "code": "1027",
+          "name": "1986年度",
+          "level": "1"
+        },
+        {
+          "code": "1028",
+          "name": "1987年度",
+          "level": "1"
+        },
+        {
+          "code": "1029",
+          "name": "1988年度",
+          "level": "1"
+        },
+        {
+          "code": "1030",
+          "name": "1989年度",
+          "level": "1"
+        },
+        {
+          "code": "1031",
+          "name": "1990年度",
+          "level": "1"
+        },
+        {
+          "code": "1032",
+          "name": "1991年度",
+          "level": "1"
+        },
+        {
+          "code": "1033",
+          "name": "1992年度",
+          "level": "1"
+        },
+        {
+          "code": "1034",
+          "name": "1993年度",
+          "level": "1"
+        },
+        {
+          "code": "1035",
+          "name": "1994年度",
+          "level": "1"
+        },
+        {
+          "code": "1036",
+          "name": "1995年度",
+          "level": "1"
+        },
+        {
+          "code": "1037",
+          "name": "1996年度",
+          "level": "1"
+        },
+        {
+          "code": "1038",
+          "name": "1997年度",
+          "level": "1"
+        },
+        {
+          "code": "1039",
+          "name": "1998年度",
+          "level": "1"
+        },
+        {
+          "code": "1040",
+          "name": "1999年度",
+          "level": "1"
+        },
+        {
+          "code": "1041",
+          "name": "2000年度",
+          "level": "1"
+        },
+        {
+          "code": "1042",
+          "name": "2001年度",
+          "level": "1"
+        },
+        {
+          "code": "1043",
+          "name": "2002年度",
+          "level": "1"
+        },
+        {
+          "code": "1044",
+          "name": "2003年度",
+          "level": "1"
+        },
+        {
+          "code": "1045",
+          "name": "2004年度",
+          "level": "1"
+        },
+        {
+          "code": "1046",
+          "name": "2005年度",
+          "level": "1"
+        },
+        {
+          "code": "1047",
+          "name": "2006年度",
+          "level": "1"
+        },
+        {
+          "code": "1048",
+          "name": "2007年度",
+          "level": "1"
+        },
+        {
+          "code": "1049",
+          "name": "2008年度",
+          "level": "1"
+        },
+        {
+          "code": "1050",
+          "name": "2009年度",
+          "level": "1"
+        },
+        {
+          "code": "1051",
+          "name": "2010年度",
+          "level": "1"
+        },
+        {
+          "code": "1052",
+          "name": "2011年度",
+          "level": "1"
+        },
+        {
+          "code": "1053",
+          "name": "2012年度",
+          "level": "1"
+        },
+        {
+          "code": "1054",
+          "name": "2013年度",
+          "level": "1"
+        },
+        {
+          "code": "1055",
+          "name": "2014年度",
+          "level": "1"
+        },
+        {
+          "code": "1056",
+          "name": "2015年度",
+          "level": "1"
+        },
+        {
+          "code": "1057",
+          "name": "2016年度",
+          "level": "1"
+        },
+        {
+          "code": "1058",
+          "name": "2017年度",
+          "level": "1"
+        },
+        {
+          "code": "1059",
+          "name": "2018年度",
+          "level": "1"
+        },
+        {
+          "code": "1060",
+          "name": "2019年度",
+          "level": "1"
+        },
+        {
+          "code": "1061",
+          "name": "2020年度",
+          "level": "1"
+        },
+        {
+          "code": "1062",
+          "name": "2021年度",
+          "level": "1"
+        },
+        {
+          "code": "1063",
+          "name": "2022年度",
+          "level": "1"
+        },
+        {
+          "code": "1064",
+          "name": "2023年度",
+          "level": "1"
+        }
+      ]
+    }
+  ],
+  "page": {
+    "total": 128,
+    "from": 1,
+    "to": 128,
+    "truncated": false
+  },
+  "records": [
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1002",
+          "name": "穀類_米"
+        },
+        "cat02": {
+          "code": "1001",
+          "name": "1960年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "1105.5",
+        "number": 1105.5,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1002",
+          "name": "穀類_米"
+        },
+        "cat02": {
+          "code": "1002",
+          "name": "1961年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "1129.4",
+        "number": 1129.4,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1002",
+          "name": "穀類_米"
+        },
+        "cat02": {
+          "code": "1003",
+          "name": "1962年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "1137.4",
+        "number": 1137.4,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1002",
+          "name": "穀類_米"
+        },
+        "cat02": {
+          "code": "1004",
+          "name": "1963年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "1124.7",
+        "number": 1124.7,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1002",
+          "name": "穀類_米"
+        },
+        "cat02": {
+          "code": "1005",
+          "name": "1964年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "1114.3",
+        "number": 1114.3,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1002",
+          "name": "穀類_米"
+        },
+        "cat02": {
+          "code": "1006",
+          "name": "1965年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "1089.7",
+        "number": 1089.7,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1002",
+          "name": "穀類_米"
+        },
+        "cat02": {
+          "code": "1007",
+          "name": "1966年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "1032.1",
+        "number": 1032.1,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1002",
+          "name": "穀類_米"
+        },
+        "cat02": {
+          "code": "1008",
+          "name": "1967年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "1005.8",
+        "number": 1005.8,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1002",
+          "name": "穀類_米"
+        },
+        "cat02": {
+          "code": "1009",
+          "name": "1968年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "976.6",
+        "number": 976.6,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1002",
+          "name": "穀類_米"
+        },
+        "cat02": {
+          "code": "1010",
+          "name": "1969年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "946.4",
+        "number": 946.4,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1002",
+          "name": "穀類_米"
+        },
+        "cat02": {
+          "code": "1011",
+          "name": "1970年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "927.2",
+        "number": 927.2,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1002",
+          "name": "穀類_米"
+        },
+        "cat02": {
+          "code": "1012",
+          "name": "1971年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "905.1",
+        "number": 905.1,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1002",
+          "name": "穀類_米"
+        },
+        "cat02": {
+          "code": "1013",
+          "name": "1972年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "892.4",
+        "number": 892.4,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1002",
+          "name": "穀類_米"
+        },
+        "cat02": {
+          "code": "1014",
+          "name": "1973年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "885.2",
+        "number": 885.2,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1002",
+          "name": "穀類_米"
+        },
+        "cat02": {
+          "code": "1015",
+          "name": "1974年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "875.0",
+        "number": 875.0,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1002",
+          "name": "穀類_米"
+        },
+        "cat02": {
+          "code": "1016",
+          "name": "1975年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "856.4",
+        "number": 856.4,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1002",
+          "name": "穀類_米"
+        },
+        "cat02": {
+          "code": "1017",
+          "name": "1976年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "841.0",
+        "number": 841.0,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1002",
+          "name": "穀類_米"
+        },
+        "cat02": {
+          "code": "1018",
+          "name": "1977年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "813.1",
+        "number": 813.1,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1002",
+          "name": "穀類_米"
+        },
+        "cat02": {
+          "code": "1019",
+          "name": "1978年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "795.7",
+        "number": 795.7,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1002",
+          "name": "穀類_米"
+        },
+        "cat02": {
+          "code": "1020",
+          "name": "1979年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "775.8",
+        "number": 775.8,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1002",
+          "name": "穀類_米"
+        },
+        "cat02": {
+          "code": "1021",
+          "name": "1980年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "769.8",
+        "number": 769.8,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1002",
+          "name": "穀類_米"
+        },
+        "cat02": {
+          "code": "1022",
+          "name": "1981年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "758.7",
+        "number": 758.7,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1002",
+          "name": "穀類_米"
+        },
+        "cat02": {
+          "code": "1023",
+          "name": "1982年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "745.2",
+        "number": 745.2,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1002",
+          "name": "穀類_米"
+        },
+        "cat02": {
+          "code": "1024",
+          "name": "1983年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "736.2",
+        "number": 736.2,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1002",
+          "name": "穀類_米"
+        },
+        "cat02": {
+          "code": "1025",
+          "name": "1984年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "733.7",
+        "number": 733.7,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1002",
+          "name": "穀類_米"
+        },
+        "cat02": {
+          "code": "1026",
+          "name": "1985年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "727.3",
+        "number": 727.3,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1002",
+          "name": "穀類_米"
+        },
+        "cat02": {
+          "code": "1027",
+          "name": "1986年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "716.2",
+        "number": 716.2,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1002",
+          "name": "穀類_米"
+        },
+        "cat02": {
+          "code": "1028",
+          "name": "1987年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "699.9",
+        "number": 699.9,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1002",
+          "name": "穀類_米"
+        },
+        "cat02": {
+          "code": "1029",
+          "name": "1988年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "692.3",
+        "number": 692.3,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1002",
+          "name": "穀類_米"
+        },
+        "cat02": {
+          "code": "1030",
+          "name": "1989年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "686.4",
+        "number": 686.4,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1002",
+          "name": "穀類_米"
+        },
+        "cat02": {
+          "code": "1031",
+          "name": "1990年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "683.0",
+        "number": 683.0,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1002",
+          "name": "穀類_米"
+        },
+        "cat02": {
+          "code": "1032",
+          "name": "1991年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "679.8",
+        "number": 679.8,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1002",
+          "name": "穀類_米"
+        },
+        "cat02": {
+          "code": "1033",
+          "name": "1992年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "679.6",
+        "number": 679.6,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1002",
+          "name": "穀類_米"
+        },
+        "cat02": {
+          "code": "1034",
+          "name": "1993年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "674.4",
+        "number": 674.4,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1002",
+          "name": "穀類_米"
+        },
+        "cat02": {
+          "code": "1035",
+          "name": "1994年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "645.4",
+        "number": 645.4,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1002",
+          "name": "穀類_米"
+        },
+        "cat02": {
+          "code": "1036",
+          "name": "1995年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "659.6",
+        "number": 659.6,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1002",
+          "name": "穀類_米"
+        },
+        "cat02": {
+          "code": "1037",
+          "name": "1996年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "656.1",
+        "number": 656.1,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1002",
+          "name": "穀類_米"
+        },
+        "cat02": {
+          "code": "1038",
+          "name": "1997年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "650.8",
+        "number": 650.8,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1002",
+          "name": "穀類_米"
+        },
+        "cat02": {
+          "code": "1039",
+          "name": "1998年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "635.5",
+        "number": 635.5,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1002",
+          "name": "穀類_米"
+        },
+        "cat02": {
+          "code": "1040",
+          "name": "1999年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "633.7",
+        "number": 633.7,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1002",
+          "name": "穀類_米"
+        },
+        "cat02": {
+          "code": "1041",
+          "name": "2000年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "630.0",
+        "number": 630.0,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1002",
+          "name": "穀類_米"
+        },
+        "cat02": {
+          "code": "1042",
+          "name": "2001年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "620.3",
+        "number": 620.3,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1002",
+          "name": "穀類_米"
+        },
+        "cat02": {
+          "code": "1043",
+          "name": "2002年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "611.6",
+        "number": 611.6,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1002",
+          "name": "穀類_米"
+        },
+        "cat02": {
+          "code": "1044",
+          "name": "2003年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "602.1",
+        "number": 602.1,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1002",
+          "name": "穀類_米"
+        },
+        "cat02": {
+          "code": "1045",
+          "name": "2004年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "599.6",
+        "number": 599.6,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1002",
+          "name": "穀類_米"
+        },
+        "cat02": {
+          "code": "1046",
+          "name": "2005年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "598.9",
+        "number": 598.9,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1002",
+          "name": "穀類_米"
+        },
+        "cat02": {
+          "code": "1047",
+          "name": "2006年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "594.5",
+        "number": 594.5,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1002",
+          "name": "穀類_米"
+        },
+        "cat02": {
+          "code": "1048",
+          "name": "2007年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "595.7",
+        "number": 595.7,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1002",
+          "name": "穀類_米"
+        },
+        "cat02": {
+          "code": "1049",
+          "name": "2008年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "573.9",
+        "number": 573.9,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1002",
+          "name": "穀類_米"
+        },
+        "cat02": {
+          "code": "1050",
+          "name": "2009年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "568.2",
+        "number": 568.2,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1002",
+          "name": "穀類_米"
+        },
+        "cat02": {
+          "code": "1051",
+          "name": "2010年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "580.4",
+        "number": 580.4,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1002",
+          "name": "穀類_米"
+        },
+        "cat02": {
+          "code": "1052",
+          "name": "2011年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "562.3",
+        "number": 562.3,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1002",
+          "name": "穀類_米"
+        },
+        "cat02": {
+          "code": "1053",
+          "name": "2012年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "548.3",
+        "number": 548.3,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1002",
+          "name": "穀類_米"
+        },
+        "cat02": {
+          "code": "1054",
+          "name": "2013年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "554.4",
+        "number": 554.4,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1002",
+          "name": "穀類_米"
+        },
+        "cat02": {
+          "code": "1055",
+          "name": "2014年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "544.2",
+        "number": 544.2,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1002",
+          "name": "穀類_米"
+        },
+        "cat02": {
+          "code": "1056",
+          "name": "2015年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "534.0",
+        "number": 534.0,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1002",
+          "name": "穀類_米"
+        },
+        "cat02": {
+          "code": "1057",
+          "name": "2016年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "532.9",
+        "number": 532.9,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1002",
+          "name": "穀類_米"
+        },
+        "cat02": {
+          "code": "1058",
+          "name": "2017年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "530.2",
+        "number": 530.2,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1002",
+          "name": "穀類_米"
+        },
+        "cat02": {
+          "code": "1059",
+          "name": "2018年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "523.9",
+        "number": 523.9,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1002",
+          "name": "穀類_米"
+        },
+        "cat02": {
+          "code": "1060",
+          "name": "2019年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "495.9",
+        "number": 495.9,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1002",
+          "name": "穀類_米"
+        },
+        "cat02": {
+          "code": "1061",
+          "name": "2020年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "475.6",
+        "number": 475.6,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1002",
+          "name": "穀類_米"
+        },
+        "cat02": {
+          "code": "1062",
+          "name": "2021年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "481.8",
+        "number": 481.8,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1002",
+          "name": "穀類_米"
+        },
+        "cat02": {
+          "code": "1063",
+          "name": "2022年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "476.5",
+        "number": 476.5,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1002",
+          "name": "穀類_米"
+        },
+        "cat02": {
+          "code": "1064",
+          "name": "2023年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "477.7",
+        "number": 477.7,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1066",
+          "name": "合計"
+        },
+        "cat02": {
+          "code": "1001",
+          "name": "1960年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "2290.6",
+        "number": 2290.6,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1066",
+          "name": "合計"
+        },
+        "cat02": {
+          "code": "1002",
+          "name": "1961年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "2337.7",
+        "number": 2337.7,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1066",
+          "name": "合計"
+        },
+        "cat02": {
+          "code": "1003",
+          "name": "1962年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "2372.5",
+        "number": 2372.5,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1066",
+          "name": "合計"
+        },
+        "cat02": {
+          "code": "1004",
+          "name": "1963年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "2384.8",
+        "number": 2384.8,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1066",
+          "name": "合計"
+        },
+        "cat02": {
+          "code": "1005",
+          "name": "1964年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "2404.2",
+        "number": 2404.2,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1066",
+          "name": "合計"
+        },
+        "cat02": {
+          "code": "1006",
+          "name": "1965年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "2458.7",
+        "number": 2458.7,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1066",
+          "name": "合計"
+        },
+        "cat02": {
+          "code": "1007",
+          "name": "1966年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "2481.2",
+        "number": 2481.2,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1066",
+          "name": "合計"
+        },
+        "cat02": {
+          "code": "1008",
+          "name": "1967年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "2496.8",
+        "number": 2496.8,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1066",
+          "name": "合計"
+        },
+        "cat02": {
+          "code": "1009",
+          "name": "1968年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "2505.6",
+        "number": 2505.6,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1066",
+          "name": "合計"
+        },
+        "cat02": {
+          "code": "1010",
+          "name": "1969年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "2503.8",
+        "number": 2503.8,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1066",
+          "name": "合計"
+        },
+        "cat02": {
+          "code": "1011",
+          "name": "1970年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "2529.8",
+        "number": 2529.8,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1066",
+          "name": "合計"
+        },
+        "cat02": {
+          "code": "1012",
+          "name": "1971年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "2531.1",
+        "number": 2531.1,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1066",
+          "name": "合計"
+        },
+        "cat02": {
+          "code": "1013",
+          "name": "1972年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "2558.1",
+        "number": 2558.1,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1066",
+          "name": "合計"
+        },
+        "cat02": {
+          "code": "1014",
+          "name": "1973年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "2569.7",
+        "number": 2569.7,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1066",
+          "name": "合計"
+        },
+        "cat02": {
+          "code": "1015",
+          "name": "1974年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "2541.7",
+        "number": 2541.7,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1066",
+          "name": "合計"
+        },
+        "cat02": {
+          "code": "1016",
+          "name": "1975年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "2518.3",
+        "number": 2518.3,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1066",
+          "name": "合計"
+        },
+        "cat02": {
+          "code": "1017",
+          "name": "1976年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "2533.8",
+        "number": 2533.8,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1066",
+          "name": "合計"
+        },
+        "cat02": {
+          "code": "1018",
+          "name": "1977年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "2554.1",
+        "number": 2554.1,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1066",
+          "name": "合計"
+        },
+        "cat02": {
+          "code": "1019",
+          "name": "1978年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "2559.0",
+        "number": 2559.0,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1066",
+          "name": "合計"
+        },
+        "cat02": {
+          "code": "1020",
+          "name": "1979年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "2557.3",
+        "number": 2557.3,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1066",
+          "name": "合計"
+        },
+        "cat02": {
+          "code": "1021",
+          "name": "1980年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "2562.5",
+        "number": 2562.5,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1066",
+          "name": "合計"
+        },
+        "cat02": {
+          "code": "1022",
+          "name": "1981年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "2561.9",
+        "number": 2561.9,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1066",
+          "name": "合計"
+        },
+        "cat02": {
+          "code": "1023",
+          "name": "1982年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "2561.8",
+        "number": 2561.8,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1066",
+          "name": "合計"
+        },
+        "cat02": {
+          "code": "1024",
+          "name": "1983年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "2565.5",
+        "number": 2565.5,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1066",
+          "name": "合計"
+        },
+        "cat02": {
+          "code": "1025",
+          "name": "1984年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "2580.2",
+        "number": 2580.2,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1066",
+          "name": "合計"
+        },
+        "cat02": {
+          "code": "1026",
+          "name": "1985年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "2596.5",
+        "number": 2596.5,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1066",
+          "name": "合計"
+        },
+        "cat02": {
+          "code": "1027",
+          "name": "1986年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "2620.9",
+        "number": 2620.9,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1066",
+          "name": "合計"
+        },
+        "cat02": {
+          "code": "1028",
+          "name": "1987年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "2623.9",
+        "number": 2623.9,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1066",
+          "name": "合計"
+        },
+        "cat02": {
+          "code": "1029",
+          "name": "1988年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "2636.9",
+        "number": 2636.9,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1066",
+          "name": "合計"
+        },
+        "cat02": {
+          "code": "1030",
+          "name": "1989年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "2641.5",
+        "number": 2641.5,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1066",
+          "name": "合計"
+        },
+        "cat02": {
+          "code": "1031",
+          "name": "1990年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "2640.1",
+        "number": 2640.1,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1066",
+          "name": "合計"
+        },
+        "cat02": {
+          "code": "1032",
+          "name": "1991年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "2628.7",
+        "number": 2628.7,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1066",
+          "name": "合計"
+        },
+        "cat02": {
+          "code": "1033",
+          "name": "1992年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "2634.9",
+        "number": 2634.9,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1066",
+          "name": "合計"
+        },
+        "cat02": {
+          "code": "1034",
+          "name": "1993年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "2624.5",
+        "number": 2624.5,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1066",
+          "name": "合計"
+        },
+        "cat02": {
+          "code": "1035",
+          "name": "1994年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "2645.3",
+        "number": 2645.3,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1066",
+          "name": "合計"
+        },
+        "cat02": {
+          "code": "1036",
+          "name": "1995年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "2653.8",
+        "number": 2653.8,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1066",
+          "name": "合計"
+        },
+        "cat02": {
+          "code": "1037",
+          "name": "1996年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "2670.4",
+        "number": 2670.4,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1066",
+          "name": "合計"
+        },
+        "cat02": {
+          "code": "1038",
+          "name": "1997年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "2651.7",
+        "number": 2651.7,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1066",
+          "name": "合計"
+        },
+        "cat02": {
+          "code": "1039",
+          "name": "1998年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "2603.3",
+        "number": 2603.3,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1066",
+          "name": "合計"
+        },
+        "cat02": {
+          "code": "1040",
+          "name": "1999年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "2620.6",
+        "number": 2620.6,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1066",
+          "name": "合計"
+        },
+        "cat02": {
+          "code": "1041",
+          "name": "2000年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "2642.9",
+        "number": 2642.9,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1066",
+          "name": "合計"
+        },
+        "cat02": {
+          "code": "1042",
+          "name": "2001年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "2631.1",
+        "number": 2631.1,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1066",
+          "name": "合計"
+        },
+        "cat02": {
+          "code": "1043",
+          "name": "2002年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "2600.3",
+        "number": 2600.3,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1066",
+          "name": "合計"
+        },
+        "cat02": {
+          "code": "1044",
+          "name": "2003年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "2587.7",
+        "number": 2587.7,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1066",
+          "name": "合計"
+        },
+        "cat02": {
+          "code": "1045",
+          "name": "2004年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "2564.0",
+        "number": 2564.0,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1066",
+          "name": "合計"
+        },
+        "cat02": {
+          "code": "1046",
+          "name": "2005年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "2572.8",
+        "number": 2572.8,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1066",
+          "name": "合計"
+        },
+        "cat02": {
+          "code": "1047",
+          "name": "2006年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "2546.5",
+        "number": 2546.5,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1066",
+          "name": "合計"
+        },
+        "cat02": {
+          "code": "1048",
+          "name": "2007年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "2545.5",
+        "number": 2545.5,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1066",
+          "name": "合計"
+        },
+        "cat02": {
+          "code": "1049",
+          "name": "2008年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "2464.2",
+        "number": 2464.2,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1066",
+          "name": "合計"
+        },
+        "cat02": {
+          "code": "1050",
+          "name": "2009年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "2429.0",
+        "number": 2429.0,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1066",
+          "name": "合計"
+        },
+        "cat02": {
+          "code": "1051",
+          "name": "2010年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "2446.6",
+        "number": 2446.6,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1066",
+          "name": "合計"
+        },
+        "cat02": {
+          "code": "1052",
+          "name": "2011年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "2436.9",
+        "number": 2436.9,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1066",
+          "name": "合計"
+        },
+        "cat02": {
+          "code": "1053",
+          "name": "2012年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "2429.0",
+        "number": 2429.0,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1066",
+          "name": "合計"
+        },
+        "cat02": {
+          "code": "1054",
+          "name": "2013年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "2422.7",
+        "number": 2422.7,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1066",
+          "name": "合計"
+        },
+        "cat02": {
+          "code": "1055",
+          "name": "2014年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "2422.5",
+        "number": 2422.5,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1066",
+          "name": "合計"
+        },
+        "cat02": {
+          "code": "1056",
+          "name": "2015年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "2415.8",
+        "number": 2415.8,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1066",
+          "name": "合計"
+        },
+        "cat02": {
+          "code": "1057",
+          "name": "2016年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "2427.7",
+        "number": 2427.7,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1066",
+          "name": "合計"
+        },
+        "cat02": {
+          "code": "1058",
+          "name": "2017年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "2434.6",
+        "number": 2434.6,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1066",
+          "name": "合計"
+        },
+        "cat02": {
+          "code": "1059",
+          "name": "2018年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "2422.5",
+        "number": 2422.5,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1066",
+          "name": "合計"
+        },
+        "cat02": {
+          "code": "1060",
+          "name": "2019年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "2333.5",
+        "number": 2333.5,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1066",
+          "name": "合計"
+        },
+        "cat02": {
+          "code": "1061",
+          "name": "2020年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "2270.0",
+        "number": 2270.0,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1066",
+          "name": "合計"
+        },
+        "cat02": {
+          "code": "1062",
+          "name": "2021年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "2265.7",
+        "number": 2265.7,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1066",
+          "name": "合計"
+        },
+        "cat02": {
+          "code": "1063",
+          "name": "2022年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "2252.4",
+        "number": 2252.4,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004047567",
+      "dimensions": {
+        "cat01": {
+          "code": "1066",
+          "name": "合計"
+        },
+        "cat02": {
+          "code": "1064",
+          "name": "2023年度"
+        }
+      },
+      "unit": "kcal",
+      "value": {
+        "raw": "2202.9",
+        "number": 2202.9,
+        "kind": "number"
+      }
+    }
+  ]
+}

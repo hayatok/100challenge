@@ -1,0 +1,165 @@
+{
+  "schema_version": "1",
+  "kind": "data",
+  "table": {
+    "id": "0003171420",
+    "statistics_code": "00200356",
+    "statistics_name": "通信利用動向調査",
+    "organization": "総務省",
+    "title": "問１（１）情報通信機器の保有状況（対象：全世帯） 世帯主年齢 平成17年以前",
+    "cycle": "年次",
+    "survey_date": "0",
+    "open_date": "2016-12-28",
+    "updated_date": "2019-02-04",
+    "collect_area": "該当なし",
+    "total_records": 165
+  },
+  "dimensions": [
+    {
+      "id": "tab",
+      "name": "表章項目",
+      "values": [
+        {
+          "code": "00100",
+          "name": "回答数割合",
+          "unit": "%"
+        }
+      ]
+    },
+    {
+      "id": "cat01",
+      "name": "情報通信機器",
+      "values": [
+        {
+          "code": "110",
+          "name": "固定電話",
+          "level": "2",
+          "parent_code": "100"
+        },
+        {
+          "code": "170",
+          "name": "携帯電話",
+          "level": "3",
+          "parent_code": "130"
+        },
+        {
+          "code": "290",
+          "name": "パソコン",
+          "level": "2",
+          "parent_code": "100"
+        }
+      ]
+    },
+    {
+      "id": "cat04",
+      "name": "世帯主年齢_1",
+      "values": [
+        {
+          "code": "100",
+          "name": "合計",
+          "level": "1"
+        }
+      ]
+    },
+    {
+      "id": "time",
+      "name": "時間軸(年次)",
+      "values": [
+        {
+          "code": "2005000000",
+          "name": "2005年",
+          "level": "1"
+        }
+      ]
+    }
+  ],
+  "page": {
+    "total": 3,
+    "from": 1,
+    "to": 3,
+    "truncated": false
+  },
+  "records": [
+    {
+      "table_id": "0003171420",
+      "dimensions": {
+        "cat01": {
+          "code": "110",
+          "name": "固定電話"
+        },
+        "cat04": {
+          "code": "100",
+          "name": "合計"
+        },
+        "tab": {
+          "code": "00100",
+          "name": "回答数割合"
+        },
+        "time": {
+          "code": "2005000000",
+          "name": "2005年"
+        }
+      },
+      "unit": "%",
+      "value": {
+        "raw": "90.7",
+        "number": 90.7,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003171420",
+      "dimensions": {
+        "cat01": {
+          "code": "170",
+          "name": "携帯電話"
+        },
+        "cat04": {
+          "code": "100",
+          "name": "合計"
+        },
+        "tab": {
+          "code": "00100",
+          "name": "回答数割合"
+        },
+        "time": {
+          "code": "2005000000",
+          "name": "2005年"
+        }
+      },
+      "unit": "%",
+      "value": {
+        "raw": "89.6",
+        "number": 89.6,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003171420",
+      "dimensions": {
+        "cat01": {
+          "code": "290",
+          "name": "パソコン"
+        },
+        "cat04": {
+          "code": "100",
+          "name": "合計"
+        },
+        "tab": {
+          "code": "00100",
+          "name": "回答数割合"
+        },
+        "time": {
+          "code": "2005000000",
+          "name": "2005年"
+        }
+      },
+      "unit": "%",
+      "value": {
+        "raw": "80.5",
+        "number": 80.5,
+        "kind": "number"
+      }
+    }
+  ]
+}

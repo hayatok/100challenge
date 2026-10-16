@@ -1,0 +1,298 @@
+{
+  "schema_version": "1",
+  "kind": "data",
+  "table": {
+    "id": "0003109570",
+    "statistics_code": "00450012",
+    "statistics_name": "生命表",
+    "organization": "厚生労働省",
+    "title": "完全生命表",
+    "cycle": "-",
+    "survey_date": "0",
+    "open_date": "2023-01-16",
+    "updated_date": "2026-07-24",
+    "collect_area": "該当なし",
+    "total_records": 7792
+  },
+  "dimensions": [
+    {
+      "id": "tab",
+      "name": "表章項目",
+      "values": [
+        {
+          "code": "150",
+          "name": "平均余命(ex)"
+        }
+      ]
+    },
+    {
+      "id": "cat01",
+      "name": "年齢区分（完全生命表）",
+      "values": [
+        {
+          "code": "300000",
+          "name": "0年",
+          "level": "1"
+        }
+      ]
+    },
+    {
+      "id": "cat02",
+      "name": "性別",
+      "values": [
+        {
+          "code": "10",
+          "name": "男",
+          "level": "1"
+        },
+        {
+          "code": "20",
+          "name": "女",
+          "level": "1"
+        }
+      ]
+    },
+    {
+      "id": "time",
+      "name": "時間軸（年次）",
+      "values": [
+        {
+          "code": "2020000000",
+          "name": "2020年",
+          "level": "1"
+        },
+        {
+          "code": "2015000000",
+          "name": "2015年",
+          "level": "1"
+        },
+        {
+          "code": "2010000000",
+          "name": "2010年",
+          "level": "1"
+        },
+        {
+          "code": "2005000000",
+          "name": "2005年",
+          "level": "1"
+        }
+      ]
+    }
+  ],
+  "page": {
+    "total": 8,
+    "from": 1,
+    "to": 8,
+    "truncated": false
+  },
+  "records": [
+    {
+      "table_id": "0003109570",
+      "dimensions": {
+        "cat01": {
+          "code": "300000",
+          "name": "0年"
+        },
+        "cat02": {
+          "code": "10",
+          "name": "男"
+        },
+        "tab": {
+          "code": "150",
+          "name": "平均余命(ex)"
+        },
+        "time": {
+          "code": "2020000000",
+          "name": "2020年"
+        }
+      },
+      "value": {
+        "raw": "81.56",
+        "number": 81.56,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003109570",
+      "dimensions": {
+        "cat01": {
+          "code": "300000",
+          "name": "0年"
+        },
+        "cat02": {
+          "code": "10",
+          "name": "男"
+        },
+        "tab": {
+          "code": "150",
+          "name": "平均余命(ex)"
+        },
+        "time": {
+          "code": "2015000000",
+          "name": "2015年"
+        }
+      },
+      "value": {
+        "raw": "80.75",
+        "number": 80.75,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003109570",
+      "dimensions": {
+        "cat01": {
+          "code": "300000",
+          "name": "0年"
+        },
+        "cat02": {
+          "code": "10",
+          "name": "男"
+        },
+        "tab": {
+          "code": "150",
+          "name": "平均余命(ex)"
+        },
+        "time": {
+          "code": "2010000000",
+          "name": "2010年"
+        }
+      },
+      "value": {
+        "raw": "79.55",
+        "number": 79.55,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003109570",
+      "dimensions": {
+        "cat01": {
+          "code": "300000",
+          "name": "0年"
+        },
+        "cat02": {
+          "code": "10",
+          "name": "男"
+        },
+        "tab": {
+          "code": "150",
+          "name": "平均余命(ex)"
+        },
+        "time": {
+          "code": "2005000000",
+          "name": "2005年"
+        }
+      },
+      "value": {
+        "raw": "78.56",
+        "number": 78.56,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003109570",
+      "dimensions": {
+        "cat01": {
+          "code": "300000",
+          "name": "0年"
+        },
+        "cat02": {
+          "code": "20",
+          "name": "女"
+        },
+        "tab": {
+          "code": "150",
+          "name": "平均余命(ex)"
+        },
+        "time": {
+          "code": "2020000000",
+          "name": "2020年"
+        }
+      },
+      "value": {
+        "raw": "87.71",
+        "number": 87.71,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003109570",
+      "dimensions": {
+        "cat01": {
+          "code": "300000",
+          "name": "0年"
+        },
+        "cat02": {
+          "code": "20",
+          "name": "女"
+        },
+        "tab": {
+          "code": "150",
+          "name": "平均余命(ex)"
+        },
+        "time": {
+          "code": "2015000000",
+          "name": "2015年"
+        }
+      },
+      "value": {
+        "raw": "86.99",
+        "number": 86.99,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003109570",
+      "dimensions": {
+        "cat01": {
+          "code": "300000",
+          "name": "0年"
+        },
+        "cat02": {
+          "code": "20",
+          "name": "女"
+        },
+        "tab": {
+          "code": "150",
+          "name": "平均余命(ex)"
+        },
+        "time": {
+          "code": "2010000000",
+          "name": "2010年"
+        }
+      },
+      "value": {
+        "raw": "86.30",
+        "number": 86.30,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003109570",
+      "dimensions": {
+        "cat01": {
+          "code": "300000",
+          "name": "0年"
+        },
+        "cat02": {
+          "code": "20",
+          "name": "女"
+        },
+        "tab": {
+          "code": "150",
+          "name": "平均余命(ex)"
+        },
+        "time": {
+          "code": "2005000000",
+          "name": "2005年"
+        }
+      },
+      "value": {
+        "raw": "85.52",
+        "number": 85.52,
+        "kind": "number"
+      }
+    }
+  ]
+}

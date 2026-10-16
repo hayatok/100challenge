@@ -1,0 +1,31 @@
+{
+  "command": [
+    "/Users/hayatok/.local/bin/estat",
+    "data",
+    "get",
+    "0003008330",
+    "--filter",
+    "cat01=000",
+    "--filter",
+    "cat02=00,01,02,08,09",
+    "--filter",
+    "cat03=0",
+    "--filter",
+    "area=00000",
+    "--all-pages",
+    "--max-records",
+    "500",
+    "--timeout",
+    "30s",
+    "-o",
+    "json"
+  ],
+  "started_at": "2026-10-16T14:59:55.493435+00:00",
+  "finished_at": "2026-10-16T14:59:56.087152+00:00",
+  "exit_code": 0,
+  "json_valid": true,
+  "redacted_fields": 0,
+  "output_path": "evidence/estat/r3_demography/labor_status_annual_data.json",
+  "sha256": "2847cd42b3768d807d639ea6cf066557227291f235f485337d0ce04b86f2ee86",
+  "stderr": ""
+}

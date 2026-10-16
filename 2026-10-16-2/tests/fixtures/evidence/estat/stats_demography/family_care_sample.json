@@ -1,0 +1,193 @@
+{
+  "schema_version": "1",
+  "kind": "data",
+  "table": {
+    "id": "0003136193",
+    "statistics_code": "00450061",
+    "statistics_name": "国民生活基礎調査",
+    "organization": "厚生労働省",
+    "title": "介護を要する者のいる世帯数，世帯構造－(再掲)高齢者世帯・介護保険料所得段階別",
+    "cycle": "年次",
+    "survey_date": "200401-200412",
+    "open_date": "2016-03-31",
+    "updated_date": "2026-10-05",
+    "collect_area": "該当なし",
+    "total_records": 56
+  },
+  "dimensions": [
+    {
+      "id": "tab",
+      "name": "表章項目",
+      "values": [
+        {
+          "code": "1980",
+          "name": "介護を要する者のいる世帯数1万対"
+        }
+      ]
+    },
+    {
+      "id": "cat01",
+      "name": "世帯構造_A05",
+      "values": [
+        {
+          "code": "100",
+          "name": "総数(全世帯)",
+          "level": "1"
+        },
+        {
+          "code": "110",
+          "name": "単独世帯",
+          "level": "2",
+          "parent_code": "100"
+        },
+        {
+          "code": "120",
+          "name": "核家族世帯総数",
+          "level": "2",
+          "parent_code": "100"
+        },
+        {
+          "code": "160",
+          "name": "三世代世帯",
+          "level": "2",
+          "parent_code": "100"
+        },
+        {
+          "code": "190",
+          "name": "高齢者世帯",
+          "level": "2",
+          "parent_code": "100"
+        }
+      ]
+    },
+    {
+      "id": "cat02",
+      "name": "介護保険料所得段階_001",
+      "values": [
+        {
+          "code": "1",
+          "name": "総数",
+          "level": "1"
+        }
+      ]
+    }
+  ],
+  "page": {
+    "total": 5,
+    "from": 1,
+    "to": 5,
+    "truncated": false
+  },
+  "records": [
+    {
+      "table_id": "0003136193",
+      "dimensions": {
+        "cat01": {
+          "code": "100",
+          "name": "総数(全世帯)"
+        },
+        "cat02": {
+          "code": "1",
+          "name": "総数"
+        },
+        "tab": {
+          "code": "1980",
+          "name": "介護を要する者のいる世帯数1万対"
+        }
+      },
+      "value": {
+        "raw": "10000",
+        "number": 10000,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003136193",
+      "dimensions": {
+        "cat01": {
+          "code": "110",
+          "name": "単独世帯"
+        },
+        "cat02": {
+          "code": "1",
+          "name": "総数"
+        },
+        "tab": {
+          "code": "1980",
+          "name": "介護を要する者のいる世帯数1万対"
+        }
+      },
+      "value": {
+        "raw": "2018",
+        "number": 2018,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003136193",
+      "dimensions": {
+        "cat01": {
+          "code": "120",
+          "name": "核家族世帯総数"
+        },
+        "cat02": {
+          "code": "1",
+          "name": "総数"
+        },
+        "tab": {
+          "code": "1980",
+          "name": "介護を要する者のいる世帯数1万対"
+        }
+      },
+      "value": {
+        "raw": "3042",
+        "number": 3042,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003136193",
+      "dimensions": {
+        "cat01": {
+          "code": "160",
+          "name": "三世代世帯"
+        },
+        "cat02": {
+          "code": "1",
+          "name": "総数"
+        },
+        "tab": {
+          "code": "1980",
+          "name": "介護を要する者のいる世帯数1万対"
+        }
+      },
+      "value": {
+        "raw": "2937",
+        "number": 2937,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003136193",
+      "dimensions": {
+        "cat01": {
+          "code": "190",
+          "name": "高齢者世帯"
+        },
+        "cat02": {
+          "code": "1",
+          "name": "総数"
+        },
+        "tab": {
+          "code": "1980",
+          "name": "介護を要する者のいる世帯数1万対"
+        }
+      },
+      "value": {
+        "raw": "4041",
+        "number": 4041,
+        "kind": "number"
+      }
+    }
+  ]
+}

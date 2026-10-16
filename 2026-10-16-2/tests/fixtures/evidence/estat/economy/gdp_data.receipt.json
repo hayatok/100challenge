@@ -1,0 +1,27 @@
+{
+  "command": [
+    "/Users/hayatok/.local/bin/estat",
+    "data",
+    "get",
+    "0003109741",
+    "--filter",
+    "tab=11",
+    "--filter",
+    "cat01=11,12",
+    "--page-size",
+    "300",
+    "--max-records",
+    "300",
+    "--timeout",
+    "25s",
+    "-o",
+    "json"
+  ],
+  "started_at": "2026-10-16T07:31:23.754154+00:00",
+  "finished_at": "2026-10-16T07:31:24.143110+00:00",
+  "exit_code": 0,
+  "json_valid": true,
+  "output_path": "evidence/estat/economy/gdp_data.json",
+  "sha256": "0292a60cbcc76adb4c41f3afc0a5efa5f3d9c3a0e9868fbe05ba1d16dd7bc4e1",
+  "stderr": ""
+}

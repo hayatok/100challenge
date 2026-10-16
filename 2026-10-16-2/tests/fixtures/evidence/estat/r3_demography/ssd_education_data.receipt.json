@@ -1,0 +1,27 @@
+{
+  "command": [
+    "/Users/hayatok/.local/bin/estat",
+    "data",
+    "get",
+    "0000010105",
+    "--filter",
+    "area=00000",
+    "--filter",
+    "cat01=E2101,E2501,E3501,E4501,E6101,E6501,E3801,E4801",
+    "--all-pages",
+    "--max-records",
+    "1000",
+    "--timeout",
+    "30s",
+    "-o",
+    "json"
+  ],
+  "started_at": "2026-10-16T14:58:16.840020+00:00",
+  "finished_at": "2026-10-16T14:58:17.870392+00:00",
+  "exit_code": 0,
+  "json_valid": true,
+  "redacted_fields": 0,
+  "output_path": "evidence/estat/r3_demography/ssd_education_data.json",
+  "sha256": "867114bbc475c6f7d3634a7858488d9d6f23af9bbe65581785bfa97d27f654a3",
+  "stderr": ""
+}

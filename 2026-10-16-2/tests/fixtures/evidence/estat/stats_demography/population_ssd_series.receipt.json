@@ -1,0 +1,26 @@
+{
+  "command": [
+    "/Users/hayatok/.local/bin/estat",
+    "data",
+    "get",
+    "0000010101",
+    "--filter",
+    "cat01=A1101",
+    "--all-pages",
+    "--page-size",
+    "1000",
+    "--max-records",
+    "3000",
+    "--timeout",
+    "30s",
+    "-o",
+    "json"
+  ],
+  "started_at": "2026-10-16T07:37:54.575506+00:00",
+  "finished_at": "2026-10-16T07:37:56.442283+00:00",
+  "exit_code": 0,
+  "json_valid": true,
+  "output_path": "evidence/estat/stats_demography/population_ssd_series.json",
+  "sha256": "b584b160dc675dcee8800a23f76ac2d07a29e08b186a46f0fea23f7289470b67",
+  "stderr": ""
+}

@@ -1,0 +1,25 @@
+{
+  "command": [
+    "/Users/hayatok/.local/bin/estat",
+    "data",
+    "get",
+    "0003146981",
+    "--filter",
+    "cat01=0000000020,0000000120",
+    "--filter",
+    "area=00000",
+    "--max-records",
+    "200",
+    "--timeout",
+    "30s",
+    "-o",
+    "json"
+  ],
+  "started_at": "2026-10-16T07:27:02.452253+00:00",
+  "finished_at": "2026-10-16T07:27:02.952109+00:00",
+  "exit_code": 0,
+  "json_valid": true,
+  "output_path": "evidence/estat/stats_demography/students_series.json",
+  "sha256": "463448434b989c925c94f521e823f0e34c9a146b0c3dfb7bbd2c74a97dc8b9b1",
+  "stderr": ""
+}

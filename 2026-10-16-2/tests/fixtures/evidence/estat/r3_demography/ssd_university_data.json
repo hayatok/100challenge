@@ -1,0 +1,3023 @@
+{
+  "schema_version": "1",
+  "kind": "data",
+  "table": {
+    "id": "0000010105",
+    "statistics_code": "00200502",
+    "statistics_name": "社会・人口統計体系",
+    "organization": "総務省",
+    "title": "Ｅ　教育",
+    "cycle": "年度次",
+    "survey_date": "0",
+    "open_date": "2026-04-27",
+    "updated_date": "2026-06-30",
+    "collect_area": "全国",
+    "total_records": 583680
+  },
+  "dimensions": [
+    {
+      "id": "tab",
+      "name": "観測値",
+      "values": [
+        {
+          "code": "00001",
+          "name": "観測値",
+          "level": "1"
+        }
+      ]
+    },
+    {
+      "id": "cat01",
+      "name": "Ｅ　教育",
+      "values": [
+        {
+          "code": "E6102",
+          "name": "E6102_大学数",
+          "level": "1",
+          "unit": "校"
+        },
+        {
+          "code": "E6302",
+          "name": "E6302_大学学生数",
+          "level": "1",
+          "unit": "人"
+        }
+      ]
+    },
+    {
+      "id": "area",
+      "name": "地域",
+      "values": [
+        {
+          "code": "00000",
+          "name": "全国",
+          "level": "1"
+        }
+      ]
+    },
+    {
+      "id": "time",
+      "name": "調査年",
+      "values": [
+        {
+          "code": "1975100000",
+          "name": "1975年度",
+          "level": "1"
+        },
+        {
+          "code": "1976100000",
+          "name": "1976年度",
+          "level": "1"
+        },
+        {
+          "code": "1977100000",
+          "name": "1977年度",
+          "level": "1"
+        },
+        {
+          "code": "1978100000",
+          "name": "1978年度",
+          "level": "1"
+        },
+        {
+          "code": "1979100000",
+          "name": "1979年度",
+          "level": "1"
+        },
+        {
+          "code": "1980100000",
+          "name": "1980年度",
+          "level": "1"
+        },
+        {
+          "code": "1981100000",
+          "name": "1981年度",
+          "level": "1"
+        },
+        {
+          "code": "1982100000",
+          "name": "1982年度",
+          "level": "1"
+        },
+        {
+          "code": "1983100000",
+          "name": "1983年度",
+          "level": "1"
+        },
+        {
+          "code": "1984100000",
+          "name": "1984年度",
+          "level": "1"
+        },
+        {
+          "code": "1985100000",
+          "name": "1985年度",
+          "level": "1"
+        },
+        {
+          "code": "1986100000",
+          "name": "1986年度",
+          "level": "1"
+        },
+        {
+          "code": "1987100000",
+          "name": "1987年度",
+          "level": "1"
+        },
+        {
+          "code": "1988100000",
+          "name": "1988年度",
+          "level": "1"
+        },
+        {
+          "code": "1989100000",
+          "name": "1989年度",
+          "level": "1"
+        },
+        {
+          "code": "1990100000",
+          "name": "1990年度",
+          "level": "1"
+        },
+        {
+          "code": "1991100000",
+          "name": "1991年度",
+          "level": "1"
+        },
+        {
+          "code": "1992100000",
+          "name": "1992年度",
+          "level": "1"
+        },
+        {
+          "code": "1993100000",
+          "name": "1993年度",
+          "level": "1"
+        },
+        {
+          "code": "1994100000",
+          "name": "1994年度",
+          "level": "1"
+        },
+        {
+          "code": "1995100000",
+          "name": "1995年度",
+          "level": "1"
+        },
+        {
+          "code": "1996100000",
+          "name": "1996年度",
+          "level": "1"
+        },
+        {
+          "code": "1997100000",
+          "name": "1997年度",
+          "level": "1"
+        },
+        {
+          "code": "1998100000",
+          "name": "1998年度",
+          "level": "1"
+        },
+        {
+          "code": "1999100000",
+          "name": "1999年度",
+          "level": "1"
+        },
+        {
+          "code": "2000100000",
+          "name": "2000年度",
+          "level": "1"
+        },
+        {
+          "code": "2001100000",
+          "name": "2001年度",
+          "level": "1"
+        },
+        {
+          "code": "2002100000",
+          "name": "2002年度",
+          "level": "1"
+        },
+        {
+          "code": "2003100000",
+          "name": "2003年度",
+          "level": "1"
+        },
+        {
+          "code": "2004100000",
+          "name": "2004年度",
+          "level": "1"
+        },
+        {
+          "code": "2005100000",
+          "name": "2005年度",
+          "level": "1"
+        },
+        {
+          "code": "2006100000",
+          "name": "2006年度",
+          "level": "1"
+        },
+        {
+          "code": "2007100000",
+          "name": "2007年度",
+          "level": "1"
+        },
+        {
+          "code": "2008100000",
+          "name": "2008年度",
+          "level": "1"
+        },
+        {
+          "code": "2009100000",
+          "name": "2009年度",
+          "level": "1"
+        },
+        {
+          "code": "2010100000",
+          "name": "2010年度",
+          "level": "1"
+        },
+        {
+          "code": "2011100000",
+          "name": "2011年度",
+          "level": "1"
+        },
+        {
+          "code": "2012100000",
+          "name": "2012年度",
+          "level": "1"
+        },
+        {
+          "code": "2013100000",
+          "name": "2013年度",
+          "level": "1"
+        },
+        {
+          "code": "2014100000",
+          "name": "2014年度",
+          "level": "1"
+        },
+        {
+          "code": "2015100000",
+          "name": "2015年度",
+          "level": "1"
+        },
+        {
+          "code": "2016100000",
+          "name": "2016年度",
+          "level": "1"
+        },
+        {
+          "code": "2017100000",
+          "name": "2017年度",
+          "level": "1"
+        },
+        {
+          "code": "2018100000",
+          "name": "2018年度",
+          "level": "1"
+        },
+        {
+          "code": "2019100000",
+          "name": "2019年度",
+          "level": "1"
+        },
+        {
+          "code": "2020100000",
+          "name": "2020年度",
+          "level": "1"
+        },
+        {
+          "code": "2021100000",
+          "name": "2021年度",
+          "level": "1"
+        },
+        {
+          "code": "2022100000",
+          "name": "2022年度",
+          "level": "1"
+        },
+        {
+          "code": "2023100000",
+          "name": "2023年度",
+          "level": "1"
+        },
+        {
+          "code": "2024100000",
+          "name": "2024年度",
+          "level": "1"
+        }
+      ]
+    }
+  ],
+  "page": {
+    "total": 100,
+    "from": 1,
+    "to": 100,
+    "truncated": false
+  },
+  "records": [
+    {
+      "table_id": "0000010105",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "E6102",
+          "name": "E6102_大学数"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1975100000",
+          "name": "1975年度"
+        }
+      },
+      "unit": "校",
+      "value": {
+        "raw": "420",
+        "number": 420,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010105",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "E6102",
+          "name": "E6102_大学数"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1976100000",
+          "name": "1976年度"
+        }
+      },
+      "unit": "校",
+      "value": {
+        "raw": "423",
+        "number": 423,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010105",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "E6102",
+          "name": "E6102_大学数"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1977100000",
+          "name": "1977年度"
+        }
+      },
+      "unit": "校",
+      "value": {
+        "raw": "431",
+        "number": 431,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010105",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "E6102",
+          "name": "E6102_大学数"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1978100000",
+          "name": "1978年度"
+        }
+      },
+      "unit": "校",
+      "value": {
+        "raw": "433",
+        "number": 433,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010105",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "E6102",
+          "name": "E6102_大学数"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1979100000",
+          "name": "1979年度"
+        }
+      },
+      "unit": "校",
+      "value": {
+        "raw": "443",
+        "number": 443,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010105",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "E6102",
+          "name": "E6102_大学数"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1980100000",
+          "name": "1980年度"
+        }
+      },
+      "unit": "校",
+      "value": {
+        "raw": "446",
+        "number": 446,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010105",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "E6102",
+          "name": "E6102_大学数"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1981100000",
+          "name": "1981年度"
+        }
+      },
+      "unit": "校",
+      "value": {
+        "raw": "451",
+        "number": 451,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010105",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "E6102",
+          "name": "E6102_大学数"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1982100000",
+          "name": "1982年度"
+        }
+      },
+      "unit": "校",
+      "value": {
+        "raw": "455",
+        "number": 455,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010105",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "E6102",
+          "name": "E6102_大学数"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1983100000",
+          "name": "1983年度"
+        }
+      },
+      "unit": "校",
+      "value": {
+        "raw": "457",
+        "number": 457,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010105",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "E6102",
+          "name": "E6102_大学数"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1984100000",
+          "name": "1984年度"
+        }
+      },
+      "unit": "校",
+      "value": {
+        "raw": "460",
+        "number": 460,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010105",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "E6102",
+          "name": "E6102_大学数"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1985100000",
+          "name": "1985年度"
+        }
+      },
+      "unit": "校",
+      "value": {
+        "raw": "460",
+        "number": 460,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010105",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "E6102",
+          "name": "E6102_大学数"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1986100000",
+          "name": "1986年度"
+        }
+      },
+      "unit": "校",
+      "value": {
+        "raw": "465",
+        "number": 465,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010105",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "E6102",
+          "name": "E6102_大学数"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1987100000",
+          "name": "1987年度"
+        }
+      },
+      "unit": "校",
+      "value": {
+        "raw": "474",
+        "number": 474,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010105",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "E6102",
+          "name": "E6102_大学数"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1988100000",
+          "name": "1988年度"
+        }
+      },
+      "unit": "校",
+      "value": {
+        "raw": "490",
+        "number": 490,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010105",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "E6102",
+          "name": "E6102_大学数"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1989100000",
+          "name": "1989年度"
+        }
+      },
+      "unit": "校",
+      "value": {
+        "raw": "499",
+        "number": 499,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010105",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "E6102",
+          "name": "E6102_大学数"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1990100000",
+          "name": "1990年度"
+        }
+      },
+      "unit": "校",
+      "value": {
+        "raw": "507",
+        "number": 507,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010105",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "E6102",
+          "name": "E6102_大学数"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1991100000",
+          "name": "1991年度"
+        }
+      },
+      "unit": "校",
+      "value": {
+        "raw": "514",
+        "number": 514,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010105",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "E6102",
+          "name": "E6102_大学数"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1992100000",
+          "name": "1992年度"
+        }
+      },
+      "unit": "校",
+      "value": {
+        "raw": "523",
+        "number": 523,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010105",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "E6102",
+          "name": "E6102_大学数"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1993100000",
+          "name": "1993年度"
+        }
+      },
+      "unit": "校",
+      "value": {
+        "raw": "534",
+        "number": 534,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010105",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "E6102",
+          "name": "E6102_大学数"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1994100000",
+          "name": "1994年度"
+        }
+      },
+      "unit": "校",
+      "value": {
+        "raw": "552",
+        "number": 552,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010105",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "E6102",
+          "name": "E6102_大学数"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1995100000",
+          "name": "1995年度"
+        }
+      },
+      "unit": "校",
+      "value": {
+        "raw": "565",
+        "number": 565,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010105",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "E6102",
+          "name": "E6102_大学数"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1996100000",
+          "name": "1996年度"
+        }
+      },
+      "unit": "校",
+      "value": {
+        "raw": "576",
+        "number": 576,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010105",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "E6102",
+          "name": "E6102_大学数"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1997100000",
+          "name": "1997年度"
+        }
+      },
+      "unit": "校",
+      "value": {
+        "raw": "586",
+        "number": 586,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010105",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "E6102",
+          "name": "E6102_大学数"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1998100000",
+          "name": "1998年度"
+        }
+      },
+      "unit": "校",
+      "value": {
+        "raw": "604",
+        "number": 604,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010105",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "E6102",
+          "name": "E6102_大学数"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1999100000",
+          "name": "1999年度"
+        }
+      },
+      "unit": "校",
+      "value": {
+        "raw": "622",
+        "number": 622,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010105",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "E6102",
+          "name": "E6102_大学数"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2000100000",
+          "name": "2000年度"
+        }
+      },
+      "unit": "校",
+      "value": {
+        "raw": "649",
+        "number": 649,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010105",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "E6102",
+          "name": "E6102_大学数"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2001100000",
+          "name": "2001年度"
+        }
+      },
+      "unit": "校",
+      "value": {
+        "raw": "669",
+        "number": 669,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010105",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "E6102",
+          "name": "E6102_大学数"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2002100000",
+          "name": "2002年度"
+        }
+      },
+      "unit": "校",
+      "value": {
+        "raw": "686",
+        "number": 686,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010105",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "E6102",
+          "name": "E6102_大学数"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2003100000",
+          "name": "2003年度"
+        }
+      },
+      "unit": "校",
+      "value": {
+        "raw": "702",
+        "number": 702,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010105",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "E6102",
+          "name": "E6102_大学数"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2004100000",
+          "name": "2004年度"
+        }
+      },
+      "unit": "校",
+      "value": {
+        "raw": "709",
+        "number": 709,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010105",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "E6102",
+          "name": "E6102_大学数"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2005100000",
+          "name": "2005年度"
+        }
+      },
+      "unit": "校",
+      "value": {
+        "raw": "726",
+        "number": 726,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010105",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "E6102",
+          "name": "E6102_大学数"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2006100000",
+          "name": "2006年度"
+        }
+      },
+      "unit": "校",
+      "value": {
+        "raw": "744",
+        "number": 744,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010105",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "E6102",
+          "name": "E6102_大学数"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2007100000",
+          "name": "2007年度"
+        }
+      },
+      "unit": "校",
+      "value": {
+        "raw": "756",
+        "number": 756,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010105",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "E6102",
+          "name": "E6102_大学数"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2008100000",
+          "name": "2008年度"
+        }
+      },
+      "unit": "校",
+      "value": {
+        "raw": "765",
+        "number": 765,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010105",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "E6102",
+          "name": "E6102_大学数"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2009100000",
+          "name": "2009年度"
+        }
+      },
+      "unit": "校",
+      "value": {
+        "raw": "773",
+        "number": 773,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010105",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "E6102",
+          "name": "E6102_大学数"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2010100000",
+          "name": "2010年度"
+        }
+      },
+      "unit": "校",
+      "value": {
+        "raw": "778",
+        "number": 778,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010105",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "E6102",
+          "name": "E6102_大学数"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2011100000",
+          "name": "2011年度"
+        }
+      },
+      "unit": "校",
+      "value": {
+        "raw": "780",
+        "number": 780,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010105",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "E6102",
+          "name": "E6102_大学数"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2012100000",
+          "name": "2012年度"
+        }
+      },
+      "unit": "校",
+      "value": {
+        "raw": "783",
+        "number": 783,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010105",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "E6102",
+          "name": "E6102_大学数"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2013100000",
+          "name": "2013年度"
+        }
+      },
+      "unit": "校",
+      "value": {
+        "raw": "782",
+        "number": 782,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010105",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "E6102",
+          "name": "E6102_大学数"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2014100000",
+          "name": "2014年度"
+        }
+      },
+      "unit": "校",
+      "value": {
+        "raw": "781",
+        "number": 781,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010105",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "E6102",
+          "name": "E6102_大学数"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2015100000",
+          "name": "2015年度"
+        }
+      },
+      "unit": "校",
+      "value": {
+        "raw": "779",
+        "number": 779,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010105",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "E6102",
+          "name": "E6102_大学数"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2016100000",
+          "name": "2016年度"
+        }
+      },
+      "unit": "校",
+      "value": {
+        "raw": "777",
+        "number": 777,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010105",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "E6102",
+          "name": "E6102_大学数"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2017100000",
+          "name": "2017年度"
+        }
+      },
+      "unit": "校",
+      "value": {
+        "raw": "780",
+        "number": 780,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010105",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "E6102",
+          "name": "E6102_大学数"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2018100000",
+          "name": "2018年度"
+        }
+      },
+      "unit": "校",
+      "value": {
+        "raw": "782",
+        "number": 782,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010105",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "E6102",
+          "name": "E6102_大学数"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2019100000",
+          "name": "2019年度"
+        }
+      },
+      "unit": "校",
+      "value": {
+        "raw": "786",
+        "number": 786,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010105",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "E6102",
+          "name": "E6102_大学数"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2020100000",
+          "name": "2020年度"
+        }
+      },
+      "unit": "校",
+      "value": {
+        "raw": "795",
+        "number": 795,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010105",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "E6102",
+          "name": "E6102_大学数"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2021100000",
+          "name": "2021年度"
+        }
+      },
+      "unit": "校",
+      "value": {
+        "raw": "803",
+        "number": 803,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010105",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "E6102",
+          "name": "E6102_大学数"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2022100000",
+          "name": "2022年度"
+        }
+      },
+      "unit": "校",
+      "value": {
+        "raw": "807",
+        "number": 807,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010105",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "E6102",
+          "name": "E6102_大学数"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2023100000",
+          "name": "2023年度"
+        }
+      },
+      "unit": "校",
+      "value": {
+        "raw": "810",
+        "number": 810,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010105",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "E6102",
+          "name": "E6102_大学数"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2024100000",
+          "name": "2024年度"
+        }
+      },
+      "unit": "校",
+      "value": {
+        "raw": "813",
+        "number": 813,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010105",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "E6302",
+          "name": "E6302_大学学生数"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1975100000",
+          "name": "1975年度"
+        }
+      },
+      "unit": "人",
+      "value": {
+        "raw": "1652003",
+        "number": 1652003,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010105",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "E6302",
+          "name": "E6302_大学学生数"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1976100000",
+          "name": "1976年度"
+        }
+      },
+      "unit": "人",
+      "value": {
+        "raw": "1702235",
+        "number": 1702235,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010105",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "E6302",
+          "name": "E6302_大学学生数"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1977100000",
+          "name": "1977年度"
+        }
+      },
+      "unit": "人",
+      "value": {
+        "raw": "1747057",
+        "number": 1747057,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010105",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "E6302",
+          "name": "E6302_大学学生数"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1978100000",
+          "name": "1978年度"
+        }
+      },
+      "unit": "人",
+      "value": {
+        "raw": "1769331",
+        "number": 1769331,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010105",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "E6302",
+          "name": "E6302_大学学生数"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1979100000",
+          "name": "1979年度"
+        }
+      },
+      "unit": "人",
+      "value": {
+        "raw": "1754343",
+        "number": 1754343,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010105",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "E6302",
+          "name": "E6302_大学学生数"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1980100000",
+          "name": "1980年度"
+        }
+      },
+      "unit": "人",
+      "value": {
+        "raw": "1741504",
+        "number": 1741504,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010105",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "E6302",
+          "name": "E6302_大学学生数"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1981100000",
+          "name": "1981年度"
+        }
+      },
+      "unit": "人",
+      "value": {
+        "raw": "1725814",
+        "number": 1725814,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010105",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "E6302",
+          "name": "E6302_大学学生数"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1982100000",
+          "name": "1982年度"
+        }
+      },
+      "unit": "人",
+      "value": {
+        "raw": "1716956",
+        "number": 1716956,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010105",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "E6302",
+          "name": "E6302_大学学生数"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1983100000",
+          "name": "1983年度"
+        }
+      },
+      "unit": "人",
+      "value": {
+        "raw": "1729632",
+        "number": 1729632,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010105",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "E6302",
+          "name": "E6302_大学学生数"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1984100000",
+          "name": "1984年度"
+        }
+      },
+      "unit": "人",
+      "value": {
+        "raw": "1734080",
+        "number": 1734080,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010105",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "E6302",
+          "name": "E6302_大学学生数"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1985100000",
+          "name": "1985年度"
+        }
+      },
+      "unit": "人",
+      "value": {
+        "raw": "1734392",
+        "number": 1734392,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010105",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "E6302",
+          "name": "E6302_大学学生数"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1986100000",
+          "name": "1986年度"
+        }
+      },
+      "unit": "人",
+      "value": {
+        "raw": "1758635",
+        "number": 1758635,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010105",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "E6302",
+          "name": "E6302_大学学生数"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1987100000",
+          "name": "1987年度"
+        }
+      },
+      "unit": "人",
+      "value": {
+        "raw": "1806024",
+        "number": 1806024,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010105",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "E6302",
+          "name": "E6302_大学学生数"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1988100000",
+          "name": "1988年度"
+        }
+      },
+      "unit": "人",
+      "value": {
+        "raw": "1861306",
+        "number": 1861306,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010105",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "E6302",
+          "name": "E6302_大学学生数"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1989100000",
+          "name": "1989年度"
+        }
+      },
+      "unit": "人",
+      "value": {
+        "raw": "1929137",
+        "number": 1929137,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010105",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "E6302",
+          "name": "E6302_大学学生数"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1990100000",
+          "name": "1990年度"
+        }
+      },
+      "unit": "人",
+      "value": {
+        "raw": "1988572",
+        "number": 1988572,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010105",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "E6302",
+          "name": "E6302_大学学生数"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1991100000",
+          "name": "1991年度"
+        }
+      },
+      "unit": "人",
+      "value": {
+        "raw": "2052335",
+        "number": 2052335,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010105",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "E6302",
+          "name": "E6302_大学学生数"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1992100000",
+          "name": "1992年度"
+        }
+      },
+      "unit": "人",
+      "value": {
+        "raw": "2127713",
+        "number": 2127713,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010105",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "E6302",
+          "name": "E6302_大学学生数"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1993100000",
+          "name": "1993年度"
+        }
+      },
+      "unit": "人",
+      "value": {
+        "raw": "2209028",
+        "number": 2209028,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010105",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "E6302",
+          "name": "E6302_大学学生数"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1994100000",
+          "name": "1994年度"
+        }
+      },
+      "unit": "人",
+      "value": {
+        "raw": "2281774",
+        "number": 2281774,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010105",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "E6302",
+          "name": "E6302_大学学生数"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1995100000",
+          "name": "1995年度"
+        }
+      },
+      "unit": "人",
+      "value": {
+        "raw": "2330831",
+        "number": 2330831,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010105",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "E6302",
+          "name": "E6302_大学学生数"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1996100000",
+          "name": "1996年度"
+        }
+      },
+      "unit": "人",
+      "value": {
+        "raw": "2368992",
+        "number": 2368992,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010105",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "E6302",
+          "name": "E6302_大学学生数"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1997100000",
+          "name": "1997年度"
+        }
+      },
+      "unit": "人",
+      "value": {
+        "raw": "2400278",
+        "number": 2400278,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010105",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "E6302",
+          "name": "E6302_大学学生数"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1998100000",
+          "name": "1998年度"
+        }
+      },
+      "unit": "人",
+      "value": {
+        "raw": "2428269",
+        "number": 2428269,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010105",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "E6302",
+          "name": "E6302_大学学生数"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "1999100000",
+          "name": "1999年度"
+        }
+      },
+      "unit": "人",
+      "value": {
+        "raw": "2448804",
+        "number": 2448804,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010105",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "E6302",
+          "name": "E6302_大学学生数"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2000100000",
+          "name": "2000年度"
+        }
+      },
+      "unit": "人",
+      "value": {
+        "raw": "2471755",
+        "number": 2471755,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010105",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "E6302",
+          "name": "E6302_大学学生数"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2001100000",
+          "name": "2001年度"
+        }
+      },
+      "unit": "人",
+      "value": {
+        "raw": "2487133",
+        "number": 2487133,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010105",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "E6302",
+          "name": "E6302_大学学生数"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2002100000",
+          "name": "2002年度"
+        }
+      },
+      "unit": "人",
+      "value": {
+        "raw": "2499147",
+        "number": 2499147,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010105",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "E6302",
+          "name": "E6302_大学学生数"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2003100000",
+          "name": "2003年度"
+        }
+      },
+      "unit": "人",
+      "value": {
+        "raw": "2509374",
+        "number": 2509374,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010105",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "E6302",
+          "name": "E6302_大学学生数"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2004100000",
+          "name": "2004年度"
+        }
+      },
+      "unit": "人",
+      "value": {
+        "raw": "2505923",
+        "number": 2505923,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010105",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "E6302",
+          "name": "E6302_大学学生数"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2005100000",
+          "name": "2005年度"
+        }
+      },
+      "unit": "人",
+      "value": {
+        "raw": "2508088",
+        "number": 2508088,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010105",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "E6302",
+          "name": "E6302_大学学生数"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2006100000",
+          "name": "2006年度"
+        }
+      },
+      "unit": "人",
+      "value": {
+        "raw": "2504885",
+        "number": 2504885,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010105",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "E6302",
+          "name": "E6302_大学学生数"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2007100000",
+          "name": "2007年度"
+        }
+      },
+      "unit": "人",
+      "value": {
+        "raw": "2514228",
+        "number": 2514228,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010105",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "E6302",
+          "name": "E6302_大学学生数"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2008100000",
+          "name": "2008年度"
+        }
+      },
+      "unit": "人",
+      "value": {
+        "raw": "2520593",
+        "number": 2520593,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010105",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "E6302",
+          "name": "E6302_大学学生数"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2009100000",
+          "name": "2009年度"
+        }
+      },
+      "unit": "人",
+      "value": {
+        "raw": "2527319",
+        "number": 2527319,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010105",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "E6302",
+          "name": "E6302_大学学生数"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2010100000",
+          "name": "2010年度"
+        }
+      },
+      "unit": "人",
+      "value": {
+        "raw": "2559191",
+        "number": 2559191,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010105",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "E6302",
+          "name": "E6302_大学学生数"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2011100000",
+          "name": "2011年度"
+        }
+      },
+      "unit": "人",
+      "value": {
+        "raw": "2569349",
+        "number": 2569349,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010105",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "E6302",
+          "name": "E6302_大学学生数"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2012100000",
+          "name": "2012年度"
+        }
+      },
+      "unit": "人",
+      "value": {
+        "raw": "2560909",
+        "number": 2560909,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010105",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "E6302",
+          "name": "E6302_大学学生数"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2013100000",
+          "name": "2013年度"
+        }
+      },
+      "unit": "人",
+      "value": {
+        "raw": "2562068",
+        "number": 2562068,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010105",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "E6302",
+          "name": "E6302_大学学生数"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2014100000",
+          "name": "2014年度"
+        }
+      },
+      "unit": "人",
+      "value": {
+        "raw": "2552022",
+        "number": 2552022,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010105",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "E6302",
+          "name": "E6302_大学学生数"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2015100000",
+          "name": "2015年度"
+        }
+      },
+      "unit": "人",
+      "value": {
+        "raw": "2556062",
+        "number": 2556062,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010105",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "E6302",
+          "name": "E6302_大学学生数"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2016100000",
+          "name": "2016年度"
+        }
+      },
+      "unit": "人",
+      "value": {
+        "raw": "2567030",
+        "number": 2567030,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010105",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "E6302",
+          "name": "E6302_大学学生数"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2017100000",
+          "name": "2017年度"
+        }
+      },
+      "unit": "人",
+      "value": {
+        "raw": "2582670",
+        "number": 2582670,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010105",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "E6302",
+          "name": "E6302_大学学生数"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2018100000",
+          "name": "2018年度"
+        }
+      },
+      "unit": "人",
+      "value": {
+        "raw": "2599684",
+        "number": 2599684,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010105",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "E6302",
+          "name": "E6302_大学学生数"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2019100000",
+          "name": "2019年度"
+        }
+      },
+      "unit": "人",
+      "value": {
+        "raw": "2609148",
+        "number": 2609148,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010105",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "E6302",
+          "name": "E6302_大学学生数"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2020100000",
+          "name": "2020年度"
+        }
+      },
+      "unit": "人",
+      "value": {
+        "raw": "2623572",
+        "number": 2623572,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010105",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "E6302",
+          "name": "E6302_大学学生数"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2021100000",
+          "name": "2021年度"
+        }
+      },
+      "unit": "人",
+      "value": {
+        "raw": "2625688",
+        "number": 2625688,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010105",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "E6302",
+          "name": "E6302_大学学生数"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2022100000",
+          "name": "2022年度"
+        }
+      },
+      "unit": "人",
+      "value": {
+        "raw": "2632216",
+        "number": 2632216,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010105",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "E6302",
+          "name": "E6302_大学学生数"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2023100000",
+          "name": "2023年度"
+        }
+      },
+      "unit": "人",
+      "value": {
+        "raw": "2632775",
+        "number": 2632775,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0000010105",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "E6302",
+          "name": "E6302_大学学生数"
+        },
+        "tab": {
+          "code": "00001",
+          "name": "観測値"
+        },
+        "time": {
+          "code": "2024100000",
+          "name": "2024年度"
+        }
+      },
+      "unit": "人",
+      "value": {
+        "raw": "2628310",
+        "number": 2628310,
+        "kind": "number"
+      }
+    }
+  ]
+}

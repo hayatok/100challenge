@@ -1,0 +1,30 @@
+{
+  "command": [
+    "/Users/hayatok/.local/bin/estat",
+    "data",
+    "get",
+    "0002060053",
+    "--filter",
+    "cat01=A009",
+    "--filter",
+    "cat02=0",
+    "--filter",
+    "cat03=00",
+    "--filter",
+    "area=00000",
+    "--max-records",
+    "100",
+    "--timeout",
+    "30s",
+    "-o",
+    "json"
+  ],
+  "started_at": "2026-10-16T09:12:03.567844+00:00",
+  "finished_at": "2026-10-16T09:12:03.968816+00:00",
+  "exit_code": 0,
+  "json_valid": true,
+  "redacted_fields": 0,
+  "output_path": "evidence/estat/r2_demography/legacy_manufacturing_data.json",
+  "sha256": "20326862affbdb626e02d126efa0a2a943cf37ccdf2f210accbffc7f099f3c34",
+  "stderr": ""
+}

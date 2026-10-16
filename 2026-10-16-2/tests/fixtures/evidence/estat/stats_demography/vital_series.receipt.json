@@ -1,0 +1,23 @@
+{
+  "command": [
+    "/Users/hayatok/.local/bin/estat",
+    "data",
+    "get",
+    "0003411561",
+    "--filter",
+    "cat01=00110,00150,00270",
+    "--max-records",
+    "400",
+    "--timeout",
+    "30s",
+    "-o",
+    "json"
+  ],
+  "started_at": "2026-10-16T07:25:38.351887+00:00",
+  "finished_at": "2026-10-16T07:25:38.819959+00:00",
+  "exit_code": 0,
+  "json_valid": true,
+  "output_path": "evidence/estat/stats_demography/vital_series.json",
+  "sha256": "2aef19512e260f470ff3cb8565b3fb85d8770200b6a256e48df8b3ee935e4a25",
+  "stderr": ""
+}

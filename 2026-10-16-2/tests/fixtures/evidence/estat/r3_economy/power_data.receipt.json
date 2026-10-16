@@ -1,0 +1,29 @@
+{
+  "command": [
+    "/Users/hayatok/.local/bin/estat",
+    "data",
+    "get",
+    "0003409159",
+    "--filter",
+    "tab=140,160",
+    "--filter",
+    "cat01=120",
+    "--filter",
+    "cat02=100",
+    "--all-pages",
+    "--max-records",
+    "150",
+    "--timeout",
+    "25s",
+    "-o",
+    "json"
+  ],
+  "started_at": "2026-10-16T15:01:04.512968+00:00",
+  "finished_at": "2026-10-16T15:01:05.564319+00:00",
+  "exit_code": 0,
+  "json_valid": true,
+  "redacted_fields": 0,
+  "output_path": "evidence/estat/r3_economy/power_data.json",
+  "sha256": "228c67af452ba6d81a2ab66c562ec02b819500ca8a499dd0a7d0f9143103f305",
+  "stderr": ""
+}

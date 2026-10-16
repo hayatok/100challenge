@@ -1,0 +1,15 @@
+Made with Natural Earth.
+
+Geography: Natural Earth, ne_50m_admin_0_countries.geojson, Japan ADMIN feature.
+Official repository: https://github.com/nvkelso/natural-earth-vector
+Download: https://raw.githubusercontent.com/nvkelso/natural-earth-vector/master/geojson/ne_50m_admin_0_countries.geojson
+License: public domain, confirmed 2026-10-16.
+Primary terms: https://www.naturalearthdata.com/about/terms-of-use/
+Source SHA-256: 3e458fc036ad0a66411f2c1e6cac49c5d7bfb81cb1123bc513b22511a2b7fdeb
+Derived japan.geo.json SHA-256: 99d09c80bd40769cd970de09ebd091da53bfaf34c04cffc1c1db26cd81d808dc
+Transformation: select ADMIN=Japan, preserve all 34 polygons and rings, round coordinates to 5 decimal degrees. No dependency or coordinate simplification.
+Renderer: equirectangular reference, longitude multiplied by cos(36 degrees). Main map viewport focuses on 125–147 E, 24–46 N. Some far offshore islands are outside the viewport; source geometry retains them.
+
+現在の日本列島の地形輪郭を参照するための資料です。1900年その他の年の政治領域、国境の変遷、領有の主張を示す歴史地図ではありません。政府統計ではありません。12地域の架空町の位置、建物、田畑、人物、交通や山並みは作者の模型配置であり、地域の実測人口・路線・地形を表しません。
+
+All miniature buildings, fields, trees, people, vehicles, waterways and cover decoration are original code-native artwork created for 箱庭日本. No externally sourced raster graphics, fonts, or generation model assets are included.

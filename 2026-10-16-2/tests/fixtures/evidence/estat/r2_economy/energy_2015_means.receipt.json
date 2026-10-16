@@ -1,0 +1,29 @@
+{
+  "command": [
+    "/Users/hayatok/.local/bin/estat",
+    "data",
+    "get",
+    "0003303599",
+    "--filter",
+    "cat01=120",
+    "--filter",
+    "cat02=0120,0260,0400,0540,0680",
+    "--filter",
+    "cat03=0100,0110,0120,0200",
+    "--all-pages",
+    "--max-records",
+    "100",
+    "-o",
+    "json",
+    "--timeout",
+    "25s"
+  ],
+  "started_at": "2026-10-16T09:23:50.564285+00:00",
+  "finished_at": "2026-10-16T09:23:51.506892+00:00",
+  "exit_code": 0,
+  "json_valid": true,
+  "redacted_fields": 0,
+  "output_path": "evidence/estat/r2_economy/energy_2015_means.json",
+  "sha256": "9576f44214abc0fb20e0cbc4dfdcac80ac94492cecd9cdef031b4908283262bd",
+  "stderr": ""
+}

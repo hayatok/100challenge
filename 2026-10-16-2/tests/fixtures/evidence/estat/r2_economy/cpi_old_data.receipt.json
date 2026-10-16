@@ -1,0 +1,31 @@
+{
+  "command": [
+    "/Users/hayatok/.local/bin/estat",
+    "data",
+    "get",
+    "0002050001",
+    "--filter",
+    "tab=1",
+    "--filter",
+    "cat01=0001",
+    "--filter",
+    "area=00000",
+    "--filter",
+    "time=1970000000,1980000000,1990000000,2000000000,2005000000,2010000000",
+    "--all-pages",
+    "--max-records",
+    "100",
+    "-o",
+    "json",
+    "--timeout",
+    "25s"
+  ],
+  "started_at": "2026-10-16T09:25:15.088439+00:00",
+  "finished_at": "2026-10-16T09:25:15.531269+00:00",
+  "exit_code": 0,
+  "json_valid": true,
+  "redacted_fields": 0,
+  "output_path": "evidence/estat/r2_economy/cpi_old_data.json",
+  "sha256": "c5f4e4fa1a092ea30abc27a93a1f0022379aed35f916d7a21cb61530f411ac8f",
+  "stderr": ""
+}
