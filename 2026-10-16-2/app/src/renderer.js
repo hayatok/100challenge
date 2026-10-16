@@ -166,19 +166,19 @@ export function createRenderer(canvas, {geometry, onPlaceSelect=()=>{}, onPerson
   function person(person,x,y,scale,t,selected=false) {
     t=motionClock;
     const seed=hash(person.id),color=['#b45d46','#6a8da0','#d0a657','#76966f','#977f93'][Math.floor(seed*5)];
-    const pose=person.scene?.pose||'walk',work=['work','care','study'].includes(pose),rest=['rest','eat','study'].includes(pose),talk=['talk','queue'].includes(pose);
-    ctx.save();ctx.translate(x,y);ctx.scale(scale*(person.age<6?.77:person.age>=75?.92:1),scale*(person.age<6?.77:person.age>=75?.92:1));if(pose==='play')ctx.translate(0,-Math.max(0,Math.sin(t*3+seed*9))*1.8);shadow(3);const step=pose==='walk'?Math.sin(t*7+seed*9)*1.2:0,arm=work?Math.sin(t*3+seed*9)*1.2:talk?-.7:0;
+    const pose=person.scene?.pose||'walk',work=['work','care','study'].includes(pose),rest=['rest','eat','study'].includes(pose),talk=pose==='talk',facing=person.facingId?(person.id<person.facingId?1:-1):1,energy=clamp(number(person.scene?.conversationEnergy,1),.7,1.6);
+    ctx.save();ctx.translate(x,y);ctx.scale(scale*(person.age<6?.77:person.age>=75?.92:1),scale*(person.age<6?.77:person.age>=75?.92:1));if(pose==='play')ctx.translate(0,-Math.max(0,Math.sin(t*3+seed*9))*1.8);shadow(3);const step=pose==='walk'?Math.sin(t*7+seed*9)*1.2:0,arm=work?Math.sin(t*3+seed*9)*1.2:talk?-.7+Math.sin(t*2.3+seed*9)*.65*energy:0;
     if(selected){ellipse(0,0,10,5,'#fff2bc',C.roof,1.7);line([[0,-16],[0,-23]],C.roof,1.8);poly([[0,-27],[-3,-24],[0,-21],[3,-24]],C.roof,null);}
     if(rest){line([[-5,-2],[5,-2]],C.wood,2);line([[-4,-2],[-4,2]],C.wood,1);line([[4,-2],[4,2]],C.wood,1);}
     if(rest){line([[-2,-3],[-4,-1],[0,0]],'#52675a',1.7);line([[1,-3],[4,-1],[5,0]],'#52675a',1.7);}
     else {line([[-1,-3],[-2+step,0]],'#52675a',1.6);line([[1,-3],[2-step,0]],'#52675a',1.6);}
-    poly([[-2,-8],[2,-8],[3,era.from<1955?-1:-3],[-3,era.from<1955?-1:-3]],color,C.ink,.45);if(era.from<1955)line([[-2,-7],[2,-3]],'#e8d6af',.65);line([[-2,-7],[-4+step*.5,-4+arm]],'#d7b48e',1.4);line([[2,-7],[4-step*.5,-4+arm]],'#d7b48e',1.4);
+    poly([[-2,-8],[2,-8],[3,era.from<1955?-1:-3],[-3,era.from<1955?-1:-3]],color,C.ink,.45);if(era.from<1955)line([[-2,-7],[2,-3]],'#e8d6af',.65);line([[-2,-7],[-4+step*.5,-4+arm]],'#d7b48e',1.4);line([[2,-7],[4-step*.5,-4+(talk&&facing<0?0:arm)]],'#d7b48e',1.4);if(talk&&facing<0)line([[-2,-7],[-4,-4+arm]],'#d7b48e',1.4);
     ellipse(0,-10,2.3,2.5,'#dcb890',C.ink,.35);ellipse(-.3,-11.7,2.2,1.3,'#525646');if(era.from<1940&&person.age>15&&seed>.5){ellipse(0,-12.5,3.4,.8,'#b3a076',C.ink,.4);rect(-1.7,-14,3.4,1.5,'#b3a076');}if(person.age>=6&&person.age<15)rect(-3,-7,2.5,4,'#b05f48',C.ink,.4);
     propIcon(person.scene?.prop,4,-4+arm,1,t);
     if(pose==='play'){const bounce=Math.abs(Math.sin(t*3+seed*4))*5;ellipse(7,-2-bounce,2.8,2.8,'#d8ad65',C.ink,.5);}
     if(pose==='study'||pose==='eat'){poly([[-5,-4],[5,-9],[13,-5],[3,0]],C.wood,C.ink,.6);line([[-3,-2],[-3,3]],C.wood,1);line([[10,-3],[10,2]],C.wood,1);propIcon(pose==='study'?'book':'food',4,-6,.65,t);}
     if(work){line([[4,1],[10,-2]],C.wood,1.5);ellipse(8,-2,3,1.4,'#c9b281');}
-    if(talk){ellipse(7,-17,4,3,'#f4efd9',C.ink,.5);ellipse(6,-17,.5,.5,C.ink);ellipse(8,-17,.5,.5,C.ink);}
+    if(talk){ellipse(facing*1.4,-10,.4,.4,C.ink);line([[facing*1.7,-8.9],[facing*2.5,-8.7]],'#9b7158',.45);}
     ctx.restore();
   }
   function vehicle(type,x,y,s=1,heading=1,year=2000) {
@@ -404,19 +404,44 @@ export function createRenderer(canvas, {geometry, onPlaceSelect=()=>{}, onPerson
     // Painter order combines people and buildings, preserving destination space.
     const objects=scenicDistricts(place,snapshot.year).concat(buildings.map(b=>({kind:'building',item:b,pos:local(number(b.x,.5),number(b.y,.5)),depth:number(b.x)+number(b.y)})));
     const people=snapshot.world?.placePeople?.[place.id]||(snapshot.world?.people||[]).filter(p=>p.placeId===place.id&&p.alive!==false);
-    people.forEach(p=>{const person=activePerson(p,t),x=number(person.x,.5),y=number(person.y,.5);const pos=local(x,y),spread=person.scene?.pose==='walk'?8:34;pos[0]+=(hash(person.id+'offset-x')-.5)*spread;pos[1]+=(hash(person.id+'offset-y')-.5)*spread*.6;objects.push({kind:'person',item:person,pos,depth:x+y+(pos[1]-local(x,y)[1])/174});});
+    people.forEach(p=>{const person=activePerson(p,t),x=number(person.x,.5),y=number(person.y,.5),pos=local(x,y),members=person.memberIds||[];
+      if(person.meetingId&&members.includes(person.id)){
+        // The model locates each gathering. Only separate its members visually.
+        const index=members.indexOf(person.id),angle=Math.PI+index/Math.max(1,members.length)*Math.PI*2;pos[0]+=Math.cos(angle)*14;pos[1]+=Math.sin(angle)*7;
+      }else{const spread=person.scene?.pose==='walk'?8:34;pos[0]+=(hash(person.id+'offset-x')-.5)*spread;pos[1]+=(hash(person.id+'offset-y')-.5)*spread*.6;}
+      objects.push({kind:'person',item:person,pos,depth:x+y+(pos[1]-local(x,y)[1])/174});});
     objects.sort((a,b)=>a.depth-b.depth);
     for(const o of objects){const [x,y]=o.pos;if(o.kind==='scenery'){ctx.save();ctx.translate(x,y);ctx.scale(o.scale,o.scale);house(o.item.type,o.item.seed,true,snapshot.year);ctx.restore();}else if(o.kind==='building'){
       ctx.save();ctx.translate(x,y);ctx.scale(1.13,1.13);glyph(o.item.type,hash(o.item.id+place.id),o.item.lit!==false,snapshot.year,t);
       if(o.item.type==='shop'&&place.visual?.priceIndex!==null&&place.visual?.priceIndex!==undefined){rect(-29,15,61,12,'#f8f2dd',C.ink,.5);text(`指数 ${Number(place.visual.priceIndex).toFixed(1)}`,1,21,8.5,C.ink);}ctx.restore();
     }else{person(o.item,x,y,residentScale,t,false);hits.push({type:'person',id:o.item.id,x:cx+x*scale,y:cy+(y-6*residentScale)*scale,r:Math.max(14,10*residentScale*scale)});}}
     const focus=objects.find(o=>o.kind==='person'&&o.item.id===options.selectedPersonId);
+    const conversationMarks=[];
     if(focus){
       const from=local(number(focus.item.from?.x,.5),number(focus.item.from?.y,.5)),to=local(number(focus.item.to?.x,.5),number(focus.item.to?.y,.5));
       if(focus.item.scene?.pose==='walk'){ctx.save();ctx.setLineDash([3,5]);line([from,to],'#a5553d',1.4);ctx.restore();ellipse(to[0],to[1],13,6,'#f9e5a788',C.roof,1.2);}
+      const companionIds=new Set(focus.item.companionIds||[]),partners=focus.item.scene?.pose==='talk'?objects.filter(o=>o.kind==='person'&&companionIds.has(o.item.id)&&o.item.meetingId===focus.item.meetingId).slice(0,2):[];
+      for(const partner of partners){
+        // The actual companion is visible and linked at ground level. No extra
+        // body or speech label is invented, and no name is repeated per person.
+        line([focus.pos,partner.pos],'#ae8f5799',1);ellipse(partner.pos[0],partner.pos[1],9,4.3,'#f6e6b988','#ae8f57',1);person(partner.item,partner.pos[0],partner.pos[1],residentScale,t,false);
+      }
+      if(partners.length){const partner=partners[0],x=(focus.pos[0]+partner.pos[0])/2,y=Math.min(focus.pos[1],partner.pos[1])-34;conversationMarks.push({x,y,focused:true});}
       // Always show the person being followed, including at a tall destination.
       ctx.save();ctx.globalAlpha=.3;ellipse(focus.pos[0],focus.pos[1]-13,16,24,'#fff5ca');ctx.restore();person(focus.item,focus.pos[0],focus.pos[1],residentScale*1.13,t,true);
     }
+    const seenMeetings=new Set(focus?.item.meetingId?[focus.item.meetingId]:[]);
+    for(const o of objects){
+      if(conversationMarks.filter(mark=>!mark.focused).length>=3)break;
+      if(o.kind!=='person'||o.item.scene?.pose!=='talk'||!o.item.meetingId||seenMeetings.has(o.item.meetingId))continue;
+      seenMeetings.add(o.item.meetingId);const x=o.pos[0],y=o.pos[1]-34;
+      if(focus&&Math.hypot(x-focus.pos[0],y-(focus.pos[1]-34))*scale<85)continue;
+      if(conversationMarks.some(mark=>Math.hypot(x-mark.x,y-mark.y)*scale<75))continue;
+      conversationMarks.push({x,y,focused:false});
+    }
+    // A single restrained response mark per separated group replaces the old
+    // bubble on every talk/queue figure. The action label belongs to focus only.
+    for(const mark of conversationMarks){const r=mark.focused?4.2:3.1;ellipse(mark.x,mark.y,r,r*.65,mark.focused?'#fff1ce':'#f1e9d1',mark.focused?C.roof:'#85927a',.65);ellipse(mark.x-1.2,mark.y,.45,.45,C.ink);ellipse(mark.x+1.2,mark.y,.45,.45,C.ink);}
     const schoolBuilding=buildings.find(b=>b.type==='school'),schoolPos=schoolBuilding?local(schoolBuilding.x,schoolBuilding.y):[-90,48];
     for(let i=0;i<count(place.visual?.students,16);i++){const drift=Math.sin(motionClock*.7+i)*3;person({id:`student-${place.id}-${i}`,age:10,scene:{pose:'play'}},schoolPos[0]-26+(i%8)*7+drift,schoolPos[1]+16+Math.floor(i/8)*8,.68,t,false);}
     const vehicles=(snapshot.world?.vehicles||[]).filter(v=>v.placeId===place.id&&v.type==='bus');

@@ -86,7 +86,7 @@ function chartMarkup(tracks,range,year) {
       const color=COLORS[seriesIds.indexOf(segment.entry.id)%COLORS.length];
       const bandLeft=x(segment.from??1900),bandRight=x(Math.min(range[1]+.9,segment.through??2026.9));
       return `${segment.from>range[0]&&segment.from<range[1]?`<line x1="${bandLeft}" x2="${bandLeft}" y1="${top}" y2="${bottom}" class="chart-boundary"/>`:''}${segment.paths.filter(p=>p.length>1).map(path=>`<path d="${path.map((p,i)=>`${i?'L':'M'}${x(timeOf(p)).toFixed(2)},${y(p.value).toFixed(2)}`).join(' ')}" fill="none" stroke="${color}" stroke-width="2" opacity=".78"/>`).join('')}${segment.points.filter(isNumber).map(p=>`<circle cx="${x(timeOf(p)).toFixed(2)}" cy="${y(p.value).toFixed(2)}" r="${p.year===year?4.3:2.8}" fill="${color}" stroke="var(--ui-surface)" stroke-width=".7"><title>${esc(p.timeLabel||p.time_label)}：${esc(p.raw)} ${esc(unitLabel(p.unit||segment.entry.unit))}</title></circle>`).join('')}`;
-    }).join('')}${!points.length?`<text x="510" y="128" text-anchor="middle" class="chart-empty">この期間の原観測はありません。期間や記録を選び直せます。</text>`:''}<line class="chart-cursor" x1="${x(year)}" x2="${x(year)}" y1="${top}" y2="${bottom}"/><rect x="${left}" y="${top}" width="${right-left}" height="${bottom-top}" fill="transparent" class="chart-hit"/></svg></div>`;
+    }).join('')}${!points.length?`<text x="510" y="128" text-anchor="middle" class="chart-empty">この期間の原観測はありません。期間や記録を選び直せます。</text>`:''}<line class="chart-cursor" x1="${x(year)}" x2="${x(year)}" y1="${top}" y2="${bottom}"/><rect x="${left}" y="${top}" width="${right-left}" height="${bottom-top}" fill="transparent" class="chart-hit"/><rect class="chart-brush" x="74" y="28" width="0" height="197"/><text class="chart-brush-label" x="78" y="20"></text></svg></div>`;
   }).join('')+`<div class="chart-legend">${seriesIds.map((id,i)=>{const related=tracks.filter(t=>t.entry.id===id),t=related[0],dates=related.flatMap(track=>track.entry.points.filter(p=>within(p,track))).map(p=>p.year);return `<span><i data-series-color="${COLORS[i%COLORS.length]}"></i>${esc(cleanSeriesLabel(t.entry.label))}${dates.length?` ／ ${Math.min(...dates)}–${Math.max(...dates)}`:''}</span>`;}).join('')}</div>`;
 }
 
@@ -110,11 +110,18 @@ export function mountChart(root,tracks,{year=1900,onYear=()=>{},onSeries=()=>{},
   function timeFromEvent(e) {return coordinates(e).time;}
   function foundFromEvent(e) {const {time,yRatio}=coordinates(e);return nearestObservation(tracks,time,{range,unit:e.currentTarget.dataset.chartUnit||null,yRatio});}
   function showFound(found){const others=observationsAt(tracks,found.point.year).filter(item=>item.point.id!==found.point.id);show([found,...others],found.point.year);}
+  function previewBrush(surface,time) {
+    const x=value=>74+(value-range[0])/Math.max(1,range[1]-range[0]+.9)*876;
+    const first=Math.min(dragStart,time),last=Math.max(dragStart,time),rect=surface.querySelector('.chart-brush'),label=surface.querySelector('.chart-brush-label');
+    rect.setAttribute('x',x(first));rect.setAttribute('width',Math.max(1,x(last)-x(first)));
+    label.setAttribute('x',Math.min(780,Math.max(78,x(first)+4)));label.textContent=`${Math.floor(first)}–${Math.min(2026,Math.ceil(last))}年を拡大`;
+    surface.classList.add('chart-brushing');
+  }
   function bindSurfaces() {drawing.querySelectorAll('[data-chart-surface]').forEach(surface=>{
-    surface.addEventListener('pointermove',e=>{if(dragStart!==null)return;const found=foundFromEvent(e);if(found)showFound(found);});
-    surface.addEventListener('pointerdown',e=>{dragStart=timeFromEvent(e);surface.setPointerCapture(e.pointerId);});
-    surface.addEventListener('pointerup',e=>{if(dragStart===null)return;const end=timeFromEvent(e),start=dragStart;dragStart=null;if(Math.abs(start-end)>3){range=[Math.max(1900,Math.floor(Math.min(start,end))),Math.min(2026,Math.ceil(Math.max(start,end)))];draw();bindSurfaces();}else{const found=foundFromEvent(e);if(found){showFound(found);onYear(found.point.year);}}});
-    surface.addEventListener('pointercancel',()=>{dragStart=null;});
+    surface.addEventListener('pointermove',e=>{if(dragStart!==null){previewBrush(surface,timeFromEvent(e));return;}const found=foundFromEvent(e);if(found)showFound(found);});
+    surface.addEventListener('pointerdown',e=>{dragStart=timeFromEvent(e);surface.setPointerCapture(e.pointerId);previewBrush(surface,dragStart);});
+    surface.addEventListener('pointerup',e=>{if(dragStart===null)return;const end=timeFromEvent(e),start=dragStart;dragStart=null;surface.classList.remove('chart-brushing');if(Math.abs(start-end)>3){range=[Math.max(1900,Math.floor(Math.min(start,end))),Math.min(2026,Math.ceil(Math.max(start,end)))];draw();bindSurfaces();}else{const found=foundFromEvent(e);if(found){showFound(found);onYear(found.point.year);}}});
+    surface.addEventListener('pointercancel',()=>{dragStart=null;surface.classList.remove('chart-brushing');});
   });}
   root.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
     if(b.dataset.range){range=b.dataset.range.split(',').map(Number);draw();bindSurfaces();}
