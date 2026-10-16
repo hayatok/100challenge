@@ -1,0 +1,20 @@
+{
+  "command": [
+    "/Users/hayatok/.local/bin/estat",
+    "tables",
+    "describe",
+    "0002060053",
+    "--explanations",
+    "--timeout",
+    "30s",
+    "-o",
+    "raw"
+  ],
+  "started_at": "2026-10-16T09:09:14.323038+00:00",
+  "finished_at": "2026-10-16T09:09:14.943525+00:00",
+  "exit_code": 0,
+  "json_valid": true,
+  "output_path": "evidence/estat/r2_demography/labor_old_raw.json",
+  "sha256": "f2eddfd433010a329ef09a66437e1ec72d0e870753b8592d341b9738e68191a2",
+  "stderr": ""
+}

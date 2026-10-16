@@ -1,0 +1,294 @@
+{
+  "version": 1,
+  "phases": [
+    {
+      "year": 1955,
+      "title": "住まいと仕事のあいだ",
+      "summary": "家から仕事場へ、そして日々の買物へ。暮らしの道をつなぐことから、町を育てよう。",
+      "statistics": [
+        {
+          "title": "製造業で働く人（当時の産業分類）",
+          "year": 1955,
+          "value": 757,
+          "raw": "757",
+          "unit": "万人",
+          "scope": "全国（原表の地域表示）・男女総数・従業上の地位総数・旧分類「*製造業」・年次",
+          "tableId": "0002060053",
+          "url": "https://www.e-stat.go.jp/dbview?sid=0002060053",
+          "institution": "総務省",
+          "checkedAt": "2026-10-16T09:12:03.968816+00:00",
+          "sourceFile": "tests/fixtures/estat/legacy_manufacturing_data.json",
+          "receiptFile": "tests/fixtures/estat/legacy_manufacturing_data.receipt.json",
+          "dimensions": {
+            "area": {
+              "code": "00000",
+              "name": "全国"
+            },
+            "cat01": {
+              "code": "A009",
+              "name": "*製造業"
+            },
+            "cat02": {
+              "code": "0",
+              "name": "総数"
+            },
+            "cat03": {
+              "code": "00",
+              "name": "総数"
+            },
+            "tab": {
+              "code": "01",
+              "name": "実数(人口)"
+            },
+            "time": {
+              "code": "1955000000",
+              "name": "1955年"
+            }
+          },
+          "notes": [
+            "1955年の掲載値1点。町の働き手の人数や職業の割合を示す値ではない。",
+            "「*製造業」の*は、現行の同名産業分類と内容が一致しないことを示す。他年の現行分類とは接続しない。",
+            "原表は全国・年次と表示。当時の対象領域や調査から除かれた人の詳しい範囲は、今回確認した表の説明だけでは確定していない。現在の日本の領域や全住民へ読み替えない。",
+            "標本調査の全国集計。個人の就業確率や、町の仕事場の効果へ変換しない。"
+          ],
+          "definitionFile": "tests/fixtures/estat/labor_old_raw.json",
+          "definitionReceiptFile": "tests/fixtures/estat/labor_old_raw.receipt.json"
+        }
+      ],
+      "events": [
+        {
+          "id": "TOWN-E001",
+          "title": "日本住宅公団の設立",
+          "description": "日本住宅公団が設立された。住まいとまちづくりを考える、この章の時代背景の一つ。",
+          "date": "1955",
+          "datePrecision": "year",
+          "url": "https://www.ur-net.go.jp/aboutus/history.html",
+          "institution": "UR都市機構",
+          "sourceTitle": "沿革",
+          "locator": "「URの歴史」直後の組織変遷図の代替テキスト、1955年の日本住宅公団設立",
+          "qualification": "設立組織を継ぐ機関による沿革。ここでは年までを採り、個々の住民の入居や住宅事情を代表するものとは扱わない。",
+          "checkedAt": "2026-10-16",
+          "sourceType": "組織を継ぐ公的機関による沿革"
+        }
+      ],
+      "living": [],
+      "gameNote": "この町の6人、建物の定員、歩ける距離、工事予算は作者が決めたゲームの設定。全国の就業者数から算出したものではない。"
+    },
+    {
+      "year": 1973,
+      "title": "川の向こうも、ご近所に",
+      "summary": "第一次石油危機の年。新しい隣人を迎え、川の向こうの家にも買物へ行ける道を届けよう。",
+      "statistics": [
+        {
+          "title": "消費者物価指数・総合",
+          "year": 1973,
+          "value": 34.5,
+          "raw": "34.5",
+          "unit": "指数（2025年=100）",
+          "scope": "全国・暦年平均",
+          "tableId": "0004052037",
+          "url": "https://www.e-stat.go.jp/dbview?sid=0004052037",
+          "institution": "総務省",
+          "checkedAt": "2026-10-16T09:25:15.534985+00:00",
+          "sourceFile": "tests/fixtures/estat/cpi_new_calendar.json",
+          "receiptFile": "tests/fixtures/estat/cpi_new_calendar.receipt.json",
+          "dimensions": {
+            "area": {
+              "code": "00000",
+              "name": "全国"
+            },
+            "cat01": {
+              "code": "0001",
+              "name": "0001 総合"
+            },
+            "tab": {
+              "code": "1",
+              "name": "指数"
+            },
+            "time": {
+              "code": "1973000000",
+              "name": "1973年"
+            }
+          },
+          "notes": [
+            "全国の暦年平均。2025年=100の公式接続指数で、金額ではない。",
+            "1970年からの取得済み系列から、この年の観測値だけを表示。1955年の値はこの系列にない。",
+            "品目とウエイトは時代によって変わる。旧基準の水準を継ぎ足さず、公表変化率や個人の生活費へ換算しない。",
+            "町の工事費・商店価格・住民の買物需要を推計する根拠には使わない。"
+          ]
+        },
+        {
+          "title": "消費者物価指数・食料",
+          "year": 1973,
+          "value": 28.4,
+          "raw": "28.4",
+          "unit": "指数（2025年=100）",
+          "scope": "全国・暦年平均",
+          "tableId": "0004052037",
+          "url": "https://www.e-stat.go.jp/dbview?sid=0004052037",
+          "institution": "総務省",
+          "checkedAt": "2026-10-16T09:25:15.534985+00:00",
+          "sourceFile": "tests/fixtures/estat/cpi_new_calendar.json",
+          "receiptFile": "tests/fixtures/estat/cpi_new_calendar.receipt.json",
+          "dimensions": {
+            "area": {
+              "code": "00000",
+              "name": "全国"
+            },
+            "cat01": {
+              "code": "0002",
+              "name": "0002 食料"
+            },
+            "tab": {
+              "code": "1",
+              "name": "指数"
+            },
+            "time": {
+              "code": "1973000000",
+              "name": "1973年"
+            }
+          },
+          "notes": [
+            "全国の暦年平均。2025年=100の公式接続指数で、金額ではない。",
+            "1970年からの取得済み系列から、この年の観測値だけを表示。1955年の値はこの系列にない。",
+            "品目とウエイトは時代によって変わる。旧基準の水準を継ぎ足さず、公表変化率や個人の生活費へ換算しない。",
+            "町の工事費・商店価格・住民の買物需要を推計する根拠には使わない。"
+          ]
+        }
+      ],
+      "events": [
+        {
+          "id": "H-E079",
+          "title": "第一次石油危機",
+          "description": "第一次石油危機が起きた。",
+          "date": "1973",
+          "datePrecision": "year",
+          "url": "https://www.env.go.jp/content/000040000.pdf",
+          "institution": "環境省",
+          "sourceTitle": "自然環境行政年表（～2021）",
+          "locator": "PDF3ページ目 1973年 社会的背景欄",
+          "qualification": "この年表から分かるのは年までで、危機の始まりや経過を月日で示してはいない。",
+          "checkedAt": "2026-10-16",
+          "sourceType": "政府による自然環境行政史年表"
+        }
+      ],
+      "living": [],
+      "gameNote": "9人への増加、橋の必要性、近場の店という目標は架空の町の設定。新しく建てる商店の工事費4から5への変更も作者の設定で、消費者物価指数から計算した値ではない。"
+    },
+    {
+      "year": 2000,
+      "title": "いつもの場所を、近くに",
+      "summary": "介護保険法が施行された年。通院できる場所と、ほっとひと息つける緑を、ご近所へ。",
+      "statistics": [
+        {
+          "title": "消費者物価指数・総合",
+          "year": 2000,
+          "value": 86.9,
+          "raw": "86.9",
+          "unit": "指数（2025年=100）",
+          "scope": "全国・暦年平均",
+          "tableId": "0004052037",
+          "url": "https://www.e-stat.go.jp/dbview?sid=0004052037",
+          "institution": "総務省",
+          "checkedAt": "2026-10-16T09:25:15.534985+00:00",
+          "sourceFile": "tests/fixtures/estat/cpi_new_calendar.json",
+          "receiptFile": "tests/fixtures/estat/cpi_new_calendar.receipt.json",
+          "dimensions": {
+            "area": {
+              "code": "00000",
+              "name": "全国"
+            },
+            "cat01": {
+              "code": "0001",
+              "name": "0001 総合"
+            },
+            "tab": {
+              "code": "1",
+              "name": "指数"
+            },
+            "time": {
+              "code": "2000000000",
+              "name": "2000年"
+            }
+          },
+          "notes": [
+            "全国の暦年平均。2025年=100の公式接続指数で、金額ではない。",
+            "1970年からの取得済み系列から、この年の観測値だけを表示。1955年の値はこの系列にない。",
+            "品目とウエイトは時代によって変わる。旧基準の水準を継ぎ足さず、公表変化率や個人の生活費へ換算しない。",
+            "町の工事費・商店価格・住民の買物需要を推計する根拠には使わない。"
+          ]
+        },
+        {
+          "title": "消費者物価指数・食料",
+          "year": 2000,
+          "value": 69.4,
+          "raw": "69.4",
+          "unit": "指数（2025年=100）",
+          "scope": "全国・暦年平均",
+          "tableId": "0004052037",
+          "url": "https://www.e-stat.go.jp/dbview?sid=0004052037",
+          "institution": "総務省",
+          "checkedAt": "2026-10-16T09:25:15.534985+00:00",
+          "sourceFile": "tests/fixtures/estat/cpi_new_calendar.json",
+          "receiptFile": "tests/fixtures/estat/cpi_new_calendar.receipt.json",
+          "dimensions": {
+            "area": {
+              "code": "00000",
+              "name": "全国"
+            },
+            "cat01": {
+              "code": "0002",
+              "name": "0002 食料"
+            },
+            "tab": {
+              "code": "1",
+              "name": "指数"
+            },
+            "time": {
+              "code": "2000000000",
+              "name": "2000年"
+            }
+          },
+          "notes": [
+            "全国の暦年平均。2025年=100の公式接続指数で、金額ではない。",
+            "1970年からの取得済み系列から、この年の観測値だけを表示。1955年の値はこの系列にない。",
+            "品目とウエイトは時代によって変わる。旧基準の水準を継ぎ足さず、公表変化率や個人の生活費へ換算しない。",
+            "町の工事費・商店価格・住民の買物需要を推計する根拠には使わない。"
+          ]
+        }
+      ],
+      "events": [
+        {
+          "id": "H2-E036",
+          "title": "介護保険法の施行",
+          "description": "介護保険法が施行された。",
+          "date": "2000-04",
+          "datePrecision": "month",
+          "url": "https://www.mhlw.go.jp/shingi/2008/07/dl/s0724-4b.pdf",
+          "institution": "厚生労働省",
+          "sourceTitle": "介護を取り巻く状況：介護保険制度を巡るこれまでの経緯",
+          "locator": "PDF6ページ目（紙面の頁表示は5）",
+          "qualification": "参照した制度史で分かるのは施行月まで。個々の人が認定を受けた日や、サービスを使い始めた日とは異なる。",
+          "checkedAt": "2026-10-16",
+          "sourceType": "official_document"
+        },
+        {
+          "id": "H-E085",
+          "title": "循環型社会形成推進基本法の制定",
+          "description": "循環型社会を形づくるための基本となる法律が制定された。",
+          "date": "2000",
+          "datePrecision": "year",
+          "url": "https://www.env.go.jp/content/000040000.pdf",
+          "institution": "環境省",
+          "sourceTitle": "自然環境行政年表（～2021）",
+          "locator": "PDF4ページ目 2000年の項目",
+          "qualification": "この年表から分かるのは制定年までで、月日は示していない。",
+          "checkedAt": "2026-10-16",
+          "sourceType": "政府による自然環境行政史年表"
+        }
+      ],
+      "living": [],
+      "gameNote": "12人、診療所と公園の距離・効果は作者が決めたゲームの設定。介護保険の施行から診療所需要を推計したものではなく、公園を循環型社会の法律の直接の効果とも扱わない。"
+    }
+  ]
+}

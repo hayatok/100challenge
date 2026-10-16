@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#f4f0e8">
+  <title>まちの続き — 時代をつなぐ、小さなまちづくり</title>
+  <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./src/style.css">
+  <script type="module" src="./src/app.mjs"></script>
+</head>
+<body>
+  <div id="boot" role="status">町の灯りをつけています…</div>
+  <noscript>このゲームにはJavaScriptが必要です。ブラウザの設定を確認してください。</noscript>
+  <main id="app" hidden>
+    <section id="title-screen" class="title-screen">
+      <div class="title-copy">
+        <p class="eyebrow"><span class="tiny-seal">町</span> 時代をつなぐ、小さなまちづくり</p>
+        <h1>まちの<span>続き</span></h1>
+        <p class="title-lead">あなたが架けた橋を、<br>次の時代の誰かが渡る。</p>
+        <p class="title-explain">家と店を建て、道をつなぐ。<br>住民の願いをかなえて、三つの時代を歩こう。</p>
+        <div class="title-actions">
+          <button id="new-game" class="primary">町をつくる <span aria-hidden="true">→</span></button>
+          <button id="resume-game" hidden>つづきから</button>
+        </div>
+        <p id="save-note" class="small">1955 → 1973 → 2000 ／ 一人用</p>
+        <button class="text-button" data-action="history">この町と時代について ↗</button>
+      </div>
+      <div class="title-art"><svg id="cover-town" viewBox="0 0 760 500" role="img" aria-label="朱色の屋根、商店、公園と橋のある小さな町"></svg><span class="map-label">川のほとりの、名もない町</span></div>
+    </section>
+
+    <section id="game-screen" hidden>
+      <header class="game-header">
+        <button class="wordmark text-button" data-action="title">まちの続き</button>
+        <ol id="era-steps" class="era-steps" aria-label="町の歩み"></ol>
+        <button id="pause-button" class="icon-button" aria-label="休む・設定">Ⅱ</button>
+      </header>
+      <div class="game-layout">
+        <section class="town-column" aria-label="町をつくる">
+          <div class="town-heading">
+            <div><p id="chapter-label" class="eyebrow"></p><h2><span id="year-label"></span><small>年</small> <span id="chapter-title"></span></h2></div>
+            <div class="budget"><span>工事予算</span><strong id="budget-value"></strong><small id="budget-change"></small></div>
+          </div>
+          <div class="town-stage">
+            <span id="town-instruction" class="map-instruction"></span>
+            <div class="map-scroll" id="map-scroll"><svg id="town-map" viewBox="0 0 760 500" role="group" aria-label="町の土地。矢印キーで移動、Enterで場所を選び、もう一度で建てる"></svg></div>
+            <div class="map-key"><span id="population-label"></span><button id="zoom-map" class="text-button" aria-pressed="false">＋ 拡大</button></div>
+          </div>
+          <div id="toolbox" class="toolbox" aria-label="建てるもの"></div>
+          <div class="under-map"><span>建てるもの → 土地 → 建てる</span><button id="undo-button" class="text-button">↶ 一手戻す</button><button id="restart-chapter" class="text-button">この年代をやり直す</button></div>
+        </section>
+        <aside class="town-sidebar">
+          <section class="mission">
+            <p class="eyebrow">この時代の願い</p><h3 id="mission-title"></h3>
+            <ul id="goals"></ul><p id="next-hint" class="next-hint"></p>
+            <button id="finish-era" class="primary" disabled>願いをかなえよう</button>
+          </section>
+          <section id="plan-panel" class="plan-panel" aria-live="polite" aria-atomic="true"></section>
+          <div id="notice" class="notice" role="status"></div>
+          <button class="history-link" data-action="history"><span class="book-icon" aria-hidden="true">▤</span><span>この時代の手がかり<small id="history-teaser">史実・数字・この町のこと</small></span><span aria-hidden="true">↗</span></button>
+        </aside>
+      </div>
+    </section>
+
+    <section id="result-screen" class="result-screen" hidden>
+      <p class="eyebrow">町の記録</p><h2>町は、続いていく。</h2><p class="result-lead">三つの時代に、暮らしの道がつながりました。</p>
+      <svg id="result-town" viewBox="0 0 760 500" role="img" aria-label="完成した町"></svg>
+      <div id="town-history" class="town-history"></div>
+      <div class="result-actions"><button id="play-again" class="primary">別の町をつくる →</button><button id="view-town">完成した町を見る</button><button data-action="history">時代の手がかりを読む</button></div>
+    </section>
+    <footer>小さな架空の町と、日本の時代から。<span>配置と距離は、この町の遊びのルールです。</span></footer>
+  </main>
+
+  <dialog id="pause-dialog" class="compact-dialog"><div class="dialog-top"><p class="eyebrow">ひと休み</p><button data-close class="icon-button" aria-label="閉じる">×</button></div><h2>町は、待っています。</h2><p>戻ってから、ゆっくり続きを。</p><div class="settings"><button id="sound-setting" aria-pressed="false">音：切</button><button id="motion-setting" aria-pressed="false">動きを減らす：切</button></div><button id="continue-game" class="primary">町に戻る</button><button id="return-title" class="text-button">タイトルへ</button></dialog>
+  <dialog id="era-dialog" class="compact-dialog"><div class="dialog-top"><p class="eyebrow">願いが、かたちになった。</p><button data-close class="icon-button" aria-label="閉じる">×</button></div><h2 id="era-result-title"></h2><p id="era-result-copy"></p><div id="era-summary" class="era-summary"></div><button id="advance-era" class="primary"></button></dialog>
+  <dialog id="restart-dialog" class="compact-dialog"><div class="dialog-top"><p class="eyebrow">町を組み直す</p><button data-close class="icon-button" aria-label="閉じる">×</button></div><h2 id="restart-title"></h2><p id="restart-copy"></p><button id="confirm-restart" class="primary">はじめからつくる</button><button data-close>今の町を続ける</button></dialog>
+  <dialog id="history-dialog" class="history-dialog"><div class="dialog-top"><p class="eyebrow">時代の手がかり</p><button data-close class="icon-button" aria-label="閉じる">×</button></div><h2 id="history-title"></h2><div id="history-body"></div></dialog>
+  <div id="announcement" class="sr-only" aria-live="polite"></div>
+</body>
+</html>

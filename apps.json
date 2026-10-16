@@ -219,5 +219,15 @@
     "category": "3D物理コメディ",
     "thumbnail": "zenryoku-taikin-cover.png",
     "accent": "#E63B2F"
+  },
+  {
+    "id": "2026-10-16-2",
+    "date": "2026-10-16",
+    "sequence": 2,
+    "name": "まちの続き",
+    "description": "家や店を建て、道をつなぐ。住民の願いをかなえて1955・1973・2000年を歩く、小さなまちづくりゲーム。",
+    "category": "まちづくり / パズル",
+    "thumbnail": "assets/town-cover.svg",
+    "accent": "#B73529"
   }
 ]
