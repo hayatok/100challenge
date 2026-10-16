@@ -1,0 +1,489 @@
+{
+  "schema_version": "reuse-checks-1",
+  "checked_at": "2026-10-16",
+  "scope": "初期ローカル試作の政府統計自作グラフ・独自の短い事実説明・テキストリンクに限定。公開許諾、原画像音声転載、著作物の権利確定を行う調査ではない。",
+  "government_statistics_values_acquired_from_web": false,
+  "third_party_contact": false,
+  "paid_action": false,
+  "source_of_summary_decision": "文化庁の事実と創作的表現の区別を踏まえた採用方針。各機関から独自要約の個別許諾を得たという意味ではない。",
+  "checks": [
+    {
+      "id": "REUSE-001",
+      "target_ids": [
+        "estat_statistics"
+      ],
+      "institution": "政府統計の総合窓口 e-Stat",
+      "content_title": "e-Stat公開集計数値からの自作グラフ",
+      "content_url": "https://www.e-stat.go.jp/terms-of-use",
+      "checked_at": "2026-10-16",
+      "intended_use": "初期ローカル試作：確認済みの事実だけを独自の短い文章で紹介し、書誌・ページ位置と出典へのテキストリンクを表示。原画像・原音声・本文転載は採用しない。",
+      "policy_evidence": [
+        {
+          "url": "https://www.e-stat.go.jp/terms-of-use",
+          "title": "e-Stat利用規約",
+          "locator": "冒頭、1出典、2第三者権利、3適用外、6その他",
+          "verified": "本文確認",
+          "finding": "数値データ・簡単な表やグラフは著作権対象外。コンテンツは出典・加工明示等の条件で商用を含み利用可。政府標準利用規約2.0準拠、CC BY4.0互換。"
+        }
+      ],
+      "findings": {
+        "facts_and_numbers": "取得済みの公開集計数値を用いた自作グラフに採用可。元表・単位・対象・注記・取得日を保持。",
+        "text_summary": "解説文のコピーを避けて定義を自分の言葉で補足。",
+        "link": "個別統計表ページの出典リンクを表示。",
+        "images_audio": "ロゴ・第三者画像・既成グラフ画像はこの判断に含めない。"
+      },
+      "adoption_decision": "adopt",
+      "implementation_conditions": [
+        "出典はe-Stat名だけでなく調査名・作成府省・表ID/表名・対象年・取得日と個別URLを併記。",
+        "『○○調査（○省、e-Stat）の数値を基に本サイトが作成』と表示。",
+        "国が作ったグラフと誤認させず、欠測・定義変更・対象世帯の注記を残す。"
+      ],
+      "unresolved": [
+        "本調査は再利用条件だけを確認し、Webから統計値を取得していない。",
+        "API・ミクロデータ・地理情報の別規約は今回の取得済み公開集計値の描画判断の対象外。"
+      ],
+      "example_fact_summary": null,
+      "suggested_attribution": "出典：○○調査（○省）、e-Stat 表ID XXXXX。取得日：YYYY-MM-DD。数値を基に本サイトが作成。",
+      "attempts": []
+    },
+    {
+      "id": "REUSE-002",
+      "target_ids": [
+        "government_standard_terms_v2"
+      ],
+      "institution": "デジタル庁",
+      "content_title": "政府標準利用規約 第2.0版",
+      "content_url": "https://www.digital.go.jp/assets/contents/node/basic_page/field_ref_resources/f7fde41d-ffca-4b2a-9b25-94b8a701a037/b33c8db5/20220706_resources_data_betten_03.pdf",
+      "checked_at": "2026-10-16",
+      "intended_use": "初期ローカル試作：確認済みの事実だけを独自の短い文章で紹介し、書誌・ページ位置と出典へのテキストリンクを表示。原画像・原音声・本文転載は採用しない。",
+      "policy_evidence": [
+        {
+          "url": "https://www.digital.go.jp/assets/contents/node/basic_page/field_ref_resources/f7fde41d-ffca-4b2a-9b25-94b8a701a037/b33c8db5/20220706_resources_data_betten_03.pdf",
+          "title": "Government of Japan Standard Terms of Use Version2.0",
+          "locator": "PDF p.1、Using content / Source citation / Third party rights",
+          "verified": "英語版本文確認",
+          "finding": "数値・単純図表の扱い、出典・加工明示、第三者権利を区別。各機関が差し替えるための標準文。"
+        },
+        {
+          "url": "https://www.e-stat.go.jp/terms-of-use",
+          "title": "e-Stat利用規約",
+          "locator": "6イ・ウ",
+          "verified": "本文確認",
+          "finding": "e-Stat自身が第2.0版準拠とCC BY互換を明記。"
+        }
+      ],
+      "findings": {
+        "facts_and_numbers": "実装では標準文だけでなく対象サイト自身の利用規約を適用。",
+        "text_summary": "標準規約があることを自治体・大学・個人手記への一括許諾としない。",
+        "link": "規約への参考リンク可。",
+        "images_audio": "第三者権利と適用除外は別確認。"
+      },
+      "adoption_decision": "adopt_as_reference",
+      "implementation_conditions": [
+        "e-Statの現行表示を根拠にする。",
+        "自治体・大学の個別条件へ政府標準規約を自動適用しない。"
+      ],
+      "unresolved": [
+        "この標準文の確認は、個別機関の権利処理完了の証明ではない。"
+      ],
+      "example_fact_summary": null,
+      "suggested_attribution": null,
+      "attempts": []
+    },
+    {
+      "id": "REUSE-003",
+      "target_ids": [
+        "L2-S001",
+        "L2-M001",
+        "L2-M033"
+      ],
+      "institution": "法政大学大原社会問題研究所",
+      "content_title": "月島調査家計簿 教員1",
+      "content_url": "https://oisr-org.ws.hosei.ac.jp/archives/darc/kakeibo/",
+      "checked_at": "2026-10-16",
+      "intended_use": "初期ローカル試作：確認済みの事実だけを独自の短い文章で紹介し、書誌・ページ位置と出典へのテキストリンクを表示。原画像・原音声・本文転載は採用しない。",
+      "policy_evidence": [
+        {
+          "url": "https://oisr-org.ws.hosei.ac.jp/about/guide/copyright/",
+          "title": "大原社研 著作権について",
+          "locator": "1〜5、更新2021-05-17",
+          "verified": "本文確認",
+          "finding": "デジタル情報と原著作者の権利を区別。複製は個人の調査研究・教育学習の私的利用に限定。引用には著作者・研究所名の表示、標題内容を改変しない旨。印刷等の利用に事前手続きの案内。"
+        },
+        {
+          "url": "https://oisr-org.ws.hosei.ac.jp/archives/darc/kakeibo/",
+          "title": "月島調査家計簿",
+          "locator": "資料説明・公開4冊のリンク",
+          "verified": "本文確認",
+          "finding": "未整理原資料の事前利用申請・許可の記載と、公開PDFへのリンクが併存。本文転載・再配布の包括許諾は示されていない。"
+        },
+        {
+          "url": "https://pf.bunka.go.jp/chosaku/chosakuken/h22_manga/comment/list_ta.html",
+          "title": "文化庁 著作権解説集・著作物",
+          "locator": "著作物の項目（統計データ・単なる事実と創作的表現を区別）",
+          "verified": "本文確認",
+          "finding": "単なる事実・統計データと、著作権で保護される創作的表現を区別する説明。独自要約の採用判断の一般的根拠。個々の文章の非侵害を保証するものではない。"
+        }
+      ],
+      "findings": {
+        "facts_and_numbers": "記帳年・世帯構成・個別支出という事実を独立した短文で紹介する範囲に限定して採用。公的統計の全国平均にしない。",
+        "text_summary": "原文の文体・連続する記帳本文を転載せず、事実説明と原簿の改変を区別。",
+        "link": "コレクション案内ページへ通常のテキストリンク。PDFを埋め込まない。リンク独自条件は未発見。",
+        "images_audio": "原簿画像・PDFの再配布・サムネイル・トレースは不採用。"
+      },
+      "adoption_decision": "adopt_facts_only",
+      "implementation_conditions": [
+        "出典を『法政大学大原社会問題研究所所蔵 月島調査家計簿 教員1、PDF pp.2–6・380』と表示。",
+        "原記帳者未同定、選択ページのみ確認、他3冊未読を明示。",
+        "原簿の生年月日・細かな住所等を初期試作に追加しない。"
+      ],
+      "unresolved": [
+        "原簿の著作者・権利存続、画像転載許諾は未確認。",
+        "事実要約の採用は公開条件による本文利用許諾の確認を意味しない。",
+        "利用案内は閲覧許可の記載を公共PDFの存在だけで解除したとは扱わない。"
+      ],
+      "example_fact_summary": "1919年に教員の夫婦二人世帯が記した家計簿。食料や葉書などの支出を日ごとの欄で確認できる。",
+      "suggested_attribution": "法政大学大原社会問題研究所所蔵『月島調査家計簿 教員1』、PDF pp.2–6・380（確認日2026-10-16）。",
+      "attempts": []
+    },
+    {
+      "id": "REUSE-004",
+      "target_ids": [
+        "E2S11"
+      ],
+      "institution": "岩手大学教育学部・岩手大学リポジトリ",
+      "content_title": "後藤和子『家計記録よりみた昭和戦前期における農家の消費構造』1980",
+      "content_url": "https://iwate-u.repo.nii.ac.jp/records/11919",
+      "checked_at": "2026-10-16",
+      "intended_use": "初期ローカル試作：確認済みの事実だけを独自の短い文章で紹介し、書誌・ページ位置と出典へのテキストリンクを表示。原画像・原音声・本文転載は採用しない。",
+      "policy_evidence": [
+        {
+          "url": "https://iwate-u.repo.nii.ac.jp/records/11919",
+          "title": "個別論文レコード",
+          "locator": "erar-v40n1p61-75.pdfのライセンス列",
+          "verified": "WebはCache miss。読み取り専用HTTP200のHTMLを確認",
+          "finding": "個別ファイルのライセンス表示は空。入力フォームのCCライセンス候補はあるが、当該論文への許諾表示ではない。"
+        },
+        {
+          "url": "https://www.edu.iwate-u.ac.jp/wp-content/uploads/2016/03/report-youken.pdf",
+          "title": "研究年報のリポジトリ提供許諾要件",
+          "locator": "PDF全2頁の本文取得を試行",
+          "verified": "文字抽出が崩れ、要件本文を判読できず",
+          "finding": "公開者がリポジトリ掲載を認める条件の資料。利用者への転載許諾を確認済みと扱わない。"
+        },
+        {
+          "url": "https://pf.bunka.go.jp/chosaku/chosakuken/h22_manga/comment/list_ta.html",
+          "title": "文化庁 著作権解説集・著作物",
+          "locator": "著作物の項目（統計データ・単なる事実と創作的表現を区別）",
+          "verified": "本文確認",
+          "finding": "単なる事実・統計データと、著作権で保護される創作的表現を区別する説明。独自要約の採用判断の一般的根拠。個々の文章の非侵害を保証するものではない。"
+        }
+      ],
+      "findings": {
+        "facts_and_numbers": "論文がどの個人日録を分析するか、原簿を直接読了した資料ではないという事実説明を短文で採用。",
+        "text_summary": "論文の論述・段落・図表をコピーしない。論文経由で確認した事実と明示。",
+        "link": "個別論文のランディングページに通常のテキストリンク。",
+        "images_audio": "論文PDF・図表画像・本文転載は不採用。"
+      },
+      "adoption_decision": "adopt_facts_only_license_unconfirmed",
+      "implementation_conditions": [
+        "後藤和子、1980、雑誌名・巻号・ページとレコードURLを表示。",
+        "政府集計値をこの論文から取り込まず、個人記録の分析と区別。"
+      ],
+      "unresolved": [
+        "明示的な再利用ライセンスは確認できない。",
+        "提供許諾要件の本文判読ができず、刊行年1980の当該論文への適用も未確認。"
+      ],
+      "example_fact_summary": "この研究は、昭和戦前期の秋田・山形の個人家計記録を用いて農家の消費を検討している。記述は論文による分析を経たもの。",
+      "suggested_attribution": "後藤和子（1980）『家計記録よりみた昭和戦前期における農家の消費構造』岩手大学教育学部研究年報40(1)、61–75頁。",
+      "attempts": [
+        {
+          "method": "official_document",
+          "url": "https://iwate-u.repo.nii.ac.jp/records/11919",
+          "result": "Web Cache miss後、HTTP200 HTML内の個別ファイルの空のライセンス欄を確認。"
+        }
+      ]
+    },
+    {
+      "id": "REUSE-005",
+      "target_ids": [
+        "L2-M007",
+        "L2-S007"
+      ],
+      "institution": "札幌市",
+      "content_title": "木村信也『あしりべつでの思い出』",
+      "content_url": "https://www.city.sapporo.jp/ncms/shimin/heiwa/library/taiken/pdf/02/18.pdf",
+      "checked_at": "2026-10-16",
+      "intended_use": "初期ローカル試作の独自事実要約・書誌・外部テキストリンク。原画像・原音声は使用しない。",
+      "policy_evidence": [
+        {
+          "url": "https://www.city.sapporo.jp/city/copyright/link.html",
+          "title": "札幌市 リンク・著作権・免責事項",
+          "locator": "リンク欄・著作権欄（更新2022-01-01）",
+          "verified": "本文確認",
+          "finding": "市または原著作者の権利を留保。法定例外以外の複製転用は事前相談。トップリンクは自由で連絡不要、その他は担当課への問い合わせ案内。"
+        },
+        {
+          "url": "https://pf.bunka.go.jp/chosaku/chosakuken/h22_manga/comment/list_ta.html",
+          "title": "文化庁 著作権解説集",
+          "locator": "著作物の項目",
+          "verified": "本文確認",
+          "finding": "単なる事実と創作的表現を区別。独自の事実要約の判断根拠。"
+        }
+      ],
+      "findings": {
+        "facts_and_numbers": "本人の回想・聞き取りであると明示した独自の事実紹介に限定して採用。全国一般の生活としない。",
+        "text_summary": "原文の表現・順序・会話の再現を避け、確認済み事実の独自短文に限定。要約者の説明であると表示。",
+        "images_audio": "原画像・原音声・動画・長文引用・本文の再配布は初期試作では採用しない。",
+        "link": "初期表示は札幌市トップ https://www.city.sapporo.jp/ のみを有効リンクとし、資料題名・冊子pp.72–75を併記。PDF直リンクは保留。"
+      },
+      "adoption_decision": "adopt_facts_with_top_link",
+      "implementation_conditions": [
+        "著者/話者・収集機関・原資料題名・確認した箇所・確認日を表示。",
+        "短く書き換えるだけで原文の創作的表現を再現する『翻案』まで一括許可されたとは扱わない。",
+        "市公式サイトへのリンクと明示し、フレーム表示・サムネイル・PDF埋め込みを行わない。"
+      ],
+      "unresolved": [
+        "本文・画像の包括的二次利用許諾は未確認。PDFへの深いリンクの問い合わせは今回未実施。"
+      ],
+      "example_fact_summary": "札幌の農村で育った木村氏は、自家製の味噌づくりや、家族が出征した農家の手伝いを回想している。",
+      "suggested_attribution": "札幌市公開、木村信也『あしりべつでの思い出』冊子pp.72–75、2009年聞き取り。",
+      "attempts": []
+    },
+    {
+      "id": "REUSE-006",
+      "target_ids": [
+        "L2-M009",
+        "L2-S008"
+      ],
+      "institution": "伊勢原市・東海大学水島ゼミ",
+      "content_title": "山岸正江 戦時中の生活について",
+      "content_url": "https://www.city.isehara.kanagawa.jp/docs/2020071000059/",
+      "checked_at": "2026-10-16",
+      "intended_use": "初期ローカル試作の独自事実要約・書誌・外部テキストリンク。原画像・原音声は使用しない。",
+      "policy_evidence": [
+        {
+          "url": "https://www.city.isehara.kanagawa.jp/docs/2007030900032/",
+          "title": "伊勢原市公式ホームページにおける著作権などについて",
+          "locator": "1 著作権・3 リンク（更新2021-02-04）",
+          "verified": "本文確認",
+          "finding": "市の権利を留保し法定例外以外の無断使用等を禁止。リンクは原則自由だが、設定時に広報戦略課への知らせを求める。"
+        },
+        {
+          "url": "https://pf.bunka.go.jp/chosaku/chosakuken/h22_manga/comment/list_ta.html",
+          "title": "文化庁 著作権解説集",
+          "locator": "著作物の項目",
+          "verified": "本文確認",
+          "finding": "単なる事実と創作的表現を区別。独自の事実要約の判断根拠。"
+        }
+      ],
+      "findings": {
+        "facts_and_numbers": "本人の回想・聞き取りであると明示した独自の事実紹介に限定して採用。全国一般の生活としない。",
+        "text_summary": "原文の表現・順序・会話の再現を避け、確認済み事実の独自短文に限定。要約者の説明であると表示。",
+        "images_audio": "原画像・原音声・動画・長文引用・本文の再配布は初期試作では採用しない。",
+        "link": "原則自由という記載を確認。ただし通知未実施。ローカル試作は候補URLを保存し、外部公開時のリンク扱いを保留する。通知を許可取得の要件と断定しない。"
+      },
+      "adoption_decision": "adopt_facts_public_link_pending_notice",
+      "implementation_conditions": [
+        "著者/話者・収集機関・原資料題名・確認した箇所・確認日を表示。",
+        "短く書き換えるだけで原文の創作的表現を再現する『翻案』まで一括許可されたとは扱わない。",
+        "原映像は未視聴なので映像内容を紹介しない。",
+        "公開前にリンク通知条項の扱いを判断できるよう、候補URLと未通知を保持。今回連絡しない。"
+      ],
+      "unresolved": [
+        "ウェブ抜粋の包括転載許諾・元話者の個別同意の範囲は未確認。",
+        "リンク時の知らせは第三者連絡に当たるため、今回の調査範囲では実施していない。"
+      ],
+      "example_fact_summary": "伊勢原の山岸氏は、病気の母に代わって料理や弟の世話をした児童期を語る。",
+      "suggested_attribution": "伊勢原市『戦争体験インタビュー』山岸正江、戦時中の生活について（公開抜粋）。",
+      "attempts": []
+    },
+    {
+      "id": "REUSE-007",
+      "target_ids": [
+        "L2-M011",
+        "L2-S009"
+      ],
+      "institution": "中央区",
+      "content_title": "大山はる子の戦時生活手記",
+      "content_url": "https://www.city.chuo.lg.jp/virtualmuseum/heiwazigyo/shiryoshitu/taikenki/seikatsu3.html",
+      "checked_at": "2026-10-16",
+      "intended_use": "初期ローカル試作の独自事実要約・書誌・外部テキストリンク。原画像・原音声は使用しない。",
+      "policy_evidence": [
+        {
+          "url": "https://www.city.chuo.lg.jp/kusei/kouhoukouchou/kouhou/aboutwebsite/thissite.html",
+          "title": "中央区 このホームページの詳細情報",
+          "locator": "著作権について・中央区ホームページへのリンクについて",
+          "verified": "本文確認",
+          "finding": "本文・PDF等の権利を区に留保し、一部画像は原著作者。法定例外以外の無断転載改変不可。リンクは原則自由、連絡不要、区サイトと明示。"
+        },
+        {
+          "url": "https://pf.bunka.go.jp/chosaku/chosakuken/h22_manga/comment/list_ta.html",
+          "title": "文化庁 著作権解説集",
+          "locator": "著作物の項目",
+          "verified": "本文確認",
+          "finding": "単なる事実と創作的表現を区別。独自の事実要約の判断根拠。"
+        }
+      ],
+      "findings": {
+        "facts_and_numbers": "本人の回想・聞き取りであると明示した独自の事実紹介に限定して採用。全国一般の生活としない。",
+        "text_summary": "原文の表現・順序・会話の再現を避け、確認済み事実の独自短文に限定。要約者の説明であると表示。",
+        "images_audio": "原画像・原音声・動画・長文引用・本文の再配布は初期試作では採用しない。",
+        "link": "個別手記ページへ中央区のサイトであることを明示したテキストリンク。トップページは推奨であり義務とは記されていない。"
+      },
+      "adoption_decision": "adopt_facts_with_source_link",
+      "implementation_conditions": [
+        "著者/話者・収集機関・原資料題名・確認した箇所・確認日を表示。",
+        "短く書き換えるだけで原文の創作的表現を再現する『翻案』まで一括許可されたとは扱わない。"
+      ],
+      "unresolved": [
+        "寄稿手記の原著作者と区の権利分担は未確認。本文・画像転載の許諾は得ていない。"
+      ],
+      "example_fact_summary": "大山氏の手記には、房総への疎開中、畑仕事と夜の仕立てを組み合わせた生活が記されている。",
+      "suggested_attribution": "中央区公開、大山はる子の戦時生活手記、畑仕事・夜の仕立物の段落。",
+      "attempts": []
+    },
+    {
+      "id": "REUSE-008",
+      "target_ids": [
+        "L2-M012",
+        "L2-S010"
+      ],
+      "institution": "三重県戦争資料館",
+      "content_title": "『戦後の物資不足』長浜での暮らし",
+      "content_url": "https://www.pref.mie.lg.jp/FUKUSHI/heiwa/17464018288.htm",
+      "checked_at": "2026-10-16",
+      "intended_use": "初期ローカル試作の独自事実要約・書誌・外部テキストリンク。原画像・原音声は使用しない。",
+      "policy_evidence": [
+        {
+          "url": "https://www.pref.mie.lg.jp/info/chosaku.htm",
+          "title": "三重県 リンク・著作権・免責事項等について",
+          "locator": "リンクについて・著作権について",
+          "verified": "本文確認",
+          "finding": "県の文章等は法で保護され、法定例外以外の複製転用には許可。リンクは原則自由、事前連絡不要だが、リンク後のURL連絡を求める。"
+        },
+        {
+          "url": "https://pf.bunka.go.jp/chosaku/chosakuken/h22_manga/comment/list_ta.html",
+          "title": "文化庁 著作権解説集",
+          "locator": "著作物の項目",
+          "verified": "本文確認",
+          "finding": "単なる事実と創作的表現を区別。独自の事実要約の判断根拠。"
+        }
+      ],
+      "findings": {
+        "facts_and_numbers": "本人の回想・聞き取りであると明示した独自の事実紹介に限定して採用。全国一般の生活としない。",
+        "text_summary": "原文の表現・順序・会話の再現を避け、確認済み事実の独自短文に限定。要約者の説明であると表示。",
+        "images_audio": "原画像・原音声・動画・長文引用・本文の再配布は初期試作では採用しない。",
+        "link": "原則自由・事前連絡不要を確認。リンク後連絡は未実施。ローカル試作は候補URLを保存し、公開リンクの通知扱いは保留。"
+      },
+      "adoption_decision": "adopt_facts_public_link_pending_notice",
+      "implementation_conditions": [
+        "著者/話者・収集機関・原資料題名・確認した箇所・確認日を表示。",
+        "短く書き換えるだけで原文の創作的表現を再現する『翻案』まで一括許可されたとは扱わない。",
+        "匿名手記の作者を推定しない。家族の聞いた話と本人の直接経験を区別。"
+      ],
+      "unresolved": [
+        "寄稿者の権利処理と本文転載の許諾は未確認。",
+        "リンク後の連絡は今回の範囲外として実施していない。"
+      ],
+      "example_fact_summary": "長浜で終戦を迎えた女性は、食料や衣服、生活道具の不足を後年の手記に残した。",
+      "suggested_attribution": "三重県戦争資料館『体験文集：戦後の耐乏生活』所収『戦後の物資不足』。",
+      "attempts": []
+    },
+    {
+      "id": "REUSE-009",
+      "target_ids": [
+        "L2-M013",
+        "L2-S010"
+      ],
+      "institution": "三重県戦争資料館",
+      "content_title": "『櫓を漕ぐかいなは甲種合格』鳥羽の小舟漁",
+      "content_url": "https://www.pref.mie.lg.jp/FUKUSHI/heiwa/17464018288.htm",
+      "checked_at": "2026-10-16",
+      "intended_use": "初期ローカル試作の独自事実要約・書誌・外部テキストリンク。原画像・原音声は使用しない。",
+      "policy_evidence": [
+        {
+          "url": "https://www.pref.mie.lg.jp/info/chosaku.htm",
+          "title": "三重県 リンク・著作権・免責事項等について",
+          "locator": "リンクについて・著作権について",
+          "verified": "本文確認",
+          "finding": "県の文章等は法で保護され、法定例外以外の複製転用には許可。リンクは原則自由、事前連絡不要だが、リンク後のURL連絡を求める。"
+        },
+        {
+          "url": "https://pf.bunka.go.jp/chosaku/chosakuken/h22_manga/comment/list_ta.html",
+          "title": "文化庁 著作権解説集",
+          "locator": "著作物の項目",
+          "verified": "本文確認",
+          "finding": "単なる事実と創作的表現を区別。独自の事実要約の判断根拠。"
+        }
+      ],
+      "findings": {
+        "facts_and_numbers": "本人の回想・聞き取りであると明示した独自の事実紹介に限定して採用。全国一般の生活としない。",
+        "text_summary": "原文の表現・順序・会話の再現を避け、確認済み事実の独自短文に限定。要約者の説明であると表示。",
+        "images_audio": "原画像・原音声・動画・長文引用・本文の再配布は初期試作では採用しない。",
+        "link": "原則自由・事前連絡不要を確認。リンク後連絡は未実施。ローカル試作は候補URLを保存し、公開リンクの通知扱いは保留。"
+      },
+      "adoption_decision": "adopt_facts_public_link_pending_notice",
+      "implementation_conditions": [
+        "著者/話者・収集機関・原資料題名・確認した箇所・確認日を表示。",
+        "短く書き換えるだけで原文の創作的表現を再現する『翻案』まで一括許可されたとは扱わない。",
+        "匿名手記の作者を推定しない。家族の聞いた話と本人の直接経験を区別。"
+      ],
+      "unresolved": [
+        "寄稿者の権利処理と本文転載の許諾は未確認。",
+        "リンク後の連絡は今回の範囲外として実施していない。"
+      ],
+      "example_fact_summary": "鳥羽の家族回想は、復員後に工場の仕事から小舟漁へ移った父の働き方を伝える。",
+      "suggested_attribution": "三重県戦争資料館『体験文集：戦後の耐乏生活』所収『櫓を漕ぐかいなは甲種合格』。",
+      "attempts": []
+    },
+    {
+      "id": "REUSE-010",
+      "target_ids": [
+        "L2-M017",
+        "L2-S013"
+      ],
+      "institution": "新潟県・新潟水俣病資料館",
+      "content_title": "小武節子の証言（未来へ語りついで）",
+      "content_url": "https://www.pref.niigata.lg.jp/sec/seikatueisei/1196352994873.html",
+      "checked_at": "2026-10-16",
+      "intended_use": "初期ローカル試作の独自事実要約・書誌・外部テキストリンク。原画像・原音声は使用しない。",
+      "policy_evidence": [
+        {
+          "url": "https://www.pref.niigata.lg.jp/site/userguide/chosakuken.html",
+          "title": "新潟県 著作権・リンク等について",
+          "locator": "著作権・リンク欄、資料公開ページ『学習用教材・資料』案内",
+          "verified": "本文確認",
+          "finding": "県・原著作者の権利と法定例外を区別。トップとリンクフリーマーク付きページはリンク自由、その他は事前連絡案内。教材ページは学習用利用を案内するが、公開転載の包括許諾とは明記されていない。"
+        },
+        {
+          "url": "https://pf.bunka.go.jp/chosaku/chosakuken/h22_manga/comment/list_ta.html",
+          "title": "文化庁 著作権解説集",
+          "locator": "著作物の項目",
+          "verified": "本文確認",
+          "finding": "単なる事実と創作的表現を区別。独自の事実要約の判断根拠。"
+        }
+      ],
+      "findings": {
+        "facts_and_numbers": "本人の回想・聞き取りであると明示した独自の事実紹介に限定して採用。全国一般の生活としない。",
+        "text_summary": "原文の表現・順序・会話の再現を避け、確認済み事実の独自短文に限定。要約者の説明であると表示。",
+        "images_audio": "原画像・原音声・動画・長文引用・本文の再配布は初期試作では採用しない。",
+        "link": "初期の有効リンクは新潟県トップ https://www.pref.niigata.lg.jp/ 。資料題名・第1部p.5を併記。個別ページにリンクフリーマークを確認できず、直接リンクは保留。"
+      },
+      "adoption_decision": "adopt_facts_with_top_link",
+      "implementation_conditions": [
+        "著者/話者・収集機関・原資料題名・確認した箇所・確認日を表示。",
+        "短く書き換えるだけで原文の創作的表現を再現する『翻案』まで一括許可されたとは扱わない。",
+        "県公式サイトへのリンクと明記し、フレーム表示を行わない。"
+      ],
+      "unresolved": [
+        "学習用利用の案内が一般公開サイトでの本文・画像転載まで含むか不明。",
+        "個別ページのリンクフリーマークは取得本文に見当たらず、表示画像まで全確認したわけではない。",
+        "事前連絡は今回未実施。"
+      ],
+      "example_fact_summary": "小武氏の証言では、農作業を手伝い和裁を学んだ経験などが語られる。",
+      "suggested_attribution": "新潟県『未来へ語りついで～新潟水俣病が教えてくれたもの～』令和3年度改訂、第1部p.5（PDF p.3）。",
+      "attempts": []
+    }
+  ]
+}

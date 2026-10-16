@@ -1,0 +1,47 @@
+{
+  "version": "japan-history-local-v1",
+  "built_on": "2026-10-16",
+  "statistics": {
+    "vital": {
+      "stat_id": "SD-STAT001",
+      "cells": 244
+    },
+    "cpi": {
+      "stat_id": "E2ST01",
+      "cells": 112
+    },
+    "household": {
+      "stat_id": "EST09",
+      "cells": 26
+    }
+  },
+  "events": 177,
+  "life_cards": 9,
+  "life_records": 10,
+  "dated_life_cards": 4,
+  "partially_dated_life_cards": 2,
+  "input_hashes": {
+    "data/observations.json": "6988d0462378fee82af3b686345d4fa3b0daced9f6f31eafd667f6c7e1fc7ba9",
+    "data/statistics.json": "811a108603fc81f31375c59df28b0dd019327674857129748badb6ec68acc249",
+    "data/events.json": "caa9c7aded18e69a3dee4055302f18a3e07b764a04a868b36ce546dbbe0ae94e",
+    "data/living_materials.json": "7c21d77e8a1f731896df0ce896562660b84c2e960e128af232690b5bc2970da7",
+    "data/sources.json": "56e283720e1a645a5a74908b75f9f41514f06b47ae9d9efcae46a86a5fef678d",
+    "data/gaps.json": "a8f7b37d3b500ef22cb9845d3d9584d14a5ace6e6e846db9d6d26fb4bc40bb57",
+    "data/adoption/statistics_checks.json": "077eddbe00e9197a8142892a3b8756fd41dac53059e36a940ecf5f8c2dde721e",
+    "data/adoption/reuse_checks.json": "29e440d47375074daf1cabde3240e0c3760bd85329300622f87c497af09bc265"
+  },
+  "ledger_modified": false,
+  "network_data_requests": false,
+  "source_of_numbers": "Existing estat CLI observations; private household figures separately labelled academic analysis.",
+  "derived_history_sha256": "17ecf382bcba684145dc22cac9f36e7127f548ba2aff0fd8cc6f862f048d3c40",
+  "source_of_government_values": "estat CLI",
+  "source_prototype": {
+    "version": "japan-history-lens-v1",
+    "bytes": 165248,
+    "sha256": "6c414199f026f2978b7eeb012ab5fe70d1a3278fec36e68b82c7bb08fa9fbef0"
+  },
+  "derived_history_bytes": 133599,
+  "raw_source_media_used": false,
+  "generated_illustrations": 3,
+  "separate_memory_cards": 5
+}

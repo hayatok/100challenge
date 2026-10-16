@@ -1,0 +1,3262 @@
+{
+  "schema_version": "1",
+  "kind": "data",
+  "table": {
+    "id": "0004052037",
+    "statistics_code": "00200573",
+    "statistics_name": "消費者物価指数",
+    "organization": "総務省",
+    "title": "消費者物価指数（2025年基準）",
+    "cycle": "-",
+    "survey_date": "0",
+    "open_date": "2026-10-02",
+    "updated_date": "2026-10-02",
+    "collect_area": "該当なし",
+    "total_records": 13103352
+  },
+  "dimensions": [
+    {
+      "id": "tab",
+      "name": "表章項目",
+      "values": [
+        {
+          "code": "1",
+          "name": "指数"
+        }
+      ]
+    },
+    {
+      "id": "cat01",
+      "name": "2025年基準品目",
+      "values": [
+        {
+          "code": "0001",
+          "name": "0001 総合",
+          "level": "1"
+        },
+        {
+          "code": "0002",
+          "name": "0002 食料",
+          "level": "1"
+        }
+      ]
+    },
+    {
+      "id": "area",
+      "name": "地域（2025年基準）",
+      "values": [
+        {
+          "code": "00000",
+          "name": "全国",
+          "level": "1"
+        }
+      ]
+    },
+    {
+      "id": "time",
+      "name": "時間軸（年・月）",
+      "values": [
+        {
+          "code": "2025000000",
+          "name": "2025年",
+          "level": "1"
+        },
+        {
+          "code": "2024000000",
+          "name": "2024年",
+          "level": "1"
+        },
+        {
+          "code": "2023000000",
+          "name": "2023年",
+          "level": "1"
+        },
+        {
+          "code": "2022000000",
+          "name": "2022年",
+          "level": "1"
+        },
+        {
+          "code": "2021000000",
+          "name": "2021年",
+          "level": "1"
+        },
+        {
+          "code": "2020000000",
+          "name": "2020年",
+          "level": "1"
+        },
+        {
+          "code": "2019000000",
+          "name": "2019年",
+          "level": "1"
+        },
+        {
+          "code": "2018000000",
+          "name": "2018年",
+          "level": "1"
+        },
+        {
+          "code": "2017000000",
+          "name": "2017年",
+          "level": "1"
+        },
+        {
+          "code": "2016000000",
+          "name": "2016年",
+          "level": "1"
+        },
+        {
+          "code": "2015000000",
+          "name": "2015年",
+          "level": "1"
+        },
+        {
+          "code": "2014000000",
+          "name": "2014年",
+          "level": "1"
+        },
+        {
+          "code": "2013000000",
+          "name": "2013年",
+          "level": "1"
+        },
+        {
+          "code": "2012000000",
+          "name": "2012年",
+          "level": "1"
+        },
+        {
+          "code": "2011000000",
+          "name": "2011年",
+          "level": "1"
+        },
+        {
+          "code": "2010000000",
+          "name": "2010年",
+          "level": "1"
+        },
+        {
+          "code": "2009000000",
+          "name": "2009年",
+          "level": "1"
+        },
+        {
+          "code": "2008000000",
+          "name": "2008年",
+          "level": "1"
+        },
+        {
+          "code": "2007000000",
+          "name": "2007年",
+          "level": "1"
+        },
+        {
+          "code": "2006000000",
+          "name": "2006年",
+          "level": "1"
+        },
+        {
+          "code": "2005000000",
+          "name": "2005年",
+          "level": "1"
+        },
+        {
+          "code": "2004000000",
+          "name": "2004年",
+          "level": "1"
+        },
+        {
+          "code": "2003000000",
+          "name": "2003年",
+          "level": "1"
+        },
+        {
+          "code": "2002000000",
+          "name": "2002年",
+          "level": "1"
+        },
+        {
+          "code": "2001000000",
+          "name": "2001年",
+          "level": "1"
+        },
+        {
+          "code": "2000000000",
+          "name": "2000年",
+          "level": "1"
+        },
+        {
+          "code": "1999000000",
+          "name": "1999年",
+          "level": "1"
+        },
+        {
+          "code": "1998000000",
+          "name": "1998年",
+          "level": "1"
+        },
+        {
+          "code": "1997000000",
+          "name": "1997年",
+          "level": "1"
+        },
+        {
+          "code": "1996000000",
+          "name": "1996年",
+          "level": "1"
+        },
+        {
+          "code": "1995000000",
+          "name": "1995年",
+          "level": "1"
+        },
+        {
+          "code": "1994000000",
+          "name": "1994年",
+          "level": "1"
+        },
+        {
+          "code": "1993000000",
+          "name": "1993年",
+          "level": "1"
+        },
+        {
+          "code": "1992000000",
+          "name": "1992年",
+          "level": "1"
+        },
+        {
+          "code": "1991000000",
+          "name": "1991年",
+          "level": "1"
+        },
+        {
+          "code": "1990000000",
+          "name": "1990年",
+          "level": "1"
+        },
+        {
+          "code": "1989000000",
+          "name": "1989年",
+          "level": "1"
+        },
+        {
+          "code": "1988000000",
+          "name": "1988年",
+          "level": "1"
+        },
+        {
+          "code": "1987000000",
+          "name": "1987年",
+          "level": "1"
+        },
+        {
+          "code": "1986000000",
+          "name": "1986年",
+          "level": "1"
+        },
+        {
+          "code": "1985000000",
+          "name": "1985年",
+          "level": "1"
+        },
+        {
+          "code": "1984000000",
+          "name": "1984年",
+          "level": "1"
+        },
+        {
+          "code": "1983000000",
+          "name": "1983年",
+          "level": "1"
+        },
+        {
+          "code": "1982000000",
+          "name": "1982年",
+          "level": "1"
+        },
+        {
+          "code": "1981000000",
+          "name": "1981年",
+          "level": "1"
+        },
+        {
+          "code": "1980000000",
+          "name": "1980年",
+          "level": "1"
+        },
+        {
+          "code": "1979000000",
+          "name": "1979年",
+          "level": "1"
+        },
+        {
+          "code": "1978000000",
+          "name": "1978年",
+          "level": "1"
+        },
+        {
+          "code": "1977000000",
+          "name": "1977年",
+          "level": "1"
+        },
+        {
+          "code": "1976000000",
+          "name": "1976年",
+          "level": "1"
+        },
+        {
+          "code": "1975000000",
+          "name": "1975年",
+          "level": "1"
+        },
+        {
+          "code": "1974000000",
+          "name": "1974年",
+          "level": "1"
+        },
+        {
+          "code": "1973000000",
+          "name": "1973年",
+          "level": "1"
+        },
+        {
+          "code": "1972000000",
+          "name": "1972年",
+          "level": "1"
+        },
+        {
+          "code": "1971000000",
+          "name": "1971年",
+          "level": "1"
+        },
+        {
+          "code": "1970000000",
+          "name": "1970年",
+          "level": "1"
+        }
+      ]
+    }
+  ],
+  "page": {
+    "total": 112,
+    "from": 1,
+    "to": 112,
+    "truncated": false
+  },
+  "records": [
+    {
+      "table_id": "0004052037",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0001",
+          "name": "0001 総合"
+        },
+        "tab": {
+          "code": "1",
+          "name": "指数"
+        },
+        "time": {
+          "code": "2025000000",
+          "name": "2025年"
+        }
+      },
+      "value": {
+        "raw": "100",
+        "number": 100,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004052037",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0001",
+          "name": "0001 総合"
+        },
+        "tab": {
+          "code": "1",
+          "name": "指数"
+        },
+        "time": {
+          "code": "2024000000",
+          "name": "2024年"
+        }
+      },
+      "value": {
+        "raw": "96.9",
+        "number": 96.9,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004052037",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0001",
+          "name": "0001 総合"
+        },
+        "tab": {
+          "code": "1",
+          "name": "指数"
+        },
+        "time": {
+          "code": "2023000000",
+          "name": "2023年"
+        }
+      },
+      "value": {
+        "raw": "94.3",
+        "number": 94.3,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004052037",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0001",
+          "name": "0001 総合"
+        },
+        "tab": {
+          "code": "1",
+          "name": "指数"
+        },
+        "time": {
+          "code": "2022000000",
+          "name": "2022年"
+        }
+      },
+      "value": {
+        "raw": "91.4",
+        "number": 91.4,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004052037",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0001",
+          "name": "0001 総合"
+        },
+        "tab": {
+          "code": "1",
+          "name": "指数"
+        },
+        "time": {
+          "code": "2021000000",
+          "name": "2021年"
+        }
+      },
+      "value": {
+        "raw": "89.1",
+        "number": 89.1,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004052037",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0001",
+          "name": "0001 総合"
+        },
+        "tab": {
+          "code": "1",
+          "name": "指数"
+        },
+        "time": {
+          "code": "2020000000",
+          "name": "2020年"
+        }
+      },
+      "value": {
+        "raw": "89.3",
+        "number": 89.3,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004052037",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0001",
+          "name": "0001 総合"
+        },
+        "tab": {
+          "code": "1",
+          "name": "指数"
+        },
+        "time": {
+          "code": "2019000000",
+          "name": "2019年"
+        }
+      },
+      "value": {
+        "raw": "89.3",
+        "number": 89.3,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004052037",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0001",
+          "name": "0001 総合"
+        },
+        "tab": {
+          "code": "1",
+          "name": "指数"
+        },
+        "time": {
+          "code": "2018000000",
+          "name": "2018年"
+        }
+      },
+      "value": {
+        "raw": "88.9",
+        "number": 88.9,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004052037",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0001",
+          "name": "0001 総合"
+        },
+        "tab": {
+          "code": "1",
+          "name": "指数"
+        },
+        "time": {
+          "code": "2017000000",
+          "name": "2017年"
+        }
+      },
+      "value": {
+        "raw": "88.1",
+        "number": 88.1,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004052037",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0001",
+          "name": "0001 総合"
+        },
+        "tab": {
+          "code": "1",
+          "name": "指数"
+        },
+        "time": {
+          "code": "2016000000",
+          "name": "2016年"
+        }
+      },
+      "value": {
+        "raw": "87.6",
+        "number": 87.6,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004052037",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0001",
+          "name": "0001 総合"
+        },
+        "tab": {
+          "code": "1",
+          "name": "指数"
+        },
+        "time": {
+          "code": "2015000000",
+          "name": "2015年"
+        }
+      },
+      "value": {
+        "raw": "87.7",
+        "number": 87.7,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004052037",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0001",
+          "name": "0001 総合"
+        },
+        "tab": {
+          "code": "1",
+          "name": "指数"
+        },
+        "time": {
+          "code": "2014000000",
+          "name": "2014年"
+        }
+      },
+      "value": {
+        "raw": "87.1",
+        "number": 87.1,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004052037",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0001",
+          "name": "0001 総合"
+        },
+        "tab": {
+          "code": "1",
+          "name": "指数"
+        },
+        "time": {
+          "code": "2013000000",
+          "name": "2013年"
+        }
+      },
+      "value": {
+        "raw": "84.7",
+        "number": 84.7,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004052037",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0001",
+          "name": "0001 総合"
+        },
+        "tab": {
+          "code": "1",
+          "name": "指数"
+        },
+        "time": {
+          "code": "2012000000",
+          "name": "2012年"
+        }
+      },
+      "value": {
+        "raw": "84.4",
+        "number": 84.4,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004052037",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0001",
+          "name": "0001 総合"
+        },
+        "tab": {
+          "code": "1",
+          "name": "指数"
+        },
+        "time": {
+          "code": "2011000000",
+          "name": "2011年"
+        }
+      },
+      "value": {
+        "raw": "84.5",
+        "number": 84.5,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004052037",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0001",
+          "name": "0001 総合"
+        },
+        "tab": {
+          "code": "1",
+          "name": "指数"
+        },
+        "time": {
+          "code": "2010000000",
+          "name": "2010年"
+        }
+      },
+      "value": {
+        "raw": "84.7",
+        "number": 84.7,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004052037",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0001",
+          "name": "0001 総合"
+        },
+        "tab": {
+          "code": "1",
+          "name": "指数"
+        },
+        "time": {
+          "code": "2009000000",
+          "name": "2009年"
+        }
+      },
+      "value": {
+        "raw": "85.3",
+        "number": 85.3,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004052037",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0001",
+          "name": "0001 総合"
+        },
+        "tab": {
+          "code": "1",
+          "name": "指数"
+        },
+        "time": {
+          "code": "2008000000",
+          "name": "2008年"
+        }
+      },
+      "value": {
+        "raw": "86.5",
+        "number": 86.5,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004052037",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0001",
+          "name": "0001 総合"
+        },
+        "tab": {
+          "code": "1",
+          "name": "指数"
+        },
+        "time": {
+          "code": "2007000000",
+          "name": "2007年"
+        }
+      },
+      "value": {
+        "raw": "85.3",
+        "number": 85.3,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004052037",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0001",
+          "name": "0001 総合"
+        },
+        "tab": {
+          "code": "1",
+          "name": "指数"
+        },
+        "time": {
+          "code": "2006000000",
+          "name": "2006年"
+        }
+      },
+      "value": {
+        "raw": "85.3",
+        "number": 85.3,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004052037",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0001",
+          "name": "0001 総合"
+        },
+        "tab": {
+          "code": "1",
+          "name": "指数"
+        },
+        "time": {
+          "code": "2005000000",
+          "name": "2005年"
+        }
+      },
+      "value": {
+        "raw": "85",
+        "number": 85,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004052037",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0001",
+          "name": "0001 総合"
+        },
+        "tab": {
+          "code": "1",
+          "name": "指数"
+        },
+        "time": {
+          "code": "2004000000",
+          "name": "2004年"
+        }
+      },
+      "value": {
+        "raw": "85.3",
+        "number": 85.3,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004052037",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0001",
+          "name": "0001 総合"
+        },
+        "tab": {
+          "code": "1",
+          "name": "指数"
+        },
+        "time": {
+          "code": "2003000000",
+          "name": "2003年"
+        }
+      },
+      "value": {
+        "raw": "85.3",
+        "number": 85.3,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004052037",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0001",
+          "name": "0001 総合"
+        },
+        "tab": {
+          "code": "1",
+          "name": "指数"
+        },
+        "time": {
+          "code": "2002000000",
+          "name": "2002年"
+        }
+      },
+      "value": {
+        "raw": "85.6",
+        "number": 85.6,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004052037",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0001",
+          "name": "0001 総合"
+        },
+        "tab": {
+          "code": "1",
+          "name": "指数"
+        },
+        "time": {
+          "code": "2001000000",
+          "name": "2001年"
+        }
+      },
+      "value": {
+        "raw": "86.3",
+        "number": 86.3,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004052037",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0001",
+          "name": "0001 総合"
+        },
+        "tab": {
+          "code": "1",
+          "name": "指数"
+        },
+        "time": {
+          "code": "2000000000",
+          "name": "2000年"
+        }
+      },
+      "value": {
+        "raw": "86.9",
+        "number": 86.9,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004052037",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0001",
+          "name": "0001 総合"
+        },
+        "tab": {
+          "code": "1",
+          "name": "指数"
+        },
+        "time": {
+          "code": "1999000000",
+          "name": "1999年"
+        }
+      },
+      "value": {
+        "raw": "87.5",
+        "number": 87.5,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004052037",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0001",
+          "name": "0001 総合"
+        },
+        "tab": {
+          "code": "1",
+          "name": "指数"
+        },
+        "time": {
+          "code": "1998000000",
+          "name": "1998年"
+        }
+      },
+      "value": {
+        "raw": "87.8",
+        "number": 87.8,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004052037",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0001",
+          "name": "0001 総合"
+        },
+        "tab": {
+          "code": "1",
+          "name": "指数"
+        },
+        "time": {
+          "code": "1997000000",
+          "name": "1997年"
+        }
+      },
+      "value": {
+        "raw": "87.3",
+        "number": 87.3,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004052037",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0001",
+          "name": "0001 総合"
+        },
+        "tab": {
+          "code": "1",
+          "name": "指数"
+        },
+        "time": {
+          "code": "1996000000",
+          "name": "1996年"
+        }
+      },
+      "value": {
+        "raw": "85.7",
+        "number": 85.7,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004052037",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0001",
+          "name": "0001 総合"
+        },
+        "tab": {
+          "code": "1",
+          "name": "指数"
+        },
+        "time": {
+          "code": "1995000000",
+          "name": "1995年"
+        }
+      },
+      "value": {
+        "raw": "85.7",
+        "number": 85.7,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004052037",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0001",
+          "name": "0001 総合"
+        },
+        "tab": {
+          "code": "1",
+          "name": "指数"
+        },
+        "time": {
+          "code": "1994000000",
+          "name": "1994年"
+        }
+      },
+      "value": {
+        "raw": "85.7",
+        "number": 85.7,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004052037",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0001",
+          "name": "0001 総合"
+        },
+        "tab": {
+          "code": "1",
+          "name": "指数"
+        },
+        "time": {
+          "code": "1993000000",
+          "name": "1993年"
+        }
+      },
+      "value": {
+        "raw": "85.2",
+        "number": 85.2,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004052037",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0001",
+          "name": "0001 総合"
+        },
+        "tab": {
+          "code": "1",
+          "name": "指数"
+        },
+        "time": {
+          "code": "1992000000",
+          "name": "1992年"
+        }
+      },
+      "value": {
+        "raw": "84.1",
+        "number": 84.1,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004052037",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0001",
+          "name": "0001 総合"
+        },
+        "tab": {
+          "code": "1",
+          "name": "指数"
+        },
+        "time": {
+          "code": "1991000000",
+          "name": "1991年"
+        }
+      },
+      "value": {
+        "raw": "82.7",
+        "number": 82.7,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004052037",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0001",
+          "name": "0001 総合"
+        },
+        "tab": {
+          "code": "1",
+          "name": "指数"
+        },
+        "time": {
+          "code": "1990000000",
+          "name": "1990年"
+        }
+      },
+      "value": {
+        "raw": "80.1",
+        "number": 80.1,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004052037",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0001",
+          "name": "0001 総合"
+        },
+        "tab": {
+          "code": "1",
+          "name": "指数"
+        },
+        "time": {
+          "code": "1989000000",
+          "name": "1989年"
+        }
+      },
+      "value": {
+        "raw": "77.7",
+        "number": 77.7,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004052037",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0001",
+          "name": "0001 総合"
+        },
+        "tab": {
+          "code": "1",
+          "name": "指数"
+        },
+        "time": {
+          "code": "1988000000",
+          "name": "1988年"
+        }
+      },
+      "value": {
+        "raw": "75.9",
+        "number": 75.9,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004052037",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0001",
+          "name": "0001 総合"
+        },
+        "tab": {
+          "code": "1",
+          "name": "指数"
+        },
+        "time": {
+          "code": "1987000000",
+          "name": "1987年"
+        }
+      },
+      "value": {
+        "raw": "75.4",
+        "number": 75.4,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004052037",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0001",
+          "name": "0001 総合"
+        },
+        "tab": {
+          "code": "1",
+          "name": "指数"
+        },
+        "time": {
+          "code": "1986000000",
+          "name": "1986年"
+        }
+      },
+      "value": {
+        "raw": "75.3",
+        "number": 75.3,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004052037",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0001",
+          "name": "0001 総合"
+        },
+        "tab": {
+          "code": "1",
+          "name": "指数"
+        },
+        "time": {
+          "code": "1985000000",
+          "name": "1985年"
+        }
+      },
+      "value": {
+        "raw": "74.9",
+        "number": 74.9,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004052037",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0001",
+          "name": "0001 総合"
+        },
+        "tab": {
+          "code": "1",
+          "name": "指数"
+        },
+        "time": {
+          "code": "1984000000",
+          "name": "1984年"
+        }
+      },
+      "value": {
+        "raw": "73.4",
+        "number": 73.4,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004052037",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0001",
+          "name": "0001 総合"
+        },
+        "tab": {
+          "code": "1",
+          "name": "指数"
+        },
+        "time": {
+          "code": "1983000000",
+          "name": "1983年"
+        }
+      },
+      "value": {
+        "raw": "71.7",
+        "number": 71.7,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004052037",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0001",
+          "name": "0001 総合"
+        },
+        "tab": {
+          "code": "1",
+          "name": "指数"
+        },
+        "time": {
+          "code": "1982000000",
+          "name": "1982年"
+        }
+      },
+      "value": {
+        "raw": "70.5",
+        "number": 70.5,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004052037",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0001",
+          "name": "0001 総合"
+        },
+        "tab": {
+          "code": "1",
+          "name": "指数"
+        },
+        "time": {
+          "code": "1981000000",
+          "name": "1981年"
+        }
+      },
+      "value": {
+        "raw": "68.5",
+        "number": 68.5,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004052037",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0001",
+          "name": "0001 総合"
+        },
+        "tab": {
+          "code": "1",
+          "name": "指数"
+        },
+        "time": {
+          "code": "1980000000",
+          "name": "1980年"
+        }
+      },
+      "value": {
+        "raw": "65.4",
+        "number": 65.4,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004052037",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0001",
+          "name": "0001 総合"
+        },
+        "tab": {
+          "code": "1",
+          "name": "指数"
+        },
+        "time": {
+          "code": "1979000000",
+          "name": "1979年"
+        }
+      },
+      "value": {
+        "raw": "60.7",
+        "number": 60.7,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004052037",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0001",
+          "name": "0001 総合"
+        },
+        "tab": {
+          "code": "1",
+          "name": "指数"
+        },
+        "time": {
+          "code": "1978000000",
+          "name": "1978年"
+        }
+      },
+      "value": {
+        "raw": "58.5",
+        "number": 58.5,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004052037",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0001",
+          "name": "0001 総合"
+        },
+        "tab": {
+          "code": "1",
+          "name": "指数"
+        },
+        "time": {
+          "code": "1977000000",
+          "name": "1977年"
+        }
+      },
+      "value": {
+        "raw": "56.1",
+        "number": 56.1,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004052037",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0001",
+          "name": "0001 総合"
+        },
+        "tab": {
+          "code": "1",
+          "name": "指数"
+        },
+        "time": {
+          "code": "1976000000",
+          "name": "1976年"
+        }
+      },
+      "value": {
+        "raw": "51.9",
+        "number": 51.9,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004052037",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0001",
+          "name": "0001 総合"
+        },
+        "tab": {
+          "code": "1",
+          "name": "指数"
+        },
+        "time": {
+          "code": "1975000000",
+          "name": "1975年"
+        }
+      },
+      "value": {
+        "raw": "47.4",
+        "number": 47.4,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004052037",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0001",
+          "name": "0001 総合"
+        },
+        "tab": {
+          "code": "1",
+          "name": "指数"
+        },
+        "time": {
+          "code": "1974000000",
+          "name": "1974年"
+        }
+      },
+      "value": {
+        "raw": "42.5",
+        "number": 42.5,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004052037",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0001",
+          "name": "0001 総合"
+        },
+        "tab": {
+          "code": "1",
+          "name": "指数"
+        },
+        "time": {
+          "code": "1973000000",
+          "name": "1973年"
+        }
+      },
+      "value": {
+        "raw": "34.5",
+        "number": 34.5,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004052037",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0001",
+          "name": "0001 総合"
+        },
+        "tab": {
+          "code": "1",
+          "name": "指数"
+        },
+        "time": {
+          "code": "1972000000",
+          "name": "1972年"
+        }
+      },
+      "value": {
+        "raw": "30.9",
+        "number": 30.9,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004052037",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0001",
+          "name": "0001 総合"
+        },
+        "tab": {
+          "code": "1",
+          "name": "指数"
+        },
+        "time": {
+          "code": "1971000000",
+          "name": "1971年"
+        }
+      },
+      "value": {
+        "raw": "29.4",
+        "number": 29.4,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004052037",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0001",
+          "name": "0001 総合"
+        },
+        "tab": {
+          "code": "1",
+          "name": "指数"
+        },
+        "time": {
+          "code": "1970000000",
+          "name": "1970年"
+        }
+      },
+      "value": {
+        "raw": "27.6",
+        "number": 27.6,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004052037",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0002",
+          "name": "0002 食料"
+        },
+        "tab": {
+          "code": "1",
+          "name": "指数"
+        },
+        "time": {
+          "code": "2025000000",
+          "name": "2025年"
+        }
+      },
+      "value": {
+        "raw": "100",
+        "number": 100,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004052037",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0002",
+          "name": "0002 食料"
+        },
+        "tab": {
+          "code": "1",
+          "name": "指数"
+        },
+        "time": {
+          "code": "2024000000",
+          "name": "2024年"
+        }
+      },
+      "value": {
+        "raw": "93.6",
+        "number": 93.6,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004052037",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0002",
+          "name": "0002 食料"
+        },
+        "tab": {
+          "code": "1",
+          "name": "指数"
+        },
+        "time": {
+          "code": "2023000000",
+          "name": "2023年"
+        }
+      },
+      "value": {
+        "raw": "89.7",
+        "number": 89.7,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004052037",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0002",
+          "name": "0002 食料"
+        },
+        "tab": {
+          "code": "1",
+          "name": "指数"
+        },
+        "time": {
+          "code": "2022000000",
+          "name": "2022年"
+        }
+      },
+      "value": {
+        "raw": "83",
+        "number": 83,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004052037",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0002",
+          "name": "0002 食料"
+        },
+        "tab": {
+          "code": "1",
+          "name": "指数"
+        },
+        "time": {
+          "code": "2021000000",
+          "name": "2021年"
+        }
+      },
+      "value": {
+        "raw": "79.5",
+        "number": 79.5,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004052037",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0002",
+          "name": "0002 食料"
+        },
+        "tab": {
+          "code": "1",
+          "name": "指数"
+        },
+        "time": {
+          "code": "2020000000",
+          "name": "2020年"
+        }
+      },
+      "value": {
+        "raw": "79.5",
+        "number": 79.5,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004052037",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0002",
+          "name": "0002 食料"
+        },
+        "tab": {
+          "code": "1",
+          "name": "指数"
+        },
+        "time": {
+          "code": "2019000000",
+          "name": "2019年"
+        }
+      },
+      "value": {
+        "raw": "78.4",
+        "number": 78.4,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004052037",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0002",
+          "name": "0002 食料"
+        },
+        "tab": {
+          "code": "1",
+          "name": "指数"
+        },
+        "time": {
+          "code": "2018000000",
+          "name": "2018年"
+        }
+      },
+      "value": {
+        "raw": "78.1",
+        "number": 78.1,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004052037",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0002",
+          "name": "0002 食料"
+        },
+        "tab": {
+          "code": "1",
+          "name": "指数"
+        },
+        "time": {
+          "code": "2017000000",
+          "name": "2017年"
+        }
+      },
+      "value": {
+        "raw": "77",
+        "number": 77,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004052037",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0002",
+          "name": "0002 食料"
+        },
+        "tab": {
+          "code": "1",
+          "name": "指数"
+        },
+        "time": {
+          "code": "2016000000",
+          "name": "2016年"
+        }
+      },
+      "value": {
+        "raw": "76.4",
+        "number": 76.4,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004052037",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0002",
+          "name": "0002 食料"
+        },
+        "tab": {
+          "code": "1",
+          "name": "指数"
+        },
+        "time": {
+          "code": "2015000000",
+          "name": "2015年"
+        }
+      },
+      "value": {
+        "raw": "75.2",
+        "number": 75.2,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004052037",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0002",
+          "name": "0002 食料"
+        },
+        "tab": {
+          "code": "1",
+          "name": "指数"
+        },
+        "time": {
+          "code": "2014000000",
+          "name": "2014年"
+        }
+      },
+      "value": {
+        "raw": "72.9",
+        "number": 72.9,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004052037",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0002",
+          "name": "0002 食料"
+        },
+        "tab": {
+          "code": "1",
+          "name": "指数"
+        },
+        "time": {
+          "code": "2013000000",
+          "name": "2013年"
+        }
+      },
+      "value": {
+        "raw": "70.2",
+        "number": 70.2,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004052037",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0002",
+          "name": "0002 食料"
+        },
+        "tab": {
+          "code": "1",
+          "name": "指数"
+        },
+        "time": {
+          "code": "2012000000",
+          "name": "2012年"
+        }
+      },
+      "value": {
+        "raw": "70.3",
+        "number": 70.3,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004052037",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0002",
+          "name": "0002 食料"
+        },
+        "tab": {
+          "code": "1",
+          "name": "指数"
+        },
+        "time": {
+          "code": "2011000000",
+          "name": "2011年"
+        }
+      },
+      "value": {
+        "raw": "70.3",
+        "number": 70.3,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004052037",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0002",
+          "name": "0002 食料"
+        },
+        "tab": {
+          "code": "1",
+          "name": "指数"
+        },
+        "time": {
+          "code": "2010000000",
+          "name": "2010年"
+        }
+      },
+      "value": {
+        "raw": "70.5",
+        "number": 70.5,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004052037",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0002",
+          "name": "0002 食料"
+        },
+        "tab": {
+          "code": "1",
+          "name": "指数"
+        },
+        "time": {
+          "code": "2009000000",
+          "name": "2009年"
+        }
+      },
+      "value": {
+        "raw": "70.7",
+        "number": 70.7,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004052037",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0002",
+          "name": "0002 食料"
+        },
+        "tab": {
+          "code": "1",
+          "name": "指数"
+        },
+        "time": {
+          "code": "2008000000",
+          "name": "2008年"
+        }
+      },
+      "value": {
+        "raw": "70.6",
+        "number": 70.6,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004052037",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0002",
+          "name": "0002 食料"
+        },
+        "tab": {
+          "code": "1",
+          "name": "指数"
+        },
+        "time": {
+          "code": "2007000000",
+          "name": "2007年"
+        }
+      },
+      "value": {
+        "raw": "68.8",
+        "number": 68.8,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004052037",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0002",
+          "name": "0002 食料"
+        },
+        "tab": {
+          "code": "1",
+          "name": "指数"
+        },
+        "time": {
+          "code": "2006000000",
+          "name": "2006年"
+        }
+      },
+      "value": {
+        "raw": "68.6",
+        "number": 68.6,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004052037",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0002",
+          "name": "0002 食料"
+        },
+        "tab": {
+          "code": "1",
+          "name": "指数"
+        },
+        "time": {
+          "code": "2005000000",
+          "name": "2005年"
+        }
+      },
+      "value": {
+        "raw": "68.3",
+        "number": 68.3,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004052037",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0002",
+          "name": "0002 食料"
+        },
+        "tab": {
+          "code": "1",
+          "name": "指数"
+        },
+        "time": {
+          "code": "2004000000",
+          "name": "2004年"
+        }
+      },
+      "value": {
+        "raw": "68.9",
+        "number": 68.9,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004052037",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0002",
+          "name": "0002 食料"
+        },
+        "tab": {
+          "code": "1",
+          "name": "指数"
+        },
+        "time": {
+          "code": "2003000000",
+          "name": "2003年"
+        }
+      },
+      "value": {
+        "raw": "68.3",
+        "number": 68.3,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004052037",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0002",
+          "name": "0002 食料"
+        },
+        "tab": {
+          "code": "1",
+          "name": "指数"
+        },
+        "time": {
+          "code": "2002000000",
+          "name": "2002年"
+        }
+      },
+      "value": {
+        "raw": "68.4",
+        "number": 68.4,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004052037",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0002",
+          "name": "0002 食料"
+        },
+        "tab": {
+          "code": "1",
+          "name": "指数"
+        },
+        "time": {
+          "code": "2001000000",
+          "name": "2001年"
+        }
+      },
+      "value": {
+        "raw": "69",
+        "number": 69,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004052037",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0002",
+          "name": "0002 食料"
+        },
+        "tab": {
+          "code": "1",
+          "name": "指数"
+        },
+        "time": {
+          "code": "2000000000",
+          "name": "2000年"
+        }
+      },
+      "value": {
+        "raw": "69.4",
+        "number": 69.4,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004052037",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0002",
+          "name": "0002 食料"
+        },
+        "tab": {
+          "code": "1",
+          "name": "指数"
+        },
+        "time": {
+          "code": "1999000000",
+          "name": "1999年"
+        }
+      },
+      "value": {
+        "raw": "70.8",
+        "number": 70.8,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004052037",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0002",
+          "name": "0002 食料"
+        },
+        "tab": {
+          "code": "1",
+          "name": "指数"
+        },
+        "time": {
+          "code": "1998000000",
+          "name": "1998年"
+        }
+      },
+      "value": {
+        "raw": "71.1",
+        "number": 71.1,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004052037",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0002",
+          "name": "0002 食料"
+        },
+        "tab": {
+          "code": "1",
+          "name": "指数"
+        },
+        "time": {
+          "code": "1997000000",
+          "name": "1997年"
+        }
+      },
+      "value": {
+        "raw": "70.2",
+        "number": 70.2,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004052037",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0002",
+          "name": "0002 食料"
+        },
+        "tab": {
+          "code": "1",
+          "name": "指数"
+        },
+        "time": {
+          "code": "1996000000",
+          "name": "1996年"
+        }
+      },
+      "value": {
+        "raw": "68.9",
+        "number": 68.9,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004052037",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0002",
+          "name": "0002 食料"
+        },
+        "tab": {
+          "code": "1",
+          "name": "指数"
+        },
+        "time": {
+          "code": "1995000000",
+          "name": "1995年"
+        }
+      },
+      "value": {
+        "raw": "69",
+        "number": 69,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004052037",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0002",
+          "name": "0002 食料"
+        },
+        "tab": {
+          "code": "1",
+          "name": "指数"
+        },
+        "time": {
+          "code": "1994000000",
+          "name": "1994年"
+        }
+      },
+      "value": {
+        "raw": "69.8",
+        "number": 69.8,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004052037",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0002",
+          "name": "0002 食料"
+        },
+        "tab": {
+          "code": "1",
+          "name": "指数"
+        },
+        "time": {
+          "code": "1993000000",
+          "name": "1993年"
+        }
+      },
+      "value": {
+        "raw": "69.2",
+        "number": 69.2,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004052037",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0002",
+          "name": "0002 食料"
+        },
+        "tab": {
+          "code": "1",
+          "name": "指数"
+        },
+        "time": {
+          "code": "1992000000",
+          "name": "1992年"
+        }
+      },
+      "value": {
+        "raw": "68.5",
+        "number": 68.5,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004052037",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0002",
+          "name": "0002 食料"
+        },
+        "tab": {
+          "code": "1",
+          "name": "指数"
+        },
+        "time": {
+          "code": "1991000000",
+          "name": "1991年"
+        }
+      },
+      "value": {
+        "raw": "68.1",
+        "number": 68.1,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004052037",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0002",
+          "name": "0002 食料"
+        },
+        "tab": {
+          "code": "1",
+          "name": "指数"
+        },
+        "time": {
+          "code": "1990000000",
+          "name": "1990年"
+        }
+      },
+      "value": {
+        "raw": "65",
+        "number": 65,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004052037",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0002",
+          "name": "0002 食料"
+        },
+        "tab": {
+          "code": "1",
+          "name": "指数"
+        },
+        "time": {
+          "code": "1989000000",
+          "name": "1989年"
+        }
+      },
+      "value": {
+        "raw": "62.5",
+        "number": 62.5,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004052037",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0002",
+          "name": "0002 食料"
+        },
+        "tab": {
+          "code": "1",
+          "name": "指数"
+        },
+        "time": {
+          "code": "1988000000",
+          "name": "1988年"
+        }
+      },
+      "value": {
+        "raw": "61.2",
+        "number": 61.2,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004052037",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0002",
+          "name": "0002 食料"
+        },
+        "tab": {
+          "code": "1",
+          "name": "指数"
+        },
+        "time": {
+          "code": "1987000000",
+          "name": "1987年"
+        }
+      },
+      "value": {
+        "raw": "60.7",
+        "number": 60.7,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004052037",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0002",
+          "name": "0002 食料"
+        },
+        "tab": {
+          "code": "1",
+          "name": "指数"
+        },
+        "time": {
+          "code": "1986000000",
+          "name": "1986年"
+        }
+      },
+      "value": {
+        "raw": "61.3",
+        "number": 61.3,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004052037",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0002",
+          "name": "0002 食料"
+        },
+        "tab": {
+          "code": "1",
+          "name": "指数"
+        },
+        "time": {
+          "code": "1985000000",
+          "name": "1985年"
+        }
+      },
+      "value": {
+        "raw": "61.2",
+        "number": 61.2,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004052037",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0002",
+          "name": "0002 食料"
+        },
+        "tab": {
+          "code": "1",
+          "name": "指数"
+        },
+        "time": {
+          "code": "1984000000",
+          "name": "1984年"
+        }
+      },
+      "value": {
+        "raw": "60.1",
+        "number": 60.1,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004052037",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0002",
+          "name": "0002 食料"
+        },
+        "tab": {
+          "code": "1",
+          "name": "指数"
+        },
+        "time": {
+          "code": "1983000000",
+          "name": "1983年"
+        }
+      },
+      "value": {
+        "raw": "58.5",
+        "number": 58.5,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004052037",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0002",
+          "name": "0002 食料"
+        },
+        "tab": {
+          "code": "1",
+          "name": "指数"
+        },
+        "time": {
+          "code": "1982000000",
+          "name": "1982年"
+        }
+      },
+      "value": {
+        "raw": "57.3",
+        "number": 57.3,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004052037",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0002",
+          "name": "0002 食料"
+        },
+        "tab": {
+          "code": "1",
+          "name": "指数"
+        },
+        "time": {
+          "code": "1981000000",
+          "name": "1981年"
+        }
+      },
+      "value": {
+        "raw": "56.3",
+        "number": 56.3,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004052037",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0002",
+          "name": "0002 食料"
+        },
+        "tab": {
+          "code": "1",
+          "name": "指数"
+        },
+        "time": {
+          "code": "1980000000",
+          "name": "1980年"
+        }
+      },
+      "value": {
+        "raw": "53.5",
+        "number": 53.5,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004052037",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0002",
+          "name": "0002 食料"
+        },
+        "tab": {
+          "code": "1",
+          "name": "指数"
+        },
+        "time": {
+          "code": "1979000000",
+          "name": "1979年"
+        }
+      },
+      "value": {
+        "raw": "50.4",
+        "number": 50.4,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004052037",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0002",
+          "name": "0002 食料"
+        },
+        "tab": {
+          "code": "1",
+          "name": "指数"
+        },
+        "time": {
+          "code": "1978000000",
+          "name": "1978年"
+        }
+      },
+      "value": {
+        "raw": "49.4",
+        "number": 49.4,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004052037",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0002",
+          "name": "0002 食料"
+        },
+        "tab": {
+          "code": "1",
+          "name": "指数"
+        },
+        "time": {
+          "code": "1977000000",
+          "name": "1977年"
+        }
+      },
+      "value": {
+        "raw": "47.7",
+        "number": 47.7,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004052037",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0002",
+          "name": "0002 食料"
+        },
+        "tab": {
+          "code": "1",
+          "name": "指数"
+        },
+        "time": {
+          "code": "1976000000",
+          "name": "1976年"
+        }
+      },
+      "value": {
+        "raw": "44.7",
+        "number": 44.7,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004052037",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0002",
+          "name": "0002 食料"
+        },
+        "tab": {
+          "code": "1",
+          "name": "指数"
+        },
+        "time": {
+          "code": "1975000000",
+          "name": "1975年"
+        }
+      },
+      "value": {
+        "raw": "41",
+        "number": 41,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004052037",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0002",
+          "name": "0002 食料"
+        },
+        "tab": {
+          "code": "1",
+          "name": "指数"
+        },
+        "time": {
+          "code": "1974000000",
+          "name": "1974年"
+        }
+      },
+      "value": {
+        "raw": "36.3",
+        "number": 36.3,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004052037",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0002",
+          "name": "0002 食料"
+        },
+        "tab": {
+          "code": "1",
+          "name": "指数"
+        },
+        "time": {
+          "code": "1973000000",
+          "name": "1973年"
+        }
+      },
+      "value": {
+        "raw": "28.4",
+        "number": 28.4,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004052037",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0002",
+          "name": "0002 食料"
+        },
+        "tab": {
+          "code": "1",
+          "name": "指数"
+        },
+        "time": {
+          "code": "1972000000",
+          "name": "1972年"
+        }
+      },
+      "value": {
+        "raw": "25.1",
+        "number": 25.1,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004052037",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0002",
+          "name": "0002 食料"
+        },
+        "tab": {
+          "code": "1",
+          "name": "指数"
+        },
+        "time": {
+          "code": "1971000000",
+          "name": "1971年"
+        }
+      },
+      "value": {
+        "raw": "24.2",
+        "number": 24.2,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004052037",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0002",
+          "name": "0002 食料"
+        },
+        "tab": {
+          "code": "1",
+          "name": "指数"
+        },
+        "time": {
+          "code": "1970000000",
+          "name": "1970年"
+        }
+      },
+      "value": {
+        "raw": "22.8",
+        "number": 22.8,
+        "kind": "number"
+      }
+    }
+  ]
+}

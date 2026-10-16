@@ -219,5 +219,15 @@
     "category": "3D物理コメディ",
     "thumbnail": "zenryoku-taikin-cover.png",
     "accent": "#E63B2F"
+  },
+  {
+    "id": "2026-10-16",
+    "date": "2026-10-16",
+    "sequence": 1,
+    "name": "時代のとなりで",
+    "description": "生まれ年から日本の近現代をたどる。統計、出来事、一人ひとりの暮らしを、イラストと出典から読む歴史作品。",
+    "category": "歴史 / インタラクティブ閲覧",
+    "thumbnail": "assets/art/rural-day.png",
+    "accent": "#B73529"
   }
 ]
