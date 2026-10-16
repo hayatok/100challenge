@@ -1,0 +1,33 @@
+{
+  "command": [
+    "/Users/hayatok/.local/bin/estat",
+    "data",
+    "get",
+    "0003037311",
+    "--filter",
+    "cat01=00,01,10",
+    "--filter",
+    "cat02=0",
+    "--filter",
+    "cat03=00,06",
+    "--filter",
+    "cat04=00",
+    "--filter",
+    "area=00000",
+    "--all-pages",
+    "--max-records",
+    "500",
+    "--timeout",
+    "30s",
+    "-o",
+    "json"
+  ],
+  "started_at": "2026-10-16T14:59:54.765895+00:00",
+  "finished_at": "2026-10-16T14:59:55.836000+00:00",
+  "exit_code": 0,
+  "json_valid": true,
+  "redacted_fields": 0,
+  "output_path": "evidence/estat/r3_demography/industry_modern_data.json",
+  "sha256": "d2d4766e8872433c1cfa349659d29921f943867e1be51f7dbb07605e3a1f98ee",
+  "stderr": ""
+}

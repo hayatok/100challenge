@@ -45,10 +45,13 @@ test('original values, units, time labels and evidence references are retained v
   assert.equal(macro.education.unit,'単位文字列未取得。表章名「在学者数」');
 });
 
-test('pre-1975 population is an author model; observations are neither extrapolated nor interpolated',()=>{
+test('early basic population and modern total population retain separate scopes without interpolation',()=>{
   const early=snap(1900),lastEarly=snap(1974),first=snap(1975),housing=snap(1980),latest=snap(2026);
-  assert.equal(early.macro.population.status,'unavailable');assert.equal(lastEarly.macro.population.value,null);
-  assert.equal(early.world.directives.personCount,180);assert.equal(early.world.directives.populationBasis,'author');
+  assert.equal(early.macro.population.status,'exact');assert.equal(early.macro.population.value,43847000);
+  assert.match(early.macro.population.scope.label,/1月1日/);
+  assert.equal(early.world.directives.personCount,73);assert.equal(early.world.directives.populationBasis,'observation');
+  assert.match(lastEarly.macro.population.series.id,/D3-ST001/);assert.match(first.macro.population.series.id,/SD-STAT016/);
+  assert.notDeepEqual(lastEarly.macro.population.scope,first.macro.population.scope);
   assert.equal(first.world.directives.personCount,Math.round(111939643/600000));
   assert.equal(housing.macro.housing.status,'historical');assert.equal(housing.macro.housing.point.year,1978);
   assert.equal(latest.macro.population.status,'historical');assert.equal(latest.macro.population.point.year,2024);
@@ -60,8 +63,9 @@ test('monthly bus observations respect the month and never become an invented an
   const october=snap(2010,10).macro.bus;
   assert.equal(october.status,'exact');assert.equal(october.point.timeLabel,'2010年10月');assert.equal(october.value,357839);
   const april=snap(2020,4).macro.bus;
-  assert.equal(april.status,'historical');assert.equal(april.point.timeLabel,'2020年3月');assert.equal(april.value,295010);
-  assert.equal(snap(2026).macro.bus.point.timeLabel,'2020年3月');
+  assert.equal(april.status,'exact');assert.equal(april.point.timeLabel,'2020年4月');assert.equal(april.value,203622);
+  assert.notEqual(april.series.id,snap(2020,3).macro.bus.series.id);
+  assert.equal(snap(2026).macro.bus.point.timeLabel,'2026年1月');assert.equal(snap(2026).macro.bus.value,301903);
 });
 
 test('a raw missing marker stops historical fallback instead of substituting an older value or zero',()=>{
@@ -72,10 +76,10 @@ test('a raw missing marker stops historical fallback instead of substituting an 
   assert.equal(s.macro.population.status,'unavailable');assert.equal(s.macro.population.value,null);assert.equal(s.macro.population.point.raw,'…');
   assert.equal(s.world.directives.populationBasis,'author');assert.equal(s.world.directives.personCount,180);
   assert.equal(snapshot(createSimulation(copied,drivers,{year:1981})).macro.population.status,'exact');
-  const bus=copied.series.find(s=>s.id===drivers.drivers.find(d=>d.id==='bus').seriesIds[0]);
-  const last=bus.points.at(-1);last.kind='missing';last.value=null;last.raw='***';
+  const bus=copied.series.find(s=>s.id===drivers.drivers.find(d=>d.id==='bus').segments.find(s=>s.from==='2020-04').seriesIds[0]);
+  const last=bus.points.find(p=>p.year===2020&&p.timeLabel==='2020年4月');last.kind='missing';last.value=null;last.raw='***';
   const past=snapshot(createSimulation(copied,drivers,{year:2020,month:4})).macro.bus;
-  assert.equal(past.status,'unavailable');assert.equal(past.point.timeLabel,'2020年3月');
+  assert.equal(past.status,'unavailable');assert.equal(past.point.timeLabel,'2020年4月');assert.equal(past.point.raw,'***');
 });
 
 test('industry survey and classification boundaries select distinct segments and ratio bases',()=>{
@@ -98,8 +102,8 @@ test('each adopted signal has an explicit draw rule tied to the selected origina
   assert.equal(d.priceIndex,m.prices.value);assert.equal(d.foodPriceIndex,m.prices.observations[1].value);
   assert.equal(d.farmCount,Math.round(12*m.industry.value/m.industry.baseline.value));
   assert.equal(d.studentCount,Math.round(48*m.education.value/m.education.baseline.value));
-  for(const id of Object.keys(m)){assert.ok(d.rules[id]);assert.equal(d.references[id][0].pointId,m[id].point.id);}
-  for(const [field,visual] of [['houseCount','houses'],['farmCount','farm'],['factoryCount','factory'],['emptyHouseCount','vacancy'],['waterCount','water'],['riceSacks','rice'],['busCount','bus']])assert.equal(s.world.places.reduce((sum,p)=>sum+p.visual[visual],0),d[field]);
+  for(const id of Object.keys(m)){assert.ok(d.rules[id]);assert.equal(d.references[id][0].pointId,m[id].point?.id??null);}
+  for(const [field,visual] of [['houseCount','houses'],['farmCount','farm'],['factoryCount','factory'],['emptyHouseCount','vacancy'],['waterCount','water'],['riceSacks','rice'],['busCount','bus'],['studentCount','students']])assert.equal(s.world.places.reduce((sum,p)=>sum+p.visual[visual],0),d[field]);
   assert.equal(s.world.buildings.filter(b=>b.type==='house'&&!b.lit).length,d.emptyHouseCount);
 });
 
@@ -160,4 +164,51 @@ test('time boundaries and a small strict save reproduce the same month, person a
   let sim=advance(create({year:1993,month:4,seed:51}),.375);sim=selectPerson(sim,snapshot(sim).world.people[0].id);
   assert.deepEqual(snapshot(restoreSimulation(archive,drivers,serializeSimulation(sim))),snapshot(sim));
   for(const raw of ['{','null',JSON.stringify({version:2}),serializeSimulation(sim).replace('"seed":51','"seed":-1')])assert.throws(()=>restoreSimulation(archive,drivers,raw));
+});
+
+test('v3 classification and population boundaries reset references and preserve actual missing periods',()=>{
+  const old=snap(2006).macro.industry,newer=snap(2007).macro.industry,missing=snap(2011).macro.industry;
+  assert.notEqual(old.series.id,newer.series.id);assert.equal(newer.baseline.year,2007);
+  assert.equal(missing.status,'unavailable');assert.equal(missing.point.year,2011);assert.equal(missing.value,null);
+  assert.equal(snap(2011).world.directives.farmCount,0);assert.equal(snap(2011).world.directives.factoryCount,0);
+  const schoolOld=snap(2016).macro.education,schoolNew=snap(2017).macro.education;
+  assert.notEqual(schoolOld.series.id,schoolNew.series.id);assert.equal(schoolNew.baseline.year,2017);
+  assert.equal(schoolNew.value,6448658);assert.equal(schoolNew.unit,'人');
+  assert.notEqual(snap(1939).macro.population.segmentFrom,snap(1940).macro.population.segmentFrom);
+  assert.match(JSON.stringify(snap(1966).macro.population.scope),/外国人/);assert.match(JSON.stringify(snap(1967).macro.population.scope),/日本人/);
+});
+
+test('inclusive month segments block old carry-over and reject overlapping or malformed periods',()=>{
+  const configured=structuredClone(drivers),bus=configured.drivers.find(d=>d.id==='bus');
+  bus.segments=[{from:'2020-03',through:'2020-03',seriesIds:[bus.seriesIds[0]]},{from:'2020-05',through:'2020-12',seriesIds:[bus.seriesIds[0]]}];
+  const sim=createSimulation(archive,configured,{year:2020,month:3});
+  assert.equal(snapshot(sim).macro.bus.status,'exact');
+  assert.equal(snapshot(seek(sim,2020,4)).macro.bus.status,'unavailable');
+  assert.equal(snapshot(seek(sim,2020,4)).macro.bus.point,null);
+  assert.equal(snapshot(seek(sim,2020,5)).macro.bus.status,'unavailable');
+  assert.equal(snapshot(seek(sim,2020,5)).world.directives.busCount,0);
+  bus.segments[1].from='2020-03';assert.throws(()=>createSimulation(archive,configured),/参照期間/);
+  bus.segments[1].from='2020-13';assert.throws(()=>createSimulation(archive,configured),/参照期間/);
+});
+
+test('rail, communication and annual energy have distinct visible scales with original timing and missing rules',()=>{
+  const early=snap(1900),april=snap(2020,4),firstEnergy=snap(2017),lastEnergy=snap(2023),last=snap(2026);
+  assert.equal(early.world.directives.railCount,0);assert.equal(early.world.directives.deviceCount,0);
+  assert.equal(early.world.directives.energyAmount,null);assert.equal(early.world.directives.energyGlyphs,0);
+  assert.equal(snap(2020,3).macro.rail.status,'unavailable');
+  assert.equal(april.macro.rail.value,1160250);assert.equal(april.macro.rail.unit,'千人');assert.equal(april.world.directives.railCount,4);
+  assert.equal(snap(1996).world.directives.deviceCount,Math.round(snap(1996).macro.communication.observations[1].value/10));
+  assert.equal(snap(2010).world.directives.deviceCount,1);assert.equal(snap(2016).world.directives.deviceCount,7);
+  assert.equal(last.macro.communication.status,'historical');assert.equal(last.macro.communication.point.year,2016);
+  assert.equal(firstEnergy.world.directives.energyAmount,33.21);assert.equal(firstEnergy.world.directives.energyGlyphs,11);
+  assert.equal(lastEnergy.world.directives.energyAmount,27.8);assert.equal(lastEnergy.world.directives.energyGlyphs,9);
+  assert.equal(last.macro.energy.point.year,2023);assert.match(last.macro.energy.point.timeLabel,/年度/);
+  for(const [count,visual,type] of [['railCount','rail','rail'],['deviceCount','device','device'],['energyGlyphs','energy','energy']]){
+    assert.equal(april.world.places.reduce((n,p)=>n+p.visual[visual],0),april.world.directives[count]);
+    assert.equal((type==='rail'?april.world.vehicles:april.world.buildings).filter(b=>b.type===type).length,april.world.directives[count]);
+  }
+  const missingArchive=structuredClone(archive),id=drivers.drivers.find(d=>d.id==='energy').seriesIds[0];
+  const point=missingArchive.series.find(s=>s.id===id).points.find(p=>p.year===2023);point.value=null;point.kind='missing';point.raw='-';
+  const stopped=snapshot(createSimulation(missingArchive,drivers,{year:2026}));
+  assert.equal(stopped.macro.energy.point.raw,'-');assert.equal(stopped.world.directives.energyAmount,null);assert.equal(stopped.world.directives.energyGlyphs,0);
 });

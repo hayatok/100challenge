@@ -1,0 +1,1071 @@
+{
+  "schema_version": "1",
+  "kind": "data",
+  "table": {
+    "id": "0004029259",
+    "statistics_code": "00650408",
+    "statistics_name": "家庭部門のCO2排出実態統計調査",
+    "organization": "環境省",
+    "title": "<時系列第2表>基本項目（世帯、住宅）別-年間エネルギー種別エネルギー消費量",
+    "cycle": "年度次",
+    "survey_date": "202304-202403",
+    "open_date": "2025-11-05",
+    "updated_date": "2025-11-05",
+    "collect_area": "全国",
+    "total_records": 39319
+  },
+  "dimensions": [
+    {
+      "id": "cat01",
+      "name": "時系列02用_表6-2-X-表頭[令和5年度版]",
+      "values": [
+        {
+          "code": "0120",
+          "name": "電気_平均",
+          "level": "1",
+          "unit": "GJ/世帯・年"
+        },
+        {
+          "code": "0260",
+          "name": "都市ガス_平均",
+          "level": "1",
+          "unit": "GJ/世帯・年"
+        },
+        {
+          "code": "0400",
+          "name": "LPガス_平均",
+          "level": "1",
+          "unit": "GJ/世帯・年"
+        },
+        {
+          "code": "0540",
+          "name": "灯油_平均",
+          "level": "1",
+          "unit": "GJ/世帯・年"
+        },
+        {
+          "code": "0680",
+          "name": "エネルギー消費量合計（電気、都市ガス、LPガス、灯油）_平均",
+          "level": "1",
+          "unit": "GJ/世帯・年"
+        }
+      ]
+    },
+    {
+      "id": "cat02",
+      "name": "時系列表側[令和5年度版]",
+      "values": [
+        {
+          "code": "01001",
+          "name": "全国_平成29年度_2017",
+          "level": "2"
+        },
+        {
+          "code": "01002",
+          "name": "全国_平成30年度_2018",
+          "level": "2"
+        },
+        {
+          "code": "01003",
+          "name": "全国_平成31年度_2019",
+          "level": "2"
+        },
+        {
+          "code": "01004",
+          "name": "全国_令和2年度_2020",
+          "level": "2"
+        },
+        {
+          "code": "01005",
+          "name": "全国_令和3年度_2021",
+          "level": "2"
+        },
+        {
+          "code": "01006",
+          "name": "全国_令和4年度_2022",
+          "level": "2"
+        },
+        {
+          "code": "01007",
+          "name": "全国_令和5年度_2023",
+          "level": "2"
+        }
+      ]
+    },
+    {
+      "id": "area",
+      "name": "地域区分",
+      "values": [
+        {
+          "code": "00100",
+          "name": "全国",
+          "level": "1"
+        }
+      ]
+    },
+    {
+      "id": "time",
+      "name": "時間軸",
+      "values": [
+        {
+          "code": "000107",
+          "name": "令和5年度",
+          "level": "1"
+        }
+      ]
+    }
+  ],
+  "page": {
+    "total": 35,
+    "from": 1,
+    "to": 35,
+    "truncated": false
+  },
+  "records": [
+    {
+      "table_id": "0004029259",
+      "dimensions": {
+        "area": {
+          "code": "00100",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0120",
+          "name": "電気_平均"
+        },
+        "cat02": {
+          "code": "01001",
+          "name": "全国_平成29年度_2017"
+        },
+        "time": {
+          "code": "000107",
+          "name": "令和5年度"
+        }
+      },
+      "unit": "GJ/世帯・年",
+      "value": {
+        "raw": "15.56",
+        "number": 15.56,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004029259",
+      "dimensions": {
+        "area": {
+          "code": "00100",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0120",
+          "name": "電気_平均"
+        },
+        "cat02": {
+          "code": "01002",
+          "name": "全国_平成30年度_2018"
+        },
+        "time": {
+          "code": "000107",
+          "name": "令和5年度"
+        }
+      },
+      "unit": "GJ/世帯・年",
+      "value": {
+        "raw": "15.12",
+        "number": 15.12,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004029259",
+      "dimensions": {
+        "area": {
+          "code": "00100",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0120",
+          "name": "電気_平均"
+        },
+        "cat02": {
+          "code": "01003",
+          "name": "全国_平成31年度_2019"
+        },
+        "time": {
+          "code": "000107",
+          "name": "令和5年度"
+        }
+      },
+      "unit": "GJ/世帯・年",
+      "value": {
+        "raw": "14.57",
+        "number": 14.57,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004029259",
+      "dimensions": {
+        "area": {
+          "code": "00100",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0120",
+          "name": "電気_平均"
+        },
+        "cat02": {
+          "code": "01004",
+          "name": "全国_令和2年度_2020"
+        },
+        "time": {
+          "code": "000107",
+          "name": "令和5年度"
+        }
+      },
+      "unit": "GJ/世帯・年",
+      "value": {
+        "raw": "15.33",
+        "number": 15.33,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004029259",
+      "dimensions": {
+        "area": {
+          "code": "00100",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0120",
+          "name": "電気_平均"
+        },
+        "cat02": {
+          "code": "01005",
+          "name": "全国_令和3年度_2021"
+        },
+        "time": {
+          "code": "000107",
+          "name": "令和5年度"
+        }
+      },
+      "unit": "GJ/世帯・年",
+      "value": {
+        "raw": "15.03",
+        "number": 15.03,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004029259",
+      "dimensions": {
+        "area": {
+          "code": "00100",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0120",
+          "name": "電気_平均"
+        },
+        "cat02": {
+          "code": "01006",
+          "name": "全国_令和4年度_2022"
+        },
+        "time": {
+          "code": "000107",
+          "name": "令和5年度"
+        }
+      },
+      "unit": "GJ/世帯・年",
+      "value": {
+        "raw": "14.22",
+        "number": 14.22,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004029259",
+      "dimensions": {
+        "area": {
+          "code": "00100",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0120",
+          "name": "電気_平均"
+        },
+        "cat02": {
+          "code": "01007",
+          "name": "全国_令和5年度_2023"
+        },
+        "time": {
+          "code": "000107",
+          "name": "令和5年度"
+        }
+      },
+      "unit": "GJ/世帯・年",
+      "value": {
+        "raw": "14.08",
+        "number": 14.08,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004029259",
+      "dimensions": {
+        "area": {
+          "code": "00100",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0260",
+          "name": "都市ガス_平均"
+        },
+        "cat02": {
+          "code": "01001",
+          "name": "全国_平成29年度_2017"
+        },
+        "time": {
+          "code": "000107",
+          "name": "令和5年度"
+        }
+      },
+      "unit": "GJ/世帯・年",
+      "value": {
+        "raw": "8.41",
+        "number": 8.41,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004029259",
+      "dimensions": {
+        "area": {
+          "code": "00100",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0260",
+          "name": "都市ガス_平均"
+        },
+        "cat02": {
+          "code": "01002",
+          "name": "全国_平成30年度_2018"
+        },
+        "time": {
+          "code": "000107",
+          "name": "令和5年度"
+        }
+      },
+      "unit": "GJ/世帯・年",
+      "value": {
+        "raw": "7.80",
+        "number": 7.80,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004029259",
+      "dimensions": {
+        "area": {
+          "code": "00100",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0260",
+          "name": "都市ガス_平均"
+        },
+        "cat02": {
+          "code": "01003",
+          "name": "全国_平成31年度_2019"
+        },
+        "time": {
+          "code": "000107",
+          "name": "令和5年度"
+        }
+      },
+      "unit": "GJ/世帯・年",
+      "value": {
+        "raw": "7.81",
+        "number": 7.81,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004029259",
+      "dimensions": {
+        "area": {
+          "code": "00100",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0260",
+          "name": "都市ガス_平均"
+        },
+        "cat02": {
+          "code": "01004",
+          "name": "全国_令和2年度_2020"
+        },
+        "time": {
+          "code": "000107",
+          "name": "令和5年度"
+        }
+      },
+      "unit": "GJ/世帯・年",
+      "value": {
+        "raw": "8.53",
+        "number": 8.53,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004029259",
+      "dimensions": {
+        "area": {
+          "code": "00100",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0260",
+          "name": "都市ガス_平均"
+        },
+        "cat02": {
+          "code": "01005",
+          "name": "全国_令和3年度_2021"
+        },
+        "time": {
+          "code": "000107",
+          "name": "令和5年度"
+        }
+      },
+      "unit": "GJ/世帯・年",
+      "value": {
+        "raw": "8.13",
+        "number": 8.13,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004029259",
+      "dimensions": {
+        "area": {
+          "code": "00100",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0260",
+          "name": "都市ガス_平均"
+        },
+        "cat02": {
+          "code": "01006",
+          "name": "全国_令和4年度_2022"
+        },
+        "time": {
+          "code": "000107",
+          "name": "令和5年度"
+        }
+      },
+      "unit": "GJ/世帯・年",
+      "value": {
+        "raw": "7.48",
+        "number": 7.48,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004029259",
+      "dimensions": {
+        "area": {
+          "code": "00100",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0260",
+          "name": "都市ガス_平均"
+        },
+        "cat02": {
+          "code": "01007",
+          "name": "全国_令和5年度_2023"
+        },
+        "time": {
+          "code": "000107",
+          "name": "令和5年度"
+        }
+      },
+      "unit": "GJ/世帯・年",
+      "value": {
+        "raw": "7.06",
+        "number": 7.06,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004029259",
+      "dimensions": {
+        "area": {
+          "code": "00100",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0400",
+          "name": "LPガス_平均"
+        },
+        "cat02": {
+          "code": "01001",
+          "name": "全国_平成29年度_2017"
+        },
+        "time": {
+          "code": "000107",
+          "name": "令和5年度"
+        }
+      },
+      "unit": "GJ/世帯・年",
+      "value": {
+        "raw": "2.98",
+        "number": 2.98,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004029259",
+      "dimensions": {
+        "area": {
+          "code": "00100",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0400",
+          "name": "LPガス_平均"
+        },
+        "cat02": {
+          "code": "01002",
+          "name": "全国_平成30年度_2018"
+        },
+        "time": {
+          "code": "000107",
+          "name": "令和5年度"
+        }
+      },
+      "unit": "GJ/世帯・年",
+      "value": {
+        "raw": "2.86",
+        "number": 2.86,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004029259",
+      "dimensions": {
+        "area": {
+          "code": "00100",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0400",
+          "name": "LPガス_平均"
+        },
+        "cat02": {
+          "code": "01003",
+          "name": "全国_平成31年度_2019"
+        },
+        "time": {
+          "code": "000107",
+          "name": "令和5年度"
+        }
+      },
+      "unit": "GJ/世帯・年",
+      "value": {
+        "raw": "2.70",
+        "number": 2.70,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004029259",
+      "dimensions": {
+        "area": {
+          "code": "00100",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0400",
+          "name": "LPガス_平均"
+        },
+        "cat02": {
+          "code": "01004",
+          "name": "全国_令和2年度_2020"
+        },
+        "time": {
+          "code": "000107",
+          "name": "令和5年度"
+        }
+      },
+      "unit": "GJ/世帯・年",
+      "value": {
+        "raw": "2.83",
+        "number": 2.83,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004029259",
+      "dimensions": {
+        "area": {
+          "code": "00100",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0400",
+          "name": "LPガス_平均"
+        },
+        "cat02": {
+          "code": "01005",
+          "name": "全国_令和3年度_2021"
+        },
+        "time": {
+          "code": "000107",
+          "name": "令和5年度"
+        }
+      },
+      "unit": "GJ/世帯・年",
+      "value": {
+        "raw": "2.63",
+        "number": 2.63,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004029259",
+      "dimensions": {
+        "area": {
+          "code": "00100",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0400",
+          "name": "LPガス_平均"
+        },
+        "cat02": {
+          "code": "01006",
+          "name": "全国_令和4年度_2022"
+        },
+        "time": {
+          "code": "000107",
+          "name": "令和5年度"
+        }
+      },
+      "unit": "GJ/世帯・年",
+      "value": {
+        "raw": "2.57",
+        "number": 2.57,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004029259",
+      "dimensions": {
+        "area": {
+          "code": "00100",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0400",
+          "name": "LPガス_平均"
+        },
+        "cat02": {
+          "code": "01007",
+          "name": "全国_令和5年度_2023"
+        },
+        "time": {
+          "code": "000107",
+          "name": "令和5年度"
+        }
+      },
+      "unit": "GJ/世帯・年",
+      "value": {
+        "raw": "2.32",
+        "number": 2.32,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004029259",
+      "dimensions": {
+        "area": {
+          "code": "00100",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0540",
+          "name": "灯油_平均"
+        },
+        "cat02": {
+          "code": "01001",
+          "name": "全国_平成29年度_2017"
+        },
+        "time": {
+          "code": "000107",
+          "name": "令和5年度"
+        }
+      },
+      "unit": "GJ/世帯・年",
+      "value": {
+        "raw": "6.26",
+        "number": 6.26,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004029259",
+      "dimensions": {
+        "area": {
+          "code": "00100",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0540",
+          "name": "灯油_平均"
+        },
+        "cat02": {
+          "code": "01002",
+          "name": "全国_平成30年度_2018"
+        },
+        "time": {
+          "code": "000107",
+          "name": "令和5年度"
+        }
+      },
+      "unit": "GJ/世帯・年",
+      "value": {
+        "raw": "5.44",
+        "number": 5.44,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004029259",
+      "dimensions": {
+        "area": {
+          "code": "00100",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0540",
+          "name": "灯油_平均"
+        },
+        "cat02": {
+          "code": "01003",
+          "name": "全国_平成31年度_2019"
+        },
+        "time": {
+          "code": "000107",
+          "name": "令和5年度"
+        }
+      },
+      "unit": "GJ/世帯・年",
+      "value": {
+        "raw": "5.25",
+        "number": 5.25,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004029259",
+      "dimensions": {
+        "area": {
+          "code": "00100",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0540",
+          "name": "灯油_平均"
+        },
+        "cat02": {
+          "code": "01004",
+          "name": "全国_令和2年度_2020"
+        },
+        "time": {
+          "code": "000107",
+          "name": "令和5年度"
+        }
+      },
+      "unit": "GJ/世帯・年",
+      "value": {
+        "raw": "5.65",
+        "number": 5.65,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004029259",
+      "dimensions": {
+        "area": {
+          "code": "00100",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0540",
+          "name": "灯油_平均"
+        },
+        "cat02": {
+          "code": "01005",
+          "name": "全国_令和3年度_2021"
+        },
+        "time": {
+          "code": "000107",
+          "name": "令和5年度"
+        }
+      },
+      "unit": "GJ/世帯・年",
+      "value": {
+        "raw": "5.08",
+        "number": 5.08,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004029259",
+      "dimensions": {
+        "area": {
+          "code": "00100",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0540",
+          "name": "灯油_平均"
+        },
+        "cat02": {
+          "code": "01006",
+          "name": "全国_令和4年度_2022"
+        },
+        "time": {
+          "code": "000107",
+          "name": "令和5年度"
+        }
+      },
+      "unit": "GJ/世帯・年",
+      "value": {
+        "raw": "4.59",
+        "number": 4.59,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004029259",
+      "dimensions": {
+        "area": {
+          "code": "00100",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0540",
+          "name": "灯油_平均"
+        },
+        "cat02": {
+          "code": "01007",
+          "name": "全国_令和5年度_2023"
+        },
+        "time": {
+          "code": "000107",
+          "name": "令和5年度"
+        }
+      },
+      "unit": "GJ/世帯・年",
+      "value": {
+        "raw": "4.33",
+        "number": 4.33,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004029259",
+      "dimensions": {
+        "area": {
+          "code": "00100",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0680",
+          "name": "エネルギー消費量合計（電気、都市ガス、LPガス、灯油）_平均"
+        },
+        "cat02": {
+          "code": "01001",
+          "name": "全国_平成29年度_2017"
+        },
+        "time": {
+          "code": "000107",
+          "name": "令和5年度"
+        }
+      },
+      "unit": "GJ/世帯・年",
+      "value": {
+        "raw": "33.21",
+        "number": 33.21,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004029259",
+      "dimensions": {
+        "area": {
+          "code": "00100",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0680",
+          "name": "エネルギー消費量合計（電気、都市ガス、LPガス、灯油）_平均"
+        },
+        "cat02": {
+          "code": "01002",
+          "name": "全国_平成30年度_2018"
+        },
+        "time": {
+          "code": "000107",
+          "name": "令和5年度"
+        }
+      },
+      "unit": "GJ/世帯・年",
+      "value": {
+        "raw": "31.23",
+        "number": 31.23,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004029259",
+      "dimensions": {
+        "area": {
+          "code": "00100",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0680",
+          "name": "エネルギー消費量合計（電気、都市ガス、LPガス、灯油）_平均"
+        },
+        "cat02": {
+          "code": "01003",
+          "name": "全国_平成31年度_2019"
+        },
+        "time": {
+          "code": "000107",
+          "name": "令和5年度"
+        }
+      },
+      "unit": "GJ/世帯・年",
+      "value": {
+        "raw": "30.33",
+        "number": 30.33,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004029259",
+      "dimensions": {
+        "area": {
+          "code": "00100",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0680",
+          "name": "エネルギー消費量合計（電気、都市ガス、LPガス、灯油）_平均"
+        },
+        "cat02": {
+          "code": "01004",
+          "name": "全国_令和2年度_2020"
+        },
+        "time": {
+          "code": "000107",
+          "name": "令和5年度"
+        }
+      },
+      "unit": "GJ/世帯・年",
+      "value": {
+        "raw": "32.35",
+        "number": 32.35,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004029259",
+      "dimensions": {
+        "area": {
+          "code": "00100",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0680",
+          "name": "エネルギー消費量合計（電気、都市ガス、LPガス、灯油）_平均"
+        },
+        "cat02": {
+          "code": "01005",
+          "name": "全国_令和3年度_2021"
+        },
+        "time": {
+          "code": "000107",
+          "name": "令和5年度"
+        }
+      },
+      "unit": "GJ/世帯・年",
+      "value": {
+        "raw": "30.87",
+        "number": 30.87,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004029259",
+      "dimensions": {
+        "area": {
+          "code": "00100",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0680",
+          "name": "エネルギー消費量合計（電気、都市ガス、LPガス、灯油）_平均"
+        },
+        "cat02": {
+          "code": "01006",
+          "name": "全国_令和4年度_2022"
+        },
+        "time": {
+          "code": "000107",
+          "name": "令和5年度"
+        }
+      },
+      "unit": "GJ/世帯・年",
+      "value": {
+        "raw": "28.86",
+        "number": 28.86,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0004029259",
+      "dimensions": {
+        "area": {
+          "code": "00100",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "0680",
+          "name": "エネルギー消費量合計（電気、都市ガス、LPガス、灯油）_平均"
+        },
+        "cat02": {
+          "code": "01007",
+          "name": "全国_令和5年度_2023"
+        },
+        "time": {
+          "code": "000107",
+          "name": "令和5年度"
+        }
+      },
+      "unit": "GJ/世帯・年",
+      "value": {
+        "raw": "27.80",
+        "number": 27.80,
+        "kind": "number"
+      }
+    }
+  ]
+}

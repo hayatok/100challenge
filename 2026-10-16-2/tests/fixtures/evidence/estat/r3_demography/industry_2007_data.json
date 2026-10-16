@@ -1,0 +1,963 @@
+{
+  "schema_version": "1",
+  "kind": "data",
+  "table": {
+    "id": "0003007106",
+    "statistics_code": "00200531",
+    "statistics_name": "労働力調査",
+    "organization": "総務省",
+    "title": "産業，従業上の地位別就業者数（2007年～2010年）-第12回改定産業分類による",
+    "cycle": "年次",
+    "survey_date": "0",
+    "open_date": "2014-01-31",
+    "updated_date": "2026-09-01",
+    "collect_area": "全国",
+    "total_records": 14161
+  },
+  "dimensions": [
+    {
+      "id": "tab",
+      "name": "表章項目",
+      "values": [
+        {
+          "code": "01",
+          "name": "実数(人口)",
+          "unit": "万人"
+        }
+      ]
+    },
+    {
+      "id": "cat01",
+      "name": "産業分類",
+      "values": [
+        {
+          "code": "00",
+          "name": "全産業",
+          "level": "1"
+        },
+        {
+          "code": "01",
+          "name": "農業，林業",
+          "level": "1"
+        },
+        {
+          "code": "10",
+          "name": "製造業",
+          "level": "2"
+        }
+      ]
+    },
+    {
+      "id": "cat02",
+      "name": "性別",
+      "values": [
+        {
+          "code": "0",
+          "name": "総数",
+          "level": "1"
+        }
+      ]
+    },
+    {
+      "id": "cat03",
+      "name": "従業上の地位",
+      "values": [
+        {
+          "code": "00",
+          "name": "総数",
+          "level": "1"
+        },
+        {
+          "code": "06",
+          "name": "家族従業者",
+          "level": "2"
+        }
+      ]
+    },
+    {
+      "id": "area",
+      "name": "地域",
+      "values": [
+        {
+          "code": "00000",
+          "name": "全国",
+          "level": "1"
+        }
+      ]
+    },
+    {
+      "id": "time",
+      "name": "時間軸（年次）",
+      "values": [
+        {
+          "code": "2007000000",
+          "name": "2007年",
+          "level": "1"
+        },
+        {
+          "code": "2008000000",
+          "name": "2008年",
+          "level": "1"
+        },
+        {
+          "code": "2009000000",
+          "name": "2009年",
+          "level": "1"
+        },
+        {
+          "code": "2010000000",
+          "name": "2010年",
+          "level": "1"
+        }
+      ]
+    }
+  ],
+  "page": {
+    "total": 24,
+    "from": 1,
+    "to": 24,
+    "truncated": false
+  },
+  "records": [
+    {
+      "table_id": "0003007106",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "00",
+          "name": "全産業"
+        },
+        "cat02": {
+          "code": "0",
+          "name": "総数"
+        },
+        "cat03": {
+          "code": "00",
+          "name": "総数"
+        },
+        "tab": {
+          "code": "01",
+          "name": "実数(人口)"
+        },
+        "time": {
+          "code": "2007000000",
+          "name": "2007年"
+        }
+      },
+      "unit": "万人",
+      "value": {
+        "raw": "6412",
+        "number": 6412,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003007106",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "00",
+          "name": "全産業"
+        },
+        "cat02": {
+          "code": "0",
+          "name": "総数"
+        },
+        "cat03": {
+          "code": "00",
+          "name": "総数"
+        },
+        "tab": {
+          "code": "01",
+          "name": "実数(人口)"
+        },
+        "time": {
+          "code": "2008000000",
+          "name": "2008年"
+        }
+      },
+      "unit": "万人",
+      "value": {
+        "raw": "6385",
+        "number": 6385,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003007106",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "00",
+          "name": "全産業"
+        },
+        "cat02": {
+          "code": "0",
+          "name": "総数"
+        },
+        "cat03": {
+          "code": "00",
+          "name": "総数"
+        },
+        "tab": {
+          "code": "01",
+          "name": "実数(人口)"
+        },
+        "time": {
+          "code": "2009000000",
+          "name": "2009年"
+        }
+      },
+      "unit": "万人",
+      "value": {
+        "raw": "6282",
+        "number": 6282,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003007106",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "00",
+          "name": "全産業"
+        },
+        "cat02": {
+          "code": "0",
+          "name": "総数"
+        },
+        "cat03": {
+          "code": "00",
+          "name": "総数"
+        },
+        "tab": {
+          "code": "01",
+          "name": "実数(人口)"
+        },
+        "time": {
+          "code": "2010000000",
+          "name": "2010年"
+        }
+      },
+      "unit": "万人",
+      "value": {
+        "raw": "6257",
+        "number": 6257,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003007106",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "00",
+          "name": "全産業"
+        },
+        "cat02": {
+          "code": "0",
+          "name": "総数"
+        },
+        "cat03": {
+          "code": "06",
+          "name": "家族従業者"
+        },
+        "tab": {
+          "code": "01",
+          "name": "実数(人口)"
+        },
+        "time": {
+          "code": "2007000000",
+          "name": "2007年"
+        }
+      },
+      "unit": "万人",
+      "value": {
+        "raw": "236",
+        "number": 236,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003007106",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "00",
+          "name": "全産業"
+        },
+        "cat02": {
+          "code": "0",
+          "name": "総数"
+        },
+        "cat03": {
+          "code": "06",
+          "name": "家族従業者"
+        },
+        "tab": {
+          "code": "01",
+          "name": "実数(人口)"
+        },
+        "time": {
+          "code": "2008000000",
+          "name": "2008年"
+        }
+      },
+      "unit": "万人",
+      "value": {
+        "raw": "224",
+        "number": 224,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003007106",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "00",
+          "name": "全産業"
+        },
+        "cat02": {
+          "code": "0",
+          "name": "総数"
+        },
+        "cat03": {
+          "code": "06",
+          "name": "家族従業者"
+        },
+        "tab": {
+          "code": "01",
+          "name": "実数(人口)"
+        },
+        "time": {
+          "code": "2009000000",
+          "name": "2009年"
+        }
+      },
+      "unit": "万人",
+      "value": {
+        "raw": "202",
+        "number": 202,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003007106",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "00",
+          "name": "全産業"
+        },
+        "cat02": {
+          "code": "0",
+          "name": "総数"
+        },
+        "cat03": {
+          "code": "06",
+          "name": "家族従業者"
+        },
+        "tab": {
+          "code": "01",
+          "name": "実数(人口)"
+        },
+        "time": {
+          "code": "2010000000",
+          "name": "2010年"
+        }
+      },
+      "unit": "万人",
+      "value": {
+        "raw": "189",
+        "number": 189,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003007106",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "01",
+          "name": "農業，林業"
+        },
+        "cat02": {
+          "code": "0",
+          "name": "総数"
+        },
+        "cat03": {
+          "code": "00",
+          "name": "総数"
+        },
+        "tab": {
+          "code": "01",
+          "name": "実数(人口)"
+        },
+        "time": {
+          "code": "2007000000",
+          "name": "2007年"
+        }
+      },
+      "unit": "万人",
+      "value": {
+        "raw": "251",
+        "number": 251,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003007106",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "01",
+          "name": "農業，林業"
+        },
+        "cat02": {
+          "code": "0",
+          "name": "総数"
+        },
+        "cat03": {
+          "code": "00",
+          "name": "総数"
+        },
+        "tab": {
+          "code": "01",
+          "name": "実数(人口)"
+        },
+        "time": {
+          "code": "2008000000",
+          "name": "2008年"
+        }
+      },
+      "unit": "万人",
+      "value": {
+        "raw": "245",
+        "number": 245,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003007106",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "01",
+          "name": "農業，林業"
+        },
+        "cat02": {
+          "code": "0",
+          "name": "総数"
+        },
+        "cat03": {
+          "code": "00",
+          "name": "総数"
+        },
+        "tab": {
+          "code": "01",
+          "name": "実数(人口)"
+        },
+        "time": {
+          "code": "2009000000",
+          "name": "2009年"
+        }
+      },
+      "unit": "万人",
+      "value": {
+        "raw": "242",
+        "number": 242,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003007106",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "01",
+          "name": "農業，林業"
+        },
+        "cat02": {
+          "code": "0",
+          "name": "総数"
+        },
+        "cat03": {
+          "code": "00",
+          "name": "総数"
+        },
+        "tab": {
+          "code": "01",
+          "name": "実数(人口)"
+        },
+        "time": {
+          "code": "2010000000",
+          "name": "2010年"
+        }
+      },
+      "unit": "万人",
+      "value": {
+        "raw": "234",
+        "number": 234,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003007106",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "01",
+          "name": "農業，林業"
+        },
+        "cat02": {
+          "code": "0",
+          "name": "総数"
+        },
+        "cat03": {
+          "code": "06",
+          "name": "家族従業者"
+        },
+        "tab": {
+          "code": "01",
+          "name": "実数(人口)"
+        },
+        "time": {
+          "code": "2007000000",
+          "name": "2007年"
+        }
+      },
+      "unit": "万人",
+      "value": {
+        "raw": "86",
+        "number": 86,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003007106",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "01",
+          "name": "農業，林業"
+        },
+        "cat02": {
+          "code": "0",
+          "name": "総数"
+        },
+        "cat03": {
+          "code": "06",
+          "name": "家族従業者"
+        },
+        "tab": {
+          "code": "01",
+          "name": "実数(人口)"
+        },
+        "time": {
+          "code": "2008000000",
+          "name": "2008年"
+        }
+      },
+      "unit": "万人",
+      "value": {
+        "raw": "84",
+        "number": 84,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003007106",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "01",
+          "name": "農業，林業"
+        },
+        "cat02": {
+          "code": "0",
+          "name": "総数"
+        },
+        "cat03": {
+          "code": "06",
+          "name": "家族従業者"
+        },
+        "tab": {
+          "code": "01",
+          "name": "実数(人口)"
+        },
+        "time": {
+          "code": "2009000000",
+          "name": "2009年"
+        }
+      },
+      "unit": "万人",
+      "value": {
+        "raw": "77",
+        "number": 77,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003007106",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "01",
+          "name": "農業，林業"
+        },
+        "cat02": {
+          "code": "0",
+          "name": "総数"
+        },
+        "cat03": {
+          "code": "06",
+          "name": "家族従業者"
+        },
+        "tab": {
+          "code": "01",
+          "name": "実数(人口)"
+        },
+        "time": {
+          "code": "2010000000",
+          "name": "2010年"
+        }
+      },
+      "unit": "万人",
+      "value": {
+        "raw": "71",
+        "number": 71,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003007106",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "10",
+          "name": "製造業"
+        },
+        "cat02": {
+          "code": "0",
+          "name": "総数"
+        },
+        "cat03": {
+          "code": "00",
+          "name": "総数"
+        },
+        "tab": {
+          "code": "01",
+          "name": "実数(人口)"
+        },
+        "time": {
+          "code": "2007000000",
+          "name": "2007年"
+        }
+      },
+      "unit": "万人",
+      "value": {
+        "raw": "1165",
+        "number": 1165,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003007106",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "10",
+          "name": "製造業"
+        },
+        "cat02": {
+          "code": "0",
+          "name": "総数"
+        },
+        "cat03": {
+          "code": "00",
+          "name": "総数"
+        },
+        "tab": {
+          "code": "01",
+          "name": "実数(人口)"
+        },
+        "time": {
+          "code": "2008000000",
+          "name": "2008年"
+        }
+      },
+      "unit": "万人",
+      "value": {
+        "raw": "1144",
+        "number": 1144,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003007106",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "10",
+          "name": "製造業"
+        },
+        "cat02": {
+          "code": "0",
+          "name": "総数"
+        },
+        "cat03": {
+          "code": "00",
+          "name": "総数"
+        },
+        "tab": {
+          "code": "01",
+          "name": "実数(人口)"
+        },
+        "time": {
+          "code": "2009000000",
+          "name": "2009年"
+        }
+      },
+      "unit": "万人",
+      "value": {
+        "raw": "1073",
+        "number": 1073,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003007106",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "10",
+          "name": "製造業"
+        },
+        "cat02": {
+          "code": "0",
+          "name": "総数"
+        },
+        "cat03": {
+          "code": "00",
+          "name": "総数"
+        },
+        "tab": {
+          "code": "01",
+          "name": "実数(人口)"
+        },
+        "time": {
+          "code": "2010000000",
+          "name": "2010年"
+        }
+      },
+      "unit": "万人",
+      "value": {
+        "raw": "1049",
+        "number": 1049,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003007106",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "10",
+          "name": "製造業"
+        },
+        "cat02": {
+          "code": "0",
+          "name": "総数"
+        },
+        "cat03": {
+          "code": "06",
+          "name": "家族従業者"
+        },
+        "tab": {
+          "code": "01",
+          "name": "実数(人口)"
+        },
+        "time": {
+          "code": "2007000000",
+          "name": "2007年"
+        }
+      },
+      "unit": "万人",
+      "value": {
+        "raw": "18",
+        "number": 18,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003007106",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "10",
+          "name": "製造業"
+        },
+        "cat02": {
+          "code": "0",
+          "name": "総数"
+        },
+        "cat03": {
+          "code": "06",
+          "name": "家族従業者"
+        },
+        "tab": {
+          "code": "01",
+          "name": "実数(人口)"
+        },
+        "time": {
+          "code": "2008000000",
+          "name": "2008年"
+        }
+      },
+      "unit": "万人",
+      "value": {
+        "raw": "15",
+        "number": 15,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003007106",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "10",
+          "name": "製造業"
+        },
+        "cat02": {
+          "code": "0",
+          "name": "総数"
+        },
+        "cat03": {
+          "code": "06",
+          "name": "家族従業者"
+        },
+        "tab": {
+          "code": "01",
+          "name": "実数(人口)"
+        },
+        "time": {
+          "code": "2009000000",
+          "name": "2009年"
+        }
+      },
+      "unit": "万人",
+      "value": {
+        "raw": "13",
+        "number": 13,
+        "kind": "number"
+      }
+    },
+    {
+      "table_id": "0003007106",
+      "dimensions": {
+        "area": {
+          "code": "00000",
+          "name": "全国"
+        },
+        "cat01": {
+          "code": "10",
+          "name": "製造業"
+        },
+        "cat02": {
+          "code": "0",
+          "name": "総数"
+        },
+        "cat03": {
+          "code": "06",
+          "name": "家族従業者"
+        },
+        "tab": {
+          "code": "01",
+          "name": "実数(人口)"
+        },
+        "time": {
+          "code": "2010000000",
+          "name": "2010年"
+        }
+      },
+      "unit": "万人",
+      "value": {
+        "raw": "11",
+        "number": 11,
+        "kind": "number"
+      }
+    }
+  ]
+}

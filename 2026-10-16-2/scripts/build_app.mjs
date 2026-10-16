@@ -6,7 +6,7 @@ import { createHash } from 'node:crypto';
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const source = path.join(root, 'app'), output = path.join(root, 'dist'), temporary = path.join(root, '.app-build-tmp');
 const archive = JSON.parse(await readFile(path.join(source, 'data/archive.json'), 'utf8'));
-if (archive.series.reduce((n, series) => n + series.points.length, 0) !== 14083 || archive.events.length !== 177 || archive.living.length !== 85) throw new Error('Incomplete archive');
+if (archive.series.reduce((n, series) => n + series.points.length, 0) !== 15728 || archive.events.length !== 184 || archive.living.length !== 105) throw new Error('Incomplete archive');
 await rm(temporary, { recursive: true, force: true });
 await mkdir(temporary, { recursive: true });
 await cp(source, temporary, { recursive: true });

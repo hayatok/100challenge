@@ -1,0 +1,29 @@
+{
+  "command": [
+    "/Users/hayatok/.local/bin/estat",
+    "data",
+    "get",
+    "0004029259",
+    "--filter",
+    "cat01=0120,0260,0400,0540,0680",
+    "--filter",
+    "cat02=01001,01002,01003,01004,01005,01006,01007",
+    "--filter",
+    "area=00100",
+    "--all-pages",
+    "--max-records",
+    "100",
+    "--timeout",
+    "25s",
+    "-o",
+    "json"
+  ],
+  "started_at": "2026-10-16T15:02:47.796490+00:00",
+  "finished_at": "2026-10-16T15:02:48.241507+00:00",
+  "exit_code": 0,
+  "json_valid": true,
+  "redacted_fields": 0,
+  "output_path": "evidence/estat/r3_economy/energy_timeseries_data.json",
+  "sha256": "004e2915e6630f76f731fd80336318bf28fc30de06a6a9ffcff6d1f290620f29",
+  "stderr": ""
+}

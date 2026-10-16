@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import test from 'node:test';
-import { observationTime, pointsThrough, materialStatus, recordNotes, readableResearchText, eraLabel } from '../app/src/presentation.js';
+import { observationTime, pointsThrough, materialStatus, recordNotes, readableResearchText, eraLabel, materialInYear, regionalMaterial, period } from '../app/src/presentation.js';
 const archive = JSON.parse(readFileSync(new URL('../app/data/archive.json', import.meta.url)));
 test('a month before an era change keeps the old era, and a transition month names both eras', () => {
   assert.equal(eraLabel(2019, 1), '平成31年');
@@ -27,4 +27,31 @@ test('unread and catalog-only materials retain their confirmation limits, and mi
   assert.equal(recordNotes(table.missing_periods).some(note => String(note).includes('[object Object]')), false);
   const notes = archive.gaps.map(item => readableResearchText(`${item.description} ${item.remaining_reason || ''}`)).join(' ');
   assert.equal(/evidence\/|SD-GAP\d+|receipt/.test(notes), false);
+  const sources = archive.sources.map(item => readableResearchText(item.perspective_limit)).join(' ');
+  assert.equal(/\b(?:tab|area|cat\d+|axis|time)\s*=/.test(sources), false);
+  assert.match(readableResearchText('大学は学部のみ。cat01=E6302、tab=00001。2016年の不一致は未解決。'), /2016年の不一致は未解決/);
+});
+test('open or unknown living periods cannot be silently assigned to the endpoint year', () => {
+  const open = archive.living.find(item => item.id === 'L3-M003');
+  assert.equal(open.period_start, null);
+  assert.equal(materialInYear(open, 1943), false);
+  const known = archive.living.find(item => item.id === 'L3-M007');
+  assert.equal(materialInYear(known, 1937), true);
+  assert.equal(materialInYear(known, 1936), false);
+  assert.equal(materialInYear(known, 1938), false);
+});
+test('regional records can be found without claiming a fictional town is the historic location', () => {
+  const northern = archive.living.find(item => item.id === 'L3-M004');
+  const southern = archive.living.find(item => item.id === 'L3-M005');
+  assert.equal(regionalMaterial(northern, 'koshin'), true);
+  assert.equal(regionalMaterial(northern, 'okinawa'), false);
+  assert.equal(regionalMaterial(southern, 'okinawa'), true);
+  assert.equal(regionalMaterial(southern, 'kanto'), false);
+});
+test('readable periods retain an unknown start or end instead of suggesting a closed date', () => {
+  assert.equal(period(null, 1943), '始まり不詳〜1943年');
+  assert.equal(period(1900, null), '1900年〜終わり不詳');
+  assert.equal(period(null, null), '年代を確かめきれていない記録');
+  assert.equal(period('1937-01', '1937-03'), '1937年1月〜1937年3月');
+  assert.equal(period('1934-07-03', '1934-07-03'), '1934年7月3日');
 });

@@ -9,7 +9,7 @@ for (const match of html.matchAll(/(?:src|href)="(\.\/[^"#]+)"/g)) await readFil
 for (const file of await readdir(path.join(app, 'src'))) if (/\.(?:m?js)$/.test(file)) execFileSync(process.execPath, ['--check', path.join(app, 'src', file)], { stdio: 'inherit' });
 for (const file of await readdir(path.join(root, 'scripts'))) if (/\.mjs$/.test(file)) execFileSync(process.execPath, ['--check', path.join(root, 'scripts', file)], { stdio: 'inherit' });
 const archive = JSON.parse(await readFile(path.join(app, 'data/archive.json'), 'utf8'));
-if (archive.sources.length !== 213 || archive.series.length !== 498 || archive.counts.observations !== 14083) throw new Error('The full research archive must remain available.');
+if (archive.sources.length !== 259 || archive.series.length !== 557 || archive.counts.observations !== 15728) throw new Error('The full research archive must remain available.');
 if (/\bon\w+=|<script[^>]*>[^<\s]/i.test(html)) throw new Error('Use separate scripts with the local CSP.');
 for (const source of archive.sources) if (source.url && !/^https?:\/\//.test(source.url)) throw new Error(`Unexpected source URL: ${source.id}`);
 console.log('Local HTML, scripts, archive and asset references verified.');

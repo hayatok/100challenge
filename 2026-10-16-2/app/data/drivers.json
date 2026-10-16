@@ -8,14 +8,210 @@
       "status": "allowed_with_notes",
       "worldTarget": "模型に描く人の規模",
       "seriesIds": [
-        "SD-STAT016:area=00000:cat01=A1101:tab=00001"
+        "SD-STAT016:area=00000:cat01=A1101:tab=00001",
+        "D3-ST001:cat01=00100:tab=10010:frequency=年次（1899–1919は1月1日。以後の基準日は定義注記参照）"
       ],
       "notes": [
-        "各年10月1日の総人口。年度平均人口ではない。",
-        "国勢調査と人口推計を含む。外国人の範囲、基準人口の補正・組替えの詳細は原注記を留保。",
-        "1975年より前の人口は作らない。最新観測より後は観測年付きの過去の模型としてのみ参照。"
+        "1900～1974年は人口動態の基礎人口。国籍・対象地域・基準日・現在地/常住の違いを区切る。",
+        "1975年以後は従来のSSD総人口。日本人人口と同じ量として増減率を計算しない。",
+        "人口から架空個人の出生・死亡・寿命の確率を作らない。"
       ],
-      "boundaries": [],
+      "boundaries": [
+        {
+          "year": 1920,
+          "reason": "外国人を含む旧内地人口"
+        },
+        {
+          "year": 1940,
+          "reason": "1940年の基礎人口"
+        },
+        {
+          "year": 1941,
+          "reason": "外国人を含む旧内地人口"
+        },
+        {
+          "year": 1944,
+          "reason": "1944年2月22日の人口"
+        },
+        {
+          "year": 1945,
+          "reason": "1945年11月1日の人口"
+        },
+        {
+          "year": 1946,
+          "reason": "1946年4月26日の人口"
+        },
+        {
+          "year": 1947,
+          "reason": "戦後の現在地人口"
+        },
+        {
+          "year": 1950,
+          "reason": "常住人口へ変わった基礎人口"
+        },
+        {
+          "year": 1952,
+          "reason": "十島村が加わった基礎人口"
+        },
+        {
+          "year": 1954,
+          "reason": "奄美が加わった基礎人口"
+        },
+        {
+          "year": 1967,
+          "reason": "日本人人口へ変わった基礎人口"
+        },
+        {
+          "year": 1968,
+          "reason": "小笠原が加わった日本人人口"
+        },
+        {
+          "year": 1973,
+          "reason": "沖縄が加わった日本人人口"
+        },
+        {
+          "year": 1975,
+          "reason": "人口動態の基礎人口からSSD総人口へ対象を切替"
+        }
+      ],
+      "segments": [
+        {
+          "from": "1900-01",
+          "through": "1919-12",
+          "seriesIds": [
+            "D3-ST001:cat01=00100:tab=10010:frequency=年次（1899–1919は1月1日。以後の基準日は定義注記参照）"
+          ],
+          "label": "旧内地の内地人・1月1日の推計人口",
+          "limitation": "国勢調査から遡った推計。樺太・台湾・朝鮮等を含む帝国全領域人口ではありません。"
+        },
+        {
+          "from": "1920-01",
+          "through": "1939-12",
+          "seriesIds": [
+            "D3-ST001:cat01=00100:tab=10010:frequency=年次（1899–1919は1月1日。以後の基準日は定義注記参照）"
+          ],
+          "label": "外国人を含む旧内地人口",
+          "limitation": "現在地人口。原則10月1日。現在の日本の領域とは異なります。"
+        },
+        {
+          "from": "1940-01",
+          "through": "1940-12",
+          "seriesIds": [
+            "D3-ST001:cat01=00100:tab=10010:frequency=年次（1899–1919は1月1日。以後の基準日は定義注記参照）"
+          ],
+          "label": "1940年の基礎人口",
+          "limitation": "銃後人口に内地軍人・軍属の推計を加えた人口です。"
+        },
+        {
+          "from": "1941-01",
+          "through": "1943-12",
+          "seriesIds": [
+            "D3-ST001:cat01=00100:tab=10010:frequency=年次（1899–1919は1月1日。以後の基準日は定義注記参照）"
+          ],
+          "label": "外国人を含む旧内地人口",
+          "limitation": "現在地人口。樺太を含まず、帝国全領域の人口ではありません。"
+        },
+        {
+          "from": "1944-01",
+          "through": "1944-12",
+          "seriesIds": [
+            "D3-ST001:cat01=00100:tab=10010:frequency=年次（1899–1919は1月1日。以後の基準日は定義注記参照）"
+          ],
+          "label": "1944年2月22日の人口",
+          "limitation": "陸海軍の部隊・艦船にある人と外国人を除きます。"
+        },
+        {
+          "from": "1945-01",
+          "through": "1945-12",
+          "seriesIds": [
+            "D3-ST001:cat01=00100:tab=10010:frequency=年次（1899–1919は1月1日。以後の基準日は定義注記参照）"
+          ],
+          "label": "1945年11月1日の人口",
+          "limitation": "軍隊・外国人を除き、沖縄と北海道・東京・九州の一部も対象外です。"
+        },
+        {
+          "from": "1946-01",
+          "through": "1946-12",
+          "seriesIds": [
+            "D3-ST001:cat01=00100:tab=10010:frequency=年次（1899–1919は1月1日。以後の基準日は定義注記参照）"
+          ],
+          "label": "1946年4月26日の人口",
+          "limitation": "外国人と外国人世帯にいる人を除くなど、前年と対象が違います。"
+        },
+        {
+          "from": "1947-01",
+          "through": "1949-12",
+          "seriesIds": [
+            "D3-ST001:cat01=00100:tab=10010:frequency=年次（1899–1919は1月1日。以後の基準日は定義注記参照）"
+          ],
+          "label": "戦後の現在地人口",
+          "limitation": "沖縄等を除き、外国軍隊・公館員とその家族を含みません。"
+        },
+        {
+          "from": "1950-01",
+          "through": "1951-12",
+          "seriesIds": [
+            "D3-ST001:cat01=00100:tab=10010:frequency=年次（1899–1919は1月1日。以後の基準日は定義注記参照）"
+          ],
+          "label": "常住人口へ変わった基礎人口",
+          "limitation": "1950年から常住人口。沖縄等の地域を除きます。"
+        },
+        {
+          "from": "1952-01",
+          "through": "1953-12",
+          "seriesIds": [
+            "D3-ST001:cat01=00100:tab=10010:frequency=年次（1899–1919は1月1日。以後の基準日は定義注記参照）"
+          ],
+          "label": "十島村が加わった基礎人口",
+          "limitation": "対象地域が変わります。地域の復帰日と統計へ加わる年は同じとは限りません。"
+        },
+        {
+          "from": "1954-01",
+          "through": "1966-12",
+          "seriesIds": [
+            "D3-ST001:cat01=00100:tab=10010:frequency=年次（1899–1919は1月1日。以後の基準日は定義注記参照）"
+          ],
+          "label": "奄美が加わった基礎人口",
+          "limitation": "外国人を含む総人口。沖縄・小笠原等はまだ対象外です。"
+        },
+        {
+          "from": "1967-01",
+          "through": "1967-12",
+          "seriesIds": [
+            "D3-ST001:cat01=00100:tab=10010:frequency=年次（1899–1919は1月1日。以後の基準日は定義注記参照）"
+          ],
+          "label": "日本人人口へ変わった基礎人口",
+          "limitation": "この年から外国人を含む総人口ではなく、日本人人口です。"
+        },
+        {
+          "from": "1968-01",
+          "through": "1972-12",
+          "seriesIds": [
+            "D3-ST001:cat01=00100:tab=10010:frequency=年次（1899–1919は1月1日。以後の基準日は定義注記参照）"
+          ],
+          "label": "小笠原が加わった日本人人口",
+          "limitation": "沖縄はまだ対象外です。現在の総人口と同じ対象ではありません。"
+        },
+        {
+          "from": "1973-01",
+          "through": "1974-12",
+          "seriesIds": [
+            "D3-ST001:cat01=00100:tab=10010:frequency=年次（1899–1919は1月1日。以後の基準日は定義注記参照）"
+          ],
+          "label": "沖縄が加わった日本人人口",
+          "limitation": "外国人を含む総人口とは別の対象です。"
+        },
+        {
+          "from": "1975-01",
+          "through": "2026-10",
+          "seriesIds": [
+            "SD-STAT016:area=00000:cat01=A1101:tab=00001"
+          ],
+          "label": "10月1日の総人口",
+          "limitation": "国勢調査と人口推計による総人口。前の日本人人口とつなげて増減を比べません。"
+        }
+      ],
+      "limitation": "人口に含まれる人や地域、数える日は年代で変わります。観測年と対象を添えています。",
       "selectionPolicy": {
         "exactYearFirst": true,
         "allowHistoricalSnapshot": true,
@@ -24,8 +220,7 @@
         "interpolate": false,
         "missingRawStopsSnapshot": true
       },
-      "authorRuleNote": "描画の数や縮尺は作者が設定する。全国値を架空個人の確率に変換しない。",
-      "limitation": "10月1日の全国人口。1975年より前の値は、この資料にはありません。"
+      "authorRuleNote": "描画の数や縮尺は作者が設定する。全国値を架空個人の確率に変換しない。"
     },
     {
       "id": "industry",
@@ -37,24 +232,88 @@
         "SD2-STAT001:cat01=180:cat02=100:tab=334",
         "SD-STAT005:area=00000:cat01=001:cat02=0:cat03=00:tab=01",
         "SD2-STAT002:area=00000:cat01=A009:cat02=0:cat03=00:tab=01",
-        "SD-STAT005:area=00000:cat01=010:cat02=0:cat03=00:tab=01"
+        "SD-STAT005:area=00000:cat01=010:cat02=0:cat03=00:tab=01",
+        "D3-ST003:area=00000:cat01=01:cat02=0:cat03=00:tab=01:frequency=年平均",
+        "D3-ST003:area=00000:cat01=10:cat02=0:cat03=00:tab=01:frequency=年平均",
+        "D3-ST004:area=00000:cat01=01:cat02=0:cat03=00:cat04=00:tab=01:frequency=年平均",
+        "D3-ST004:area=00000:cat01=10:cat02=0:cat03=00:cat04=00:tab=01:frequency=年平均"
       ],
       "notes": [
-        "国勢調査の旧産業1920/1930/1940/1950と労働力調査は別系列。",
-        "人と万人を同じ数として混ぜない。旧*製造業A009と010製造業も接続しない。",
-        "労働力調査は対象年齢・対象領域等の詳細が未確定。全国の掲載値を示す過去の断面に限定。",
-        "農業・製造業だけでは全産業の構成にならない。他産業の人数を差引きで作らない。"
+        "国勢/労働力調査、旧新産業分類、年齢区分を別系列に保持。人と万人を混ぜない。",
+        "2011年の原記号を保持。2026年平均を作らず、古い断面には観測年を表示する。",
+        "農業と製造業から他産業の人数や個人の就業確率を作らない。"
       ],
       "boundaries": [
         {
           "year": 1953,
-          "reason": "国勢調査と労働力調査の別系列"
+          "reason": "国勢調査から労働力調査"
         },
         {
           "year": 2003,
-          "reason": "*製造業A009から010への分類境界、接続禁止"
+          "reason": "旧製造業から別分類"
+        },
+        {
+          "year": 2007,
+          "reason": "第12回産業分類"
+        },
+        {
+          "year": 2011,
+          "reason": "年齢・分類を区別、震災による欠測"
         }
       ],
+      "segments": [
+        {
+          "from": "1920-01",
+          "through": "1952-12",
+          "seriesIds": [
+            "SD2-STAT001:cat01=120:cat02=100:tab=334",
+            "SD2-STAT001:cat01=180:cat02=100:tab=334"
+          ],
+          "label": "国勢調査の旧産業分類",
+          "limitation": "実際の観測は1920・1930・1940・1950年。人の単位で、後年の労働力調査とは別です。"
+        },
+        {
+          "from": "1953-01",
+          "through": "2002-12",
+          "seriesIds": [
+            "SD-STAT005:area=00000:cat01=001:cat02=0:cat03=00:tab=01",
+            "SD2-STAT002:area=00000:cat01=A009:cat02=0:cat03=00:tab=01"
+          ],
+          "label": "労働力調査の旧製造業",
+          "limitation": "旧製造業は現在の同名分類と内容が違います。農業と製造業だけで全産業の構成にはなりません。"
+        },
+        {
+          "from": "2003-01",
+          "through": "2006-12",
+          "seriesIds": [
+            "SD-STAT005:area=00000:cat01=001:cat02=0:cat03=00:tab=01",
+            "SD-STAT005:area=00000:cat01=010:cat02=0:cat03=00:tab=01"
+          ],
+          "label": "産業分類を改めた就業者数",
+          "limitation": "万人の年平均。旧製造業の値へ継ぎ足しません。"
+        },
+        {
+          "from": "2007-01",
+          "through": "2010-12",
+          "seriesIds": [
+            "D3-ST003:area=00000:cat01=01:cat02=0:cat03=00:tab=01:frequency=年平均",
+            "D3-ST003:area=00000:cat01=10:cat02=0:cat03=00:tab=01:frequency=年平均"
+          ],
+          "label": "第12回改定の産業分類",
+          "limitation": "以前の分類と別の資料です。年平均と月次を混ぜません。"
+        },
+        {
+          "from": "2011-01",
+          "through": "2026-10",
+          "seriesIds": [
+            "D3-ST004:area=00000:cat01=01:cat02=0:cat03=00:cat04=00:tab=01:frequency=年平均",
+            "D3-ST004:area=00000:cat01=10:cat02=0:cat03=00:cat04=00:tab=01:frequency=年平均"
+          ],
+          "label": "15歳以上の就業者数",
+          "limitation": "2011年は震災で全国年平均がありません。記号を0や2010年の値へ置き換えません。"
+        }
+      ],
+      "limitation": "調査や産業の分け方が変わります。2011年の値はなく、前後をつなぎません。",
       "selectionPolicy": {
         "exactYearFirst": true,
         "allowHistoricalSnapshot": true,
@@ -63,8 +322,7 @@
         "interpolate": false,
         "missingRawStopsSnapshot": true
       },
-      "authorRuleNote": "描画の数や縮尺は作者が設定する。全国値を架空個人の確率に変換しない。",
-      "limitation": "調査や産業の分け方が変わります。違う分類の値をひと続きにはしません。"
+      "authorRuleNote": "描画の数や縮尺は作者が設定する。全国値を架空個人の確率に変換しない。"
     },
     {
       "id": "housing",
@@ -76,11 +334,12 @@
         "EST13:area=00000:cat01=H110202:tab=00001"
       ],
       "notes": [
-        "1978～2023年の5年刻みの取得値。毎年の戸数を補間しない。",
-        "SSD年度表示と住宅・土地統計調査の原調査日の対応は未確定。",
-        "空き家数から実在の場所・個人の不在を割り当てない。"
+        "原単位は戸。世帯数や人数ではない。1978～2023の5年刻み。",
+        "原調査日と年度ラベルの対応は未確定。間の年を補間しない。"
       ],
       "boundaries": [],
+      "segments": [],
+      "limitation": "住宅と空き家の数は5年ごとの値。間の年の戸数は分かりません。",
       "selectionPolicy": {
         "exactYearFirst": true,
         "allowHistoricalSnapshot": true,
@@ -89,8 +348,7 @@
         "interpolate": false,
         "missingRawStopsSnapshot": true
       },
-      "authorRuleNote": "描画の数や縮尺は作者が設定する。全国値を架空個人の確率に変換しない。",
-      "limitation": "住宅と空き家の数は5年ごとの値。間の年の戸数は分かりません。"
+      "authorRuleNote": "描画の数や縮尺は作者が設定する。全国値を架空個人の確率に変換しない。"
     },
     {
       "id": "water",
@@ -102,9 +360,11 @@
       ],
       "notes": [
         "1975～2023年度の上水道給水人口。電化率や全水道普及率ではない。",
-        "原調査日とSSD年度ラベルの対応は未確認。人口と安易に割って普及率を作らない。"
+        "原調査日との対応は未確認。人口と安易に割って普及率を作らない。"
       ],
       "boundaries": [],
+      "segments": [],
+      "limitation": "上水道で給水される人口。電気の普及や、水道全体の普及率ではありません。",
       "selectionPolicy": {
         "exactYearFirst": true,
         "allowHistoricalSnapshot": true,
@@ -113,8 +373,7 @@
         "interpolate": false,
         "missingRawStopsSnapshot": true
       },
-      "authorRuleNote": "描画の数や縮尺は作者が設定する。全国値を架空個人の確率に変換しない。",
-      "limitation": "上水道で給水される人口。電気の普及や、水道全体の普及率ではありません。"
+      "authorRuleNote": "描画の数や縮尺は作者が設定する。全国値を架空個人の確率に変換しない。"
     },
     {
       "id": "education",
@@ -123,14 +382,45 @@
       "worldTarget": "学校と通学の模型",
       "seriesIds": [
         "SD-STAT003:area=00000:cat01=0000000020:tab=0000000450",
-        "SD-STAT003:area=00000:cat01=0000000120:tab=0000000450"
+        "SD-STAT003:area=00000:cat01=0000000120:tab=0000000450",
+        "D3-ST002:area=00000:cat01=E2501:tab=00001:frequency=年度",
+        "D3-ST002:area=00000:cat01=E6302:tab=00001:frequency=年度"
       ],
       "notes": [
-        "1948～2016年、国公私立合計の小学校/大学の在学者数を別系列。",
-        "大学には大学院・専攻科・別科などを含み、通信教育を含まない。",
-        "学校種の変更を無条件接続せず、個人の進学率・試験合格確率にしない。"
+        "1948～2016の旧在学者と、2017以後に参照するSSD小学生/大学学部を別対象にする。",
+        "大学は旧DBが大学院等を含み、新SSDは学部のみ。旧DBの単位文字列は未取得のまま。",
+        "小学校2016は旧DBとSSDの値が一致せず未解決。変更を成長/減少の実態と断定しない。",
+        "SSDは5月1日の断面。個人の進学・合格確率へ使わない。"
       ],
-      "boundaries": [],
+      "boundaries": [
+        {
+          "year": 2017,
+          "reason": "対象の違う学校統計へ切替。大学は学部のみ"
+        }
+      ],
+      "segments": [
+        {
+          "from": "1948-01",
+          "through": "2016-12",
+          "seriesIds": [
+            "SD-STAT003:area=00000:cat01=0000000020:tab=0000000450",
+            "SD-STAT003:area=00000:cat01=0000000120:tab=0000000450"
+          ],
+          "label": "従来の在学者統計",
+          "limitation": "大学は大学院等を含み、単位文字列の確認が残ります。"
+        },
+        {
+          "from": "2017-01",
+          "through": "2026-10",
+          "seriesIds": [
+            "D3-ST002:area=00000:cat01=E2501:tab=00001:frequency=年度",
+            "D3-ST002:area=00000:cat01=E6302:tab=00001:frequency=年度"
+          ],
+          "label": "小学生と大学学部の学生",
+          "limitation": "大学は学部のみで前の資料と別対象。小学校の2016年不一致も未解決です。"
+        }
+      ],
+      "limitation": "学校に数える学生の範囲が変わります。大学院を含む資料と学部だけの資料を分けています。",
       "selectionPolicy": {
         "exactYearFirst": true,
         "allowHistoricalSnapshot": true,
@@ -139,8 +429,7 @@
         "interpolate": false,
         "missingRawStopsSnapshot": true
       },
-      "authorRuleNote": "描画の数や縮尺は作者が設定する。全国値を架空個人の確率に変換しない。",
-      "limitation": "全国の在学者数。模型の一人ひとりが進学する確率ではありません。"
+      "authorRuleNote": "描画の数や縮尺は作者が設定する。全国値を架空個人の確率に変換しない。"
     },
     {
       "id": "rice",
@@ -152,8 +441,7 @@
       ],
       "notes": [
         "国民1人1年当たり供給純食料の米、kg。摂取量・購入量ではない。",
-        "1971年度以前は沖縄除外。2024年調査表の最終収録は2023年度。",
-        "食品成分表等の改定境界と2018年度の純旅客用控除で比較を切る。"
+        "1971年度以前は沖縄除外。最終取得2023年度。成分表と純旅客用控除の境界を切る。"
       ],
       "boundaries": [
         {
@@ -189,6 +477,8 @@
           "reason": "成分表改定"
         }
       ],
+      "segments": [],
+      "limitation": "国内に供給された米の量。実際に一人が食べた量ではありません。",
       "selectionPolicy": {
         "exactYearFirst": true,
         "allowHistoricalSnapshot": true,
@@ -197,8 +487,7 @@
         "interpolate": false,
         "missingRawStopsSnapshot": true
       },
-      "authorRuleNote": "描画の数や縮尺は作者が設定する。全国値を架空個人の確率に変換しない。",
-      "limitation": "国内に供給された米の量。実際に一人が食べた量ではありません。"
+      "authorRuleNote": "描画の数や縮尺は作者が設定する。全国値を架空個人の確率に変換しない。"
     },
     {
       "id": "prices",
@@ -211,10 +500,11 @@
       ],
       "notes": [
         "全国・暦年平均、2025年=100の公式接続指数。金額ではない。",
-        "1970～2025年だけ。旧2005/2020年基準とは別系列。品目とウエイトは変わる。",
-        "個人の家計・購買量や商店の工事費へ変換しない。"
+        "1970～2025だけ。旧基準や個人家計・商店工事費へ変換しない。"
       ],
       "boundaries": [],
+      "segments": [],
+      "limitation": "2025年を100とした物価の指数。値札の金額ではありません。",
       "selectionPolicy": {
         "exactYearFirst": true,
         "allowHistoricalSnapshot": true,
@@ -223,8 +513,7 @@
         "interpolate": false,
         "missingRawStopsSnapshot": true
       },
-      "authorRuleNote": "描画の数や縮尺は作者が設定する。全国値を架空個人の確率に変換しない。",
-      "limitation": "2025年を100とした物価の指数。値札の金額ではありません。"
+      "authorRuleNote": "描画の数や縮尺は作者が設定する。全国値を架空個人の確率に変換しない。"
     },
     {
       "id": "bus",
@@ -232,14 +521,42 @@
       "status": "allowed_with_notes",
       "worldTarget": "走る乗合バスの模型",
       "seriesIds": [
-        "EST05:area=00001:cat01=00001"
+        "EST05:area=00001:cat01=00001",
+        "E3-ST001:cat01=00030:tab=00040:frequency=月次"
       ],
       "notes": [
-        "合計区分の乗合バス輸送人員。単位原表は「千」、千人の輸送人員を表す。",
-        "2010年10月～2020年3月の月次114観測。区域コードを都道府県コードと混同しない。",
-        "年平均や年計を独自算出しない。選択年の末月など参照する月と原timeLabelを明示する。"
+        "旧表は2010-10～2020-03、原単位は千。新表は2020-04～2026-03、千人。",
+        "2020年4月に調査/集計変更。前後の公表値を無条件に接続しない。",
+        "月次の輸送人員で、実車両数・利用者の実人数・年平均ではない。"
       ],
-      "boundaries": [],
+      "boundaries": [
+        {
+          "year": 2020,
+          "month": 4,
+          "reason": "調査・集計方法を改めた乗合バス統計"
+        }
+      ],
+      "segments": [
+        {
+          "from": "2010-10",
+          "through": "2020-03",
+          "seriesIds": [
+            "EST05:area=00001:cat01=00001"
+          ],
+          "label": "旧方法の乗合バス輸送",
+          "limitation": "月次。合計区域を県コードと混同しません。"
+        },
+        {
+          "from": "2020-04",
+          "through": "2026-10",
+          "seriesIds": [
+            "E3-ST001:cat01=00030:tab=00040:frequency=月次"
+          ],
+          "label": "新方法の乗合バス輸送",
+          "limitation": "2020年4月より前と比較をつなぎません。過去の月の資料はその月を表示します。"
+        }
+      ],
+      "limitation": "乗合バスの月ごとの輸送人員。2020年4月の調査方法変更で区切っています。",
       "selectionPolicy": {
         "exactYearFirst": true,
         "allowHistoricalSnapshot": true,
@@ -248,8 +565,163 @@
         "interpolate": false,
         "missingRawStopsSnapshot": true
       },
-      "authorRuleNote": "描画の数や縮尺は作者が設定する。全国値を架空個人の確率に変換しない。",
-      "limitation": "乗合バスの月ごとの輸送人員。年の合計や平均ではありません。"
+      "authorRuleNote": "描画の数や縮尺は作者が設定する。全国値を架空個人の確率に変換しない。"
+    },
+    {
+      "id": "rail",
+      "label": "鉄道",
+      "status": "allowed_with_notes",
+      "worldTarget": "動く鉄道の模型",
+      "seriesIds": [
+        "E3-ST002:cat01=100:cat02=160:tab=110:frequency=月次"
+      ],
+      "notes": [
+        "2020-04～2026-06月次、千人。旅客数量は総流動で事業者間の重複を含む。",
+        "実人数・実車両数・地方別路線の分布を推計しない。月報と年報再集計の版を分ける。"
+      ],
+      "boundaries": [],
+      "segments": [
+        {
+          "from": "2020-04",
+          "through": "2026-10",
+          "seriesIds": [
+            "E3-ST002:cat01=100:cat02=160:tab=110:frequency=月次"
+          ],
+          "label": "鉄・軌道の月間旅客数量",
+          "limitation": "同じ人の複数の利用や事業者間の重複を含みます。"
+        }
+      ],
+      "limitation": "輸送した旅客の数量。利用者の実人数や列車の台数ではありません。",
+      "selectionPolicy": {
+        "exactYearFirst": true,
+        "allowHistoricalSnapshot": true,
+        "showObservationYear": true,
+        "treatSnapshotAsCurrent": false,
+        "interpolate": false,
+        "missingRawStopsSnapshot": true
+      },
+      "authorRuleNote": "描画の数や縮尺は作者が設定する。全国値を架空個人の確率に変換しない。"
+    },
+    {
+      "id": "communication",
+      "label": "通信の道具",
+      "status": "allowed_with_notes",
+      "worldTarget": "家の通信機器の模型",
+      "seriesIds": [
+        "E3-ST003:cat01=110:cat04=100:cat08=290:tab=00100:frequency=年次",
+        "E3-ST003:cat01=110:cat04=100:cat08=170:tab=00100:frequency=年次",
+        "E3-ST004:cat01=290:cat04=100:tab=00100:frequency=年次（2005年の断面）",
+        "E3-ST004:cat01=170:cat04=100:tab=00100:frequency=年次（2005年の断面）",
+        "E3-ST005:cat01=290:cat04=100:tab=00100:frequency=年次",
+        "E3-ST005:cat01=260:cat04=100:tab=00100:frequency=年次"
+      ],
+      "notes": [
+        "世帯の保有割合で、個人の所有率や利用率ではない。PCと携帯/スマホを足さない。",
+        "2005の断面と2006以後の複数回答を分ける。携帯の包含が異なる4分類は混ぜない。",
+        "2017～2025のCSV数値は未採用。以後は2016年の過去資料を示す場合に限る。"
+      ],
+      "boundaries": [
+        {
+          "year": 2005,
+          "reason": "2005年の別保有表"
+        },
+        {
+          "year": 2006,
+          "reason": "複数回答の全世帯保有表"
+        },
+        {
+          "year": 2010,
+          "reason": "PCとスマートフォンを別チャネルに表示"
+        }
+      ],
+      "segments": [
+        {
+          "from": "1996-01",
+          "through": "2004-12",
+          "seriesIds": [
+            "E3-ST003:cat01=110:cat04=100:cat08=290:tab=00100:frequency=年次",
+            "E3-ST003:cat01=110:cat04=100:cat08=170:tab=00100:frequency=年次"
+          ],
+          "label": "PCと携帯電話の世帯保有",
+          "limitation": "実観測は1996～2000年。後の年は観測年付きの過去の資料です。"
+        },
+        {
+          "from": "2005-01",
+          "through": "2005-12",
+          "seriesIds": [
+            "E3-ST004:cat01=290:cat04=100:tab=00100:frequency=年次（2005年の断面）",
+            "E3-ST004:cat01=170:cat04=100:tab=00100:frequency=年次（2005年の断面）"
+          ],
+          "label": "2005年の世帯保有",
+          "limitation": "この表は2005年だけ。前後の質問・分類と別に扱います。"
+        },
+        {
+          "from": "2006-01",
+          "through": "2009-12",
+          "seriesIds": [
+            "E3-ST005:cat01=290:cat04=100:tab=00100:frequency=年次"
+          ],
+          "label": "PCの世帯保有",
+          "limitation": "携帯の包含範囲が異なる分類をつないでいません。"
+        },
+        {
+          "from": "2010-01",
+          "through": "2026-10",
+          "seriesIds": [
+            "E3-ST005:cat01=290:cat04=100:tab=00100:frequency=年次",
+            "E3-ST005:cat01=260:cat04=100:tab=00100:frequency=年次"
+          ],
+          "label": "PCとスマートフォンの世帯保有",
+          "limitation": "最終観測は2016年。最新の所有状況に置き換えず、観測年を表示します。"
+        }
+      ],
+      "limitation": "世帯が持つ機器の割合。個人の所有や利用の確率ではありません。",
+      "selectionPolicy": {
+        "exactYearFirst": true,
+        "allowHistoricalSnapshot": true,
+        "showObservationYear": true,
+        "treatSnapshotAsCurrent": false,
+        "interpolate": false,
+        "missingRawStopsSnapshot": true
+      },
+      "authorRuleNote": "描画の数や縮尺は作者が設定する。全国値を架空個人の確率に変換しない。"
+    },
+    {
+      "id": "energy",
+      "label": "家庭のエネルギー",
+      "status": "allowed_with_notes",
+      "worldTarget": "家のエネルギーの模型",
+      "seriesIds": [
+        "E3-ST007:area=00100:cat01=0680:time=000107:axis=cat02:frequency=年度"
+      ],
+      "notes": [
+        "2017～2023年度の全国平均GJ/世帯・年。電気/都市ガス/LPガス/灯油の合計。",
+        "非使用世帯を含む。電気は二次換算。自動車用ガソリン/軽油を含まない。",
+        "2015試験調査と接続しない。2024年度以後の偶数年度は非実施で、欠測0にしない。",
+        "cat02が観測年度。timeの令和5年度は版であり、全値の観測年ではない。"
+      ],
+      "boundaries": [],
+      "segments": [
+        {
+          "from": "2017-01",
+          "through": "2026-10",
+          "seriesIds": [
+            "E3-ST007:area=00100:cat01=0680:time=000107:axis=cat02:frequency=年度"
+          ],
+          "label": "世帯当たりの年間エネルギー",
+          "limitation": "電気・ガス・灯油の合計。最新観測は2023年度で、2024年度は調査していません。"
+        }
+      ],
+      "limitation": "世帯当たりの年間平均。自動車の燃料を含まず、個々の家の使用量ではありません。",
+      "selectionPolicy": {
+        "exactYearFirst": true,
+        "allowHistoricalSnapshot": true,
+        "showObservationYear": true,
+        "treatSnapshotAsCurrent": false,
+        "interpolate": false,
+        "missingRawStopsSnapshot": true
+      },
+      "authorRuleNote": "描画の数や縮尺は作者が設定する。全国値を架空個人の確率に変換しない。"
     }
   ],
   "rules": [
@@ -259,8 +731,8 @@
   ],
   "archiveOnlyNotes": [
     "旧CPI、家計円、熱量は基準・量の違いを保持した別系列。",
-    "携帯電話の構成は2002～2004年だけで全通信普及の長期系列にはならない。",
-    "家庭電力・燃料は2015年試験調査の1期で、長期の電化率にはしない。",
-    "国勢人口長期表は歴史的領域・調査基準の留保があるため主駆動は保留。"
+    "通信の最新CSV値や所有と利用を同一の普及率へ混ぜない。",
+    "電灯需要の口/MWhと世帯エネルギーのGJは別量。月・年度・半期も別系列。",
+    "国勢人口長期表は対象・基準の留保があり主駆動は保留。"
   ]
 }

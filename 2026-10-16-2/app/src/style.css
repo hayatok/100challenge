@@ -16,3 +16,33 @@ dialog{width:min(780px,calc(100% - 32px));max-height:88vh;border:1px solid var(-
 .vital-records{display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid var(--ui-line)}.vital-records button{display:flex;align-items:baseline;flex-wrap:wrap;gap:4px 12px;border:0;background:transparent;text-align:left;white-space:normal;padding:12px 0;font-weight:400}.vital-records button:first-child{border-right:1px solid var(--ui-line);padding-right:16px}.vital-records button:last-child{padding-left:20px}.vital-records span{font-size:11px;color:var(--ui-muted)}.vital-records strong{font:22px Georgia,var(--serif);font-variant-numeric:tabular-nums}.vital-records small{font:11px var(--sans);margin-left:4px}.vital-records .vital-source{color:var(--ui-accent);margin-left:auto;margin-right:4px}.vital-records button:hover{background:#e9e6db}@media(max-width:560px){.vital-records button{gap:4px 8px;padding:10px 0}.vital-records button:last-child{padding-left:12px}.vital-records strong{font-size:20px}.vital-records .vital-source{display:none}}
 
 @media(max-width:360px){.brand h1{font-size:21px}.masthead nav button{font-size:11px;padding:6px}.masthead #open-about{min-width:44px}}
+
+/* Watching a place comes first; the quiet paper rail connects actions to records. */
+.world-frame{height:530px;box-shadow:0 3px 0 #abc0ad55,0 16px 35px #42584b08}
+.world-column{display:flex;flex-direction:column}
+.season-stamp{position:absolute;top:78px;right:18px;max-width:44%;padding:5px 9px;background:#fffdf8d9;color:#42584b;font-size:11px;line-height:1.6;pointer-events:none;border-radius:2px}
+.prop-icon{display:block;width:36px;height:36px;flex:0 0 36px;color:var(--forest)}
+.daily-ribbon{background:#fffdf85c;border-bottom:1px solid var(--ui-line);padding:10px 12px 12px}
+.daily-heading{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:4px}
+.daily-heading .eyebrow{font-size:11px;letter-spacing:.08em}.daily-heading .small{font-size:11px}
+.daily-stories{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.daily-story{min-width:0;display:flex;flex-wrap:wrap;align-items:center;gap:0 12px}
+.daily-story+.daily-story{border-left:1px solid var(--ui-line);padding-left:16px}
+.daily-person{display:flex;gap:12px;align-items:center;text-align:left;background:none;border:0;border-radius:2px;padding:4px;white-space:normal;font-weight:400;max-width:100%;min-height:52px}
+.daily-person:hover{background:#dce4d147}.daily-person>span{display:flex;flex-direction:column;gap:1px;min-width:0}.daily-person strong{font:700 15px/1.6 var(--serif)}.daily-person>span>span{font-size:11px;color:var(--ui-muted)}
+.daily-source{background:none;border:0;padding:0 4px;font-size:11px;font-weight:400;min-height:44px;white-space:normal;color:var(--ui-accent)}
+.fictional-origin{display:flex;align-items:center;color:var(--ui-muted);min-height:24px}
+.person-scene{display:flex;align-items:center;gap:8px;margin-top:12px}.person-scene .person-activity{margin-top:0}.person-scene .prop-icon{width:28px;height:28px;flex-basis:28px}.scene-origin{font-size:12px;white-space:normal}
+.fiction-tag{font-size:12px;line-height:1.6}.life-journal{font-size:13px}.life-journal li{gap:8px}
+.journey{margin-top:28px;padding-top:24px;border-top:1px solid var(--ui-line)}
+.journey h2{font-size:23px;margin:4px 0 16px}.journey-stops{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.journey-stop{display:flex;align-items:center;gap:12px;padding:12px 14px;text-align:left;white-space:normal;min-width:0;background:#fffdf85c;border:1px solid var(--ui-line);font-weight:400;min-height:84px}
+.journey-stop>span:not(.journey-arrow){display:flex;flex-direction:column;gap:3px;min-width:0}.journey-date{font:12px/1.6 var(--sans);color:var(--ui-muted)}.journey-stop strong{font:700 16px/1.5 var(--serif)}
+.journey-arrow{margin-left:auto;color:var(--ui-accent)}.journey-stop[aria-pressed=true]{border-color:var(--ui-accent);background:#f1e6d6;box-shadow:inset 3px 0 var(--ui-accent)}
+.scene-detail-heading{display:flex;align-items:center;gap:16px}.scene-detail-heading .prop-icon{width:54px;height:54px;flex-basis:54px}.scene-detail-heading h3{margin:4px 0}.fiction-explanation{font-size:13px!important;color:var(--ui-muted);border-left:2px solid var(--ui-line);padding-left:14px}.inspiration-record{padding:8px 0 20px;border-top:1px solid var(--ui-line)}.inspiration-record h3{margin:8px 0}.scene-detail-heading+p{font-family:var(--serif);font-size:19px}
+.numbers-section>.vital-records{margin-top:16px;border-top:1px solid var(--ui-line)}
+.macro-card:last-child{border-right:0}.history-summary{font-size:14px}.history-kicker{font-size:12px}
+@media(min-width:1500px){.world-frame{height:600px}}
+@media(max-width:1100px){.world-frame{height:500px}.journey-stops{grid-template-columns:repeat(3,minmax(0,1fr))}.daily-source{width:100%;padding-left:4px}.season-stamp{max-width:46%;font-size:10px}}
+@media(max-width:800px){.world-frame{height:540px}.journey-stops{grid-template-columns:repeat(2,minmax(0,1fr))}.daily-source{width:auto}.observation-column{margin-top:4px}}
+@media(max-width:560px){.world-frame{height:470px}.season-stamp{top:132px;right:12px;max-width:45%;font-size:10px}.daily-ribbon{padding:10px 8px}.daily-stories{gap:6px}.daily-story+.daily-story{padding-left:8px}.daily-person{gap:6px;padding:4px 0}.daily-person .prop-icon{width:25px;height:30px;flex-basis:25px}.daily-person strong{font-size:13px}.daily-person>span>span{font-size:10px}.daily-story{align-content:start}.daily-source{font-size:11px;width:100%;min-height:44px}.daily-heading .small{font-size:10px}.daily-heading .eyebrow{font-size:11px}.journey{margin-top:24px;padding-top:20px}.journey h2{font-size:21px}.journey-stops{display:flex;overflow-x:auto;gap:10px;padding:4px 4px 12px;scroll-snap-type:x proximity}.journey-stop{flex:0 0 245px;scroll-snap-align:start}.numbers-section{margin-top:20px}.life-journal{display:block}.life-journal li{display:grid;grid-template-columns:42px 1fr;margin:6px 0}.person-age{font-size:14px}.person-activity{font-size:17px}.person-scene{gap:10px}.scene-origin{font-size:13px}.fiction-tag{font-size:12px}}

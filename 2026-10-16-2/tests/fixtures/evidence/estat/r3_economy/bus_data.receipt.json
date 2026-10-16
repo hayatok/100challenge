@@ -1,0 +1,27 @@
+{
+  "command": [
+    "/Users/hayatok/.local/bin/estat",
+    "data",
+    "get",
+    "0003423113",
+    "--filter",
+    "tab=00040",
+    "--filter",
+    "cat01=00030,00060,00070",
+    "--all-pages",
+    "--max-records",
+    "1000",
+    "--timeout",
+    "25s",
+    "-o",
+    "json"
+  ],
+  "started_at": "2026-10-16T15:00:10.931846+00:00",
+  "finished_at": "2026-10-16T15:00:11.521967+00:00",
+  "exit_code": 0,
+  "json_valid": true,
+  "redacted_fields": 0,
+  "output_path": "evidence/estat/r3_economy/bus_data.json",
+  "sha256": "0c626f997db6b4f1f9637ee1e0d26623cad54ce9eb545b78e0d3aadc491418c5",
+  "stderr": ""
+}
