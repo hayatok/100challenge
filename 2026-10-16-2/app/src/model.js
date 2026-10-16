@@ -1,4 +1,5 @@
 // The archive is evidence; this small world is author-created fiction.
+import { createRoutine, createMeetings, personaAt } from './routines.js';
 import { createLifeIndex, lifeScene, placeAtmosphere, sceneDestination } from './life-scenes.js';
 export const PLACES = Object.freeze([
   ['hokkaido','北海道','白樺町',.81,.13,142.1,43.2],['tohoku','東北','こもれび町',.72,.35,140.5,39.3],
@@ -119,7 +120,7 @@ function makePeople(seed) {
         parentIds:generation?[`${familyId}-g${generation-1}-0`]:[],
         childrenIds:sibling===0&&generation<9?[`${familyId}-g${generation+1}-0`,`${familyId}-g${generation+1}-1`]:[],
         siblingIds:[`${familyId}-g${generation}-${1-sibling}`],
-        occupation:pick(seed,`${id}-job`,['商店の仕事','畑の仕事','ものづくり','仕立ての仕事']),
+        profession:pick(seed,`${id}-job`,['farmer','merchant','craft','textile','clerk','teacher','courier','builder','food','mechanic','health','factory',...(['hokkaido','hokuriku','sanin','sanyo','shikoku','kyushu','okinawa'].includes(place.id)?['fisher']:['farmer'])]),
         home:{x:.15+random(seed,`${familyId}-hx`)*.7,y:.2+random(seed,`${familyId}-hy`)*.6},
         destination:{x:.15+random(seed,`${id}-dx`)*.7,y:.2+random(seed,`${id}-dy`)*.6},
         order:hash(`${seed}-${id}-order`)});
@@ -127,15 +128,20 @@ function makePeople(seed) {
   }
   const byId=new Map(people.map(p=>[p.id,p]));
   for(const person of people){person.childBirths=person.childrenIds.map(id=>({id,year:byId.get(id).birthYear}));person.schoolYear=person.birthYear+5+Math.floor(random(seed,`${person.id}-school`)*3);person.workYear=person.birthYear+16+Math.floor(random(seed,`${person.id}-work`)*7);}
+  for(const p of people){const local=people.filter(q=>q.placeId===p.placeId&&q.familyId!==p.familyId);p.neighborIds=local.filter(q=>Math.abs(q.birthYear-p.birthYear)<15).sort((a,b)=>hash(`${seed}|${p.id}-${a.id}`)-hash(`${seed}|${p.id}-${b.id}`)).slice(0,2).map(q=>q.id);p.schoolmateIds=local.filter(q=>Math.abs(q.birthYear-p.birthYear)<=3).sort((a,b)=>hash(`${seed}|${p.id}-school-${a.id}`)-hash(`${seed}|${p.id}-school-${b.id}`)).slice(0,2).map(q=>q.id);Object.assign(p,personaAt(p,p.birthYear+30,seed));}
   return {people,byId};
 }
 function dailyAt(person,seed,year,month,index,sourceMaterialId=null) {
   const scene=lifeScene(index,person,seed,year,month,{sourceMaterialId});
   return {...scene,id:`${person.id}-${year}-${month}`,sceneId:scene.id,year,month,kind:'daily',fictional:true};
 }
-function personAt(person,time,seed,journal=false,index=new Map(),sourceMaterialId=null,targets=null) {
+function personAt(person,time,seed,journal=false,index=new Map(),sourceMaterialId=null,targets=null,byId=null,meetings=null) {
   if(!person)return null;
   const year=Math.floor(time/12),age=year-person.birthYear,alive=age>=0&&year<person.deathYear;
+  const homes=targets?.homes??[];person={...person,...personaAt(person,year,seed),home:homes.length?homes[hash(person.familyId)%homes.length]:person.home};
+  const relations=[...person.parentIds.map(id=>({id,kind:'parent'})),...person.childrenIds.map(id=>({id,kind:'child'})),...person.siblingIds.map(id=>({id,kind:'family'})),...(person.neighborIds??[]).map(id=>({id,kind:'neighbor'})),...(person.schoolmateIds??[]).map(id=>({id,kind:'schoolmate'}))].filter(r=>{const p=byId?.get(r.id);return p&&p.birthYear<=year&&p.deathYear>year;}).map(r=>({...r,name:byId.get(r.id).name,age:year-byId.get(r.id).birthYear}));
+  const relationships=[...relations,...relations.filter(r=>r.kind==='parent'||r.kind==='child').map(r=>({...r,kind:'family'}))];
+  for(const meeting of meetings??[])for(const companion of meeting.companions)if(!relationships.some(r=>r.id===companion.id&&r.kind===companion.kind))relationships.push(companion);
   const progress=((time%12)+random(seed,`${person.id}-walk`)*12)%12/12;
   const outbound=progress<.5,portion=outbound?progress*2:(1-progress)*2;
   const month=Math.floor(time%12)+1,dailyEvent=alive?dailyAt(person,seed,year,month,index,sourceMaterialId):null;
@@ -152,9 +158,10 @@ function personAt(person,time,seed,journal=false,index=new Map(),sourceMaterialI
   }
   if(journal&&dailyEvent){const existing=lifeEvents.findIndex(e=>e.kind==='daily'&&e.year===year&&e.month===month);if(existing>=0)lifeEvents[existing]=dailyEvent;else lifeEvents.push(dailyEvent);}
   lifeEvents.sort((a,b)=>a.year-b.year||a.month-b.month);
+  const routine=alive?createRoutine(person,scene,seed,year,month,targets,relationships,meetings):null;
   return {...person,age:Math.max(0,Math.min(age,person.deathYear-person.birthYear)),alive,activity,
     x:walking?departure.x+(destination.x-departure.x)*portion:destination.x,y:walking?departure.y+(destination.y-departure.y)*portion:destination.y,
-    from:walking?(outbound?departure:destination):destination,to:walking?(outbound?destination:departure):destination,progress:portion,lifeEvents,dailyEvent,scene,fictional:true,authorRule:MODEL_RULES.lives};
+    from:walking?(outbound?departure:destination):destination,to:walking?(outbound?destination:departure):destination,progress:portion,lifeEvents,dailyEvent,scene,relationships,routine,sceneStages:routine?.stages??[],fictional:true,authorRule:MODEL_RULES.lives};
 }
 function sceneAssignments(sim){
   const year=Math.floor(sim.time/12),month=Math.floor(sim.time%12)+1,map=new Map(),alive=sim._people.people.filter(p=>p.birthYear<=year&&p.deathYear>year).sort((a,b)=>a.order-b.order);
@@ -164,7 +171,7 @@ function sceneAssignments(sim){
   }
   return map;
 }
-function targetsFor(buildings,placeId){return Object.fromEntries(['shop','farm','school'].map(type=>{const building=buildings.find(b=>b.placeId===placeId&&b.type===type);return [type,building?{x:building.x,y:building.y}:null];}));}
+function targetsFor(buildings,placeId){const local=buildings.filter(b=>b.placeId===placeId);const targets=Object.fromEntries(['shop','farm','school','factory','water'].map(type=>{const building=local.find(b=>b.type===type);return [type,building?{x:building.x,y:building.y}:null];}));for(const [kind,type] of [['workshop','factory'],['office','shop'],['post','shop'],['clinic','shop']])if(targets[type])targets[kind]=targets[type];targets.homes=local.filter(b=>b.type==='house'&&b.lit).map(b=>({x:b.x,y:b.y}));return targets;}
 function buildWorld(sim,macro,assignments) {
   const directives=directivesAt(macro),{seed,time}=sim;
   const candidates=sim._people.people.filter(p=>p.birthYear<=Math.floor(time/12)&&p.deathYear>Math.floor(time/12)).sort((a,b)=>a.order-b.order);
@@ -183,7 +190,9 @@ function buildWorld(sim,macro,assignments) {
     for(let i=0;i<total;i++){
       const place=places[i%places.length],id=`${type}-${i}`,lit=type!=='house'||i>=Math.min(directives.emptyHouseCount,directives.houseCount);
       place.visual[visual]++;if(type==='house'&&!lit)place.visual.vacancy++;
-      buildings.push({id,placeId:place.id,type,x:.12+random(seed,`${id}-x`)*.76,y:.15+random(seed,`${id}-y`)*.7,lit,fictional:true});
+      const row=Math.floor(i/places.length),jitter=(axis)=>(random(seed,`${id}-${axis}`)-.5)*.035;
+      const district=type==='house'?{x:[.17,.39,.61,.83][row%4],y:[.16,.39,.64][Math.floor(row/4)%3]}:type==='farm'||type==='rice'?{x:.82-(row%3)*.085,y:.64+Math.floor(row/3)*.06}:type==='factory'||type==='energy'?{x:.72-(row%3)*.12,y:.18+Math.floor(row/3)*.085}:type==='school'?{x:.4+(row%2)*.16,y:.22}:type==='water'?{x:.24,y:.67}:{x:.45+(row%3)*.11,y:.46};
+      buildings.push({id,placeId:place.id,type,x:clamp(district.x+jitter('x'),.1,.9),y:clamp(district.y+jitter('y'),.1,.9),lit,fictional:true});
     }
   };
   scatter(directives.houseCount,'house','houses');scatter(directives.farmCount,'farm','farm');scatter(directives.factoryCount,'factory','factory');scatter(directives.waterCount,'water','water');scatter(directives.schoolCount+directives.campusCount,'school','school');scatter(directives.riceSacks,'rice','rice');
@@ -198,9 +207,14 @@ function buildWorld(sim,macro,assignments) {
     const place=places[i%12],phase=(time/4+i*.19)%1;place.visual.rail++;
     vehicles.push({id:`rail-${i}`,placeId:place.id,type:'rail',x:.15+.7*phase,y:.8,from:{x:.15,y:.8},to:{x:.85,y:.8}});
   }
-  const people=chosen.map(p=>personAt(p,time,seed,false,sim._index.life,assignments.get(p.id)??null,targetsFor(buildings,p.placeId)));
+  const observed=Object.fromEntries(places.map(place=>[place.id,candidates.filter(p=>p.placeId===place.id).slice(0,28)]));
+  for(const id of [...assignments.keys(),sim.personId].filter(Boolean)){const p=sim._people.byId.get(id);if(!p||p.birthYear>Math.floor(time/12)||p.deathYear<=Math.floor(time/12))continue;const local=observed[p.placeId];if(!local.some(q=>q.id===id)){const replacement=local.findLastIndex(q=>!assignments.has(q.id)&&q.id!==sim.personId);if(replacement>=0)local[replacement]=p;}}
+  const meetings=Object.assign({},...places.map(place=>createMeetings(observed[place.id],Math.floor(time/12),seed)));
+  const people=chosen.map(p=>personAt(p,time,seed,false,sim._index.life,assignments.get(p.id)??null,targetsFor(buildings,p.placeId),sim._people.byId,meetings[p.id]));
+  const personMap=new Map(people.map(p=>[p.id,p]));
+  const placePeople=Object.fromEntries(places.map(place=>[place.id,observed[place.id].map(p=>personMap.get(p.id)??personAt(p,time,seed,false,sim._index.life,assignments.get(p.id)??null,targetsFor(buildings,p.placeId),sim._people.byId,meetings[p.id]))]));
   const localStories=places.flatMap(place=>people.filter(p=>p.placeId===place.id&&p.scene).sort((a,b)=>Number(b.id===sim.personId)-Number(a.id===sim.personId)||Number(b.scene.sourceMaterialIds.length>0)-Number(a.scene.sourceMaterialIds.length>0)||a.order-b.order).slice(0,2).map(person=>({id:`${person.id}-${Math.floor(time)}`,placeId:place.id,personId:person.id,title:person.name+'のひとこま',text:person.scene.text,activity:person.scene.activity,prop:person.scene.prop,pose:person.scene.pose,sourceMaterialIds:person.scene.sourceMaterialIds,fictional:true})));
-  return {places,people,buildings,vehicles,directives,localStories,scopeNote:'町ごとの模型の置き分けは作者設定です。実際の地域人口・路線・個人の暮らしを推計していません。'};
+  return {places,people,placePeople,meetings,buildings,vehicles,directives,localStories,scopeNote:'町ごとの模型の置き分けは作者設定です。実際の地域人口・路線・個人の暮らしを推計していません。'};
 }
 function atTime(sim,time) {return {...sim,time:clamp(time,monthIndex(MIN_YEAR),monthIndex(MAX_YEAR,10))};}
 export function createSimulation(archive,drivers,{seed=1,year=1900,month=1,placeId='kanto'}={}) {
@@ -232,7 +246,7 @@ export function snapshot(sim) {
   const events=sim._index.events.filter(e=>e.start<=Math.floor(sim.time));
   const activeEvents=events.filter(e=>e.end!==null&&e.end>=Math.floor(sim.time)).map(e=>e.event);
   const living=sim._index.living.filter(e=>e.start!==null&&e.end!==null&&e.start<=sim.time&&e.end>=Math.floor(sim.time)).map(e=>e.item);
-  const selectedPerson=personAt(sim._people.byId.get(sim.personId),sim.time,sim.seed,true,sim._index.life,assignments.get(sim.personId)??null,targetsFor(world.buildings,sim.placeId));
-  if(selectedPerson){const ids=[...selectedPerson.parentIds,...selectedPerson.siblingIds,...selectedPerson.childrenIds];selectedPerson.family=ids.map(id=>personAt(sim._people.byId.get(id),sim.time,sim.seed,false,sim._index.life,assignments.get(id)??null,targetsFor(world.buildings,sim._people.byId.get(id)?.placeId))).filter(p=>p&&p.birthYear<=year);selectedPerson.childrenIds=selectedPerson.childrenIds.filter(id=>sim._people.byId.get(id).birthYear<=year);}
+  const selectedPerson=personAt(sim._people.byId.get(sim.personId),sim.time,sim.seed,true,sim._index.life,assignments.get(sim.personId)??null,targetsFor(world.buildings,sim.placeId),sim._people.byId,world.meetings[sim.personId]);
+  if(selectedPerson){const ids=[...selectedPerson.parentIds,...selectedPerson.siblingIds,...selectedPerson.childrenIds];selectedPerson.family=ids.map(id=>personAt(sim._people.byId.get(id),sim.time,sim.seed,false,sim._index.life,assignments.get(id)??null,targetsFor(world.buildings,sim._people.byId.get(id)?.placeId),sim._people.byId,world.meetings[id])).filter(p=>p&&p.birthYear<=year);selectedPerson.childrenIds=selectedPerson.childrenIds.filter(id=>sim._people.byId.get(id).birthYear<=year);}
   return {year,month,seed:sim.seed,ended:sim.time>=monthIndex(MAX_YEAR,10),macro,events:events.slice(-6).reverse().map(e=>e.event),activeEvents,living,world,selectedPerson,selectedPlace:world.places.find(p=>p.id===sim.placeId),scopeNote:sim._index.archive.scopeNote};
 }

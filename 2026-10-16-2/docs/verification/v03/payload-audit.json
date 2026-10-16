@@ -1,0 +1,396 @@
+{
+  "version": 1,
+  "release": "0.3.0",
+  "checkedAt": "2026-10-16T18:51:39.025320+00:00",
+  "status": "pass",
+  "scope": "Read-only independent source and distribution audit before Pages deployment. No browser operation or Git mutation.",
+  "counts": {
+    "sourceFiles": 18,
+    "distributionFilesIncludingManifest": 19,
+    "originalEvents": 184,
+    "additionalEvents": 210,
+    "mergedEventRecords": 394,
+    "additionalSources": 32,
+    "series": 557,
+    "observations": 15728
+  },
+  "checks": {
+    "sourceEqualsDistributionExceptManifest": true,
+    "distributionManifestValid": true,
+    "javascriptSyntax": [
+      {
+        "file": "src/app.js",
+        "exitCode": 0
+      },
+      {
+        "file": "src/charts.js",
+        "exitCode": 0
+      },
+      {
+        "file": "src/era-art.js",
+        "exitCode": 0
+      },
+      {
+        "file": "src/history-data.js",
+        "exitCode": 0
+      },
+      {
+        "file": "src/life-scenes.js",
+        "exitCode": 0
+      },
+      {
+        "file": "src/model.js",
+        "exitCode": 0
+      },
+      {
+        "file": "src/presentation.js",
+        "exitCode": 0
+      },
+      {
+        "file": "src/renderer.js",
+        "exitCode": 0
+      },
+      {
+        "file": "src/routines.js",
+        "exitCode": 0
+      },
+      {
+        "file": "src/storage.js",
+        "exitCode": 0
+      }
+    ],
+    "namedImports": [
+      {
+        "file": "src/app.js",
+        "target": "src/model.js",
+        "names": [
+          "PLACES",
+          "createSimulation",
+          "snapshot",
+          "seek",
+          "advance",
+          "reroll",
+          "selectPerson",
+          "selectPlace"
+        ],
+        "resolved": true
+      },
+      {
+        "file": "src/app.js",
+        "target": "src/renderer.js",
+        "names": [
+          "createRenderer"
+        ],
+        "resolved": true
+      },
+      {
+        "file": "src/app.js",
+        "target": "src/storage.js",
+        "names": [
+          "STORAGE_KEY",
+          "parseSaved",
+          "serializeSaved",
+          "escapeHTML",
+          "safeURL"
+        ],
+        "resolved": true
+      },
+      {
+        "file": "src/app.js",
+        "target": "src/presentation.js",
+        "names": [
+          "observationTime",
+          "pointsThrough",
+          "materialStatus",
+          "recordNotes",
+          "readableResearchText",
+          "eraLabel",
+          "materialInYear",
+          "regionalMaterial",
+          "period"
+        ],
+        "resolved": true
+      },
+      {
+        "file": "src/app.js",
+        "target": "src/charts.js",
+        "names": [
+          "createStatisticsExplorer",
+          "mountChart",
+          "presetTracks"
+        ],
+        "resolved": true
+      },
+      {
+        "file": "src/app.js",
+        "target": "src/routines.js",
+        "names": [
+          "routineAt",
+          "dayClockAt",
+          "DAILY_CYCLE_SECONDS"
+        ],
+        "resolved": true
+      },
+      {
+        "file": "src/app.js",
+        "target": "src/era-art.js",
+        "names": [
+          "eraProfile"
+        ],
+        "resolved": true
+      },
+      {
+        "file": "src/app.js",
+        "target": "src/history-data.js",
+        "names": [
+          "mergeHistory",
+          "eventDateLabel",
+          "eventThemeIds",
+          "filterHistory",
+          "HISTORY_CHAPTERS",
+          "HISTORY_THEMES"
+        ],
+        "resolved": true
+      },
+      {
+        "file": "src/charts.js",
+        "target": "src/storage.js",
+        "names": [
+          "escapeHTML"
+        ],
+        "resolved": true
+      },
+      {
+        "file": "src/charts.js",
+        "target": "src/presentation.js",
+        "names": [
+          "observationTime",
+          "readableResearchText",
+          "recordNotes"
+        ],
+        "resolved": true
+      },
+      {
+        "file": "src/life-scenes.js",
+        "target": "src/routines.js",
+        "names": [
+          "ROUTINE_ACTIONS",
+          "routineEligible",
+          "personaAt"
+        ],
+        "resolved": true
+      },
+      {
+        "file": "src/model.js",
+        "target": "src/routines.js",
+        "names": [
+          "createRoutine",
+          "createMeetings",
+          "personaAt"
+        ],
+        "resolved": true
+      },
+      {
+        "file": "src/model.js",
+        "target": "src/life-scenes.js",
+        "names": [
+          "createLifeIndex",
+          "lifeScene",
+          "placeAtmosphere",
+          "sceneDestination"
+        ],
+        "resolved": true
+      },
+      {
+        "file": "src/renderer.js",
+        "target": "src/routines.js",
+        "names": [
+          "routineAt",
+          "dayClockAt"
+        ],
+        "resolved": true
+      },
+      {
+        "file": "src/renderer.js",
+        "target": "src/era-art.js",
+        "names": [
+          "eraProfile",
+          "buildingArt",
+          "dailyLight"
+        ],
+        "resolved": true
+      }
+    ],
+    "localAssetsAndFetchTargets": [
+      {
+        "from": "index.html",
+        "target": "./assets/japan-cover.svg",
+        "exists": true
+      },
+      {
+        "from": "index.html",
+        "target": "./src/style.css",
+        "exists": true
+      },
+      {
+        "from": "index.html",
+        "target": "./src/app.js",
+        "exists": true
+      },
+      {
+        "from": "src/app.js fetch bootstrap",
+        "target": "data/archive.json",
+        "exists": true
+      },
+      {
+        "from": "src/app.js fetch bootstrap",
+        "target": "data/drivers.json",
+        "exists": true
+      },
+      {
+        "from": "src/app.js fetch bootstrap",
+        "target": "data/japan.geo.json",
+        "exists": true
+      },
+      {
+        "from": "src/app.js fetch bootstrap",
+        "target": "data/history-expanded.json",
+        "exists": true
+      }
+    ],
+    "forbiddenPayloadFiles": [],
+    "credentialPatternHits": [],
+    "allAdditionalSourceVerifications": true,
+    "allAdditionalSourceHTTPS": true,
+    "latestAdditionalEvent": "2026-03-31",
+    "historicalPlanningTermsReviewed": [
+      {
+        "id": "E4-086",
+        "title": "小諸で構想された『破戒』刊行"
+      },
+      {
+        "id": "E4-092",
+        "title": "満州農業移民の国策と長野からの移住"
+      },
+      {
+        "id": "E4-049",
+        "title": "森林計画・伐採許可制度の導入"
+      },
+      {
+        "id": "E4-044",
+        "title": "最初の食料・農業・農村基本計画"
+      }
+    ],
+    "futurePlannedEventsFound": [],
+    "frozenEvidenceAndHistoryTests": {
+      "command": "node --test tests/archive.test.mjs tests/history-data.test.mjs",
+      "passed": 23,
+      "failed": 0,
+      "checks": [
+        "15728 observation canonical hashes vs frozen source_snapshot.v3",
+        "15728 cells vs original estat CLI dimension/value/raw/kind",
+        "55 fixture byte hashes and original capture receipts",
+        "frozen sources/living/gaps/statistics/events/editorial",
+        "v2 14083 original observations still preserved",
+        "history merge preserves original object references and frozen arrays"
+      ]
+    }
+  },
+  "files": {
+    "assets/japan-cover.svg": {
+      "bytes": 35078,
+      "sha256": "fe76881d8f40b80dceb53e6efe515ecc75d49568bd2d7b2e2a7ecb401cdde2e6"
+    },
+    "assets/map-attribution.txt": {
+      "bytes": 1598,
+      "sha256": "b3978e3e3f4f49f2a509359b7a20a8863c06c3cb175fa9b942fcbb6b14a4ddd5"
+    },
+    "data/archive.json": {
+      "bytes": 16329292,
+      "sha256": "b08c8b32ba07d33c5186478cb27574ef90016522cfcbfb9860d927f397a9cefb"
+    },
+    "data/drivers.json": {
+      "bytes": 30153,
+      "sha256": "4f7c6ab03a81891009fd04eb0743eff965fc13927d59128bd6a0f543139c13eb"
+    },
+    "data/history-expanded.json": {
+      "bytes": 323501,
+      "sha256": "afefaf7c6fd69610b5f53ef20d387d5ac7072d4773dc63677f4454a706ee3cee"
+    },
+    "data/japan.geo.json": {
+      "bytes": 23394,
+      "sha256": "99d09c80bd40769cd970de09ebd091da53bfaf34c04cffc1c1db26cd81d808dc"
+    },
+    "index.html": {
+      "bytes": 12482,
+      "sha256": "8cd9e65afd6fcefceaedaccdf498cb7dc3c28fcc7fa0d65cb25630f70441f039"
+    },
+    "src/app.js": {
+      "bytes": 63255,
+      "sha256": "ab72c7d8c1f0191b6f8915f5c7dc638017179e54992fcec365275ba98fad0e92"
+    },
+    "src/charts.js": {
+      "bytes": 18148,
+      "sha256": "9610f4678c5b4b2339533ab7114305fa468dd64a00ed712eb3df09023e90106b"
+    },
+    "src/era-art.js": {
+      "bytes": 2960,
+      "sha256": "eabbdd2ec2b7cff9c94e6832263ba5186aaa4999c91980be68c68becfb640d58"
+    },
+    "src/history-data.js": {
+      "bytes": 8437,
+      "sha256": "964da22e24900d8d5dbcb03327ad7bc890ba074e56f3cf4363fb357775105513"
+    },
+    "src/life-scenes.js": {
+      "bytes": 9206,
+      "sha256": "f91a4bd4501df2eb000438623f8287cb160a359a3b27cd137f8b513e8618cecc"
+    },
+    "src/model.js": {
+      "bytes": 27980,
+      "sha256": "f6129fa136af39bbdf080fe3383824a766a577cedec57a4d13222e523f6bd393"
+    },
+    "src/presentation.js": {
+      "bytes": 5863,
+      "sha256": "c2247cc2e02f6f416fcf487858202e2ff2146aee29d158d76bbd89ff5ea25412"
+    },
+    "src/renderer.js": {
+      "bytes": 49966,
+      "sha256": "cb9febe6b6dab24ae42029617a13faee908fe4566a8ad8c1dc1562588bf733be"
+    },
+    "src/routines.js": {
+      "bytes": 25920,
+      "sha256": "11e73b9e90bea9436566fe4998d5287f33d7658c8b3de7097dc20720b55a8bb3"
+    },
+    "src/storage.js": {
+      "bytes": 1718,
+      "sha256": "eb82c8338030df0f462aa922162ccdf40f25109c5a0f9d6940b18a1c77a53a8d"
+    },
+    "src/style.css": {
+      "bytes": 43626,
+      "sha256": "cc50a22826a4cd43f310a6c4ac8bebef45a8fe78d710052c5da4808fc2b36d2b"
+    }
+  },
+  "findings": [],
+  "sourceReview": {
+    "addedSourceCount": 32,
+    "eventSourceLocatorsPresent": true,
+    "datePrecisionPreserved": true,
+    "confirmedCompleted2026Event": "E5-040 FOMA・iモード service ended 2026-03-31 (official past-tense notice, as documented)",
+    "provenanceDocument": "docs/HISTORY_EXPANSION.md",
+    "limitations": [
+      "Source bodies and locators were verified during the research passes on 2026-10-17; this release audit rechecks frozen data, coverage, provenance structure, and previous qualifications rather than claiming a new full live re-download of all 32 sources.",
+      "The four summaries containing plan/concept vocabulary describe historical activities (1906 novel, 1936 emigration policy, 1951 forestry rules, 2000 agriculture plan), not future events.",
+      "Original archive retains three pairs of same-event records; 394 is the number of event records, not a claim of 394 distinct historical events."
+    ]
+  },
+  "packagingReview": [
+    "build_app.mjs recursively copies app/ only into dist/.",
+    "Root build-site.mjs copies the selected app dist/ into .site/2026-10-16-2/, reusing unselected app deploy artifacts.",
+    "deploy-pages.yml uploads .site only. GH_TOKEN is a build environment variable, not a copied file.",
+    "Source PDF/workbook URLs and original CLI paths/receipt provenance occur as JSON metadata; no source images, PDF/workbook, fixture files, credentials, or research evidence files are in app/dist payload."
+  ],
+  "pending": [
+    "Same-run github-pages artifact versus every target app public file SHA-256 comparison awaits deployment run ID.",
+    "Browser acceptance is handled independently by parent agent."
+  ]
+}

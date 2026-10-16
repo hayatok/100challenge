@@ -7,6 +7,12 @@ test('a local saved world survives serialization; corrupt or future states do no
   assert.deepEqual(parseSaved(serializeSaved(state, preferences)), { ...state, ...preferences });
   for (const raw of ['null', '{', '{}', JSON.stringify({ version: 1, seed: 1, year: 2026, month: 12 }), JSON.stringify({ version: 1, seed: 0, year: 1900, month: 1 }), JSON.stringify({ version: 1, seed: 1, year: 1899, month: 1 })]) assert.equal(parseSaved(raw), null);
 });
+test('a saved day keeps its action clock and zoom without breaking older saves',()=>{
+  const state={seed:12345,year:1935,month:4},settings={placeId:'kanto',personId:'p',speed:1,reducedMotion:false,clockSeconds:172.5,zoom:1.5};
+  assert.deepEqual(parseSaved(serializeSaved(state,settings)),{...state,...settings});
+  const invalid=JSON.parse(serializeSaved(state,settings));invalid.clockSeconds=-1;invalid.zoom=10;
+  const restored=parseSaved(JSON.stringify(invalid));assert.equal(restored.clockSeconds,undefined);assert.equal(restored.zoom,undefined);
+});
 test('external sources can only open http URLs', () => {
   assert.equal(safeURL('javascript:alert(1)'), null);
   assert.equal(safeURL('file:///etc/passwd'), null);
