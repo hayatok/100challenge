@@ -1,7 +1,11 @@
 export function observationTime(point) {
   if (!Number.isInteger(point.year)) return null;
-  const month = String(point.timeLabel || point.time_label || '').match(/年\s*(\d{1,2})月/);
-  return point.year * 12 + (month ? Number(month[1]) - 1 : 0);
+  const label=String(point.timeLabel || point.time_label || '');
+  // A period starts at the month written in the original label. This is a
+  // plotting coordinate, not an invented date of observation or publication.
+  const month=label.match(/年(?:度)?\s*(\d{1,2})(?:\s*[～〜–-]\s*\d{1,2})?月/);
+  const quarter=label.match(/第?([1-4])四半期|([1-4])Q/i);
+  return point.year*12+(month?Number(month[1])-1:quarter?(Number(quarter[1]||quarter[2])-1)*3:0);
 }
 const japaneseYear = new Intl.DateTimeFormat('ja-JP-u-ca-japanese', { era: 'long', year: 'numeric', timeZone: 'UTC' });
 export function eraLabel(year, month) {
@@ -51,6 +55,8 @@ export function recordNotes(value) {
 }
 export function readableResearchText(value = '') {
   return String(value ?? '')
+    .replace(/地域軸なし。/g, '地域の区分がない総覧です。')
+    .replace(/注記未取得/g, '対象の詳しい範囲は確認が残っています')
     .replace(/CLI catalogヘルプは検索のみ。?/g, '')
     .replace(/\b(?:cat\d+|tab|area|time(?:From|To)?|axis|frequency|limit|startPosition|meta)\s*=\s*[^\s。、；;）)]+/gi, '')
     .replace(/\s*証拠\s*=\s*[^\s。]+/g, '')

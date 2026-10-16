@@ -1,0 +1,54 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {readFile} from 'node:fs/promises';
+import {statisticCatalogue,presetTracks,observationsAt,nearestObservation,chartData,chartTime} from '../app/src/charts.js';
+import {eraProfile,buildingArt} from '../app/src/era-art.js';
+const archive=JSON.parse(await readFile(new URL('../app/data/archive.json',import.meta.url)));
+const drivers=JSON.parse(await readFile(new URL('../app/data/drivers.json',import.meta.url)));
+
+test('the graph catalogue exposes all 557 original series and every original observation',()=>{
+  const entries=statisticCatalogue(archive);
+  assert.equal(entries.length,557);
+  assert.deepEqual(new Set(entries.map(e=>e.id)),new Set(archive.series.map(e=>e.id)));
+  assert.equal(entries.reduce((n,e)=>n+e.entry.points.length,0),15728);
+  for(const e of entries)assert.equal(e.entry,archive.series.find(s=>s.id===e.id));
+});
+test('the default population graph starts in 1900 and keeps early scopes and the 1975 switch visible',()=>{
+  const tracks=presetTracks(archive,drivers,'population'),early=observationsAt(tracks,1900);
+  assert.equal(early.length,1);assert.equal(early[0].point.raw,'43847000');
+  assert.match(early[0].track.label,/旧内地/);
+  assert.deepEqual(chartData(tracks).range,[1900,2026]);
+  for(let year=1900;year<=1974;year++)assert.equal(observationsAt(tracks,year).length,1,`${year} has the original early observation`);
+  assert.match(observationsAt(tracks,1967)[0].track.label,/日本人人口/);
+  assert.match(observationsAt(tracks,1975)[0].track.label,/総人口/);
+  assert.equal(observationsAt(tracks,2026).length,0);
+});
+test('wartime absence is not a zero and neither a missing symbol nor a scope change is joined',()=>{
+  const births=presetTracks(archive,drivers,'SD-STAT001:cat01=00110');
+  assert.equal(observationsAt(births,1900)[0].point.raw,'1420534');
+  for(const year of [1944,1945,1946])assert.equal(observationsAt(births,year).filter(({point})=>point.kind==='number').length,0);
+  const paths=chartData(births).panels[0].segments[0].paths;
+  assert.ok(!paths.some(path=>path.some(p=>p.year===1943)&&path.some(p=>p.year===1947)));
+  const industry=presetTracks(archive,drivers,'industry'),missing=observationsAt(industry,2011)[0];
+  assert.equal(missing.point.raw,'…');assert.equal(missing.point.value,null);
+  assert.equal(nearestObservation(industry,2011).point.raw,'…');
+  assert.equal(chartData(industry).panels.length,2,'people and ten-thousand people keep separate scales');
+  const housing=presetTracks(archive,drivers,'housing');
+  assert.equal(nearestObservation(housing,1925,{range:[1900,1945]}),null,'an empty viewport cannot visit a future observation');
+  assert.ok(nearestObservation(industry,2012,{range:[2000,2026],unit:'万人'}));
+  assert.equal(nearestObservation(industry,2012,{range:[2000,2026],unit:'人'}),null,'different-unit panels cannot steal each other\'s points');
+});
+test('monthly, quarterly and half-year observations have distinct original-period plot coordinates',()=>{
+  for(const label of ['1994年1～3月期','1994年4～6月期','1994年7～9月期','1994年10～12月期']){
+    assert.equal(chartTime({year:1994,timeLabel:label}),1994+Number(label.match(/年(\d+)/)[1]-1)/12);
+  }
+  assert.notEqual(chartTime({year:2013,timeLabel:'2013年度4～9月期'}),chartTime({year:2013,timeLabel:'2013年度10～3月期'}));
+  const gdp=archive.series.find(e=>e.statId==='EST02');
+  assert.equal(new Set(gdp.points.filter(p=>p.year===1994).map(chartTime)).size,4);
+});
+test('seven representative dates have seven distinct town art identities and mixed building forms',()=>{
+  const years=[1900,1925,1945,1965,1985,2005,2026];
+  assert.equal(new Set(years.map(y=>eraProfile(y).id)).size,7);
+  assert.notEqual(buildingArt(1900,.9,'house','kanto').form,buildingArt(1985,.9,'house','kanto').form);
+  assert.equal(buildingArt(2026,.9,'house','kanto').solar,true);
+});

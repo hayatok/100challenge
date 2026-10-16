@@ -1,3 +1,4 @@
+import { ROUTINE_ACTIONS, routineEligible, personaAt } from './routines.js';
 // Scene authorship and evidence eligibility live here; no historical person is
 // copied into the fictional family tree. All coordinates and weather are art.
 const datedMaterials = new Set(['L3-M004','L3-M005','L3-M006','L3-M007','L3-M008','L3-M012','L3-M017']);
@@ -21,20 +22,7 @@ export const LIFE_SCENE_RULES=Object.freeze([
   profile('matsushige-weaving','織り上がりを確かめる','織り上がった布を広げ、目をそろえていく。手仕事の合間に、ひと息ついた。','cloth','work','home',{sourceMaterialId:'L3-M017',places:['shikoku'],windows:[['1911-02','1911-02'],['1916-04','1916-04']],minAge:16}),
 ]);
 
-const authored=[
-  profile('shopping','買物に出かける','籠を片手に商店へ。顔なじみに挨拶しながら、家の用事を済ませる。','basket','walk','shop'),
-  profile('letter','親戚への便りを書く','親戚に短い便りを書く。書き終えたら、家族にも読んでもらおう。','letter','work','home'),
-  profile('repair','家を手入れする','道具を並べて家を手入れする。片づけが済むと、家族を呼ぶ声がした。','tools','work','home'),
-  profile('walk','近所を散歩する','いつもの道を少し遠回り。季節の風を感じながら、家へ戻っていく。',null,'walk','path'),
-  profile('conversation','店先で話をする','店先で顔なじみと立ち話。用事の話が、いつの間にか季節の話になった。','basket','talk','shop'),
-  profile('meal','家族と過ごす','食卓の支度を手伝って、家族とひと休み。今日の小さな出来事を話す。','food','rest','home'),
-  profile('field','畑の手伝いをする','畑で手を動かし、道具の土を払う。帰りの籠には、家へのおすそ分け。','tools','work','farm',{seasons:['spring','summer','autumn']}),
-  profile('shore','浜で道具を手入れする','浜で道具を広げ、次の仕事の支度をする。仲間が来ると、手を止めて話す。','net','work','coast',{places:['hokkaido','hokuriku','sanin','sanyo','shikoku','kyushu','okinawa']}),
-  profile('winter-cloth','暖かい部屋で布を整える','部屋で布を整える。外へ出る家族に声を掛け、また手元の仕事に戻る。','cloth','work','home',{seasons:['winter']}),
-  profile('school','学校へ歩く','本を持っていつもの道へ。途中で友だちと合流し、並んで学校へ向かう。','book','walk','school',{minAge:6,maxAge:14}),
-  profile('phone','電話で待ち合わせる','電話で待ち合わせを確かめる。返事が来るまで、町の道を少し歩こう。','phone','walk','path',{from:'2000-01',minAge:16}),
-  profile('festival','祭りの支度をする','近所の人と、町の行事の支度を進める。道具を渡し合って、声を掛け合う。','tools','talk','path',{seasons:['summer','autumn'],minAge:16}),
-];
+const authored=[...ROUTINE_ACTIONS,profile('walk-to-shop','買物の用事へ向かう','籠を手に、町の商店へ向かう。用事が済んだら家族の待つ家へ戻ろう。','basket','walk','shop',{minAge:16}),profile('walk-to-school','仲間と学校へ向かう','本を持ち、近所の仲間と学校へ向かう。','book','walk','school',{minAge:6,maxAge:17}),profile('walk-to-post','便りを届けに向かう','書いた便りを手に、町の郵便へ向かう。','letter','walk','post',{minAge:16})];
 const children=[profile('child-play','家のそばで遊ぶ','家のそばで遊び、見つけたものを家族に見せる。',null,'rest','home',{minAge:0,maxAge:5}),profile('child-home','家族と過ごす','家族のそばで、ゆっくり一日を過ごす。','food','rest','home',{minAge:0,maxAge:5})];
 
 export function createLifeIndex(materials){
@@ -56,7 +44,8 @@ function eligible(rule,person,year,month,index){
 export function lifeScene(index,person,seed,year,month,{sourceMaterialId=null}={}){
   const key=`${person.id}-${seasonAt(year,month).key}`,inspired=LIFE_SCENE_RULES.filter(rule=>(!sourceMaterialId||rule.sourceMaterialId===sourceMaterialId)&&eligible(rule,person,year,month,index));
   if(sourceMaterialId&&inspired.length===0)return null;
-  const base=(year-person.birthYear<6?children:authored).filter(rule=>eligible(rule,person,year,month,index));
+  const persona={...person,...personaAt(person,year,seed)};
+  const base=(year-person.birthYear<6?children:authored).filter(rule=>eligible(rule,person,year,month,index)&&routineEligible(rule,persona,year,month));
   const sourceFirst=inspired.length&&(sourceMaterialId||hash(`${seed}|${key}-source`)%3!==0);
   const rule=choose(seed,key,sourceFirst?inspired:base),sourceMaterialIds=rule.sourceMaterialId?[rule.sourceMaterialId]:[];
   return {id:rule.id,activity:rule.activity,text:rule.text,prop:rule.prop,pose:rule.pose,destinationKind:rule.destinationKind,sourceMaterialIds,fictional:true,sourceNote:sourceMaterialIds.length?'地域の記録を手がかりにした架空の場面。記録の当人・家族・出来事を再現したものではありません。':'人物・場面・地域への置き分けは作者の創作です。'};
@@ -66,7 +55,7 @@ export function sceneDestination(scene,person,seed,placeIndex=0,targets=null){
   if(targets?.[scene.destinationKind])return targets[scene.destinationKind];
   // Shop coordinates match the baseline shop-i geometry in model.js.
   if(scene.destinationKind==='shop')return {x:.12+hash(`${seed}|shop-${placeIndex}-x`)/4294967296*.76,y:.15+hash(`${seed}|shop-${placeIndex}-y`)/4294967296*.7};
-  const anchors={water:{x:.24,y:.67},farm:{x:.7,y:.67},coast:{x:.94,y:.24},school:{x:.4,y:.26},post:{x:.32,y:.42},station:{x:.18,y:.75},path:{x:.6,y:.43}};
+  const anchors={water:{x:.24,y:.67},farm:{x:.7,y:.67},coast:{x:.94,y:.24},school:{x:.4,y:.26},post:{x:.32,y:.42},station:{x:.18,y:.75},path:{x:.6,y:.43},square:{x:.48,y:.48},river:{x:.96,y:.32},workshop:{x:.73,y:.36},office:{x:.36,y:.3},factory:{x:.79,y:.28},clinic:{x:.32,y:.42}};
   return anchors[scene.destinationKind]??person.destination;
 }
 export function placeAtmosphere(index,place,seed,year,month){

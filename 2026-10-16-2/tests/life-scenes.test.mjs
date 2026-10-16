@@ -86,3 +86,105 @@ test('tracking source scenes preserves current diary evidence, save compatibilit
   assert.equal(dead.age,actor.deathYear-actor.birthYear);assert.ok(dead.lifeEvents.some(e=>e.kind==='death'));
   assert.deepEqual(snapshot(seek(seek(sim,2000),1934,7)).selectedPerson,tracked);
 });
+
+test('authored day moves continuously through home, work or learning, errands, interests and return',async()=>{
+  const {routineAt,dayClockAt,DAILY_CYCLE_SECONDS}=await import('../app/src/routines.js');
+  const s=snapshot(createSimulation(archive,drivers,{year:1975,month:4,seed:42}));
+  const roles=new Set();
+  for(const p of Object.values(s.world.placePeople).flat()){
+    roles.add(p.role);assert.ok(p.personality&&p.hobby&&p.occupation);assert.ok(p.sceneStages.length>=9);
+    for(const stages of p.routine.days){
+      assert.deepEqual(stages[0].from,p.home);assert.deepEqual(stages.at(-1).to,p.home);
+      assert.equal(stages[0].startsAt,0);assert.equal(stages.at(-1).endsAt,DAILY_CYCLE_SECONDS);
+      for(let i=1;i<stages.length;i++){
+        assert.deepEqual(stages[i-1].to,stages[i].from,`${p.id}/${i} cannot teleport`);
+        assert.equal(stages[i-1].endsAt,stages[i].startsAt);
+      }
+      assert.ok(stages.some(stage=>stage.phase==='work'));
+      assert.ok(stages.some(stage=>stage.phase==='errand'));
+      assert.ok(stages.some(stage=>stage.phase==='hobby'));
+      assert.ok(stages.some(stage=>stage.phase==='social'));
+    }
+    let changed=false,previous=routineAt(p,0);
+    for(let second=1;second<DAILY_CYCLE_SECONDS;second++){
+      const current=routineAt(p,second);assert.equal(current.activity,current.scene.activity);
+      if(current.x!==previous.x||current.y!==previous.y||current.scene.id!==previous.scene.id)changed=true;
+      if(current.scene.pose!=='walk'){assert.deepEqual(current.from,current.to);assert.equal(current.x,current.to.x);}
+      previous=current;
+    }
+    assert.ok(changed,`${p.id} has a changing day`);
+    assert.deepEqual(routineAt(p,0).scene,routineAt(p,DAILY_CYCLE_SECONDS*3).scene);assert.deepEqual(routineAt(p,0).from,routineAt(p,DAILY_CYCLE_SECONDS*3).from);
+  }
+  assert.ok(roles.has('student')&&roles.has('worker')&&roles.has('elder')&&roles.has('child'));
+  assert.equal(dayClockAt(0).timeLabel,'06:00');assert.equal(dayClockAt(48).timeLabel,'14:00');
+});
+
+test('routine actions respect role, region, season and technology with at least forty distinct realized actions',async()=>{
+  const {routineEligible,ROUTINE_ACTIONS}=await import('../app/src/routines.js');
+  const realized=new Set();
+  for(const seed of [1,42])for(const year of [1900,1931,1955,1975,2005,2026])for(const month of [1,4,7,10]){
+    const s=snapshot(createSimulation(archive,drivers,{year,month,seed}));
+    for(const p of Object.values(s.world.placePeople).flat())for(const stages of p.routine.days)for(const stage of stages){
+      const authored=ROUTINE_ACTIONS.find(a=>a.id===stage.scene.id);
+      if(authored){assert.ok(routineEligible(authored,p,year,month),`${year}/${month}/${p.role}/${authored.id}`);realized.add(authored.id);}
+      assert.ok(stage.scene.fictional);
+      if(['phone','tablet'].includes(stage.scene.prop))assert.ok(year>=(stage.scene.prop==='phone'?2000:1985));
+      if(stage.scene.prop==='bicycle')assert.ok(year>=1920);
+      if(stage.scene.pose!=='walk'&&['shop','farm','school','factory','water'].includes(stage.scene.destinationKind)){
+        const b=s.world.buildings.find(b=>b.placeId===p.placeId&&b.type===stage.scene.destinationKind);
+        if(b)assert.deepEqual(stage.to,{x:b.x,y:b.y});
+      }
+    }
+  }
+  assert.ok(realized.size>=40,`only ${realized.size} realized actions: ${[...realized]}`);
+});
+
+test('routine relationships refer to living local relatives or peers, source stops remain bounded',async()=>{
+  const {routineAt}=await import('../app/src/routines.js');
+  for(const [id,year,month,placeId] of stops){
+    const s=snapshot(createSimulation(archive,drivers,{year,month,placeId,seed:42}));
+    const actor=s.world.people.find(p=>p.scene.sourceMaterialIds.includes(id));
+    assert.ok(actor.routine.days[0].some(stage=>stage.scene.sourceMaterialIds.includes(id)));
+    const all=Object.values(s.world.placePeople).flat();
+    for(const p of all){
+      const ids=new Set(p.relationships.map(r=>r.id));
+      assert.ok(p.relationships.every(r=>r.age>=0));
+      for(const stages of p.routine.days)for(const stage of stages)assert.ok(stage.companionIds.every(id=>ids.has(id)));
+    }
+    assert.deepEqual(routineAt(actor,25),routineAt(structuredClone(actor),25));
+  }
+});
+
+test('appointments put actual visible relatives, schoolmates and neighbors together at the same clock',async()=>{
+  const {routineAt,DAILY_CYCLE_SECONDS}=await import('../app/src/routines.js');
+  const kinds=new Set();let encounters=0;
+  for(const seed of [42,771])for(const year of [1900,1945,2005,2026]){
+    const s=snapshot(createSimulation(archive,drivers,{year,month:4,seed}));
+    for(const residents of Object.values(s.world.placePeople)){
+      const byId=new Map(residents.map(p=>[p.id,p]));
+      for(const p of residents)for(let day=0;day<3;day++){
+        const clock=day*DAILY_CYCLE_SECONDS+76,current=routineAt(p,clock);
+        assert.equal(current.stage.phase,'social');assert.equal(current.scene.pose,'talk');
+        assert.equal(current.stage.startsAt,72);assert.equal(current.stage.endsAt,80);
+        assert.ok(current.companions.length>=1&&current.companions.length<=2);
+        assert.equal(current.facingId,current.companions[0].id);
+        for(const companion of current.companions){
+          encounters++;kinds.add(companion.kind);
+          assert.ok(byId.has(companion.id),'the other person must actually be rendered in this town');
+          const other=routineAt(byId.get(companion.id),clock);
+          assert.equal(other.meetingId,current.meetingId);assert.equal(other.stage.phase,'social');
+          assert.equal(other.placeId,current.placeId);assert.equal(other.x,current.x);assert.equal(other.y,current.y);
+          assert.equal(companion.name,other.name);assert.equal(companion.occupation,other.occupation);
+          assert.equal(companion.personality,other.personality);assert.equal(companion.hobby,other.hobby);
+        }
+        assert.deepEqual(routineAt(p,clock),routineAt(structuredClone(p),clock));
+        assert.deepEqual(routineAt(p,day*DAILY_CYCLE_SECONDS+60).companions,[]);
+        for(const boundary of [72,80]){
+          const before=routineAt(p,day*DAILY_CYCLE_SECONDS+boundary-.00001),after=routineAt(p,day*DAILY_CYCLE_SECONDS+boundary+.00001);
+          assert.ok(Math.hypot(before.x-after.x,before.y-after.y)<.00001,'arrival and departure cannot teleport');
+        }
+      }
+    }
+  }
+  assert.ok(encounters>1000);for(const kind of ['parent','child','family','schoolmate','neighbor'])assert.ok(kinds.has(kind),kind);
+});

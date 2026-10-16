@@ -1,0 +1,84 @@
+{
+  "recordedAt": "2026-10-16T18:51:25.486Z",
+  "checks": [
+    {
+      "activity": "教室で文字を教える",
+      "age": "17歳 ／ 1883年生まれ",
+      "art": "木の町と、手の仕事",
+      "height": 900,
+      "person": "井上みどり",
+      "width": 1440,
+      "year": "1900"
+    },
+    {
+      "activity": "教室で文字を教える",
+      "age": "42歳 ／ 1883年生まれ",
+      "art": "瓦屋根と、洋風の店",
+      "height": 900,
+      "person": "井上みどり",
+      "width": 1440,
+      "year": "1925"
+    },
+    {
+      "activity": "授業の道具を整える",
+      "age": "62歳 ／ 1883年生まれ",
+      "art": "低い軒と、小さな商い",
+      "height": 900,
+      "person": "井上みどり",
+      "width": 1440,
+      "year": "1945"
+    },
+    {
+      "activity": "便りを仕分ける",
+      "age": "62歳 ／ 1903年生まれ",
+      "art": "団地と、広がる道路",
+      "height": 900,
+      "person": "石川誠",
+      "width": 1440,
+      "year": "1965"
+    },
+    {
+      "activity": "庭の鉢を手入れする",
+      "age": "82歳 ／ 1903年生まれ",
+      "art": "看板の街と、四角いビル",
+      "height": 900,
+      "person": "石川誠",
+      "width": 1440,
+      "year": "1985"
+    },
+    {
+      "activity": "布を縫い合わせる",
+      "age": "39歳 ／ 1966年生まれ",
+      "art": "ガラスの駅前と、身近な店",
+      "height": 900,
+      "person": "木村みどり",
+      "width": 1440,
+      "year": "2005"
+    },
+    {
+      "activity": "布を縫い合わせる",
+      "age": "60歳 ／ 1966年生まれ",
+      "art": "屋上の緑と、いまの暮らし",
+      "height": 900,
+      "person": "木村みどり",
+      "width": 1440,
+      "year": "2026"
+    },
+    {
+      "type": "graph",
+      "firstPopulation": "1900:43847000",
+      "comparison": "1900 births:1420534 / deaths:910744",
+      "missing": "1945 raw observation absent",
+      "brush": "drag changed displayed period; all-period reset",
+      "visit": "1900"
+    },
+    {
+      "activity": "顔なじみに今日の話をする",
+      "clock": "18:41",
+      "season": "10",
+      "type": "year-and-season",
+      "year": "1940"
+    }
+  ],
+  "console": []
+}

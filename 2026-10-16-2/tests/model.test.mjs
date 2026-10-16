@@ -212,3 +212,17 @@ test('rail, communication and annual energy have distinct visible scales with or
   const stopped=snapshot(createSimulation(missingArchive,drivers,{year:2026}));
   assert.equal(stopped.macro.energy.point.raw,'-');assert.equal(stopped.world.directives.energyAmount,null);assert.equal(stopped.world.directives.energyGlyphs,0);
 });
+
+test('place observation has named residents while national statistical model count remains unchanged',()=>{
+  for(const year of [1900,1945,1975,2026]){
+    const s=snap(year);
+    assert.equal(s.world.people.length,s.world.directives.personCount);
+    for(const place of PLACES){
+      const locals=s.world.placePeople[place.id];assert.ok(locals.length>=20&&locals.length<=28);
+      assert.equal(new Set(locals.map(p=>p.id)).size,locals.length);
+      assert.ok(locals.every(p=>p.placeId===place.id&&p.alive&&p.fictional&&p.routine));
+      const homes=s.world.buildings.filter(b=>b.placeId===place.id&&b.type==='house'&&b.lit);
+      if(homes.length)assert.ok(locals.every(p=>homes.some(h=>h.x===p.home.x&&h.y===p.home.y)));
+    }
+  }
+});
