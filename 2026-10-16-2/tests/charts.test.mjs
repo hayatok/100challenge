@@ -2,7 +2,6 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import {statisticCatalogue,presetTracks,observationsAt,nearestObservation,chartData,chartTime} from '../app/src/charts.js';
-import {eraProfile,buildingArt} from '../app/src/era-art.js';
 const archive=JSON.parse(await readFile(new URL('../app/data/archive.json',import.meta.url)));
 const drivers=JSON.parse(await readFile(new URL('../app/data/drivers.json',import.meta.url)));
 
@@ -46,9 +45,11 @@ test('monthly, quarterly and half-year observations have distinct original-perio
   const gdp=archive.series.find(e=>e.statId==='EST02');
   assert.equal(new Set(gdp.points.filter(p=>p.year===1994).map(chartTime)).size,4);
 });
-test('seven representative dates have seven distinct town art identities and mixed building forms',()=>{
-  const years=[1900,1925,1945,1965,1985,2005,2026];
-  assert.equal(new Set(years.map(y=>eraProfile(y).id)).size,7);
-  assert.notEqual(buildingArt(1900,.9,'house','kanto').form,buildingArt(1985,.9,'house','kanto').form);
-  assert.equal(buildingArt(2026,.9,'house','kanto').solar,true);
+
+test('the original-series detail also keeps documented scope breaks',()=>{
+  const id=archive.series.find(e=>e.statId==='D3-ST001'&&/^総数/.test(e.label)).id;
+  const tracks=presetTracks(archive,drivers,id),data=chartData(tracks);
+  assert.ok(observationsAt(tracks,2024).length,'full original series is retained');
+  assert.ok(tracks[0].boundaries.some(b=>b.year===1945));
+  for(const segment of data.panels[0].segments)for(const path of segment.paths)for(const b of tracks[0].boundaries)assert.ok(!path.some(p=>p.year<b.year)||!path.some(p=>p.year>=b.year));
 });

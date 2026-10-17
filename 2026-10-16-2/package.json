@@ -1,9 +1,11 @@
 {
-  "name": "japan-sandbox",
-  "version": "0.3.3",
+  "name": "japan-modern-history",
+  "version": "1.0.0",
   "private": true,
   "type": "module",
-  "engines": { "node": ">=22" },
+  "engines": {
+    "node": ">=22"
+  },
   "scripts": {
     "dev": "node scripts/serve_app.mjs",
     "preview": "node scripts/serve_app.mjs --dist",

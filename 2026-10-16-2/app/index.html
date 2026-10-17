@@ -1,92 +1,30 @@
 <!doctype html>
 <html lang="ja">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#f4f0e8">
-  <meta name="description" content="史実と統計の時代の流れの中で、架空の人々の暮らしを眺める日本の箱庭。1900年から2026年まで。">
-  <title>箱庭日本 — 時代は流れる。暮らしは、ひとつずつ。</title>
-  <link rel="icon" href="./assets/japan-cover.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="./src/style.css">
-  <script type="module" src="./src/app.js"></script>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#173746">
+  <meta name="description" content="写真を見比べ、数字を動かし、当時の人の記録を読む。1900年から現代までの日本の近現代史をたどるインタラクティブな学びの本。">
+  <title>日本の変わりかた — 写真と数字で読む近現代史</title>
+  <link rel="icon" href="./assets/book-mark.svg" type="image/svg+xml"><link rel="stylesheet" href="./src/style.css"><script type="module" src="./src/app.js"></script>
 </head>
 <body>
-  <a href="#playback" class="skip-link">時間の操作へ</a>
+  <a class="skip-link" href="#main">本文へ</a>
   <header class="masthead">
-    <a class="brand" href="./"><span class="brand-seal" aria-hidden="true">日</span><h1>箱庭日本</h1></a>
-    <p>時代は流れる。暮らしは、ひとつずつ。</p>
-    <nav class="page-tabs" aria-label="眺めるもの"><button type="button" data-page="town" aria-pressed="true" disabled>まち</button><button type="button" data-page="history" aria-pressed="false" disabled>歴史</button><button type="button" data-page="statistics" aria-pressed="false" disabled>統計</button></nav>
-    <nav aria-label="作品について"><button type="button" id="open-archive" disabled>資料を探す <span aria-hidden="true">↗</span></button><button type="button" id="open-about" class="quiet-button" disabled>この作品について</button></nav>
+    <a href="#read/early" class="brand"><span class="brand-mark" aria-hidden="true">変</span><span>日本の変わりかた<small>写真と数字で読む、近現代史。</small></span></a>
+    <nav class="main-nav" aria-label="読み方"><button data-mode="read" aria-current="page">時代を読む</button><button data-mode="compare">写真を比べる</button><button data-mode="data">データを動かす</button><button data-mode="archive">年表を調べる</button></nav>
+    <button class="about-link" id="about-open" aria-label="この本について">この本について</button>
   </header>
-  <div id="loading" class="load-message" role="status"><span class="loading-island" aria-hidden="true">✦</span><h2>日本の箱庭をひらいています</h2><p>一世紀の記録と、小さな暮らしを用意しています。</p></div>
-  <div id="load-error" class="load-message" hidden role="alert"><h2>箱庭をひらけませんでした</h2><p>読み込みが途中で止まったようです。もう一度お試しください。</p><button type="button" id="retry" class="primary-button">もう一度ひらく</button></div>
-  <main id="app" hidden>
-    <section id="playback" class="playback timeline-dock" aria-label="時間の操作">
-      <div class="playback-row">
-        <button id="toggle-play" type="button" class="primary-button" aria-label="時間を止める">Ⅱ 止める</button>
-        <label class="speed-control" for="speed">時代の速さ <select id="speed"><option value="1">じっくり</option><option value="4" selected>いつもの</option><option value="12">早送り</option><option value="48">一世紀</option></select></label>
-        <label class="year-entry" for="year-input">見る年 <input id="year-input" type="number" min="1900" max="2026" value="1900" step="1"></label>
-        <label class="timeline-control" for="year-range"><span class="sr-only">1900年から2026年の間を移動する</span><input id="year-range" type="range" min="1900" max="2026" step="1" value="1900"><span class="timeline-marks"><span>1900</span><span>1930</span><span>1960</span><span>1990</span><span>2026</span></span></label>
-        <button type="button" id="reroll" title="別の人々の暮らしを見る">↻ 別の暮らし</button>
-      </div>
-      <p id="time-message" class="time-message" role="status"></p>
-    </section>
-    <div id="town-page" data-workspace="town">
-    <nav id="era-stops" class="era-stops" aria-label="時代をのぞく"></nav>
-    <section class="world-layout" aria-label="時代が流れる箱庭">
-      <div class="world-column">
-        <div class="world-frame">
-          <canvas id="world-canvas" tabindex="0" role="img" aria-label="日本列島と町の暮らし。場所欄から町を選べます。"></canvas>
-          <div class="year-stamp"><p id="era-label">明治33年</p><div><strong id="year-label">1900</strong><span>年</span></div><p><span id="month-label">1</span>月 <span id="play-state" class="play-state">時代が流れています</span></p><p id="era-note" class="era-note"></p></div>
-          <div class="view-switch" role="group" aria-label="箱庭の見方"><button type="button" id="view-japan" aria-pressed="false">日本全景</button><button type="button" id="view-place" aria-pressed="true">町をのぞく</button></div>
-          <div id="scene-title" class="scene-title" hidden><span class="eyebrow">一世紀を、眺めよう。</span><p>町をのぞく。人を見守る。</p></div>
-          <div class="season-stamp" id="season-stamp"></div>
-          <div class="scene-tools"><label>町の時計 <input id="day-range" type="range" min="0" max="95" value="12" step="1" aria-label="町の一日の時刻"></label><output id="day-clock">朝</output><label>季節 <select id="season-select" aria-label="眺める季節"><option value="1">冬</option><option value="4">春</option><option value="7">夏</option><option value="10">秋</option></select></label><label>近づく <input id="zoom-range" type="range" min="1" max="1.7" value="1" step=".1"></label></div>
-          <div class="map-caption"><span id="scene-caption">町や人を押すと、近づいて眺められます。</span><span id="motion-note"></span></div>
-        </div>
-        <section class="daily-ribbon" aria-labelledby="daily-heading"><div class="daily-heading"><span class="eyebrow" id="daily-heading">この町の一日</span></div><div id="daily-stories" class="daily-stories"></div></section>
-      </div>
-      <aside class="observation-column" aria-label="気になる暮らし">
-        <div class="place-control"><label for="place-select">眺める場所</label><select id="place-select"></select></div>
-        <div class="inspector-tabs" aria-label="町で気になること"><button type="button" data-inspector="people" aria-pressed="true">人々の暮らし</button><button type="button" data-inspector="history" aria-pressed="false">この年の出来事 <span id="year-event-count"></span></button></div>
-        <section class="person-panel" aria-labelledby="person-heading"><div class="panel-heading"><h2 id="person-heading">この人を見守る</h2><button type="button" id="next-person" class="quiet-button">別の人 →</button></div><div id="person-content"></div></section>
-        <details class="residents-panel"><summary>この町を歩く人々 <span id="resident-count"></span></summary><div id="resident-list"></div></details>
-        <section class="history-panel" aria-labelledby="history-heading"><div class="panel-heading"><h2 id="history-heading">この年の出来事</h2><button id="next-history" type="button" class="quiet-button" aria-label="次の出来事">→</button><span id="history-year" class="small"></span></div><div id="history-content"></div><button type="button" id="more-history" class="inline-link">この時代の出来事を読む ↗</button></section>
-      </aside>
-    </section>
-    <section class="journey" aria-labelledby="journey-heading"><div><h2 id="journey-heading">各地の暮らしをのぞく</h2></div><div id="journey-stops" class="journey-stops"></div></section>
-    <section class="numbers-section" aria-labelledby="numbers-heading">
-      <div class="section-heading"><div><h2 id="numbers-heading">この年の日本</h2></div></div>
-      <button type="button" class="open-statistics" data-page="statistics">統計をグラフで見る ↗</button>
-      <div id="macro-grid" class="macro-grid"></div>
-      <div id="vital-records" class="vital-records" aria-label="この年の出生と死亡の記録"></div>
-    </section>
-    <section class="living-section" aria-labelledby="living-heading"><div class="section-heading"><div><h2 id="living-heading">当時の暮らしの記録</h2></div><div class="living-actions"><button type="button" id="next-living" class="inline-link">別の記録 →</button><button type="button" id="more-living" class="inline-link">各地の記録をたどる ↗</button></div></div><div id="living-content" class="living-content"></div></section>
-    </div>
-    <section id="history-page" data-workspace="history" hidden aria-labelledby="chronicle-heading">
-      <div class="explorer-heading"><div><h2 id="chronicle-heading">日本の歩み</h2></div><p id="history-total"></p></div>
-      <div id="history-density" class="history-density" aria-label="各年の記録へ移動"></div>
-      <div class="history-filters"><label>言葉で探す<input type="search" id="history-search" placeholder="鉄道、学校、米、映画、沖縄…"></label><label>テーマ<select id="history-theme"><option value="">すべて</option></select></label><label>地域<select id="history-region"><option value="">全国・各地</option></select></label><label>最初の年<input type="number" id="history-from" min="1900" max="2026" value="1900"></label><label>最後の年<input type="number" id="history-through" min="1900" max="2026" value="2026"></label><button type="button" id="history-reset">全期間へ</button></div>
-      <div id="history-chapters" class="history-chapters"></div><p id="history-result-count" role="status"></p><div id="history-results" class="chronicle-results"></div><button type="button" id="history-more" class="more-records">続きをひらく</button>
-    </section>
-    <section id="statistics-page" data-workspace="statistics" hidden aria-label="統計のグラフ"><div id="statistics-explorer"></div></section>
-    <section id="about-page" data-workspace="about" hidden aria-labelledby="about-heading" class="about-page">
-      <h2 id="about-heading">この作品について</h2>
-      <p>1900年から現代まで、時代とともに変わる日本の風景と暮らしを眺める作品です。</p>
-      <h3>歴史と暮らし</h3>
-      <p>歴史と統計は公表された資料に基づきます。町の配置、人物、家族、日常、天気は創作です。実在の地域や個人の人生を再現したものではありません。地図は現在の地形を参考にしています。</p>
-      <h3>資料の読み方</h3>
-      <p>統計は時期によって対象地域・国籍・調査方法が異なります。欠測や未収録の数字は補っていません。記録の対象、出典、確認できていない範囲は、各資料の「出典・詳細」から読めます。</p>
-      <button type="button" id="about-materials" class="inline-link">資料について・未収録の範囲 ↗</button>
-      <h3>続きの保存</h3>
-      <p>続きはこの端末に保存します。アカウント登録や外部への送信はありません。</p>
-      <button type="button" class="primary-button" data-page="town">まちへ戻る</button>
-    </section>
-    <footer class="footer"><p><strong>箱庭日本</strong><br>1900 — 2026</p><button type="button" class="quiet-button" data-page="about">この作品について</button><div><label class="motion-setting"><input id="reduce-motion" type="checkbox">動きを減らす</label><span id="save-status" class="sr-only">この端末に続きを保存します。</span></div></footer>
+  <div id="loading" class="load-screen" role="status"><div class="book-loading" aria-hidden="true"></div><h1>写真と数字で、日本の変化を読む。</h1><p>ページをひらいています。</p></div>
+  <div id="load-error" class="load-screen" role="alert" hidden><h1>ページをひらけませんでした</h1><p>読み込みが止まりました。もう一度お試しください。</p><button id="retry" class="primary">もう一度ひらく</button></div>
+  <main id="main" tabindex="-1" hidden>
+    <section id="read-page" data-page="read"><nav id="chapter-nav" class="chapter-nav" aria-label="読む時代"></nav><div id="chapter-content"></div></section>
+    <section id="compare-page" data-page="compare" hidden><header class="page-heading"><p class="eyebrow">写真の中に、変化を見つける。</p><h1>昔と今、同じ場所。</h1><p>境目を動かす。拡大する。建物、道、人の使う空間を見比べよう。</p></header><div id="comparison-tabs" class="topic-tabs"></div><div id="comparison-content"></div><section class="photo-collection"><div class="section-heading"><h2>写真で読む、街と暮らしの時間</h2><p>一枚を大きくひらいて、細部を読む。</p></div><div id="photo-gallery" class="photo-grid"></div></section></section>
+    <section id="data-page" data-page="data" hidden><header class="page-heading"><p class="eyebrow">数字の変化から、問いを見つける。</p><h1>日本の変化を、動かして読む。</h1></header><div id="lens-tabs" class="topic-tabs"></div><div id="data-content"></div><details class="advanced-data"><summary>ほかの統計も探す <span>557系列</span></summary><div id="statistics-explorer"></div></details></section>
+    <section id="archive-page" data-page="archive" hidden><header class="page-heading"><p class="eyebrow">出来事と、当時の人の記録。</p><h1>日本の近現代を調べる。</h1><p>1900年から2026年まで。時代、地域、テーマからたどる。</p></header><div id="archive-density" class="history-density" aria-label="年代を選ぶ"></div><div class="archive-filters"><label>言葉で探す<input id="archive-query" type="search" placeholder="例：鉄道、家計簿、学校、沖縄"></label><label>記録<select id="archive-kind"><option value="events">出来事</option><option value="living">暮らし</option></select></label><label>テーマ<select id="archive-theme"><option value="">すべて</option></select></label><label>地域<select id="archive-region"><option value="">全国・各地</option></select></label><label>最初の年<input id="archive-from" type="number" min="1900" max="2026" value="1900"></label><label>最後の年<input id="archive-through" type="number" min="1900" max="2026" value="2026"></label><button id="archive-reset">全期間へ</button></div><p id="archive-count" role="status"></p><div id="archive-results"></div><button id="archive-more" class="more-button">続きを読む</button></section>
+    <footer><a href="#read/early">日本の変わりかた</a><span>1900 — 2026</span><button id="footer-about">この本と出典について</button><button id="back-top" class="back-top">ページの上へ ↑</button></footer>
   </main>
-  <dialog id="detail-dialog" aria-labelledby="detail-title"><div class="dialog-top"><span class="eyebrow">箱庭日本</span><button type="button" id="detail-close">閉じる ×</button></div><h2 id="detail-title"></h2><div id="detail-body"></div></dialog>
-  <dialog id="archive-dialog" aria-labelledby="archive-title"><div class="dialog-top"><span class="eyebrow">1900 — 2026</span><button type="button" id="archive-close">閉じる ×</button></div><h2 id="archive-title">日本の記録</h2><p id="archive-intro" class="archive-intro">気になる時代や言葉から探せます。</p><nav class="archive-tabs" aria-label="記録の種類"><button type="button" data-section="statistics" aria-pressed="true">統計</button><button type="button" data-section="events" aria-pressed="false">出来事</button><button type="button" data-section="living" aria-pressed="false">暮らし</button><button type="button" data-section="sources" aria-pressed="false">出典</button></nav><div class="archive-filters"><label for="archive-search">言葉で探す<input type="search" id="archive-search" placeholder="人口、農村、物価、沖縄…"></label><label for="archive-year">年を絞る<input type="number" min="1900" max="2026" id="archive-year" placeholder="すべての年"></label><button id="archive-clear" type="button">絞り込みを戻す</button></div><p id="archive-count" class="small" role="status"></p><div id="archive-results"></div></dialog>
-  <div id="announcement" class="sr-only" aria-live="polite" aria-atomic="true"></div>
-  <noscript><p>この箱庭を眺めるには、ブラウザのJavaScriptを有効にしてください。</p></noscript>
+  <dialog id="detail-dialog" aria-labelledby="detail-title"><header class="dialog-head"><span>日本の変わりかた</span><button id="detail-close" aria-label="資料を閉じる">閉じる ×</button></header><h2 id="detail-title"></h2><div id="detail-body"></div></dialog>
+  <dialog id="photo-dialog" aria-labelledby="photo-title"><header class="dialog-head"><h2 id="photo-title"></h2><button id="photo-close" aria-label="写真を閉じる">閉じる ×</button></header><div id="photo-body"></div></dialog>
+  <div id="announcement" class="sr-only" aria-live="polite"></div><noscript>この本を読むには、JavaScriptを有効にしてください。</noscript>
 </body>
 </html>

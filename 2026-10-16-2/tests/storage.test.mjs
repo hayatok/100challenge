@@ -1,20 +1,13 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { parseSaved, serializeSaved, safeURL } from '../app/src/storage.js';
-test('a local saved world survives serialization; corrupt or future states do not enter the simulation', () => {
-  const state = { seed: 12345, year: 1935, month: 4 };
-  const preferences = { placeId: 'tohoku', personId: 'person-4', speed: 4, reducedMotion: true };
-  assert.deepEqual(parseSaved(serializeSaved(state, preferences)), { ...state, ...preferences });
-  for (const raw of ['null', '{', '{}', JSON.stringify({ version: 1, seed: 1, year: 2026, month: 12 }), JSON.stringify({ version: 1, seed: 0, year: 1900, month: 1 }), JSON.stringify({ version: 1, seed: 1, year: 1899, month: 1 })]) assert.equal(parseSaved(raw), null);
+import { safeURL, escapeHTML } from '../app/src/storage.js';
+test('external references allow only http and https',()=>{
+  for(const value of ['javascript:alert(1)','file:///etc/passwd','data:text/html,x','/relative',null])assert.equal(safeURL(value),null);
+  assert.equal(safeURL('https://www.e-stat.go.jp/'),'https://www.e-stat.go.jp/');
+  assert.equal(safeURL('http://example.com/'),'http://example.com/');
 });
-test('a saved day keeps its action clock and zoom without breaking older saves',()=>{
-  const state={seed:12345,year:1935,month:4},settings={placeId:'kanto',personId:'p',speed:1,reducedMotion:false,clockSeconds:172.5,zoom:1.5};
-  assert.deepEqual(parseSaved(serializeSaved(state,settings)),{...state,...settings});
-  const invalid=JSON.parse(serializeSaved(state,settings));invalid.clockSeconds=-1;invalid.zoom=10;
-  const restored=parseSaved(JSON.stringify(invalid));assert.equal(restored.clockSeconds,undefined);assert.equal(restored.zoom,undefined);
-});
-test('external sources can only open http URLs', () => {
-  assert.equal(safeURL('javascript:alert(1)'), null);
-  assert.equal(safeURL('file:///etc/passwd'), null);
-  assert.equal(safeURL('https://www.e-stat.go.jp/'), 'https://www.e-stat.go.jp/');
+test('source titles and quotations cannot become markup',()=>{
+  assert.equal(escapeHTML('<img src=x onerror="x"> & \'文\''),'&lt;img src=x onerror=&quot;x&quot;&gt; &amp; &#39;文&#39;');
+  assert.equal(escapeHTML(null),'');
+  assert.equal(escapeHTML(1900),'1900');
 });

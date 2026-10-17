@@ -1,0 +1,530 @@
+{
+  "version": 1,
+  "items": [
+    {
+      "id": "tokyo-station-1914",
+      "src": "./assets/history/tokyo-station-1914.jpg",
+      "title": "開業の年の東京駅",
+      "caption": "開業の年の東京駅。1914年ごろ。",
+      "year": 1914,
+      "dateLabel": "1914年ごろ",
+      "place": "東京・丸の内",
+      "creator": "鉄道院東京改良事務所",
+      "sourceTitle": "東京市街高架鉄道建築概要（1914年）、鉄道院東京改良事務所",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Tokyo_Station_(1914).webp",
+      "license": "パブリックドメイン",
+      "licenseUrl": "https://commons.wikimedia.org/wiki/Template:PD-Japan-oldphoto",
+      "alt": "東京駅丸の内駅舎と広い駅前の白黒写真。",
+      "chapters": [
+        "early"
+      ],
+      "hotspots": [
+        {
+          "x": 50,
+          "y": 41,
+          "title": "長い駅舎",
+          "text": "横に長く続く駅舎と、その前の空間を探してみよう。"
+        },
+        {
+          "x": 50,
+          "y": 75,
+          "title": "駅前の空間",
+          "text": "道路と植え込みに区切られた空間が駅の正面へ続いている。"
+        }
+      ],
+      "height": 616,
+      "width": 1600
+    },
+    {
+      "id": "police-box-1923",
+      "src": "./assets/history/police-box-1923.jpg",
+      "title": "震災後、尋ね人のビラが貼られた派出所",
+      "caption": "震災後、尋ね人のビラが貼られた派出所。1923年、関東大震災後。",
+      "year": 1923,
+      "dateLabel": "1923年、関東大震災後",
+      "place": "東京駅前",
+      "creator": "撮影者不明",
+      "sourceTitle": "内務省社会局編『大正震災志写真帖』（1926年）",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Tokyo_Station_police_box_The_Great_Kanto_Earthquake_of_1923.jpg",
+      "license": "パブリックドメイン",
+      "licenseUrl": "https://commons.wikimedia.org/wiki/Template:PD-Japan-oldphoto",
+      "alt": "壁に尋ね人の紙が多数貼られた東京駅の派出所。",
+      "chapters": [
+        "interwar"
+      ],
+      "hotspots": [
+        {
+          "x": 49,
+          "y": 65,
+          "title": "壁に貼られた紙",
+          "text": "建物の壁面を多くの紙が覆っている。通信が途絶えたとき、どのように人を探したのだろう。"
+        },
+        {
+          "x": 64,
+          "y": 27,
+          "title": "派出所の建物",
+          "text": "丸い飾りを持つ小さな建物が、人々へ情報を伝える場所にもなった。"
+        }
+      ],
+      "height": 458,
+      "width": 590
+    },
+    {
+      "id": "ginza-1933",
+      "src": "./assets/history/ginza-1933.jpg",
+      "title": "路面電車が走る銀座四丁目",
+      "caption": "路面電車が走る銀座四丁目。1933年。",
+      "year": 1933,
+      "dateLabel": "1933年",
+      "place": "東京・銀座四丁目",
+      "creator": "撮影者不明",
+      "sourceTitle": "博文館『大東京写真案内』（1933年）",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Ginza_in_1933.JPG",
+      "license": "パブリックドメイン",
+      "licenseUrl": "https://commons.wikimedia.org/wiki/Template:PD-Japan-oldphoto",
+      "alt": "時計塔のある服部時計店と、路面電車が通る銀座の道路。",
+      "chapters": [
+        "interwar"
+      ],
+      "hotspots": [
+        {
+          "x": 44,
+          "y": 19,
+          "title": "時計塔",
+          "text": "2015年の写真にも写る時計塔。建物を手がかりに、同じ場所を見つけよう。"
+        },
+        {
+          "x": 52,
+          "y": 60,
+          "title": "路面電車",
+          "text": "通りの中央を電車が走り、自動車や人も同じ道路を使っている。"
+        },
+        {
+          "x": 90,
+          "y": 44,
+          "title": "看板の並ぶ通り",
+          "text": "道路の両側に店舗や看板が続いている。"
+        }
+      ],
+      "height": 1020,
+      "width": 807
+    },
+    {
+      "id": "airraid-ginza-1945",
+      "src": "./assets/history/airraid-ginza-1945.jpg",
+      "title": "空襲下の銀座四丁目",
+      "caption": "空襲下の銀座四丁目。1945年1月27日。",
+      "year": 1945,
+      "dateLabel": "1945年1月27日",
+      "place": "東京・銀座四丁目",
+      "creator": "Kikuchi Shunkichi",
+      "sourceTitle": "菊池俊吉／『日本写真全集 4 戦争の記録』（小学館、1987年）",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:A_scene_of_T%C5%8Dky%C5%8D_Air_Raid_-_Ginza_4_ch%C5%8Dme_-_January_27_1945_-_Kikuchi_Shunkichi.png",
+      "license": "パブリックドメイン",
+      "licenseUrl": "https://commons.wikimedia.org/wiki/Template:PD-Japan-oldphoto",
+      "alt": "建物が燃え、煙が立ちこめる銀座四丁目交差点。",
+      "chapters": [
+        "war"
+      ],
+      "hotspots": [
+        {
+          "x": 16,
+          "y": 56,
+          "title": "炎と煙",
+          "text": "建物の窓付近から炎が見える。これは1945年1月27日の空襲を撮影した写真。"
+        },
+        {
+          "x": 68,
+          "y": 54,
+          "title": "通りにいる人々",
+          "text": "煙の中の道路に人影が見える。写真一枚から、その後の行動までは分からない。"
+        }
+      ],
+      "height": 1092,
+      "width": 1600
+    },
+    {
+      "id": "rubble-ginza-1945",
+      "src": "./assets/history/rubble-ginza-1945.jpg",
+      "title": "終戦後の銀座に残る鉄材",
+      "caption": "終戦後の銀座に残る鉄材。1945年9月23日。",
+      "year": 1945,
+      "dateLabel": "1945年9月23日",
+      "place": "東京・銀座松屋前",
+      "creator": "撮影者不明",
+      "sourceTitle": "『1億人の昭和史 4 空襲・敗戦・引揚』（毎日新聞社、1975年）、143頁",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Two_women_passing_by_rubble_of_T%C5%8Dky%C5%8D_Air_Raids_-_Matsuya,_Ginza.png",
+      "license": "パブリックドメイン",
+      "licenseUrl": "https://commons.wikimedia.org/wiki/Template:PD-Japan-oldphoto",
+      "alt": "焼けた鉄材の山のそばを女性たちが歩く銀座松屋前。",
+      "chapters": [
+        "war",
+        "rebuilding"
+      ],
+      "hotspots": [
+        {
+          "x": 65,
+          "y": 66,
+          "title": "積み重なる鉄材",
+          "text": "曲がった鉄材が画面の手前に大きく積み重なっている。"
+        },
+        {
+          "x": 30,
+          "y": 35,
+          "title": "通りを歩く人々",
+          "text": "終戦後の街では、被害の跡のそばで人々の移動が続いていた。"
+        }
+      ],
+      "height": 862,
+      "width": 1600
+    },
+    {
+      "id": "food-ginza-1946",
+      "src": "./assets/history/food-ginza-1946.jpg",
+      "title": "配給を待つ長い列",
+      "caption": "配給を待つ長い列。1946年。",
+      "year": 1946,
+      "dateLabel": "1946年",
+      "place": "東京・銀座",
+      "creator": "Tadahiko Hayashi",
+      "sourceTitle": "林忠彦／『カストリの時代』（ピエ・ブックス、2007年）",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:A_long_line_for_food_distribution_-_Ginza,_Tokyo_1946.png",
+      "license": "パブリックドメイン",
+      "licenseUrl": "https://commons.wikimedia.org/wiki/Template:PD-Japan-oldphoto",
+      "alt": "銀座で配給を待つ人々の列と、背後の服部時計店。",
+      "chapters": [
+        "rebuilding"
+      ],
+      "hotspots": [
+        {
+          "x": 47,
+          "y": 50,
+          "title": "並ぶ人々",
+          "text": "建物の前から横へ、長い列が続いている。食べ物を手に入れるまで、どんな時間が必要だっただろう。"
+        },
+        {
+          "x": 34,
+          "y": 12,
+          "title": "残る時計塔",
+          "text": "背後に服部時計店の時計塔が見える。1933年や2015年の銀座と見比べられる。"
+        }
+      ],
+      "height": 1407,
+      "width": 1428
+    },
+    {
+      "id": "ginza-1967",
+      "src": "./assets/history/ginza-1967.jpg",
+      "title": "自動車とバスが行き交う銀座",
+      "caption": "自動車とバスが行き交う銀座。1967年5月1日。",
+      "year": 1967,
+      "dateLabel": "1967年5月1日",
+      "place": "東京・銀座中央通り",
+      "creator": "Roger W",
+      "sourceTitle": "Roger W（Roger Wollstadt）／Tokyo - Chuo-Dori",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Ch%C5%AB%C5%8D-d%C5%8Dri,_Ginza_(1967-05-01_by_Roger_W).jpg",
+      "license": "CC BY-SA 2.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.0",
+      "alt": "銀座中央通りを走るバスと自動車、建物上の大型広告。",
+      "chapters": [
+        "growth"
+      ],
+      "hotspots": [
+        {
+          "x": 53,
+          "y": 83,
+          "title": "路線バス",
+          "text": "画面手前にバスが大きく写り、周囲には自動車が並ぶ。"
+        },
+        {
+          "x": 54,
+          "y": 18,
+          "title": "屋上の広告",
+          "text": "建物の屋上にも大きな広告が掲げられている。通りの景色を誰に向けて作っていたのだろう。"
+        }
+      ],
+      "height": 750,
+      "width": 708
+    },
+    {
+      "id": "rice-1967",
+      "src": "./assets/history/rice-1967.jpg",
+      "title": "列車の窓から見た田植え",
+      "caption": "列車の窓から見た田植え。1967年5月6日。",
+      "year": 1967,
+      "dateLabel": "1967年5月6日",
+      "place": "東武日光線沿線（詳しい撮影地点は不明）",
+      "creator": "Roger W",
+      "sourceTitle": "Roger W（Roger Wollstadt）／Japan - Farming Scene",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Rice_planting_on_paddy_field_in_Japan,_view_from_T%C5%8Dbu_Nikk%C5%8D_Line_(1967-05-06_by_Roger_W).jpg",
+      "license": "CC BY-SA 2.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.0",
+      "alt": "水を張った田で、腰をかがめて作業する人々。",
+      "chapters": [
+        "growth"
+      ],
+      "hotspots": [
+        {
+          "x": 67,
+          "y": 52,
+          "title": "水田で働く人",
+          "text": "水の張られた田の中で、人が腰をかがめて作業している。"
+        },
+        {
+          "x": 44,
+          "y": 75,
+          "title": "水を張った田",
+          "text": "田の表面に空や人影が映る。列車の窓から撮影された農村の一場面。"
+        }
+      ],
+      "height": 602,
+      "width": 920
+    },
+    {
+      "id": "townhouses-1977",
+      "src": "./assets/history/townhouses-1977.jpg",
+      "title": "細い建物が並ぶ東京の通り",
+      "caption": "細い建物が並ぶ東京の通り。1977年5月。",
+      "year": 1977,
+      "dateLabel": "1977年5月",
+      "place": "東京（詳しい撮影地点は不明）",
+      "creator": "Odd Roar Aalborg",
+      "sourceTitle": "Odd Roar Aalborg／Varied townhouses in Tokyo",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Varied_townhouses_in_Tokyo.jpg",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "alt": "細長い建物が隣り合い、一階に店の入口や看板が並ぶ通り。",
+      "chapters": [
+        "changing"
+      ],
+      "hotspots": [
+        {
+          "x": 46,
+          "y": 44,
+          "title": "隣り合う建物",
+          "text": "幅や高さ、外壁の形が違う建物が、すき間少なく並んでいる。"
+        },
+        {
+          "x": 43,
+          "y": 87,
+          "title": "通りに面する店",
+          "text": "一階に店の入口と看板が見える。土地の使い方と商いの関係を考えてみよう。"
+        }
+      ],
+      "height": 1600,
+      "width": 936
+    },
+    {
+      "id": "rice-machine-1985",
+      "src": "./assets/history/rice-machine-1985.jpg",
+      "title": "田植機と農作業",
+      "caption": "田植機と農作業。1985年。",
+      "year": 1985,
+      "dateLabel": "1985年",
+      "place": "日本（詳しい撮影地点は不明）",
+      "creator": "Marie-Sophie Mejan",
+      "sourceTitle": "Marie-Sophie Mejan／Japan, modern rice planting",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Japan,_modern_rice_planting.jpg",
+      "license": "CC BY 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/4.0",
+      "alt": "水田の中で歩行型の田植機を操作する人。",
+      "chapters": [
+        "changing"
+      ],
+      "hotspots": [
+        {
+          "x": 68,
+          "y": 66,
+          "title": "田植機",
+          "text": "作業する人の手前に機械が見える。1967年の田植え写真と道具を比べよう。"
+        },
+        {
+          "x": 59,
+          "y": 48,
+          "title": "機械を操作する人",
+          "text": "機械があっても、人が田に入り、操作していることが分かる。"
+        }
+      ],
+      "height": 1096,
+      "width": 1600
+    },
+    {
+      "id": "akihabara-2005",
+      "src": "./assets/history/akihabara-2005.jpg",
+      "title": "電気街の夜",
+      "caption": "電気街の夜。2005年2月24日。",
+      "year": 2005,
+      "dateLabel": "2005年2月24日",
+      "place": "東京・秋葉原",
+      "creator": "Joshua Rappeneker",
+      "sourceTitle": "Joshua Rappeneker／Akihabara II",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Akihabara_II.jpg",
+      "license": "CC BY-SA 2.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.0",
+      "alt": "店の看板と明かりが重なり、車が通る夜の秋葉原。",
+      "chapters": [
+        "connected"
+      ],
+      "hotspots": [
+        {
+          "x": 57,
+          "y": 31,
+          "title": "大きな店の看板",
+          "text": "建物の高い位置まで店舗の看板が伸びている。"
+        },
+        {
+          "x": 49,
+          "y": 90,
+          "title": "夜の通り",
+          "text": "店が明るく照らす通りを自動車が通る。昼とは違う商いの景色が見える。"
+        }
+      ],
+      "height": 1208,
+      "width": 1600
+    },
+    {
+      "id": "tama-housing-2009",
+      "src": "./assets/history/tama-housing-2009.jpg",
+      "title": "多摩ニュータウンの団地",
+      "caption": "多摩ニュータウンの団地。2009年3月8日。",
+      "year": 2009,
+      "dateLabel": "2009年3月8日",
+      "place": "東京・多摩ニュータウン諏訪・永山地区",
+      "creator": "Terebitou",
+      "sourceTitle": "Terebitou／Tama new town suwa",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Tama_new_town_suwa.jpg",
+      "license": "パブリックドメイン",
+      "licenseUrl": "https://commons.wikimedia.org/wiki/Template:PD-self",
+      "alt": "複数の中層集合住宅と、住宅を結ぶ道路や樹木。",
+      "chapters": [
+        "connected"
+      ],
+      "hotspots": [
+        {
+          "x": 37,
+          "y": 41,
+          "title": "中層の集合住宅",
+          "text": "窓や住戸が繰り返し並ぶ建物が、いくつも建っている。"
+        },
+        {
+          "x": 37,
+          "y": 84,
+          "title": "建物の間の道路",
+          "text": "住宅の間に道路や歩道、樹木のある空間が設けられている。"
+        }
+      ],
+      "height": 1086,
+      "width": 1800
+    },
+    {
+      "id": "ginza-2015",
+      "src": "./assets/history/ginza-2015.jpg",
+      "title": "時計塔が残る銀座四丁目",
+      "caption": "時計塔が残る銀座四丁目。2015年9月15日。",
+      "year": 2015,
+      "dateLabel": "2015年9月15日",
+      "place": "東京・銀座四丁目",
+      "creator": "そらみみ (Soramimi)",
+      "sourceTitle": "そらみみ（Soramimi）／Headquarters of Wako at Ginza 4-Chome Crossroads",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Headquarters_of_Wako_at_Ginza_4-Chome_Crossroads.JPG",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "alt": "時計塔のある和光本店と、その前を走る自動車。",
+      "chapters": [
+        "present"
+      ],
+      "hotspots": [
+        {
+          "x": 38,
+          "y": 20,
+          "title": "同じ時計塔",
+          "text": "1933年の写真にも写る時計塔が、ここにも残っている。"
+        },
+        {
+          "x": 49,
+          "y": 92,
+          "title": "道路を走る自動車",
+          "text": "建物の前を自動車が通っている。1933年の路面電車との違いを探してみよう。"
+        }
+      ],
+      "height": 1350,
+      "width": 1800
+    },
+    {
+      "id": "tokyo-station-2018",
+      "src": "./assets/history/tokyo-station-2018.jpg",
+      "title": "東京駅丸の内駅舎と駅前広場",
+      "caption": "東京駅丸の内駅舎と駅前広場。2018年4月3日。",
+      "year": 2018,
+      "dateLabel": "2018年4月3日",
+      "place": "東京・丸の内",
+      "creator": "Zairon",
+      "sourceTitle": "Zairon／Tokyo Station 1",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Tokyo_Station_1.jpg",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "alt": "赤れんがの東京駅丸の内駅舎と、歩く人々のいる駅前広場。",
+      "chapters": [
+        "present"
+      ],
+      "hotspots": [
+        {
+          "x": 51,
+          "y": 65,
+          "title": "赤れんがの駅舎",
+          "text": "横に長い駅舎の中央に入口がある。1914年の写真と屋根や窓を比べよう。"
+        },
+        {
+          "x": 50,
+          "y": 88,
+          "title": "人が歩く広場",
+          "text": "駅の正面に広い歩行空間があり、多くの人が歩いている。"
+        },
+        {
+          "x": 24,
+          "y": 32,
+          "title": "背後の高層建物",
+          "text": "駅舎の向こうに高い建物が立つ。駅舎だけでなく、周囲の高さも比べられる。"
+        }
+      ],
+      "height": 1352,
+      "width": 1800
+    }
+  ],
+  "comparisons": [
+    {
+      "id": "ginza-century",
+      "title": "銀座四丁目、1933年と2015年",
+      "beforeId": "ginza-1933",
+      "afterId": "ginza-2015",
+      "question": "同じ時計塔のまわりで、何が変わり、何が残った？",
+      "insights": [
+        {
+          "title": "同じ場所の手がかり",
+          "text": "両方に服部時計店・和光の時計塔が写る。写す方向と高さは異なるが、同じ銀座四丁目交差点を見ている。"
+        },
+        {
+          "title": "道路の使い方",
+          "text": "1933年の写真では路面電車が見え、2015年の写真では自動車が目立つ。人が通る場所と、建物の間隔にも注目しよう。"
+        }
+      ]
+    },
+    {
+      "id": "tokyo-station-century",
+      "title": "東京駅、1914年と2018年",
+      "beforeId": "tokyo-station-1914",
+      "afterId": "tokyo-station-2018",
+      "question": "駅舎と駅前の空間は、どのように変わった？",
+      "insights": [
+        {
+          "title": "駅舎を比べる",
+          "text": "同じ丸の内側の駅舎を、開業の年と2018年に撮影した写真。撮影位置や写る範囲は異なる。屋根、窓、中央入口を手がかりに見比べよう。"
+        },
+        {
+          "title": "周囲も見る",
+          "text": "2018年には駅舎の背後に高層建物、手前には歩く人々の広場が見える。写真で見える違いと、その理由についての推測を分けて考えよう。"
+        }
+      ]
+    }
+  ]
+}
