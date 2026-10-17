@@ -6,7 +6,7 @@ const fmt = new Intl.NumberFormat('ja-JP', { maximumFractionDigits: 3 });
 const compact = new Intl.NumberFormat('ja-JP', { notation: 'compact', maximumFractionDigits: 1 });
 const bindings = new WeakMap();
 export const CHART_RANGES = Object.freeze([[1900,2026,'全期間'],[1900,1945,'1900–1945'],[1945,1975,'1945–1975'],[1975,2000,'1975–2000'],[2000,2026,'2000–現在']]);
-const unitLabel = unit => /未取得|未確認|未確定/.test(unit || '') ? '単位の文字列は未確認' : unit || '単位は原表を参照';
+const unitLabel = unit => /未取得|未確認|未確定/.test(unit || '') ? '' : unit || '';
 export const cleanSeriesLabel = label => readableResearchText(label).replace(/\b[A-Z]\d{4,}_/g,'').replace(/\b\d{4}\s+(?=総合|食料)/g,'').replace(/\s*\/\s*観測値/g,'');
 export const chartTime = p => observationTime(p)===null?null:observationTime(p)/12;
 const timeOf=chartTime;
@@ -143,7 +143,7 @@ export function createStatisticsExplorer(root,archive,drivers,{year=1900,onYear,
     const words=query.normalize('NFKC').toLocaleLowerCase('ja').split(/\s+/).filter(Boolean);
     const matches=catalogue.filter(e=>words.every(word=>e.search.normalize('NFKC').includes(word)||(/^\d{4}$/.test(word)&&e.entry.points.some(p=>p.year===Number(word)))));
     const groups=new Map();for(const e of matches){if(!groups.has(e.stat.id))groups.set(e.stat.id,[]);groups.get(e.stat.id).push(e);}
-    const markup=[...groups.values()].map(es=>`<optgroup label="${esc(es[0].title)}">${es.map(e=>`<option value="${esc(e.id)}">${esc(e.label)}${e.start!==null?` ／ ${e.start}–${e.end}`:' ／ 年代の確認が残る記録'}</option>`).join('')}</optgroup>`).join('');
+    const markup=[...groups.values()].map(es=>`<optgroup label="${esc(es[0].title)}">${es.map(e=>`<option value="${esc(e.id)}">${esc(e.label)}${e.start!==null?` ／ ${e.start}–${e.end}`:''}</option>`).join('')}</optgroup>`).join('');
     selector.innerHTML=`<option value="">${matches.length}区分から選ぶ</option>`+markup;
     root.querySelector('.explorer-comparison').innerHTML='<option value="">見比べない</option>'+markup;
     if(byId.has(active))selector.value=active;root.querySelector('.explorer-comparison').value=comparison;
