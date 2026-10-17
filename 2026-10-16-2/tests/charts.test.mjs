@@ -53,3 +53,18 @@ test('the original-series detail also keeps documented scope breaks',()=>{
   assert.ok(tracks[0].boundaries.some(b=>b.year===1945));
   for(const segment of data.panels[0].segments)for(const path of segment.paths)for(const b of tracks[0].boundaries)assert.ok(!path.some(p=>p.year<b.year)||!path.some(p=>p.year>=b.year));
 });
+
+test('monthly method changes split in April without inventing a January break',()=>{
+  const bus=drivers.drivers.find(d=>d.id==='bus'),old=presetTracks(archive,drivers,bus.seriesIds[0]);
+  const paths=chartData(old).panels[0].segments[0].paths;
+  assert.ok(paths.some(path=>path.some(p=>p.timeLabel==='2019年12月')&&path.some(p=>p.timeLabel==='2020年1月')));
+  const start=observationsAt(old,2020).map(r=>r.point);
+  const newer=presetTracks(archive,drivers,bus.seriesIds[1]);
+  const april=observationsAt(newer,2020).map(r=>r.point).find(p=>p.timeLabel==='2020年4月');
+  assert.ok(april&&start.length===3);
+  // A copied fixture isolates the boundary logic without changing either source.
+  const combined=[{...old[0],entry:{...old[0].entry,points:[...start,april]}}];
+  const split=chartData(combined).panels[0].segments[0].paths;
+  assert.ok(split.some(path=>path.length===3&&path[2].timeLabel==='2020年3月'));
+  assert.ok(split.some(path=>path.length===1&&path[0]===april));
+});
