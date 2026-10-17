@@ -62,7 +62,7 @@ export function chartData(tracks, range=[1900,2026]) {
       const points=track.entry.points.filter(p=>within(p,track)&&p.year>=range[0]&&p.year<=range[1]).sort((a,b)=>timeOf(a)-timeOf(b));
       const paths=[]; let path=[];
       for(const p of points) {
-        const previous=path.at(-1), boundary=previous&&(track.boundaries||[]).some(b=>b.year>previous.year&&b.year<=p.year);
+        const previous=path.at(-1), boundary=previous&&(track.boundaries||[]).some(b=>{const time=Number(b.year)+((Number(b.month)||1)-1)/12;return time>timeOf(previous)&&time<=timeOf(p);});
         // Separate scope changes, missing symbols and unobserved years. Never fill them.
         if(!isNumber(p)||boundary||(previous&&timeOf(p)-timeOf(previous)>1.01)){if(path.length)paths.push(path);path=[];}
         if(isNumber(p))path.push(p);
