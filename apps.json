@@ -224,10 +224,10 @@
     "id": "2026-10-16-2",
     "date": "2026-10-16",
     "sequence": 2,
-    "name": "箱庭日本",
-    "description": "史実と統計の時代の流れの中で、ランダムな暮らしを眺める日本の箱庭シミュレータ。",
-    "category": "観察 / シミュレーション",
-    "thumbnail": "assets/japan-cover.svg",
-    "accent": "#B73529"
+    "name": "日本の変わりかた",
+    "description": "写真を見比べ、数字を動かし、当時の人の記録を読む。1900年から現代までの日本の近現代史をたどるインタラクティブな教材。",
+    "category": "歴史 / インタラクティブ教材",
+    "thumbnail": "assets/education-cover.svg",
+    "accent": "#173746"
   }
 ]

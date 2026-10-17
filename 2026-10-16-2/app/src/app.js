@@ -1,516 +1,141 @@
-import { PLACES, createSimulation, snapshot, seek, advance, reroll, selectPerson, selectPlace } from './model.js';
-import { createRenderer } from './renderer.js';
-import { STORAGE_KEY, parseSaved, serializeSaved, escapeHTML as esc, safeURL } from './storage.js';
-import { observationTime, pointsThrough, eraLabel, materialInYear, regionalMaterial } from './presentation.js';
-import { cleanSeriesLabel, statisticTitle, statisticDefinition, statisticNotes, recordTitle, eventSummary, livingSummary, journalText, displayPeriod as period, displayGeography, displayTimeLabel, materialAccess, materialVoice, materialType, sourceTitle, displayUnit, citationPages } from './ui-copy.js';
+import { escapeHTML as esc, safeURL } from './storage.js';
+import { mergeHistory, HISTORY_THEMES, eventYear, eventDateLabel, eventInRegion, filterHistory } from './history-data.js';
+import { period, materialInYear } from './presentation.js';
+import { cleanSeriesLabel, recordTitle, eventSummary, livingSummary, displayGeography, displayTimeLabel, displayUnit, sourceTitle, materialVoice, materialType, materialAccess, statisticTitle, statisticDefinition, statisticNotes, citationPages } from './ui-copy.js';
 import { GAP_COPY } from './ui-gap-copy.js';
-import { createStatisticsExplorer, mountChart, presetTracks } from './charts.js';
-import { routineAt, dayClockAt, DAILY_CYCLE_SECONDS } from './routines.js';
-import { eraProfile } from './era-art.js';
-import { mergeHistory, eventDateLabel, eventThemeIds, filterHistory, HISTORY_CHAPTERS, HISTORY_THEMES } from './history-data.js';
+import { createStatisticsExplorer, mountChart, observationsAt, presetTracks } from './charts.js';
+import { LENSES, lensMeasures, lensTracks, comparisonRecords, comparisonPayload, figureUnit, chapterAt, validateEducation, educationEvents } from './education-data.js';
+import { budgetFigure, comparisonFigure } from './education-figures.js';
 
-const $ = id => document.getElementById(id);
-const number = new Intl.NumberFormat('ja-JP', { maximumFractionDigits: 3 });
-const JOURNEYS = [
-  {id:'teacher',year:1904,month:1,placeId:'sanyo',region:'広島',title:'教員家族の机',material:'L3-M008',prop:'book'},
-  {id:'weaving',year:1911,month:2,placeId:'shikoku',region:'徳島',title:'織りの手仕事',material:'L3-M017',prop:'cloth'},
-  {id:'fishing',year:1931,month:1,placeId:'shikoku',region:'愛媛',title:'海士の共同出漁',material:'L3-M012',prop:'net'},
-  {id:'harbour',year:1934,month:7,placeId:'okinawa',region:'石垣島',title:'漁から戻る浜辺',material:'L3-M005',prop:'basket'},
-  {id:'shopping',year:1937,month:2,placeId:'kanto',region:'小平',title:'覚帳の買物',material:'L3-M007',prop:'basket'},
-  {id:'water',year:1943,month:8,placeId:'koshin',region:'北信濃',title:'通い帳と水汲み',material:'L3-M004',prop:'bucket'},
-  {id:'fuel',year:1955,month:1,placeId:'kanto',region:'杉並',title:'家事と燃料の記憶',material:'L3-M006',prop:'tools'}
-];
-const TOPICS = {culture_leisure:'文化と余暇',disaster_environment:'災害と環境',economy_household:'家計',education:'教育',food_clothing:'衣食',health_welfare:'健康と福祉',housing_infrastructure:'住まいと設備',law_rights_politics:'制度と政治',media_technology:'通信と道具',population_family:'人口と家族',transport:'移動',war_empire:'戦争と歴史的な領域',work_industry:'仕事と産業'};
-let archive, drivers, sim, current, renderer, sources, statistics, series;
-let playing = true, speed = 4, view = 'place', reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
-let motionTime = 15, lastFrame = 0, lastModel = 0, lastRoutineFrame=0, accumulatedMonths = 0, frameId = 0, dirty = true;
-let page = 'town', inspector='people', explorer, zoom = 1, lastRoutineStamp = '', lastPlanStamp = '', lastDailyStamp = '', historyLimit = 36, lastHistoricalDay = 0;
-let archiveSection = 'statistics', seriesDetail = null, seriesPage = 1, seriesYear = null, detailResume = false, archiveLimit = 30;
-let lastUIStamp = '', livingPage = 0, lastHistoryIndex = 0, lastCuration = 0, saveAvailable = true;
-const dialogs = [$('detail-dialog'), $('archive-dialog')];
+const $=id=>document.getElementById(id);
+const format=new Intl.NumberFormat('ja-JP',{maximumFractionDigits:3});
+const REGION_NAMES={hokkaido:'北海道',tohoku:'東北',hokuriku:'北陸',kanto:'関東',koshin:'甲信',tokai:'東海',kinki:'近畿',sanin:'山陰',sanyo:'山陽',shikoku:'四国',kyushu:'九州',okinawa:'沖縄'};
+const COVERS={early:'tokyo-station-1914',interwar:'ginza-1933',war:'airraid-ginza-1945',rebuilding:'food-ginza-1946',growth:'ginza-1967',changing:'rice-machine-1985',connected:'akihabara-2005',present:'ginza-2015'};
+let archive,drivers,lessons,media,sources,series,statistics,explorer,readerEvents;
+let mode='read',chapterId='early',compareId='',lensId='population',measureId=null,archiveLimit=32,lensUnit=null,lensA=null,lensB=null,selectedYear=1900;
+let activeTracks=[],activeRecords=[],seriesId=null,seriesLimit=100;
+const byPhoto=id=>media.items.find(p=>p.id===id);
+const chapter=()=>lessons.chapters.find(c=>c.id===chapterId)||lessons.chapters[0];
+const href=(url,label)=>safeURL(url)?`<a href="${esc(safeURL(url))}" target="_blank" rel="noopener noreferrer">${esc(label)} ↗</a>`:esc(label);
+const notes=(items,label='資料の詳細')=>items.filter(Boolean).length?`<details class="record-details"><summary>${esc(label)}</summary>${[...new Set(items.filter(Boolean))].map(s=>`<p>${esc(s)}</p>`).join('')}</details>`:'';
+const announce=text=>{$('announcement').textContent=text;};
+function sourceHTML(id,locator=''){
+  const s=sources.get(id);if(!s)return '';
+  const pages=citationPages(locator);
+  return `<div class="source-entry">${href(s.url,sourceTitle(s))}<p>${esc(s.institution||'')}${pages?` ／ ${esc(pages)}`:''}</p></div>`;
+}
+function showDetail(title,body){$('detail-title').textContent=title;$('detail-body').innerHTML=body;if(!$('detail-dialog').open)$('detail-dialog').showModal();$('detail-dialog').scrollTop=0;}
+function closeDialogs(){for(const id of ['detail-dialog','photo-dialog'])$(id).close();}
+function moveTo(id){$(id)?.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth',block:'start'});}
+function syncHash(){const value=mode==='read'?chapterId:mode==='compare'?compareId:mode==='data'?lensId:'';const hash=`#${mode}${value?`/${value}`:''}`;if(location.hash!==hash)history[location.hash?'pushState':'replaceState'](null,'',hash);}
+function setMode(next,{scroll=true}={}){
+  if(!['read','compare','data','archive'].includes(next))return;
+  mode=next;document.querySelectorAll('[data-page]').forEach(s=>s.hidden=s.dataset.page!==mode);
+  document.querySelectorAll('[data-mode]').forEach(b=>{if(b.dataset.mode===mode)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current');});
+  if(mode==='read')renderChapter();if(mode==='compare')renderComparison();if(mode==='data')renderData();if(mode==='archive')renderArchive();
+  syncHash();if(scroll)window.scrollTo({top:0,behavior:'instant'});
+}
+function setChapter(id){if(!lessons.chapters.some(c=>c.id===id))return;chapterId=id;closeDialogs();setMode('read');announce(`${chapter().from}年から${chapter().through}年の章をひらきました。`);}
+function openArchive(from,through){for(const id of ['archive-query','archive-theme','archive-region'])$(id).value='';$('archive-kind').value='events';$('archive-from').value=from;$('archive-through').value=through;archiveLimit=32;closeDialogs();setMode('archive');}
+function setLens(id){lensId=LENSES.some(l=>l.id===id)?id:'population';measureId=null;lensUnit=null;lensA=null;lensB=null;closeDialogs();setMode('data');}
+function route(){const [next,value]=location.hash.slice(1).split('/');if(next==='read'&&lessons.chapters.some(c=>c.id===value))chapterId=value;if(next==='data'&&LENSES.some(l=>l.id===value))lensId=value;if(next==='compare'&&media.comparisons.some(c=>c.id===value))compareId=value;setMode(['read','compare','data','archive'].includes(next)?next:'read');}
 
-function announce(message) { $('announcement').textContent = message; }
-function sourceHTML(id, locator = '') {
-  const source = sources.get(id); if (!source) return '';
-  const url = safeURL(source.url);
-  const location = citationPages(locator);
-  return `<div class="source-entry">${url ? `<a href="${esc(url)}" target="_blank" rel="noopener noreferrer">${esc(sourceTitle(source))} ↗</a>` : `<strong>${esc(sourceTitle(source))}</strong>`}<p>${esc(source.institution || '')}</p>${location ? `<details class="source-location"><summary>掲載箇所</summary><p>${esc(location)}</p></details>` : ''}</div>`;
+function photoCredit(p){return `<span>${esc(p.creator)}</span><button class="text-link" data-photo-source="${esc(p.id)}">写真の出典</button>`;}
+function annotatedPhoto(p,{large=false}={}){
+  return `<figure class="photo-figure${large?' photo-large':''}" data-photo-ratio="${p.width/p.height}"><div class="annotated-photo"><img src="${esc(p.src)}" alt="${esc(p.alt)}"${large?'':' loading="eager"'}>${p.hotspots.map((h,i)=>`<button class="photo-hotspot" data-photo-spot="${esc(p.id)}" data-spot="${i}" data-x="${h.x}" data-y="${h.y}" aria-label="見どころ${i+1}：${esc(h.title)}" aria-pressed="false">${i+1}</button>`).join('')}<button class="photo-enlarge" data-photo="${esc(p.id)}" aria-label="${esc(p.title)}を拡大">拡大 ↗</button></div><figcaption><span class="photo-date">${esc(p.dateLabel)} ／ ${esc(p.place)}</span><strong>${esc(p.title)}</strong><div class="photo-credit">${photoCredit(p)}</div></figcaption><div class="photo-insight" aria-live="polite"><span class="insight-mark">見どころ</span><p>写真の数字を押して、細部を読む。</p></div></figure>`;
 }
-function formatValue(observation) {
-  if (observation.value === null || !Number.isFinite(observation.value)) return '—';
-  return number.format(observation.value);
+function positionSpots(root=document){root.querySelectorAll('[data-photo-ratio]').forEach(f=>f.style.setProperty('--photo-ratio',f.dataset.photoRatio));root.querySelectorAll('.photo-hotspot').forEach(b=>{b.style.left=`${Number(b.dataset.x)}%`;b.style.top=`${Number(b.dataset.y)}%`;});}
+function showPhoto(id){const p=byPhoto(id);if(!p)return;$('photo-title').textContent=`${p.title} ／ ${p.dateLabel}`;$('photo-body').innerHTML=annotatedPhoto(p,{large:true});positionSpots($('photo-body'));if(!$('photo-dialog').open)$('photo-dialog').showModal();}
+function photoSource(id){const p=byPhoto(id);if(!p)return;showDetail(p.title,`<p>${esc(p.caption)}</p><dl><dt>撮影・制作</dt><dd>${esc(p.creator)}</dd><dt>時期・場所</dt><dd>${esc(p.dateLabel)} ／ ${esc(p.place)}</dd><dt>出典</dt><dd>${href(p.sourceUrl,p.sourceTitle)}</dd><dt>利用条件</dt><dd>${href(p.licenseUrl,p.license)}</dd></dl><p class="small">配布用に縮小・圧縮し、JPEGに変換しています。</p>`);}
+function eventCard(e){return `<article class="event-card"><p class="record-meta">${esc(eventDateLabel(e))} ／ ${esc(displayGeography(e.geography))}</p><h3><button data-event="${esc(e.id)}">${esc(recordTitle(e))}</button></h3><p>${esc(eventSummary(e))}</p><button class="text-link" data-event="${esc(e.id)}">出典・詳細 ↗</button></article>`;}
+function livingCard(l){return `<article class="living-card"><span class="record-mark" aria-hidden="true">記</span><div><p class="record-meta">${esc(period(l.period_start,l.period_end).replace('年代を確かめきれていない記録','年代不詳'))} ／ ${esc(displayGeography(l.geography))}</p><h3>${esc(recordTitle(l))}</h3><p>${esc(livingSummary(l))}</p><button class="text-link" data-living="${esc(l.id)}">当時の人の記録を読む ↗</button></div></article>`;}
+function renderChapter(){
+  const c=chapter(),index=lessons.chapters.indexOf(c),p=byPhoto(COVERS[c.id])||media.items.find(p=>p.chapters.includes(c.id));
+  $('chapter-nav').innerHTML=lessons.chapters.map((item,i)=>`<button data-chapter="${item.id}" aria-current="${item.id===c.id?'step':'false'}"><span>${String(i+1).padStart(2,'0')}</span><strong>${item.from}–${item.through}</strong><small>${esc(item.kicker)}</small></button>`).join('');
+  const events=c.eventIds.map(id=>archive.events.find(e=>e.id===id)).filter(Boolean);
+  const living=c.livingIds.map(id=>archive.living.find(l=>l.id===id)).filter(Boolean);
+  const otherPhotos=media.items.filter(item=>item.chapters.includes(c.id)&&item.id!==p.id);
+  const next=lessons.chapters[index+1];
+  $('chapter-content').innerHTML=`<section class="chapter-hero"><div class="chapter-intro"><p class="eyebrow">${String(index+1).padStart(2,'0')} / 08　${c.from}–${c.through}</p><h1>${esc(c.title)}</h1><p class="chapter-lead">${esc(c.lead)}</p><button class="primary read-start" data-scroll="chapter-reading">この時代を読む ↓</button><div class="chapter-progress" aria-label="8章のうち${index+1}章目">${lessons.chapters.map((_,i)=>`<i${i<=index?' class="is-read"':''}></i>`).join('')}</div></div>${annotatedPhoto(p)}</section><section id="chapter-reading" class="chapter-reading"><div class="question-block"><span>この章の問い</span><h2>${esc(c.question)}</h2></div><div class="editorial-columns"><div class="reading-prose">${c.paragraphs.map(text=>`<p>${esc(text)}</p>`).join('')}<p class="takeaway"><strong>読み終えて残る視点</strong>${esc(c.takeaway)}</p></div><aside class="focus-list"><h2>三つの手がかり</h2>${c.focus.map((f,i)=>`<article><span>${i+1}</span><h3>${esc(f.title)}</h3><p>${esc(f.text)}</p><div>${f.eventIds.slice(0,1).map(id=>`<button class="text-link" data-event="${esc(id)}">出来事を読む ↗</button>`).join('')}${f.livingIds.slice(0,1).map(id=>`<button class="text-link" data-living="${esc(id)}">暮らしの記録 ↗</button>`).join('')}</div></article>`).join('')}</aside></div></section>${c.id==='early'?`<section class="budget-section"><div class="section-heading"><div><p class="eyebrow">一つの家計を、大きく読む。</p><h2>40円の月給と、3円50銭の家賃。</h2><p>金額だけでなく、家計の中の割合を見る。</p></div><button class="text-link" data-living="L3-M008">この家の記録を読む ↗</button></div>${budgetFigure()}</section>`:''}${otherPhotos.length?`<section class="chapter-photos"><div class="section-heading"><h2>別の風景から、この時代を見る</h2></div><div class="chapter-photo-grid">${otherPhotos.map(item=>`<article><button class="photo-thumb" data-photo="${esc(item.id)}"><img src="${esc(item.src)}" alt="${esc(item.alt)}" loading="lazy"><span>大きく見る ↗</span></button><p class="record-meta">${esc(item.dateLabel)} ／ ${esc(item.place)}</p><h3>${esc(item.title)}</h3><div class="photo-credit">${photoCredit(item)}</div></article>`).join('')}</div></section>`:''}<section class="chapter-events"><div class="section-heading"><h2>この時代に起きたこと</h2><button class="text-link" data-archive-period="${c.from},${c.through}">年表をひらく ↗</button></div><div class="chapter-event-grid">${events.map(eventCard).join('')}</div></section><section class="chapter-living"><div class="section-heading"><div><p class="eyebrow">同じ時代にも、違う暮らし。</p><h2>当時の人の記録を読む</h2></div></div><div class="living-grid">${living.map(livingCard).join('')}</div></section><section class="chapter-data-link"><div><p class="eyebrow">数字を重ねて、もう一度読む。</p><h2>${esc(c.dataQuestion)}</h2><p>${esc(c.dataExplanation)}</p></div><button class="primary" data-lens="${c.dataLens}">データを動かしてみる →</button></section><details class="chapter-sources"><summary>この章の出典</summary>${c.sources.map(s=>`<div class="source-entry">${href(s.url,s.title)}<p>${esc(s.institution)}</p></div>`).join('')}</details><nav class="chapter-turn" aria-label="前後の章">${index>0?`<button data-chapter="${lessons.chapters[index-1].id}">← 前の章</button>`:'<span></span>'}${next?`<button data-chapter="${next.id}"><small>次の時代へ　${next.from}–${next.through}</small><strong>${esc(next.title)} →</strong></button>`:`<button data-mode="compare"><small>写真をもう一度見比べる</small><strong>昔と今、同じ場所へ →</strong></button>`}</nav>`;
+  positionSpots($('chapter-content'));
 }
-const readableUnit = displayUnit;
-function observationLabel(id, index = 0) {
-  if (id === 'industry') return index ? '製造業の働き手' : current.year < 1953 ? '農業の有業者' : '農業・林業の就業者';
-  if (id === 'population') return current.year < 1975 ? '人口動態の基礎人口' : '全国人口';
-  if (id === 'education') return index ? current.year >= 2017 ? '大学の学部学生数' : '大学の在学者数' : '小学校の在学者数';
-  if (id === 'communication') return index ? current.year >= 2010 ? 'スマートフォンの世帯保有率' : '携帯電話の世帯保有率' : 'パソコンの世帯保有率';
-  return ({ housing: ['総住宅数', '空き家数'], water: ['上水道の給水人口'], rice: ['米の供給量／1人・1年'], prices: ['総合指数', '食料指数'], bus: ['乗合バス輸送人員／月次'], rail:['鉄道の旅客数量／月次'], energy:['年間エネルギー消費／1世帯'] })[id]?.[index] || '';
+function renderComparison(){
+  const c=media.comparisons.find(c=>c.id===compareId)||media.comparisons[0];compareId=c.id;
+  const before=byPhoto(c.beforeId),after=byPhoto(c.afterId);
+  $('comparison-tabs').innerHTML=media.comparisons.map(item=>`<button data-comparison="${item.id}" aria-pressed="${item.id===c.id}">${esc(item.title)}</button>`).join('');
+  $('comparison-content').innerHTML=`<section class="comparison-study"><div class="comparison-intro"><p class="eyebrow">${esc(c.title)}</p><h2>${esc(c.question)}</h2></div><div class="image-compare"><img class="compare-back" src="${esc(after.src)}" alt="${esc(after.alt)}"><div class="compare-before"><img src="${esc(before.src)}" alt="${esc(before.alt)}"></div><span class="compare-year before-year">${esc(before.dateLabel)}</span><span class="compare-year after-year">${esc(after.dateLabel)}</span><span class="compare-divider" aria-hidden="true"><i>↔</i></span></div><label class="compare-slider-label">写真の境目を動かす<input id="compare-range" type="range" min="0" max="100" value="50" aria-label="昔と今の写真の境目"></label><div class="compare-credits"><div><button class="text-link" data-photo="${before.id}">${esc(before.title)}を拡大 ↗</button><div class="photo-credit">${photoCredit(before)}</div></div><div><button class="text-link" data-photo="${after.id}">${esc(after.title)}を拡大 ↗</button><div class="photo-credit">${photoCredit(after)}</div></div></div><div class="comparison-insights">${c.insights.map((x,i)=>`<article><span>0${i+1}</span><h3>${esc(x.title)}</h3><p>${esc(x.text)}</p></article>`).join('')}</div></section>`;
+  setCompareAmount(50);
+  $('photo-gallery').innerHTML=media.items.map(p=>`<article><button class="photo-thumb" data-photo="${esc(p.id)}"><img src="${esc(p.src)}" alt="${esc(p.alt)}" loading="lazy"><span>細部を見る ↗</span></button><p class="record-meta">${esc(p.dateLabel)} ／ ${esc(p.place)}</p><h3>${esc(p.title)}</h3><div class="photo-credit">${photoCredit(p)}</div></article>`).join('');
 }
-function pointDate(observation) {
-  const label = observation.point?.timeLabel || observation.point?.time_label || 'この年代の記録はありません';
-  return /^全国_.+_\d{4}$/.test(label) ? `${observation.point.year}年度` : label;
-}
-function sourceForEvent(event) { return (event.source_ids || []).map(id => sourceHTML(id, event.locator || event.source_locator)).join(''); }
-function boundedYear(input, allowEmpty = false) {
-  if (allowEmpty && input === '') return null;
-  const value = Number(input);
-  return Number.isInteger(value) && value >= 1900 && value <= 2026 ? value : undefined;
-}
-function choosePerson(excluded = null) {
-  const local = current.world.placePeople?.[sim.placeId] || current.world.people.filter(person => person.placeId === sim.placeId);
-  const preferred = local.filter(person => person.age >= 15 && person.age <= 65);
-  const candidates = preferred.length ? preferred : local;
-  if (candidates.length) { const index = candidates.findIndex(person => person.id === excluded); sim = selectPerson(sim, candidates[(index + 1) % candidates.length].id); current = snapshot(sim); }
-}
-function refresh(selectDefault = false) {
-  current = snapshot(sim);
-  if (selectDefault || !current.selectedPerson) choosePerson();
-  else if (!current.selectedPerson.alive) {
-    const next = current.selectedPerson.family?.filter(p=>p.alive&&p.age>=15).sort((a,b)=>Math.abs(a.age-35)-Math.abs(b.age-35))[0];
-    if(next){sim=selectPerson(sim,next.id);current=snapshot(sim);}else choosePerson();
-  }
-  dirty = true; renderUI(true); save();
-}
-function setPage(next) {
-  if(!current)return;
-  page = next;
-  $('playback').hidden=next==='about';
-  if(next!=='town'&&playing)setPlaying(false);
-  document.querySelectorAll('[data-workspace]').forEach(section=>{section.hidden=section.dataset.workspace!==next;});
-  document.querySelectorAll('[data-page]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.page===next)));
-  if(next==='statistics')explorer?.syncYear(current.year);
-  if(next==='history')renderChronicle();
-  if(next==='town'){renderer?.resize();dirty=true;}
-  window.scrollTo({top:0,behavior:reducedMotion?'instant':'smooth'});
-}
-function setInspector(next){
-  inspector=next;
-  document.querySelector('.person-panel').hidden=next!=='people';document.querySelector('.residents-panel').hidden=next!=='people';document.querySelector('.history-panel').hidden=next!=='history';
-  document.querySelectorAll('[data-inspector]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.inspector===next)));
-}
-function save() {
-  try {
-    localStorage.setItem(STORAGE_KEY, serializeSaved(current, { placeId: sim.placeId, personId: sim.personId, speed, reducedMotion,clockSeconds:motionTime,zoom }));
-    $('save-status').textContent = 'この端末に続きを保存しています。';
-  } catch { saveAvailable = false; $('save-status').textContent = 'この端末では保存できません。開いている間は遊べます。'; }
-}
-function playState() {
-  if (current?.ended) { playing = false; $('play-state').textContent = 'いまにつながりました'; $('toggle-play').textContent = '↶ 最初から'; $('toggle-play').setAttribute('aria-label', '1900年から眺め直す'); }
-  else { $('play-state').textContent = playing ? '時代が流れています' : '時間を止めています'; $('toggle-play').textContent = playing ? 'Ⅱ 止める' : '▶ 眺める'; $('toggle-play').setAttribute('aria-label', playing ? '時間を止める' : '時間を進める'); }
-}
-function setPlaying(value, message = '') {
-  playing = value; accumulatedMonths = 0; lastModel = performance.now(); dirty = true; playState();
-  if (message) announce(message);
-  if(current)save();
-}
-function setView(next) {
-  view = next;
-  $('view-japan').setAttribute('aria-pressed', String(view === 'japan'));
-  $('view-place').setAttribute('aria-pressed', String(view === 'place'));
-  $('scene-title').hidden = view === 'place';
-  dirty = true; renderUI(true);
-}
-function setPlace(id, zoom = true) {
-  sim = selectPlace(sim, id); current = snapshot(sim); choosePerson();
-  if (zoom) setView('place');
-  refresh(); announce(`${current.selectedPlace.region}の${current.selectedPlace.name}を眺めます。`);
-}
-function portrait(person) {
-  const seed=[...person.id].reduce((n,c)=>Math.imul(n^c.charCodeAt(0),16777619)>>>0,2166136261),elder=person.age>=65,child=person.age<15;
-  const color = ['#8d584c', '#627e67', '#647783', '#b99a59','#89729b','#527d80'][seed%6],hair=elder?'#b3b1a3':'#3f3c33';
-  return `<svg class="person-portrait" viewBox="0 0 62 72" aria-hidden="true"><path d="M9 72V55q22-18 44 0v17" fill="${color}"/><path d="M26 42v12h10V42" fill="#d9b78e"/><ellipse cx="31" cy="29" rx="${child?14:15}" ry="${child?17:19}" fill="#e9c89d"/><path d="${seed%3===0?'M16 30Q9 8 31 6q24 1 15 26l-6-17-18 5z':seed%3===1?'M16 29q-3-23 15-23 20 0 15 25l-5-15-19 3z':'M16 27q-2-21 15-21 19 1 15 23l-9-15-18 5z'}" fill="${hair}"/><circle cx="25" cy="29" r="1.2" fill="#3f3c33"/><circle cx="37" cy="29" r="1.2" fill="#3f3c33"/>${seed%4===0?'<path d="M19 26h11v8H19zm13 0h11v8H32zM30 29h2" stroke="#605d50" fill="none" stroke-width="1"/>':''}<path d="M27 38q4 ${person.personality==='話好き'?5:2} 8 0" fill="none" stroke="#a36b59" stroke-width="1.5"/>${elder?'<path d="m19 35 3 1m18-1 3-1" stroke="#b38f74" stroke-width=".8"/>':''}${current.year<1945?'<path d="m20 50 10 20 12-20m-23 13h24" stroke="#d2bf9b" fill="none" stroke-width="2"/>':'<path d="m23 50 8 9 8-9" stroke="#d8dbc9" fill="none" stroke-width="2"/>'}</svg>`;
-}
-function propIcon(prop = 'basket') {
-  const paths = {
-    bucket:'<path d="M9 15h22l-3 17H12z"/><path d="M12 15v-4a8 8 0 0 1 16 0v4"/>',
-    basket:'<path d="M6 17h28l-4 15H10z"/><path d="m11 17 6-11m12 11L23 6M15 21v7m5-7v7m5-7v7"/>',
-    net:'<path d="m7 9 26 5-7 18-19-8zM12 10l-2 16m8-15-4 18m10-17-5 18m11-17-7 18M8 16l22 5M8 21l19 5"/>',
-    cloth:'<path d="M9 7h22v26H9zM13 7v26m6-26v26m6-26v26M9 14h22M9 22h22M9 29h22"/>',
-    letter:'<path d="M5 11h30v21H5zM5 11l15 13 15-13"/>',
-    book:'<path d="M20 10q-8-6-15-2v23q8-3 15 2 7-5 15-2V8q-7-4-15 2v23M9 15l7 1m8 0 7-1M9 21l7 1m8 0 7-1"/>',
-    tools:'<path d="m10 31 18-23m-9 1 10 8M7 29l5 4M9 8v15m-4-9h8"/>',
-    food:'<path d="M6 20h28q-2 13-14 13T6 20M9 16q2-7 6-2 3-9 7-2 5-5 8 4"/>',
-    phone:'<rect x="12" y="4" width="17" height="31" rx="3"/><path d="M16 9h9m-9 19h9"/>',
-    tablet:'<rect x="6" y="7" width="28" height="24" rx="2"/><path d="M10 11h20v15H10zm7 23h6"/>',
-    bicycle:'<circle cx="10" cy="28" r="7"/><circle cx="31" cy="28" r="7"/><path d="m10 28 8-14 7 14H10m8-14h10l3 14M14 12h8m5-3h6"/>',
-    broom:'<path d="m26 5-9 20m-5-2 10 4-3 9-12-5zM12 26l-3 6m7-5-3 6m7-5-3 6"/>',
-    ball:'<circle cx="20" cy="20" r="14"/><path d="m20 11 8 6-3 10H15l-3-10zM20 6v5m14 4-6 2m-3 10 4 5m-14-5-4 5m1-15-6-2"/>',
-    briefcase:'<rect x="6" y="13" width="28" height="21" rx="2"/><path d="M14 13V7h12v6M6 22h28m-16-3h4v6h-4"/>',
-    camera:'<path d="M5 13h8l3-5h10l3 5h6v20H5z"/><circle cx="21" cy="23" r="7"/><path d="M8 17h4"/>',
-    radio:'<rect x="5" y="13" width="30" height="20" rx="2"/><path d="m10 13 20-9M9 18h16m-16 4h16m-16 4h16"/><circle cx="30" cy="24" r="2"/>',
-    umbrella:'<path d="M5 20a15 15 0 0 1 30 0q-5-4-10 0-5-4-10 0-5-4-10 0m15-14v27q0 5-5 1M15 20q-1-9 5-14 6 5 5 14"/>',
-    sewing:'<path d="m7 33 24-26m-6-2 8 8m-1-1q6-10-3-7M7 33q2-15 8-5t13 0"/>',
-    kettle:'<path d="M11 16h20l2 17H9zm3 0q-2-15 13 0M11 22l-8-5v11l7 2m21-8 6-6v9l-5 4"/>',
-    cart:'<path d="M5 9h5l5 21h18M12 15h24l-3 11H14"/><circle cx="17" cy="33" r="2"/><circle cx="30" cy="33" r="2"/>'
-  };
-  return `<svg class="prop-icon" viewBox="0 0 40 40" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">${paths[prop] || paths.basket}</svg>`;
-}
-function renderPerson() {
-  const person = current.selectedPerson;
-  if (!person) { $('person-content').innerHTML = '<p class="observation-empty">この町を歩く人を、まだ見つけられませんでした。別の場所ものぞいてみてください。</p>'; return; }
-  const unborn = person.birthYear > current.year;
-  const aliveLabel = unborn ? 'まだ生まれていません' : person.alive ? `${person.age}歳 ／ ${person.birthYear}年生まれ` : `${person.birthYear}–${person.deathYear}年の暮らし`;
-  const family = person.family?.filter(member => member.generation > person.generation&&member.alive) || [];
-  $('person-content').innerHTML = `<div class="person-intro">${portrait(person)}<div><p class="person-name">${esc(person.name)}</p><p class="person-age">${esc(aliveLabel)}</p><span class="fiction-tag">${esc(person.occupation || '')}${person.personality ? ` ／ ${esc(person.personality)}` : ''}</span></div></div><div id="routine-now" class="person-scene"></div><p id="routine-description" class="routine-description"></p><div class="routine-progress"><span id="routine-progress-bar"></span></div><p class="routine-next" id="routine-next"></p><div id="routine-plan" class="routine-plan"></div><details class="day-agenda"><summary>今日の予定をひらく</summary><ol id="day-agenda-list"></ol></details>${person.alive ? `<button type="button" class="inline-link scene-origin" data-scene="${esc(person.id)}">今日の暮らし ↗</button>` : ''}<details class="person-journal"><summary>これまでの暮らし${person.hobby ? ` ／ 楽しみは${esc(person.hobby)}`:''}</summary><ol class="life-journal">${person.lifeEvents.slice(-8).map(event => `<li><span>${event.year}</span><span>${esc(journalText(event.text))}</span></li>`).join('')}</ol></details>${family.length ? `<button type="button" class="follow-family" data-person="${esc(family[0].id)}">家族の${esc(family[0].name)}を見守る →</button>` : ''}`;
-  lastRoutineStamp='';lastPlanStamp='';renderRoutineUI();
-  const residents=current.world.placePeople?.[sim.placeId] || current.world.people.filter(p=>p.placeId===sim.placeId);
-  $('resident-count').textContent=`${residents.length}人`;
-  $('resident-list').innerHTML=residents.map(p=>`<button type="button" data-person="${esc(p.id)}" aria-pressed="${p.id===person.id}"><strong>${esc(p.name)}</strong><span>${p.age}歳 ／ ${esc(p.occupation||'町の住民')}</span></button>`).join('');
-}
-function renderRoutineUI() {
-  const p=current?.selectedPerson;if(!p)return;
-  const runtime=routineAt(p,motionTime),clock=dayClockAt(motionTime);
-  const stamp=`${p.id}-${runtime.stageIndex}-${clock.dayIndex}-${Math.floor(motionTime)}`;
-  if(stamp===lastRoutineStamp)return;lastRoutineStamp=stamp;
-  $('day-clock').textContent=clock.timeLabel;
-  if(document.activeElement!==$('day-range'))$('day-range').value=Math.floor(motionTime%DAILY_CYCLE_SECONDS);
-  if(!$('routine-now'))return;
-  $('routine-now').innerHTML=`${propIcon(runtime.scene?.prop)}<p class="person-activity">${esc(runtime.activity||p.activity)}</p>`;
-  $('routine-description').textContent=runtime.scene?.text||'';
-  $('routine-next').innerHTML=runtime.companions?.length?`いっしょに：${runtime.companions.map(q=>`<button type="button" class="inline-link" data-person="${esc(q.id)}">${esc(q.name)}</button>`).join('、')}`:esc(runtime.nextStage?`このあと：${runtime.nextStage.scene.activity}`:'');
-  $('routine-progress-bar').style.width=`${Math.round((runtime.progress||0)*100)}%`;
-  const stages=runtime.sceneStages||[],places={home:'家',farm:'畑',workshop:'工房',shop:'店',office:'仕事場',school:'学校',factory:'工場',post:'郵便',water:'井戸',square:'広場',coast:'浜',river:'川',path:'道',clinic:'診療所',meeting:'待ち合わせ'};
-  const phaseLabels={morning:'朝',work:p.role==='student'?'学び':'仕事',midday:'昼',errand:'用事',hobby:'楽しみ',social:'交流',evening:'帰宅',night:'夜'};
-  const shown=stages.filter((s,i)=>s.scene.pose!=='walk'&&!stages.slice(0,i).some(before=>before.scene.pose!=='walk'&&before.phase===s.phase));
-  const planStamp=`${p.id}-${current.year}-${current.month}-${clock.dayIndex}`;
-  if(lastPlanStamp!==planStamp){lastPlanStamp=planStamp;$('routine-plan').innerHTML=shown.map(s=>`<button type="button" data-day-time="${(s.startsAt+s.endsAt)/2}" data-day-phase="${s.phase}" title="${esc(s.scene.activity)}">${esc(phaseLabels[s.phase]||places[s.scene.destinationKind]||'町')}</button>`).join('');$('day-agenda-list').innerHTML=stages.filter(s=>s.scene.pose!=='walk').map(s=>`<li><time>${dayClockAt(s.startsAt).timeLabel}</time><button type="button" data-day-time="${(s.startsAt+s.endsAt)/2}">${esc(s.scene.activity)}</button></li>`).join('');}
-  $('routine-plan').querySelectorAll('[data-day-phase]').forEach(b=>{b.className=b.dataset.dayPhase===runtime.stage?.phase?'active':Number(b.dataset.dayTime)<clock.phase*DAILY_CYCLE_SECONDS?'past':'';b.setAttribute('aria-pressed',String(b.dataset.dayPhase===runtime.stage?.phase));});
-  renderDaily();
-}
-function renderDaily() {
-  const stories = (current.world.localStories || []).filter(story => story.placeId === sim.placeId).slice(0, 2);
-  const fallback = current.selectedPerson?.alive ? [{...current.selectedPerson.dailyEvent, personId:current.selectedPerson.id, title:current.selectedPerson.name, sourceMaterialIds:[]}] : [];
-  const local=current.world.placePeople?.[sim.placeId]||current.world.people.filter(p=>p.placeId===sim.placeId);
-  const watched=[current.selectedPerson,...local.filter(p=>p.id!==sim.personId&&p.profession!==current.selectedPerson?.profession)].filter(Boolean).slice(0,3);
-  const activeStories=watched.map(p=>({...routineAt(p,motionTime).scene,personId:p.id}));
-  const dailyStamp=JSON.stringify([sim.seed,current.year,current.month,activeStories.map(s=>[s.personId,s.id])]);
-  if(lastDailyStamp!==dailyStamp){lastDailyStamp=dailyStamp;
-  $('daily-stories').innerHTML = (activeStories.length ? activeStories : stories.length ? stories : fallback).map(story => {
-    const person = local.find(item => item.id === story.personId) || current.selectedPerson;
-    const material = story.sourceMaterialIds?.find(id => archive.living.some(item => item.id === id));
-    return `<article class="daily-story"><button type="button" class="daily-person" data-person="${esc(story.personId)}">${propIcon(story.prop)}<span><strong>${esc(story.activity || '町で過ごす')}</strong><span>${esc(person?.name || story.title || '')}の一日を見守る →</span></span></button>${material ? `<button type="button" class="daily-source" data-living="${esc(material)}">当時の暮らし ↗</button>` : ''}</article>`;
-  }).join('') || '<p class="observation-empty">この町の暮らしを、ゆっくり眺めてみましょう。</p>';}
-  const atmosphere = current.selectedPlace.atmosphere;
-  $('season-stamp').hidden = view !== 'place';
-  $('season-stamp').textContent = atmosphere ? `${atmosphere.seasonLabel || ''} ／ ${{sunny:'晴れ間',cloudy:'くもり空',rain:'雨模様',snow:'雪景色'}[atmosphere.weather] || ''}` : '';
-  document.querySelectorAll('[data-journey]').forEach(button => {
-    const stop = JOURNEYS.find(item => item.id === button.dataset.journey);
-    button.setAttribute('aria-pressed', String(stop.year === current.year && stop.placeId === sim.placeId && stop.month === current.month));
-  });
-}
-function journeyTo(id) {
-  const stop = JOURNEYS.find(item => item.id === id); if (!stop) return;
-  sim = seek(selectPlace(sim, stop.placeId), stop.year, stop.month); current = snapshot(sim);
-  const person = (current.world.placePeople?.[stop.placeId]||current.world.people).find(item => item.placeId === stop.placeId && item.scene?.sourceMaterialIds?.includes(stop.material));
-  if (person) {sim = selectPerson(sim, person.id);const stage=person.routine?.days[0]?.find(s=>s.scene.sourceMaterialIds?.includes(stop.material));motionTime=stage?(stage.startsAt+stage.endsAt)/2:15;lastHistoricalDay=0;} else choosePerson();
-  livingPage = 0; accumulatedMonths = 0; lastHistoryIndex = 0;
-  setView('place'); refresh(); setPlaying(false);
-  announce(`${stop.year}年${stop.month}月、${stop.title}の風景に移りました。`);
-}
-function sceneDetail(id) {
-  const person = current.world.placePeople?.[sim.placeId]?.find(item => item.id === id) || current.world.people.find(item => item.id === id) || current.selectedPerson;
-  if (!person || person.id !== id) return;
-  const scene = routineAt(person,motionTime).scene || person.scene || person.dailyEvent;
-  const materials = [...new Set([...(scene?.sourceMaterialIds||[]),...(person.routine?.sourceMaterialIds||[])])].map(key => archive.living.find(item => item.id === key)).filter(Boolean);
-  detail(`${person.name}の小さな一日`, `<div class="scene-detail-heading">${propIcon(scene?.prop)}<div><p class="small">${current.year}年${current.month}月 ／ ${esc(current.selectedPlace.name)}</p><h3>${esc(scene?.activity||person.activity)}</h3></div></div><p>${esc(scene?.text || person.dailyEvent?.text || 'いつもの町で、一日を過ごしています。')}</p>${materials.length ? '<h3>当時の暮らし</h3>' + materials.map(item => `<article class="inspiration-record"><p class="small">${esc(period(item.period_start,item.period_end))} ／ ${esc(displayGeography(item.geography))}</p><h3>${esc(recordTitle(item))}</h3><p>${esc(livingSummary(item))}</p><button type="button" class="inline-link" data-living="${esc(item.id)}">出典・詳細 ↗</button></article>`).join('') : ''}`);
-}
+function setCompareAmount(value){const n=Math.max(0,Math.min(100,Number(value)));$('comparison-content').querySelector('.compare-before').style.clipPath=`inset(0 ${100-n}% 0 0)`;$('comparison-content').querySelector('.compare-divider').style.left=`${n}%`;}
 
-function currentHistory() {
-  const exact = archive.events.filter(event => String(event.date_start).slice(0, 4) === String(current.year));
-  const pool = exact.length ? exact.sort((a, b) => String(b.date_start).localeCompare(String(a.date_start))) : current.events;
-  return pool.length ? pool[lastHistoryIndex % pool.length] : null;
+function renderData(){
+  const lens=LENSES.find(l=>l.id===lensId)||LENSES[0];lensId=lens.id;const measures=lensMeasures(lensId),measure=measures.find(m=>m.id===measureId)||measures[0];measureId=measure.id;activeTracks=lensTracks(archive,drivers,lensId,measureId);
+  const groups=measureId==='mobile'?activeTracks.map(t=>({key:t.entry.id,unit:t.entry.unit,tracks:[t]})):[...new Set(activeTracks.map(t=>t.entry.unit))].map(unit=>({key:unit,unit,tracks:activeTracks.filter(t=>t.entry.unit===unit)}));if(!groups.some(g=>g.key===lensUnit))lensUnit=(measureId==='mobile'?groups.at(-1):groups[0])?.key;const group=groups.find(g=>g.key===lensUnit);activeRecords=comparisonRecords(group?.tracks||[]);
+  if(!activeRecords.some(r=>r.key===lensA))lensA=activeRecords[0]?.key;if(!activeRecords.some(r=>r.key===lensB))lensB=activeRecords.at(-1)?.key;
+  const b=activeRecords.find(r=>r.key===lensB);selectedYear=b?.point.year||1900;
+  $('lens-tabs').innerHTML=LENSES.map(l=>`<button data-lens="${l.id}" aria-pressed="${l.id===lensId}">${esc(l.label)}</button>`).join('');
+  const unitOptions=groups.map(g=>{const rs=comparisonRecords(g.tracks);return `<option value="${esc(g.key)}"${g.key===lensUnit?' selected':''}>${rs[0]?.point.year}–${rs.at(-1)?.point.year}年${displayUnit(g.unit)?` ／ ${esc(displayUnit(g.unit))}`:''}</option>`;}).join('');
+  const options=key=>activeRecords.map(r=>`<option value="${esc(r.key)}"${r.key===key?' selected':''}>${esc(displayTimeLabel(r.point))}</option>`).join('');
+  $('data-content').innerHTML=`<section class="data-study"><div class="data-study-heading">${measures.length>1?`<div class="measure-tabs" aria-label="比べる項目">${measures.map(m=>`<button data-measure="${esc(m.id)}" aria-pressed="${m.id===measureId}">${esc(m.label)}</button>`).join('')}</div>`:''}<h2>${esc(measure.question)}</h2><p>${esc(measure.intro)}</p></div><div class="data-pair-controls">${groups.length>1?`<label>比べる期間<select id="lens-unit">${unitOptions}</select></label>`:''}<label>はじめの年<select id="lens-a">${options(lensA)}</select></label><span aria-hidden="true">→</span><label>比べる年<select id="lens-b">${options(lensB)}</select></label></div><div id="lens-figure"></div><div class="section-heading chart-heading"><h3>変化の途中を、グラフで読む</h3><p>点に触れて数字を読む。ドラッグして期間を拡大。</p></div><div id="lens-chart" class="lens-chart"></div><div id="year-context" class="year-context"></div></section>`;
+  renderPair();mountChart($('lens-chart'),activeTracks,{year:selectedYear,onYear:year=>{selectedYear=year;renderYearContext();moveTo('year-context');},onSeries:showSeries});renderYearContext();
 }
-function renderHistory() {
-  const event = currentHistory();
-  $('history-year').textContent = event ? String(event.date_start).slice(0, 4) : '';
-  if (!event) { $('history-content').innerHTML = '<p class="observation-empty">近くの年代の出来事を「歴史」から読めます。</p>'; return; }
-  const nearby=archive.events.filter(e=>Number(String(e.date_start).slice(0,4))===current.year);
-  $('year-event-count').textContent=nearby.length;
-  $('history-content').innerHTML = `<p class="history-kicker">${esc(eventDateLabel(event))} ${esc(displayGeography(event.geography))}</p><h3 class="history-title">${esc(recordTitle(event))}</h3><p class="history-summary">${esc(eventSummary(event))}</p><button type="button" class="inline-link" data-event="${esc(event.id)}">出典・詳細 ↗</button>${nearby.length>1?`<p class="history-count">この年には${nearby.length}件の出来事。<button type="button" class="inline-link" data-history-year="${current.year}">まとめて読む →</button></p>`:''}`;
+function renderPair(){const a=activeRecords.find(r=>r.key===lensA),b=activeRecords.find(r=>r.key===lensB),measure=lensMeasures(lensId).find(m=>m.id===measureId);$('lens-figure').innerHTML=comparisonFigure({kind:measure.kind,a:comparisonPayload(a),b:comparisonPayload(b),unit:figureUnit(a),title:measure.question});}
+function renderYearContext(){const es=readerEvents.filter(e=>eventYear(e)===selectedYear).sort((a,b)=>Number(chapterAt(lessons.chapters,selectedYear).eventIds.includes(b.id))-Number(chapterAt(lessons.chapters,selectedYear).eventIds.includes(a.id)));$('year-context').innerHTML=`<div><p class="eyebrow">数字のそばにあった出来事</p><h3>${selectedYear}年の日本</h3></div><div>${es.slice(0,3).map(e=>`<button class="context-event" data-event="${esc(e.id)}"><span>${esc(eventDateLabel(e))}</span><strong>${esc(recordTitle(e))} ↗</strong></button>`).join('')||`<button class="text-link" data-archive-period="${Math.max(1900,selectedYear-2)},${Math.min(2026,selectedYear+2)}">前後の年代を読む ↗</button>`}</div><button class="text-link" data-chapter="${chapterAt(lessons.chapters,selectedYear).id}">この時代の章へ →</button>`;}
+function showSeries(id){if(!series.has(id))return;seriesId=id;seriesLimit=100;renderSeries();}
+function renderSeries(){
+  const e=series.get(seriesId),s=statistics.get(e.statId),peers=archive.series.filter(x=>x.statId===e.statId),points=e.points.slice(0,seriesLimit);
+  showDetail(cleanSeriesLabel(e.label),`<p class="record-meta">${esc(statisticTitle(s))}</p><label class="series-picker-label">同じ統計から選ぶ<select id="series-picker">${peers.map(p=>`<option value="${esc(p.id)}"${p.id===e.id?' selected':''}>${esc(cleanSeriesLabel(p.label))}</option>`).join('')}</select></label><div id="detail-chart"></div><h3>出典</h3>${sourceHTML(e.sourceId)}${notes([statisticDefinition(s),...statisticNotes(s)],'対象・単位・欠測')}<details class="record-values"><summary>年ごとの数字${displayUnit(e.unit)?` ／ ${esc(displayUnit(e.unit))}`:''}</summary><div class="record-table-wrap"><table><thead><tr><th>時期</th><th>値</th><th>単位</th></tr></thead><tbody>${points.map(p=>`<tr><td>${esc(displayTimeLabel(p))}</td><td>${esc(p.raw)}${p.kind!=='number'&&p.value_note?`<small>${esc(p.value_note)}</small>`:''}</td><td>${esc(displayUnit(p.unit||e.unit))}</td></tr>`).join('')}</tbody></table></div>${e.points.length>points.length?'<button id="series-more">続きを読む</button>':''}</details>`);
+  mountChart($('detail-chart'),presetTracks(archive,drivers,e.id),{year:selectedYear,onYear:year=>{selectedYear=year;openArchive(year,year);},onSeries:showSeries});
 }
-function renderChronicle() {
-  const query=$('history-search').value.trim(),theme=$('history-theme').value,region=$('history-region').value;
-  const from=boundedYear($('history-from').value),through=boundedYear($('history-through').value);
-  if(from===undefined||through===undefined||from>through){$('history-result-count').textContent='1900〜2026年の範囲で、最初と最後の年を選んでください。';$('history-results').innerHTML='';$('history-more').hidden=true;return;}
-  const events=filterHistory(archive.events,{query,theme,region,from,through});
-  $('history-result-count').textContent=`${events.length}件 ／ ${from}–${through}年`;
-  let lastYear=null;
-  $('history-results').innerHTML=events.slice(0,historyLimit).map(event=>{
-    const year=Number(String(event.date_start).slice(0,4)),heading=year!==lastYear?`<div class="chronicle-year"><strong>${year}</strong><span>${esc(eraLabel(year,1))}</span><button type="button" data-jump="${year}">この年の町へ ↗</button></div>`:'';lastYear=year;
-    const topic=eventThemeIds(event).map(id=>HISTORY_THEMES.find(t=>t.id===id)?.label||TOPICS[id]).filter(Boolean).slice(0,2);
-    return `${heading}<article class="chronicle-event"><div class="chronicle-meta"><span>${esc(eventDateLabel(event))}</span><span>${esc(displayGeography(event.geography))}</span>${topic.map(label=>`<span class="theme-label">${esc(label)}</span>`).join('')}</div><h3><button type="button" data-event="${esc(event.id)}">${esc(recordTitle(event))}</button></h3><p>${esc(eventSummary(event))}</p><div class="chronicle-actions"><button type="button" class="inline-link" data-event="${esc(event.id)}">出典・詳細 ↗</button><button type="button" class="inline-link" data-jump="${year}">この時代を眺める →</button></div></article>`;
-  }).join('')||'<p class="observation-empty">見つかりませんでした。言葉や年代を変えてみてください。</p>';
-  $('history-more').hidden=events.length<=historyLimit;
+function eventDetail(id){const e=readerEvents.find(e=>e.id===id||e.relatedRecords?.some(r=>r.id===id));if(!e)return;showDetail(recordTitle(e),`<p class="record-meta">${esc(eventDateLabel(e))} ／ ${esc(displayGeography(e.geography))}</p><p class="detail-lead">${esc(eventSummary(e))}</p><button class="text-link" data-chapter="${chapterAt(lessons.chapters,eventYear(e)).id}">この時代の章を読む →</button><h3>出典</h3>${(e.source_ids||[]).map(id=>sourceHTML(id,e.locator||e.source_locator)).join('')}${e.relatedRecords?`<details class="record-details"><summary>資料を読み比べる</summary>${e.relatedRecords.map(r=>`<h3>${esc(recordTitle(r))}</h3><p>${esc(eventSummary(r))}</p>${(r.source_ids||[]).map(id=>sourceHTML(id,r.locator||r.source_locator)).join('')}`).join('')}</details>`:''}`);}
+function livingDetail(id){const l=archive.living.find(l=>l.id===id);if(!l)return;showDetail(recordTitle(l),`<p class="record-meta">${esc(period(l.period_start,l.period_end).replace('年代を確かめきれていない記録','年代不詳'))} ／ ${esc(displayGeography(l.geography))}</p><p class="detail-lead">${esc(livingSummary(l))}</p><dl><dt>記録の形</dt><dd>${esc(materialType(l))}</dd><dt>誰の経験か</dt><dd>${esc(materialVoice(l))}</dd></dl><h3>出典</h3>${sourceHTML(l.source_id,l.item_locator)}${notes([`資料の確認範囲：${materialAccess(l)}`])}`);}
+function setupArchive(){
+  $('archive-theme').innerHTML='<option value="">すべて</option>'+HISTORY_THEMES.map(t=>`<option value="${t.id}">${esc(t.label)}</option>`).join('');
+  $('archive-region').innerHTML='<option value="">全国・各地</option>'+Object.entries(REGION_NAMES).map(([id,name])=>`<option value="${id}">${name}</option>`).join('');
+  const counts=Array.from({length:127},(_,i)=>readerEvents.filter(e=>eventYear(e)===1900+i).length),max=Math.max(...counts);
+  $('archive-density').innerHTML=counts.map((n,i)=>`<button data-archive-period="${1900+i},${1900+i}" aria-label="${1900+i}年の${n}件を読む"><i data-density="${Math.max(3,n/max*54)}"></i>${i%10===0?`<span>${1900+i}</span>`:''}</button>`).join('');$('archive-density').querySelectorAll('[data-density]').forEach(i=>i.style.height=`${i.dataset.density}px`);
 }
-function historyAround(year) {
-  $('history-from').value=Math.max(1900,Number(year)-2);$('history-through').value=Math.min(2026,Number(year)+2);historyLimit=36;setPage('history');
-}
-function setupChronicle() {
-  $('history-total').textContent=`${archive.events.length}の出来事、${archive.living.length}の暮らしの記録`;
-  $('history-theme').innerHTML='<option value="">すべて</option>'+HISTORY_THEMES.map(t=>`<option value="${esc(t.id)}">${esc(t.label)}</option>`).join('');
-  $('history-region').innerHTML='<option value="">全国・各地</option>'+PLACES.map(p=>`<option value="${p.id}">${esc(p.region)}</option>`).join('');
-  $('history-chapters').innerHTML=HISTORY_CHAPTERS.map(c=>`<button type="button" data-history-range="${c.from},${c.through}"><span>${c.from}–${c.through}</span><strong>${esc(c.title||c.label)}</strong></button>`).join('');
-  const counts=Array.from({length:127},(_,i)=>archive.events.filter(e=>Number(String(e.date_start).slice(0,4))===1900+i).length),max=Math.max(...counts,1);
-  $('history-density').innerHTML=counts.map((n,i)=>`<button type="button" data-history-year="${1900+i}" title="${1900+i}年：${n}件" aria-label="${1900+i}年の前後を読む、${n}件"><i data-density-height="${Math.max(3,n/max*55)}"></i>${i%10===0?`<span>${1900+i}</span>`:''}</button>`).join('');
-  $('history-density').querySelectorAll('[data-density-height]').forEach(i=>i.style.height=`${i.dataset.densityHeight}px`);
-  renderChronicle();
-}
-function sparkline(observation) {
-  const points = pointsThrough(observation.series, current.year, current.month).filter(point => observation.segment === null || point.year >= observation.segment);
-  if (points.length < 2) return '';
-  const values = points.map(point => point.value), min = Math.min(...values), max = Math.max(...values), first = observationTime(points[0]), span = Math.max(1, observationTime(points.at(-1)) - first);
-  return `<svg class="sparkline" viewBox="0 0 90 24" aria-hidden="true">${points.map(point => `<circle cx="${((observationTime(point) - first) / span * 88 + 1).toFixed(1)}" cy="${(20 - (point.value - min) / Math.max(1, max - min) * 17).toFixed(1)}" r="1.1" fill="#56715b"/>`).join('')}</svg>`;
-}
-function renderMacro() {
-  $('macro-grid').innerHTML = drivers.drivers.flatMap(driver => {
-    const signal = current.macro[driver.id];
-    if(signal.status === 'unavailable' || !Number.isFinite(signal.value))return [];
-    const unit=displayUnit(signal.unit);
-    return [`<button type="button" class="macro-card" data-driver="${driver.id}"><span class="metric-label">${esc(driver.label)}<span aria-hidden="true">↗</span></span><span class="metric-context">${esc(observationLabel(driver.id))}</span><span class="metric-value">${formatValue(signal)}<small>${esc(unit)}</small></span><span class="metric-date">${esc(pointDate(signal))}</span>${sparkline(signal)}</button>`];
-  }).join('');
-}
-function renderLiving() {
-  const entries = current.living;
-  document.querySelector('.living-section').hidden=!entries.length;
-  if (!entries.length) { $('living-content').innerHTML = ''; return; }
-  const regional = entries.filter(item => regionalMaterial(item, sim.placeId)).sort((a,b)=>Number(b.id.startsWith('L3-'))-Number(a.id.startsWith('L3-')));
-  const pool = [...regional, ...entries.filter(item => !regional.includes(item))];
-  const offset = livingPage % Math.max(1, pool.length);
-  const selected = [...pool.slice(offset), ...pool.slice(0, offset)].slice(0, 3);
-  $('living-content').innerHTML = selected.map(item => `<article class="living-card"><span class="small">${esc(period(item.period_start, item.period_end))} ／ ${esc(displayGeography(item.geography))}</span><h3>${esc(recordTitle(item))}</h3><p>${esc(livingSummary(item))}</p><button type="button" class="inline-link" data-living="${esc(item.id)}">記録を読む ↗</button></article>`).join('');
-}
-function renderUI(force = false) {
-  if (!current) return;
-  const stamp = `${current.year}-${current.month}-${sim.personId}-${sim.placeId}-${sim.seed}-${view}`;
-  if (!force && stamp === lastUIStamp) return;
-  lastUIStamp = stamp;
-  $('year-label').textContent = current.year; $('era-label').textContent = eraLabel(current.year, current.month); $('month-label').textContent = current.month;
-  $('era-note').textContent=eraProfile(current.year).label;
-  if (document.activeElement !== $('year-input')) $('year-input').value = current.year;
-  $('year-range').value = current.year; $('place-select').value = sim.placeId;
-  $('season-select').value=[1,4,7,10][Math.floor((current.month-1)/3)];
-  $('scene-caption').textContent = view === 'japan' ? '町を押すと、近づいて眺められます。' : `${current.selectedPlace.region} ／ ${current.selectedPlace.name}。人を押すと暮らしを追えます。`;
-  $('world-canvas').setAttribute('aria-label', `${current.year}年${current.month}月の${view === 'japan' ? '日本の全景' : current.selectedPlace.name}。場所と人は画面右の操作でも選べます。`);
-  $('vital-records').innerHTML = [['00110', '出生数'], ['00150', '死亡数']].map(([code, label]) => {
-    const entry = archive.series.find(item => item.id === `SD-STAT001:cat01=${code}`), point = entry.points.find(item => item.year === current.year);
-    if(point?.kind!=='number')return '';
-    return `<button type="button" data-vital="${code}"><span>${current.year}年の記録 ／ ${label}</span><strong>${point?.kind === 'number' ? `${number.format(point.value)}<small>人</small>` : '記録なし'}</strong><span class="vital-source">出典・詳細 ↗</span></button>`;
-  }).join('');
-  renderPerson(); renderDaily(); renderHistory(); renderMacro(); renderLiving(); playState();
-  explorer?.syncYear(current.year);
-  const era=eraProfile(current.year);document.querySelectorAll('[data-era-year]').forEach(b=>b.setAttribute('aria-pressed',String(eraProfile(Number(b.dataset.eraYear)).id===era.id)));
-}
-function openDialog(dialog) {
-  if (!dialogs.some(item => item.open)) detailResume = playing;
-  setPlaying(false); if (!dialog.open) dialog.showModal();
-}
-function dialogClosed() {
-  if (!dialogs.some(dialog => dialog.open) && detailResume && !current.ended) { setPlaying(true); detailResume = false; }
-}
-function detail(title, html) {
-  $('detail-title').textContent = title; $('detail-body').innerHTML = html; openDialog($('detail-dialog')); $('detail-dialog').scrollTop = 0;
-  mountInlineCharts();
-}
-function notesHTML(notes, label = '資料の詳細') {
-  return notes.length ? `<details class="record-details"><summary>${esc(label)}</summary>${notes.map(note=>`<p>${esc(note)}</p>`).join('')}</details>` : '';
-}
-function eventDetail(id) {
-  const event = archive.events.find(item => item.id === id); if (!event) return;
-  detail(recordTitle(event), `<p class="small">${esc(eventDateLabel(event))} ／ ${esc(displayGeography(event.geography))}</p><p>${esc(eventSummary(event))}</p><h3>出典</h3>${sourceForEvent(event)}`);
-}
-function vitalDetail(code) { showSeries(`SD-STAT001:cat01=${code}`); }
-function livingDetail(id) {
-  const item = archive.living.find(record => record.id === id); if (!item) return;
-  detail(recordTitle(item), `<p class="small">${esc(period(item.period_start, item.period_end))} ／ ${esc(displayGeography(item.geography))}</p><p>${esc(livingSummary(item))}</p><dl class="detail-dl"><dt>記録の形</dt><dd>${esc(materialType(item))}</dd><dt>誰の経験か</dt><dd>${esc(materialVoice(item))}</dd></dl><h3>出典</h3>${sourceHTML(item.source_id, item.item_locator)}${notesHTML([`資料の確認範囲：${materialAccess(item)}`])}`);
-}
-function chartHTML(observation) { return `<div class="inline-chart" data-inline-chart="${esc(observation.series.id)}"></div>`; }
-function mountInlineCharts() {
-  $('detail-body').querySelectorAll('[data-inline-chart]').forEach(root=>mountChart(root,presetTracks(archive,drivers,root.dataset.inlineChart),{year:current.year,onYear:year=>{detailResume=false;dialogs.forEach(d=>d.close());jumpYear(year);setPlaying(false);setPage('town');},onSeries:id=>showSeries(id)}));
-}
-function driverDetail(id) {
-  if (!drivers.drivers.some(driver=>driver.id===id)) return;
-  explorer?.select(id);setPage('statistics');
-}
-function seriesDetailHTML() {
-  const entry = series.get(seriesDetail), stat = statistics.get(entry.statId), year = seriesYear;
-  const all = entry.points.filter(point => year === null || year === undefined || point.year === year);
-  const points = all.slice(0, seriesPage * 100);
-  const peers = archive.series.filter(item => item.statId === entry.statId);
-  const notes = [...new Set([statisticDefinition(stat), ...statisticNotes(stat)])].filter(Boolean);
-  return `<p class="small">${esc(statisticTitle(stat))}</p><label class="small" for="series-picker">グラフを選ぶ</label><select id="series-picker" class="series-select">${peers.map(item => `<option value="${esc(item.id)}"${item.id === entry.id ? ' selected' : ''}>${esc(cleanSeriesLabel(item.label))}</option>`).join('')}</select>${chartHTML({series:entry})}<h3>出典</h3>${sourceHTML(entry.sourceId)}${notesHTML(notes,'対象・単位・欠測')}${year !== null && year !== undefined && !all.length ? `<p>${year}年の記録はありません。</p><button type="button" id="show-all-series-years">すべての年を見る</button>` : ''}<details class="record-values"><summary>年ごとの数字${readableUnit(entry.unit) ? ` ／ ${esc(readableUnit(entry.unit))}` : ''}</summary><div class="record-table-wrap"><table class="record-table"><thead><tr><th scope="col">時期</th><th scope="col">値</th><th scope="col">単位</th></tr></thead><tbody>${points.map(point => `<tr><td>${esc(displayTimeLabel(point))}</td><td>${esc(point.raw)}${point.kind !== 'number' && point.value_note ? `<small class="value-note">${esc(point.value_note)}</small>` : ''}</td><td>${esc(readableUnit(point.unit || entry.unit))}</td></tr>`).join('')}</tbody></table></div><p class="small">${points.length} / ${all.length}件</p>${all.length > points.length ? '<button id="more-series" type="button" class="more-records">続きを見る</button>' : ''}</details>`;
-}
-function showSeries(id) {
-  if (!series.has(id)) return; seriesDetail = id; seriesPage = 1;
-  seriesYear = $('archive-dialog').open ? boundedYear($('archive-year').value, true) : null;
-  detail(cleanSeriesLabel(series.get(id).label), seriesDetailHTML());
-}
-function matchesYear(item, section, year) {
-  if (year === null) return true;
-  if (section === 'living') return materialInYear(item, year);
-  if (section === 'statistics') return archive.series.some(entry => entry.statId === item.id && entry.points.some(point => point.year === year));
-  const start = section === 'events' ? item.date_start : section === 'sources' ? item.scope_start : item.period_start;
-  const end = section === 'events' ? item.date_end : section === 'sources' ? item.scope_end : item.period_end;
-  if (!start && !end) return false;
-  const from = Number(String(start ?? end).slice(0, 4)), to = Number(String(end ?? start).slice(0, 4));
-  return from <= year && to >= year;
-}
-function relatedSources(item) {
-  const ids = new Set(item.source_ids || []);
-  for (const id of item.related_ids || []) {
-    if (sources.has(id)) ids.add(id);
-    const record = statistics.get(id) || archive.living.find(entry => entry.id === id) || archive.events.find(entry => entry.id === id);
-    if (record?.source_id) ids.add(record.source_id);
-    for (const sourceId of record?.source_ids || []) ids.add(sourceId);
+function renderArchive(){
+  const q=$('archive-query').value.trim(),kind=$('archive-kind').value,theme=$('archive-theme').value,region=$('archive-region').value,from=Number($('archive-from').value),through=Number($('archive-through').value);
+  $('archive-density').hidden=kind==='living';
+  if(!Number.isInteger(from)||!Number.isInteger(through)||from<1900||through>2026||from>through){$('archive-count').textContent='1900〜2026年の範囲で、最初と最後の年を選んでください。';$('archive-results').innerHTML='';$('archive-more').hidden=true;return;}
+  let pool;if(kind==='events')pool=educationEvents(filterHistory(archive.events,{query:q,theme,region,from,through})).map(e=>readerEvents.find(r=>r.id===e.id)||readerEvents.find(r=>r.relatedRecords?.some(o=>o.id===e.id))||e);else{
+    const words=q.normalize('NFKC').split(/\s+/).filter(Boolean);
+    pool=archive.living.filter(l=>{const text=`${recordTitle(l)} ${livingSummary(l)} ${l.geography} ${materialVoice(l)}`.normalize('NFKC');const years=from===1900&&through===2026||Array.from({length:through-from+1},(_,i)=>from+i).some(y=>materialInYear(l,y));const thematic=!theme||filterHistory([{...l,title:recordTitle(l),summary:livingSummary(l),date_start:'2000',date_precision:'year'}],{theme}).length>0;return years&&thematic&&(!region||eventInRegion({title:l.title,summary:l.what_it_shows,geography:l.geography},region))&&words.every(w=>text.includes(w));});
   }
-  return [...ids];
+  $('archive-count').textContent=`${pool.length}件 ／ ${from}–${through}年`;
+  let last=null;$('archive-results').innerHTML=pool.slice(0,archiveLimit).map(e=>{if(kind==='living')return livingCard(e);const y=eventYear(e),title=y!==last?`<div class="chronicle-year"><strong>${y}</strong><button class="text-link" data-chapter="${chapterAt(lessons.chapters,y).id}">この時代を読む ↗</button></div>`:'';last=y;return title+eventCard(e);}).join('')||'<p class="empty-state">見つかりませんでした。言葉や年代を変えてみてください。</p>';
+  $('archive-results').classList.toggle('living-results',kind==='living');$('archive-more').hidden=pool.length<=archiveLimit;
 }
-function renderArchive() {
-  const query = $('archive-search').value.trim().toLocaleLowerCase('ja'), year = boundedYear($('archive-year').value, true);
-  if (year === undefined) { $('archive-count').textContent = '1900〜2026年の範囲で年を入力してください。'; $('archive-results').innerHTML = ''; return; }
-  const fields = { statistics: ['title', 'geography', 'unit', 'notes', 'population_definition'], events: ['title', 'summary', 'geography'], living: ['title', 'what_it_shows', 'geography', 'whose_voice'], sources: ['title', 'institution', 'geography', 'perspective_limit'], gaps: ['description', 'finding', 'remaining_reason', 'geography'] }[archiveSection];
-  const pool = archive[archiveSection].filter(item => (archiveSection !== 'gaps' || item.review_status !== 'resolved') && (!query || [recordTitle(item), ...(archiveSection==='statistics'?[statisticTitle(item)]:[]), GAP_COPY[item.id], ...fields.map(field=>item[field])].some(value => String(value || '').toLocaleLowerCase('ja').includes(query))) && matchesYear(item, archiveSection, year));
-  $('archive-count').textContent = `${pool.length}件${year !== null ? ` ／ ${year}年` : ''}`;
-  if (!pool.length) { $('archive-results').innerHTML = '<p class="observation-empty">見つかりませんでした。言葉や年を変えてみてください。</p>'; return; }
-  $('archive-results').innerHTML = pool.slice(0, archiveLimit).map(item => {
-    if (archiveSection === 'statistics') {
-      const entries = archive.series.filter(entry => entry.statId === item.id);
-      const dated = entries.flatMap(entry => entry.points).map(point => point.year).filter(Number.isInteger);
-      return `<article class="archive-result"><span class="small">${dated.length ? `${Math.min(...dated)}–${Math.max(...dated)}年` : ''}</span><h3>${esc(statisticTitle(item))}</h3><button type="button" data-series="${esc(entries[0].id)}">グラフを見る →</button></article>`;
-    }
-    if (archiveSection === 'events') return `<article class="archive-result"><span class="small">${esc(eventDateLabel(item))} ／ ${esc(displayGeography(item.geography))}</span><h3>${esc(recordTitle(item))}</h3><p>${esc(eventSummary(item))}</p><button type="button" data-event="${esc(item.id)}">出典・詳細 →</button><button type="button" data-jump="${esc(String(item.date_start).slice(0, 4))}">この年の町へ</button></article>`;
-    if (archiveSection === 'living') return `<article class="archive-result"><span class="small">${esc(period(item.period_start, item.period_end))} ／ ${esc(displayGeography(item.geography))}</span><h3>${esc(recordTitle(item))}</h3><p>${esc(livingSummary(item))}</p><button type="button" data-living="${esc(item.id)}">記録を読む →</button></article>`;
-    if (archiveSection === 'sources') return `<article class="archive-result">${sourceHTML(item.id)}${item.scope_start || item.scope_end ? `<p>${esc(period(item.scope_start, item.scope_end))}</p>` : ''}</article>`;
-    const heading = (item.topic_ids || []).slice(0, 2).map(id => TOPICS[id]).filter(Boolean).join('・') || '歴史と暮らし';
-    return `<article class="archive-result"><span class="small">${esc(period(item.period_start, item.period_end))}</span><h3>${esc(heading)}</h3><p>${esc(GAP_COPY[item.id] || 'この範囲の資料は未収録です。')}</p>${relatedSources(item).map(id => sourceHTML(id)).join('')}</article>`;
-  }).join('') + (pool.length > archiveLimit ? '<button type="button" id="more-archive" class="more-records">続きを見る</button>' : '');
-}
-function openArchive(section = 'statistics', year = '') {
-  archiveSection = section; archiveLimit = 30; $('archive-year').value = year; $('archive-search').value = '';
-  const gaps = section === 'gaps';
-  $('archive-title').textContent = gaps ? '資料について' : '日本の記録';
-  $('archive-intro').textContent = gaps ? '未収録の範囲と、資料を読むときの補足。' : '時代や言葉から、気になる記録を探す。';
-  document.querySelector('.archive-tabs').hidden = gaps;
-  document.querySelectorAll('[data-section]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.section === section)));
-  renderArchive(); openDialog($('archive-dialog')); $('archive-dialog').scrollTop = 0;
-}
-function jumpYear(year) {
-  if (boundedYear(year) === undefined) { $('time-message').textContent = '1900〜2026年の範囲で年を入力してください。'; $('year-input').setAttribute('aria-invalid', 'true'); return; }
-  $('year-input').removeAttribute('aria-invalid'); sim = seek(sim, Number(year), 1); accumulatedMonths = 0; lastHistoryIndex = 0; livingPage = 0; refresh();
-  if (current.ended) setPlaying(false);
-  if(page==='statistics')explorer?.syncYear(current.year);
-  $('time-message').textContent = ''; announce(`${current.year}年に移りました。`);
-}
-function showAbout() { setPage('about'); }
+function showAbout(){showDetail('この本と出典について',`<p class="detail-lead">写真を観察し、数字を動かし、当時の人の記録を読む。1900年から現代までの日本を、異なる視点からたどる教材です。</p><h3>写真・図・数字</h3><p>写真には撮影時期・場所・撮影者・利用条件を記しています。説明図は数値や仕組みを読むための図版です。出典は各写真・出来事・統計からひらけます。</p><p>統計は公表された値と時期を保ち、欠測を補っていません。対象地域や国籍、調査方法は時代によって異なります。具体的な条件は統計の「対象・単位・欠測」にまとめています。</p><h3>収録資料</h3><p>53表・557系列の統計、出来事の記録394点、105の暮らしの記録を収録しています。</p><button class="text-link" id="gaps-open">未収録の範囲と資料の補足 ↗</button><h3>写真の利用条件</h3><p>各写真の「写真の出典」から、原資料・撮影者・ライセンスを確認できます。配布用の縮小・圧縮とJPEGへの変換を行っています。</p><h3>この端末で読む</h3><p>登録は不要です。ページのURLで章やテーマを開けます。</p>`);}
+function showGaps(){const gaps=archive.gaps.filter(g=>g.review_status!=='resolved');showDetail('未収録の範囲と資料の補足',`<p class="record-meta">${gaps.length}件</p><label class="gap-search-label">言葉で探す<input id="gap-search" type="search" placeholder="戦前、学校、地方…"></label><div id="gap-results">${gaps.map(g=>`<article class="gap-record"><p class="record-meta">${esc(period(g.period_start,g.period_end))}</p><p>${esc(GAP_COPY[g.id]||'この範囲の資料は未収録です。')}</p></article>`).join('')}</div>`);}
 
-function bindControls() {
-  $('toggle-play').addEventListener('click', () => {
-    if (current.ended) { sim = seek(sim, 1900, 1); refresh(true); setPlaying(true, '1900年から、もう一度眺めます。'); }
-    else setPlaying(!playing, playing ? '時間を止めました。じっくり眺められます。' : '眺めているだけで、時代が進みます。');
+function bind(){
+  document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
+    if(b.dataset.mode)setMode(b.dataset.mode);if(b.dataset.chapter)setChapter(b.dataset.chapter);if(b.dataset.lens)setLens(b.dataset.lens);
+    if(b.dataset.measure){measureId=b.dataset.measure;lensUnit=null;lensA=null;lensB=null;renderData();}
+    if(b.dataset.comparison){compareId=b.dataset.comparison;renderComparison();syncHash();}
+    if(b.dataset.photo)showPhoto(b.dataset.photo);if(b.dataset.photoSource)photoSource(b.dataset.photoSource);
+    if(b.dataset.photoSpot){const p=byPhoto(b.dataset.photoSpot),h=p?.hotspots[Number(b.dataset.spot)];if(h){const figure=b.closest('figure');figure.querySelectorAll('.photo-hotspot').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));figure.querySelector('.photo-insight').innerHTML=`<span class="insight-mark">${esc(h.title)}</span><p>${esc(h.text)}</p>`;}}
+    if(b.dataset.scroll)moveTo(b.dataset.scroll);if(b.dataset.event)eventDetail(b.dataset.event);if(b.dataset.living)livingDetail(b.dataset.living);if(b.dataset.series)showSeries(b.dataset.series);
+    if(b.dataset.archivePeriod){const [from,to]=b.dataset.archivePeriod.split(',');openArchive(from,to);}
+    if(b.id==='series-more'){seriesLimit+=100;renderSeries();$('detail-body').querySelector('.record-values').open=true;}
+    if(b.id==='gaps-open')showGaps();
   });
-  $('speed').addEventListener('change', event => { speed = Number(event.target.value); save(); announce('時代の速さを変えました。'); });
-  $('year-range').addEventListener('input', event => jumpYear(event.target.value));
-  $('year-input').addEventListener('input', event => { if (/^\d{4}$/.test(event.target.value) && boundedYear(event.target.value) !== undefined) jumpYear(event.target.value); });
-  $('year-input').addEventListener('change', event => jumpYear(event.target.value));
-  $('year-input').addEventListener('keydown', event => { if (event.key === 'Enter') { jumpYear(event.target.value); event.target.blur(); } });
-  $('place-select').addEventListener('change', event => setPlace(event.target.value));
-  $('view-japan').addEventListener('click', () => setView('japan')); $('view-place').addEventListener('click', () => setView('place'));
-  $('next-person').addEventListener('click', () => { const old = sim.personId; choosePerson(old); refresh(); });
-  $('next-history').addEventListener('click', () => { lastHistoryIndex++; renderHistory(); });
-  $('next-living').addEventListener('click', () => { livingPage += 3; renderLiving(); });
-  $('reroll').addEventListener('click', () => {
-    const values = new Uint32Array(1); crypto.getRandomValues(values); sim = reroll(sim, values[0] || 1); refresh(true);
-    announce('別の人々の暮らしになりました。');
-  });
-  $('reduce-motion').addEventListener('change', event => { reducedMotion = event.target.checked; $('motion-note').textContent = reducedMotion ? '動きを抑えて表示しています。' : ''; dirty = true; save(); });
-  $('open-archive').addEventListener('click', () => openArchive()); $('open-about').addEventListener('click', showAbout);
-  $('more-history').addEventListener('click', () => historyAround(current.year)); $('more-living').addEventListener('click', () => openArchive('living'));
-  $('about-materials').addEventListener('click', () => openArchive('gaps'));
-  $('day-range').addEventListener('input',event=>{motionTime=Math.floor(motionTime/DAILY_CYCLE_SECONDS)*DAILY_CYCLE_SECONDS+Number(event.target.value);dirty=true;renderRoutineUI();});
-  $('zoom-range').addEventListener('input',event=>{zoom=Number(event.target.value);dirty=true;save();});
-  $('season-select').addEventListener('change',event=>{sim=seek(sim,current.year,Number(event.target.value));motionTime=15;lastHistoricalDay=0;refresh();});
-  for(const id of ['history-search','history-theme','history-region','history-from','history-through'])$(id).addEventListener('input',()=>{historyLimit=36;renderChronicle();});
-  $('history-reset').addEventListener('click',()=>{for(const id of ['history-search','history-theme','history-region'])$(id).value='';$('history-from').value=1900;$('history-through').value=2026;historyLimit=36;renderChronicle();});
-  $('history-more').addEventListener('click',()=>{historyLimit+=36;renderChronicle();});
-  $('detail-close').addEventListener('click', () => $('detail-dialog').close()); $('archive-close').addEventListener('click', () => $('archive-dialog').close());
-  dialogs.forEach(dialog => dialog.addEventListener('close', dialogClosed));
-  $('archive-search').addEventListener('input', () => { archiveLimit = 30; renderArchive(); });
-  $('archive-year').addEventListener('input', () => { archiveLimit = 30; renderArchive(); });
-  $('archive-clear').addEventListener('click', () => { $('archive-search').value = ''; $('archive-year').value = ''; archiveLimit = 30; renderArchive(); });
-  document.addEventListener('change', event => { if (event.target.id === 'series-picker') { seriesDetail = event.target.value; seriesPage = 1; $('detail-title').textContent = cleanSeriesLabel(series.get(seriesDetail).label); $('detail-body').innerHTML = seriesDetailHTML();mountInlineCharts(); } });
-  document.addEventListener('click', event => {
-    const button = event.target.closest('button'); if (!button) return;
-    if(button.dataset.page)setPage(button.dataset.page);
-    if(button.dataset.inspector)setInspector(button.dataset.inspector);
-    if(button.dataset.dayTime){motionTime=Math.floor(motionTime/DAILY_CYCLE_SECONDS)*DAILY_CYCLE_SECONDS+Number(button.dataset.dayTime);dirty=true;renderRoutineUI();save();}
-    if(button.dataset.eraYear){jumpYear(button.dataset.eraYear);motionTime=15;lastHistoricalDay=0;setPage('town');renderRoutineUI();}
-    if(button.dataset.historyYear)historyAround(button.dataset.historyYear);
-    if(button.dataset.historyRange){const [from,through]=button.dataset.historyRange.split(',');$('history-from').value=from;$('history-through').value=through;historyLimit=36;renderChronicle();}
-    if (button.dataset.driver) driverDetail(button.dataset.driver);
-    if (button.dataset.scene) sceneDetail(button.dataset.scene);
-    if (button.dataset.journey) journeyTo(button.dataset.journey);
-    if (button.dataset.vital) vitalDetail(button.dataset.vital);
-    if (button.dataset.event) eventDetail(button.dataset.event);
-    if (button.dataset.living) livingDetail(button.dataset.living);
-    if (button.dataset.series) showSeries(button.dataset.series);
-    if (button.dataset.person) { sim = selectPerson(sim, button.dataset.person); setView('place');setInspector('people'); refresh(); }
-    if (button.dataset.section) { archiveSection = button.dataset.section; archiveLimit = 30; document.querySelectorAll('[data-section]').forEach(tab => tab.setAttribute('aria-pressed', String(tab === button))); renderArchive(); }
-    if (button.dataset.jump) { detailResume=false;jumpYear(button.dataset.jump); dialogs.forEach(dialog => dialog.close());setPage('town');setPlaying(false,'この年の暮らしです。「眺める」で一日が動き始めます。'); }
-    if (button.id === 'more-archive') { archiveLimit += 30; renderArchive(); }
-    if (button.id === 'more-series') { seriesPage++; $('detail-body').innerHTML = seriesDetailHTML();$('detail-body').querySelector('.record-values').open=true;mountInlineCharts(); }
-    if (button.id === 'show-all-series-years') { seriesYear = null; $('detail-body').innerHTML = seriesDetailHTML();mountInlineCharts(); }
-  });
-  document.addEventListener('visibilitychange', () => { if (document.hidden && playing) setPlaying(false, '画面を離れたので、時間を止めました。「眺める」で続きます。'); });
-  window.addEventListener('blur', () => { if (playing) setPlaying(false, '画面を離れたので、時間を止めました。「眺める」で続きます。'); });
-  window.addEventListener('pagehide', save);
-  new ResizeObserver(() => { renderer?.resize(); dirty = true; }).observe($('world-canvas'));
+  document.addEventListener('input',e=>{const id=e.target.id;if(id==='compare-range')setCompareAmount(e.target.value);if(['archive-query','archive-kind','archive-theme','archive-region','archive-from','archive-through'].includes(id)){archiveLimit=32;renderArchive();}if(id==='gap-search'){const q=e.target.value.trim();$('gap-results').querySelectorAll('.gap-record').forEach(r=>r.hidden=q&&!r.textContent.includes(q));}});
+  document.addEventListener('change',e=>{const id=e.target.id;if(id==='lens-unit'){lensUnit=e.target.value;lensA=null;lensB=null;renderData();}if(id==='lens-a'||id==='lens-b'){if(id==='lens-a')lensA=e.target.value;else lensB=e.target.value;renderPair();const r=activeRecords.find(r=>r.key===e.target.value);if(r){selectedYear=r.point.year;mountChart($('lens-chart'),activeTracks,{year:selectedYear,onYear:y=>{selectedYear=y;renderYearContext();moveTo('year-context');},onSeries:showSeries});renderYearContext();}}if(id==='series-picker')showSeries(e.target.value);});
+  $('detail-close').addEventListener('click',()=>$('detail-dialog').close());$('photo-close').addEventListener('click',()=>$('photo-dialog').close());
+  $('about-open').addEventListener('click',showAbout);$('footer-about').addEventListener('click',showAbout);
+  $('archive-more').addEventListener('click',()=>{archiveLimit+=32;renderArchive();});$('archive-reset').addEventListener('click',()=>{for(const id of ['archive-query','archive-theme','archive-region'])$(id).value='';$('archive-from').value=1900;$('archive-through').value=2026;archiveLimit=32;renderArchive();});
+  window.addEventListener('hashchange',route);window.addEventListener('popstate',route);$('back-top').addEventListener('click',()=>window.scrollTo({top:0,behavior:'instant'}));document.querySelector('.skip-link').addEventListener('click',e=>{e.preventDefault();$('main').focus();moveTo('main');});$('retry').addEventListener('click',()=>location.reload());
 }
-function frame(now) {
-  const dt = Math.min(.1, (now - (lastFrame || now)) / 1000); lastFrame = now;
-  if (playing) { motionTime += dt*speed; }
-  if(now-lastRoutineFrame>=150){renderRoutineUI();lastRoutineFrame=now;}
-  if (playing && motionTime - lastCuration >= 10) { lastCuration = motionTime; lastHistoryIndex++; livingPage += 3; renderHistory(); renderLiving(); }
-  if (playing && now - lastModel >= 200) {
-    const day=Math.floor(motionTime/DAILY_CYCLE_SECONDS);
-    if(day>lastHistoricalDay){const days=day-lastHistoricalDay,nextMonth=[1,4,7,10][(Math.floor((current.month-1)/3)+days)%4];sim=advance(sim,days*12);if(!snapshot(sim).ended)sim=seek(sim,Math.floor(sim.time/12),nextMonth);lastHistoricalDay=day;refresh();}
-    lastModel = now;dirty=true;
-    if (current.ended) { playState(); announce('2026年10月、いまにつながりました。'); }
-  }
-  if (dirty || (playing && !reducedMotion)) {
-    if(page==='town')renderer.render(current, motionTime, { view, placeId: sim.placeId, selectedPersonId: sim.personId, reducedMotion,zoom }); dirty = false;
-  }
-  frameId = requestAnimationFrame(frame);
-}
-async function boot() {
-  $('loading').hidden = false; $('load-error').hidden = true;
-  try {
-    const files = await Promise.all(['archive.json', 'drivers.json', 'japan.geo.json','history-expanded.json'].map(async file => {
-      const response = await fetch(`./data/${file}`); if (!response.ok) throw new Error('読み込みが止まりました'); return response.json();
-    }));
-    archive=mergeHistory(files[0],files[3]);drivers=files[1];
-    sources = new Map(archive.sources.map(source => [source.id, source])); statistics = new Map(archive.statistics.map(stat => [stat.id, stat])); series = new Map(archive.series.map(entry => [entry.id, entry]));
-    let saved = null; try { saved = parseSaved(localStorage.getItem(STORAGE_KEY)); } catch { saveAvailable = false; }
-    const values = new Uint32Array(1); crypto.getRandomValues(values);
-    sim = createSimulation(archive, drivers, saved || { seed: values[0] || 1, year: 1900, month: 1 });
-    if (saved?.personId) sim = selectPerson(sim, saved.personId);
-    motionTime=saved?.clockSeconds??15;lastHistoricalDay=Math.floor(motionTime/DAILY_CYCLE_SECONDS);zoom=saved?.zoom??1;$('zoom-range').value=zoom;
-    speed = saved ? saved.clockSeconds===undefined ? ({1:4,4:12,12:48}[saved.speed]||4) : saved.speed : 4; reducedMotion = saved?.reducedMotion ?? reducedMotion; $('speed').value = speed; $('reduce-motion').checked = reducedMotion;
-    $('motion-note').textContent = reducedMotion ? '動きを抑えて表示しています。' : '';
-    $('place-select').innerHTML = PLACES.map(place => `<option value="${place.id}">${esc(place.region)} ／ ${esc(place.name)}</option>`).join('');
-    renderer?.destroy();
-    renderer = createRenderer($('world-canvas'), { geometry: files[2], onPlaceSelect: id => setPlace(id), onPersonSelect: id => { sim = selectPerson(sim, id); refresh(); }, onViewChange: setView });
-    $('loading').hidden = true; $('app').hidden = false;
-    explorer=createStatisticsExplorer($('statistics-explorer'),archive,drivers,{year:sim.year||1900,onYear:year=>{jumpYear(year);setPlaying(false);setPage('town');},onSeries:id=>showSeries(id)});
-    setupChronicle();
-    $('era-stops').innerHTML=[[1900,'木の町と手仕事'],[1925,'瓦屋根と洋風の店'],[1945,'低い軒の町'],[1965,'団地と広がる道'],[1985,'看板と四角いビル'],[2005,'ガラスの駅前'],[2026,'いまの暮らし']].map(([year,label],i)=>`<button type="button" data-era-year="${year}" aria-pressed="false"><span class="era-mini era-${i}" aria-hidden="true"><i></i><i></i><i></i></span><span><strong>${year}</strong><span>${label}</span></span></button>`).join('');
-    refresh(!saved?.personId); renderer.resize();
-    if (saved) announce('前に眺めていた暮らしの続きから始めます。');
-    $('archive-intro').textContent = '時代や言葉から、気になる記録を探す。';
-    $('journey-stops').innerHTML = JOURNEYS.map(stop => `<button type="button" class="journey-stop" data-journey="${stop.id}" aria-pressed="false">${propIcon(stop.prop)}<span><span class="journey-date">${stop.year}年 ／ ${stop.region}</span><strong>${stop.title}</strong></span><span class="journey-arrow" aria-hidden="true">↗</span></button>`).join('');
-    bindControls(); $('open-archive').disabled = false; $('open-about').disabled = false;document.querySelectorAll('.page-tabs button').forEach(b=>b.disabled=false); if (!frameId) frameId = requestAnimationFrame(frame);
-    setInspector('people');
-  } catch (error) { $('loading').hidden = true; $('load-error').hidden = false; $('app').hidden = true; console.error('箱庭をひらけませんでした。', error); }
-}
-$('retry').addEventListener('click', boot);
+async function boot(){try{
+  const get=async name=>{const r=await fetch(`./data/${name}.json`);if(!r.ok)throw new Error('読み込みを完了できませんでした。');return r.json();};
+  const [original,expansion,ds,ls,ms]=await Promise.all([get('archive'),get('history-expanded'),get('drivers'),get('lessons'),get('media')]);
+  archive=mergeHistory(original,expansion);readerEvents=educationEvents(archive.events);drivers=ds;lessons=ls;media=ms;validateEducation(lessons,media,archive);
+  sources=new Map(archive.sources.map(s=>[s.id,s]));series=new Map(archive.series.map(s=>[s.id,s]));statistics=new Map(archive.statistics.map(s=>[s.id,s]));compareId=media.comparisons[0].id;
+  setupArchive();bind();explorer=createStatisticsExplorer($('statistics-explorer'),archive,drivers,{year:1900,onYear:y=>{selectedYear=y;openArchive(y,y);},onSeries:showSeries});
+  $('loading').hidden=true;$('main').hidden=false;route();
+}catch(error){$('loading').hidden=true;$('load-error').hidden=false;console.error('ページの読み込みに失敗しました。',error.message);}}
 boot();

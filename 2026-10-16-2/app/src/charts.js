@@ -28,12 +28,16 @@ export function statisticCatalogue(archive) {
 export function presetTracks(archive, drivers, id) {
   const byId=new Map(archive.series.map(e=>[e.id,e]));
   const driver=drivers.drivers.find(d=>d.id===id);
-  if(!driver) { const e=byId.get(id); return e?[{entry:e,label:cleanSeriesLabel(e.label),from:1900,through:2026.999}]:[]; }
+  if(!driver) {
+    const e=byId.get(id);
+    const boundaries=drivers.drivers.filter(d=>d.seriesIds?.includes(id)||d.segments?.some(s=>s.seriesIds.includes(id))).flatMap(d=>d.boundaries||[]);
+    return e?[{entry:e,label:cleanSeriesLabel(e.label),from:1900,through:2026.999,boundaries}]:[];
+  }
   if(driver.segments?.length) return driver.segments.flatMap(s=>{
     const sid=s.seriesIds[0], entry=byId.get(sid); if(!entry)return [];
     const from=Number(s.from.slice(0,4))+(Number(s.from.slice(5,7))-1)/12;
     const through=Number(s.through.slice(0,4))+(Number(s.through.slice(5,7)))/12-1e-5;
-    return [{entry,label:cleanSeriesLabel(s.label || entry.label),from,through,limitation:s.limitation,boundaries:driver.boundaries}];
+    return [{entry,label:cleanSeriesLabel(['industry','education','communication'].includes(driver.id)?entry.label:(s.label || entry.label)),from,through,limitation:s.limitation,boundaries:driver.boundaries}];
   });
   return driver.seriesIds.slice(0,1).map(sid=>({entry:byId.get(sid),label:driver.label,from:1900,through:2026.999,boundaries:driver.boundaries})).filter(t=>t.entry);
 }
@@ -95,7 +99,7 @@ export function mountChart(root,tracks,{year=1900,onYear=()=>{},onSeries=()=>{},
   bindings.get(root)?.abort();
   const controller=new AbortController();bindings.set(root,controller);const signal=controller.signal;
   let selectedYear=year, chosen=null, dragStart=null;
-  root.innerHTML=`<div class="chart-ranges" aria-label="グラフの表示期間">${CHART_RANGES.map(([a,b,label])=>`<button type="button" data-range="${a},${b}" aria-pressed="${a===range[0]&&b===range[1]}">${label}</button>`).join('')}</div><div class="chart-drawing"></div><div class="chart-controls"><label>グラフの年 <input type="range" class="chart-year" min="1900" max="2026" value="${year}" step="1"></label><output class="chart-selected-year">${year}年</output><button type="button" class="chart-visit">この年の町へ ↗</button></div><div class="chart-readout" aria-live="polite"></div><p class="chart-caption">点を押すとその年の町へ。ドラッグで期間を拡大。</p>`;
+  root.innerHTML=`<div class="chart-ranges" aria-label="グラフの表示期間">${CHART_RANGES.map(([a,b,label])=>`<button type="button" data-range="${a},${b}" aria-pressed="${a===range[0]&&b===range[1]}">${label}</button>`).join('')}</div><div class="chart-drawing"></div><div class="chart-controls"><label>グラフの年 <input type="range" class="chart-year" min="1900" max="2026" value="${year}" step="1"></label><output class="chart-selected-year">${year}年</output><button type="button" class="chart-visit">この年を読む ↗</button></div><div class="chart-readout" aria-live="polite"></div><p class="chart-caption">点で年を選ぶ。ドラッグで期間を拡大。</p>`;
   const drawing=root.querySelector('.chart-drawing'),readout=root.querySelector('.chart-readout'),slider=root.querySelector('.chart-year');
   drawing.before(readout);
   function show(records,requestedYear) {
