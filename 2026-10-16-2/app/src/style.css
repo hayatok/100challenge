@@ -136,3 +136,5 @@ dialog{width:min(1050px,calc(100% - 40px));max-height:90vh}.inline-chart{margin:
 @media(max-width:850px){.inspector-tabs{grid-column:1/-1}.person-panel{grid-column:1/-1}.history-panel{grid-column:1/-1;grid-row:auto}.residents-panel{grid-column:1/-1}.observation-column{max-height:none}.daily-stories{grid-template-columns:1fr 1fr}.daily-story:last-child{grid-column:1/-1;border-left:0;padding-left:0}}
 
 .chart-brush,.chart-brush-label{display:none;pointer-events:none}.chart-brush{fill:#5c74552b;stroke:var(--forest);stroke-width:1;stroke-dasharray:4 2}.chart-brush-label{fill:var(--forest);font:700 12px var(--sans)}.chart-brushing .chart-brush,.chart-brushing .chart-brush-label{display:block}
+
+.about-page{max-width:760px;margin:36px auto 64px;line-height:1.9}.about-page h2{font-size:30px;margin-bottom:24px}.about-page h3{margin:28px 0 10px}.about-page>button{margin-top:32px}.chart-readout article{grid-template-columns:minmax(180px,1fr) auto}.chart-readout article>button{grid-column:auto}.numbers-section .macro-grid{margin:16px 0}.daily-story .daily-person{margin-bottom:0}

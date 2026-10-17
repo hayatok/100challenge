@@ -9,19 +9,6 @@ import { mergeHistory, eventDateLabel, eventThemeIds, filterHistory, HISTORY_CHA
 
 const $ = id => document.getElementById(id);
 const number = new Intl.NumberFormat('ja-JP', { maximumFractionDigits: 3 });
-const driverDescriptions = {
-  population: '全国の人口を縮めて、人の模型の密度を変えています。模型の一人が、実在の一人を表すものではありません。',
-  industry: '同じ分類の最初の記録との比から、田畑と工場の模型の量を変えています。異なる調査や産業分類は、つなげずに描き分けています。',
-  housing: '総住宅数を縮めて家を描き、空き家数を参考に灯りの消えた家を置いています。町ごとの配置は架空です。',
-  water: '上水道の給水人口を縮めて、水道設備の模型の量を変えています。水道の普及率や電化率を表すものではありません。',
-  education: '小学校と大学の在学者の記録を、それぞれの最初の年と比べ、学校と通学の人影を描いています。架空の人の進学を決める数字にはしていません。',
-  rice: '一人一年当たりの米の供給量を参考に、米屋の俵の模型を増減しています。実際に食べた量や、買った量とは異なります。',
-  prices: '商店のそばに、そのままの物価指数を掲げています。円の価格や、個人の家計への換算はしていません。',
-  bus: '記録のある月の乗合バス輸送人員を縮めて、走るバスの模型の量を変えています。2020年4月からは調査方法の違う資料です。実際の車両数や路線ではありません。',
-  rail: 'その月の鉄道旅客数量を参考に、列車の模型の量を変えています。実際の列車本数や町ごとの路線を表すものではありません。',
-  communication: '世帯の機器保有の記録を参考に、暮らしの中の機器を描いています。個人が端末を買う抽選や、地域の実測分布ではありません。',
-  energy: '世帯当たりの年間エネルギー消費を参考に、住まいに熱の印を描いています。電化率、電気料金、個人の消費量には換算していません。'
-};
 const JOURNEYS = [
   {id:'teacher',year:1904,month:1,placeId:'sanyo',region:'広島',title:'教員家族の机',material:'L3-M008',prop:'book'},
   {id:'weaving',year:1911,month:2,placeId:'shikoku',region:'徳島',title:'織りの手仕事',material:'L3-M017',prop:'cloth'},
@@ -62,11 +49,6 @@ function pointDate(observation) {
   const label = observation.point?.timeLabel || observation.point?.time_label || 'この年代の記録はありません';
   return /^全国_.+_\d{4}$/.test(label) ? `${observation.point.year}年度` : label;
 }
-function unavailableNote(observation, short = false) {
-  if (observation.point && observation.point.kind !== 'number') return short ? `原表の記号：${observation.point.raw}` : `原表の値は「${observation.point.raw}」です。欠測を0にはしていません。`;
-  if (observation.point) return short ? '対象が異なる記録は持ち越しません' : '過去の数字はありますが、対象や区分が異なるため、この年の風景には持ち越していません。';
-  return short ? '参照できる時期は出典から確認できます' : 'この時点で参照できる数字はありません。収録されていない時期の数字は補っていません。';
-}
 function sourceForEvent(event) { return (event.source_ids || []).map(id => sourceHTML(id, event.locator || event.source_locator)).join(''); }
 function boundedYear(input, allowEmpty = false) {
   if (allowEmpty && input === '') return null;
@@ -91,6 +73,7 @@ function refresh(selectDefault = false) {
 function setPage(next) {
   if(!current)return;
   page = next;
+  $('playback').hidden=next==='about';
   if(next!=='town'&&playing)setPlaying(false,'時間を止めて、時代の記録をたどっています。');
   document.querySelectorAll('[data-workspace]').forEach(section=>{section.hidden=section.dataset.workspace!==next;});
   document.querySelectorAll('[data-page]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.page===next)));
@@ -205,11 +188,11 @@ function renderDaily() {
   $('daily-stories').innerHTML = (activeStories.length ? activeStories : stories.length ? stories : fallback).map(story => {
     const person = local.find(item => item.id === story.personId) || current.selectedPerson;
     const material = story.sourceMaterialIds?.find(id => archive.living.some(item => item.id === id));
-    return `<article class="daily-story"><button type="button" class="daily-person" data-person="${esc(story.personId)}">${propIcon(story.prop)}<span><strong>${esc(story.activity || '町で過ごす')}</strong><span>${esc(person?.name || story.title || '')}の一日を見守る →</span></span></button>${material ? `<button type="button" class="daily-source" data-living="${esc(material)}">着想の記録 ↗</button>` : '<span class="daily-source fictional-origin">作者が想像した日常</span>'}</article>`;
+    return `<article class="daily-story"><button type="button" class="daily-person" data-person="${esc(story.personId)}">${propIcon(story.prop)}<span><strong>${esc(story.activity || '町で過ごす')}</strong><span>${esc(person?.name || story.title || '')}の一日を見守る →</span></span></button>${material ? `<button type="button" class="daily-source" data-living="${esc(material)}">着想の記録 ↗</button>` : ''}</article>`;
   }).join('') || '<p class="observation-empty">この町の暮らしを、ゆっくり眺めてみましょう。</p>';}
   const atmosphere = current.selectedPlace.atmosphere;
   $('season-stamp').hidden = view !== 'place';
-  $('season-stamp').textContent = atmosphere ? `${atmosphere.seasonLabel || ''} ／ ${{sunny:'晴れ間',cloudy:'くもり空',rain:'雨模様',snow:'雪景色'}[atmosphere.weather] || ''}（架空の空模様）` : '';
+  $('season-stamp').textContent = atmosphere ? `${atmosphere.seasonLabel || ''} ／ ${{sunny:'晴れ間',cloudy:'くもり空',rain:'雨模様',snow:'雪景色'}[atmosphere.weather] || ''}` : '';
   document.querySelectorAll('[data-journey]').forEach(button => {
     const stop = JOURNEYS.find(item => item.id === button.dataset.journey);
     button.setAttribute('aria-pressed', String(stop.year === current.year && stop.placeId === sim.placeId && stop.month === current.month));
@@ -229,7 +212,7 @@ function sceneDetail(id) {
   if (!person || person.id !== id) return;
   const scene = routineAt(person,motionTime).scene || person.scene || person.dailyEvent;
   const materials = [...new Set([...(scene?.sourceMaterialIds||[]),...(person.routine?.sourceMaterialIds||[])])].map(key => archive.living.find(item => item.id === key)).filter(Boolean);
-  detail(`${person.name}の小さな一日`, `<div class="scene-detail-heading">${propIcon(scene?.prop)}<div><p class="small">${current.year}年${current.month}月 ／ ${esc(current.selectedPlace.name)}</p><h3>${esc(scene?.activity||person.activity)}</h3></div></div><p>${esc(scene?.text || person.dailyEvent?.text || 'いつもの町で、一日を過ごしています。')}</p><p class="fiction-explanation">この人と出来事は架空です。町ごとの実際の人口・仕事・家計を再現したものではありません。</p>${materials.length ? '<h3>この一日の着想になった記録</h3><p>この人の予定の一部は、以下の道具や仕事の記録から想像しています。いまの場面を含む一日全体や、記録に登場する本人の人生を再現したものではありません。</p>' + materials.map(item => `<article class="inspiration-record"><p class="small">${esc(period(item.period_start,item.period_end))} ／ ${esc(item.geography)}</p><h3>${esc(item.title)}</h3><p>${esc(item.what_it_shows)}</p><button type="button" class="inline-link" data-living="${esc(item.id)}">誰の経験か、出典と限界を読む ↗</button></article>`).join('') : '<p>この場面は作者が想像した日常です。特定の生活記録へは結び付けていません。</p>'}`);
+  detail(`${person.name}の小さな一日`, `<div class="scene-detail-heading">${propIcon(scene?.prop)}<div><p class="small">${current.year}年${current.month}月 ／ ${esc(current.selectedPlace.name)}</p><h3>${esc(scene?.activity||person.activity)}</h3></div></div><p>${esc(scene?.text || person.dailyEvent?.text || 'いつもの町で、一日を過ごしています。')}</p>${materials.length ? '<h3>ゆかりの記録</h3>' + materials.map(item => `<article class="inspiration-record"><p class="small">${esc(period(item.period_start,item.period_end))} ／ ${esc(item.geography)}</p><h3>${esc(item.title)}</h3><p>${esc(item.what_it_shows)}</p><button type="button" class="inline-link" data-living="${esc(item.id)}">出典・詳細 ↗</button></article>`).join('') : ''}`);
 }
 
 function currentHistory() {
@@ -279,18 +262,17 @@ function sparkline(observation) {
   return `<svg class="sparkline" viewBox="0 0 90 24" aria-hidden="true">${points.map(point => `<circle cx="${((observationTime(point) - first) / span * 88 + 1).toFixed(1)}" cy="${(20 - (point.value - min) / Math.max(1, max - min) * 17).toFixed(1)}" r="1.1" fill="#56715b"/>`).join('')}</svg>`;
 }
 function renderMacro() {
-  $('macro-grid').innerHTML = drivers.drivers.map(driver => {
+  $('macro-grid').innerHTML = drivers.drivers.flatMap(driver => {
     const signal = current.macro[driver.id];
-    const unavailable = signal.status === 'unavailable';
-    return `<button type="button" class="macro-card" data-driver="${driver.id}"><span class="metric-label">${esc(driver.label)}<span aria-hidden="true">↗</span></span><span class="metric-context">${esc(observationLabel(driver.id))}</span><span class="metric-value${unavailable ? ' unavailable' : ''}">${unavailable ? 'この時点は参照なし' : `${formatValue(signal)}<small>${esc(readableUnit(signal.unit))}</small>`}</span><span class="metric-date">${unavailable ? esc(unavailableNote(signal, true)) : `${signal.status === 'historical' ? '過去の記録：' : ''}${esc(pointDate(signal))}`}</span><span class="metric-link">${esc(driver.worldTarget.replace('模型', '風景'))}</span>${unavailable ? '' : sparkline(signal)}</button>`;
+    if(signal.status === 'unavailable' || !Number.isFinite(signal.value))return [];
+    const unit=/未取得|未確認|未確定/.test(signal.unit||'')?'':signal.unit||'';
+    return [`<button type="button" class="macro-card" data-driver="${driver.id}"><span class="metric-label">${esc(driver.label)}<span aria-hidden="true">↗</span></span><span class="metric-context">${esc(observationLabel(driver.id))}</span><span class="metric-value">${formatValue(signal)}<small>${esc(unit)}</small></span><span class="metric-date">${esc(pointDate(signal))}</span>${sparkline(signal)}</button>`];
   }).join('');
-  const missing = Object.values(current.macro).filter(signal => signal.status === 'unavailable').length;
-  const past = Object.values(current.macro).filter(signal => signal.status === 'historical').length;
-  $('basis-note').textContent = `${missing ? `${missing}項目にはこの時点で使える数字がありません。` : ''}${past ? '過去の時点の記録を参考にしている風景があります。観測年を併記しています。' : ''}数値のない量や町ごとの配置、人物の暮らしには作者の想像を含みます。`;
 }
 function renderLiving() {
   const entries = current.living;
-  if (!entries.length) { $('living-content').innerHTML = '<p class="observation-empty">この年に結びつけられる暮らしの記録は、まだありません。年を決めきれない記憶も「各地の記録」から読めます。</p>'; return; }
+  document.querySelector('.living-section').hidden=!entries.length;
+  if (!entries.length) { $('living-content').innerHTML = ''; return; }
   const regional = entries.filter(item => regionalMaterial(item, sim.placeId)).sort((a,b)=>Number(b.id.startsWith('L3-'))-Number(a.id.startsWith('L3-')));
   const pool = [...regional, ...entries.filter(item => !regional.includes(item))];
   const offset = livingPage % Math.max(1, pool.length);
@@ -307,11 +289,12 @@ function renderUI(force = false) {
   if (document.activeElement !== $('year-input')) $('year-input').value = current.year;
   $('year-range').value = current.year; $('place-select').value = sim.placeId;
   $('season-select').value=[1,4,7,10][Math.floor((current.month-1)/3)];
-  $('scene-caption').textContent = view === 'japan' ? '12の架空の町で、日本の暮らしを描いています。' : `${current.selectedPlace.region} ／ ${current.selectedPlace.name}。町・人物・空模様は架空です。人を押すと暮らしを追えます。`;
-  $('world-canvas').setAttribute('aria-label', `${current.year}年${current.month}月の${view === 'japan' ? '日本の全景' : current.selectedPlace.name}。架空の人々が暮らす箱庭。場所と人は画面右の操作でも選べます。`);
+  $('scene-caption').textContent = view === 'japan' ? '町を押すと、近づいて眺められます。' : `${current.selectedPlace.region} ／ ${current.selectedPlace.name}。人を押すと暮らしを追えます。`;
+  $('world-canvas').setAttribute('aria-label', `${current.year}年${current.month}月の${view === 'japan' ? '日本の全景' : current.selectedPlace.name}。場所と人は画面右の操作でも選べます。`);
   $('vital-records').innerHTML = [['00110', '出生数'], ['00150', '死亡数']].map(([code, label]) => {
     const entry = archive.series.find(item => item.id === `SD-STAT001:cat01=${code}`), point = entry.points.find(item => item.year === current.year);
-    return `<button type="button" data-vital="${code}"><span>${current.year}年の記録 ／ ${label}</span><strong>${point?.kind === 'number' ? `${number.format(point.value)}<small>人</small>` : '記録なし'}</strong><span class="vital-source">対象と出典 ↗</span></button>`;
+    if(point?.kind!=='number')return '';
+    return `<button type="button" data-vital="${code}"><span>${current.year}年の記録 ／ ${label}</span><strong>${point?.kind === 'number' ? `${number.format(point.value)}<small>人</small>` : '記録なし'}</strong><span class="vital-source">出典・詳細 ↗</span></button>`;
   }).join('');
   renderPerson(); renderDaily(); renderHistory(); renderMacro(); renderLiving(); playState();
   explorer?.syncYear(current.year);
@@ -334,11 +317,11 @@ function eventDetail(id) {
 }
 function vitalDetail(code) {
   const entry = series.get(`SD-STAT001:cat01=${code}`), point = entry.points.find(item => item.year === current.year), stat = statistics.get(entry.statId);
-  detail(`${current.year}年の${entry.label}`, `${point?.kind === 'number' ? `<p class="detail-value">${number.format(point.value)} <small>人</small></p>` : '<p class="missing-note">この年の数字はありません。1944〜1946年は、戦災などによる資料の不備で原表から省略されています。最新の収録年は2024年です。</p>'}<p>その年全体の公表集計です。今見ている月の人数ではありません。架空の人物が生まれたり亡くなったりする抽選には使っていません。</p><div class="detail-note"><p>歴史的な領域・国籍・届出の範囲に違いがあり、全期間を同じ集団として比較できるとは限りません。1947〜1972年は沖縄県を含みません。詳しい対象の変遷には確認が残っています。</p></div>${chartHTML({series:entry,point})}<button type="button" data-series="${esc(entry.id)}">原表の年・数字・欠測を見る →</button>${sourceHTML(entry.sourceId, `統計表 ${entry.tableId}`)}`);
+  detail(`${current.year}年の${entry.label}`, `${point?.kind === 'number' ? `<p class="detail-value">${number.format(point.value)} <small>人</small></p>` : '<p class="missing-note">この年の数字はありません。1944〜1946年は、戦災などによる資料の不備で原表から省略されています。最新の収録年は2024年です。</p>'}<div class="detail-note"><p>歴史的な領域・国籍・届出の範囲に違いがあり、全期間を同じ集団として比較できるとは限りません。1947〜1972年は沖縄県を含みません。詳しい対象の変遷には確認が残っています。</p></div>${chartHTML({series:entry,point})}<button type="button" data-series="${esc(entry.id)}">原表の年・数字・欠測を見る →</button>${sourceHTML(entry.sourceId, `統計表 ${entry.tableId}`)}`);
 }
 function livingDetail(id) {
   const item = archive.living.find(record => record.id === id); if (!item) return;
-  detail(item.title, `<p class="small">${esc(period(item.period_start, item.period_end))} ／ ${esc(item.geography)}</p><div class="detail-note"><p>${esc(materialStatus(item))}</p></div><p>${esc(item.what_it_shows)}</p><dl class="detail-dl"><dt>記録の形</dt><dd>${esc(item.material_type)}</dd><dt>誰の経験か</dt><dd>${esc(item.whose_voice)}</dd></dl><div class="detail-note"><p>${esc(item.representativeness_limit || 'この記録を全国の人々の平均としては扱えません。')}</p></div><h3>出典</h3>${sourceHTML(item.source_id, item.item_locator)}<p class="small">原資料の文章・写真・映像の利用条件は、それぞれの公開元をご確認ください。</p>`);
+  detail(item.title, `<p class="small">${esc(period(item.period_start, item.period_end))} ／ ${esc(item.geography)}</p><div class="detail-note"><p>${esc(materialStatus(item))}</p></div><p>${esc(item.what_it_shows)}</p><dl class="detail-dl"><dt>記録の形</dt><dd>${esc(item.material_type)}</dd><dt>誰の経験か</dt><dd>${esc(item.whose_voice)}</dd></dl><div class="detail-note"><p>${esc(item.representativeness_limit || 'この記録を全国の人々の平均としては扱えません。')}</p></div><h3>出典</h3>${sourceHTML(item.source_id, item.item_locator)}<p class="small"></p>`);
 }
 function chartHTML(observation) { return `<div class="inline-chart" data-inline-chart="${esc(observation.series.id)}"></div>`; }
 function mountInlineCharts() {
@@ -391,7 +374,7 @@ function renderArchive() {
     if (archiveSection === 'statistics') {
       const entries = archive.series.filter(entry => entry.statId === item.id), count = entries.reduce((n, entry) => n + entry.points.length, 0);
       const dated = entries.flatMap(entry => entry.points).map(point => point.year).filter(Number.isInteger);
-      return `<article class="archive-result"><h3>${esc(item.title)}</h3><p>${esc(item.geography)} ／ ${entries.length}区分 ／ ${number.format(count)}観測</p><p>${dated.length ? `確認できた数字の時期：${Math.min(...dated)}–${Math.max(...dated)}年。` : '数字の時期を確かめきれていません。'}収録している区分と地域は、原表の一部です。</p><button type="button" data-series="${esc(entries[0].id)}">区分を選んで数字・欠測・出典を見る →</button></article>`;
+      return `<article class="archive-result"><h3>${esc(item.title)}</h3><p>${esc(item.geography)} ／ ${entries.length}区分 ／ ${number.format(count)}観測</p><p>${dated.length ? `確認できた数字の時期：${Math.min(...dated)}–${Math.max(...dated)}年。` : '数字の時期を確かめきれていません。'}</p><button type="button" data-series="${esc(entries[0].id)}">区分を選んで数字・欠測・出典を見る →</button></article>`;
     }
     if (archiveSection === 'events') return `<article class="archive-result"><span class="small">${esc(item.date_start)}${item.date_end ? `–${esc(item.date_end)}` : ''} ／ ${esc(item.geography)}</span><h3>${esc(item.title)}</h3><p>${esc(item.summary)}</p><button type="button" data-event="${esc(item.id)}">詳しい記録と出典 →</button><button type="button" data-jump="${esc(String(item.date_start).slice(0, 4))}">この年を眺める</button></article>`;
     if (archiveSection === 'living') return `<article class="archive-result"><span class="small">${esc(period(item.period_start, item.period_end))} ／ ${esc(item.geography)}</span><h3>${esc(item.title)}</h3><p>${esc(item.what_it_shows)}</p><p>${esc(materialStatus(item))}</p><button type="button" data-living="${esc(item.id)}">誰の記録か、出典を読む →</button></article>`;
@@ -413,9 +396,8 @@ function jumpYear(year) {
   if(page==='statistics')explorer?.syncYear(current.year);
   $('time-message').textContent = `${current.year}年に移りました。${playing ? 'このまま時代が進みます。' : '「眺める」で時間が進みます。'}`;
 }
-function showAbout() {
-  detail('時代は同じ。暮らしは、ひとつずつ。', `<p>1900年から2026年まで、日本の時代が自動で流れる箱庭です。何もしなくても、人々が歩き、風景が変わっていきます。</p><p>町を押して近づいたり、気になる人の暮らしを見守ったり。時間を止めて数字を読み、遠い年代へ移ってもかまいません。「別の暮らし」を押すと、同じ歴史の中に別の人々が生まれます。</p><h3>歴史と数字は、そのまま。</h3><p>政府統計はestatで取得した原値です。${archive.statistics.length}表・15,728観測、${archive.events.length}の出来事、105の生活史料を収めています。統計には対象・分類・欠測の違いがあり、年と年の間の数値は作っていません。</p><h3>小さな暮らしは、架空のもの。</h3><p>町の配置、空模様、人物の名前・家族・寿命・仕事・日常には、作者が決めた範囲の偶然があります。道具や仕事の一部は、年代と地域を確かめた個別の記録から着想を得ています。史実の被害や全国の数字から、一人の運命を決めるものではありません。風景の縮尺や年代ごとの建物・交通の形にも作者の想像を含みます。</p><p>統計のない量を描く場合は作者の模型として扱い、過去の観測を参考にした風景にはその観測年を示します。「当時の暮らしの記録」は実際の史料ですが、架空の人物の体験とは別のものです。</p><h3>いまの輪郭で、過去を眺める。</h3><p>日本列島はNatural Earthの地形を参考にしています。地図は1900年当時の政治的領域や、各統計の調査範囲を表していません。12の町の位置と暮らしは架空です。</p><p class="small">歴史の対象は2026年10月16日まで。追加資料の確認日は2026年10月17日です。続きをこの端末に保存します。外部への送信やアカウント登録はありません。</p>`);
-}
+function showAbout() { setPage('about'); }
+
 function bindControls() {
   $('toggle-play').addEventListener('click', () => {
     if (current.ended) { sim = seek(sim, 1900, 1); refresh(true); setPlaying(true, '1900年から、もう一度眺めます。'); }
@@ -517,7 +499,7 @@ async function boot() {
     $('era-stops').innerHTML=[[1900,'木の町と手仕事'],[1925,'瓦屋根と洋風の店'],[1945,'低い軒の町'],[1965,'団地と広がる道'],[1985,'看板と四角いビル'],[2005,'ガラスの駅前'],[2026,'いまの暮らし']].map(([year,label],i)=>`<button type="button" data-era-year="${year}" aria-pressed="false"><span class="era-mini era-${i}" aria-hidden="true"><i></i><i></i><i></i></span><span><strong>${year}</strong><span>${label}</span></span></button>`).join('');
     refresh(!saved?.personId); renderer.resize();
     if (saved) $('time-message').textContent = '前に眺めていた暮らしの続きから始めます。';
-    $('archive-intro').textContent = `${archive.statistics.length}の統計表、${archive.events.length}の出来事、${archive.living.length}の暮らしの記録から。数字のない年や、確かめきれていないことも残しています。`;
+    $('archive-intro').textContent = `${archive.statistics.length}の統計表、${archive.events.length}の出来事、${archive.living.length}の暮らしの記録から。気になる時代や言葉から探せます。`;
     $('journey-stops').innerHTML = JOURNEYS.map(stop => `<button type="button" class="journey-stop" data-journey="${stop.id}" aria-pressed="false">${propIcon(stop.prop)}<span><span class="journey-date">${stop.year}年 ／ ${stop.region}</span><strong>${stop.title}</strong></span><span class="journey-arrow" aria-hidden="true">↗</span></button>`).join('');
     bindControls(); $('open-archive').disabled = false; $('open-about').disabled = false;document.querySelectorAll('.page-tabs button').forEach(b=>b.disabled=false); if (!frameId) frameId = requestAnimationFrame(frame);
     setInspector('people');
