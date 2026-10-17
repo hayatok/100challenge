@@ -1,13 +1,14 @@
 import { escapeHTML as esc } from './storage.js';
-import { observationTime, readableResearchText } from './presentation.js';
+import { observationTime } from './presentation.js';
+import { cleanSeriesLabel, statisticTitle, displayTimeLabel, displayUnit } from './ui-copy.js';
+export { cleanSeriesLabel } from './ui-copy.js';
 
 const COLORS = ['#ad4938', '#376b72', '#667a44', '#866647', '#676ca0', '#986780'];
 const fmt = new Intl.NumberFormat('ja-JP', { maximumFractionDigits: 3 });
 const compact = new Intl.NumberFormat('ja-JP', { notation: 'compact', maximumFractionDigits: 1 });
 const bindings = new WeakMap();
 export const CHART_RANGES = Object.freeze([[1900,2026,'全期間'],[1900,1945,'1900–1945'],[1945,1975,'1945–1975'],[1975,2000,'1975–2000'],[2000,2026,'2000–現在']]);
-const unitLabel = unit => /未取得|未確認|未確定/.test(unit || '') ? '' : unit || '';
-export const cleanSeriesLabel = label => readableResearchText(label).replace(/\b[A-Z]\d{4,}_/g,'').replace(/\b\d{4}\s+(?=総合|食料)/g,'').replace(/\s*\/\s*観測値/g,'');
+const unitLabel = displayUnit;
 export const chartTime = p => observationTime(p)===null?null:observationTime(p)/12;
 const timeOf=chartTime;
 const isDated = p => Number.isInteger(p.year) && p.year >= 1900 && p.year <= 2026;
@@ -18,9 +19,9 @@ export function statisticCatalogue(archive) {
   const stats = new Map(archive.statistics.map(s=>[s.id,s]));
   return archive.series.map(entry=>{
     const dated=entry.points.filter(isDated), numeric=dated.filter(isNumber), stat=stats.get(entry.statId);
-    return {id:entry.id, entry, stat, label:cleanSeriesLabel(entry.label), title:stat?.title || entry.label,
+    return {id:entry.id, entry, stat, label:cleanSeriesLabel(entry.label), title:stat?statisticTitle(stat):cleanSeriesLabel(entry.label),
       start:dated.length?Math.min(...dated.map(p=>p.year)):null,end:dated.length?Math.max(...dated.map(p=>p.year)):null,
-      numericCount:numeric.length,search:`${stat?.title} ${entry.label} ${entry.geography} ${entry.unit}`.toLocaleLowerCase('ja')};
+      numericCount:numeric.length,search:`${stat?.title} ${stat?statisticTitle(stat):''} ${cleanSeriesLabel(entry.label)} ${entry.label} ${entry.geography} ${entry.unit}`.toLocaleLowerCase('ja')};
   });
 }
 
@@ -32,7 +33,7 @@ export function presetTracks(archive, drivers, id) {
     const sid=s.seriesIds[0], entry=byId.get(sid); if(!entry)return [];
     const from=Number(s.from.slice(0,4))+(Number(s.from.slice(5,7))-1)/12;
     const through=Number(s.through.slice(0,4))+(Number(s.through.slice(5,7)))/12-1e-5;
-    return [{entry,label:s.label || cleanSeriesLabel(entry.label),from,through,limitation:s.limitation,boundaries:driver.boundaries}];
+    return [{entry,label:cleanSeriesLabel(s.label || entry.label),from,through,limitation:s.limitation,boundaries:driver.boundaries}];
   });
   return driver.seriesIds.slice(0,1).map(sid=>({entry:byId.get(sid),label:driver.label,from:1900,through:2026.999,boundaries:driver.boundaries})).filter(t=>t.entry);
 }
@@ -85,9 +86,9 @@ function chartMarkup(tracks,range,year) {
     }).join('')}${ticks.map(t=>`<text x="${x(t)}" y="251" text-anchor="middle" class="chart-axis">${t}</text>`).join('')}${panel.segments.map(segment=>{
       const color=COLORS[seriesIds.indexOf(segment.entry.id)%COLORS.length];
       const bandLeft=x(segment.from??1900),bandRight=x(Math.min(range[1]+.9,segment.through??2026.9));
-      return `${segment.from>range[0]&&segment.from<range[1]?`<line x1="${bandLeft}" x2="${bandLeft}" y1="${top}" y2="${bottom}" class="chart-boundary"/>`:''}${segment.paths.filter(p=>p.length>1).map(path=>`<path d="${path.map((p,i)=>`${i?'L':'M'}${x(timeOf(p)).toFixed(2)},${y(p.value).toFixed(2)}`).join(' ')}" fill="none" stroke="${color}" stroke-width="2" opacity=".78"/>`).join('')}${segment.points.filter(isNumber).map(p=>`<circle cx="${x(timeOf(p)).toFixed(2)}" cy="${y(p.value).toFixed(2)}" r="${p.year===year?4.3:2.8}" fill="${color}" stroke="var(--ui-surface)" stroke-width=".7"><title>${esc(p.timeLabel||p.time_label)}：${esc(p.raw)} ${esc(unitLabel(p.unit||segment.entry.unit))}</title></circle>`).join('')}`;
+      return `${segment.from>range[0]&&segment.from<range[1]?`<line x1="${bandLeft}" x2="${bandLeft}" y1="${top}" y2="${bottom}" class="chart-boundary"/>`:''}${segment.paths.filter(p=>p.length>1).map(path=>`<path d="${path.map((p,i)=>`${i?'L':'M'}${x(timeOf(p)).toFixed(2)},${y(p.value).toFixed(2)}`).join(' ')}" fill="none" stroke="${color}" stroke-width="2" opacity=".78"/>`).join('')}${segment.points.filter(isNumber).map(p=>`<circle cx="${x(timeOf(p)).toFixed(2)}" cy="${y(p.value).toFixed(2)}" r="${p.year===year?4.3:2.8}" fill="${color}" stroke="var(--ui-surface)" stroke-width=".7"><title>${esc(displayTimeLabel(p))}：${esc(p.raw)} ${esc(unitLabel(p.unit||segment.entry.unit))}</title></circle>`).join('')}`;
     }).join('')}${!points.length?`<text x="510" y="128" text-anchor="middle" class="chart-empty">期間を選び直してご覧ください。</text>`:''}<line class="chart-cursor" x1="${x(year)}" x2="${x(year)}" y1="${top}" y2="${bottom}"/><rect x="${left}" y="${top}" width="${right-left}" height="${bottom-top}" fill="transparent" class="chart-hit"/><rect class="chart-brush" x="74" y="28" width="0" height="197"/><text class="chart-brush-label" x="78" y="20"></text></svg></div>`;
-  }).join('')+`<div class="chart-legend">${seriesIds.map((id,i)=>{const related=tracks.filter(t=>t.entry.id===id),t=related[0],dates=related.flatMap(track=>track.entry.points.filter(p=>within(p,track))).map(p=>p.year);return `<span><i data-series-color="${COLORS[i%COLORS.length]}"></i>${esc(cleanSeriesLabel(t.entry.label))}${dates.length?` ／ ${Math.min(...dates)}–${Math.max(...dates)}`:''}</span>`;}).join('')}</div>`;
+  }).join('')+`<div class="chart-legend">${seriesIds.map((id,i)=>{const related=tracks.filter(t=>t.entry.id===id),t=related[0],dates=related.flatMap(track=>track.entry.points.filter(p=>within(p,track))).map(p=>p.year);return `<button type="button" data-chart-series="${esc(id)}" title="出典・詳細" aria-label="${esc(cleanSeriesLabel(t.entry.label))}の出典・詳細"><i data-series-color="${COLORS[i%COLORS.length]}"></i>${esc(cleanSeriesLabel(t.entry.label))}${dates.length?` ／ ${Math.min(...dates)}–${Math.max(...dates)}`:''} ↗</button>`;}).join('')}</div>`;
 }
 
 export function mountChart(root,tracks,{year=1900,onYear=()=>{},onSeries=()=>{},range=[1900,2026]}={}) {
@@ -103,7 +104,7 @@ export function mountChart(root,tracks,{year=1900,onYear=()=>{},onSeries=()=>{},
     root.querySelectorAll('.chart-cursor').forEach(line=>{const pos=74+(requestedYear-range[0])/Math.max(1,range[1]-range[0]+.9)*876;line.setAttribute('x1',pos);line.setAttribute('x2',pos);line.style.display=requestedYear>=range[0]&&requestedYear<=range[1]?'':'none';});
     if(!records.length){readout.innerHTML=`<strong>${requestedYear}年 —</strong>`;chosen=null;return;}
     chosen=records[0];
-    readout.innerHTML=records.slice(0,5).map(({point,track})=>`<article><div><span class="small">${esc(point.timeLabel||point.time_label||`${point.year}年`)} ／ ${esc(track.label)}</span><strong>${isNumber(point)?esc(fmt.format(point.value)):esc(point.raw||'記録なし')} <small>${esc(unitLabel(point.unit||track.entry.unit))}</small></strong></div><button type="button" data-chart-series="${esc(track.entry.id)}">出典・詳細 ↗</button></article>`).join('')+(records.length>5?`<span class="small">この年には${records.length}件あります。すべては原表から確認できます。</span>`:'');
+    readout.innerHTML=records.slice(0,5).map(({point,track})=>`<article><div><span class="small">${esc(displayTimeLabel(point))} ／ ${esc(cleanSeriesLabel(track.label))}</span><strong>${isNumber(point)?esc(fmt.format(point.value)):esc(point.raw||'—')} <small>${esc(unitLabel(point.unit||track.entry.unit))}</small></strong></div><button type="button" data-chart-series="${esc(track.entry.id)}">出典・詳細 ↗</button></article>`).join('')+(records.length>5?`<span class="small">この年の${records.length}件は「年ごとの数字」へ。</span>`:'');
   }
   function draw() {drawing.innerHTML=chartMarkup(tracks,range,selectedYear);drawing.querySelectorAll('[data-series-color]').forEach(i=>i.style.setProperty('--series-color',i.dataset.seriesColor));show(observationsAt(tracks,selectedYear),selectedYear);root.querySelectorAll('[data-range]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.range===range.join(','))));}
   function coordinates(e) {const p=e.currentTarget.createSVGPoint();p.x=e.clientX;p.y=e.clientY;const v=p.matrixTransform(e.currentTarget.getScreenCTM().inverse());return {time:range[0]+Math.max(0,Math.min(1,(v.x-74)/876))*(range[1]-range[0]+.9),yRatio:(v.y-28)/197};}
@@ -137,14 +138,14 @@ export function createStatisticsExplorer(root,archive,drivers,{year=1900,onYear,
   const catalogue=statisticCatalogue(archive),byId=new Map(catalogue.map(e=>[e.id,e]));
   let active='population',comparison='',chart;
   const presets=[['population','人口'],['SD-STAT001:cat01=00110','出生'],['SD-STAT001:cat01=00150','死亡'],['industry','仕事'],['education','学び'],['rice','食'],['prices','物価'],['housing','住まい'],['communication','通信'],['rail','鉄道']];
-  root.innerHTML=`<div class="explorer-heading"><div><p class="eyebrow">一世紀の数字を、自分の手で。</p><h2>日本の変化をたどる</h2></div><p>${catalogue.length}種類の統計</p></div><div class="chart-presets" aria-label="気になる数字">${presets.map(([id,label])=>`<button type="button" data-preset="${esc(id)}" aria-pressed="${id===active}">${label}</button>`).join('')}</div><div class="series-finder"><label>記録を探す<input type="search" class="series-search" placeholder="例：1920、沖縄、婚姻、小学校、家賃"></label><label>すべての記録から選ぶ<select class="explorer-series" aria-label="グラフにする記録"></select></label></div><details class="comparison-picker"><summary>もう一つの記録と見比べる</summary><label>比べる記録<select class="explorer-comparison" aria-label="比べる記録"></select></label></details><p class="series-description"></p><div class="explorer-chart"></div>`;
+  root.innerHTML=`<div class="explorer-heading"><div><h2>日本の変化をたどる</h2></div><p>${catalogue.length}種類の統計</p></div><div class="chart-presets" aria-label="気になる数字">${presets.map(([id,label])=>`<button type="button" data-preset="${esc(id)}" aria-pressed="${id===active}">${label}</button>`).join('')}</div><div class="series-finder"><label>統計を探す<input type="search" class="series-search" placeholder="例：1920、沖縄、婚姻、小学校、家賃"></label><label>統計を選ぶ<select class="explorer-series" aria-label="グラフにする統計"></select></label></div><details class="comparison-picker"><summary>ほかの統計と比べる</summary><label>比べる統計<select class="explorer-comparison" aria-label="比べる統計"></select></label></details><p class="series-description"></p><div class="explorer-chart"></div>`;
   const selector=root.querySelector('.explorer-series'),description=root.querySelector('.series-description');
   function options(query='') {
     const words=query.normalize('NFKC').toLocaleLowerCase('ja').split(/\s+/).filter(Boolean);
     const matches=catalogue.filter(e=>words.every(word=>e.search.normalize('NFKC').includes(word)||(/^\d{4}$/.test(word)&&e.entry.points.some(p=>p.year===Number(word)))));
     const groups=new Map();for(const e of matches){if(!groups.has(e.stat.id))groups.set(e.stat.id,[]);groups.get(e.stat.id).push(e);}
     const markup=[...groups.values()].map(es=>`<optgroup label="${esc(es[0].title)}">${es.map(e=>`<option value="${esc(e.id)}">${esc(e.label)}${e.start!==null?` ／ ${e.start}–${e.end}`:''}</option>`).join('')}</optgroup>`).join('');
-    selector.innerHTML=`<option value="">${matches.length}区分から選ぶ</option>`+markup;
+    selector.innerHTML=`<option value="">${matches.length}件から選ぶ</option>`+markup;
     root.querySelector('.explorer-comparison').innerHTML='<option value="">見比べない</option>'+markup;
     if(byId.has(active))selector.value=active;root.querySelector('.explorer-comparison').value=comparison;
   }
@@ -154,7 +155,7 @@ export function createStatisticsExplorer(root,archive,drivers,{year=1900,onYear,
     active=id;const driver=drivers.drivers.find(d=>d.id===id),entry=byId.get(id),stat=entry?.stat;
     root.querySelectorAll('[data-preset]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.preset===id)));
     if(entry)selector.value=id;else selector.value='';
-    description.textContent=driver?`${driver.label}`: `${stat?.title || ''} ／ ${entry?.label || ''}`;
+    description.textContent=driver?`${driver.label}`: `${stat?statisticTitle(stat):''} ／ ${entry?cleanSeriesLabel(entry.entry.label):''}`;
     chart=mountChart(root.querySelector('.explorer-chart'),tracks,{year,onYear,onSeries});
   }
   root.querySelector('.series-search').addEventListener('input',e=>options(e.target.value.trim()));
