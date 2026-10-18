@@ -1,0 +1,46 @@
+{
+  "reports": [
+    {
+      "format": "mp3",
+      "bytes": 57768,
+      "codec": "mp3",
+      "sampleRate": 48000,
+      "channels": 2,
+      "duration": 2.4000000000000004,
+      "decoded": {
+        "duration": 2.4,
+        "channels": 2,
+        "left": [
+          440,
+          880
+        ],
+        "right": [
+          660,
+          1320
+        ]
+      }
+    },
+    {
+      "format": "m4a",
+      "bytes": 57701,
+      "codec": "aac",
+      "sampleRate": 48000,
+      "channels": 2,
+      "duration": 2.4106666666666667,
+      "decoded": {
+        "duration": 2.4106666666666667,
+        "channels": 2,
+        "left": [
+          440,
+          880
+        ],
+        "right": [
+          660,
+          1320
+        ]
+      }
+    }
+  ],
+  "httpAfterReady": [],
+  "errors": []
+}

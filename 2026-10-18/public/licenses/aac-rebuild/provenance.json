@@ -1,0 +1,27 @@
+{
+  "ffmpegCommit": "894da5ca7d742e4429ffb2af534fcda0103ef593",
+  "ffmpegRelease": "n8.0.1",
+  "ffmpegSourceURL": "https://codeload.github.com/FFmpeg/FFmpeg/tar.gz/894da5ca7d742e4429ffb2af534fcda0103ef593",
+  "ffmpegModified": false,
+  "mediabunnyCommit": "8dee3638fb1755e58b88d4432e344c5916027e76",
+  "emscriptenVersion": "4.0.21",
+  "emscriptenCommit": "d6f42310010ddec0753a69bab01a4b33aae255b7",
+  "wasmSha256": "5588e91d677997b5b73af97d51da10a9a26bfcde3315c5cde70fb2e6f8be418c",
+  "wasmBytes": 512891,
+  "glueSha256": "c2ea933f69c32febd75bef88262976b4baa2ef3ebad53f18113e9b8786381729",
+  "changes": "AAC glue/WASM rebuilt from the pinned FFmpeg source. Wrapper source is unchanged; bundle-aac.ts selects the official ESM configuration only.",
+  "files": {
+    "vendor/aac-encoder/index.mjs": "47d1f93cd38242bbffce220972431d4d5e216bd9502039c24e47bc8158e940f3",
+    "vendor/aac-encoder/index.d.ts": "c910fc68a3d4969d730acb0929d099cabe1195680a30c50755e08df7c1aa4d67",
+    "vendor/aac-encoder/LICENSE": "3f3d9e0024b1921b067d6f7f88deb4a60cbe7a78e76c64e3f1d7fc3b779b9d04",
+    "vendor/aac-encoder/package.json": "ab2d34be733a5e43b9a2f96301c6c49f58bbd73811cb4b8b8552148213d66de9",
+    "public/licenses/lame-3.100.tar.gz": "ddfe36cab873794038ae2c1210557ad34857a4b6bdc515785d1da9e175b1da1e",
+    "public/licenses/aac-rebuild/build-aac.sh": "1fd685a2e99d1689aefb79e758524264d231df61c1afbe545e470bd8db37d205",
+    "public/licenses/aac-rebuild/bundle-aac.ts": "3645c4cfd0abd478df43abaff1c82d3cc5aa79649484442970e582f69a71a81b",
+    "public/licenses/aac-rebuild/config.h": "ba752a205a6e8431ce98596af0937d944bace30ba70c2795e35df3a07c2ac40e",
+    "public/licenses/aac-rebuild/config.mak": "1782efcddf29f1b80babb210d63482fb2fe9eb9466663fc693aa73b9aa6dfe05",
+    "public/licenses/aac-rebuild/config_components.h": "51a19a988801e4868b26dca4a1b0114c9d5b13287b55ea0cdb12140ffc29906a",
+    "public/licenses/aac-rebuild/ffmpeg-894da5ca.tar.gz": "9dad3557314f1b7923b61aff15e30079e964c3b41276bbd43dd8bb15b8028b5f",
+    "public/licenses/aac-rebuild/mediabunny-aac-source.tar.gz": "698ed30e9b5e951f7676dfaadd9c93d737598e7b1a06ffe90a1f1b2bcddac13e"
+  }
+}
