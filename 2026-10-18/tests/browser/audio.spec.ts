@@ -3,7 +3,7 @@ import { readFile } from 'node:fs/promises'
 import { Input, BlobSource, ALL_FORMATS } from 'mediabunny'
 import { toneWav } from './helpers'
 
-const ready = (page: Page) => expect(page.getByText('準備完了 — 通信を切っても編集・保存できます。')).toBeVisible()
+const ready = (page: Page) => expect(page.getByText('準備完了。通信を切っても編集・保存できます。')).toBeVisible()
 const upload = (page: Page, buffer = toneWav(), name = 'テスト音声_左右で音が違う.wav') => page.getByLabel('音声ファイル', { exact: true }).setInputFiles({ name, mimeType: 'audio/wav', buffer })
 async function select(page: Page, start = '1.125', end = '3.500') {
   await page.getByLabel('開始時刻', { exact: true }).fill(start)

@@ -149,11 +149,11 @@ export default function App() {
     <main>
       <div className="intro">
         <h1>音声の切り出し</h1>
-        <p>必要なところを選んで、聴いて、保存。</p>
+        <p>音声の残したい範囲を選び、試聴して保存できます。</p>
       </div>
       <div className={`encoder-status ${encoder === 'ready' ? 'status-success' : encoder === 'error' ? 'status-error' : ''}`} role="status">
         <span className="status-dot" aria-hidden="true" />
-        <span>{encoder === 'ready' ? '準備完了 — 通信を切っても編集・保存できます。' : encoder === 'loading' ? '音声処理の準備中… ファイルは先に選べます。' : `音声処理を準備できませんでした。${encoderError}`}</span>
+        <span>{encoder === 'ready' ? '準備完了。通信を切っても編集・保存できます。' : encoder === 'loading' ? '音声処理の準備中… ファイルは先に選べます。' : `音声処理を準備できませんでした。${encoderError}`}</span>
         {encoder === 'error' && <button type="button" onClick={() => void prepare()}>準備を再試行</button>}
       </div>
       <section className={`file-section${dragOver ? ' is-dragover' : ''}${asset ? ' has-file' : ''}`} aria-labelledby="file-heading" onDragOver={event => { event.preventDefault(); setDragOver(true); }} onDragLeave={event => { if (!event.currentTarget.contains(event.relatedTarget as Node)) setDragOver(false); }} onDrop={onDrop}>
@@ -207,6 +207,6 @@ export default function App() {
       </>}
       {notice && <p className="notice" role="status">{notice}</p>}
     </main>
-    <footer><p>音声・ファイル名・編集内容は外部へ送信せず、この画面を閉じると破棄します。</p><a href="./licenses.html" target="_blank" rel="noreferrer">使用ライブラリのライセンス</a></footer>
+    <footer><p>音声・ファイル名・編集内容は外部へ送信しません。この画面を閉じると、ブラウザ内の編集データを破棄します。</p><a href="./licenses.html" target="_blank" rel="noreferrer">使用ライブラリのライセンス</a></footer>
   </div>;
 }
