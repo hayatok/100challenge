@@ -17,6 +17,7 @@ export const MAX_DURATION = 600
 const SAMPLE_RATE = 48000
 let registered = false
 let preparation: Promise<void> | null = null
+let decoderBusy: Promise<void> = Promise.resolve()
 
 function checkAbort(signal?: AbortSignal) {
   if (signal?.aborted) throw new DOMException('キャンセルしました。', 'AbortError')
@@ -86,22 +87,31 @@ export async function loadAudioFile(file: File, signal?: AbortSignal): Promise<A
   if (duration > MAX_DURATION) throw new Error('10分を超えています。10分以下の音声ファイルを選んでください。')
   // Inspect channel count before allocating the full decoded PCM (e.g. a 5.1 recording).
   const input = new Input({ source: new BlobSource(file), formats: ALL_FORMATS })
+  let channelCount: number
   try {
     const track = await input.getPrimaryAudioTrack()
-    if (!track) throw new Error('音声トラックが見つかりませんでした。別の音声ファイルを選んでください。')
-    const channels = await track.getNumberOfChannels()
-    if (channels < 1 || channels > 2) throw new Error('モノラルまたはステレオの音声を選んでください。')
-  } catch (error) {
-    if (error instanceof Error && /モノラル|音声トラック/.test(error.message)) throw error
+    channelCount = track ? await track.getNumberOfChannels() : 0
+  } catch {
     throw new Error('この形式を確認できませんでした。MP3・M4A・WAVなど、別の音声ファイルを選んでください。')
   } finally {
     input.dispose()
   }
   checkAbort(signal)
+  if (channelCount === 0) throw new Error('音声トラックが見つかりませんでした。別の音声ファイルを選んでください。')
+  if (channelCount < 1 || channelCount > 2) throw new Error('モノラルまたはステレオの音声を選んでください。')
   let buffer: AudioBuffer
   try {
-    const context = new OfflineAudioContext(2, 1, SAMPLE_RATE)
-    buffer = await context.decodeAudioData(await file.arrayBuffer())
+    // Native decoding cannot be aborted. Serialize it so repeated cancellation/reselection
+    // does not expand several large files into PCM concurrently.
+    const decode = decoderBusy.then(async () => {
+      checkAbort(signal)
+      const context = new OfflineAudioContext(2, 1, SAMPLE_RATE)
+      const data = await file.arrayBuffer()
+      checkAbort(signal)
+      return context.decodeAudioData(data)
+    })
+    decoderBusy = decode.then(() => {}, () => {})
+    buffer = await decode
   } catch {
     checkAbort(signal)
     throw new Error('音声を読み取れませんでした。このブラウザが対応するMP3・M4A・WAVなどを選んでください。')

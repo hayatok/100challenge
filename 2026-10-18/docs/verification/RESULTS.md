@@ -4,7 +4,7 @@
 
 ## 実行した検証
 
-`npm run check`成功。単体7件、lint警告なし、TypeScript、Vite production build、実ブラウザ10件を含む。Playwright同梱Chromium/macOSを使用。IABでも生成音声を読み込み、時刻入力とM4A書き出しを実操作した。
+`npm run check`成功。単体7件、lint警告なし、TypeScript、Vite production build、実ブラウザ10件を含む。Playwright同梱Chromium 153.0.8010.12/macOSを使用。IABでも生成音声を読み込み、時刻入力とM4A書き出しを実操作した。
 
 | 検証 | 結果 |
 | --- | --- |
@@ -37,7 +37,9 @@
 - productionの初期取得は同一originの静的GETのみ。
 - 「準備完了」後、ブラウザcontextをofflineへ切り替え、WAV読込、範囲設定、試聴、両形式の実エンコード、ダウンロード、MP3/M4A再読込を成功させた。
 - この間のHTTP(S)リクエストは0件、ページの未処理例外0件。入力ファイル・ファイル名・編集情報の送信は観測されなかった。
-- production CSPは`connect-src 'none'`。WASMとworkerを初期bundleへ内包し、外部CDN・解析・外部フォントなし。
+- production CSPは`connect-src 'none'`、`media-src blob:`。WASMとworkerを初期bundleへ内包し、外部CDN・解析・外部フォントなし。
+- 通常の静的HTTPサーバーの`/2026-10-18/`配下でも、特別なisolationヘッダーなしで初期準備と通信遮断後の実MP3出力に成功した。
+- ネイティブのデコード自体は中断APIがないため、キャンセル時は結果を破棄し、次のデコードを直列化する。再選択を繰り返しても大きなPCMを同時に展開しない。
 - オフライン再読み込み/再訪問は保証しない。ブラウザ内の永続保存は行わない。
 
 ## 限界と未確認
@@ -50,4 +52,4 @@
 
 ## AI Slopレビュー
 
-必須の`ai_slop_reviewer`（gpt-6-astra）へ、今回の新規アプリと登録差分、既存変更の境界、検証証拠を渡してレビューする。結果と指摘対応はレビュー後に追記する。
+`ai_slop_reviewer`（gpt-6-astra）が新規アプリ、登録3ファイル、仕様、ブラウザテスト、音声検証JSON、375pxの結果画像を確認し、指摘なし。既存の別作業は対象外。レビュアーはコマンドやブラウザ操作を独立再実行しておらず、上記の未確認範囲も維持する。PR/CI証拠の追記後、変更した文書の再確認を依頼する。
