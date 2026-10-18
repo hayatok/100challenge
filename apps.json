@@ -229,5 +229,15 @@
     "category": "歴史 / インタラクティブ教材",
     "thumbnail": "assets/education-cover.svg",
     "accent": "#173746"
+  },
+  {
+    "id": "2026-10-18",
+    "date": "2026-10-18",
+    "sequence": 1,
+    "name": "音声の切り出し",
+    "description": "音声を送信せず、ブラウザ内で範囲選択・試聴・MP3/M4A保存。必要なところだけ切り出す音声ツール。",
+    "category": "音声ツール",
+    "thumbnail": "audio-cutter-cover.svg",
+    "accent": "#B73529"
   }
 ]
