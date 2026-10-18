@@ -1,0 +1,11 @@
+{
+  "originalFFmpegFilesChecked": 9912,
+  "modifiedOriginalFiles": [],
+  "officialAndAacOnlyBundleSha256": "47d1f93cd38242bbffce220972431d4d5e216bd9502039c24e47bc8158e940f3",
+  "rebuiltWasm": {
+    "bytes": 512891,
+    "sha256": "5588e91d677997b5b73af97d51da10a9a26bfcde3315c5cde70fb2e6f8be418c"
+  },
+  "distributedSourceFilesMatched": 139,
+  "distributedSourceRebundleSha256": "47d1f93cd38242bbffce220972431d4d5e216bd9502039c24e47bc8158e940f3"
+}

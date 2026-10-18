@@ -48,9 +48,10 @@ test('通信遮断中に両形式を保存し、codec・長さ・左右の選択
   const errors: string[] = []
   page.on('pageerror', error => errors.push(error.message))
   page.on('request', request => { if (/^https?:/.test(request.url())) httpRequests.push({ url: request.url(), method: request.method() }) })
-  await page.goto('/')
+  await page.goto('./')
   await ready(page)
-  expect(httpRequests.every(r => r.method === 'GET' && r.url.startsWith('http://127.0.0.1:4189/'))).toBe(true)
+  const appURL = new URL('./', page.url()).href
+  expect(httpRequests.every(r => r.method === 'GET' && r.url.startsWith(appURL))).toBe(true)
   const initialRequests = httpRequests.length
   await context.setOffline(true)
   await upload(page)
@@ -103,7 +104,7 @@ test('通信遮断中に両形式を保存し、codec・長さ・左右の選択
 })
 
 test('ドラッグ・ハンドル・拡大・時刻入力・試聴ループを操作できる', async ({ page }) => {
-  await page.goto('/'); await ready(page); await upload(page)
+  await page.goto('./'); await ready(page); await upload(page)
   const track = page.locator('.wave-track')
   const rect = (await track.boundingBox())!
   await page.mouse.move(rect.x + rect.width * 0.2, rect.y + rect.height * 0.55)
@@ -131,7 +132,7 @@ test('ドラッグ・ハンドル・拡大・時刻入力・試聴ループを�
 })
 
 test('空・破損・長すぎる入力から、同じ画面で復帰できる', async ({ page }) => {
-  await page.goto('/'); await ready(page)
+  await page.goto('./'); await ready(page)
   await upload(page, Buffer.alloc(0), 'empty.wav')
   await expect(page.getByRole('alert')).toContainText('空のファイル')
   await upload(page, Buffer.from('not audio'), 'broken.wav')
@@ -156,7 +157,7 @@ test('実デコード待ちをキャンセルし、次の読み込みで古い�
       return new Promise<AudioBuffer>((resolve, reject) => setTimeout(() => original.call(this, data).then(resolve, reject), 800))
     }
   })
-  await page.goto('/'); await ready(page)
+  await page.goto('./'); await ready(page)
   await upload(page, toneWav(4), 'old.wav')
   await page.getByRole('button', { name: '読み込みをキャンセル', exact: true }).click()
   await expect(page.getByText('読み込みをキャンセルしました。ファイルを選び直せます。')).toBeVisible()
@@ -166,7 +167,7 @@ test('実デコード待ちをキャンセルし、次の読み込みで古い�
 })
 
 test('書き出しキャンセル後に、別形式で保存し直せる', async ({ page }) => {
-  await page.goto('/'); await ready(page); await upload(page, toneWav(60), 'long.wav')
+  await page.goto('./'); await ready(page); await upload(page, toneWav(60), 'long.wav')
   await page.getByRole('button', { name: 'MP3を書き出す', exact: true }).click()
   await page.getByRole('button', { name: '書き出しをキャンセル', exact: true }).click()
   await expect(page.getByText('書き出しをキャンセルしました。設定を確認して、もう一度書き出せます。')).toBeVisible()
@@ -185,7 +186,7 @@ test('初期準備の一時的な失敗を説明し、再試行できる', async
       return Reflect.construct(target, args)
     } })
   })
-  await page.goto('/')
+  await page.goto('./')
   await expect(page.getByText(/音声処理を準備できませんでした/)).toBeVisible()
   await page.getByRole('button', { name: '準備を再試行', exact: true }).click()
   await ready(page)
@@ -203,7 +204,7 @@ test('書き出し中の失敗を説明し、同じ入力から実エンコー�
       original.apply(this, args)
     }
   })
-  await page.goto('/'); await ready(page); await upload(page)
+  await page.goto('./'); await ready(page); await upload(page)
   await select(page)
   await page.getByRole('button', { name: 'MP3を書き出す', exact: true }).click()
   await expect(page.getByRole('alert')).toContainText('書き出せませんでした')
@@ -214,7 +215,7 @@ test('書き出し中の失敗を説明し、同じ入力から実エンコー�
 
 for (const width of [1440, 768, 375]) test(`${width}pxで長いファイル名と結果がはみ出さない`, async ({ page }, info) => {
   await page.setViewportSize({ width, height: 1000 })
-  await page.goto('/'); await ready(page)
+  await page.goto('./'); await ready(page)
   await page.screenshot({ path: info.outputPath(`empty-${width}.png`), fullPage: true })
   await upload(page, toneWav(4), 'とても長いファイル名でも内容を選択して安全に保存できるか確認するためのテスト音声です_2026-10-18.wav')
   await select(page, '0.1', '2.3')

@@ -4,15 +4,15 @@
 音声ファイルから必要な範囲を選択し、試聴し、MP3またはAAC入りM4Aとして保存できるブラウザ内処理のツール。ルートのAGENTS.md、docs/DESIGN.md、docs/FRONTEND.mdに従う。
 
 ## Constraints
-- React + TypeScript + Vite。音声処理はWeb Audio、エンコードは同梱したMediabunnyと公式MP3/AAC WASM拡張を利用する。CDN、外部フォント、解析、アップロード、音声の永続保存を使用しない。
+- React + TypeScript + Vite。音声処理はWeb Audio、エンコードは同梱したMediabunnyとMP3/AAC WASM拡張を利用する。AACは固定FFmpegソースから再ビルドしたローカルパッケージを使う。CDN、外部フォント、解析、アップロード、音声の永続保存を使用しない。
 - 入力音声・ファイル名・編集情報をネットワークへ送信しない。エンコーダーも初期準備時に読み込み、準備完了後は通信遮断下で編集・試聴・保存できることを確認する。
 - 実音声をデコードして波形と試聴へ使う。サンプルは明示した生成音声。拡張子変更や固定出力でエンコード成功を装わない。
 - MP3とM4Aを実際にエンコードし、結果を再生できる。M4AはAAC音声のMP4コンテナ。対応する入力形式はブラウザのデコーダーに依存し、読めないファイルは再選択へ案内する。
 - ファイル読込、試聴、範囲変更、エンコード/キャンセル/失敗時の非同期処理とメモリ・Object URL・AudioContextの終了処理を管理する。
-- 変更はこのフォルダとカタログ登録の最小範囲。公開・リリースタグ作成はしない。
+- 変更はこのフォルダとカタログ登録の最小範囲。公開時は対応ソースとビルド手順を同じ配信先にそろえ、Pagesの実行結果、実画面、配信ファイルを確認する。
 
 ## Done when / Verification
 - 範囲ドラッグ、数値入力、キーボード、選択範囲の試聴/ループ、MP3/M4Aの保存が操作できる。
 - エンコード前後の実ファイルを用いて音声内容・codec/container・長さ・チャンネルを確認。通信遮断中に両形式の出力を確認。
 - 主対象デスクトップChromium、1440px/768px/375px。実機Safari/スマートフォンの未確認は明記。
-- npm run checkを実行し、実ブラウザQAと必須ai_slop_reviewerレビューの結果をdocs/verification/RESULTS.mdへ記録する。
+- npm run checkを実行し、実ブラウザQAと必須ai_slop_reviewerレビューの結果をdocs/verification/RESULTS.mdへ記録する。checkに含まれるverify:aacで、AACのソース、bundle、同梱WASMがprovenance.jsonと一致することも確認する。

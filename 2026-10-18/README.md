@@ -36,13 +36,16 @@ npm run dev -- --port 4188
 npm run check        # 単体7件、lint、型、build、実ブラウザ10件
 npm run test:e2e     # distを使った実ブラウザ検証のみ。事前にbuildする
 npm run preview -- --port 4189
+npm run verify:aac   # AACの対応ソース・ローカルパッケージ・同梱WASMを照合
 ```
+
+公開先を検証するときは、`AUDIO_TEST_URL=https://hayatok.github.io/100challenge/2026-10-18/ npm run test:e2e`を使う。ローカルサーバーを起動せず、指定したURLで同じブラウザテストを実行する。
 
 `setup`は検証用Chromiumをインストールする。アプリの利用者にはインストール不要。`check`のブラウザテストはローカル限定プレビューを起動する。ビルドした`dist/`を任意の静的HTTPサーバーで配信でき、サブディレクトリ配信に対応する。
 
 ## 実装と依存
 
-React + TypeScript + Viteで実装した。デコードと試聴にはWeb Audio、エンコードにはMediabunny 1.61.6と公式のMP3/AACエンコーダー拡張を使う。ブラウザごとのAACエンコーダー実装の違いに依存せず両形式を保存するため、両WASM拡張を採用した。workerとWASMはアプリに同梱するため、外部の処理サーバーや追加ダウンロードを必要としない。
+React + TypeScript + Viteで実装した。デコードと試聴にはWeb Audio、エンコードにはMediabunny 1.61.6とMP3/AACエンコーダー拡張を使う。AACはFFmpegの固定ソースから再ビルドし、ローカルパッケージとして同梱する。ブラウザごとのAACエンコーダー実装の違いに依存せず両形式を保存するため、両WASM拡張を採用した。workerとWASMはアプリに同梱するため、外部の処理サーバーや追加ダウンロードを必要としない。
 
 | ファイル | 役割 |
 |---|---|
@@ -52,4 +55,4 @@ React + TypeScript + Viteで実装した。デコードと試聴にはWeb Audio�
 | `src/audio/usePlayback.ts` | 選択範囲の試聴と停止/後処理 |
 | `tests/browser/` | オフライン・保存内容・失敗復帰・画面幅の実操作 |
 
-[実装計画](docs/PLAN.md)、[画面方針](docs/DESIGN.md)、[検証結果](docs/verification/RESULTS.md)、[依存とライセンス](docs/THIRD_PARTY.md)。
+[実装計画](docs/PLAN.md)、[画面方針](docs/DESIGN.md)、[検証結果](docs/verification/RESULTS.md)、[依存とライセンス](docs/THIRD_PARTY.md)、[AAC再ビルド手順](public/licenses/aac-rebuild/README.md)。
