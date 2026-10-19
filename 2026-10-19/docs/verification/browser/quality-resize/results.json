@@ -1,0 +1,2173 @@
+{
+  "success": true,
+  "samples": [
+    {
+      "name": "paused-1280",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "snapshot": {
+        "arena": {
+          "bounded": false,
+          "obstacles": false
+        },
+        "audio": {
+          "music_active": true,
+          "music_paused": true,
+          "music_starts": 1
+        },
+        "choices": [],
+        "damage_taken": 0,
+        "echo": {
+          "active": false,
+          "x": 0,
+          "y": 0
+        },
+        "echo_shots": 0,
+        "effects": 1,
+        "elapsed": 1.41666666666667,
+        "enemies": [
+          {
+            "hp": 28,
+            "id": 1,
+            "kind": "hound",
+            "mark_expires": 0,
+            "mark_source": "",
+            "phase": "seek",
+            "x": 31.3,
+            "y": -227.2
+          },
+          {
+            "hp": 16,
+            "id": 2,
+            "kind": "hound",
+            "mark_expires": 3.4,
+            "mark_source": "player",
+            "phase": "seek",
+            "x": 276.9,
+            "y": -58.7
+          },
+          {
+            "hp": 28,
+            "id": 3,
+            "kind": "hound",
+            "mark_expires": 0,
+            "mark_source": "",
+            "phase": "seek",
+            "x": 171.6,
+            "y": 169.4
+          },
+          {
+            "hp": 28,
+            "id": 4,
+            "kind": "hound",
+            "mark_expires": 0,
+            "mark_source": "",
+            "phase": "seek",
+            "x": -133.9,
+            "y": 216.2
+          },
+          {
+            "hp": 28,
+            "id": 5,
+            "kind": "hound",
+            "mark_expires": 0,
+            "mark_source": "",
+            "phase": "seek",
+            "x": -202.4,
+            "y": -73
+          },
+          {
+            "hp": 28,
+            "id": 6,
+            "kind": "hound",
+            "mark_expires": 0,
+            "mark_source": "",
+            "phase": "arrival",
+            "x": 668.4,
+            "y": 41
+          },
+          {
+            "hp": 28,
+            "id": 7,
+            "kind": "hound",
+            "mark_expires": 0,
+            "mark_source": "",
+            "phase": "arrival",
+            "x": 668.4,
+            "y": -41
+          }
+        ],
+        "enemy_count": 7,
+        "experience": 0,
+        "experience_needed": 5,
+        "health": 100,
+        "history_samples": 86,
+        "kills": 0,
+        "last_echo_attack": {},
+        "last_player_attack": {
+          "cooldown": 0.78,
+          "count": 1,
+          "damage": 12,
+          "kind": "lightning",
+          "level": 1,
+          "power_scale": 1,
+          "range": 400,
+          "range_scale": 1,
+          "resonance_bonus": 12,
+          "width": 11
+        },
+        "level": 1,
+        "maximum_health": 100,
+        "pending_echo_attacks": 1,
+        "phase": {
+          "assault": true,
+          "index": 0,
+          "name": "残像の目覚め",
+          "remaining": 20.5833333333333,
+          "subtitle": "道を分け、二人で狙おう"
+        },
+        "pickups": 0,
+        "player": {
+          "x": 300.999969482422,
+          "y": 0
+        },
+        "player_shots": 1,
+        "projectiles": 0,
+        "resonance_bonus": 12,
+        "resonance_hits": 0,
+        "resonance_kills": 0,
+        "settings": {
+          "reduced_motion": false,
+          "sound": true
+        },
+        "specialization": "未選択",
+        "state": "paused",
+        "upgrade_choices": [],
+        "weapons": {
+          "lightning": {
+            "cooldown": 0.78,
+            "count": 1,
+            "damage": 12,
+            "level": 1,
+            "power_scale": 1,
+            "range": 400,
+            "range_scale": 1,
+            "width": 11
+          },
+          "moon": {
+            "cooldown": 2.15,
+            "count": 1,
+            "damage": 13,
+            "level": 0,
+            "power_scale": 1,
+            "radius": 118,
+            "radius_scale": 1
+          }
+        }
+      }
+    },
+    {
+      "name": "resize-immediate",
+      "viewport": {
+        "width": 960,
+        "height": 540
+      },
+      "snapshot": {
+        "arena": {
+          "bounded": false,
+          "obstacles": false
+        },
+        "audio": {
+          "music_active": true,
+          "music_paused": true,
+          "music_starts": 1
+        },
+        "choices": [],
+        "damage_taken": 0,
+        "echo": {
+          "active": false,
+          "x": 0,
+          "y": 0
+        },
+        "echo_shots": 0,
+        "effects": 1,
+        "elapsed": 1.41666666666667,
+        "enemies": [
+          {
+            "hp": 28,
+            "id": 1,
+            "kind": "hound",
+            "mark_expires": 0,
+            "mark_source": "",
+            "phase": "seek",
+            "x": 31.3,
+            "y": -227.2
+          },
+          {
+            "hp": 16,
+            "id": 2,
+            "kind": "hound",
+            "mark_expires": 3.4,
+            "mark_source": "player",
+            "phase": "seek",
+            "x": 276.9,
+            "y": -58.7
+          },
+          {
+            "hp": 28,
+            "id": 3,
+            "kind": "hound",
+            "mark_expires": 0,
+            "mark_source": "",
+            "phase": "seek",
+            "x": 171.6,
+            "y": 169.4
+          },
+          {
+            "hp": 28,
+            "id": 4,
+            "kind": "hound",
+            "mark_expires": 0,
+            "mark_source": "",
+            "phase": "seek",
+            "x": -133.9,
+            "y": 216.2
+          },
+          {
+            "hp": 28,
+            "id": 5,
+            "kind": "hound",
+            "mark_expires": 0,
+            "mark_source": "",
+            "phase": "seek",
+            "x": -202.4,
+            "y": -73
+          },
+          {
+            "hp": 28,
+            "id": 6,
+            "kind": "hound",
+            "mark_expires": 0,
+            "mark_source": "",
+            "phase": "arrival",
+            "x": 668.4,
+            "y": 41
+          },
+          {
+            "hp": 28,
+            "id": 7,
+            "kind": "hound",
+            "mark_expires": 0,
+            "mark_source": "",
+            "phase": "arrival",
+            "x": 668.4,
+            "y": -41
+          }
+        ],
+        "enemy_count": 7,
+        "experience": 0,
+        "experience_needed": 5,
+        "health": 100,
+        "history_samples": 86,
+        "kills": 0,
+        "last_echo_attack": {},
+        "last_player_attack": {
+          "cooldown": 0.78,
+          "count": 1,
+          "damage": 12,
+          "kind": "lightning",
+          "level": 1,
+          "power_scale": 1,
+          "range": 400,
+          "range_scale": 1,
+          "resonance_bonus": 12,
+          "width": 11
+        },
+        "level": 1,
+        "maximum_health": 100,
+        "pending_echo_attacks": 1,
+        "phase": {
+          "assault": true,
+          "index": 0,
+          "name": "残像の目覚め",
+          "remaining": 20.5833333333333,
+          "subtitle": "道を分け、二人で狙おう"
+        },
+        "pickups": 0,
+        "player": {
+          "x": 300.999969482422,
+          "y": 0
+        },
+        "player_shots": 1,
+        "projectiles": 0,
+        "resonance_bonus": 12,
+        "resonance_hits": 0,
+        "resonance_kills": 0,
+        "settings": {
+          "reduced_motion": false,
+          "sound": true
+        },
+        "specialization": "未選択",
+        "state": "paused",
+        "upgrade_choices": [],
+        "weapons": {
+          "lightning": {
+            "cooldown": 0.78,
+            "count": 1,
+            "damage": 12,
+            "level": 1,
+            "power_scale": 1,
+            "range": 400,
+            "range_scale": 1,
+            "width": 11
+          },
+          "moon": {
+            "cooldown": 2.15,
+            "count": 1,
+            "damage": 13,
+            "level": 0,
+            "power_scale": 1,
+            "radius": 118,
+            "radius_scale": 1
+          }
+        }
+      }
+    },
+    {
+      "name": "resize-settled",
+      "viewport": {
+        "width": 960,
+        "height": 540
+      },
+      "snapshot": {
+        "arena": {
+          "bounded": false,
+          "obstacles": false
+        },
+        "audio": {
+          "music_active": true,
+          "music_paused": true,
+          "music_starts": 1
+        },
+        "choices": [],
+        "damage_taken": 0,
+        "echo": {
+          "active": false,
+          "x": 0,
+          "y": 0
+        },
+        "echo_shots": 0,
+        "effects": 1,
+        "elapsed": 1.41666666666667,
+        "enemies": [
+          {
+            "hp": 28,
+            "id": 1,
+            "kind": "hound",
+            "mark_expires": 0,
+            "mark_source": "",
+            "phase": "seek",
+            "x": 31.3,
+            "y": -227.2
+          },
+          {
+            "hp": 16,
+            "id": 2,
+            "kind": "hound",
+            "mark_expires": 3.4,
+            "mark_source": "player",
+            "phase": "seek",
+            "x": 276.9,
+            "y": -58.7
+          },
+          {
+            "hp": 28,
+            "id": 3,
+            "kind": "hound",
+            "mark_expires": 0,
+            "mark_source": "",
+            "phase": "seek",
+            "x": 171.6,
+            "y": 169.4
+          },
+          {
+            "hp": 28,
+            "id": 4,
+            "kind": "hound",
+            "mark_expires": 0,
+            "mark_source": "",
+            "phase": "seek",
+            "x": -133.9,
+            "y": 216.2
+          },
+          {
+            "hp": 28,
+            "id": 5,
+            "kind": "hound",
+            "mark_expires": 0,
+            "mark_source": "",
+            "phase": "seek",
+            "x": -202.4,
+            "y": -73
+          },
+          {
+            "hp": 28,
+            "id": 6,
+            "kind": "hound",
+            "mark_expires": 0,
+            "mark_source": "",
+            "phase": "arrival",
+            "x": 668.4,
+            "y": 41
+          },
+          {
+            "hp": 28,
+            "id": 7,
+            "kind": "hound",
+            "mark_expires": 0,
+            "mark_source": "",
+            "phase": "arrival",
+            "x": 668.4,
+            "y": -41
+          }
+        ],
+        "enemy_count": 7,
+        "experience": 0,
+        "experience_needed": 5,
+        "health": 100,
+        "history_samples": 86,
+        "kills": 0,
+        "last_echo_attack": {},
+        "last_player_attack": {
+          "cooldown": 0.78,
+          "count": 1,
+          "damage": 12,
+          "kind": "lightning",
+          "level": 1,
+          "power_scale": 1,
+          "range": 400,
+          "range_scale": 1,
+          "resonance_bonus": 12,
+          "width": 11
+        },
+        "level": 1,
+        "maximum_health": 100,
+        "pending_echo_attacks": 1,
+        "phase": {
+          "assault": true,
+          "index": 0,
+          "name": "残像の目覚め",
+          "remaining": 20.5833333333333,
+          "subtitle": "道を分け、二人で狙おう"
+        },
+        "pickups": 0,
+        "player": {
+          "x": 300.999969482422,
+          "y": 0
+        },
+        "player_shots": 1,
+        "projectiles": 0,
+        "resonance_bonus": 12,
+        "resonance_hits": 0,
+        "resonance_kills": 0,
+        "settings": {
+          "reduced_motion": false,
+          "sound": true
+        },
+        "specialization": "未選択",
+        "state": "paused",
+        "upgrade_choices": [],
+        "weapons": {
+          "lightning": {
+            "cooldown": 0.78,
+            "count": 1,
+            "damage": 12,
+            "level": 1,
+            "power_scale": 1,
+            "range": 400,
+            "range_scale": 1,
+            "width": 11
+          },
+          "moon": {
+            "cooldown": 2.15,
+            "count": 1,
+            "damage": 13,
+            "level": 0,
+            "power_scale": 1,
+            "radius": 118,
+            "radius_scale": 1
+          }
+        }
+      }
+    },
+    {
+      "name": "resize-after-second",
+      "viewport": {
+        "width": 960,
+        "height": 540
+      },
+      "snapshot": {
+        "arena": {
+          "bounded": false,
+          "obstacles": false
+        },
+        "audio": {
+          "music_active": true,
+          "music_paused": true,
+          "music_starts": 1
+        },
+        "choices": [],
+        "damage_taken": 0,
+        "echo": {
+          "active": false,
+          "x": 0,
+          "y": 0
+        },
+        "echo_shots": 0,
+        "effects": 1,
+        "elapsed": 1.41666666666667,
+        "enemies": [
+          {
+            "hp": 28,
+            "id": 1,
+            "kind": "hound",
+            "mark_expires": 0,
+            "mark_source": "",
+            "phase": "seek",
+            "x": 31.3,
+            "y": -227.2
+          },
+          {
+            "hp": 16,
+            "id": 2,
+            "kind": "hound",
+            "mark_expires": 3.4,
+            "mark_source": "player",
+            "phase": "seek",
+            "x": 276.9,
+            "y": -58.7
+          },
+          {
+            "hp": 28,
+            "id": 3,
+            "kind": "hound",
+            "mark_expires": 0,
+            "mark_source": "",
+            "phase": "seek",
+            "x": 171.6,
+            "y": 169.4
+          },
+          {
+            "hp": 28,
+            "id": 4,
+            "kind": "hound",
+            "mark_expires": 0,
+            "mark_source": "",
+            "phase": "seek",
+            "x": -133.9,
+            "y": 216.2
+          },
+          {
+            "hp": 28,
+            "id": 5,
+            "kind": "hound",
+            "mark_expires": 0,
+            "mark_source": "",
+            "phase": "seek",
+            "x": -202.4,
+            "y": -73
+          },
+          {
+            "hp": 28,
+            "id": 6,
+            "kind": "hound",
+            "mark_expires": 0,
+            "mark_source": "",
+            "phase": "arrival",
+            "x": 668.4,
+            "y": 41
+          },
+          {
+            "hp": 28,
+            "id": 7,
+            "kind": "hound",
+            "mark_expires": 0,
+            "mark_source": "",
+            "phase": "arrival",
+            "x": 668.4,
+            "y": -41
+          }
+        ],
+        "enemy_count": 7,
+        "experience": 0,
+        "experience_needed": 5,
+        "health": 100,
+        "history_samples": 86,
+        "kills": 0,
+        "last_echo_attack": {},
+        "last_player_attack": {
+          "cooldown": 0.78,
+          "count": 1,
+          "damage": 12,
+          "kind": "lightning",
+          "level": 1,
+          "power_scale": 1,
+          "range": 400,
+          "range_scale": 1,
+          "resonance_bonus": 12,
+          "width": 11
+        },
+        "level": 1,
+        "maximum_health": 100,
+        "pending_echo_attacks": 1,
+        "phase": {
+          "assault": true,
+          "index": 0,
+          "name": "残像の目覚め",
+          "remaining": 20.5833333333333,
+          "subtitle": "道を分け、二人で狙おう"
+        },
+        "pickups": 0,
+        "player": {
+          "x": 300.999969482422,
+          "y": 0
+        },
+        "player_shots": 1,
+        "projectiles": 0,
+        "resonance_bonus": 12,
+        "resonance_hits": 0,
+        "resonance_kills": 0,
+        "settings": {
+          "reduced_motion": false,
+          "sound": true
+        },
+        "specialization": "未選択",
+        "state": "paused",
+        "upgrade_choices": [],
+        "weapons": {
+          "lightning": {
+            "cooldown": 0.78,
+            "count": 1,
+            "damage": 12,
+            "level": 1,
+            "power_scale": 1,
+            "range": 400,
+            "range_scale": 1,
+            "width": 11
+          },
+          "moon": {
+            "cooldown": 2.15,
+            "count": 1,
+            "damage": 13,
+            "level": 0,
+            "power_scale": 1,
+            "radius": 118,
+            "radius_scale": 1
+          }
+        }
+      }
+    },
+    {
+      "name": "resize-resumed",
+      "viewport": {
+        "width": 960,
+        "height": 540
+      },
+      "snapshot": {
+        "arena": {
+          "bounded": false,
+          "obstacles": false
+        },
+        "audio": {
+          "music_active": true,
+          "music_paused": false,
+          "music_starts": 1
+        },
+        "choices": [],
+        "damage_taken": 8,
+        "echo": {
+          "active": true,
+          "x": 75.25,
+          "y": 0
+        },
+        "echo_shots": 0,
+        "effects": 0,
+        "elapsed": 2.36666666666666,
+        "enemies": [
+          {
+            "hp": 28,
+            "id": 1,
+            "kind": "hound",
+            "mark_expires": 0,
+            "mark_source": "",
+            "phase": "seek",
+            "x": 95.2,
+            "y": -173.3
+          },
+          {
+            "hp": 4,
+            "id": 2,
+            "kind": "hound",
+            "mark_expires": 4.18333333333333,
+            "mark_source": "player",
+            "phase": "seek",
+            "x": 300.7,
+            "y": -0.6
+          },
+          {
+            "hp": 28,
+            "id": 3,
+            "kind": "hound",
+            "mark_expires": 0,
+            "mark_source": "",
+            "phase": "seek",
+            "x": 222.3,
+            "y": 103
+          },
+          {
+            "hp": 28,
+            "id": 4,
+            "kind": "hound",
+            "mark_expires": 0,
+            "mark_source": "",
+            "phase": "seek",
+            "x": -59,
+            "y": 179
+          },
+          {
+            "hp": 28,
+            "id": 5,
+            "kind": "hound",
+            "mark_expires": 0,
+            "mark_source": "",
+            "phase": "seek",
+            "x": -119.7,
+            "y": -61
+          },
+          {
+            "hp": 28,
+            "id": 6,
+            "kind": "hound",
+            "mark_expires": 0,
+            "mark_source": "",
+            "phase": "seek",
+            "x": 608.6,
+            "y": 34.3
+          },
+          {
+            "hp": 28,
+            "id": 7,
+            "kind": "hound",
+            "mark_expires": 0,
+            "mark_source": "",
+            "phase": "seek",
+            "x": 608.6,
+            "y": -34.3
+          },
+          {
+            "hp": 28,
+            "id": 8,
+            "kind": "hound",
+            "mark_expires": 0,
+            "mark_source": "",
+            "phase": "arrival",
+            "x": 372,
+            "y": 607.3
+          },
+          {
+            "hp": 28,
+            "id": 9,
+            "kind": "hound",
+            "mark_expires": 0,
+            "mark_source": "",
+            "phase": "arrival",
+            "x": 279.3,
+            "y": 498.7
+          }
+        ],
+        "enemy_count": 9,
+        "experience": 0,
+        "experience_needed": 5,
+        "health": 92,
+        "history_samples": 131,
+        "kills": 0,
+        "last_echo_attack": {},
+        "last_player_attack": {
+          "cooldown": 0.78,
+          "count": 1,
+          "damage": 12,
+          "kind": "lightning",
+          "level": 1,
+          "power_scale": 1,
+          "range": 400,
+          "range_scale": 1,
+          "resonance_bonus": 12,
+          "width": 11
+        },
+        "level": 1,
+        "maximum_health": 100,
+        "pending_echo_attacks": 2,
+        "phase": {
+          "assault": true,
+          "index": 0,
+          "name": "残像の目覚め",
+          "remaining": 19.6333333333333,
+          "subtitle": "道を分け、二人で狙おう"
+        },
+        "pickups": 0,
+        "player": {
+          "x": 300.999969482422,
+          "y": 0
+        },
+        "player_shots": 2,
+        "projectiles": 0,
+        "resonance_bonus": 12,
+        "resonance_hits": 0,
+        "resonance_kills": 0,
+        "settings": {
+          "reduced_motion": false,
+          "sound": true
+        },
+        "specialization": "未選択",
+        "state": "playing",
+        "upgrade_choices": [],
+        "weapons": {
+          "lightning": {
+            "cooldown": 0.78,
+            "count": 1,
+            "damage": 12,
+            "level": 1,
+            "power_scale": 1,
+            "range": 400,
+            "range_scale": 1,
+            "width": 11
+          },
+          "moon": {
+            "cooldown": 2.15,
+            "count": 1,
+            "damage": 13,
+            "level": 0,
+            "power_scale": 1,
+            "radius": 118,
+            "radius_scale": 1
+          }
+        }
+      }
+    },
+    {
+      "name": "resize-repaused",
+      "viewport": {
+        "width": 960,
+        "height": 540
+      },
+      "snapshot": {
+        "arena": {
+          "bounded": false,
+          "obstacles": false
+        },
+        "audio": {
+          "music_active": true,
+          "music_paused": true,
+          "music_starts": 1
+        },
+        "choices": [],
+        "damage_taken": 8,
+        "echo": {
+          "active": true,
+          "x": 75.25,
+          "y": 0
+        },
+        "echo_shots": 0,
+        "effects": 0,
+        "elapsed": 2.36666666666666,
+        "enemies": [
+          {
+            "hp": 28,
+            "id": 1,
+            "kind": "hound",
+            "mark_expires": 0,
+            "mark_source": "",
+            "phase": "seek",
+            "x": 95.2,
+            "y": -173.3
+          },
+          {
+            "hp": 4,
+            "id": 2,
+            "kind": "hound",
+            "mark_expires": 4.18333333333333,
+            "mark_source": "player",
+            "phase": "seek",
+            "x": 300.7,
+            "y": -0.6
+          },
+          {
+            "hp": 28,
+            "id": 3,
+            "kind": "hound",
+            "mark_expires": 0,
+            "mark_source": "",
+            "phase": "seek",
+            "x": 222.3,
+            "y": 103
+          },
+          {
+            "hp": 28,
+            "id": 4,
+            "kind": "hound",
+            "mark_expires": 0,
+            "mark_source": "",
+            "phase": "seek",
+            "x": -59,
+            "y": 179
+          },
+          {
+            "hp": 28,
+            "id": 5,
+            "kind": "hound",
+            "mark_expires": 0,
+            "mark_source": "",
+            "phase": "seek",
+            "x": -119.7,
+            "y": -61
+          },
+          {
+            "hp": 28,
+            "id": 6,
+            "kind": "hound",
+            "mark_expires": 0,
+            "mark_source": "",
+            "phase": "seek",
+            "x": 608.6,
+            "y": 34.3
+          },
+          {
+            "hp": 28,
+            "id": 7,
+            "kind": "hound",
+            "mark_expires": 0,
+            "mark_source": "",
+            "phase": "seek",
+            "x": 608.6,
+            "y": -34.3
+          },
+          {
+            "hp": 28,
+            "id": 8,
+            "kind": "hound",
+            "mark_expires": 0,
+            "mark_source": "",
+            "phase": "arrival",
+            "x": 372,
+            "y": 607.3
+          },
+          {
+            "hp": 28,
+            "id": 9,
+            "kind": "hound",
+            "mark_expires": 0,
+            "mark_source": "",
+            "phase": "arrival",
+            "x": 279.3,
+            "y": 498.7
+          }
+        ],
+        "enemy_count": 9,
+        "experience": 0,
+        "experience_needed": 5,
+        "health": 92,
+        "history_samples": 131,
+        "kills": 0,
+        "last_echo_attack": {},
+        "last_player_attack": {
+          "cooldown": 0.78,
+          "count": 1,
+          "damage": 12,
+          "kind": "lightning",
+          "level": 1,
+          "power_scale": 1,
+          "range": 400,
+          "range_scale": 1,
+          "resonance_bonus": 12,
+          "width": 11
+        },
+        "level": 1,
+        "maximum_health": 100,
+        "pending_echo_attacks": 2,
+        "phase": {
+          "assault": true,
+          "index": 0,
+          "name": "残像の目覚め",
+          "remaining": 19.6333333333333,
+          "subtitle": "道を分け、二人で狙おう"
+        },
+        "pickups": 0,
+        "player": {
+          "x": 300.999969482422,
+          "y": 0
+        },
+        "player_shots": 2,
+        "projectiles": 0,
+        "resonance_bonus": 12,
+        "resonance_hits": 0,
+        "resonance_kills": 0,
+        "settings": {
+          "reduced_motion": false,
+          "sound": true
+        },
+        "specialization": "未選択",
+        "state": "paused",
+        "upgrade_choices": [],
+        "weapons": {
+          "lightning": {
+            "cooldown": 0.78,
+            "count": 1,
+            "damage": 12,
+            "level": 1,
+            "power_scale": 1,
+            "range": 400,
+            "range_scale": 1,
+            "width": 11
+          },
+          "moon": {
+            "cooldown": 2.15,
+            "count": 1,
+            "damage": 13,
+            "level": 0,
+            "power_scale": 1,
+            "radius": 118,
+            "radius_scale": 1
+          }
+        }
+      }
+    },
+    {
+      "name": "repeat-1-paused-960",
+      "viewport": {
+        "width": 960,
+        "height": 540
+      },
+      "snapshot": {
+        "arena": {
+          "bounded": false,
+          "obstacles": false
+        },
+        "audio": {
+          "music_active": true,
+          "music_paused": true,
+          "music_starts": 1
+        },
+        "choices": [],
+        "damage_taken": 8,
+        "echo": {
+          "active": true,
+          "x": 75.25,
+          "y": 0
+        },
+        "echo_shots": 0,
+        "effects": 0,
+        "elapsed": 2.36666666666666,
+        "enemies": [
+          {
+            "hp": 28,
+            "id": 1,
+            "kind": "hound",
+            "mark_expires": 0,
+            "mark_source": "",
+            "phase": "seek",
+            "x": 95.2,
+            "y": -173.3
+          },
+          {
+            "hp": 4,
+            "id": 2,
+            "kind": "hound",
+            "mark_expires": 4.18333333333333,
+            "mark_source": "player",
+            "phase": "seek",
+            "x": 300.7,
+            "y": -0.6
+          },
+          {
+            "hp": 28,
+            "id": 3,
+            "kind": "hound",
+            "mark_expires": 0,
+            "mark_source": "",
+            "phase": "seek",
+            "x": 222.3,
+            "y": 103
+          },
+          {
+            "hp": 28,
+            "id": 4,
+            "kind": "hound",
+            "mark_expires": 0,
+            "mark_source": "",
+            "phase": "seek",
+            "x": -59,
+            "y": 179
+          },
+          {
+            "hp": 28,
+            "id": 5,
+            "kind": "hound",
+            "mark_expires": 0,
+            "mark_source": "",
+            "phase": "seek",
+            "x": -119.7,
+            "y": -61
+          },
+          {
+            "hp": 28,
+            "id": 6,
+            "kind": "hound",
+            "mark_expires": 0,
+            "mark_source": "",
+            "phase": "seek",
+            "x": 608.6,
+            "y": 34.3
+          },
+          {
+            "hp": 28,
+            "id": 7,
+            "kind": "hound",
+            "mark_expires": 0,
+            "mark_source": "",
+            "phase": "seek",
+            "x": 608.6,
+            "y": -34.3
+          },
+          {
+            "hp": 28,
+            "id": 8,
+            "kind": "hound",
+            "mark_expires": 0,
+            "mark_source": "",
+            "phase": "arrival",
+            "x": 372,
+            "y": 607.3
+          },
+          {
+            "hp": 28,
+            "id": 9,
+            "kind": "hound",
+            "mark_expires": 0,
+            "mark_source": "",
+            "phase": "arrival",
+            "x": 279.3,
+            "y": 498.7
+          }
+        ],
+        "enemy_count": 9,
+        "experience": 0,
+        "experience_needed": 5,
+        "health": 92,
+        "history_samples": 131,
+        "kills": 0,
+        "last_echo_attack": {},
+        "last_player_attack": {
+          "cooldown": 0.78,
+          "count": 1,
+          "damage": 12,
+          "kind": "lightning",
+          "level": 1,
+          "power_scale": 1,
+          "range": 400,
+          "range_scale": 1,
+          "resonance_bonus": 12,
+          "width": 11
+        },
+        "level": 1,
+        "maximum_health": 100,
+        "pending_echo_attacks": 2,
+        "phase": {
+          "assault": true,
+          "index": 0,
+          "name": "残像の目覚め",
+          "remaining": 19.6333333333333,
+          "subtitle": "道を分け、二人で狙おう"
+        },
+        "pickups": 0,
+        "player": {
+          "x": 300.999969482422,
+          "y": 0
+        },
+        "player_shots": 2,
+        "projectiles": 0,
+        "resonance_bonus": 12,
+        "resonance_hits": 0,
+        "resonance_kills": 0,
+        "settings": {
+          "reduced_motion": false,
+          "sound": true
+        },
+        "specialization": "未選択",
+        "state": "paused",
+        "upgrade_choices": [],
+        "weapons": {
+          "lightning": {
+            "cooldown": 0.78,
+            "count": 1,
+            "damage": 12,
+            "level": 1,
+            "power_scale": 1,
+            "range": 400,
+            "range_scale": 1,
+            "width": 11
+          },
+          "moon": {
+            "cooldown": 2.15,
+            "count": 1,
+            "damage": 13,
+            "level": 0,
+            "power_scale": 1,
+            "radius": 118,
+            "radius_scale": 1
+          }
+        }
+      }
+    },
+    {
+      "name": "repeat-2-paused-960",
+      "viewport": {
+        "width": 960,
+        "height": 540
+      },
+      "snapshot": {
+        "arena": {
+          "bounded": false,
+          "obstacles": false
+        },
+        "audio": {
+          "music_active": true,
+          "music_paused": true,
+          "music_starts": 1
+        },
+        "choices": [],
+        "damage_taken": 8,
+        "echo": {
+          "active": true,
+          "x": 75.25,
+          "y": 0
+        },
+        "echo_shots": 0,
+        "effects": 0,
+        "elapsed": 2.36666666666666,
+        "enemies": [
+          {
+            "hp": 28,
+            "id": 1,
+            "kind": "hound",
+            "mark_expires": 0,
+            "mark_source": "",
+            "phase": "seek",
+            "x": 95.2,
+            "y": -173.3
+          },
+          {
+            "hp": 4,
+            "id": 2,
+            "kind": "hound",
+            "mark_expires": 4.18333333333333,
+            "mark_source": "player",
+            "phase": "seek",
+            "x": 300.7,
+            "y": -0.6
+          },
+          {
+            "hp": 28,
+            "id": 3,
+            "kind": "hound",
+            "mark_expires": 0,
+            "mark_source": "",
+            "phase": "seek",
+            "x": 222.3,
+            "y": 103
+          },
+          {
+            "hp": 28,
+            "id": 4,
+            "kind": "hound",
+            "mark_expires": 0,
+            "mark_source": "",
+            "phase": "seek",
+            "x": -59,
+            "y": 179
+          },
+          {
+            "hp": 28,
+            "id": 5,
+            "kind": "hound",
+            "mark_expires": 0,
+            "mark_source": "",
+            "phase": "seek",
+            "x": -119.7,
+            "y": -61
+          },
+          {
+            "hp": 28,
+            "id": 6,
+            "kind": "hound",
+            "mark_expires": 0,
+            "mark_source": "",
+            "phase": "seek",
+            "x": 608.6,
+            "y": 34.3
+          },
+          {
+            "hp": 28,
+            "id": 7,
+            "kind": "hound",
+            "mark_expires": 0,
+            "mark_source": "",
+            "phase": "seek",
+            "x": 608.6,
+            "y": -34.3
+          },
+          {
+            "hp": 28,
+            "id": 8,
+            "kind": "hound",
+            "mark_expires": 0,
+            "mark_source": "",
+            "phase": "arrival",
+            "x": 372,
+            "y": 607.3
+          },
+          {
+            "hp": 28,
+            "id": 9,
+            "kind": "hound",
+            "mark_expires": 0,
+            "mark_source": "",
+            "phase": "arrival",
+            "x": 279.3,
+            "y": 498.7
+          }
+        ],
+        "enemy_count": 9,
+        "experience": 0,
+        "experience_needed": 5,
+        "health": 92,
+        "history_samples": 131,
+        "kills": 0,
+        "last_echo_attack": {},
+        "last_player_attack": {
+          "cooldown": 0.78,
+          "count": 1,
+          "damage": 12,
+          "kind": "lightning",
+          "level": 1,
+          "power_scale": 1,
+          "range": 400,
+          "range_scale": 1,
+          "resonance_bonus": 12,
+          "width": 11
+        },
+        "level": 1,
+        "maximum_health": 100,
+        "pending_echo_attacks": 2,
+        "phase": {
+          "assault": true,
+          "index": 0,
+          "name": "残像の目覚め",
+          "remaining": 19.6333333333333,
+          "subtitle": "道を分け、二人で狙おう"
+        },
+        "pickups": 0,
+        "player": {
+          "x": 300.999969482422,
+          "y": 0
+        },
+        "player_shots": 2,
+        "projectiles": 0,
+        "resonance_bonus": 12,
+        "resonance_hits": 0,
+        "resonance_kills": 0,
+        "settings": {
+          "reduced_motion": false,
+          "sound": true
+        },
+        "specialization": "未選択",
+        "state": "paused",
+        "upgrade_choices": [],
+        "weapons": {
+          "lightning": {
+            "cooldown": 0.78,
+            "count": 1,
+            "damage": 12,
+            "level": 1,
+            "power_scale": 1,
+            "range": 400,
+            "range_scale": 1,
+            "width": 11
+          },
+          "moon": {
+            "cooldown": 2.15,
+            "count": 1,
+            "damage": 13,
+            "level": 0,
+            "power_scale": 1,
+            "radius": 118,
+            "radius_scale": 1
+          }
+        }
+      }
+    },
+    {
+      "name": "repeat-3-paused-960",
+      "viewport": {
+        "width": 960,
+        "height": 540
+      },
+      "snapshot": {
+        "arena": {
+          "bounded": false,
+          "obstacles": false
+        },
+        "audio": {
+          "music_active": true,
+          "music_paused": true,
+          "music_starts": 1
+        },
+        "choices": [],
+        "damage_taken": 8,
+        "echo": {
+          "active": true,
+          "x": 75.25,
+          "y": 0
+        },
+        "echo_shots": 0,
+        "effects": 0,
+        "elapsed": 2.36666666666666,
+        "enemies": [
+          {
+            "hp": 28,
+            "id": 1,
+            "kind": "hound",
+            "mark_expires": 0,
+            "mark_source": "",
+            "phase": "seek",
+            "x": 95.2,
+            "y": -173.3
+          },
+          {
+            "hp": 4,
+            "id": 2,
+            "kind": "hound",
+            "mark_expires": 4.18333333333333,
+            "mark_source": "player",
+            "phase": "seek",
+            "x": 300.7,
+            "y": -0.6
+          },
+          {
+            "hp": 28,
+            "id": 3,
+            "kind": "hound",
+            "mark_expires": 0,
+            "mark_source": "",
+            "phase": "seek",
+            "x": 222.3,
+            "y": 103
+          },
+          {
+            "hp": 28,
+            "id": 4,
+            "kind": "hound",
+            "mark_expires": 0,
+            "mark_source": "",
+            "phase": "seek",
+            "x": -59,
+            "y": 179
+          },
+          {
+            "hp": 28,
+            "id": 5,
+            "kind": "hound",
+            "mark_expires": 0,
+            "mark_source": "",
+            "phase": "seek",
+            "x": -119.7,
+            "y": -61
+          },
+          {
+            "hp": 28,
+            "id": 6,
+            "kind": "hound",
+            "mark_expires": 0,
+            "mark_source": "",
+            "phase": "seek",
+            "x": 608.6,
+            "y": 34.3
+          },
+          {
+            "hp": 28,
+            "id": 7,
+            "kind": "hound",
+            "mark_expires": 0,
+            "mark_source": "",
+            "phase": "seek",
+            "x": 608.6,
+            "y": -34.3
+          },
+          {
+            "hp": 28,
+            "id": 8,
+            "kind": "hound",
+            "mark_expires": 0,
+            "mark_source": "",
+            "phase": "arrival",
+            "x": 372,
+            "y": 607.3
+          },
+          {
+            "hp": 28,
+            "id": 9,
+            "kind": "hound",
+            "mark_expires": 0,
+            "mark_source": "",
+            "phase": "arrival",
+            "x": 279.3,
+            "y": 498.7
+          }
+        ],
+        "enemy_count": 9,
+        "experience": 0,
+        "experience_needed": 5,
+        "health": 92,
+        "history_samples": 131,
+        "kills": 0,
+        "last_echo_attack": {},
+        "last_player_attack": {
+          "cooldown": 0.78,
+          "count": 1,
+          "damage": 12,
+          "kind": "lightning",
+          "level": 1,
+          "power_scale": 1,
+          "range": 400,
+          "range_scale": 1,
+          "resonance_bonus": 12,
+          "width": 11
+        },
+        "level": 1,
+        "maximum_health": 100,
+        "pending_echo_attacks": 2,
+        "phase": {
+          "assault": true,
+          "index": 0,
+          "name": "残像の目覚め",
+          "remaining": 19.6333333333333,
+          "subtitle": "道を分け、二人で狙おう"
+        },
+        "pickups": 0,
+        "player": {
+          "x": 300.999969482422,
+          "y": 0
+        },
+        "player_shots": 2,
+        "projectiles": 0,
+        "resonance_bonus": 12,
+        "resonance_hits": 0,
+        "resonance_kills": 0,
+        "settings": {
+          "reduced_motion": false,
+          "sound": true
+        },
+        "specialization": "未選択",
+        "state": "paused",
+        "upgrade_choices": [],
+        "weapons": {
+          "lightning": {
+            "cooldown": 0.78,
+            "count": 1,
+            "damage": 12,
+            "level": 1,
+            "power_scale": 1,
+            "range": 400,
+            "range_scale": 1,
+            "width": 11
+          },
+          "moon": {
+            "cooldown": 2.15,
+            "count": 1,
+            "damage": 13,
+            "level": 0,
+            "power_scale": 1,
+            "radius": 118,
+            "radius_scale": 1
+          }
+        }
+      }
+    },
+    {
+      "name": "fresh-title-960",
+      "viewport": {
+        "width": 960,
+        "height": 540
+      },
+      "snapshot": {
+        "arena": {
+          "bounded": false,
+          "obstacles": false
+        },
+        "audio": {
+          "music_active": false,
+          "music_paused": false,
+          "music_starts": 0
+        },
+        "choices": [],
+        "damage_taken": 0,
+        "echo": {
+          "active": false,
+          "x": 0,
+          "y": 0
+        },
+        "echo_shots": 0,
+        "effects": 0,
+        "elapsed": 0,
+        "enemies": [],
+        "enemy_count": 0,
+        "experience": 0,
+        "experience_needed": 5,
+        "health": 100,
+        "history_samples": 1,
+        "kills": 0,
+        "last_echo_attack": {},
+        "last_player_attack": {},
+        "level": 1,
+        "maximum_health": 100,
+        "pending_echo_attacks": 0,
+        "phase": {
+          "assault": true,
+          "index": 0,
+          "name": "残像の目覚め",
+          "remaining": 22,
+          "subtitle": "道を分け、二人で狙おう"
+        },
+        "pickups": 0,
+        "player": {
+          "x": 0,
+          "y": 0
+        },
+        "player_shots": 0,
+        "projectiles": 0,
+        "resonance_bonus": 12,
+        "resonance_hits": 0,
+        "resonance_kills": 0,
+        "settings": {
+          "reduced_motion": false,
+          "sound": true
+        },
+        "specialization": "未選択",
+        "state": "title",
+        "upgrade_choices": [],
+        "weapons": {
+          "lightning": {
+            "cooldown": 0.78,
+            "count": 1,
+            "damage": 12,
+            "level": 1,
+            "power_scale": 1,
+            "range": 400,
+            "range_scale": 1,
+            "width": 11
+          },
+          "moon": {
+            "cooldown": 2.15,
+            "count": 1,
+            "damage": 13,
+            "level": 0,
+            "power_scale": 1,
+            "radius": 118,
+            "radius_scale": 1
+          }
+        }
+      }
+    },
+    {
+      "name": "fresh-playing-960",
+      "viewport": {
+        "width": 960,
+        "height": 540
+      },
+      "snapshot": {
+        "arena": {
+          "bounded": false,
+          "obstacles": false
+        },
+        "audio": {
+          "music_active": true,
+          "music_paused": false,
+          "music_starts": 1
+        },
+        "choices": [],
+        "damage_taken": 0,
+        "echo": {
+          "active": false,
+          "x": 0,
+          "y": 0
+        },
+        "echo_shots": 0,
+        "effects": 0,
+        "elapsed": 0.816666666666668,
+        "enemies": [
+          {
+            "hp": 28,
+            "id": 1,
+            "kind": "hound",
+            "mark_expires": 0,
+            "mark_source": "",
+            "phase": "arrival",
+            "x": 0,
+            "y": -260
+          },
+          {
+            "hp": 28,
+            "id": 2,
+            "kind": "hound",
+            "mark_expires": 0,
+            "mark_source": "",
+            "phase": "arrival",
+            "x": 280.6,
+            "y": -91.2
+          },
+          {
+            "hp": 28,
+            "id": 3,
+            "kind": "hound",
+            "mark_expires": 0,
+            "mark_source": "",
+            "phase": "arrival",
+            "x": 152.8,
+            "y": 210.3
+          },
+          {
+            "hp": 28,
+            "id": 4,
+            "kind": "hound",
+            "mark_expires": 0,
+            "mark_source": "",
+            "phase": "arrival",
+            "x": -173.4,
+            "y": 238.7
+          },
+          {
+            "hp": 28,
+            "id": 5,
+            "kind": "hound",
+            "mark_expires": 0,
+            "mark_source": "",
+            "phase": "arrival",
+            "x": -247.3,
+            "y": -80.3
+          },
+          {
+            "hp": 28,
+            "id": 6,
+            "kind": "hound",
+            "mark_expires": 0,
+            "mark_source": "",
+            "phase": "arrival",
+            "x": 500,
+            "y": 41
+          },
+          {
+            "hp": 28,
+            "id": 7,
+            "kind": "hound",
+            "mark_expires": 0,
+            "mark_source": "",
+            "phase": "arrival",
+            "x": 500,
+            "y": -41
+          }
+        ],
+        "enemy_count": 7,
+        "experience": 0,
+        "experience_needed": 5,
+        "health": 100,
+        "history_samples": 50,
+        "kills": 0,
+        "last_echo_attack": {},
+        "last_player_attack": {},
+        "level": 1,
+        "maximum_health": 100,
+        "pending_echo_attacks": 0,
+        "phase": {
+          "assault": true,
+          "index": 0,
+          "name": "残像の目覚め",
+          "remaining": 21.1833333333333,
+          "subtitle": "道を分け、二人で狙おう"
+        },
+        "pickups": 0,
+        "player": {
+          "x": 0,
+          "y": 0
+        },
+        "player_shots": 0,
+        "projectiles": 0,
+        "resonance_bonus": 12,
+        "resonance_hits": 0,
+        "resonance_kills": 0,
+        "settings": {
+          "reduced_motion": false,
+          "sound": true
+        },
+        "specialization": "未選択",
+        "state": "playing",
+        "upgrade_choices": [],
+        "weapons": {
+          "lightning": {
+            "cooldown": 0.78,
+            "count": 1,
+            "damage": 12,
+            "level": 1,
+            "power_scale": 1,
+            "range": 400,
+            "range_scale": 1,
+            "width": 11
+          },
+          "moon": {
+            "cooldown": 2.15,
+            "count": 1,
+            "damage": 13,
+            "level": 0,
+            "power_scale": 1,
+            "radius": 118,
+            "radius_scale": 1
+          }
+        }
+      }
+    },
+    {
+      "name": "fresh-paused-960",
+      "viewport": {
+        "width": 960,
+        "height": 540
+      },
+      "snapshot": {
+        "arena": {
+          "bounded": false,
+          "obstacles": false
+        },
+        "audio": {
+          "music_active": true,
+          "music_paused": true,
+          "music_starts": 1
+        },
+        "choices": [],
+        "damage_taken": 0,
+        "echo": {
+          "active": false,
+          "x": 0,
+          "y": 0
+        },
+        "echo_shots": 0,
+        "effects": 0,
+        "elapsed": 0.866666666666668,
+        "enemies": [
+          {
+            "hp": 28,
+            "id": 1,
+            "kind": "hound",
+            "mark_expires": 0,
+            "mark_source": "",
+            "phase": "arrival",
+            "x": 0,
+            "y": -260
+          },
+          {
+            "hp": 28,
+            "id": 2,
+            "kind": "hound",
+            "mark_expires": 0,
+            "mark_source": "",
+            "phase": "arrival",
+            "x": 280.6,
+            "y": -91.2
+          },
+          {
+            "hp": 28,
+            "id": 3,
+            "kind": "hound",
+            "mark_expires": 0,
+            "mark_source": "",
+            "phase": "arrival",
+            "x": 152.8,
+            "y": 210.3
+          },
+          {
+            "hp": 28,
+            "id": 4,
+            "kind": "hound",
+            "mark_expires": 0,
+            "mark_source": "",
+            "phase": "arrival",
+            "x": -173.4,
+            "y": 238.7
+          },
+          {
+            "hp": 28,
+            "id": 5,
+            "kind": "hound",
+            "mark_expires": 0,
+            "mark_source": "",
+            "phase": "arrival",
+            "x": -247.3,
+            "y": -80.3
+          },
+          {
+            "hp": 28,
+            "id": 6,
+            "kind": "hound",
+            "mark_expires": 0,
+            "mark_source": "",
+            "phase": "arrival",
+            "x": 500,
+            "y": 41
+          },
+          {
+            "hp": 28,
+            "id": 7,
+            "kind": "hound",
+            "mark_expires": 0,
+            "mark_source": "",
+            "phase": "arrival",
+            "x": 500,
+            "y": -41
+          }
+        ],
+        "enemy_count": 7,
+        "experience": 0,
+        "experience_needed": 5,
+        "health": 100,
+        "history_samples": 53,
+        "kills": 0,
+        "last_echo_attack": {},
+        "last_player_attack": {},
+        "level": 1,
+        "maximum_health": 100,
+        "pending_echo_attacks": 0,
+        "phase": {
+          "assault": true,
+          "index": 0,
+          "name": "残像の目覚め",
+          "remaining": 21.1333333333333,
+          "subtitle": "道を分け、二人で狙おう"
+        },
+        "pickups": 0,
+        "player": {
+          "x": 0,
+          "y": 0
+        },
+        "player_shots": 0,
+        "projectiles": 0,
+        "resonance_bonus": 12,
+        "resonance_hits": 0,
+        "resonance_kills": 0,
+        "settings": {
+          "reduced_motion": false,
+          "sound": true
+        },
+        "specialization": "未選択",
+        "state": "paused",
+        "upgrade_choices": [],
+        "weapons": {
+          "lightning": {
+            "cooldown": 0.78,
+            "count": 1,
+            "damage": 12,
+            "level": 1,
+            "power_scale": 1,
+            "range": 400,
+            "range_scale": 1,
+            "width": 11
+          },
+          "moon": {
+            "cooldown": 2.15,
+            "count": 1,
+            "damage": 13,
+            "level": 0,
+            "power_scale": 1,
+            "radius": 118,
+            "radius_scale": 1
+          }
+        }
+      }
+    },
+    {
+      "name": "fresh-resumed-960",
+      "viewport": {
+        "width": 960,
+        "height": 540
+      },
+      "snapshot": {
+        "arena": {
+          "bounded": false,
+          "obstacles": false
+        },
+        "audio": {
+          "music_active": true,
+          "music_paused": false,
+          "music_starts": 1
+        },
+        "choices": [],
+        "damage_taken": 0,
+        "echo": {
+          "active": false,
+          "x": 0,
+          "y": 0
+        },
+        "echo_shots": 0,
+        "effects": 2,
+        "elapsed": 1.71666666666667,
+        "enemies": [
+          {
+            "hp": 16,
+            "id": 1,
+            "kind": "hound",
+            "mark_expires": 3.4,
+            "mark_source": "player",
+            "phase": "seek",
+            "x": 0,
+            "y": -200.1
+          },
+          {
+            "hp": 28,
+            "id": 2,
+            "kind": "hound",
+            "mark_expires": 0,
+            "mark_source": "",
+            "phase": "seek",
+            "x": 212.2,
+            "y": -69
+          },
+          {
+            "hp": 28,
+            "id": 3,
+            "kind": "hound",
+            "mark_expires": 0,
+            "mark_source": "",
+            "phase": "seek",
+            "x": 110.6,
+            "y": 152.2
+          },
+          {
+            "hp": 28,
+            "id": 4,
+            "kind": "hound",
+            "mark_expires": 0,
+            "mark_source": "",
+            "phase": "seek",
+            "x": -131.2,
+            "y": 180.5
+          },
+          {
+            "hp": 16,
+            "id": 5,
+            "kind": "hound",
+            "mark_expires": 4.18333333333333,
+            "mark_source": "player",
+            "phase": "seek",
+            "x": -190.3,
+            "y": -61.8
+          },
+          {
+            "hp": 28,
+            "id": 6,
+            "kind": "hound",
+            "mark_expires": 0,
+            "mark_source": "",
+            "phase": "seek",
+            "x": 497.1,
+            "y": 40.8
+          },
+          {
+            "hp": 28,
+            "id": 7,
+            "kind": "hound",
+            "mark_expires": 0,
+            "mark_source": "",
+            "phase": "seek",
+            "x": 497.1,
+            "y": -40.8
+          }
+        ],
+        "enemy_count": 7,
+        "experience": 0,
+        "experience_needed": 5,
+        "health": 100,
+        "history_samples": 104,
+        "kills": 0,
+        "last_echo_attack": {},
+        "last_player_attack": {
+          "cooldown": 0.78,
+          "count": 1,
+          "damage": 12,
+          "kind": "lightning",
+          "level": 1,
+          "power_scale": 1,
+          "range": 400,
+          "range_scale": 1,
+          "resonance_bonus": 12,
+          "width": 11
+        },
+        "level": 1,
+        "maximum_health": 100,
+        "pending_echo_attacks": 2,
+        "phase": {
+          "assault": true,
+          "index": 0,
+          "name": "残像の目覚め",
+          "remaining": 20.2833333333333,
+          "subtitle": "道を分け、二人で狙おう"
+        },
+        "pickups": 0,
+        "player": {
+          "x": 0,
+          "y": 0
+        },
+        "player_shots": 2,
+        "projectiles": 0,
+        "resonance_bonus": 12,
+        "resonance_hits": 0,
+        "resonance_kills": 0,
+        "settings": {
+          "reduced_motion": false,
+          "sound": true
+        },
+        "specialization": "未選択",
+        "state": "playing",
+        "upgrade_choices": [],
+        "weapons": {
+          "lightning": {
+            "cooldown": 0.78,
+            "count": 1,
+            "damage": 12,
+            "level": 1,
+            "power_scale": 1,
+            "range": 400,
+            "range_scale": 1,
+            "width": 11
+          },
+          "moon": {
+            "cooldown": 2.15,
+            "count": 1,
+            "damage": 13,
+            "level": 0,
+            "power_scale": 1,
+            "radius": 118,
+            "radius_scale": 1
+          }
+        }
+      }
+    }
+  ],
+  "errors": []
+}

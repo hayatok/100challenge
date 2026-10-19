@@ -43,7 +43,9 @@
 
 通しプレイの画像で、経験値バーと挟撃表示の重なりを見つけて配置を修正した。タイトルと停止中の同じ画面は再描画せず、ゲーム時刻・状態・演出設定・画面サイズが変わった場合に更新するようにした。ゲームのルールは変更していない。
 
-その後のWeb出力で[最終UI確認](browser/quality-final-ui/results.json)を行い、タイトル、プレイ中のHUD、強化、専門化、ポーズと960×540の表示を確認した。マウスで残響の魔女を選び、復帰後の音楽開始も1回、console errorは0件だった。[最終のプレイ画面](browser/quality-final-ui/after-specialization.png)と[専門化の画面](browser/quality-final-ui/specialization.png)を保存している。カタログの画像は第2版の実タイトル画面へ更新した。
+その後のWeb出力で[最終UI確認](browser/quality-final-ui/results.json)を行い、タイトル、プレイ中のHUD、強化、専門化、ポーズを確認した。マウスで残響の魔女を選び、復帰後の音楽開始も1回、console errorは0件だった。[最終のプレイ画面](browser/quality-final-ui/after-specialization.png)と[専門化の画面](browser/quality-final-ui/specialization.png)を保存している。カタログの画像は第2版の実タイトル画面へ更新した。
+
+Astraは960×540のポーズ画像で、下部に上部HUDが重複し、経験値表示が欠けていることを指摘した。[元の異常画像](browser/quality-final-ui/paused-960-before-recheck.png)を保持し、同じWeb出力で[サイズ変更の再確認](browser/quality-resize/results.json)を行った。1280×720から960×540へ停止中に縮小し、350msと2描画フレームを待った画面、さらに1秒後、再開と再停止、縮小3回の反復、960×540での新規起動を記録した。保存画像を目視で確認し、上部HUDが一組で、下部の武器・経験値・挟撃表示が残ることを確認した。停止中の時刻も変わらず、console errorは0件だった。元の異常は再現できず、原因と発生条件は未確定。ゲーム側のソースは変えず、[ポーズ画像](browser/quality-final-ui/paused-960.png)を再確認後のものへ更新した。再実行にはPlaywrightとChromeを用意し、`node 2026-10-19/scripts/resize-qa.mjs`を使う。
 
 通常Chromeでも変更前の開始・移動・残像・停止を操作し、第2版の読み込みを確認した。その後はユーザー側の状態変更があったため操作を止め、残りは検証用ブラウザで進めた。ユーザーのChromeの別タブやゲーム進行を操作していない。
 

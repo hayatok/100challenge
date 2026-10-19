@@ -9,7 +9,8 @@
     "Game-flavored titles retain their intended tone; instructions and state labels remain explicit.",
     "Resolution denotes the actual screen pixel dimensions.",
     "GDScript syntax and intentional gameplay-number changes were kept and checked against 92 production checks and real browser snapshots.",
-    "Natural repeated polite endings in README and asset provenance were retained."
+    "Natural repeated polite endings in README and asset provenance were retained.",
+    "The resize anomaly and its unknown cause remain explicit. New wait durations and links match the focused resize script and captured evidence."
   ],
   "changed": [
     "Removed a pause comma in the echo onboarding hint.",
@@ -110,8 +111,8 @@
     },
     {
       "file": "docs/verification/QUALITY.md",
-      "sha256": "b61cffffa9775da2d5094521d3646c22a4e8d161fd11eb9b2a8bf1b325138894",
-      "verify": "yomiyasu-check: executed via=verify run=20261019T160136Z-8eeec218 attempt=2 final=sha256:b61cffffa977 mode=rewrite doc_type=manual checks=lint,diff meaning_risk=0 replay=skipped"
+      "sha256": "5f487f021e814aa36d33b24013b41e8180e6945a5285cd85d8b5b64b669cb9a6",
+      "verify": "yomiyasu-check: executed via=verify run=20261019T160953Z-af56f4db attempt=1 final=sha256:5f487f021e81 mode=rewrite doc_type=manual checks=lint,diff meaning_risk=3 replay=skipped"
     }
   ],
   "records": ".yomiyasu/ is local and ignored; detailed reports contain full drafts.",
