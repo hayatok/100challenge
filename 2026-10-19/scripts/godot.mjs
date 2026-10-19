@@ -20,6 +20,6 @@ if(mode==='editor'||mode==='play'){
  if(mode==='build'){
   const dist=path.join(root,'dist');
   mkdirSync(path.join(dist,'licenses'),{recursive:true});
-  for(const [from,to] of [['credits.html','credits.html'],['docs/licenses/GODOT-LICENSE.txt','licenses/GODOT-LICENSE.txt'],['game/assets/fonts/LICENSE.txt','licenses/NOTO-OFL.txt'],['public/echo-witch-cover.svg','echo-witch-cover.svg']])copyFileSync(path.join(root,from),path.join(dist,to));
+  for(const [from,to] of [['credits.html','credits.html'],['docs/licenses/GODOT-LICENSE.txt','licenses/GODOT-LICENSE.txt'],['game/assets/fonts/LICENSE.txt','licenses/NOTO-OFL.txt'],['public/echo-witch-cover.png','echo-witch-cover.png']])copyFileSync(path.join(root,from),path.join(dist,to));
  }
 }

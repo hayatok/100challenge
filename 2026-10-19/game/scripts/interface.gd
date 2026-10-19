@@ -1,5 +1,7 @@
 extends Control
 
+const Glyph = preload("res://scripts/spell_glyph.gd")
+
 signal start_requested
 signal resume_requested
 signal retry_requested
@@ -29,6 +31,9 @@ var experience_bar: ProgressBar
 var weapon_label: Label
 var hint: Label
 var last_screen := ""
+var phase_label: Label
+var phase_detail: Label
+var echo_label: Label
 var sound_buttons: Array[Button] = []
 var motion_buttons: Array[Button] = []
 var book_theme: Theme
@@ -51,9 +56,9 @@ func _make_theme() -> void:
 	book_theme.set_color("font_hover_color", "Button", PAPER)
 	book_theme.set_color("font_pressed_color", "Button", Color("161d32"))
 	book_theme.set_color("font_focus_color", "Button", PAPER)
-	book_theme.set_stylebox("panel", "PanelContainer", _box(Color("1e273e"), Color("968766"), 2, 8))
-	book_theme.set_stylebox("normal", "Button", _box(Color("29344b"), Color("968766"), 2, 5))
-	book_theme.set_stylebox("hover", "Button", _box(Color("37455d"), GOLD, 2, 5))
+	book_theme.set_stylebox("panel", "PanelContainer", _box(Color("172533"), Color("8a7957"), 1, 3))
+	book_theme.set_stylebox("normal", "Button", _box(Color("223340"), Color("867a61"), 1, 3))
+	book_theme.set_stylebox("hover", "Button", _box(Color("344a54"), GOLD, 2, 3))
 	book_theme.set_stylebox("pressed", "Button", _box(GOLD, PAPER, 2, 5))
 	book_theme.set_stylebox("focus", "Button", _box(Color(0, 0, 0, 0), GOLD, 3, 5))
 	book_theme.set_constant("outline_size", "Label", 0)
@@ -87,7 +92,7 @@ func _at(node: Control, x: float, y: float, width: float, height: float) -> void
 
 func _panel(parent: Control, x: float, y: float, width: float, height: float) -> Panel:
 	var panel := Panel.new()
-	panel.add_theme_stylebox_override("panel", _box(Color(0.09, 0.12, 0.20, 0.94), Color("8a8067"), 1, 5))
+	panel.add_theme_stylebox_override("panel", _box(Color(0.045, 0.075, 0.11, 0.91), Color("8a8067"), 1, 5))
 	panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	parent.add_child(panel)
 	_at(panel, x, y, width, height)
@@ -119,6 +124,12 @@ func _build_hud() -> void:
 	health_bar = _bar(Color("b67183"))
 	hp_panel.add_child(health_bar)
 	_at(health_bar, 16, 45, 248, 17)
+	phase_label = _label("第一節", 20, GOLD)
+	hud.add_child(phase_label)
+	_at(phase_label, 324, 25, 218, 32)
+	phase_detail = _label("攻勢 22秒", 16, MUTED)
+	hud.add_child(phase_detail)
+	_at(phase_detail, 324, 58, 218, 28)
 	var timer_panel := _panel(hud, 552, 16, 176, 86)
 	var timer_caption := _label("夜明けまで", 15, MUTED)
 	timer_caption.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -149,11 +160,11 @@ func _build_hud() -> void:
 	_at(experience_bar, 16, 12, 1204, 10)
 	weapon_label = _label("雷 Ⅰ   /   月輪 未習得", 19)
 	xp_panel.add_child(weapon_label)
-	_at(weapon_label, 16, 32, 610, 32)
-	var controls := _label("WASD / 矢印  移動     Esc  休止", 17, MUTED)
-	controls.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
-	xp_panel.add_child(controls)
-	_at(controls, 635, 33, 565, 32)
+	_at(weapon_label, 16, 32, 720, 32)
+	echo_label = _label("挟撃 0回", 17, BLUE)
+	xp_panel.add_child(echo_label)
+	_at(echo_label, 760, 32, 440, 32)
+	echo_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	hint = _label("", 20, PAPER)
 	hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	hint.add_theme_color_override("font_outline_color", Color("131a29"))
@@ -182,10 +193,17 @@ func refresh() -> void:
 	experience_bar.value = run.experience
 	var moon_text := "月輪 %d重" % int(run.weapons.moon.count) if int(run.weapons.moon.level) > 0 else "月輪 未習得"
 	weapon_label.text = "雷 %d本   /   %s     経験値 %d / %d" % [int(run.weapons.lightning.count), moon_text, run.experience, run.experience_needed]
+	var phase: Dictionary = run.phase_info()
+	phase_label.text = "%02d  %s" % [int(phase.index) + 1, str(phase.name)]
+	phase_detail.text = "%s  あと%d秒" % ["攻勢" if phase.assault else "回収の間", ceili(float(phase.remaining))]
+	phase_detail.add_theme_color_override("font_color", MUTED if phase.assault else BLUE)
+	echo_label.text = "%s   /   挟撃 %d回" % [str(run.specialization), int(run.resonance_hits)]
 	if run.elapsed < 2.0:
 		hint.text = "WASD / 矢印で移動。魔法は自動で放つ。"
 	elif run.elapsed < 9.0:
-		hint.text = "青い残像が2秒前の位置と攻撃を再現。"
+		hint.text = "残像と離れて同じ敵を撃つと「挟撃」。"
+	elif not phase.assault:
+		hint.text = "回収の間。残った群れをかわして、経験値を拾おう。"
 	elif run.elapsed > 145.0 and run.elapsed < 150.0:
 		hint.text = "夜明け前。二人の魔法で、群れを切りひらこう。"
 	else:
@@ -213,11 +231,11 @@ func _title_screen() -> void:
 	var box := VBoxContainer.new()
 	box.add_theme_constant_override("separation", 8)
 	panel.add_child(box)
-	box.add_child(_label("AFTERIMAGE SURVIVAL", 15, GOLD))
+	box.add_child(_label("ECHO WITCH  /  夜明けまで180秒", 15, GOLD))
 	box.add_child(_label("残響の魔女", 56))
-	box.add_child(_label("歩いた道が、もう一人の戦場になる。", 21, GOLD))
+	box.add_child(_label("過去の自分と、退路を描け。", 21, GOLD))
 	_add_rule(box)
-	box.add_child(_label("2秒前の自分が、同じ魔法を放つ。\n残像と道を分け、夜明けまで3分生き延びよう。", 20))
+	box.add_child(_label("2秒前の自分が、同じ魔法を放つ。\n残像と離れて同じ敵を撃つと「挟撃」。\n攻勢をしのぎ、回収の間に経験値を拾おう。", 20))
 	box.add_child(_label("WASD / 矢印  移動    ・    攻撃は自動", 20, MUTED))
 	var start := _button("庭園へ入る  [Enter]", true)
 	box.add_child(start)
@@ -246,10 +264,11 @@ func _base_modal(width: float) -> VBoxContainer:
 
 func _upgrade_screen() -> void:
 	var box := _base_modal(1030)
-	var heading := _label("魔術書に、新しい一節を。", 32)
+	var specializing: bool = not run.choices.is_empty() and bool(run.choices[0].get("specialization", false))
+	var heading := _label("魔法の道を定める。" if specializing else "魔術書に、新しい一節を。", 32)
 	heading.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	box.add_child(heading)
-	var subtitle := _label("Lv.%d  ひとつ選んで、残像と強くなる。" % run.level, 20, MUTED)
+	var subtitle := _label("この夜に選べる道はひとつ。得意と弱点を選ぶ。" if specializing else "Lv.%d  ひとつ選んで、残像と強くなる。" % run.level, 20, MUTED)
 	subtitle.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	box.add_child(subtitle)
 	var cards := HBoxContainer.new()
@@ -259,7 +278,7 @@ func _upgrade_screen() -> void:
 	for index in range(run.choices.size()):
 		var choice: Dictionary = run.choices[index]
 		var button := Button.new()
-		button.custom_minimum_size = Vector2(316, 278)
+		button.custom_minimum_size = Vector2(316, 336)
 		cards.add_child(button)
 		button.pressed.connect(func() -> void: upgrade_requested.emit(index))
 		var margin := MarginContainer.new()
@@ -275,11 +294,18 @@ func _upgrade_screen() -> void:
 		margin.add_child(content)
 		content.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		content.add_child(_label("[%d]   %s" % [index + 1, choice.tag], 18, GOLD))
+		var glyph := Glyph.new()
+		glyph.kind = str(choice.icon)
+		glyph.custom_minimum_size = Vector2(258, 48)
+		content.add_child(glyph)
 		content.add_child(_label(str(choice.title), 25))
 		var description := _label(str(choice.body), 19, MUTED)
 		description.size_flags_vertical = Control.SIZE_EXPAND_FILL
+		description.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		content.add_child(description)
 		var effect := _label(str(choice.effect), 18, BLUE)
+		effect.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		effect.custom_minimum_size.y = 52
 		content.add_child(effect)
 		if index == 0:
 			button.call_deferred("grab_focus")
@@ -315,7 +341,8 @@ func _result_screen() -> void:
 	var seconds := int(run.elapsed)
 	box.add_child(_label("生存  %02d:%02d    討伐  %d    Lv.%d" % [seconds / 60, seconds % 60, run.kills, run.level], 24))
 	box.add_child(_label("あなたの魔法 %d回  ・  残像の魔法 %d回" % [run.player_shots, run.echo_shots], 20, MUTED))
-	box.add_child(_label("次は道を変えて、二人の魔法を重ねよう。", 20, MUTED))
+	box.add_child(_label("%s   /   挟撃 %d回・挟撃で討伐 %d体" % [str(run.specialization), int(run.resonance_hits), int(run.resonance_kills)], 20, GOLD))
+	box.add_child(_label("次は道を変えて、二人の魔法で敵を挟もう。", 20, MUTED))
 	var retry := _button("もう一度挑む  [Enter / R]", true)
 	box.add_child(retry)
 	retry.pressed.connect(func() -> void: retry_requested.emit())

@@ -10,7 +10,6 @@ var garden
 var interface
 var soundscape
 var snapshot_timer := 0.0
-var previous_state := ""
 
 func _ready() -> void:
 	_register_inputs()
@@ -53,12 +52,7 @@ func _physics_process(delta: float) -> void:
 		if not played.has(event):
 			soundscape.play_event(event)
 			played[event] = true
-	if previous_state != run.state:
-		if run.state == "paused":
-			soundscape.pause_all(true)
-		elif previous_state == "paused":
-			soundscape.pause_all(false)
-		previous_state = run.state
+	soundscape.set_context(str(run.state))
 
 func _process(delta: float) -> void:
 	garden.refresh()
@@ -119,6 +113,7 @@ func _publish_snapshot() -> void:
 		return
 	var data: Dictionary = run.snapshot()
 	data.settings = {"sound": interface.sound_enabled, "reduced_motion": garden.reduced_motion}
+	data.audio = {"music_starts": soundscape.music_start_count, "music_active": soundscape.music_started, "music_paused": soundscape.music.stream_paused}
 	data.upgrade_choices = data.choices
 	data.arena = {"bounded": false, "obstacles": false}
 	var encoded := JSON.stringify(data)

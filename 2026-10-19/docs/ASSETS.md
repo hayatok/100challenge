@@ -1,9 +1,11 @@
 # 素材と出典
 
-魔女、敵3種、庭園、月は、このアプリ向けに作成したオリジナルSVGです。`game/assets/art/`のSVGが編集用の原稿と実行用素材を兼ねます。外部のキャラクター画像は使っていません。効果音はゲーム内の合成音です。
+第2版の魔女と敵3種は、組み込みのimage_genでこのゲーム向けに生成した透過PNGです。実行時は`game/assets/art/witch-r2.png`、`hound-r2.png`、`charger-r2.png`、`archer-r2.png`を使います。保存した画像を目視で確認し、ミップマップを有効にして縮小表示します。生成時のプロンプトは[art-prompts.json](art-prompts.json)に保存しています。
 
-日本語フォントは既存の`2026-10-14/game/assets/fonts/NotoSansCJKjp-Medium.otf`を変更せずコピーし、同じフォルダのSIL Open Font License 1.1を同梱しています。SHA-256は`assets-manifest.json`に記録します。
+石畳の`garden-r2.svg`、月、魔法の印、庭園の地紋は編集可能なSVGまたはGodotの2D描画です。初版の魔女と敵のSVGは原稿として残しています。効果音と静かな夜の音楽はゲーム内で合成したPCMです。実行中に画像生成や外部通信は行いません。
+
+日本語フォントは既存の`2026-10-14/game/assets/fonts/NotoSansCJKjp-Medium.otf`を変更せずコピーし、同じフォルダのSIL Open Font License 1.1を同梱しています。素材のSHA-256は`assets-manifest.json`に記録します。
 
 Godot 4.7.2はMIT Licenseです。全文は`docs/licenses/GODOT-LICENSE.txt`。Web出力には`credits.html`、Godotのライセンス、フォントのOFLを同梱します。
 
-`docs/reference/play-layout.svg`と`public/echo-witch-cover.svg`はSVG原稿を配置した設計用・紹介用の画像です。実プレイの検証画像は`docs/verification/`へ保存し、区別します。
+`docs/reference/play-layout.svg`は初版の配置見本です。第2版の画面比較は`docs/verification/`の実スクリーンショットで行い、設計用画像と実プレイの記録を区別します。

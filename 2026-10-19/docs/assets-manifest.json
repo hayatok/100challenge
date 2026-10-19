@@ -1,5 +1,5 @@
 {
-  "art": "Original SVG sources created for Echo Witch",
+  "art": "Built-in image_gen PNG characters (r2); original editable SVG environment and first-edition art retained.",
   "font_source": "2026-10-14/game/assets/fonts/NotoSansCJKjp-Medium.otf",
   "files": {
     "game/assets/art/archer.svg": {
@@ -33,6 +33,26 @@
     "game/assets/fonts/NotoSansCJKjp-Medium.otf": {
       "bytes": 16554004,
       "sha256": "dd523e580e3413c480b2d701bf64e534c20f8419e3cfb6a44c2bdcd8d2a6c052"
+    },
+    "game/assets/art/charger-r2.png": {
+      "bytes": 2092649,
+      "sha256": "03e61540be8e78c5e161d98ee9a2db2ff16af9536e9e1ce57678bdd67863ed08"
+    },
+    "game/assets/art/hound-r2.png": {
+      "bytes": 1610783,
+      "sha256": "78d4d9d607559e78099187a8bb414c21f84a72c26169c802efa49fadd871d15a"
+    },
+    "game/assets/art/witch-r2.png": {
+      "bytes": 1789725,
+      "sha256": "4439b77d340d173b6867ed5727314831775f3e9566db8f89028fc95420705340"
+    },
+    "game/assets/art/archer-r2.png": {
+      "bytes": 1663710,
+      "sha256": "1534d51f2dc5800fa4177036eebf099d8b0b44282501971affbd3a2e7691ed03"
+    },
+    "game/assets/art/garden-r2.svg": {
+      "bytes": 22570,
+      "sha256": "4a9493205fac67cf479393290e8165344e06cfcf43d81fefbeee8c368969005b"
     }
   }
 }

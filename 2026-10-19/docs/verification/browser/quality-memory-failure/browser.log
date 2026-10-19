@@ -1,0 +1,13 @@
+
+> echo-witch@0.1.0 qa:browser
+> node scripts/browser-qa.mjs
+
+{"elapsed":2.51666666666666,"health":100,"level":1,"kills":0,"enemies":9,"echo_shots":0,"resonance_hits":0,"phase":{"assault":true,"index":0,"name":"残像の目覚め","remaining":19.4833333333333,"subtitle":"道を分け、二人で狙おう"}}
+{"elapsed":17.5500000000003,"health":76,"level":4,"kills":23,"enemies":10,"echo_shots":25,"resonance_hits":14,"phase":{"assault":true,"index":0,"name":"残像の目覚め","remaining":4.44999999999972,"subtitle":"道を分け、二人で狙おう"}}
+{"elapsed":32.7166666666661,"health":76,"level":5,"kills":39,"enemies":7,"echo_shots":49,"resonance_hits":22,"phase":{"assault":true,"index":1,"name":"獣の足音","remaining":19.2833333333339,"subtitle":"正面の群れに道を譲ろう"}}
+page.evaluate: Target page, context or browser has been closed
+    at snap (/Users/hayatok/.codex/worktrees/echo-witch/100challenge/2026-10-19/scripts/browser-qa.mjs:18:21)
+    at /Users/hayatok/.codex/worktrees/echo-witch/100challenge/2026-10-19/scripts/browser-qa.mjs:57:11 {
+  log: []
+}
+QA report: /Users/hayatok/.codex/worktrees/echo-witch/100challenge/2026-10-19/docs/verification/browser/quality/results.json
