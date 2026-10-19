@@ -27,7 +27,7 @@ try{engineBinary();}catch(error){
  engineBinary();
 }
 const userData=process.platform==='darwin'?path.join(os.homedir(),'Library/Application Support'):process.platform==='win32'?(process.env.APPDATA||path.join(os.homedir(),'AppData/Roaming')):(process.env.XDG_DATA_HOME||path.join(os.homedir(),'.local/share'));
-const templates=path.join(userData,'Godot/export_templates/'+version+'.stable');
+const templates=path.join(userData,process.platform==='linux'?'godot':'Godot','export_templates/'+version+'.stable');
 const names=['web_nothreads_debug.zip','web_nothreads_release.zip','version.txt'];
 if(!names.every(name=>existsSync(path.join(templates,name)))){
  const archive=download('Godot_v'+version+'-stable_export_templates.tpz');
