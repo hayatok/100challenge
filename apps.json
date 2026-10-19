@@ -239,5 +239,15 @@
     "category": "音声ツール",
     "thumbnail": "audio-cutter-cover.svg",
     "accent": "#B73529"
+  },
+  {
+    "id": "2026-10-19",
+    "date": "2026-10-19",
+    "sequence": 1,
+    "name": "残響の魔女",
+    "description": "2秒前の自分と挟み撃ち。雷と月輪を育て、夜の庭園で3分生き残る2Dサバイバル。",
+    "category": "2Dサバイバルゲーム",
+    "thumbnail": "echo-witch-cover.svg",
+    "accent": "#b8a174"
   }
 ]

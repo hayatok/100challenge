@@ -1,0 +1,1050 @@
+{
+  "base": "http://127.0.0.1:4197/",
+  "renderer": "Headless Chromium; software WebGL may be used. This is not a physical-GPU benchmark.",
+  "actions": [
+    {
+      "action": "key",
+      "key": "Enter",
+      "wall": "2026-10-19T14:47:21.087Z"
+    },
+    {
+      "action": "key",
+      "key": "Escape",
+      "wall": "2026-10-19T14:47:23.567Z"
+    },
+    {
+      "action": "key",
+      "key": "Enter",
+      "wall": "2026-10-19T14:47:25.012Z"
+    },
+    {
+      "action": "key",
+      "key": "1",
+      "wall": "2026-10-19T14:47:38.751Z"
+    },
+    {
+      "action": "key",
+      "key": "3",
+      "wall": "2026-10-19T14:48:05.216Z"
+    },
+    {
+      "action": "key",
+      "key": "1",
+      "wall": "2026-10-19T14:48:22.083Z"
+    },
+    {
+      "action": "key",
+      "key": "2",
+      "wall": "2026-10-19T14:48:30.402Z"
+    },
+    {
+      "action": "key",
+      "key": "1",
+      "wall": "2026-10-19T14:48:37.654Z"
+    },
+    {
+      "action": "key",
+      "key": "2",
+      "wall": "2026-10-19T14:48:56.804Z"
+    },
+    {
+      "action": "key",
+      "key": "1",
+      "wall": "2026-10-19T14:49:16.995Z"
+    },
+    {
+      "action": "key",
+      "key": "1",
+      "wall": "2026-10-19T14:49:36.429Z"
+    },
+    {
+      "action": "key",
+      "key": "1",
+      "wall": "2026-10-19T14:49:52.315Z"
+    },
+    {
+      "action": "key",
+      "key": "2",
+      "wall": "2026-10-19T14:50:05.241Z"
+    },
+    {
+      "action": "key",
+      "key": "3",
+      "wall": "2026-10-19T14:50:11.760Z"
+    },
+    {
+      "action": "key",
+      "key": "1",
+      "wall": "2026-10-19T14:50:16.012Z"
+    },
+    {
+      "action": "key",
+      "key": "3",
+      "wall": "2026-10-19T14:50:20.529Z"
+    },
+    {
+      "action": "key",
+      "key": "1",
+      "wall": "2026-10-19T14:50:22.741Z"
+    },
+    {
+      "action": "key",
+      "key": "Enter",
+      "wall": "2026-10-19T14:50:27.559Z"
+    }
+  ],
+  "observations": [
+    {
+      "elapsed": 2.48333333333333,
+      "health": 100,
+      "level": 1,
+      "kills": 3,
+      "enemies": 4,
+      "echo_shots": 0
+    },
+    {
+      "elapsed": 14.8333333333337,
+      "upgrade": {
+        "body": "魔女と残像の周囲に\n月の輪が広がる。",
+        "effect": "範囲 118  /  2.15秒ごと",
+        "icon": "moon",
+        "id": "moon_unlock",
+        "tag": "新しい魔法",
+        "title": "月輪をひらく"
+      }
+    },
+    {
+      "elapsed": 17.6166666666669,
+      "health": 100,
+      "level": 2,
+      "kills": 19,
+      "enemies": 6,
+      "echo_shots": 12
+    },
+    {
+      "elapsed": 32.8166666666661,
+      "health": 100,
+      "level": 2,
+      "kills": 35,
+      "enemies": 9,
+      "echo_shots": 32
+    },
+    {
+      "elapsed": 41.0166666666656,
+      "upgrade": {
+        "body": "少し遅れて次の輪を放つ。\n追ってくる敵を押し返す。",
+        "effect": "月輪 1重 → 2重",
+        "icon": "moon",
+        "id": "moon_double",
+        "tag": "月輪・弾数",
+        "title": "重なる月輪"
+      }
+    },
+    {
+      "elapsed": 47.9999999999986,
+      "health": 100,
+      "level": 3,
+      "kills": 57,
+      "enemies": 7,
+      "echo_shots": 58
+    },
+    {
+      "elapsed": 57.6833333333313,
+      "upgrade": {
+        "body": "少し遅れて次の輪を放つ。\n追ってくる敵を押し返す。",
+        "effect": "月輪 2重 → 3重",
+        "icon": "moon",
+        "id": "moon_double",
+        "tag": "月輪・弾数",
+        "title": "重なる月輪"
+      }
+    },
+    {
+      "elapsed": 63.2666666666644,
+      "health": 100,
+      "level": 4,
+      "kills": 76,
+      "enemies": 12,
+      "echo_shots": 79
+    },
+    {
+      "elapsed": 65.7333333333309,
+      "upgrade": {
+        "body": "月輪を放つ間隔を短くする。\n近づく敵を続けて払う。",
+        "effect": "間隔 2.15秒 → 1.76秒",
+        "icon": "moon",
+        "id": "moon_haste",
+        "tag": "月輪・速さ",
+        "title": "月の巡り"
+      }
+    },
+    {
+      "elapsed": 72.6166666666638,
+      "upgrade": {
+        "body": "別の敵へも雷を放つ。\n離れた群れを同時に狙う。",
+        "effect": "雷 1本 → 2本",
+        "icon": "lightning",
+        "id": "lightning_fork",
+        "tag": "雷・弾数",
+        "title": "枝分かれの雷"
+      }
+    },
+    {
+      "elapsed": 78.3666666666635,
+      "health": 100,
+      "level": 6,
+      "kills": 99,
+      "enemies": 14,
+      "echo_shots": 104
+    },
+    {
+      "elapsed": 91.6833333333294,
+      "upgrade": {
+        "body": "二つの魔法の威力を上げる。\n残像にも新しい力が宿る。",
+        "effect": "雷・月輪の威力 +5",
+        "icon": "power",
+        "id": "power",
+        "tag": "魔法・威力",
+        "title": "魔術書の余白"
+      }
+    },
+    {
+      "elapsed": 93.4833333333293,
+      "health": 100,
+      "level": 7,
+      "kills": 132,
+      "enemies": 11,
+      "echo_shots": 132
+    },
+    {
+      "elapsed": 108.666666666662,
+      "health": 72,
+      "level": 7,
+      "kills": 172,
+      "enemies": 14,
+      "echo_shots": 162
+    },
+    {
+      "elapsed": 111.799999999995,
+      "upgrade": {
+        "body": "月の輪が大きく広がる。\n自分の周りに道をつくる。",
+        "effect": "範囲 118 → 148",
+        "icon": "moon",
+        "id": "moon_range",
+        "tag": "月輪・攻撃範囲",
+        "title": "満ちゆく月"
+      }
+    },
+    {
+      "elapsed": 123.799999999994,
+      "health": 72,
+      "level": 8,
+      "kills": 218,
+      "enemies": 16,
+      "echo_shots": 189
+    },
+    {
+      "elapsed": 130.83333333333,
+      "upgrade": {
+        "body": "月の輪が大きく広がる。\n自分の周りに道をつくる。",
+        "effect": "範囲 148 → 178",
+        "icon": "moon",
+        "id": "moon_range",
+        "tag": "月輪・攻撃範囲",
+        "title": "満ちゆく月"
+      }
+    },
+    {
+      "elapsed": 138.866666666669,
+      "health": 72,
+      "level": 9,
+      "kills": 271,
+      "enemies": 23,
+      "echo_shots": 215
+    },
+    {
+      "elapsed": 146.550000000009,
+      "upgrade": {
+        "body": "月の輪が大きく広がる。\n自分の周りに道をつくる。",
+        "effect": "範囲 178 → 208",
+        "icon": "moon",
+        "id": "moon_range",
+        "tag": "月輪・攻撃範囲",
+        "title": "満ちゆく月"
+      }
+    },
+    {
+      "elapsed": 153.900000000015,
+      "health": 72,
+      "level": 10,
+      "kills": 340,
+      "enemies": 39,
+      "echo_shots": 245
+    },
+    {
+      "elapsed": 159.100000000019,
+      "upgrade": {
+        "body": "別の敵へも雷を放つ。\n離れた群れを同時に狙う。",
+        "effect": "雷 2本 → 3本",
+        "icon": "lightning",
+        "id": "lightning_fork",
+        "tag": "雷・弾数",
+        "title": "枝分かれの雷"
+      }
+    },
+    {
+      "elapsed": 165.483333333357,
+      "upgrade": {
+        "body": "雷を放つ間隔を短くする。\n残像の雷も同じ速さに。",
+        "effect": "間隔 0.72秒 → 0.60秒",
+        "icon": "lightning",
+        "id": "lightning_haste",
+        "tag": "雷・速さ",
+        "title": "早口の詠唱"
+      }
+    },
+    {
+      "elapsed": 169.116666666693,
+      "health": 72,
+      "level": 12,
+      "kills": 442,
+      "enemies": 73,
+      "echo_shots": 274
+    },
+    {
+      "elapsed": 169.416666666694,
+      "upgrade": {
+        "body": "別の敵へも雷を放つ。\n離れた群れを同時に狙う。",
+        "effect": "雷 3本 → 4本",
+        "icon": "lightning",
+        "id": "lightning_fork",
+        "tag": "雷・弾数",
+        "title": "枝分かれの雷"
+      }
+    },
+    {
+      "elapsed": 173.716666666697,
+      "upgrade": {
+        "body": "雷を放つ間隔を短くする。\n残像の雷も同じ速さに。",
+        "effect": "間隔 0.60秒 → 0.51秒",
+        "icon": "lightning",
+        "id": "lightning_haste",
+        "tag": "雷・速さ",
+        "title": "早口の詠唱"
+      }
+    },
+    {
+      "elapsed": 175.550000000032,
+      "upgrade": {
+        "body": "月の輪が大きく広がる。\n自分の周りに道をつくる。",
+        "effect": "範囲 208 → 238",
+        "icon": "moon",
+        "id": "moon_range",
+        "tag": "月輪・攻撃範囲",
+        "title": "満ちゆく月"
+      }
+    }
+  ],
+  "errors": [],
+  "checks": {
+    "echo_appears": true,
+    "pause_freezes_time_position_echo": true,
+    "upgrade_freezes_time": true,
+    "normal_speed_three_minutes": true,
+    "retry_resets_run": true,
+    "focus_loss_requires_resume": null,
+    "layout_1920x1080": true,
+    "layout_960x540": true,
+    "layout_390x844": true,
+    "load_failure_retry": true
+  },
+  "final": {
+    "arena": {
+      "bounded": false,
+      "obstacles": false
+    },
+    "choices": [],
+    "damage_taken": 42,
+    "echo": {
+      "active": true,
+      "x": 501.995513916016,
+      "y": -87.9175643920898
+    },
+    "echo_shots": 299,
+    "effects": 26,
+    "elapsed": 180,
+    "enemies": [
+      {
+        "hp": 17.3,
+        "id": 513,
+        "kind": "hound",
+        "phase": "seek",
+        "x": 490.6,
+        "y": 402.1
+      },
+      {
+        "hp": 36.3,
+        "id": 514,
+        "kind": "archer",
+        "phase": "seek",
+        "x": 475.2,
+        "y": 488.2
+      },
+      {
+        "hp": 17.3,
+        "id": 515,
+        "kind": "hound",
+        "phase": "seek",
+        "x": 435.6,
+        "y": 439
+      },
+      {
+        "hp": 35.1,
+        "id": 530,
+        "kind": "charger",
+        "phase": "seek",
+        "x": 655.5,
+        "y": 352.9
+      },
+      {
+        "hp": 0.4,
+        "id": 531,
+        "kind": "hound",
+        "phase": "seek",
+        "x": 612.1,
+        "y": 367
+      },
+      {
+        "hp": 36.5,
+        "id": 532,
+        "kind": "archer",
+        "phase": "seek",
+        "x": 629.4,
+        "y": 472.6
+      },
+      {
+        "hp": 17.4,
+        "id": 534,
+        "kind": "hound",
+        "phase": "seek",
+        "x": 618.2,
+        "y": 409.4
+      },
+      {
+        "hp": 1.2,
+        "id": 535,
+        "kind": "charger",
+        "phase": "seek",
+        "x": 182.1,
+        "y": 620.4
+      },
+      {
+        "hp": 52.3,
+        "id": 537,
+        "kind": "charger",
+        "phase": "seek",
+        "x": 561.5,
+        "y": 472.5
+      },
+      {
+        "hp": 17.4,
+        "id": 538,
+        "kind": "hound",
+        "phase": "seek",
+        "x": 499.6,
+        "y": 458.1
+      },
+      {
+        "hp": 17.5,
+        "id": 543,
+        "kind": "hound",
+        "phase": "seek",
+        "x": 436.6,
+        "y": 507.6
+      },
+      {
+        "hp": 17.5,
+        "id": 544,
+        "kind": "hound",
+        "phase": "seek",
+        "x": 408.6,
+        "y": 562.5
+      },
+      {
+        "hp": 17.5,
+        "id": 545,
+        "kind": "hound",
+        "phase": "seek",
+        "x": 383,
+        "y": 642.2
+      },
+      {
+        "hp": 52.4,
+        "id": 546,
+        "kind": "charger",
+        "phase": "seek",
+        "x": -134.9,
+        "y": 568.1
+      },
+      {
+        "hp": 17.5,
+        "id": 547,
+        "kind": "hound",
+        "phase": "seek",
+        "x": -115.7,
+        "y": 488.7
+      },
+      {
+        "hp": 52.4,
+        "id": 548,
+        "kind": "charger",
+        "phase": "seek",
+        "x": -184.6,
+        "y": 480.8
+      },
+      {
+        "hp": 35.5,
+        "id": 549,
+        "kind": "charger",
+        "phase": "seek",
+        "x": -151.1,
+        "y": 190.7
+      },
+      {
+        "hp": 36.8,
+        "id": 554,
+        "kind": "archer",
+        "phase": "seek",
+        "x": -123.9,
+        "y": 723.6
+      },
+      {
+        "hp": 17.5,
+        "id": 555,
+        "kind": "hound",
+        "phase": "seek",
+        "x": -120.7,
+        "y": 623
+      },
+      {
+        "hp": 17.5,
+        "id": 556,
+        "kind": "hound",
+        "phase": "seek",
+        "x": 444.9,
+        "y": 512.1
+      },
+      {
+        "hp": 52.7,
+        "id": 558,
+        "kind": "charger",
+        "phase": "seek",
+        "x": -188.7,
+        "y": 511.5
+      },
+      {
+        "hp": 17.6,
+        "id": 559,
+        "kind": "hound",
+        "phase": "seek",
+        "x": -147.6,
+        "y": 411.3
+      },
+      {
+        "hp": 17.6,
+        "id": 560,
+        "kind": "hound",
+        "phase": "seek",
+        "x": -167.7,
+        "y": 364.6
+      },
+      {
+        "hp": 17.6,
+        "id": 561,
+        "kind": "hound",
+        "phase": "seek",
+        "x": -198.8,
+        "y": 327.4
+      },
+      {
+        "hp": 36.9,
+        "id": 562,
+        "kind": "archer",
+        "phase": "seek",
+        "x": -257,
+        "y": 298.1
+      },
+      {
+        "hp": 17.6,
+        "id": 563,
+        "kind": "hound",
+        "phase": "seek",
+        "x": -210.6,
+        "y": 218.4
+      },
+      {
+        "hp": 17.6,
+        "id": 564,
+        "kind": "hound",
+        "phase": "seek",
+        "x": 256.1,
+        "y": 622.2
+      },
+      {
+        "hp": 2.9,
+        "id": 565,
+        "kind": "archer",
+        "phase": "seek",
+        "x": 179.7,
+        "y": 656.8
+      },
+      {
+        "hp": 17.6,
+        "id": 566,
+        "kind": "hound",
+        "phase": "seek",
+        "x": 528.4,
+        "y": 361.9
+      },
+      {
+        "hp": 17.6,
+        "id": 567,
+        "kind": "hound",
+        "phase": "seek",
+        "x": 495.1,
+        "y": 426.7
+      },
+      {
+        "hp": 36.9,
+        "id": 568,
+        "kind": "archer",
+        "phase": "seek",
+        "x": 442.2,
+        "y": 514.1
+      },
+      {
+        "hp": 52.8,
+        "id": 569,
+        "kind": "charger",
+        "phase": "seek",
+        "x": -155.6,
+        "y": 487.3
+      },
+      {
+        "hp": 17.6,
+        "id": 570,
+        "kind": "hound",
+        "phase": "seek",
+        "x": -188.4,
+        "y": 435.4
+      },
+      {
+        "hp": 37,
+        "id": 571,
+        "kind": "archer",
+        "phase": "seek",
+        "x": -292.6,
+        "y": 89.4
+      },
+      {
+        "hp": 37,
+        "id": 572,
+        "kind": "archer",
+        "phase": "seek",
+        "x": -250.5,
+        "y": 29.2
+      },
+      {
+        "hp": 0.7,
+        "id": 579,
+        "kind": "hound",
+        "phase": "seek",
+        "x": -5.5,
+        "y": 401.5
+      },
+      {
+        "hp": 3.1,
+        "id": 581,
+        "kind": "archer",
+        "phase": "seek",
+        "x": 632.8,
+        "y": 337.7
+      },
+      {
+        "hp": 2.1,
+        "id": 582,
+        "kind": "charger",
+        "phase": "seek",
+        "x": 259.4,
+        "y": -500
+      },
+      {
+        "hp": 17.7,
+        "id": 586,
+        "kind": "hound",
+        "phase": "seek",
+        "x": -131.4,
+        "y": 255
+      },
+      {
+        "hp": 53.2,
+        "id": 587,
+        "kind": "charger",
+        "phase": "seek",
+        "x": -201.1,
+        "y": 164.5
+      },
+      {
+        "hp": 17.7,
+        "id": 588,
+        "kind": "hound",
+        "phase": "seek",
+        "x": -277.6,
+        "y": 124.9
+      },
+      {
+        "hp": 17.7,
+        "id": 589,
+        "kind": "hound",
+        "phase": "seek",
+        "x": -86.1,
+        "y": -506.8
+      },
+      {
+        "hp": 17.7,
+        "id": 590,
+        "kind": "hound",
+        "phase": "seek",
+        "x": -9.6,
+        "y": -528.6
+      },
+      {
+        "hp": 17.7,
+        "id": 591,
+        "kind": "hound",
+        "phase": "seek",
+        "x": 44.7,
+        "y": -576
+      },
+      {
+        "hp": 17.7,
+        "id": 592,
+        "kind": "hound",
+        "phase": "seek",
+        "x": 152.7,
+        "y": -598.3
+      },
+      {
+        "hp": 2.3,
+        "id": 593,
+        "kind": "charger",
+        "phase": "seek",
+        "x": 619.7,
+        "y": 336.2
+      },
+      {
+        "hp": 0.8,
+        "id": 594,
+        "kind": "hound",
+        "phase": "seek",
+        "x": -186.3,
+        "y": 108.3
+      },
+      {
+        "hp": 37.3,
+        "id": 595,
+        "kind": "archer",
+        "phase": "seek",
+        "x": 284.1,
+        "y": -613.5
+      },
+      {
+        "hp": 17.8,
+        "id": 596,
+        "kind": "hound",
+        "phase": "seek",
+        "x": 357.1,
+        "y": -660.7
+      },
+      {
+        "hp": 37.3,
+        "id": 597,
+        "kind": "archer",
+        "phase": "seek",
+        "x": 429.8,
+        "y": -622.3
+      },
+      {
+        "hp": 17.8,
+        "id": 598,
+        "kind": "hound",
+        "phase": "seek",
+        "x": 829.3,
+        "y": 270
+      },
+      {
+        "hp": 0.8,
+        "id": 599,
+        "kind": "hound",
+        "phase": "seek",
+        "x": 751.9,
+        "y": 286
+      },
+      {
+        "hp": 17.8,
+        "id": 600,
+        "kind": "hound",
+        "phase": "seek",
+        "x": -22.9,
+        "y": 227.2
+      },
+      {
+        "hp": 17.8,
+        "id": 601,
+        "kind": "hound",
+        "phase": "seek",
+        "x": -85.2,
+        "y": 173.1
+      },
+      {
+        "hp": 3.4,
+        "id": 604,
+        "kind": "archer",
+        "phase": "warning",
+        "x": 1063.7,
+        "y": -375.2
+      },
+      {
+        "hp": 0.8,
+        "id": 605,
+        "kind": "hound",
+        "phase": "seek",
+        "x": 993.2,
+        "y": 201.5
+      },
+      {
+        "hp": 36.5,
+        "id": 606,
+        "kind": "charger",
+        "phase": "seek",
+        "x": 1072.8,
+        "y": 183.2
+      },
+      {
+        "hp": 20.4,
+        "id": 607,
+        "kind": "archer",
+        "phase": "seek",
+        "x": 1014.6,
+        "y": 235.6
+      },
+      {
+        "hp": 0.8,
+        "id": 608,
+        "kind": "hound",
+        "phase": "seek",
+        "x": 57.9,
+        "y": -360
+      },
+      {
+        "hp": 17.8,
+        "id": 609,
+        "kind": "hound",
+        "phase": "seek",
+        "x": 96.6,
+        "y": -425.3
+      },
+      {
+        "hp": 53.5,
+        "id": 610,
+        "kind": "charger",
+        "phase": "seek",
+        "x": 115.8,
+        "y": -510.7
+      },
+      {
+        "hp": 17.9,
+        "id": 612,
+        "kind": "hound",
+        "phase": "seek",
+        "x": 219.8,
+        "y": -548.8
+      },
+      {
+        "hp": 17.9,
+        "id": 613,
+        "kind": "hound",
+        "phase": "seek",
+        "x": 271.6,
+        "y": -618.2
+      },
+      {
+        "hp": 53.6,
+        "id": 614,
+        "kind": "charger",
+        "phase": "seek",
+        "x": 353.7,
+        "y": -647.8
+      },
+      {
+        "hp": 17.9,
+        "id": 615,
+        "kind": "hound",
+        "phase": "seek",
+        "x": 1029,
+        "y": 484.8
+      },
+      {
+        "hp": 17.9,
+        "id": 616,
+        "kind": "hound",
+        "phase": "seek",
+        "x": 933.3,
+        "y": 480.4
+      },
+      {
+        "hp": 17.9,
+        "id": 617,
+        "kind": "hound",
+        "phase": "seek",
+        "x": 343.4,
+        "y": 454.1
+      },
+      {
+        "hp": 17.9,
+        "id": 618,
+        "kind": "hound",
+        "phase": "seek",
+        "x": 303,
+        "y": 403.8
+      },
+      {
+        "hp": 17.9,
+        "id": 619,
+        "kind": "hound",
+        "phase": "seek",
+        "x": 253.9,
+        "y": 325.9
+      },
+      {
+        "hp": 53.7,
+        "id": 620,
+        "kind": "charger",
+        "phase": "seek",
+        "x": 245.3,
+        "y": -498.9
+      },
+      {
+        "hp": 53.7,
+        "id": 621,
+        "kind": "charger",
+        "phase": "seek",
+        "x": 288,
+        "y": -576.6
+      },
+      {
+        "hp": 17.9,
+        "id": 622,
+        "kind": "hound",
+        "phase": "seek",
+        "x": 330.3,
+        "y": -662.2
+      },
+      {
+        "hp": 17.9,
+        "id": 623,
+        "kind": "hound",
+        "phase": "arrival",
+        "x": 132.5,
+        "y": -262.4
+      },
+      {
+        "hp": 17.9,
+        "id": 624,
+        "kind": "hound",
+        "phase": "arrival",
+        "x": 173.6,
+        "y": -346.8
+      },
+      {
+        "hp": 17.9,
+        "id": 625,
+        "kind": "hound",
+        "phase": "arrival",
+        "x": 276.9,
+        "y": 282.1
+      },
+      {
+        "hp": 17.9,
+        "id": 626,
+        "kind": "hound",
+        "phase": "arrival",
+        "x": 1270,
+        "y": 514
+      }
+    ],
+    "enemy_count": 76,
+    "experience": 44,
+    "experience_needed": 61,
+    "health": 58,
+    "history_samples": 131,
+    "kills": 550,
+    "last_echo_attack": {
+      "cooldown": 0.508032,
+      "count": 4,
+      "damage": 17,
+      "kind": "lightning",
+      "level": 6,
+      "range": 510,
+      "width": 11
+    },
+    "last_player_attack": {
+      "cooldown": 0.508032,
+      "count": 4,
+      "damage": 17,
+      "kind": "lightning",
+      "level": 6,
+      "range": 510,
+      "width": 11
+    },
+    "level": 15,
+    "maximum_health": 100,
+    "pending_echo_attacks": 5,
+    "pickups": 189,
+    "player": {
+      "x": 916.250671386719,
+      "y": -125.924537658691
+    },
+    "player_shots": 304,
+    "projectiles": 7,
+    "settings": {
+      "reduced_motion": false,
+      "sound": true
+    },
+    "state": "victory",
+    "upgrade_choices": [],
+    "weapons": {
+      "lightning": {
+        "cooldown": 0.508032,
+        "count": 4,
+        "damage": 17,
+        "level": 6,
+        "range": 510,
+        "width": 11
+      },
+      "moon": {
+        "cooldown": 1.763,
+        "count": 3,
+        "damage": 18,
+        "level": 8,
+        "radius": 238
+      }
+    }
+  },
+  "max_enemies": 80,
+  "normal_run_wall_seconds": 182.481,
+  "focus_return": "playing",
+  "focus_observable": false,
+  "focus_note": "Automation kept the document visible and focused. Verify real tab switching separately.",
+  "success": true
+}

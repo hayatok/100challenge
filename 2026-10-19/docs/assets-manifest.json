@@ -1,0 +1,38 @@
+{
+  "art": "Original SVG sources created for Echo Witch",
+  "font_source": "2026-10-14/game/assets/fonts/NotoSansCJKjp-Medium.otf",
+  "files": {
+    "game/assets/art/archer.svg": {
+      "bytes": 672,
+      "sha256": "11b9dec92331b1684cc43e14e99a8e10ae2025b456611fb334743aa42c62d099"
+    },
+    "game/assets/art/charger.svg": {
+      "bytes": 632,
+      "sha256": "f6eb27f86894ffd9a9bb47a6858d9accf5f58de843454371500459e0bb7f62b8"
+    },
+    "game/assets/art/garden_tile.svg": {
+      "bytes": 954,
+      "sha256": "c7aa27c319835504a248ec27c32ae072ca91ad4e6ef645bdab563064480cd14e"
+    },
+    "game/assets/art/hound.svg": {
+      "bytes": 635,
+      "sha256": "db928e2b872ed92bee0c5fb021f51a35c1e84fc705aa85073339e442ded43af6"
+    },
+    "game/assets/art/moon.svg": {
+      "bytes": 469,
+      "sha256": "6716e80c9c8a3f06ba8d2eb2ee9b2d22f8e1f03d6a62e726438a19718ba52eb7"
+    },
+    "game/assets/art/witch.svg": {
+      "bytes": 1508,
+      "sha256": "070b8d35ca6ac27c76da13d06ec9559842509f951358e5163525517343e14bc2"
+    },
+    "game/assets/fonts/LICENSE.txt": {
+      "bytes": 4301,
+      "sha256": "6a73f9541c2de74158c0e7cf6b0a58ef774f5a780bf191f2d7ec9cc53efe2bf2"
+    },
+    "game/assets/fonts/NotoSansCJKjp-Medium.otf": {
+      "bytes": 16554004,
+      "sha256": "dd523e580e3413c480b2d701bf64e534c20f8419e3cfb6a44c2bdcd8d2a6c052"
+    }
+  }
+}

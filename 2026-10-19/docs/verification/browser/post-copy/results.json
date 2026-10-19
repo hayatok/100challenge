@@ -1,0 +1,138 @@
+{
+  "success": true,
+  "kind": "final UI copy and mouse interaction; no clock/HP changes",
+  "choices": [
+    {
+      "body": "魔女と残像の周囲に\n月の輪が広がる。",
+      "effect": "周囲に広がる / 2.15秒ごと",
+      "icon": "moon",
+      "id": "moon_unlock",
+      "tag": "新しい魔法",
+      "title": "月輪をひらく"
+    },
+    {
+      "body": "別の敵へも雷を放つ。\n離れた群れを同時に狙う。",
+      "effect": "雷 1本 → 2本",
+      "icon": "lightning",
+      "id": "lightning_fork",
+      "tag": "雷・弾数",
+      "title": "枝分かれの雷"
+    },
+    {
+      "body": "歩く速さと回収範囲を広げる。\n残像との距離をつくりやすい。",
+      "effect": "移動 +8% / 回収範囲も拡大",
+      "icon": "stride",
+      "id": "stride",
+      "tag": "移動・回収",
+      "title": "風をまとう靴"
+    }
+  ],
+  "after": {
+    "arena": {
+      "bounded": false,
+      "obstacles": false
+    },
+    "choices": [],
+    "damage_taken": 0,
+    "echo": {
+      "active": true,
+      "x": -3.58334159851074,
+      "y": 404.916931152344
+    },
+    "echo_shots": 7,
+    "effects": 0,
+    "elapsed": 8.23333333333332,
+    "enemies": [
+      {
+        "hp": 10,
+        "id": 10,
+        "kind": "hound",
+        "phase": "seek",
+        "x": 813.2,
+        "y": 619.1
+      },
+      {
+        "hp": 10,
+        "id": 11,
+        "kind": "hound",
+        "phase": "seek",
+        "x": -376.6,
+        "y": 682.1
+      },
+      {
+        "hp": 10,
+        "id": 13,
+        "kind": "hound",
+        "phase": "seek",
+        "x": 634.2,
+        "y": -61.5
+      },
+      {
+        "hp": 10,
+        "id": 14,
+        "kind": "hound",
+        "phase": "arrival",
+        "x": -584,
+        "y": -298
+      }
+    ],
+    "enemy_count": 4,
+    "experience": 0,
+    "experience_needed": 9,
+    "health": 100,
+    "history_samples": 130,
+    "kills": 10,
+    "last_echo_attack": {
+      "cooldown": 0.72,
+      "count": 1,
+      "damage": 12,
+      "kind": "lightning",
+      "level": 1,
+      "range": 510,
+      "width": 11
+    },
+    "last_player_attack": {
+      "cooldown": 0.72,
+      "count": 1,
+      "damage": 12,
+      "kind": "lightning",
+      "level": 1,
+      "range": 510,
+      "width": 11
+    },
+    "level": 2,
+    "maximum_health": 100,
+    "pending_echo_attacks": 2,
+    "pickups": 5,
+    "player": {
+      "x": -3.58334159851074,
+      "y": -0.00000810623168945312
+    },
+    "player_shots": 9,
+    "projectiles": 0,
+    "settings": {
+      "reduced_motion": false,
+      "sound": true
+    },
+    "state": "playing",
+    "upgrade_choices": [],
+    "weapons": {
+      "lightning": {
+        "cooldown": 0.72,
+        "count": 1,
+        "damage": 12,
+        "level": 1,
+        "range": 510,
+        "width": 11
+      },
+      "moon": {
+        "cooldown": 2.15,
+        "count": 1,
+        "damage": 13,
+        "level": 1,
+        "radius": 118
+      }
+    }
+  },
+  "errors": []
+}
