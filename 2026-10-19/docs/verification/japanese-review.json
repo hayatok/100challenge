@@ -1,0 +1,120 @@
+{
+  "scope": "New app prose and new catalog entry only; unrelated existing descriptions were not rewritten.",
+  "method": "Read originals and candidates, run lint/diff, verify actual file hashes.",
+  "retained": [
+    "GDScript colons are required syntax, not prose punctuation.",
+    "The image-center versus feet distinction is an asset coordinate requirement.",
+    "README command explanations retain natural repeated sentence endings.",
+    "README implementation tense and new browser QA command intentionally reflect completed work and the actual command.",
+    "Game-flavored titles retain their intended tone; instructions and state labels remain explicit.",
+    "Resolution denotes the actual screen pixel dimensions.",
+    "GDScript syntax and intentional gameplay-number changes were kept and checked against 92 production checks and real browser snapshots.",
+    "Natural repeated polite endings in README and asset provenance were retained.",
+    "The resize anomaly and its unknown cause remain explicit. New wait durations and links match the focused resize script and captured evidence."
+  ],
+  "changed": [
+    "Removed a pause comma in the echo onboarding hint.",
+    "Replaced raw coordinate values in upgrade cards with relative increases; behavior is unchanged.",
+    "Named the flanking condition, phase timing, specialization tradeoffs and result breakdown.",
+    "Removed pause commas in the second-edition description and verification report."
+  ],
+  "files": [
+    {
+      "file": "AGENTS.md",
+      "sha256": "cce73640d66d213910fa972cddcc4a70bf3dd52589cb108c88e73acea359b54a",
+      "verify": "yomiyasu-check: executed via=verify run=20261019T145004Z-24e12e55 attempt=1 final=sha256:cce73640d66d mode=rewrite doc_type=manual checks=lint,diff meaning_risk=0 replay=skipped"
+    },
+    {
+      "file": "README.md",
+      "sha256": "1edccdb4b993716f70346a3dba21e5d46ea03d1b17a4d194c5bcab296ad83df8",
+      "verify": "yomiyasu-check: executed via=verify run=20261019T155505Z-edfc8c99 attempt=2 final=sha256:1edccdb4b993 mode=rewrite doc_type=manual checks=lint,diff meaning_risk=4 replay=skipped"
+    },
+    {
+      "file": "docs/SPEC.md",
+      "sha256": "655439579242cbcd455a453d76b48f3dd777a2f7ec979ade2eab727e6f0942a1",
+      "verify": "yomiyasu-check: executed via=verify run=20261019T155506Z-16fb3468 attempt=1 final=sha256:655439579242 mode=rewrite doc_type=manual checks=lint,diff meaning_risk=16 replay=skipped"
+    },
+    {
+      "file": "docs/ART_DIRECTION.md",
+      "sha256": "6bdf62afd3a767dbcbd8eae8de493b2f94878f48075ff1706d69454c92589f90",
+      "verify": "yomiyasu-check: executed via=verify run=20261019T155507Z-36f176ea attempt=1 final=sha256:6bdf62afd3a7 mode=rewrite doc_type=manual checks=lint,diff meaning_risk=6 replay=skipped"
+    },
+    {
+      "file": "docs/ASSETS.md",
+      "sha256": "9a11df97386572b15d81f3470e186c0bcc50ead8809bb2d68afbbcaeee147632",
+      "verify": "yomiyasu-check: executed via=verify run=20261019T155507Z-1c6ec9db attempt=1 final=sha256:9a11df973865 mode=rewrite doc_type=manual checks=lint,diff meaning_risk=8 replay=skipped"
+    },
+    {
+      "file": "credits.html",
+      "sha256": "c128ab9e00e4a90663ab2dfb5d36ee4f369203382c82d561d13f723561ffa151",
+      "verify": "yomiyasu-check: executed via=verify run=20261019T155506Z-f34e41fc attempt=1 final=sha256:c128ab9e00e4 mode=rewrite doc_type=manual checks=lint,diff meaning_risk=3 replay=skipped"
+    },
+    {
+      "file": "game/web_shell.html",
+      "sha256": "5b66dcce89d6dfc9f81e5df911f7034de61b874101c1d95fa23f1299dffbf7cc",
+      "verify": "yomiyasu-check: executed via=verify run=20261019T145006Z-476b590c attempt=1 final=sha256:5b66dcce89d6 mode=rewrite doc_type=manual checks=lint,diff meaning_risk=3 replay=skipped"
+    },
+    {
+      "file": "game/project.godot",
+      "sha256": "d7862baf3e21a77e995f17a65d37fedb3981b26a2048f1a463286a19a3e3fd35",
+      "verify": "yomiyasu-check: executed via=verify run=20261019T145007Z-5fad7221 attempt=1 final=sha256:d7862baf3e21 mode=rewrite doc_type=manual checks=lint,diff meaning_risk=0 replay=skipped"
+    },
+    {
+      "file": "game/scripts/interface.gd",
+      "sha256": "fa2b7efcaabe328b90663e43fd9a89c4962e02dbfa2277a8f96ca46f156c47da",
+      "verify": "yomiyasu-check: executed via=verify run=20261019T155509Z-9f253018 attempt=2 final=sha256:fa2b7efcaabe mode=rewrite doc_type=manual checks=lint,diff meaning_risk=16 replay=skipped"
+    },
+    {
+      "file": "game/scripts/main.gd",
+      "sha256": "1a117e63ec2e435ae93db8dac89e5308993c4e90d86dd4dbc97fbb5f2f927f61",
+      "verify": "yomiyasu-check: executed via=verify run=20261019T155509Z-2a9831c8 attempt=1 final=sha256:1a117e63ec2e mode=rewrite doc_type=manual checks=lint,diff meaning_risk=0 replay=skipped"
+    },
+    {
+      "file": "game/scripts/spellbook.gd",
+      "sha256": "ca7f0422bbab5d43d18e0246f1d3555d648820c9567ec17c6902336a503fdbc3",
+      "verify": "yomiyasu-check: executed via=verify run=20261019T155511Z-cc9fb6cb attempt=1 final=sha256:ca7f0422bbab mode=rewrite doc_type=manual checks=lint,diff meaning_risk=24 replay=skipped"
+    },
+    {
+      "file": "game/scripts/garden_view.gd",
+      "sha256": "2cb509ed70c5c0c9661aa0e29cc8c7cc09a45e8d4ae9b641f20317cf325fa440",
+      "verify": "yomiyasu-check: executed via=verify run=20261019T155508Z-b24c1053 attempt=2 final=sha256:2cb509ed70c5 mode=rewrite doc_type=manual checks=lint,diff meaning_risk=60 replay=skipped"
+    },
+    {
+      "file": "docs/reference/play-layout.svg",
+      "sha256": "c85261d4ad3b9db79d4a4d031523e25498f1c72fe9bf09531eeb7185ae326bd6",
+      "verify": "yomiyasu-check: executed via=verify run=20261019T145009Z-dcfac9db attempt=1 final=sha256:c85261d4ad3b mode=rewrite doc_type=manual checks=lint,diff meaning_risk=0 replay=skipped"
+    },
+    {
+      "file": "public/echo-witch-cover.svg",
+      "sha256": "6f59b18dcb1108ead69b4af8944887d3e9a0333845b209956b2d1c7a197768ee",
+      "verify": "yomiyasu-check: executed via=verify run=20261019T145009Z-f6ede445 attempt=1 final=sha256:6f59b18dcb11 mode=rewrite doc_type=manual checks=lint,diff meaning_risk=0 replay=skipped"
+    },
+    {
+      "file": "docs/verification/RESULTS.md",
+      "sha256": "7f5b9f210c3646487a19afe269dfa89c225dd355adc2ea868edea301357e9cfc",
+      "verify": "yomiyasu-check: executed via=verify run=20261019T145354Z-bcbbbe54 attempt=2 final=sha256:7f5b9f210c36 mode=rewrite doc_type=incident checks=lint,diff meaning_risk=0 replay=skipped"
+    },
+    {
+      "file": "../apps.json",
+      "sha256": "8c62875bd0fc10549d4ad63186cc36455c5baf1ed128e55bc0b176f6a96fdef2",
+      "verify": "yomiyasu-check: executed via=verify run=20261019T155511Z-ea4e4aa2 attempt=1 final=sha256:8c62875bd0fc mode=rewrite doc_type=manual checks=lint,diff meaning_risk=0 replay=skipped"
+    },
+    {
+      "file": "docs/QUALITY_PLAN.md",
+      "sha256": "0b5397c0b27df8ab180cea4a22029d4ea2dd8715d10eb084c156549513786284",
+      "verify": "yomiyasu-check: executed via=verify run=20261019T155507Z-5ff2bd6c attempt=1 final=sha256:0b5397c0b27d mode=rewrite doc_type=manual checks=lint,diff meaning_risk=0 replay=skipped"
+    },
+    {
+      "file": "game/scripts/run_model.gd",
+      "sha256": "0cd06a875723b87e0fa291901057dbd6d6f004990f90873ee1862791f0678484",
+      "verify": "yomiyasu-check: executed via=verify run=20261019T155510Z-b5fe83b0 attempt=1 final=sha256:0cd06a875723 mode=rewrite doc_type=manual checks=lint,diff meaning_risk=32 replay=skipped"
+    },
+    {
+      "file": "docs/verification/QUALITY.md",
+      "sha256": "5f487f021e814aa36d33b24013b41e8180e6945a5285cd85d8b5b64b669cb9a6",
+      "verify": "yomiyasu-check: executed via=verify run=20261019T160953Z-af56f4db attempt=1 final=sha256:5f487f021e81 mode=rewrite doc_type=manual checks=lint,diff meaning_risk=3 replay=skipped"
+    }
+  ],
+  "records": ".yomiyasu/ is local and ignored; detailed reports contain full drafts.",
+  "round": "Quality pass beginning at e4cc52d, 2026-10-20 JST"
+}

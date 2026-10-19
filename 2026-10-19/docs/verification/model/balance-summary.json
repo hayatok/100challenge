@@ -1,0 +1,347 @@
+[
+  {
+    "build": "lightning",
+    "pattern": "straight",
+    "runs": 3,
+    "wins": 0,
+    "time": [
+      41.7,
+      49.3,
+      40.5
+    ],
+    "levels": [
+      4,
+      5,
+      4
+    ],
+    "upgrade_count": [
+      3,
+      4,
+      3
+    ],
+    "resonance": [
+      24,
+      22,
+      20
+    ],
+    "health": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "late_gap_range": [],
+    "last_upgrade": [
+      28.25,
+      46.08,
+      31.53
+    ]
+  },
+  {
+    "build": "moon",
+    "pattern": "straight",
+    "runs": 3,
+    "wins": 0,
+    "time": [
+      44.9,
+      49.3,
+      45.0
+    ],
+    "levels": [
+      5,
+      4,
+      4
+    ],
+    "upgrade_count": [
+      4,
+      3,
+      3
+    ],
+    "resonance": [
+      22,
+      19,
+      18
+    ],
+    "health": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "late_gap_range": [],
+    "last_upgrade": [
+      43.68,
+      29.15,
+      31.53
+    ]
+  },
+  {
+    "build": "echo",
+    "pattern": "straight",
+    "runs": 3,
+    "wins": 0,
+    "time": [
+      49.3,
+      44.9,
+      41.6
+    ],
+    "levels": [
+      5,
+      5,
+      4
+    ],
+    "upgrade_count": [
+      4,
+      4,
+      3
+    ],
+    "resonance": [
+      31,
+      25,
+      25
+    ],
+    "health": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "late_gap_range": [],
+    "last_upgrade": [
+      38.15,
+      44.18,
+      34.83
+    ]
+  },
+  {
+    "build": "lightning",
+    "pattern": "orbit",
+    "runs": 3,
+    "wins": 2,
+    "time": [
+      180.0,
+      155.1,
+      180.0
+    ],
+    "levels": [
+      10,
+      9,
+      10
+    ],
+    "upgrade_count": [
+      9,
+      8,
+      9
+    ],
+    "resonance": [
+      127,
+      81,
+      127
+    ],
+    "health": [
+      48.0,
+      0.0,
+      28.0
+    ],
+    "late_gap_range": [
+      19.01,
+      30.72
+    ],
+    "last_upgrade": [
+      163.18,
+      141.05,
+      161.05
+    ]
+  },
+  {
+    "build": "moon",
+    "pattern": "orbit",
+    "runs": 3,
+    "wins": 3,
+    "time": [
+      180.0,
+      180.0,
+      180.0
+    ],
+    "levels": [
+      11,
+      11,
+      11
+    ],
+    "upgrade_count": [
+      10,
+      10,
+      10
+    ],
+    "resonance": [
+      184,
+      129,
+      121
+    ],
+    "health": [
+      48.0,
+      52.0,
+      56.0
+    ],
+    "late_gap_range": [
+      17.1,
+      31.25
+    ],
+    "last_upgrade": [
+      173.13,
+      178.8,
+      173.32
+    ]
+  },
+  {
+    "build": "echo",
+    "pattern": "orbit",
+    "runs": 3,
+    "wins": 1,
+    "time": [
+      180.0,
+      168.0,
+      173.2
+    ],
+    "levels": [
+      11,
+      10,
+      11
+    ],
+    "upgrade_count": [
+      10,
+      9,
+      10
+    ],
+    "resonance": [
+      199,
+      134,
+      231
+    ],
+    "health": [
+      16.0,
+      0.0,
+      0.0
+    ],
+    "late_gap_range": [
+      19.75,
+      27.8
+    ],
+    "last_upgrade": [
+      173.05,
+      152.02,
+      159.62
+    ]
+  },
+  {
+    "build": "lightning",
+    "pattern": "turnback",
+    "runs": 3,
+    "wins": 0,
+    "time": [
+      83.0,
+      78.2,
+      143.4
+    ],
+    "levels": [
+      8,
+      8,
+      10
+    ],
+    "upgrade_count": [
+      7,
+      7,
+      9
+    ],
+    "resonance": [
+      44,
+      41,
+      138
+    ],
+    "health": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "late_gap_range": [
+      22.53,
+      22.53
+    ],
+    "last_upgrade": [
+      77.17,
+      70.02,
+      131.9
+    ]
+  },
+  {
+    "build": "moon",
+    "pattern": "turnback",
+    "runs": 3,
+    "wins": 0,
+    "time": [
+      82.9,
+      80.9,
+      41.9
+    ],
+    "levels": [
+      8,
+      8,
+      6
+    ],
+    "upgrade_count": [
+      7,
+      7,
+      5
+    ],
+    "resonance": [
+      57,
+      33,
+      16
+    ],
+    "health": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "late_gap_range": [],
+    "last_upgrade": [
+      69.85,
+      73.68,
+      40.77
+    ]
+  },
+  {
+    "build": "echo",
+    "pattern": "turnback",
+    "runs": 3,
+    "wins": 0,
+    "time": [
+      75.8,
+      50.5,
+      105.7
+    ],
+    "levels": [
+      8,
+      7,
+      10
+    ],
+    "upgrade_count": [
+      7,
+      6,
+      9
+    ],
+    "resonance": [
+      58,
+      32,
+      93
+    ],
+    "health": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "late_gap_range": [],
+    "last_upgrade": [
+      67.52,
+      48.7,
+      103.9
+    ]
+  }
+]

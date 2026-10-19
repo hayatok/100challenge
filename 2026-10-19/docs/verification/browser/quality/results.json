@@ -1,0 +1,757 @@
+{
+  "base": "http://127.0.0.1:4197/",
+  "renderer": "Headless Chromium; software WebGL may be used. This is not a physical-GPU benchmark.",
+  "actions": [
+    {
+      "action": "key",
+      "key": "Enter",
+      "wall": "2026-10-19T15:52:55.476Z"
+    },
+    {
+      "action": "key",
+      "key": "Escape",
+      "wall": "2026-10-19T15:52:57.984Z"
+    },
+    {
+      "action": "key",
+      "key": "Enter",
+      "wall": "2026-10-19T15:52:59.496Z"
+    },
+    {
+      "action": "key",
+      "key": "1",
+      "wall": "2026-10-19T15:53:02.862Z"
+    },
+    {
+      "action": "key",
+      "key": "1",
+      "wall": "2026-10-19T15:53:07.846Z"
+    },
+    {
+      "action": "key",
+      "key": "2",
+      "wall": "2026-10-19T15:53:17.710Z"
+    },
+    {
+      "action": "key",
+      "key": "2",
+      "wall": "2026-10-19T15:53:34.641Z"
+    },
+    {
+      "action": "key",
+      "key": "2",
+      "wall": "2026-10-19T15:53:40.650Z"
+    },
+    {
+      "action": "key",
+      "key": "2",
+      "wall": "2026-10-19T15:54:07.249Z"
+    },
+    {
+      "action": "key",
+      "key": "1",
+      "wall": "2026-10-19T15:54:16.831Z"
+    },
+    {
+      "action": "key",
+      "key": "2",
+      "wall": "2026-10-19T15:54:35.291Z"
+    },
+    {
+      "action": "key",
+      "key": "3",
+      "wall": "2026-10-19T15:54:46.647Z"
+    },
+    {
+      "action": "key",
+      "key": "3",
+      "wall": "2026-10-19T15:55:06.612Z"
+    },
+    {
+      "action": "key",
+      "key": "3",
+      "wall": "2026-10-19T15:55:27.128Z"
+    },
+    {
+      "action": "key",
+      "key": "2",
+      "wall": "2026-10-19T15:55:54.357Z"
+    },
+    {
+      "action": "key",
+      "key": "Enter",
+      "wall": "2026-10-19T15:56:01.189Z"
+    },
+    {
+      "action": "key",
+      "key": "Enter",
+      "wall": "2026-10-19T15:56:05.822Z"
+    },
+    {
+      "action": "key",
+      "key": "1",
+      "wall": "2026-10-19T15:56:13.178Z"
+    },
+    {
+      "action": "key",
+      "key": "1",
+      "wall": "2026-10-19T15:56:16.244Z"
+    },
+    {
+      "action": "key",
+      "key": "1",
+      "wall": "2026-10-19T15:56:20.736Z"
+    },
+    {
+      "action": "key",
+      "key": "Enter",
+      "wall": "2026-10-19T15:56:25.870Z"
+    }
+  ],
+  "observations": [
+    {
+      "elapsed": 2.51666666666666,
+      "health": 100,
+      "level": 1,
+      "kills": 0,
+      "enemies": 9,
+      "echo_shots": 0,
+      "resonance_hits": 0,
+      "phase": {
+        "assault": true,
+        "index": 0,
+        "name": "残像の目覚め",
+        "remaining": 19.4833333333333,
+        "subtitle": "道を分け、二人で狙おう"
+      },
+      "music_starts": 1
+    },
+    {
+      "elapsed": 4.46666666666666,
+      "upgrade": {
+        "body": "魔女と残像の周囲に\n月の輪が広がる。",
+        "effect": "周囲に広がる / 2.15秒ごと",
+        "icon": "moon",
+        "id": "moon_unlock",
+        "tag": "新しい魔法",
+        "title": "月輪をひらく"
+      }
+    },
+    {
+      "elapsed": 9.1666666666667,
+      "upgrade": {
+        "body": "歩く速さと回収範囲を広げる。\n残像との距離をつくりやすい。",
+        "effect": "移動 +8% / 回収範囲も拡大",
+        "icon": "stride",
+        "id": "stride",
+        "tag": "移動・回収",
+        "title": "風をまとう靴"
+      }
+    },
+    {
+      "elapsed": 17.6000000000003,
+      "health": 100,
+      "level": 3,
+      "kills": 17,
+      "enemies": 18,
+      "echo_shots": 25,
+      "resonance_hits": 15,
+      "phase": {
+        "assault": true,
+        "index": 0,
+        "name": "残像の目覚め",
+        "remaining": 4.39999999999972,
+        "subtitle": "道を分け、二人で狙おう"
+      },
+      "music_starts": 1
+    },
+    {
+      "elapsed": 18.8666666666669,
+      "upgrade": {
+        "body": "月輪を習得、大きく速く。\n雷の射程は25%短くなる。",
+        "effect": "月輪範囲 +40% / 雷射程 −25%",
+        "icon": "moon",
+        "id": "spec_moon",
+        "specialization": true,
+        "tag": "専門化・広域",
+        "title": "月の魔女"
+      }
+    },
+    {
+      "elapsed": 32.6333333333328,
+      "health": 100,
+      "level": 4,
+      "kills": 35,
+      "enemies": 11,
+      "echo_shots": 49,
+      "resonance_hits": 23,
+      "phase": {
+        "assault": true,
+        "index": 1,
+        "name": "獣の足音",
+        "remaining": 19.3666666666672,
+        "subtitle": "正面の群れに道を譲ろう"
+      },
+      "music_starts": 1
+    },
+    {
+      "elapsed": 35.3833333333326,
+      "upgrade": {
+        "body": "別の敵へも雷を放つ。\n離れた群れを同時に狙う。",
+        "effect": "雷 1本 → 2本",
+        "icon": "lightning",
+        "id": "lightning_fork",
+        "tag": "雷・弾数",
+        "title": "枝分かれの雷"
+      }
+    },
+    {
+      "elapsed": 41.2166666666656,
+      "upgrade": {
+        "body": "別の敵へも雷を放つ。\n離れた群れを同時に狙う。",
+        "effect": "雷 2本 → 3本",
+        "icon": "lightning",
+        "id": "lightning_fork",
+        "tag": "雷・弾数",
+        "title": "枝分かれの雷"
+      }
+    },
+    {
+      "elapsed": 47.7833333333319,
+      "health": 92,
+      "level": 6,
+      "kills": 59,
+      "enemies": 15,
+      "echo_shots": 73,
+      "resonance_hits": 34,
+      "phase": {
+        "assault": true,
+        "index": 1,
+        "name": "獣の足音",
+        "remaining": 4.2166666666681,
+        "subtitle": "正面の群れに道を譲ろう"
+      },
+      "music_starts": 1
+    },
+    {
+      "elapsed": 62.983333333331,
+      "health": 84,
+      "level": 6,
+      "kills": 79,
+      "enemies": 9,
+      "echo_shots": 93,
+      "resonance_hits": 40,
+      "phase": {
+        "assault": true,
+        "index": 2,
+        "name": "月下の射手",
+        "remaining": 19.016666666669,
+        "subtitle": "赤い射線を横にかわそう"
+      },
+      "music_starts": 1
+    },
+    {
+      "elapsed": 67.7666666666641,
+      "upgrade": {
+        "body": "少し遅れて次の輪を放つ。\n追ってくる敵を押し返す。",
+        "effect": "月輪 1重 → 2重",
+        "icon": "moon",
+        "id": "moon_double",
+        "tag": "月輪・弾数",
+        "title": "重なる月輪"
+      }
+    },
+    {
+      "elapsed": 77.1833333333302,
+      "upgrade": {
+        "body": "雷を放つ間隔を短くする。\n残像の雷も同じ速さに。",
+        "effect": "間隔 0.78秒 → 0.66秒",
+        "icon": "lightning",
+        "id": "lightning_haste",
+        "tag": "雷・速さ",
+        "title": "早口の詠唱"
+      }
+    },
+    {
+      "elapsed": 78.2333333333302,
+      "health": 74,
+      "level": 8,
+      "kills": 113,
+      "enemies": 20,
+      "echo_shots": 116,
+      "resonance_hits": 58,
+      "phase": {
+        "assault": true,
+        "index": 2,
+        "name": "月下の射手",
+        "remaining": 3.76666666666982,
+        "subtitle": "赤い射線を横にかわそう"
+      },
+      "music_starts": 1
+    },
+    {
+      "elapsed": 93.4333333333293,
+      "health": 56,
+      "level": 8,
+      "kills": 128,
+      "enemies": 26,
+      "echo_shots": 139,
+      "resonance_hits": 63,
+      "phase": {
+        "assault": true,
+        "index": 3,
+        "name": "交差する牙",
+        "remaining": 18.5666666666707,
+        "subtitle": "突進と射線の間を抜けよう"
+      },
+      "music_starts": 1
+    },
+    {
+      "elapsed": 95.5333333333292,
+      "upgrade": {
+        "body": "二つの魔法の威力を上げる。\n専門にした魔法は伸びやすい。",
+        "effect": "魔法の基礎威力 +3",
+        "icon": "power",
+        "id": "power",
+        "tag": "魔法・威力",
+        "title": "魔術書の余白"
+      }
+    },
+    {
+      "elapsed": 106.549999999995,
+      "upgrade": {
+        "body": "二つの魔法の威力を上げる。\n専門にした魔法は伸びやすい。",
+        "effect": "魔法の基礎威力 +3",
+        "icon": "power",
+        "id": "power",
+        "tag": "魔法・威力",
+        "title": "魔術書の余白"
+      }
+    },
+    {
+      "elapsed": 108.449999999995,
+      "health": 56,
+      "level": 10,
+      "kills": 184,
+      "enemies": 21,
+      "echo_shots": 167,
+      "resonance_hits": 92,
+      "phase": {
+        "assault": true,
+        "index": 3,
+        "name": "交差する牙",
+        "remaining": 3.55000000000487,
+        "subtitle": "突進と射線の間を抜けよう"
+      },
+      "music_starts": 1
+    },
+    {
+      "elapsed": 123.633333333328,
+      "health": 48,
+      "level": 10,
+      "kills": 218,
+      "enemies": 10,
+      "echo_shots": 193,
+      "resonance_hits": 101,
+      "phase": {
+        "assault": true,
+        "index": 4,
+        "name": "庭園の包囲",
+        "remaining": 18.3666666666724,
+        "subtitle": "囲いの薄い場所を探そう"
+      },
+      "music_starts": 1
+    },
+    {
+      "elapsed": 126.099999999994,
+      "upgrade": {
+        "body": "二つの魔法の威力を上げる。\n専門にした魔法は伸びやすい。",
+        "effect": "魔法の基礎威力 +3",
+        "icon": "power",
+        "id": "power",
+        "tag": "魔法・威力",
+        "title": "魔術書の余白"
+      }
+    },
+    {
+      "elapsed": 138.700000000003,
+      "health": 40,
+      "level": 11,
+      "kills": 275,
+      "enemies": 33,
+      "echo_shots": 223,
+      "resonance_hits": 110,
+      "phase": {
+        "assault": true,
+        "index": 4,
+        "name": "庭園の包囲",
+        "remaining": 3.29999999999748,
+        "subtitle": "囲いの薄い場所を探そう"
+      },
+      "music_starts": 1
+    },
+    {
+      "elapsed": 146.350000000009,
+      "upgrade": {
+        "body": "二つの魔法の威力を上げる。\n専門にした魔法は伸びやすい。",
+        "effect": "魔法の基礎威力 +3",
+        "icon": "power",
+        "id": "power",
+        "tag": "魔法・威力",
+        "title": "魔術書の余白"
+      }
+    },
+    {
+      "elapsed": 153.900000000015,
+      "health": 32,
+      "level": 12,
+      "kills": 322,
+      "enemies": 21,
+      "echo_shots": 247,
+      "resonance_hits": 119,
+      "phase": {
+        "assault": true,
+        "index": 5,
+        "name": "夜明けの大群",
+        "remaining": 18.0999999999854,
+        "subtitle": "二人の魔法で夜明けを迎えよう"
+      },
+      "music_starts": 1
+    },
+    {
+      "elapsed": 169.100000000027,
+      "health": 12,
+      "level": 12,
+      "kills": 388,
+      "enemies": 47,
+      "echo_shots": 277,
+      "resonance_hits": 134,
+      "phase": {
+        "assault": true,
+        "index": 5,
+        "name": "夜明けの大群",
+        "remaining": 2.89999999997329,
+        "subtitle": "二人の魔法で夜明けを迎えよう"
+      },
+      "music_starts": 1
+    },
+    {
+      "elapsed": 173.366666666697,
+      "upgrade": {
+        "body": "月の輪が大きく広がる。\n自分の周りに道をつくる。",
+        "effect": "輪の大きさ +25%",
+        "icon": "moon",
+        "id": "moon_range",
+        "tag": "月輪・攻撃範囲",
+        "title": "満ちゆく月"
+      }
+    }
+  ],
+  "errors": [],
+  "checks": {
+    "echo_appears": true,
+    "pause_freezes_time_position_echo": true,
+    "upgrade_freezes_time": true,
+    "normal_speed_three_minutes": true,
+    "music_starts_once": true,
+    "six_phases_and_recovery": true,
+    "specialization_once": true,
+    "actual_flanking": true,
+    "retry_resets_run": true,
+    "focus_loss_requires_resume": null,
+    "layout_1920x1080": true,
+    "layout_960x540": true,
+    "layout_390x844": true,
+    "settings_actual_mouse": true,
+    "actual_defeat": true,
+    "defeat_retry_reset": true,
+    "load_failure_retry": true
+  },
+  "final": {
+    "arena": {
+      "bounded": false,
+      "obstacles": false
+    },
+    "audio": {
+      "music_active": false,
+      "music_paused": false,
+      "music_starts": 1
+    },
+    "choices": [],
+    "damage_taken": 98,
+    "echo": {
+      "active": true,
+      "x": 1125.240234375,
+      "y": -401.808135986328
+    },
+    "echo_shots": 299,
+    "effects": 0,
+    "elapsed": 180,
+    "enemies": [
+      {
+        "hp": 41.6,
+        "id": 457,
+        "kind": "hound",
+        "mark_expires": 0,
+        "mark_source": "",
+        "phase": "seek",
+        "x": 852.2,
+        "y": -692
+      },
+      {
+        "hp": 41.9,
+        "id": 458,
+        "kind": "hound",
+        "mark_expires": 0,
+        "mark_source": "",
+        "phase": "seek",
+        "x": 1724.7,
+        "y": -573.1
+      }
+    ],
+    "enemy_count": 2,
+    "experience": 80,
+    "experience_needed": 181,
+    "health": 2,
+    "history_samples": 131,
+    "kills": 456,
+    "last_echo_attack": {
+      "cooldown": 0.6552,
+      "count": 3,
+      "damage": 24,
+      "kind": "lightning",
+      "level": 4,
+      "power_scale": 1,
+      "range": 300,
+      "range_scale": 0.75,
+      "resonance_bonus": 12,
+      "width": 11
+    },
+    "last_player_attack": {
+      "cooldown": 0.6552,
+      "count": 3,
+      "damage": 24,
+      "kind": "lightning",
+      "level": 4,
+      "power_scale": 1,
+      "range": 300,
+      "range_scale": 0.75,
+      "resonance_bonus": 12,
+      "width": 11
+    },
+    "level": 13,
+    "maximum_health": 100,
+    "pending_echo_attacks": 3,
+    "phase": {
+      "assault": false,
+      "index": 5,
+      "name": "夜明けの大群",
+      "remaining": 0,
+      "subtitle": "攻勢が緩む。経験値を拾おう"
+    },
+    "pickups": 46,
+    "player": {
+      "x": 1385.72888183594,
+      "y": -486.932312011719
+    },
+    "player_shots": 302,
+    "projectiles": 7,
+    "resonance_bonus": 12,
+    "resonance_hits": 158,
+    "resonance_kills": 142,
+    "settings": {
+      "reduced_motion": false,
+      "sound": true
+    },
+    "specialization": "月の魔女",
+    "state": "victory",
+    "upgrade_choices": [],
+    "weapons": {
+      "lightning": {
+        "cooldown": 0.6552,
+        "count": 3,
+        "damage": 24,
+        "level": 4,
+        "power_scale": 1,
+        "range": 300,
+        "range_scale": 0.75,
+        "width": 11
+      },
+      "moon": {
+        "cooldown": 1.8275,
+        "count": 2,
+        "damage": 25,
+        "level": 3,
+        "power_scale": 1,
+        "radius": 207.2,
+        "radius_scale": 1.4
+      }
+    }
+  },
+  "max_enemies": 53,
+  "normal_run_wall_seconds": 181.626,
+  "focus_return": "playing",
+  "focus_observable": false,
+  "focus_note": "Automation kept the document visible and focused. Verify real tab switching separately.",
+  "defeat": {
+    "arena": {
+      "bounded": false,
+      "obstacles": false
+    },
+    "audio": {
+      "music_active": false,
+      "music_paused": false,
+      "music_starts": 0
+    },
+    "choices": [],
+    "damage_taken": 104,
+    "echo": {
+      "active": true,
+      "x": 206.287078857422,
+      "y": 575.415588378906
+    },
+    "echo_shots": 26,
+    "effects": 3,
+    "elapsed": 18.8000000000002,
+    "enemies": [
+      {
+        "hp": 11.2,
+        "id": 28,
+        "kind": "hound",
+        "mark_expires": 20.2833333333336,
+        "mark_source": "echo",
+        "phase": "seek",
+        "x": 371.5,
+        "y": 75.8
+      },
+      {
+        "hp": 11.2,
+        "id": 33,
+        "kind": "hound",
+        "mark_expires": 20.6333333333336,
+        "mark_source": "player",
+        "phase": "seek",
+        "x": 372.2,
+        "y": 927.2
+      },
+      {
+        "hp": 11.2,
+        "id": 34,
+        "kind": "hound",
+        "mark_expires": 21.0666666666669,
+        "mark_source": "echo",
+        "phase": "seek",
+        "x": 495.7,
+        "y": 357.1
+      },
+      {
+        "hp": 11.2,
+        "id": 35,
+        "kind": "hound",
+        "mark_expires": 21.0666666666669,
+        "mark_source": "echo",
+        "phase": "seek",
+        "x": 553.7,
+        "y": 418.4
+      },
+      {
+        "hp": 28,
+        "id": 36,
+        "kind": "hound",
+        "mark_expires": 0,
+        "mark_source": "",
+        "phase": "arrival",
+        "x": 485.1,
+        "y": 1375.5
+      },
+      {
+        "hp": 28,
+        "id": 37,
+        "kind": "hound",
+        "mark_expires": 0,
+        "mark_source": "",
+        "phase": "arrival",
+        "x": 411.7,
+        "y": 1419
+      }
+    ],
+    "enemy_count": 6,
+    "experience": 10,
+    "experience_needed": 17,
+    "health": 0,
+    "history_samples": 131,
+    "kills": 31,
+    "last_echo_attack": {
+      "cooldown": 0.78,
+      "count": 2,
+      "damage": 16.8,
+      "kind": "lightning",
+      "level": 2,
+      "power_scale": 1.4,
+      "range": 460,
+      "range_scale": 1.15,
+      "resonance_bonus": 12,
+      "width": 11
+    },
+    "last_player_attack": {
+      "cooldown": 2.15,
+      "count": 1,
+      "damage": 9.1,
+      "kind": "moon",
+      "level": 1,
+      "power_scale": 0.7,
+      "radius": 118,
+      "radius_scale": 1,
+      "resonance_bonus": 12
+    },
+    "level": 4,
+    "maximum_health": 100,
+    "pending_echo_attacks": 3,
+    "phase": {
+      "assault": true,
+      "index": 0,
+      "name": "残像の目覚め",
+      "remaining": 3.19999999999979,
+      "subtitle": "道を分け、二人で狙おう"
+    },
+    "pickups": 5,
+    "player": {
+      "x": 353.247955322266,
+      "y": 904.661193847656
+    },
+    "player_shots": 29,
+    "projectiles": 1,
+    "resonance_bonus": 12,
+    "resonance_hits": 11,
+    "resonance_kills": 11,
+    "settings": {
+      "reduced_motion": true,
+      "sound": false
+    },
+    "specialization": "雷の魔女",
+    "state": "defeat",
+    "upgrade_choices": [],
+    "weapons": {
+      "lightning": {
+        "cooldown": 0.78,
+        "count": 2,
+        "damage": 16.8,
+        "level": 2,
+        "power_scale": 1.4,
+        "range": 460,
+        "range_scale": 1.15,
+        "width": 11
+      },
+      "moon": {
+        "cooldown": 2.15,
+        "count": 1,
+        "damage": 9.1,
+        "level": 1,
+        "power_scale": 0.7,
+        "radius": 118,
+        "radius_scale": 1
+      }
+    }
+  },
+  "success": true
+}

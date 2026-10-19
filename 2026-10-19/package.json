@@ -1,0 +1,16 @@
+{
+  "name": "echo-witch",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "setup": "node scripts/setup.mjs",
+    "dev": "node scripts/godot.mjs editor",
+    "play": "node scripts/godot.mjs play",
+    "preview": "node scripts/serve.mjs",
+    "test": "node scripts/godot.mjs test",
+    "build": "node scripts/godot.mjs build",
+    "check": "node scripts/godot.mjs import && npm test && npm run build",
+    "qa:browser": "node scripts/browser-qa.mjs"
+  }
+}

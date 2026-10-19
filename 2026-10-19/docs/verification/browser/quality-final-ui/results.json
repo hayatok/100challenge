@@ -1,0 +1,21 @@
+{
+  "success": true,
+  "scope": "Final HUD placement, frozen canvas redraw cache, actual mouse upgrades, alternate specialization; rules unchanged from full run",
+  "settings": {
+    "reduced_motion": false,
+    "sound": true
+  },
+  "specialization": "残響の魔女",
+  "audio": {
+    "music_active": true,
+    "music_paused": false,
+    "music_starts": 1
+  },
+  "errors": [],
+  "resize_recheck": {
+    "report": "../quality-resize/results.json",
+    "original_anomaly": "paused-960-before-recheck.png",
+    "replacement": "paused-960.png",
+    "scope": "Same Web output; repeated paused resize and fresh 960x540 load. Original anomaly did not recur; cause remains unconfirmed. HUD appearance reviewed visually, not asserted by script."
+  }
+}

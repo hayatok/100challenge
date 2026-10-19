@@ -1,0 +1,147 @@
+{
+  "base": "http://127.0.0.1:4197/",
+  "renderer": "Headless Chromium; software WebGL may be used. This is not a physical-GPU benchmark.",
+  "actions": [
+    {
+      "action": "key",
+      "key": "Enter",
+      "wall": "2026-10-19T15:46:09.169Z"
+    },
+    {
+      "action": "key",
+      "key": "Escape",
+      "wall": "2026-10-19T15:46:11.677Z"
+    },
+    {
+      "action": "key",
+      "key": "Enter",
+      "wall": "2026-10-19T15:46:13.174Z"
+    },
+    {
+      "action": "key",
+      "key": "1",
+      "wall": "2026-10-19T15:46:16.540Z"
+    },
+    {
+      "action": "key",
+      "key": "2",
+      "wall": "2026-10-19T15:46:21.546Z"
+    },
+    {
+      "action": "key",
+      "key": "2",
+      "wall": "2026-10-19T15:46:29.671Z"
+    },
+    {
+      "action": "key",
+      "key": "1",
+      "wall": "2026-10-19T15:46:42.087Z"
+    }
+  ],
+  "observations": [
+    {
+      "elapsed": 2.51666666666666,
+      "health": 100,
+      "level": 1,
+      "kills": 0,
+      "enemies": 9,
+      "echo_shots": 0,
+      "resonance_hits": 0,
+      "phase": {
+        "assault": true,
+        "index": 0,
+        "name": "残像の目覚め",
+        "remaining": 19.4833333333333,
+        "subtitle": "道を分け、二人で狙おう"
+      }
+    },
+    {
+      "elapsed": 4.46666666666666,
+      "upgrade": {
+        "body": "魔女と残像の周囲に\n月の輪が広がる。",
+        "effect": "周囲に広がる / 2.15秒ごと",
+        "icon": "moon",
+        "id": "moon_unlock",
+        "tag": "新しい魔法",
+        "title": "月輪をひらく"
+      }
+    },
+    {
+      "elapsed": 9.25000000000004,
+      "upgrade": {
+        "body": "少し遅れて次の輪を放つ。\n追ってくる敵を押し返す。",
+        "effect": "月輪 1重 → 2重",
+        "icon": "moon",
+        "id": "moon_double",
+        "tag": "月輪・弾数",
+        "title": "重なる月輪"
+      }
+    },
+    {
+      "elapsed": 17.0000000000003,
+      "upgrade": {
+        "body": "月輪を習得、大きく速く。\n雷の射程は25%短くなる。",
+        "effect": "月輪範囲 +40% / 雷射程 −25%",
+        "icon": "moon",
+        "id": "spec_moon",
+        "specialization": true,
+        "tag": "専門化・広域",
+        "title": "月の魔女"
+      }
+    },
+    {
+      "elapsed": 17.5500000000003,
+      "health": 76,
+      "level": 4,
+      "kills": 23,
+      "enemies": 10,
+      "echo_shots": 25,
+      "resonance_hits": 14,
+      "phase": {
+        "assault": true,
+        "index": 0,
+        "name": "残像の目覚め",
+        "remaining": 4.44999999999972,
+        "subtitle": "道を分け、二人で狙おう"
+      }
+    },
+    {
+      "elapsed": 29.1166666666663,
+      "upgrade": {
+        "body": "別の敵へも雷を放つ。\n離れた群れを同時に狙う。",
+        "effect": "雷 1本 → 2本",
+        "icon": "lightning",
+        "id": "lightning_fork",
+        "tag": "雷・弾数",
+        "title": "枝分かれの雷"
+      }
+    },
+    {
+      "elapsed": 32.7166666666661,
+      "health": 76,
+      "level": 5,
+      "kills": 39,
+      "enemies": 7,
+      "echo_shots": 49,
+      "resonance_hits": 22,
+      "phase": {
+        "assault": true,
+        "index": 1,
+        "name": "獣の足音",
+        "remaining": 19.2833333333339,
+        "subtitle": "正面の群れに道を譲ろう"
+      }
+    }
+  ],
+  "errors": [
+    "NotSupportedError: Failed to execute 'createBuffer' on 'BaseAudioContext': createBuffer(2, 768000, 48000) failed.",
+    "NotSupportedError: Failed to execute 'createBuffer' on 'BaseAudioContext': createBuffer(2, 768000, 48000) failed."
+  ],
+  "checks": {
+    "echo_appears": true,
+    "pause_freezes_time_position_echo": true,
+    "upgrade_freezes_time": true
+  },
+  "success": false,
+  "failure": "page.evaluate: Target page, context or browser has been closed\n    at snap (/Users/hayatok/.codex/worktrees/echo-witch/100challenge/2026-10-19/scripts/browser-qa.mjs:18:21)\n    at /Users/hayatok/.codex/worktrees/echo-witch/100challenge/2026-10-19/scripts/browser-qa.mjs:57:11"
+}

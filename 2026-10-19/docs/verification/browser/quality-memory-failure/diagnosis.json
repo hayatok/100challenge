@@ -1,0 +1,10 @@
+{
+  "observed_renderer_rss_kib": 11602576,
+  "observed_cpu_percent": 54.2,
+  "last_logged_elapsed": 32.7166666666661,
+  "stopped_test_browser_pid": 96448,
+  "observed_errors": [
+    "NotSupportedError: createBuffer(2, 768000, 48000) failed"
+  ],
+  "hypothesis": "Polling music.playing every physics frame retriggered asynchronous Web playback and allocated repeated 16-second audio buffers. Replaced polling with transitions and an explicit start flag; same rendering and mipmaps retained for comparison."
+}
