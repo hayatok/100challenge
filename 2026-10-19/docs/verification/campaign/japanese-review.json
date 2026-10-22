@@ -93,8 +93,8 @@
     },
     {
       "file": "PR description (private working file)",
-      "sha256": "d143bcc2916727ea7af7ef817c0e50564a2de5674c4b19cd457d951d105d05ab",
-      "verify": "yomiyasu-check: executed via=verify run=20261022T020536Z-f5594485 attempt=2 final=sha256:d143bcc29167 mode=rewrite doc_type=pr checks=lint,diff,materials meaning_risk=1 replay=skipped"
+      "sha256": "005e40c6a11cd0db47422a24c4e2ec4a7d7a2bcf7d6139a1db675101a0dd5898",
+      "verify": "yomiyasu-check: executed via=verify run=20261022T021141Z-a5523cde attempt=1 final=sha256:005e40c6a11c mode=rewrite doc_type=pr checks=lint,diff,materials meaning_risk=6 replay=skipped"
     }
   ]
 }
