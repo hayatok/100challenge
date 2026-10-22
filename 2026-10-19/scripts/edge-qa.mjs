@@ -1,3 +1,4 @@
+import {uiControls} from './ui-controls.mjs';
 import {mkdir,writeFile,readFile} from 'node:fs/promises';
 import {createHash} from 'node:crypto';
 import path from 'node:path';
@@ -15,6 +16,7 @@ try{browser=await pw[kind].launch(opts);}catch(e){await writeFile(path.join(out,
 const report={browser:kind,version:browser.version(),started:new Date().toISOString(),checks:{},errors:[],external_requests:[],observations:[],note:'Isolated automated browser; real keyboard input, no gameplay state changes. WebKit is a test engine, not physical Safari.'};
 const context=await browser.newContext({viewport:{width:1280,height:720},deviceScaleFactor:1});
 const page=await context.newPage();
+const {click}=uiControls(page);
 page.on('pageerror',e=>report.errors.push(String(e)));
 page.on('console',m=>{if(m.type()==='error')report.errors.push(m.text());});
 page.on('request',r=>{if(!r.url().startsWith(base)&&!r.url().startsWith('data:')&&!r.url().startsWith('blob:'))report.external_requests.push(r.url());});
@@ -25,7 +27,7 @@ const shot=name=>page.screenshot({path:path.join(out,name+'.png')});
 let held=[];
 async function hold(keys){for(const k of held)if(!keys.includes(k))await page.keyboard.up(k);for(const k of keys)if(!held.includes(k))await page.keyboard.down(k);held=keys;}
 try{
- await page.goto(base);await until('title');await shot('title');await page.mouse.click(350,403);await page.waitForFunction(()=>window.echoWitchSnapshot?.gui?.page==='starters');await page.mouse.click(635,250);await page.waitForFunction(()=>window.echoWitchSnapshot?.gui?.page==='');assert.equal((await snap()).gui.starter,'moon');await page.locator('#canvas').focus();await page.keyboard.press('Enter');await until('playing');
+ await page.goto(base);await until('title');await shot('title');await click('title_starters');await page.waitForFunction(()=>window.echoWitchSnapshot?.gui?.page==='starters');await click('starter_moon');await page.waitForFunction(()=>window.echoWitchSnapshot?.gui?.page==='');assert.equal((await snap()).gui.starter,'moon');await page.locator('#canvas').focus();await page.keyboard.press('Enter');await until('playing');
  await hold(['d']);await sleep(2300);await hold([]);let s=await snap();assert.ok(s.echo.active);assert.ok(Math.hypot(s.player.x-s.echo.x,s.player.y-s.echo.y)>30);report.checks.echo=true;await shot('playing');
  // Moving keyboard focus outside the canvas is a real DOM focus change.
  await page.locator('#legal').focus();await until('paused');const stopped=await snap();await sleep(650);assert.equal((await snap()).elapsed,stopped.elapsed);await page.locator('#canvas').focus();await sleep(300);assert.equal((await snap()).state,'paused');report.checks.focus_loss_freezes_until_explicit_resume=true;await shot('focus-return');await page.keyboard.press('Escape');await until('playing');
@@ -38,7 +40,7 @@ try{
   await sleep(200);
  }
  await hold([]);s=await snap();assert.equal(s.state,'defeat','normal contact can cause defeat');report.defeat=s;report.checks.defeat_actual=true;await shot('defeat');
- const defeatedEquipment=s.equipment;await page.mouse.click(703,570);await page.waitForFunction(()=>window.echoWitchSnapshot?.gui?.page==='loadout');assert.deepEqual((await snap()).equipment,defeatedEquipment);await shot('defeat-loadout');await page.keyboard.press('Escape');await page.waitForFunction(()=>window.echoWitchSnapshot?.gui?.page==='');assert.equal((await snap()).state,'defeat');report.checks.result_loadout=true;const musicStarts=s.audio.music_starts;await page.keyboard.press('r');await until('playing');s=await snap();assert.equal(s.chapter,0);assert.equal(s.level,1);assert.equal(s.health,s.maximum_health);assert.equal(s.echo.active,false);assert.deepEqual(s.last_echo_attack,{});assert.ok(s.history_samples<=Math.ceil(s.chapter_elapsed*60)+2);assert.ok(s.elapsed<1);await page.waitForFunction(n=>window.echoWitchSnapshot?.audio?.music_starts>n,musicStarts,{timeout:5000});assert.equal((await snap()).audio.music_active,true);report.checks.retry_resets_run=true;
+ const defeatedEquipment=s.equipment;await click('result_loadout');await page.waitForFunction(()=>window.echoWitchSnapshot?.gui?.page==='loadout');assert.deepEqual((await snap()).equipment,defeatedEquipment);await shot('defeat-loadout');await page.keyboard.press('Escape');await page.waitForFunction(()=>window.echoWitchSnapshot?.gui?.page==='');assert.equal((await snap()).state,'defeat');report.checks.result_loadout=true;const musicStarts=s.audio.music_starts;await page.keyboard.press('r');await until('playing');s=await snap();assert.equal(s.chapter,0);assert.equal(s.level,1);assert.equal(s.health,s.maximum_health);assert.equal(s.echo.active,false);assert.deepEqual(s.last_echo_attack,{});assert.ok(s.history_samples<=Math.ceil(s.chapter_elapsed*60)+2);assert.ok(s.elapsed<1);await page.waitForFunction(n=>window.echoWitchSnapshot?.audio?.music_starts>n,musicStarts,{timeout:5000});assert.equal((await snap()).audio.music_active,true);report.checks.retry_resets_run=true;
  await page.keyboard.press('Escape');await until('paused');s=await snap();
  for(const [width,height] of [[960,540],[1920,1080]]){await page.setViewportSize({width,height});await sleep(350);assert.equal((await snap()).elapsed,s.elapsed);await shot('pause-'+width);}
  report.checks.resize_paused_freezes=true;

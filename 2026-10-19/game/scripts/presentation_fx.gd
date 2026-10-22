@@ -2,11 +2,12 @@ extends RefCounted
 ## Finite, combat-clock feedback. Every particle is a quad from one retained atlas.
 
 const ATLAS := preload("res://assets/art/pixel-fx.svg")
-const GOLD := Color("dbc182")
-const BLUE := Color("92d4e8")
-const PAPER := Color("f5efdf")
-const DANGER := Color("ed8c87")
-const INK := Color("101b25")
+const Grimoire := preload("res://scripts/grimoire_theme.gd")
+const GOLD := Grimoire.GOLD
+const BLUE := Grimoire.ECHO
+const PAPER := Grimoire.TEXT
+const DANGER := Grimoire.DANGER
+const INK := Grimoire.NIGHT
 const MAX_PARTICLES := 96
 const CAMERA_LIMIT := 3.5
 const CAMERA_DURATION := 0.24
@@ -169,47 +170,65 @@ func draw_screen(canvas, presentation, run, reduced: bool) -> void:
 		for i in range(5):
 			var width := float(5 - i) * 7.0
 			var alpha := damage_alpha * float(i + 1) / 5.0
-			canvas.draw_rect(Rect2(0, 95, width, canvas.screen.y - 205), Color(DANGER, alpha))
-			canvas.draw_rect(Rect2(canvas.screen.x - width, 95, width, canvas.screen.y - 205), Color(DANGER, alpha))
+			canvas.draw_rect(Rect2(0, Grimoire.SAFE_TOP, width, canvas.screen.y - Grimoire.SAFE_TOP - Grimoire.SAFE_BOTTOM), Color(DANGER, alpha))
+			canvas.draw_rect(Rect2(canvas.screen.x - width, Grimoire.SAFE_TOP, width, canvas.screen.y - Grimoire.SAFE_TOP - Grimoire.SAFE_BOTTOM), Color(DANGER, alpha))
 	if str(run.state) != "playing":
 		return
+	var selected: Dictionary = {}
+	var selected_priority := -1
+	var priorities := {"chapter": 0, "boss_arrival": 1, "boss_phase": 2, "evolution": 3}
 	for event in presentation.events:
 		var kind := str(event.get("kind", ""))
-		if kind not in ["boss_arrival", "boss_phase", "evolution", "chapter"]:
+		if not priorities.has(kind) or bool(event.get("clear", false)):
 			continue
-		if bool(event.get("clear", false)):
-			continue
-		var age := float(event.get("age", 0.0))
-		var duration := maxf(0.01, float(event.get("duration", 1.2)))
-		var p := clampf(age / duration, 0, 1)
-		var fade := minf(1.0, p * 8.0) * minf(1.0, (1.0 - p) * 5.0)
-		var title := str(event.get("name", ""))
-		var caption := ""
-		if kind == "boss_phase":
-			title = "第二形態"
-			caption = "魔力が満ちる"
-		elif kind == "evolution":
-			title = "魔法進化"
-			caption = "新たな頁がひらく"
-		elif kind == "chapter":
-			title = str(run.chapter_info().get("name", ""))
-			caption = "第%d章" % (int(run.chapter) + 1)
-		else:
-			caption = "章の主"
-		if title.is_empty():
-			continue
-		# A small top ribbon leaves the center and damage telegraphs clear.
-		var width := minf(430.0, canvas.screen.x - 390.0)
-		var center := Vector2(canvas.screen.x * 0.5, 232.0 if kind.begins_with("boss") else 144.0)
-		var ink := Color(INK, fade * 0.87)
-		canvas.draw_rect(Rect2(center - Vector2(width * 0.5, 27), Vector2(width, 66)), ink)
-		canvas.draw_line(center + Vector2(-width * 0.5 + 15, -27), center + Vector2(width * 0.5 - 15, -27), Color(GOLD, fade * 0.65), 1)
-		var text_size := 25
-		var text_width := heading.get_string_size(title, HORIZONTAL_ALIGNMENT_LEFT, -1, text_size).x
-		canvas.draw_string(heading, center + Vector2(-text_width * 0.5, 2), title, HORIZONTAL_ALIGNMENT_LEFT, -1, text_size, Color(PAPER, fade))
-		var caption_width: float = canvas.font.get_string_size(caption, HORIZONTAL_ALIGNMENT_LEFT, -1, 13).x
-		canvas.draw_string(canvas.font, center + Vector2(-caption_width * 0.5, 26), caption, HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color(GOLD, fade))
-		break
+		var priority: int = priorities[kind]
+		if priority > selected_priority or (priority == selected_priority and float(event.get("age", 0)) < float(selected.get("age", INF))):
+			selected = event
+			selected_priority = priority
+	if selected.is_empty():
+		return
+	var kind := str(selected.kind)
+	var age := float(selected.get("age", 0.0))
+	var duration := maxf(0.01, float(selected.get("duration", 1.2)))
+	var p := clampf(age / duration, 0, 1)
+	var fade := minf(1.0, p * 8.0) * minf(1.0, (1.0 - p) * 5.0)
+	var title := str(selected.get("name", ""))
+	var caption := ""
+	if kind == "boss_phase":
+		title = "第二形態"
+		caption = "魔力が満ちる"
+	elif kind == "evolution":
+		title = "魔法進化"
+		caption = "新たな頁がひらく"
+	elif kind == "chapter":
+		title = str(run.chapter_info().get("name", ""))
+		caption = "第%d章" % (int(run.chapter) + 1)
+	else:
+		caption = "章の主"
+	if title.is_empty():
+		return
+	# The single manuscript heading fits between the boss meter and the battlefield.
+	# Reveal only the ink; neither layout nor hostile telegraphs move with this effect.
+	var width := minf(620.0, canvas.screen.x - 160.0)
+	var center := Vector2(canvas.screen.x * 0.5, 166.0)
+	var left := center.x - width * 0.5
+	var right := center.x + width * 0.5
+	var surface := PackedVector2Array([Vector2(left + 20, 126), Vector2(right - 20, 126), Vector2(right, 166), Vector2(right - 20, 206), Vector2(left + 20, 206), Vector2(left, 166)])
+	canvas.draw_colored_polygon(surface, Color(INK, fade * 0.88))
+	var accent := DANGER if kind.begins_with("boss") else BLUE if kind == "evolution" else GOLD
+	var ink_width := width * (1.0 if reduced else minf(1.0, p * 7.0)) * 0.42
+	for y in [128.0, 204.0]:
+		canvas.draw_line(Vector2(center.x - ink_width, y), Vector2(center.x + ink_width, y), Color(GOLD, fade * 0.65), 1.0, true)
+	for side in [-1.0, 1.0]:
+		var seal := center + Vector2(side * (width * 0.5 - 35), 0)
+		canvas.draw_arc(seal + Vector2(-3, 0), 9, 0, TAU, 24, Color(GOLD, fade * 0.7), 1, true)
+		canvas.draw_arc(seal + Vector2(3, 0), 9, 0, TAU, 24, Color(accent, fade * 0.7), 1, true)
+	var text_size := Grimoire.HEADING_SIZE
+	var text_width := heading.get_string_size(title, HORIZONTAL_ALIGNMENT_LEFT, -1, text_size).x
+	canvas.draw_string(heading, center + Vector2(-text_width * 0.5, 0), title, HORIZONTAL_ALIGNMENT_LEFT, -1, text_size, Color(PAPER, fade))
+	var caption_size := Grimoire.SMALL_SIZE
+	var caption_width: float = canvas.font.get_string_size(caption, HORIZONTAL_ALIGNMENT_LEFT, -1, caption_size).x
+	canvas.draw_string(canvas.font, center + Vector2(-caption_width * 0.5, 27), caption, HORIZONTAL_ALIGNMENT_LEFT, -1, caption_size, Color(accent, fade))
 
 func diagnostics() -> Dictionary:
 	return {"particle_limit": MAX_PARTICLES, "particles_drawn": particles_drawn, "atlas_texture_id": texture.get_rid().get_id(), "atlas_frames": GLYPH.size()}

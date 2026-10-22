@@ -1,3 +1,4 @@
+import {uiControls} from './ui-controls.mjs';
 import {mkdir,writeFile,readFile} from 'node:fs/promises';
 import {createHash} from 'node:crypto';
 import {existsSync} from 'node:fs';
@@ -18,6 +19,7 @@ const executablePath=process.env.CHROMIUM_BIN||(process.platform==='darwin'&&exi
 const browser=await chromium.launch({headless:true,executablePath,args:['--enable-unsafe-swiftshader']});
 const context=await browser.newContext({viewport:{width:1280,height:720},deviceScaleFactor:1});
 const page=await context.newPage();
+const {click}=uiControls(page);
 if(process.env.QA_GPU_PROBE==='1')await page.addInitScript(()=>{
  const counts={buffers:{created:0,deleted:0},vertex_arrays:{created:0,deleted:0},syncs:{created:0,deleted:0}};
  const prototype=globalThis.WebGL2RenderingContext?.prototype;
@@ -126,11 +128,11 @@ try{
  await load();await shot('title-1280');
  assert.ok(await page.evaluate(()=>Object.isFrozen(window.echoWitchSnapshot)&&Object.getOwnPropertyDescriptor(window,'echoWitchSnapshot').writable===false));report.checks.snapshot_read_only=true;assert.ok(await page.evaluate(()=>!Object.hasOwn(window,'__echoWitchSnapshotPublisherInit')));report.checks.no_public_publisher=true;
  await key('c');await gui('codex');await shot('codex-initial');await key('Escape');await gui('');
- await page.mouse.click(485,557);await gui('settings');await shot('settings');
- await page.mouse.click(350,204);await page.mouse.click(910,204);await page.mouse.click(910,293);await sleep(400);
+ await click('title_settings');await gui('settings');await shot('settings');
+ await click('settings_sound');await click('settings_reduced_motion');await click('settings_large_text');await sleep(400);
  let s=await snap();assert.equal(s.settings.sound,false);assert.equal(s.settings.reduced_motion,true);assert.equal(s.settings.large_text,true);report.checks.settings_actual_mouse=true;await shot('settings-large');
  await page.reload();await until('title');s=await snap();assert.equal(s.settings.sound,false);assert.equal(s.settings.reduced_motion,true);assert.equal(s.settings.large_text,true);report.checks.settings_persist_reload=true;
- await page.mouse.click(480,558);await gui('settings');await page.mouse.click(350,204);await page.mouse.click(910,204);await page.mouse.click(910,293);if(audioOff)await page.mouse.click(350,204);await key('Escape');await gui('');
+ await click('title_settings');await gui('settings');await click('settings_sound');await click('settings_reduced_motion');await click('settings_large_text');if(audioOff)await click('settings_sound');await key('Escape');await gui('');
  await key('Enter');await until('playing');await hold(['d']);await sleep(2400);await hold([]);s=await snap();
  if(s.state==='upgrade'){await key(String(choose(s)+1));await sleep(250);s=await snap();}
  assert.ok(s.echo.active&&dist(s.player,s.echo)>30,'delayed echo appears at separated position');report.checks.echo_position=true;await shot('echo');
@@ -178,7 +180,7 @@ try{
   s=await snap();
  }
  report.final=s;report.wall_seconds=(Date.now()-started)/1000;report.seen_chapters=[...seenChapters];report.seen_bosses=[...seenBosses];await shot('final-'+s.state);
- if(mode==='full'){assert.equal(s.state,'victory','actual keyboard run completes all three bosses');assert.equal(seenChapters.size,3);assert.equal(seenBosses.size,3);report.checks.full_campaign_actual=true;const finishedEquipment=s.equipment;await page.mouse.click(703,570);await gui('loadout');assert.deepEqual((await snap()).equipment,finishedEquipment);await shot('victory-loadout');await key('Escape');await gui('');assert.equal((await snap()).state,'victory');report.checks.result_loadout=true;
+ if(mode==='full'){assert.equal(s.state,'victory','actual keyboard run completes all three bosses');assert.equal(seenChapters.size,3);assert.equal(seenBosses.size,3);report.checks.full_campaign_actual=true;const finishedEquipment=s.equipment;await click('result_loadout');await gui('loadout');assert.deepEqual((await snap()).equipment,finishedEquipment);await shot('victory-loadout');await key('Escape');await gui('');assert.equal((await snap()).state,'victory');report.checks.result_loadout=true;
   const musicStarts=s.audio.music_starts;await key('r');await until('playing');const restart=await snap();assert.equal(restart.chapter,0);assert.equal(restart.level,1);assert.equal(restart.health,restart.maximum_health);assertFreshEcho(restart);
   const again=Date.now();goal=null;while(Date.now()-again<60000){const r=await snap();if(r.state==='upgrade'||r.state==='treasure'){await hold([]);await key(String(choose(r)+1));await sleep(180);continue;}assert.equal(r.state,'playing');await hold(steering(r));if(r.elapsed>35){await memory(r,'second-run');break;}await sleep(250);}await hold([]);report.retry_snapshot=await snap();assert.ok(report.retry_snapshot.elapsed>35);assert.equal(report.retry_snapshot.audio.music_starts,musicStarts+1);report.checks.same_page_second_run=true;await key('Escape');await until('paused');const t=(await snap()).elapsed;await sleep(600);assert.equal((await snap()).elapsed,t);await shot('second-run-paused');
  }

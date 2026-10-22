@@ -261,7 +261,7 @@ func _snapshot_payload() -> Dictionary:
 	data.motion = garden.motion_snapshot() if is_instance_valid(garden) else {}
 	data.settings = profile.settings()
 	data.profile = profile.snapshot()
-	data.gui = {"page": interface.local_screen, "starter": interface.selected_starter, "codex_category": interface.codex_category}
+	data.gui = {"page": interface.local_screen, "starter": interface.selected_starter, "codex_category": interface.codex_category, "controls": interface.control_snapshot()}
 	data.audio = {"music_starts": soundscape.music_start_count, "music_active": soundscape.music_started, "music_paused": soundscape.music.stream_paused}
 	data.upgrade_choices = data.choices
 	var chapter: Dictionary = run.chapter_info()

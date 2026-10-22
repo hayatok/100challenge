@@ -1,0 +1,70 @@
+{
+  "base_commit": "3c43603ba26be0472bc6a026fb620a93a741f069",
+  "root_tests": {
+    "command": "npm test",
+    "passed": 38,
+    "exit_code": 0
+  },
+  "app_check": {
+    "command": "npm run check",
+    "exit_code": 0,
+    "gui_checks": 7777,
+    "gui_failures": 0
+  },
+  "native": {
+    "kind": "artificial composition fixtures, not gameplay",
+    "checks": 57,
+    "images": 26,
+    "failures": 0
+  },
+  "primary_checkout_preservation": {
+    "preexisting_files": 1393,
+    "changed": 0,
+    "missing": 0
+  },
+  "creative_review": {
+    "model": "gpt-6.1-sol",
+    "findings": [
+      "boss identity repeated",
+      "kill and level text over busy floor",
+      "selected page bookmark",
+      "defeat tone too close to pause"
+    ],
+    "resolution": "All addressed and checked in the affected native images; no additional visual issues found",
+    "limits": "Static arranged images only"
+  },
+  "completion_review": {
+    "role": "ai_slop_reviewer",
+    "model": "gpt-6-astra",
+    "status": "complete, no findings",
+    "scope": "Baseline3c43603 task diff including untracked files, final evidence, Japanese verification and concrete PR/Issue drafts",
+    "limitations": "Record and static image review. The reviewer did not execute tests or browser actions. Push, external metadata update and CI are verified by the parent afterward."
+  },
+  "full_browser_status": "passed",
+  "full_browser": {
+    "checks": 18,
+    "state": "victory",
+    "elapsed": 620.166666666325,
+    "health": 66,
+    "kills": 1673,
+    "level": 12,
+    "retry_elapsed": 35.2666666666659,
+    "errors": 0,
+    "external_requests": 0,
+    "pck_sha256": "504c177250865de0a325e9e9db996a931d7111ba974fecf35dd2a9e5835492c8"
+  },
+  "other_web_checks": {
+    "chromium": 9,
+    "webkit": 8,
+    "storage_cases": 6,
+    "storage_assertions": 90,
+    "motion_checks": 10,
+    "motion_samples": 41
+  },
+  "project": {
+    "number": 3,
+    "issue": 196,
+    "status": "In Progress",
+    "reason": "PR197 remains unmerged; release and human/physical-device evaluation are outstanding."
+  }
+}

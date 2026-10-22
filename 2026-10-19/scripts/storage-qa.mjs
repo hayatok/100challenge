@@ -1,3 +1,4 @@
+import {uiControls} from './ui-controls.mjs';
 import assert from 'node:assert/strict';
 import {createHash} from 'node:crypto';
 import {existsSync} from 'node:fs';
@@ -68,11 +69,7 @@ async function scenario(name,fixture,body){
  };
  const state=stateName=>page.waitForFunction(value=>window.echoWitchSnapshot?.state===value,stateName,{timeout:20000});
  const gui=pageName=>page.waitForFunction(value=>window.echoWitchSnapshot?.gui?.page===value,pageName,{timeout:10000});
- const click=async(x,y)=>{
-  const canvas=await page.locator('#canvas').boundingBox();
-  assert.ok(canvas&&canvas.width>0&&canvas.height>0,'real game canvas is visible');
-  await page.mouse.click(canvas.x+x*canvas.width/1280,canvas.y+y*canvas.height/720);
- };
+ const {click}=uiControls(page);
  const key=keyName=>page.keyboard.press(keyName);
  const check=(condition,label)=>{assert.ok(condition,label);row.checks.push(label);};
  const equal=(actual,expected,label)=>{assert.deepEqual(actual,expected,label);row.checks.push(label);};
@@ -91,8 +88,8 @@ async function scenario(name,fixture,body){
  };
  const raw=()=>page.evaluate(key=>localStorage.getItem(key),storageKey);
  const original=()=>page.evaluate(()=>window.__echoStorageQA?.original());
- const openSettings=async()=>{await click(488,556);await gui('settings');};
- const openWarning=async()=>{await click(326,674);await gui('storage');};
+ const openSettings=async()=>{await click('title_settings');await gui('settings');};
+ const openWarning=async()=>{await click('storage_warning');await gui('storage');};
  try{
   await body({page,load,snapshot,wait,state,gui,click,key,check,equal,shot,raw,original,openSettings,openWarning,row});
   row.final=await snapshot();
@@ -119,20 +116,21 @@ try{
   equal(s.profile.data.starters,['lightning','moon'],'fresh profile only unlocks the initial two starters');
   check(await page.evaluate(()=>Object.isFrozen(window.echoWitchSnapshot)&&Object.getOwnPropertyDescriptor(window,'echoWitchSnapshot').writable===false),'public game snapshot is immutable');
   await shot('title');
-  await click(344,403);await gui('starters');await shot('starter-locks');
-  for(const [index,x,y] of [[2,1010,251],[3,262,437],[4,636,437],[5,1010,437]]){
-   await click(x,y);await delay(200);s=await snapshot();
+  await click('title_starters');await gui('starters');await shot('starter-locks');
+  for(const [index,id] of [[2,'starter_thorn'],[3,'starter_wisp'],[4,'starter_frost'],[5,'starter_bell']]){
+   const locked=await click(id,{allowDisabled:true});
+   check(locked.disabled,'locked starter '+index+' is reported disabled');await delay(200);s=await snapshot();
    equal({page:s.gui.page,starter:s.gui.starter,state:s.state},{page:'starters',starter:'lightning',state:'title'},'locked starter '+index+' cannot be selected or start combat');
   }
   await key('Escape');await gui('');
   await openSettings();
-  await click(337,205);await wait(()=>window.echoWitchSnapshot.settings.sound===false);
-  await click(917,205);await wait(()=>window.echoWitchSnapshot.settings.reduced_motion===true);
-  await click(917,293);await wait(()=>window.echoWitchSnapshot.settings.large_text===true);
-  await click(337,360);await key('Home');
+  await click('settings_sound');await wait(()=>window.echoWitchSnapshot.settings.sound===false);
+  await click('settings_reduced_motion');await wait(()=>window.echoWitchSnapshot.settings.reduced_motion===true);
+  await click('settings_large_text');await wait(()=>window.echoWitchSnapshot.settings.large_text===true);
+  await click('settings_music_volume');await key('Home');
   for(let n=0;n<5;n++)await key('ArrowRight');
   await wait(()=>window.echoWitchSnapshot.settings.music_volume===0.25);
-  await click(337,488);await key('Home');
+  await click('settings_sfx_volume');await key('Home');
   for(let n=0;n<9;n++)await key('ArrowRight');
   await wait(()=>window.echoWitchSnapshot.settings.sfx_volume===0.45);
   s=await snapshot();
@@ -146,7 +144,7 @@ try{
   equal(s.profile.status,'saved','reload visibly recognizes the saved profile');
   await shot('title-restored-960');
   await page.setViewportSize({width:1280,height:720});await delay(250);await openSettings();
-  await click(917,621);await gui('storage');await shot('storage-saved');
+  await click('settings_storage');await gui('storage');await shot('storage-saved');
   await key('Escape');await gui('settings');
   equal((await snapshot()).state,'title','Back from storage returns to settings without starting combat');
   row.settings_after_reload=s.settings;
@@ -161,12 +159,12 @@ try{
    await shot('title-invalid');
    await openWarning();await shot('storage-invalid');
    await key('Escape');await gui('');await openSettings();
-   await click(337,205);await wait(()=>window.echoWitchSnapshot.settings.sound===false);
+   await click('settings_sound');await wait(()=>window.echoWitchSnapshot.settings.sound===false);
    equal(await raw(),rawFixture,'changing settings cannot overwrite the unreadable record');
    equal((await snapshot()).profile.status,'invalid','storage warning remains after a setting change');
    await shot('settings-with-warning');
    await key('Escape');await gui('');await openWarning();
-   await click(917,621);await wait(()=>window.echoWitchSnapshot.profile.status==='saved');
+   await click('storage_reset');await wait(()=>window.echoWitchSnapshot.profile.status==='saved');
    s=await snapshot();
    const backups=await page.evaluate(key=>Object.keys(localStorage).filter(item=>item.startsWith(key+'-unreadable-')).map(item=>({key:item,raw:localStorage.getItem(item)})),storageKey);
    equal(backups.length,1,'explicit recovery makes exactly one archived copy');
@@ -191,8 +189,8 @@ try{
   let s=await load();equal(s.profile.status,'blocked','storage read denial is visible at initial title');equal(s.profile.can_save,false,'unavailable storage is not reported as saveable');
   equal(await original(),'preserve existing inaccessible data','denied read does not erase an existing stored value');
   await shot('title');await openWarning();await shot('storage');
-  await click(917,621);await delay(300);equal((await snapshot()).profile.status,'blocked','retry reports that storage remains unavailable');
-  await key('Escape');await gui('');await openSettings();await click(337,205);await wait(()=>window.echoWitchSnapshot.settings.sound===false);
+  await click('storage_retry');await delay(300);equal((await snapshot()).profile.status,'blocked','retry reports that storage remains unavailable');
+  await key('Escape');await gui('');await openSettings();await click('settings_sound');await wait(()=>window.echoWitchSnapshot.settings.sound===false);
   equal(await original(),'preserve existing inaccessible data','setting changes preserve inaccessible original data');await shot('settings');
   await key('Escape');await gui('');await key('Enter');await wait(()=>window.echoWitchSnapshot.state==='playing');await key('Escape');await wait(()=>window.echoWitchSnapshot.state==='paused');
   s=await snapshot();await delay(500);equal((await snapshot()).elapsed,s.elapsed,'play and explicit pause remain usable while storage is denied');
@@ -201,9 +199,9 @@ try{
  });
 
  await scenario('blocked-write',{mode:'blocked_write'},async({load,snapshot,wait,gui,click,key,equal,check,shot,raw,openSettings,row})=>{
-  await load();await openSettings();await click(337,205);await wait(()=>window.echoWitchSnapshot.profile.status==='blocked');
+  await load();await openSettings();await click('settings_sound');await wait(()=>window.echoWitchSnapshot.profile.status==='blocked');
   let s=await snapshot();equal(s.settings.sound,false,'write denial still applies the requested in-memory setting');equal(s.profile.can_save,false,'write failure is visible in save availability');equal(await raw(),null,'failed write does not create or alter a stored record');await shot('settings-error');
-  await click(917,621);await gui('storage');await shot('storage-error');await click(917,621);await delay(300);
+  await click('settings_storage');await gui('storage');await shot('storage-error');await click('storage_retry');await delay(300);
   s=await snapshot();equal(s.profile.status,'blocked','write retry keeps the failure visible');equal(await raw(),null,'write retry also leaves the stored value untouched');
   check(s.settings.sound===false,'failed retry preserves current settings');
   row.profile_after_write_failure=s.profile;

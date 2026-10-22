@@ -1,3 +1,4 @@
+import {uiControls} from './ui-controls.mjs';
 import {mkdir,writeFile,readFile} from 'node:fs/promises';
 import {createHash} from 'node:crypto';
 import path from 'node:path';
@@ -11,6 +12,7 @@ const buildSha=createHash('sha256').update(await readFile(path.join(root,'dist/i
 const browser=await chromium.launch({headless:true,executablePath:process.env.CHROMIUM_BIN||(process.platform==='darwin'?'/Applications/Google Chrome.app/Contents/MacOS/Google Chrome':undefined),args:['--enable-unsafe-swiftshader']});
 const context=await browser.newContext({viewport:{width:1280,height:720},deviceScaleFactor:1,recordVideo:{dir:path.join(out,'video'),size:{width:1280,height:720}}});
 const page=await context.newPage();
+const {click}=uiControls(page);
 const report={base,build_sha256:buildSha,started:new Date().toISOString(),note:'Real Web keyboard and mouse input; no game state setters. Software renderer, not a physical GPU benchmark.',checks:{},samples:[],errors:[],external_requests:[]};
 page.on('pageerror',e=>report.errors.push(String(e)));
 page.on('console',m=>{if(m.type()==='error')report.errors.push(m.text());});
@@ -47,7 +49,7 @@ try{
  const resized=await snap();assert.equal(resized.elapsed,paused.elapsed);assert.deepEqual(resized.motion.player,paused.motion.player);assert.deepEqual(resized.motion.actors,paused.motion.actors);report.checks.resize_preserves_frames_and_textures=true;
  await page.setViewportSize({width:1280,height:720});await page.keyboard.press('r');await until('playing');await sleep(300);let s=await snap();
  assert.equal(s.chapter,0);assert.equal(s.level,1);assert.ok(s.elapsed<1.0);assert.equal(s.motion.death_count,0);assert.deepEqual(s.motion.actors,paused.motion.actors);assert.equal(s.motion.fx.atlas_texture_id,paused.motion.fx.atlas_texture_id);assert.ok(s.motion.generation>paused.motion.generation);report.checks.retry_reuses_textures_and_resets_feedback=true;
- await page.reload();await until('title');await page.mouse.click(480,558);await gui('settings');await page.mouse.click(910,204);await sleep(250);assert.equal((await snap()).settings.reduced_motion,true);await page.keyboard.press('Escape');await gui('');await page.keyboard.press('Enter');await until('playing');
+ await page.reload();await until('title');await click('title_settings');await gui('settings');await click('settings_reduced_motion');await sleep(250);assert.equal((await snap()).settings.reduced_motion,true);await page.keyboard.press('Escape');await gui('');await page.keyboard.press('Enter');await until('playing');
  await page.keyboard.down('d');const reduced=await sample('reduced-walk',1600);await page.keyboard.up('d');
  const reducedWalks=reduced.filter(r=>r.motion.player.animation==='walk');assert.ok(reducedWalks.length>=2);assert.equal(new Set(reducedWalks.map(r=>r.motion.player.frame)).size,1,'reduced motion holds a readable walking pose');assert.ok(reduced.every(r=>r.motion.camera.x===0&&r.motion.camera.y===0));report.checks.reduced_motion_still_frames_and_no_shake=true;
  s=await choose();await page.keyboard.press('Escape');await until('paused');await shot('reduced-pause');

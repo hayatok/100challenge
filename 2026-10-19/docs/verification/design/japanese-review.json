@@ -1,0 +1,62 @@
+{
+  "private_records": ".yomiyasu/design",
+  "meaning_review": "Originals and material compared manually, including numerical conditions, actual unlocks, replacement losses and unverified limits. Candidate counts are not scores.",
+  "retained_candidates": [
+    "GDScript colon syntax is code, not prose.",
+    "Parallel repository constraints are intentionally listed.",
+    "UI topic commas separate scene conditions, compound subjects and the existing storage instructions.",
+    "Issue history retained without rewriting prior reports."
+  ],
+  "records": [
+    {
+      "file": "AGENTS.md",
+      "sha256": "28739b365cf4b968d970096c53885bc296e9f9d0e585a08fe07863681b94c7ba",
+      "verification_status": "yomiyasu-check: executed via=verify run=20261022T125900Z-5e7ced00 attempt=1 final=sha256:28739b365cf4 mode=rewrite doc_type=formal checks=lint,diff,materials meaning_risk=1 replay=skipped"
+    },
+    {
+      "file": "README.md",
+      "sha256": "e0fa5f488da988368fc69e3a29264cd239214312add64b5e29c87b49fe351bc2",
+      "verification_status": "yomiyasu-check: executed via=verify run=20261022T131807Z-06976664 attempt=1 final=sha256:e0fa5f488da9 mode=rewrite doc_type=manual checks=lint,diff,materials meaning_risk=6 replay=skipped"
+    },
+    {
+      "file": "docs/ART_DIRECTION.md",
+      "sha256": "7c8ed67ed6ecc000a4bd2b0bcddda63a538cc38c4c4ace76997d1242d28fdf83",
+      "verification_status": "yomiyasu-check: executed via=verify run=20261022T125901Z-6efa915e attempt=1 final=sha256:7c8ed67ed6ec mode=rewrite doc_type=formal checks=lint,diff,materials meaning_risk=15 replay=skipped"
+    },
+    {
+      "file": "docs/DESIGN_SYSTEM.md",
+      "sha256": "06ff55606505bdeaf96541603cadd79f0eefb4686728caae357724b788d173f7",
+      "verification_status": "yomiyasu-check: executed via=verify run=20261022T125902Z-c9b1e3eb attempt=2 final=sha256:06ff55606505 mode=compose doc_type=formal checks=lint,materials meaning_risk=90 replay=skipped"
+    },
+    {
+      "file": "game/scripts/interface.gd",
+      "sha256": "d5421cfe0c2df2273e008e84f57ded8edcb78ac335381e7766685330be6c6eae",
+      "verification_status": "yomiyasu-check: executed via=verify run=20261022T130930Z-a3daf8a7 attempt=1 final=sha256:d5421cfe0c2d mode=rewrite doc_type=manual checks=lint,diff,materials meaning_risk=345 replay=skipped"
+    },
+    {
+      "file": ".yomiyasu/design/ui-copy-final.md",
+      "sha256": "5008faab4927d0210fd83f8da1cdae2ba2ad7b2cdd8ac68fff2a974b58c09638",
+      "verification_status": "yomiyasu-check: executed via=verify run=20261022T131014Z-3e7587b5 attempt=1 final=sha256:5008faab4927 mode=rewrite doc_type=manual checks=lint,diff,materials meaning_risk=1 replay=skipped"
+    },
+    {
+      "file": "docs/verification/DESIGN_SYSTEM.md",
+      "sha256": "eac6022e6335c105cbc51e9f5b8c3850c64ba370967fd61461956425747d7c47",
+      "verification_status": "yomiyasu-check: executed via=verify run=20261022T132131Z-111226c4 attempt=2 final=sha256:eac6022e6335 mode=compose doc_type=manual checks=lint,materials meaning_risk=92 replay=skipped"
+    },
+    {
+      "file": ".cache/design/pr-title.txt",
+      "sha256": "484e244d5b32fe39373218189c15c471b81cf368de8a892c0b125ed0ce92a04d",
+      "verification_status": "yomiyasu-check: executed via=verify run=20261022T132322Z-0653bb2f attempt=1 final=sha256:484e244d5b32 mode=rewrite doc_type=pr checks=lint,diff,materials meaning_risk=1 replay=skipped"
+    },
+    {
+      "file": ".cache/design/pr-body.md",
+      "sha256": "7e8d824409cb6104c05bdaf971aa2b180830fe11804a4ec704a3273a0b1021a4",
+      "verification_status": "yomiyasu-check: executed via=verify run=20261022T132322Z-a1c18e69 attempt=1 final=sha256:7e8d824409cb mode=rewrite doc_type=pr checks=lint,diff,materials meaning_risk=27 replay=skipped"
+    },
+    {
+      "file": ".cache/design/issue-body.md",
+      "sha256": "6ec194fc79d65252516d104571b9ade1c9c205fba5bd7334a8124bfc1de8c238",
+      "verification_status": "yomiyasu-check: executed via=verify run=20261022T132322Z-1bd5d598 attempt=1 final=sha256:6ec194fc79d6 mode=rewrite doc_type=pr checks=lint,diff,materials meaning_risk=9 replay=skipped"
+    }
+  ]
+}

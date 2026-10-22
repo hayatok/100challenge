@@ -1,8 +1,9 @@
 extends RefCounted
 ## Authored dressing uses the exact collision rectangles supplied by chapter_info.
 
-const GOLD := Color("dbc182")
-const BLUE := Color("92d4e8")
+const Grimoire := preload("res://scripts/grimoire_theme.gd")
+const GOLD := Grimoire.GOLD
+const BLUE := Grimoire.ECHO
 const STONE := Color("61716d")
 
 static func draw_floor(view, info: Dictionary, textures: Dictionary) -> void:
@@ -29,11 +30,11 @@ static func _draw_tiles(view, bounds: Rect2, textures: Dictionary, chapter: int)
 	var camera: Vector2 = view.run.player - view.screen * Vector2(0.5, 0.52)
 	var tile_size := 384.0
 	var start := (camera / tile_size).floor() * tile_size
-	var tint := Color(0.74, 0.91, 0.89, 0.43)
+	var tint := Color(0.74, 0.91, 0.89, 0.27)
 	if chapter == 1:
-		tint = Color(0.75, 0.78, 1.05, 0.28)
+		tint = Color(0.75, 0.78, 1.05, 0.18)
 	elif chapter == 2:
-		tint = Color(1.05, 0.91, 0.73, 0.32)
+		tint = Color(1.05, 0.91, 0.73, 0.21)
 	var texture: Texture2D = textures.garden_tile
 	var source_size := texture.get_size()
 	for x in range(-1, int(view.screen.x / tile_size) + 2):
@@ -51,7 +52,7 @@ static func _draw_garden_floor(view, bounds: Rect2) -> void:
 	view.draw_rect(Rect2(view.world(Vector2(bounds.position.x + 26, -48)), Vector2(bounds.size.x - 52, 96)), Color(0.42, 0.47, 0.43, 0.08))
 	view.draw_rect(Rect2(view.world(Vector2(-48, bounds.position.y + 26)), Vector2(96, bounds.size.y - 52)), Color(0.42, 0.47, 0.43, 0.08))
 	for radius in [182.0, 202.0, 214.0]:
-		view.draw_arc(center, radius, 0, TAU, 72, Color(0.63, 0.68, 0.57, 0.14), 2, true)
+		view.draw_arc(center, radius, 0, TAU, 72, Color(0.63, 0.68, 0.57, 0.10), 2, true)
 	for i in range(12):
 		var direction := Vector2.from_angle(float(i) * TAU / 12)
 		var petal := PackedVector2Array([center + direction * 42, center + direction.rotated(-0.10) * 147, center + direction * 180, center + direction.rotated(0.10) * 147])
@@ -96,7 +97,7 @@ static func _draw_mirror_floor(view, bounds: Rect2) -> void:
 			view.draw_polyline(lozenge, Color(BLUE, 0.16), 2, true)
 			view.draw_line(point + Vector2(-47, 0), point + Vector2(47, 0), Color(BLUE, 0.07), 1, true)
 	for r in [104.0, 146.0, 160.0]:
-		view.draw_arc(center, r, 0, TAU, 64, Color(BLUE, 0.15), 1.5, true)
+		view.draw_arc(center, r, 0, TAU, 64, Color(BLUE, 0.11), 1.5, true)
 	for i in range(8):
 		var direction := Vector2.from_angle(float(i) * TAU / 8)
 		var diamond := PackedVector2Array([center + direction * 45, center + direction.rotated(-0.13) * 122, center + direction * 151, center + direction.rotated(0.13) * 122])
@@ -110,7 +111,7 @@ static func _draw_bell_floor(view, _bounds: Rect2) -> void:
 	var center: Vector2 = view.world(Vector2.ZERO)
 	# The circular brass clock is an inlaid floor; the outer wall remains rectangular.
 	for r in [118.0, 136.0, 346.0, 365.0, 666.0, 690.0]:
-		view.draw_arc(center, r, 0, TAU, 120, Color(GOLD, 0.13 if r < 400 else 0.10), 2, true)
+		view.draw_arc(center, r, 0, TAU, 120, Color(GOLD, 0.10 if r < 400 else 0.08), 2, true)
 	for i in range(16):
 		var direction := Vector2.from_angle(float(i) * TAU / 16)
 		view.draw_line(center + direction * 143, center + direction * 658, Color(GOLD, 0.055), 2, true)

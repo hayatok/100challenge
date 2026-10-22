@@ -8,11 +8,12 @@ const Presentation := preload("res://scripts/presentation.gd")
 const PresentationFX := preload("res://scripts/presentation_fx.gd")
 const WHITE_DISC := preload("res://assets/art/white-disc.svg")
 const DISC_PADDING := 64.0 / 62.0
-const INK := Color("161d32")
-const PAPER := Color("f5efdf")
-const GOLD := Color("dbc182")
-const BLUE := Color("92d4e8")
-const DANGER := Color("ed8c87")
+const Grimoire := preload("res://scripts/grimoire_theme.gd")
+const INK := Grimoire.NIGHT
+const PAPER := Grimoire.TEXT
+const GOLD := Grimoire.GOLD
+const BLUE := Grimoire.ECHO
+const DANGER := Grimoire.DANGER
 const FROST := Color("b8dce1")
 const THORN := Color("a6bd8b")
 const WISP := Color("c6a8e0")
@@ -131,35 +132,38 @@ func _draw() -> void:
 	presentation_fx.draw_screen(self, presentation, run, reduced_motion)
 
 func _draw_title_art() -> void:
-	draw_rect(Rect2(Vector2.ZERO, screen), Color("0d1724"))
+	draw_rect(Rect2(Vector2.ZERO, screen), Grimoire.NIGHT)
+	var portrait_scale := minf(screen.x / 1280.0, screen.y / 720.0)
 	if textures.has("keyart"):
 		var texture: Texture2D = textures.keyart
 		var factor := maxf(screen.x / texture.get_width(), screen.y / texture.get_height())
 		var image_size := texture.get_size() * factor
 		draw_texture_rect(texture, Rect2((screen - image_size) * 0.5, image_size), false)
-		# A smooth left ink wash reserves the book typography without a flat panel.
-		var wash := PackedVector2Array([Vector2.ZERO, Vector2(screen.x, 0), screen, Vector2(0, screen.y)])
-		var wash_colors := PackedColorArray([Color(0.035, 0.06, 0.10, 0.88), Color(0.035, 0.06, 0.10, 0), Color(0.035, 0.06, 0.10, 0), Color(0.035, 0.06, 0.10, 0.88)])
+		# The ink wash supports the typography while leaving the garden illustration open.
+		var wash := PackedVector2Array([Vector2.ZERO, Vector2(screen.x * 0.72, 0), Vector2(screen.x * 0.72, screen.y), Vector2(0, screen.y)])
+		var wash_colors := PackedColorArray([Color(Grimoire.NIGHT, 0.97), Color(Grimoire.NIGHT, 0.02), Color(Grimoire.NIGHT, 0.02), Color(Grimoire.NIGHT, 0.97)])
 		draw_polygon(wash, wash_colors)
-		draw_rect(Rect2(Vector2.ZERO, screen), Color(0.025, 0.04, 0.07, 0.13))
-		var portrait_scale := minf(screen.x / 1280, screen.y / 720)
-		var portrait_at := Vector2(screen.x * 0.78, screen.y * 0.90)
-		_draw_witch(portrait_at + Vector2(-84, 8) * portrait_scale, true, 214 * portrait_scale)
-		_draw_witch(portrait_at, false, 288 * portrait_scale)
-	else:
-		var moon_at := Vector2(screen.x * 0.81, screen.y * 0.29)
-		for radius in [188.0, 164.0, 138.0]:
-			_disc(moon_at, radius, Color(GOLD, 0.025))
-		if textures.has("moon"):
-			draw_texture_rect(textures.moon, Rect2(moon_at - Vector2.ONE * 116, Vector2.ONE * 232), false, Color(0.95, 0.94, 0.83, 0.85))
-		draw_arc(moon_at, 156, 0, TAU, 90, Color(GOLD, 0.25), 1, true)
-		_draw_witch(Vector2(screen.x * 0.76 - 110, screen.y * 0.83), true, 250)
-		_draw_witch(Vector2(screen.x * 0.81, screen.y * 0.81), false, 390)
-	# These static gilt stars frame the illustrated right half without competing
-	# with chapter, equipment or the main title on the left.
-	for i in range(7):
-		var at := Vector2(screen.x * 0.61 + float(i % 3) * 116, 95 + float(i) * 69)
-		_star(at, 4 if i % 2 == 0 else 2.5, Color(GOLD, 0.44))
+		draw_rect(Rect2(Vector2.ZERO, screen), Color(Grimoire.NIGHT, 0.12))
+	elif textures.has("moon"):
+		var moon_at := Vector2(screen.x * 0.80, screen.y * 0.24)
+		draw_texture_rect(textures.moon, Rect2(moon_at - Vector2.ONE * 116 * portrait_scale, Vector2.ONE * 232 * portrait_scale), false, Color(PAPER, 0.8))
+	# An engraved arch and paired seals belong to the same manuscript as the UI.
+	# Their positions are authored, so the illustration has a clear visual axis.
+	var arch_at := screen * Vector2(0.79, 0.50)
+	var arch_size := Vector2(207, 258) * portrait_scale
+	_elliptic_arc(arch_at, arch_size, PI * 0.89, TAU + PI * 0.11, Color(GOLD, 0.34), 1.3)
+	_elliptic_arc(arch_at, arch_size + Vector2.ONE * 10 * portrait_scale, PI * 0.89, TAU + PI * 0.11, Color(GOLD, 0.11), 1)
+	var seal_at := arch_at + Vector2(0, -258) * portrait_scale
+	draw_arc(seal_at + Vector2(-9, 0) * portrait_scale, 14 * portrait_scale, 0, TAU, 32, Color(GOLD, 0.75), 1, true)
+	draw_arc(seal_at + Vector2(9, 0) * portrait_scale, 14 * portrait_scale, 0, TAU, 32, Color(BLUE, 0.65), 1, true)
+	for side in [-1.0, 1.0]:
+		var at := arch_at + Vector2(side * 207, 31) * portrait_scale
+		_star(at, 5 * portrait_scale, Color(GOLD, 0.62))
+		draw_line(at + Vector2(0, 14) * portrait_scale, at + Vector2(0, 110) * portrait_scale, Color(GOLD, 0.22), 1, true)
+	var portrait_at := screen * Vector2(0.79, 0.94)
+	_draw_witch(portrait_at + Vector2(-101, 9) * portrait_scale, true, 266 * portrait_scale)
+	_draw_witch(portrait_at, false, 358 * portrait_scale)
+	_elliptic_arc(portrait_at + Vector2(-30, 4) * portrait_scale, Vector2(191, 31) * portrait_scale, 0, TAU, Color(GOLD, 0.31), 1.1)
 
 func _draw_trail() -> void:
 	if not run.echo_active or run.player.distance_to(run.echo) < 35.0:

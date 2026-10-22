@@ -4,6 +4,8 @@
 
 戦闘中の魔女と魔物は、歩行・詠唱・予備動作・被弾・消滅を描き分けたドット絵です。背景と魔術書のGUIに合わせ、命中、撃破、挟撃、ボスと報酬の反応を加えています。
 
+画面は「夜の魔術書に残響を書き足す」を指針にしています。戦闘中は細いHUD、強化では明るい紙の選択頁、休止や図鑑では見開きを使い、勝利と敗北にも別の構図を用意しています。
+
 ## 遊び方
 
 - WASDまたは矢印キーで移動します。攻撃は自動です。
@@ -45,7 +47,7 @@ npm run preview
 
 `npm run check`でインポート、戦闘・成長・保存・GUI・音声・素材の検査、Web出力を実行します。通常ルールの複数ビルドによる通し検証は、Godotから`game/tests/simulate_campaign.gd`を実行します。
 
-Web上の`window.echoWitchSnapshot`は読み取り専用の状態です。ゲームの時刻やHPを変える機能はありません。ブラウザ検証には別途Playwrightと検証用ブラウザを使います。
+Web上の`window.echoWitchSnapshot`は読み取り専用の状態です。`gui.controls`には実際に表示中の操作部品のID、位置、大きさ、有効・無効が入ります。ゲームの時刻やHPを変える機能はありません。ブラウザ検証には別途Playwrightと検証用ブラウザを使います。
 
 ```sh
 BASE_URL=http://127.0.0.1:4197/ npm run qa:browser
@@ -58,4 +60,4 @@ BASE_URL=http://127.0.0.1:4197/ npm run qa:motion
 
 Playwrightを別の場所に置いている場合は、`PLAYWRIGHT_MODULE`にその`index.mjs`、`CHROMIUM_BIN`にChromeの実行ファイルを指定してください。
 
-本編の仕様は[docs/CAMPAIGN.md](docs/CAMPAIGN.md)、画面の方針は[docs/ART_DIRECTION.md](docs/ART_DIRECTION.md)、実施結果は[docs/verification/CAMPAIGN.md](docs/verification/CAMPAIGN.md)を参照してください。モーションの仕様は[docs/MOTION.md](docs/MOTION.md)、実施結果は[docs/verification/MOTION.md](docs/verification/MOTION.md)です。初版・第2版の記録は当時の検証として残しています。素材とフォントの出典は[docs/ASSETS.md](docs/ASSETS.md)と`credits.html`に記載しています。
+本編の仕様は[docs/CAMPAIGN.md](docs/CAMPAIGN.md)、画面のデザイン指針は[docs/DESIGN_SYSTEM.md](docs/DESIGN_SYSTEM.md)、描画の方針は[docs/ART_DIRECTION.md](docs/ART_DIRECTION.md)、実施結果は[docs/verification/CAMPAIGN.md](docs/verification/CAMPAIGN.md)を参照してください。モーションの仕様は[docs/MOTION.md](docs/MOTION.md)、実施結果は[docs/verification/MOTION.md](docs/verification/MOTION.md)です。 デザイン更新の画面比較と検証は[docs/verification/DESIGN_SYSTEM.md](docs/verification/DESIGN_SYSTEM.md)に記録しています。初版・第2版の記録は当時の検証として残しています。素材とフォントの出典は[docs/ASSETS.md](docs/ASSETS.md)と`credits.html`に記載しています。
