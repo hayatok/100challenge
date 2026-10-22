@@ -1,0 +1,40 @@
+{
+  "visual_review": {
+    "reviewer": "painted_art_audit",
+    "model": "gpt-6.1-sol",
+    "scope": "Saved native renders and sources; no browser execution",
+    "findings": [
+      {
+        "priority": "P2",
+        "issue": "New downscaled sources lacked mipmaps and showed stippled edges",
+        "disposition": "Enabled mipmaps on all eight new PNG imports and added source assertions; visual recheck resolved"
+      },
+      {
+        "priority": "P3",
+        "issue": "Garden mirrored petals/pebbles competed with dark actors",
+        "disposition": "Edited terrain with imagegen, preserved original, retained wash; visual recheck accepted"
+      }
+    ],
+    "recheck": "No additional findings; stone repeat remains as texture, not a visibility blocker"
+  },
+  "ai_slop_review": {
+    "reviewer": "design_astra_review",
+    "role": "ai_slop_reviewer",
+    "model": "gpt-6-astra",
+    "status": "complete_no_findings",
+    "scope": "Changed sources, local generated assets, final source/provenance records, native and normal Web evidence, Japanese final hash records, exact PR/Issue drafts",
+    "pending": [
+      "Commit/push and external PR/Issue updates",
+      "Current-head CI"
+    ],
+    "conclusion": "No findings. Final evidence agrees with the documented run, source/pose distinction, and limits.",
+    "limits": [
+      "Reviewer did not execute tests or browser controls",
+      "No public deployment, physical Safari/Firefox, low-end PC, unbounded repeated sessions or human first-play evaluation"
+    ]
+  },
+  "primary_preservation": {
+    "files": 1393,
+    "unchanged": true
+  }
+}

@@ -4,6 +4,7 @@ extends Node2D
 const FloorArt := preload("res://scripts/campaign_floor.gd")
 const SceneryCache := preload("res://scripts/scenery_cache.gd")
 const PixelActors := preload("res://scripts/pixel_actors.gd")
+const IllustratedAssets := preload("res://scripts/illustrated_assets.gd")
 const Presentation := preload("res://scripts/presentation.gd")
 const PresentationFX := preload("res://scripts/presentation_fx.gd")
 const WHITE_DISC := preload("res://assets/art/white-disc.svg")
@@ -114,7 +115,7 @@ func _draw() -> void:
 			"death":
 				_draw_death(actor.data)
 			_:
-				_draw_witch(world(actor.position), actor.type == "echo", 82.0)
+				_draw_witch(world(actor.position), actor.type == "echo", PixelActors.display_size("witch"))
 	for shot in run.projectiles:
 		_draw_projectile(shot)
 	# Newest feedback survives the cap. Damage numbers never blanket a boss cue.
@@ -214,16 +215,7 @@ func _draw_enemy(enemy: Dictionary) -> void:
 	if not _on_screen(at, 240 if boss else 100):
 		return
 	var kind := str(enemy.kind)
-	var size := 64.0
-	match kind:
-		"charger", "sentinel":
-			size = 86
-		"archer", "wisp":
-			size = 76
-		"bat":
-			size = 53
-	if boss:
-		size = 210 if kind == "boss_thorn" else 198 if kind == "boss_mirror" else 224
+	var size := PixelActors.display_size(kind)
 	var elite := bool(enemy.get("elite", false))
 	if elite:
 		size *= 1.22
@@ -232,11 +224,11 @@ func _draw_enemy(enemy: Dictionary) -> void:
 		alpha = clampf(1.0 - float(enemy.get("timer", 0)) / maxf(0.01, float(enemy.get("arrival_duration", 0.9))), 0.20, 1)
 		_elliptic_arc(at + Vector2(0, 7), Vector2(size * 0.31, size * 0.12), 0, TAU, Color(DANGER, 0.40), 1.5)
 	_ellipse(at + Vector2(0, 10), Vector2(size * 0.30, 9 if boss else 7), Color(0, 0.01, 0.025, 0.50 * alpha))
-	var tint := Color(1, 1, 1, alpha)
+	var tint := Color(1.18, 1.20, 1.24, alpha)
 	if kind == "wisp":
 		tint = Color(0.75, 0.89, 1.06, alpha)
 	elif kind == "sentinel":
-		tint = Color(0.82, 0.88, 0.86, alpha)
+		tint = Color(1.15, 1.20, 1.23, alpha)
 	if float(enemy.get("flash", 0)) > 0 and not reduced_motion:
 		tint = Color(1.65, 1.35, 1.20, alpha)
 	var pose: Dictionary = presentation.enemy_poses.get(int(enemy.id), {})
@@ -399,26 +391,7 @@ func _draw_pickup(pickup: Dictionary) -> void:
 	_ellipse(at + Vector2(0, 8), Vector2(13, 5), Color(0, 0.01, 0.02, 0.50))
 	_disc(at, 17, Color(INK, 0.96))
 	draw_arc(at, 17, 0, TAU, 40, Color(GOLD, 0.65), 1.6, true)
-	match kind:
-		"heal":
-			var bottle := PackedVector2Array([at + Vector2(-4, -10), at + Vector2(4, -10), at + Vector2(4, -5), at + Vector2(8, -1), at + Vector2(7, 9), at + Vector2(-7, 9), at + Vector2(-8, -1), at + Vector2(-4, -5)])
-			draw_colored_polygon(bottle, Color("bb8291"))
-			draw_line(at + Vector2(-4, -11), at + Vector2(4, -11), GOLD, 3, true)
-			draw_line(at + Vector2(0, -2), at + Vector2(0, 6), PAPER, 2, true)
-			draw_line(at + Vector2(-4, 2), at + Vector2(4, 2), PAPER, 2, true)
-		"magnet":
-			draw_arc(at + Vector2(0, -1), 8, 0, PI, 24, BLUE, 5, true)
-			draw_line(at + Vector2(-8, -7), at + Vector2(-8, 0), PAPER, 4, true)
-			draw_line(at + Vector2(8, -7), at + Vector2(8, 0), GOLD, 4, true)
-		"ward":
-			var leaf := PackedVector2Array([at + Vector2(-7, 9), at + Vector2(-9, -2), at + Vector2(-4, -10), at + Vector2(9, -10), at + Vector2(8, 2), at + Vector2(-7, 9)])
-			draw_colored_polygon(leaf, THORN)
-			draw_line(at + Vector2(-6, 10), at + Vector2(5, -6), INK, 1.5, true)
-		"blast":
-			_star(at, 10, GOLD)
-			_disc(at, 3.5, PAPER)
-		_:
-			_star(at, 8, GOLD)
+	IllustratedAssets.draw_icon(self, kind, at, 28.0)
 
 func _draw_chest(chest: Dictionary) -> void:
 	var at := world(chest.position)
@@ -430,17 +403,10 @@ func _draw_chest(chest: Dictionary) -> void:
 		_elliptic_arc(at + Vector2(0, 9), Vector2(26, 11), 0, TAU, Color(GOLD, 0.60), 1.5)
 		for side in [-1.0, 1.0]:
 			_star(at + Vector2(side * 28, -11), 3, GOLD)
-	draw_rect(Rect2(at + Vector2(-18, -9), Vector2(36, 24)), Color("493841"))
-	draw_rect(Rect2(at + Vector2(-18, -9), Vector2(36, 24)), GOLD, false, 2)
-	var lid_y := -26.0 if opened else -14.0
-	var lid := PackedVector2Array([at + Vector2(-20, lid_y + 7), at + Vector2(-15, lid_y - 4), at + Vector2(14, lid_y - 4), at + Vector2(20, lid_y + 7), at + Vector2(-20, lid_y + 7)])
-	draw_colored_polygon(lid, Color("66505b"))
-	draw_polyline(lid, GOLD, 2, true)
-	for x in [-11.0, 11.0]:
-		draw_line(at + Vector2(x, lid_y - 2), at + Vector2(x, 13), Color(GOLD, 0.73), 2, true)
-	draw_rect(Rect2(at + Vector2(-4, -5), Vector2(8, 9)), GOLD)
-	if not opened:
-		_star(at + Vector2(0, -1), 3, PAPER)
+	var icon := "chest_open" if opened else "chest"
+	var extent := 60.0 if opened else 53.0
+	var tint := Color(0.73, 0.77, 0.80, 0.85) if opened else Color.WHITE
+	IllustratedAssets.draw_icon(self, icon, at + Vector2(0, -12), extent, tint)
 
 func _draw_wayfinding() -> void:
 	# Edge pointers refer to real persistent objects, with the HUD bands excluded.

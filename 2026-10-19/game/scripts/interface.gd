@@ -890,7 +890,10 @@ func _codex_screen() -> void:
 	var current_id: String = ids[codex_index]
 	var info := _codex_info(current_id)
 	var known := _discovered(codex_category, current_id)
-	_glyph(page, str(info.get("icon", "empty")) if known else "locked", 644, 140, 112, 112, codex_category == "evolutions" and known)
+	var icon_id := str(info.get("icon", "empty"))
+	if codex_category == "enemies":
+		icon_id = "enemy:" + current_id
+	_glyph(page, icon_id if known else "locked", 644, 140, 112, 112, codex_category == "evolutions" and known)
 	var title := str(info.get("title", "")) if known else "まだ、白い頁"
 	if codex_category == "evolutions" and known:
 		title = str(info.get("evolution", title))

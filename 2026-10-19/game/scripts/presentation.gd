@@ -1,6 +1,8 @@
 extends RefCounted
 ## Read-only visual state. Every age and pose uses the simulation clock.
 
+const ActorArt := preload("res://scripts/pixel_actors.gd")
+
 const MAX_DEATHS := 24
 const MAX_EVENTS := 80
 const DEATH_DURATION := 0.45
@@ -536,14 +538,7 @@ func _stride(kind: String) -> float:
 		_: return 50.0
 
 func _size(kind: String) -> float:
-	match kind:
-		"charger", "sentinel": return 86.0
-		"archer", "wisp": return 76.0
-		"bat": return 53.0
-		"boss_thorn": return 210.0
-		"boss_mirror": return 198.0
-		"boss_bell": return 224.0
-		_: return 64.0
+	return ActorArt.display_size(kind)
 
 func snapshot() -> Dictionary:
 	return {"clock": _clock, "chapter": _chapter, "generation": generation, "latest_serial": latest_serial, "player_pose": player_pose.duplicate(true), "echo_pose": echo_pose.duplicate(true), "enemy_poses": enemy_poses.duplicate(true), "deaths": deaths.duplicate(true), "events": events.duplicate(true), "camera_impulse": camera_impulse, "tracked_enemy_count": _enemies.size(), "effect_keys": _effect_counts.size(), "pickup_refs": _pickups.size(), "chest_keys": _chests.size(), "evolution_keys": _evolved.size(), "event_limit": MAX_EVENTS, "death_limit": MAX_DEATHS}

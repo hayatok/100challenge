@@ -1,0 +1,78 @@
+{
+  "documents": [
+    {
+      "target": "AGENTS.md",
+      "sha256": "b285f767e0bdcbf9a0ba3d67df80cafddef66b88f959db3bed5290619655603d",
+      "verified": true,
+      "record": "yomiyasu-check: executed via=verify run=20261022T160127Z-7a8303c5 attempt=1 final=sha256:b285f767e0bd mode=rewrite doc_type=manual checks=lint,diff,materials meaning_risk=2 replay=skipped"
+    },
+    {
+      "target": "README.md",
+      "sha256": "7d9ae9a24df8c2c0cb3ad6917e26dea8b03790f3543f714bf8d90d1834141b7d",
+      "verified": true,
+      "record": "yomiyasu-check: executed via=verify run=20261022T160128Z-eae2c537 attempt=1 final=sha256:7d9ae9a24df8 mode=rewrite doc_type=manual checks=lint,diff,materials meaning_risk=2 replay=skipped"
+    },
+    {
+      "target": "credits.html",
+      "sha256": "cb8ee350b3dccbc9bd90b0a067718e1a04ff5c702aaa605a6efc66b7b7278f89",
+      "verified": true,
+      "record": "yomiyasu-check: executed via=verify run=20261022T160129Z-405d58f6 attempt=1 final=sha256:cb8ee350b3dc mode=rewrite doc_type=manual checks=lint,diff,materials meaning_risk=2 replay=skipped"
+    },
+    {
+      "target": "docs/ART_DIRECTION.md",
+      "sha256": "a10330195e047fd462bb2f20b80d71d21ff5aecf4294d7e6bac3db877c5b0408",
+      "verified": true,
+      "record": "yomiyasu-check: executed via=verify run=20261022T160129Z-dfdfe708 attempt=2 final=sha256:a10330195e04 mode=rewrite doc_type=manual checks=lint,diff,materials meaning_risk=5 replay=skipped"
+    },
+    {
+      "target": "docs/ASSETS.md",
+      "sha256": "3f7ab13601ddfb4f257a622f1b375e8b415ed82ffb6c6c85bad100e6ba860a2c",
+      "verified": true,
+      "record": "yomiyasu-check: executed via=verify run=20261022T160130Z-cffc7b77 attempt=2 final=sha256:3f7ab13601dd mode=rewrite doc_type=manual checks=lint,diff,materials meaning_risk=17 replay=skipped"
+    },
+    {
+      "target": "docs/ART_UPGRADE.md",
+      "sha256": "bb50d56b2ecf8e35a162da07493447655b85343781efb628a4838534b533101f",
+      "verified": true,
+      "record": "yomiyasu-check: executed via=verify run=20261022T160130Z-fe26ba86 attempt=2 final=sha256:bb50d56b2ecf mode=compose doc_type=manual checks=lint,materials meaning_risk=33 replay=skipped"
+    },
+    {
+      "target": "docs/MOTION.md",
+      "sha256": "79ff633429764f46afe686aefafeff1d3a2cf3c0da713ca54b1aecb1b696a48c",
+      "verified": true,
+      "record": "yomiyasu-check: executed via=verify run=20261022T162107Z-eca61c5d attempt=1 final=sha256:79ff63342976 mode=rewrite doc_type=manual checks=lint,diff,materials meaning_risk=1 replay=skipped"
+    },
+    {
+      "target": "docs/verification/ART_UPGRADE.md",
+      "sha256": "e739c2b312ff1eeaf321fe1548f35f8b6821c6660e4b2e7d0fd6502702356eee",
+      "verified": true,
+      "record": "yomiyasu-check: executed via=verify run=20261022T162108Z-6c8da456 attempt=1 final=sha256:e739c2b312ff mode=compose doc_type=manual checks=lint,materials meaning_risk=89 replay=skipped"
+    },
+    {
+      "target": ".yomiyasu/art-upgrade/drafts/pr-title.md",
+      "sha256": "785194acccd0b2df1c384650e8918f9dba3ca94c830176f2a47f01dd4c1af5ef",
+      "verified": true,
+      "record": "yomiyasu-check: executed via=verify run=20261022T161624Z-e85d6521 attempt=1 final=sha256:785194acccd0 mode=rewrite doc_type=manual checks=lint,diff,materials meaning_risk=0 replay=skipped"
+    },
+    {
+      "target": ".yomiyasu/art-upgrade/drafts/pr.md",
+      "sha256": "c097f27cd838246c65a52b2a63a1b748861572fc1f82f1918fb7ff64b9ab69ec",
+      "verified": true,
+      "record": "yomiyasu-check: executed via=verify run=20261022T162108Z-eb03a637 attempt=1 final=sha256:c097f27cd838 mode=rewrite doc_type=manual checks=lint,diff,materials meaning_risk=31 replay=skipped"
+    },
+    {
+      "target": ".yomiyasu/art-upgrade/drafts/issue.md",
+      "sha256": "e19eafb4b77c7585a1f201284fa6fd01213b00d053001ac62f04cc9e34dd0b87",
+      "verified": true,
+      "record": "yomiyasu-check: executed via=verify run=20261022T161625Z-8da4c218 attempt=1 final=sha256:e19eafb4b77c mode=rewrite doc_type=manual checks=lint,diff,materials meaning_risk=8 replay=skipped"
+    }
+  ],
+  "checks": [
+    "original/source lint",
+    "candidate reading",
+    "full diff or material comparison",
+    "final file hash verification"
+  ],
+  "interpretation": "Execution and equal hashes do not certify meaning or readability. New quantities/names were checked against actual code and logs. Natural manual sentence endings and reference instructions were retained.",
+  "private_records": ".yomiyasu/art-upgrade (not committed)"
+}

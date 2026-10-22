@@ -4,9 +4,21 @@ extends RefCounted
 const Grimoire := preload("res://scripts/grimoire_theme.gd")
 const GOLD := Grimoire.GOLD
 const BLUE := Grimoire.ECHO
-const STONE := Color("61716d")
+const TERRAIN := preload("res://assets/art/terrain-painted-r3.png")
+const SCENERY := preload("res://assets/art/scenery-painted-r3.png")
+const TERRAIN_TILE_WIDTH := 440.0
+const PANEL_INSET := 2.0
+# Measured alpha silhouettes, expressed against the original sheet dimensions.
+# The painter let rose vines cross equal thirds: cell crops would cut them off.
+const SCENERY_REFERENCE_SIZE := Vector2(1536, 1024)
+const SCENERY_CROPS := [
+	[Rect2(32, 128, 529, 348), Rect2(27, 643, 535, 345)],
+	[Rect2(647, 1, 364, 479), Rect2(646, 496, 364, 492)],
+	[Rect2(1162, 2, 281, 491), Rect2(1166, 491, 340, 519)]
+]
+const SCENERY_BASE := [0.976, 0.982, 0.981]
 
-static func draw_floor(view, info: Dictionary, textures: Dictionary) -> void:
+static func draw_floor(view, info: Dictionary, _textures: Dictionary) -> void:
 	var chapter := int(info.get("id", 0)) if info.get("id", 0) is int else int(view.run.chapter)
 	var bounds: Rect2 = info.get("bounds", Rect2(-1100, -800, 2200, 1600))
 	var at: Vector2 = view.world(bounds.position)
@@ -14,7 +26,9 @@ static func draw_floor(view, info: Dictionary, textures: Dictionary) -> void:
 	var ground := Color("172c31") if chapter == 0 else Color("222a3d") if chapter == 1 else Color("2b2c33")
 	view.draw_rect(visible_rect, Color("0c1420"))
 	view.draw_rect(Rect2(at, bounds.size), ground)
-	_draw_tiles(view, bounds, textures, chapter)
+	_draw_tiles(view, bounds, chapter)
+	# A retained moonlit wash compresses the painted stone contrast behind actors.
+	view.draw_rect(Rect2(at, bounds.size), Color(ground, 0.54))
 	match chapter:
 		0:
 			_draw_garden_floor(view, bounds)
@@ -24,27 +38,50 @@ static func draw_floor(view, info: Dictionary, textures: Dictionary) -> void:
 			_draw_bell_floor(view, bounds)
 	_draw_boundary(view, bounds, chapter)
 
-static func _draw_tiles(view, bounds: Rect2, textures: Dictionary, chapter: int) -> void:
-	if not textures.has("garden_tile"):
-		return
-	var camera: Vector2 = view.run.player - view.screen * Vector2(0.5, 0.52)
-	var tile_size := 384.0
-	var start := (camera / tile_size).floor() * tile_size
-	var tint := Color(0.74, 0.91, 0.89, 0.27)
+static func terrain_region(chapter: int) -> Rect2:
+	# Equal source panels: garden, archive, belfry, then spare neutral paving.
+	var panel := Vector2(float(chapter % 2), float(chapter >> 1))
+	var half := TERRAIN.get_size() * 0.5
+	return Rect2(panel * half, half).grow(-PANEL_INSET)
+
+static func scenery_region(chapter: int, variant: int) -> Rect2:
+	var authored: Rect2 = SCENERY_CROPS[chapter][variant % 2]
+	var source_scale := SCENERY.get_size() / SCENERY_REFERENCE_SIZE
+	return Rect2(authored.position * source_scale, authored.size * source_scale)
+
+static func _draw_tiles(view, bounds: Rect2, chapter: int) -> void:
+	var source := terrain_region(chapter)
+	var tile_size := Vector2(TERRAIN_TILE_WIDTH, TERRAIN_TILE_WIDTH * source.size.y / source.size.x)
+	var first := (bounds.position / tile_size).floor()
+	var last := (bounds.end / tile_size).ceil()
+	# These quads are authored once into FloorLayer's retained draw list. Mirror
+	# adjoining cells at the same painted edge instead of exposing atlas seams.
+	var tint := Color(0.68, 0.77, 0.80, 1.0)
 	if chapter == 1:
-		tint = Color(0.75, 0.78, 1.05, 0.18)
+		tint = Color(0.69, 0.75, 0.88, 1.0)
 	elif chapter == 2:
-		tint = Color(1.05, 0.91, 0.73, 0.21)
-	var texture: Texture2D = textures.garden_tile
-	var source_size := texture.get_size()
-	for x in range(-1, int(view.screen.x / tile_size) + 2):
-		for y in range(-1, int(view.screen.y / tile_size) + 2):
-			var cell := Rect2(start + Vector2(x, y) * tile_size, Vector2.ONE * tile_size)
+		tint = Color(0.80, 0.76, 0.68, 1.0)
+	for x in range(int(first.x), int(last.x)):
+		for y in range(int(first.y), int(last.y)):
+			var cell := Rect2(Vector2(x, y) * tile_size, tile_size)
 			var clipped := cell.intersection(bounds)
 			if not clipped.has_area():
 				continue
-			var source := Rect2((clipped.position - cell.position) / tile_size * source_size, clipped.size / tile_size * source_size)
-			view.draw_texture_rect_region(texture, Rect2(view.world(clipped.position), clipped.size), source, tint)
+			var uv_start := (clipped.position - cell.position) / tile_size
+			var uv_end := (clipped.end - cell.position) / tile_size
+			if posmod(x, 2) == 1:
+				uv_start.x = 1.0 - uv_start.x
+				uv_end.x = 1.0 - uv_end.x
+			if posmod(y, 2) == 1:
+				uv_start.y = 1.0 - uv_start.y
+				uv_end.y = 1.0 - uv_end.y
+			var a: Vector2 = view.world(clipped.position)
+			var b: Vector2 = a + clipped.size
+			var points := PackedVector2Array([a, Vector2(b.x, a.y), b, Vector2(a.x, b.y)])
+			var uvs := PackedVector2Array([uv_start, Vector2(uv_end.x, uv_start.y), uv_end, Vector2(uv_start.x, uv_end.y)])
+			for i in range(uvs.size()):
+				uvs[i] = (source.position + uvs[i] * source.size) / TERRAIN.get_size()
+			view.draw_polygon(points, PackedColorArray([tint]), uvs, TERRAIN)
 
 static func _draw_garden_floor(view, bounds: Rect2) -> void:
 	var center: Vector2 = view.world(Vector2.ZERO)
@@ -150,112 +187,53 @@ static func _draw_boundary(view, bounds: Rect2, chapter: int) -> void:
 
 static func draw_obstacle_base(view, obstacle: Rect2) -> void:
 	var rect := Rect2(view.world(obstacle.position), obstacle.size)
-	if not rect.grow(80).intersects(Rect2(Vector2.ZERO, view.screen)):
+	if not rect.grow(20).intersects(Rect2(Vector2.ZERO, view.screen)):
 		return
-	view.draw_rect(Rect2(rect.position + Vector2(4, 8), rect.size + Vector2(6, 5)), Color(0.01, 0.025, 0.04, 0.42))
-	view.draw_rect(rect, Color("0e171f"))
-	view.draw_rect(rect, Color("b1b2a0"), false, 2)
+	# The slab and its front edge keep the exact model footprint visible, even
+	# through the irregular silhouette of the painted roses, shelves and stone.
+	view.draw_rect(Rect2(rect.position + Vector2(4, 8), rect.size + Vector2(6, 5)), Color(0.01, 0.025, 0.04, 0.48))
+	view.draw_rect(rect, Color("182329"))
+	view.draw_line(Vector2(rect.position.x, rect.end.y), rect.end, Color("a0a699"), 2.0, true)
+
+static func obstacle_modules(obstacle: Rect2, chapter: int, index: int) -> Array[Dictionary]:
+	# Long shelves form a bank of intact bookcases. Wide tower solids similarly
+	# carry several intact buttresses instead of flattening a single tall arch.
+	var vertical := obstacle.size.y > obstacle.size.x * 1.45
+	var rows := maxi(1, ceili(obstacle.size.y / 235.0)) if vertical else 1
+	var primary := scenery_region(chapter, index)
+	var aspect := primary.size.x / primary.size.y
+	var row_height := obstacle.size.y / rows
+	var columns := clampi(roundi(obstacle.size.x / (row_height * aspect)), 1, 4)
+	var result: Array[Dictionary] = []
+	for row in range(rows):
+		for column in range(columns):
+			var offset := Vector2(obstacle.size.x * float(column) / columns, row_height * row)
+			var target := Rect2(obstacle.position + offset, Vector2(obstacle.size.x / columns, row_height))
+			var variant := posmod(index + row + column, 2)
+			result.append({"target": target, "source": scenery_region(chapter, variant), "variant": variant})
+	return result
 
 static func draw_obstacle(view, obstacle: Rect2, chapter: int, index: int) -> void:
 	var rect := Rect2(view.world(obstacle.position), obstacle.size)
-	if not rect.grow(85).intersects(Rect2(Vector2.ZERO, view.screen)):
+	if not rect.grow(20).intersects(Rect2(Vector2.ZERO, view.screen)):
 		return
-	match chapter:
-		0:
-			_draw_planter(view, rect, index)
-		1:
-			_draw_column(view, rect, index)
-		_:
-			_draw_buttress(view, rect, index)
-
-static func _draw_planter(view, rect: Rect2, index: int) -> void:
-	# Bevelled stone contains an irregular rose thicket; the clear front lip is
-	# exactly the collision footprint, so no leaf becomes an invisible wall.
-	view.draw_rect(rect, Color("4c5650"))
-	view.draw_rect(Rect2(rect.position + Vector2(0, rect.size.y - 19), Vector2(rect.size.x, 19)), Color("303d39"))
-	view.draw_rect(rect.grow(-7), Color("20392f"))
-	view.draw_rect(rect, Color("82907b"), false, 2)
-	view.draw_line(rect.position + Vector2(5, 4), rect.position + Vector2(rect.size.x - 5, 4), Color("a0a38a"), 2, true)
-	view.draw_line(rect.position + Vector2(4, 4), rect.position + Vector2(4, rect.size.y - 5), Color("74816e"), 2, true)
-	var count := maxi(12, int(rect.size.x * rect.size.y / 1200))
-	var colors: Array[Color] = [Color("335144"), Color("3b5948"), Color("425e4b"), Color("46634f")]
-	for i in range(count):
-		var px := fposmod(float(i * 73 + index * 31), maxf(1, rect.size.x - 34))
-		var py := fposmod(float(i * i * 17 + i * 83 + index * 29), maxf(1, rect.size.y - 47))
-		var at := rect.position + Vector2(17 + px, 20 + py)
-		var tint: Color = colors[(i + index) % colors.size()]
-		view._ellipse(at + Vector2(2, 5), Vector2(18, 10), Color("203c30"))
-		view._ellipse(at, Vector2(15 + float(i % 3), 8 + float(i % 4)), tint)
-		var stem := PackedVector2Array([at + Vector2(-8, 5), at + Vector2(-3, -1), at + Vector2(5, -7), at + Vector2(8, -13)])
-		view.draw_polyline(stem, Color("6a8165"), 1.4, true)
-		for side in [-1.0, 1.0]:
-			var leaf := PackedVector2Array([at + Vector2(0, 1), at + Vector2(side * 10, -9), at + Vector2(side * 12, -3), at + Vector2(side * 5, 3)])
-			view.draw_colored_polygon(leaf, tint.lightened(0.045))
-		if i % 4 == 0:
-			var flower_at := at + Vector2(4, -8)
-			for petal in range(5):
-				view.draw_circle(flower_at + Vector2.from_angle(float(petal) * TAU / 5) * 3, 2.7, Color("a18a9e") if i % 8 == 0 else Color("b2aaa2"))
-			view.draw_circle(flower_at, 2, Color("c9b583"))
-	# Mortar joints and a worn lip belong to masonry, not a rectangular UI frame.
-	for x in range(1, int(rect.size.x / 43)):
-		var point := rect.position + Vector2(float(x) * 43, rect.size.y - 17)
-		view.draw_line(point, point + Vector2(0, 15), Color("74806e"), 1, true)
-	view.draw_line(rect.position + Vector2(8, rect.size.y - 18), rect.end - Vector2(8, 18), Color("839079"), 1.5, true)
-
-static func _draw_column(view, rect: Rect2, index: int) -> void:
-	view.draw_rect(rect, Color("4b5061"))
-	view.draw_rect(Rect2(rect.position + Vector2(0, rect.size.y - 16), Vector2(rect.size.x, 16)), Color("303648"))
-	var inner := rect.grow(-17)
-	view.draw_rect(inner, Color("29354b"))
-	# Fluted pale stone uprights and broad mouldings read as physical architecture.
-	for side in [0.0, 1.0]:
-		var x: float = rect.position.x + 4 + float(side) * (rect.size.x - 17)
-		view.draw_rect(Rect2(x, rect.position.y + 7, 10, rect.size.y - 15), Color("666c79"))
-		view.draw_line(Vector2(x + 2, rect.position.y + 10), Vector2(x + 2, rect.end.y - 12), Color("999ca5"), 1.5, true)
-		view.draw_line(Vector2(x + 8, rect.position.y + 11), Vector2(x + 8, rect.end.y - 12), Color("303a4e"), 1.5, true)
-	for y in [rect.position.y + 4, rect.end.y - 11]:
-		view.draw_rect(Rect2(rect.position.x + 2, y, rect.size.x - 4, 7), Color("858797"))
-		view.draw_line(Vector2(rect.position.x + 4, y), Vector2(rect.end.x - 4, y), Color("a8a8b0"), 1, true)
-	# Light fades across the glass; fine etching and one crack break perfect symmetry.
-	var face := PackedVector2Array([inner.position + Vector2(3, 0), inner.position + Vector2(inner.size.x * 0.65, 0), inner.end - Vector2(3, 0), inner.position + Vector2(inner.size.x * 0.30, inner.size.y)])
-	view.draw_colored_polygon(face, Color(0.56, 0.76, 0.84, 0.13))
-	view.draw_rect(inner, Color("899aaa"), false, 1.5)
-	view.draw_line(inner.position + inner.size * Vector2(0.25, 0.10), inner.position + inner.size * Vector2(0.65, 0.90), Color(BLUE, 0.22), 2, true)
-	view.draw_line(inner.position + inner.size * Vector2(0.45, 0.10), inner.position + inner.size * Vector2(0.80, 0.78), Color(BLUE, 0.10), 1, true)
-	var at := inner.get_center()
-	if rect.size.y > rect.size.x:
-		for side in [-1.0, 1.0]:
-			var ornament := PackedVector2Array([at + Vector2(side * 14, -38), at + Vector2(side * 29, -17), at + Vector2(side * 27, 15), at + Vector2(side * 14, 38)])
-			view.draw_polyline(ornament, Color(BLUE, 0.18), 1, true)
-	if index % 2 == 0:
-		view.draw_polyline(PackedVector2Array([at + Vector2(-8, -32), at + Vector2(4, -12), at + Vector2(-3, 2), at + Vector2(10, 26)]), Color(0.12, 0.20, 0.32, 0.70), 2, true)
-
-static func _draw_buttress(view, rect: Rect2, index: int) -> void:
-	view.draw_rect(rect, Color("454b46"))
-	var cap := rect.grow(-12)
-	view.draw_rect(cap, Color("56594e"))
-	# Broad, bevelled blocks catch the moon on the upper and left faces.
-	view.draw_colored_polygon(PackedVector2Array([rect.position, Vector2(rect.end.x, rect.position.y), Vector2(cap.end.x, cap.position.y), cap.position]), Color("858575"))
-	view.draw_colored_polygon(PackedVector2Array([rect.position, cap.position, Vector2(cap.position.x, cap.end.y), Vector2(rect.position.x, rect.end.y)]), Color("6c7263"))
-	view.draw_colored_polygon(PackedVector2Array([Vector2(rect.end.x, rect.position.y), rect.end, cap.end, Vector2(cap.end.x, cap.position.y)]), Color("343d3a"))
-	view.draw_colored_polygon(PackedVector2Array([Vector2(rect.position.x, rect.end.y), Vector2(cap.position.x, cap.end.y), cap.end, rect.end]), Color("303b35"))
-	view.draw_rect(rect, Color("8e917b"), false, 1.5)
-	for row in range(1, int(cap.size.y / 29)):
-		var y := cap.position.y + float(row) * 29
-		view.draw_line(Vector2(cap.position.x + 1, y), Vector2(cap.end.x - 1, y), Color(0.19, 0.23, 0.20, 0.52), 1.3, true)
-		for column in range(1, int(cap.size.x / 61)):
-			var x := cap.position.x + float(column) * 61 + (25 if row % 2 == 0 else 0)
-			if x < cap.end.x - 10:
-				view.draw_line(Vector2(x, y - 28), Vector2(x, y - 1), Color(0.18, 0.22, 0.19, 0.46), 1, true)
-	var at := cap.get_center()
-	var width := minf(16, cap.size.x * 0.20)
-	var height := minf(25, cap.size.y * 0.28)
-	var rune := PackedVector2Array([at + Vector2(-width, height), at + Vector2(-width * 0.7, -height * 0.5), at + Vector2(0, -height), at + Vector2(width * 0.7, -height * 0.5), at + Vector2(width, height), at + Vector2(-width, height)])
-	view.draw_polyline(rune, Color(GOLD, 0.62), 1.7, true)
-	view.draw_line(at + Vector2(-width - 3, height + 4), at + Vector2(width + 3, height + 4), Color(GOLD, 0.55), 1.5, true)
-	view.draw_circle(at + Vector2(0, height + 7), 2.5, Color(GOLD, 0.65))
-	if index % 2 == 0:
-		view.draw_polyline(PackedVector2Array([cap.position + Vector2(19, 1), cap.position + Vector2(28, 16), cap.position + Vector2(22, 25), cap.position + Vector2(36, 35)]), Color("333f36"), 1.4, true)
+	var stone := Color("65776c") if chapter == 0 else Color("626e83") if chapter == 1 else Color("837d69")
+	view.draw_rect(rect, stone.darkened(0.54))
+	# The painted material continues under each module so transparent gaps in a
+	# source panel never suggest a walkable hole inside the collision rectangle.
+	view.draw_texture_rect_region(TERRAIN, rect.grow(-3), terrain_region(chapter), Color(0.44, 0.48, 0.49, 1))
+	for module in obstacle_modules(obstacle, chapter, index):
+		var target: Rect2 = module.target
+		var source: Rect2 = module.source
+		var available := target.size + Vector2(12, 12)
+		var scale_factor := minf(available.x / source.size.x, available.y / source.size.y)
+		var size := source.size * scale_factor
+		# Place the measured stone/wood contact edge on the authored footprint;
+		# the source's last faint shadow pixels can extend into the 20px margin.
+		var at: Vector2 = view.world(Vector2(target.get_center().x - size.x * 0.5, target.end.y - size.y * float(SCENERY_BASE[chapter])))
+		view.draw_texture_rect_region(SCENERY, Rect2(at, size), source, Color(0.88, 0.92, 0.96, 1))
+	view.draw_line(Vector2(rect.position.x + 2, rect.end.y - 2), rect.end - Vector2(2, 2), Color(stone, 0.86), 2.0, true)
+	view.draw_line(rect.position + Vector2(1, 2), Vector2(rect.position.x + 1, rect.end.y - 2), Color(stone, 0.52), 1.5, true)
 
 static func draw_ambient(view, chapter: int) -> void:
 	var camera: Vector2 = view.run.player - view.screen * Vector2(0.5, 0.52)

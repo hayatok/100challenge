@@ -2,7 +2,7 @@
 
 2秒前の位置と魔法を再現する残像と、三つの章を攻略する見下ろし2Dサバイバルです。庭園、鏡の書庫、夜鐘の塔を進み、各章のボスを倒して夜明けを迎えます。公開済み3分版から、本編・装備・図鑑・GUIを拡張しました。
 
-戦闘中の魔女と魔物は、歩行・詠唱・予備動作・被弾・消滅を描き分けたドット絵です。背景と魔術書のGUIに合わせ、命中、撃破、挟撃、ボスと報酬の反応を加えています。
+戦闘中の魔女と魔物は、タイトルと同じ画風の原画に部位ごとの動きを付けています。歩行・詠唱・予備動作・被弾・消滅を描き分け、庭園の石畳、書庫の木と本、塔の石と真鍮、装備の絵も揃えました。ドットの火花と破片を、命中や撃破のアクセントに使います。
 
 画面は「夜の魔術書に残響を書き足す」を指針にしています。戦闘中は細いHUD、強化では明るい紙の選択頁、休止や図鑑では見開きを使い、勝利と敗北にも別の構図を用意しています。
 
@@ -61,3 +61,5 @@ BASE_URL=http://127.0.0.1:4197/ npm run qa:motion
 Playwrightを別の場所に置いている場合は、`PLAYWRIGHT_MODULE`にその`index.mjs`、`CHROMIUM_BIN`にChromeの実行ファイルを指定してください。
 
 本編の仕様は[docs/CAMPAIGN.md](docs/CAMPAIGN.md)、画面のデザイン指針は[docs/DESIGN_SYSTEM.md](docs/DESIGN_SYSTEM.md)、描画の方針は[docs/ART_DIRECTION.md](docs/ART_DIRECTION.md)、実施結果は[docs/verification/CAMPAIGN.md](docs/verification/CAMPAIGN.md)を参照してください。モーションの仕様は[docs/MOTION.md](docs/MOTION.md)、実施結果は[docs/verification/MOTION.md](docs/verification/MOTION.md)です。 デザイン更新の画面比較と検証は[docs/verification/DESIGN_SYSTEM.md](docs/verification/DESIGN_SYSTEM.md)に記録しています。初版・第2版の記録は当時の検証として残しています。素材とフォントの出典は[docs/ASSETS.md](docs/ASSETS.md)と`credits.html`に記載しています。
+
+素材の指針と今回の範囲は[docs/ART_UPGRADE.md](docs/ART_UPGRADE.md)、画面と検証の記録は[docs/verification/ART_UPGRADE.md](docs/verification/ART_UPGRADE.md)を参照してください。

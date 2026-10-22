@@ -1,5 +1,5 @@
 {
-  "art": "Original code-authored animated pixel SVG actors and feedback; image_gen title art and archived static actors/bosses; code-authored chapter floors and glyphs.",
+  "art": "Local imagegen painted illustrations for actors, terrain, scenery and inventory; retained regional mesh poses; original code-authored pixel feedback. Earlier pixel actor SVGs retained as source history.",
   "font_source": "2026-10-14/game/assets/fonts/NotoSansCJKjp-Medium.otf",
   "files": {
     "game/assets/art/archer.svg": {
@@ -141,6 +141,38 @@
     "game/assets/art/pixel-fx.svg": {
       "bytes": 1939,
       "sha256": "bcf1491a3144716b1dce19f04c5f50c1963bd59287bf7e3365c4c3eb055a4c76"
+    },
+    "game/assets/art/bat-painted-r3.png": {
+      "bytes": 1791343,
+      "sha256": "94cc35bb4b645eed851a0ab4f385cacf16f87b20f8dfc60a8a9f74f4fce1943b"
+    },
+    "game/assets/art/chest-open-painted-r3.png": {
+      "bytes": 2165199,
+      "sha256": "13ab8d400faba91e0d22dfff4b939b42ff52f07e00119d379135325146722d43"
+    },
+    "game/assets/art/creatures-painted-r3.png": {
+      "bytes": 1712574,
+      "sha256": "3e511b21b030002a6de94aacaee62639a9206e05471e0201a2f2862fb24a1dbf"
+    },
+    "game/assets/art/items-painted-r3.png": {
+      "bytes": 1753486,
+      "sha256": "825c2d97dbc97f46dbdbb806df21eb02fed60977f4f5386d7baf71a0bf3139b6"
+    },
+    "game/assets/art/rewards-painted-r3.png": {
+      "bytes": 2648504,
+      "sha256": "3a5053e376fb965a1358e750fa9d622e0f8996181ebc76905a407e6de5be6c69"
+    },
+    "game/assets/art/scenery-painted-r3.png": {
+      "bytes": 2547557,
+      "sha256": "a90385d143c2b815744755e332e16d3d2126f2ebff81eb74d0033bd99988433e"
+    },
+    "game/assets/art/sentinel-painted-r3.png": {
+      "bytes": 1866790,
+      "sha256": "833fb015ac89ce411058228b04c028be4c57e19a9232c30829a3358145660fe8"
+    },
+    "game/assets/art/terrain-painted-r3.png": {
+      "bytes": 3818017,
+      "sha256": "4cfe9e2514b2b74f5b002a39a6add85b312fcf0a2ad5885dba2c1f51fc5c335f"
     }
   },
   "heading_font_source": "Google Fonts google/fonts at 6c4ff7159f6296ebd06b92d8010b086fcb795409/ofl/zenoldmincho",
