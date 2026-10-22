@@ -13,7 +13,7 @@ if(mode==='editor'||mode==='play'){
  const modes={import:['--editor','--import','--quit'],test:['--script','res://tests/run.gd'],build:['--export-release','Web']};
  if(!modes[mode])throw new Error('Unknown Godot mode: '+mode);
  mkdirSync(path.join(root,'dist'),{recursive:true});
- const tasks=mode==='test'?['run','profile_run','ui_run','audio_run','asset_run','renderer_geometry_run', 'renderer_cache_run'].map(name=>['--script','res://tests/'+name+'.gd']):[modes[mode]];
+ const tasks=mode==='test'?['run','profile_run','ui_run','audio_run','asset_run','renderer_geometry_run', 'renderer_cache_run','presentation_run','pixel_actors_run','feedback_run'].map(name=>['--script','res://tests/'+name+'.gd']):[modes[mode]];
  for(const task of tasks){
   const result=spawnSync(bin,['--headless','--path',project,...task],{encoding:'utf8',maxBuffer:30*1024*1024});
   const output=(result.stdout||'')+(result.stderr||'');

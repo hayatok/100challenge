@@ -3,6 +3,9 @@ extends Node2D
 
 const FloorArt := preload("res://scripts/campaign_floor.gd")
 const SceneryCache := preload("res://scripts/scenery_cache.gd")
+const PixelActors := preload("res://scripts/pixel_actors.gd")
+const Presentation := preload("res://scripts/presentation.gd")
+const PresentationFX := preload("res://scripts/presentation_fx.gd")
 const WHITE_DISC := preload("res://assets/art/white-disc.svg")
 const DISC_PADDING := 64.0 / 62.0
 const INK := Color("161d32")
@@ -27,13 +30,16 @@ var number_labels := 0
 var last_signature: Array = []
 var chapter_geometry: Dictionary = {}
 var scenery_cache
+var pixel_actors = PixelActors.new()
+var presentation = Presentation.new()
+var presentation_fx = PresentationFX.new()
+var camera_offset := Vector2.ZERO
 
 func _ready() -> void:
 	texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
 	var paths := {
-		"witch": "witch-r2.png", "hound": "hound-r2.png", "charger": "charger-r2.png", "archer": "archer-r2.png",
-		"garden_tile": "garden-r2.svg", "moon": "moon.svg", "keyart": "campaign-keyart.png",
-		"boss_thorn": "boss-thorn.png", "boss_mirror": "boss-mirror.png", "boss_bell": "boss-bell.png"
+		"witch": "witch-r2.png",
+		"garden_tile": "garden-r2.svg", "moon": "moon.svg", "keyart": "campaign-keyart.png"
 	}
 	for id in paths:
 		var path := "res://assets/art/%s" % str(paths[id])
@@ -55,16 +61,18 @@ func refresh() -> void:
 	if signature == last_signature:
 		return
 	last_signature = signature
+	presentation.update(run)
+	camera_offset = presentation_fx.camera_offset(presentation, run, reduced_motion)
 	screen = next_size
 	chapter_geometry = run.chapter_info()
 	scenery_cache.visible = run.state != "title"
 	if scenery_cache.visible:
 		scenery_cache.select_chapter(int(run.chapter), chapter_geometry, textures)
-		scenery_cache.position = -run.player + screen * Vector2(0.5, 0.52)
+		scenery_cache.position = -run.player + screen * Vector2(0.5, 0.52) + camera_offset
 	queue_redraw()
 
 func world(at: Vector2) -> Vector2:
-	return at - run.player + screen * Vector2(0.5, 0.52)
+	return at - run.player + screen * Vector2(0.5, 0.52) + camera_offset
 
 func _draw() -> void:
 	if run == null:
@@ -88,6 +96,8 @@ func _draw() -> void:
 		actors.append({"type": "chest", "position": chest.position, "data": chest})
 	for enemy in run.enemies:
 		actors.append({"type": "enemy", "position": enemy.position, "data": enemy})
+	for corpse in presentation.deaths:
+		actors.append({"type": "death", "position": corpse.position, "data": corpse})
 	if run.echo_active:
 		actors.append({"type": "echo", "position": run.echo})
 	actors.append({"type": "player", "position": run.player})
@@ -100,6 +110,8 @@ func _draw() -> void:
 				_draw_chest(actor.data)
 			"enemy":
 				_draw_enemy(actor.data)
+			"death":
+				_draw_death(actor.data)
 			_:
 				_draw_witch(world(actor.position), actor.type == "echo", 82.0)
 	for shot in run.projectiles:
@@ -108,6 +120,7 @@ func _draw() -> void:
 	var start := maxi(0, run.effects.size() - MAX_EFFECTS)
 	for i in range(run.effects.size() - 1, start - 1, -1):
 		_draw_effect(run.effects[i])
+	presentation_fx.draw_world(self, presentation, run, reduced_motion)
 	_draw_wayfinding()
 	# Hostile intent and its live damage area always sit above friendly spells.
 	for enemy in run.enemies:
@@ -115,6 +128,7 @@ func _draw() -> void:
 	for hazard in run.hazards:
 		_draw_hazard(hazard)
 	_draw_vignette()
+	presentation_fx.draw_screen(self, presentation, run, reduced_motion)
 
 func _draw_title_art() -> void:
 	draw_rect(Rect2(Vector2.ZERO, screen), Color("0d1724"))
@@ -179,7 +193,10 @@ func _draw_witch(at: Vector2, is_echo: bool, size: float) -> void:
 			facing = signf(run.echo.x - old_position.x)
 	if not is_echo and run.invulnerable > 0:
 		tint = Color(1.35, 0.85, 0.75) if reduced_motion else Color(1.5, 1.2, 1.1, 0.73 + sin(run.elapsed * 32) * 0.16)
-	if textures.has("witch"):
+	if run.state != "title" and size < 100:
+		var pose: Dictionary = presentation.echo_pose if is_echo else presentation.player_pose
+		pixel_actors.draw_actor(self, at, "witch", size, pose, tint, reduced_motion)
+	elif textures.has("witch"):
 		draw_set_transform(at + Vector2(0, bob), tilt, Vector2(facing, 1))
 		draw_texture_rect(textures.witch, Rect2(Vector2(-size * 0.5, -size * 0.87), Vector2.ONE * size), false, tint)
 		draw_set_transform(Vector2.ZERO)
@@ -193,18 +210,14 @@ func _draw_enemy(enemy: Dictionary) -> void:
 	if not _on_screen(at, 240 if boss else 100):
 		return
 	var kind := str(enemy.kind)
-	var art_kind := kind
 	var size := 64.0
 	match kind:
 		"charger", "sentinel":
 			size = 86
-			art_kind = "charger"
 		"archer", "wisp":
 			size = 76
-			art_kind = "archer"
 		"bat":
 			size = 53
-			art_kind = "hound"
 	if boss:
 		size = 210 if kind == "boss_thorn" else 198 if kind == "boss_mirror" else 224
 	var elite := bool(enemy.get("elite", false))
@@ -215,8 +228,6 @@ func _draw_enemy(enemy: Dictionary) -> void:
 		alpha = clampf(1.0 - float(enemy.get("timer", 0)) / maxf(0.01, float(enemy.get("arrival_duration", 0.9))), 0.20, 1)
 		_elliptic_arc(at + Vector2(0, 7), Vector2(size * 0.31, size * 0.12), 0, TAU, Color(DANGER, 0.40), 1.5)
 	_ellipse(at + Vector2(0, 10), Vector2(size * 0.30, 9 if boss else 7), Color(0, 0.01, 0.025, 0.50 * alpha))
-	if kind == "bat":
-		_draw_bat_wings(at, size, alpha, float(enemy.id))
 	var tint := Color(1, 1, 1, alpha)
 	if kind == "wisp":
 		tint = Color(0.75, 0.89, 1.06, alpha)
@@ -224,28 +235,8 @@ func _draw_enemy(enemy: Dictionary) -> void:
 		tint = Color(0.82, 0.88, 0.86, alpha)
 	if float(enemy.get("flash", 0)) > 0 and not reduced_motion:
 		tint = Color(1.65, 1.35, 1.20, alpha)
-	if textures.has(art_kind):
-		var tilt := 0.0
-		var stretch := Vector2.ONE
-		if not reduced_motion:
-			tilt = sin(run.elapsed * (2.0 if boss else 7.0) + float(enemy.id)) * (0.012 if boss else 0.025)
-			if enemy.phase == "warning" and not boss:
-				stretch = Vector2(1.08, 0.94)
-			elif enemy.phase == "rush":
-				stretch = Vector2(1.12, 0.90)
-		var flip := -1.0 if (enemy.position as Vector2).x > run.player.x else 1.0
-		draw_set_transform(at, tilt, Vector2(flip, 1) * stretch)
-		var texture: Texture2D = textures[art_kind]
-		var image_size := texture.get_size() * (size / maxf(texture.get_width(), texture.get_height()))
-		var top_left := Vector2(-image_size.x * 0.5, -image_size.y + 12) if boss else Vector2(-size * 0.5, -size * 0.70)
-		draw_texture_rect(texture, Rect2(top_left, image_size), false, tint)
-		draw_set_transform(Vector2.ZERO)
-	elif boss:
-		_draw_boss_fallback(at, kind, size, alpha)
-	if kind == "sentinel":
-		_draw_sentinel_shield(at + Vector2(-15, -3), alpha)
-	elif kind == "wisp":
-		_draw_lantern(at + Vector2(20, 2), 0.68, Color(DANGER, alpha))
+	var pose: Dictionary = presentation.enemy_poses.get(int(enemy.id), {})
+	pixel_actors.draw_actor(self, at, kind, size, pose, tint, reduced_motion)
 	if elite:
 		_draw_elite_crown(at - Vector2(0, size * 0.70), alpha)
 	if boss and int(enemy.get("phase_index", 1)) >= 2:
@@ -263,23 +254,37 @@ func _draw_enemy(enemy: Dictionary) -> void:
 		draw_line(at + Vector2(-18, y), at + Vector2(18, y), INK, 5)
 		draw_line(at + Vector2(-18, y), at + Vector2(-18 + 36 * clampf(float(enemy.hp) / float(enemy.max_hp), 0, 1), y), DANGER, 3)
 
-func _draw_bat_wings(at: Vector2, size: float, alpha: float, seed_value: float) -> void:
-	var lift := 0.0 if reduced_motion else sin(run.elapsed * 11 + seed_value) * 3
-	for side in [-1.0, 1.0]:
-		var wing := PackedVector2Array([at + Vector2(side * 8, -10), at + Vector2(side * size * 0.56, -26 - lift), at + Vector2(side * size * 0.43, -2), at + Vector2(side * size * 0.30, -7), at + Vector2(side * size * 0.22, 3), at + Vector2(side * 7, -2)])
-		draw_colored_polygon(wing, Color("6e607e") * Color(1, 1, 1, alpha))
-		var border := wing.duplicate()
-		border.append(wing[0])
-		draw_polyline(border, Color(0.62, 0.55, 0.68, alpha), 1.3, true)
+func _draw_death(corpse: Dictionary) -> void:
+	var at := world(corpse.get("position", Vector2.ZERO))
+	if not _on_screen(at, 250.0):
+		return
+	var pose: Dictionary = corpse.get("pose", {}).duplicate()
+	pose.animation = "death"
+	pose.time = float(corpse.get("age", 0.0))
+	pose.phase_progress = clampf(pose.time / maxf(0.01, float(corpse.get("duration", 0.45))), 0.0, 1.0)
+	var tint := Color(0.85, 0.90, 1.0, 1.0 - pose.phase_progress * 0.45)
+	pixel_actors.draw_actor(self, at, str(corpse.get("kind", "hound")), float(corpse.get("size", 64.0)), pose, tint, reduced_motion)
 
-func _draw_sentinel_shield(at: Vector2, alpha: float) -> void:
-	var shield := PackedVector2Array([at + Vector2(-15, -22), at + Vector2(13, -22), at + Vector2(15, 7), at + Vector2(0, 20), at + Vector2(-17, 7)])
-	draw_colored_polygon(shield, Color(0.31, 0.37, 0.38, alpha))
-	var border := shield.duplicate()
-	border.append(shield[0])
-	draw_polyline(border, Color(0.75, 0.76, 0.65, alpha), 2, true)
-	draw_line(at + Vector2(-1, -15), at + Vector2(-1, 13), Color(DANGER, alpha * 0.75), 2, true)
-	draw_line(at + Vector2(-10, -5), at + Vector2(8, -5), Color(DANGER, alpha * 0.75), 2, true)
+func _pose_snapshot(kind: String, pose: Dictionary) -> Dictionary:
+	var frame: Dictionary = pixel_actors.frame_info(kind, pose, reduced_motion)
+	return {"kind": kind, "animation": str(pose.get("animation", "idle")), "frame": int(frame.index), "gait": float(pose.get("gait", 0.0)), "cast": float(pose.get("cast", 0.0)), "hit": float(pose.get("hit", 0.0)), "facing": int(pose.get("facing", 1)), "moving": bool(pose.get("moving", false))}
+
+func motion_snapshot() -> Dictionary:
+	var enemy_samples: Array = []
+	for enemy in run.enemies:
+		if enemy_samples.size() >= 11 and not bool(enemy.get("boss", false)):
+			continue
+		if enemy_samples.size() >= 12:
+			break
+		var pose: Dictionary = presentation.enemy_poses.get(int(enemy.id), {})
+		var sample := _pose_snapshot(str(enemy.kind), pose)
+		sample.id = int(enemy.id)
+		enemy_samples.append(sample)
+	var recent: Array = []
+	for i in range(maxi(0, presentation.events.size() - 8), presentation.events.size()):
+		var event: Dictionary = presentation.events[i]
+		recent.append({"kind": str(event.kind), "serial": int(event.get("serial", 0)), "age": float(event.age), "echo": bool(event.get("echo", false))})
+	return {"clock": float(run.elapsed), "generation": int(presentation.generation), "serial": int(presentation.latest_serial), "player": _pose_snapshot("witch", presentation.player_pose), "echo": _pose_snapshot("witch", presentation.echo_pose), "enemies": enemy_samples, "event_count": presentation.events.size(), "event_limit": presentation.MAX_EVENTS, "death_count": presentation.deaths.size(), "death_limit": presentation.MAX_DEATHS, "recent_events": recent, "actors": pixel_actors.diagnostics(), "fx": presentation_fx.diagnostics(), "camera": {"x": camera_offset.x, "y": camera_offset.y}}
 
 func _draw_elite_crown(at: Vector2, alpha: float) -> void:
 	var crown := PackedVector2Array([at + Vector2(-15, 6), at + Vector2(-18, -8), at + Vector2(-6, -2), at + Vector2(0, -15), at + Vector2(6, -2), at + Vector2(18, -8), at + Vector2(15, 6)])
@@ -288,33 +293,6 @@ func _draw_elite_crown(at: Vector2, alpha: float) -> void:
 	border.append(crown[0])
 	draw_polyline(border, Color(0.94, 0.74, 0.66, alpha), 1.4, true)
 	_star(at + Vector2(0, 1), 3, Color(PAPER, alpha))
-
-func _draw_boss_fallback(at: Vector2, kind: String, size: float, alpha: float) -> void:
-	# Designed creature silhouettes remain legible before optional art is imported.
-	if kind == "boss_thorn" and textures.has("charger"):
-		draw_texture_rect(textures.charger, Rect2(at + Vector2(-size * 0.5, -size * 0.72), Vector2.ONE * size), false, Color(0.87, 0.97, 0.85, alpha))
-		for side in [-1.0, 1.0]:
-			var branches := PackedVector2Array([at + Vector2(side * 34, -55), at + Vector2(side * 67, -102), at + Vector2(side * 58, -131), at + Vector2(side * 80, -111), at + Vector2(side * 94, -127)])
-			draw_polyline(branches, Color(THORN, alpha), 4, true)
-	elif kind == "boss_mirror" and textures.has("archer"):
-		draw_texture_rect(textures.archer, Rect2(at + Vector2(-size * 0.5, -size * 0.76), Vector2.ONE * size), false, Color(0.84, 0.88, 1.0, alpha))
-		for side in [-1.0, 1.0]:
-			var plate_at := at + Vector2(side * 70, -66)
-			var plate := PackedVector2Array([plate_at + Vector2(0, -42), plate_at + Vector2(20, 0), plate_at + Vector2(0, 42), plate_at + Vector2(-20, 0), plate_at + Vector2(0, -42)])
-			draw_colored_polygon(plate, Color(0.36, 0.50, 0.64, alpha))
-			draw_polyline(plate, Color(BLUE, alpha), 3, true)
-	else:
-		var bell := PackedVector2Array([at + Vector2(-76, 17), at + Vector2(-57, -11), at + Vector2(-49, -90), at + Vector2(-28, -124), at + Vector2(26, -124), at + Vector2(50, -90), at + Vector2(59, -11), at + Vector2(77, 17), at + Vector2(60, 29), at + Vector2(-59, 29)])
-		draw_colored_polygon(bell, Color(0.40, 0.35, 0.26, alpha))
-		var border := bell.duplicate()
-		border.append(bell[0])
-		draw_polyline(border, Color(0.79, 0.70, 0.49, alpha), 4, true)
-		for side in [-1.0, 1.0]:
-			draw_line(at + Vector2(side * 26, -103), at + Vector2(side * 35, 4), Color(GOLD, alpha * 0.5), 3, true)
-		draw_line(at + Vector2(-55, 10), at + Vector2(56, 10), Color(GOLD, alpha), 3, true)
-		_disc(at + Vector2(0, 30), 12, Color(0.76, 0.58, 0.39, alpha))
-		for side in [-1.0, 1.0]:
-			draw_line(at + Vector2(side * 17, -70), at + Vector2(side * 30, -79), Color(DANGER, alpha), 4, true)
 
 func _draw_telegraph(enemy: Dictionary) -> void:
 	if enemy.get("phase", "") != "warning" or bool(enemy.get("boss", false)):
@@ -695,14 +673,9 @@ func _draw_effect(effect: Dictionary) -> void:
 			draw_string_outline(font, at, str(effect.get("text", "")), HORIZONTAL_ALIGNMENT_LEFT, -1, 16, 3, Color(INK, alpha))
 			draw_string(font, at, str(effect.get("text", "")), HORIZONTAL_ALIGNMENT_LEFT, -1, 16, color)
 		"vanish":
-			for i in range(5):
-				var direction := Vector2.from_angle(TAU * float(i) / 5)
-				var drift := 5.0 if reduced_motion else progress * 15
-				draw_line(at + direction * (5 + drift), at + direction * (9 + drift), Color(GOLD, alpha * 0.75), 1.8, true)
+			# The retained death sprite and pixel debris carry this feedback.
+			return
 		"resonance":
-			var radius := 30.0 if reduced_motion else 18.0 + progress * 36
-			draw_arc(at, radius, 0, PI, 32, Color(GOLD, alpha * 0.90), 2.5, true)
-			draw_arc(at, radius, PI, TAU, 32, Color(BLUE, alpha * 0.90), 2.5, true)
 			if resonance_labels < 3:
 				resonance_labels += 1
 				var label_at := at + Vector2(-36, -44 if reduced_motion else -38 - progress * 10)

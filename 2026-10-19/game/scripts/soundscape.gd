@@ -13,6 +13,8 @@ var music_volume := 0.65
 var sfx_volume := 0.8
 var scene_key := "garden"
 var themes: Dictionary = {}
+var _feedback_times: Dictionary = {}
+var _feedback_clock := -1.0
 
 func _ready() -> void:
 	for i in range(10):
@@ -37,6 +39,11 @@ func _ready() -> void:
 	sounds.evolution = _chord([392.0, 523.3, 659.2, 783.9, 1046.5], 0.95)
 	sounds.boss = _chord([65.4, 98.0, 130.8], 0.8)
 	sounds.chapter = _chord([392.0, 493.9, 587.3, 783.9], 0.78)
+	sounds.impact = _percussion(0.075, 0.32, 720.0)
+	sounds.shatter = _percussion(0.16, 0.24, 1760.0)
+	sounds.footstep = _percussion(0.065, 0.11, 140.0)
+	sounds.shield = _chord([698.5, 1046.5, 1396.9], 0.28)
+	sounds.boss_phase = _chord([73.4, 110.0, 146.8, 220.0], 0.65)
 	for id in ["garden", "mirror", "bell", "boss"]:
 		var stream := load("res://assets/audio/theme-%s.wav" % id) as AudioStreamWAV
 		if stream != null:
@@ -57,7 +64,32 @@ func play_event(event: String) -> void:
 	next_player = (next_player + 1) % players.size()
 	player.stream = sounds[event]
 	player.pitch_scale = 1.0
+	var attenuation := -5.0 if event == "impact" else -4.0 if event == "shatter" else -14.0 if event == "footstep" else 0.0
+	player.volume_db = linear_to_db(maxf(0.0001, sfx_volume)) - 17.0 + attenuation
 	player.play()
+
+func play_feedback(event: Dictionary, clock: float) -> void:
+	if clock < _feedback_clock:
+		_feedback_times.clear()
+	_feedback_clock = clock
+	var kind := str(event.get("kind", ""))
+	var cue := ""
+	var interval := 0.14
+	if kind == "hit" and str(event.get("target", "enemy")) == "enemy":
+		cue = "impact"
+	elif kind == "kill" and not bool(event.get("boss", false)):
+		cue = "shatter"
+		interval = 0.20
+	elif kind == "footstep" and not bool(event.get("echo", false)):
+		cue = "footstep"
+		interval = 0.23
+	elif kind == "boss_phase":
+		cue = "boss_phase"
+		interval = 2.0
+	if cue.is_empty() or clock - float(_feedback_times.get(cue, -100.0)) < interval:
+		return
+	_feedback_times[cue] = clock
+	play_event(cue)
 
 func set_enabled(value: bool) -> void:
 	enabled = value
@@ -117,6 +149,8 @@ func pause_all(paused: bool) -> void:
 
 func stop_all() -> void:
 	music_started = false
+	_feedback_times.clear()
+	_feedback_clock = -1.0
 	if is_instance_valid(music):
 		music.stop()
 	for player in players:
@@ -186,4 +220,25 @@ func _night_motif() -> AudioStreamWAV:
 	stream.data = pcm
 	stream.loop_mode = AudioStreamWAV.LOOP_FORWARD
 	stream.loop_end = samples
+	return stream
+
+func _percussion(seconds: float, gain: float, frequency: float) -> AudioStreamWAV:
+	var rate := 22050
+	var samples := int(rate * seconds)
+	var pcm := PackedByteArray()
+	pcm.resize(samples * 2)
+	for i in range(samples):
+		var time := float(i) / float(rate)
+		var progress := float(i) / float(samples)
+		var pseudo := sin(float(i) * 12.9898 + frequency) * 43758.5453
+		var noise: float = (pseudo - floorf(pseudo)) * 2.0 - 1.0
+		var fall := pow(1.0 - progress, 3.0) * minf(1.0, progress * 70.0)
+		var pitch := frequency * (1.0 - progress * 0.55)
+		var tonal := sin(TAU * pitch * time) * 0.28 + sin(TAU * pitch * 2.37 * time) * 0.12
+		var value: float = (noise * 0.43 + tonal) * fall * gain
+		pcm.encode_s16(i * 2, int(clampf(value, -1.0, 1.0) * 32767.0))
+	var stream := AudioStreamWAV.new()
+	stream.format = AudioStreamWAV.FORMAT_16_BITS
+	stream.mix_rate = rate
+	stream.data = pcm
 	return stream

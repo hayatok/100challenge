@@ -1,0 +1,125 @@
+{
+  "base_commit": "6fa3cc6c77a9772908ab549df2eb8b0031f76ccd",
+  "built_utc": "2026-10-22T12:12:36.045012+00:00",
+  "engine": "Godot 4.7.2.stable.official.ed1daf0bf",
+  "renderer": "Compatibility single-thread local macOS Web export",
+  "note": "This PCK is frozen during Web checks. CI Linux export and deployment are separate evidence layers. Test scripts are excluded from the PCK.",
+  "artifacts": {
+    "credits.html": {
+      "bytes": 1708,
+      "sha256": "bec2793170f386b7cb62537ff0fe7b4f6a62f5bbbf19fe1f60d8a4d69318eef9"
+    },
+    "echo-witch-cover.png": {
+      "bytes": 1134984,
+      "sha256": "a2192efb75d5ad9118208890836fa04fafa2843de2c78b50afce834a4eae89a9"
+    },
+    "echo-witch-cover.svg": {
+      "bytes": 5519,
+      "sha256": "6f59b18dcb1108ead69b4af8944887d3e9a0333845b209956b2d1c7a197768ee"
+    },
+    "index.apple-touch-icon.png": {
+      "bytes": 11944,
+      "sha256": "01d4f63e525941e06ce74f5187dad030d20a8d52a07ce365ae4e94af97a3b1f5"
+    },
+    "index.audio.position.worklet.js": {
+      "bytes": 2973,
+      "sha256": "be33985bc7160d6bf9646f259cd86b259cd67b02ccb297ee5c44f8ac84327bc8"
+    },
+    "index.audio.worklet.js": {
+      "bytes": 7298,
+      "sha256": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3"
+    },
+    "index.html": {
+      "bytes": 4735,
+      "sha256": "919b63408c76895c9f168596f6211663be984ab7e208ad4c6d419eacdbe0f851"
+    },
+    "index.icon.png": {
+      "bytes": 5700,
+      "sha256": "ad3c35ad0facf487c618204bd98db543034fc95224eadc7f08c7a9ff38d5b3b5"
+    },
+    "index.js": {
+      "bytes": 279815,
+      "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba"
+    },
+    "index.pck": {
+      "bytes": 33705516,
+      "sha256": "af8968a3a09dfdd3c0918f155035b27e8e8d63eecc9dafa5842cb47d72ed4ccb"
+    },
+    "index.png": {
+      "bytes": 21443,
+      "sha256": "3cb4495c0b98dfbe4b663cbf2b6836473572339beb66d902367893162a70be0e"
+    },
+    "index.wasm": {
+      "bytes": 39514754,
+      "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0"
+    },
+    "licenses/GODOT-LICENSE.txt": {
+      "bytes": 78778,
+      "sha256": "0fe7d25682d7102d5ddd5d0b7af97efbebd8b1e219ccd871a5cf66d883b9eef9"
+    },
+    "licenses/NOTO-OFL.txt": {
+      "bytes": 4301,
+      "sha256": "6a73f9541c2de74158c0e7cf6b0a58ef774f5a780bf191f2d7ec9cc53efe2bf2"
+    },
+    "licenses/ZEN-OFL.txt": {
+      "bytes": 4399,
+      "sha256": "469d214f9842809659c827b7f2adaf40ec0df6efdd5fe18b7127665c32aafaec"
+    }
+  },
+  "source_sha256": {
+    "game/scripts/presentation_fx.gd": "91e00d4a9462024c0ae25a5bd7e9f56774af2c4054f088ce7c7d2321395f4fe5",
+    "game/scripts/spell_glyph.gd": "9207756ef2e0da2184a992320c910e3350eacd057b1903c5cd9cebfb5bffe338",
+    "game/scripts/campaign_floor.gd": "22b213fd2a3b359154a2a593afba46c8c835267ec441b494e07b630226c61a5e",
+    "game/scripts/campaign.gd": "747be49754119bd3c5e589ab3d4b1ae2c1b8a37c72ac97e0226ab21718e2d978",
+    "game/scripts/garden_view.gd": "33ba1c741bd0a79699f8b193cfd87906205e537116925a5f23b064fa72501d9a",
+    "game/scripts/presentation.gd": "74f7b66dfca0ddd57059ea7c74ef89617a4d8e0172388f231f65f4faeb5d6216",
+    "game/scripts/soundscape.gd": "83125de2546d8f4463fc0b3116f648dc3a0313e79445595e4e7923c6ed4b11bb",
+    "game/scripts/scenery_cache.gd": "613560030b92772e77485c6c04bd3383fb1edbd3bfe58493985da9aa1ee69104",
+    "game/scripts/book_frame.gd": "808653c04d9395b166d6b562a9685e68b1784aafad4079a05455e2011413c65f",
+    "game/scripts/main.gd": "713f0acef824ad06ada9f627a3941a9ebc997087d7df67492be229ff56be37a1",
+    "game/scripts/pixel_actors.gd": "34b14754f9de8ac0f6af3b821f895c5ec0b026eea9a90a0b3a102fb9f8167d9d",
+    "game/scripts/arena_grid.gd": "93c8b2cc62992ab7c6d5ee48af278f7fdcc6aee779e2f545572e8e5e48726e72",
+    "game/scripts/spellbook.gd": "953164cfdb0afacf17744ec17b491ad53e10231931cfe032f2c6b9f1aaed825a",
+    "game/scripts/run_model.gd": "ca3adfeb0bdc1550ced0416816cf223d9c90924a5a3b5cf4f3f85ec6b11a85e5",
+    "game/scripts/echo_timeline.gd": "72bfe89bf9c0a7e4e5109183e40b0baccde3fe6655427a8fca627f51a8134a6c",
+    "game/scripts/profile.gd": "bc565831a1786771fa197989a3130ff35e472256287ed32b2505f9b44d5b5e71",
+    "game/scripts/interface.gd": "92f7caf08432a0b066292e8031bc157196a52386dbb9353f98fba149e94ad396",
+    "game/project.godot": "39684bfe71a961fd3dc95754a0b2c6c320f733b42450848b0fbada4389689a69",
+    "game/export_presets.cfg": "b4e7faedcd96baf52c4992376e60db72bf29a0434e63a956950917006364663d",
+    "game/web_shell.html": "9cb71fde176894b2228677995ead41a8e57e262cd9916ad99a8bb17af6b345e1",
+    "docs/assets-manifest.json": "f0c8ca147317b55b58dfb75b7c66e650d23f5fc804c2b9fa95ede6a8578b9587",
+    "game/assets/art/pixel-actors-archer.svg": "45ff9fac8436261af93af94c6e54fba918f02f6915a74d4302861ce28cf14d84",
+    "game/assets/art/pixel-actors-bat.svg": "2fe6d7db65381e55e74826d9120f922baa7512355fa30e3e49d4d4b9fd7c8e4b",
+    "game/assets/art/pixel-actors-boss-bell.svg": "0eac812f78e7fa73000f9232b4c9c753a77dc669a86c8e6a54f528c0d2774dd1",
+    "game/assets/art/pixel-actors-boss-mirror.svg": "5458f1000cb69254bb6fdf97f52fa6bbcbb637c7d2757877e626bfd546f8ee1a",
+    "game/assets/art/pixel-actors-boss-thorn.svg": "bbc9039ffea991182f9e49916ed924d29eb68b84fe4c50ba6a9e355134f204ac",
+    "game/assets/art/pixel-actors-charger.svg": "3a496e1d46189070c6d67ae854586d86fe1f469db853d589e8a63d3550520465",
+    "game/assets/art/pixel-actors-hound.svg": "dc3ca0f212f009f675b8fd9651b2abd5953457660696fdadf3906154ebbb8b85",
+    "game/assets/art/pixel-actors-sentinel.svg": "bf2fb25d7308ba90befe18967e1fc8f2df56be7053fa191d25b3993e78301ebe",
+    "game/assets/art/pixel-actors-wisp.svg": "375b0fe4cf9ae85344e9776b4051c9fe941409a9b5e403e2a8aad0f514d2c1e4",
+    "game/assets/art/pixel-actors-witch.svg": "23202a14aa2b1e09183d1a723a623cd6414662de18d33876d3e98b3644657ee4",
+    "game/assets/art/pixel-fx.svg": "bcf1491a3144716b1dce19f04c5f50c1963bd59287bf7e3365c4c3eb055a4c76"
+  },
+  "verification_sha256": {
+    "game/tests/ui_run.gd": "4ae87b759a402198cfc0fcf40bac5b4ef58afe2e1233d0da2f84b06c0ad6a359",
+    "game/tests/simulate_campaign.gd": "145cd94089778c0be0bf45cc0f12d086bf0e9959d7024f9f02859e0d036cb68e",
+    "game/tests/motion_render_run.gd": "8adc7e8bfdc85ef99ece9f278d8ebf3f02087c901bf3b0b8d77c425b7d135c24",
+    "game/tests/feedback_run.gd": "2bce409c99c3e3aa4ebdd44a71c5943e9b90e45b29551da46ae4bb0830442c61",
+    "game/tests/asset_run.gd": "3404c44fb4751de61529f4da0082059ce094ac639b2fb7cce4870cf5d2b97091",
+    "game/tests/renderer_geometry_run.gd": "89c8d9d0a24fa0664b1245a8d989b44ddd5dfbc6a0dba97398d2595f4c46dd23",
+    "game/tests/campaign_simulation.gd": "ac6eeffcf7a982a6ce04d47cd51620110ca47d56032559bb9a81079ab8939463",
+    "game/tests/pixel_actors_run.gd": "f2e46466a19707c975d380733b09e3040a08424c8e54b2b968d1e78d2ee3c63c",
+    "game/tests/run.gd": "68f28b016fd0c2fc56e70cf82edbd20113a5f28ca138fc55bec5ec29056802ae",
+    "game/tests/renderer_cache_run.gd": "6e67e7de14adfc50a7c8abcd0e923691143e5ba08d0b7921aa73bb0f27ca53cc",
+    "game/tests/audio_run.gd": "28bf8a164feda7fc708ed80605c01f3e44b5e5563524593fb80c0894397ded0e",
+    "game/tests/presentation_run.gd": "63e6f6616a2f3baf634aa6498682fa102c8792d1c8147b04ccfb571d583dc1c7",
+    "game/tests/profile_run.gd": "b761c808874b26a6db328ec9f2e441ae2d0ec7f34d37095f4b441488841b6e18",
+    "scripts/motion-qa.mjs": "f86f8ee34f9e9da4e364fa7a8f09e6e8a102166cc8316a4c8ac69f6ede24a823",
+    "scripts/browser-qa.mjs": "21cfd230dda681e5d0b56a1322a9a9803109f6f18c1f373370e6cba932dd6d6a",
+    "scripts/resize-qa.mjs": "0fd4c1843be1d48ce43e60393711bfb62870b09018103469aa072ba56b7e4ecc",
+    "scripts/edge-qa.mjs": "fe34fcc2997cc54d07490f2004fd52d36d5871453833f85b0825e4224a5a7db8",
+    "scripts/storage-qa.mjs": "5c193c06992c2b99ed3300915db0d3a0943d2591b78f306430d7b607a26c0144",
+    "scripts/generate-pixel-actors.py": "7484a5a66659e1d922a5804e2adda1d266f451adedf57f525c4a43edf2ad23aa",
+    "scripts/godot.mjs": "f78e8bd77adf06f76e94c21b70930ba0b47f285d19de5d63b5f60e8132791d40"
+  }
+}

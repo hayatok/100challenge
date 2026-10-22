@@ -1,0 +1,113 @@
+{
+  "skill": "yomiyasu 2.0.1",
+  "originals": "Saved under local ignored .yomiyasu/motion/before; originals for existing app files correspond to base commit 6fa3cc6. Original PR and Issue bodies were fetched before updating.",
+  "checks": [
+    "original lint",
+    "rewrite diff or composition material comparison",
+    "full changed-text reading and manual evidence comparison",
+    "run",
+    "verify actual files"
+  ],
+  "not_a_quality_score": true,
+  "manual_decisions": [
+    "README: name walking, casting and delayed echo directly.",
+    "Verification report: remove unnecessary commas, fix the subject of the input test, and use actual boss names from campaign.gd and spellbook.gd.",
+    "Keep actual counts, timestamps, pauses, bounds and unverified hardware/playtest limits. Numeric material candidates caused by Japanese units and rounded MiB values were checked against logs and raw data.",
+    "Keep game captions that fit the book setting; GDScript colons and code constants are syntax, not Japanese prose candidates.",
+    "Preserve the historical Issue plan and existing unrelated prose; repeated sentence endings in those sections are not rewritten.",
+    "PR: preserve the explicit lack of evidence for zero memory growth and unlimited repeated-run stability."
+  ],
+  "records": [
+    {
+      "path": "AGENTS.md",
+      "sha256": "13d778ec7e155852e73619a32bb4b4e0a27c60cc1e08a420ccd64f66fd4eed24",
+      "mode": "rewrite",
+      "run_id": "20261022T121326Z-7cf7a283",
+      "run_status": "executed",
+      "verify_status": "executed",
+      "status_line": "yomiyasu-check: executed via=verify run=20261022T121326Z-7cf7a283 attempt=1 final=sha256:13d778ec7e15 mode=rewrite doc_type=manual reader=expert checks=lint,diff meaning_risk=1 replay=skipped"
+    },
+    {
+      "path": "README.md",
+      "sha256": "018baca4de56ec5691c4e9c6971170d665c9e89fca0c6e30c896a73ed5bc612d",
+      "mode": "rewrite",
+      "run_id": "20261022T121327Z-8e00a3b0",
+      "run_status": "executed",
+      "verify_status": "executed",
+      "status_line": "yomiyasu-check: executed via=verify run=20261022T121327Z-8e00a3b0 attempt=2 final=sha256:018baca4de56 mode=rewrite doc_type=manual reader=expert checks=lint,diff meaning_risk=3 replay=skipped"
+    },
+    {
+      "path": "docs/ART_DIRECTION.md",
+      "sha256": "f87cd6106156011a706bd2fe8a9b4a27d39f436a264d2b55a286f3ce1abbd897",
+      "mode": "rewrite",
+      "run_id": "20261022T121327Z-9f44a091",
+      "run_status": "executed",
+      "verify_status": "executed",
+      "status_line": "yomiyasu-check: executed via=verify run=20261022T121327Z-9f44a091 attempt=1 final=sha256:f87cd6106156 mode=rewrite doc_type=manual reader=expert checks=lint,diff meaning_risk=5 replay=skipped"
+    },
+    {
+      "path": "docs/ASSETS.md",
+      "sha256": "265a14473a2dcc6be98a6bc0888ee39bfc9ad1600902caf95e766873c5d80048",
+      "mode": "rewrite",
+      "run_id": "20261022T121328Z-52c51bb2",
+      "run_status": "executed",
+      "verify_status": "executed",
+      "status_line": "yomiyasu-check: executed via=verify run=20261022T121328Z-52c51bb2 attempt=1 final=sha256:265a14473a2d mode=rewrite doc_type=manual reader=expert checks=lint,diff meaning_risk=5 replay=skipped"
+    },
+    {
+      "path": "docs/MOTION.md",
+      "sha256": "de375bc661f2804b145aa0fdb17d58275ebbf4b8a959f860677266f1fd069b2b",
+      "mode": "compose",
+      "run_id": "20261022T121328Z-9a053cc4",
+      "run_status": "executed",
+      "verify_status": "executed",
+      "status_line": "yomiyasu-check: executed via=verify run=20261022T121328Z-9a053cc4 attempt=1 final=sha256:de375bc661f2 mode=compose doc_type=manual reader=expert checks=lint,diff,materials meaning_risk=0 replay=skipped"
+    },
+    {
+      "path": "game/scripts/presentation_fx.gd",
+      "sha256": "91e00d4a9462024c0ae25a5bd7e9f56774af2c4054f088ce7c7d2321395f4fe5",
+      "mode": "compose",
+      "run_id": "20261022T121329Z-ea72d25d",
+      "run_status": "executed",
+      "verify_status": "executed",
+      "status_line": "yomiyasu-check: executed via=verify run=20261022T121329Z-ea72d25d attempt=1 final=sha256:91e00d4a9462 mode=compose doc_type=manual reader=expert checks=lint,materials meaning_risk=336 replay=skipped"
+    },
+    {
+      "path": "docs/verification/MOTION.md",
+      "sha256": "19fc6b4581487d90cb28a408bedf600b72afc02b38c739e91dc7223bcab6294b",
+      "mode": "compose",
+      "run_id": "20261022T122522Z-be4d765b",
+      "run_status": "executed",
+      "verify_status": "executed",
+      "status_line": "yomiyasu-check: executed via=verify run=20261022T122522Z-be4d765b attempt=2 final=sha256:19fc6b458148 mode=compose doc_type=manual reader=expert checks=lint,materials meaning_risk=123 replay=skipped"
+    },
+    {
+      "path": ".cache/motion/pr-body.md",
+      "sha256": "3946de71c2ad8b88b036bae2aa8b1052d1fb87175c5d331c026f1e1bb70685a7",
+      "mode": "rewrite",
+      "run_id": "20261022T122522Z-c50ef68d",
+      "run_status": "executed",
+      "verify_status": "executed",
+      "status_line": "yomiyasu-check: executed via=verify run=20261022T122522Z-c50ef68d attempt=2 final=sha256:3946de71c2ad mode=rewrite doc_type=pr reader=expert checks=lint,diff,materials meaning_risk=32 replay=skipped"
+    },
+    {
+      "path": ".cache/motion/issue-body.md",
+      "sha256": "6654ed8a9cf1261fa5d92c7e7323769286f18c776efe31ed9aab2266caf04180",
+      "mode": "rewrite",
+      "run_id": "20261022T122523Z-e88f49f5",
+      "run_status": "executed",
+      "verify_status": "executed",
+      "status_line": "yomiyasu-check: executed via=verify run=20261022T122523Z-e88f49f5 attempt=1 final=sha256:6654ed8a9cf1 mode=rewrite doc_type=pr reader=expert checks=lint,diff,materials meaning_risk=7 replay=skipped"
+    },
+    {
+      "path": ".cache/motion/pr-title.txt",
+      "sha256": "2ecedd1759cb9da7f4135d1e7726bbbe3e05d46cebbd77b65a391181d8523c41",
+      "mode": "rewrite",
+      "run_id": "20261022T122523Z-ffec0970",
+      "run_status": "executed",
+      "verify_status": "executed",
+      "status_line": "yomiyasu-check: executed via=verify run=20261022T122523Z-ffec0970 attempt=1 final=sha256:2ecedd1759cb mode=rewrite doc_type=pr reader=expert checks=lint,diff,materials meaning_risk=0 replay=skipped"
+    }
+  ],
+  "record_storage": "Full originals and tool records remain in the ignored local .yomiyasu/motion folder. This file records final file hashes and completed verification statuses."
+}

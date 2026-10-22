@@ -1,0 +1,419 @@
+{
+  "duration_seconds": 60,
+  "pause_seconds": 30,
+  "baseline_pck_sha256": "567c6a59fd3460fc431947e0a4282197e486f79f3437cfcb91bc7f06e93c45ff",
+  "motion_pck_sha256": "af8968a3a09dfdd3c0918f155035b27e8e8d63eecc9dafa5842cb47d72ed4ccb",
+  "note": "Independent real-input runs, not identical frame traces. Both finish after 60 game seconds. The 30-second periodic allocator and memory sample is near 33 game seconds, not at 60. Software WebGL; no physical GPU benchmark, no forced GC.",
+  "before_samples": [
+    {
+      "phase": "pause-start",
+      "elapsed": 2.56666666666666,
+      "chapter": 0,
+      "perf": {
+        "effects": 3,
+        "fps": 60,
+        "nodes": 80,
+        "objects": 1621,
+        "orphans": 0,
+        "projectiles": 0,
+        "resources": 31,
+        "static_bytes": 0,
+        "static_peak_bytes": 0
+      },
+      "js_heap": {
+        "usedSize": 13012944,
+        "totalSize": 20168704,
+        "embedderHeapUsedSize": 1764232,
+        "backingStorageSize": 69105563
+      },
+      "snapshot_chars": 6553,
+      "renderers": [
+        {
+          "pid": 32511,
+          "rss_kib": 190560
+        },
+        {
+          "pid": 32513,
+          "rss_kib": 101264
+        },
+        {
+          "pid": 32514,
+          "rss_kib": 703392
+        }
+      ],
+      "gpu_allocations": {
+        "buffers": {
+          "created": 7447,
+          "deleted": 4290
+        },
+        "vertex_arrays": {
+          "created": 5910,
+          "deleted": 4046
+        },
+        "syncs": {
+          "created": 502,
+          "deleted": 496
+        }
+      }
+    },
+    {
+      "phase": "pause-after-30s",
+      "elapsed": 2.56666666666666,
+      "chapter": 0,
+      "perf": {
+        "effects": 3,
+        "fps": 60,
+        "nodes": 80,
+        "objects": 1621,
+        "orphans": 0,
+        "projectiles": 0,
+        "resources": 31,
+        "static_bytes": 0,
+        "static_peak_bytes": 0
+      },
+      "js_heap": {
+        "usedSize": 11685272,
+        "totalSize": 15450112,
+        "embedderHeapUsedSize": 2839024,
+        "backingStorageSize": 45611681
+      },
+      "snapshot_chars": 6553,
+      "renderers": [
+        {
+          "pid": 32511,
+          "rss_kib": 185328
+        },
+        {
+          "pid": 32513,
+          "rss_kib": 101328
+        },
+        {
+          "pid": 32514,
+          "rss_kib": 729760
+        }
+      ],
+      "gpu_allocations": {
+        "buffers": {
+          "created": 7447,
+          "deleted": 4290
+        },
+        "vertex_arrays": {
+          "created": 5910,
+          "deleted": 4046
+        },
+        "syncs": {
+          "created": 4104,
+          "deleted": 4098
+        }
+      }
+    },
+    {
+      "phase": "first-run",
+      "elapsed": 2.56666666666666,
+      "chapter": 0,
+      "perf": {
+        "effects": 3,
+        "fps": 54,
+        "nodes": 80,
+        "objects": 1625,
+        "orphans": 0,
+        "projectiles": 0,
+        "resources": 31,
+        "static_bytes": 0,
+        "static_peak_bytes": 0
+      },
+      "js_heap": {
+        "usedSize": 13339736,
+        "totalSize": 17235968,
+        "embedderHeapUsedSize": 3300096,
+        "backingStorageSize": 57138781
+      },
+      "snapshot_chars": 6554,
+      "renderers": [
+        {
+          "pid": 32511,
+          "rss_kib": 185632
+        },
+        {
+          "pid": 32513,
+          "rss_kib": 101328
+        },
+        {
+          "pid": 32514,
+          "rss_kib": 755984
+        }
+      ],
+      "gpu_allocations": {
+        "buffers": {
+          "created": 16981,
+          "deleted": 13880
+        },
+        "vertex_arrays": {
+          "created": 11644,
+          "deleted": 9825
+        },
+        "syncs": {
+          "created": 4234,
+          "deleted": 4228
+        }
+      }
+    },
+    {
+      "phase": "first-run",
+      "elapsed": 32.7833333333328,
+      "chapter": 0,
+      "perf": {
+        "effects": 0,
+        "fps": 60,
+        "nodes": 60,
+        "objects": 1591,
+        "orphans": 0,
+        "projectiles": 1,
+        "resources": 31,
+        "static_bytes": 0,
+        "static_peak_bytes": 0
+      },
+      "js_heap": {
+        "usedSize": 19341436,
+        "totalSize": 26198016,
+        "embedderHeapUsedSize": 10644424,
+        "backingStorageSize": 47500940
+      },
+      "snapshot_chars": 6764,
+      "renderers": [
+        {
+          "pid": 32511,
+          "rss_kib": 185664
+        },
+        {
+          "pid": 32513,
+          "rss_kib": 101392
+        },
+        {
+          "pid": 32514,
+          "rss_kib": 746576
+        }
+      ],
+      "gpu_allocations": {
+        "buffers": {
+          "created": 160895,
+          "deleted": 157775
+        },
+        "vertex_arrays": {
+          "created": 148273,
+          "deleted": 146438
+        },
+        "syncs": {
+          "created": 8160,
+          "deleted": 8154
+        }
+      }
+    }
+  ],
+  "after_samples": [
+    {
+      "phase": "pause-start",
+      "elapsed": 2.56666666666666,
+      "chapter": 0,
+      "perf": {
+        "effects": 3,
+        "fps": 60,
+        "nodes": 80,
+        "objects": 1648,
+        "orphans": 0,
+        "projectiles": 0,
+        "resources": 39,
+        "static_bytes": 0,
+        "static_peak_bytes": 0
+      },
+      "js_heap": {
+        "usedSize": 13357636,
+        "totalSize": 20430848,
+        "embedderHeapUsedSize": 1833072,
+        "backingStorageSize": 69794138
+      },
+      "snapshot_chars": 8866,
+      "renderers": [
+        {
+          "pid": 34284,
+          "rss_kib": 189184
+        },
+        {
+          "pid": 34286,
+          "rss_kib": 101264
+        },
+        {
+          "pid": 34287,
+          "rss_kib": 663632
+        }
+      ],
+      "gpu_allocations": {
+        "buffers": {
+          "created": 7404,
+          "deleted": 4250
+        },
+        "vertex_arrays": {
+          "created": 5872,
+          "deleted": 4008
+        },
+        "syncs": {
+          "created": 500,
+          "deleted": 495
+        }
+      }
+    },
+    {
+      "phase": "pause-after-30s",
+      "elapsed": 2.56666666666666,
+      "chapter": 0,
+      "perf": {
+        "effects": 3,
+        "fps": 60,
+        "nodes": 80,
+        "objects": 1648,
+        "orphans": 0,
+        "projectiles": 0,
+        "resources": 39,
+        "static_bytes": 0,
+        "static_peak_bytes": 0
+      },
+      "js_heap": {
+        "usedSize": 10935776,
+        "totalSize": 13615104,
+        "embedderHeapUsedSize": 2719936,
+        "backingStorageSize": 45859495
+      },
+      "snapshot_chars": 8866,
+      "renderers": [
+        {
+          "pid": 34284,
+          "rss_kib": 183648
+        },
+        {
+          "pid": 34286,
+          "rss_kib": 101360
+        },
+        {
+          "pid": 34287,
+          "rss_kib": 690784
+        }
+      ],
+      "gpu_allocations": {
+        "buffers": {
+          "created": 7404,
+          "deleted": 4250
+        },
+        "vertex_arrays": {
+          "created": 5872,
+          "deleted": 4008
+        },
+        "syncs": {
+          "created": 4102,
+          "deleted": 4097
+        }
+      }
+    },
+    {
+      "phase": "first-run",
+      "elapsed": 2.56666666666666,
+      "chapter": 0,
+      "perf": {
+        "effects": 3,
+        "fps": 60,
+        "nodes": 80,
+        "objects": 1652,
+        "orphans": 0,
+        "projectiles": 0,
+        "resources": 39,
+        "static_bytes": 0,
+        "static_peak_bytes": 0
+      },
+      "js_heap": {
+        "usedSize": 13461776,
+        "totalSize": 17235968,
+        "embedderHeapUsedSize": 3387888,
+        "backingStorageSize": 57398254
+      },
+      "snapshot_chars": 8867,
+      "renderers": [
+        {
+          "pid": 34284,
+          "rss_kib": 183936
+        },
+        {
+          "pid": 34286,
+          "rss_kib": 101360
+        },
+        {
+          "pid": 34287,
+          "rss_kib": 719600
+        }
+      ],
+      "gpu_allocations": {
+        "buffers": {
+          "created": 16884,
+          "deleted": 13786
+        },
+        "vertex_arrays": {
+          "created": 11555,
+          "deleted": 9736
+        },
+        "syncs": {
+          "created": 4230,
+          "deleted": 4225
+        }
+      }
+    },
+    {
+      "phase": "first-run",
+      "elapsed": 32.6166666666661,
+      "chapter": 0,
+      "perf": {
+        "effects": 2,
+        "fps": 60,
+        "nodes": 61,
+        "objects": 1625,
+        "orphans": 0,
+        "projectiles": 0,
+        "resources": 39,
+        "static_bytes": 0,
+        "static_peak_bytes": 0
+      },
+      "js_heap": {
+        "usedSize": 20599356,
+        "totalSize": 23838720,
+        "embedderHeapUsedSize": 10006944,
+        "backingStorageSize": 48353426
+      },
+      "snapshot_chars": 8576,
+      "renderers": [
+        {
+          "pid": 34284,
+          "rss_kib": 183888
+        },
+        {
+          "pid": 34286,
+          "rss_kib": 101392
+        },
+        {
+          "pid": 34287,
+          "rss_kib": 713360
+        }
+      ],
+      "gpu_allocations": {
+        "buffers": {
+          "created": 166935,
+          "deleted": 163813
+        },
+        "vertex_arrays": {
+          "created": 143040,
+          "deleted": 141201
+        },
+        "syncs": {
+          "created": 8144,
+          "deleted": 8139
+        }
+      }
+    }
+  ]
+}

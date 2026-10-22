@@ -13,6 +13,7 @@
     "check": "node scripts/godot.mjs import && npm test && npm run build",
     "qa:browser": "node scripts/browser-qa.mjs",
     "qa:storage": "node scripts/storage-qa.mjs",
-    "qa:edge": "node scripts/edge-qa.mjs"
+    "qa:edge": "node scripts/edge-qa.mjs",
+    "qa:motion": "node scripts/motion-qa.mjs"
   }
 }

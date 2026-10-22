@@ -35,6 +35,8 @@ var snapshot_timer := 0.0
 var previous_state := "title"
 var previous_chapter := 0
 var _snapshot_publisher
+var _feedback_generation := -1
+var _feedback_serial := 0
 
 func _ready() -> void:
 	_register_inputs()
@@ -106,11 +108,25 @@ func _record_milestones() -> void:
 
 func _process(delta: float) -> void:
 	garden.refresh()
+	_play_presentation_audio()
 	interface.refresh()
 	snapshot_timer += delta
 	if snapshot_timer >= 0.25:
 		snapshot_timer = 0.0
 		_publish_snapshot()
+
+func _play_presentation_audio() -> void:
+	var feedback = garden.presentation
+	if int(feedback.generation) != _feedback_generation:
+		_feedback_generation = int(feedback.generation)
+		_feedback_serial = 0
+	for event in feedback.events:
+		var serial := int(event.get("serial", 0))
+		if serial <= _feedback_serial:
+			continue
+		_feedback_serial = serial
+		if str(run.state) == "playing":
+			soundscape.play_feedback(event, float(run.elapsed))
 
 func _unhandled_key_input(event: InputEvent) -> void:
 	if not event is InputEventKey or not event.pressed or event.echo:
@@ -242,6 +258,7 @@ func _performance_snapshot() -> Dictionary:
 func _snapshot_payload() -> Dictionary:
 	var data: Dictionary = run.snapshot()
 	data.perf = _performance_snapshot()
+	data.motion = garden.motion_snapshot() if is_instance_valid(garden) else {}
 	data.settings = profile.settings()
 	data.profile = profile.snapshot()
 	data.gui = {"page": interface.local_screen, "starter": interface.selected_starter, "codex_category": interface.codex_category}

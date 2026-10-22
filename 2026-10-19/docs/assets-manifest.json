@@ -1,5 +1,5 @@
 {
-  "art": "Built-in image_gen PNG actors, bosses and title art; code-authored chapter floors and glyphs. Original prototype SVG sources are retained.",
+  "art": "Original code-authored animated pixel SVG actors and feedback; image_gen title art and archived static actors/bosses; code-authored chapter floors and glyphs.",
   "font_source": "2026-10-14/game/assets/fonts/NotoSansCJKjp-Medium.otf",
   "files": {
     "game/assets/art/archer.svg": {
@@ -97,6 +97,50 @@
     "game/assets/art/white-disc.svg": {
       "bytes": 138,
       "sha256": "190218cf7011ea309548ad3522a98eac48cfdb1a3d871b09a497d3190f9f5cc6"
+    },
+    "game/assets/art/pixel-actors-archer.svg": {
+      "bytes": 233987,
+      "sha256": "45ff9fac8436261af93af94c6e54fba918f02f6915a74d4302861ce28cf14d84"
+    },
+    "game/assets/art/pixel-actors-bat.svg": {
+      "bytes": 135551,
+      "sha256": "2fe6d7db65381e55e74826d9120f922baa7512355fa30e3e49d4d4b9fd7c8e4b"
+    },
+    "game/assets/art/pixel-actors-boss-bell.svg": {
+      "bytes": 495999,
+      "sha256": "0eac812f78e7fa73000f9232b4c9c753a77dc669a86c8e6a54f528c0d2774dd1"
+    },
+    "game/assets/art/pixel-actors-boss-mirror.svg": {
+      "bytes": 432240,
+      "sha256": "5458f1000cb69254bb6fdf97f52fa6bbcbb637c7d2757877e626bfd546f8ee1a"
+    },
+    "game/assets/art/pixel-actors-boss-thorn.svg": {
+      "bytes": 542362,
+      "sha256": "bbc9039ffea991182f9e49916ed924d29eb68b84fe4c50ba6a9e355134f204ac"
+    },
+    "game/assets/art/pixel-actors-charger.svg": {
+      "bytes": 244870,
+      "sha256": "3a496e1d46189070c6d67ae854586d86fe1f469db853d589e8a63d3550520465"
+    },
+    "game/assets/art/pixel-actors-hound.svg": {
+      "bytes": 187581,
+      "sha256": "dc3ca0f212f009f675b8fd9651b2abd5953457660696fdadf3906154ebbb8b85"
+    },
+    "game/assets/art/pixel-actors-sentinel.svg": {
+      "bytes": 205774,
+      "sha256": "bf2fb25d7308ba90befe18967e1fc8f2df56be7053fa191d25b3993e78301ebe"
+    },
+    "game/assets/art/pixel-actors-wisp.svg": {
+      "bytes": 149846,
+      "sha256": "375b0fe4cf9ae85344e9776b4051c9fe941409a9b5e403e2a8aad0f514d2c1e4"
+    },
+    "game/assets/art/pixel-actors-witch.svg": {
+      "bytes": 385733,
+      "sha256": "23202a14aa2b1e09183d1a723a623cd6414662de18d33876d3e98b3644657ee4"
+    },
+    "game/assets/art/pixel-fx.svg": {
+      "bytes": 1939,
+      "sha256": "bcf1491a3144716b1dce19f04c5f50c1963bd59287bf7e3365c4c3eb055a4c76"
     }
   },
   "heading_font_source": "Google Fonts google/fonts at 6c4ff7159f6296ebd06b92d8010b086fcb795409/ofl/zenoldmincho",

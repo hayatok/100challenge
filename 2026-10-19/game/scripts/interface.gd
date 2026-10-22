@@ -64,6 +64,7 @@ var last_screen := ""
 var last_equipment := ""
 var _default_focus: Control
 var save_notice: Label
+var _overlay_tween: Tween
 
 func _ready() -> void:
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
@@ -324,6 +325,8 @@ func _rebuild_overlay() -> void:
 	var focused := get_viewport().gui_get_focus_owner()
 	if is_instance_valid(focused) and is_instance_valid(overlay) and overlay.is_ancestor_of(focused):
 		focus_key = str(focused.get_meta("focus_key", ""))
+	if _overlay_tween != null and _overlay_tween.is_valid():
+		_overlay_tween.kill()
 	if is_instance_valid(overlay):
 		remove_child(overlay)
 		overlay.queue_free()
@@ -347,6 +350,11 @@ func _rebuild_overlay() -> void:
 			"paused": _pause_screen()
 			"chapter_clear": _chapter_screen()
 			"victory", "defeat": _result_screen()
+	if not reduced_motion and local_screen.is_empty() and str(run.state) in ["upgrade", "treasure", "chapter_clear", "victory"]:
+		# The input rectangles remain fixed and active during this brief ink reveal.
+		overlay.modulate.a = 0.72
+		_overlay_tween = create_tween()
+		_overlay_tween.tween_property(overlay, "modulate:a", 1.0, 0.14).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 	if not focus_key.is_empty():
 		for control in overlay.find_children("*", "Control", true, false):
 			if str(control.get_meta("focus_key", "")) == focus_key and control.focus_mode != Control.FOCUS_NONE:

@@ -52,6 +52,17 @@ func _run() -> void:
 	expect(not audio.music_started, "retry stops old stream")
 	for id in ["thorn", "wisp", "frost", "bell", "treasure", "evolution", "boss", "chapter"]:
 		expect(audio.sounds.has(id), "event " + id + " has a sound")
+	for id in ["impact", "shatter", "footstep", "shield", "boss_phase"]:
+		expect(audio.sounds.has(id) and audio.sounds[id].data.size() > 1000, "bounded local feedback sound: " + id)
+	var voices: int = audio.next_player
+	for i in range(300):
+		audio.play_feedback({"kind":"hit", "target":"enemy"}, 2.0)
+	expect(audio.next_player == (voices + 1) % audio.players.size(), "repeated same-clock hits use one impact voice")
+	voices = audio.next_player
+	audio.play_feedback({"kind":"footstep", "echo":true}, 2.1)
+	expect(audio.next_player == voices, "echo footsteps do not duplicate footstep audio")
+	audio.play_feedback({"kind":"hit", "target":"enemy"}, 0.5)
+	expect(audio.next_player == (voices + 1) % audio.players.size(), "retry clock clears previous feedback cooldown")
 	audio.stop_all()
 	await create_timer(0.2).timeout
 	await process_frame

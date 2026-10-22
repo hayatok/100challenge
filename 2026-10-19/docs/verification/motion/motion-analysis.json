@@ -1,0 +1,37 @@
+{
+  "source": "motion-browser/results.json",
+  "source_sha256": "23e2d92c94c9f95e614ce7c4978822dadbd4e3e7e63e553ab9199e599b0b0069",
+  "note": "Read-only analysis of the recorded real-input Web snapshots. Only kinds and poses observed in this short run are listed; native fixtures cover other actors. Snapshot publication is 4 Hz, not a frame-rate measurement.",
+  "samples": 41,
+  "normal_player_walk_frames": [
+    4,
+    5,
+    7
+  ],
+  "enemy_frames": {
+    "hound:arrival": [
+      27,
+      28,
+      29,
+      30
+    ],
+    "hound:hit": [
+      14,
+      15
+    ],
+    "hound:walk": [
+      4,
+      5,
+      6,
+      7,
+      8,
+      9
+    ]
+  },
+  "delayed_echo_after_player_stops": true,
+  "actor_texture_ids_stable": true,
+  "max_event_count": 6,
+  "max_death_count": 1,
+  "max_particle_count": 12,
+  "max_camera_magnitude": 0.0
+}

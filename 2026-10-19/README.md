@@ -2,6 +2,8 @@
 
 2秒前の位置と魔法を再現する残像と、三つの章を攻略する見下ろし2Dサバイバルです。庭園、鏡の書庫、夜鐘の塔を進み、各章のボスを倒して夜明けを迎えます。公開済み3分版から、本編・装備・図鑑・GUIを拡張しました。
 
+戦闘中の魔女と魔物は、歩行・詠唱・予備動作・被弾・消滅を描き分けたドット絵です。背景と魔術書のGUIに合わせ、命中、撃破、挟撃、ボスと報酬の反応を加えています。
+
 ## 遊び方
 
 - WASDまたは矢印キーで移動します。攻撃は自動です。
@@ -49,10 +51,11 @@ Web上の`window.echoWitchSnapshot`は読み取り専用の状態です。ゲー
 BASE_URL=http://127.0.0.1:4197/ npm run qa:browser
 BASE_URL=http://127.0.0.1:4197/ npm run qa:storage
 BASE_URL=http://127.0.0.1:4197/ npm run qa:edge
+BASE_URL=http://127.0.0.1:4197/ npm run qa:motion
 ```
 
-`qa:browser`は通常速度で三章を進める自動キー入力です。`QA_MODE=smoke`なら序盤の操作だけを確認します。`qa:storage`は独立した保存領域で正常・破損・保存拒否を検査します。`qa:edge`は敗北、再挑戦、停止、画面幅、読み込み失敗を確認します。`QA_BROWSER=firefox`または`webkit`で別の検証用エンジンも選べます。これらは人間の面白さの評価や実機の性能測定とは分けて記録します。
+`qa:browser`は通常速度で三章を進める自動キー入力です。`QA_MODE=smoke`なら序盤の操作だけを確認します。`qa:storage`は独立した保存領域で正常・破損・保存拒否を検査します。`qa:edge`は敗北、再挑戦、停止、画面幅、読み込み失敗を確認します。`QA_BROWSER=firefox`または`webkit`で別の検証用エンジンも選べます。`qa:motion`は実入力による歩行・詠唱、残像の遅れ、停止、再挑戦と演出軽減を確認します。これらは人間の面白さの評価や実機の性能測定とは分けて記録します。
 
 Playwrightを別の場所に置いている場合は、`PLAYWRIGHT_MODULE`にその`index.mjs`、`CHROMIUM_BIN`にChromeの実行ファイルを指定してください。
 
-本編の仕様は[docs/CAMPAIGN.md](docs/CAMPAIGN.md)、画面の方針は[docs/ART_DIRECTION.md](docs/ART_DIRECTION.md)、実施結果は[docs/verification/CAMPAIGN.md](docs/verification/CAMPAIGN.md)を参照してください。初版・第2版の記録は当時の検証として残しています。素材とフォントの出典は[docs/ASSETS.md](docs/ASSETS.md)と`credits.html`に記載しています。
+本編の仕様は[docs/CAMPAIGN.md](docs/CAMPAIGN.md)、画面の方針は[docs/ART_DIRECTION.md](docs/ART_DIRECTION.md)、実施結果は[docs/verification/CAMPAIGN.md](docs/verification/CAMPAIGN.md)を参照してください。モーションの仕様は[docs/MOTION.md](docs/MOTION.md)、実施結果は[docs/verification/MOTION.md](docs/verification/MOTION.md)です。初版・第2版の記録は当時の検証として残しています。素材とフォントの出典は[docs/ASSETS.md](docs/ASSETS.md)と`credits.html`に記載しています。
