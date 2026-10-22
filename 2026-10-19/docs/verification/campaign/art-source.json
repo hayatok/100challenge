@@ -1,0 +1,46 @@
+[
+  {
+    "id": "boss-thorn",
+    "path": "game/assets/art/boss-thorn.png",
+    "generated_source": "exec-051ecc7d-918a-406d-916a-d84c38c2575c.png",
+    "width": 1222,
+    "height": 1287,
+    "bit_depth": 8,
+    "color_type": 6,
+    "sha256": "32a652a7e5567b1159c7dda288c0b929638689f80a5e62b9a3e67fe09de27b0f",
+    "bytes": 2442966
+  },
+  {
+    "id": "boss-mirror",
+    "path": "game/assets/art/boss-mirror.png",
+    "generated_source": "exec-44d26398-0e65-4251-915d-d8d228dfb7dc.png",
+    "width": 1024,
+    "height": 1536,
+    "bit_depth": 8,
+    "color_type": 6,
+    "sha256": "18ee9cf9d5a31593a400aa3626ff0d9c54b5dbeee4f8ad5c5c733dab6f2c9f0f",
+    "bytes": 2768667
+  },
+  {
+    "id": "boss-bell",
+    "path": "game/assets/art/boss-bell.png",
+    "generated_source": "exec-98e81df3-897d-433b-95ee-36128715d670.png",
+    "width": 1312,
+    "height": 1199,
+    "bit_depth": 8,
+    "color_type": 6,
+    "sha256": "9c55a5bd01c875c71d73833955c5f4e257a38f61ac9ac2829c65ce092f5117ae",
+    "bytes": 2308200
+  },
+  {
+    "id": "campaign-keyart",
+    "path": "game/assets/art/campaign-keyart.png",
+    "generated_source": "exec-925a580a-7fa8-407c-aadc-23244a59c474.png",
+    "width": 1672,
+    "height": 941,
+    "bit_depth": 8,
+    "color_type": 2,
+    "sha256": "01a87d4616fc6b88fb6847027becb4d1b601977203450c613d81b1b398bcf364",
+    "bytes": 2741019
+  }
+]

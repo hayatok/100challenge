@@ -2,7 +2,7 @@ config_version=5
 
 [application]
 config/name="残響の魔女"
-config/description="2秒前の自分と戦う、夜の庭園の3分サバイバル。"
+config/description="2秒前の自分と戦い、庭園・回廊・鐘楼を越えるサバイバル。"
 run/main_scene="res://main.tscn"
 config/features=PackedStringArray("4.7", "GL Compatibility")
 

@@ -1,0 +1,36 @@
+
+> echo-witch@1.0.0 check
+> node scripts/godot.mjs import && npm test && npm run build
+
+Godot 4.7.2: import passed
+
+> echo-witch@1.0.0 test
+> node scripts/godot.mjs test
+
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS: 2887 campaign checks (2s echo, immutable relics, freeze, choices, replacement, six weapons/evolutions, relics/drops, routing, bosses/chapters)
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+Profile tests: 29 checks, 0 failures
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+GUI tests: 1240 checks, 0 failures
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+AUDIO: 24 checks, 0 failures
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+ASSETS: 113 checks, 0 failures
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+STAR_GEOMETRY_PASS visible=3970 skipped_subpixel=136 original_screen_space_failures=2
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+RENDERER_CACHE_PASS {"after_resize":[{"atlas_builds":3,"atlas_size":"(908, 668)","chapter":0,"floor_builds":1},{"atlas_builds":3,"atlas_size":"(898, 1622)","chapter":1,"floor_builds":1},{"atlas_builds":3,"atlas_size":"(764, 1160)","chapter":2,"floor_builds":3}],"after_retry":[{"atlas_builds":3,"atlas_size":"(908, 668)","chapter":0,"floor_builds":5},{"atlas_builds":3,"atlas_size":"(898, 1622)","chapter":1,"floor_builds":4},{"atlas_builds":3,"atlas_size":"(764, 1160)","chapter":2,"floor_builds":6}],"cache_limit":3,"chapter_reentries":9,"checks":397,"draw_execution_verified":false,"moving_frames":120,"native_window_resizes":2,"renderer":"headless","resource_ids_reused":true,"warm":[{"atlas_builds":1,"atlas_size":"(908, 668)","chapter":0,"floor_builds":1},{"atlas_builds":1,"atlas_size":"(898, 1622)","chapter":1,"floor_builds":1},{"atlas_builds":1,"atlas_size":"(764, 1160)","chapter":2,"floor_builds":1}]}
+Snapshot bridge tests: passed fixed-source parsing, framing, recursive freeze, replacement, private publisher, and malformed input
+
+> echo-witch@1.0.0 build
+> node scripts/godot.mjs build
+
+Godot 4.7.2: build passed

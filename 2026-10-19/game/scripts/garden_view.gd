@@ -1,11 +1,21 @@
 extends Node2D
-## All animation derives from the model clock; overlays freeze the whole garden.
+## The model owns every clock and hit shape; frozen overlays reuse draw commands.
 
+const FloorArt := preload("res://scripts/campaign_floor.gd")
+const SceneryCache := preload("res://scripts/scenery_cache.gd")
+const WHITE_DISC := preload("res://assets/art/white-disc.svg")
+const DISC_PADDING := 64.0 / 62.0
 const INK := Color("161d32")
 const PAPER := Color("f5efdf")
 const GOLD := Color("dbc182")
 const BLUE := Color("92d4e8")
 const DANGER := Color("ed8c87")
+const FROST := Color("b8dce1")
+const THORN := Color("a6bd8b")
+const WISP := Color("c6a8e0")
+const MAX_NUMBERS := 18
+const MAX_EFFECTS := 86
+const MIN_STAR_RADIUS := 0.5
 
 var run
 var reduced_motion := false
@@ -13,38 +23,44 @@ var textures: Dictionary = {}
 var font: Font
 var screen := Vector2(1280, 720)
 var resonance_labels := 0
-var last_draw_time := -1.0
-var last_draw_state := ""
-var last_draw_motion := false
-var last_draw_size := Vector2.ZERO
+var number_labels := 0
+var last_signature: Array = []
+var chapter_geometry: Dictionary = {}
+var scenery_cache
 
 func _ready() -> void:
 	texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
-	for id in ["witch", "hound", "charger", "archer", "garden_tile", "moon"]:
-		var path := "res://assets/art/%s.svg" % id
-		if id in ["witch", "hound", "charger", "archer"]:
-			path = "res://assets/art/%s-r2.png" % id
-		elif id == "garden_tile":
-			path = "res://assets/art/garden-r2.svg"
+	var paths := {
+		"witch": "witch-r2.png", "hound": "hound-r2.png", "charger": "charger-r2.png", "archer": "archer-r2.png",
+		"garden_tile": "garden-r2.svg", "moon": "moon.svg", "keyart": "campaign-keyart.png",
+		"boss_thorn": "boss-thorn.png", "boss_mirror": "boss-mirror.png", "boss_bell": "boss-bell.png"
+	}
+	for id in paths:
+		var path := "res://assets/art/%s" % str(paths[id])
 		if ResourceLoader.exists(path):
 			textures[id] = load(path)
-	if ResourceLoader.exists("res://assets/fonts/NotoSansCJKjp-Medium.otf"):
-		font = load("res://assets/fonts/NotoSansCJKjp-Medium.otf")
-	else:
-		font = ThemeDB.fallback_font
+	font = load("res://assets/fonts/NotoSansCJKjp-Medium.otf") if ResourceLoader.exists("res://assets/fonts/NotoSansCJKjp-Medium.otf") else ThemeDB.fallback_font
+	scenery_cache = SceneryCache.new()
+	scenery_cache.z_index = -1
+	scenery_cache.visible = false
+	add_child(scenery_cache)
 
 func refresh() -> void:
-	var next_size := get_viewport_rect().size
 	if run == null:
 		return
-	# Static title and frozen overlays reuse their canvas commands.
-	if run.elapsed == last_draw_time and str(run.state) == last_draw_state and reduced_motion == last_draw_motion and next_size == last_draw_size:
+	var next_size := get_viewport_rect().size
+	# Chapter changes can leave elapsed unchanged. Include geometry/state inputs so
+	# a frozen chapter-clear screen and a restarted title never reuse another biome.
+	var signature: Array = [run.elapsed, str(run.state), reduced_motion, next_size, run.chapter, run.chapter_elapsed, str(run.chapter_stage), run.player, run.health, run.echo_active, run.chests.size(), run.pickups.size()]
+	if signature == last_signature:
 		return
+	last_signature = signature
 	screen = next_size
-	last_draw_time = run.elapsed
-	last_draw_state = str(run.state)
-	last_draw_motion = reduced_motion
-	last_draw_size = screen
+	chapter_geometry = run.chapter_info()
+	scenery_cache.visible = run.state != "title"
+	if scenery_cache.visible:
+		scenery_cache.select_chapter(int(run.chapter), chapter_geometry, textures)
+		scenery_cache.position = -run.player + screen * Vector2(0.5, 0.52)
 	queue_redraw()
 
 func world(at: Vector2) -> Vector2:
@@ -54,16 +70,22 @@ func _draw() -> void:
 	if run == null:
 		return
 	resonance_labels = 0
-	_draw_ground()
+	number_labels = 0
 	if run.state == "title":
 		_draw_title_art()
 		return
+	FloorArt.draw_ambient(self, int(run.chapter))
 	_draw_trail()
+	var obstacles: Array = chapter_geometry.get("obstacles", [])
+	var actors: Array[Dictionary] = []
+	for i in range(obstacles.size()):
+		var obstacle: Rect2 = obstacles[i]
+		scenery_cache.draw_obstacle(self, i, true)
+		actors.append({"type": "obstacle", "position": obstacle.end, "rect": obstacle, "index": i})
 	for pickup in run.pickups:
 		_draw_pickup(pickup)
-	for shot in run.projectiles:
-		_draw_projectile(shot)
-	var actors: Array[Dictionary] = []
+	for chest in run.chests:
+		actors.append({"type": "chest", "position": chest.position, "data": chest})
 	for enemy in run.enemies:
 		actors.append({"type": "enemy", "position": enemy.position, "data": enemy})
 	if run.echo_active:
@@ -71,91 +93,59 @@ func _draw() -> void:
 	actors.append({"type": "player", "position": run.player})
 	actors.sort_custom(func(a: Dictionary, b: Dictionary) -> bool: return a.position.y < b.position.y)
 	for actor in actors:
-		if actor.type == "enemy":
-			_draw_enemy(actor.data)
-		else:
-			_draw_witch(world(actor.position), actor.type == "echo", 82.0)
-	for effect in run.effects:
-		_draw_effect(effect)
-	# Attack intent remains on top of friendly magic.
+		match str(actor.type):
+			"obstacle":
+				scenery_cache.draw_obstacle(self, int(actor.index))
+			"chest":
+				_draw_chest(actor.data)
+			"enemy":
+				_draw_enemy(actor.data)
+			_:
+				_draw_witch(world(actor.position), actor.type == "echo", 82.0)
+	for shot in run.projectiles:
+		_draw_projectile(shot)
+	# Newest feedback survives the cap. Damage numbers never blanket a boss cue.
+	var start := maxi(0, run.effects.size() - MAX_EFFECTS)
+	for i in range(run.effects.size() - 1, start - 1, -1):
+		_draw_effect(run.effects[i])
+	_draw_wayfinding()
+	# Hostile intent and its live damage area always sit above friendly spells.
 	for enemy in run.enemies:
 		_draw_telegraph(enemy)
+	for hazard in run.hazards:
+		_draw_hazard(hazard)
 	_draw_vignette()
 
-func _draw_ground() -> void:
-	draw_rect(Rect2(Vector2.ZERO, screen), Color("101b25"))
-	var camera: Vector2 = run.player - screen * Vector2(0.5, 0.52)
-	var tile_size := 384.0
-	var start := (camera / tile_size).floor() * tile_size
-	for x in range(-1, int(screen.x / tile_size) + 2):
-		for y in range(-1, int(screen.y / tile_size) + 2):
-			var at := start + Vector2(x, y) * tile_size - camera
-			if textures.has("garden_tile"):
-				draw_texture_rect(textures.garden_tile, Rect2(at, Vector2.ONE * tile_size), false, Color(0.85, 0.94, 1.0, 0.82))
-	_draw_garden_details(camera)
-	# The origin garden seal provides an early landmark without blocking movement.
-	var center := world(Vector2.ZERO)
-	draw_arc(center, 208.0, 0.0, TAU, 96, Color(0.61, 0.66, 0.62, 0.14), 3.0, true)
-	draw_arc(center, 217.0, 0.0, TAU, 96, Color(0.61, 0.66, 0.62, 0.08), 1.0, true)
-	for i in range(12):
-		var direction := Vector2.from_angle(TAU * float(i) / 12.0)
-		draw_line(center + direction * 201.0, center + direction * 225.0, Color(0.7, 0.69, 0.55, 0.18), 2.0, true)
-	# Ground dust is sparse and fixed in world space, never a gameplay obstacle.
-	for i in range(32):
-		var px := fposmod(float(i * 179 + 67) - camera.x * 0.12, screen.x)
-		var py := fposmod(float(i * 101 + 19) - camera.y * 0.12, screen.y)
-		draw_circle(Vector2(px, py), 1.3, Color(0.73, 0.75, 0.58, 0.14))
-
 func _draw_title_art() -> void:
-	var center := Vector2(screen.x * 0.80, 578.0)
-	var moon_at := Vector2(screen.x * 0.80, 216.0)
-	for radius in [188.0, 164.0, 138.0]:
-		draw_circle(moon_at, radius, Color(GOLD, 0.022))
-	if textures.has("moon"):
-		draw_texture_rect(textures.moon, Rect2(moon_at - Vector2.ONE * 119.0, Vector2.ONE * 238.0), false, Color(0.95, 0.94, 0.83, 0.83))
-	draw_arc(moon_at, 156, 0, TAU, 90, Color(GOLD, 0.25), 1.0, true)
-	for i in range(28):
-		var direction := Vector2.from_angle(float(i) * TAU / 28.0)
-		draw_line(moon_at + direction * 151, moon_at + direction * (162 if i % 7 == 0 else 157), Color(GOLD, 0.48), 1.0, true)
-	_draw_witch(center + Vector2(-128, 16), true, 240.0)
-	_draw_witch(center + Vector2(10, 0), false, 380.0)
-	draw_string(font, center + Vector2(-105, 73), "2秒前のあなたと。", HORIZONTAL_ALIGNMENT_LEFT, -1, 21, BLUE)
-
-func _draw_garden_details(camera: Vector2) -> void:
-	# Flat mosaics and flowers are landmarks, never collision obstacles.
-	var cell := Vector2(680, 540)
-	var start := (camera / cell).floor()
-	for x in range(-1, 4):
-		for y in range(-1, 4):
-			var grid := start + Vector2(x, y)
-			var seed_value := int(grid.x) * 47 + int(grid.y) * 83
-			var at := grid * cell + Vector2(147, 185) - camera
-			if not Rect2(Vector2(-170, -140), screen + Vector2(340, 280)).has_point(at):
-				continue
-			var tint := Color("334443")
-			_ellipse(at, Vector2(112, 47), Color(0.03, 0.07, 0.10, 0.32))
-			_elliptic_arc(at, Vector2(98, 40), 0, TAU, Color("455455"), 3)
-			_elliptic_arc(at, Vector2(87, 33), 0, TAU, Color("263a3e"), 2)
-			for i in range(9):
-				var direction := Vector2.from_angle(float(i) * TAU / 9.0)
-				var leaf := at + direction * Vector2(91, 39)
-				_ellipse(leaf, Vector2(12, 4), tint)
-				if (i + absi(seed_value)) % 3 == 0:
-					for petal in range(5):
-						var point := leaf + Vector2.from_angle(float(petal) * TAU / 5) * 4.0
-						draw_circle(point, 2.5, Color("9b91a3"))
-					draw_circle(leaf, 1.7, GOLD)
-			for i in range(5):
-				var angle := float(i) * TAU / 5.0
-				var direction := Vector2.from_angle(angle)
-				draw_line(at + direction * Vector2(10, 5), at + direction.rotated(0.8) * Vector2(64, 25), Color("697165"), 1.0, true)
-	# Fireflies follow the simulation clock and stop with all overlays.
-	for i in range(17):
-		var phase := float(i) * 1.77
-		var offset := Vector2.ZERO if reduced_motion else Vector2(sin(run.elapsed * 0.35 + phase) * 7, cos(run.elapsed * 0.3 + phase) * 5)
-		var at := Vector2(fposmod(float(i * 179 + 53) - camera.x * 0.6, screen.x), fposmod(float(i * 137 + 29) - camera.y * 0.6, screen.y)) + offset
-		draw_circle(at, 6, Color(GOLD, 0.035))
-		draw_circle(at, 1.1, Color(GOLD, 0.42))
+	draw_rect(Rect2(Vector2.ZERO, screen), Color("0d1724"))
+	if textures.has("keyart"):
+		var texture: Texture2D = textures.keyart
+		var factor := maxf(screen.x / texture.get_width(), screen.y / texture.get_height())
+		var image_size := texture.get_size() * factor
+		draw_texture_rect(texture, Rect2((screen - image_size) * 0.5, image_size), false)
+		# A smooth left ink wash reserves the book typography without a flat panel.
+		var wash := PackedVector2Array([Vector2.ZERO, Vector2(screen.x, 0), screen, Vector2(0, screen.y)])
+		var wash_colors := PackedColorArray([Color(0.035, 0.06, 0.10, 0.88), Color(0.035, 0.06, 0.10, 0), Color(0.035, 0.06, 0.10, 0), Color(0.035, 0.06, 0.10, 0.88)])
+		draw_polygon(wash, wash_colors)
+		draw_rect(Rect2(Vector2.ZERO, screen), Color(0.025, 0.04, 0.07, 0.13))
+		var portrait_scale := minf(screen.x / 1280, screen.y / 720)
+		var portrait_at := Vector2(screen.x * 0.78, screen.y * 0.90)
+		_draw_witch(portrait_at + Vector2(-84, 8) * portrait_scale, true, 214 * portrait_scale)
+		_draw_witch(portrait_at, false, 288 * portrait_scale)
+	else:
+		var moon_at := Vector2(screen.x * 0.81, screen.y * 0.29)
+		for radius in [188.0, 164.0, 138.0]:
+			_disc(moon_at, radius, Color(GOLD, 0.025))
+		if textures.has("moon"):
+			draw_texture_rect(textures.moon, Rect2(moon_at - Vector2.ONE * 116, Vector2.ONE * 232), false, Color(0.95, 0.94, 0.83, 0.85))
+		draw_arc(moon_at, 156, 0, TAU, 90, Color(GOLD, 0.25), 1, true)
+		_draw_witch(Vector2(screen.x * 0.76 - 110, screen.y * 0.83), true, 250)
+		_draw_witch(Vector2(screen.x * 0.81, screen.y * 0.81), false, 390)
+	# These static gilt stars frame the illustrated right half without competing
+	# with chapter, equipment or the main title on the left.
+	for i in range(7):
+		var at := Vector2(screen.x * 0.61 + float(i % 3) * 116, 95 + float(i) * 69)
+		_star(at, 4 if i % 2 == 0 else 2.5, Color(GOLD, 0.44))
 
 func _draw_trail() -> void:
 	if not run.echo_active or run.player.distance_to(run.echo) < 35.0:
@@ -165,195 +155,646 @@ func _draw_trail() -> void:
 		index += 1
 		if index % 10 != 0:
 			continue
-		var fraction := clampf((float(sample.time) - (run.elapsed - 2.0)) / 2.0, 0.0, 1.0)
+		var fraction := clampf((float(sample.time) - (run.chapter_elapsed - 2.0)) / 2, 0, 1)
 		var at := world(sample.position) + Vector2(0, 18)
-		draw_circle(at, 2.0, Color(BLUE, 0.17 + fraction * 0.18))
+		draw_line(at - Vector2(2, 0), at + Vector2(2, 0), Color(BLUE, 0.14 + fraction * 0.17), 1.6, true)
 
 func _draw_witch(at: Vector2, is_echo: bool, size: float) -> void:
-	var scale_factor := size / 82.0
-	var tint := Color(0.46, 0.88, 1.05, 0.62) if is_echo else Color.WHITE
+	var scale_factor := size / 82
+	var tint := Color(0.45, 0.87, 1.10, 0.61) if is_echo else Color.WHITE
 	_ellipse(at + Vector2(0, 3), Vector2(21, 7) * scale_factor, Color(0.01, 0.02, 0.04, 0.50))
 	if is_echo:
 		for i in range(12):
-			var angle := float(i) * TAU / 12.0
+			var angle := float(i) * TAU / 12
 			_elliptic_arc(at, Vector2(22, 9) * scale_factor, angle, angle + 0.27, Color(BLUE, 0.95), 1.7)
 	else:
-		_elliptic_arc(at, Vector2(21, 9) * scale_factor, 0, TAU, Color(PAPER, 0.8), 1.8)
-	var bob := 0.0 if reduced_motion or run.state == "title" else sin(run.elapsed * 6.0) * 1.2
-	var tilt := 0.0 if reduced_motion or run.state == "title" else sin(run.elapsed * 5.0) * 0.025
+		_elliptic_arc(at, Vector2(21, 9) * scale_factor, 0, TAU, Color(PAPER, 0.95), 2)
+		_star(at + Vector2(0, 11) * scale_factor, 3 * scale_factor, GOLD)
+	var bob := 0.0 if reduced_motion or run.state == "title" else sin(run.elapsed * 6) * 1.2
+	var tilt := 0.0 if reduced_motion or run.state == "title" else sin(run.elapsed * 5) * 0.025
 	var facing := float(run.facing) if run.state != "title" else 1.0
 	if is_echo and run.state != "title":
-		var old_position: Vector2 = run.timeline.position_at(maxf(0.0, run.elapsed - 2.1))
+		var old_position: Vector2 = run.timeline.position_at(maxf(0, run.chapter_elapsed - 2.1))
 		if absf(run.echo.x - old_position.x) > 0.1:
 			facing = signf(run.echo.x - old_position.x)
-	if not is_echo and run.invulnerable > 0.0:
-		tint = Color(1.35, 0.85, 0.75) if reduced_motion else Color(1.5, 1.2, 1.1, 0.65 + sin(run.elapsed * 32) * 0.25)
+	if not is_echo and run.invulnerable > 0:
+		tint = Color(1.35, 0.85, 0.75) if reduced_motion else Color(1.5, 1.2, 1.1, 0.73 + sin(run.elapsed * 32) * 0.16)
 	if textures.has("witch"):
 		draw_set_transform(at + Vector2(0, bob), tilt, Vector2(facing, 1))
 		draw_texture_rect(textures.witch, Rect2(Vector2(-size * 0.5, -size * 0.87), Vector2.ONE * size), false, tint)
 		draw_set_transform(Vector2.ZERO)
-	if is_echo and size < 100.0:
+	if is_echo and size < 100:
 		draw_string_outline(font, at + Vector2(-14, -size * 0.83), "残像", HORIZONTAL_ALIGNMENT_LEFT, -1, 13, 3, INK)
 		draw_string(font, at + Vector2(-14, -size * 0.83), "残像", HORIZONTAL_ALIGNMENT_LEFT, -1, 13, BLUE)
 
 func _draw_enemy(enemy: Dictionary) -> void:
 	var at := world(enemy.position)
-	if at.x < -80 or at.y < -80 or at.x > screen.x + 80 or at.y > screen.y + 80:
+	var boss := bool(enemy.get("boss", false))
+	if not _on_screen(at, 240 if boss else 100):
 		return
+	var kind := str(enemy.kind)
+	var art_kind := kind
 	var size := 64.0
-	if enemy.kind == "charger":
-		size = 86.0
-	elif enemy.kind == "archer":
-		size = 74.0
+	match kind:
+		"charger", "sentinel":
+			size = 86
+			art_kind = "charger"
+		"archer", "wisp":
+			size = 76
+			art_kind = "archer"
+		"bat":
+			size = 53
+			art_kind = "hound"
+	if boss:
+		size = 210 if kind == "boss_thorn" else 198 if kind == "boss_mirror" else 224
+	var elite := bool(enemy.get("elite", false))
+	if elite:
+		size *= 1.22
 	var alpha := 1.0
-	if enemy.phase == "arrival":
-		alpha = clampf(1.0 - float(enemy.timer) / float(enemy.get("arrival_duration", 0.9)), 0.15, 1.0)
-		_elliptic_arc(at + Vector2(0, 13), Vector2(24, 10), 0, TAU, Color(DANGER, 0.32), 1.0)
-	_ellipse(at + Vector2(0, 10), Vector2(size * 0.28, 7), Color(0.0, 0.01, 0.025, 0.4 * alpha))
+	if str(enemy.get("phase", "seek")) == "arrival":
+		alpha = clampf(1.0 - float(enemy.get("timer", 0)) / maxf(0.01, float(enemy.get("arrival_duration", 0.9))), 0.20, 1)
+		_elliptic_arc(at + Vector2(0, 7), Vector2(size * 0.31, size * 0.12), 0, TAU, Color(DANGER, 0.40), 1.5)
+	_ellipse(at + Vector2(0, 10), Vector2(size * 0.30, 9 if boss else 7), Color(0, 0.01, 0.025, 0.50 * alpha))
+	if kind == "bat":
+		_draw_bat_wings(at, size, alpha, float(enemy.id))
 	var tint := Color(1, 1, 1, alpha)
-	if float(enemy.flash) > 0.0 and not reduced_motion:
-		tint = Color(1.8, 1.5, 1.2, alpha)
-	if textures.has(enemy.kind):
+	if kind == "wisp":
+		tint = Color(0.75, 0.89, 1.06, alpha)
+	elif kind == "sentinel":
+		tint = Color(0.82, 0.88, 0.86, alpha)
+	if float(enemy.get("flash", 0)) > 0 and not reduced_motion:
+		tint = Color(1.65, 1.35, 1.20, alpha)
+	if textures.has(art_kind):
 		var tilt := 0.0
 		var stretch := Vector2.ONE
 		if not reduced_motion:
-			tilt = sin(run.elapsed * 7.0 + float(enemy.id)) * 0.035
-			if enemy.phase == "warning":
-				stretch = Vector2(1.12, 0.88)
+			tilt = sin(run.elapsed * (2.0 if boss else 7.0) + float(enemy.id)) * (0.012 if boss else 0.025)
+			if enemy.phase == "warning" and not boss:
+				stretch = Vector2(1.08, 0.94)
 			elif enemy.phase == "rush":
-				stretch = Vector2(1.16, 0.85)
+				stretch = Vector2(1.12, 0.90)
 		var flip := -1.0 if (enemy.position as Vector2).x > run.player.x else 1.0
 		draw_set_transform(at, tilt, Vector2(flip, 1) * stretch)
-		draw_texture_rect(textures[enemy.kind], Rect2(Vector2(-size * 0.5, -size * 0.70), Vector2.ONE * size), false, tint)
+		var texture: Texture2D = textures[art_kind]
+		var image_size := texture.get_size() * (size / maxf(texture.get_width(), texture.get_height()))
+		var top_left := Vector2(-image_size.x * 0.5, -image_size.y + 12) if boss else Vector2(-size * 0.5, -size * 0.70)
+		draw_texture_rect(texture, Rect2(top_left, image_size), false, tint)
 		draw_set_transform(Vector2.ZERO)
+	elif boss:
+		_draw_boss_fallback(at, kind, size, alpha)
+	if kind == "sentinel":
+		_draw_sentinel_shield(at + Vector2(-15, -3), alpha)
+	elif kind == "wisp":
+		_draw_lantern(at + Vector2(20, 2), 0.68, Color(DANGER, alpha))
+	if elite:
+		_draw_elite_crown(at - Vector2(0, size * 0.70), alpha)
+	if boss and int(enemy.get("phase_index", 1)) >= 2:
+		for i in range(3):
+			var point := at + Vector2(float(i - 1) * 19, 19)
+			_star(point, 4, Color(DANGER, alpha))
 	var mark: Dictionary = enemy.get("mark", {})
-	if not mark.is_empty() and float(mark.get("expires", 0.0)) > run.elapsed:
+	if not mark.is_empty() and float(mark.get("expires", 0)) > run.elapsed:
 		var color := GOLD if str(mark.get("source", "player")) == "player" else BLUE
-		draw_arc(at, 23.0, PI * 0.2, PI * 0.8, 16, color, 2.3, true)
-		draw_arc(at, 23.0, PI * 1.2, PI * 1.8, 16, color, 2.3, true)
-	if float(enemy.hp) < float(enemy.max_hp):
-		draw_line(at + Vector2(-16, -27), at + Vector2(16, -27), Color("141a29"), 4.0)
-		draw_line(at + Vector2(-16, -27), at + Vector2(-16 + 32 * maxf(0, float(enemy.hp) / float(enemy.max_hp)), -27), DANGER, 3.0)
+		var radius := 27.0 if not boss else 56.0
+		draw_arc(at, radius, PI * 0.2, PI * 0.8, 16, color, 2.3, true)
+		draw_arc(at, radius, PI * 1.2, PI * 1.8, 16, color, 2.3, true)
+	if not boss and float(enemy.hp) < float(enemy.max_hp):
+		var y := -size * 0.75 - (12 if elite else 3)
+		draw_line(at + Vector2(-18, y), at + Vector2(18, y), INK, 5)
+		draw_line(at + Vector2(-18, y), at + Vector2(-18 + 36 * clampf(float(enemy.hp) / float(enemy.max_hp), 0, 1), y), DANGER, 3)
+
+func _draw_bat_wings(at: Vector2, size: float, alpha: float, seed_value: float) -> void:
+	var lift := 0.0 if reduced_motion else sin(run.elapsed * 11 + seed_value) * 3
+	for side in [-1.0, 1.0]:
+		var wing := PackedVector2Array([at + Vector2(side * 8, -10), at + Vector2(side * size * 0.56, -26 - lift), at + Vector2(side * size * 0.43, -2), at + Vector2(side * size * 0.30, -7), at + Vector2(side * size * 0.22, 3), at + Vector2(side * 7, -2)])
+		draw_colored_polygon(wing, Color("6e607e") * Color(1, 1, 1, alpha))
+		var border := wing.duplicate()
+		border.append(wing[0])
+		draw_polyline(border, Color(0.62, 0.55, 0.68, alpha), 1.3, true)
+
+func _draw_sentinel_shield(at: Vector2, alpha: float) -> void:
+	var shield := PackedVector2Array([at + Vector2(-15, -22), at + Vector2(13, -22), at + Vector2(15, 7), at + Vector2(0, 20), at + Vector2(-17, 7)])
+	draw_colored_polygon(shield, Color(0.31, 0.37, 0.38, alpha))
+	var border := shield.duplicate()
+	border.append(shield[0])
+	draw_polyline(border, Color(0.75, 0.76, 0.65, alpha), 2, true)
+	draw_line(at + Vector2(-1, -15), at + Vector2(-1, 13), Color(DANGER, alpha * 0.75), 2, true)
+	draw_line(at + Vector2(-10, -5), at + Vector2(8, -5), Color(DANGER, alpha * 0.75), 2, true)
+
+func _draw_elite_crown(at: Vector2, alpha: float) -> void:
+	var crown := PackedVector2Array([at + Vector2(-15, 6), at + Vector2(-18, -8), at + Vector2(-6, -2), at + Vector2(0, -15), at + Vector2(6, -2), at + Vector2(18, -8), at + Vector2(15, 6)])
+	draw_colored_polygon(crown, Color(0.69, 0.42, 0.47, alpha))
+	var border := crown.duplicate()
+	border.append(crown[0])
+	draw_polyline(border, Color(0.94, 0.74, 0.66, alpha), 1.4, true)
+	_star(at + Vector2(0, 1), 3, Color(PAPER, alpha))
+
+func _draw_boss_fallback(at: Vector2, kind: String, size: float, alpha: float) -> void:
+	# Designed creature silhouettes remain legible before optional art is imported.
+	if kind == "boss_thorn" and textures.has("charger"):
+		draw_texture_rect(textures.charger, Rect2(at + Vector2(-size * 0.5, -size * 0.72), Vector2.ONE * size), false, Color(0.87, 0.97, 0.85, alpha))
+		for side in [-1.0, 1.0]:
+			var branches := PackedVector2Array([at + Vector2(side * 34, -55), at + Vector2(side * 67, -102), at + Vector2(side * 58, -131), at + Vector2(side * 80, -111), at + Vector2(side * 94, -127)])
+			draw_polyline(branches, Color(THORN, alpha), 4, true)
+	elif kind == "boss_mirror" and textures.has("archer"):
+		draw_texture_rect(textures.archer, Rect2(at + Vector2(-size * 0.5, -size * 0.76), Vector2.ONE * size), false, Color(0.84, 0.88, 1.0, alpha))
+		for side in [-1.0, 1.0]:
+			var plate_at := at + Vector2(side * 70, -66)
+			var plate := PackedVector2Array([plate_at + Vector2(0, -42), plate_at + Vector2(20, 0), plate_at + Vector2(0, 42), plate_at + Vector2(-20, 0), plate_at + Vector2(0, -42)])
+			draw_colored_polygon(plate, Color(0.36, 0.50, 0.64, alpha))
+			draw_polyline(plate, Color(BLUE, alpha), 3, true)
+	else:
+		var bell := PackedVector2Array([at + Vector2(-76, 17), at + Vector2(-57, -11), at + Vector2(-49, -90), at + Vector2(-28, -124), at + Vector2(26, -124), at + Vector2(50, -90), at + Vector2(59, -11), at + Vector2(77, 17), at + Vector2(60, 29), at + Vector2(-59, 29)])
+		draw_colored_polygon(bell, Color(0.40, 0.35, 0.26, alpha))
+		var border := bell.duplicate()
+		border.append(bell[0])
+		draw_polyline(border, Color(0.79, 0.70, 0.49, alpha), 4, true)
+		for side in [-1.0, 1.0]:
+			draw_line(at + Vector2(side * 26, -103), at + Vector2(side * 35, 4), Color(GOLD, alpha * 0.5), 3, true)
+		draw_line(at + Vector2(-55, 10), at + Vector2(56, 10), Color(GOLD, alpha), 3, true)
+		_disc(at + Vector2(0, 30), 12, Color(0.76, 0.58, 0.39, alpha))
+		for side in [-1.0, 1.0]:
+			draw_line(at + Vector2(side * 17, -70), at + Vector2(side * 30, -79), Color(DANGER, alpha), 4, true)
 
 func _draw_telegraph(enemy: Dictionary) -> void:
-	if enemy.phase != "warning":
+	if enemy.get("phase", "") != "warning" or bool(enemy.get("boss", false)):
+		return
+	var kind := str(enemy.kind)
+	if kind not in ["charger", "archer", "wisp"]:
 		return
 	var at := world(enemy.position)
-	var direction: Vector2 = enemy.direction
-	var length := 296.0 if enemy.kind == "charger" else 495.0
+	var direction: Vector2 = enemy.get("direction", Vector2.DOWN)
+	var length := float(enemy.get("warning_length", 296 if kind == "charger" else 495))
 	var end := at + direction * length
-	draw_line(at, end, Color(INK, 0.8), 4.2, true)
-	var normal := direction.orthogonal()
-	if enemy.kind == "charger":
-		var poly := PackedVector2Array([at + normal * 18, end + normal * 18, end - normal * 18, at - normal * 18])
-		draw_colored_polygon(poly, Color(DANGER, 0.12))
-		draw_line(at + normal * 18, end + normal * 18, Color(DANGER, 0.65), 1.5, true)
-		draw_line(at - normal * 18, end - normal * 18, Color(DANGER, 0.65), 1.5, true)
+	var progress := 1.0 - float(enemy.get("timer", 0)) / float(enemy.get("warning_duration", 0.95))
+	if kind == "charger":
+		_capsule(at, end, float(enemy.get("warning_width", float(enemy.get("radius", 22)) * 2)), Color(DANGER, 0.10), Color(DANGER, 0.73), 1.5)
+	elif kind == "wisp":
+		for i in range(3):
+			var ray := direction.rotated(float(i - 1) * 0.19)
+			var ray_end := at + ray * length
+			draw_line(at, ray_end, Color(INK, 0.8), 4.2, true)
+			_dotted_line(at, ray_end, Color(DANGER, 0.80), 16, 2)
 	else:
-		_dotted_line(at, end, Color(DANGER, 0.7), 11, 2.0)
-	var progress := 1.0 - float(enemy.timer) / 0.95
-	draw_arc(at, 29.0, -PI * 0.5, -PI * 0.5 + TAU * progress, 48, DANGER, 2.5, true)
-	draw_line(end, end - direction * 14 + normal * 8, DANGER, 2.0, true)
-	draw_line(end, end - direction * 14 - normal * 8, DANGER, 2.0, true)
+		draw_line(at, end, Color(INK, 0.8), 4.2, true)
+		_dotted_line(at, end, Color(DANGER, 0.80), 16, 2)
+	var normal := direction.orthogonal()
+	draw_arc(at, 29, -PI * 0.5, -PI * 0.5 + TAU * clampf(progress, 0, 1), 48, DANGER, 2.5, true)
+	draw_line(end, end - direction * 14 + normal * 8, DANGER, 2, true)
+	draw_line(end, end - direction * 14 - normal * 8, DANGER, 2, true)
+
+func _draw_hazard(hazard: Dictionary) -> void:
+	var age := float(hazard.get("age", 0))
+	var delay := float(hazard.get("delay", 0))
+	var duration := float(hazard.get("duration", 0))
+	if age >= delay + duration:
+		return
+	var active := age >= delay
+	var progress := clampf(age / maxf(0.01, delay), 0, 1)
+	var fill := Color(DANGER, 0.22 if active else 0.045 + progress * 0.055)
+	var edge := Color("ffd5b3") if active else Color(DANGER, 0.85)
+	var at := world(hazard.get("position", Vector2.ZERO))
+	var radius := float(hazard.get("radius", 40))
+	var width := float(hazard.get("width", 20))
+	match str(hazard.get("shape", "circle")):
+		"line":
+			var start := world(hazard.get("from", hazard.get("position", Vector2.ZERO)))
+			var end := world(hazard.get("to", hazard.get("position", Vector2.ZERO)))
+			_capsule(start, end, width, fill, edge, 2.5 if active else 1.8)
+			if active:
+				var normal := (end - start).normalized().orthogonal() * width * 0.36
+				for i in range(1, 9):
+					var point := start.lerp(end, float(i) / 9)
+					draw_line(point - normal, point + normal, Color(DANGER, 0.53), 2, true)
+			else:
+				_dotted_line(start, start.lerp(end, progress), Color(DANGER, 0.70), 16, 2)
+		"ring":
+			var outer := radius + width * 0.5
+			var inner := maxf(0, radius - width * 0.5)
+			if inner <= 0:
+				_disc(at, outer, fill)
+			else:
+				draw_arc(at, radius, 0, TAU, 112, fill, width, true)
+			draw_arc(at, outer, 0, TAU, 112, edge, 2.4 if active else 1.8, true)
+			if inner > 0:
+				draw_arc(at, inner, 0, TAU, 112, edge, 2.4 if active else 1.8, true)
+			for i in range(20):
+				var direction := Vector2.from_angle(float(i) * TAU / 20)
+				draw_line(at + direction * (inner + 3), at + direction * (outer - 3), Color(DANGER, 0.48 if active else 0.20), 2, true)
+			if not active:
+				draw_arc(at, radius, -PI * 0.5, -PI * 0.5 + TAU * progress, 80, Color(DANGER, 0.72), 2, true)
+		_:
+			_disc(at, radius, fill)
+			draw_arc(at, radius, 0, TAU, 80, edge, 2.5 if active else 1.8, true)
+			if active:
+				for i in range(8):
+					var direction := Vector2.from_angle(float(i) * TAU / 8)
+					draw_line(at + direction * maxf(10, radius - 14), at + direction * maxf(12, radius - 4), Color(DANGER, 0.85), 2, true)
+			else:
+				draw_arc(at, maxf(2, radius - 5), -PI * 0.5, -PI * 0.5 + TAU * progress, 64, Color(DANGER, 0.48), 2, true)
+	# Center warning has a different silhouette from both pickups and spell sigils.
+	if str(hazard.get("shape", "circle")) != "ring":
+		var sign_at := at
+		if str(hazard.get("shape", "")) == "line":
+			sign_at = world(hazard.get("from", Vector2.ZERO)).lerp(world(hazard.get("to", Vector2.ZERO)), 0.5)
+		draw_line(sign_at + Vector2(0, -8), sign_at + Vector2(0, 1), edge, 3, true)
+		_disc(sign_at + Vector2(0, 6), 1.8, edge)
 
 func _draw_pickup(pickup: Dictionary) -> void:
 	var at := world(pickup.position)
-	if not Rect2(Vector2(-15, -15), screen + Vector2(30, 30)).has_point(at):
+	if not _on_screen(at, 24):
 		return
-	var size := 5.0 + minf(int(pickup.value), 3)
-	draw_circle(at, size * 1.9, Color(GOLD, 0.07))
-	var diamond := PackedVector2Array([at + Vector2(0, -size), at + Vector2(size * 0.7, 0), at + Vector2(0, size), at + Vector2(-size * 0.7, 0)])
-	draw_colored_polygon(diamond, GOLD)
-	draw_line(at + Vector2(0, -size + 1), at + Vector2(0, size - 1), PAPER, 1.2)
-	if (pickup.position as Vector2).distance_to(run.player) < run.pickup_radius:
-		draw_line(at, at.lerp(world(run.player), 0.12), Color(GOLD, 0.22), 1.0)
+	var kind := str(pickup.get("kind", "xp"))
+	if kind == "xp":
+		var size := 5.0 + minf(int(pickup.get("value", 1)), 3)
+		_disc(at, size * 1.8, Color(GOLD, 0.065))
+		var diamond := PackedVector2Array([at + Vector2(0, -size), at + Vector2(size * 0.7, 0), at + Vector2(0, size), at + Vector2(-size * 0.7, 0)])
+		draw_colored_polygon(diamond, GOLD)
+		draw_line(at + Vector2(0, -size + 1), at + Vector2(0, size - 1), PAPER, 1.2)
+		if (pickup.position as Vector2).distance_to(run.player) < run.pickup_radius:
+			draw_line(at, at.lerp(world(run.player), 0.12), Color(GOLD, 0.22), 1)
+		return
+	_ellipse(at + Vector2(0, 8), Vector2(13, 5), Color(0, 0.01, 0.02, 0.50))
+	_disc(at, 17, Color(INK, 0.96))
+	draw_arc(at, 17, 0, TAU, 40, Color(GOLD, 0.65), 1.6, true)
+	match kind:
+		"heal":
+			var bottle := PackedVector2Array([at + Vector2(-4, -10), at + Vector2(4, -10), at + Vector2(4, -5), at + Vector2(8, -1), at + Vector2(7, 9), at + Vector2(-7, 9), at + Vector2(-8, -1), at + Vector2(-4, -5)])
+			draw_colored_polygon(bottle, Color("bb8291"))
+			draw_line(at + Vector2(-4, -11), at + Vector2(4, -11), GOLD, 3, true)
+			draw_line(at + Vector2(0, -2), at + Vector2(0, 6), PAPER, 2, true)
+			draw_line(at + Vector2(-4, 2), at + Vector2(4, 2), PAPER, 2, true)
+		"magnet":
+			draw_arc(at + Vector2(0, -1), 8, 0, PI, 24, BLUE, 5, true)
+			draw_line(at + Vector2(-8, -7), at + Vector2(-8, 0), PAPER, 4, true)
+			draw_line(at + Vector2(8, -7), at + Vector2(8, 0), GOLD, 4, true)
+		"ward":
+			var leaf := PackedVector2Array([at + Vector2(-7, 9), at + Vector2(-9, -2), at + Vector2(-4, -10), at + Vector2(9, -10), at + Vector2(8, 2), at + Vector2(-7, 9)])
+			draw_colored_polygon(leaf, THORN)
+			draw_line(at + Vector2(-6, 10), at + Vector2(5, -6), INK, 1.5, true)
+		"blast":
+			_star(at, 10, GOLD)
+			_disc(at, 3.5, PAPER)
+		_:
+			_star(at, 8, GOLD)
+
+func _draw_chest(chest: Dictionary) -> void:
+	var at := world(chest.position)
+	if not _on_screen(at, 50):
+		return
+	var opened := bool(chest.get("opened", false))
+	_ellipse(at + Vector2(0, 11), Vector2(24, 8), Color(0, 0.01, 0.02, 0.55))
+	if not opened:
+		_elliptic_arc(at + Vector2(0, 9), Vector2(26, 11), 0, TAU, Color(GOLD, 0.60), 1.5)
+		for side in [-1.0, 1.0]:
+			_star(at + Vector2(side * 28, -11), 3, GOLD)
+	draw_rect(Rect2(at + Vector2(-18, -9), Vector2(36, 24)), Color("493841"))
+	draw_rect(Rect2(at + Vector2(-18, -9), Vector2(36, 24)), GOLD, false, 2)
+	var lid_y := -26.0 if opened else -14.0
+	var lid := PackedVector2Array([at + Vector2(-20, lid_y + 7), at + Vector2(-15, lid_y - 4), at + Vector2(14, lid_y - 4), at + Vector2(20, lid_y + 7), at + Vector2(-20, lid_y + 7)])
+	draw_colored_polygon(lid, Color("66505b"))
+	draw_polyline(lid, GOLD, 2, true)
+	for x in [-11.0, 11.0]:
+		draw_line(at + Vector2(x, lid_y - 2), at + Vector2(x, 13), Color(GOLD, 0.73), 2, true)
+	draw_rect(Rect2(at + Vector2(-4, -5), Vector2(8, 9)), GOLD)
+	if not opened:
+		_star(at + Vector2(0, -1), 3, PAPER)
+
+func _draw_wayfinding() -> void:
+	# Edge pointers refer to real persistent objects, with the HUD bands excluded.
+	var safe := Rect2(43, 129, maxf(1, screen.x - 86), maxf(1, screen.y - 260))
+	var markers := 0
+	for chest in run.chests:
+		if bool(chest.get("opened", false)):
+			continue
+		var target := world(chest.position)
+		if safe.has_point(target):
+			continue
+		_draw_edge_pointer(_edge_position(target, safe), target, GOLD, false)
+		markers += 1
+		if markers >= 2:
+			break
+	for enemy in run.enemies:
+		if not bool(enemy.get("boss", false)):
+			continue
+		var target := world(enemy.position)
+		if not safe.has_point(target):
+			_draw_edge_pointer(_edge_position(target, safe), target, DANGER, true)
+		break
+
+func _edge_position(target: Vector2, safe: Rect2) -> Vector2:
+	var origin := world(run.player)
+	var direction := (target - origin).normalized()
+	var distance := INF
+	if absf(direction.x) > 0.0001:
+		distance = minf(distance, ((safe.end.x if direction.x > 0 else safe.position.x) - origin.x) / direction.x)
+	if absf(direction.y) > 0.0001:
+		distance = minf(distance, ((safe.end.y if direction.y > 0 else safe.position.y) - origin.y) / direction.y)
+	return origin + direction * maxf(0, distance)
+
+func _draw_edge_pointer(at: Vector2, target: Vector2, color: Color, boss: bool) -> void:
+	var direction := (target - at).normalized()
+	var normal := direction.orthogonal()
+	var frame := PackedVector2Array([at + Vector2(0, -19), at + Vector2(19, 0), at + Vector2(0, 19), at + Vector2(-19, 0), at + Vector2(0, -19)])
+	draw_colored_polygon(frame, Color(INK, 0.95))
+	draw_polyline(frame, Color(color, 0.65), 1.4, true)
+	var arrow_tip := at + direction * 30
+	draw_polyline(PackedVector2Array([arrow_tip - direction * 7 + normal * 5, arrow_tip, arrow_tip - direction * 7 - normal * 5]), color, 2, true)
+	if boss:
+		var crown := PackedVector2Array([at + Vector2(-9, 5), at + Vector2(-11, -7), at + Vector2(-4, -2), at + Vector2(0, -11), at + Vector2(4, -2), at + Vector2(11, -7), at + Vector2(9, 5)])
+		draw_colored_polygon(crown, color)
+	else:
+		draw_rect(Rect2(at + Vector2(-9, -3), Vector2(18, 12)), Color(color, 0.20))
+		draw_rect(Rect2(at + Vector2(-9, -3), Vector2(18, 12)), color, false, 1.5)
+		draw_polyline(PackedVector2Array([at + Vector2(-10, -3), at + Vector2(-7, -9), at + Vector2(7, -9), at + Vector2(10, -3)]), color, 1.5, true)
+		_star(at + Vector2(0, 1), 3, PAPER)
 
 func _draw_projectile(shot: Dictionary) -> void:
-	if float(shot.age) < 0.0:
+	if float(shot.get("age", 0)) < 0:
 		return
 	var at := world(shot.position)
-	if shot.kind == "bolt":
-		var direction: Vector2 = (shot.velocity as Vector2).normalized()
-		draw_line(at - direction * 14, at + direction * 5, Color(DANGER, 0.3), 8, true)
-		draw_line(at - direction * 9, at + direction * 5, DANGER, 3, true)
-		draw_circle(at, 4, PAPER)
+	var kind := str(shot.kind)
+	var radius := float(shot.get("radius", 10))
+	if not _on_screen(at, maxf(40, radius + 10)):
+		return
+	var age := float(shot.get("age", 0))
+	var duration := float(shot.get("duration", 1))
+	var alpha := clampf((duration - age) / minf(0.28, duration * 0.35), 0, 1)
+	var is_echo := bool(shot.get("echo", false))
+	var evolved := bool(shot.get("evolved", false))
+	var color := BLUE if is_echo else PAPER
+	match kind:
+		"bolt":
+			var direction: Vector2 = (shot.get("velocity", Vector2.DOWN) as Vector2).normalized()
+			draw_line(at - direction * 14, at + direction * 5, Color(DANGER, 0.28), 8, true)
+			draw_line(at - direction * 9, at + direction * 5, DANGER, 3, true)
+			_disc(at, 3, PAPER)
+		"thorn":
+			_draw_thorn_projectile(at, shot, Color(BLUE if is_echo else THORN, alpha), evolved)
+		"wisp":
+			_draw_wisp_projectile(at, shot, Color(BLUE if is_echo else WISP, alpha), evolved)
+		"bramble":
+			_draw_bramble_field(at, float(shot.get("current_radius", radius)), Color(BLUE if is_echo else THORN, alpha), is_echo)
+		"frost":
+			_draw_frost_field(at, radius, age, Color(BLUE if is_echo else FROST, alpha), evolved, is_echo)
+		"bell":
+			var current_radius := float(shot.get("current_radius", radius * minf(1, age / 0.75)))
+			_draw_bell_wave(at, current_radius, float(shot.get("width", 22)), Color(BLUE if is_echo else GOLD, alpha), evolved, is_echo)
+		"moon":
+			var current_radius := float(shot.get("current_radius", radius * minf(1, age / 0.55)))
+			_draw_moon_wave(at, current_radius, age, Color(color, alpha), evolved, is_echo)
+
+func _draw_moon_wave(at: Vector2, radius: float, age: float, color: Color, evolved: bool, is_echo: bool) -> void:
+	_disc(at, radius, Color(color, color.a * 0.025))
+	draw_arc(at, radius, 0, TAU, 80, Color(color, color.a * 0.12), 10, true)
+	draw_arc(at, radius, 0, TAU, 80, color, 2.3, true)
+	if evolved:
+		draw_arc(at, maxf(0, radius - 8), 0, TAU, 80, Color(BLUE if not is_echo else GOLD, color.a * 0.63), 1.8, true)
+	for i in range(8 if evolved else 5):
+		var angle := float(i) * TAU / (8 if evolved else 5) + age * (0.0 if reduced_motion else 0.50)
+		var point := at + Vector2.from_angle(angle) * radius
+		draw_arc(point, 7 if evolved else 5, angle - PI * 0.65, angle + PI * 0.65, 16, color, 2, true)
+		if evolved:
+			_star(point + Vector2.from_angle(angle) * 11, 2.5, color)
+
+func _draw_thorn_projectile(at: Vector2, shot: Dictionary, color: Color, evolved: bool) -> void:
+	var direction: Vector2 = shot.get("direction", (shot.get("velocity", Vector2.RIGHT) as Vector2).normalized())
+	var angle := direction.angle()
+	draw_set_transform(at, angle)
+	var spear := PackedVector2Array([Vector2(19, 0), Vector2(-2, -5), Vector2(-10, -3), Vector2(-20, -6), Vector2(-12, 0), Vector2(-20, 6), Vector2(-10, 3), Vector2(-2, 5)])
+	draw_colored_polygon(spear, Color(color, color.a * 0.55))
+	draw_line(Vector2(-21, 0), Vector2(19, 0), color, 2.2, true)
+	for x in [-9.0, 0.0]:
+		draw_polyline(PackedVector2Array([Vector2(x - 5, -7), Vector2(x, 0), Vector2(x - 5, 7)]), color, 1.7, true)
+	if evolved:
+		draw_line(Vector2(-25, -3), Vector2(13, -3), Color(PAPER, color.a), 1, true)
+		draw_line(Vector2(-25, 3), Vector2(13, 3), Color(PAPER, color.a), 1, true)
+	draw_set_transform(Vector2.ZERO)
+
+func _draw_wisp_projectile(at: Vector2, shot: Dictionary, color: Color, evolved: bool) -> void:
+	var velocity: Vector2 = shot.get("velocity", Vector2.UP)
+	var direction := velocity.normalized()
+	if direction == Vector2.ZERO:
+		direction = Vector2.UP
+	var normal := direction.orthogonal()
+	var flame := PackedVector2Array([at + direction * 13, at + normal * 9 + direction * 2, at + normal * 5 - direction * 10, at - direction * 22, at - normal * 6 - direction * 9, at - normal * 10 + direction * 3])
+	draw_colored_polygon(flame, Color(color, color.a * 0.64))
+	draw_line(at - direction * 10, at + direction * 10, Color(PAPER, color.a), 3, true)
+	_star(at, 6, Color(PAPER, color.a))
+	if evolved:
+		for side in [-1.0, 1.0]:
+			var wing := PackedVector2Array([at + normal * side * 4 - direction * 3, at + normal * side * 14 + direction * 4, at + normal * side * 10 - direction * 11, at - direction * 15])
+			draw_polyline(wing, Color(color, color.a * 0.85), 1.8, true)
+
+func _draw_bramble_field(at: Vector2, radius: float, color: Color, is_echo: bool) -> void:
+	_disc(at, radius, Color(color, color.a * 0.035))
+	draw_arc(at, radius, 0, TAU, 64, Color(color, color.a * 0.55), 1.4, true)
+	for i in range(9):
+		var direction := Vector2.from_angle(float(i) * TAU / 9)
+		var point := at + direction * radius * 0.76
+		var tangent := direction.orthogonal()
+		var root := at + direction * radius * 0.26
+		draw_polyline(PackedVector2Array([root, point - tangent * 3, point + direction * 9]), Color(color, color.a * 0.60), 2.2, true)
+		for side in [-1.0, 1.0]:
+			var thorn := PackedVector2Array([point - direction * 12, point + tangent * side * 8, point + direction * 3, point - direction * 12])
+			draw_colored_polygon(thorn, Color(color, color.a * 0.42))
+		if is_echo:
+			draw_arc(at, radius - 4, float(i) * TAU / 9, float(i) * TAU / 9 + 0.25, 6, Color(color, color.a * 0.50), 1, true)
+
+func _draw_frost_field(at: Vector2, radius: float, age: float, color: Color, evolved: bool, is_echo: bool) -> void:
+	_disc(at, radius, Color(color, color.a * 0.045))
+	draw_arc(at, radius, 0, TAU, 72, Color(color, color.a * 0.45), 1.4, true)
+	var crystal_count := 12 if evolved else 6
+	for i in range(crystal_count):
+		var angle := float(i) * TAU / crystal_count
+		var direction := Vector2.from_angle(angle)
+		var tangent := direction.orthogonal()
+		var crystal_at := at + direction * radius * 0.64
+		var height := minf(18, radius * 0.22)
+		var crystal := PackedVector2Array([crystal_at - direction * height, crystal_at - tangent * 5, crystal_at + direction * height * 0.9, crystal_at + tangent * 5, crystal_at - direction * height])
+		draw_colored_polygon(crystal, Color(color, color.a * 0.17))
+		draw_polyline(crystal, Color(color, color.a * 0.75), 1.5, true)
+		draw_line(at + direction * radius * 0.19, crystal_at - direction * height, Color(color, color.a * 0.27), 1, true)
+		if evolved:
+			draw_line(at + direction * radius * 0.78, at + direction.rotated(TAU / crystal_count) * radius * 0.78, Color(color, color.a * 0.32), 1.5, true)
+	if is_echo:
+		for i in range(12):
+			var a := float(i) * TAU / 12
+			draw_arc(at, maxf(0, radius - 5), a, a + 0.20, 6, Color(color, color.a * 0.50), 1.2, true)
+	var pulse := 0.65 if reduced_motion else 0.58 + sin(age * 6) * 0.10
+	_star(at, 8 if evolved else 5, Color(color, color.a * pulse))
+
+func _draw_bell_wave(at: Vector2, radius: float, width: float, color: Color, evolved: bool, is_echo: bool) -> void:
+	if radius < width * 0.5:
+		_disc(at, radius + width * 0.5, Color(color, color.a * 0.05))
 	else:
-		var radius := float(shot.radius) * minf(1.0, float(shot.age) / 0.55)
-		var alpha := clampf((float(shot.duration) - float(shot.age)) / 0.25, 0.0, 1.0)
-		var color := Color(BLUE if shot.echo else PAPER, alpha)
-		draw_arc(at, radius, 0, TAU, 80, Color(color, alpha * 0.10), 15, true)
-		draw_arc(at, radius, 0, TAU, 80, color, 2.5, true)
-		draw_arc(at, maxf(radius - 6, 0.0), 0, TAU, 80, Color(color, alpha * 0.35), 1.0, true)
-		for i in range(5):
-			var angle := float(i) * TAU / 5.0 + float(shot.age) * (0.0 if reduced_motion else 0.5)
-			var position_on_ring := at + Vector2.from_angle(angle) * radius
-			draw_arc(position_on_ring, 5, -PI * 0.7, PI * 0.7, 12, color, 1.8, true)
+		draw_arc(at, radius, 0, TAU, 88, Color(color, color.a * 0.07), width, true)
+	for i in range(3 if evolved else 2):
+		var r := maxf(0, radius - float(i) * (11 if evolved else 6))
+		draw_arc(at, r, 0, TAU, 88, Color(color, color.a * (1.0 if i == 0 else 0.35)), 2.4 if i == 0 else 1.4, true)
+	var count := 12 if evolved else 8
+	for i in range(count):
+		var direction := Vector2.from_angle(float(i) * TAU / count)
+		var point := at + direction * radius
+		draw_line(point - direction * 6, point + direction * 5, color, 1.8, true)
+		if evolved:
+			_star(point, 4, Color(PAPER if not is_echo else BLUE, color.a))
+	_draw_lantern(at, 0.50, Color(color, color.a * 0.65), true)
 
 func _draw_effect(effect: Dictionary) -> void:
-	var progress := float(effect.age) / float(effect.duration)
+	var duration := maxf(0.01, float(effect.get("duration", 0.5)))
+	var progress := clampf(float(effect.get("age", 0)) / duration, 0, 1)
 	var alpha := 1.0 - progress
-	match str(effect.kind):
+	var kind := str(effect.kind)
+	var evolved := bool(effect.get("evolved", false))
+	var is_echo := bool(effect.get("echo", false))
+	var at := world(effect.get("position", Vector2.ZERO))
+	if kind != "lightning" and not _on_screen(at, float(effect.get("radius", 80))):
+		return
+	match kind:
 		"lightning":
 			var from := world(effect.from)
 			var to := world(effect.to)
-			var color := Color(BLUE if effect.echo else GOLD, alpha)
+			var color := Color(BLUE if is_echo else GOLD, alpha)
 			var normal := (to - from).normalized().orthogonal()
 			var points := PackedVector2Array([from])
 			for i in range(1, 12):
-				var wave := sin(float(effect.seed) + float(i) * 5.73) * (3.0 if reduced_motion else 10.0)
-				points.append(from.lerp(to, float(i) / 12.0) + normal * wave)
+				var wave := sin(float(effect.get("seed", 0)) + float(i) * 5.73) * (3 if reduced_motion else 10)
+				points.append(from.lerp(to, float(i) / 12) + normal * wave)
 			points.append(to)
-			draw_polyline(points, Color(color, alpha * 0.12), float(effect.width) + 5, true)
-			draw_polyline(points, color, 3.0 + float(effect.width) * 0.07, true)
-			draw_circle(from, 8.0 * alpha, Color(color, alpha * 0.45))
-			draw_polyline(points, Color(PAPER, alpha * 0.9), 1.0, true)
+			draw_polyline(points, Color(color, alpha * 0.11), float(effect.get("width", 16)) + 5, true)
+			draw_polyline(points, color, 3.0 + float(effect.get("width", 16)) * 0.07, true)
+			draw_polyline(points, Color(PAPER, alpha * 0.90), 1, true)
+			if evolved:
+				for side in [-1.0, 1.0]:
+					var branch := PackedVector2Array([from])
+					for i in range(1, 8):
+						branch.append(from.lerp(to, float(i) / 8) + normal * sin(float(i) * PI / 8) * side * 11)
+					branch.append(to)
+					draw_polyline(branch, Color(BLUE if not is_echo else GOLD, alpha * 0.75), 1.4, true)
+			_star(from, 8 * alpha, color)
+		"wisp":
+			var radius := float(effect.get("radius", 50))
+			var color := Color(BLUE if is_echo else WISP, alpha)
+			draw_arc(at, radius, 0, TAU, 48, Color(color, alpha * 0.35), 1.6, true)
+			for i in range(9 if evolved else 6):
+				var direction := Vector2.from_angle(float(i) * TAU / (9 if evolved else 6))
+				var drift := 0.62 if reduced_motion else lerpf(0.35, 0.85, progress)
+				_star(at + direction * radius * drift, 7 * alpha, color)
+			_star(at, 9 * alpha, Color(PAPER, alpha))
+		"boss_phase":
+			_draw_elite_crown(at + Vector2(0, -148), alpha)
+			for side in [-1.0, 1.0]:
+				draw_line(at + Vector2(side * 27, -146), at + Vector2(side * 52, -146), Color(DANGER, alpha), 2, true)
 		"number":
-			var at := world(effect.position) - Vector2(7, 25 + progress * (5.0 if reduced_motion else 24.0))
-			var color := Color(BLUE if effect.echo else PAPER, alpha)
-			draw_string_outline(font, at, str(effect.text), HORIZONTAL_ALIGNMENT_LEFT, -1, 17, 3, Color(INK, alpha))
-			draw_string(font, at, str(effect.text), HORIZONTAL_ALIGNMENT_LEFT, -1, 17, color)
+			if number_labels >= MAX_NUMBERS:
+				return
+			number_labels += 1
+			at -= Vector2(7, 25 + (0 if reduced_motion else progress * 22))
+			var color := Color(BLUE if is_echo else PAPER, alpha)
+			draw_string_outline(font, at, str(effect.get("text", "")), HORIZONTAL_ALIGNMENT_LEFT, -1, 16, 3, Color(INK, alpha))
+			draw_string(font, at, str(effect.get("text", "")), HORIZONTAL_ALIGNMENT_LEFT, -1, 16, color)
 		"vanish":
-			var at := world(effect.position)
 			for i in range(5):
-				var direction := Vector2.from_angle(TAU * float(i) / 5.0)
-				draw_line(at + direction * (5 + progress * 13), at + direction * (9 + progress * 19), Color(GOLD, alpha * 0.8), 2.0, true)
+				var direction := Vector2.from_angle(TAU * float(i) / 5)
+				var drift := 5.0 if reduced_motion else progress * 15
+				draw_line(at + direction * (5 + drift), at + direction * (9 + drift), Color(GOLD, alpha * 0.75), 1.8, true)
 		"resonance":
-			var at := world(effect.position)
-			var radius := 18.0 + progress * (12.0 if reduced_motion else 42.0)
-			draw_arc(at, radius, 0, PI, 32, Color(GOLD, alpha * 0.9), 3, true)
-			draw_arc(at, radius, PI, TAU, 32, Color(BLUE, alpha * 0.9), 3, true)
-			for i in range(6):
-				var direction := Vector2.from_angle(float(i) * TAU / 6.0)
-				draw_line(at + direction * radius * 0.5, at + direction * (radius + 10), Color(PAPER, alpha * 0.65), 1.7, true)
-			if resonance_labels < 4:
+			var radius := 30.0 if reduced_motion else 18.0 + progress * 36
+			draw_arc(at, radius, 0, PI, 32, Color(GOLD, alpha * 0.90), 2.5, true)
+			draw_arc(at, radius, PI, TAU, 32, Color(BLUE, alpha * 0.90), 2.5, true)
+			if resonance_labels < 3:
 				resonance_labels += 1
-				var label_at := at + Vector2(-36, -38 - progress * 10)
-				var label := "挟撃 +%d" % roundi(float(effect.get("damage", 0.0)))
+				var label_at := at + Vector2(-36, -44 if reduced_motion else -38 - progress * 10)
+				var label := "挟撃 +%d" % roundi(float(effect.get("damage", 0)))
 				draw_string_outline(font, label_at, label, HORIZONTAL_ALIGNMENT_LEFT, -1, 18, 4, Color(INK, alpha))
 				draw_string(font, label_at, label, HORIZONTAL_ALIGNMENT_LEFT, -1, 18, Color(GOLD, alpha))
 		"hurt":
-			var at := world(effect.position)
-			draw_arc(at, 24 + progress * 28, 0, TAU, 40, Color(DANGER, alpha * 0.8), 3, true)
+			draw_arc(at, 38 if reduced_motion else 24 + progress * 28, 0, TAU, 40, Color(DANGER, alpha * 0.80), 3, true)
+		"blast":
+			var radius := float(effect.get("radius", 420)) * (0.65 if reduced_motion else lerpf(0.10, 1.0, progress))
+			draw_arc(at, radius, 0, TAU, 100, Color(GOLD, alpha * 0.65), 4, true)
+			for i in range(12):
+				var direction := Vector2.from_angle(float(i) * TAU / 12)
+				draw_line(at + direction * radius * 0.80, at + direction * radius, Color(PAPER, alpha * 0.62), 2, true)
+		"shield":
+			var radius := float(effect.get("radius", 38))
+			draw_arc(at, radius, 0, TAU, 56, Color(THORN, alpha * 0.75), 2, true)
+			for i in range(6):
+				_star(at + Vector2.from_angle(float(i) * TAU / 6) * radius, 3, Color(PAPER, alpha))
+
+func _draw_lantern(at: Vector2, scale_factor: float, color: Color, bell_shape: bool = false) -> void:
+	draw_set_transform(at, 0, Vector2.ONE * scale_factor)
+	var silhouette := PackedVector2Array([Vector2(-10, 9), Vector2(-7, -7), Vector2(-4, -12), Vector2(4, -12), Vector2(7, -7), Vector2(10, 9), Vector2(-10, 9)]) if bell_shape else PackedVector2Array([Vector2(-8, -9), Vector2(8, -9), Vector2(10, 9), Vector2(-10, 9), Vector2(-8, -9)])
+	draw_colored_polygon(silhouette, Color(INK, color.a))
+	draw_polyline(silhouette, color, 2, true)
+	draw_line(Vector2(-11, 12), Vector2(11, 12), color, 2, true)
+	if bell_shape:
+		_disc(Vector2(0, 15), 3, color)
+	else:
+		draw_arc(Vector2(0, -12), 5, PI, TAU, 16, color, 2, true)
+	draw_set_transform(Vector2.ZERO)
+	if not bell_shape:
+		_star(at, 5 * scale_factor, color)
 
 func _draw_vignette() -> void:
-	# Opaque edge bands separate the HUD from a busy garden without hiding paths.
-	draw_rect(Rect2(0, 0, screen.x, 110), Color(INK, 0.12))
-	draw_rect(Rect2(0, screen.y - 110, screen.x, 110), Color(INK, 0.1))
+	draw_rect(Rect2(0, 0, screen.x, 100), Color(INK, 0.09))
+	draw_rect(Rect2(0, screen.y - 105, screen.x, 105), Color(INK, 0.10))
+
+func _capsule(from: Vector2, to: Vector2, width: float, fill: Color, border: Color, stroke: float) -> void:
+	var radius := width * 0.5
+	draw_line(from, to, fill, width, true)
+	_disc(from, radius, fill)
+	_disc(to, radius, fill)
+	var angle := (to - from).angle()
+	var points := PackedVector2Array()
+	for i in range(17):
+		points.append(to + Vector2.from_angle(angle - PI * 0.5 + float(i) * PI / 16) * radius)
+	for i in range(17):
+		points.append(from + Vector2.from_angle(angle + PI * 0.5 + float(i) * PI / 16) * radius)
+	points.append(points[0])
+	draw_polyline(points, border, stroke, true)
+
+static func _star_points(radius: float) -> PackedVector2Array:
+	# Fading effects can retain a positive, subpixel radius on their final tick.
+	# Keep triangulation near the origin: screen coordinates lose the tiny area.
+	if radius < MIN_STAR_RADIUS:
+		return PackedVector2Array()
+	var points := PackedVector2Array()
+	for i in range(8):
+		points.append(Vector2.from_angle(-PI * 0.5 + float(i) * TAU / 8) * (radius if i % 2 == 0 else radius * 0.25))
+	return points
+
+func _star(at: Vector2, radius: float, color: Color) -> void:
+	var points := _star_points(radius)
+	if points.is_empty():
+		return
+	draw_set_transform(at)
+	draw_colored_polygon(points, color)
+	draw_set_transform(Vector2.ZERO)
+
+func _disc(at: Vector2, radius: float, color: Color) -> void:
+	if radius <= 0.0:
+		return
+	var padded_radius := radius * DISC_PADDING
+	draw_texture_rect(WHITE_DISC, Rect2(at - Vector2.ONE * padded_radius, Vector2.ONE * padded_radius * 2), false, color)
 
 func _ellipse(center: Vector2, radius: Vector2, color: Color) -> void:
-	draw_set_transform(center, 0, Vector2(1, radius.y / radius.x))
-	draw_circle(Vector2.ZERO, radius.x, color)
-	draw_set_transform(Vector2.ZERO)
+	var padded_radius := radius * DISC_PADDING
+	draw_texture_rect(WHITE_DISC, Rect2(center - padded_radius, padded_radius * 2), false, color)
 
 func _elliptic_arc(center: Vector2, radius: Vector2, from: float, to: float, color: Color, width: float) -> void:
 	var points := PackedVector2Array()
 	for i in range(33):
-		var angle := lerpf(from, to, float(i) / 32.0)
+		var angle := lerpf(from, to, float(i) / 32)
 		points.append(center + Vector2(cos(angle) * radius.x, sin(angle) * radius.y))
 	draw_polyline(points, color, width, true)
 
 func _dotted_line(from: Vector2, to: Vector2, color: Color, segments: int, width: float) -> void:
 	for i in range(segments):
-		var start := float(i) / float(segments)
-		var end := minf(1.0, start + 0.5 / float(segments))
+		var start := float(i) / segments
+		var end := minf(1, start + 0.5 / segments)
 		draw_line(from.lerp(to, start), from.lerp(to, end), color, width, true)
+
+func _on_screen(at: Vector2, margin: float) -> bool:
+	return Rect2(Vector2.ONE * -margin, screen + Vector2.ONE * margin * 2).has_point(at)

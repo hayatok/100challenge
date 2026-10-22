@@ -1,5 +1,5 @@
 extends Node
-## Local PCM bells and a quiet looping night motif. No network or external audio.
+## Original local PCM music and bells. Playback starts only on explicit transitions.
 
 var enabled := true
 var players: Array[AudioStreamPlayer] = []
@@ -9,6 +9,10 @@ var music: AudioStreamPlayer
 var context := "title"
 var music_started := false
 var music_start_count := 0
+var music_volume := 0.65
+var sfx_volume := 0.8
+var scene_key := "garden"
+var themes: Dictionary = {}
 
 func _ready() -> void:
 	for i in range(10):
@@ -25,13 +29,29 @@ func _ready() -> void:
 	sounds.defeat = _chord([196.0, 233.1, 293.6], 0.65)
 	sounds.start = _chord([329.6, 440.0], 0.25)
 	sounds.resonance = _chord([587.3, 880.0, 1174.6], 0.19)
+	sounds.thorn = _tone(310, 95, 0.19, 0.26, 0.45)
+	sounds.wisp = _tone(540, 840, 0.23, 0.22, 0.05)
+	sounds.frost = _chord([1046.5, 1396.9], 0.17)
+	sounds.bell = _chord([261.6, 523.3, 783.9], 0.31)
+	sounds.treasure = _chord([523.3, 659.2, 783.9, 1046.5], 0.72)
+	sounds.evolution = _chord([392.0, 523.3, 659.2, 783.9, 1046.5], 0.95)
+	sounds.boss = _chord([65.4, 98.0, 130.8], 0.8)
+	sounds.chapter = _chord([392.0, 493.9, 587.3, 783.9], 0.78)
+	for id in ["garden", "mirror", "bell", "boss"]:
+		var stream := load("res://assets/audio/theme-%s.wav" % id) as AudioStreamWAV
+		if stream != null:
+			stream.loop_mode = AudioStreamWAV.LOOP_FORWARD
+			stream.loop_begin = 0
+			stream.loop_end = stream.data.size() / (4 if stream.stereo else 2)
+			themes[id] = stream
 	music = AudioStreamPlayer.new()
 	music.volume_db = -13.0
-	music.stream = _night_motif()
+	music.stream = themes["garden"] if themes.has("garden") else _night_motif()
 	add_child(music)
+	set_levels(music_volume, sfx_volume)
 
 func play_event(event: String) -> void:
-	if not enabled or not sounds.has(event) or players.is_empty():
+	if not enabled or sfx_volume <= 0.0 or not sounds.has(event) or players.is_empty():
 		return
 	var player := players[next_player]
 	next_player = (next_player + 1) % players.size()
@@ -47,6 +67,28 @@ func set_enabled(value: bool) -> void:
 		play_event("pickup")
 		_sync_music()
 
+func set_levels(music_level: float, sfx_level: float) -> void:
+	var was_muted := music_volume <= 0.0
+	music_volume = clampf(music_level, 0.0, 1.0)
+	sfx_volume = clampf(sfx_level, 0.0, 1.0)
+	if is_instance_valid(music):
+		music.volume_db = linear_to_db(maxf(0.0001, music_volume)) - 9.0
+	for player in players:
+		player.volume_db = linear_to_db(maxf(0.0001, sfx_volume)) - 17.0
+	if music_volume <= 0.0 or was_muted:
+		_sync_music()
+
+func set_scene(chapter: int, boss: bool) -> void:
+	var next_key := "boss" if boss else str(["garden", "mirror", "bell"][clampi(chapter, 0, 2)])
+	if next_key == scene_key:
+		return
+	scene_key = next_key
+	if is_instance_valid(music) and themes.has(scene_key):
+		music.stop()
+		music.stream = themes[scene_key]
+		music_started = false
+		_sync_music()
+
 func set_context(value: String) -> void:
 	if value == context:
 		return
@@ -56,7 +98,7 @@ func set_context(value: String) -> void:
 func _sync_music() -> void:
 	if not is_instance_valid(music):
 		return
-	if not enabled or context in ["title", "victory", "defeat"]:
+	if not enabled or music_volume <= 0.0 or context in ["title", "victory", "defeat"]:
 		music.stop()
 		music_started = false
 	elif context == "playing":

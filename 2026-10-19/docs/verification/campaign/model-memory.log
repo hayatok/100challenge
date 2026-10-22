@@ -1,0 +1,13 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+MODEL_MEMORY {"nodes":0.0,"objects":1487.0,"orphan_nodes":1.0,"pid":16520,"resources":7.0,"stage":"before","static_bytes":25163905.0}
+MODEL_RESULT {"elapsed":674.833333333377,"history_samples":66,"max_enemies":29,"max_projectiles":18,"round":0,"state":"victory"}
+MODEL_MEMORY {"nodes":0.0,"objects":1487.0,"orphan_nodes":1.0,"pid":16520,"resources":7.0,"stage":"result_alive_0","static_bytes":25206757.0}
+MODEL_MEMORY {"nodes":0.0,"objects":1487.0,"orphan_nodes":1.0,"pid":16520,"resources":7.0,"stage":"after_clear_0","static_bytes":25164813.0}
+MODEL_RESULT {"elapsed":674.833333333377,"history_samples":66,"max_enemies":29,"max_projectiles":18,"round":1,"state":"victory"}
+MODEL_MEMORY {"nodes":0.0,"objects":1487.0,"orphan_nodes":1.0,"pid":16520,"resources":7.0,"stage":"result_alive_1","static_bytes":25206757.0}
+MODEL_MEMORY {"nodes":0.0,"objects":1487.0,"orphan_nodes":1.0,"pid":16520,"resources":7.0,"stage":"after_clear_1","static_bytes":25164813.0}
+MODEL_RESULT {"elapsed":674.833333333377,"history_samples":66,"max_enemies":29,"max_projectiles":18,"round":2,"state":"victory"}
+MODEL_MEMORY {"nodes":0.0,"objects":1487.0,"orphan_nodes":1.0,"pid":16520,"resources":7.0,"stage":"result_alive_2","static_bytes":25206757.0}
+MODEL_MEMORY {"nodes":0.0,"objects":1487.0,"orphan_nodes":1.0,"pid":16520,"resources":7.0,"stage":"after_clear_2","static_bytes":25164813.0}
+MODEL_MEMORY {"nodes":0.0,"objects":1487.0,"orphan_nodes":1.0,"pid":16520,"resources":7.0,"stage":"after_three_runs","static_bytes":25164249.0}

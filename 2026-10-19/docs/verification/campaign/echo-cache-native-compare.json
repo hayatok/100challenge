@@ -1,0 +1,62 @@
+[
+  {
+    "case": "title",
+    "mean_abs_channel": 0.002,
+    "pixels_diff_above8": 71,
+    "total_pixels": 921600
+  },
+  {
+    "case": "chapter-0",
+    "mean_abs_channel": 0.3048,
+    "pixels_diff_above8": 11801,
+    "total_pixels": 921600
+  },
+  {
+    "case": "chapter-1",
+    "mean_abs_channel": 0.2035,
+    "pixels_diff_above8": 4764,
+    "total_pixels": 921600
+  },
+  {
+    "case": "chapter-2",
+    "mean_abs_channel": 0.255,
+    "pixels_diff_above8": 4890,
+    "total_pixels": 921600
+  },
+  {
+    "case": "spells-base",
+    "mean_abs_channel": 0.3144,
+    "pixels_diff_above8": 12066,
+    "total_pixels": 921600
+  },
+  {
+    "case": "spells-evolved",
+    "mean_abs_channel": 0.3143,
+    "pixels_diff_above8": 12048,
+    "total_pixels": 921600
+  },
+  {
+    "case": "hazards-warning",
+    "mean_abs_channel": 0.3159,
+    "pixels_diff_above8": 12145,
+    "total_pixels": 921600
+  },
+  {
+    "case": "hazards-active",
+    "mean_abs_channel": 0.3158,
+    "pixels_diff_above8": 12167,
+    "total_pixels": 921600
+  },
+  {
+    "case": "pause-before",
+    "mean_abs_channel": 0.3158,
+    "pixels_diff_above8": 12167,
+    "total_pixels": 921600
+  },
+  {
+    "case": "reduced-motion",
+    "mean_abs_channel": 0.3158,
+    "pixels_diff_above8": 12165,
+    "total_pixels": 921600
+  }
+]

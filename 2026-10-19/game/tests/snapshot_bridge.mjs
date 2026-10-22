@@ -1,0 +1,34 @@
+import assert from 'node:assert/strict';
+import {readFile} from 'node:fs/promises';
+import vm from 'node:vm';
+
+// Execute the exact fixed bridge source used by Godot; no browser or game state is changed.
+const source=await readFile(new URL('../scripts/main.gd',import.meta.url),'utf8');
+const setup=source.match(/const SNAPSHOT_BRIDGE_SETUP := """\n([\s\S]*?)\n"""/)[1];
+const clear=source.match(/const SNAPSHOT_BRIDGE_CLEAR := "([^"]+)"/)[1];
+const name=source.match(/const SNAPSHOT_BRIDGE_NAME := "([^"]+)"/)[1];
+const context=vm.createContext({});
+vm.runInContext('globalThis.window=globalThis',context);
+vm.runInContext(setup,context);
+const publisher=context[name];
+assert.equal(typeof publisher.publish,'function');
+vm.runInContext(clear,context);
+assert.equal(Object.hasOwn(context,name),false,'temporary publisher is removed before publication');
+const sample={title:'魔女 "月" \\ 改行\n\u2028\u2029',nested:{values:[1,null,{text:'"); globalThis.injected = true; //'}]},settings:{sound:false},state:'paused'};
+publisher.publish(JSON.stringify(sample));
+assert.deepEqual(JSON.parse(JSON.stringify(context.echoWitchSnapshot)),sample,'JSON string framing preserves quotes, unicode, and nested values');
+assert.equal(context.injected,undefined,'payload text is parsed as data');
+assert.equal(Object.isFrozen(context.echoWitchSnapshot),true);
+assert.equal(Object.isFrozen(context.echoWitchSnapshot.nested.values[2]),true,'snapshot children remain immutable');
+const descriptor=Object.getOwnPropertyDescriptor(context,'echoWitchSnapshot');
+assert.equal(descriptor.writable,false);
+assert.equal(descriptor.configurable,true,'same replaceable read-only descriptor is retained');
+const previous=context.echoWitchSnapshot;
+publisher.publish(JSON.stringify({state:'playing',elapsed:1.25}));
+assert.equal(context.echoWitchSnapshot.state,'playing');
+assert.equal(previous.state,'paused','publishing a new snapshot does not mutate the previous value');
+const current=context.echoWitchSnapshot;
+assert.throws(()=>publisher.publish('{broken'));
+assert.equal(context.echoWitchSnapshot,current,'parse failure cannot partially replace the current snapshot');
+assert.deepEqual(Object.keys(context).sort(),['window'],'no new public publisher or game-state mutator is exposed');
+console.log('Snapshot bridge tests: passed fixed-source parsing, framing, recursive freeze, replacement, private publisher, and malformed input');

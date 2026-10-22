@@ -1,0 +1,87 @@
+
+> test
+> node --test scripts/*.test.mjs
+
+✔ accepts the first and subsequent apps for a date (0.357625ms)
+✔ rejects unsupported directory names (0.049ms)
+✔ loads the current app catalog (2.598125ms)
+✔ one app does not include its same-day sibling (1.043375ms)
+✔ multiple changed apps are deduplicated and retain catalog order (0.081875ms)
+✔ added and edited catalog entries select only their apps (0.155083ms)
+✔ removed apps and catalog reordering do not run unrelated apps (0.12675ms)
+✔ deleting a file in a retained app still checks that app (0.087125ms)
+✔ unregistered dates are outside the public app runner (0.086292ms)
+✔ shared change checks every app: scripts/build-site.mjs (0.105042ms)
+✔ shared change checks every app: scripts/run-apps.mjs (0.036875ms)
+✔ shared change checks every app: scripts/apps.mjs (0.03575ms)
+✔ shared change checks every app: package.json (0.069708ms)
+✔ shared change checks every app: package-lock.json (0.035792ms)
+✔ shared change checks every app: showcase/showcase.js (0.028792ms)
+✔ shared change checks every app: .github/workflows/verify.yml (0.025125ms)
+✔ shared change checks every app: .github/workflows/deploy-pages.yml (0.031917ms)
+✔ root tests and shared documentation do not expand app selection (0.513083ms)
+✔ runner defaults to all apps but an explicit empty selection runs none (0.125625ms)
+✔ runner rejects invalid or unknown selections instead of silently skipping (0.133625ms)
+✔ git diff covers every commit in a push and handles whitespace in paths (159.019167ms)
+✔ git rename checks both the old and the new app directories (123.244083ms)
+✔ git catalog comparison supports adding and removing an app (128.467541ms)
+✔ missing, invalid and unavailable base commits fall back to all apps (88.373584ms)
+✔ an invalid base catalog falls back to all current apps (149.489084ms)
+✔ an invalid current catalog fails before selecting any apps (67.107292ms)
+Reusing 2026-09-06 — A
+
+Showcase ready: /var/folders/_n/lm0cmjyj7l759qzv03j33fqw0000gn/T/pages-incremental-KwxlaM/.site
+✔ one changed app uses its checked dist once and preserves the other app byte for byte (146.334333ms)
+Reusing 2026-09-06 — A
+Reusing 2026-09-06-2 — B
+
+Showcase ready: /var/folders/_n/lm0cmjyj7l759qzv03j33fqw0000gn/T/pages-incremental-sVEw8W/.site
+✔ no changes reuse all apps, without needing local dependencies, package or dist (97.912375ms)
+Reusing 2026-09-06 — A
+
+Showcase ready: /var/folders/_n/lm0cmjyj7l759qzv03j33fqw0000gn/T/pages-incremental-vLlKJq/.site
+✔ new app builds, removed apps and stale root files disappear (146.3195ms)
+✔ missing baseline app output is rebuilt even with no git changes (95.603875ms)
+
+Showcase ready: /var/folders/_n/lm0cmjyj7l759qzv03j33fqw0000gn/T/pages-incremental-dGKL3D/.site
+✔ initial deployment, invalid provenance, missing git base and forced rebuild select every app (96.504292ms)
+✔ shared scripts force all apps; diff spans releases and supports rollback (244.999083ms)
+✔ missing inputs or invalid selection fail before replacing the existing site (72.8085ms)
+
+Building 2026-09-06 — A
+
+> build
+> node build.cjs
+
+
+Building 2026-09-06-2 — B
+
+> build
+> node build.cjs
+
+
+Showcase ready: /var/folders/_n/lm0cmjyj7l759qzv03j33fqw0000gn/T/pages-incremental-chw4SF/.site
+✔ default local build still invokes npm build for every app (281.635709ms)
+Restored Pages run 10 at aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+✔ restore skips failed, foreign, current and expired runs and extracts a retained Pages tar (91.387166ms)
+Pages baseline unavailable during workflow lookup; rebuilding all apps.
+Pages baseline unavailable during artifact download; rebuilding all apps.
+Pages baseline unavailable during artifact extraction; rebuilding all apps.
+No retained successful Pages artifact; rebuilding all apps.
+✔ restore failures and expired artifacts clear stale provenance and fall back to full (79.023125ms)
+✔ forced full rebuild does not contact GitHub and clears the baseline (72.991375ms)
+Reusing 2026-09-06-2 — B
+
+Showcase ready: /var/folders/_n/lm0cmjyj7l759qzv03j33fqw0000gn/T/pages-incremental-5otleO/.site
+Reusing 2026-09-06-2 — B
+
+Showcase ready: /var/folders/_n/lm0cmjyj7l759qzv03j33fqw0000gn/T/pages-incremental-5otleO/.site
+✔ desktop entries publish only their static description even when an editor dist exists (81.012541ms)
+ℹ tests 38
+ℹ suites 0
+ℹ pass 38
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1545.548875

@@ -1,6 +1,6 @@
 {
   "name": "echo-witch",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -11,6 +11,8 @@
     "test": "node scripts/godot.mjs test",
     "build": "node scripts/godot.mjs build",
     "check": "node scripts/godot.mjs import && npm test && npm run build",
-    "qa:browser": "node scripts/browser-qa.mjs"
+    "qa:browser": "node scripts/browser-qa.mjs",
+    "qa:storage": "node scripts/storage-qa.mjs",
+    "qa:edge": "node scripts/edge-qa.mjs"
   }
 }

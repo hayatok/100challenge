@@ -1,0 +1,17 @@
+{
+  "source_commit": "6c4ff7159f6296ebd06b92d8010b086fcb795409",
+  "files": [
+    {
+      "path": "game/assets/fonts/ZenOldMincho-Bold.ttf",
+      "url": "https://raw.githubusercontent.com/google/fonts/6c4ff7159f6296ebd06b92d8010b086fcb795409/ofl/zenoldmincho/ZenOldMincho-Bold.ttf",
+      "bytes": 5436460,
+      "sha256": "d6b95c1ff45c8dac153d28961e4c37d7d03b648330c71f884d124dc652a13c0d"
+    },
+    {
+      "path": "game/assets/fonts/ZEN-OFL.txt",
+      "url": "https://raw.githubusercontent.com/google/fonts/6c4ff7159f6296ebd06b92d8010b086fcb795409/ofl/zenoldmincho/OFL.txt",
+      "bytes": 4399,
+      "sha256": "469d214f9842809659c827b7f2adaf40ec0df6efdd5fe18b7127665c32aafaec"
+    }
+  ]
+}

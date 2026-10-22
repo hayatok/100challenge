@@ -1,0 +1,34 @@
+{
+  "method": "Original local deterministic PCM synthesis; 32 beats per theme; no external samples.",
+  "sample_rate": 22050,
+  "files": [
+    {
+      "file": "game/assets/audio/theme-garden.wav",
+      "bpm": 64,
+      "seconds": 30.0,
+      "peak": 0.19562045794316954,
+      "sha256": "693dbf06aa89f7c083c7d932f6902a134ff1cf03ece56aa9426756f588848ee9"
+    },
+    {
+      "file": "game/assets/audio/theme-mirror.wav",
+      "bpm": 78,
+      "seconds": 24.615374149659864,
+      "peak": 0.19361546687019976,
+      "sha256": "a332d0a783ebf34717fd0918a789110c86e420db20c738fc6e9b6cbca6810552"
+    },
+    {
+      "file": "game/assets/audio/theme-bell.wav",
+      "bpm": 88,
+      "seconds": 21.818185941043083,
+      "peak": 0.20211389578646705,
+      "sha256": "4661e4504f4f91106145363dc629ac0128cf3751c17da28856ac9a00aae12d41"
+    },
+    {
+      "file": "game/assets/audio/theme-boss.wav",
+      "bpm": 104,
+      "seconds": 18.46154195011338,
+      "peak": 0.22041471513308453,
+      "sha256": "6f39f95d46d5c0c9f5143a7f2a0058f7679515989ed1aa8870c0cc9f2fcffda3"
+    }
+  ]
+}

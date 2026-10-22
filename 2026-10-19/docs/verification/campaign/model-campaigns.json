@@ -1,0 +1,1258 @@
+[
+  {
+    "boss_entries": [
+      {
+        "at": 179.999999999992,
+        "chapter": 0,
+        "damage_taken": 8.0,
+        "health": 100.0
+      },
+      {
+        "at": 398.366666666768,
+        "chapter": 1,
+        "damage_taken": 168.0,
+        "health": 90.0
+      },
+      {
+        "at": 626.566666666754,
+        "chapter": 2,
+        "damage_taken": 230.0,
+        "health": 100.0
+      }
+    ],
+    "chapter": 2,
+    "chapter_times": [
+      {
+        "chapter": 0,
+        "chapter_elapsed": 218.366666666664,
+        "damage_taken": 114.0,
+        "elapsed": 218.366666666657,
+        "hp": 14.0,
+        "level": 8
+      },
+      {
+        "chapter": 1,
+        "chapter_elapsed": 228.199999999997,
+        "damage_taken": 230.0,
+        "elapsed": 446.566666666806,
+        "hp": 48.0,
+        "level": 11
+      },
+      {
+        "chapter": 2,
+        "chapter_elapsed": 228.266666666664,
+        "damage_taken": 230.0,
+        "elapsed": 674.833333333377,
+        "hp": 100.0,
+        "level": 12
+      }
+    ],
+    "choice_log": [
+      {
+        "at": 9.4,
+        "chapter": 0,
+        "chapter_elapsed": 9.4,
+        "id": "relic:storm_ink",
+        "kind": "relic",
+        "source": "upgrade",
+        "stage": "assault"
+      },
+      {
+        "at": 11.8,
+        "chapter": 0,
+        "chapter_elapsed": 11.8,
+        "id": "weapon:lightning",
+        "kind": "weapon",
+        "source": "upgrade",
+        "stage": "assault"
+      },
+      {
+        "at": 15.0,
+        "chapter": 0,
+        "chapter_elapsed": 15.0,
+        "id": "spec_lightning",
+        "kind": "specialization",
+        "source": "upgrade",
+        "stage": "assault"
+      },
+      {
+        "at": 22.8,
+        "chapter": 0,
+        "chapter_elapsed": 22.8,
+        "id": "weapon:lightning",
+        "kind": "weapon",
+        "source": "upgrade",
+        "stage": "assault"
+      },
+      {
+        "at": 34.6,
+        "chapter": 0,
+        "chapter_elapsed": 34.6,
+        "id": "weapon:bell",
+        "kind": "weapon",
+        "source": "treasure",
+        "stage": "assault"
+      },
+      {
+        "at": 60.6,
+        "chapter": 0,
+        "chapter_elapsed": 60.6,
+        "id": "weapon:moon",
+        "kind": "weapon",
+        "source": "upgrade",
+        "stage": "assault"
+      },
+      {
+        "at": 61.0,
+        "chapter": 0,
+        "chapter_elapsed": 61.0,
+        "id": "weapon:bell",
+        "kind": "weapon",
+        "source": "treasure",
+        "stage": "assault"
+      },
+      {
+        "at": 98.5,
+        "chapter": 0,
+        "chapter_elapsed": 98.5,
+        "id": "relic:moonstone",
+        "kind": "relic",
+        "source": "upgrade",
+        "stage": "assault"
+      },
+      {
+        "at": 111.7,
+        "chapter": 0,
+        "chapter_elapsed": 111.7,
+        "id": "weapon:bell",
+        "kind": "weapon",
+        "source": "treasure",
+        "stage": "assault"
+      },
+      {
+        "at": 132.7,
+        "chapter": 0,
+        "chapter_elapsed": 132.7,
+        "id": "weapon:moon",
+        "kind": "weapon",
+        "source": "treasure",
+        "stage": "assault"
+      },
+      {
+        "at": 142.5,
+        "chapter": 0,
+        "chapter_elapsed": 142.5,
+        "id": "weapon:moon",
+        "kind": "weapon",
+        "source": "upgrade",
+        "stage": "assault"
+      },
+      {
+        "at": 235.1,
+        "chapter": 1,
+        "chapter_elapsed": 16.7,
+        "id": "weapon:bell",
+        "kind": "weapon",
+        "source": "upgrade",
+        "stage": "assault"
+      },
+      {
+        "at": 253.4,
+        "chapter": 1,
+        "chapter_elapsed": 35.1,
+        "id": "weapon:moon",
+        "kind": "weapon",
+        "source": "treasure",
+        "stage": "assault"
+      },
+      {
+        "at": 283.6,
+        "chapter": 1,
+        "chapter_elapsed": 65.2,
+        "id": "weapon:lightning",
+        "kind": "weapon",
+        "source": "treasure",
+        "stage": "assault"
+      },
+      {
+        "at": 330.6,
+        "chapter": 1,
+        "chapter_elapsed": 112.3,
+        "id": "relic:ward_leaf",
+        "kind": "relic",
+        "source": "treasure",
+        "stage": "assault"
+      },
+      {
+        "at": 332.1,
+        "chapter": 1,
+        "chapter_elapsed": 113.7,
+        "id": "relic:lantern_oil",
+        "kind": "relic",
+        "source": "upgrade",
+        "stage": "assault"
+      },
+      {
+        "at": 353.3,
+        "chapter": 1,
+        "chapter_elapsed": 134.9,
+        "id": "heal",
+        "kind": "heal",
+        "source": "treasure",
+        "stage": "assault"
+      },
+      {
+        "at": 393.2,
+        "chapter": 1,
+        "chapter_elapsed": 174.8,
+        "id": "relic:ward_leaf",
+        "kind": "relic",
+        "source": "upgrade",
+        "stage": "assault"
+      },
+      {
+        "at": 481.6,
+        "chapter": 2,
+        "chapter_elapsed": 35.0,
+        "id": "weapon:moon",
+        "kind": "weapon",
+        "source": "treasure",
+        "stage": "assault"
+      },
+      {
+        "at": 515.7,
+        "chapter": 2,
+        "chapter_elapsed": 69.1,
+        "id": "evolve:moon",
+        "kind": "evolution",
+        "source": "treasure",
+        "stage": "assault"
+      },
+      {
+        "at": 555.4,
+        "chapter": 2,
+        "chapter_elapsed": 108.9,
+        "id": "weapon:bell",
+        "kind": "weapon",
+        "source": "treasure",
+        "stage": "assault"
+      },
+      {
+        "at": 561.4,
+        "chapter": 2,
+        "chapter_elapsed": 114.9,
+        "id": "weapon:lightning",
+        "kind": "weapon",
+        "source": "upgrade",
+        "stage": "assault"
+      },
+      {
+        "at": 576.8,
+        "chapter": 2,
+        "chapter_elapsed": 130.2,
+        "id": "evolve:lightning",
+        "kind": "evolution",
+        "source": "treasure",
+        "stage": "assault"
+      }
+    ],
+    "damage_received": {
+      "contact": 56.0,
+      "hazard": 144.0,
+      "projectile": 30.0
+    },
+    "damage_summary": {
+      "by_weapon": {
+        "bell": 31795.0489216665,
+        "blast": 1795.30479999999,
+        "frost": 0.0,
+        "lightning": 94018.0943700014,
+        "moon": 16956.8845349999,
+        "thorn": 0.0,
+        "wisp": 0.0
+      },
+      "echo": 66271.8410133336,
+      "player": 75232.3790466671,
+      "poison": 0.0,
+      "resonance": 3061.11256666664
+    },
+    "damage_taken": 230.0,
+    "decision_breakdown": {
+      "evolution": 2,
+      "heal": 1,
+      "relic": 5,
+      "replacement_confirm": 2,
+      "replacement_offer": 2,
+      "specialization": 1,
+      "weapon": 14
+    },
+    "decisions": 25,
+    "discoveries": {
+      "enemies": [
+        "hound",
+        "charger",
+        "archer",
+        "sentinel",
+        "boss_thorn",
+        "bat",
+        "wisp",
+        "boss_mirror",
+        "boss_bell"
+      ],
+      "evolutions": [
+        "moon",
+        "lightning"
+      ],
+      "relics": [
+        "storm_ink",
+        "moonstone",
+        "ward_leaf",
+        "lantern_oil"
+      ],
+      "weapons": [
+        "lightning",
+        "bell",
+        "moon"
+      ]
+    },
+    "elapsed": 674.833333333377,
+    "equipment": {
+      "rank_cap": 5,
+      "relic_slots": 3,
+      "relics": [
+        {
+          "body": "本体の4回目の詠唱ごとに、その攻撃の威力+45%。残像も同じ強さで再現。",
+          "evolves": "lightning",
+          "icon": "storm_ink",
+          "id": "storm_ink",
+          "title": "静電のインク"
+        },
+        {
+          "body": "全ての魔法の範囲と太さ+22%。射程は変わらない。",
+          "evolves": "moon",
+          "icon": "moonstone",
+          "id": "moonstone",
+          "title": "月長石"
+        },
+        {
+          "body": "18秒ごとに盾を1枚用意する。盾は次の被弾を一度防ぐ。上限1枚。",
+          "evolves": "",
+          "icon": "ward_leaf",
+          "id": "ward_leaf",
+          "title": "守り葉"
+        }
+      ],
+      "weapon_slots": 3,
+      "weapons": [
+        {
+          "body": "近い敵へ雷を放ち、直線上の敵を貫く。",
+          "can_evolve": false,
+          "evolution": "天裂の雷",
+          "evolution_body": "雷が4本に増え、命中先から別の敵へ連鎖する。",
+          "evolution_id": "lightning",
+          "evolution_name": "天裂の雷",
+          "evolved": true,
+          "icon": "lightning",
+          "id": "lightning",
+          "level": 5,
+          "max_level": 5,
+          "rank_cap": 5,
+          "requirement": "storm_ink",
+          "requirement_title": "静電のインク",
+          "stats": "威力 49.0 / 0.56秒ごと\n4本 / 射程 644.0",
+          "title": "雷"
+        },
+        {
+          "body": "自分の周りに輪を広げ、一度ずつ敵を払う。",
+          "can_evolve": false,
+          "evolution": "双月の環",
+          "evolution_body": "広い月輪を3重に放つ。",
+          "evolution_id": "moon",
+          "evolution_name": "双月の環",
+          "evolved": true,
+          "icon": "moon",
+          "id": "moon",
+          "level": 5,
+          "max_level": 5,
+          "rank_cap": 5,
+          "requirement": "moonstone",
+          "requirement_title": "月長石",
+          "stats": "威力 28.9 / 1.45秒ごと\n3重 / 範囲 268.4",
+          "title": "月輪"
+        },
+        {
+          "body": "広がる音の輪が敵を押し戻し、足を止める。",
+          "can_evolve": false,
+          "evolution": "暁の鐘",
+          "evolution_body": "二重の鐘波が広がり、ボスの足も短く止める。",
+          "evolution_id": "bell",
+          "evolution_name": "暁の鐘",
+          "evolved": false,
+          "icon": "bell",
+          "id": "bell",
+          "level": 5,
+          "max_level": 5,
+          "rank_cap": 5,
+          "requirement": "silver_bell",
+          "requirement_title": "銀の音叉",
+          "stats": "威力 34.0 / 1.80秒ごと\n1重 / 範囲 390.4",
+          "title": "鐘波"
+        }
+      ]
+    },
+    "health": 100.0,
+    "history_samples": 66,
+    "kills": 1669,
+    "last_evolution_time": 576.800000000133,
+    "last_major_time": 576.800000000133,
+    "level": 12,
+    "max_enemies": 29,
+    "max_projectiles": 18,
+    "minimum_health": 14.0,
+    "replacements": 2,
+    "rerolls_used": 3,
+    "resonance_hits": 649,
+    "seed": 731,
+    "skips_used": 0,
+    "stage": "boss",
+    "starter": "lightning",
+    "state": "victory"
+  },
+  {
+    "boss_entries": [
+      {
+        "at": 179.999999999992,
+        "chapter": 0,
+        "damage_taken": 44.0,
+        "health": 90.0
+      },
+      {
+        "at": 394.000000000098,
+        "chapter": 1,
+        "damage_taken": 150.0,
+        "health": 100.0
+      },
+      {
+        "at": 614.166666666765,
+        "chapter": 2,
+        "damage_taken": 238.0,
+        "health": 100.0
+      }
+    ],
+    "chapter": 2,
+    "chapter_times": [
+      {
+        "chapter": 0,
+        "chapter_elapsed": 213.999999999998,
+        "damage_taken": 118.0,
+        "elapsed": 213.99999999999,
+        "hp": 36.0,
+        "level": 8
+      },
+      {
+        "chapter": 1,
+        "chapter_elapsed": 220.166666666664,
+        "damage_taken": 198.0,
+        "elapsed": 434.166666666796,
+        "hp": 88.0,
+        "level": 11
+      },
+      {
+        "chapter": 2,
+        "chapter_elapsed": 216.966666666665,
+        "damage_taken": 256.0,
+        "elapsed": 651.133333333398,
+        "hp": 82.0,
+        "level": 12
+      }
+    ],
+    "choice_log": [
+      {
+        "at": 11.3,
+        "chapter": 0,
+        "chapter_elapsed": 11.3,
+        "id": "relic:moonstone",
+        "kind": "relic",
+        "source": "upgrade",
+        "stage": "assault"
+      },
+      {
+        "at": 16.7,
+        "chapter": 0,
+        "chapter_elapsed": 16.7,
+        "id": "weapon:moon",
+        "kind": "weapon",
+        "source": "upgrade",
+        "stage": "assault"
+      },
+      {
+        "at": 17.7,
+        "chapter": 0,
+        "chapter_elapsed": 17.7,
+        "id": "spec_moon",
+        "kind": "specialization",
+        "source": "upgrade",
+        "stage": "assault"
+      },
+      {
+        "at": 35.6,
+        "chapter": 0,
+        "chapter_elapsed": 35.6,
+        "id": "weapon:moon",
+        "kind": "weapon",
+        "source": "treasure",
+        "stage": "assault"
+      },
+      {
+        "at": 42.0,
+        "chapter": 0,
+        "chapter_elapsed": 42.0,
+        "id": "weapon:wisp",
+        "kind": "weapon",
+        "source": "upgrade",
+        "stage": "assault"
+      },
+      {
+        "at": 71.5,
+        "chapter": 0,
+        "chapter_elapsed": 71.5,
+        "id": "relic:lantern_oil",
+        "kind": "relic",
+        "source": "upgrade",
+        "stage": "assault"
+      },
+      {
+        "at": 78.4,
+        "chapter": 0,
+        "chapter_elapsed": 78.4,
+        "id": "weapon:frost",
+        "kind": "weapon",
+        "source": "treasure",
+        "stage": "assault"
+      },
+      {
+        "at": 104.6,
+        "chapter": 0,
+        "chapter_elapsed": 104.6,
+        "id": "relic:ice_crystal",
+        "kind": "relic",
+        "source": "upgrade",
+        "stage": "assault"
+      },
+      {
+        "at": 106.5,
+        "chapter": 0,
+        "chapter_elapsed": 106.5,
+        "id": "weapon:wisp",
+        "kind": "weapon",
+        "source": "treasure",
+        "stage": "assault"
+      },
+      {
+        "at": 135.3,
+        "chapter": 0,
+        "chapter_elapsed": 135.3,
+        "id": "weapon:frost",
+        "kind": "weapon",
+        "source": "treasure",
+        "stage": "assault"
+      },
+      {
+        "at": 143.5,
+        "chapter": 0,
+        "chapter_elapsed": 143.5,
+        "id": "weapon:frost",
+        "kind": "weapon",
+        "source": "upgrade",
+        "stage": "assault"
+      },
+      {
+        "at": 238.1,
+        "chapter": 1,
+        "chapter_elapsed": 24.1,
+        "id": "heal",
+        "kind": "heal",
+        "source": "upgrade",
+        "stage": "assault"
+      },
+      {
+        "at": 253.2,
+        "chapter": 1,
+        "chapter_elapsed": 39.2,
+        "id": "weapon:wisp",
+        "kind": "weapon",
+        "source": "treasure",
+        "stage": "assault"
+      },
+      {
+        "at": 275.6,
+        "chapter": 1,
+        "chapter_elapsed": 61.6,
+        "id": "weapon:wisp",
+        "kind": "weapon",
+        "source": "treasure",
+        "stage": "assault"
+      },
+      {
+        "at": 323.7,
+        "chapter": 1,
+        "chapter_elapsed": 109.7,
+        "id": "weapon:frost",
+        "kind": "weapon",
+        "source": "upgrade",
+        "stage": "assault"
+      },
+      {
+        "at": 324.1,
+        "chapter": 1,
+        "chapter_elapsed": 110.1,
+        "id": "weapon:moon",
+        "kind": "weapon",
+        "source": "treasure",
+        "stage": "assault"
+      },
+      {
+        "at": 346.7,
+        "chapter": 1,
+        "chapter_elapsed": 132.7,
+        "id": "relic:echo_mirror",
+        "kind": "relic",
+        "source": "treasure",
+        "stage": "assault"
+      },
+      {
+        "at": 387.5,
+        "chapter": 1,
+        "chapter_elapsed": 173.5,
+        "id": "heal",
+        "kind": "heal",
+        "source": "upgrade",
+        "stage": "assault"
+      },
+      {
+        "at": 471.4,
+        "chapter": 2,
+        "chapter_elapsed": 37.2,
+        "id": "weapon:wisp",
+        "kind": "weapon",
+        "source": "treasure",
+        "stage": "assault"
+      },
+      {
+        "at": 496.2,
+        "chapter": 2,
+        "chapter_elapsed": 62.0,
+        "id": "weapon:frost",
+        "kind": "weapon",
+        "source": "treasure",
+        "stage": "assault"
+      },
+      {
+        "at": 545.9,
+        "chapter": 2,
+        "chapter_elapsed": 111.8,
+        "id": "weapon:moon",
+        "kind": "weapon",
+        "source": "upgrade",
+        "stage": "assault"
+      },
+      {
+        "at": 557.8,
+        "chapter": 2,
+        "chapter_elapsed": 123.6,
+        "id": "evolve:frost",
+        "kind": "evolution",
+        "source": "treasure",
+        "stage": "assault"
+      },
+      {
+        "at": 562.4,
+        "chapter": 2,
+        "chapter_elapsed": 128.2,
+        "id": "evolve:moon",
+        "kind": "evolution",
+        "source": "treasure",
+        "stage": "assault"
+      }
+    ],
+    "damage_received": {
+      "contact": 40.0,
+      "hazard": 136.0,
+      "projectile": 80.0
+    },
+    "damage_summary": {
+      "by_weapon": {
+        "bell": 0.0,
+        "blast": 1555.62813333333,
+        "frost": 40851.8811333332,
+        "lightning": 0.0,
+        "moon": 47013.0691999996,
+        "thorn": 0.0,
+        "wisp": 54765.9057333324
+      },
+      "echo": 61034.5209333327,
+      "player": 76740.3088666658,
+      "poison": 0.0,
+      "resonance": 6411.65439999997
+    },
+    "damage_taken": 256.0,
+    "decision_breakdown": {
+      "evolution": 2,
+      "heal": 2,
+      "relic": 4,
+      "replacement_confirm": 1,
+      "replacement_offer": 1,
+      "specialization": 1,
+      "weapon": 14
+    },
+    "decisions": 24,
+    "discoveries": {
+      "enemies": [
+        "hound",
+        "charger",
+        "archer",
+        "sentinel",
+        "boss_thorn",
+        "bat",
+        "wisp",
+        "boss_mirror",
+        "boss_bell"
+      ],
+      "evolutions": [
+        "frost",
+        "moon"
+      ],
+      "relics": [
+        "moonstone",
+        "lantern_oil",
+        "ice_crystal",
+        "echo_mirror"
+      ],
+      "weapons": [
+        "moon",
+        "wisp",
+        "frost"
+      ]
+    },
+    "elapsed": 651.133333333398,
+    "equipment": {
+      "rank_cap": 5,
+      "relic_slots": 3,
+      "relics": [
+        {
+          "body": "全ての魔法の範囲と太さ+22%。射程は変わらない。",
+          "evolves": "moon",
+          "icon": "moonstone",
+          "id": "moonstone",
+          "title": "月長石"
+        },
+        {
+          "body": "全ての魔法が敵の移動を1.2秒間、30%遅くする。霜結の減速を弱めない。",
+          "evolves": "frost",
+          "icon": "ice_crystal",
+          "id": "ice_crystal",
+          "title": "氷晶"
+        },
+        {
+          "body": "挟撃に必要な距離を100から70へ。挟撃の追加威力+10。",
+          "evolves": "",
+          "icon": "echo_mirror",
+          "id": "echo_mirror",
+          "title": "欠けた鏡"
+        }
+      ],
+      "weapon_slots": 3,
+      "weapons": [
+        {
+          "body": "自分の周りに輪を広げ、一度ずつ敵を払う。",
+          "can_evolve": false,
+          "evolution": "双月の環",
+          "evolution_body": "広い月輪を3重に放つ。",
+          "evolution_id": "moon",
+          "evolution_name": "双月の環",
+          "evolved": true,
+          "icon": "moon",
+          "id": "moon",
+          "level": 5,
+          "max_level": 5,
+          "rank_cap": 5,
+          "requirement": "moonstone",
+          "requirement_title": "月長石",
+          "stats": "威力 41.2 / 1.23秒ごと\n3重 / 範囲 375.8",
+          "title": "月輪"
+        },
+        {
+          "body": "壁を越える追尾の火が、命中した場所で弾ける。",
+          "can_evolve": false,
+          "evolution": "道しるべの灯",
+          "evolution_body": "爆発が広がり、火が別の敵へ最大3回跳ぶ。",
+          "evolution_id": "wisp",
+          "evolution_name": "道しるべの灯",
+          "evolved": false,
+          "icon": "wisp",
+          "id": "wisp",
+          "level": 5,
+          "max_level": 5,
+          "rank_cap": 5,
+          "requirement": "lantern_oil",
+          "requirement_title": "灯火の油",
+          "stats": "威力 36.0 / 1.05秒ごと\n3個 / 爆発範囲 51.2",
+          "title": "鬼火"
+        },
+        {
+          "body": "敵の足元に霜の庭をつくり、動きを鈍らせる。",
+          "can_evolve": false,
+          "evolution": "冬の庭",
+          "evolution_body": "霜の庭が広がり、命中のたびに敵を短く凍らせる。",
+          "evolution_id": "frost",
+          "evolution_name": "冬の庭",
+          "evolved": true,
+          "icon": "frost",
+          "id": "frost",
+          "level": 5,
+          "max_level": 5,
+          "rank_cap": 5,
+          "requirement": "ice_crystal",
+          "requirement_title": "氷晶",
+          "stats": "威力 18.8 / 2.30秒ごと\n2か所 / 範囲 185.4",
+          "title": "霜結"
+        }
+      ]
+    },
+    "health": 82.0,
+    "history_samples": 66,
+    "kills": 1667,
+    "last_evolution_time": 562.366666666813,
+    "last_major_time": 562.366666666813,
+    "level": 12,
+    "max_enemies": 36,
+    "max_projectiles": 33,
+    "minimum_health": 36.0,
+    "replacements": 1,
+    "rerolls_used": 3,
+    "resonance_hits": 636,
+    "seed": 2026,
+    "skips_used": 0,
+    "stage": "boss",
+    "starter": "moon",
+    "state": "victory"
+  },
+  {
+    "boss_entries": [
+      {
+        "at": 179.999999999992,
+        "chapter": 0,
+        "damage_taken": 26.0,
+        "health": 90.0
+      },
+      {
+        "at": 395.566666666766,
+        "chapter": 1,
+        "damage_taken": 146.0,
+        "health": 88.0
+      },
+      {
+        "at": 629.866666666751,
+        "chapter": 2,
+        "damage_taken": 276.0,
+        "health": 100.0
+      }
+    ],
+    "chapter": 2,
+    "chapter_times": [
+      {
+        "chapter": 0,
+        "chapter_elapsed": 215.566666666665,
+        "damage_taken": 26.0,
+        "elapsed": 215.566666666657,
+        "hp": 100.0,
+        "level": 9
+      },
+      {
+        "chapter": 1,
+        "chapter_elapsed": 234.299999999997,
+        "damage_taken": 226.0,
+        "elapsed": 449.866666666809,
+        "hp": 28.0,
+        "level": 11
+      },
+      {
+        "chapter": 2,
+        "chapter_elapsed": 230.499999999997,
+        "damage_taken": 348.0,
+        "elapsed": 680.366666666705,
+        "hp": 68.0,
+        "level": 12
+      }
+    ],
+    "choice_log": [
+      {
+        "at": 10.3,
+        "chapter": 0,
+        "chapter_elapsed": 10.3,
+        "id": "weapon:thorn",
+        "kind": "weapon",
+        "source": "upgrade",
+        "stage": "assault"
+      },
+      {
+        "at": 13.1,
+        "chapter": 0,
+        "chapter_elapsed": 13.1,
+        "id": "weapon:thorn",
+        "kind": "weapon",
+        "source": "upgrade",
+        "stage": "assault"
+      },
+      {
+        "at": 16.8,
+        "chapter": 0,
+        "chapter_elapsed": 16.8,
+        "id": "spec_echo",
+        "kind": "specialization",
+        "source": "upgrade",
+        "stage": "assault"
+      },
+      {
+        "at": 26.9,
+        "chapter": 0,
+        "chapter_elapsed": 26.9,
+        "id": "relic:thorn_seed",
+        "kind": "relic",
+        "source": "upgrade",
+        "stage": "assault"
+      },
+      {
+        "at": 33.4,
+        "chapter": 0,
+        "chapter_elapsed": 33.4,
+        "id": "weapon:wisp",
+        "kind": "weapon",
+        "source": "treasure",
+        "stage": "assault"
+      },
+      {
+        "at": 61.8,
+        "chapter": 0,
+        "chapter_elapsed": 61.8,
+        "id": "weapon:wisp",
+        "kind": "weapon",
+        "source": "upgrade",
+        "stage": "assault"
+      },
+      {
+        "at": 62.2,
+        "chapter": 0,
+        "chapter_elapsed": 62.2,
+        "id": "weapon:bell",
+        "kind": "weapon",
+        "source": "treasure",
+        "stage": "assault"
+      },
+      {
+        "at": 98.3,
+        "chapter": 0,
+        "chapter_elapsed": 98.3,
+        "id": "relic:silver_bell",
+        "kind": "relic",
+        "source": "upgrade",
+        "stage": "assault"
+      },
+      {
+        "at": 107.0,
+        "chapter": 0,
+        "chapter_elapsed": 107.0,
+        "id": "weapon:bell",
+        "kind": "weapon",
+        "source": "treasure",
+        "stage": "assault"
+      },
+      {
+        "at": 136.3,
+        "chapter": 0,
+        "chapter_elapsed": 136.3,
+        "id": "weapon:wisp",
+        "kind": "weapon",
+        "source": "treasure",
+        "stage": "assault"
+      },
+      {
+        "at": 137.2,
+        "chapter": 0,
+        "chapter_elapsed": 137.2,
+        "id": "weapon:bell",
+        "kind": "weapon",
+        "source": "upgrade",
+        "stage": "assault"
+      },
+      {
+        "at": 184.6,
+        "chapter": 0,
+        "chapter_elapsed": 184.6,
+        "id": "relic:echo_mirror",
+        "kind": "relic",
+        "source": "upgrade",
+        "stage": "boss"
+      },
+      {
+        "at": 250.0,
+        "chapter": 1,
+        "chapter_elapsed": 34.4,
+        "id": "weapon:thorn",
+        "kind": "weapon",
+        "source": "treasure",
+        "stage": "assault"
+      },
+      {
+        "at": 280.9,
+        "chapter": 1,
+        "chapter_elapsed": 65.3,
+        "id": "weapon:wisp",
+        "kind": "weapon",
+        "source": "treasure",
+        "stage": "assault"
+      },
+      {
+        "at": 305.4,
+        "chapter": 1,
+        "chapter_elapsed": 89.8,
+        "id": "weapon:bell",
+        "kind": "weapon",
+        "source": "upgrade",
+        "stage": "assault"
+      },
+      {
+        "at": 321.2,
+        "chapter": 1,
+        "chapter_elapsed": 105.6,
+        "id": "heal",
+        "kind": "heal",
+        "source": "treasure",
+        "stage": "assault"
+      },
+      {
+        "at": 365.4,
+        "chapter": 1,
+        "chapter_elapsed": 149.8,
+        "id": "heal",
+        "kind": "heal",
+        "source": "treasure",
+        "stage": "assault"
+      },
+      {
+        "at": 385.5,
+        "chapter": 1,
+        "chapter_elapsed": 170.0,
+        "id": "heal",
+        "kind": "heal",
+        "source": "upgrade",
+        "stage": "assault"
+      },
+      {
+        "at": 487.5,
+        "chapter": 2,
+        "chapter_elapsed": 37.6,
+        "id": "weapon:thorn",
+        "kind": "weapon",
+        "source": "treasure",
+        "stage": "assault"
+      },
+      {
+        "at": 512.8,
+        "chapter": 2,
+        "chapter_elapsed": 62.9,
+        "id": "evolve:thorn",
+        "kind": "evolution",
+        "source": "treasure",
+        "stage": "assault"
+      },
+      {
+        "at": 550.7,
+        "chapter": 2,
+        "chapter_elapsed": 100.8,
+        "id": "weapon:bell",
+        "kind": "weapon",
+        "source": "upgrade",
+        "stage": "assault"
+      },
+      {
+        "at": 564.8,
+        "chapter": 2,
+        "chapter_elapsed": 114.9,
+        "id": "evolve:bell",
+        "kind": "evolution",
+        "source": "treasure",
+        "stage": "assault"
+      },
+      {
+        "at": 586.9,
+        "chapter": 2,
+        "chapter_elapsed": 137.1,
+        "id": "weapon:wisp",
+        "kind": "weapon",
+        "source": "treasure",
+        "stage": "assault"
+      }
+    ],
+    "damage_received": {
+      "contact": 16.0,
+      "hazard": 152.0,
+      "projectile": 180.0
+    },
+    "damage_summary": {
+      "by_weapon": {
+        "bell": 32106.2853999928,
+        "blast": 2621.19186666665,
+        "frost": 0.0,
+        "lightning": 0.0,
+        "moon": 0.0,
+        "thorn": 55524.8103333235,
+        "wisp": 54542.7983333235
+      },
+      "echo": 55512.9734666658,
+      "player": 66092.7513999995,
+      "poison": 12485.6530000004,
+      "resonance": 10703.7080666666
+    },
+    "damage_taken": 348.0,
+    "decision_breakdown": {
+      "evolution": 2,
+      "heal": 3,
+      "relic": 3,
+      "replacement_confirm": 0,
+      "replacement_offer": 0,
+      "specialization": 1,
+      "weapon": 14
+    },
+    "decisions": 23,
+    "discoveries": {
+      "enemies": [
+        "hound",
+        "charger",
+        "archer",
+        "sentinel",
+        "boss_thorn",
+        "bat",
+        "wisp",
+        "boss_mirror",
+        "boss_bell"
+      ],
+      "evolutions": [
+        "thorn",
+        "bell"
+      ],
+      "relics": [
+        "thorn_seed",
+        "silver_bell",
+        "echo_mirror"
+      ],
+      "weapons": [
+        "thorn",
+        "wisp",
+        "bell"
+      ]
+    },
+    "elapsed": 680.366666666705,
+    "equipment": {
+      "rank_cap": 5,
+      "relic_slots": 3,
+      "relics": [
+        {
+          "body": "全ての魔法が3秒間、毎秒3の毒を付ける。茨針の毒には毎秒3を加える。",
+          "evolves": "thorn",
+          "icon": "thorn_seed",
+          "id": "thorn_seed",
+          "title": "茨の種"
+        },
+        {
+          "body": "挟撃で敵を0.45秒止める。ボスには0.2秒。",
+          "evolves": "bell",
+          "icon": "silver_bell",
+          "id": "silver_bell",
+          "title": "銀の音叉"
+        },
+        {
+          "body": "挟撃に必要な距離を100から70へ。挟撃の追加威力+10。",
+          "evolves": "",
+          "icon": "echo_mirror",
+          "id": "echo_mirror",
+          "title": "欠けた鏡"
+        }
+      ],
+      "weapon_slots": 3,
+      "weapons": [
+        {
+          "body": "扇状の針が敵を貫き、毒を残す。同じ詠唱は一体へ一度だけ当たる。",
+          "can_evolve": false,
+          "evolution": "常闇の茨",
+          "evolution_body": "針が7本に増え、命中先に茨の庭を残す。",
+          "evolution_id": "thorn",
+          "evolution_name": "常闇の茨",
+          "evolved": true,
+          "icon": "thorn",
+          "id": "thorn",
+          "level": 5,
+          "max_level": 5,
+          "rank_cap": 5,
+          "requirement": "thorn_seed",
+          "requirement_title": "茨の種",
+          "stats": "威力 27.6 / 1.05秒ごと\n7本 / 6体を貫通 / 毒 11.0毎秒",
+          "title": "茨針"
+        },
+        {
+          "body": "壁を越える追尾の火が、命中した場所で弾ける。",
+          "can_evolve": false,
+          "evolution": "道しるべの灯",
+          "evolution_body": "爆発が広がり、火が別の敵へ最大3回跳ぶ。",
+          "evolution_id": "wisp",
+          "evolution_name": "道しるべの灯",
+          "evolved": false,
+          "icon": "wisp",
+          "id": "wisp",
+          "level": 5,
+          "max_level": 5,
+          "rank_cap": 5,
+          "requirement": "lantern_oil",
+          "requirement_title": "灯火の油",
+          "stats": "威力 30.6 / 1.05秒ごと\n3個 / 爆発範囲 42.0",
+          "title": "鬼火"
+        },
+        {
+          "body": "広がる音の輪が敵を押し戻し、足を止める。",
+          "can_evolve": false,
+          "evolution": "暁の鐘",
+          "evolution_body": "二重の鐘波が広がり、ボスの足も短く止める。",
+          "evolution_id": "bell",
+          "evolution_name": "暁の鐘",
+          "evolved": true,
+          "icon": "bell",
+          "id": "bell",
+          "level": 5,
+          "max_level": 5,
+          "rank_cap": 5,
+          "requirement": "silver_bell",
+          "requirement_title": "銀の音叉",
+          "stats": "威力 36.1 / 1.80秒ごと\n2重 / 範囲 320.0",
+          "title": "鐘波"
+        }
+      ]
+    },
+    "health": 68.0,
+    "history_samples": 66,
+    "kills": 1669,
+    "last_evolution_time": 564.76666666681,
+    "last_major_time": 586.933333333457,
+    "level": 12,
+    "max_enemies": 45,
+    "max_projectiles": 74,
+    "minimum_health": 24.0,
+    "replacements": 0,
+    "rerolls_used": 3,
+    "resonance_hits": 764,
+    "seed": 196,
+    "skips_used": 0,
+    "stage": "boss",
+    "starter": "thorn",
+    "state": "victory"
+  }
+]

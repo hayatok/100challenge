@@ -1,0 +1,213 @@
+{
+  "kind": "Independent retained allocation sampling after 60 seconds of normal keyboard gameplay and explicit pause/GC",
+  "pck_sha256": "567c6a59fd3460fc431947e0a4282197e486f79f3437cfcb91bc7f06e93c45ff",
+  "sampling_interval_bytes": 32768,
+  "total_sampled_bytes": 20162208,
+  "allocations": [
+    {
+      "function": "_emscripten_glGenVertexArrays | http://127.0.0.1:4198/index.js",
+      "bytes": 3477852
+    },
+    {
+      "function": "_emscripten_glGenBuffers | http://127.0.0.1:4198/index.js",
+      "bytes": 3477852
+    },
+    {
+      "function": "_emscripten_glFenceSync | http://127.0.0.1:4198/index.js",
+      "bytes": 3477852
+    },
+    {
+      "function": "(IDLE_EXTERNAL) | ",
+      "bytes": 3085832
+    },
+    {
+      "function": "js-to-wasm:ii:i | wasm://wasm/096bca0a",
+      "bytes": 2971652
+    },
+    {
+      "function": "genObject | http://127.0.0.1:4198/index.js",
+      "bytes": 1395400
+    },
+    {
+      "function": "(V8 API) | ",
+      "bytes": 832760
+    },
+    {
+      "function": "webglPrepareUniformLocationsBeforeFirstUse | http://127.0.0.1:4198/index.js",
+      "bytes": 253056
+    },
+    {
+      "function": " | ",
+      "bytes": 197708
+    },
+    {
+      "function": " | http://127.0.0.1:4198/index.js",
+      "bytes": 131140
+    },
+    {
+      "function": "add | ",
+      "bytes": 131132
+    },
+    {
+      "function": "prototype.<computed> | ",
+      "bytes": 98336
+    },
+    {
+      "function": "(BYTECODE_COMPILER) | ",
+      "bytes": 66504
+    },
+    {
+      "function": "node.port.onmessage | http://127.0.0.1:4198/index.js",
+      "bytes": 66240
+    },
+    {
+      "function": "js-to-wasm:: | wasm://wasm/096bca0a",
+      "bytes": 65956
+    },
+    {
+      "function": "createNode | http://127.0.0.1:4198/index.js",
+      "bytes": 65588
+    },
+    {
+      "function": "webgl_enable_WEBGL_multi_draw | http://127.0.0.1:4198/index.js",
+      "bytes": 38128
+    },
+    {
+      "function": "callUserCallback | http://127.0.0.1:4198/index.js",
+      "bytes": 33440
+    },
+    {
+      "function": "evaluate | ",
+      "bytes": 33264
+    },
+    {
+      "function": "initExtensions | http://127.0.0.1:4198/index.js",
+      "bytes": 32960
+    },
+    {
+      "function": "createStream | http://127.0.0.1:4198/index.js",
+      "bytes": 32832
+    },
+    {
+      "function": "SelectorEvaluatorImpl | ",
+      "bytes": 32800
+    },
+    {
+      "function": "publish | ",
+      "bytes": 32800
+    },
+    {
+      "function": "_godot_audio_is_available | http://127.0.0.1:4198/index.js",
+      "bytes": 32784
+    },
+    {
+      "function": "js-to-wasm:iiddi:i | wasm://wasm/096bca0a",
+      "bytes": 32784
+    },
+    {
+      "function": " | http://127.0.0.1:4198/",
+      "bytes": 32784
+    },
+    {
+      "function": "collectRoots | ",
+      "bytes": 32772
+    },
+    {
+      "function": "(root) | ",
+      "bytes": 0
+    },
+    {
+      "function": "run | http://127.0.0.1:4198/index.js",
+      "bytes": 0
+    },
+    {
+      "function": "doRun | http://127.0.0.1:4198/index.js",
+      "bytes": 0
+    },
+    {
+      "function": "initRuntime | http://127.0.0.1:4198/index.js",
+      "bytes": 0
+    },
+    {
+      "function": "init | http://127.0.0.1:4198/index.js",
+      "bytes": 0
+    },
+    {
+      "function": "createStandardStreams | http://127.0.0.1:4198/index.js",
+      "bytes": 0
+    },
+    {
+      "function": "open | http://127.0.0.1:4198/index.js",
+      "bytes": 0
+    },
+    {
+      "function": "InjectedScript | ",
+      "bytes": 0
+    },
+    {
+      "function": "inPagePrepareForScreenshots | ",
+      "bytes": 0
+    },
+    {
+      "function": "Promise | ",
+      "bytes": 0
+    },
+    {
+      "function": "callMain | http://127.0.0.1:4198/index.js",
+      "bytes": 0
+    },
+    {
+      "function": "_godot_js_wrapper_object_call | http://127.0.0.1:4198/index.js",
+      "bytes": 0
+    },
+    {
+      "function": "_emscripten_glGetUniformLocation | http://127.0.0.1:4198/index.js",
+      "bytes": 0
+    },
+    {
+      "function": "_emscripten_webgl_do_create_context | http://127.0.0.1:4198/index.js",
+      "bytes": 0
+    },
+    {
+      "function": "createContext | http://127.0.0.1:4198/index.js",
+      "bytes": 0
+    },
+    {
+      "function": "registerContext | http://127.0.0.1:4198/index.js",
+      "bytes": 0
+    },
+    {
+      "function": "___syscall_mkdirat | http://127.0.0.1:4198/index.js",
+      "bytes": 0
+    },
+    {
+      "function": "mkdir | http://127.0.0.1:4198/index.js",
+      "bytes": 0
+    },
+    {
+      "function": "mknod | http://127.0.0.1:4198/index.js",
+      "bytes": 0
+    },
+    {
+      "function": "button_cb | http://127.0.0.1:4198/index.js",
+      "bytes": 0
+    },
+    {
+      "function": "MainLoop_runner | http://127.0.0.1:4198/index.js",
+      "bytes": 0
+    },
+    {
+      "function": "runIter | http://127.0.0.1:4198/index.js",
+      "bytes": 0
+    },
+    {
+      "function": "_emscripten_glGenTextures | http://127.0.0.1:4198/index.js",
+      "bytes": 0
+    },
+    {
+      "function": "_emscripten_glGenFramebuffers | http://127.0.0.1:4198/index.js",
+      "bytes": 0
+    }
+  ],
+  "note": "Approximate retained-allocation sampling; forced GC is limited to this independent diagnosis."
+}
