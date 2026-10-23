@@ -1,0 +1,35 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+Metal 4.0 - Forward+ - Using Device #0: Apple - Apple M5 (Apple9)
+
+TENSAI_RUNTIME {"driver":"metal","engine":"4.7.2-stable (official)","gpu":"Apple M5 (Apple9)","os":"macOS","renderer":"forward_plus","viewport":"(1280.0, 720.0)"}
+TENSAI_CAPTURE /Users/hayatok/.codex/worktrees/tensai-local-handoff/100challenge/2026-10-24/docs/verification/native/01-manual.png
+TENSAI_EVENT {"dashes":2,"event":"start","health":100,"position":"(0.0, 0.15, 7.0)","seconds":0.0}
+TENSAI_EVENT {"dashes":2,"event":"land","health":100,"position":"(0.0, 0.000274, 7.0)","seconds":0.12}
+TENSAI_EVENT {"dashes":2,"event":"wire","health":100,"position":"(0.0, 0.000833, 2.625001)","seconds":1.48}
+TENSAI_EVENT {"dashes":2,"event":"land","health":100,"position":"(0.0, 0.65083, -2.751088)","seconds":2.08}
+TENSAI_PERF {"draw_calls":941.0,"fps":60.0,"frame_p95_ms":16.666,"frame_p99_ms":16.666,"memory_bytes":0,"position":"(0.0, 0.650833, -8.808532)","seconds":5.0,"state":"idle"}
+TENSAI_PERF {"draw_calls":984.0,"fps":60.0,"frame_p95_ms":16.666,"frame_p99_ms":16.666,"memory_bytes":0,"position":"(0.0, 0.650833, -8.808532)","seconds":10.0,"state":"idle"}
+TENSAI_EVENT {"dashes":2,"event":"wire","health":100,"position":"(0.0, 0.650833, -8.808532)","seconds":14.07}
+TENSAI_EVENT {"dashes":2,"event":"land","health":100,"position":"(0.424496, 1.000186, -10.86996)","seconds":14.48}
+TENSAI_PERF {"draw_calls":980.0,"fps":60.0,"frame_p95_ms":16.666,"frame_p99_ms":16.666,"memory_bytes":0,"position":"(0.356257, 1.058113, -10.37145)","seconds":15.0,"state":"hurt"}
+TENSAI_EVENT {"dashes":2,"event":"land","health":86,"position":"(0.356257, 0.972226, -10.36604)","seconds":15.08}
+TENSAI_EVENT {"dashes":2,"event":"launch","health":86,"position":"(0.356257, 0.972226, -10.36604)","seconds":16.0}
+TENSAI_EVENT {"dashes":2,"event":"land","health":86,"position":"(0.356257, 0.972266, -10.36604)","seconds":17.33}
+TENSAI_EVENT {"dashes":2,"event":"slash","health":86,"position":"(0.356257, 0.972266, -10.36604)","seconds":17.95}
+TENSAI_EVENT {"dashes":2,"event":"hit","health":86,"position":"(0.356257, 0.97073, -10.36336)","seconds":18.12}
+TENSAI_EVENT {"dashes":2,"event":"hit","health":86,"position":"(0.356257, 0.97073, -10.36336)","seconds":18.12}
+TENSAI_EVENT {"dashes":2,"event":"land","health":72,"position":"(0.924497, 0.968922, -10.356)","seconds":19.3}
+TENSAI_EVENT {"dashes":2,"event":"slash","health":72,"position":"(0.929812, 0.967437, -10.35522)","seconds":19.53}
+TENSAI_EVENT {"dashes":2,"event":"hit","health":72,"position":"(0.929812, 0.967437, -10.35522)","seconds":19.7}
+TENSAI_EVENT {"dashes":2,"event":"hit","health":72,"position":"(0.929812, 0.967437, -10.35522)","seconds":19.7}
+TENSAI_PERF {"draw_calls":1026.0,"fps":60.0,"frame_p95_ms":16.666,"frame_p99_ms":16.666,"memory_bytes":0,"position":"(0.929812, 0.967437, -10.35522)","seconds":20.1,"state":"idle"}
+TENSAI_EVENT {"dashes":2,"event":"land","health":58,"position":"(1.527776, 0.968025, -10.35417)","seconds":20.9}
+TENSAI_EVENT {"dashes":2,"event":"slash","health":58,"position":"(1.527776, 0.966839, -10.35417)","seconds":21.3}
+TENSAI_EVENT {"dashes":2,"event":"hit","health":58,"position":"(1.527776, 0.966839, -10.35417)","seconds":21.47}
+TENSAI_EVENT {"dashes":2,"event":"hit","health":58,"position":"(1.527776, 0.966839, -10.35417)","seconds":21.47}
+TENSAI_EVENT {"dashes":2,"event":"hit","health":58,"position":"(1.527776, 0.966839, -10.35417)","seconds":21.47}
+TENSAI_EVENT {"dashes":2,"event":"land","health":44,"position":"(2.121441, 0.965996, -10.34995)","seconds":22.67}
+TENSAI_CAPTURE /Users/hayatok/.codex/worktrees/tensai-local-handoff/100challenge/2026-10-24/docs/verification/native/02-manual.png
+TENSAI_EVENT {"dashes":2,"event":"land","health":30,"position":"(2.696907, 0.965021, -10.34806)","seconds":24.58}
+TENSAI_PERF {"draw_calls":1026.0,"fps":52.0,"frame_p95_ms":16.826,"frame_p99_ms":17.748,"memory_bytes":0,"position":"(2.702805, 0.963056, -10.34728)","seconds":25.1,"state":"idle"}
+TENSAI_EVENT {"dashes":2,"event":"pause","health":30,"position":"(2.7028

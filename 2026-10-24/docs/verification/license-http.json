@@ -1,0 +1,32 @@
+[
+  {
+    "path": "licenses/index.html",
+    "status": 200,
+    "bytes": 470,
+    "sha256": "baefd7d74b23a43fc9a0295f7864e5f81983012f5b4678f48192f7be7053b966"
+  },
+  {
+    "path": "licenses/GODOT_LICENSE.txt",
+    "status": 200,
+    "bytes": 1149,
+    "sha256": "b0435e3b3e4e55238f05f4b306f30524a1b2e20147810d436eaa554fa6855c80"
+  },
+  {
+    "path": "licenses/GODOT_COPYRIGHT.txt",
+    "status": 200,
+    "bytes": 98163,
+    "sha256": "d9d9a398d18ee5b34c44312610442cc7cbe87ea712a71c0f40d3045dbea2bd67"
+  },
+  {
+    "path": "licenses/NOTO_OFL.txt",
+    "status": 200,
+    "bytes": 4358,
+    "sha256": "3c4c22312dc8fb029eaab030a8fee82fbb36006d8b4e6d0eb4a2621b76037cb5"
+  },
+  {
+    "path": "licenses/NOTICES.txt",
+    "status": 200,
+    "bytes": 463,
+    "sha256": "14c7faf3f80591d6f537a00cb39fb0ab38dc9b6bd4349ad9e5c9bd01a2d39341"
+  }
+]

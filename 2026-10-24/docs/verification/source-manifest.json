@@ -1,0 +1,206 @@
+{
+  "algorithm": "sha256",
+  "excludes": [
+    "game/.godot/**",
+    "**/.DS_Store"
+  ],
+  "sha256": "72aa6c946a2590c392a406f5c8746edd969facbdc2464e19d6982792c880335f",
+  "files": [
+    {
+      "path": "game/assets/audio/chime.wav",
+      "sha256": "0e660eda21f3d5530be2eab9537b1f1aae23270af5dffd061c73ec9e8ce5fee5"
+    },
+    {
+      "path": "game/assets/audio/chime.wav.import",
+      "sha256": "2fc10b91c9d611849a16bc7d722bddd1972863ed75c4404a5e7e57c46e413973"
+    },
+    {
+      "path": "game/assets/audio/dash.wav",
+      "sha256": "80da14e2fa5d89e6751ece579b27edbc5f3e33b09e916e25554faf5aa6c56dff"
+    },
+    {
+      "path": "game/assets/audio/dash.wav.import",
+      "sha256": "687d4b92ea0c9a9e5ee03c8a953830b1b0b5878acade0125093a1fde6b673eee"
+    },
+    {
+      "path": "game/assets/audio/impact.wav",
+      "sha256": "15f67b944dc6e0b7216da08ae90bbdb4f0fb53441b396498c29038c84474d297"
+    },
+    {
+      "path": "game/assets/audio/impact.wav.import",
+      "sha256": "4a92dce92bd979d61026483b6e2ea5c4434e7b497064ec4fb911e7736acc9996"
+    },
+    {
+      "path": "game/assets/audio/slash.wav",
+      "sha256": "e3d08f0376b1743c3a96c76ae9707e9e499fbc0f5ccf5e855be0d605f04484e0"
+    },
+    {
+      "path": "game/assets/audio/slash.wav.import",
+      "sha256": "5cee7b833d261b350f28d6c1772ee9650c7188426060be26a9a485527b4d5980"
+    },
+    {
+      "path": "game/assets/audio/wind_music.wav",
+      "sha256": "53f0a2a92fcf1af914580d1628439eb91a96eae8fe144e4fbe33264e1f02bc87"
+    },
+    {
+      "path": "game/assets/audio/wind_music.wav.import",
+      "sha256": "557ccdf921b931014359ccb6bb8f327c22be5ecbb22e6f6af03ba8ec29520e92"
+    },
+    {
+      "path": "game/assets/audio/wire.wav",
+      "sha256": "067850b07a6ca2c3cb93eb419d2672107f85d8f493fc10ead930e010dd944fae"
+    },
+    {
+      "path": "game/assets/audio/wire.wav.import",
+      "sha256": "79e0946cb4b053ce71a0f5f4f05c9325929ec57595b966ea92c97fa7de8a0b54"
+    },
+    {
+      "path": "game/assets/fonts/LICENSE.txt",
+      "sha256": "6a73f9541c2de74158c0e7cf6b0a58ef774f5a780bf191f2d7ec9cc53efe2bf2"
+    },
+    {
+      "path": "game/assets/fonts/NotoSansCJKjp-Medium.otf",
+      "sha256": "dd523e580e3413c480b2d701bf64e534c20f8419e3cfb6a44c2bdcd8d2a6c052"
+    },
+    {
+      "path": "game/assets/fonts/NotoSansCJKjp-Medium.otf.import",
+      "sha256": "3f3954ec2a4eebbe9315e589ee38730bfcf9fe50fe0630d9dd60fecef3bcd401"
+    },
+    {
+      "path": "game/assets/models/hero.glb",
+      "sha256": "ddc4e58f1193ab9ba58950451ee52bf50d6ac6d67b221d17fb86deb229870d0b"
+    },
+    {
+      "path": "game/assets/models/hero.glb.import",
+      "sha256": "cc3bb2b11c4a6c254d4b54035c8218d51cba648d526c4d875085c76121cbe56b"
+    },
+    {
+      "path": "game/assets/models/sentinel.glb",
+      "sha256": "c59805ad47c8bbc4d6f8202098829b6e86b41f4f5c4996d4e631128453ba7243"
+    },
+    {
+      "path": "game/assets/models/sentinel.glb.import",
+      "sha256": "032d7ad35e06101ae9679a52fc1f473237a25b7fd58f3d8b4a4779e7bce4ba98"
+    },
+    {
+      "path": "game/export_presets.cfg",
+      "sha256": "5cf18893c2c2e4fbe77975e78f9d8b4a246157c1d12759445878892cb1eca5e1"
+    },
+    {
+      "path": "game/icon.svg",
+      "sha256": "7ed1c9ef0efd669dac1482fb2318a19b9954a0170ab528e629aad27c1ef5d935"
+    },
+    {
+      "path": "game/icon.svg.import",
+      "sha256": "d62cec4b340c7097c5dbe29a1219213b8a886594728073406e1a480ea943a35f"
+    },
+    {
+      "path": "game/main.tscn",
+      "sha256": "722bbf2673dca23e74fda0090fc027fef20f1cfddee99f4a0937a0fa062a3e56"
+    },
+    {
+      "path": "game/project.godot",
+      "sha256": "393726e48af40b51aefe6339ca90c359620a25a7a693e7f203ea28ded179eb3e"
+    },
+    {
+      "path": "game/scripts/camera_rig.gd",
+      "sha256": "4f601e64d8c382179ec23a76ee56721e6888073c0d331ad0e210d2f5bd6cc2da"
+    },
+    {
+      "path": "game/scripts/camera_rig.gd.uid",
+      "sha256": "1f768cc99ceadf78b372fdab3b170f57954d745e1e590b70562b7769ad83b023"
+    },
+    {
+      "path": "game/scripts/colossus.gd",
+      "sha256": "bfde8fbcc7671f6cd55af51c9e028e5c55ad961929199f61ad99163d45aef700"
+    },
+    {
+      "path": "game/scripts/colossus.gd.uid",
+      "sha256": "d51374168e8ff35131f2459a77316edcee3ab1a788236f1d9310b7d6db90d81c"
+    },
+    {
+      "path": "game/scripts/enemy.gd",
+      "sha256": "7048bbf7f6042f149c861b5a3942c18e4d795b984957cac3ac3d766aed312406"
+    },
+    {
+      "path": "game/scripts/enemy.gd.uid",
+      "sha256": "37f076b2cda870fd97739d0d732f8a1f95f53608b281a2f7b4cae5395f455362"
+    },
+    {
+      "path": "game/scripts/impact.gd",
+      "sha256": "188152ee0019b399ef548f4156d8a7eeb12284eedbcb99e95d9be2ae792423dd"
+    },
+    {
+      "path": "game/scripts/impact.gd.uid",
+      "sha256": "a63e0c0c686455135767329376cc2ca1efc5432e330f7d0e2b5ed3d291120a6d"
+    },
+    {
+      "path": "game/scripts/interface.gd",
+      "sha256": "906369eae63befb1c51a3fab205cd0fac3f4270a991cc35dd0fda377277cac46"
+    },
+    {
+      "path": "game/scripts/interface.gd.uid",
+      "sha256": "5083eb41a73e0a6f7e2b264cf083b9cdf92703694b4992e33b18c9c8a4ce53b4"
+    },
+    {
+      "path": "game/scripts/main.gd",
+      "sha256": "d95b9073f6aee92868e37faad871db1cde6922e3af1925956c6b054970c34110"
+    },
+    {
+      "path": "game/scripts/main.gd.uid",
+      "sha256": "1e3a85926f8d8bf55da71a299465f68d83153fd56fdd76b07cf0f1aec4d5216b"
+    },
+    {
+      "path": "game/scripts/player.gd",
+      "sha256": "56ff964e3ff77d41ed050a437ff2af21e0d084ee99eeaf2da9b1806e2b227efa"
+    },
+    {
+      "path": "game/scripts/player.gd.uid",
+      "sha256": "42394a849196b18eabb25e2856e38f8383b1e22b27395607e9840de5ca2b9653"
+    },
+    {
+      "path": "game/scripts/sound.gd",
+      "sha256": "9f4a8112f20b2203c8da372e8f69d856f33f36a7354d294393d77541e16570f2"
+    },
+    {
+      "path": "game/scripts/sound.gd.uid",
+      "sha256": "2ee9349f35e001596b829c550df13253a61c3b432292e4328f8c972158f6c218"
+    },
+    {
+      "path": "game/scripts/world.gd",
+      "sha256": "42db1b9f6b69877943775e27a9a7e78e7d05a5914e37ba134bd9d2326c9cb444"
+    },
+    {
+      "path": "game/scripts/world.gd.uid",
+      "sha256": "c90b438c4d5772e21ab40f9237b8ebfcf51f6a5ef1ce045b26c9ca389b063721"
+    },
+    {
+      "path": "game/shaders/stone.gdshader",
+      "sha256": "3342463b669cb0908edd6992f2f1e9cde01696a17474be50f64e4ed59f3044c0"
+    },
+    {
+      "path": "game/shaders/stone.gdshader.uid",
+      "sha256": "fcf0081df27ef90c1a7be10f2c80d04ad5b2dace9bbbd2787167c50fecd211ee"
+    },
+    {
+      "path": "game/tests/route.gd",
+      "sha256": "ac63b09b26a4e9422b2073f82f38c3c0a8c8ae9ac92b5c7b6490b844d270b659"
+    },
+    {
+      "path": "game/tests/route.gd.uid",
+      "sha256": "4c633b004e0d7978868d0eec2d9a52dc76955739b2810d7e85b58b85b9c9f935"
+    },
+    {
+      "path": "game/tests/run.gd",
+      "sha256": "18c0df617b665aa2e2d75c72435380272a2b81b704b187cfc79f219fc2ec3703"
+    },
+    {
+      "path": "game/tests/run.gd.uid",
+      "sha256": "8e0d2a326abee2de733956fa4efb3e244028d27ff365a687e9858ab9546c01ae"
+    },
+    {
+      "path": "game/web_shell.html",
+      "sha256": "90c35212c31dfe74fc5030cb35c390134b3f3e9ec6b724aa6ec3bde4a39242c6"
+    }
+  ]
+}

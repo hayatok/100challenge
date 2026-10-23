@@ -1,0 +1,6 @@
+game/.godot/
+.cache/
+dist/
+builds/
+node_modules/
+art/*.blend1

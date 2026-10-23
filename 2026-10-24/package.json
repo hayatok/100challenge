@@ -1,0 +1,16 @@
+{
+  "name": "tensai",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "import": "node scripts/godot.mjs import",
+    "test": "node scripts/godot.mjs test && node scripts/godot.mjs route",
+    "build": "node scripts/godot.mjs web",
+    "build:mac": "node scripts/godot.mjs mac",
+    "check": "npm run import && npm test && npm run build && npm run build:mac",
+    "dev": "node scripts/godot.mjs play",
+    "editor": "node scripts/godot.mjs editor",
+    "preview": "node scripts/serve.mjs"
+  }
+}

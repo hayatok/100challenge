@@ -1,0 +1,14 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+Metal 4.0 - Forward+ - Using Device #0: Apple - Apple M5 (Apple9)
+
+ROUTE_LAND anchor_0 (0.0, 0.65037, -2.596362)
+ROUTE_LAND anchor_1 (0.0, 1.000109, -10.63058)
+ROUTE_LAND anchor_2 (4.967164, 1.000035, -22.34252)
+ROUTE_LAND anchor_3 (5.388511, 6.884468, -28.92212)
+ROUTE_LAND anchor_4 (-0.66818, 7.051011, -29.95394)
+ROUTE_FULL_SEQUENCE_PASS feet=(-0.66818, 1.000834, -23.50782)
+ROUTE_LAND phase_-1.0_shoulder (4.556819, 6.050936, -29.03185)
+ROUTE_LAND phase_-1.0_upper (-0.710238, 7.050134, -29.98367)
+ROUTE_LAND phase_1.0_shoulder (5.431466, 6.950072, -28.8125)
+ROUTE_LAND phase_1.0_upper (-0.659365, 7.05048, -29.94884)
+ROUTE_PASS enemy_free full_sequence_and_both_shoulder_extremes

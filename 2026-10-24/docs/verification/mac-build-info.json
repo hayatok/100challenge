@@ -1,0 +1,14 @@
+{
+  "engine": "4.7.2.stable.official.ed1daf0bf",
+  "revision": "cdf24bb2ba116115c2c0eebb044d6bb44b11263a",
+  "sourceDirty": true,
+  "sourceManifest": {
+    "path": "source-manifest.json",
+    "sha256": "72aa6c946a2590c392a406f5c8746edd969facbdc2464e19d6982792c880335f",
+    "scope": "game/ excluding import cache"
+  },
+  "mode": "mac",
+  "sha256": "80eb927adbef04309236cb1fcb9290bc8d845da0ae7eea3768df4d997a2bccf4",
+  "signing": "ad-hoc",
+  "signatureVerifiedAfterRepack": true
+}
