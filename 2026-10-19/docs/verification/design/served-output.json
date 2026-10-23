@@ -1,0 +1,14 @@
+{
+  "index.pck": {
+    "http_status": 200,
+    "bytes": 33714552,
+    "sha256": "504c177250865de0a325e9e9db996a931d7111ba974fecf35dd2a9e5835492c8",
+    "matches_recorded_build": true
+  },
+  "index.html": {
+    "http_status": 200,
+    "bytes": 4766,
+    "sha256": "7d28f6b010735dee36b189be93bf21098cfc31285227e246bae653d67ecfe6bc",
+    "matches_recorded_build": true
+  }
+}

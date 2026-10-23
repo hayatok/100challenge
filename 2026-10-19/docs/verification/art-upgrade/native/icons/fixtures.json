@@ -1,0 +1,21 @@
+{
+	"capture": "/Users/hayatok/.codex/worktrees/echo-witch/100challenge/2026-10-19/.cache/art-upgrade/native/icons/painted-icons-contact-sheet.png",
+	"checks": 199,
+	"failed": false,
+	"glyph_cases": [
+		"moon_evolved",
+		"evolution_lightning",
+		"empty",
+		"new",
+		"evolution",
+		"locked",
+		"enemy:wisp",
+		"enemy:boss_bell"
+	],
+	"icon_count": 40,
+	"kind": "arranged native painted icon fixture",
+	"native_draws": 160,
+	"real_gameplay": false,
+	"renderer": "macOS",
+	"resource_ids_reused": true
+}

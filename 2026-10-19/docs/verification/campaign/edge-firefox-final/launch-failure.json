@@ -1,0 +1,7 @@
+{
+  "success": false,
+  "browser": "firefox",
+  "stage": "browser-launch",
+  "failure": "TimeoutError: browserType.launch: Timeout 60000ms exceeded.\nCall log:\n\u001b[2m  - <launching> /Users/hayatok/Library/Caches/ms-playwright/firefox-1538/firefox/Nightly.app/Contents/MacOS/firefox -no-remote -headless -profile /var/folders/_n/lm0cmjyj7l759qzv03j33fqw0000gn/T/playwright_firefoxdev_profile-Lnxkkd -juggler-pipe -silent\u001b[22m\n\u001b[2m  - <launched> pid=15800\u001b[22m\n\u001b[2m  - [pid=15800][err] *** You are running in headless mode.\u001b[22m\n\u001b[2m  - [pid=15800][err] sandbox_extension_issue_file_to_process failed for /Users/hayatok/Library/Caches/ms-playwright/firefox-1538/firefox/Nightly.app/Contents/MacOS/plugin-container.app: 1 (Operation not permitted)\u001b[22m\n\u001b[2m  - [pid=15800][out] Crash Annotation GraphicsCriticalError: |[0][GFX1-]: RenderCompositorSWGL failed mapping default framebuffer, no dt (t=1.60048) [GFX1-]: RenderCompositorSWGL failed mapping default framebuffer, no dt\u001b[22m\n",
+  "note": "The game was not loaded; this is a test-browser setup failure."
+}

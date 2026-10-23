@@ -1,0 +1,127 @@
+{
+  "generator": "built-in imagegen",
+  "local_pixel_processing": false,
+  "imagegen_edit": [
+    "terrain-painted-r3.png"
+  ],
+  "source_reference": {
+    "path": "docs/reference/terrain-r3-source.png",
+    "sha256": "39a0454c2f50d3c1c1ce13fa8a20a80694fd875c4f67097e04d96b4013215630",
+    "bytes": 3777006,
+    "use": "reference for imagegen edit only; not exported by the game"
+  },
+  "sources": [
+    {
+      "path": "game/assets/art/bat-painted-r3.png",
+      "bytes": 1791343,
+      "sha256": "94cc35bb4b645eed851a0ab4f385cacf16f87b20f8dfc60a8a9f74f4fce1943b",
+      "width": 1536,
+      "height": 1024,
+      "mode": "RGBA",
+      "alpha_range": [
+        0,
+        254
+      ],
+      "transparent_pixels": 1117750,
+      "mipmaps": true
+    },
+    {
+      "path": "game/assets/art/chest-open-painted-r3.png",
+      "bytes": 2165199,
+      "sha256": "13ab8d400faba91e0d22dfff4b939b42ff52f07e00119d379135325146722d43",
+      "width": 1312,
+      "height": 1199,
+      "mode": "RGBA",
+      "alpha_range": [
+        0,
+        255
+      ],
+      "transparent_pixels": 684876,
+      "mipmaps": true
+    },
+    {
+      "path": "game/assets/art/creatures-painted-r3.png",
+      "bytes": 1712574,
+      "sha256": "3e511b21b030002a6de94aacaee62639a9206e05471e0201a2f2862fb24a1dbf",
+      "width": 1916,
+      "height": 821,
+      "mode": "RGBA",
+      "alpha_range": [
+        0,
+        255
+      ],
+      "transparent_pixels": 928932,
+      "mipmaps": true
+    },
+    {
+      "path": "game/assets/art/items-painted-r3.png",
+      "bytes": 1753486,
+      "sha256": "825c2d97dbc97f46dbdbb806df21eb02fed60977f4f5386d7baf71a0bf3139b6",
+      "width": 1774,
+      "height": 887,
+      "mode": "RGBA",
+      "alpha_range": [
+        0,
+        255
+      ],
+      "transparent_pixels": 997669,
+      "mipmaps": true
+    },
+    {
+      "path": "game/assets/art/rewards-painted-r3.png",
+      "bytes": 2648504,
+      "sha256": "3a5053e376fb965a1358e750fa9d622e0f8996181ebc76905a407e6de5be6c69",
+      "width": 1448,
+      "height": 1086,
+      "mode": "RGBA",
+      "alpha_range": [
+        0,
+        255
+      ],
+      "transparent_pixels": 696720,
+      "mipmaps": true
+    },
+    {
+      "path": "game/assets/art/scenery-painted-r3.png",
+      "bytes": 2547557,
+      "sha256": "a90385d143c2b815744755e332e16d3d2126f2ebff81eb74d0033bd99988433e",
+      "width": 1536,
+      "height": 1024,
+      "mode": "RGBA",
+      "alpha_range": [
+        0,
+        254
+      ],
+      "transparent_pixels": 769310,
+      "mipmaps": true
+    },
+    {
+      "path": "game/assets/art/sentinel-painted-r3.png",
+      "bytes": 1866790,
+      "sha256": "833fb015ac89ce411058228b04c028be4c57e19a9232c30829a3358145660fe8",
+      "width": 1216,
+      "height": 1294,
+      "mode": "RGBA",
+      "alpha_range": [
+        0,
+        255
+      ],
+      "transparent_pixels": 871891,
+      "mipmaps": true
+    },
+    {
+      "path": "game/assets/art/terrain-painted-r3.png",
+      "bytes": 3818017,
+      "sha256": "4cfe9e2514b2b74f5b002a39a6add85b312fcf0a2ad5885dba2c1f51fc5c335f",
+      "width": 1254,
+      "height": 1254,
+      "mode": "RGB",
+      "alpha_range": [
+        255,
+        255
+      ],
+      "transparent_pixels": 0,
+      "mipmaps": true
+    }
+  ]
+}

@@ -1,0 +1,73 @@
+{
+  "baseline": "56d7aa85c726f29b4b34256755c4dbede39372de",
+  "tested_pck_sha256": "82cbad3177dfc14444803980bddd7613aa580002e70b73e1bb54d0536aeec9ff",
+  "pck_bytes": 51025196,
+  "full_browser": {
+    "success": true,
+    "checks": {
+      "snapshot_read_only": true,
+      "no_public_publisher": true,
+      "settings_actual_mouse": true,
+      "settings_persist_reload": true,
+      "echo_position": true,
+      "pause_freezes": true,
+      "choice_freezes": true,
+      "actual_reroll": true,
+      "treasure_actual": true,
+      "chapter_0_carry": true,
+      "chapter_1_carry": true,
+      "full_campaign_actual": true,
+      "result_loadout": true,
+      "same_page_second_run": true,
+      "profile_reload": true,
+      "clear_unlocks_persist": true,
+      "portrait_guide": true,
+      "no_external_requests": true
+    },
+    "simulation_seconds": 623.949999999655,
+    "health": 68,
+    "kills": 1671,
+    "level": 12,
+    "same_page_retry_seconds": 35.2333333333326,
+    "errors": [],
+    "external_requests": [],
+    "memory_samples": 24,
+    "heap_max_mib": 279.16776275634766,
+    "renderer_rss_max_mib": 958.15625,
+    "all_renderers_rss_max_mib": 1168.703125,
+    "sampled_fps_range": [
+      55,
+      61
+    ],
+    "resource_samples": [
+      45
+    ],
+    "forced_gc": false,
+    "rendering_note": "Isolated headless Chrome; software WebGL may be used, not a physical GPU benchmark."
+  },
+  "checks": {
+    "app_import_tests_build": "passed",
+    "root_tests": 38,
+    "actor_headless": 2108,
+    "actor_native": 2121,
+    "environment_headless": 111,
+    "environment_native": 114,
+    "icons_headless": 196,
+    "icons_native": 199,
+    "native_motion": 44,
+    "native_ui": 57,
+    "motion_browser_checks": 10,
+    "motion_browser_samples": 40,
+    "edge_browser_checks": 9,
+    "storage_cases": 6,
+    "storage_assertions": 90
+  },
+  "ai_slop_review": "complete_no_findings_gpt-6-astra",
+  "limits": [
+    "Native fixtures are arranged, not actual gameplay.",
+    "Automated keyboard full run is not human fun evaluation.",
+    "No physical Safari/Firefox, low-end PC or unbounded repeated-session verification.",
+    "Software WebGL sampling is not a physical GPU performance guarantee."
+  ],
+  "release": "Local preview and PR update only; not merged, tagged or deployed."
+}

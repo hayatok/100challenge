@@ -1,0 +1,32 @@
+{
+	"captures": [
+		{
+			"all_collision_obstacles": 4,
+			"atlas_size": "(908, 668)",
+			"chapter": 0,
+			"path": "/Users/hayatok/.codex/worktrees/echo-witch/100challenge/2026-10-19/.cache/art-upgrade/native/environment/chapter-1-all-props.png",
+			"size": "(1440, 1240)"
+		},
+		{
+			"all_collision_obstacles": 6,
+			"atlas_size": "(898, 1622)",
+			"chapter": 1,
+			"path": "/Users/hayatok/.codex/worktrees/echo-witch/100challenge/2026-10-19/.cache/art-upgrade/native/environment/chapter-2-all-props.png",
+			"size": "(1440, 1240)"
+		},
+		{
+			"all_collision_obstacles": 6,
+			"atlas_size": "(764, 1160)",
+			"chapter": 2,
+			"path": "/Users/hayatok/.codex/worktrees/echo-witch/100challenge/2026-10-19/.cache/art-upgrade/native/environment/chapter-3-all-props.png",
+			"size": "(1440, 1240)"
+		}
+	],
+	"checks": 114,
+	"failed": false,
+	"kind": "arranged native environment fixtures",
+	"real_gameplay": false,
+	"renderer": "macOS",
+	"scenery_size": "(1536.0, 1024.0)",
+	"terrain_size": "(1254.0, 1254.0)"
+}

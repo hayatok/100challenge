@@ -1,0 +1,32 @@
+{
+  "reviewer": "ai_slop_reviewer",
+  "model": "gpt-6-astra",
+  "base_commit": "6fa3cc6c77a9772908ab549df2eb8b0031f76ccd",
+  "scope": "All motion changes under 2026-10-19, including untracked actor artwork, presentation state, effects, integration, audio, tests, QA scripts, documentation and evidence. Existing campaign work before base commit and unrelated primary-checkout changes are excluded.",
+  "method": "Read-only source, saved-image and provided-evidence review, including read-only shell commands. Reviewer does not execute tests/builds, edit files, or operate the game. Parent executes tests and operates the game.",
+  "confirmed_findings": [
+    {
+      "priority": "P2",
+      "problem": "blood_vial replacement could reduce the HP cap from 124 to 100 and incorrectly trigger a player-hit pose, hit event and camera reaction.",
+      "fix": "Use damage_taken delta when the real model exposes the counter. Health-loss fallback is limited to counter-less minimal fixtures.",
+      "regression": "Real item replacement emits no hit; real damage of 8 emits one player-hit event. Minimal fixtures retain fallback behavior.",
+      "status": "fixed and rechecked by the same Astra reviewer; no additional finding in the fix review"
+    }
+  ],
+  "source_review_evidence": {
+    "presentation_checks": 377,
+    "presentation_sha256": "74f7b66dfca0ddd57059ea7c74ef89617a4d8e0172388f231f65f4faeb5d6216",
+    "test_sha256": "63e6f6616a2f3baf634aa6498682fa102c8792d1c8147b04ccfb571d583dc1c7"
+  },
+  "later_changes_for_final_review": [
+    "Classify Web walk samples by actual movement across the key-up snapshot boundary; no game-code change.",
+    "Final frozen PCK Web motion recording, before/after probe, Chrome and WebKit edge checks, storage checks, full campaign and same-page retry evidence.",
+    "Japanese proofreading, artwork provenance, build hashes, verification report and PR/Issue drafts."
+  ],
+  "limits": [
+    "No physical Safari or Firefox game test for this PCK.",
+    "No low-end hardware benchmark, unlimited repeated-run stability, human first-play fun assessment, or speaker listening evaluation.",
+    "No merge or publication in this motion task."
+  ],
+  "final_review": "Astra confirmed no major unresolved problem or additional implementation finding. Actual-movement sampling, final-PCK campaign success, pause/retry, performance records, saved boss images and documentation were reviewed. The P2 fix remains resolved."
+}

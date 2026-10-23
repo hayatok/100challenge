@@ -1,0 +1,1744 @@
+{
+  "base": "http://127.0.0.1:4200/",
+  "mode": "probe",
+  "build_sha256": "bbbb5226d6fa72de3a527f1ac4eb1631d88a91d6f8804c968c73cd7522df21a6",
+  "audio_mode": "on",
+  "started": "2026-10-21T16:08:03.229Z",
+  "renderer": "Isolated headless Chrome; software WebGL may be used, not a physical GPU benchmark.",
+  "checks": {
+    "snapshot_read_only": true,
+    "no_public_publisher": true,
+    "settings_actual_mouse": true,
+    "settings_persist_reload": true,
+    "echo_position": true,
+    "pause_freezes": true,
+    "choice_freezes": true,
+    "actual_reroll": true,
+    "treasure_actual": true,
+    "profile_reload": true,
+    "portrait_guide": true,
+    "no_external_requests": true
+  },
+  "observations": [
+    {
+      "state": "playing",
+      "elapsed": 2.65,
+      "chapter": 0,
+      "health": 100,
+      "level": 1
+    },
+    {
+      "elapsed": 2.65,
+      "chapter": 0,
+      "boss": 0,
+      "health": 100,
+      "level": 1,
+      "kills": 1,
+      "enemies": 8,
+      "flanks": 0,
+      "fps": 54,
+      "music": 1
+    },
+    {
+      "state": "upgrade",
+      "elapsed": 4.99999999999999,
+      "chapter": 0,
+      "health": 100,
+      "level": 2
+    },
+    {
+      "choice": {
+        "after": "威力 19.0 / 1.30秒ごと\n1個 / 爆発範囲 42.0",
+        "before": "未習得",
+        "body": "壁を越える追尾の火が、命中した場所で弾ける。",
+        "effect": "威力 19.0 / 1.30秒ごと\n1個 / 爆発範囲 42.0",
+        "evolved": false,
+        "full_slots": false,
+        "icon": "wisp",
+        "id": "weapon:wisp",
+        "item_id": "wisp",
+        "kind": "weapon",
+        "replace_id": "",
+        "requirement": "第3章の宝箱 / Rank 5 ＋ 灯火の油",
+        "specialization": false,
+        "tag": "新しい魔法・3枠",
+        "title": "鬼火"
+      },
+      "chapter": 0,
+      "elapsed": 4.99999999999999
+    },
+    {
+      "state": "playing",
+      "elapsed": 4.99999999999999,
+      "chapter": 0,
+      "health": 100,
+      "level": 2
+    },
+    {
+      "state": "upgrade",
+      "elapsed": 9.40000000000005,
+      "chapter": 0,
+      "health": 100,
+      "level": 3
+    },
+    {
+      "choice": {
+        "after": "威力 14.0 / 0.78秒ごと\n2本 / 射程 400.0",
+        "before": "威力 12.0 / 0.78秒ごと\n1本 / 射程 400.0",
+        "body": "近い敵へ雷を放ち、直線上の敵を貫く。",
+        "effect": "威力 14.0 / 0.78秒ごと\n2本 / 射程 400.0",
+        "evolved": false,
+        "full_slots": false,
+        "icon": "lightning",
+        "id": "weapon:lightning",
+        "item_id": "lightning",
+        "kind": "weapon",
+        "replace_id": "",
+        "requirement": "第3章の宝箱 / Rank 5 ＋ 静電のインク",
+        "specialization": false,
+        "tag": "魔法 Rank 1 → 2",
+        "title": "雷"
+      },
+      "chapter": 0,
+      "elapsed": 9.40000000000005
+    },
+    {
+      "state": "playing",
+      "elapsed": 9.58333333333339,
+      "chapter": 0,
+      "health": 100,
+      "level": 3
+    },
+    {
+      "elapsed": 17.7166666666669,
+      "chapter": 0,
+      "boss": 0,
+      "health": 100,
+      "level": 3,
+      "kills": 27,
+      "enemies": 4,
+      "flanks": 10,
+      "fps": 60,
+      "music": 1
+    },
+    {
+      "state": "upgrade",
+      "elapsed": 18.8333333333335,
+      "chapter": 0,
+      "health": 100,
+      "level": 4
+    },
+    {
+      "choice": {
+        "after": "",
+        "before": "",
+        "body": "月輪を習得し、大きく速くする。\n雷の射程は25%短くなる。",
+        "effect": "月輪範囲 +40% / 間隔 −15%\n雷射程 −25%",
+        "full_slots": false,
+        "icon": "moon",
+        "id": "spec_moon",
+        "kind": "specialization",
+        "replace_id": "",
+        "requirement": "",
+        "specialization": true,
+        "tag": "専門化・広域",
+        "title": "月の魔女"
+      },
+      "chapter": 0,
+      "elapsed": 18.8333333333335
+    },
+    {
+      "state": "playing",
+      "elapsed": 18.9500000000002,
+      "chapter": 0,
+      "health": 100,
+      "level": 4
+    },
+    {
+      "elapsed": 32.9333333333327,
+      "chapter": 0,
+      "boss": 0,
+      "health": 100,
+      "level": 4,
+      "kills": 40,
+      "enemies": 2,
+      "flanks": 15,
+      "fps": 55,
+      "music": 1
+    },
+    {
+      "state": "upgrade",
+      "elapsed": 35.1999999999993,
+      "chapter": 0,
+      "health": 100,
+      "level": 5
+    },
+    {
+      "choice": {
+        "after": "威力 17.0 / 1.83秒ごと\n1重 / 範囲 198.8",
+        "before": "威力 13.0 / 1.83秒ごと\n1重 / 範囲 165.2",
+        "body": "自分の周りに輪を広げ、一度ずつ敵を払う。",
+        "effect": "威力 17.0 / 1.83秒ごと\n1重 / 範囲 198.8",
+        "evolved": false,
+        "full_slots": false,
+        "icon": "moon",
+        "id": "weapon:moon",
+        "item_id": "moon",
+        "kind": "weapon",
+        "replace_id": "",
+        "requirement": "第3章の宝箱 / Rank 5 ＋ 月長石",
+        "specialization": false,
+        "tag": "魔法 Rank 1 → 2",
+        "title": "月輪"
+      },
+      "chapter": 0,
+      "elapsed": 35.1999999999993
+    },
+    {
+      "state": "playing",
+      "elapsed": 35.3166666666659,
+      "chapter": 0,
+      "health": 100,
+      "level": 5
+    },
+    {
+      "elapsed": 48.1166666666652,
+      "chapter": 0,
+      "boss": 0,
+      "health": 100,
+      "level": 5,
+      "kills": 59,
+      "enemies": 7,
+      "flanks": 22,
+      "fps": 60,
+      "music": 1
+    },
+    {
+      "elapsed": 63.283333333331,
+      "chapter": 0,
+      "boss": 0,
+      "health": 100,
+      "level": 5,
+      "kills": 76,
+      "enemies": 6,
+      "flanks": 28,
+      "fps": 54,
+      "music": 1
+    },
+    {
+      "state": "treasure",
+      "elapsed": 63.5666666666643,
+      "chapter": 0,
+      "health": 100,
+      "level": 5
+    },
+    {
+      "choice": {
+        "after": "威力 23.0 / 1.20秒ごと\n1個 / 爆発範囲 42.0",
+        "before": "威力 19.0 / 1.30秒ごと\n1個 / 爆発範囲 42.0",
+        "body": "壁を越える追尾の火が、命中した場所で弾ける。",
+        "effect": "威力 23.0 / 1.20秒ごと\n1個 / 爆発範囲 42.0",
+        "evolved": false,
+        "full_slots": false,
+        "icon": "wisp",
+        "id": "weapon:wisp",
+        "item_id": "wisp",
+        "kind": "weapon",
+        "replace_id": "",
+        "requirement": "第3章の宝箱 / Rank 5 ＋ 灯火の油",
+        "specialization": false,
+        "tag": "魔法 Rank 1 → 2",
+        "title": "鬼火"
+      },
+      "chapter": 0,
+      "elapsed": 63.5666666666643
+    },
+    {
+      "state": "playing",
+      "elapsed": 63.6999999999977,
+      "chapter": 0,
+      "health": 100,
+      "level": 5
+    },
+    {
+      "state": "upgrade",
+      "elapsed": 69.1833333333307,
+      "chapter": 0,
+      "health": 100,
+      "level": 6
+    },
+    {
+      "choice": {
+        "after": "威力 21.0 / 1.70秒ごと\n2重 / 範囲 221.2",
+        "before": "威力 17.0 / 1.83秒ごと\n1重 / 範囲 198.8",
+        "body": "自分の周りに輪を広げ、一度ずつ敵を払う。",
+        "effect": "威力 21.0 / 1.70秒ごと\n2重 / 範囲 221.2",
+        "evolved": false,
+        "full_slots": false,
+        "icon": "moon",
+        "id": "weapon:moon",
+        "item_id": "moon",
+        "kind": "weapon",
+        "replace_id": "",
+        "requirement": "第3章の宝箱 / Rank 5 ＋ 月長石",
+        "specialization": false,
+        "tag": "魔法 Rank 2 → 3",
+        "title": "月輪"
+      },
+      "chapter": 0,
+      "elapsed": 69.1833333333307
+    },
+    {
+      "state": "playing",
+      "elapsed": 69.366666666664,
+      "chapter": 0,
+      "health": 100,
+      "level": 6
+    },
+    {
+      "elapsed": 78.4333333333302,
+      "chapter": 0,
+      "boss": 0,
+      "health": 100,
+      "level": 6,
+      "kills": 108,
+      "enemies": 13,
+      "flanks": 41,
+      "fps": 61,
+      "music": 1
+    },
+    {
+      "elapsed": 93.6333333333293,
+      "chapter": 0,
+      "boss": 0,
+      "health": 90,
+      "level": 6,
+      "kills": 133,
+      "enemies": 6,
+      "flanks": 53,
+      "fps": 59,
+      "music": 1
+    },
+    {
+      "state": "upgrade",
+      "elapsed": 100.366666666662,
+      "chapter": 0,
+      "health": 90,
+      "level": 7
+    },
+    {
+      "choice": {
+        "after": "威力 27.0 / 1.20秒ごと\n2個 / 爆発範囲 42.0",
+        "before": "威力 23.0 / 1.20秒ごと\n1個 / 爆発範囲 42.0",
+        "body": "壁を越える追尾の火が、命中した場所で弾ける。",
+        "effect": "威力 27.0 / 1.20秒ごと\n2個 / 爆発範囲 42.0",
+        "evolved": false,
+        "full_slots": false,
+        "icon": "wisp",
+        "id": "weapon:wisp",
+        "item_id": "wisp",
+        "kind": "weapon",
+        "replace_id": "",
+        "requirement": "第3章の宝箱 / Rank 5 ＋ 灯火の油",
+        "specialization": false,
+        "tag": "魔法 Rank 2 → 3",
+        "title": "鬼火"
+      },
+      "chapter": 0,
+      "elapsed": 100.366666666662
+    },
+    {
+      "state": "playing",
+      "elapsed": 100.516666666662,
+      "chapter": 0,
+      "health": 90,
+      "level": 7
+    },
+    {
+      "elapsed": 108.883333333328,
+      "chapter": 0,
+      "boss": 0,
+      "health": 80,
+      "level": 7,
+      "kills": 175,
+      "enemies": 9,
+      "flanks": 65,
+      "fps": 45,
+      "music": 1
+    },
+    {
+      "state": "treasure",
+      "elapsed": 118.166666666661,
+      "chapter": 0,
+      "health": 68,
+      "level": 7
+    },
+    {
+      "choice": {
+        "after": "威力 18.0 / 0.78秒ごと\n2本 / 射程 345.0",
+        "before": "威力 14.0 / 0.78秒ごと\n2本 / 射程 300.0",
+        "body": "近い敵へ雷を放ち、直線上の敵を貫く。",
+        "effect": "威力 18.0 / 0.78秒ごと\n2本 / 射程 345.0",
+        "evolved": false,
+        "full_slots": false,
+        "icon": "lightning",
+        "id": "weapon:lightning",
+        "item_id": "lightning",
+        "kind": "weapon",
+        "replace_id": "",
+        "requirement": "第3章の宝箱 / Rank 5 ＋ 静電のインク",
+        "specialization": false,
+        "tag": "魔法 Rank 2 → 3",
+        "title": "雷"
+      },
+      "chapter": 0,
+      "elapsed": 118.166666666661
+    },
+    {
+      "state": "playing",
+      "elapsed": 118.166666666661,
+      "chapter": 0,
+      "health": 68,
+      "level": 7
+    },
+    {
+      "elapsed": 123.966666666661,
+      "chapter": 0,
+      "boss": 0,
+      "health": 68,
+      "level": 7,
+      "kills": 196,
+      "enemies": 8,
+      "flanks": 71,
+      "fps": 42,
+      "music": 1
+    },
+    {
+      "state": "treasure",
+      "elapsed": 134.533333333333,
+      "chapter": 0,
+      "health": 68,
+      "level": 7
+    },
+    {
+      "choice": {
+        "after": "全ての魔法の範囲と太さ+22%。射程は変わらない。",
+        "before": "",
+        "body": "全ての魔法の範囲と太さ+22%。射程は変わらない。",
+        "effect": "全ての魔法の範囲と太さ+22%。射程は変わらない。",
+        "full_slots": false,
+        "icon": "moonstone",
+        "id": "relic:moonstone",
+        "item_id": "moonstone",
+        "kind": "relic",
+        "replace_id": "",
+        "requirement": "",
+        "specialization": false,
+        "tag": "遺物・3枠",
+        "title": "月長石"
+      },
+      "chapter": 0,
+      "elapsed": 134.533333333333
+    },
+    {
+      "state": "playing",
+      "elapsed": 134.683333333333,
+      "chapter": 0,
+      "health": 68,
+      "level": 7
+    },
+    {
+      "elapsed": 139.16666666667,
+      "chapter": 0,
+      "boss": 0,
+      "health": 78,
+      "level": 7,
+      "kills": 251,
+      "enemies": 22,
+      "flanks": 96,
+      "fps": 38,
+      "music": 1
+    },
+    {
+      "state": "upgrade",
+      "elapsed": 142.000000000005,
+      "chapter": 0,
+      "health": 78,
+      "level": 8
+    },
+    {
+      "choice": {
+        "after": "本体の4回目の詠唱ごとに、その攻撃の威力+45%。残像も同じ強さで再現。",
+        "before": "",
+        "body": "本体の4回目の詠唱ごとに、その攻撃の威力+45%。残像も同じ強さで再現。",
+        "effect": "本体の4回目の詠唱ごとに、その攻撃の威力+45%。残像も同じ強さで再現。",
+        "full_slots": false,
+        "icon": "storm_ink",
+        "id": "relic:storm_ink",
+        "item_id": "storm_ink",
+        "kind": "relic",
+        "replace_id": "",
+        "requirement": "",
+        "specialization": false,
+        "tag": "遺物・3枠",
+        "title": "静電のインク"
+      },
+      "chapter": 0,
+      "elapsed": 142.000000000005
+    },
+    {
+      "state": "playing",
+      "elapsed": 142.000000000005,
+      "chapter": 0,
+      "health": 78,
+      "level": 8
+    },
+    {
+      "elapsed": 154.383333333348,
+      "chapter": 0,
+      "boss": 0,
+      "health": 78,
+      "level": 8,
+      "kills": 289,
+      "enemies": 11,
+      "flanks": 110,
+      "fps": 60,
+      "music": 1
+    },
+    {
+      "elapsed": 169.566666666694,
+      "chapter": 0,
+      "boss": 0,
+      "health": 78,
+      "level": 8,
+      "kills": 351,
+      "enemies": 21,
+      "flanks": 125,
+      "fps": 56,
+      "music": 1
+    },
+    {
+      "state": "treasure",
+      "elapsed": 175.850000000032,
+      "chapter": 0,
+      "health": 78,
+      "level": 8
+    },
+    {
+      "choice": {
+        "after": "残像の魔法威力+30%。元の詠唱時に効果を記録する。",
+        "before": "",
+        "body": "残像の魔法威力+30%。元の詠唱時に効果を記録する。",
+        "effect": "残像の魔法威力+30%。元の詠唱時に効果を記録する。",
+        "full_slots": false,
+        "icon": "lantern_oil",
+        "id": "relic:lantern_oil",
+        "item_id": "lantern_oil",
+        "kind": "relic",
+        "replace_id": "",
+        "requirement": "",
+        "specialization": false,
+        "tag": "遺物・3枠",
+        "title": "灯火の油"
+      },
+      "chapter": 0,
+      "elapsed": 175.850000000032
+    },
+    {
+      "state": "playing",
+      "elapsed": 176.000000000032,
+      "chapter": 0,
+      "health": 78,
+      "level": 8
+    },
+    {
+      "elapsed": 184.683333333337,
+      "chapter": 0,
+      "boss": 4047.6,
+      "health": 78,
+      "level": 8,
+      "kills": 386,
+      "enemies": 1,
+      "flanks": 139,
+      "fps": 59,
+      "music": 2
+    }
+  ],
+  "errors": [],
+  "external_requests": [],
+  "memory": [
+    {
+      "phase": "pause-start",
+      "elapsed": 2.65,
+      "chapter": 0,
+      "perf": {
+        "effects": 3,
+        "fps": 59,
+        "nodes": 76,
+        "objects": 1611,
+        "orphans": 0,
+        "projectiles": 0,
+        "resources": 29,
+        "static_bytes": 0,
+        "static_peak_bytes": 0
+      },
+      "js_heap": {
+        "usedSize": 25155808,
+        "totalSize": 48070656,
+        "embedderHeapUsedSize": 3607664,
+        "backingStorageSize": 45780329
+      },
+      "snapshot_chars": 6519,
+      "renderers": [
+        {
+          "pid": 23076,
+          "rss_kib": 188048
+        },
+        {
+          "pid": 23078,
+          "rss_kib": 101232
+        },
+        {
+          "pid": 23079,
+          "rss_kib": 838528
+        }
+      ]
+    },
+    {
+      "phase": "pause-after-30s",
+      "elapsed": 2.65,
+      "chapter": 0,
+      "perf": {
+        "effects": 3,
+        "fps": 60,
+        "nodes": 76,
+        "objects": 1611,
+        "orphans": 0,
+        "projectiles": 0,
+        "resources": 29,
+        "static_bytes": 0,
+        "static_peak_bytes": 0
+      },
+      "js_heap": {
+        "usedSize": 19781244,
+        "totalSize": 22396928,
+        "embedderHeapUsedSize": 2969696,
+        "backingStorageSize": 45597426
+      },
+      "snapshot_chars": 6519,
+      "renderers": [
+        {
+          "pid": 23076,
+          "rss_kib": 181904
+        },
+        {
+          "pid": 23078,
+          "rss_kib": 101296
+        },
+        {
+          "pid": 23079,
+          "rss_kib": 786832
+        }
+      ]
+    },
+    {
+      "phase": "first-run",
+      "elapsed": 2.65,
+      "chapter": 0,
+      "perf": {
+        "effects": 3,
+        "fps": 54,
+        "nodes": 76,
+        "objects": 1615,
+        "orphans": 0,
+        "projectiles": 0,
+        "resources": 29,
+        "static_bytes": 0,
+        "static_peak_bytes": 0
+      },
+      "js_heap": {
+        "usedSize": 27388868,
+        "totalSize": 31490048,
+        "embedderHeapUsedSize": 3100616,
+        "backingStorageSize": 57131404
+      },
+      "snapshot_chars": 6520,
+      "renderers": [
+        {
+          "pid": 23076,
+          "rss_kib": 182208
+        },
+        {
+          "pid": 23078,
+          "rss_kib": 101296
+        },
+        {
+          "pid": 23079,
+          "rss_kib": 818080
+        }
+      ]
+    },
+    {
+      "phase": "first-run",
+      "elapsed": 32.6833333333328,
+      "chapter": 0,
+      "perf": {
+        "effects": 0,
+        "fps": 55,
+        "nodes": 57,
+        "objects": 1586,
+        "orphans": 0,
+        "projectiles": 4,
+        "resources": 29,
+        "static_bytes": 0,
+        "static_peak_bytes": 0
+      },
+      "js_heap": {
+        "usedSize": 224154052,
+        "totalSize": 261570560,
+        "embedderHeapUsedSize": 165833080,
+        "backingStorageSize": 48168300
+      },
+      "snapshot_chars": 6718,
+      "renderers": [
+        {
+          "pid": 23076,
+          "rss_kib": 182208
+        },
+        {
+          "pid": 23078,
+          "rss_kib": 101360
+        },
+        {
+          "pid": 23079,
+          "rss_kib": 1262880
+        }
+      ]
+    },
+    {
+      "phase": "first-run",
+      "elapsed": 62.7499999999977,
+      "chapter": 0,
+      "perf": {
+        "effects": 2,
+        "fps": 57,
+        "nodes": 57,
+        "objects": 1594,
+        "orphans": 0,
+        "projectiles": 3,
+        "resources": 29,
+        "static_bytes": 0,
+        "static_peak_bytes": 0
+      },
+      "js_heap": {
+        "usedSize": 290069736,
+        "totalSize": 354238464,
+        "embedderHeapUsedSize": 5874640,
+        "backingStorageSize": 46480788
+      },
+      "snapshot_chars": 7952,
+      "renderers": [
+        {
+          "pid": 23076,
+          "rss_kib": 182208
+        },
+        {
+          "pid": 23078,
+          "rss_kib": 101360
+        },
+        {
+          "pid": 23079,
+          "rss_kib": 1352864
+        }
+      ]
+    },
+    {
+      "phase": "first-run",
+      "elapsed": 92.8333333333293,
+      "chapter": 0,
+      "perf": {
+        "effects": 0,
+        "fps": 61,
+        "nodes": 57,
+        "objects": 1599,
+        "orphans": 0,
+        "projectiles": 4,
+        "resources": 29,
+        "static_bytes": 0,
+        "static_peak_bytes": 0
+      },
+      "js_heap": {
+        "usedSize": 224496668,
+        "totalSize": 277102592,
+        "embedderHeapUsedSize": 31068408,
+        "backingStorageSize": 46835055
+      },
+      "snapshot_chars": 8109,
+      "renderers": [
+        {
+          "pid": 23076,
+          "rss_kib": 182224
+        },
+        {
+          "pid": 23078,
+          "rss_kib": 101360
+        },
+        {
+          "pid": 23079,
+          "rss_kib": 1282288
+        }
+      ]
+    },
+    {
+      "phase": "first-run",
+      "elapsed": 122.916666666661,
+      "chapter": 0,
+      "perf": {
+        "effects": 1,
+        "fps": 40,
+        "nodes": 57,
+        "objects": 1600,
+        "orphans": 0,
+        "projectiles": 11,
+        "resources": 29,
+        "static_bytes": 0,
+        "static_peak_bytes": 0
+      },
+      "js_heap": {
+        "usedSize": 304580760,
+        "totalSize": 374390784,
+        "embedderHeapUsedSize": 17470616,
+        "backingStorageSize": 46556381
+      },
+      "snapshot_chars": 7886,
+      "renderers": [
+        {
+          "pid": 23076,
+          "rss_kib": 182224
+        },
+        {
+          "pid": 23078,
+          "rss_kib": 101360
+        },
+        {
+          "pid": 23079,
+          "rss_kib": 1583024
+        }
+      ]
+    },
+    {
+      "phase": "first-run",
+      "elapsed": 153.050000000014,
+      "chapter": 0,
+      "perf": {
+        "effects": 0,
+        "fps": 48,
+        "nodes": 57,
+        "objects": 1603,
+        "orphans": 0,
+        "projectiles": 4,
+        "resources": 29,
+        "static_bytes": 0,
+        "static_peak_bytes": 0
+      },
+      "js_heap": {
+        "usedSize": 616309004,
+        "totalSize": 688734208,
+        "embedderHeapUsedSize": 13932384,
+        "backingStorageSize": 46484069
+      },
+      "snapshot_chars": 10104,
+      "renderers": [
+        {
+          "pid": 23076,
+          "rss_kib": 182224
+        },
+        {
+          "pid": 23078,
+          "rss_kib": 101360
+        },
+        {
+          "pid": 23079,
+          "rss_kib": 1861248
+        }
+      ]
+    },
+    {
+      "phase": "first-run",
+      "elapsed": 183.133333333336,
+      "chapter": 0,
+      "perf": {
+        "effects": 2,
+        "fps": 48,
+        "nodes": 57,
+        "objects": 1611,
+        "orphans": 0,
+        "projectiles": 9,
+        "resources": 29,
+        "static_bytes": 0,
+        "static_peak_bytes": 0
+      },
+      "js_heap": {
+        "usedSize": 485426984,
+        "totalSize": 527745024,
+        "embedderHeapUsedSize": 154766800,
+        "backingStorageSize": 82968405
+      },
+      "snapshot_chars": 9488,
+      "renderers": [
+        {
+          "pid": 23076,
+          "rss_kib": 182224
+        },
+        {
+          "pid": 23078,
+          "rss_kib": 101360
+        },
+        {
+          "pid": 23079,
+          "rss_kib": 2038880
+        }
+      ]
+    },
+    {
+      "phase": "diagnostic-before-gc",
+      "elapsed": 185.333333333338,
+      "chapter": 0,
+      "perf": {
+        "effects": 9,
+        "fps": 59,
+        "nodes": 86,
+        "objects": 1676,
+        "orphans": 0,
+        "projectiles": 6,
+        "resources": 29,
+        "static_bytes": 0,
+        "static_peak_bytes": 0
+      },
+      "js_heap": {
+        "usedSize": 441249012,
+        "totalSize": 509788160,
+        "embedderHeapUsedSize": 20055400,
+        "backingStorageSize": 54195554
+      },
+      "snapshot_chars": 9311,
+      "renderers": [
+        {
+          "pid": 23076,
+          "rss_kib": 182224
+        },
+        {
+          "pid": 23078,
+          "rss_kib": 101360
+        },
+        {
+          "pid": 23079,
+          "rss_kib": 1856944
+        }
+      ]
+    },
+    {
+      "phase": "diagnostic-after-gc",
+      "elapsed": 185.333333333338,
+      "chapter": 0,
+      "perf": {
+        "effects": 9,
+        "fps": 59,
+        "nodes": 86,
+        "objects": 1676,
+        "orphans": 0,
+        "projectiles": 6,
+        "resources": 29,
+        "static_bytes": 0,
+        "static_peak_bytes": 0
+      },
+      "js_heap": {
+        "usedSize": 430783912,
+        "totalSize": 431669248,
+        "embedderHeapUsedSize": 1258656,
+        "backingStorageSize": 53783810
+      },
+      "snapshot_chars": 9311,
+      "renderers": [
+        {
+          "pid": 23076,
+          "rss_kib": 182224
+        },
+        {
+          "pid": 23078,
+          "rss_kib": 101360
+        },
+        {
+          "pid": 23079,
+          "rss_kib": 1343632
+        }
+      ]
+    }
+  ],
+  "heap_diagnostic": "Separate forced-GC diagnostic, not part of ordinary full-run memory samples.",
+  "final": {
+    "arena": {
+      "bounded": true,
+      "bounds": {
+        "height": 1600,
+        "width": 2200,
+        "x": -1100,
+        "y": -800
+      },
+      "obstacle_count": 4,
+      "obstacles": [
+        {
+          "height": 180,
+          "width": 260,
+          "x": -480,
+          "y": -380
+        },
+        {
+          "height": 180,
+          "width": 260,
+          "x": 220,
+          "y": -380
+        },
+        {
+          "height": 180,
+          "width": 260,
+          "x": -480,
+          "y": 200
+        },
+        {
+          "height": 180,
+          "width": 260,
+          "x": 220,
+          "y": 200
+        }
+      ]
+    },
+    "audio": {
+      "music_active": true,
+      "music_paused": true,
+      "music_starts": 2
+    },
+    "boss": {
+      "hp": 3867.6,
+      "id": "boss_thorn",
+      "max_hp": 4500,
+      "name": "茨の庭守",
+      "phase": 1,
+      "radius": 44,
+      "x": 694.010559082031,
+      "y": -330.976928710938
+    },
+    "chapter": 0,
+    "chapter_clears": [],
+    "chapter_elapsed": 185.333333333338,
+    "chapter_name": "眠りの庭園",
+    "chapter_stage": "boss",
+    "chests": [
+      {
+        "elite": false,
+        "id": 1,
+        "opened": true,
+        "x": 760,
+        "y": -540
+      },
+      {
+        "elite": true,
+        "id": 2,
+        "opened": true,
+        "x": -380.468109130859,
+        "y": 426.332427978516
+      },
+      {
+        "elite": false,
+        "id": 3,
+        "opened": true,
+        "x": -760,
+        "y": 540
+      },
+      {
+        "elite": true,
+        "id": 4,
+        "opened": true,
+        "x": 52.6111145019531,
+        "y": -182.637664794922
+      }
+    ],
+    "choice_phase": "offer",
+    "choices": [],
+    "damage_received": {
+      "contact": 12,
+      "hazard": 0,
+      "projectile": 30
+    },
+    "damage_summary": {
+      "by_weapon": {
+        "bell": 0,
+        "blast": 0,
+        "frost": 0,
+        "lightning": 5392.22396666668,
+        "moon": 2900.48863333339,
+        "thorn": 0,
+        "wisp": 9577.3948333334
+      },
+      "echo": 7229.9910333334,
+      "player": 10112.2084000001,
+      "poison": 0,
+      "resonance": 527.908000000002
+    },
+    "damage_taken": 42,
+    "discoveries": {
+      "enemies": [
+        "hound",
+        "charger",
+        "archer",
+        "sentinel",
+        "boss_thorn"
+      ],
+      "evolutions": [],
+      "relics": [
+        "moonstone",
+        "storm_ink",
+        "lantern_oil"
+      ],
+      "weapons": [
+        "lightning",
+        "wisp",
+        "moon"
+      ]
+    },
+    "echo": {
+      "active": true,
+      "x": 567.695190429688,
+      "y": -198.497817993164
+    },
+    "echo_shots": 369,
+    "effects": 9,
+    "elapsed": 185.333333333338,
+    "enemies": [
+      {
+        "boss": true,
+        "elite": false,
+        "hp": 3867.6,
+        "id": 388,
+        "kind": "boss_thorn",
+        "mark_expires": 187.766666666671,
+        "mark_source": "player",
+        "max_hp": 4500,
+        "phase": "seek",
+        "phase_index": 1,
+        "radius": 44,
+        "timer": -1.17267306976032e-15,
+        "x": 694,
+        "y": -331
+      }
+    ],
+    "enemy_count": 1,
+    "equipment": {
+      "rank_cap": 3,
+      "relic_slots": 3,
+      "relics": [
+        {
+          "body": "全ての魔法の範囲と太さ+22%。射程は変わらない。",
+          "evolves": "moon",
+          "icon": "moonstone",
+          "id": "moonstone",
+          "title": "月長石"
+        },
+        {
+          "body": "本体の4回目の詠唱ごとに、その攻撃の威力+45%。残像も同じ強さで再現。",
+          "evolves": "lightning",
+          "icon": "storm_ink",
+          "id": "storm_ink",
+          "title": "静電のインク"
+        },
+        {
+          "body": "残像の魔法威力+30%。元の詠唱時に効果を記録する。",
+          "evolves": "wisp",
+          "icon": "lantern_oil",
+          "id": "lantern_oil",
+          "title": "灯火の油"
+        }
+      ],
+      "weapon_slots": 3,
+      "weapons": [
+        {
+          "body": "近い敵へ雷を放ち、直線上の敵を貫く。",
+          "can_evolve": false,
+          "evolution": "天裂の雷",
+          "evolution_body": "雷が4本に増え、命中先から別の敵へ連鎖する。",
+          "evolution_id": "lightning",
+          "evolution_name": "天裂の雷",
+          "evolved": false,
+          "icon": "lightning",
+          "id": "lightning",
+          "level": 3,
+          "max_level": 5,
+          "rank_cap": 3,
+          "requirement": "storm_ink",
+          "requirement_title": "静電のインク",
+          "stats": "威力 18.0 / 0.78秒ごと\n2本 / 射程 345.0",
+          "title": "雷"
+        },
+        {
+          "body": "自分の周りに輪を広げ、一度ずつ敵を払う。",
+          "can_evolve": false,
+          "evolution": "双月の環",
+          "evolution_body": "広い月輪を3重に放つ。",
+          "evolution_id": "moon",
+          "evolution_name": "双月の環",
+          "evolved": false,
+          "icon": "moon",
+          "id": "moon",
+          "level": 3,
+          "max_level": 5,
+          "rank_cap": 3,
+          "requirement": "moonstone",
+          "requirement_title": "月長石",
+          "stats": "威力 21.0 / 1.70秒ごと\n2重 / 範囲 269.9",
+          "title": "月輪"
+        },
+        {
+          "body": "壁を越える追尾の火が、命中した場所で弾ける。",
+          "can_evolve": false,
+          "evolution": "道しるべの灯",
+          "evolution_body": "爆発が広がり、火が別の敵へ最大3回跳ぶ。",
+          "evolution_id": "wisp",
+          "evolution_name": "道しるべの灯",
+          "evolved": false,
+          "icon": "wisp",
+          "id": "wisp",
+          "level": 3,
+          "max_level": 5,
+          "rank_cap": 3,
+          "requirement": "lantern_oil",
+          "requirement_title": "灯火の油",
+          "stats": "威力 27.0 / 1.20秒ごと\n2個 / 爆発範囲 51.2",
+          "title": "鬼火"
+        }
+      ]
+    },
+    "experience": 199,
+    "experience_needed": 283,
+    "gui": {
+      "codex_category": "weapons",
+      "page": "",
+      "starter": "lightning"
+    },
+    "hazards": [],
+    "health": 78,
+    "history_samples": 130,
+    "kills": 386,
+    "last_damage_cause": "archer",
+    "last_echo_attack": {
+      "captured": true,
+      "cooldown": 0.78,
+      "cooldown_scale": 1,
+      "count": 2,
+      "damage": 18,
+      "echo_multiplier": 1.3,
+      "empowered": false,
+      "evolved": false,
+      "kind": "lightning",
+      "level": 3,
+      "max_level": 5,
+      "pierce": 1,
+      "poison": 0,
+      "poison_duration": 0,
+      "power_scale": 1,
+      "radius": 0,
+      "radius_scale": 1,
+      "range": 345,
+      "range_scale": 0.75,
+      "resonance_bonus": 12,
+      "resonance_distance": 100,
+      "resonance_stagger": 0,
+      "slow": 1,
+      "slow_duration": 0,
+      "stagger": 0,
+      "width": 19.52
+    },
+    "last_player_attack": {
+      "captured": true,
+      "cooldown": 0.78,
+      "cooldown_scale": 1,
+      "count": 2,
+      "damage": 18,
+      "echo_multiplier": 1.3,
+      "empowered": false,
+      "evolved": false,
+      "kind": "lightning",
+      "level": 3,
+      "max_level": 5,
+      "pierce": 1,
+      "poison": 0,
+      "poison_duration": 0,
+      "power_scale": 1,
+      "radius": 0,
+      "radius_scale": 1,
+      "range": 345,
+      "range_scale": 0.75,
+      "resonance_bonus": 12,
+      "resonance_distance": 100,
+      "resonance_stagger": 0,
+      "slow": 1,
+      "slow_duration": 0,
+      "stagger": 0,
+      "width": 19.52
+    },
+    "level": 8,
+    "max_health": 100,
+    "maximum_health": 100,
+    "pending_echo_attacks": 4,
+    "perf": {
+      "effects": 9,
+      "fps": 59,
+      "nodes": 86,
+      "objects": 1676,
+      "orphans": 0,
+      "projectiles": 6,
+      "resources": 29,
+      "static_bytes": 0,
+      "static_peak_bytes": 0
+    },
+    "phase": {
+      "assault": true,
+      "boss": true,
+      "index": 6,
+      "name": "茨の庭守",
+      "remaining": 0,
+      "subtitle": "予告をかわし、主を倒そう"
+    },
+    "pickup_count": 32,
+    "pickup_radius": 172,
+    "pickups": [
+      {
+        "kind": "ward",
+        "value": 1,
+        "x": 547.203796386719,
+        "y": 698.604187011719
+      },
+      {
+        "kind": "blast",
+        "value": 1,
+        "x": 72.6111145019531,
+        "y": -182.637664794922
+      },
+      {
+        "kind": "ward",
+        "value": 1,
+        "x": -7.72724533081055,
+        "y": 226.809951782227
+      },
+      {
+        "kind": "xp",
+        "value": 2,
+        "x": -285.550720214844,
+        "y": -106.552452087402
+      },
+      {
+        "kind": "xp",
+        "value": 2,
+        "x": -209.486846923828,
+        "y": -48.7145195007324
+      },
+      {
+        "kind": "xp",
+        "value": 2,
+        "x": -277.381134033203,
+        "y": -72.0410003662109
+      },
+      {
+        "kind": "xp",
+        "value": 2,
+        "x": -113.794746398926,
+        "y": -40.1203689575195
+      },
+      {
+        "kind": "xp",
+        "value": 2,
+        "x": 60.1050796508789,
+        "y": -132.382202148438
+      },
+      {
+        "kind": "xp",
+        "value": 2,
+        "x": 99.1495742797852,
+        "y": -136.194732666016
+      },
+      {
+        "kind": "xp",
+        "value": 2,
+        "x": -223.575317382812,
+        "y": 114.900062561035
+      },
+      {
+        "kind": "xp",
+        "value": 1,
+        "x": 36.771297454834,
+        "y": -212.404159545898
+      },
+      {
+        "kind": "xp",
+        "value": 1,
+        "x": 110.640205383301,
+        "y": -208.913314819336
+      },
+      {
+        "kind": "xp",
+        "value": 1,
+        "x": -77.4695129394531,
+        "y": -165.595001220703
+      },
+      {
+        "kind": "xp",
+        "value": 1,
+        "x": -195.402526855469,
+        "y": 39.9783096313477
+      },
+      {
+        "kind": "xp",
+        "value": 2,
+        "x": -213.780426025391,
+        "y": 65.2462921142578
+      },
+      {
+        "kind": "xp",
+        "value": 1,
+        "x": -48.7208862304688,
+        "y": -36.3914489746094
+      },
+      {
+        "kind": "blast",
+        "value": 1,
+        "x": -28.7208862304688,
+        "y": -36.3914489746094
+      },
+      {
+        "kind": "xp",
+        "value": 1,
+        "x": 111.963775634766,
+        "y": -179.851165771484
+      },
+      {
+        "kind": "xp",
+        "value": 1,
+        "x": -113.101280212402,
+        "y": 200.488739013672
+      },
+      {
+        "kind": "xp",
+        "value": 2,
+        "x": 8.02830123901367,
+        "y": -209.858856201172
+      },
+      {
+        "kind": "xp",
+        "value": 2,
+        "x": 41.5699310302734,
+        "y": -208.520980834961
+      },
+      {
+        "kind": "xp",
+        "value": 1,
+        "x": 14.0915250778198,
+        "y": -283.040740966797
+      },
+      {
+        "kind": "xp",
+        "value": 1,
+        "x": 24.713924407959,
+        "y": 13.4686794281006
+      },
+      {
+        "kind": "xp",
+        "value": 1,
+        "x": 44.5632553100586,
+        "y": 67.5596618652344
+      },
+      {
+        "kind": "xp",
+        "value": 1,
+        "x": 150.036605834961,
+        "y": 110.406280517578
+      },
+      {
+        "kind": "xp",
+        "value": 2,
+        "x": 321.810028076172,
+        "y": -418.698089599609
+      },
+      {
+        "kind": "xp",
+        "value": 2,
+        "x": 171.090698242188,
+        "y": -402.004547119141
+      },
+      {
+        "kind": "xp",
+        "value": 2,
+        "x": 251.858337402344,
+        "y": -411.706909179688
+      },
+      {
+        "kind": "xp",
+        "value": 1,
+        "x": 146.62712097168,
+        "y": -125.327117919922
+      },
+      {
+        "kind": "xp",
+        "value": 1,
+        "x": 224.798233032227,
+        "y": -126.259376525879
+      },
+      {
+        "kind": "xp",
+        "value": 2,
+        "x": 193.137466430664,
+        "y": -91.7530288696289
+      },
+      {
+        "kind": "xp",
+        "value": 1,
+        "x": 1050.41296386719,
+        "y": 140.179656982422
+      }
+    ],
+    "player": {
+      "x": 744.117431640625,
+      "y": -521.837341308594
+    },
+    "player_shots": 373,
+    "profile": {
+      "can_save": true,
+      "data": {
+        "best": {
+          "chapter": 0,
+          "kills": 0,
+          "seconds": 0,
+          "victories": 0
+        },
+        "clears": [],
+        "discoveries": {
+          "enemies": [],
+          "evolutions": [],
+          "relics": [],
+          "weapons": [
+            "lightning",
+            "moon"
+          ]
+        },
+        "runs": 0,
+        "settings": {
+          "large_text": false,
+          "music_volume": 0.65,
+          "reduced_motion": false,
+          "sfx_volume": 0.8,
+          "sound": true
+        },
+        "starters": [
+          "lightning",
+          "moon"
+        ],
+        "version": 1
+      },
+      "message": "この端末に保存しました。",
+      "status": "saved",
+      "unlocks": []
+    },
+    "projectiles": 6,
+    "rank_cap": 3,
+    "rerolls_left": 2,
+    "resonance_bonus": 12,
+    "resonance_hits": 140,
+    "resonance_kills": 107,
+    "settings": {
+      "large_text": false,
+      "music_volume": 0.65,
+      "reduced_motion": false,
+      "sfx_volume": 0.8,
+      "sound": true
+    },
+    "skips_left": 3,
+    "specialization": "月の魔女",
+    "speed": 215,
+    "state": "paused",
+    "upgrade_choices": [],
+    "ward_charges": 0,
+    "ward_cooldown": 0,
+    "weapons": {
+      "bell": {
+        "cooldown": 2.4,
+        "cooldown_scale": 1,
+        "count": 1,
+        "damage": 15,
+        "evolved": false,
+        "level": 0,
+        "max_level": 5,
+        "pierce": 1,
+        "poison": 0,
+        "poison_duration": 0,
+        "power_scale": 1,
+        "radius": 220,
+        "radius_scale": 1,
+        "range": 400,
+        "range_scale": 1,
+        "slow": 1,
+        "slow_duration": 0,
+        "stagger": 0.35,
+        "width": 46
+      },
+      "frost": {
+        "cooldown": 2.7,
+        "cooldown_scale": 1,
+        "count": 1,
+        "damage": 6,
+        "evolved": false,
+        "level": 0,
+        "max_level": 5,
+        "pierce": 1,
+        "poison": 0,
+        "poison_duration": 0,
+        "power_scale": 1,
+        "radius": 80,
+        "radius_scale": 1,
+        "range": 450,
+        "range_scale": 1,
+        "slow": 0.5,
+        "slow_duration": 1,
+        "stagger": 0,
+        "width": 11
+      },
+      "lightning": {
+        "cooldown": 0.78,
+        "cooldown_scale": 1,
+        "count": 2,
+        "damage": 18,
+        "evolved": false,
+        "level": 3,
+        "max_level": 5,
+        "pierce": 1,
+        "poison": 0,
+        "poison_duration": 0,
+        "power_scale": 1,
+        "radius": 0,
+        "radius_scale": 1,
+        "range": 345,
+        "range_scale": 0.75,
+        "slow": 1,
+        "slow_duration": 0,
+        "stagger": 0,
+        "width": 16
+      },
+      "moon": {
+        "cooldown": 1.7,
+        "cooldown_scale": 0.85,
+        "count": 2,
+        "damage": 21,
+        "evolved": false,
+        "level": 3,
+        "max_level": 5,
+        "pierce": 1,
+        "poison": 0,
+        "poison_duration": 0,
+        "power_scale": 1,
+        "radius": 221.2,
+        "radius_scale": 1.4,
+        "range": 400,
+        "range_scale": 1,
+        "slow": 1,
+        "slow_duration": 0,
+        "stagger": 0,
+        "width": 15.4
+      },
+      "thorn": {
+        "cooldown": 1.4,
+        "cooldown_scale": 1,
+        "count": 2,
+        "damage": 13,
+        "evolved": false,
+        "level": 0,
+        "max_level": 5,
+        "pierce": 2,
+        "poison": 3,
+        "poison_duration": 2.5,
+        "power_scale": 1,
+        "radius": 8,
+        "radius_scale": 1,
+        "range": 620,
+        "range_scale": 1,
+        "slow": 1,
+        "slow_duration": 0,
+        "stagger": 0,
+        "width": 16
+      },
+      "wisp": {
+        "cooldown": 1.2,
+        "cooldown_scale": 1,
+        "count": 2,
+        "damage": 27,
+        "evolved": false,
+        "level": 3,
+        "max_level": 5,
+        "pierce": 1,
+        "poison": 0,
+        "poison_duration": 0,
+        "power_scale": 1,
+        "radius": 42,
+        "radius_scale": 1,
+        "range": 570,
+        "range_scale": 1,
+        "slow": 1,
+        "slow_duration": 0,
+        "stagger": 0,
+        "width": 11
+      }
+    }
+  },
+  "wall_seconds": 187.504,
+  "seen_chapters": [
+    0
+  ],
+  "seen_bosses": [
+    0
+  ],
+  "profile_after_reload": {
+    "can_save": true,
+    "data": {
+      "best": {
+        "chapter": 0,
+        "kills": 0,
+        "seconds": 0,
+        "victories": 0
+      },
+      "clears": [],
+      "discoveries": {
+        "enemies": [],
+        "evolutions": [],
+        "relics": [],
+        "weapons": [
+          "lightning",
+          "moon"
+        ]
+      },
+      "runs": 0,
+      "settings": {
+        "large_text": false,
+        "music_volume": 0.65,
+        "reduced_motion": false,
+        "sfx_volume": 0.8,
+        "sound": true
+      },
+      "starters": [
+        "lightning",
+        "moon"
+      ],
+      "version": 1
+    },
+    "message": "この端末の記録を読み込みました。",
+    "status": "saved",
+    "unlocks": []
+  },
+  "success": true,
+  "build_sha256_after": "bbbb5226d6fa72de3a527f1ac4eb1631d88a91d6f8804c968c73cd7522df21a6"
+}

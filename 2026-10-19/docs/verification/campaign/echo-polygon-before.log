@@ -1,0 +1,39 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+OpenGL API 4.1 Metal - 91.7 - Compatibility - Using Device: Apple - Apple M5
+
+age=0.3499999999999999 alpha=0.0000000000000001 radius=0.0000000000000008 indices=18 vertices=[(727.8345, 375.5197), (727.8345, 375.5197), (727.8345, 375.5197), (727.8345, 375.5197), (727.8345, 375.5197), (727.8345, 375.5197), (727.8345, 375.5197), (727.8345, 375.5197)]
+age=0.3499999999990000 alpha=0.0000000000028570 radius=0.0000000000199993 indices=18 vertices=[(727.8345, 435.5197), (727.8345, 435.5197), (727.8345, 435.5197), (727.8345, 435.5197), (727.8345, 435.5197), (727.8345, 435.5197), (727.8345, 435.5197), (727.8345, 435.5197)]
+age=0.3499990000000000 alpha=0.0000028571428571 radius=0.0000199999999996 indices=18 vertices=[(727.8345, 495.5196), (727.8345, 495.5197), (727.8345, 495.5197), (727.8345, 495.5197), (727.8345, 495.5197), (727.8345, 495.5197), (727.8345, 495.5197), (727.8345, 495.5197)]
+age=0.3499000000000000 alpha=0.0002857142857142 radius=0.0019999999999996 indices=18 vertices=[(727.8345, 555.5176), (727.8349, 555.5193), (727.8365, 555.5197), (727.8349, 555.52), (727.8345, 555.5217), (727.8342, 555.52), (727.8325, 555.5197), (727.8342, 555.5193)]
+ERROR: Invalid polygon data, triangulation failed.
+   at: canvas_item_add_polygon (servers/rendering/renderer_canvas_cull.cpp:1770)
+   GDScript backtrace (most recent call first):
+       [0] _star (res://scripts/garden_view.gd:749)
+       [1] _draw_effect (res://scripts/garden_view.gd:672)
+       [2] _draw (res://star_repro_view.gd:14)
+age=0.3490000000000000 alpha=0.0028571428571429 radius=0.0200000000000002 indices=0 vertices=[(727.8345, 615.4996), (727.8381, 615.5161), (727.8546, 615.5197), (727.8381, 615.5232), (727.8345, 615.5397), (727.831, 615.5232), (727.8145, 615.5197), (727.831, 615.5161)]
+ERROR: Invalid polygon data, triangulation failed.
+   at: canvas_item_add_polygon (servers/rendering/renderer_canvas_cull.cpp:1770)
+   GDScript backtrace (most recent call first):
+       [0] _star (res://scripts/garden_view.gd:749)
+       [1] _draw_effect (res://scripts/garden_view.gd:671)
+       [2] _draw (res://star_repro_view.gd:14)
+ERROR: Invalid polygon data, triangulation failed.
+   at: canvas_item_add_polygon (servers/rendering/renderer_canvas_cull.cpp:1770)
+   GDScript backtrace (most recent call first):
+       [0] _star (res://scripts/garden_view.gd:749)
+       [1] _draw_effect (res://scripts/garden_view.gd:671)
+       [2] _draw (res://star_repro_view.gd:14)
+ERROR: Invalid polygon data, triangulation failed.
+   at: canvas_item_add_polygon (servers/rendering/renderer_canvas_cull.cpp:1770)
+   GDScript backtrace (most recent call first):
+       [0] _star (res://scripts/garden_view.gd:749)
+       [1] _draw_effect (res://scripts/garden_view.gd:672)
+       [2] _draw (res://star_repro_view.gd:14)
+age=0.3400000000000000 alpha=0.0285714285714285 radius=0.1999999999999993 indices=18 vertices=[(727.8345, 675.3196), (727.8699, 675.4843), (728.0345, 675.5197), (727.8699, 675.555), (727.8345, 675.7197), (727.7992, 675.555), (727.6345, 675.5197), (727.7992, 675.4843)]
+ERROR: Invalid polygon data, triangulation failed.
+   at: canvas_item_add_polygon (servers/rendering/renderer_canvas_cull.cpp:1770)
+   GDScript backtrace (most recent call first):
+       [0] _star (res://scripts/garden_view.gd:749)
+       [1] _draw_effect (res://scripts/garden_view.gd:671)
+       [2] _draw (res://star_repro_view.gd:14)

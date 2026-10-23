@@ -1,0 +1,107 @@
+{
+  "engine": "Godot 4.7.2.stable.official.ed1daf0bf",
+  "logical_resolution": [
+    1280,
+    720
+  ],
+  "renderer": "Compatibility, single-thread Web",
+  "base_commit": "ab42a55396915254a76d99fdda6913248f9fa724",
+  "built_utc": "2026-10-21T16:44:27.920277+00:00",
+  "note": "Local macOS export, separate from CI Linux export and public deployment. Tests are excluded from the PCK.",
+  "artifacts": {
+    "echo-witch-cover.png": {
+      "bytes": 1134984,
+      "sha256": "a2192efb75d5ad9118208890836fa04fafa2843de2c78b50afce834a4eae89a9"
+    },
+    "index.apple-touch-icon.png": {
+      "bytes": 11944,
+      "sha256": "01d4f63e525941e06ce74f5187dad030d20a8d52a07ce365ae4e94af97a3b1f5"
+    },
+    "index.wasm": {
+      "bytes": 39514754,
+      "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0"
+    },
+    "index.icon.png": {
+      "bytes": 5700,
+      "sha256": "ad3c35ad0facf487c618204bd98db543034fc95224eadc7f08c7a9ff38d5b3b5"
+    },
+    "index.html": {
+      "bytes": 4735,
+      "sha256": "56975d36aad495ab4049fbbee103b81e02a513122cd46dfab8a275959fa0e1c5"
+    },
+    "index.png": {
+      "bytes": 21443,
+      "sha256": "3cb4495c0b98dfbe4b663cbf2b6836473572339beb66d902367893162a70be0e"
+    },
+    "index.audio.worklet.js": {
+      "bytes": 7298,
+      "sha256": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3"
+    },
+    "index.js": {
+      "bytes": 279815,
+      "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba"
+    },
+    "echo-witch-cover.svg": {
+      "bytes": 5519,
+      "sha256": "6f59b18dcb1108ead69b4af8944887d3e9a0333845b209956b2d1c7a197768ee"
+    },
+    "index.audio.position.worklet.js": {
+      "bytes": 2973,
+      "sha256": "be33985bc7160d6bf9646f259cd86b259cd67b02ccb297ee5c44f8ac84327bc8"
+    },
+    "credits.html": {
+      "bytes": 1708,
+      "sha256": "bec2793170f386b7cb62537ff0fe7b4f6a62f5bbbf19fe1f60d8a4d69318eef9"
+    },
+    "index.pck": {
+      "bytes": 33568356,
+      "sha256": "567c6a59fd3460fc431947e0a4282197e486f79f3437cfcb91bc7f06e93c45ff"
+    },
+    "licenses/ZEN-OFL.txt": {
+      "bytes": 4399,
+      "sha256": "469d214f9842809659c827b7f2adaf40ec0df6efdd5fe18b7127665c32aafaec"
+    },
+    "licenses/GODOT-LICENSE.txt": {
+      "bytes": 78778,
+      "sha256": "0fe7d25682d7102d5ddd5d0b7af97efbebd8b1e219ccd871a5cf66d883b9eef9"
+    },
+    "licenses/NOTO-OFL.txt": {
+      "bytes": 4301,
+      "sha256": "6a73f9541c2de74158c0e7cf6b0a58ef774f5a780bf191f2d7ec9cc53efe2bf2"
+    }
+  },
+  "source_sha256": {
+    "game/scripts/spell_glyph.gd": "9207756ef2e0da2184a992320c910e3350eacd057b1903c5cd9cebfb5bffe338",
+    "game/scripts/campaign_floor.gd": "22b213fd2a3b359154a2a593afba46c8c835267ec441b494e07b630226c61a5e",
+    "game/scripts/campaign.gd": "747be49754119bd3c5e589ab3d4b1ae2c1b8a37c72ac97e0226ab21718e2d978",
+    "game/scripts/garden_view.gd": "64dfc0277ff420020cdf91320a38e788c279d320b62432c7a7e94e71e0b3d7f3",
+    "game/scripts/soundscape.gd": "02d1ae8ddc6e97f1d855958967398b98a306b37d7446e594add0374793327753",
+    "game/scripts/scenery_cache.gd": "613560030b92772e77485c6c04bd3383fb1edbd3bfe58493985da9aa1ee69104",
+    "game/scripts/book_frame.gd": "808653c04d9395b166d6b562a9685e68b1784aafad4079a05455e2011413c65f",
+    "game/scripts/main.gd": "a2340723c785fe953781ba254046baaf308941b398e8fbad8a59c002d82c235d",
+    "game/scripts/arena_grid.gd": "93c8b2cc62992ab7c6d5ee48af278f7fdcc6aee779e2f545572e8e5e48726e72",
+    "game/scripts/spellbook.gd": "953164cfdb0afacf17744ec17b491ad53e10231931cfe032f2c6b9f1aaed825a",
+    "game/scripts/run_model.gd": "ca3adfeb0bdc1550ced0416816cf223d9c90924a5a3b5cf4f3f85ec6b11a85e5",
+    "game/scripts/echo_timeline.gd": "72bfe89bf9c0a7e4e5109183e40b0baccde3fe6655427a8fca627f51a8134a6c",
+    "game/scripts/profile.gd": "bc565831a1786771fa197989a3130ff35e472256287ed32b2505f9b44d5b5e71",
+    "game/scripts/interface.gd": "c97c3bbc4f7b889127eb9dceaf867b85dd88b566629646176997caff0d20f661",
+    "game/project.godot": "39684bfe71a961fd3dc95754a0b2c6c320f733b42450848b0fbada4389689a69",
+    "game/web_shell.html": "9cb71fde176894b2228677995ead41a8e57e262cd9916ad99a8bb17af6b345e1",
+    "docs/assets-manifest.json": "98d9a1d94ba2c6f8738e42f916e00db765d2255e79ba2e4a5ef30550fbdfde92"
+  },
+  "verification_sha256": {
+    "game/tests/ui_run.gd": "4ae87b759a402198cfc0fcf40bac5b4ef58afe2e1233d0da2f84b06c0ad6a359",
+    "game/tests/simulate_campaign.gd": "145cd94089778c0be0bf45cc0f12d086bf0e9959d7024f9f02859e0d036cb68e",
+    "game/tests/asset_run.gd": "3404c44fb4751de61529f4da0082059ce094ac639b2fb7cce4870cf5d2b97091",
+    "game/tests/renderer_geometry_run.gd": "89c8d9d0a24fa0664b1245a8d989b44ddd5dfbc6a0dba97398d2595f4c46dd23",
+    "game/tests/campaign_simulation.gd": "ac6eeffcf7a982a6ce04d47cd51620110ca47d56032559bb9a81079ab8939463",
+    "game/tests/run.gd": "68f28b016fd0c2fc56e70cf82edbd20113a5f28ca138fc55bec5ec29056802ae",
+    "game/tests/renderer_cache_run.gd": "6e67e7de14adfc50a7c8abcd0e923691143e5ba08d0b7921aa73bb0f27ca53cc",
+    "game/tests/audio_run.gd": "2e44241186b22edea7b372c3cfc163ca2f46a9d6aee705603d08059e84d806e2",
+    "game/tests/profile_run.gd": "b761c808874b26a6db328ec9f2e441ae2d0ec7f34d37095f4b441488841b6e18",
+    "game/tests/snapshot_bridge.mjs": "8b0cc7497f16d0961f6ff0e2530d0ef020868eb7ca56fde10553568af1accab2",
+    "scripts/browser-qa.mjs": "21cfd230dda681e5d0b56a1322a9a9803109f6f18c1f373370e6cba932dd6d6a",
+    "scripts/storage-qa.mjs": "5c193c06992c2b99ed3300915db0d3a0943d2591b78f306430d7b607a26c0144",
+    "scripts/edge-qa.mjs": "fe34fcc2997cc54d07490f2004fd52d36d5871453833f85b0825e4224a5a7db8"
+  }
+}

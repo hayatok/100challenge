@@ -1,0 +1,25 @@
+{
+  "tool": "built-in imagegen",
+  "images": [
+    {
+      "id": "boss-thorn",
+      "transparent": true,
+      "prompt": "Use case: stylized-concept. Production game asset, one complete isolated fantasy boss sprite for a 2D top-down survival game called Echo Witch. The Thorn Warden: a stocky enchanted garden guardian made of twisted grey-green roots, bone-white bark mask, branching thorn crown, small muted gold flowers, heavy root arms. Dark storybook watercolor and ink line illustration with clean readable silhouette, elegant hand painted paper texture, restrained indigo/bone white/antique gold palette matching a gothic little witch with a large ivory hat and violet dress. Three-quarter overhead view appropriate for a game sprite. Full body completely visible with a small oval foot base, centered on genuine transparent background, no scene, no ground plane, no text, no UI, no frame, no watermark. Face and limb silhouette should remain readable at 170px. Restrained pale cyan magic at the joints. The design should feel specific and carefully drawn, not geometric clip art."
+    },
+    {
+      "id": "boss-mirror",
+      "transparent": true,
+      "prompt": "Use case: stylized-concept. Production game asset, one complete isolated fantasy boss sprite for a 2D top-down survival game called Echo Witch. The Mirror Keeper: a tall spectral knight in layered ivory and indigo armor, a tall oval cracked silver mirror instead of a face, antique gold filigree, long flowing translucent pale-blue cloak, a single crescent shield held visibly at one side. A readable asymmetrical silhouette. Dark storybook watercolor and ink line illustration with clean outlined edges and hand painted paper texture, restrained indigo/bone white/antique gold/pale cyan palette matching a gothic witch game. Three-quarter overhead view appropriate for a game sprite. Full body visible including lower cloak tip, centered on genuine transparent background. No setting, no ground plane, no background mirror or scene, no text, no UI, no frame, no watermark. Strong recognizable silhouette readable at 180px."
+    },
+    {
+      "id": "boss-bell",
+      "transparent": true,
+      "prompt": "Use case: stylized-concept. Production game asset, one complete isolated fantasy final-boss sprite for a 2D top-down survival game called Echo Witch. The Bell Devourer: a looming owl-like midnight shadow spirit with a weathered bronze bell for its chest and crown of three small broken cathedral bells, broad torn cloak-wings, two narrow bone-white eyes, luminous muted-gold runes on bronze and pale cyan mist below. The bells and owl shadow create one creature, not separate objects. Dark storybook watercolor and ink illustration, clean outlined silhouette and careful hand-painted texture, indigo/bone white/antique gold/pale cyan palette. Three-quarter overhead view for a game sprite. Full silhouette and cloak-tips fully in frame, centered on genuine transparent background. No setting, no ground plane, no text or letters, no UI, no frame, no watermark. Readable menacing silhouette at 200px, refined illustrated game art."
+    },
+    {
+      "id": "campaign-keyart",
+      "transparent": false,
+      "prompt": "Use case: illustration-story. Create a finished widescreen 16:9 hand-painted background illustration for the title of a gothic storybook game Echo Witch. A moonlit abandoned magical garden in the foreground leads through pale stone archways into a distant cathedral bell tower on the right. A large delicate pale moon behind the tower, silver flowers and climbing thorn vines along worn stone steps, small gold fireflies, dark indigo night, muted blue-green foliage and bone-white stone, very restrained antique gold accents. Elegant ink outlines, watercolor and gouache paper texture consistent with a fantasy witch storybook. The left 45 percent of the composition must be mostly quiet dark indigo open sky and shadow, low detail, suitable for a game title/menu rendered separately. Put the interesting garden path, archways and bell tower in the right half. Atmospheric depth and luminous moonlit edges, carefully composed, no people or characters, no text, no logo, no interface, no frame, no watermark. It is a game background asset, not a screenshot or mockup."
+    }
+  ]
+}

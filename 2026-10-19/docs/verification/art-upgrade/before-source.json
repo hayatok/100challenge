@@ -1,0 +1,24 @@
+{
+  "kind": "existing real browser evidence copied from the unchanged baseline",
+  "head": "56d7aa85c726f29b4b34256755c4dbede39372de",
+  "pck_sha256": "504c177250865de0a325e9e9db996a931d7111ba974fecf35dd2a9e5835492c8",
+  "source_directory": "docs/verification/design/full-browser",
+  "files": [
+    {
+      "path": "docs/verification/art-upgrade/before/boss-0-battle.png",
+      "sha256": "93d4e4af42a176b0e64aaabbeb513c8e4755c4d60c48076691a595e6b59f5216"
+    },
+    {
+      "path": "docs/verification/art-upgrade/before/chapter-0-playing.png",
+      "sha256": "b6584999f711d56fe40d470c571043076648f3f39dd56b4319da9eaad542a06d"
+    },
+    {
+      "path": "docs/verification/art-upgrade/before/title-1280.png",
+      "sha256": "95eb5e225d48ebaa97b00b963bbf1a3585133071566918148efde0deacd966cb"
+    },
+    {
+      "path": "docs/verification/art-upgrade/before/upgrade.png",
+      "sha256": "a250b3a354a681ec05e3bc76895fbc9ad313ddc312bcfadee5220860fe76837f"
+    }
+  ]
+}

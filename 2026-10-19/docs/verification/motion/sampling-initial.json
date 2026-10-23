@@ -1,0 +1,5729 @@
+{
+  "base": "http://127.0.0.1:4198/",
+  "build_sha256": "af8968a3a09dfdd3c0918f155035b27e8e8d63eecc9dafa5842cb47d72ed4ccb",
+  "started": "2026-10-22T12:08:27.904Z",
+  "note": "Real Web keyboard and mouse input; no game state setters. Software renderer, not a physical GPU benchmark.",
+  "checks": {
+    "read_only": true
+  },
+  "samples": [
+    {
+      "label": "idle",
+      "elapsed": 0.1,
+      "state": "playing",
+      "player": {
+        "x": 0,
+        "y": 0
+      },
+      "echo": {
+        "active": false,
+        "x": 0,
+        "y": 0
+      },
+      "motion": {
+        "actors": {
+          "atlas_count": 10,
+          "frame_count": 36,
+          "region_count": 360,
+          "texture_ids": [
+            -9223372004105649000,
+            -9223372004088872000,
+            -9223372004072095000,
+            -9223372004055318000,
+            -9223372004038540000,
+            -9223372004021763000,
+            -9223372004004986000,
+            -9223372003988209000,
+            -9223372003971431000,
+            -9223372003954654000
+          ]
+        },
+        "camera": {
+          "x": 0,
+          "y": 0
+        },
+        "clock": 0.1,
+        "death_count": 0,
+        "death_limit": 24,
+        "echo": {
+          "animation": "idle",
+          "cast": 0,
+          "facing": 1,
+          "frame": 0,
+          "gait": 0,
+          "hit": 0,
+          "kind": "witch",
+          "moving": false
+        },
+        "enemies": [
+          {
+            "animation": "arrival",
+            "cast": 0,
+            "facing": 1,
+            "frame": 27,
+            "gait": 0,
+            "hit": 0,
+            "id": 1,
+            "kind": "hound",
+            "moving": false
+          },
+          {
+            "animation": "arrival",
+            "cast": 0,
+            "facing": 1,
+            "frame": 27,
+            "gait": 0,
+            "hit": 0,
+            "id": 2,
+            "kind": "hound",
+            "moving": false
+          },
+          {
+            "animation": "arrival",
+            "cast": 0,
+            "facing": 1,
+            "frame": 27,
+            "gait": 0,
+            "hit": 0,
+            "id": 3,
+            "kind": "hound",
+            "moving": false
+          },
+          {
+            "animation": "arrival",
+            "cast": 0,
+            "facing": 1,
+            "frame": 27,
+            "gait": 0,
+            "hit": 0,
+            "id": 4,
+            "kind": "hound",
+            "moving": false
+          },
+          {
+            "animation": "arrival",
+            "cast": 0,
+            "facing": 1,
+            "frame": 27,
+            "gait": 0,
+            "hit": 0,
+            "id": 5,
+            "kind": "hound",
+            "moving": false
+          }
+        ],
+        "event_count": 0,
+        "event_limit": 80,
+        "fx": {
+          "atlas_frames": 10,
+          "atlas_texture_id": 442381631499,
+          "particle_limit": 96,
+          "particles_drawn": 0
+        },
+        "generation": 2,
+        "player": {
+          "animation": "idle",
+          "cast": 0,
+          "facing": 1,
+          "frame": 0,
+          "gait": 0,
+          "hit": 0,
+          "kind": "witch",
+          "moving": false
+        },
+        "recent_events": [],
+        "serial": 0
+      }
+    },
+    {
+      "label": "idle",
+      "elapsed": 0.1,
+      "state": "playing",
+      "player": {
+        "x": 0,
+        "y": 0
+      },
+      "echo": {
+        "active": false,
+        "x": 0,
+        "y": 0
+      },
+      "motion": {
+        "actors": {
+          "atlas_count": 10,
+          "frame_count": 36,
+          "region_count": 360,
+          "texture_ids": [
+            -9223372004105649000,
+            -9223372004088872000,
+            -9223372004072095000,
+            -9223372004055318000,
+            -9223372004038540000,
+            -9223372004021763000,
+            -9223372004004986000,
+            -9223372003988209000,
+            -9223372003971431000,
+            -9223372003954654000
+          ]
+        },
+        "camera": {
+          "x": 0,
+          "y": 0
+        },
+        "clock": 0.1,
+        "death_count": 0,
+        "death_limit": 24,
+        "echo": {
+          "animation": "idle",
+          "cast": 0,
+          "facing": 1,
+          "frame": 0,
+          "gait": 0,
+          "hit": 0,
+          "kind": "witch",
+          "moving": false
+        },
+        "enemies": [
+          {
+            "animation": "arrival",
+            "cast": 0,
+            "facing": 1,
+            "frame": 27,
+            "gait": 0,
+            "hit": 0,
+            "id": 1,
+            "kind": "hound",
+            "moving": false
+          },
+          {
+            "animation": "arrival",
+            "cast": 0,
+            "facing": 1,
+            "frame": 27,
+            "gait": 0,
+            "hit": 0,
+            "id": 2,
+            "kind": "hound",
+            "moving": false
+          },
+          {
+            "animation": "arrival",
+            "cast": 0,
+            "facing": 1,
+            "frame": 27,
+            "gait": 0,
+            "hit": 0,
+            "id": 3,
+            "kind": "hound",
+            "moving": false
+          },
+          {
+            "animation": "arrival",
+            "cast": 0,
+            "facing": 1,
+            "frame": 27,
+            "gait": 0,
+            "hit": 0,
+            "id": 4,
+            "kind": "hound",
+            "moving": false
+          },
+          {
+            "animation": "arrival",
+            "cast": 0,
+            "facing": 1,
+            "frame": 27,
+            "gait": 0,
+            "hit": 0,
+            "id": 5,
+            "kind": "hound",
+            "moving": false
+          }
+        ],
+        "event_count": 0,
+        "event_limit": 80,
+        "fx": {
+          "atlas_frames": 10,
+          "atlas_texture_id": 442381631499,
+          "particle_limit": 96,
+          "particles_drawn": 0
+        },
+        "generation": 2,
+        "player": {
+          "animation": "idle",
+          "cast": 0,
+          "facing": 1,
+          "frame": 0,
+          "gait": 0,
+          "hit": 0,
+          "kind": "witch",
+          "moving": false
+        },
+        "recent_events": [],
+        "serial": 0
+      }
+    },
+    {
+      "label": "idle",
+      "elapsed": 0.366666666666667,
+      "state": "playing",
+      "player": {
+        "x": 0,
+        "y": 0
+      },
+      "echo": {
+        "active": false,
+        "x": 0,
+        "y": 0
+      },
+      "motion": {
+        "actors": {
+          "atlas_count": 10,
+          "frame_count": 36,
+          "region_count": 360,
+          "texture_ids": [
+            -9223372004105649000,
+            -9223372004088872000,
+            -9223372004072095000,
+            -9223372004055318000,
+            -9223372004038540000,
+            -9223372004021763000,
+            -9223372004004986000,
+            -9223372003988209000,
+            -9223372003971431000,
+            -9223372003954654000
+          ]
+        },
+        "camera": {
+          "x": 0,
+          "y": 0
+        },
+        "clock": 0.366666666666667,
+        "death_count": 0,
+        "death_limit": 24,
+        "echo": {
+          "animation": "idle",
+          "cast": 0,
+          "facing": 1,
+          "frame": 1,
+          "gait": 0,
+          "hit": 0,
+          "kind": "witch",
+          "moving": false
+        },
+        "enemies": [
+          {
+            "animation": "arrival",
+            "cast": 0,
+            "facing": 1,
+            "frame": 28,
+            "gait": 0,
+            "hit": 0,
+            "id": 1,
+            "kind": "hound",
+            "moving": false
+          },
+          {
+            "animation": "arrival",
+            "cast": 0,
+            "facing": 1,
+            "frame": 28,
+            "gait": 0,
+            "hit": 0,
+            "id": 2,
+            "kind": "hound",
+            "moving": false
+          },
+          {
+            "animation": "arrival",
+            "cast": 0,
+            "facing": 1,
+            "frame": 28,
+            "gait": 0,
+            "hit": 0,
+            "id": 3,
+            "kind": "hound",
+            "moving": false
+          },
+          {
+            "animation": "arrival",
+            "cast": 0,
+            "facing": 1,
+            "frame": 28,
+            "gait": 0,
+            "hit": 0,
+            "id": 4,
+            "kind": "hound",
+            "moving": false
+          },
+          {
+            "animation": "arrival",
+            "cast": 0,
+            "facing": 1,
+            "frame": 28,
+            "gait": 0,
+            "hit": 0,
+            "id": 5,
+            "kind": "hound",
+            "moving": false
+          }
+        ],
+        "event_count": 0,
+        "event_limit": 80,
+        "fx": {
+          "atlas_frames": 10,
+          "atlas_texture_id": 442381631499,
+          "particle_limit": 96,
+          "particles_drawn": 0
+        },
+        "generation": 2,
+        "player": {
+          "animation": "idle",
+          "cast": 0,
+          "facing": 1,
+          "frame": 1,
+          "gait": 0,
+          "hit": 0,
+          "kind": "witch",
+          "moving": false
+        },
+        "recent_events": [],
+        "serial": 0
+      }
+    },
+    {
+      "label": "idle",
+      "elapsed": 0.633333333333334,
+      "state": "playing",
+      "player": {
+        "x": 0,
+        "y": 0
+      },
+      "echo": {
+        "active": false,
+        "x": 0,
+        "y": 0
+      },
+      "motion": {
+        "actors": {
+          "atlas_count": 10,
+          "frame_count": 36,
+          "region_count": 360,
+          "texture_ids": [
+            -9223372004105649000,
+            -9223372004088872000,
+            -9223372004072095000,
+            -9223372004055318000,
+            -9223372004038540000,
+            -9223372004021763000,
+            -9223372004004986000,
+            -9223372003988209000,
+            -9223372003971431000,
+            -9223372003954654000
+          ]
+        },
+        "camera": {
+          "x": 0,
+          "y": 0
+        },
+        "clock": 0.633333333333334,
+        "death_count": 0,
+        "death_limit": 24,
+        "echo": {
+          "animation": "idle",
+          "cast": 0,
+          "facing": 1,
+          "frame": 2,
+          "gait": 0,
+          "hit": 0,
+          "kind": "witch",
+          "moving": false
+        },
+        "enemies": [
+          {
+            "animation": "arrival",
+            "cast": 0,
+            "facing": 1,
+            "frame": 29,
+            "gait": 0,
+            "hit": 0,
+            "id": 1,
+            "kind": "hound",
+            "moving": false
+          },
+          {
+            "animation": "arrival",
+            "cast": 0,
+            "facing": 1,
+            "frame": 29,
+            "gait": 0,
+            "hit": 0,
+            "id": 2,
+            "kind": "hound",
+            "moving": false
+          },
+          {
+            "animation": "arrival",
+            "cast": 0,
+            "facing": 1,
+            "frame": 29,
+            "gait": 0,
+            "hit": 0,
+            "id": 3,
+            "kind": "hound",
+            "moving": false
+          },
+          {
+            "animation": "arrival",
+            "cast": 0,
+            "facing": 1,
+            "frame": 29,
+            "gait": 0,
+            "hit": 0,
+            "id": 4,
+            "kind": "hound",
+            "moving": false
+          },
+          {
+            "animation": "arrival",
+            "cast": 0,
+            "facing": 1,
+            "frame": 29,
+            "gait": 0,
+            "hit": 0,
+            "id": 5,
+            "kind": "hound",
+            "moving": false
+          }
+        ],
+        "event_count": 0,
+        "event_limit": 80,
+        "fx": {
+          "atlas_frames": 10,
+          "atlas_texture_id": 442381631499,
+          "particle_limit": 96,
+          "particles_drawn": 0
+        },
+        "generation": 2,
+        "player": {
+          "animation": "idle",
+          "cast": 0,
+          "facing": 1,
+          "frame": 2,
+          "gait": 0,
+          "hit": 0,
+          "kind": "witch",
+          "moving": false
+        },
+        "recent_events": [],
+        "serial": 0
+      }
+    },
+    {
+      "label": "walk",
+      "elapsed": 0.900000000000001,
+      "state": "playing",
+      "player": {
+        "x": 0,
+        "y": 0
+      },
+      "echo": {
+        "active": false,
+        "x": 0,
+        "y": 0
+      },
+      "motion": {
+        "actors": {
+          "atlas_count": 10,
+          "frame_count": 36,
+          "region_count": 360,
+          "texture_ids": [
+            -9223372004105649000,
+            -9223372004088872000,
+            -9223372004072095000,
+            -9223372004055318000,
+            -9223372004038540000,
+            -9223372004021763000,
+            -9223372004004986000,
+            -9223372003988209000,
+            -9223372003971431000,
+            -9223372003954654000
+          ]
+        },
+        "camera": {
+          "x": 0,
+          "y": 0
+        },
+        "clock": 0.900000000000001,
+        "death_count": 0,
+        "death_limit": 24,
+        "echo": {
+          "animation": "idle",
+          "cast": 0,
+          "facing": 1,
+          "frame": 3,
+          "gait": 0,
+          "hit": 0,
+          "kind": "witch",
+          "moving": false
+        },
+        "enemies": [
+          {
+            "animation": "idle",
+            "cast": 0,
+            "facing": 1,
+            "frame": 0,
+            "gait": 0,
+            "hit": 0,
+            "id": 1,
+            "kind": "hound",
+            "moving": false
+          },
+          {
+            "animation": "hit",
+            "cast": 0,
+            "facing": 1,
+            "frame": 14,
+            "gait": 0.199999904632568,
+            "hit": 1,
+            "id": 2,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "idle",
+            "cast": 0,
+            "facing": 1,
+            "frame": 0,
+            "gait": 0,
+            "hit": 0,
+            "id": 3,
+            "kind": "hound",
+            "moving": false
+          },
+          {
+            "animation": "idle",
+            "cast": 0,
+            "facing": 1,
+            "frame": 0,
+            "gait": 0,
+            "hit": 0,
+            "id": 4,
+            "kind": "hound",
+            "moving": false
+          },
+          {
+            "animation": "idle",
+            "cast": 0,
+            "facing": 1,
+            "frame": 0,
+            "gait": 0,
+            "hit": 0,
+            "id": 5,
+            "kind": "hound",
+            "moving": false
+          }
+        ],
+        "event_count": 2,
+        "event_limit": 80,
+        "fx": {
+          "atlas_frames": 10,
+          "atlas_texture_id": 442381631499,
+          "particle_limit": 96,
+          "particles_drawn": 0
+        },
+        "generation": 2,
+        "player": {
+          "animation": "cast",
+          "cast": 1,
+          "facing": 1,
+          "frame": 10,
+          "gait": 0,
+          "hit": 0,
+          "kind": "witch",
+          "moving": false
+        },
+        "recent_events": [
+          {
+            "age": 0,
+            "echo": false,
+            "kind": "cast",
+            "serial": 1
+          },
+          {
+            "age": 0,
+            "echo": false,
+            "kind": "hit",
+            "serial": 2
+          }
+        ],
+        "serial": 2
+      }
+    },
+    {
+      "label": "walk",
+      "elapsed": 0.900000000000001,
+      "state": "playing",
+      "player": {
+        "x": 0,
+        "y": 0
+      },
+      "echo": {
+        "active": false,
+        "x": 0,
+        "y": 0
+      },
+      "motion": {
+        "actors": {
+          "atlas_count": 10,
+          "frame_count": 36,
+          "region_count": 360,
+          "texture_ids": [
+            -9223372004105649000,
+            -9223372004088872000,
+            -9223372004072095000,
+            -9223372004055318000,
+            -9223372004038540000,
+            -9223372004021763000,
+            -9223372004004986000,
+            -9223372003988209000,
+            -9223372003971431000,
+            -9223372003954654000
+          ]
+        },
+        "camera": {
+          "x": 0,
+          "y": 0
+        },
+        "clock": 0.900000000000001,
+        "death_count": 0,
+        "death_limit": 24,
+        "echo": {
+          "animation": "idle",
+          "cast": 0,
+          "facing": 1,
+          "frame": 3,
+          "gait": 0,
+          "hit": 0,
+          "kind": "witch",
+          "moving": false
+        },
+        "enemies": [
+          {
+            "animation": "idle",
+            "cast": 0,
+            "facing": 1,
+            "frame": 0,
+            "gait": 0,
+            "hit": 0,
+            "id": 1,
+            "kind": "hound",
+            "moving": false
+          },
+          {
+            "animation": "hit",
+            "cast": 0,
+            "facing": 1,
+            "frame": 14,
+            "gait": 0.199999904632568,
+            "hit": 1,
+            "id": 2,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "idle",
+            "cast": 0,
+            "facing": 1,
+            "frame": 0,
+            "gait": 0,
+            "hit": 0,
+            "id": 3,
+            "kind": "hound",
+            "moving": false
+          },
+          {
+            "animation": "idle",
+            "cast": 0,
+            "facing": 1,
+            "frame": 0,
+            "gait": 0,
+            "hit": 0,
+            "id": 4,
+            "kind": "hound",
+            "moving": false
+          },
+          {
+            "animation": "idle",
+            "cast": 0,
+            "facing": 1,
+            "frame": 0,
+            "gait": 0,
+            "hit": 0,
+            "id": 5,
+            "kind": "hound",
+            "moving": false
+          }
+        ],
+        "event_count": 2,
+        "event_limit": 80,
+        "fx": {
+          "atlas_frames": 10,
+          "atlas_texture_id": 442381631499,
+          "particle_limit": 96,
+          "particles_drawn": 0
+        },
+        "generation": 2,
+        "player": {
+          "animation": "cast",
+          "cast": 1,
+          "facing": 1,
+          "frame": 10,
+          "gait": 0,
+          "hit": 0,
+          "kind": "witch",
+          "moving": false
+        },
+        "recent_events": [
+          {
+            "age": 0,
+            "echo": false,
+            "kind": "cast",
+            "serial": 1
+          },
+          {
+            "age": 0,
+            "echo": false,
+            "kind": "hit",
+            "serial": 2
+          }
+        ],
+        "serial": 2
+      }
+    },
+    {
+      "label": "walk",
+      "elapsed": 1.16666666666667,
+      "state": "playing",
+      "player": {
+        "x": 43,
+        "y": 0
+      },
+      "echo": {
+        "active": false,
+        "x": 0,
+        "y": 0
+      },
+      "motion": {
+        "actors": {
+          "atlas_count": 10,
+          "frame_count": 36,
+          "region_count": 360,
+          "texture_ids": [
+            -9223372004105649000,
+            -9223372004088872000,
+            -9223372004072095000,
+            -9223372004055318000,
+            -9223372004038540000,
+            -9223372004021763000,
+            -9223372004004986000,
+            -9223372003988209000,
+            -9223372003971431000,
+            -9223372003954654000
+          ]
+        },
+        "camera": {
+          "x": 0,
+          "y": 0
+        },
+        "clock": 1.16666666666667,
+        "death_count": 0,
+        "death_limit": 24,
+        "echo": {
+          "animation": "idle",
+          "cast": 0,
+          "facing": 1,
+          "frame": 0,
+          "gait": 0,
+          "hit": 0,
+          "kind": "witch",
+          "moving": false
+        },
+        "enemies": [
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 6,
+            "gait": 0.469332110881805,
+            "hit": 0,
+            "id": 1,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 8,
+            "gait": 0.669334652423859,
+            "hit": 0,
+            "id": 2,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 6,
+            "gait": 0.469332110881805,
+            "hit": 0,
+            "id": 3,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": 1,
+            "frame": 6,
+            "gait": 0.469333326816559,
+            "hit": 0,
+            "id": 4,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 6,
+            "gait": 0.469332110881805,
+            "hit": 0,
+            "id": 5,
+            "kind": "hound",
+            "moving": true
+          }
+        ],
+        "event_count": 2,
+        "event_limit": 80,
+        "fx": {
+          "atlas_frames": 10,
+          "atlas_texture_id": 442381631499,
+          "particle_limit": 96,
+          "particles_drawn": 3
+        },
+        "generation": 2,
+        "player": {
+          "animation": "cast",
+          "cast": 0.25925925925926,
+          "facing": 1,
+          "frame": 12,
+          "gait": 0.977272727272727,
+          "hit": 0,
+          "kind": "witch",
+          "moving": true
+        },
+        "recent_events": [
+          {
+            "age": 0.266666666666666,
+            "echo": false,
+            "kind": "cast",
+            "serial": 1
+          },
+          {
+            "age": 0.083333333333333,
+            "echo": false,
+            "kind": "footstep",
+            "serial": 3
+          }
+        ],
+        "serial": 3
+      }
+    },
+    {
+      "label": "walk",
+      "elapsed": 1.43333333333333,
+      "state": "playing",
+      "player": {
+        "x": 100.333351135254,
+        "y": 0
+      },
+      "echo": {
+        "active": false,
+        "x": 0,
+        "y": 0
+      },
+      "motion": {
+        "actors": {
+          "atlas_count": 10,
+          "frame_count": 36,
+          "region_count": 360,
+          "texture_ids": [
+            -9223372004105649000,
+            -9223372004088872000,
+            -9223372004072095000,
+            -9223372004055318000,
+            -9223372004038540000,
+            -9223372004021763000,
+            -9223372004004986000,
+            -9223372003988209000,
+            -9223372003971431000,
+            -9223372003954654000
+          ]
+        },
+        "camera": {
+          "x": 0,
+          "y": 0
+        },
+        "clock": 1.43333333333333,
+        "death_count": 0,
+        "death_limit": 24,
+        "echo": {
+          "animation": "idle",
+          "cast": 0,
+          "facing": 1,
+          "frame": 1,
+          "gait": 0,
+          "hit": 0,
+          "kind": "witch",
+          "moving": false
+        },
+        "enemies": [
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 9,
+            "gait": 0.938662135601043,
+            "hit": 0,
+            "id": 1,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 4,
+            "gait": 0.138668353557587,
+            "hit": 0,
+            "id": 2,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 9,
+            "gait": 0.938662135601043,
+            "hit": 0,
+            "id": 3,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": 1,
+            "frame": 9,
+            "gait": 0.938666636943817,
+            "hit": 0,
+            "id": 4,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 9,
+            "gait": 0.938662135601043,
+            "hit": 0,
+            "id": 5,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "arrival",
+            "cast": 0,
+            "facing": 1,
+            "frame": 28,
+            "gait": 0,
+            "hit": 0,
+            "id": 6,
+            "kind": "hound",
+            "moving": false
+          },
+          {
+            "animation": "arrival",
+            "cast": 0,
+            "facing": 1,
+            "frame": 28,
+            "gait": 0,
+            "hit": 0,
+            "id": 7,
+            "kind": "hound",
+            "moving": false
+          }
+        ],
+        "event_count": 3,
+        "event_limit": 80,
+        "fx": {
+          "atlas_frames": 10,
+          "atlas_texture_id": 442381631499,
+          "particle_limit": 96,
+          "particles_drawn": 3
+        },
+        "generation": 2,
+        "player": {
+          "animation": "walk",
+          "cast": 0,
+          "facing": 1,
+          "frame": 5,
+          "gait": 0.280303434892134,
+          "hit": 0,
+          "kind": "witch",
+          "moving": true
+        },
+        "recent_events": [
+          {
+            "age": 0.249999999999999,
+            "echo": false,
+            "kind": "footstep",
+            "serial": 4
+          },
+          {
+            "age": 0.149999999999999,
+            "echo": false,
+            "kind": "footstep",
+            "serial": 5
+          },
+          {
+            "age": 0.0499999999999998,
+            "echo": false,
+            "kind": "footstep",
+            "serial": 6
+          }
+        ],
+        "serial": 6
+      }
+    },
+    {
+      "label": "walk",
+      "elapsed": 1.43333333333333,
+      "state": "playing",
+      "player": {
+        "x": 100.333351135254,
+        "y": 0
+      },
+      "echo": {
+        "active": false,
+        "x": 0,
+        "y": 0
+      },
+      "motion": {
+        "actors": {
+          "atlas_count": 10,
+          "frame_count": 36,
+          "region_count": 360,
+          "texture_ids": [
+            -9223372004105649000,
+            -9223372004088872000,
+            -9223372004072095000,
+            -9223372004055318000,
+            -9223372004038540000,
+            -9223372004021763000,
+            -9223372004004986000,
+            -9223372003988209000,
+            -9223372003971431000,
+            -9223372003954654000
+          ]
+        },
+        "camera": {
+          "x": 0,
+          "y": 0
+        },
+        "clock": 1.43333333333333,
+        "death_count": 0,
+        "death_limit": 24,
+        "echo": {
+          "animation": "idle",
+          "cast": 0,
+          "facing": 1,
+          "frame": 1,
+          "gait": 0,
+          "hit": 0,
+          "kind": "witch",
+          "moving": false
+        },
+        "enemies": [
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 9,
+            "gait": 0.938662135601043,
+            "hit": 0,
+            "id": 1,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 4,
+            "gait": 0.138668353557587,
+            "hit": 0,
+            "id": 2,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 9,
+            "gait": 0.938662135601043,
+            "hit": 0,
+            "id": 3,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": 1,
+            "frame": 9,
+            "gait": 0.938666636943817,
+            "hit": 0,
+            "id": 4,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 9,
+            "gait": 0.938662135601043,
+            "hit": 0,
+            "id": 5,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "arrival",
+            "cast": 0,
+            "facing": 1,
+            "frame": 28,
+            "gait": 0,
+            "hit": 0,
+            "id": 6,
+            "kind": "hound",
+            "moving": false
+          },
+          {
+            "animation": "arrival",
+            "cast": 0,
+            "facing": 1,
+            "frame": 28,
+            "gait": 0,
+            "hit": 0,
+            "id": 7,
+            "kind": "hound",
+            "moving": false
+          }
+        ],
+        "event_count": 3,
+        "event_limit": 80,
+        "fx": {
+          "atlas_frames": 10,
+          "atlas_texture_id": 442381631499,
+          "particle_limit": 96,
+          "particles_drawn": 3
+        },
+        "generation": 2,
+        "player": {
+          "animation": "walk",
+          "cast": 0,
+          "facing": 1,
+          "frame": 5,
+          "gait": 0.280303434892134,
+          "hit": 0,
+          "kind": "witch",
+          "moving": true
+        },
+        "recent_events": [
+          {
+            "age": 0.249999999999999,
+            "echo": false,
+            "kind": "footstep",
+            "serial": 4
+          },
+          {
+            "age": 0.149999999999999,
+            "echo": false,
+            "kind": "footstep",
+            "serial": 5
+          },
+          {
+            "age": 0.0499999999999998,
+            "echo": false,
+            "kind": "footstep",
+            "serial": 6
+          }
+        ],
+        "serial": 6
+      }
+    },
+    {
+      "label": "walk",
+      "elapsed": 1.68333333333333,
+      "state": "playing",
+      "player": {
+        "x": 154.08332824707,
+        "y": 0
+      },
+      "echo": {
+        "active": false,
+        "x": 0,
+        "y": 0
+      },
+      "motion": {
+        "actors": {
+          "atlas_count": 10,
+          "frame_count": 36,
+          "region_count": 360,
+          "texture_ids": [
+            -9223372004105649000,
+            -9223372004088872000,
+            -9223372004072095000,
+            -9223372004055318000,
+            -9223372004038540000,
+            -9223372004021763000,
+            -9223372004004986000,
+            -9223372003988209000,
+            -9223372003971431000,
+            -9223372003954654000
+          ]
+        },
+        "camera": {
+          "x": 0,
+          "y": 0
+        },
+        "clock": 1.68333333333333,
+        "death_count": 0,
+        "death_limit": 24,
+        "echo": {
+          "animation": "idle",
+          "cast": 0,
+          "facing": 1,
+          "frame": 2,
+          "gait": 0,
+          "hit": 0,
+          "kind": "witch",
+          "moving": false
+        },
+        "enemies": [
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 6,
+            "gait": 0.37865933895111,
+            "hit": 0,
+            "id": 1,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "hit",
+            "cast": 0,
+            "facing": 1,
+            "frame": 14,
+            "gait": 0.720002508163452,
+            "hit": 1,
+            "id": 2,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 6,
+            "gait": 0.37865933895111,
+            "hit": 0,
+            "id": 3,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": 1,
+            "frame": 6,
+            "gait": 0.378667430877686,
+            "hit": 0,
+            "id": 4,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 6,
+            "gait": 0.37865933895111,
+            "hit": 0,
+            "id": 5,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "arrival",
+            "cast": 0,
+            "facing": 1,
+            "frame": 29,
+            "gait": 0,
+            "hit": 0,
+            "id": 6,
+            "kind": "hound",
+            "moving": false
+          },
+          {
+            "animation": "arrival",
+            "cast": 0,
+            "facing": 1,
+            "frame": 29,
+            "gait": 0,
+            "hit": 0,
+            "id": 7,
+            "kind": "hound",
+            "moving": false
+          }
+        ],
+        "event_count": 6,
+        "event_limit": 80,
+        "fx": {
+          "atlas_frames": 10,
+          "atlas_texture_id": 442381631499,
+          "particle_limit": 96,
+          "particles_drawn": 3
+        },
+        "generation": 2,
+        "player": {
+          "animation": "cast",
+          "cast": 1,
+          "facing": 1,
+          "frame": 10,
+          "gait": 0.501893823797053,
+          "hit": 0,
+          "kind": "witch",
+          "moving": true
+        },
+        "recent_events": [
+          {
+            "age": 0.299999999999999,
+            "echo": false,
+            "kind": "footstep",
+            "serial": 6
+          },
+          {
+            "age": 0.199999999999999,
+            "echo": false,
+            "kind": "footstep",
+            "serial": 7
+          },
+          {
+            "age": 0.0999999999999996,
+            "echo": false,
+            "kind": "footstep",
+            "serial": 8
+          },
+          {
+            "age": 0,
+            "echo": false,
+            "kind": "footstep",
+            "serial": 9
+          },
+          {
+            "age": 0,
+            "echo": false,
+            "kind": "cast",
+            "serial": 10
+          },
+          {
+            "age": 0,
+            "echo": false,
+            "kind": "hit",
+            "serial": 11
+          }
+        ],
+        "serial": 11
+      }
+    },
+    {
+      "label": "walk",
+      "elapsed": 1.93333333333333,
+      "state": "playing",
+      "player": {
+        "x": 207.833251953125,
+        "y": 0
+      },
+      "echo": {
+        "active": false,
+        "x": 0,
+        "y": 0
+      },
+      "motion": {
+        "actors": {
+          "atlas_count": 10,
+          "frame_count": 36,
+          "region_count": 360,
+          "texture_ids": [
+            -9223372004105649000,
+            -9223372004088872000,
+            -9223372004072095000,
+            -9223372004055318000,
+            -9223372004038540000,
+            -9223372004021763000,
+            -9223372004004986000,
+            -9223372003988209000,
+            -9223372003971431000,
+            -9223372003954654000
+          ]
+        },
+        "camera": {
+          "x": 0,
+          "y": 0
+        },
+        "clock": 1.93333333333333,
+        "death_count": 0,
+        "death_limit": 24,
+        "echo": {
+          "animation": "idle",
+          "cast": 0,
+          "facing": 1,
+          "frame": 3,
+          "gait": 0,
+          "hit": 0,
+          "kind": "witch",
+          "moving": false
+        },
+        "enemies": [
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 8,
+            "gait": 0.818660814762115,
+            "hit": 0,
+            "id": 1,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 4,
+            "gait": 0.160002527236939,
+            "hit": 0,
+            "id": 2,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 8,
+            "gait": 0.818660814762115,
+            "hit": 0,
+            "id": 3,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": 1,
+            "frame": 8,
+            "gait": 0.818667857646942,
+            "hit": 0,
+            "id": 4,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 8,
+            "gait": 0.818660814762115,
+            "hit": 0,
+            "id": 5,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "arrival",
+            "cast": 0,
+            "facing": 1,
+            "frame": 30,
+            "gait": 0,
+            "hit": 0,
+            "id": 6,
+            "kind": "hound",
+            "moving": false
+          },
+          {
+            "animation": "arrival",
+            "cast": 0,
+            "facing": 1,
+            "frame": 30,
+            "gait": 0,
+            "hit": 0,
+            "id": 7,
+            "kind": "hound",
+            "moving": false
+          }
+        ],
+        "event_count": 4,
+        "event_limit": 80,
+        "fx": {
+          "atlas_frames": 10,
+          "atlas_texture_id": 442381631499,
+          "particle_limit": 96,
+          "particles_drawn": 5
+        },
+        "generation": 2,
+        "player": {
+          "animation": "cast",
+          "cast": 0.305555555555558,
+          "facing": 1,
+          "frame": 12,
+          "gait": 0.723482998934659,
+          "hit": 0,
+          "kind": "witch",
+          "moving": true
+        },
+        "recent_events": [
+          {
+            "age": 0.249999999999999,
+            "echo": false,
+            "kind": "footstep",
+            "serial": 9
+          },
+          {
+            "age": 0.249999999999999,
+            "echo": false,
+            "kind": "cast",
+            "serial": 10
+          },
+          {
+            "age": 0.133333333333333,
+            "echo": false,
+            "kind": "footstep",
+            "serial": 12
+          },
+          {
+            "age": 0.0333333333333332,
+            "echo": false,
+            "kind": "footstep",
+            "serial": 13
+          }
+        ],
+        "serial": 13
+      }
+    },
+    {
+      "label": "walk",
+      "elapsed": 1.93333333333333,
+      "state": "playing",
+      "player": {
+        "x": 207.833251953125,
+        "y": 0
+      },
+      "echo": {
+        "active": false,
+        "x": 0,
+        "y": 0
+      },
+      "motion": {
+        "actors": {
+          "atlas_count": 10,
+          "frame_count": 36,
+          "region_count": 360,
+          "texture_ids": [
+            -9223372004105649000,
+            -9223372004088872000,
+            -9223372004072095000,
+            -9223372004055318000,
+            -9223372004038540000,
+            -9223372004021763000,
+            -9223372004004986000,
+            -9223372003988209000,
+            -9223372003971431000,
+            -9223372003954654000
+          ]
+        },
+        "camera": {
+          "x": 0,
+          "y": 0
+        },
+        "clock": 1.93333333333333,
+        "death_count": 0,
+        "death_limit": 24,
+        "echo": {
+          "animation": "idle",
+          "cast": 0,
+          "facing": 1,
+          "frame": 3,
+          "gait": 0,
+          "hit": 0,
+          "kind": "witch",
+          "moving": false
+        },
+        "enemies": [
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 8,
+            "gait": 0.818660814762115,
+            "hit": 0,
+            "id": 1,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 4,
+            "gait": 0.160002527236939,
+            "hit": 0,
+            "id": 2,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 8,
+            "gait": 0.818660814762115,
+            "hit": 0,
+            "id": 3,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": 1,
+            "frame": 8,
+            "gait": 0.818667857646942,
+            "hit": 0,
+            "id": 4,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 8,
+            "gait": 0.818660814762115,
+            "hit": 0,
+            "id": 5,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "arrival",
+            "cast": 0,
+            "facing": 1,
+            "frame": 30,
+            "gait": 0,
+            "hit": 0,
+            "id": 6,
+            "kind": "hound",
+            "moving": false
+          },
+          {
+            "animation": "arrival",
+            "cast": 0,
+            "facing": 1,
+            "frame": 30,
+            "gait": 0,
+            "hit": 0,
+            "id": 7,
+            "kind": "hound",
+            "moving": false
+          }
+        ],
+        "event_count": 4,
+        "event_limit": 80,
+        "fx": {
+          "atlas_frames": 10,
+          "atlas_texture_id": 442381631499,
+          "particle_limit": 96,
+          "particles_drawn": 5
+        },
+        "generation": 2,
+        "player": {
+          "animation": "cast",
+          "cast": 0.305555555555558,
+          "facing": 1,
+          "frame": 12,
+          "gait": 0.723482998934659,
+          "hit": 0,
+          "kind": "witch",
+          "moving": true
+        },
+        "recent_events": [
+          {
+            "age": 0.249999999999999,
+            "echo": false,
+            "kind": "footstep",
+            "serial": 9
+          },
+          {
+            "age": 0.249999999999999,
+            "echo": false,
+            "kind": "cast",
+            "serial": 10
+          },
+          {
+            "age": 0.133333333333333,
+            "echo": false,
+            "kind": "footstep",
+            "serial": 12
+          },
+          {
+            "age": 0.0333333333333332,
+            "echo": false,
+            "kind": "footstep",
+            "serial": 13
+          }
+        ],
+        "serial": 13
+      }
+    },
+    {
+      "label": "echo-replay",
+      "elapsed": 2.18333333333333,
+      "state": "playing",
+      "player": {
+        "x": 261.583190917969,
+        "y": 0
+      },
+      "echo": {
+        "active": true,
+        "x": 0,
+        "y": 0
+      },
+      "motion": {
+        "actors": {
+          "atlas_count": 10,
+          "frame_count": 36,
+          "region_count": 360,
+          "texture_ids": [
+            -9223372004105649000,
+            -9223372004088872000,
+            -9223372004072095000,
+            -9223372004055318000,
+            -9223372004038540000,
+            -9223372004021763000,
+            -9223372004004986000,
+            -9223372003988209000,
+            -9223372003971431000,
+            -9223372003954654000
+          ]
+        },
+        "camera": {
+          "x": 0,
+          "y": 0
+        },
+        "clock": 2.18333333333333,
+        "death_count": 0,
+        "death_limit": 24,
+        "echo": {
+          "animation": "idle",
+          "cast": 0,
+          "facing": 1,
+          "frame": 0,
+          "gait": 0,
+          "hit": 0,
+          "kind": "witch",
+          "moving": false
+        },
+        "enemies": [
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 5,
+            "gait": 0.25866229057312,
+            "hit": 0,
+            "id": 1,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": 1,
+            "frame": 7,
+            "gait": 0.60000247001648,
+            "hit": 0,
+            "id": 2,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 5,
+            "gait": 0.25866229057312,
+            "hit": 0,
+            "id": 3,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": 1,
+            "frame": 5,
+            "gait": 0.25866783618927,
+            "hit": 0,
+            "id": 4,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 5,
+            "gait": 0.25866229057312,
+            "hit": 0,
+            "id": 5,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 5,
+            "gait": 0.175999410152435,
+            "hit": 0,
+            "id": 6,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 5,
+            "gait": 0.175999410152435,
+            "hit": 0,
+            "id": 7,
+            "kind": "hound",
+            "moving": true
+          }
+        ],
+        "event_count": 3,
+        "event_limit": 80,
+        "fx": {
+          "atlas_frames": 10,
+          "atlas_texture_id": 442381631499,
+          "particle_limit": 96,
+          "particles_drawn": 3
+        },
+        "generation": 2,
+        "player": {
+          "animation": "walk",
+          "cast": 0,
+          "facing": 1,
+          "frame": 9,
+          "gait": 0.945072520862926,
+          "hit": 0,
+          "kind": "witch",
+          "moving": true
+        },
+        "recent_events": [
+          {
+            "age": 0.283333333333332,
+            "echo": false,
+            "kind": "footstep",
+            "serial": 13
+          },
+          {
+            "age": 0.183333333333333,
+            "echo": false,
+            "kind": "footstep",
+            "serial": 14
+          },
+          {
+            "age": 0.083333333333333,
+            "echo": false,
+            "kind": "footstep",
+            "serial": 15
+          }
+        ],
+        "serial": 15
+      }
+    },
+    {
+      "label": "echo-replay",
+      "elapsed": 2.45,
+      "state": "playing",
+      "player": {
+        "x": 279.499908447266,
+        "y": 0
+      },
+      "echo": {
+        "active": true,
+        "x": 0,
+        "y": 0
+      },
+      "motion": {
+        "actors": {
+          "atlas_count": 10,
+          "frame_count": 36,
+          "region_count": 360,
+          "texture_ids": [
+            -9223372004105649000,
+            -9223372004088872000,
+            -9223372004072095000,
+            -9223372004055318000,
+            -9223372004038540000,
+            -9223372004021763000,
+            -9223372004004986000,
+            -9223372003988209000,
+            -9223372003971431000,
+            -9223372003954654000
+          ]
+        },
+        "camera": {
+          "x": 0,
+          "y": 0
+        },
+        "clock": 2.45,
+        "death_count": 0,
+        "death_limit": 24,
+        "echo": {
+          "animation": "idle",
+          "cast": 0,
+          "facing": 1,
+          "frame": 1,
+          "gait": 0,
+          "hit": 0,
+          "kind": "witch",
+          "moving": false
+        },
+        "enemies": [
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 8,
+            "gait": 0.727997910976409,
+            "hit": 0,
+            "id": 1,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": 1,
+            "frame": 4,
+            "gait": 0.06933495759964,
+            "hit": 0,
+            "id": 2,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 8,
+            "gait": 0.727997910976409,
+            "hit": 0,
+            "id": 3,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": 1,
+            "frame": 8,
+            "gait": 0.728000776767731,
+            "hit": 0,
+            "id": 4,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 8,
+            "gait": 0.727997910976409,
+            "hit": 0,
+            "id": 5,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 7,
+            "gait": 0.645336763858795,
+            "hit": 0,
+            "id": 6,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 7,
+            "gait": 0.645336763858795,
+            "hit": 0,
+            "id": 7,
+            "kind": "hound",
+            "moving": true
+          }
+        ],
+        "event_count": 1,
+        "event_limit": 80,
+        "fx": {
+          "atlas_frames": 10,
+          "atlas_texture_id": 442381631499,
+          "particle_limit": 96,
+          "particles_drawn": 1
+        },
+        "generation": 2,
+        "player": {
+          "animation": "idle",
+          "cast": 0,
+          "facing": 1,
+          "frame": 0,
+          "gait": 0.352270646528764,
+          "hit": 0,
+          "kind": "witch",
+          "moving": false
+        },
+        "recent_events": [
+          {
+            "age": 0.249999999999999,
+            "echo": false,
+            "kind": "footstep",
+            "serial": 16
+          }
+        ],
+        "serial": 16
+      }
+    },
+    {
+      "label": "echo-replay",
+      "elapsed": 2.45,
+      "state": "playing",
+      "player": {
+        "x": 279.499908447266,
+        "y": 0
+      },
+      "echo": {
+        "active": true,
+        "x": 0,
+        "y": 0
+      },
+      "motion": {
+        "actors": {
+          "atlas_count": 10,
+          "frame_count": 36,
+          "region_count": 360,
+          "texture_ids": [
+            -9223372004105649000,
+            -9223372004088872000,
+            -9223372004072095000,
+            -9223372004055318000,
+            -9223372004038540000,
+            -9223372004021763000,
+            -9223372004004986000,
+            -9223372003988209000,
+            -9223372003971431000,
+            -9223372003954654000
+          ]
+        },
+        "camera": {
+          "x": 0,
+          "y": 0
+        },
+        "clock": 2.45,
+        "death_count": 0,
+        "death_limit": 24,
+        "echo": {
+          "animation": "idle",
+          "cast": 0,
+          "facing": 1,
+          "frame": 1,
+          "gait": 0,
+          "hit": 0,
+          "kind": "witch",
+          "moving": false
+        },
+        "enemies": [
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 8,
+            "gait": 0.727997910976409,
+            "hit": 0,
+            "id": 1,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": 1,
+            "frame": 4,
+            "gait": 0.06933495759964,
+            "hit": 0,
+            "id": 2,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 8,
+            "gait": 0.727997910976409,
+            "hit": 0,
+            "id": 3,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": 1,
+            "frame": 8,
+            "gait": 0.728000776767731,
+            "hit": 0,
+            "id": 4,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 8,
+            "gait": 0.727997910976409,
+            "hit": 0,
+            "id": 5,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 7,
+            "gait": 0.645336763858795,
+            "hit": 0,
+            "id": 6,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 7,
+            "gait": 0.645336763858795,
+            "hit": 0,
+            "id": 7,
+            "kind": "hound",
+            "moving": true
+          }
+        ],
+        "event_count": 1,
+        "event_limit": 80,
+        "fx": {
+          "atlas_frames": 10,
+          "atlas_texture_id": 442381631499,
+          "particle_limit": 96,
+          "particles_drawn": 1
+        },
+        "generation": 2,
+        "player": {
+          "animation": "idle",
+          "cast": 0,
+          "facing": 1,
+          "frame": 0,
+          "gait": 0.352270646528764,
+          "hit": 0,
+          "kind": "witch",
+          "moving": false
+        },
+        "recent_events": [
+          {
+            "age": 0.249999999999999,
+            "echo": false,
+            "kind": "footstep",
+            "serial": 16
+          }
+        ],
+        "serial": 16
+      }
+    },
+    {
+      "label": "echo-replay",
+      "elapsed": 2.7,
+      "state": "playing",
+      "player": {
+        "x": 279.499908447266,
+        "y": 0
+      },
+      "echo": {
+        "active": true,
+        "x": 0,
+        "y": 0
+      },
+      "motion": {
+        "actors": {
+          "atlas_count": 10,
+          "frame_count": 36,
+          "region_count": 360,
+          "texture_ids": [
+            -9223372004105649000,
+            -9223372004088872000,
+            -9223372004072095000,
+            -9223372004055318000,
+            -9223372004038540000,
+            -9223372004021763000,
+            -9223372004004986000,
+            -9223372003988209000,
+            -9223372003971431000,
+            -9223372003954654000
+          ]
+        },
+        "camera": {
+          "x": 0,
+          "y": 0
+        },
+        "clock": 2.7,
+        "death_count": 1,
+        "death_limit": 24,
+        "echo": {
+          "animation": "idle",
+          "cast": 0,
+          "facing": 1,
+          "frame": 2,
+          "gait": 0,
+          "hit": 0,
+          "kind": "witch",
+          "moving": false
+        },
+        "enemies": [
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 5,
+            "gait": 0.168000173568725,
+            "hit": 0,
+            "id": 1,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 5,
+            "gait": 0.168000173568725,
+            "hit": 0,
+            "id": 3,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": 1,
+            "frame": 5,
+            "gait": 0.168000500202178,
+            "hit": 0,
+            "id": 4,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 5,
+            "gait": 0.168000173568725,
+            "hit": 0,
+            "id": 5,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 4,
+            "gait": 0.0853408145904534,
+            "hit": 0,
+            "id": 6,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 4,
+            "gait": 0.0853408145904534,
+            "hit": 0,
+            "id": 7,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "arrival",
+            "cast": 0,
+            "facing": 1,
+            "frame": 27,
+            "gait": 0,
+            "hit": 0,
+            "id": 8,
+            "kind": "hound",
+            "moving": false
+          },
+          {
+            "animation": "arrival",
+            "cast": 0,
+            "facing": 1,
+            "frame": 27,
+            "gait": 0,
+            "hit": 0,
+            "id": 9,
+            "kind": "hound",
+            "moving": false
+          }
+        ],
+        "event_count": 3,
+        "event_limit": 80,
+        "fx": {
+          "atlas_frames": 10,
+          "atlas_texture_id": 442381631499,
+          "particle_limit": 96,
+          "particles_drawn": 10
+        },
+        "generation": 2,
+        "player": {
+          "animation": "cast",
+          "cast": 0.351851851851854,
+          "facing": 1,
+          "frame": 12,
+          "gait": 0.352270646528764,
+          "hit": 0,
+          "kind": "witch",
+          "moving": false
+        },
+        "recent_events": [
+          {
+            "age": 0.233333333333333,
+            "echo": false,
+            "kind": "cast",
+            "serial": 17
+          },
+          {
+            "age": 0.233333333333333,
+            "echo": false,
+            "kind": "kill",
+            "serial": 18
+          },
+          {
+            "age": 0.199999999999999,
+            "echo": false,
+            "kind": "collect",
+            "serial": 19
+          }
+        ],
+        "serial": 19
+      }
+    },
+    {
+      "label": "echo-replay",
+      "elapsed": 2.96666666666666,
+      "state": "playing",
+      "player": {
+        "x": 279.499908447266,
+        "y": 0
+      },
+      "echo": {
+        "active": true,
+        "x": 0,
+        "y": 0
+      },
+      "motion": {
+        "actors": {
+          "atlas_count": 10,
+          "frame_count": 36,
+          "region_count": 360,
+          "texture_ids": [
+            -9223372004105649000,
+            -9223372004088872000,
+            -9223372004072095000,
+            -9223372004055318000,
+            -9223372004038540000,
+            -9223372004021763000,
+            -9223372004004986000,
+            -9223372003988209000,
+            -9223372003971431000,
+            -9223372003954654000
+          ]
+        },
+        "camera": {
+          "x": 0,
+          "y": 0
+        },
+        "clock": 2.96666666666666,
+        "death_count": 0,
+        "death_limit": 24,
+        "echo": {
+          "animation": "cast",
+          "cast": 0.814814814814815,
+          "facing": 1,
+          "frame": 10,
+          "gait": 0,
+          "hit": 0,
+          "kind": "witch",
+          "moving": false
+        },
+        "enemies": [
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 7,
+            "gait": 0.637334074974059,
+            "hit": 0,
+            "id": 1,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 7,
+            "gait": 0.637334074974059,
+            "hit": 0,
+            "id": 3,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "hit",
+            "cast": 0,
+            "facing": 1,
+            "frame": 14,
+            "gait": 0.791091358661651,
+            "hit": 0.696969696969698,
+            "id": 4,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 7,
+            "gait": 0.637334074974059,
+            "hit": 0,
+            "id": 5,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 7,
+            "gait": 0.554678468704223,
+            "hit": 0,
+            "id": 6,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 7,
+            "gait": 0.554678468704223,
+            "hit": 0,
+            "id": 7,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "arrival",
+            "cast": 0,
+            "facing": 1,
+            "frame": 28,
+            "gait": 0,
+            "hit": 0,
+            "id": 8,
+            "kind": "hound",
+            "moving": false
+          },
+          {
+            "animation": "arrival",
+            "cast": 0,
+            "facing": 1,
+            "frame": 28,
+            "gait": 0,
+            "hit": 0,
+            "id": 9,
+            "kind": "hound",
+            "moving": false
+          }
+        ],
+        "event_count": 2,
+        "event_limit": 80,
+        "fx": {
+          "atlas_frames": 10,
+          "atlas_texture_id": 442381631499,
+          "particle_limit": 96,
+          "particles_drawn": 7
+        },
+        "generation": 2,
+        "player": {
+          "animation": "idle",
+          "cast": 0,
+          "facing": 1,
+          "frame": 0,
+          "gait": 0.352270646528764,
+          "hit": 0,
+          "kind": "witch",
+          "moving": false
+        },
+        "recent_events": [
+          {
+            "age": 0.0666666666666664,
+            "echo": true,
+            "kind": "cast",
+            "serial": 20
+          },
+          {
+            "age": 0.0666666666666664,
+            "echo": true,
+            "kind": "hit",
+            "serial": 21
+          }
+        ],
+        "serial": 21
+      }
+    },
+    {
+      "label": "echo-replay",
+      "elapsed": 2.96666666666666,
+      "state": "playing",
+      "player": {
+        "x": 279.499908447266,
+        "y": 0
+      },
+      "echo": {
+        "active": true,
+        "x": 0,
+        "y": 0
+      },
+      "motion": {
+        "actors": {
+          "atlas_count": 10,
+          "frame_count": 36,
+          "region_count": 360,
+          "texture_ids": [
+            -9223372004105649000,
+            -9223372004088872000,
+            -9223372004072095000,
+            -9223372004055318000,
+            -9223372004038540000,
+            -9223372004021763000,
+            -9223372004004986000,
+            -9223372003988209000,
+            -9223372003971431000,
+            -9223372003954654000
+          ]
+        },
+        "camera": {
+          "x": 0,
+          "y": 0
+        },
+        "clock": 2.96666666666666,
+        "death_count": 0,
+        "death_limit": 24,
+        "echo": {
+          "animation": "cast",
+          "cast": 0.814814814814815,
+          "facing": 1,
+          "frame": 10,
+          "gait": 0,
+          "hit": 0,
+          "kind": "witch",
+          "moving": false
+        },
+        "enemies": [
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 7,
+            "gait": 0.637334074974059,
+            "hit": 0,
+            "id": 1,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 7,
+            "gait": 0.637334074974059,
+            "hit": 0,
+            "id": 3,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "hit",
+            "cast": 0,
+            "facing": 1,
+            "frame": 14,
+            "gait": 0.791091358661651,
+            "hit": 0.696969696969698,
+            "id": 4,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 7,
+            "gait": 0.637334074974059,
+            "hit": 0,
+            "id": 5,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 7,
+            "gait": 0.554678468704223,
+            "hit": 0,
+            "id": 6,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 7,
+            "gait": 0.554678468704223,
+            "hit": 0,
+            "id": 7,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "arrival",
+            "cast": 0,
+            "facing": 1,
+            "frame": 28,
+            "gait": 0,
+            "hit": 0,
+            "id": 8,
+            "kind": "hound",
+            "moving": false
+          },
+          {
+            "animation": "arrival",
+            "cast": 0,
+            "facing": 1,
+            "frame": 28,
+            "gait": 0,
+            "hit": 0,
+            "id": 9,
+            "kind": "hound",
+            "moving": false
+          }
+        ],
+        "event_count": 2,
+        "event_limit": 80,
+        "fx": {
+          "atlas_frames": 10,
+          "atlas_texture_id": 442381631499,
+          "particle_limit": 96,
+          "particles_drawn": 7
+        },
+        "generation": 2,
+        "player": {
+          "animation": "idle",
+          "cast": 0,
+          "facing": 1,
+          "frame": 0,
+          "gait": 0.352270646528764,
+          "hit": 0,
+          "kind": "witch",
+          "moving": false
+        },
+        "recent_events": [
+          {
+            "age": 0.0666666666666664,
+            "echo": true,
+            "kind": "cast",
+            "serial": 20
+          },
+          {
+            "age": 0.0666666666666664,
+            "echo": true,
+            "kind": "hit",
+            "serial": 21
+          }
+        ],
+        "serial": 21
+      }
+    },
+    {
+      "label": "echo-replay",
+      "elapsed": 3.23333333333333,
+      "state": "playing",
+      "player": {
+        "x": 279.499908447266,
+        "y": 0
+      },
+      "echo": {
+        "active": true,
+        "x": 57.3333282470703,
+        "y": 0
+      },
+      "motion": {
+        "actors": {
+          "atlas_count": 10,
+          "frame_count": 36,
+          "region_count": 360,
+          "texture_ids": [
+            -9223372004105649000,
+            -9223372004088872000,
+            -9223372004072095000,
+            -9223372004055318000,
+            -9223372004038540000,
+            -9223372004021763000,
+            -9223372004004986000,
+            -9223372003988209000,
+            -9223372003971431000,
+            -9223372003954654000
+          ]
+        },
+        "camera": {
+          "x": 0,
+          "y": 0
+        },
+        "clock": 3.23333333333333,
+        "death_count": 0,
+        "death_limit": 24,
+        "echo": {
+          "animation": "cast",
+          "cast": 0.0740740740740773,
+          "facing": 1,
+          "frame": 13,
+          "gait": 0.303030187433416,
+          "hit": 0,
+          "kind": "witch",
+          "moving": true
+        },
+        "enemies": [
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 4,
+            "gait": 0.106667804718017,
+            "hit": 0,
+            "id": 1,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 4,
+            "gait": 0.106667804718017,
+            "hit": 0,
+            "id": 3,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": 1,
+            "frame": 5,
+            "gait": 0.260424435138702,
+            "hit": 0,
+            "id": 4,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 4,
+            "gait": 0.106667804718017,
+            "hit": 0,
+            "id": 5,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 4,
+            "gait": 0.024016122817992,
+            "hit": 0,
+            "id": 6,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 4,
+            "gait": 0.024016122817992,
+            "hit": 0,
+            "id": 7,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "arrival",
+            "cast": 0,
+            "facing": 1,
+            "frame": 30,
+            "gait": 0,
+            "hit": 0,
+            "id": 8,
+            "kind": "hound",
+            "moving": false
+          },
+          {
+            "animation": "arrival",
+            "cast": 0,
+            "facing": 1,
+            "frame": 30,
+            "gait": 0,
+            "hit": 0,
+            "id": 9,
+            "kind": "hound",
+            "moving": false
+          }
+        ],
+        "event_count": 3,
+        "event_limit": 80,
+        "fx": {
+          "atlas_frames": 10,
+          "atlas_texture_id": 442381631499,
+          "particle_limit": 96,
+          "particles_drawn": 4
+        },
+        "generation": 2,
+        "player": {
+          "animation": "idle",
+          "cast": 0,
+          "facing": 1,
+          "frame": 1,
+          "gait": 0.352270646528764,
+          "hit": 0,
+          "kind": "witch",
+          "moving": false
+        },
+        "recent_events": [
+          {
+            "age": 0.333333333333332,
+            "echo": true,
+            "kind": "cast",
+            "serial": 20
+          },
+          {
+            "age": 0.149999999999999,
+            "echo": true,
+            "kind": "footstep",
+            "serial": 22
+          },
+          {
+            "age": 0.0499999999999998,
+            "echo": true,
+            "kind": "footstep",
+            "serial": 23
+          }
+        ],
+        "serial": 23
+      }
+    },
+    {
+      "label": "echo-replay",
+      "elapsed": 3.23333333333333,
+      "state": "playing",
+      "player": {
+        "x": 279.499908447266,
+        "y": 0
+      },
+      "echo": {
+        "active": true,
+        "x": 57.3333282470703,
+        "y": 0
+      },
+      "motion": {
+        "actors": {
+          "atlas_count": 10,
+          "frame_count": 36,
+          "region_count": 360,
+          "texture_ids": [
+            -9223372004105649000,
+            -9223372004088872000,
+            -9223372004072095000,
+            -9223372004055318000,
+            -9223372004038540000,
+            -9223372004021763000,
+            -9223372004004986000,
+            -9223372003988209000,
+            -9223372003971431000,
+            -9223372003954654000
+          ]
+        },
+        "camera": {
+          "x": 0,
+          "y": 0
+        },
+        "clock": 3.23333333333333,
+        "death_count": 0,
+        "death_limit": 24,
+        "echo": {
+          "animation": "cast",
+          "cast": 0.0740740740740773,
+          "facing": 1,
+          "frame": 13,
+          "gait": 0.303030187433416,
+          "hit": 0,
+          "kind": "witch",
+          "moving": true
+        },
+        "enemies": [
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 4,
+            "gait": 0.106667804718017,
+            "hit": 0,
+            "id": 1,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 4,
+            "gait": 0.106667804718017,
+            "hit": 0,
+            "id": 3,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": 1,
+            "frame": 5,
+            "gait": 0.260424435138702,
+            "hit": 0,
+            "id": 4,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 4,
+            "gait": 0.106667804718017,
+            "hit": 0,
+            "id": 5,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 4,
+            "gait": 0.024016122817992,
+            "hit": 0,
+            "id": 6,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 4,
+            "gait": 0.024016122817992,
+            "hit": 0,
+            "id": 7,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "arrival",
+            "cast": 0,
+            "facing": 1,
+            "frame": 30,
+            "gait": 0,
+            "hit": 0,
+            "id": 8,
+            "kind": "hound",
+            "moving": false
+          },
+          {
+            "animation": "arrival",
+            "cast": 0,
+            "facing": 1,
+            "frame": 30,
+            "gait": 0,
+            "hit": 0,
+            "id": 9,
+            "kind": "hound",
+            "moving": false
+          }
+        ],
+        "event_count": 3,
+        "event_limit": 80,
+        "fx": {
+          "atlas_frames": 10,
+          "atlas_texture_id": 442381631499,
+          "particle_limit": 96,
+          "particles_drawn": 4
+        },
+        "generation": 2,
+        "player": {
+          "animation": "idle",
+          "cast": 0,
+          "facing": 1,
+          "frame": 1,
+          "gait": 0.352270646528764,
+          "hit": 0,
+          "kind": "witch",
+          "moving": false
+        },
+        "recent_events": [
+          {
+            "age": 0.333333333333332,
+            "echo": true,
+            "kind": "cast",
+            "serial": 20
+          },
+          {
+            "age": 0.149999999999999,
+            "echo": true,
+            "kind": "footstep",
+            "serial": 22
+          },
+          {
+            "age": 0.0499999999999998,
+            "echo": true,
+            "kind": "footstep",
+            "serial": 23
+          }
+        ],
+        "serial": 23
+      }
+    },
+    {
+      "label": "echo-replay",
+      "elapsed": 3.48333333333333,
+      "state": "playing",
+      "player": {
+        "x": 279.499908447266,
+        "y": 0
+      },
+      "echo": {
+        "active": true,
+        "x": 111.083358764648,
+        "y": 0
+      },
+      "motion": {
+        "actors": {
+          "atlas_count": 10,
+          "frame_count": 36,
+          "region_count": 360,
+          "texture_ids": [
+            -9223372004105649000,
+            -9223372004088872000,
+            -9223372004072095000,
+            -9223372004055318000,
+            -9223372004038540000,
+            -9223372004021763000,
+            -9223372004004986000,
+            -9223372003988209000,
+            -9223372003971431000,
+            -9223372003954654000
+          ]
+        },
+        "camera": {
+          "x": 0,
+          "y": 0
+        },
+        "clock": 3.48333333333333,
+        "death_count": 0,
+        "death_limit": 24,
+        "echo": {
+          "animation": "walk",
+          "cast": 0,
+          "facing": 1,
+          "frame": 7,
+          "gait": 0.524621790105646,
+          "hit": 0,
+          "kind": "witch",
+          "moving": true
+        },
+        "enemies": [
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 7,
+            "gait": 0.546670782566069,
+            "hit": 0,
+            "id": 1,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 7,
+            "gait": 0.546670782566069,
+            "hit": 0,
+            "id": 3,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": 1,
+            "frame": 8,
+            "gait": 0.700424280166626,
+            "hit": 0,
+            "id": 4,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 7,
+            "gait": 0.546670782566069,
+            "hit": 0,
+            "id": 5,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 7,
+            "gait": 0.605352902412413,
+            "hit": 0,
+            "id": 6,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 6,
+            "gait": 0.464020173549651,
+            "hit": 0,
+            "id": 7,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 4,
+            "gait": 0.0879985570907593,
+            "hit": 0,
+            "id": 8,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 4,
+            "gait": 0.0880010318756104,
+            "hit": 0,
+            "id": 9,
+            "kind": "hound",
+            "moving": true
+          }
+        ],
+        "event_count": 5,
+        "event_limit": 80,
+        "fx": {
+          "atlas_frames": 10,
+          "atlas_texture_id": 442381631499,
+          "particle_limit": 96,
+          "particles_drawn": 6
+        },
+        "generation": 2,
+        "player": {
+          "animation": "cast",
+          "cast": 0.351851851851854,
+          "facing": 1,
+          "frame": 12,
+          "gait": 0.352270646528764,
+          "hit": 0,
+          "kind": "witch",
+          "moving": false
+        },
+        "recent_events": [
+          {
+            "age": 0.299999999999999,
+            "echo": true,
+            "kind": "footstep",
+            "serial": 23
+          },
+          {
+            "age": 0.233333333333333,
+            "echo": false,
+            "kind": "cast",
+            "serial": 24
+          },
+          {
+            "age": 0.199999999999999,
+            "echo": true,
+            "kind": "footstep",
+            "serial": 26
+          },
+          {
+            "age": 0.0999999999999996,
+            "echo": true,
+            "kind": "footstep",
+            "serial": 27
+          },
+          {
+            "age": 0,
+            "echo": true,
+            "kind": "footstep",
+            "serial": 28
+          }
+        ],
+        "serial": 28
+      }
+    },
+    {
+      "label": "echo-replay",
+      "elapsed": 3.48333333333333,
+      "state": "playing",
+      "player": {
+        "x": 279.499908447266,
+        "y": 0
+      },
+      "echo": {
+        "active": true,
+        "x": 111.083358764648,
+        "y": 0
+      },
+      "motion": {
+        "actors": {
+          "atlas_count": 10,
+          "frame_count": 36,
+          "region_count": 360,
+          "texture_ids": [
+            -9223372004105649000,
+            -9223372004088872000,
+            -9223372004072095000,
+            -9223372004055318000,
+            -9223372004038540000,
+            -9223372004021763000,
+            -9223372004004986000,
+            -9223372003988209000,
+            -9223372003971431000,
+            -9223372003954654000
+          ]
+        },
+        "camera": {
+          "x": 0,
+          "y": 0
+        },
+        "clock": 3.48333333333333,
+        "death_count": 0,
+        "death_limit": 24,
+        "echo": {
+          "animation": "walk",
+          "cast": 0,
+          "facing": 1,
+          "frame": 7,
+          "gait": 0.524621790105646,
+          "hit": 0,
+          "kind": "witch",
+          "moving": true
+        },
+        "enemies": [
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 7,
+            "gait": 0.546670782566069,
+            "hit": 0,
+            "id": 1,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 7,
+            "gait": 0.546670782566069,
+            "hit": 0,
+            "id": 3,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": 1,
+            "frame": 8,
+            "gait": 0.700424280166626,
+            "hit": 0,
+            "id": 4,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 7,
+            "gait": 0.546670782566069,
+            "hit": 0,
+            "id": 5,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 7,
+            "gait": 0.605352902412413,
+            "hit": 0,
+            "id": 6,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 6,
+            "gait": 0.464020173549651,
+            "hit": 0,
+            "id": 7,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 4,
+            "gait": 0.0879985570907593,
+            "hit": 0,
+            "id": 8,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 4,
+            "gait": 0.0880010318756104,
+            "hit": 0,
+            "id": 9,
+            "kind": "hound",
+            "moving": true
+          }
+        ],
+        "event_count": 5,
+        "event_limit": 80,
+        "fx": {
+          "atlas_frames": 10,
+          "atlas_texture_id": 442381631499,
+          "particle_limit": 96,
+          "particles_drawn": 6
+        },
+        "generation": 2,
+        "player": {
+          "animation": "cast",
+          "cast": 0.351851851851854,
+          "facing": 1,
+          "frame": 12,
+          "gait": 0.352270646528764,
+          "hit": 0,
+          "kind": "witch",
+          "moving": false
+        },
+        "recent_events": [
+          {
+            "age": 0.299999999999999,
+            "echo": true,
+            "kind": "footstep",
+            "serial": 23
+          },
+          {
+            "age": 0.233333333333333,
+            "echo": false,
+            "kind": "cast",
+            "serial": 24
+          },
+          {
+            "age": 0.199999999999999,
+            "echo": true,
+            "kind": "footstep",
+            "serial": 26
+          },
+          {
+            "age": 0.0999999999999996,
+            "echo": true,
+            "kind": "footstep",
+            "serial": 27
+          },
+          {
+            "age": 0,
+            "echo": true,
+            "kind": "footstep",
+            "serial": 28
+          }
+        ],
+        "serial": 28
+      }
+    },
+    {
+      "label": "echo-replay",
+      "elapsed": 3.74999999999999,
+      "state": "playing",
+      "player": {
+        "x": 279.499908447266,
+        "y": 0
+      },
+      "echo": {
+        "active": true,
+        "x": 168.416641235352,
+        "y": 0
+      },
+      "motion": {
+        "actors": {
+          "atlas_count": 10,
+          "frame_count": 36,
+          "region_count": 360,
+          "texture_ids": [
+            -9223372004105649000,
+            -9223372004088872000,
+            -9223372004072095000,
+            -9223372004055318000,
+            -9223372004038540000,
+            -9223372004021763000,
+            -9223372004004986000,
+            -9223372003988209000,
+            -9223372003971431000,
+            -9223372003954654000
+          ]
+        },
+        "camera": {
+          "x": 0,
+          "y": 0
+        },
+        "clock": 3.74999999999999,
+        "death_count": 0,
+        "death_limit": 24,
+        "echo": {
+          "animation": "cast",
+          "cast": 0.814814814814815,
+          "facing": 1,
+          "frame": 10,
+          "gait": 0.827650937167081,
+          "hit": 0,
+          "kind": "witch",
+          "moving": true
+        },
+        "enemies": [
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 4,
+            "gait": 0.0160074448585501,
+            "hit": 0,
+            "id": 1,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 4,
+            "gait": 0.0160074448585501,
+            "hit": 0,
+            "id": 3,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "hit",
+            "cast": 0,
+            "facing": 1,
+            "frame": 14,
+            "gait": 0.312752587795258,
+            "hit": 0.696969696969698,
+            "id": 4,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 4,
+            "gait": 0.0160074448585501,
+            "hit": 0,
+            "id": 5,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 4,
+            "gait": 0.0746905565261823,
+            "hit": 0,
+            "id": 6,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 9,
+            "gait": 0.93335782766342,
+            "hit": 0,
+            "id": 7,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 7,
+            "gait": 0.55732964515686,
+            "hit": 0,
+            "id": 8,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 7,
+            "gait": 0.557336592674256,
+            "hit": 0,
+            "id": 9,
+            "kind": "hound",
+            "moving": true
+          }
+        ],
+        "event_count": 5,
+        "event_limit": 80,
+        "fx": {
+          "atlas_frames": 10,
+          "atlas_texture_id": 442381631499,
+          "particle_limit": 96,
+          "particles_drawn": 10
+        },
+        "generation": 2,
+        "player": {
+          "animation": "idle",
+          "cast": 0,
+          "facing": 1,
+          "frame": 0,
+          "gait": 0.352270646528764,
+          "hit": 0,
+          "kind": "witch",
+          "moving": false
+        },
+        "recent_events": [
+          {
+            "age": 0.266666666666666,
+            "echo": true,
+            "kind": "footstep",
+            "serial": 28
+          },
+          {
+            "age": 0.166666666666666,
+            "echo": true,
+            "kind": "footstep",
+            "serial": 29
+          },
+          {
+            "age": 0.0666666666666664,
+            "echo": true,
+            "kind": "footstep",
+            "serial": 30
+          },
+          {
+            "age": 0.0666666666666664,
+            "echo": true,
+            "kind": "cast",
+            "serial": 31
+          },
+          {
+            "age": 0.0666666666666664,
+            "echo": true,
+            "kind": "hit",
+            "serial": 32
+          }
+        ],
+        "serial": 32
+      }
+    },
+    {
+      "label": "echo-replay",
+      "elapsed": 3.74999999999999,
+      "state": "playing",
+      "player": {
+        "x": 279.499908447266,
+        "y": 0
+      },
+      "echo": {
+        "active": true,
+        "x": 168.416641235352,
+        "y": 0
+      },
+      "motion": {
+        "actors": {
+          "atlas_count": 10,
+          "frame_count": 36,
+          "region_count": 360,
+          "texture_ids": [
+            -9223372004105649000,
+            -9223372004088872000,
+            -9223372004072095000,
+            -9223372004055318000,
+            -9223372004038540000,
+            -9223372004021763000,
+            -9223372004004986000,
+            -9223372003988209000,
+            -9223372003971431000,
+            -9223372003954654000
+          ]
+        },
+        "camera": {
+          "x": 0,
+          "y": 0
+        },
+        "clock": 3.74999999999999,
+        "death_count": 0,
+        "death_limit": 24,
+        "echo": {
+          "animation": "cast",
+          "cast": 0.814814814814815,
+          "facing": 1,
+          "frame": 10,
+          "gait": 0.827650937167081,
+          "hit": 0,
+          "kind": "witch",
+          "moving": true
+        },
+        "enemies": [
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 4,
+            "gait": 0.0160074448585501,
+            "hit": 0,
+            "id": 1,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 4,
+            "gait": 0.0160074448585501,
+            "hit": 0,
+            "id": 3,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "hit",
+            "cast": 0,
+            "facing": 1,
+            "frame": 14,
+            "gait": 0.312752587795258,
+            "hit": 0.696969696969698,
+            "id": 4,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 4,
+            "gait": 0.0160074448585501,
+            "hit": 0,
+            "id": 5,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 4,
+            "gait": 0.0746905565261823,
+            "hit": 0,
+            "id": 6,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 9,
+            "gait": 0.93335782766342,
+            "hit": 0,
+            "id": 7,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 7,
+            "gait": 0.55732964515686,
+            "hit": 0,
+            "id": 8,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 7,
+            "gait": 0.557336592674256,
+            "hit": 0,
+            "id": 9,
+            "kind": "hound",
+            "moving": true
+          }
+        ],
+        "event_count": 5,
+        "event_limit": 80,
+        "fx": {
+          "atlas_frames": 10,
+          "atlas_texture_id": 442381631499,
+          "particle_limit": 96,
+          "particles_drawn": 10
+        },
+        "generation": 2,
+        "player": {
+          "animation": "idle",
+          "cast": 0,
+          "facing": 1,
+          "frame": 0,
+          "gait": 0.352270646528764,
+          "hit": 0,
+          "kind": "witch",
+          "moving": false
+        },
+        "recent_events": [
+          {
+            "age": 0.266666666666666,
+            "echo": true,
+            "kind": "footstep",
+            "serial": 28
+          },
+          {
+            "age": 0.166666666666666,
+            "echo": true,
+            "kind": "footstep",
+            "serial": 29
+          },
+          {
+            "age": 0.0666666666666664,
+            "echo": true,
+            "kind": "footstep",
+            "serial": 30
+          },
+          {
+            "age": 0.0666666666666664,
+            "echo": true,
+            "kind": "cast",
+            "serial": 31
+          },
+          {
+            "age": 0.0666666666666664,
+            "echo": true,
+            "kind": "hit",
+            "serial": 32
+          }
+        ],
+        "serial": 32
+      }
+    },
+    {
+      "label": "echo-replay",
+      "elapsed": 4.01666666666666,
+      "state": "playing",
+      "player": {
+        "x": 279.499908447266,
+        "y": 0
+      },
+      "echo": {
+        "active": true,
+        "x": 225.749893188477,
+        "y": 0
+      },
+      "motion": {
+        "actors": {
+          "atlas_count": 10,
+          "frame_count": 36,
+          "region_count": 360,
+          "texture_ids": [
+            -9223372004105649000,
+            -9223372004088872000,
+            -9223372004072095000,
+            -9223372004055318000,
+            -9223372004038540000,
+            -9223372004021763000,
+            -9223372004004986000,
+            -9223372003988209000,
+            -9223372003971431000,
+            -9223372003954654000
+          ]
+        },
+        "camera": {
+          "x": 0,
+          "y": 0
+        },
+        "clock": 4.01666666666666,
+        "death_count": 0,
+        "death_limit": 24,
+        "echo": {
+          "animation": "cast",
+          "cast": 0.0740740740740761,
+          "facing": 1,
+          "frame": 13,
+          "gait": 0.130679390647195,
+          "hit": 0,
+          "kind": "witch",
+          "moving": true
+        },
+        "enemies": [
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 6,
+            "gait": 0.485344564914702,
+            "hit": 0,
+            "id": 1,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 6,
+            "gait": 0.485344564914702,
+            "hit": 0,
+            "id": 3,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": 1,
+            "frame": 8,
+            "gait": 0.782085959911346,
+            "hit": 0,
+            "id": 4,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 6,
+            "gait": 0.485344564914702,
+            "hit": 0,
+            "id": 5,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 7,
+            "gait": 0.544028289318083,
+            "hit": 0,
+            "id": 6,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 6,
+            "gait": 0.402695567607878,
+            "hit": 0,
+            "id": 7,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 4,
+            "gait": 0.0266591739654538,
+            "hit": 0,
+            "id": 8,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 4,
+            "gait": 0.0266679167747499,
+            "hit": 0,
+            "id": 9,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "arrival",
+            "cast": 0,
+            "facing": 1,
+            "frame": 27,
+            "gait": 0,
+            "hit": 0,
+            "id": 10,
+            "kind": "hound",
+            "moving": false
+          },
+          {
+            "animation": "arrival",
+            "cast": 0,
+            "facing": 1,
+            "frame": 27,
+            "gait": 0,
+            "hit": 0,
+            "id": 11,
+            "kind": "hound",
+            "moving": false
+          }
+        ],
+        "event_count": 4,
+        "event_limit": 80,
+        "fx": {
+          "atlas_frames": 10,
+          "atlas_texture_id": 442381631499,
+          "particle_limit": 96,
+          "particles_drawn": 5
+        },
+        "generation": 2,
+        "player": {
+          "animation": "idle",
+          "cast": 0,
+          "facing": 1,
+          "frame": 1,
+          "gait": 0.352270646528764,
+          "hit": 0,
+          "kind": "witch",
+          "moving": false
+        },
+        "recent_events": [
+          {
+            "age": 0.333333333333333,
+            "echo": true,
+            "kind": "cast",
+            "serial": 31
+          },
+          {
+            "age": 0.216666666666666,
+            "echo": true,
+            "kind": "footstep",
+            "serial": 33
+          },
+          {
+            "age": 0.116666666666667,
+            "echo": true,
+            "kind": "footstep",
+            "serial": 34
+          },
+          {
+            "age": 0.0166666666666671,
+            "echo": true,
+            "kind": "footstep",
+            "serial": 35
+          }
+        ],
+        "serial": 35
+      }
+    },
+    {
+      "label": "echo-replay",
+      "elapsed": 4.01666666666666,
+      "state": "playing",
+      "player": {
+        "x": 279.499908447266,
+        "y": 0
+      },
+      "echo": {
+        "active": true,
+        "x": 225.749893188477,
+        "y": 0
+      },
+      "motion": {
+        "actors": {
+          "atlas_count": 10,
+          "frame_count": 36,
+          "region_count": 360,
+          "texture_ids": [
+            -9223372004105649000,
+            -9223372004088872000,
+            -9223372004072095000,
+            -9223372004055318000,
+            -9223372004038540000,
+            -9223372004021763000,
+            -9223372004004986000,
+            -9223372003988209000,
+            -9223372003971431000,
+            -9223372003954654000
+          ]
+        },
+        "camera": {
+          "x": 0,
+          "y": 0
+        },
+        "clock": 4.01666666666666,
+        "death_count": 0,
+        "death_limit": 24,
+        "echo": {
+          "animation": "cast",
+          "cast": 0.0740740740740761,
+          "facing": 1,
+          "frame": 13,
+          "gait": 0.130679390647195,
+          "hit": 0,
+          "kind": "witch",
+          "moving": true
+        },
+        "enemies": [
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 6,
+            "gait": 0.485344564914702,
+            "hit": 0,
+            "id": 1,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 6,
+            "gait": 0.485344564914702,
+            "hit": 0,
+            "id": 3,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": 1,
+            "frame": 8,
+            "gait": 0.782085959911346,
+            "hit": 0,
+            "id": 4,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 6,
+            "gait": 0.485344564914702,
+            "hit": 0,
+            "id": 5,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 7,
+            "gait": 0.544028289318083,
+            "hit": 0,
+            "id": 6,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 6,
+            "gait": 0.402695567607878,
+            "hit": 0,
+            "id": 7,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 4,
+            "gait": 0.0266591739654538,
+            "hit": 0,
+            "id": 8,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 4,
+            "gait": 0.0266679167747499,
+            "hit": 0,
+            "id": 9,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "arrival",
+            "cast": 0,
+            "facing": 1,
+            "frame": 27,
+            "gait": 0,
+            "hit": 0,
+            "id": 10,
+            "kind": "hound",
+            "moving": false
+          },
+          {
+            "animation": "arrival",
+            "cast": 0,
+            "facing": 1,
+            "frame": 27,
+            "gait": 0,
+            "hit": 0,
+            "id": 11,
+            "kind": "hound",
+            "moving": false
+          }
+        ],
+        "event_count": 4,
+        "event_limit": 80,
+        "fx": {
+          "atlas_frames": 10,
+          "atlas_texture_id": 442381631499,
+          "particle_limit": 96,
+          "particles_drawn": 5
+        },
+        "generation": 2,
+        "player": {
+          "animation": "idle",
+          "cast": 0,
+          "facing": 1,
+          "frame": 1,
+          "gait": 0.352270646528764,
+          "hit": 0,
+          "kind": "witch",
+          "moving": false
+        },
+        "recent_events": [
+          {
+            "age": 0.333333333333333,
+            "echo": true,
+            "kind": "cast",
+            "serial": 31
+          },
+          {
+            "age": 0.216666666666666,
+            "echo": true,
+            "kind": "footstep",
+            "serial": 33
+          },
+          {
+            "age": 0.116666666666667,
+            "echo": true,
+            "kind": "footstep",
+            "serial": 34
+          },
+          {
+            "age": 0.0166666666666671,
+            "echo": true,
+            "kind": "footstep",
+            "serial": 35
+          }
+        ],
+        "serial": 35
+      }
+    },
+    {
+      "label": "echo-replay",
+      "elapsed": 4.28333333333332,
+      "state": "playing",
+      "player": {
+        "x": 279.499908447266,
+        "y": 0
+      },
+      "echo": {
+        "active": true,
+        "x": 279.499908447266,
+        "y": 0
+      },
+      "motion": {
+        "actors": {
+          "atlas_count": 10,
+          "frame_count": 36,
+          "region_count": 360,
+          "texture_ids": [
+            -9223372004105649000,
+            -9223372004088872000,
+            -9223372004072095000,
+            -9223372004055318000,
+            -9223372004038540000,
+            -9223372004021763000,
+            -9223372004004986000,
+            -9223372003988209000,
+            -9223372003971431000,
+            -9223372003954654000
+          ]
+        },
+        "camera": {
+          "x": 0,
+          "y": 0
+        },
+        "clock": 4.28333333333332,
+        "death_count": 0,
+        "death_limit": 24,
+        "echo": {
+          "animation": "idle",
+          "cast": 0,
+          "facing": 1,
+          "frame": 0,
+          "gait": 0.352270646528764,
+          "hit": 0,
+          "kind": "witch",
+          "moving": false
+        },
+        "enemies": [
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 9,
+            "gait": 0.954680693149566,
+            "hit": 0,
+            "id": 1,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 9,
+            "gait": 0.954680693149566,
+            "hit": 0,
+            "id": 3,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": 1,
+            "frame": 5,
+            "gait": 0.251419150829315,
+            "hit": 0,
+            "id": 4,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 9,
+            "gait": 0.954680693149566,
+            "hit": 0,
+            "id": 5,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 4,
+            "gait": 0.0133660244941698,
+            "hit": 0,
+            "id": 6,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 4,
+            "gait": 0.0133660340309127,
+            "hit": 0,
+            "id": 7,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 6,
+            "gait": 0.495988702774047,
+            "hit": 0,
+            "id": 8,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 6,
+            "gait": 0.495999410152436,
+            "hit": 0,
+            "id": 9,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "arrival",
+            "cast": 0,
+            "facing": 1,
+            "frame": 28,
+            "gait": 0,
+            "hit": 0,
+            "id": 10,
+            "kind": "hound",
+            "moving": false
+          },
+          {
+            "animation": "arrival",
+            "cast": 0,
+            "facing": 1,
+            "frame": 28,
+            "gait": 0,
+            "hit": 0,
+            "id": 11,
+            "kind": "hound",
+            "moving": false
+          }
+        ],
+        "event_count": 4,
+        "event_limit": 80,
+        "fx": {
+          "atlas_frames": 10,
+          "atlas_texture_id": 442381631499,
+          "particle_limit": 96,
+          "particles_drawn": 5
+        },
+        "generation": 2,
+        "player": {
+          "animation": "cast",
+          "cast": 0.305555555555558,
+          "facing": 1,
+          "frame": 12,
+          "gait": 0.352270646528764,
+          "hit": 0,
+          "kind": "witch",
+          "moving": false
+        },
+        "recent_events": [
+          {
+            "age": 0.283333333333333,
+            "echo": true,
+            "kind": "footstep",
+            "serial": 35
+          },
+          {
+            "age": 0.249999999999999,
+            "echo": false,
+            "kind": "cast",
+            "serial": 36
+          },
+          {
+            "age": 0.183333333333333,
+            "echo": true,
+            "kind": "footstep",
+            "serial": 38
+          },
+          {
+            "age": 0.083333333333333,
+            "echo": true,
+            "kind": "footstep",
+            "serial": 39
+          }
+        ],
+        "serial": 39
+      }
+    },
+    {
+      "label": "echo-replay",
+      "elapsed": 4.28333333333332,
+      "state": "playing",
+      "player": {
+        "x": 279.499908447266,
+        "y": 0
+      },
+      "echo": {
+        "active": true,
+        "x": 279.499908447266,
+        "y": 0
+      },
+      "motion": {
+        "actors": {
+          "atlas_count": 10,
+          "frame_count": 36,
+          "region_count": 360,
+          "texture_ids": [
+            -9223372004105649000,
+            -9223372004088872000,
+            -9223372004072095000,
+            -9223372004055318000,
+            -9223372004038540000,
+            -9223372004021763000,
+            -9223372004004986000,
+            -9223372003988209000,
+            -9223372003971431000,
+            -9223372003954654000
+          ]
+        },
+        "camera": {
+          "x": 0,
+          "y": 0
+        },
+        "clock": 4.28333333333332,
+        "death_count": 0,
+        "death_limit": 24,
+        "echo": {
+          "animation": "idle",
+          "cast": 0,
+          "facing": 1,
+          "frame": 0,
+          "gait": 0.352270646528764,
+          "hit": 0,
+          "kind": "witch",
+          "moving": false
+        },
+        "enemies": [
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 9,
+            "gait": 0.954680693149566,
+            "hit": 0,
+            "id": 1,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 9,
+            "gait": 0.954680693149566,
+            "hit": 0,
+            "id": 3,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": 1,
+            "frame": 5,
+            "gait": 0.251419150829315,
+            "hit": 0,
+            "id": 4,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 9,
+            "gait": 0.954680693149566,
+            "hit": 0,
+            "id": 5,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 4,
+            "gait": 0.0133660244941698,
+            "hit": 0,
+            "id": 6,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 4,
+            "gait": 0.0133660340309127,
+            "hit": 0,
+            "id": 7,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 6,
+            "gait": 0.495988702774047,
+            "hit": 0,
+            "id": 8,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 6,
+            "gait": 0.495999410152436,
+            "hit": 0,
+            "id": 9,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "arrival",
+            "cast": 0,
+            "facing": 1,
+            "frame": 28,
+            "gait": 0,
+            "hit": 0,
+            "id": 10,
+            "kind": "hound",
+            "moving": false
+          },
+          {
+            "animation": "arrival",
+            "cast": 0,
+            "facing": 1,
+            "frame": 28,
+            "gait": 0,
+            "hit": 0,
+            "id": 11,
+            "kind": "hound",
+            "moving": false
+          }
+        ],
+        "event_count": 4,
+        "event_limit": 80,
+        "fx": {
+          "atlas_frames": 10,
+          "atlas_texture_id": 442381631499,
+          "particle_limit": 96,
+          "particles_drawn": 5
+        },
+        "generation": 2,
+        "player": {
+          "animation": "cast",
+          "cast": 0.305555555555558,
+          "facing": 1,
+          "frame": 12,
+          "gait": 0.352270646528764,
+          "hit": 0,
+          "kind": "witch",
+          "moving": false
+        },
+        "recent_events": [
+          {
+            "age": 0.283333333333333,
+            "echo": true,
+            "kind": "footstep",
+            "serial": 35
+          },
+          {
+            "age": 0.249999999999999,
+            "echo": false,
+            "kind": "cast",
+            "serial": 36
+          },
+          {
+            "age": 0.183333333333333,
+            "echo": true,
+            "kind": "footstep",
+            "serial": 38
+          },
+          {
+            "age": 0.083333333333333,
+            "echo": true,
+            "kind": "footstep",
+            "serial": 39
+          }
+        ],
+        "serial": 39
+      }
+    },
+    {
+      "label": "echo-replay",
+      "elapsed": 4.54999999999999,
+      "state": "playing",
+      "player": {
+        "x": 279.499908447266,
+        "y": 0
+      },
+      "echo": {
+        "active": true,
+        "x": 279.499908447266,
+        "y": 0
+      },
+      "motion": {
+        "actors": {
+          "atlas_count": 10,
+          "frame_count": 36,
+          "region_count": 360,
+          "texture_ids": [
+            -9223372004105649000,
+            -9223372004088872000,
+            -9223372004072095000,
+            -9223372004055318000,
+            -9223372004038540000,
+            -9223372004021763000,
+            -9223372004004986000,
+            -9223372003988209000,
+            -9223372003971431000,
+            -9223372003954654000
+          ]
+        },
+        "camera": {
+          "x": 0,
+          "y": 0
+        },
+        "clock": 4.54999999999999,
+        "death_count": 0,
+        "death_limit": 24,
+        "echo": {
+          "animation": "cast",
+          "cast": 0.768518518518519,
+          "facing": 1,
+          "frame": 10,
+          "gait": 0.352270646528764,
+          "hit": 0,
+          "kind": "witch",
+          "moving": false
+        },
+        "enemies": [
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 6,
+            "gait": 0.424009878635406,
+            "hit": 0,
+            "id": 1,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 6,
+            "gait": 0.424009878635406,
+            "hit": 0,
+            "id": 3,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": 1,
+            "frame": 8,
+            "gait": 0.720751824378967,
+            "hit": 0,
+            "id": 4,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 6,
+            "gait": 0.424009878635406,
+            "hit": 0,
+            "id": 5,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "hit",
+            "cast": 0,
+            "facing": -1,
+            "frame": 14,
+            "gait": 0.624036533832549,
+            "hit": 0.621212121212123,
+            "id": 6,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 6,
+            "gait": 0.4827038025856,
+            "hit": 0,
+            "id": 7,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 9,
+            "gait": 0.965323145389557,
+            "hit": 0,
+            "id": 8,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "walk",
+            "cast": 0,
+            "facing": -1,
+            "frame": 9,
+            "gait": 0.965329492092133,
+            "hit": 0,
+            "id": 9,
+            "kind": "hound",
+            "moving": true
+          },
+          {
+            "animation": "arrival",
+            "cast": 0,
+            "facing": 1,
+            "frame": 29,
+            "gait": 0,
+            "hit": 0,
+            "id": 10,
+            "kind": "hound",
+            "moving": false
+          },
+          {
+            "animation": "arrival",
+            "cast": 0,
+            "facing": 1,
+            "frame": 29,
+            "gait": 0,
+            "hit": 0,
+            "id": 11,
+            "kind": "hound",
+            "moving": false
+          }
+        ],
+        "event_count": 2,
+        "event_limit": 80,
+        "fx": {
+          "atlas_frames": 10,
+          "atlas_texture_id": 442381631499,
+          "particle_limit": 96,
+          "particles_drawn": 7
+        },
+        "generation": 2,
+        "player": {
+          "animation": "idle",
+          "cast": 0,
+          "facing": 1,
+          "frame": 0,
+          "gait": 0.352270646528764,
+          "hit": 0,
+          "kind": "witch",
+          "moving": false
+        },
+        "recent_events": [
+          {
+            "age": 0.083333333333333,
+            "echo": true,
+            "kind": "cast",
+            "serial": 40
+          },
+          {
+            "age": 0.083333333333333,
+            "echo": true,
+            "kind": "hit",
+            "serial": 41
+          }
+        ],
+        "serial": 41
+      }
+    }
+  ],
+  "errors": [],
+  "external_requests": [],
+  "failure": "AssertionError [ERR_ASSERTION]: walking uses multiple actual sprite frames\n    at file:///Users/hayatok/.codex/worktrees/echo-witch/100challenge/2026-10-19/scripts/motion-qa.mjs:37:9",
+  "final": {
+    "arena": {
+      "bounded": true,
+      "bounds": {
+        "height": 1600,
+        "width": 2200,
+        "x": -1100,
+        "y": -800
+      },
+      "obstacle_count": 4,
+      "obstacles": [
+        {
+          "height": 180,
+          "width": 260,
+          "x": -480,
+          "y": -380
+        },
+        {
+          "height": 180,
+          "width": 260,
+          "x": 220,
+          "y": -380
+        },
+        {
+          "height": 180,
+          "width": 260,
+          "x": -480,
+          "y": 200
+        },
+        {
+          "height": 180,
+          "width": 260,
+          "x": 220,
+          "y": 200
+        }
+      ]
+    },
+    "audio": {
+      "music_active": true,
+      "music_paused": false,
+      "music_starts": 1
+    },
+    "boss": {},
+    "chapter": 0,
+    "chapter_clears": [],
+    "chapter_elapsed": 4.81666666666665,
+    "chapter_name": "眠りの庭園",
+    "chapter_stage": "assault",
+    "chests": [],
+    "choice_phase": "offer",
+    "choices": [],
+    "damage_received": {
+      "contact": 0,
+      "hazard": 0,
+      "projectile": 0
+    },
+    "damage_summary": {
+      "by_weapon": {
+        "bell": 0,
+        "blast": 0,
+        "frost": 0,
+        "lightning": 104.0672,
+        "moon": 0,
+        "thorn": 0,
+        "wisp": 0
+      },
+      "echo": 36,
+      "player": 68.0672,
+      "poison": 0,
+      "resonance": 0
+    },
+    "damage_taken": 0,
+    "discoveries": {
+      "enemies": [
+        "hound"
+      ],
+      "evolutions": [],
+      "relics": [],
+      "weapons": [
+        "lightning"
+      ]
+    },
+    "echo": {
+      "active": true,
+      "x": 279.499908447266,
+      "y": 0
+    },
+    "echo_shots": 3,
+    "effects": 5,
+    "elapsed": 4.81666666666665,
+    "enemies": [
+      {
+        "boss": false,
+        "elite": false,
+        "hp": 28,
+        "id": 1,
+        "kind": "hound",
+        "mark_expires": 0,
+        "mark_source": "",
+        "max_hp": 28,
+        "phase": "seek",
+        "phase_index": 1,
+        "radius": 17,
+        "timer": -1.06165076729781e-15,
+        "x": 175.6,
+        "y": 252.8
+      },
+      {
+        "boss": false,
+        "elite": false,
+        "hp": 28,
+        "id": 3,
+        "kind": "hound",
+        "mark_expires": 0,
+        "mark_source": "",
+        "max_hp": 28,
+        "phase": "seek",
+        "phase_index": 1,
+        "radius": 17,
+        "timer": -1.06165076729781e-15,
+        "x": 175.6,
+        "y": 252.8
+      },
+      {
+        "boss": false,
+        "elite": false,
+        "hp": 4,
+        "id": 4,
+        "kind": "hound",
+        "mark_expires": 6.18333333333332,
+        "mark_source": "echo",
+        "max_hp": 28,
+        "phase": "seek",
+        "phase_index": 1,
+        "radius": 17,
+        "timer": -1.06165076729781e-15,
+        "x": 105.5,
+        "y": 89.7
+      },
+      {
+        "boss": false,
+        "elite": false,
+        "hp": 28,
+        "id": 5,
+        "kind": "hound",
+        "mark_expires": 0,
+        "mark_source": "",
+        "max_hp": 28,
+        "phase": "seek",
+        "phase_index": 1,
+        "radius": 17,
+        "timer": -1.06165076729781e-15,
+        "x": 175.6,
+        "y": 252.8
+      },
+      {
+        "boss": false,
+        "elite": false,
+        "hp": 4.1,
+        "id": 7,
+        "kind": "hound",
+        "mark_expires": 7.31666666666665,
+        "mark_source": "player",
+        "max_hp": 28.0672,
+        "phase": "seek",
+        "phase_index": 1,
+        "radius": 17,
+        "timer": -1.06165076729781e-15,
+        "x": 341.9,
+        "y": -9.2
+      },
+      {
+        "boss": false,
+        "elite": false,
+        "hp": 28.1,
+        "id": 8,
+        "kind": "hound",
+        "mark_expires": 0,
+        "mark_source": "",
+        "max_hp": 28.1428,
+        "phase": "seek",
+        "phase_index": 1,
+        "radius": 17,
+        "timer": -1.06165076729781e-15,
+        "x": 587.2,
+        "y": 309.8
+      },
+      {
+        "boss": false,
+        "elite": false,
+        "hp": 28.1,
+        "id": 9,
+        "kind": "hound",
+        "mark_expires": 0,
+        "mark_source": "",
+        "max_hp": 28.1428,
+        "phase": "seek",
+        "phase_index": 1,
+        "radius": 17,
+        "timer": -1.06165076729781e-15,
+        "x": 527.3,
+        "y": 314.2
+      },
+      {
+        "boss": false,
+        "elite": false,
+        "hp": 28.2,
+        "id": 10,
+        "kind": "hound",
+        "mark_expires": 0,
+        "mark_source": "",
+        "max_hp": 28.2184,
+        "phase": "seek",
+        "phase_index": 1,
+        "radius": 17,
+        "timer": -1.06165076729781e-15,
+        "x": 236,
+        "y": 507.2
+      },
+      {
+        "boss": false,
+        "elite": false,
+        "hp": 28.2,
+        "id": 11,
+        "kind": "hound",
+        "mark_expires": 0,
+        "mark_source": "",
+        "max_hp": 28.2184,
+        "phase": "seek",
+        "phase_index": 1,
+        "radius": 17,
+        "timer": -1.06165076729781e-15,
+        "x": 319.6,
+        "y": 508.2
+      }
+    ],
+    "enemy_count": 9,
+    "equipment": {
+      "rank_cap": 3,
+      "relic_slots": 3,
+      "relics": [],
+      "weapon_slots": 3,
+      "weapons": [
+        {
+          "body": "近い敵へ雷を放ち、直線上の敵を貫く。",
+          "can_evolve": false,
+          "evolution": "天裂の雷",
+          "evolution_body": "雷が4本に増え、命中先から別の敵へ連鎖する。",
+          "evolution_id": "lightning",
+          "evolution_name": "天裂の雷",
+          "evolved": false,
+          "icon": "lightning",
+          "id": "lightning",
+          "level": 1,
+          "max_level": 5,
+          "rank_cap": 3,
+          "requirement": "storm_ink",
+          "requirement_title": "静電のインク",
+          "stats": "威力 12.0 / 0.78秒ごと\n1本 / 射程 400.0",
+          "title": "雷"
+        }
+      ]
+    },
+    "experience": 1,
+    "experience_needed": 5,
+    "gui": {
+      "codex_category": "weapons",
+      "page": "",
+      "starter": "lightning"
+    },
+    "hazards": [],
+    "health": 100,
+    "history_samples": 131,
+    "kills": 2,
+    "last_damage_cause": "",
+    "last_echo_attack": {
+      "captured": true,
+      "cooldown": 0.78,
+      "cooldown_scale": 1,
+      "count": 1,
+      "damage": 12,
+      "echo_multiplier": 1,
+      "empowered": false,
+      "evolved": false,
+      "kind": "lightning",
+      "level": 1,
+      "max_level": 5,
+      "pierce": 1,
+      "poison": 0,
+      "poison_duration": 0,
+      "power_scale": 1,
+      "radius": 0,
+      "radius_scale": 1,
+      "range": 400,
+      "range_scale": 1,
+      "resonance_bonus": 12,
+      "resonance_distance": 100,
+      "resonance_stagger": 0,
+      "slow": 1,
+      "slow_duration": 0,
+      "stagger": 0,
+      "width": 11
+    },
+    "last_player_attack": {
+      "captured": true,
+      "cooldown": 0.78,
+      "cooldown_scale": 1,
+      "count": 1,
+      "damage": 12,
+      "echo_multiplier": 1,
+      "empowered": false,
+      "evolved": false,
+      "kind": "lightning",
+      "level": 1,
+      "max_level": 5,
+      "pierce": 1,
+      "poison": 0,
+      "poison_duration": 0,
+      "power_scale": 1,
+      "radius": 0,
+      "radius_scale": 1,
+      "range": 400,
+      "range_scale": 1,
+      "resonance_bonus": 12,
+      "resonance_distance": 100,
+      "resonance_stagger": 0,
+      "slow": 1,
+      "slow_duration": 0,
+      "stagger": 0,
+      "width": 11
+    },
+    "level": 1,
+    "max_health": 100,
+    "maximum_health": 100,
+    "motion": {
+      "actors": {
+        "atlas_count": 10,
+        "frame_count": 36,
+        "region_count": 360,
+        "texture_ids": [
+          -9223372004105649000,
+          -9223372004088872000,
+          -9223372004072095000,
+          -9223372004055318000,
+          -9223372004038540000,
+          -9223372004021763000,
+          -9223372004004986000,
+          -9223372003988209000,
+          -9223372003971431000,
+          -9223372003954654000
+        ]
+      },
+      "camera": {
+        "x": 0,
+        "y": 0
+      },
+      "clock": 4.81666666666665,
+      "death_count": 1,
+      "death_limit": 24,
+      "echo": {
+        "animation": "cast",
+        "cast": 0.0277777777777812,
+        "facing": 1,
+        "frame": 13,
+        "gait": 0.352270646528764,
+        "hit": 0,
+        "kind": "witch",
+        "moving": false
+      },
+      "enemies": [
+        {
+          "animation": "walk",
+          "cast": 0,
+          "facing": -1,
+          "frame": 9,
+          "gait": 0.89333997964859,
+          "hit": 0,
+          "id": 1,
+          "kind": "hound",
+          "moving": true
+        },
+        {
+          "animation": "walk",
+          "cast": 0,
+          "facing": -1,
+          "frame": 9,
+          "gait": 0.89333997964859,
+          "hit": 0,
+          "id": 3,
+          "kind": "hound",
+          "moving": true
+        },
+        {
+          "animation": "walk",
+          "cast": 0,
+          "facing": 1,
+          "frame": 5,
+          "gait": 0.190084223747254,
+          "hit": 0,
+          "id": 4,
+          "kind": "hound",
+          "moving": true
+        },
+        {
+          "animation": "walk",
+          "cast": 0,
+          "facing": -1,
+          "frame": 9,
+          "gait": 0.89333997964859,
+          "hit": 0,
+          "id": 5,
+          "kind": "hound",
+          "moving": true
+        },
+        {
+          "animation": "hit",
+          "cast": 0,
+          "facing": 1,
+          "frame": 14,
+          "gait": 0.0933743309974657,
+          "hit": 1,
+          "id": 7,
+          "kind": "hound",
+          "moving": true
+        },
+        {
+          "animation": "walk",
+          "cast": 0,
+          "facing": -1,
+          "frame": 6,
+          "gait": 0.434660875797272,
+          "hit": 0,
+          "id": 8,
+          "kind": "hound",
+          "moving": true
+        },
+        {
+          "animation": "walk",
+          "cast": 0,
+          "facing": -1,
+          "frame": 6,
+          "gait": 0.434658372402191,
+          "hit": 0,
+          "id": 9,
+          "kind": "hound",
+          "moving": true
+        },
+        {
+          "animation": "walk",
+          "cast": 0,
+          "facing": -1,
+          "frame": 4,
+          "gait": 0.0586667919158936,
+          "hit": 0,
+          "id": 10,
+          "kind": "hound",
+          "moving": true
+        },
+        {
+          "animation": "walk",
+          "cast": 0,
+          "facing": -1,
+          "frame": 4,
+          "gait": 0.0586663627624512,
+          "hit": 0,
+          "id": 11,
+          "kind": "hound",
+          "moving": true
+        }
+      ],
+      "event_count": 4,
+      "event_limit": 80,
+      "fx": {
+        "atlas_frames": 10,
+        "atlas_texture_id": 442381631499,
+        "particle_limit": 96,
+        "particles_drawn": 2
+      },
+      "generation": 2,
+      "player": {
+        "animation": "cast",
+        "cast": 1,
+        "facing": 1,
+        "frame": 10,
+        "gait": 0.352270646528764,
+        "hit": 0,
+        "kind": "witch",
+        "moving": false
+      },
+      "recent_events": [
+        {
+          "age": 0.349999999999999,
+          "echo": true,
+          "kind": "cast",
+          "serial": 40
+        },
+        {
+          "age": 0,
+          "echo": false,
+          "kind": "cast",
+          "serial": 42
+        },
+        {
+          "age": 0,
+          "echo": false,
+          "kind": "hit",
+          "serial": 43
+        },
+        {
+          "age": 0,
+          "echo": false,
+          "kind": "kill",
+          "serial": 44
+        }
+      ],
+      "serial": 44
+    },
+    "pending_echo_attacks": 3,
+    "perf": {
+      "effects": 5,
+      "fps": 60,
+      "nodes": 59,
+      "objects": 1591,
+      "orphans": 0,
+      "projectiles": 0,
+      "resources": 39,
+      "static_bytes": 0,
+      "static_peak_bytes": 0
+    },
+    "phase": {
+      "assault": true,
+      "boss": false,
+      "index": 0,
+      "name": "残像の目覚め",
+      "remaining": 17.1833333333333,
+      "subtitle": "道を分け、二人で狙おう"
+    },
+    "pickup_count": 1,
+    "pickup_radius": 172,
+    "pickups": [
+      {
+        "kind": "xp",
+        "value": 1,
+        "x": 342.585418701172,
+        "y": 6.71793556213379
+      }
+    ],
+    "player": {
+      "x": 279.499908447266,
+      "y": 0
+    },
+    "player_shots": 6,
+    "profile": {
+      "can_save": true,
+      "data": {
+        "best": {
+          "chapter": 0,
+          "kills": 0,
+          "seconds": 0,
+          "victories": 0
+        },
+        "clears": [],
+        "discoveries": {
+          "enemies": [],
+          "evolutions": [],
+          "relics": [],
+          "weapons": [
+            "lightning",
+            "moon"
+          ]
+        },
+        "runs": 0,
+        "settings": {
+          "large_text": false,
+          "music_volume": 0.65,
+          "reduced_motion": false,
+          "sfx_volume": 0.8,
+          "sound": true
+        },
+        "starters": [
+          "lightning",
+          "moon"
+        ],
+        "version": 1
+      },
+      "message": "記録はこの端末だけに保存します。",
+      "status": "new",
+      "unlocks": []
+    },
+    "projectiles": 0,
+    "rank_cap": 3,
+    "rerolls_left": 3,
+    "resonance_bonus": 12,
+    "resonance_hits": 0,
+    "resonance_kills": 0,
+    "settings": {
+      "large_text": false,
+      "music_volume": 0.65,
+      "reduced_motion": false,
+      "sfx_volume": 0.8,
+      "sound": true
+    },
+    "skips_left": 3,
+    "specialization": "未選択",
+    "speed": 215,
+    "state": "playing",
+    "upgrade_choices": [],
+    "ward_charges": 0,
+    "ward_cooldown": 0,
+    "weapons": {
+      "bell": {
+        "cooldown": 2.4,
+        "cooldown_scale": 1,
+        "count": 1,
+        "damage": 15,
+        "evolved": false,
+        "level": 0,
+        "max_level": 5,
+        "pierce": 1,
+        "poison": 0,
+        "poison_duration": 0,
+        "power_scale": 1,
+        "radius": 220,
+        "radius_scale": 1,
+        "range": 400,
+        "range_scale": 1,
+        "slow": 1,
+        "slow_duration": 0,
+        "stagger": 0.35,
+        "width": 46
+      },
+      "frost": {
+        "cooldown": 2.7,
+        "cooldown_scale": 1,
+        "count": 1,
+        "damage": 6,
+        "evolved": false,
+        "level": 0,
+        "max_level": 5,
+        "pierce": 1,
+        "poison": 0,
+        "poison_duration": 0,
+        "power_scale": 1,
+        "radius": 80,
+        "radius_scale": 1,
+        "range": 450,
+        "range_scale": 1,
+        "slow": 0.5,
+        "slow_duration": 1,
+        "stagger": 0,
+        "width": 11
+      },
+      "lightning": {
+        "cooldown": 0.78,
+        "cooldown_scale": 1,
+        "count": 1,
+        "damage": 12,
+        "evolved": false,
+        "level": 1,
+        "max_level": 5,
+        "pierce": 1,
+        "poison": 0,
+        "poison_duration": 0,
+        "power_scale": 1,
+        "radius": 0,
+        "radius_scale": 1,
+        "range": 400,
+        "range_scale": 1,
+        "slow": 1,
+        "slow_duration": 0,
+        "stagger": 0,
+        "width": 11
+      },
+      "moon": {
+        "cooldown": 2.15,
+        "cooldown_scale": 1,
+        "count": 1,
+        "damage": 13,
+        "evolved": false,
+        "level": 0,
+        "max_level": 5,
+        "pierce": 1,
+        "poison": 0,
+        "poison_duration": 0,
+        "power_scale": 1,
+        "radius": 118,
+        "radius_scale": 1,
+        "range": 400,
+        "range_scale": 1,
+        "slow": 1,
+        "slow_duration": 0,
+        "stagger": 0,
+        "width": 11
+      },
+      "thorn": {
+        "cooldown": 1.4,
+        "cooldown_scale": 1,
+        "count": 2,
+        "damage": 13,
+        "evolved": false,
+        "level": 0,
+        "max_level": 5,
+        "pierce": 2,
+        "poison": 3,
+        "poison_duration": 2.5,
+        "power_scale": 1,
+        "radius": 8,
+        "radius_scale": 1,
+        "range": 620,
+        "range_scale": 1,
+        "slow": 1,
+        "slow_duration": 0,
+        "stagger": 0,
+        "width": 16
+      },
+      "wisp": {
+        "cooldown": 1.3,
+        "cooldown_scale": 1,
+        "count": 1,
+        "damage": 19,
+        "evolved": false,
+        "level": 0,
+        "max_level": 5,
+        "pierce": 1,
+        "poison": 0,
+        "poison_duration": 0,
+        "power_scale": 1,
+        "radius": 42,
+        "radius_scale": 1,
+        "range": 570,
+        "range_scale": 1,
+        "slow": 1,
+        "slow_duration": 0,
+        "stagger": 0,
+        "width": 11
+      }
+    }
+  }
+}

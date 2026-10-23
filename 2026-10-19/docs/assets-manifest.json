@@ -1,5 +1,5 @@
 {
-  "art": "Built-in image_gen PNG characters (r2); original editable SVG environment and first-edition art retained.",
+  "art": "Local imagegen painted illustrations for actors, terrain, scenery and inventory; retained regional mesh poses; original code-authored pixel feedback. Earlier pixel actor SVGs retained as source history.",
   "font_source": "2026-10-14/game/assets/fonts/NotoSansCJKjp-Medium.otf",
   "files": {
     "game/assets/art/archer.svg": {
@@ -53,6 +53,128 @@
     "game/assets/art/garden-r2.svg": {
       "bytes": 22570,
       "sha256": "4a9493205fac67cf479393290e8165344e06cfcf43d81fefbeee8c368969005b"
+    },
+    "game/assets/art/boss-bell.png": {
+      "bytes": 2308200,
+      "sha256": "9c55a5bd01c875c71d73833955c5f4e257a38f61ac9ac2829c65ce092f5117ae"
+    },
+    "game/assets/art/boss-mirror.png": {
+      "bytes": 2768667,
+      "sha256": "18ee9cf9d5a31593a400aa3626ff0d9c54b5dbeee4f8ad5c5c733dab6f2c9f0f"
+    },
+    "game/assets/art/boss-thorn.png": {
+      "bytes": 2442966,
+      "sha256": "32a652a7e5567b1159c7dda288c0b929638689f80a5e62b9a3e67fe09de27b0f"
+    },
+    "game/assets/art/campaign-keyart.png": {
+      "bytes": 2741019,
+      "sha256": "01a87d4616fc6b88fb6847027becb4d1b601977203450c613d81b1b398bcf364"
+    },
+    "game/assets/fonts/ZEN-OFL.txt": {
+      "bytes": 4399,
+      "sha256": "469d214f9842809659c827b7f2adaf40ec0df6efdd5fe18b7127665c32aafaec"
+    },
+    "game/assets/fonts/ZenOldMincho-Bold.ttf": {
+      "bytes": 5436460,
+      "sha256": "d6b95c1ff45c8dac153d28961e4c37d7d03b648330c71f884d124dc652a13c0d"
+    },
+    "game/assets/audio/theme-bell.wav": {
+      "bytes": 1924408,
+      "sha256": "4661e4504f4f91106145363dc629ac0128cf3751c17da28856ac9a00aae12d41"
+    },
+    "game/assets/audio/theme-boss.wav": {
+      "bytes": 1628352,
+      "sha256": "6f39f95d46d5c0c9f5143a7f2a0058f7679515989ed1aa8870c0cc9f2fcffda3"
+    },
+    "game/assets/audio/theme-garden.wav": {
+      "bytes": 2646044,
+      "sha256": "693dbf06aa89f7c083c7d932f6902a134ff1cf03ece56aa9426756f588848ee9"
+    },
+    "game/assets/audio/theme-mirror.wav": {
+      "bytes": 2171120,
+      "sha256": "a332d0a783ebf34717fd0918a789110c86e420db20c738fc6e9b6cbca6810552"
+    },
+    "game/assets/art/white-disc.svg": {
+      "bytes": 138,
+      "sha256": "190218cf7011ea309548ad3522a98eac48cfdb1a3d871b09a497d3190f9f5cc6"
+    },
+    "game/assets/art/pixel-actors-archer.svg": {
+      "bytes": 233987,
+      "sha256": "45ff9fac8436261af93af94c6e54fba918f02f6915a74d4302861ce28cf14d84"
+    },
+    "game/assets/art/pixel-actors-bat.svg": {
+      "bytes": 135551,
+      "sha256": "2fe6d7db65381e55e74826d9120f922baa7512355fa30e3e49d4d4b9fd7c8e4b"
+    },
+    "game/assets/art/pixel-actors-boss-bell.svg": {
+      "bytes": 495999,
+      "sha256": "0eac812f78e7fa73000f9232b4c9c753a77dc669a86c8e6a54f528c0d2774dd1"
+    },
+    "game/assets/art/pixel-actors-boss-mirror.svg": {
+      "bytes": 432240,
+      "sha256": "5458f1000cb69254bb6fdf97f52fa6bbcbb637c7d2757877e626bfd546f8ee1a"
+    },
+    "game/assets/art/pixel-actors-boss-thorn.svg": {
+      "bytes": 542362,
+      "sha256": "bbc9039ffea991182f9e49916ed924d29eb68b84fe4c50ba6a9e355134f204ac"
+    },
+    "game/assets/art/pixel-actors-charger.svg": {
+      "bytes": 244870,
+      "sha256": "3a496e1d46189070c6d67ae854586d86fe1f469db853d589e8a63d3550520465"
+    },
+    "game/assets/art/pixel-actors-hound.svg": {
+      "bytes": 187581,
+      "sha256": "dc3ca0f212f009f675b8fd9651b2abd5953457660696fdadf3906154ebbb8b85"
+    },
+    "game/assets/art/pixel-actors-sentinel.svg": {
+      "bytes": 205774,
+      "sha256": "bf2fb25d7308ba90befe18967e1fc8f2df56be7053fa191d25b3993e78301ebe"
+    },
+    "game/assets/art/pixel-actors-wisp.svg": {
+      "bytes": 149846,
+      "sha256": "375b0fe4cf9ae85344e9776b4051c9fe941409a9b5e403e2a8aad0f514d2c1e4"
+    },
+    "game/assets/art/pixel-actors-witch.svg": {
+      "bytes": 385733,
+      "sha256": "23202a14aa2b1e09183d1a723a623cd6414662de18d33876d3e98b3644657ee4"
+    },
+    "game/assets/art/pixel-fx.svg": {
+      "bytes": 1939,
+      "sha256": "bcf1491a3144716b1dce19f04c5f50c1963bd59287bf7e3365c4c3eb055a4c76"
+    },
+    "game/assets/art/bat-painted-r3.png": {
+      "bytes": 1791343,
+      "sha256": "94cc35bb4b645eed851a0ab4f385cacf16f87b20f8dfc60a8a9f74f4fce1943b"
+    },
+    "game/assets/art/chest-open-painted-r3.png": {
+      "bytes": 2165199,
+      "sha256": "13ab8d400faba91e0d22dfff4b939b42ff52f07e00119d379135325146722d43"
+    },
+    "game/assets/art/creatures-painted-r3.png": {
+      "bytes": 1712574,
+      "sha256": "3e511b21b030002a6de94aacaee62639a9206e05471e0201a2f2862fb24a1dbf"
+    },
+    "game/assets/art/items-painted-r3.png": {
+      "bytes": 1753486,
+      "sha256": "825c2d97dbc97f46dbdbb806df21eb02fed60977f4f5386d7baf71a0bf3139b6"
+    },
+    "game/assets/art/rewards-painted-r3.png": {
+      "bytes": 2648504,
+      "sha256": "3a5053e376fb965a1358e750fa9d622e0f8996181ebc76905a407e6de5be6c69"
+    },
+    "game/assets/art/scenery-painted-r3.png": {
+      "bytes": 2547557,
+      "sha256": "a90385d143c2b815744755e332e16d3d2126f2ebff81eb74d0033bd99988433e"
+    },
+    "game/assets/art/sentinel-painted-r3.png": {
+      "bytes": 1866790,
+      "sha256": "833fb015ac89ce411058228b04c028be4c57e19a9232c30829a3358145660fe8"
+    },
+    "game/assets/art/terrain-painted-r3.png": {
+      "bytes": 3818017,
+      "sha256": "4cfe9e2514b2b74f5b002a39a6add85b312fcf0a2ad5885dba2c1f51fc5c335f"
     }
-  }
+  },
+  "heading_font_source": "Google Fonts google/fonts at 6c4ff7159f6296ebd06b92d8010b086fcb795409/ofl/zenoldmincho",
+  "audio_source": "Original local PCM synthesis; scripts/generate-audio.py"
 }

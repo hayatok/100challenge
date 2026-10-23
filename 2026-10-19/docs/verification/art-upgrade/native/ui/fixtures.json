@@ -1,0 +1,1487 @@
+{
+	"captures": [
+		{
+			"controls": [
+				{
+					"disabled": false,
+					"height": 64.0,
+					"id": "title_start",
+					"label": "物語をはじめる / Enter",
+					"width": 496.0,
+					"x": 66.0,
+					"y": 370.0
+				},
+				{
+					"disabled": false,
+					"height": 70.0,
+					"id": "title_starters",
+					"label": "初めの魔法 / 雷 / 変更  ›",
+					"width": 496.0,
+					"x": 66.0,
+					"y": 450.0
+				},
+				{
+					"disabled": false,
+					"height": 50.0,
+					"id": "title_codex",
+					"label": "魔術図鑑  [C]",
+					"width": 240.0,
+					"x": 66.0,
+					"y": 532.0
+				},
+				{
+					"disabled": false,
+					"height": 50.0,
+					"id": "title_settings",
+					"label": "設定",
+					"width": 160.0,
+					"x": 322.0,
+					"y": 532.0
+				}
+			],
+			"height": 720,
+			"large_text": false,
+			"name": "01-title",
+			"page": "",
+			"state": "title",
+			"width": 1280
+		},
+		{
+			"controls": [
+				{
+					"disabled": false,
+					"height": 220.0,
+					"id": "starter_lightning",
+					"label": "雷 / 選択中 / 近い敵へ雷を放ち、直線上の敵を貫く。",
+					"width": 368.0,
+					"x": 64.0,
+					"y": 160.0
+				},
+				{
+					"disabled": false,
+					"height": 220.0,
+					"id": "starter_moon",
+					"label": "月輪 / 自分の周りに輪を広げ、一度ずつ敵を払う。",
+					"width": 368.0,
+					"x": 456.0,
+					"y": 160.0
+				},
+				{
+					"disabled": true,
+					"height": 220.0,
+					"id": "starter_thorn",
+					"label": "未解放の魔法 / 第1章を踏破すると解放",
+					"width": 368.0,
+					"x": 848.0,
+					"y": 160.0
+				},
+				{
+					"disabled": true,
+					"height": 220.0,
+					"id": "starter_wisp",
+					"label": "未解放の魔法 / 第1章を踏破すると解放",
+					"width": 368.0,
+					"x": 64.0,
+					"y": 384.0
+				},
+				{
+					"disabled": true,
+					"height": 220.0,
+					"id": "starter_frost",
+					"label": "未解放の魔法 / 第2章を踏破すると解放",
+					"width": 368.0,
+					"x": 456.0,
+					"y": 384.0
+				},
+				{
+					"disabled": true,
+					"height": 220.0,
+					"id": "starter_bell",
+					"label": "未解放の魔法 / 第3章を踏破すると解放",
+					"width": 368.0,
+					"x": 848.0,
+					"y": 384.0
+				},
+				{
+					"disabled": false,
+					"height": 56.0,
+					"id": "back",
+					"label": "戻る  [Esc]",
+					"width": 280.0,
+					"x": 64.0,
+					"y": 620.0
+				}
+			],
+			"height": 720,
+			"large_text": false,
+			"name": "02-starters",
+			"page": "starters",
+			"state": "title",
+			"width": 1280
+		},
+		{
+			"controls": [
+				{
+					"disabled": false,
+					"height": 54.0,
+					"id": "hud_pause",
+					"label": "休止",
+					"width": 114.0,
+					"x": 1146.0,
+					"y": 18.0
+				}
+			],
+			"height": 720,
+			"large_text": false,
+			"name": "03-hud-combat",
+			"page": "",
+			"state": "playing",
+			"width": 1280
+		},
+		{
+			"controls": [
+				{
+					"disabled": false,
+					"height": 480.0,
+					"id": "choice_0",
+					"label": "01  /  新しい魔法・3枠 / 鬼火 / 壁を越える追尾の火が、命中した場所で弾ける。 / 現在  未習得 / 取得後  威力 19.0 / 1.30秒ごと\n1個 / 爆発範囲 42.0 / 第3章の宝箱 / Rank 5 ＋ 灯火の油\n選択後、魔法を入れ替えます。",
+					"width": 368.0,
+					"x": 64.0,
+					"y": 158.0
+				},
+				{
+					"disabled": false,
+					"height": 480.0,
+					"id": "choice_1",
+					"label": "02  /  遺物・3枠 / 灯火の油 / 残像の魔法威力+30%。元の詠唱時に効果を記録する。 / 遺物 3 / 3枠 → 3 / 3枠 / 選択後、遺物を入れ替えます。",
+					"width": 368.0,
+					"x": 456.0,
+					"y": 158.0
+				},
+				{
+					"disabled": false,
+					"height": 480.0,
+					"id": "choice_2",
+					"label": "03  /  進化 / 双月の環 / 広い月輪を3重に放つ。 / 現在  威力 33.0 / 1.45秒ごと\n2重 / 範囲 190.0 / 取得後  威力 41.2 / 1.45秒ごと\n3重 / 範囲 220.0 / 第3章の宝箱 / Rank 5 ＋ 月長石",
+					"width": 368.0,
+					"x": 848.0,
+					"y": 158.0
+				},
+				{
+					"disabled": false,
+					"height": 56.0,
+					"id": "reroll",
+					"label": "引き直す 3回  [R]",
+					"width": 368.0,
+					"x": 64.0,
+					"y": 644.0
+				},
+				{
+					"disabled": false,
+					"height": 56.0,
+					"id": "skip",
+					"label": "見送る 3回  [X]",
+					"width": 368.0,
+					"x": 456.0,
+					"y": 644.0
+				}
+			],
+			"height": 720,
+			"large_text": false,
+			"name": "04-long-three-choices",
+			"page": "",
+			"state": "upgrade",
+			"width": 1280
+		},
+		{
+			"controls": [
+				{
+					"disabled": false,
+					"height": 480.0,
+					"id": "choice_0",
+					"label": "01  /  失う装備 → 得る装備 / 雷と交換 / 手放す装備 / 雷 Rank 5\n威力 28.0 / 0.56秒ごと\n3本 / 射程 460.0 / 受け取る装備 / 鬼火\n威力 19.0 / 1.30秒ごと\n1個 / 爆発範囲 42.0",
+					"width": 368.0,
+					"x": 64.0,
+					"y": 158.0
+				},
+				{
+					"disabled": false,
+					"height": 480.0,
+					"id": "choice_1",
+					"label": "02  /  失う装備 → 得る装備 / 月輪と交換 / 手放す装備 / 月輪 Rank 5\n威力 33.0 / 1.45秒ごと\n2重 / 範囲 231.8 / 受け取る装備 / 鬼火\n威力 19.0 / 1.30秒ごと\n1個 / 爆発範囲 42.0",
+					"width": 368.0,
+					"x": 456.0,
+					"y": 158.0
+				},
+				{
+					"disabled": false,
+					"height": 480.0,
+					"id": "choice_2",
+					"label": "03  /  失う装備 → 得る装備 / 茨針と交換 / 手放す装備 / 茨針 Rank 5\n威力 26.0 / 1.05秒ごと\n5本 / 3体を貫通 / 毒 10.0毎秒 / 受け取る装備 / 鬼火\n威力 19.0 / 1.30秒ごと\n1個 / 爆発範囲 42.0",
+					"width": 368.0,
+					"x": 848.0,
+					"y": 158.0
+				},
+				{
+					"disabled": false,
+					"height": 56.0,
+					"id": "cancel_replace",
+					"label": "選択へ戻る  [Esc]",
+					"width": 368.0,
+					"x": 64.0,
+					"y": 644.0
+				}
+			],
+			"height": 720,
+			"large_text": false,
+			"name": "05-weapon-replacement",
+			"page": "",
+			"state": "upgrade",
+			"width": 1280
+		},
+		{
+			"controls": [
+				{
+					"disabled": false,
+					"height": 480.0,
+					"id": "choice_0",
+					"label": "01  /  失う装備 → 得る装備 / 静電のインクと交換 / 手放す装備 / 本体の4回目の詠唱ごとに、その攻撃の威力+45%。残像も同じ強さで再現。 / 受け取る装備 / 灯火の油\n残像の魔法威力+30%。元の詠唱時に効果を記録する。",
+					"width": 368.0,
+					"x": 64.0,
+					"y": 158.0
+				},
+				{
+					"disabled": false,
+					"height": 480.0,
+					"id": "choice_1",
+					"label": "02  /  失う装備 → 得る装備 / 月長石と交換 / 手放す装備 / 全ての魔法の範囲と太さ+22%。射程は変わらない。 / 受け取る装備 / 灯火の油\n残像の魔法威力+30%。元の詠唱時に効果を記録する。",
+					"width": 368.0,
+					"x": 456.0,
+					"y": 158.0
+				},
+				{
+					"disabled": false,
+					"height": 480.0,
+					"id": "choice_2",
+					"label": "03  /  失う装備 → 得る装備 / 茨の種と交換 / 手放す装備 / 全ての魔法が3秒間、毎秒3の毒を付ける。茨針の毒には毎秒3を加える。 / 受け取る装備 / 灯火の油\n残像の魔法威力+30%。元の詠唱時に効果を記録する。",
+					"width": 368.0,
+					"x": 848.0,
+					"y": 158.0
+				},
+				{
+					"disabled": false,
+					"height": 56.0,
+					"id": "cancel_replace",
+					"label": "選択へ戻る  [Esc]",
+					"width": 368.0,
+					"x": 64.0,
+					"y": 644.0
+				}
+			],
+			"height": 720,
+			"large_text": false,
+			"name": "06-relic-replacement",
+			"page": "",
+			"state": "upgrade",
+			"width": 1280
+		},
+		{
+			"controls": [
+				{
+					"disabled": false,
+					"height": 480.0,
+					"id": "choice_0",
+					"label": "01  /  新しい魔法・3枠 / 鬼火 / 壁を越える追尾の火が、命中した場所で弾ける。 / 現在  未習得 / 取得後  威力 19.0 / 1.30秒ごと\n1個 / 爆発範囲 42.0 / 第3章の宝箱 / Rank 5 ＋ 灯火の油\n選択後、魔法を入れ替えます。",
+					"width": 368.0,
+					"x": 64.0,
+					"y": 158.0
+				},
+				{
+					"disabled": false,
+					"height": 480.0,
+					"id": "choice_1",
+					"label": "02  /  遺物・3枠 / 灯火の油 / 残像の魔法威力+30%。元の詠唱時に効果を記録する。 / 遺物 3 / 3枠 → 3 / 3枠 / 選択後、遺物を入れ替えます。",
+					"width": 368.0,
+					"x": 456.0,
+					"y": 158.0
+				},
+				{
+					"disabled": false,
+					"height": 480.0,
+					"id": "choice_2",
+					"label": "03  /  進化 / 双月の環 / 広い月輪を3重に放つ。 / 現在  威力 33.0 / 1.45秒ごと\n2重 / 範囲 190.0 / 取得後  威力 41.2 / 1.45秒ごと\n3重 / 範囲 220.0 / 第3章の宝箱 / Rank 5 ＋ 月長石",
+					"width": 368.0,
+					"x": 848.0,
+					"y": 158.0
+				},
+				{
+					"disabled": false,
+					"height": 56.0,
+					"id": "reroll",
+					"label": "引き直す 3回  [R]",
+					"width": 368.0,
+					"x": 64.0,
+					"y": 644.0
+				},
+				{
+					"disabled": false,
+					"height": 56.0,
+					"id": "skip",
+					"label": "見送る 3回  [X]",
+					"width": 368.0,
+					"x": 456.0,
+					"y": 644.0
+				}
+			],
+			"height": 720,
+			"large_text": false,
+			"name": "07-treasure",
+			"page": "",
+			"state": "treasure",
+			"width": 1280
+		},
+		{
+			"controls": [
+				{
+					"disabled": false,
+					"height": 58.0,
+					"id": "chapter_next",
+					"label": "第2章へ進む  [Enter]",
+					"width": 720.0,
+					"x": 80.0,
+					"y": 618.0
+				},
+				{
+					"disabled": false,
+					"height": 58.0,
+					"id": "chapter_title",
+					"label": "タイトルへ戻る",
+					"width": 376.0,
+					"x": 824.0,
+					"y": 618.0
+				}
+			],
+			"height": 720,
+			"large_text": false,
+			"name": "08-chapter-clear",
+			"page": "",
+			"state": "chapter_clear",
+			"width": 1280
+		},
+		{
+			"controls": [
+				{
+					"disabled": false,
+					"height": 60.0,
+					"id": "result_retry",
+					"label": "もう一度挑む  [Enter / R]",
+					"width": 464.0,
+					"x": 80.0,
+					"y": 580.0
+				},
+				{
+					"disabled": false,
+					"height": 60.0,
+					"id": "result_loadout",
+					"label": "今夜の装備",
+					"width": 292.0,
+					"x": 568.0,
+					"y": 580.0
+				},
+				{
+					"disabled": false,
+					"height": 60.0,
+					"id": "result_title",
+					"label": "タイトルへ戻る",
+					"width": 308.0,
+					"x": 884.0,
+					"y": 580.0
+				}
+			],
+			"height": 720,
+			"large_text": false,
+			"name": "09-victory",
+			"page": "",
+			"state": "victory",
+			"width": 1280
+		},
+		{
+			"controls": [
+				{
+					"disabled": false,
+					"height": 60.0,
+					"id": "back",
+					"label": "結果へ戻る  [Esc]",
+					"width": 516.0,
+					"x": 80.0,
+					"y": 616.0
+				}
+			],
+			"height": 720,
+			"large_text": false,
+			"name": "10-result-loadout",
+			"page": "loadout",
+			"state": "victory",
+			"width": 1280
+		},
+		{
+			"controls": [
+				{
+					"disabled": false,
+					"height": 64.0,
+					"id": "result_retry",
+					"label": "もう一度挑む  [Enter / R]",
+					"width": 516.0,
+					"x": 80.0,
+					"y": 294.0
+				},
+				{
+					"disabled": false,
+					"height": 56.0,
+					"id": "result_loadout",
+					"label": "今夜の装備",
+					"width": 516.0,
+					"x": 80.0,
+					"y": 382.0
+				},
+				{
+					"disabled": false,
+					"height": 56.0,
+					"id": "result_title",
+					"label": "タイトルへ戻る",
+					"width": 516.0,
+					"x": 80.0,
+					"y": 462.0
+				}
+			],
+			"height": 720,
+			"large_text": false,
+			"name": "11-defeat",
+			"page": "",
+			"state": "defeat",
+			"width": 1280
+		},
+		{
+			"controls": [
+				{
+					"disabled": false,
+					"height": 64.0,
+					"id": "pause_resume",
+					"label": "続ける  [Enter / Esc]",
+					"width": 516.0,
+					"x": 80.0,
+					"y": 264.0
+				},
+				{
+					"disabled": false,
+					"height": 56.0,
+					"id": "pause_settings",
+					"label": "設定",
+					"width": 250.0,
+					"x": 80.0,
+					"y": 350.0
+				},
+				{
+					"disabled": false,
+					"height": 56.0,
+					"id": "pause_codex",
+					"label": "魔術図鑑  [C]",
+					"width": 250.0,
+					"x": 346.0,
+					"y": 350.0
+				},
+				{
+					"disabled": false,
+					"height": 56.0,
+					"id": "pause_retry",
+					"label": "最初から挑む  [R]",
+					"width": 516.0,
+					"x": 80.0,
+					"y": 430.0
+				},
+				{
+					"disabled": false,
+					"height": 56.0,
+					"id": "pause_title",
+					"label": "タイトルへ戻る",
+					"width": 516.0,
+					"x": 80.0,
+					"y": 510.0
+				}
+			],
+			"height": 720,
+			"large_text": false,
+			"name": "12-paused",
+			"page": "",
+			"state": "paused",
+			"width": 1280
+		},
+		{
+			"controls": [
+				{
+					"disabled": false,
+					"height": 62.0,
+					"id": "settings_sound",
+					"label": "音を鳴らす   ON",
+					"width": 508.0,
+					"x": 80.0,
+					"y": 190.0
+				},
+				{
+					"disabled": false,
+					"height": 62.0,
+					"id": "settings_reduced_motion",
+					"label": "動きを減らす   OFF",
+					"width": 508.0,
+					"x": 684.0,
+					"y": 174.0
+				},
+				{
+					"disabled": false,
+					"height": 62.0,
+					"id": "settings_large_text",
+					"label": "文字を大きく   OFF",
+					"width": 508.0,
+					"x": 684.0,
+					"y": 264.0
+				},
+				{
+					"disabled": false,
+					"height": 48.0,
+					"id": "settings_music_volume",
+					"label": "音楽",
+					"width": 500.0,
+					"x": 84.0,
+					"y": 336.0
+				},
+				{
+					"disabled": false,
+					"height": 48.0,
+					"id": "settings_sfx_volume",
+					"label": "効果音",
+					"width": 500.0,
+					"x": 84.0,
+					"y": 464.0
+				},
+				{
+					"disabled": false,
+					"height": 60.0,
+					"id": "back",
+					"label": "戻る  [Esc]",
+					"width": 516.0,
+					"x": 80.0,
+					"y": 616.0
+				},
+				{
+					"disabled": false,
+					"height": 60.0,
+					"id": "settings_storage",
+					"label": "保存記録を確認",
+					"width": 508.0,
+					"x": 684.0,
+					"y": 616.0
+				}
+			],
+			"height": 720,
+			"large_text": false,
+			"name": "13-settings",
+			"page": "settings",
+			"state": "paused",
+			"width": 1280
+		},
+		{
+			"controls": [
+				{
+					"disabled": false,
+					"height": 50.0,
+					"id": "codex_category_weapons",
+					"label": "魔法",
+					"width": 120.0,
+					"x": 80.0,
+					"y": 194.0
+				},
+				{
+					"disabled": false,
+					"height": 50.0,
+					"id": "codex_category_relics",
+					"label": "遺物",
+					"width": 120.0,
+					"x": 212.0,
+					"y": 194.0
+				},
+				{
+					"disabled": false,
+					"height": 50.0,
+					"id": "codex_category_enemies",
+					"label": "魔物",
+					"width": 120.0,
+					"x": 344.0,
+					"y": 194.0
+				},
+				{
+					"disabled": false,
+					"height": 50.0,
+					"id": "codex_category_evolutions",
+					"label": "進化",
+					"width": 120.0,
+					"x": 476.0,
+					"y": 194.0
+				},
+				{
+					"disabled": false,
+					"height": 49.0,
+					"id": "codex_item_lightning",
+					"label": "雷",
+					"width": 516.0,
+					"x": 80.0,
+					"y": 262.0
+				},
+				{
+					"disabled": false,
+					"height": 49.0,
+					"id": "codex_item_moon",
+					"label": "月輪",
+					"width": 516.0,
+					"x": 80.0,
+					"y": 316.0
+				},
+				{
+					"disabled": false,
+					"height": 49.0,
+					"id": "codex_item_thorn",
+					"label": "茨針",
+					"width": 516.0,
+					"x": 80.0,
+					"y": 370.0
+				},
+				{
+					"disabled": false,
+					"height": 49.0,
+					"id": "codex_item_wisp",
+					"label": "鬼火",
+					"width": 516.0,
+					"x": 80.0,
+					"y": 424.0
+				},
+				{
+					"disabled": false,
+					"height": 49.0,
+					"id": "codex_item_frost",
+					"label": "霜結",
+					"width": 516.0,
+					"x": 80.0,
+					"y": 478.0
+				},
+				{
+					"disabled": false,
+					"height": 49.0,
+					"id": "codex_item_bell",
+					"label": "鐘波",
+					"width": 516.0,
+					"x": 80.0,
+					"y": 532.0
+				},
+				{
+					"disabled": false,
+					"height": 60.0,
+					"id": "back",
+					"label": "戻る  [Esc]",
+					"width": 516.0,
+					"x": 80.0,
+					"y": 616.0
+				}
+			],
+			"height": 720,
+			"large_text": false,
+			"name": "14-codex-weapons",
+			"page": "codex",
+			"state": "paused",
+			"width": 1280
+		},
+		{
+			"controls": [
+				{
+					"disabled": false,
+					"height": 50.0,
+					"id": "codex_category_weapons",
+					"label": "魔法",
+					"width": 120.0,
+					"x": 80.0,
+					"y": 194.0
+				},
+				{
+					"disabled": false,
+					"height": 50.0,
+					"id": "codex_category_relics",
+					"label": "遺物",
+					"width": 120.0,
+					"x": 212.0,
+					"y": 194.0
+				},
+				{
+					"disabled": false,
+					"height": 50.0,
+					"id": "codex_category_enemies",
+					"label": "魔物",
+					"width": 120.0,
+					"x": 344.0,
+					"y": 194.0
+				},
+				{
+					"disabled": false,
+					"height": 50.0,
+					"id": "codex_category_evolutions",
+					"label": "進化",
+					"width": 120.0,
+					"x": 476.0,
+					"y": 194.0
+				},
+				{
+					"disabled": false,
+					"height": 49.0,
+					"id": "codex_item_storm_ink",
+					"label": "静電のインク",
+					"width": 250.0,
+					"x": 80.0,
+					"y": 262.0
+				},
+				{
+					"disabled": false,
+					"height": 49.0,
+					"id": "codex_item_moonstone",
+					"label": "月長石",
+					"width": 250.0,
+					"x": 80.0,
+					"y": 316.0
+				},
+				{
+					"disabled": false,
+					"height": 49.0,
+					"id": "codex_item_thorn_seed",
+					"label": "茨の種",
+					"width": 250.0,
+					"x": 80.0,
+					"y": 370.0
+				},
+				{
+					"disabled": false,
+					"height": 49.0,
+					"id": "codex_item_lantern_oil",
+					"label": "灯火の油",
+					"width": 250.0,
+					"x": 80.0,
+					"y": 424.0
+				},
+				{
+					"disabled": false,
+					"height": 49.0,
+					"id": "codex_item_ice_crystal",
+					"label": "氷晶",
+					"width": 250.0,
+					"x": 80.0,
+					"y": 478.0
+				},
+				{
+					"disabled": false,
+					"height": 49.0,
+					"id": "codex_item_silver_bell",
+					"label": "銀の音叉",
+					"width": 250.0,
+					"x": 80.0,
+					"y": 532.0
+				},
+				{
+					"disabled": false,
+					"height": 49.0,
+					"id": "codex_item_swift_boots",
+					"label": "風縫いの靴",
+					"width": 250.0,
+					"x": 346.0,
+					"y": 262.0
+				},
+				{
+					"disabled": false,
+					"height": 49.0,
+					"id": "codex_item_magnet_ring",
+					"label": "星屑の環",
+					"width": 250.0,
+					"x": 346.0,
+					"y": 316.0
+				},
+				{
+					"disabled": false,
+					"height": 49.0,
+					"id": "codex_item_ward_leaf",
+					"label": "守り葉",
+					"width": 250.0,
+					"x": 346.0,
+					"y": 370.0
+				},
+				{
+					"disabled": false,
+					"height": 49.0,
+					"id": "codex_item_blood_vial",
+					"label": "赤い小瓶",
+					"width": 250.0,
+					"x": 346.0,
+					"y": 424.0
+				},
+				{
+					"disabled": false,
+					"height": 49.0,
+					"id": "codex_item_hourglass",
+					"label": "砂時計",
+					"width": 250.0,
+					"x": 346.0,
+					"y": 478.0
+				},
+				{
+					"disabled": false,
+					"height": 49.0,
+					"id": "codex_item_echo_mirror",
+					"label": "欠けた鏡",
+					"width": 250.0,
+					"x": 346.0,
+					"y": 532.0
+				},
+				{
+					"disabled": false,
+					"height": 60.0,
+					"id": "back",
+					"label": "戻る  [Esc]",
+					"width": 516.0,
+					"x": 80.0,
+					"y": 616.0
+				}
+			],
+			"height": 720,
+			"large_text": false,
+			"name": "14-codex-relics",
+			"page": "codex",
+			"state": "paused",
+			"width": 1280
+		},
+		{
+			"controls": [
+				{
+					"disabled": false,
+					"height": 50.0,
+					"id": "codex_category_weapons",
+					"label": "魔法",
+					"width": 120.0,
+					"x": 80.0,
+					"y": 194.0
+				},
+				{
+					"disabled": false,
+					"height": 50.0,
+					"id": "codex_category_relics",
+					"label": "遺物",
+					"width": 120.0,
+					"x": 212.0,
+					"y": 194.0
+				},
+				{
+					"disabled": false,
+					"height": 50.0,
+					"id": "codex_category_enemies",
+					"label": "魔物",
+					"width": 120.0,
+					"x": 344.0,
+					"y": 194.0
+				},
+				{
+					"disabled": false,
+					"height": 50.0,
+					"id": "codex_category_evolutions",
+					"label": "進化",
+					"width": 120.0,
+					"x": 476.0,
+					"y": 194.0
+				},
+				{
+					"disabled": false,
+					"height": 49.0,
+					"id": "codex_item_hound",
+					"label": "影の群れ",
+					"width": 250.0,
+					"x": 80.0,
+					"y": 262.0
+				},
+				{
+					"disabled": false,
+					"height": 49.0,
+					"id": "codex_item_charger",
+					"label": "月牙の獣",
+					"width": 250.0,
+					"x": 80.0,
+					"y": 316.0
+				},
+				{
+					"disabled": false,
+					"height": 49.0,
+					"id": "codex_item_archer",
+					"label": "夜の射手",
+					"width": 250.0,
+					"x": 80.0,
+					"y": 370.0
+				},
+				{
+					"disabled": false,
+					"height": 49.0,
+					"id": "codex_item_sentinel",
+					"label": "書庫の番人",
+					"width": 250.0,
+					"x": 80.0,
+					"y": 424.0
+				},
+				{
+					"disabled": false,
+					"height": 49.0,
+					"id": "codex_item_wisp",
+					"label": "迷い灯",
+					"width": 250.0,
+					"x": 80.0,
+					"y": 478.0
+				},
+				{
+					"disabled": false,
+					"height": 49.0,
+					"id": "codex_item_bat",
+					"label": "夜羽",
+					"width": 250.0,
+					"x": 80.0,
+					"y": 532.0
+				},
+				{
+					"disabled": false,
+					"height": 49.0,
+					"id": "codex_item_boss_thorn",
+					"label": "茨の庭守",
+					"width": 250.0,
+					"x": 346.0,
+					"y": 262.0
+				},
+				{
+					"disabled": false,
+					"height": 49.0,
+					"id": "codex_item_boss_mirror",
+					"label": "鏡の司書",
+					"width": 250.0,
+					"x": 346.0,
+					"y": 316.0
+				},
+				{
+					"disabled": false,
+					"height": 49.0,
+					"id": "codex_item_boss_bell",
+					"label": "夜鐘の主",
+					"width": 250.0,
+					"x": 346.0,
+					"y": 370.0
+				},
+				{
+					"disabled": false,
+					"height": 60.0,
+					"id": "back",
+					"label": "戻る  [Esc]",
+					"width": 516.0,
+					"x": 80.0,
+					"y": 616.0
+				}
+			],
+			"height": 720,
+			"large_text": false,
+			"name": "14-codex-enemies",
+			"page": "codex",
+			"state": "paused",
+			"width": 1280
+		},
+		{
+			"controls": [
+				{
+					"disabled": false,
+					"height": 50.0,
+					"id": "codex_category_weapons",
+					"label": "魔法",
+					"width": 120.0,
+					"x": 80.0,
+					"y": 194.0
+				},
+				{
+					"disabled": false,
+					"height": 50.0,
+					"id": "codex_category_relics",
+					"label": "遺物",
+					"width": 120.0,
+					"x": 212.0,
+					"y": 194.0
+				},
+				{
+					"disabled": false,
+					"height": 50.0,
+					"id": "codex_category_enemies",
+					"label": "魔物",
+					"width": 120.0,
+					"x": 344.0,
+					"y": 194.0
+				},
+				{
+					"disabled": false,
+					"height": 50.0,
+					"id": "codex_category_evolutions",
+					"label": "進化",
+					"width": 120.0,
+					"x": 476.0,
+					"y": 194.0
+				},
+				{
+					"disabled": false,
+					"height": 49.0,
+					"id": "codex_item_lightning",
+					"label": "天裂の雷",
+					"width": 516.0,
+					"x": 80.0,
+					"y": 262.0
+				},
+				{
+					"disabled": false,
+					"height": 49.0,
+					"id": "codex_item_moon",
+					"label": "双月の環",
+					"width": 516.0,
+					"x": 80.0,
+					"y": 316.0
+				},
+				{
+					"disabled": false,
+					"height": 49.0,
+					"id": "codex_item_thorn",
+					"label": "常闇の茨",
+					"width": 516.0,
+					"x": 80.0,
+					"y": 370.0
+				},
+				{
+					"disabled": false,
+					"height": 49.0,
+					"id": "codex_item_wisp",
+					"label": "道しるべの灯",
+					"width": 516.0,
+					"x": 80.0,
+					"y": 424.0
+				},
+				{
+					"disabled": false,
+					"height": 49.0,
+					"id": "codex_item_frost",
+					"label": "冬の庭",
+					"width": 516.0,
+					"x": 80.0,
+					"y": 478.0
+				},
+				{
+					"disabled": false,
+					"height": 49.0,
+					"id": "codex_item_bell",
+					"label": "暁の鐘",
+					"width": 516.0,
+					"x": 80.0,
+					"y": 532.0
+				},
+				{
+					"disabled": false,
+					"height": 60.0,
+					"id": "back",
+					"label": "戻る  [Esc]",
+					"width": 516.0,
+					"x": 80.0,
+					"y": 616.0
+				}
+			],
+			"height": 720,
+			"large_text": false,
+			"name": "14-codex-evolutions",
+			"page": "codex",
+			"state": "paused",
+			"width": 1280
+		},
+		{
+			"controls": [
+				{
+					"disabled": false,
+					"height": 60.0,
+					"id": "storage_retry",
+					"label": "保存を再確認",
+					"width": 508.0,
+					"x": 684.0,
+					"y": 616.0
+				},
+				{
+					"disabled": false,
+					"height": 60.0,
+					"id": "back",
+					"label": "戻る  [Esc]",
+					"width": 516.0,
+					"x": 80.0,
+					"y": 616.0
+				}
+			],
+			"height": 720,
+			"large_text": false,
+			"name": "15-storage-failed",
+			"page": "storage",
+			"state": "paused",
+			"width": 1280
+		},
+		{
+			"controls": [
+				{
+					"disabled": false,
+					"height": 60.0,
+					"id": "storage_reset",
+					"label": "元の記録を退避して初期化",
+					"width": 508.0,
+					"x": 684.0,
+					"y": 616.0
+				},
+				{
+					"disabled": false,
+					"height": 60.0,
+					"id": "back",
+					"label": "戻る  [Esc]",
+					"width": 516.0,
+					"x": 80.0,
+					"y": 616.0
+				}
+			],
+			"height": 720,
+			"large_text": false,
+			"name": "16-storage-invalid",
+			"page": "storage",
+			"state": "paused",
+			"width": 1280
+		},
+		{
+			"controls": [
+				{
+					"disabled": false,
+					"height": 64.0,
+					"id": "pause_resume",
+					"label": "続ける  [Enter / Esc]",
+					"width": 516.0,
+					"x": 80.0,
+					"y": 264.0
+				},
+				{
+					"disabled": false,
+					"height": 56.0,
+					"id": "pause_settings",
+					"label": "設定",
+					"width": 250.0,
+					"x": 80.0,
+					"y": 350.0
+				},
+				{
+					"disabled": false,
+					"height": 56.0,
+					"id": "pause_codex",
+					"label": "魔術図鑑  [C]",
+					"width": 250.0,
+					"x": 346.0,
+					"y": 350.0
+				},
+				{
+					"disabled": false,
+					"height": 56.0,
+					"id": "pause_retry",
+					"label": "最初から挑む  [R]",
+					"width": 516.0,
+					"x": 80.0,
+					"y": 430.0
+				},
+				{
+					"disabled": false,
+					"height": 56.0,
+					"id": "pause_title",
+					"label": "タイトルへ戻る",
+					"width": 516.0,
+					"x": 80.0,
+					"y": 510.0
+				}
+			],
+			"height": 540,
+			"large_text": false,
+			"name": "17-paused-960",
+			"page": "",
+			"state": "paused",
+			"width": 960
+		},
+		{
+			"controls": [
+				{
+					"disabled": false,
+					"height": 64.0,
+					"id": "pause_resume",
+					"label": "続ける  [Enter / Esc]",
+					"width": 516.0,
+					"x": 80.0,
+					"y": 264.0
+				},
+				{
+					"disabled": false,
+					"height": 56.0,
+					"id": "pause_settings",
+					"label": "設定",
+					"width": 250.0,
+					"x": 80.0,
+					"y": 350.0
+				},
+				{
+					"disabled": false,
+					"height": 56.0,
+					"id": "pause_codex",
+					"label": "魔術図鑑  [C]",
+					"width": 250.0,
+					"x": 346.0,
+					"y": 350.0
+				},
+				{
+					"disabled": false,
+					"height": 56.0,
+					"id": "pause_retry",
+					"label": "最初から挑む  [R]",
+					"width": 516.0,
+					"x": 80.0,
+					"y": 430.0
+				},
+				{
+					"disabled": false,
+					"height": 56.0,
+					"id": "pause_title",
+					"label": "タイトルへ戻る",
+					"width": 516.0,
+					"x": 80.0,
+					"y": 510.0
+				}
+			],
+			"height": 540,
+			"large_text": true,
+			"name": "18-paused-large-960",
+			"page": "",
+			"state": "paused",
+			"width": 960
+		},
+		{
+			"controls": [
+				{
+					"disabled": false,
+					"height": 480.0,
+					"id": "choice_0",
+					"label": "01  /  新しい魔法・3枠 / 鬼火 / 壁を越える追尾の火が、命中した場所で弾ける。 / 現在  未習得 / 取得後  威力 19.0 / 1.30秒ごと\n1個 / 爆発範囲 42.0 / 第3章の宝箱 / Rank 5 ＋ 灯火の油\n選択後、魔法を入れ替えます。",
+					"width": 368.0,
+					"x": 64.0,
+					"y": 158.0
+				},
+				{
+					"disabled": false,
+					"height": 480.0,
+					"id": "choice_1",
+					"label": "02  /  遺物・3枠 / 灯火の油 / 残像の魔法威力+30%。元の詠唱時に効果を記録する。 / 遺物 3 / 3枠 → 3 / 3枠 / 選択後、遺物を入れ替えます。",
+					"width": 368.0,
+					"x": 456.0,
+					"y": 158.0
+				},
+				{
+					"disabled": false,
+					"height": 480.0,
+					"id": "choice_2",
+					"label": "03  /  進化 / 双月の環 / 広い月輪を3重に放つ。 / 現在  威力 33.0 / 1.45秒ごと\n2重 / 範囲 190.0 / 取得後  威力 41.2 / 1.45秒ごと\n3重 / 範囲 220.0 / 第3章の宝箱 / Rank 5 ＋ 月長石",
+					"width": 368.0,
+					"x": 848.0,
+					"y": 158.0
+				},
+				{
+					"disabled": false,
+					"height": 56.0,
+					"id": "reroll",
+					"label": "引き直す 3回  [R]",
+					"width": 368.0,
+					"x": 64.0,
+					"y": 644.0
+				},
+				{
+					"disabled": false,
+					"height": 56.0,
+					"id": "skip",
+					"label": "見送る 3回  [X]",
+					"width": 368.0,
+					"x": 456.0,
+					"y": 644.0
+				}
+			],
+			"height": 720,
+			"large_text": true,
+			"name": "19-long-choices-large",
+			"page": "",
+			"state": "upgrade",
+			"width": 1280
+		},
+		{
+			"artificial_event_fixture": "20-artificial-chapter-start",
+			"artificial_events": [
+				{
+					"age": 0.24,
+					"chapter": 0,
+					"clear": false,
+					"duration": 1.2,
+					"echo": false,
+					"kind": "chapter",
+					"position": "(0.0, 0.0)",
+					"priority": 4,
+					"seed": 197,
+					"serial": 1
+				}
+			],
+			"boss_hud_present": false,
+			"controls": [
+				{
+					"disabled": false,
+					"height": 54.0,
+					"id": "hud_pause",
+					"label": "休止",
+					"width": 114.0,
+					"x": 1146.0,
+					"y": 18.0
+				}
+			],
+			"height": 720,
+			"large_text": false,
+			"name": "20-artificial-chapter-start",
+			"page": "",
+			"state": "playing",
+			"width": 1280
+		},
+		{
+			"artificial_event_fixture": "21-artificial-boss-arrival",
+			"artificial_events": [
+				{
+					"actor": "enemy",
+					"actor_kind": "boss_thorn",
+					"age": 0.24,
+					"boss": true,
+					"boss_kind": "boss_thorn",
+					"chapter": 0,
+					"duration": 1.2,
+					"echo": false,
+					"id": 6,
+					"kind": "boss_arrival",
+					"name": "茨の庭守",
+					"phase": 1,
+					"position": "(225.0, -10.0)",
+					"priority": 4,
+					"seed": 197,
+					"serial": 1
+				}
+			],
+			"boss_hud_present": true,
+			"controls": [
+				{
+					"disabled": false,
+					"height": 54.0,
+					"id": "hud_pause",
+					"label": "休止",
+					"width": 114.0,
+					"x": 1146.0,
+					"y": 18.0
+				}
+			],
+			"height": 720,
+			"large_text": false,
+			"name": "21-artificial-boss-arrival",
+			"page": "",
+			"state": "playing",
+			"width": 1280
+		},
+		{
+			"artificial_event_fixture": "22-artificial-boss-second-phase",
+			"artificial_events": [
+				{
+					"actor": "enemy",
+					"actor_kind": "boss_thorn",
+					"age": 0.24,
+					"boss": true,
+					"boss_kind": "boss_thorn",
+					"chapter": 0,
+					"duration": 1.2,
+					"echo": false,
+					"id": 6,
+					"kind": "boss_phase",
+					"name": "茨の庭守",
+					"phase": 2,
+					"position": "(225.0, -10.0)",
+					"priority": 4,
+					"seed": 197,
+					"serial": 1
+				}
+			],
+			"boss_hud_present": true,
+			"controls": [
+				{
+					"disabled": false,
+					"height": 54.0,
+					"id": "hud_pause",
+					"label": "休止",
+					"width": 114.0,
+					"x": 1146.0,
+					"y": 18.0
+				}
+			],
+			"height": 720,
+			"large_text": false,
+			"name": "22-artificial-boss-second-phase",
+			"page": "",
+			"state": "playing",
+			"width": 1280
+		},
+		{
+			"artificial_event_fixture": "23-artificial-evolution-with-boss-hud",
+			"artificial_events": [
+				{
+					"age": 0.24,
+					"duration": 1.2,
+					"echo": false,
+					"kind": "evolution",
+					"position": "(0.0, 0.0)",
+					"priority": 4,
+					"seed": 197,
+					"serial": 1,
+					"weapon": "moon"
+				}
+			],
+			"boss_hud_present": true,
+			"controls": [
+				{
+					"disabled": false,
+					"height": 54.0,
+					"id": "hud_pause",
+					"label": "休止",
+					"width": 114.0,
+					"x": 1146.0,
+					"y": 18.0
+				}
+			],
+			"height": 720,
+			"large_text": false,
+			"name": "23-artificial-evolution-with-boss-hud",
+			"page": "",
+			"state": "playing",
+			"width": 1280
+		}
+	],
+	"checks": 57,
+	"failed": false,
+	"kind": "artificial native UI composition fixtures",
+	"profile_path": "user://echo-witch-design-fixture-53603.json",
+	"real_gameplay": false
+}

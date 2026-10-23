@@ -1,0 +1,45 @@
+
+> echo-witch@1.0.0 check
+> node scripts/godot.mjs import && npm test && npm run build
+
+Godot 4.7.2: import passed
+
+> echo-witch@1.0.0 test
+> node scripts/godot.mjs test
+
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS: 2887 campaign checks (2s echo, immutable relics, freeze, choices, replacement, six weapons/evolutions, relics/drops, routing, bosses/chapters)
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+Profile tests: 29 checks, 0 failures
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+GUI tests: 7777 checks, 0 failures
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+AUDIO: 32 checks, 0 failures
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+ASSETS: 113 checks, 0 failures
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+STAR_GEOMETRY_PASS visible=3970 skipped_subpixel=136 original_screen_space_failures=2
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+RENDERER_CACHE_PASS {"after_resize":[{"atlas_builds":3,"atlas_size":"(908, 668)","chapter":0,"floor_builds":1},{"atlas_builds":3,"atlas_size":"(898, 1622)","chapter":1,"floor_builds":1},{"atlas_builds":3,"atlas_size":"(764, 1160)","chapter":2,"floor_builds":3}],"after_retry":[{"atlas_builds":3,"atlas_size":"(908, 668)","chapter":0,"floor_builds":5},{"atlas_builds":3,"atlas_size":"(898, 1622)","chapter":1,"floor_builds":4},{"atlas_builds":3,"atlas_size":"(764, 1160)","chapter":2,"floor_builds":6}],"cache_limit":3,"chapter_reentries":9,"checks":397,"draw_execution_verified":false,"moving_frames":120,"native_window_resizes":2,"renderer":"headless","resource_ids_reused":true,"warm":[{"atlas_builds":1,"atlas_size":"(908, 668)","chapter":0,"floor_builds":1},{"atlas_builds":1,"atlas_size":"(898, 1622)","chapter":1,"floor_builds":1},{"atlas_builds":1,"atlas_size":"(764, 1160)","chapter":2,"floor_builds":1}]}
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PRESENTATION_PASS {"checks":377,"death_limit":24,"event_limit":80,"gameplay_read_only":true,"repeated_clock_updates":1050,"retry_cycles":100}
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PIXEL_ACTORS {"atlas_count":10,"checks":7568,"draw_execution_verified":false,"draw_notifications":180,"failures":0,"frame_count_per_actor":36,"native_draw_frames":0,"pixel_motion_evidence":{"archer_draws_string":182,"bat_wings":1747,"bell_clapper":228,"charger_hooves":270,"hound_paws":227,"mirror_shards":1104,"sentinel_shield":461,"thorn_fists":938,"wisp_flame":72,"witch_book_arm":421,"witch_feet":150},"renderer":"headless","resources_reused":true}
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+FEEDBACK: 509 checks, 0 failures
+Snapshot bridge tests: passed fixed-source parsing, framing, recursive freeze, replacement, private publisher, and malformed input
+
+> echo-witch@1.0.0 build
+> node scripts/godot.mjs build
+
+Godot 4.7.2: build passed

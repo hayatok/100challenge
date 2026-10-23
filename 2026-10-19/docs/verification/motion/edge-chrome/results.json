@@ -1,0 +1,873 @@
+{
+  "browser": "chromium",
+  "version": "155.0.8059.85",
+  "started": "2026-10-22T12:10:57.118Z",
+  "checks": {
+    "echo": true,
+    "focus_loss_freezes_until_explicit_resume": true,
+    "defeat_actual": true,
+    "result_loadout": true,
+    "retry_resets_run": true,
+    "resize_paused_freezes": true,
+    "console_clean": true,
+    "no_external_requests": true,
+    "load_error_and_retry": true
+  },
+  "errors": [],
+  "external_requests": [],
+  "observations": [],
+  "note": "Isolated automated browser; real keyboard input, no gameplay state changes. WebKit is a test engine, not physical Safari.",
+  "defeat": {
+    "arena": {
+      "bounded": true,
+      "bounds": {
+        "height": 1600,
+        "width": 2200,
+        "x": -1100,
+        "y": -800
+      },
+      "obstacle_count": 4,
+      "obstacles": [
+        {
+          "height": 180,
+          "width": 260,
+          "x": -480,
+          "y": -380
+        },
+        {
+          "height": 180,
+          "width": 260,
+          "x": 220,
+          "y": -380
+        },
+        {
+          "height": 180,
+          "width": 260,
+          "x": -480,
+          "y": 200
+        },
+        {
+          "height": 180,
+          "width": 260,
+          "x": 220,
+          "y": 200
+        }
+      ]
+    },
+    "audio": {
+      "music_active": false,
+      "music_paused": false,
+      "music_starts": 1
+    },
+    "boss": {},
+    "chapter": 0,
+    "chapter_clears": [],
+    "chapter_elapsed": 22.2333333333334,
+    "chapter_name": "眠りの庭園",
+    "chapter_stage": "assault",
+    "chests": [],
+    "choice_phase": "offer",
+    "choices": [],
+    "damage_received": {
+      "contact": 176,
+      "hazard": 0,
+      "projectile": 0
+    },
+    "damage_summary": {
+      "by_weapon": {
+        "bell": 0,
+        "blast": 0,
+        "frost": 0,
+        "lightning": 0,
+        "moon": 757.4004,
+        "thorn": 0,
+        "wisp": 0
+      },
+      "echo": 385.3348,
+      "player": 370.0656,
+      "poison": 0,
+      "resonance": 2
+    },
+    "damage_taken": 176,
+    "discoveries": {
+      "enemies": [
+        "hound"
+      ],
+      "evolutions": [],
+      "relics": [],
+      "weapons": [
+        "moon"
+      ]
+    },
+    "echo": {
+      "active": true,
+      "x": 503.090240478516,
+      "y": 158.579772949219
+    },
+    "echo_shots": 10,
+    "effects": 8,
+    "elapsed": 22.2333333333334,
+    "enemies": [
+      {
+        "boss": false,
+        "elite": false,
+        "hp": 15.7,
+        "id": 25,
+        "kind": "hound",
+        "mark_expires": 24.55,
+        "mark_source": "player",
+        "max_hp": 28.7476,
+        "phase": "seek",
+        "phase_index": 1,
+        "radius": 17,
+        "timer": -1.06165076729781e-15,
+        "x": 533.5,
+        "y": 255.9
+      },
+      {
+        "boss": false,
+        "elite": false,
+        "hp": 2.8,
+        "id": 26,
+        "kind": "hound",
+        "mark_expires": 24.4833333333334,
+        "mark_source": "echo",
+        "max_hp": 28.8232,
+        "phase": "seek",
+        "phase_index": 1,
+        "radius": 17,
+        "timer": -1.06165076729781e-15,
+        "x": 445.6,
+        "y": 125.9
+      },
+      {
+        "boss": false,
+        "elite": false,
+        "hp": 15.8,
+        "id": 27,
+        "kind": "hound",
+        "mark_expires": 24.5833333333334,
+        "mark_source": "echo",
+        "max_hp": 28.8232,
+        "phase": "seek",
+        "phase_index": 1,
+        "radius": 17,
+        "timer": -1.06165076729781e-15,
+        "x": 415.1,
+        "y": 126.1
+      },
+      {
+        "boss": false,
+        "elite": false,
+        "hp": 15.9,
+        "id": 28,
+        "kind": "hound",
+        "mark_expires": 24.55,
+        "mark_source": "player",
+        "max_hp": 28.8988,
+        "phase": "seek",
+        "phase_index": 1,
+        "radius": 17,
+        "timer": -1.06165076729781e-15,
+        "x": 534.1,
+        "y": 254.1
+      },
+      {
+        "boss": false,
+        "elite": false,
+        "hp": 15.9,
+        "id": 29,
+        "kind": "hound",
+        "mark_expires": 24.5666666666667,
+        "mark_source": "player",
+        "max_hp": 28.8988,
+        "phase": "seek",
+        "phase_index": 1,
+        "radius": 17,
+        "timer": -1.06165076729781e-15,
+        "x": 540.6,
+        "y": 260.7
+      },
+      {
+        "boss": false,
+        "elite": false,
+        "hp": 29,
+        "id": 30,
+        "kind": "hound",
+        "mark_expires": 0,
+        "mark_source": "",
+        "max_hp": 28.9744,
+        "phase": "seek",
+        "phase_index": 1,
+        "radius": 17,
+        "timer": -1.06165076729781e-15,
+        "x": 320.7,
+        "y": 124.2
+      },
+      {
+        "boss": false,
+        "elite": false,
+        "hp": 29,
+        "id": 31,
+        "kind": "hound",
+        "mark_expires": 0,
+        "mark_source": "",
+        "max_hp": 28.9744,
+        "phase": "seek",
+        "phase_index": 1,
+        "radius": 17,
+        "timer": -1.06165076729781e-15,
+        "x": 317.5,
+        "y": 126
+      },
+      {
+        "boss": false,
+        "elite": false,
+        "hp": 29.1,
+        "id": 32,
+        "kind": "hound",
+        "mark_expires": 0,
+        "mark_source": "",
+        "max_hp": 29.05,
+        "phase": "seek",
+        "phase_index": 1,
+        "radius": 17,
+        "timer": -1.06165076729781e-15,
+        "x": 655.9,
+        "y": -82.1
+      },
+      {
+        "boss": false,
+        "elite": false,
+        "hp": 29.1,
+        "id": 33,
+        "kind": "hound",
+        "mark_expires": 0,
+        "mark_source": "",
+        "max_hp": 29.05,
+        "phase": "seek",
+        "phase_index": 1,
+        "radius": 17,
+        "timer": -1.06165076729781e-15,
+        "x": 770.4,
+        "y": -129.5
+      },
+      {
+        "boss": false,
+        "elite": false,
+        "hp": 29.1,
+        "id": 34,
+        "kind": "hound",
+        "mark_expires": 0,
+        "mark_source": "",
+        "max_hp": 29.1256,
+        "phase": "seek",
+        "phase_index": 1,
+        "radius": 17,
+        "timer": -1.06165076729781e-15,
+        "x": 760.5,
+        "y": -157.6
+      },
+      {
+        "boss": false,
+        "elite": false,
+        "hp": 29.1,
+        "id": 35,
+        "kind": "hound",
+        "mark_expires": 0,
+        "mark_source": "",
+        "max_hp": 29.1256,
+        "phase": "seek",
+        "phase_index": 1,
+        "radius": 17,
+        "timer": -1.06165076729781e-15,
+        "x": 807.3,
+        "y": -106.3
+      },
+      {
+        "boss": false,
+        "elite": false,
+        "hp": 29.2,
+        "id": 36,
+        "kind": "hound",
+        "mark_expires": 0,
+        "mark_source": "",
+        "max_hp": 29.2012,
+        "phase": "arrival",
+        "phase_index": 1,
+        "radius": 17,
+        "timer": 0.116666666666666,
+        "x": 937,
+        "y": 628.1
+      },
+      {
+        "boss": false,
+        "elite": false,
+        "hp": 29.2,
+        "id": 37,
+        "kind": "hound",
+        "mark_expires": 0,
+        "mark_source": "",
+        "max_hp": 29.2012,
+        "phase": "arrival",
+        "phase_index": 1,
+        "radius": 17,
+        "timer": 0.116666666666666,
+        "x": 905.1,
+        "y": 744.8
+      }
+    ],
+    "enemy_count": 13,
+    "equipment": {
+      "rank_cap": 3,
+      "relic_slots": 3,
+      "relics": [],
+      "weapon_slots": 3,
+      "weapons": [
+        {
+          "body": "自分の周りに輪を広げ、一度ずつ敵を払う。",
+          "can_evolve": false,
+          "evolution": "双月の環",
+          "evolution_body": "広い月輪を3重に放つ。",
+          "evolution_id": "moon",
+          "evolution_name": "双月の環",
+          "evolved": false,
+          "icon": "moon",
+          "id": "moon",
+          "level": 1,
+          "max_level": 5,
+          "rank_cap": 3,
+          "requirement": "moonstone",
+          "requirement_title": "月長石",
+          "stats": "威力 13.0 / 2.15秒ごと\n1重 / 範囲 118.0",
+          "title": "月輪"
+        }
+      ]
+    },
+    "experience": 11,
+    "experience_needed": 13,
+    "gui": {
+      "codex_category": "weapons",
+      "page": "",
+      "starter": "moon"
+    },
+    "hazards": [],
+    "health": 0,
+    "history_samples": 131,
+    "kills": 24,
+    "last_damage_cause": "hound",
+    "last_echo_attack": {
+      "captured": true,
+      "cooldown": 2.15,
+      "cooldown_scale": 1,
+      "count": 1,
+      "damage": 13,
+      "echo_multiplier": 1,
+      "empowered": false,
+      "evolved": false,
+      "kind": "moon",
+      "level": 1,
+      "max_level": 5,
+      "pierce": 1,
+      "poison": 0,
+      "poison_duration": 0,
+      "power_scale": 1,
+      "radius": 118,
+      "radius_scale": 1,
+      "range": 400,
+      "range_scale": 1,
+      "resonance_bonus": 12,
+      "resonance_distance": 100,
+      "resonance_stagger": 0,
+      "slow": 1,
+      "slow_duration": 0,
+      "stagger": 0,
+      "width": 11
+    },
+    "last_player_attack": {
+      "captured": true,
+      "cooldown": 2.15,
+      "cooldown_scale": 1,
+      "count": 1,
+      "damage": 13,
+      "echo_multiplier": 1,
+      "empowered": false,
+      "evolved": false,
+      "kind": "moon",
+      "level": 1,
+      "max_level": 5,
+      "pierce": 1,
+      "poison": 0,
+      "poison_duration": 0,
+      "power_scale": 1,
+      "radius": 118,
+      "radius_scale": 1,
+      "range": 400,
+      "range_scale": 1,
+      "resonance_bonus": 12,
+      "resonance_distance": 100,
+      "resonance_stagger": 0,
+      "slow": 1,
+      "slow_duration": 0,
+      "stagger": 0,
+      "width": 11
+    },
+    "level": 3,
+    "max_health": 100,
+    "maximum_health": 100,
+    "motion": {
+      "actors": {
+        "atlas_count": 10,
+        "frame_count": 36,
+        "region_count": 360,
+        "texture_ids": [
+          -9223372004105649000,
+          -9223372004088872000,
+          -9223372004072095000,
+          -9223372004055318000,
+          -9223372004038540000,
+          -9223372004021763000,
+          -9223372004004986000,
+          -9223372003988209000,
+          -9223372003971431000,
+          -9223372003954654000
+        ]
+      },
+      "camera": {
+        "x": 0,
+        "y": 0
+      },
+      "clock": 22.2333333333334,
+      "death_count": 1,
+      "death_limit": 24,
+      "echo": {
+        "animation": "cast",
+        "cast": 0.027777777777833,
+        "facing": 1,
+        "frame": 13,
+        "gait": 0.846793467348269,
+        "hit": 0,
+        "kind": "witch",
+        "moving": true
+      },
+      "enemies": [
+        {
+          "animation": "hit",
+          "cast": 0,
+          "facing": 1,
+          "frame": 15,
+          "gait": 0.250657775402067,
+          "hit": 0.242424242424286,
+          "id": 25,
+          "kind": "hound",
+          "moving": true
+        },
+        {
+          "animation": "walk",
+          "cast": 0,
+          "facing": 1,
+          "frame": 9,
+          "gait": 0.958621051311494,
+          "hit": 0,
+          "id": 26,
+          "kind": "hound",
+          "moving": true
+        },
+        {
+          "animation": "hit",
+          "cast": 0,
+          "facing": 1,
+          "frame": 15,
+          "gait": 0.816058003902437,
+          "hit": 0.393939393939428,
+          "id": 27,
+          "kind": "hound",
+          "moving": true
+        },
+        {
+          "animation": "hit",
+          "cast": 0,
+          "facing": 1,
+          "frame": 15,
+          "gait": 0.484766263961792,
+          "hit": 0.242424242424286,
+          "id": 28,
+          "kind": "hound",
+          "moving": true
+        },
+        {
+          "animation": "hit",
+          "cast": 0,
+          "facing": -1,
+          "frame": 15,
+          "gait": 0.440788877010346,
+          "hit": 0.318181818181857,
+          "id": 29,
+          "kind": "hound",
+          "moving": true
+        },
+        {
+          "animation": "walk",
+          "cast": 0,
+          "facing": 1,
+          "frame": 9,
+          "gait": 0.922668190002442,
+          "hit": 0,
+          "id": 30,
+          "kind": "hound",
+          "moving": true
+        },
+        {
+          "animation": "walk",
+          "cast": 0,
+          "facing": 1,
+          "frame": 9,
+          "gait": 0.922667725086213,
+          "hit": 0,
+          "id": 31,
+          "kind": "hound",
+          "moving": true
+        },
+        {
+          "animation": "walk",
+          "cast": 0,
+          "facing": -1,
+          "frame": 7,
+          "gait": 0.546667714118958,
+          "hit": 0,
+          "id": 32,
+          "kind": "hound",
+          "moving": true
+        },
+        {
+          "animation": "walk",
+          "cast": 0,
+          "facing": -1,
+          "frame": 7,
+          "gait": 0.546660785675048,
+          "hit": 0,
+          "id": 33,
+          "kind": "hound",
+          "moving": true
+        },
+        {
+          "animation": "walk",
+          "cast": 0,
+          "facing": -1,
+          "frame": 5,
+          "gait": 0.1706693816185,
+          "hit": 0,
+          "id": 34,
+          "kind": "hound",
+          "moving": true
+        },
+        {
+          "animation": "walk",
+          "cast": 0,
+          "facing": -1,
+          "frame": 5,
+          "gait": 0.170665571689606,
+          "hit": 0,
+          "id": 35,
+          "kind": "hound",
+          "moving": true
+        }
+      ],
+      "event_count": 12,
+      "event_limit": 80,
+      "fx": {
+        "atlas_frames": 10,
+        "atlas_texture_id": 442381631499,
+        "particle_limit": 96,
+        "particles_drawn": 35
+      },
+      "generation": 2,
+      "player": {
+        "animation": "cast",
+        "cast": 0.49074074074077,
+        "facing": -1,
+        "frame": 12,
+        "gait": 0.049452776258639,
+        "hit": 0,
+        "kind": "witch",
+        "moving": false
+      },
+      "recent_events": [
+        {
+          "age": 0.166666666666657,
+          "echo": true,
+          "kind": "footstep",
+          "serial": 493
+        },
+        {
+          "age": 0.166666666666657,
+          "echo": false,
+          "kind": "hit",
+          "serial": 494
+        },
+        {
+          "age": 0.166666666666657,
+          "echo": false,
+          "kind": "hit",
+          "serial": 495
+        },
+        {
+          "age": 0.166666666666657,
+          "echo": false,
+          "kind": "kill",
+          "serial": 496
+        },
+        {
+          "age": 0.149999999999991,
+          "echo": false,
+          "kind": "hit",
+          "serial": 497
+        },
+        {
+          "age": 0.133333333333326,
+          "echo": true,
+          "kind": "hit",
+          "serial": 498
+        },
+        {
+          "age": 0.11666666666666,
+          "echo": false,
+          "kind": "footstep",
+          "serial": 499
+        },
+        {
+          "age": 0.0666666666666629,
+          "echo": true,
+          "kind": "footstep",
+          "serial": 500
+        }
+      ],
+      "serial": 500
+    },
+    "pending_echo_attacks": 1,
+    "perf": {
+      "effects": 8,
+      "fps": 60,
+      "nodes": 59,
+      "objects": 1606,
+      "orphans": 0,
+      "projectiles": 2,
+      "resources": 39,
+      "static_bytes": 0,
+      "static_peak_bytes": 0
+    },
+    "phase": {
+      "assault": false,
+      "boss": false,
+      "index": 0,
+      "name": "残像の目覚め",
+      "remaining": 7.76666666666665,
+      "subtitle": "攻勢が緩む。雫と宝箱を拾おう"
+    },
+    "pickup_count": 0,
+    "pickup_radius": 172,
+    "pickups": [],
+    "player": {
+      "x": 533.495971679688,
+      "y": 254.864120483398
+    },
+    "player_shots": 11,
+    "profile": {
+      "can_save": true,
+      "data": {
+        "best": {
+          "chapter": 1,
+          "kills": 24,
+          "seconds": 22.2333333333334,
+          "victories": 0
+        },
+        "clears": [],
+        "discoveries": {
+          "enemies": [
+            "hound"
+          ],
+          "evolutions": [],
+          "relics": [],
+          "weapons": [
+            "lightning",
+            "moon"
+          ]
+        },
+        "runs": 1,
+        "settings": {
+          "large_text": false,
+          "music_volume": 0.65,
+          "reduced_motion": false,
+          "sfx_volume": 0.8,
+          "sound": true
+        },
+        "starters": [
+          "lightning",
+          "moon"
+        ],
+        "version": 1
+      },
+      "message": "この端末に保存しました。",
+      "status": "saved",
+      "unlocks": []
+    },
+    "projectiles": 2,
+    "rank_cap": 3,
+    "rerolls_left": 3,
+    "resonance_bonus": 12,
+    "resonance_hits": 1,
+    "resonance_kills": 1,
+    "settings": {
+      "large_text": false,
+      "music_volume": 0.65,
+      "reduced_motion": false,
+      "sfx_volume": 0.8,
+      "sound": true
+    },
+    "skips_left": 3,
+    "specialization": "未選択",
+    "speed": 215,
+    "state": "defeat",
+    "upgrade_choices": [],
+    "ward_charges": 0,
+    "ward_cooldown": 0,
+    "weapons": {
+      "bell": {
+        "cooldown": 2.4,
+        "cooldown_scale": 1,
+        "count": 1,
+        "damage": 15,
+        "evolved": false,
+        "level": 0,
+        "max_level": 5,
+        "pierce": 1,
+        "poison": 0,
+        "poison_duration": 0,
+        "power_scale": 1,
+        "radius": 220,
+        "radius_scale": 1,
+        "range": 400,
+        "range_scale": 1,
+        "slow": 1,
+        "slow_duration": 0,
+        "stagger": 0.35,
+        "width": 46
+      },
+      "frost": {
+        "cooldown": 2.7,
+        "cooldown_scale": 1,
+        "count": 1,
+        "damage": 6,
+        "evolved": false,
+        "level": 0,
+        "max_level": 5,
+        "pierce": 1,
+        "poison": 0,
+        "poison_duration": 0,
+        "power_scale": 1,
+        "radius": 80,
+        "radius_scale": 1,
+        "range": 450,
+        "range_scale": 1,
+        "slow": 0.5,
+        "slow_duration": 1,
+        "stagger": 0,
+        "width": 11
+      },
+      "lightning": {
+        "cooldown": 0.78,
+        "cooldown_scale": 1,
+        "count": 1,
+        "damage": 12,
+        "evolved": false,
+        "level": 0,
+        "max_level": 5,
+        "pierce": 1,
+        "poison": 0,
+        "poison_duration": 0,
+        "power_scale": 1,
+        "radius": 0,
+        "radius_scale": 1,
+        "range": 400,
+        "range_scale": 1,
+        "slow": 1,
+        "slow_duration": 0,
+        "stagger": 0,
+        "width": 11
+      },
+      "moon": {
+        "cooldown": 2.15,
+        "cooldown_scale": 1,
+        "count": 1,
+        "damage": 13,
+        "evolved": false,
+        "level": 1,
+        "max_level": 5,
+        "pierce": 1,
+        "poison": 0,
+        "poison_duration": 0,
+        "power_scale": 1,
+        "radius": 118,
+        "radius_scale": 1,
+        "range": 400,
+        "range_scale": 1,
+        "slow": 1,
+        "slow_duration": 0,
+        "stagger": 0,
+        "width": 11
+      },
+      "thorn": {
+        "cooldown": 1.4,
+        "cooldown_scale": 1,
+        "count": 2,
+        "damage": 13,
+        "evolved": false,
+        "level": 0,
+        "max_level": 5,
+        "pierce": 2,
+        "poison": 3,
+        "poison_duration": 2.5,
+        "power_scale": 1,
+        "radius": 8,
+        "radius_scale": 1,
+        "range": 620,
+        "range_scale": 1,
+        "slow": 1,
+        "slow_duration": 0,
+        "stagger": 0,
+        "width": 16
+      },
+      "wisp": {
+        "cooldown": 1.3,
+        "cooldown_scale": 1,
+        "count": 1,
+        "damage": 19,
+        "evolved": false,
+        "level": 0,
+        "max_level": 5,
+        "pierce": 1,
+        "poison": 0,
+        "poison_duration": 0,
+        "power_scale": 1,
+        "radius": 42,
+        "radius_scale": 1,
+        "range": 570,
+        "range_scale": 1,
+        "slow": 1,
+        "slow_duration": 0,
+        "stagger": 0,
+        "width": 11
+      }
+    }
+  },
+  "expected_load_errors": [
+    "Failed to load resource: net::ERR_FAILED",
+    "Failed to load resource: net::ERR_FAILED",
+    "Failed to load resource: net::ERR_FAILED",
+    "Failed to load resource: net::ERR_FAILED",
+    "TypeError: Failed to fetch"
+  ],
+  "success": true,
+  "finished": "2026-10-22T12:11:29.135Z",
+  "build_sha256": "af8968a3a09dfdd3c0918f155035b27e8e8d63eecc9dafa5842cb47d72ed4ccb"
+}
