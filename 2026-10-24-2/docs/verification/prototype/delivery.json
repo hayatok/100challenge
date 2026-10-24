@@ -1,0 +1,55 @@
+{
+  "scope": "First approximately 90-second playable prototype; not the complete game.",
+  "implementation_commit": "efe2cb4a73ed95bb98880485758e2594e8b02e11",
+  "pull_request": "https://github.com/hayatok/100challenge/pull/202",
+  "pull_request_status": "draft",
+  "review": {
+    "agent": "ai_slop_reviewer",
+    "model": "gpt-6-astra",
+    "status": "completed",
+    "method": "Read-only source and saved-image review; did not rerun tests or input.",
+    "resolved_findings": [
+      {
+        "priority": "P2",
+        "issue": "Rider could become active early after pausing during fall recovery.",
+        "fix": "Keep rider inactive at countdown completion while recover_left is positive.",
+        "regression": "Seven new recovery-pause checks; main_flow_test.gd has 46 passing checks."
+      }
+    ],
+    "additional_findings": []
+  },
+  "ci": {
+    "workflow": "Verify site",
+    "run_id": 40116353103,
+    "url": "https://github.com/hayatok/100challenge/actions/runs/40116353103",
+    "head_sha": "efe2cb4a73ed95bb98880485758e2594e8b02e11",
+    "conclusion": "success",
+    "environment": "ubuntu-latest"
+  },
+  "local_verification": {
+    "game_test_scripts": 5,
+    "root_tests": 38,
+    "web_finish_seconds": 92.16,
+    "persisted_web_best_seconds": 88.51,
+    "native_finish_seconds": 91.68,
+    "japanese_review": "japanese-review.json"
+  },
+  "tripo": {
+    "assets": 5,
+    "studio_subscription_credits": 300,
+    "paid_api_generations": 0
+  },
+  "remaining_limits": [
+    "Physical gamepad input",
+    "Auditory mix",
+    "Long sessions and repeated retries",
+    "Other browsers",
+    "Difficulty and fun through broader playtesting",
+    "Four AudioStreamWAV instances reported only on short headless forced shutdown"
+  ],
+  "release": {
+    "deployed": false,
+    "merged": false,
+    "tagged": false
+  }
+}

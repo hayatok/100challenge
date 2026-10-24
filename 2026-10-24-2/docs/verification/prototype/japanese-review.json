@@ -27,7 +27,7 @@
     {
       "target": "prototype",
       "status": "executed",
-      "run_id": "20261024T163514Z-81e97515",
+      "run_id": "20261024T173141Z-9a3dc85e",
       "problems": []
     },
     {
@@ -73,6 +73,7 @@
     "GDScript colon and dash findings are syntax, not prose.",
     "UI copy was extracted and compared against actual source hashes.",
     "Removed one unnecessary comma in the verification prose.",
-    "Candidate counts are not readability or pass scores."
+    "Candidate counts are not readability or pass scores.",
+    "Delivery status and new record link were checked against the completed Astra review and successful Linux workflow; the layout wording avoids blaming the game for the capture-tool scale artifact."
   ]
 }
