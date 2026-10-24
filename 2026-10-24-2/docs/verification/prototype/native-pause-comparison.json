@@ -1,0 +1,45 @@
+{
+  "before": {
+    "assets_loaded": 5,
+    "draw_calls": 141.0,
+    "energy": 100.0,
+    "falls": 1,
+    "fps": 120.0,
+    "lateral": -0.00519448006525636,
+    "paused": true,
+    "position": [
+      -37.2928504943848,
+      14.3636503219604,
+      -672.698913574219
+    ],
+    "primitives": 438743.0,
+    "progress": 672.698913574219,
+    "score": 500,
+    "speed": 19.0451314598322,
+    "state": "pause",
+    "time": 49.9499110000018
+  },
+  "after": {
+    "assets_loaded": 5,
+    "draw_calls": 141.0,
+    "energy": 100.0,
+    "falls": 1,
+    "fps": 120.0,
+    "lateral": -0.00519448006525636,
+    "paused": true,
+    "position": [
+      -37.2928504943848,
+      14.3636503219604,
+      -672.698913574219
+    ],
+    "primitives": 438743.0,
+    "progress": 672.698913574219,
+    "score": 500,
+    "speed": 19.0451314598322,
+    "state": "pause",
+    "time": 49.9499110000018
+  },
+  "same_time": true,
+  "same_position": true,
+  "paused_before_and_after": true
+}

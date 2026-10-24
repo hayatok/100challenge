@@ -1,0 +1,121 @@
+{
+  "project": "CLOUDSEA SURFER",
+  "created_date": "2026-10-24",
+  "timezone": "Asia/Tokyo",
+  "generator": "built-in image_gen.imagegen",
+  "status": "preproduction concepts; game not implemented",
+  "selected_asset_count": 6,
+  "assets": [
+    {
+      "id": "01-mio-character",
+      "image": "concepts/01-mio-character.png",
+      "prompt": "prompts/01-mio-character.txt",
+      "references": [],
+      "purpose": "character concept sheet",
+      "selected": true,
+      "source_file": "/Users/hayatok/.codex/generated_images/01a16e1c-f8d2-7771-ae38-4588c216b8b6/exec-d446fd12-6279-4f96-93b6-44b4ef5ce4c8.png",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 1985669,
+      "sha256": "f5916387c9118ed86121e6e2863e2d50606cdfce6d7889cf09e503284da120a2",
+      "png_crc_valid": true
+    },
+    {
+      "id": "02-cloudsea-keyart",
+      "image": "concepts/02-cloudsea-keyart.png",
+      "prompt": "prompts/02-cloudsea-keyart.txt",
+      "references": [
+        "concepts/01-mio-character.png"
+      ],
+      "purpose": "cinematic world and movement key art",
+      "selected": true,
+      "source_file": "/Users/hayatok/.codex/generated_images/01a16e1c-f8d2-7771-ae38-4588c216b8b6/exec-5f88945e-1b0f-450c-aa63-29dafc1273a1.png",
+      "width": 1672,
+      "height": 941,
+      "bytes": 2786365,
+      "sha256": "c914aad3e3c457674b04f031543c244ffc796b8004060e1e029d51719edf8c67",
+      "png_crc_valid": true
+    },
+    {
+      "id": "03-gameplay-hud",
+      "image": "concepts/03-gameplay-hud.png",
+      "prompt": "prompts/03-gameplay-hud.txt",
+      "references": [
+        "concepts/01-mio-character.png",
+        "concepts/02-cloudsea-keyart.png"
+      ],
+      "purpose": "gameplay and HUD preproduction mockup",
+      "selected": true,
+      "source_file": "/Users/hayatok/.codex/generated_images/01a16e1c-f8d2-7771-ae38-4588c216b8b6/exec-5ccdb689-4d81-477d-b2c8-913dc192ec2b.png",
+      "width": 1672,
+      "height": 941,
+      "bytes": 2679972,
+      "sha256": "acffd14b2d976ac3586ff08d9c497239532927f275862307119ac7ed08856fb3",
+      "png_crc_valid": true
+    },
+    {
+      "id": "04-guardian-machines",
+      "image": "concepts/04-guardian-machines-v2.png",
+      "prompt": "prompts/04-guardian-machines-v2.txt",
+      "references": [
+        "drafts/04-guardian-machines-v1.png"
+      ],
+      "purpose": "three enemy shapes; wind diagram is illustrative only",
+      "selected": true,
+      "source_file": "/Users/hayatok/.codex/generated_images/01a16e1c-f8d2-7771-ae38-4588c216b8b6/exec-1365d64f-0fef-4a7c-aad1-6f7911df3ef7.png",
+      "width": 1671,
+      "height": 941,
+      "bytes": 2471389,
+      "sha256": "edc2ce1135967c92eb2a573f6dee92c0d4ccf03fa8bd258515f6f4a3a409b4de",
+      "png_crc_valid": true
+    },
+    {
+      "id": "05-screen-family",
+      "image": "concepts/05-screen-family.png",
+      "prompt": "prompts/05-screen-family.txt",
+      "references": [
+        "concepts/01-mio-character.png",
+        "concepts/03-gameplay-hud.png"
+      ],
+      "purpose": "title, gameplay, results and pause mockups",
+      "selected": true,
+      "source_file": "/Users/hayatok/.codex/generated_images/01a16e1c-f8d2-7771-ae38-4588c216b8b6/exec-69948c08-cd4c-4179-8d2b-5a1b5fbcb636.png",
+      "width": 1672,
+      "height": 941,
+      "bytes": 2851762,
+      "sha256": "1805fec18eeb39935c0f94fdffd634b8ee751cf134c775866c609022c4a5de05",
+      "png_crc_valid": true
+    },
+    {
+      "id": "04-guardian-machines-draft",
+      "image": "drafts/04-guardian-machines-v1.png",
+      "prompt": "prompts/04-guardian-machines.txt",
+      "references": [
+        "concepts/02-cloudsea-keyart.png"
+      ],
+      "purpose": "retained superseded enemy draft",
+      "selected": false,
+      "source_file": "/Users/hayatok/.codex/generated_images/01a16e1c-f8d2-7771-ae38-4588c216b8b6/exec-442deab1-eb15-45ab-8bbe-6cc8baa4f305.png",
+      "width": 1671,
+      "height": 941,
+      "bytes": 2559985,
+      "sha256": "31767d6e4cd76fa193ec082e3e8488d38a7595cc6f9aaa750407827d10a39fe3",
+      "png_crc_valid": true
+    },
+    {
+      "id": "06-mio-age19-costume",
+      "image": "concepts/06-mio-age19-costume.png",
+      "prompt": "prompts/06-mio-age19-costume.txt",
+      "references": [],
+      "purpose": "current age-19 adult character and sporty summer costume candidate; previous character images remain historical references",
+      "selected": true,
+      "source_file": "/Users/hayatok/.codex/generated_images/01a16e1c-f8d2-7771-ae38-4588c216b8b6/exec-bcd1e11d-adb4-42a7-94bc-508bf27639af.png",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 1997304,
+      "sha256": "e9c266c9d1de69f9368ab24eff83b452fa00c321b8c4d2b8eccd566dcf54f74b",
+      "png_crc_valid": true
+    }
+  ],
+  "current_character_asset": "06-mio-age19-costume"
+}

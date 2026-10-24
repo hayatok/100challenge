@@ -1,0 +1,16 @@
+[
+  {
+    "allGlyphsPresent" : true,
+    "font" : "Noto Sans CJK JP Medium",
+    "missingGlyphCount" : 0,
+    "sample" : "雲海サーファー 凪原 澪 白環の通学路 旋回 ブレーキ ジャンプ 風力 記録なし 再挑戦 続ける ＋ ／",
+    "source" : "/Users/hayatok/Documents/dev/100challenge/2026-10-02/game/assets/fonts/NotoSansCJKjp-Medium.otf"
+  },
+  {
+    "allGlyphsPresent" : true,
+    "font" : "DejaVu Sans Mono",
+    "missingGlyphCount" : 0,
+    "sample" : "0123456789 99:59.99 999,999 FLOW x2.00 34 m/s +150",
+    "source" : "/Users/hayatok/Documents/dev/100challenge/2026-10-02/game/assets/fonts/DejaVuSansMono.ttf"
+  }
+]

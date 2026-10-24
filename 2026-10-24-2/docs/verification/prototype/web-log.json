@@ -1,0 +1,410 @@
+[
+  {
+    "level": "log",
+    "message": "Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org",
+    "timestamp": "2026-10-24T16:11:08.437Z",
+    "url": "http://127.0.0.1:4249/index.js"
+  },
+  {
+    "level": "log",
+    "message": "OpenGL API OpenGL ES 3.0 (WebGL 2.0 (OpenGL ES 3.0 Chromium)) - Compatibility - Using Device: WebKit - WebKit WebGL",
+    "timestamp": "2026-10-24T16:11:08.561Z",
+    "url": "http://127.0.0.1:4249/index.js"
+  },
+  {
+    "level": "log",
+    "message": "Build configuration: Emscripten 4.0.20, single-threaded, no GDExtension support.",
+    "timestamp": "2026-10-24T16:11:08.669Z",
+    "url": "http://127.0.0.1:4249/index.js"
+  },
+  {
+    "level": "log",
+    "message": "CLOUDSEA_READY assets=5",
+    "timestamp": "2026-10-24T16:11:10.347Z",
+    "url": "http://127.0.0.1:4249/index.js"
+  },
+  {
+    "level": "log",
+    "message": "Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org",
+    "timestamp": "2026-10-24T16:18:13.603Z",
+    "url": "http://127.0.0.1:4249/index.js"
+  },
+  {
+    "level": "log",
+    "message": "OpenGL API OpenGL ES 3.0 (WebGL 2.0 (OpenGL ES 3.0 Chromium)) - Compatibility - Using Device: WebKit - WebKit WebGL",
+    "timestamp": "2026-10-24T16:18:13.775Z",
+    "url": "http://127.0.0.1:4249/index.js"
+  },
+  {
+    "level": "log",
+    "message": "Build configuration: Emscripten 4.0.20, single-threaded, no GDExtension support.",
+    "timestamp": "2026-10-24T16:18:13.929Z",
+    "url": "http://127.0.0.1:4249/index.js"
+  },
+  {
+    "level": "log",
+    "message": "CLOUDSEA_READY assets=5",
+    "timestamp": "2026-10-24T16:18:16.046Z",
+    "url": "http://127.0.0.1:4249/index.js"
+  },
+  {
+    "level": "log",
+    "message": "CLOUDSEA_FINISH time=88.51 score=900 falls=0",
+    "timestamp": "2026-10-24T16:20:32.563Z",
+    "url": "http://127.0.0.1:4249/index.js"
+  },
+  {
+    "level": "log",
+    "message": "Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org",
+    "timestamp": "2026-10-24T16:23:55.095Z",
+    "url": "http://127.0.0.1:4249/index.js"
+  },
+  {
+    "level": "log",
+    "message": "OpenGL API OpenGL ES 3.0 (WebGL 2.0 (OpenGL ES 3.0 Chromium)) - Compatibility - Using Device: WebKit - WebKit WebGL",
+    "timestamp": "2026-10-24T16:23:55.162Z",
+    "url": "http://127.0.0.1:4249/index.js"
+  },
+  {
+    "level": "log",
+    "message": "Build configuration: Emscripten 4.0.20, single-threaded, no GDExtension support.",
+    "timestamp": "2026-10-24T16:23:55.188Z",
+    "url": "http://127.0.0.1:4249/index.js"
+  },
+  {
+    "level": "log",
+    "message": "CLOUDSEA_READY assets=5",
+    "timestamp": "2026-10-24T16:23:56.711Z",
+    "url": "http://127.0.0.1:4249/index.js"
+  },
+  {
+    "level": "log",
+    "message": "Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org",
+    "timestamp": "2026-10-24T16:33:16.724Z",
+    "url": "http://127.0.0.1:4249/index.js"
+  },
+  {
+    "level": "log",
+    "message": "OpenGL API OpenGL ES 3.0 (WebGL 2.0 (OpenGL ES 3.0 Chromium)) - Compatibility - Using Device: WebKit - WebKit WebGL",
+    "timestamp": "2026-10-24T16:33:16.787Z",
+    "url": "http://127.0.0.1:4249/index.js"
+  },
+  {
+    "level": "log",
+    "message": "Build configuration: Emscripten 4.0.20, single-threaded, no GDExtension support.",
+    "timestamp": "2026-10-24T16:33:16.812Z",
+    "url": "http://127.0.0.1:4249/index.js"
+  },
+  {
+    "level": "log",
+    "message": "CLOUDSEA_READY assets=5",
+    "timestamp": "2026-10-24T16:33:18.311Z",
+    "url": "http://127.0.0.1:4249/index.js"
+  },
+  {
+    "level": "log",
+    "message": "Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org",
+    "timestamp": "2026-10-24T16:37:08.564Z",
+    "url": "http://127.0.0.1:4249/index.js"
+  },
+  {
+    "level": "log",
+    "message": "OpenGL API OpenGL ES 3.0 (WebGL 2.0 (OpenGL ES 3.0 Chromium)) - Compatibility - Using Device: WebKit - WebKit WebGL",
+    "timestamp": "2026-10-24T16:37:08.625Z",
+    "url": "http://127.0.0.1:4249/index.js"
+  },
+  {
+    "level": "log",
+    "message": "Build configuration: Emscripten 4.0.20, single-threaded, no GDExtension support.",
+    "timestamp": "2026-10-24T16:37:08.649Z",
+    "url": "http://127.0.0.1:4249/index.js"
+  },
+  {
+    "level": "log",
+    "message": "CLOUDSEA_READY assets=5",
+    "timestamp": "2026-10-24T16:37:10.151Z",
+    "url": "http://127.0.0.1:4249/index.js"
+  },
+  {
+    "level": "log",
+    "message": "Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org",
+    "timestamp": "2026-10-24T16:40:08.208Z",
+    "url": "http://127.0.0.1:4249/index.js"
+  },
+  {
+    "level": "log",
+    "message": "OpenGL API OpenGL ES 3.0 (WebGL 2.0 (OpenGL ES 3.0 Chromium)) - Compatibility - Using Device: WebKit - WebKit WebGL",
+    "timestamp": "2026-10-24T16:40:08.269Z",
+    "url": "http://127.0.0.1:4249/index.js"
+  },
+  {
+    "level": "log",
+    "message": "Build configuration: Emscripten 4.0.20, single-threaded, no GDExtension support.",
+    "timestamp": "2026-10-24T16:40:08.294Z",
+    "url": "http://127.0.0.1:4249/index.js"
+  },
+  {
+    "level": "log",
+    "message": "CLOUDSEA_READY assets=5",
+    "timestamp": "2026-10-24T16:40:09.798Z",
+    "url": "http://127.0.0.1:4249/index.js"
+  },
+  {
+    "level": "log",
+    "message": "Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org",
+    "timestamp": "2026-10-24T16:42:34.698Z",
+    "url": "http://127.0.0.1:4249/index.js"
+  },
+  {
+    "level": "log",
+    "message": "OpenGL API OpenGL ES 3.0 (WebGL 2.0 (OpenGL ES 3.0 Chromium)) - Compatibility - Using Device: WebKit - WebKit WebGL",
+    "timestamp": "2026-10-24T16:42:34.758Z",
+    "url": "http://127.0.0.1:4249/index.js"
+  },
+  {
+    "level": "log",
+    "message": "Build configuration: Emscripten 4.0.20, single-threaded, no GDExtension support.",
+    "timestamp": "2026-10-24T16:42:34.785Z",
+    "url": "http://127.0.0.1:4249/index.js"
+  },
+  {
+    "level": "log",
+    "message": "CLOUDSEA_READY assets=5",
+    "timestamp": "2026-10-24T16:42:36.297Z",
+    "url": "http://127.0.0.1:4249/index.js"
+  },
+  {
+    "level": "log",
+    "message": "Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org",
+    "timestamp": "2026-10-24T16:45:34.139Z",
+    "url": "http://127.0.0.1:4249/index.js"
+  },
+  {
+    "level": "log",
+    "message": "OpenGL API OpenGL ES 3.0 (WebGL 2.0 (OpenGL ES 3.0 Chromium)) - Compatibility - Using Device: WebKit - WebKit WebGL",
+    "timestamp": "2026-10-24T16:45:34.206Z",
+    "url": "http://127.0.0.1:4249/index.js"
+  },
+  {
+    "level": "log",
+    "message": "Build configuration: Emscripten 4.0.20, single-threaded, no GDExtension support.",
+    "timestamp": "2026-10-24T16:45:34.230Z",
+    "url": "http://127.0.0.1:4249/index.js"
+  },
+  {
+    "level": "log",
+    "message": "CLOUDSEA_READY assets=5",
+    "timestamp": "2026-10-24T16:45:35.736Z",
+    "url": "http://127.0.0.1:4249/index.js"
+  },
+  {
+    "level": "log",
+    "message": "CLOUDSEA_DISPLAY window=(960, 540) viewport=(1280.0, 720.0) texture=(1280.0, 720.0) mode=2 base=(1280, 720) factor=1.0 stretch=[X: (1.0, 0.0), Y: (0.0, 1.0), O: (0.0, 0.0)] screen=1.0",
+    "timestamp": "2026-10-24T16:45:35.736Z",
+    "url": "http://127.0.0.1:4249/index.js"
+  },
+  {
+    "level": "log",
+    "message": "Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org",
+    "timestamp": "2026-10-24T16:49:00.258Z",
+    "url": "http://127.0.0.1:4249/index.js"
+  },
+  {
+    "level": "log",
+    "message": "OpenGL API OpenGL ES 3.0 (WebGL 2.0 (OpenGL ES 3.0 Chromium)) - Compatibility - Using Device: WebKit - WebKit WebGL",
+    "timestamp": "2026-10-24T16:49:00.319Z",
+    "url": "http://127.0.0.1:4249/index.js"
+  },
+  {
+    "level": "log",
+    "message": "Build configuration: Emscripten 4.0.20, single-threaded, no GDExtension support.",
+    "timestamp": "2026-10-24T16:49:00.344Z",
+    "url": "http://127.0.0.1:4249/index.js"
+  },
+  {
+    "level": "log",
+    "message": "CLOUDSEA_READY assets=5",
+    "timestamp": "2026-10-24T16:49:01.839Z",
+    "url": "http://127.0.0.1:4249/index.js"
+  },
+  {
+    "level": "log",
+    "message": "CLOUDSEA_DISPLAY window=(960, 540) viewport=(960.0, 540.0) texture=(960.0, 540.0) mode=0 base=(1280, 720) factor=1.0 stretch=[X: (1.0, 0.0), Y: (0.0, 1.0), O: (0.0, 0.0)] screen=1.0",
+    "timestamp": "2026-10-24T16:49:01.839Z",
+    "url": "http://127.0.0.1:4249/index.js"
+  },
+  {
+    "level": "log",
+    "message": "Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org",
+    "timestamp": "2026-10-24T16:56:40.517Z",
+    "url": "http://127.0.0.1:4249/index.js"
+  },
+  {
+    "level": "log",
+    "message": "OpenGL API OpenGL ES 3.0 (WebGL 2.0 (OpenGL ES 3.0 Chromium)) - Compatibility - Using Device: WebKit - WebKit WebGL",
+    "timestamp": "2026-10-24T16:56:40.585Z",
+    "url": "http://127.0.0.1:4249/index.js"
+  },
+  {
+    "level": "log",
+    "message": "Build configuration: Emscripten 4.0.20, single-threaded, no GDExtension support.",
+    "timestamp": "2026-10-24T16:56:40.612Z",
+    "url": "http://127.0.0.1:4249/index.js"
+  },
+  {
+    "level": "log",
+    "message": "CLOUDSEA_READY assets=5",
+    "timestamp": "2026-10-24T16:56:42.117Z",
+    "url": "http://127.0.0.1:4249/index.js"
+  },
+  {
+    "level": "log",
+    "message": "Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org",
+    "timestamp": "2026-10-24T17:00:57.171Z",
+    "url": "http://127.0.0.1:4249/index.js"
+  },
+  {
+    "level": "log",
+    "message": "OpenGL API OpenGL ES 3.0 (WebGL 2.0 (OpenGL ES 3.0 Chromium)) - Compatibility - Using Device: WebKit - WebKit WebGL",
+    "timestamp": "2026-10-24T17:00:57.233Z",
+    "url": "http://127.0.0.1:4249/index.js"
+  },
+  {
+    "level": "log",
+    "message": "Build configuration: Emscripten 4.0.20, single-threaded, no GDExtension support.",
+    "timestamp": "2026-10-24T17:00:57.257Z",
+    "url": "http://127.0.0.1:4249/index.js"
+  },
+  {
+    "level": "log",
+    "message": "CLOUDSEA_READY assets=5",
+    "timestamp": "2026-10-24T17:00:58.756Z",
+    "url": "http://127.0.0.1:4249/index.js"
+  },
+  {
+    "level": "log",
+    "message": "Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org",
+    "timestamp": "2026-10-24T17:02:18.435Z",
+    "url": "http://127.0.0.1:4249/index.js"
+  },
+  {
+    "level": "log",
+    "message": "OpenGL API OpenGL ES 3.0 (WebGL 2.0 (OpenGL ES 3.0 Chromium)) - Compatibility - Using Device: WebKit - WebKit WebGL",
+    "timestamp": "2026-10-24T17:02:18.502Z",
+    "url": "http://127.0.0.1:4249/index.js"
+  },
+  {
+    "level": "log",
+    "message": "Build configuration: Emscripten 4.0.20, single-threaded, no GDExtension support.",
+    "timestamp": "2026-10-24T17:02:18.527Z",
+    "url": "http://127.0.0.1:4249/index.js"
+  },
+  {
+    "level": "log",
+    "message": "CLOUDSEA_READY assets=5",
+    "timestamp": "2026-10-24T17:02:20.018Z",
+    "url": "http://127.0.0.1:4249/index.js"
+  },
+  {
+    "level": "log",
+    "message": "Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org",
+    "timestamp": "2026-10-24T17:04:27.661Z",
+    "url": "http://127.0.0.1:4249/index.js"
+  },
+  {
+    "level": "log",
+    "message": "OpenGL API OpenGL ES 3.0 (WebGL 2.0 (OpenGL ES 3.0 Chromium)) - Compatibility - Using Device: WebKit - WebKit WebGL",
+    "timestamp": "2026-10-24T17:04:27.744Z",
+    "url": "http://127.0.0.1:4249/index.js"
+  },
+  {
+    "level": "log",
+    "message": "Build configuration: Emscripten 4.0.20, single-threaded, no GDExtension support.",
+    "timestamp": "2026-10-24T17:04:27.768Z",
+    "url": "http://127.0.0.1:4249/index.js"
+  },
+  {
+    "level": "log",
+    "message": "CLOUDSEA_READY assets=5",
+    "timestamp": "2026-10-24T17:04:29.269Z",
+    "url": "http://127.0.0.1:4249/index.js"
+  },
+  {
+    "level": "log",
+    "message": "Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org",
+    "timestamp": "2026-10-24T17:06:04.005Z",
+    "url": "http://127.0.0.1:4249/index.js"
+  },
+  {
+    "level": "log",
+    "message": "OpenGL API OpenGL ES 3.0 (WebGL 2.0 (OpenGL ES 3.0 Chromium)) - Compatibility - Using Device: WebKit - WebKit WebGL",
+    "timestamp": "2026-10-24T17:06:04.068Z",
+    "url": "http://127.0.0.1:4249/index.js"
+  },
+  {
+    "level": "log",
+    "message": "Build configuration: Emscripten 4.0.20, single-threaded, no GDExtension support.",
+    "timestamp": "2026-10-24T17:06:04.091Z",
+    "url": "http://127.0.0.1:4249/index.js"
+  },
+  {
+    "level": "log",
+    "message": "CLOUDSEA_READY assets=5",
+    "timestamp": "2026-10-24T17:06:05.595Z",
+    "url": "http://127.0.0.1:4249/index.js"
+  },
+  {
+    "level": "log",
+    "message": "Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org",
+    "timestamp": "2026-10-24T17:10:45.380Z",
+    "url": "http://127.0.0.1:4249/index.js"
+  },
+  {
+    "level": "log",
+    "message": "OpenGL API OpenGL ES 3.0 (WebGL 2.0 (OpenGL ES 3.0 Chromium)) - Compatibility - Using Device: WebKit - WebKit WebGL",
+    "timestamp": "2026-10-24T17:10:45.443Z",
+    "url": "http://127.0.0.1:4249/index.js"
+  },
+  {
+    "level": "log",
+    "message": "Build configuration: Emscripten 4.0.20, single-threaded, no GDExtension support.",
+    "timestamp": "2026-10-24T17:10:45.467Z",
+    "url": "http://127.0.0.1:4249/index.js"
+  },
+  {
+    "level": "log",
+    "message": "CLOUDSEA_READY assets=5",
+    "timestamp": "2026-10-24T17:10:46.969Z",
+    "url": "http://127.0.0.1:4249/index.js"
+  },
+  {
+    "level": "log",
+    "message": "Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org",
+    "timestamp": "2026-10-24T17:14:39.217Z",
+    "url": "http://127.0.0.1:4249/index.js"
+  },
+  {
+    "level": "log",
+    "message": "OpenGL API OpenGL ES 3.0 (WebGL 2.0 (OpenGL ES 3.0 Chromium)) - Compatibility - Using Device: WebKit - WebKit WebGL",
+    "timestamp": "2026-10-24T17:14:39.283Z",
+    "url": "http://127.0.0.1:4249/index.js"
+  },
+  {
+    "level": "log",
+    "message": "Build configuration: Emscripten 4.0.20, single-threaded, no GDExtension support.",
+    "timestamp": "2026-10-24T17:14:39.306Z",
+    "url": "http://127.0.0.1:4249/index.js"
+  },
+  {
+    "level": "log",
+    "message": "CLOUDSEA_READY assets=5",
+    "timestamp": "2026-10-24T17:14:40.808Z",
+    "url": "http://127.0.0.1:4249/index.js"
+  },
+  {
+    "level": "log",
+    "message": "CLOUDSEA_FINISH time=92.16 score=900 falls=0",
+    "timestamp": "2026-10-24T17:17:26.811Z",
+    "url": "http://127.0.0.1:4249/index.js"
+  }
+]

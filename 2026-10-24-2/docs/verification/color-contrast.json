@@ -1,0 +1,11 @@
+{
+  "assumption": "opaque specified solid colors; generated pixels and runtime not measured",
+  "ratios": {
+    "text_on_panel": 14.15,
+    "muted_on_panel": 9.74,
+    "text_on_primary": 4.67,
+    "focus_on_panel": 5.91,
+    "wind_on_panel": 8.53,
+    "danger_on_panel": 7.79
+  }
+}

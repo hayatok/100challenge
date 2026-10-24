@@ -249,5 +249,15 @@
     "category": "2Dサバイバルゲーム",
     "thumbnail": "echo-witch-cover.png",
     "accent": "#b8a174"
+  },
+  {
+    "id": "2026-10-24-2",
+    "date": "2026-10-24",
+    "sequence": 2,
+    "name": "雲海サーファー",
+    "description": "雲海の風路で旋回、ジャンプ、ブーストを試す3D滑走ゲーム。90秒の開発試作。",
+    "category": "3D滑走ゲーム",
+    "thumbnail": "art/concepts/02-cloudsea-keyart.png",
+    "accent": "#168b8c"
   }
 ]

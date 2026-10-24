@@ -1,0 +1,48 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://scripts/rider.gd" id="1_rider"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape_rider"]
+radius = 0.34
+height = 1.8
+
+[sub_resource type="StandardMaterial3D" id="Material_blockout"]
+albedo_color = Color(0.45, 0.48, 0.50, 1)
+roughness = 0.9
+
+[sub_resource type="CapsuleMesh" id="Mesh_blockout_rider"]
+radius = 0.28
+height = 1.6
+radial_segments = 12
+rings = 4
+material = SubResource("Material_blockout")
+
+[sub_resource type="BoxMesh" id="Mesh_blockout_board"]
+size = Vector3(0.75, 0.12, 1.65)
+material = SubResource("Material_blockout")
+
+[node name="Rider" type="CharacterBody3D"]
+process_mode = 1
+physics_interpolation_mode = 1
+collision_layer = 1
+collision_mask = 2
+script = ExtResource("1_rider")
+metadata/asset_status = "BLOCKOUT"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+position = Vector3(0, 0.9, 0)
+shape = SubResource("CapsuleShape_rider")
+
+[node name="Visual" type="Node3D" parent="."]
+
+[node name="Avatar" type="Node3D" parent="Visual"]
+
+[node name="BLOCKOUT" type="MeshInstance3D" parent="Visual/Avatar"]
+position = Vector3(0, 1, 0)
+mesh = SubResource("Mesh_blockout_rider")
+
+[node name="Board" type="Node3D" parent="Visual"]
+
+[node name="BLOCKOUT" type="MeshInstance3D" parent="Visual/Board"]
+position = Vector3(0, 0.12, 0)
+mesh = SubResource("Mesh_blockout_board")

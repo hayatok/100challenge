@@ -1,0 +1,23 @@
+{
+  "browser": "Chrome",
+  "dimensions": {
+    "dpr": 2,
+    "height": 723,
+    "width": 1282
+  },
+  "capture": "fullPage true",
+  "runs": [
+    {
+      "time": 88.51,
+      "score": 900,
+      "falls": 0
+    },
+    {
+      "time": 92.16,
+      "score": 900,
+      "falls": 0
+    }
+  ],
+  "persistedBestTimeAfterReload": 88.51,
+  "errors": []
+}

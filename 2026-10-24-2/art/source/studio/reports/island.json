@@ -1,0 +1,364 @@
+{
+  "tripo_task_id": "4106c6ca-e74d-4567-9e56-2b1f4943e034",
+  "blender_version": "5.2.1 LTS",
+  "source_file": "cloudsea-island-source (1).glb",
+  "output_file": "island.glb",
+  "parameters": {
+    "triangle_budget": 18000,
+    "length_metres": 13.0,
+    "blender_rotation_xyz_degrees": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "uniform_scale": 13.26928947450394,
+    "expected_game_long_axis": null,
+    "source_local_weld_distance": 1e-06,
+    "sized_game_axis": "Y",
+    "operator_verified_source_top": "Z",
+    "operator_verified_source_front": null
+  },
+  "source_glb": {
+    "bytes": 60297176,
+    "sha256": "0a5ae5942734bb16d5bc3a63dee0e1ac91f1ad076c7868bf0a2dc3c4a9df000c",
+    "triangles": 1909971,
+    "meshes": 1,
+    "primitives": 1,
+    "uv_primitives": 1,
+    "materials": 1,
+    "images": [
+      {
+        "name": "cloudsea-island-source_normal",
+        "mime": "image/jpeg",
+        "bytes": 419766,
+        "sha256": "97cb25b7fba00279bb92fd480a790f84f7003c28d2212cd110acc07e7345c336"
+      },
+      {
+        "name": "cloudsea-island-source_basecolor",
+        "mime": "image/jpeg",
+        "bytes": 812289,
+        "sha256": "443a624c489722241bfdb98dacae4867067045fbade4fc27b07fe2a858a300aa"
+      },
+      {
+        "name": "cloudsea-island-source_rm",
+        "mime": "image/jpeg",
+        "bytes": 385602,
+        "sha256": "53f2e28122847f323a78bb53c8723cc487ece869914fdd6c327d92d1900e50d1"
+      }
+    ],
+    "material_texture_bindings": [
+      {
+        "baseColorTexture": {
+          "image_sha256": "443a624c489722241bfdb98dacae4867067045fbade4fc27b07fe2a858a300aa",
+          "texcoord": 0
+        },
+        "metallicRoughnessTexture": {
+          "image_sha256": "53f2e28122847f323a78bb53c8723cc487ece869914fdd6c327d92d1900e50d1",
+          "texcoord": 0
+        },
+        "normalTexture": {
+          "image_sha256": "97cb25b7fba00279bb92fd480a790f84f7003c28d2212cd110acc07e7345c336",
+          "texcoord": 0
+        }
+      }
+    ],
+    "skins": 0,
+    "skin_joints": [],
+    "animations": 0,
+    "animation_channels": []
+  },
+  "source_import": {
+    "triangles": 1909971,
+    "mesh_objects": 1,
+    "vertices": 1117436,
+    "blender_min": [
+      -0.4894104599952698,
+      -0.4853211045265198,
+      0.0
+    ],
+    "blender_max": [
+      0.4895935654640198,
+      0.4854431748390198,
+      0.979705810546875
+    ],
+    "blender_dimensions": [
+      0.9790040254592896,
+      0.9707642793655396,
+      0.979705810546875
+    ],
+    "game_dimensions_xyz": [
+      0.9790040254592896,
+      0.979705810546875,
+      0.9707642793655396
+    ],
+    "uv_layer_counts": [
+      1
+    ],
+    "armatures": 0,
+    "material_slots": 1
+  },
+  "normalized_source": {
+    "triangles": 1909971,
+    "mesh_objects": 1,
+    "vertices": 1117436,
+    "blender_min": [
+      -6.4953436851501465,
+      -6.440675735473633,
+      0.0
+    ],
+    "blender_max": [
+      6.4953436851501465,
+      6.440675735473633,
+      13.0
+    ],
+    "blender_dimensions": [
+      12.990687370300293,
+      12.881351470947266,
+      13.0
+    ],
+    "game_dimensions_xyz": [
+      12.990687370300293,
+      13.0,
+      12.881351470947266
+    ],
+    "uv_layer_counts": [
+      1
+    ],
+    "armatures": 0,
+    "material_slots": 1
+  },
+  "reduced_mesh": {
+    "triangles": 17999,
+    "mesh_objects": 1,
+    "vertices": 8937,
+    "blender_min": [
+      -6.504364967346191,
+      -6.444986820220947,
+      -0.011085272766649723
+    ],
+    "blender_max": [
+      6.506221294403076,
+      6.439799785614014,
+      13.006593704223633
+    ],
+    "blender_dimensions": [
+      13.01058578491211,
+      12.884786605834961,
+      13.017679214477539
+    ],
+    "game_dimensions_xyz": [
+      13.01058578491211,
+      13.017679214477539,
+      12.884786605834961
+    ],
+    "uv_layer_counts": [
+      1
+    ],
+    "armatures": 0,
+    "material_slots": 1
+  },
+  "output_glb": {
+    "bytes": 2206744,
+    "sha256": "28f28b835ec09c80f804489b753f6055b63589ae8f55e7ba067cdd4d42c9fa45",
+    "triangles": 17999,
+    "meshes": 1,
+    "primitives": 1,
+    "uv_primitives": 1,
+    "materials": 1,
+    "images": [
+      {
+        "name": "cloudsea-island-source_normal",
+        "mime": "image/jpeg",
+        "bytes": 419766,
+        "sha256": "97cb25b7fba00279bb92fd480a790f84f7003c28d2212cd110acc07e7345c336"
+      },
+      {
+        "name": "cloudsea-island-source_basecolor",
+        "mime": "image/jpeg",
+        "bytes": 812289,
+        "sha256": "443a624c489722241bfdb98dacae4867067045fbade4fc27b07fe2a858a300aa"
+      },
+      {
+        "name": "cloudsea-island-source_rm",
+        "mime": "image/jpeg",
+        "bytes": 385602,
+        "sha256": "53f2e28122847f323a78bb53c8723cc487ece869914fdd6c327d92d1900e50d1"
+      }
+    ],
+    "material_texture_bindings": [
+      {
+        "baseColorTexture": {
+          "image_sha256": "443a624c489722241bfdb98dacae4867067045fbade4fc27b07fe2a858a300aa",
+          "texcoord": 0
+        },
+        "metallicRoughnessTexture": {
+          "image_sha256": "53f2e28122847f323a78bb53c8723cc487ece869914fdd6c327d92d1900e50d1",
+          "texcoord": 0
+        },
+        "normalTexture": {
+          "image_sha256": "97cb25b7fba00279bb92fd480a790f84f7003c28d2212cd110acc07e7345c336",
+          "texcoord": 0
+        }
+      }
+    ],
+    "skins": 0,
+    "skin_joints": [],
+    "animations": 0,
+    "animation_channels": []
+  },
+  "clean_reimport": {
+    "triangles": 17999,
+    "mesh_objects": 1,
+    "vertices": 14968,
+    "blender_min": [
+      -6.504364967346191,
+      -6.444986820220947,
+      -0.011085272766649723
+    ],
+    "blender_max": [
+      6.506221294403076,
+      6.439799785614014,
+      13.006593704223633
+    ],
+    "blender_dimensions": [
+      13.01058578491211,
+      12.884786605834961,
+      13.017679214477539
+    ],
+    "game_dimensions_xyz": [
+      13.01058578491211,
+      13.017679214477539,
+      12.884786605834961
+    ],
+    "uv_layer_counts": [
+      1
+    ],
+    "armatures": 0,
+    "material_slots": 1
+  },
+  "source_decoded_images": [
+    {
+      "width": 2048,
+      "height": 2048,
+      "channels": 4,
+      "pixel_sha256": "9a5d6e820f6e4664c02695110c9472f26c4ff6e7fde344a61e49d781eedc5a41"
+    },
+    {
+      "width": 2048,
+      "height": 2048,
+      "channels": 4,
+      "pixel_sha256": "f0172ee28a4e9945e93a186bba1d716b35ca0586e804bee21f81c3c9563e13c2"
+    },
+    {
+      "width": 2048,
+      "height": 2048,
+      "channels": 4,
+      "pixel_sha256": "fc15ed508656392988a94eab5573124151c6fbb72c5a100afae2ef9c3aec7048"
+    }
+  ],
+  "output_decoded_images": [
+    {
+      "width": 2048,
+      "height": 2048,
+      "channels": 4,
+      "pixel_sha256": "9a5d6e820f6e4664c02695110c9472f26c4ff6e7fde344a61e49d781eedc5a41"
+    },
+    {
+      "width": 2048,
+      "height": 2048,
+      "channels": 4,
+      "pixel_sha256": "f0172ee28a4e9945e93a186bba1d716b35ca0586e804bee21f81c3c9563e13c2"
+    },
+    {
+      "width": 2048,
+      "height": 2048,
+      "channels": 4,
+      "pixel_sha256": "fc15ed508656392988a94eab5573124151c6fbb72c5a100afae2ef9c3aec7048"
+    }
+  ],
+  "welded_vertices": [
+    {
+      "object": "tripo_node_99167be9-890e-4fed-b1b5-52a4dd2e9f6d",
+      "vertices_before": 1117436,
+      "vertices_after": 954923
+    }
+  ],
+  "decimated_objects": [
+    "tripo_node_99167be9-890e-4fed-b1b5-52a4dd2e9f6d"
+  ],
+  "checks": {
+    "source_unchanged": true,
+    "length_within_1_percent": true,
+    "triangles_match_clean_reimport": true,
+    "within_triangle_budget_5_percent": true,
+    "uvs_present": true,
+    "material_count_preserved": true,
+    "material_texture_bindings_preserved": true,
+    "image_count_preserved": true,
+    "decoded_texture_pixels_preserved": true,
+    "skin_joint_counts_preserved": true,
+    "animation_channel_counts_preserved": true
+  },
+  "uv_processing": {
+    "original_layer_retained": true,
+    "coordinates_exact_preserved": false,
+    "unwrapped": false,
+    "textures_repainted": false
+  },
+  "render_comparison": {
+    "top": {
+      "rgb_mean_absolute_error_0_to_1": 0.01720564806897671,
+      "rgb_max_absolute_error_0_to_1": 0.8156863301992416
+    },
+    "bottom": {
+      "rgb_mean_absolute_error_0_to_1": 0.004935172119234264,
+      "rgb_max_absolute_error_0_to_1": 0.6980392783880234
+    },
+    "threequarter": {
+      "rgb_mean_absolute_error_0_to_1": 0.013968057130616994,
+      "rgb_max_absolute_error_0_to_1": 0.6823530048131943
+    },
+    "game-front-minus-z": {
+      "rgb_mean_absolute_error_0_to_1": 0.009342191515144206,
+      "rgb_max_absolute_error_0_to_1": 0.7294118329882622
+    },
+    "game-back-plus-z": {
+      "rgb_mean_absolute_error_0_to_1": 0.010139862516355068,
+      "rgb_max_absolute_error_0_to_1": 0.6627451628446579
+    }
+  },
+  "relative_dimension_change": [
+    0.0015317445524329044,
+    0.0013599395751953125,
+    0.00026667503758770586
+  ],
+  "central_opening_qa": null,
+  "orientation": {
+    "game_up_axis": "+Y",
+    "game_long_axis": "Y",
+    "front_back_semantic_verified": false,
+    "game_front_axis": null,
+    "top_semantic_verified": true
+  },
+  "visual_quality_approved": false,
+  "committed_output": true,
+  "render_settings": {
+    "width": 768,
+    "height": 576,
+    "cycles_samples": 16,
+    "area_light_watts_per_squared_extent": 550,
+    "area_light_size_per_extent": 2
+  },
+  "selected_preview_files": [
+    {
+      "file": "previews/island-source-1909971-threequarter.png",
+      "bytes": 580695,
+      "sha256": "ff7822a2758e7d53ff388e4a44af92b88362f55c54bfaa0ce9382ae480990463"
+    },
+    {
+      "file": "previews/island-reduced-17999-threequarter.png",
+      "bytes": 575558,
+      "sha256": "21f0f6d3bf5e1b9d4fe1dab7ea0a6407aa1653e41d0895333974029eb3196970"
+    }
+  ]
+}

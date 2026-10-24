@@ -1,0 +1,28 @@
+{
+  "dry_run": true,
+  "valid": true,
+  "input": "One freestanding ancient ivory stone aqueduct arch module, elegant semicircular stone opening between two tall rectangular piers, thin carved geometric turquoise inlay at top, sparse green moss on outer cornices, stylized bright sky-fantasy game architecture, wide clear empty opening, no ground platform, no text",
+  "model": "v3.1-20260211",
+  "model_reason": "default high-fidelity \u2192 v3.1",
+  "steps": [
+    {
+      "name": "text-to-model",
+      "endpoint": "/v3/generation/text-to-model",
+      "task_type": "text_to_model",
+      "payload": {
+        "prompt": "One freestanding ancient ivory stone aqueduct arch module, elegant semicircular stone opening between two tall rectangular piers, thin carved geometric turquoise inlay at top, sparse green moss on outer cornices, stylized bright sky-fantasy game architecture, wide clear empty opening, no ground platform, no text",
+        "model": "v3.1-20260211",
+        "face_limit": 25000,
+        "texture": true,
+        "pbr": true,
+        "texture_quality": "standard"
+      }
+    }
+  ],
+  "pending_uploads": [],
+  "deliverables": [],
+  "candidates": 1,
+  "warnings": [],
+  "errors": [],
+  "cost_notes": []
+}

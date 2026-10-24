@@ -1,0 +1,50 @@
+{
+  "request": "Change Mio to age 19",
+  "scope": [
+    "AGENTS.md",
+    "README.md",
+    "docs/SPEC.md",
+    "docs/ART_DIRECTION.md"
+  ],
+  "verified": [
+    {
+      "file": "AGENTS.md",
+      "sha256": "841c2d83a4d71ba69911896f4e5437529a2a701574c2b86aca829b46f03cf934",
+      "verify": "yomiyasu-check: executed via=verify run=20261024T141835Z-6e931354 attempt=1 final=sha256:841c2d83a4d7 mode=rewrite doc_type=manual checks=lint,diff,materials meaning_risk=1 replay=skipped"
+    },
+    {
+      "file": "README.md",
+      "sha256": "62f6a3e0fefda5e1e14b051d9a2be16ab357e975dc78c23cc7fd36b7e4b285bf",
+      "verify": "yomiyasu-check: executed via=verify run=20261024T141835Z-7165bd22 attempt=1 final=sha256:62f6a3e0fefd mode=rewrite doc_type=proposal checks=lint,diff,materials meaning_risk=1 replay=skipped"
+    },
+    {
+      "file": "docs/SPEC.md",
+      "sha256": "b14503bf01e5f37b0b12b443b41dacbd1794590e5cddc47c06f1d9ae0601a6f4",
+      "verify": "yomiyasu-check: executed via=verify run=20261024T141835Z-185fe417 attempt=1 final=sha256:b14503bf01e5 mode=rewrite doc_type=formal checks=lint,diff,materials meaning_risk=1 replay=skipped"
+    },
+    {
+      "file": "docs/ART_DIRECTION.md",
+      "sha256": "add86a059413e6b6c09e2f6f6990b6ec9f229df6d16fa7e92547d3e6cc7bfe70",
+      "verify": "yomiyasu-check: executed via=verify run=20261024T141835Z-b335d7e9 attempt=1 final=sha256:add86a059413 mode=rewrite doc_type=formal checks=lint,diff,materials meaning_risk=1 replay=skipped"
+    }
+  ],
+  "checks": [
+    "current age references",
+    "local links",
+    "unchanged pre-existing tracked diff",
+    "yomiyasu run and verify"
+  ],
+  "decisions": [
+    "The age change is explicit in the user request; age-related diff candidates are intentional.",
+    "Removed the earlier specific high-school grade and retained a generic student affiliation.",
+    "Preserved the cool and cute personality and school-uniform-inspired clothing.",
+    "Existing images, original prompts, and earlier review records remain historical references; no image was regenerated in this task.",
+    "Existing literal technical vocabulary and parallel requirement lists remain appropriate."
+  ],
+  "not_verified": [
+    "new character artwork",
+    "gameplay",
+    "runtime UI"
+  ],
+  "candidate_counts_are_not_quality_scores": true
+}

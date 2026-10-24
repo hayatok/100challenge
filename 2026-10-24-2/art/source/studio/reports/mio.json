@@ -1,0 +1,336 @@
+{
+  "tripo_task_id": "9b55ab2b-7e37-45f0-b403-2fe8636a9aaa",
+  "pipeline_credits": {
+    "generation": 55,
+    "standard_40000_retopology": 5,
+    "mixamo_rig": 20,
+    "total": 80
+  },
+  "source_file": "anime+girl+3d+model.glb",
+  "production_file": "mio.glb",
+  "blender_version": "5.2.1 LTS",
+  "glb": {
+    "bytes": 8798232,
+    "sha256": "70a343c829f5e4b79802435bbd24365219cd24c5e4e38e197393aeaf9536b074",
+    "triangles": 40000,
+    "meshes": 1,
+    "primitives": 1,
+    "uv_primitives": 1,
+    "materials": 1,
+    "images": [
+      {
+        "name": "anime_girl_3d_model_normal",
+        "mime": "image/jpeg",
+        "bytes": 441744,
+        "sha256": "7a3d0b2eeacac20b6c5c547083265ad60c1b5d64ce0b743f672f3f0902a521cc"
+      },
+      {
+        "name": "anime_girl_3d_model_basecolor",
+        "mime": "image/jpeg",
+        "bytes": 1362772,
+        "sha256": "83c57844cf6d544a3b5d72375d3a874257967f6187c26e1d7883d576c262f8a8"
+      },
+      {
+        "name": "anime_girl_3d_model_rm",
+        "mime": "image/png",
+        "bytes": 5267431,
+        "sha256": "2b0bda27b531f29cc8a5c367fdd0060e584cfe300cd1424d886aa3b66e657f5e"
+      }
+    ],
+    "material_texture_bindings": [
+      {
+        "baseColorTexture": {
+          "image_sha256": "83c57844cf6d544a3b5d72375d3a874257967f6187c26e1d7883d576c262f8a8",
+          "texcoord": 0
+        },
+        "metallicRoughnessTexture": {
+          "image_sha256": "2b0bda27b531f29cc8a5c367fdd0060e584cfe300cd1424d886aa3b66e657f5e",
+          "texcoord": 0
+        },
+        "normalTexture": {
+          "image_sha256": "7a3d0b2eeacac20b6c5c547083265ad60c1b5d64ce0b743f672f3f0902a521cc",
+          "texcoord": 0
+        }
+      }
+    ],
+    "skins": 1,
+    "skin_joints": [
+      65
+    ],
+    "animations": 0,
+    "animation_channels": []
+  },
+  "clean_reimport": {
+    "triangles": 40000,
+    "mesh_objects": 1,
+    "vertices": 28133,
+    "blender_min": [
+      -0.2954100966453552,
+      -0.09890753030776978,
+      3.6715528040076606e-07
+    ],
+    "blender_max": [
+      0.2954098582267761,
+      0.09891505539417267,
+      0.9797973036766052
+    ],
+    "game_dimensions_xyz": [
+      0.5908199548721313,
+      0.9797969460487366,
+      0.19782258570194244
+    ],
+    "uv_layer_counts": [
+      1
+    ],
+    "material_slots": 1,
+    "armatures": 1
+  },
+  "weights": {
+    "mesh_vertices": 28133,
+    "vertices_with_influences": 28133,
+    "vertices_without_influences": 0,
+    "nonfinite_weights": 0,
+    "negative_weights": 0,
+    "over_one_weights": 0,
+    "nonfinite_coordinates": 0,
+    "weight_sum_min": 0.9999999012798071,
+    "weight_sum_max": 1.0000000521540642,
+    "weight_sum_error_over_0_001": 0,
+    "max_influences": 4,
+    "armature_modifiers": 1,
+    "weighted_group_names_not_bones": []
+  },
+  "imported_images": [
+    {
+      "name": "anime_girl_3d_model_basecolor",
+      "width": 2048,
+      "height": 2048,
+      "packed": true,
+      "channels": 4
+    },
+    {
+      "name": "anime_girl_3d_model_normal",
+      "width": 1024,
+      "height": 1024,
+      "packed": true,
+      "channels": 4
+    },
+    {
+      "name": "anime_girl_3d_model_rm",
+      "width": 2048,
+      "height": 2048,
+      "packed": true,
+      "channels": 4
+    }
+  ],
+  "bone_names": [
+    "mixamorig:Hips",
+    "mixamorig:LeftUpLeg",
+    "mixamorig:LeftLeg",
+    "mixamorig:LeftFoot",
+    "mixamorig:LeftToeBase",
+    "mixamorig:LeftToe_End",
+    "mixamorig:RightUpLeg",
+    "mixamorig:RightLeg",
+    "mixamorig:RightFoot",
+    "mixamorig:RightToeBase",
+    "mixamorig:RightToe_End",
+    "mixamorig:Spine",
+    "mixamorig:Spine1",
+    "mixamorig:Spine2",
+    "mixamorig:LeftShoulder",
+    "mixamorig:LeftArm",
+    "mixamorig:LeftForeArm",
+    "mixamorig:LeftHand",
+    "mixamorig:LeftHandIndex1",
+    "mixamorig:LeftHandIndex2",
+    "mixamorig:LeftHandIndex3",
+    "mixamorig:LeftHandIndex4",
+    "mixamorig:LeftHandMiddle1",
+    "mixamorig:LeftHandMiddle2",
+    "mixamorig:LeftHandMiddle3",
+    "mixamorig:LeftHandMiddle4",
+    "mixamorig:LeftHandPinky1",
+    "mixamorig:LeftHandPinky2",
+    "mixamorig:LeftHandPinky3",
+    "mixamorig:LeftHandPinky4",
+    "mixamorig:LeftHandRing1",
+    "mixamorig:LeftHandRing2",
+    "mixamorig:LeftHandRing3",
+    "mixamorig:LeftHandRing4",
+    "mixamorig:LeftHandThumb1",
+    "mixamorig:LeftHandThumb2",
+    "mixamorig:LeftHandThumb3",
+    "mixamorig:LeftHandThumb4",
+    "mixamorig:Neck",
+    "mixamorig:Head",
+    "mixamorig:HeadTop_End",
+    "mixamorig:RightShoulder",
+    "mixamorig:RightArm",
+    "mixamorig:RightForeArm",
+    "mixamorig:RightHand",
+    "mixamorig:RightHandIndex1",
+    "mixamorig:RightHandIndex2",
+    "mixamorig:RightHandIndex3",
+    "mixamorig:RightHandIndex4",
+    "mixamorig:RightHandMiddle1",
+    "mixamorig:RightHandMiddle2",
+    "mixamorig:RightHandMiddle3",
+    "mixamorig:RightHandMiddle4",
+    "mixamorig:RightHandPinky1",
+    "mixamorig:RightHandPinky2",
+    "mixamorig:RightHandPinky3",
+    "mixamorig:RightHandPinky4",
+    "mixamorig:RightHandRing1",
+    "mixamorig:RightHandRing2",
+    "mixamorig:RightHandRing3",
+    "mixamorig:RightHandRing4",
+    "mixamorig:RightHandThumb1",
+    "mixamorig:RightHandThumb2",
+    "mixamorig:RightHandThumb3",
+    "mixamorig:RightHandThumb4"
+  ],
+  "checks": {
+    "production_copy_identical": true,
+    "expected_size": true,
+    "expected_sha256": true,
+    "triangles_40000": true,
+    "one_skin_65_joints": true,
+    "imported_bones_65": true,
+    "finite_bone_matrices": true,
+    "finite_vertex_coordinates": true,
+    "finite_weights": true,
+    "nonnegative_weights": true,
+    "weights_at_most_one": true,
+    "all_vertices_weighted": true,
+    "weight_sums_within_0_001": true,
+    "all_weight_groups_reference_bones": true,
+    "all_images_loaded": true,
+    "uvs_present": true,
+    "raw_gltf_weights_normalized": true,
+    "raw_gltf_joint_indices_valid": true,
+    "raw_inverse_bind_matrices_finite": true
+  },
+  "orientation": {
+    "coordinate_up_axis": "+Y",
+    "semantic_front_axis": "+Z",
+    "top_semantic_verified": true,
+    "semantic_front_verified_by_rest_render": true
+  },
+  "blender_generated_display_helpers_excluded": [
+    {
+      "name": "Icosphere",
+      "vertices": 42,
+      "triangles": 80,
+      "hide_render": false,
+      "hide_viewport": false,
+      "custom_shape_bone_references": [
+        "mixamorig:Hips",
+        "mixamorig:LeftUpLeg",
+        "mixamorig:LeftLeg",
+        "mixamorig:LeftFoot",
+        "mixamorig:LeftToeBase",
+        "mixamorig:LeftToe_End",
+        "mixamorig:RightUpLeg",
+        "mixamorig:RightLeg",
+        "mixamorig:RightFoot",
+        "mixamorig:RightToeBase",
+        "mixamorig:RightToe_End",
+        "mixamorig:Spine",
+        "mixamorig:Spine1",
+        "mixamorig:Spine2",
+        "mixamorig:LeftShoulder",
+        "mixamorig:LeftArm",
+        "mixamorig:LeftForeArm",
+        "mixamorig:LeftHand",
+        "mixamorig:LeftHandIndex1",
+        "mixamorig:LeftHandIndex2",
+        "mixamorig:LeftHandIndex3",
+        "mixamorig:LeftHandIndex4",
+        "mixamorig:LeftHandMiddle1",
+        "mixamorig:LeftHandMiddle2",
+        "mixamorig:LeftHandMiddle3",
+        "mixamorig:LeftHandMiddle4",
+        "mixamorig:LeftHandPinky1",
+        "mixamorig:LeftHandPinky2",
+        "mixamorig:LeftHandPinky3",
+        "mixamorig:LeftHandPinky4",
+        "mixamorig:LeftHandRing1",
+        "mixamorig:LeftHandRing2",
+        "mixamorig:LeftHandRing3",
+        "mixamorig:LeftHandRing4",
+        "mixamorig:LeftHandThumb1",
+        "mixamorig:LeftHandThumb2",
+        "mixamorig:LeftHandThumb3",
+        "mixamorig:LeftHandThumb4",
+        "mixamorig:Neck",
+        "mixamorig:Head",
+        "mixamorig:HeadTop_End",
+        "mixamorig:RightShoulder",
+        "mixamorig:RightArm",
+        "mixamorig:RightForeArm",
+        "mixamorig:RightHand",
+        "mixamorig:RightHandIndex1",
+        "mixamorig:RightHandIndex2",
+        "mixamorig:RightHandIndex3",
+        "mixamorig:RightHandIndex4",
+        "mixamorig:RightHandMiddle1",
+        "mixamorig:RightHandMiddle2",
+        "mixamorig:RightHandMiddle3",
+        "mixamorig:RightHandMiddle4",
+        "mixamorig:RightHandPinky1",
+        "mixamorig:RightHandPinky2",
+        "mixamorig:RightHandPinky3",
+        "mixamorig:RightHandPinky4",
+        "mixamorig:RightHandRing1",
+        "mixamorig:RightHandRing2",
+        "mixamorig:RightHandRing3",
+        "mixamorig:RightHandRing4",
+        "mixamorig:RightHandThumb1",
+        "mixamorig:RightHandThumb2",
+        "mixamorig:RightHandThumb3",
+        "mixamorig:RightHandThumb4"
+      ]
+    }
+  ],
+  "gltf_asset_metadata": {
+    "generator": "Tripo",
+    "version": "2.0"
+  },
+  "gltf_mesh_names": [
+    "tripo_mesh_39d7752a-37bd-4272-822c-693facc4672a"
+  ],
+  "source_unchanged": true,
+  "production_unchanged": true,
+  "model_exported": false,
+  "model_decimated": false,
+  "pose_adjusted": false,
+  "visual_quality_approved": false,
+  "selected_preview_files": [
+    {
+      "file": "previews/mio-rest-import-40000-game-minus-z.png",
+      "bytes": 438180,
+      "sha256": "82378594f7a03184c766353375ffa1cbecbe50c3e708d53783f23d33c78e5e5e"
+    },
+    {
+      "file": "previews/mio-rest-import-40000-game-plus-z.png",
+      "bytes": 466797,
+      "sha256": "aa9fbeb1a5e98593d7ab0a7c1598dffab08f7e3f4bf8b7ae8436bc70ea1928d5"
+    }
+  ],
+  "raw_gltf_accessor_checks": {
+    "position_vertices": 28133,
+    "weight_vertices": 28133,
+    "zero_weight_vertices": 0,
+    "nonfinite_position_components": 0,
+    "nonfinite_weight_components": 0,
+    "weight_sum_min": 0.9999999012798071,
+    "weight_sum_max": 1.0000000521540642,
+    "weight_sums_error_over_0_001": 0,
+    "joint_indices_out_of_range": 0,
+    "inverse_bind_matrices": 65,
+    "nonfinite_inverse_bind_components": 0,
+    "glb_meshes": 1,
+    "glb_mesh_named_icosphere": false
+  }
+}
