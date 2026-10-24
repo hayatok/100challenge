@@ -1,175 +1,156 @@
 extends SceneTree
 
-# Scale wall-clock execution while retaining a 1/60-second simulation step.
-const SIMULATION_HZ: int = 60
-const ACCELERATION: int = 8
-const LOWER_TICK_LIMIT: int = 7200
-const UPPER_TICK_LIMIT: int = 900
-const WALL_TIMEOUT_MS: int = 30000
-
-class TickProbe extends Node:
-	var minimum_delta: float = INF
-	var maximum_delta: float = 0.0
-
-	func _physics_process(delta: float) -> void:
-		minimum_delta = minf(minimum_delta, delta)
-		maximum_delta = maxf(maximum_delta, delta)
-
-var _course: Node3D
-var _rider: CharacterBody3D
-var _probe: TickProbe
-var _failures: int = 0
-var _checks: int = 0
-var _falls: int = 0
-var _jumps: int = 0
-var _departure_s: float = -1.0
-var _departure_y: float = 0.0
-var _landing_s: float = -1.0
-var _landing_height: float = 0.0
-var _landing_lateral: float = 0.0
-var _maximum_y: float = 0.0
-var _maximum_base_height: float = 0.0
-var _deadline: int
-
+var checks := 0
+var failures := 0
+var falls := 0
+var jumps := 0
+var landings := 0
+var bursts := 0
+var clean := 0
+var releases: Array[float] = []
+var course
+var rider
 
 func _initialize() -> void:
 	_run.call_deferred()
 
-
-func _expect(condition: bool, label: String) -> void:
-	_checks += 1
-	if not condition:
-		_failures += 1
+func expect(value: bool, label: String) -> void:
+	checks += 1
+	if not value:
+		failures += 1
 		push_error(label)
 
-
 func _run() -> void:
-	var original_hz := Engine.physics_ticks_per_second
-	var original_scale := Engine.time_scale
-	var original_step_limit := Engine.max_physics_steps_per_frame
-	Engine.physics_ticks_per_second = SIMULATION_HZ * ACCELERATION
-	Engine.time_scale = float(ACCELERATION)
+	Engine.physics_ticks_per_second = 480
+	Engine.time_scale = 8.0
 	Engine.max_physics_steps_per_frame = 64
-	_deadline = Time.get_ticks_msec() + WALL_TIMEOUT_MS
 	for action in ["steer_left", "steer_right", "brake", "jump", "boost"]:
 		if not InputMap.has_action(action):
 			InputMap.add_action(action)
-		Input.action_release(action)
-	_course = Node3D.new()
-	_course.set_script(load("res://scripts/course.gd"))
-	root.add_child(_course)
-	_probe = TickProbe.new()
-	root.add_child(_probe)
-	_rider = load("res://scenes/rider.tscn").instantiate()
-	_rider.set("course", _course)
-	root.add_child(_rider)
-	_rider.fell.connect(func(): _falls += 1)
-	_rider.jumped.connect(_observe_departure)
-	_rider.landed.connect(_observe_landing)
+	course = load("res://scripts/course.gd").new()
+	root.add_child(course)
+	rider = load("res://scenes/rider.tscn").instantiate()
+	rider.course = course
+	root.add_child(rider)
+	rider.fell.connect(func(): falls += 1)
+	rider.jumped.connect(func(): jumps += 1)
+	rider.landed.connect(func(): landings += 1)
+	rider.burst_started.connect(func(_value): bursts += 1)
+	rider.clean_landed.connect(func(_value): clean += 1)
+	rider.carve_released.connect(func(value): releases.append(value))
 	await physics_frame
-	await physics_frame
-
-	# Real collision geometry, no steering, brake, boost or jump input.
-	_rider.reset_run()
-	_rider.wind_energy = 0.0
-	_rider.set_active(true)
-	var lower_ticks := 0
-	var maximum_lateral := 0.0
-	while _rider.progress < _course.length and _falls == 0 and lower_ticks < LOWER_TICK_LIMIT and _within_deadline():
+	rider.reset_run()
+	rider.set_active(true)
+	for tick in 1000:
 		await physics_frame
-		lower_ticks += 1
-		maximum_lateral = maxf(maximum_lateral, absf(_rider.lateral))
-	_rider.set_active(false)
-	_expect(_rider.progress >= 1650.0, "zero-input lower route reaches the 1650m finish within 120 simulated seconds")
-	_expect(_falls == 0, "zero-input lower route has no falls")
-	_expect(_jumps == 0, "lower route requires no jump input")
-	_expect(maximum_lateral < 1.0, "unsteered rider stays on the continuous lower route")
-	print("Course lower: ticks=%d simulation_seconds=%.3f progress=%.3f max_lateral=%.4f falls=%d" % [lower_ticks, float(lower_ticks) / SIMULATION_HZ, _rider.progress, maximum_lateral, _falls])
-
-	# Begin before the upper ramp; reach the lane using steering actions only.
-	# At about 18m/s, taking off 4m before the 8m opening leaves a landing
-	# about 5m beyond its far edge under the nominal 8.5m/s jump / 18m/s2 gravity.
-	_falls = 0
-	_jumps = 0
-	_departure_s = -1.0
-	_landing_s = -1.0
-	_maximum_base_height = 0.0
-	_rider.reset_to(315.0, 0.0)
-	_rider.set_active(true)
-	var upper_ticks := 0
-	var jump_requested := false
-	var ramp_seen := false
-	var airborne_gap_ticks := 0
-	while upper_ticks < UPPER_TICK_LIMIT and _falls == 0 and _within_deadline():
-		_steer_to(-3.5)
-		if _rider.progress >= 420.0 and _rider.progress < 450.0 and _rider.is_on_floor():
-			var center: Vector3 = _course.center_at(_rider.progress)
-			if _rider.global_position.y - center.y > 1.5:
-				ramp_seen = true
-		if not jump_requested and _rider.progress >= 455.5:
-			Input.action_press("jump")
-			jump_requested = true
-		elif jump_requested:
-			Input.action_release("jump")
-		await physics_frame
-		upper_ticks += 1
-		if _departure_s >= 0.0 and _landing_s < 0.0:
-			var center: Vector3 = _course.center_at(_rider.progress)
-			_maximum_y = maxf(_maximum_y, _rider.global_position.y)
-			_maximum_base_height = maxf(_maximum_base_height, _rider.global_position.y - center.y)
-			if _rider.progress > 462.0 and _rider.progress < 466.0 and not _rider.is_on_floor():
-				airborne_gap_ticks += 1
-		if _landing_s >= 0.0 or _rider.progress > 500.0:
+		if falls > 0:
 			break
-	_rider.set_active(false)
-	for action in ["steer_left", "steer_right", "jump"]:
-		Input.action_release(action)
-	_expect(ramp_seen, "steering reaches the elevated upper ramp before takeoff")
-	_expect(_jumps == 1 and _departure_s >= 455.0 and _departure_s < 460.0, "one Space action produces a real takeoff before the opening")
-	_expect(airborne_gap_ticks > 0, "rider is physically airborne over the middle of the 460..468m opening")
-	_expect(_landing_s >= 468.0 and _landing_s <= 490.0, "real landing occurs beyond the opening")
-	_expect(_landing_height > 1.5 and _landing_lateral < -1.5, "landing returns to the elevated lane rather than the safety road")
-	_expect(_maximum_y - _departure_y > 1.5, "jump rises more than 1.5m above its actual takeoff")
-	_expect(_falls == 0, "upper ramp and gap traversal has no falls")
-	_expect(is_equal_approx(_probe.minimum_delta, 1.0 / SIMULATION_HZ) and is_equal_approx(_probe.maximum_delta, 1.0 / SIMULATION_HZ), "acceleration preserves the actual 1/60-second physics delta")
-	_expect(_within_deadline(), "both paths finish inside the wall-clock timeout")
-	print("Course upper: ticks=%d takeoff_s=%.3f landing_s=%.3f landing_height=%.3f landing_lateral=%.3f jump_rise=%.3f max_above_base=%.3f airborne_gap_ticks=%d falls=%d" % [upper_ticks, _departure_s, _landing_s, _landing_height, _landing_lateral, _maximum_y - _departure_y, _maximum_base_height, airborne_gap_ticks, _falls])
-	print("Course physics delta: min=%.8f max=%.8f" % [_probe.minimum_delta, _probe.maximum_delta])
-	print("Course run: %d checks, %d failures" % [_checks, _failures])
-	_rider.queue_free()
-	_course.queue_free()
-	_probe.queue_free()
-	await process_frame
-	Engine.time_scale = original_scale
-	Engine.physics_ticks_per_second = original_hz
-	Engine.max_physics_steps_per_frame = original_step_limit
-	quit(0 if _failures == 0 else 1)
-
-
-func _steer_to(target: float) -> void:
-	var strength := clampf((target - _rider.lateral) * 0.35, -1.0, 1.0)
-	Input.action_release("steer_left")
+	expect(falls == 1 and rider.progress < 150.0, "zero input cannot follow the first authored turn")
+	print("Unsteered fall: progress=%.2f lateral=%.2f" % [rider.progress, rider.lateral])
+	falls = 0
+	# A keyboard-strength carve on the actual first corner should load within
+	# one short lean, with its heading and speed measured from real physics.
+	rider.reset_to(35.0, 60.0)
+	rider.set_active(true)
+	for settling_tick in 4:
+		await physics_frame
+	var start_heading: float = rider.heading
+	Input.action_press("brake")
+	Input.action_press("steer_right")
+	for carve_tick in 24:
+		await physics_frame
+	var corner_charge: float = rider.carve_charge
+	var corner_angle: float = rad_to_deg(absf(rider.heading - start_heading))
+	var corner_speed: float = rider.speed
+	var corner_lateral: float = rider.lateral
+	Input.action_release("brake")
 	Input.action_release("steer_right")
-	if strength < 0.0:
-		Input.action_press("steer_left", -strength)
-	elif strength > 0.0:
-		Input.action_press("steer_right", strength)
-
-
-func _observe_departure() -> void:
-	_jumps += 1
-	_departure_s = _rider.progress
-	_departure_y = _rider.global_position.y
-	_maximum_y = _departure_y
-
-
-func _observe_landing() -> void:
-	if _departure_s < 0.0 or _landing_s >= 0.0:
-		return
-	_landing_s = _rider.progress
-	_landing_height = _rider.global_position.y - _course.center_at(_rider.progress).y
-	_landing_lateral = _rider.lateral
-
-
-func _within_deadline() -> bool:
-	return Time.get_ticks_msec() < _deadline
+	for release_tick in 3:
+		await physics_frame
+	var release_speed: float = rider.speed
+	expect(corner_charge >= 0.9 and not releases.is_empty(), "one 0.4-second committed first-corner carve reaches READY and releases")
+	expect(corner_angle < 30.0 and absf(corner_lateral) < 2.5, "full corner charge fits the authored turn without leaving its natural line")
+	expect(corner_speed < 22.0 and release_speed > 35.0, "carve speed cost becomes immediate release acceleration")
+	print("First corner: hold=0.400s charge=%.3f angle=%.2fdeg lateral=%.2fm carve_speed=%.2f release_speed=%.2f" % [corner_charge, corner_angle, corner_lateral, corner_speed, release_speed])
+	# Attempt a new edge while the release is still propelling the board.
+	Input.action_press("brake")
+	Input.action_press("steer_left")
+	for boosted_tick in 20:
+		await physics_frame
+	expect(rider.boosting and is_zero_approx(rider.carve_charge), "active burst cannot charge another carve")
+	Input.action_release("brake")
+	Input.action_release("steer_left")
+	# The same full input on a straight needs more time and a deeper heading,
+	# so the high-efficiency corner line has a measurable spatial advantage.
+	rider.reset_to(565.0, 60.0)
+	rider.set_active(true)
+	for settling_tick in 4:
+		await physics_frame
+	var straight_heading: float = rider.heading
+	Input.action_press("brake")
+	Input.action_press("steer_right")
+	for straight_tick in 40:
+		await physics_frame
+	var straight_angle: float = rad_to_deg(absf(rider.heading - straight_heading))
+	expect(rider.carve_charge >= 0.9 and straight_angle > corner_angle * 1.5, "straight charging requires a longer and deeper turn than the authored corner")
+	print("Straight charge: hold=0.667s charge=%.3f angle=%.2fdeg lateral=%.2fm speed=%.2f" % [rider.carve_charge, straight_angle, rider.lateral, rider.speed])
+	Input.action_release("brake")
+	Input.action_release("steer_right")
+	bursts = 0
+	releases.clear()
+	falls = 0
+	rider.reset_run()
+	rider.set_active(true)
+	var tick := 0
+	var max_lateral := 0.0
+	var last_jump := -1.0
+	var last_boost := -1.0
+	var digital := OS.get_cmdline_user_args().has("--digital")
+	var held_strength := 0.0
+	while rider.progress < course.length and falls == 0 and tick < 4800:
+		Input.action_release("steer_left")
+		Input.action_release("steer_right")
+		Input.action_release("brake")
+		Input.action_release("jump")
+		Input.action_release("boost")
+		var look: Vector3 = course.center_at(rider.progress + 12.0) - rider.position
+		var desired := atan2(-look.x, -look.z)
+		var difference := angle_difference(rider.heading, desired)
+		var curvature: float = course.curvature_at(rider.progress)
+		var use_carve: bool = rider.is_on_floor() and absf(curvature) > 0.003 and absf(difference) > 0.035
+		var rate := 1.25 if use_carve else 0.82
+		var strength := clampf(-difference * 5.0 / rate, -1.0, 1.0)
+		if digital:
+			if tick % 6 == 0:
+				held_strength = -signf(difference) if absf(difference) > 0.055 else 0.0
+			strength = held_strength
+		if strength < 0:
+			Input.action_press("steer_left", -strength)
+		else:
+			Input.action_press("steer_right", strength)
+		if use_carve:
+			Input.action_press("brake")
+		var gap: Vector2 = course.next_gap_at(rider.progress)
+		if gap != Vector2.ZERO:
+			var ahead: float = gap.x - rider.progress
+			if gap.x > 800 and ahead < 22.0 and last_boost != gap.x:
+				Input.action_press("boost")
+				last_boost = gap.x
+			if ahead < 3.0 and ahead >= -0.3 and last_jump != gap.x:
+				Input.action_press("jump")
+				last_jump = gap.x
+		await physics_frame
+		tick += 1
+		max_lateral = maxf(max_lateral, absf(rider.lateral))
+	for action in ["steer_left", "steer_right", "brake", "jump", "boost"]:
+		Input.action_release(action)
+	expect(rider.progress >= course.length and falls == 0, "input-driven rider traverses the complete authored course")
+	expect(jumps == 3 and landings == 3, "all three real gaps require and receive a takeoff and landing")
+	expect(bursts > 1, "carve releases produce acceleration during traversal")
+	expect(clean >= 1, "aligned actual landings return wind")
+	expect(tick < 3300, "successful course takes under 55 simulated seconds")
+	print("Course run: checks=%d failures=%d time=%.2f progress=%.2f lateral_max=%.2f jumps=%d landings=%d bursts=%d clean=%d falls=%d" % [checks, failures, tick / 60.0, rider.progress, max_lateral, jumps, landings, bursts, clean, falls])
+	rider.queue_free()
+	course.queue_free()
+	await process_frame
+	quit(0 if failures == 0 else 1)

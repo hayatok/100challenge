@@ -1,0 +1,52 @@
+{
+  "browser": "Chrome",
+  "normal_viewport": [
+    1282,
+    723
+  ],
+  "small_viewport": [
+    960,
+    540
+  ],
+  "manual_coverage": [
+    "first two carves, release, first gate, first gap jump and landing, next gate",
+    "side fall and checkpoint recovery",
+    "title, settings, pause, resume, confirmation",
+    "reduced motion on then restored off"
+  ],
+  "manual_not_covered": [
+    "full course completion",
+    "physical gamepad",
+    "auditory mix",
+    "long session",
+    "other browsers"
+  ],
+  "console_warnings_errors": [],
+  "native_scope": "new character title, start, pause; combined non-modifier chord unsupported by tool",
+  "native_qa": {
+    "airborne_time": 0.0166666666666667,
+    "assets_loaded": 5,
+    "burst_left": 0.0,
+    "carving": false,
+    "charge": 0.0,
+    "draw_calls": 146.0,
+    "energy": 60.0,
+    "falls": 0,
+    "fps": 121.0,
+    "heading": 0.0,
+    "lateral": 0.0,
+    "paused": true,
+    "position": [
+      0.0,
+      24.0944442749023,
+      -0.400000035762787
+    ],
+    "primitives": 537365.0,
+    "progress": 0.400000035762787,
+    "score": 0,
+    "speed": 24.0,
+    "state": "pause",
+    "time": 0.008333
+  },
+  "evidence_policy": "Screenshots are actual UI. Static and trajectory fixtures are labeled separately. Failed attempts are not successful-jump evidence."
+}

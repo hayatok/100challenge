@@ -255,9 +255,9 @@
     "date": "2026-10-24",
     "sequence": 2,
     "name": "雲海サーファー",
-    "description": "雲海の風路で旋回、ジャンプ、ブーストを試す3D滑走ゲーム。90秒の開発試作。",
+    "description": "カーブで風をため、解放して加速し、ジャンプをつなぐ3D滑走ゲーム。900mの風路を自分で操る開発版。",
     "category": "3D滑走ゲーム",
-    "thumbnail": "art/concepts/02-cloudsea-keyart.png",
+    "thumbnail": "docs/verification/rework/web-carve-release.jpg",
     "accent": "#168b8c"
   }
 ]

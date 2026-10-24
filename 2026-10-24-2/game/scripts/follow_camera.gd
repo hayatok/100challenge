@@ -5,36 +5,58 @@ extends Camera3D
 @export var reduced_motion: bool = false
 var title_view := false
 @export_group("Framing")
-@export var follow_distance: float = 5.5
-@export var follow_height: float = 2.8
-@export var look_ahead: float = 17.0
+@export var follow_distance: float = 4.3
+@export var follow_height: float = 1.85
+@export var look_ahead: float = 19.0
 @export var position_response: float = 7.0
-@export var look_response: float = 6.0
+@export var look_response: float = 7.0
 
-var _look_target: Vector3 = Vector3.ZERO
-var _previous_rider_position: Vector3 = Vector3.ZERO
-var _initialized: bool = false
+var _look_target := Vector3.ZERO
+var _previous_rider_position := Vector3.ZERO
+var _previous_render_position := Vector3.ZERO
+var _previous_ground_height := 0.0
+var _previous_jump_height := 0.0
+var _initialized := false
+var _heading := 0.0
+var _boost_impulse := 0.0
+var _land_impulse := 0.0
+var _hit_impulse := 0.0
+var _bank := 0.0
 
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_PAUSABLE
-	# Read the rider's interpolated transform once per rendered frame.
 	physics_interpolation_mode = Node.PHYSICS_INTERPOLATION_MODE_OFF
-	fov = 48.0 if title_view else 64.0
 	reset_camera()
 
 
+func cue(kind: String, strength: float = 1.0) -> void:
+	strength = clampf(strength, 0.0, 1.0)
+	match kind:
+		"boost", "release": _boost_impulse = maxf(_boost_impulse, strength)
+		"land", "clean": _land_impulse = maxf(_land_impulse, strength)
+		"hit": _hit_impulse = maxf(_hit_impulse, strength)
+
+
 func reset_camera() -> void:
+	_initialized = false
+	_boost_impulse = 0.0
+	_land_impulse = 0.0
+	_hit_impulse = 0.0
+	_bank = 0.0
 	if not is_instance_valid(rider) or not is_instance_valid(course):
-		_initialized = false
 		return
+	_heading = _rider_heading()
 	var framing := _framing(rider.global_position)
 	global_position = framing[0]
 	_look_target = framing[1]
 	look_at(_look_target, Vector3.UP)
-	rotation.z = 0.0
-	fov = 48.0 if title_view else 64.0
+	fov = 48.0 if title_view else 62.0
 	_previous_rider_position = rider.global_position
+	_previous_render_position = rider.global_position
+	var ground: Vector3 = course.call("center_at", maxf(0.0, -rider.global_position.z))
+	_previous_ground_height = ground.y
+	_previous_jump_height = clampf(rider.global_position.y - ground.y, 0.0, 7.0)
 	_initialized = true
 	reset_physics_interpolation()
 
@@ -47,34 +69,74 @@ func _process(delta: float) -> void:
 		return
 	if not _initialized or rider.global_position.distance_to(_previous_rider_position) > 20.0:
 		reset_camera()
+		return
 	_previous_rider_position = rider.global_position
+	_heading = lerp_angle(_heading, _rider_heading(), 1.0 - exp(-3.8 * delta))
+	_boost_impulse = move_toward(_boost_impulse, 0.0, delta * 3.3)
+	_land_impulse = move_toward(_land_impulse, 0.0, delta * 5.0)
+	_hit_impulse = move_toward(_hit_impulse, 0.0, delta * 4.0)
 	var rider_position := rider.get_global_transform_interpolated().origin
+	if rider_position.distance_to(_previous_render_position) > 20.0:
+		reset_camera()
+		return
+	var ground: Vector3 = course.call("center_at", maxf(0.0, -rider_position.z))
+	# Carry translation at the same interpolated instant as the rendered rider.
+	# Smooth only the relative orbit/height; world-space damping adds speed / response lag.
+	var jump_height := clampf(rider_position.y - ground.y, 0.0, 7.0)
+	var jump_change := jump_height - _previous_jump_height
+	var translation := rider_position - _previous_render_position
+	translation.y = ground.y - _previous_ground_height
+	global_position += translation + Vector3.UP * jump_change * 0.75
+	_look_target += translation + Vector3.UP * jump_change * 0.18
+	_previous_render_position = rider_position
+	_previous_ground_height = ground.y
+	_previous_jump_height = jump_height
+	# Weighted interpolated jump motion avoids a second vertical lag on landing.
 	var framing := _framing(rider_position)
 	global_position = global_position.lerp(framing[0], 1.0 - exp(-position_response * delta))
 	_look_target = _look_target.lerp(framing[1], 1.0 - exp(-look_response * delta))
 	look_at(_look_target, Vector3.UP)
-	rotation.z = 0.0
-	var target_fov := 70.0 if rider.get("boosting") and not reduced_motion else 64.0
-	fov = 64.0 if reduced_motion else lerpf(fov, target_fov, 1.0 - exp(-3.0 * delta))
+	var carve := _number("carve_amount")
+	_bank = lerpf(_bank, -carve * 0.022, 1.0 - exp(-5.0 * delta))
+	rotation.z = 0.0 if reduced_motion else _bank
+	var speed_ratio := clampf((_number("speed") - 18.0) / 20.0, 0.0, 1.0)
+	var target_fov := 62.0 + speed_ratio + (1.0 if bool(rider.get("boosting")) else 0.0)
+	fov = 62.0 if reduced_motion else lerpf(fov, target_fov, 1.0 - exp(-4.5 * delta))
 
 
 func _framing(rider_position: Vector3) -> Array[Vector3]:
 	if title_view:
-		var offset := Vector3(2.7, 1.7, 2.6)
+		var offset := Vector3(3.6, 1.65, 1.2)
 		var camera_right := Vector3(-offset.x, 0.0, -offset.z).normalized().cross(Vector3.UP)
 		return [rider_position + offset, rider_position + Vector3.UP - camera_right * 1.2]
 	var s := maxf(0.0, -rider_position.z)
 	var center: Vector3 = course.call("center_at", s)
-	var tangent: Vector3 = course.call("tangent_at", s + 5.0)
-	var forward := Vector3(tangent.x, 0.0, tangent.z).normalized()
-	if forward.length_squared() < 0.001:
-		forward = Vector3.FORWARD
+	var forward := Vector3(-sin(_heading), 0.0, -cos(_heading))
 	var right := forward.cross(Vector3.UP).normalized()
-	var offset := (rider_position - center).dot(right)
-	var position_target := rider_position - forward * follow_distance
-	var jump_height := maxf(0.0, rider_position.y - center.y)
-	position_target.y = center.y + follow_height + jump_height * (0.15 if reduced_motion else 0.35)
-	var target: Vector3 = course.call("center_at", s + look_ahead)
-	target += right * offset * 0.45
-	target.y += 1.0
+	var speed_ratio := clampf((_number("speed") - 18.0) / 20.0, 0.0, 1.0)
+	var impulse := 0.0 if reduced_motion else _boost_impulse * 0.08
+	var position_target := rider_position - forward * (follow_distance + impulse)
+	var jump_height := clampf(rider_position.y - center.y, 0.0, 7.0)
+	# Track airborne height enough to preserve the pose; a low gaze keeps the board above HUD.
+	position_target.y = center.y + follow_height + jump_height * 0.75
+	if not reduced_motion:
+		position_target.y -= _land_impulse * 0.10
+		position_target += right * _hit_impulse * 0.08
+	var path_target: Vector3 = course.call("center_at", s + look_ahead + speed_ratio * 4.0)
+	var player_target := rider_position + forward * look_ahead
+	var target := player_target.lerp(path_target, 0.27)
+	target.y = lerpf(center.y, path_target.y, 0.72) - 1.1 + jump_height * 0.18
 	return [position_target, target]
+
+
+func _rider_heading() -> float:
+	var value = rider.get("heading")
+	if value != null:
+		return float(value)
+	var tangent: Vector3 = course.call("tangent_at", maxf(0.0, -rider.global_position.z))
+	return atan2(-tangent.x, -tangent.z)
+
+
+func _number(property: String) -> float:
+	var value = rider.get(property)
+	return float(value) if value != null else 0.0

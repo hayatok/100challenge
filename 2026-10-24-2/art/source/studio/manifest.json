@@ -24,7 +24,7 @@
       "model_label": "H3.1",
       "generation_credits": 55,
       "privacy": "private",
-      "status": "imported_in_Godot",
+      "status": "historical_initial_prototype_model",
       "input_type": "image",
       "input_file": "art/source/mio/ref/front.png",
       "source_triangles": 1909377,
@@ -39,11 +39,13 @@
         "credits": 20,
         "export_skeleton": true
       },
-      "local_file": "game/assets/models/mio.glb",
       "qa_report": "art/source/studio/reports/mio.json",
       "downloaded_basename": "anime+girl+3d+model.glb",
       "source_sha256": "70a343c829f5e4b79802435bbd24365219cd24c5e4e38e197393aeaf9536b074",
-      "source_download_method": "user manually exported GLB with skeleton from Chrome Studio"
+      "source_download_method": "user manually exported GLB with skeleton from Chrome Studio",
+      "historical_file": "game/assets/models/mio.glb",
+      "historical_commit": "07c2730e877ee608cd781e0c4fee242626dba05f",
+      "superseded_by": "art/source/mio-v2/manifest.json"
     },
     {
       "name": "sentry",
@@ -87,5 +89,7 @@
   ],
   "generation_credits_total": 275,
   "processing_credits_total": 25,
-  "Studio_credits_total": 300
+  "Studio_credits_total": 300,
+  "scope": "Initial five-asset Studio batch. Its credit totals are historical; replacement character generation is recorded separately.",
+  "current_character_manifest": "art/source/mio-v2/manifest.json"
 }

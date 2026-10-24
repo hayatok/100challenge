@@ -1,0 +1,73 @@
+{
+  "body_forward": "world +X",
+  "evidence_kind": "Real Main title UI and new character, deterministic idle samples, not gameplay",
+  "model_sha256": "dc73844328312fc1e6ab2324dc8253076037fe093b231355d8bdc3dac51784a3",
+  "views": [
+    {
+      "file": "title-previous-idle0.png",
+      "fov": 48,
+      "idle_seconds": 0.0,
+      "offset": [
+        2.70000004768372,
+        1.70000004768372,
+        2.59999990463257
+      ],
+      "view": "previous"
+    },
+    {
+      "file": "title-previous-idle2.png",
+      "fov": 48,
+      "idle_seconds": 2.0,
+      "offset": [
+        2.70000004768372,
+        1.70000004768372,
+        2.59999990463257
+      ],
+      "view": "previous"
+    },
+    {
+      "file": "title-front25-idle0.png",
+      "fov": 48,
+      "idle_seconds": 0.0,
+      "offset": [
+        3.40000009536743,
+        1.5,
+        1.60000002384186
+      ],
+      "view": "front25"
+    },
+    {
+      "file": "title-front25-idle2.png",
+      "fov": 48,
+      "idle_seconds": 2.0,
+      "offset": [
+        3.40000009536743,
+        1.5,
+        1.60000002384186
+      ],
+      "view": "front25"
+    },
+    {
+      "file": "title-front18-idle0.png",
+      "fov": 48,
+      "idle_seconds": 0.0,
+      "offset": [
+        3.59999990463257,
+        1.64999997615814,
+        1.20000004768372
+      ],
+      "view": "front18"
+    },
+    {
+      "file": "title-front18-idle2.png",
+      "fov": 48,
+      "idle_seconds": 2.0,
+      "offset": [
+        3.59999990463257,
+        1.64999997615814,
+        1.20000004768372
+      ],
+      "view": "front18"
+    }
+  ]
+}

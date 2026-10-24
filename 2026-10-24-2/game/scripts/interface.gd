@@ -77,6 +77,11 @@ var _progress: ProgressBar
 var _section: Label
 var _notice: Label
 var _legend: Label
+var _technique_frame: Control
+var _carve_caption: Label
+var _carve_bar: ProgressBar
+var _gap_label: Label
+var _context_hint := ""
 var _title_controls: Label
 var _title_controls_extra: Label
 var _settings_controls: Label
@@ -159,6 +164,12 @@ func set_screen(name: String, data: Dictionary = {}) -> void:
 			focused.release_focus()
 	if name == "run":
 		_notice.text = ""
+	if name in ["title", "countdown", "results"]:
+		_context_hint = ""
+		_carve_bar.value = 0.0
+		_carve_caption.text = "CARVE → BURST"
+		_gap_label.text = ""
+		_refresh_legend()
 	if not data.is_empty() and name in ["run", "countdown"]:
 		update_hud(data)
 
@@ -183,6 +194,26 @@ func update_hud(data: Dictionary) -> void:
 		_section.text = "白環の通学路 · " + str(data.section)
 	if data.has("notice"):
 		_notice.text = str(data.notice)
+	if data.has("hint"):
+		_context_hint = str(data.hint)
+		_refresh_legend()
+	if data.has("carve_charge"):
+		var charge := clampf(float(data.carve_charge), 0.0, 1.0)
+		_carve_bar.value = charge * 100.0
+		if float(data.get("burst_left", 0.0)) > 0.0:
+			_carve_caption.text = "BURST · 加速中"
+		elif bool(data.get("charge_requires_press", false)):
+			_carve_caption.text = "風を保存中 · S を押して離す" if not _using_pad else "風を保存中 · LT を押して離す"
+		elif charge >= 0.9:
+			_carve_caption.text = "READY · S を離して解放"
+		elif bool(data.get("carving", false)):
+			_carve_caption.text = "CARVE · 風をためる"
+		else:
+			_carve_caption.text = "CARVE → BURST"
+		_carve_caption.add_theme_color_override("font_color", AMBER if charge >= 0.9 else CYAN)
+	if data.has("gap_ahead"):
+		var gap_distance := float(data.gap_ahead)
+		_gap_label.text = "切れ目まで %dm · Space でジャンプ" % ceili(gap_distance) if gap_distance >= 0.0 and gap_distance <= 65.0 else ""
 
 
 func _input(event: InputEvent) -> void:
@@ -301,7 +332,7 @@ func _build_title() -> void:
 	var box := _panel(screen, Vector4(0, 0.5, 0, 0.5), Vector4(40, -222, 520, 222))
 	_label(box, "C L O U D S E A  S U R F E R", 16, CYAN)
 	_label(box, "雲海サーファー", 46)
-	_label(box, "白環の通学路 · 90秒の試作", 20, MUTED)
+	_label(box, "風をためて、切り返して、空へ。", 20, MUTED)
 	var spacer := Control.new()
 	spacer.custom_minimum_size.y = 16
 	box.add_child(spacer)
@@ -310,7 +341,7 @@ func _build_title() -> void:
 	_link_buttons([start, settings])
 	_first_focus.title = start
 	_title_controls = _label(box, "A / D 旋回  ·  Space ジャンプ", 16, MUTED)
-	_title_controls_extra = _label(box, "S ブレーキ  ·  Shift ブースト", 16, MUTED)
+	_title_controls_extra = _label(box, "S + 旋回でためる → 離して加速", 16, MUTED)
 
 
 func _build_hud() -> void:
@@ -360,14 +391,23 @@ func _build_hud() -> void:
 	_notice.add_theme_color_override("font_shadow_color", INK)
 	_notice.add_theme_constant_override("shadow_outline_size", 8)
 	_notice.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	_legend = Label.new()
-	_rect(_legend, _hud, Vector4(0.5, 1, 0.5, 1), Vector4(-330, -80, 330, -24))
+	_gap_label = Label.new()
+	_rect(_gap_label, _hud, Vector4.ZERO, Vector4(28, 242, 445, 278))
+	_gap_label.add_theme_font_size_override("font_size", 18)
+	_gap_label.add_theme_color_override("font_color", AMBER)
+	_gap_label.add_theme_color_override("font_shadow_color", INK)
+	_gap_label.add_theme_constant_override("shadow_outline_size", 8)
+	var technique := _panel(_hud, Vector4(0.5, 1, 0.5, 1), Vector4(-245, -144, 245, -24))
+	_technique_frame = technique.get_parent()
+	technique.add_theme_constant_override("separation", 5)
+	_carve_caption = _label(technique, "CARVE → BURST", 16, CYAN)
+	_carve_caption.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_carve_bar = _bar(technique)
+	_carve_bar.custom_minimum_size.y = 8
+	_legend = _label(technique, "", 17)
 	_legend.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_legend.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	_legend.add_theme_font_size_override("font_size", 16)
-	_legend.add_theme_color_override("font_color", WHITE)
-	_legend.add_theme_color_override("font_shadow_color", INK)
-	_legend.add_theme_constant_override("shadow_outline_size", 6)
+	_legend.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_refresh_legend()
 	_screens.run = Control.new()
 	_root.add_child(_screens.run)
@@ -376,7 +416,7 @@ func _build_hud() -> void:
 func _build_countdown() -> void:
 	var screen := _new_screen("countdown")
 	var box := _panel(screen, Vector4(0.5, 0.5, 0.5, 0.5), Vector4(-190, -115, 190, 115))
-	_count = _label(box, "3", 88, WHITE, true)
+	_count = _label(box, "READY", 68, WHITE, true)
 	_count.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_count_caption = _label(box, "風を読んで、走り出そう", 20, MUTED)
 	_count_caption.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -572,21 +612,26 @@ func _refresh_legend() -> void:
 		return
 	var compact := _root.size.x < 1100
 	if _using_pad:
-		_legend.text = "左スティック 旋回 · A ジャンプ · RT ブースト" if compact else "左スティック 旋回  ·  LT ブレーキ  ·  A ジャンプ  ·  RT ブースト"
+		_legend.text = "LT + 旋回でためる → 離して加速"
 		if _title_controls != null:
 			_title_controls.text = "左スティック 旋回  ·  A ジャンプ"
-			_title_controls_extra.text = "LT ブレーキ  ·  RT ブースト"
+			_title_controls_extra.text = "LT + 旋回でためる → 離して加速"
 		if _settings_controls != null:
-			_settings_controls.text = "左スティック 旋回   LT ブレーキ   A ジャンプ\nRT ブースト   Menu ポーズ"
+			_settings_controls.text = "左スティック 旋回   LT カーヴ   A ジャンプ\nRT ブースト   Menu ポーズ"
 	else:
-		_legend.text = "A / D 旋回 · Space ジャンプ · Shift ブースト" if compact else "A / D 旋回  ·  S ブレーキ  ·  Space ジャンプ  ·  Shift ブースト"
+		_legend.text = "S + A / D でためる → S を離して加速"
 		if _title_controls != null:
 			_title_controls.text = "A / D 旋回  ·  Space ジャンプ"
-			_title_controls_extra.text = "S ブレーキ  ·  Shift ブースト"
+			_title_controls_extra.text = "S + 旋回でためる → 離して加速"
 		if _settings_controls != null:
-			_settings_controls.text = "A / D 旋回   S ブレーキ   Space ジャンプ\nShift ブースト   Esc ポーズ"
-	_legend.offset_top = -149 if compact else -84
-	_legend.offset_bottom = -125 if compact else -28
+			_settings_controls.text = "A / D 旋回   S カーヴ   Space ジャンプ\nShift ブースト   Esc ポーズ"
+	if not _context_hint.is_empty():
+		_legend.text = _context_hint
+		if _using_pad:
+			_legend.text = _legend.text.replace("A / D", "左スティック").replace("S +", "LT +").replace("S を", "LT を").replace("Space", "A").replace("Shift", "RT")
+	if _technique_frame != null:
+		_technique_frame.offset_left = -160 if compact else -245
+		_technique_frame.offset_right = 160 if compact else 245
 
 
 func _refresh_layout() -> void:

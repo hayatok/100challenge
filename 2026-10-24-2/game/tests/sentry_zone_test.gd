@@ -1,6 +1,6 @@
 extends SceneTree
 
-const SENTRIES: Array[float] = [280.0, 550.0, 880.0, 1180.0, 1440.0]
+const SENTRIES: Array[float] = [340.0, 690.0]
 var _course: Node3D
 var _rider: CharacterBody3D
 var _checks: int = 0
@@ -80,16 +80,18 @@ func _run() -> void:
 		for ds in [-8.6, -8.25, -4.0, 0.0, 4.0, 8.25, 8.6]:
 			var progress: float = sentry.s + ds
 			var width: float = _course.half_width_at(progress)
-			for offset in [0.0, -0.3, 0.3, sentry.side * 0.39, sentry.side * 0.405, sentry.side * (width - 0.05), sentry.side * (width + 0.05)]:
+			for offset in [0.0, -0.3, 0.3, sentry.side * -0.81, sentry.side * -0.79, sentry.side * (width - 0.05), sentry.side * (width + 0.05)]:
 				var point: Vector3 = _course.surface_at(progress, offset)
-				var expected: bool = absf(ds) < 8.5 and sentry.side * offset > 0.4 and sentry.side * offset <= width
+				var expected: bool = absf(ds) < 8.5 and sentry.side * offset > -0.8 and sentry.side * offset <= width
 				var physical: bool = sentry.is_position_in_zone(point)
 				var visible := _mesh_contains(warning, vertices, point)
 				_expect(physical == expected, "sentry %d world position agrees with endangered cross section" % index)
 				_expect(visible == physical, "sentry %d visible stripe and physical zone agree at s=%.3f x=%.3f" % [index, progress, offset])
 		# Use real grounded CharacterBody positions, including the former center
 		# ambiguity and both dangerous edges, and observe the actual hit signal.
-		for offset in [0.0, -0.3, 0.3, sentry.side * 0.405, sentry.side * (_course.half_width_at(sentry.s) - 0.1)]:
+		for offset in [0.0, -0.3, 0.3, sentry.side * -0.6, sentry.side * (_course.half_width_at(sentry.s) - 0.1)]:
+			_rider.reset_to(sentry.s, 60.0)
+			_rider.set_active(true)
 			_rider.global_position = _course.surface_at(sentry.s, offset) + Vector3.UP * 0.05
 			_rider.velocity = Vector3.ZERO
 			await _frames(95)
@@ -102,7 +104,7 @@ func _run() -> void:
 			sentry.call("_physics_process", 0.0)
 			_expect(_hit_count == hits_before, "sentry %d cannot hit before 1.7-second telegraph" % index)
 			sentry.call("_physics_process", 0.02)
-			var should_hit: bool = sentry.side * offset > 0.4
+			var should_hit: bool = sentry.side * offset > -0.8
 			_expect((_hit_count == hits_before + 1) == should_hit, "sentry %d grounded collision matches visible side at offset %.3f" % [index, offset])
 			sentry.active = false
 		print("Sentry zone %d: s=%.0f side=%+.0f vertices=%d center and inner/outer-edge checks complete" % [index, sentry.s, sentry.side, vertices.size()])

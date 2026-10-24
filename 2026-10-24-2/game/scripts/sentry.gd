@@ -17,7 +17,7 @@ var _warn: MeshInstance3D
 var _model_anchor: Node3D
 
 const ZONE_HALF_LENGTH: float = 8.5
-const SAFE_HALF_WIDTH: float = 0.4
+const SAFE_HALF_WIDTH: float = -0.8
 const WARNING_LIFT: float = 0.055
 
 

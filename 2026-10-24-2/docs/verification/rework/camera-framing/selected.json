@@ -1,0 +1,876 @@
+{
+  "board_metric": "Projected visible board mesh vertices, not empty AABB corners",
+  "camera_sha256": "ddaa54c8727599852a71ac739cc985c01fa9fd70027d277f15e72461e6891f11",
+  "candidates": [
+    {
+      "boost": false,
+      "id": "selected_run",
+      "reduced": false,
+      "speed": 26.0
+    },
+    {
+      "boost": true,
+      "id": "selected_boost",
+      "reduced": false,
+      "speed": 40.0
+    },
+    {
+      "boost": true,
+      "id": "selected_reduced",
+      "reduced": true,
+      "speed": 40.0
+    }
+  ],
+  "cases": [
+    {
+      "airborne_fixture": false,
+      "board_bounds_px": [
+        580.225280761719,
+        451.118896484375,
+        90.4444580078125,
+        103.082153320312
+      ],
+      "board_hud_margin_px": 21.7989501953125,
+      "board_mesh_overlaps_center_hud": false,
+      "board_overlaps_center_hud": false,
+      "board_px": [
+        625.625061035156,
+        516.225402832031
+      ],
+      "candidate": "selected_run",
+      "feet_px": [
+        [
+          618.265930175781,
+          458.82861328125
+        ],
+        [
+          617.706359863281,
+          474.135070800781
+        ]
+      ],
+      "file": "selected_run-030.png",
+      "fov": 62.3999481201172,
+      "head_px": [
+        637.108154296875,
+        291.017669677734
+      ],
+      "head_to_foot_fraction": 0.25432972378201,
+      "next_gap_landing_px": [
+        670.366394042969,
+        292.697692871094
+      ],
+      "roll": 0.0,
+      "s": 30.0
+    },
+    {
+      "airborne_fixture": false,
+      "board_bounds_px": [
+        606.033813476562,
+        452.659088134766,
+        89.781982421875,
+        108.268646240234
+      ],
+      "board_hud_margin_px": 15.072265625,
+      "board_mesh_overlaps_center_hud": false,
+      "board_overlaps_center_hud": false,
+      "board_px": [
+        645.427612304688,
+        518.190307617188
+      ],
+      "candidate": "selected_run",
+      "feet_px": [
+        [
+          647.801879882812,
+          460.286529541016
+        ],
+        [
+          648.256042480469,
+          475.564422607422
+        ]
+      ],
+      "file": "selected_run-085.png",
+      "fov": 62.3999481201172,
+      "head_px": [
+        713.827331542969,
+        310.818939208984
+      ],
+      "head_to_foot_fraction": 0.228813171386719,
+      "next_gap_landing_px": [
+        351.035186767578,
+        301.593566894531
+      ],
+      "roll": -0.0131994010880589,
+      "s": 85.0
+    },
+    {
+      "airborne_fixture": false,
+      "board_bounds_px": [
+        594.778503417969,
+        451.039947509766,
+        90.384765625,
+        102.816497802734
+      ],
+      "board_hud_margin_px": 22.1435546875,
+      "board_mesh_overlaps_center_hud": false,
+      "board_overlaps_center_hud": false,
+      "board_px": [
+        640.0,
+        516.126525878906
+      ],
+      "candidate": "selected_run",
+      "feet_px": [
+        [
+          632.842407226562,
+          458.693115234375
+        ],
+        [
+          632.231628417969,
+          473.985687255859
+        ]
+      ],
+      "file": "selected_run-240.png",
+      "fov": 62.3999481201172,
+      "head_px": [
+        652.246215820312,
+        290.994354248047
+      ],
+      "head_to_foot_fraction": 0.254154629177517,
+      "next_gap_landing_px": [
+        640.0,
+        330.292419433594
+      ],
+      "roll": 0.0,
+      "s": 240.0
+    },
+    {
+      "airborne_fixture": true,
+      "board_bounds_px": [
+        594.549011230469,
+        401.568511962891,
+        90.840576171875,
+        90.5250549316406
+      ],
+      "board_hud_margin_px": 83.9064331054688,
+      "board_mesh_overlaps_center_hud": false,
+      "board_overlaps_center_hud": false,
+      "board_px": [
+        640.0,
+        460.583679199219
+      ],
+      "candidate": "selected_run",
+      "feet_px": [
+        [
+          632.797668457031,
+          404.186889648438
+        ],
+        [
+          632.181701660156,
+          416.316741943359
+        ]
+      ],
+      "file": "selected_run-250.png",
+      "fov": 62.3999481201172,
+      "head_px": [
+        656.122314453125,
+        241.165069580078
+      ],
+      "head_to_foot_fraction": 0.243266211615668,
+      "next_gap_landing_px": [
+        640.0,
+        371.160522460938
+      ],
+      "roll": 0.0,
+      "s": 250.0
+    },
+    {
+      "airborne_fixture": true,
+      "board_bounds_px": [
+        594.549194335938,
+        401.568389892578,
+        90.8405151367188,
+        90.524169921875
+      ],
+      "board_hud_margin_px": 83.9074401855469,
+      "board_mesh_overlaps_center_hud": false,
+      "board_overlaps_center_hud": false,
+      "board_px": [
+        640.0,
+        460.584197998047
+      ],
+      "candidate": "selected_run",
+      "feet_px": [
+        [
+          632.797607421875,
+          404.188049316406
+        ],
+        [
+          632.181701660156,
+          416.317047119141
+        ]
+      ],
+      "file": "selected_run-535.png",
+      "fov": 62.3999481201172,
+      "head_px": [
+        656.12255859375,
+        241.164794921875
+      ],
+      "head_to_foot_fraction": 0.243267016940647,
+      "next_gap_landing_px": [
+        640.0,
+        351.831359863281
+      ],
+      "roll": 0.0,
+      "s": 535.0
+    },
+    {
+      "airborne_fixture": true,
+      "board_bounds_px": [
+        594.549133300781,
+        401.568267822266,
+        90.840576171875,
+        90.5241394042969
+      ],
+      "board_hud_margin_px": 83.9075927734375,
+      "board_mesh_overlaps_center_hud": false,
+      "board_overlaps_center_hud": false,
+      "board_px": [
+        640.0,
+        460.584136962891
+      ],
+      "candidate": "selected_run",
+      "feet_px": [
+        [
+          632.797546386719,
+          404.188079833984
+        ],
+        [
+          632.181701660156,
+          416.317077636719
+        ]
+      ],
+      "file": "selected_run-830.png",
+      "fov": 62.3999481201172,
+      "head_px": [
+        656.12255859375,
+        241.164703369141
+      ],
+      "head_to_foot_fraction": 0.243267186482747,
+      "next_gap_landing_px": [
+        640.0,
+        329.306823730469
+      ],
+      "roll": 0.0,
+      "s": 830.0
+    },
+    {
+      "airborne_fixture": false,
+      "board_bounds_px": [
+        594.778625488281,
+        451.039642333984,
+        90.384765625,
+        102.815338134766
+      ],
+      "board_hud_margin_px": 22.14501953125,
+      "board_mesh_overlaps_center_hud": false,
+      "board_overlaps_center_hud": false,
+      "board_px": [
+        640.0,
+        516.127014160156
+      ],
+      "candidate": "selected_run",
+      "feet_px": [
+        [
+          632.842346191406,
+          458.694580078125
+        ],
+        [
+          632.231628417969,
+          473.985992431641
+        ]
+      ],
+      "file": "selected_run-860.png",
+      "fov": 62.3999481201172,
+      "head_px": [
+        652.246215820312,
+        290.994140625
+      ],
+      "head_to_foot_fraction": 0.254155349731445,
+      "next_gap_landing_px": [
+        0.0,
+        0.0
+      ],
+      "roll": 0.0,
+      "s": 860.0
+    },
+    {
+      "airborne_fixture": false,
+      "board_bounds_px": [
+        578.171875,
+        449.870330810547,
+        87.745361328125,
+        100.142852783203
+      ],
+      "board_hud_margin_px": 25.98681640625,
+      "board_mesh_overlaps_center_hud": false,
+      "board_overlaps_center_hud": false,
+      "board_px": [
+        622.254760742188,
+        513.051391601562
+      ],
+      "candidate": "selected_boost",
+      "feet_px": [
+        [
+          615.068786621094,
+          457.364501953125
+        ],
+        [
+          614.537963867188,
+          472.218627929688
+        ]
+      ],
+      "file": "selected_boost-030.png",
+      "fov": 63.9997520446777,
+      "head_px": [
+        626.22998046875,
+        305.866180419922
+      ],
+      "head_to_foot_fraction": 0.231045065985786,
+      "next_gap_landing_px": [
+        665.416320800781,
+        296.275482177734
+      ],
+      "roll": 0.0,
+      "s": 30.0
+    },
+    {
+      "airborne_fixture": false,
+      "board_bounds_px": [
+        608.233154296875,
+        451.370483398438,
+        87.0763549804688,
+        105.108459472656
+      ],
+      "board_hud_margin_px": 19.5210571289062,
+      "board_mesh_overlaps_center_hud": false,
+      "board_overlaps_center_hud": false,
+      "board_px": [
+        646.427917480469,
+        514.958068847656
+      ],
+      "candidate": "selected_boost",
+      "feet_px": [
+        [
+          648.743835449219,
+          458.772857666016
+        ],
+        [
+          649.180786132812,
+          473.595336914062
+        ]
+      ],
+      "file": "selected_boost-085.png",
+      "fov": 63.9997520446777,
+      "head_px": [
+        703.179138183594,
+        322.747772216797
+      ],
+      "head_to_foot_fraction": 0.20951050652398,
+      "next_gap_landing_px": [
+        361.509521484375,
+        304.914184570312
+      ],
+      "roll": -0.0131994010880589,
+      "s": 85.0
+    },
+    {
+      "airborne_fixture": false,
+      "board_bounds_px": [
+        596.145202636719,
+        449.747131347656,
+        87.6533203125,
+        99.77294921875
+      ],
+      "board_hud_margin_px": 26.4799194335938,
+      "board_mesh_overlaps_center_hud": false,
+      "board_overlaps_center_hud": false,
+      "board_px": [
+        640.0,
+        512.896728515625
+      ],
+      "candidate": "selected_boost",
+      "feet_px": [
+        [
+          633.059875488281,
+          457.170684814453
+        ],
+        [
+          632.467163085938,
+          472.005920410156
+        ]
+      ],
+      "file": "selected_boost-240.png",
+      "fov": 63.9997520446777,
+      "head_px": [
+        644.849914550781,
+        305.821563720703
+      ],
+      "head_to_foot_fraction": 0.230811606513129,
+      "next_gap_landing_px": [
+        640.0,
+        332.686798095703
+      ],
+      "roll": 0.0,
+      "s": 240.0
+    },
+    {
+      "airborne_fixture": true,
+      "board_bounds_px": [
+        595.929016113281,
+        402.191650390625,
+        88.082763671875,
+        87.8222351074219
+      ],
+      "board_hud_margin_px": 85.9861145019531,
+      "board_mesh_overlaps_center_hud": false,
+      "board_overlaps_center_hud": false,
+      "board_px": [
+        640.0,
+        459.434783935547
+      ],
+      "candidate": "selected_boost",
+      "feet_px": [
+        [
+          633.017700195312,
+          404.730621337891
+        ],
+        [
+          632.420104980469,
+          416.493560791016
+        ]
+      ],
+      "file": "selected_boost-250.png",
+      "fov": 63.9997520446777,
+      "head_px": [
+        648.379150390625,
+        258.992706298828
+      ],
+      "head_to_foot_fraction": 0.218751186794705,
+      "next_gap_landing_px": [
+        640.0,
+        372.711303710938
+      ],
+      "roll": 0.0,
+      "s": 250.0
+    },
+    {
+      "airborne_fixture": true,
+      "board_bounds_px": [
+        595.92919921875,
+        402.191680908203,
+        88.0826416015625,
+        87.8213500976562
+      ],
+      "board_hud_margin_px": 85.9869689941406,
+      "board_mesh_overlaps_center_hud": false,
+      "board_overlaps_center_hud": false,
+      "board_px": [
+        640.0,
+        459.435485839844
+      ],
+      "candidate": "selected_boost",
+      "feet_px": [
+        [
+          633.017700195312,
+          404.731994628906
+        ],
+        [
+          632.420104980469,
+          416.493988037109
+        ]
+      ],
+      "file": "selected_boost-535.png",
+      "fov": 63.9997520446777,
+      "head_px": [
+        648.379272460938,
+        258.992706298828
+      ],
+      "head_to_foot_fraction": 0.218751780192057,
+      "next_gap_landing_px": [
+        640.0,
+        353.977081298828
+      ],
+      "roll": 0.0,
+      "s": 535.0
+    },
+    {
+      "airborne_fixture": true,
+      "board_bounds_px": [
+        595.92919921875,
+        402.191558837891,
+        88.0826416015625,
+        87.8213195800781
+      ],
+      "board_hud_margin_px": 85.9871215820312,
+      "board_mesh_overlaps_center_hud": false,
+      "board_overlaps_center_hud": false,
+      "board_px": [
+        640.0,
+        459.435394287109
+      ],
+      "candidate": "selected_boost",
+      "feet_px": [
+        [
+          633.017639160156,
+          404.73193359375
+        ],
+        [
+          632.420104980469,
+          416.494018554688
+        ]
+      ],
+      "file": "selected_boost-830.png",
+      "fov": 63.9997520446777,
+      "head_px": [
+        648.379272460938,
+        258.992736816406
+      ],
+      "head_to_foot_fraction": 0.218751780192057,
+      "next_gap_landing_px": [
+        640.0,
+        332.150726318359
+      ],
+      "roll": 0.0,
+      "s": 830.0
+    },
+    {
+      "airborne_fixture": false,
+      "board_bounds_px": [
+        596.145324707031,
+        449.746917724609,
+        87.6533203125,
+        99.7718200683594
+      ],
+      "board_hud_margin_px": 26.4812622070312,
+      "board_mesh_overlaps_center_hud": false,
+      "board_overlaps_center_hud": false,
+      "board_px": [
+        640.0,
+        512.897277832031
+      ],
+      "candidate": "selected_boost",
+      "feet_px": [
+        [
+          633.059814453125,
+          457.172180175781
+        ],
+        [
+          632.467163085938,
+          472.006408691406
+        ]
+      ],
+      "file": "selected_boost-860.png",
+      "fov": 63.9997520446777,
+      "head_px": [
+        644.849914550781,
+        305.821319580078
+      ],
+      "head_to_foot_fraction": 0.230812623765733,
+      "next_gap_landing_px": [
+        0.0,
+        0.0
+      ],
+      "roll": 0.0,
+      "s": 860.0
+    },
+    {
+      "airborne_fixture": false,
+      "board_bounds_px": [
+        575.701721191406,
+        453.460845947266,
+        91.2509765625,
+        104.143768310547
+      ],
+      "board_hud_margin_px": 18.3953857421875,
+      "board_mesh_overlaps_center_hud": false,
+      "board_overlaps_center_hud": false,
+      "board_px": [
+        621.545776367188,
+        519.166137695312
+      ],
+      "candidate": "selected_reduced",
+      "feet_px": [
+        [
+          614.072692871094,
+          461.25439453125
+        ],
+        [
+          613.520690917969,
+          476.702026367188
+        ]
+      ],
+      "file": "selected_reduced-030.png",
+      "fov": 62.0,
+      "head_px": [
+        625.679870605469,
+        303.703399658203
+      ],
+      "head_to_foot_fraction": 0.240275870429145,
+      "next_gap_landing_px": [
+        666.431762695312,
+        293.729553222656
+      ],
+      "roll": 0.0,
+      "s": 30.0
+    },
+    {
+      "airborne_fixture": false,
+      "board_bounds_px": [
+        605.138732910156,
+        455.058654785156,
+        90.2782592773438,
+        109.790771484375
+      ],
+      "board_hud_margin_px": 11.1505737304688,
+      "board_mesh_overlaps_center_hud": false,
+      "board_overlaps_center_hud": false,
+      "board_px": [
+        644.55712890625,
+        521.223205566406
+      ],
+      "candidate": "selected_reduced",
+      "feet_px": [
+        [
+          647.736572265625,
+          462.830139160156
+        ],
+        [
+          647.987487792969,
+          478.249450683594
+        ]
+      ],
+      "file": "selected_reduced-085.png",
+      "fov": 62.0,
+      "head_px": [
+        706.208923339844,
+        322.130035400391
+      ],
+      "head_to_foot_fraction": 0.216832521226671,
+      "next_gap_landing_px": [
+        351.164581298828,
+        298.895751953125
+      ],
+      "roll": 0.0,
+      "s": 85.0
+    },
+    {
+      "airborne_fixture": false,
+      "board_bounds_px": [
+        594.393127441406,
+        453.332702636719,
+        91.1552734375,
+        103.759094238281
+      ],
+      "board_hud_margin_px": 18.908203125,
+      "board_mesh_overlaps_center_hud": false,
+      "board_overlaps_center_hud": false,
+      "board_px": [
+        640.0,
+        519.005249023438
+      ],
+      "candidate": "selected_reduced",
+      "feet_px": [
+        [
+          632.782592773438,
+          461.052856445312
+        ],
+        [
+          632.166198730469,
+          476.480804443359
+        ]
+      ],
+      "file": "selected_reduced-240.png",
+      "fov": 62.0,
+      "head_px": [
+        645.043640136719,
+        303.657012939453
+      ],
+      "head_to_foot_fraction": 0.240033043755425,
+      "next_gap_landing_px": [
+        640.0,
+        331.595550537109
+      ],
+      "roll": 0.0,
+      "s": 240.0
+    },
+    {
+      "airborne_fixture": true,
+      "board_bounds_px": [
+        594.168273925781,
+        403.877288818359,
+        91.6018676757812,
+        91.3309326171875
+      ],
+      "board_hud_margin_px": 80.7917785644531,
+      "board_mesh_overlaps_center_hud": false,
+      "board_overlaps_center_hud": false,
+      "board_px": [
+        640.0,
+        463.407440185547
+      ],
+      "candidate": "selected_reduced",
+      "feet_px": [
+        [
+          632.73876953125,
+          406.517700195312
+        ],
+        [
+          632.117248535156,
+          418.750610351562
+        ]
+      ],
+      "file": "selected_reduced-250.png",
+      "fov": 62.0,
+      "head_px": [
+        648.7138671875,
+        254.957244873047
+      ],
+      "head_to_foot_fraction": 0.227490785386827,
+      "next_gap_landing_px": [
+        640.0,
+        373.219146728516
+      ],
+      "roll": 0.0,
+      "s": 250.0
+    },
+    {
+      "airborne_fixture": true,
+      "board_bounds_px": [
+        594.16845703125,
+        403.877319335938,
+        91.6017456054688,
+        91.3300170898438
+      ],
+      "board_hud_margin_px": 80.7926635742188,
+      "board_mesh_overlaps_center_hud": false,
+      "board_overlaps_center_hud": false,
+      "board_px": [
+        640.0,
+        463.408142089844
+      ],
+      "candidate": "selected_reduced",
+      "feet_px": [
+        [
+          632.73876953125,
+          406.519134521484
+        ],
+        [
+          632.117248535156,
+          418.751068115234
+        ]
+      ],
+      "file": "selected_reduced-535.png",
+      "fov": 62.0,
+      "head_px": [
+        648.714050292969,
+        254.957260131836
+      ],
+      "head_to_foot_fraction": 0.227491399976942,
+      "next_gap_landing_px": [
+        640.0,
+        353.736450195312
+      ],
+      "roll": 0.0,
+      "s": 535.0
+    },
+    {
+      "airborne_fixture": true,
+      "board_bounds_px": [
+        594.16845703125,
+        403.877197265625,
+        91.6017456054688,
+        91.3299865722656
+      ],
+      "board_hud_margin_px": 80.7928161621094,
+      "board_mesh_overlaps_center_hud": false,
+      "board_overlaps_center_hud": false,
+      "board_px": [
+        640.0,
+        463.408050537109
+      ],
+      "candidate": "selected_reduced",
+      "feet_px": [
+        [
+          632.738708496094,
+          406.519073486328
+        ],
+        [
+          632.117248535156,
+          418.751098632812
+        ]
+      ],
+      "file": "selected_reduced-830.png",
+      "fov": 62.0,
+      "head_px": [
+        648.714050292969,
+        254.957275390625
+      ],
+      "head_to_foot_fraction": 0.227491421169705,
+      "next_gap_landing_px": [
+        640.0,
+        331.0380859375
+      ],
+      "roll": 0.0,
+      "s": 830.0
+    },
+    {
+      "airborne_fixture": false,
+      "board_bounds_px": [
+        594.393249511719,
+        453.332489013672,
+        91.1552734375,
+        103.757965087891
+      ],
+      "board_hud_margin_px": 18.9095458984375,
+      "board_mesh_overlaps_center_hud": false,
+      "board_overlaps_center_hud": false,
+      "board_px": [
+        640.0,
+        519.005859375
+      ],
+      "candidate": "selected_reduced",
+      "feet_px": [
+        [
+          632.782531738281,
+          461.054443359375
+        ],
+        [
+          632.166198730469,
+          476.481292724609
+        ]
+      ],
+      "file": "selected_reduced-860.png",
+      "fov": 62.0,
+      "head_px": [
+        645.043640136719,
+        303.65673828125
+      ],
+      "head_to_foot_fraction": 0.240034103393555,
+      "next_gap_landing_px": [
+        0.0,
+        0.0
+      ],
+      "roll": 0.0,
+      "s": 860.0
+    }
+  ],
+  "evidence_kind": "Deterministic rendering fixture, not human playtesting",
+  "head_bone": "mixamorig_HeadTop_End",
+  "head_metric": "Skeleton HeadTop_End to lowest projected foot joint; excludes hair and sole thickness",
+  "interpolation": "Disabled on the fixture rider for static placement; production remains unchanged",
+  "model": "Current game/assets/models/mio.glb; adoption is not assessed",
+  "model_sha256": "70a343c829f5e4b79802435bbd24365219cd24c5e4e38e197393aeaf9536b074",
+  "viewport": [
+    1280,
+    720
+  ]
+}

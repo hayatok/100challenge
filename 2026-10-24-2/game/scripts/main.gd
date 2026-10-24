@@ -4,10 +4,11 @@ const RIDER_SCENE = preload("res://scenes/rider.tscn")
 const SENTRY_SCRIPT = preload("res://scripts/sentry.gd")
 const ASSET_SCRIPT = preload("res://scripts/asset_loader.gd")
 const CLOUD_SCRIPT = preload("res://scripts/cloudscape.gd")
-const RECORD_PATH := "user://cloudsea-records.json"
+const RECORD_PATH := "user://cloudsea-carve-v2.json"
+const LEGACY_RECORD_PATH := "user://cloudsea-records.json"
 @export var record_path := RECORD_PATH
-const GATES := [100.0, 220.0, 400.0, 610.0, 760.0, 940.0, 1160.0, 1320.0, 1510.0]
-const SENTRIES := [280.0, 550.0, 880.0, 1180.0, 1440.0]
+const GATES := [155.0, 275.0, 420.0, 560.0, 610.0, 795.0, 890.0]
+const SENTRIES := [340.0, 690.0]
 
 @onready var course = $Course
 @onready var camera = $FollowCamera
@@ -15,6 +16,7 @@ const SENTRIES := [280.0, 550.0, 880.0, 1180.0, 1440.0]
 var rider
 var assets
 var sound
+var effects
 var cloudscape
 var state := "title"
 var time := 0.0
@@ -38,6 +40,8 @@ var _qa := false
 var _auto := false
 var _qa_next := 0.0
 var _jump_gap := -1.0
+var _countdown_caption := "風を読んで、走り出そう"
+var _resuming := false
 
 
 func _ready() -> void:
@@ -53,6 +57,9 @@ func _ready() -> void:
 	rider.fell.connect(_on_fall)
 	rider.landed.connect(_on_landed)
 	rider.jumped.connect(_on_jumped)
+	rider.carve_released.connect(_on_carve_released)
+	rider.burst_started.connect(_on_burst_started)
+	rider.clean_landed.connect(_on_clean_landed)
 	cloudscape = CLOUD_SCRIPT.new()
 	cloudscape.follow_rider = rider
 	add_child(cloudscape)
@@ -71,6 +78,10 @@ func _ready() -> void:
 		sentry.name = "Sentry%d" % index
 		add_child(sentry)
 		assets.attach_sentry(sentry)
+	effects = preload("res://scripts/effects.gd").new()
+	effects.rider = rider
+	effects.course = course
+	add_child(effects)
 	camera.rider = rider
 	camera.course = course
 	camera.reset_camera()
@@ -96,12 +107,18 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	if state == "countdown":
 		countdown -= delta
-		ui.set_screen("countdown", {"count": maxi(1, ceili(countdown)), "caption": "風を読んで、走り出そう"})
+		ui.set_screen("countdown", {"count": "READY" if countdown > 0.35 else "GO", "caption": _countdown_caption})
 		if countdown <= 0.0:
+			get_tree().paused = false
 			state = "run"
+			_pose_context("running" if recover_left <= 0.0 else "recovery")
+			if recover_left <= 0.0 and not _resuming:
+				_pose_event("start", 1.0)
 			ui.set_screen("run")
 			rider.set_active(recover_left <= 0.0)
 			_set_hazards_active(recover_left <= 0.0)
+			_resuming = false
+		_update_hud()
 	elif state == "run":
 		time += delta
 		flow_left = maxf(0.0, flow_left - delta)
@@ -114,21 +131,23 @@ func _process(delta: float) -> void:
 			recover_left -= delta
 			if recover_left <= 0.0:
 				var checkpoint: float = course.checkpoint_at(rider.progress)
-				rider.reset_to(checkpoint, maxf(40.0, rider.wind_energy))
+				rider.reset_to(checkpoint, maxf(48.0, rider.wind_energy))
+				_pose_context("running")
 				previous_progress = checkpoint
 				camera.reset_camera()
+				_reset_feedback()
 				rider.set_active(true)
 				_set_hazards_active(true)
 		else:
 			_process_events()
-			if rider.progress >= course.length:
+			if rider.progress >= course.length and rider.is_on_floor() and absf(rider.lateral) <= course.half_width_at(rider.progress):
 				_finish()
 			if sound:
 				sound.set_speed(rider.speed, rider.boosting)
-				if rider.boosting and not _was_boosting:
-					sound.cue("boost")
-				if not rider.is_on_floor() and _was_grounded and rider.velocity.y > 2.0:
-					sound.cue("jump")
+				sound.set_motion(rider.carve_amount, rider.carve_charge, not rider.is_on_floor())
+				if not rider.boosting and _was_boosting:
+					_pose_event("boost_end", 1.0)
+
 			_was_boosting = rider.boosting
 			_was_grounded = rider.is_on_floor()
 		_update_hud()
@@ -163,6 +182,7 @@ func _notification(what: int) -> void:
 
 
 func _start_run() -> void:
+	_resuming = false
 	get_tree().paused = false
 	_release_inputs()
 	time = 0.0
@@ -180,22 +200,29 @@ func _start_run() -> void:
 	for sentry in get_tree().get_nodes_in_group("sentries"):
 		sentry.reset_run()
 	rider.reset_run()
+	_reset_feedback()
 	_set_hazards_active(false)
 	camera.title_view = false
 	camera.reset_camera()
-	countdown = 3.0
+	countdown = 1.2
+	_countdown_caption = "風を読んで、走り出そう"
+	_pose_reset()
+	_pose_context("countdown")
 	state = "countdown"
-	ui.set_screen("countdown", {"count": 3})
+	ui.set_screen("countdown", {"count": "READY"})
 	if sound:
 		sound.cue("count")
 
 
 func _show_title() -> void:
+	_resuming = false
 	get_tree().paused = false
 	state = "title"
 	_release_inputs()
 	rider.reset_run()
+	_reset_feedback()
 	_set_hazards_active(false)
+	_pose_context("idle")
 	camera.title_view = true
 	camera.reset_camera()
 	ui.set_screen("title", records)
@@ -206,17 +233,21 @@ func _show_title() -> void:
 func _pause() -> void:
 	state = "pause"
 	rider.set_active(false)
-	_set_hazards_active(false)
+	_set_hazards_active(false, true)
 	get_tree().paused = true
 	ui.set_screen("pause")
 
 
 func _resume() -> void:
 	_release_inputs()
-	get_tree().paused = false
-	countdown = 3.0
+	_resuming = true
+	# Main and UI process ALWAYS; keep the exact airborne pose, audio and world
+	# frozen until the resume cue finishes.
+	get_tree().paused = true
+	countdown = 1.2
+	_countdown_caption = "進路を見て、もう一度。"
 	state = "countdown"
-	ui.set_screen("countdown", {"count": 3, "caption": "続けます"})
+	ui.set_screen("countdown", {"count": "READY", "caption": _countdown_caption})
 
 
 func _show_settings() -> void:
@@ -234,6 +265,8 @@ func _apply_settings(values: Dictionary) -> void:
 	settings.merge(values, true)
 	camera.reduced_motion = bool(settings.get("reduced_motion", false))
 	cloudscape.reduced_motion = camera.reduced_motion
+	if effects:
+		effects.reduced_motion = camera.reduced_motion
 	if is_instance_valid(assets.pose_controller):
 		assets.pose_controller.reduced_motion = camera.reduced_motion
 	AudioServer.set_bus_volume_db(0, linear_to_db(maxf(0.0001, float(settings.get("master_volume", 0.65)))))
@@ -246,34 +279,50 @@ func _process_events() -> void:
 		var id := "gate_%d" % index
 		if previous_progress < s and rider.progress >= s and not event_ids.has(id):
 			var center: Vector3 = course.center_at(s)
-			if absf(rider.lateral) <= course.half_width_at(s) and rider.global_position.y >= center.y - 0.5 and rider.global_position.y <= center.y + 5.0:
+			if absf(rider.lateral) <= course.half_width_at(s) - 0.3 and rider.global_position.y >= center.y - 0.5 and rider.global_position.y <= center.y + 5.0:
 				event_ids[id] = true
-				_award(100, "GATE", 20.0)
+				_award(60, "LINE", 6.0)
 	previous_progress = rider.progress
 
 
 func _on_landed() -> void:
-	var jump_gap := _jump_gap
-	_jump_gap = -1.0
 	if state != "run":
 		return
-	if sound:
-		sound.cue("land")
-	for gap in [460.0, 1080.0]:
-		var id := "landing_%d" % int(gap)
-		var center: Vector3 = course.center_at(rider.progress)
-		if jump_gap == gap and rider.progress >= gap + 8.0 and rider.progress <= gap + 35.0 and rider.lateral < -1.5 and rider.global_position.y - center.y > 1.5 and not event_ids.has(id):
+	_pose_event("land", rider.landing_strength)
+	_feedback_cue("land", rider.landing_strength)
+	if _jump_gap >= 0.0:
+		var gap: Vector2 = course.gap_at(_jump_gap + 0.1)
+		var id := "landing_%d" % int(_jump_gap)
+		if rider.progress >= gap.y and rider.progress < gap.y + 38.0 and not event_ids.has(id):
 			event_ids[id] = true
-			if not failed_sections.has(_section()):
-				_award(100, "CLEAN", 10.0)
+			_award(140, "FLIGHT", 10.0)
+	_jump_gap = -1.0
 
 
 func _on_jumped() -> void:
 	_jump_gap = -1.0
-	var center: Vector3 = course.center_at(rider.progress)
-	for gap in [460.0, 1080.0]:
-		if rider.progress >= gap - 22.0 and rider.progress <= gap + 2.0 and rider.lateral < -1.5 and rider.global_position.y - center.y > 1.5:
-			_jump_gap = gap
+	var gap: Vector2 = course.next_gap_at(rider.progress)
+	if gap != Vector2.ZERO and rider.progress >= gap.x - 22.0:
+		_jump_gap = gap.x
+	_pose_event("jump", 1.0)
+	_feedback_cue("jump", 1.0)
+
+
+func _on_carve_released(charge: float) -> void:
+	if state == "run" and charge >= 0.22:
+		_feedback_cue("release", charge)
+		_award_motion(int(40.0 + charge * 60.0), "CARVE")
+
+
+func _on_burst_started(strength: float) -> void:
+	_pose_event("boost_start", strength)
+	_feedback_cue("boost", strength)
+
+
+func _on_clean_landed(strength: float) -> void:
+	if state == "run":
+		_feedback_cue("clean", strength)
+		_award_motion(int(70.0 + strength * 50.0), "CLEAN")
 
 
 func _on_sentry_passed(id: String, near: bool) -> void:
@@ -281,6 +330,7 @@ func _on_sentry_passed(id: String, near: bool) -> void:
 		return
 	event_ids[id] = true
 	if near and not failed_sections.has(_section()):
+		_feedback_cue("near", 1.0)
 		_award(150, "NEAR", 10.0)
 
 
@@ -290,9 +340,9 @@ func _on_hit() -> void:
 	flow = 0
 	flow_left = 0.0
 	_jump_gap = -1.0
-	_show_notice("減速")
-	if sound:
-		sound.cue("hit")
+	_pose_event("hit", 1.0)
+	_show_notice("HIT · 風をつなぎ直そう")
+	_feedback_cue("hit", 1.0)
 
 
 func _on_fall() -> void:
@@ -303,10 +353,25 @@ func _on_fall() -> void:
 	flow = 0
 	flow_left = 0.0
 	failed_sections[_section()] = true
-	recover_left = 1.0
+	recover_left = 0.65
+	_pose_context("recovery")
 	_jump_gap = -1.0
 	_set_hazards_active(false)
-	_show_notice("チェックポイントへ復帰 · 追加 +3.00秒")
+	var cause := "着地に届かなかった" if rider.fall_reason == &"missed_platform" else "風路を外れた"
+	_show_notice("%s · 復帰 +3.00秒" % cause)
+	if sound:
+		sound.cue("hit")
+
+
+func _award_motion(base: int, label: String) -> void:
+	# A recovery keeps physical rewards but cannot rescore already travelled ground.
+	if rider.progress < rider.max_progress - 0.1:
+		return
+	var id := "%s_%d" % [label, floori(rider.progress / 20.0)]
+	if event_ids.has(id):
+		return
+	event_ids[id] = true
+	_award(base, label, 0.0)
 
 
 func _award(base: int, label: String, energy: float) -> void:
@@ -330,17 +395,25 @@ func _multiplier() -> float:
 
 
 func _section() -> int:
-	return clampi(int(rider.progress / 330.0), 0, 4)
+	return int(course.beat_at(rider.progress).index)
 
 
 func _update_hud() -> void:
+	var beat: Dictionary = course.beat_at(rider.progress)
+	var gap: Vector2 = course.next_gap_at(rider.progress)
 	ui.update_hud({"time": time, "speed": rider.speed, "energy": rider.wind_energy,
 		"score": score, "flow": _multiplier(), "progress": rider.progress / course.length,
-		"section": "%d / 5" % (_section() + 1), "notice": notice})
+		"section": "%d / 5" % (_section() + 1), "notice": notice,
+		"carving": rider.carving, "carve_charge": rider.carve_charge, "charge_rate": rider.charge_rate,
+		"charge_requires_press": rider.charge_requires_press,
+		"burst_left": rider.burst_left, "beat": beat.name, "hint": beat.hint,
+		"gap_ahead": gap.x - rider.progress if gap != Vector2.ZERO else -1.0})
 
 
 func _finish() -> void:
 	state = "results"
+	_pose_context("finish")
+	_pose_event("finish", 1.0)
 	rider.set_active(false)
 	_set_hazards_active(false)
 	_release_inputs()
@@ -360,13 +433,19 @@ func _finish() -> void:
 
 
 func _load_records() -> void:
-	if not FileAccess.file_exists(record_path):
-		return
-	var parsed = JSON.parse_string(FileAccess.get_file_as_string(record_path))
+	var source_path: String = record_path
+	var same_course := true
+	if not FileAccess.file_exists(source_path):
+		if record_path == RECORD_PATH and FileAccess.file_exists(LEGACY_RECORD_PATH):
+			source_path = LEGACY_RECORD_PATH
+			same_course = false
+		else:
+			return
+	var parsed = JSON.parse_string(FileAccess.get_file_as_string(source_path))
 	if parsed is Dictionary:
-		if parsed.get("best_time") is float or parsed.get("best_time") is int:
+		if same_course and (parsed.get("best_time") is float or parsed.get("best_time") is int):
 			records["best_time"] = maxf(0.0, float(parsed["best_time"]))
-		if parsed.get("best_score") is float or parsed.get("best_score") is int:
+		if same_course and (parsed.get("best_score") is float or parsed.get("best_score") is int):
 			records["best_score"] = maxi(0, int(parsed["best_score"]))
 		if parsed.get("settings") is Dictionary:
 			var stored: Dictionary = parsed["settings"]
@@ -381,6 +460,7 @@ func _save_records() -> bool:
 	if file == null:
 		return false
 	var data := records.duplicate()
+	data["course_revision"] = 2
 	data["settings"] = settings
 	file.store_string(JSON.stringify(data))
 	return file.get_error() == OK
@@ -443,7 +523,12 @@ func _setup_environment() -> void:
 	add_child(world)
 
 
-func _set_hazards_active(value: bool) -> void:
+func _set_hazards_active(value: bool, preserve_feedback: bool = false) -> void:
+	if effects and not preserve_feedback:
+		effects.set_active(value)
+	if not value and sound and not preserve_feedback:
+		sound.set_speed(0.0, false)
+		sound.set_motion(0.0, 0.0, false)
 	for sentry in get_tree().get_nodes_in_group("sentries"):
 		sentry.active = value
 
@@ -460,10 +545,11 @@ func _add_gate_markers() -> void:
 		for inset in [-0.12, 0.12]:
 			ribbon.surface_add_vertex(Vector3(cos(angle) * (7.5 + inset), sin(angle) * (3.2 + inset), 0.0))
 	ribbon.surface_end()
-	for s in GATES + [1650.0]:
+	for s in GATES + [course.length]:
 		var marker := MeshInstance3D.new()
 		marker.name = "WindGate%d" % int(s)
 		marker.mesh = ribbon
+		marker.scale.x = course.half_width_at(s) / 7.5
 		marker.position = course.center_at(s) + Vector3.UP * 2.8
 		var tangent: Vector3 = course.tangent_at(s)
 		marker.rotation.y = atan2(-tangent.x, -tangent.z)
@@ -475,8 +561,43 @@ func _write_qa() -> void:
 	if file:
 		file.store_string(JSON.stringify({"state": state, "time": time, "score": score, "falls": falls,
 			"progress": rider.progress, "lateral": rider.lateral, "speed": rider.speed,
+			"heading": rider.heading, "carving": rider.carving, "charge": rider.carve_charge,
+			"burst_left": rider.burst_left, "airborne_time": rider.airborne_time,
 			"energy": rider.wind_energy, "position": [rider.position.x, rider.position.y, rider.position.z],
 			"assets_loaded": assets.loaded_assets, "paused": get_tree().paused,
 			"fps": Engine.get_frames_per_second(),
 			"draw_calls": Performance.get_monitor(Performance.RENDER_TOTAL_DRAW_CALLS_IN_FRAME),
 			"primitives": Performance.get_monitor(Performance.RENDER_TOTAL_PRIMITIVES_IN_FRAME)}))
+
+
+func _pose_context(context: String) -> void:
+	if assets and is_instance_valid(assets.pose_controller) and assets.pose_controller.has_method("set_motion_context"):
+		assets.pose_controller.set_motion_context(context)
+
+
+func _pose_event(event: String, strength: float) -> void:
+	if assets and is_instance_valid(assets.pose_controller) and assets.pose_controller.has_method("trigger_motion"):
+		assets.pose_controller.trigger_motion(event, strength)
+
+
+func _pose_reset() -> void:
+	if assets and is_instance_valid(assets.pose_controller) and assets.pose_controller.has_method("reset_motion"):
+		assets.pose_controller.reset_motion()
+
+
+func _feedback_cue(kind: String, strength: float = 1.0) -> void:
+	if sound:
+		sound.cue(kind)
+	if effects:
+		effects.cue(kind, strength)
+	if camera.has_method("cue"):
+		camera.cue(kind, strength)
+
+
+func _reset_feedback() -> void:
+	_was_boosting = false
+	_was_grounded = false
+	if effects:
+		effects.reset_effects()
+	if sound:
+		sound.reset_audio()

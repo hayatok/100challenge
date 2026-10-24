@@ -1,0 +1,99 @@
+{
+  "character": "Mio Nagihara, adult age 19",
+  "input_mode": "four-view image-to-3D",
+  "images": [
+    {
+      "view": "front",
+      "file": "ref/front.png",
+      "width": 1024,
+      "height": 1536,
+      "sha256": "1a509eaf0247246c73e1a0c23fc14128a7a4d9612a63cde91dbc03d4e195c7e0"
+    },
+    {
+      "view": "left",
+      "file": "ref/left.png",
+      "width": 1024,
+      "height": 1536,
+      "sha256": "f919621460389c15a320f35991e658f1cd7e62f87f9add1b53aa68e756b68abc"
+    },
+    {
+      "view": "right",
+      "file": "ref/right.png",
+      "width": 1024,
+      "height": 1536,
+      "sha256": "fbd48c4dc4d5669614d7206daad74a1cbb8e97329eebf2e5ac7fb3550a4126e5"
+    },
+    {
+      "view": "back",
+      "file": "ref/back.png",
+      "width": 1024,
+      "height": 1536,
+      "sha256": "b340aea6813f6d6209f30237987ef46b82288215de793ee7c5b0d38c41f84f03"
+    }
+  ],
+  "reference_design": "../../concepts/06-mio-age19-costume.png",
+  "image_provider": "built-in image_gen",
+  "image_method": "Front anchor created from the adult costume design; left, right and back generated with the front anchor as the locked identity reference. No source images were replaced.",
+  "studio": {
+    "task_id": "c237fc39-019a-4cd9-893b-38dd459aed4f",
+    "url": "https://studio.tripo3d.ai/ja/workspace/generate/anime-girl-3d-model-c237fc39-019a-4cd9-893b-38dd459aed4f",
+    "model": "H3.1",
+    "privacy": "private",
+    "status": "completed",
+    "approved_budget": 80,
+    "paid_api_calls": 0,
+    "steps": [
+      {
+        "operation": "multiview generation and texture",
+        "credits": 55,
+        "status": "completed"
+      },
+      {
+        "operation": "standard triangle retopology",
+        "target_faces": 40000,
+        "credits": 5,
+        "status": "completed",
+        "actual_triangles": 39999
+      },
+      {
+        "operation": "humanoid Mixamo rig",
+        "credits": 20,
+        "status": "completed",
+        "actual_bones": 65
+      }
+    ],
+    "credits_consumed": 80
+  },
+  "adoption_status": "Integrated candidate after raw validation and multiview comparison; final user aesthetic approval is not implied.",
+  "limitations": [
+    "Generated images are view guidance, not exact measured orthographic blueprints.",
+    "Left and right arm projection and small seam details may differ.",
+    "Face morphs, hair and cloth bones are not guaranteed by generation or the humanoid rig.",
+    "Adjacent duplicated cloud markings and waist tabs remain in the Tripo source.",
+    "Facial acting and hair or cloth secondary animation are not present."
+  ],
+  "prompts": "prompts.json",
+  "output": {
+    "file": "../../../game/assets/models/mio.glb",
+    "source_download_name": "cloudsea-mio-v2-rigged-source.glb",
+    "bytes": 9182588,
+    "sha256": "dc73844328312fc1e6ab2324dc8253076037fe093b231355d8bdc3dac51784a3"
+  },
+  "legacy": {
+    "source_commit": "07c2730e877ee608cd781e0c4fee242626dba05f",
+    "file": "game/assets/models/mio.glb",
+    "sha256": "70a343c829f5e4b79802435bbd24365219cd24c5e4e38e197393aeaf9536b074",
+    "local_comparison_copy": ".cache/rework/legacy-mio.glb"
+  },
+  "quality_review": "reports/review-observations.json",
+  "runtime_material": {
+    "candidate": "C from reports/material-comparison.json",
+    "scope": "character surface material duplicate only",
+    "diffuse_mode": "DIFFUSE_TOON",
+    "specular_mode": "SPECULAR_DISABLED",
+    "metallic": 0.0,
+    "roughness": 1.0,
+    "normal_scale": 0.35,
+    "source_glb_unchanged": true
+  }
+}
