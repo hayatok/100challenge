@@ -1805,4 +1805,3 @@ func _number(property: String) -> float:
   "fixture": "render_dynamic.gd",
   "title_fixture": "render_title.gd"
 }
-
