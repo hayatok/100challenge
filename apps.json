@@ -257,7 +257,7 @@
     "name": "雲海サーファー",
     "description": "カーブで風をため、解放して加速し、ジャンプをつなぐ3D滑走ゲーム。900mの風路を自分で操る開発版。",
     "category": "3D滑走ゲーム",
-    "thumbnail": "docs/verification/rework/web-carve-release.jpg",
+    "thumbnail": "thumbnail.jpg",
     "accent": "#168b8c"
   }
 ]

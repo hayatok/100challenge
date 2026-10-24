@@ -1,0 +1,137 @@
+{
+  "schema_version": 1,
+  "created_at": "2026-10-24T19:48:36.797456+00:00",
+  "language": "en",
+  "scope": "Release-preparation documentation only. No code, app catalog, pre-existing rework results, old verification record or GitHub edits.",
+  "skill": "/Users/hayatok/.codex/skills/yomiyasu/SKILL.md",
+  "material": "docs/verification/release/originals/release-material.txt",
+  "tool_record_policy": "Tool-generated state remains local and ignored by its own .gitignore. Portable metadata retains run ids and full final hashes.",
+  "verification_boundary": "Executed checks and matching hashes are not a readability score, proof of preserved meaning or publication approval. Material and manual comparisons are recorded separately.",
+  "publication_status_at_document_freeze": "Not yet published. Trusted baseline reuse and local site assembly verified; later publication results are for PR/Issue comments.",
+  "records": [
+    {
+      "file": "README.md",
+      "mode": "rewrite",
+      "run_id": "20261024T194729Z-c3f62d9f",
+      "attempt": 1,
+      "final_sha256": "2970031eb2e209880e4cec3473ebc6e74e7c26e4913498ce1bb11a1887e04e8c",
+      "source": "docs/verification/release/originals/README.md",
+      "draft_snapshot": null,
+      "record": "docs/verification/release/yomiyasu/README/runs/20261024T194729Z-c3f62d9f/attempt-1.json",
+      "verify_status": "matched",
+      "verify_status_line": "yomiyasu-check: executed via=verify run=20261024T194729Z-c3f62d9f attempt=1 final=sha256:2970031eb2e2 mode=rewrite doc_type=manual checks=lint,diff,materials meaning_risk=2 replay=skipped",
+      "checks_executed": [
+        "final_lint",
+        "materials",
+        "manual_comparison",
+        "final_hash_verification",
+        "source_final_diff",
+        "original_lint"
+      ],
+      "manual_comparison": {
+        "confirmed": [
+          "Chrome CUA completion is segmented by pauses and six recoveries, not a continuous natural playthrough or human enjoyment rating.",
+          "TIME 01:03.13, SCORE 2825, FALLS 6 and saved message visually checked in local-result.jpg.",
+          "Retry TIME 00:00.48, score 0 and wind 60 visually checked.",
+          "Game-arrival images total 15, with 2 additional assembled-site images.",
+          "Audio/component figures copied from the final calibrated summary, not the earlier preliminary run.",
+          "24000 accelerated updates represent 400 simulated seconds, not 400 seconds of full-game endurance.",
+          "Source-to-local thumbnail SHA and 81915 bytes match; this alone is not public deployment proof.",
+          "Trusted baseline and GitHub artifact digest, 25 reused apps and 315 matching files match site-assembly.json.",
+          "All publication results remain pending and are reserved for parent PR/Issue follow-up."
+        ],
+        "retained_candidates": [
+          "README historical-concept negation prevents misreading unimplemented old concepts as current features.",
+          "Required numeric observations, artifact ids, hashes, technical identifiers and relative links are intentional; diagnostic candidate counts are not quality scores."
+        ],
+        "changes_after_first_run": [
+          "Removed pause commas in REWORK and RESULTS.",
+          "Clarified that static memory includes the real Main scene and that unity gain refers to soundscape volume as well as Master gain."
+        ],
+        "unresolved_editorial_questions": []
+      }
+    },
+    {
+      "file": "docs/REWORK.md",
+      "mode": "rewrite",
+      "run_id": "20261024T194729Z-ffb9bf2f",
+      "attempt": 2,
+      "final_sha256": "e7c5f5175b721523a0d7588266e3af040b14cf4fbdf712afc4d94a93f77b6ad2",
+      "source": "docs/verification/release/originals/REWORK.md",
+      "draft_snapshot": null,
+      "record": "docs/verification/release/yomiyasu/REWORK/runs/20261024T194729Z-ffb9bf2f/attempt-2.json",
+      "verify_status": "matched",
+      "verify_status_line": "yomiyasu-check: executed via=verify run=20261024T194729Z-ffb9bf2f attempt=2 final=sha256:e7c5f5175b72 mode=rewrite doc_type=manual checks=lint,diff,materials meaning_risk=2 replay=skipped",
+      "checks_executed": [
+        "final_lint",
+        "materials",
+        "manual_comparison",
+        "final_hash_verification",
+        "source_final_diff",
+        "original_lint"
+      ],
+      "manual_comparison": {
+        "confirmed": [
+          "Chrome CUA completion is segmented by pauses and six recoveries, not a continuous natural playthrough or human enjoyment rating.",
+          "TIME 01:03.13, SCORE 2825, FALLS 6 and saved message visually checked in local-result.jpg.",
+          "Retry TIME 00:00.48, score 0 and wind 60 visually checked.",
+          "Game-arrival images total 15, with 2 additional assembled-site images.",
+          "Audio/component figures copied from the final calibrated summary, not the earlier preliminary run.",
+          "24000 accelerated updates represent 400 simulated seconds, not 400 seconds of full-game endurance.",
+          "Source-to-local thumbnail SHA and 81915 bytes match; this alone is not public deployment proof.",
+          "Trusted baseline and GitHub artifact digest, 25 reused apps and 315 matching files match site-assembly.json.",
+          "All publication results remain pending and are reserved for parent PR/Issue follow-up."
+        ],
+        "retained_candidates": [
+          "README historical-concept negation prevents misreading unimplemented old concepts as current features.",
+          "Required numeric observations, artifact ids, hashes, technical identifiers and relative links are intentional; diagnostic candidate counts are not quality scores."
+        ],
+        "changes_after_first_run": [
+          "Removed pause commas in REWORK and RESULTS.",
+          "Clarified that static memory includes the real Main scene and that unity gain refers to soundscape volume as well as Master gain."
+        ],
+        "unresolved_editorial_questions": []
+      }
+    },
+    {
+      "file": "docs/verification/release/RESULTS.md",
+      "mode": "compose",
+      "run_id": "20261024T194730Z-1ceab407",
+      "attempt": 2,
+      "final_sha256": "7238d84f12bdced75f25a1fbf4ae05081d07e7924452eae5e9f09c5e5e770a30",
+      "source": null,
+      "draft_snapshot": "docs/verification/release/originals/RESULTS.draft.md",
+      "record": "docs/verification/release/yomiyasu/RESULTS/runs/20261024T194730Z-1ceab407/attempt-2.json",
+      "verify_status": "matched",
+      "verify_status_line": "yomiyasu-check: executed via=verify run=20261024T194730Z-1ceab407 attempt=2 final=sha256:7238d84f12bd mode=compose doc_type=manual checks=lint,materials meaning_risk=56 replay=skipped",
+      "checks_executed": [
+        "final_lint",
+        "materials",
+        "manual_comparison",
+        "final_hash_verification"
+      ],
+      "manual_comparison": {
+        "confirmed": [
+          "Chrome CUA completion is segmented by pauses and six recoveries, not a continuous natural playthrough or human enjoyment rating.",
+          "TIME 01:03.13, SCORE 2825, FALLS 6 and saved message visually checked in local-result.jpg.",
+          "Retry TIME 00:00.48, score 0 and wind 60 visually checked.",
+          "Game-arrival images total 15, with 2 additional assembled-site images.",
+          "Audio/component figures copied from the final calibrated summary, not the earlier preliminary run.",
+          "24000 accelerated updates represent 400 simulated seconds, not 400 seconds of full-game endurance.",
+          "Source-to-local thumbnail SHA and 81915 bytes match; this alone is not public deployment proof.",
+          "Trusted baseline and GitHub artifact digest, 25 reused apps and 315 matching files match site-assembly.json.",
+          "All publication results remain pending and are reserved for parent PR/Issue follow-up."
+        ],
+        "retained_candidates": [
+          "README historical-concept negation prevents misreading unimplemented old concepts as current features.",
+          "Required numeric observations, artifact ids, hashes, technical identifiers and relative links are intentional; diagnostic candidate counts are not quality scores."
+        ],
+        "changes_after_first_run": [
+          "Removed pause commas in REWORK and RESULTS.",
+          "Clarified that static memory includes the real Main scene and that unity gain refers to soundscape volume as well as Master gain."
+        ],
+        "unresolved_editorial_questions": []
+      }
+    }
+  ]
+}

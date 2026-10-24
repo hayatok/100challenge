@@ -2,7 +2,7 @@
 
 雲海に浮かぶ遺跡をホバーボードで滑り、曲がり、跳び、次の足場へつなぐ3Dアクション。主人公は19歳の学生、凪原 澪（なぎはら みお）。凛としてクールで、可愛らしさもある。
 
-Godot 4.7.2で、900mの風路を自分で操る滑走ゲームへ作り直した。Sと旋回で風をため、Sを離して加速し、発射台から次の足場へつなぐ。現在の方針は[再設計の仕様](docs/REWORK.md)、実装の接続は[実装資料](docs/IMPLEMENTATION.md)、確認した範囲は[再設計版の記録](docs/verification/rework/RESULTS.md)を参照する。
+Godot 4.7.2で、900mの風路を自分で操る滑走ゲームへ作り直した。Sと旋回で風をため、Sを離して加速し、発射台から次の足場へつなぐ。現在の方針は[再設計の仕様](docs/REWORK.md)、実装の接続は[実装資料](docs/IMPLEMENTATION.md)、再設計時の確認は[再設計版の記録](docs/verification/rework/RESULTS.md)、追加の到達確認と公開準備は[公開前の確認記録](docs/verification/release/RESULTS.md)を参照する。
 
 ## 現在の実行画面
 
@@ -45,6 +45,7 @@ Linuxの`setup`は公式Godot本体とWebテンプレートを取得し、SHA512
 
 - [現在の再設計方針・人物制作・確認条件](docs/REWORK.md)
 - [再設計版の実装とモジュールの接続](docs/IMPLEMENTATION.md)
+- [Chromeでの到達・音とエフェクト・公開準備の確認](docs/verification/release/RESULTS.md)
 - [旧90秒試作の操作仕様](docs/SPEC.md)
 - [旧試作のアート方針](docs/ART_DIRECTION.md)
 - [旧試作の検証範囲と未確認事項](docs/verification/RESULTS.md)

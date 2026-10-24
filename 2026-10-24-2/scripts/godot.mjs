@@ -57,6 +57,7 @@ function buildProject() {
     ['game/assets/fonts/NOTO-LICENSE.txt', 'NOTO-LICENSE.txt'],
     ['game/assets/fonts/DEJAVU-LICENSE.txt', 'DEJAVU-LICENSE.txt'],
   ]) copyFileSync(path.join(root, source), path.join(licenses, target));
+  copyFileSync(path.join(root, 'docs/verification/rework/web-carve-release.jpg'), path.join(dist, 'thumbnail.jpg'));
   console.log(`Godot ${version}: single-thread Web build ready at dist/index.html`);
 }
 

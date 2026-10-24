@@ -1,0 +1,84 @@
+{
+  "created_at": "2026-10-24T19:39:30.620548+00:00",
+  "scope": "Independent soundscape/effects release verification only. Tracked source, documents, GitHub and GUI were not edited. Other agents may have unrelated working-tree changes.",
+  "source_commit": "35f58ebecaae971d8a8b3e62bb378dda78ca1ba8",
+  "engine": "Godot 4.7.2 official macOS executable, --headless --audio-driver Dummy",
+  "verified_checks": 61,
+  "unverified_checks": [
+    {
+      "check": "reduced motion air-streak transform readback",
+      "passed": true,
+      "reason": "Headless Dummy renderer returns identity for a deliberately zeroed MultiMesh transform; graphics readback is unsupported in this backend.",
+      "status": "not_verified"
+    }
+  ],
+  "component_soak": {
+    "frames": 24000,
+    "simulated_seconds": 400,
+    "snapshots": 10,
+    "cue_events": 1000,
+    "additional_landing_fans": 422,
+    "scene_nodes": 321.0,
+    "objects": 2234.0,
+    "resources": 57.0,
+    "orphans": 0,
+    "audio_nodes": 8,
+    "effect_nodes": 4,
+    "audio_wav_resource_ids_fixed": true,
+    "effect_mesh_multimesh_material_ids_fixed": true,
+    "static_memory_first_bytes": 312672885.0,
+    "static_memory_last_bytes": 312702881.0,
+    "static_memory_drift_bytes": 29996.0,
+    "memory_interpretation": "Object, node and resource counts are flat after warmup. About 30 KiB static-memory drift is bounded over this short run and includes accumulating harness checks/snapshots. It is not proof of zero memory leakage over unlimited sessions.",
+    "process_note": "Accelerated 60 Hz component update calls with periodic real-time yields for the audio mixer; not 400 seconds of physical gameplay. All commands returned within the ten-minute task limit."
+  },
+  "audio": {
+    "capture": "Actual Godot Master-bus float mixer under Dummy output; not offline addition of source files and not hardware loopback",
+    "mix_rate": 44100.0,
+    "normal_stress_peak": 0.275873780250549,
+    "normal_stress_peak_dbfs": -11.1857914803485,
+    "aligned_four_voice_stress_peak": 0.897508978843689,
+    "aligned_four_voice_stress_peak_dbfs": -0.93922395933242,
+    "aligned_stress_default_master_065_equivalent_peak": 0.583380836248398,
+    "aligned_stress_dc": -0.00113104722899436,
+    "all_capture_full_scale_or_clipped_samples": 0,
+    "source_wave_count": 16,
+    "source_pcm_full_scale_samples": 0,
+    "source_loop_boundary_steps": "All loop seam sample steps were below the largest ordinary adjacent-sample step in their source. This does not establish inaudibility.",
+    "pause_capture_peak": 0.0,
+    "sound_volume_zero_capture_peak_dbfs": -109.298049680373,
+    "settings_master_values_verified": [
+      0,
+      0.65,
+      1.0
+    ],
+    "pause_resume_reset_connections_verified": true,
+    "sample_peak_bound_caveat": "The loose triangle-inequality bound of all source peaks is 1.037 at unity Master, so arbitrary phase combinations are not mathematically proven clipping-free. Deliberately aligned four-voice clean/release stress over 32 cycles measured peak 0.898 with zero clipped/full-scale samples. Normal gameplay event combinations have fewer perfectly aligned same-cue voices.",
+    "subjective_listening": "not performed"
+  },
+  "findings": [],
+  "harness_calibration": "The first run assumed zero MultiMesh transform readback worked in the Dummy renderer. A deliberate zero-write returned identity (determinant 1); that graphical assertion is now explicitly unverified rather than a product defect. The initial diagnostic log is retained.",
+  "source_sha256": {
+    "effects": "93ced1fdb789f5e9fad27bb942a41a64edb4d7f027f704ec6e1d6212b3019f24",
+    "main": "9ecd215b7a0da1706fffe79f5c91ee9522397fb5bc5aa27536a9302364aa34c0",
+    "soundscape": "a1b08af7f1b52cf429d4a0c887cc1d0c4e73c9760422877ab99d6ec3cecc76b1"
+  },
+  "artifacts": [
+    "sound-effects-result.json",
+    "sound-effects.log",
+    "aligned-mix-result.json",
+    "aligned-mix.log",
+    "settings-connection-result.json",
+    "settings-connection.log",
+    "pcm-analysis.json",
+    "mix-stress40_carve_charge_all_cues_unity_master.wav",
+    "mix-aligned-four-voices.wav"
+  ],
+  "limitations": [
+    "No subjective listening or musical/comfort judgment.",
+    "No Chrome or audio hardware/device-output validation.",
+    "No GPU cost, graphics readback or visible effect-quality validation in the headless Dummy renderer.",
+    "No full-course reachability or manual gameplay validation.",
+    "Short finite endurance run; not an unlimited-session leak proof."
+  ]
+}

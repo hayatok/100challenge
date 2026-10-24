@@ -1,0 +1,183 @@
+{
+  "method": "PCM source WAV analysis, no listening assessment",
+  "sources": [
+    {
+      "file": "source-CarveEdge.wav",
+      "frames": 44100,
+      "rate": 22050,
+      "channels": 1,
+      "peak": 0.984893798828125,
+      "rms": 0.32706260098285944,
+      "dc": 0.00046777149987599207,
+      "pcm_full_scale_samples": 0,
+      "loop_begin_frame": 512,
+      "loop_seam_step": 0.049560546875,
+      "largest_normal_adjacent_step": 1.577789306640625
+    },
+    {
+      "file": "source-SurfPulse.wav",
+      "frames": 176400,
+      "rate": 22050,
+      "channels": 1,
+      "peak": 0.287506103515625,
+      "rms": 0.04325277990929501,
+      "dc": 0.0004029093632081739,
+      "pcm_full_scale_samples": 0,
+      "loop_begin_frame": 0,
+      "loop_seam_step": 9.1552734375e-05,
+      "largest_normal_adjacent_step": 0.1259765625
+    },
+    {
+      "file": "source-Wind.wav",
+      "frames": 44100,
+      "rate": 22050,
+      "channels": 1,
+      "peak": 0.2894287109375,
+      "rms": 0.06812112489118749,
+      "dc": -0.00010281378990398243,
+      "pcm_full_scale_samples": 0,
+      "loop_begin_frame": 512,
+      "loop_seam_step": 0.01153564453125,
+      "largest_normal_adjacent_step": 0.179962158203125
+    },
+    {
+      "file": "source-WindCharge.wav",
+      "frames": 22050,
+      "rate": 22050,
+      "channels": 1,
+      "peak": 0.361724853515625,
+      "rms": 0.15296679199198343,
+      "dc": -8.027299461451248e-08,
+      "pcm_full_scale_samples": 0,
+      "loop_begin_frame": 0,
+      "loop_seam_step": 0.020355224609375,
+      "largest_normal_adjacent_step": 0.02764892578125
+    },
+    {
+      "file": "source-boost.wav",
+      "frames": 8820,
+      "rate": 22050,
+      "channels": 1,
+      "peak": 0.805206298828125,
+      "rms": 0.13666392439440367,
+      "dc": -0.0013304937453497024,
+      "pcm_full_scale_samples": 0
+    },
+    {
+      "file": "source-charge.wav",
+      "frames": 3528,
+      "rate": 22050,
+      "channels": 1,
+      "peak": 0.32574462890625,
+      "rms": 0.10542752140275125,
+      "dc": -8.122450640412415e-05,
+      "pcm_full_scale_samples": 0
+    },
+    {
+      "file": "source-clean.wav",
+      "frames": 8379,
+      "rate": 22050,
+      "channels": 1,
+      "peak": 0.93109130859375,
+      "rms": 0.16425860700369666,
+      "dc": -0.0002971521239389396,
+      "pcm_full_scale_samples": 0
+    },
+    {
+      "file": "source-count.wav",
+      "frames": 2205,
+      "rate": 22050,
+      "channels": 1,
+      "peak": 0.3125,
+      "rms": 0.10251438065010281,
+      "dc": 6.366478883219955e-07,
+      "pcm_full_scale_samples": 0
+    },
+    {
+      "file": "source-finish.wav",
+      "frames": 24255,
+      "rate": 22050,
+      "channels": 1,
+      "peak": 0.4866943359375,
+      "rms": 0.12061013238517453,
+      "dc": -1.829544850610699e-05,
+      "pcm_full_scale_samples": 0
+    },
+    {
+      "file": "source-gate.wav",
+      "frames": 7717,
+      "rate": 22050,
+      "channels": 1,
+      "peak": 0.4788818359375,
+      "rms": 0.11888870910827122,
+      "dc": 5.603655332788e-06,
+      "pcm_full_scale_samples": 0
+    },
+    {
+      "file": "source-hit.wav",
+      "frames": 4851,
+      "rate": 22050,
+      "channels": 1,
+      "peak": 0.74749755859375,
+      "rms": 0.1480882595374054,
+      "dc": -0.0020515223282731652,
+      "pcm_full_scale_samples": 0
+    },
+    {
+      "file": "source-jump.wav",
+      "frames": 4410,
+      "rate": 22050,
+      "channels": 1,
+      "peak": 0.444000244140625,
+      "rms": 0.08832029737902028,
+      "dc": -0.0005085363409686792,
+      "pcm_full_scale_samples": 0
+    },
+    {
+      "file": "source-land.wav",
+      "frames": 5512,
+      "rate": 22050,
+      "channels": 1,
+      "peak": 0.696380615234375,
+      "rms": 0.16017685685678432,
+      "dc": 0.0007659790304817897,
+      "pcm_full_scale_samples": 0
+    },
+    {
+      "file": "source-near.wav",
+      "frames": 4851,
+      "rate": 22050,
+      "channels": 1,
+      "peak": 0.572265625,
+      "rms": 0.10430101522911216,
+      "dc": -0.0008758941254058441,
+      "pcm_full_scale_samples": 0
+    },
+    {
+      "file": "source-release.wav",
+      "frames": 8820,
+      "rate": 22050,
+      "channels": 1,
+      "peak": 0.777374267578125,
+      "rms": 0.13421610929182837,
+      "dc": -0.002247740730406746,
+      "pcm_full_scale_samples": 0
+    },
+    {
+      "file": "source-trick.wav",
+      "frames": 7717,
+      "rate": 22050,
+      "channels": 1,
+      "peak": 0.4788818359375,
+      "rms": 0.11888870910827122,
+      "dc": 5.603655332788e-06,
+      "pcm_full_scale_samples": 0
+    }
+  ],
+  "conservative_sample_peak_bound_at_unity_master": {
+    "loop_peak_sum": 0.2036976701190265,
+    "largest_single_cue_scaled_peak": 0.20844537944860853,
+    "four_voice_plus_all_loops_sum": 1.0374791879134606,
+    "note": "Triangle inequality using peak absolute PCM values and maximum configured gains; ignores phase cancellation. Actual mixer capture is reported separately. Resampler interpolation and browser output are outside this simple bound."
+  }
+}

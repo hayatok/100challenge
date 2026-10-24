@@ -1,0 +1,24 @@
+{
+  "trusted_baseline_run": 40093933322,
+  "sha": "d8253e95b81938454e089e6378c4b1fd67e6f5e6",
+  "artifact_id": 12559574869,
+  "archive_sha256": "95fa8b08eb8b7f68419c509dc0db563a1a9507f1723cddb6ffdbb21584e0e596",
+  "github_digest_matched": true,
+  "changed_apps": [
+    "2026-10-24-2"
+  ],
+  "reused_apps": 25,
+  "reused_files_checked": 315,
+  "mismatches": [],
+  "thumbnail_matches_source": true,
+  "preview_url": "http://127.0.0.1:4252/",
+  "showcase_thumbnail": {
+    "complete": true,
+    "natural_width": 1282,
+    "natural_height": 779,
+    "src": "./2026-10-24-2/thumbnail.jpg"
+  },
+  "navigation": "Clicked showcase app heading to /2026-10-24-2/",
+  "assembled_game_input": "carve, release and pause observed at 960x540",
+  "console_warnings_errors": []
+}

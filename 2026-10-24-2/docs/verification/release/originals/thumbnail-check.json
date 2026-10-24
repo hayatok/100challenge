@@ -1,0 +1,9 @@
+{
+  "source": "docs/verification/rework/web-carve-release.jpg",
+  "source_sha256": "ab68250b4f195676f88af5bd5d6b178534e3237d254e59b35199fdac44671180",
+  "local_dist": "dist/thumbnail.jpg",
+  "local_dist_sha256": "ab68250b4f195676f88af5bd5d6b178534e3237d254e59b35199fdac44671180",
+  "bytes": 81915,
+  "identical": true,
+  "scope": "Local thumbnail source-to-dist comparison only. Does not establish remote artifact contents or public deployment."
+}

@@ -1,0 +1,5 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+CLOUDSEA_READY assets=5
+TRANSFORM_READBACK_CALIBRATION determinant=1.0 supported=false
+SOUND_EFFECTS_CHECK_DONE checks=62 failures=0 frames=24000 snapshots=10
