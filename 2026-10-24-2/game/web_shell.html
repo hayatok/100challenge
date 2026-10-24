@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>$GODOT_PROJECT_NAME</title>
+  <style>
+    * { box-sizing: border-box; }
+    html, body { margin: 0; width: 100%; height: 100%; overflow: hidden; }
+    body { display: grid; place-items: center; background: #102839; color: #f7faf8; font-family: system-ui, sans-serif; }
+    #canvas { display: block; outline: none; }
+    #status { position: fixed; inset: 0; display: grid; place-items: center; background: #102839; }
+    #status[hidden], [hidden] { display: none !important; }
+    .panel { width: min(480px, calc(100vw - 32px)); padding: 28px; border: 2px solid #78b8c4; background: #162f40; }
+    h1 { margin: 0 0 20px; font-size: 28px; }
+    p { line-height: 1.6; }
+    progress { width: 100%; height: 16px; accent-color: #51d2d7; }
+    button { min-height: 48px; padding: 8px 24px; border: 2px solid #78b8c4; background: #087f8c; color: #fff; font: inherit; cursor: pointer; }
+    button:focus-visible { outline: 3px solid #ff9b83; outline-offset: 3px; }
+    .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+  </style>
+  $GODOT_HEAD_INCLUDE
+</head>
+<body>
+  <canvas id="canvas" width="1280" height="720" tabindex="0" aria-label="雲海サーファーのゲーム画面" aria-describedby="controls">雲海サーファーのゲーム画面です。操作方法は下の説明をご覧ください。</canvas>
+  <p id="controls" class="sr-only">AとDで進む向きを変えます。Sを押しながら旋回して風をため、Sを離すと加速します。Spaceでジャンプ、Shiftでブースト、Escでポーズ。</p>
+  <div id="status" role="status" aria-live="polite">
+    <div class="panel">
+      <h1>雲海サーファー</h1>
+      <p id="message">ゲームを読み込んでいます。</p>
+      <progress id="progress" aria-label="読み込みの進み具合"></progress>
+      <button id="retry" type="button" hidden>再読み込み</button>
+    </div>
+  </div>
+  <noscript>このゲームにはJavaScriptが必要です。</noscript>
+  <script src="$GODOT_URL"></script>
+  <script>
+    const config = $GODOT_CONFIG;
+    const status = document.getElementById('status');
+    const progress = document.getElementById('progress');
+    const message = document.getElementById('message');
+    const retry = document.getElementById('retry');
+    retry.addEventListener('click', () => location.reload());
+    function fail() {
+      message.textContent = 'ゲームを起動できませんでした。WebGL 2に対応したPCブラウザで再読み込みしてください。';
+      progress.hidden = true;
+      retry.hidden = false;
+    }
+    if (typeof Engine === 'undefined' || Engine.getMissingFeatures({threads: false}).length) {
+      fail();
+    } else {
+      const engine = new Engine(config);
+      engine.startGame({onProgress(current, total) {
+        if (current > 0 && total > 0) {
+          progress.max = total;
+          progress.value = current;
+        } else {
+          progress.removeAttribute('value');
+        }
+      }}).then(() => { status.hidden = true; }, fail);
+    }
+  </script>
+</body>
+</html>

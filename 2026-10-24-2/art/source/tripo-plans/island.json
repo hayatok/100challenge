@@ -1,0 +1,28 @@
+{
+  "dry_run": true,
+  "valid": true,
+  "input": "One small floating ancient garden island, flat circular ivory stone terrace on top of a tapering rocky underside, a short broken ivory column and sparse small green shrubs at the edge, elegant stylized sky fantasy game environment prop, compact single object, no people, no text",
+  "model": "v3.1-20260211",
+  "model_reason": "default high-fidelity \u2192 v3.1",
+  "steps": [
+    {
+      "name": "text-to-model",
+      "endpoint": "/v3/generation/text-to-model",
+      "task_type": "text_to_model",
+      "payload": {
+        "prompt": "One small floating ancient garden island, flat circular ivory stone terrace on top of a tapering rocky underside, a short broken ivory column and sparse small green shrubs at the edge, elegant stylized sky fantasy game environment prop, compact single object, no people, no text",
+        "model": "v3.1-20260211",
+        "face_limit": 25000,
+        "texture": true,
+        "pbr": true,
+        "texture_quality": "standard"
+      }
+    }
+  ],
+  "pending_uploads": [],
+  "deliverables": [],
+  "candidates": 1,
+  "warnings": [],
+  "errors": [],
+  "cost_notes": []
+}

@@ -1,0 +1,78 @@
+{
+  "primary_documents": [
+    "README.md",
+    "AGENTS.md",
+    "docs/SPEC.md",
+    "docs/ART_DIRECTION.md",
+    "docs/verification/RESULTS.md"
+  ],
+  "local_link_count": 16,
+  "all_links_exist": true,
+  "existing_tracked_diff_unchanged": true,
+  "links": [
+    {
+      "source": "README.md",
+      "target": "docs/SPEC.md"
+    },
+    {
+      "source": "README.md",
+      "target": "docs/ART_DIRECTION.md"
+    },
+    {
+      "source": "README.md",
+      "target": "docs/verification/RESULTS.md"
+    },
+    {
+      "source": "README.md",
+      "target": "art/manifest.json"
+    },
+    {
+      "source": "README.md",
+      "target": "art/concepts/01-mio-character.png"
+    },
+    {
+      "source": "README.md",
+      "target": "art/concepts/02-cloudsea-keyart.png"
+    },
+    {
+      "source": "README.md",
+      "target": "art/concepts/03-gameplay-hud.png"
+    },
+    {
+      "source": "README.md",
+      "target": "art/concepts/04-guardian-machines-v2.png"
+    },
+    {
+      "source": "README.md",
+      "target": "art/concepts/05-screen-family.png"
+    },
+    {
+      "source": "docs/SPEC.md",
+      "target": "ART_DIRECTION.md"
+    },
+    {
+      "source": "docs/ART_DIRECTION.md",
+      "target": "SPEC.md"
+    },
+    {
+      "source": "docs/verification/RESULTS.md",
+      "target": "../../art/manifest.json"
+    },
+    {
+      "source": "docs/verification/RESULTS.md",
+      "target": "../ART_DIRECTION.md"
+    },
+    {
+      "source": "docs/verification/RESULTS.md",
+      "target": "font-coverage.json"
+    },
+    {
+      "source": "docs/verification/RESULTS.md",
+      "target": "font-sample.png"
+    },
+    {
+      "source": "docs/verification/RESULTS.md",
+      "target": "color-contrast.json"
+    }
+  ]
+}

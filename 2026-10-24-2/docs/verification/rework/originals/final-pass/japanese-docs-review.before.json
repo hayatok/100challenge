@@ -1,0 +1,192 @@
+{
+  "schema_version": 1,
+  "created_at": "2026-10-24T18:14:54.157617+00:00",
+  "language": "en",
+  "skill": "/Users/hayatok/.codex/skills/yomiyasu/SKILL.md",
+  "scope": "Four documentation files for the 900 m Cloudsea Surfer rework. No game or art edits in this documentation task.",
+  "material": "docs/verification/rework/material.txt",
+  "tool_record_policy": "Tool-generated state is local and ignored by its own .gitignore. This portable summary retains run ids and full final hashes.",
+  "completion_boundary": "Yomiyasu execution and matching hashes do not establish preserved meaning, readability, model adoption, gameplay enjoyment or final approval. Manual comparison is recorded separately.",
+  "records": [
+    {
+      "file": "README.md",
+      "source_snapshot": "docs/verification/rework/originals/README.md",
+      "source_sha256": "7beb66602db4a95682ada09d53abdf90da21df89bcf5181c3f605e0888d969ea",
+      "final_sha256": "f72c7a9841db831f2182ef10796c34e4d23eeaa5141370cb314846ec2c039d07",
+      "run_id": "20261024T181318Z-66631ec2",
+      "attempt": 2,
+      "mode": "rewrite",
+      "record": "docs/verification/rework/yomiyasu/README/runs/20261024T181318Z-66631ec2/attempt-2.json",
+      "verification": "matched",
+      "verify_status_line": "yomiyasu-check: executed via=verify run=20261024T181318Z-66631ec2 attempt=2 final=sha256:f72c7a9841db mode=rewrite doc_type=manual checks=lint,diff,materials meaning_risk=14 replay=skipped",
+      "checks_executed": [
+        "original_lint",
+        "final_lint",
+        "source_final_diff",
+        "material_comparison",
+        "manual_comparison",
+        "final_hash_verification"
+      ],
+      "candidate_count_note": "Candidate counts are diagnostic hints, not quality scores or approval.",
+      "final_lint_candidates": 1,
+      "manual_comparison": {
+        "scope": "Authorized redesign documentation changes plus local prose cleanup; unrelated historical descriptions retained.",
+        "facts_checked": [
+          "Godot 4.7.2 and 900 m course",
+          "three physical gaps",
+          "independent heading and held carve release",
+          "legacy record separation",
+          "Studio credit allocation and developer API boundary",
+          "pending model adoption, listening, hands-on play, enjoyment, final review and CI"
+        ],
+        "accepted_changes": [
+          "Replace current 90-second prototype claims with current 900 m rework scope",
+          "Label old screens/specifications as history",
+          "Add evidence boundaries for automated tests, static frames and hands-on play"
+        ],
+        "retained_candidates": [
+          "Technical identifiers and newly linked paths are intentional code references.",
+          "Explicit negation prevents old prototype evidence from being read as current acceptance.",
+          "New numbers describe the authorized rework and were checked against code or the supplied production status."
+        ],
+        "prose_cleanup": "Removed unnecessary pauses after short topics and shortened a repeated possessive phrase in README; removed an extra blank line in REWORK.",
+        "unresolved_editorial_questions": []
+      }
+    },
+    {
+      "file": "AGENTS.md",
+      "source_snapshot": "docs/verification/rework/originals/AGENTS.md",
+      "source_sha256": "fb88de1251d568bbdd2866921b085fe24fbc92cdcbe16230cb884c179c8c6f59",
+      "final_sha256": "ec9c73bbf688afc901c57fef98e63992c00a021459833b258af6da3e2c1101cd",
+      "run_id": "20261024T181319Z-6fecb00d",
+      "attempt": 1,
+      "mode": "rewrite",
+      "record": "docs/verification/rework/yomiyasu/AGENTS/runs/20261024T181319Z-6fecb00d/attempt-1.json",
+      "verification": "matched",
+      "verify_status_line": "yomiyasu-check: executed via=verify run=20261024T181319Z-6fecb00d attempt=1 final=sha256:ec9c73bbf688 mode=rewrite doc_type=manual checks=lint,diff,materials meaning_risk=5 replay=skipped",
+      "checks_executed": [
+        "original_lint",
+        "final_lint",
+        "source_final_diff",
+        "material_comparison",
+        "manual_comparison",
+        "final_hash_verification"
+      ],
+      "candidate_count_note": "Candidate counts are diagnostic hints, not quality scores or approval.",
+      "final_lint_candidates": 0,
+      "manual_comparison": {
+        "scope": "Authorized redesign documentation changes plus local prose cleanup; unrelated historical descriptions retained.",
+        "facts_checked": [
+          "Godot 4.7.2 and 900 m course",
+          "three physical gaps",
+          "independent heading and held carve release",
+          "legacy record separation",
+          "Studio credit allocation and developer API boundary",
+          "pending model adoption, listening, hands-on play, enjoyment, final review and CI"
+        ],
+        "accepted_changes": [
+          "Replace current 90-second prototype claims with current 900 m rework scope",
+          "Label old screens/specifications as history",
+          "Add evidence boundaries for automated tests, static frames and hands-on play"
+        ],
+        "retained_candidates": [
+          "Technical identifiers and newly linked paths are intentional code references.",
+          "Explicit negation prevents old prototype evidence from being read as current acceptance.",
+          "New numbers describe the authorized rework and were checked against code or the supplied production status."
+        ],
+        "prose_cleanup": "Removed unnecessary pauses after short topics and shortened a repeated possessive phrase in README; removed an extra blank line in REWORK.",
+        "unresolved_editorial_questions": []
+      }
+    },
+    {
+      "file": "docs/REWORK.md",
+      "source_snapshot": "docs/verification/rework/originals/REWORK.md",
+      "source_sha256": "54042209edcd3397d5f566fb7d62ac033f029e0ee0e5e6051116b1da0d8649db",
+      "final_sha256": "2d519d5ce482ac551d37e32bc2e6d171a39ffb16fd639de15884b76fc2d6fbee",
+      "run_id": "20261024T181320Z-c3e51575",
+      "attempt": 2,
+      "mode": "rewrite",
+      "record": "docs/verification/rework/yomiyasu/REWORK/runs/20261024T181320Z-c3e51575/attempt-2.json",
+      "verification": "matched",
+      "verify_status_line": "yomiyasu-check: executed via=verify run=20261024T181320Z-c3e51575 attempt=2 final=sha256:2d519d5ce482 mode=rewrite doc_type=manual checks=lint,diff,materials meaning_risk=9 replay=skipped",
+      "checks_executed": [
+        "original_lint",
+        "final_lint",
+        "source_final_diff",
+        "material_comparison",
+        "manual_comparison",
+        "final_hash_verification"
+      ],
+      "candidate_count_note": "Candidate counts are diagnostic hints, not quality scores or approval.",
+      "final_lint_candidates": 0,
+      "manual_comparison": {
+        "scope": "Authorized redesign documentation changes plus local prose cleanup; unrelated historical descriptions retained.",
+        "facts_checked": [
+          "Godot 4.7.2 and 900 m course",
+          "three physical gaps",
+          "independent heading and held carve release",
+          "legacy record separation",
+          "Studio credit allocation and developer API boundary",
+          "pending model adoption, listening, hands-on play, enjoyment, final review and CI"
+        ],
+        "accepted_changes": [
+          "Replace current 90-second prototype claims with current 900 m rework scope",
+          "Label old screens/specifications as history",
+          "Add evidence boundaries for automated tests, static frames and hands-on play"
+        ],
+        "retained_candidates": [
+          "Technical identifiers and newly linked paths are intentional code references.",
+          "Explicit negation prevents old prototype evidence from being read as current acceptance.",
+          "New numbers describe the authorized rework and were checked against code or the supplied production status."
+        ],
+        "prose_cleanup": "Removed unnecessary pauses after short topics and shortened a repeated possessive phrase in README; removed an extra blank line in REWORK.",
+        "unresolved_editorial_questions": []
+      }
+    },
+    {
+      "file": "docs/IMPLEMENTATION.md",
+      "source_snapshot": "docs/verification/rework/originals/IMPLEMENTATION.md",
+      "source_sha256": "369103f519555570682efa159b2cae1641b89acf95fab3f5cfd3c53d0b918054",
+      "final_sha256": "b225313ce52cd41526bab26da115e57eabc92b103f625cc5c396fb1d975b5f30",
+      "run_id": "20261024T181322Z-9888aa93",
+      "attempt": 1,
+      "mode": "rewrite",
+      "record": "docs/verification/rework/yomiyasu/IMPLEMENTATION/runs/20261024T181322Z-9888aa93/attempt-1.json",
+      "verification": "matched",
+      "verify_status_line": "yomiyasu-check: executed via=verify run=20261024T181322Z-9888aa93 attempt=1 final=sha256:b225313ce52c mode=rewrite doc_type=manual checks=lint,diff,materials meaning_risk=46 replay=skipped",
+      "checks_executed": [
+        "original_lint",
+        "final_lint",
+        "source_final_diff",
+        "material_comparison",
+        "manual_comparison",
+        "final_hash_verification"
+      ],
+      "candidate_count_note": "Candidate counts are diagnostic hints, not quality scores or approval.",
+      "final_lint_candidates": 0,
+      "manual_comparison": {
+        "scope": "Authorized redesign documentation changes plus local prose cleanup; unrelated historical descriptions retained.",
+        "facts_checked": [
+          "Godot 4.7.2 and 900 m course",
+          "three physical gaps",
+          "independent heading and held carve release",
+          "legacy record separation",
+          "Studio credit allocation and developer API boundary",
+          "pending model adoption, listening, hands-on play, enjoyment, final review and CI"
+        ],
+        "accepted_changes": [
+          "Replace current 90-second prototype claims with current 900 m rework scope",
+          "Label old screens/specifications as history",
+          "Add evidence boundaries for automated tests, static frames and hands-on play"
+        ],
+        "retained_candidates": [
+          "Technical identifiers and newly linked paths are intentional code references.",
+          "Explicit negation prevents old prototype evidence from being read as current acceptance.",
+          "New numbers describe the authorized rework and were checked against code or the supplied production status."
+        ],
+        "prose_cleanup": "Removed unnecessary pauses after short topics and shortened a repeated possessive phrase in README; removed an extra blank line in REWORK.",
+        "unresolved_editorial_questions": []
+      }
+    }
+  ]
+}

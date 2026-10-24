@@ -1,0 +1,168 @@
+
+> cloudsea-surfer@0.1.0 check
+> node scripts/godot.mjs check
+
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+[   0% ] first_scan_filesystem | Started プロジェクトの初期化 (5 steps)
+[   0% ] first_scan_filesystem | ファイル構造をスキャン中...
+[  16% ] first_scan_filesystem | グローバルクラス名を読み込み中...
+[  33% ] first_scan_filesystem | GDExtensionを検証中...
+[  50% ] first_scan_filesystem | 自動読み込みスクリプトを作成中...
+[  66% ] first_scan_filesystem | プラグインを初期化中...
+[  83% ] first_scan_filesystem | ファイルスキャンを開始...
+[ DONE ] first_scan_filesystem
+
+[   0% ] loading_editor_layout | Started エディターの読み込み (5 steps)
+[   0% ] loading_editor_layout | エディターレイアウトを読み込み中...
+[  16% ] loading_editor_layout | ドックを読み込み中...
+[ DONE ] loading_editor_layout
+
+Testing res://tests/course_geometry_test.gd
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+Course geometry: 1681 raycasts, 3 mesh batches, 27 collision chunks, 0 failures
+Testing res://tests/course_run_test.gd
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+Course lower: ticks=5444 simulation_seconds=90.733 progress=1650.177 max_lateral=0.0844 falls=0
+Course upper: ticks=508 takeoff_s=455.823 landing_s=474.475 landing_height=2.355 landing_lateral=-3.483 jump_rise=2.078 max_above_base=4.712 airborne_gap_ticks=13 falls=0
+Course physics delta: min=0.01666667 max=0.01666667
+Course run: 13 checks, 0 failures
+Testing res://tests/main_flow_test.gd
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+CLOUDSEA_READY assets=5
+CLOUDSEA_FINISH time=89.25 score=875 falls=0
+Main flow: 46 checks, 0 failures
+Testing res://tests/rider_behavior_test.gd
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+CHECK grounded after 1 second: true
+CHECK automatic forward progress: true
+CHECK no central drift on straight: true
+CHECK jump reaches expected height: true
+CHECK one held jump produces one landing: true
+CHECK braking reaches minimum speed without stopping: true
+CHECK releasing brake recovers cruise speed: true
+CHECK boost exhausts: true
+CHECK held boost stays off after distance recharge: true
+CHECK boost re-arms after release: true
+CHECK checkpoint preserves highest progress: true
+CHECK repeated distance grants no energy: true
+CHECK hit slows 30 percent and immunity blocks repeat: true
+CHECK hit immunity lasts beyond one second: true
+CHECK hit immunity expires after 1.5 seconds: true
+CHECK inactive rider rejects hits: true
+CHECK new run clears recovery history: true
+CHECK inactive rider does not travel: true
+CHECK reactivation ignores held jump and boost: true
+CHECK event recovery is rejected while boosting: true
+CHECK buffer input is issued before contact: true
+CHECK prelanding input buffer produces one jump: true
+CHECK grounded before coyote check: true
+CHECK support has actually been lost: true
+CHECK coyote jump works after support loss: true
+CHECK fall emits once and deactivates movement: true
+CHECK fall notification is not repeated: true
+Rider behavior: 27 checks, 0 failures
+Testing res://tests/sentry_zone_test.gd
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+Sentry zone 0: s=280 side=-1 vertices=108 center and inner/outer-edge checks complete
+Sentry zone 1: s=550 side=+1 vertices=108 center and inner/outer-edge checks complete
+Sentry zone 2: s=880 side=-1 vertices=108 center and inner/outer-edge checks complete
+Sentry zone 3: s=1180 side=+1 vertices=108 center and inner/outer-edge checks complete
+Sentry zone 4: s=1440 side=-1 vertices=108 center and inner/outer-edge checks complete
+Sentry zones: 1650 checks, 0 failures, 10 accepted physical hits
+5 Godot test scripts passed.
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+[   0% ] first_scan_filesystem | Started プロジェクトの初期化 (5 steps)
+[   0% ] first_scan_filesystem | ファイル構造をスキャン中...
+[  16% ] first_scan_filesystem | グローバルクラス名を読み込み中...
+[  33% ] first_scan_filesystem | GDExtensionを検証中...
+[  50% ] first_scan_filesystem | 自動読み込みスクリプトを作成中...
+[  66% ] first_scan_filesystem | プラグインを初期化中...
+[  83% ] first_scan_filesystem | ファイルスキャンを開始...
+[ DONE ] first_scan_filesystem
+
+[   0% ] savepack | Started パック中 (102 steps)
+[   1% ] savepack | ファイルの保存中: res://.godot/imported/DejaVuSansMono.ttf-9a4c8400e0605ada74fff5183c94f917.fontdata
+[   1% ] savepack | ファイルの保存中: res://assets/fonts/DejaVuSansMono.ttf.import
+[   3% ] savepack | ファイルの保存中: res://.godot/imported/NotoSansCJKjp-Medium.otf-13e73020c76b4f29e64c8dc55585dbcb.fontdata
+[   3% ] savepack | ファイルの保存中: res://assets/fonts/NotoSansCJKjp-Medium.otf.import
+[   6% ] savepack | ファイルの保存中: res://.godot/imported/arch.glb-355a2ff2b0519dc6500002a3e29ef10b.scn
+[   6% ] savepack | ファイルの保存中: res://assets/models/arch.glb.import
+[   9% ] savepack | ファイルの保存中: res://.godot/imported/arch_cloudsea-arch-source_basecolor.jpg-d36394d3e8a7fa0475e6c90389b84f5b.ctex
+[   9% ] savepack | ファイルの保存中: res://assets/models/arch_cloudsea-arch-source_basecolor.jpg.import
+[  11% ] savepack | ファイルの保存中: res://.godot/imported/arch_cloudsea-arch-source_normal.jpg-ec45f7c668cfcb2ab7662b5104bd4117.ctex
+[  11% ] savepack | ファイルの保存中: res://assets/models/arch_cloudsea-arch-source_normal.jpg.import
+[  14% ] savepack | ファイルの保存中: res://.godot/imported/arch_cloudsea-arch-source_rm.jpg-1b221b1723f4e5cd8945a13d53c170c7.ctex
+[  14% ] savepack | ファイルの保存中: res://assets/models/arch_cloudsea-arch-source_rm.jpg.import
+[  17% ] savepack | ファイルの保存中: res://.godot/imported/board.glb-5c484d059dc83a0d7b4e556088961331.scn
+[  17% ] savepack | ファイルの保存中: res://assets/models/board.glb.import
+[  19% ] savepack | ファイルの保存中: res://.godot/imported/board_cloudsea-board-source_basecolor.jpg-23638cc7094208a1cf07c392eded51f4.ctex
+[  19% ] savepack | ファイルの保存中: res://assets/models/board_cloudsea-board-source_basecolor.jpg.import
+[  22% ] savepack | ファイルの保存中: res://.godot/imported/board_cloudsea-board-source_normal.jpg-fcac7324ce4f944343f9d80425f4a204.ctex
+[  22% ] savepack | ファイルの保存中: res://assets/models/board_cloudsea-board-source_normal.jpg.import
+[  25% ] savepack | ファイルの保存中: res://.godot/imported/board_cloudsea-board-source_rm.jpg-5500e7d9a8ede6c8116063b5807a613b.ctex
+[  25% ] savepack | ファイルの保存中: res://assets/models/board_cloudsea-board-source_rm.jpg.import
+[  28% ] savepack | ファイルの保存中: res://.godot/imported/island.glb-7456a94e445b25bc6c70597612d590d8.scn
+[  28% ] savepack | ファイルの保存中: res://assets/models/island.glb.import
+[  30% ] savepack | ファイルの保存中: res://.godot/imported/island_cloudsea-island-source_basecolor.jpg-734fe13ab6a2ef5ec02be31bbfc8187e.ctex
+[  30% ] savepack | ファイルの保存中: res://assets/models/island_cloudsea-island-source_basecolor.jpg.import
+[  33% ] savepack | ファイルの保存中: res://.godot/imported/island_cloudsea-island-source_normal.jpg-bf94e52fbcb50aae3aa330bedc3c78b7.ctex
+[  33% ] savepack | ファイルの保存中: res://assets/models/island_cloudsea-island-source_normal.jpg.import
+[  35% ] savepack | ファイルの保存中: res://.godot/imported/island_cloudsea-island-source_rm.jpg-393bb9d9c01bf11b187d31c76706e21d.ctex
+[  35% ] savepack | ファイルの保存中: res://assets/models/island_cloudsea-island-source_rm.jpg.import
+[  37% ] savepack | ファイルの保存中: res://.godot/imported/mio.glb-ec8598a9e87e56e9be5746b7d62c2d29.scn
+[  37% ] savepack | ファイルの保存中: res://assets/models/mio.glb.import
+[  40% ] savepack | ファイルの保存中: res://.godot/imported/mio_anime_girl_3d_model_basecolor.jpg-16544cbd445f8f70cce37e6f4d8871d3.ctex
+[  40% ] savepack | ファイルの保存中: res://assets/models/mio_anime_girl_3d_model_basecolor.jpg.import
+[  43% ] savepack | ファイルの保存中: res://.godot/imported/mio_anime_girl_3d_model_normal.jpg-598cd29cb30abd4a93fb9653c1272b7e.ctex
+[  43% ] savepack | ファイルの保存中: res://assets/models/mio_anime_girl_3d_model_normal.jpg.import
+[  45% ] savepack | ファイルの保存中: res://.godot/imported/mio_anime_girl_3d_model_rm.png-242150565e1f2c9c1fe008384e2690d0.ctex
+[  45% ] savepack | ファイルの保存中: res://assets/models/mio_anime_girl_3d_model_rm.png.import
+[  48% ] savepack | ファイルの保存中: res://.godot/imported/sentry.glb-74f965028ff91c41447aedd2dc880499.scn
+[  48% ] savepack | ファイルの保存中: res://assets/models/sentry.glb.import
+[  51% ] savepack | ファイルの保存中: res://.godot/imported/sentry_cloudsea-sentry-source_basecolor.jpg-a038a78c51b6449aaeb59c74b30e1ad1.ctex
+[  51% ] savepack | ファイルの保存中: res://assets/models/sentry_cloudsea-sentry-source_basecolor.jpg.import
+[  54% ] savepack | ファイルの保存中: res://.godot/imported/sentry_cloudsea-sentry-source_normal.jpg-fba3dbc340f00fd19668b1f188c3c24c.ctex
+[  54% ] savepack | ファイルの保存中: res://assets/models/sentry_cloudsea-sentry-source_normal.jpg.import
+[  56% ] savepack | ファイルの保存中: res://.godot/imported/sentry_cloudsea-sentry-source_rm.jpg-41724c4bc6e01baedc38470f0321e047.ctex
+[  56% ] savepack | ファイルの保存中: res://assets/models/sentry_cloudsea-sentry-source_rm.jpg.import
+[  59% ] savepack | ファイルの保存中: res://.godot/exported/133200997/export-54363c46c26e42648f2d0284e954c923-interface.scn
+[  62% ] savepack | ファイルの保存中: res://.godot/exported/133200997/export-3ad5c15c4f3250da0cc7c1af1770d85f-main.scn
+[  64% ] savepack | ファイルの保存中: res://.godot/exported/133200997/export-37157f2c44191b8e42b7411d886dc662-rider.scn
+[  66% ] savepack | ファイルの保存中: res://scripts/asset_loader.gdc
+[  69% ] savepack | ファイルの保存中: res://scripts/cloudscape.gdc
+[  71% ] savepack | ファイルの保存中: res://scripts/course.gdc
+[  74% ] savepack | ファイルの保存中: res://scripts/follow_camera.gdc
+[  77% ] savepack | ファイルの保存中: res://scripts/interface.gdc
+[  80% ] savepack | ファイルの保存中: res://scripts/main.gdc
+[  82% ] savepack | ファイルの保存中: res://scripts/rider.gdc
+[  85% ] savepack | ファイルの保存中: res://scripts/rider_pose.gdc
+[  88% ] savepack | ファイルの保存中: res://scripts/sentry.gdc
+[  90% ] savepack | ファイルの保存中: res://scripts/soundscape.gdc
+[  93% ] savepack | ファイルの保存中: res://shaders/cloud_sea.gdshader
+[  96% ] savepack | ファイルの保存中: res://shaders/stone_path.gdshader
+[  96% ] savepack | ファイルの保存中: res://scenes/interface.tscn.remap
+[  96% ] savepack | ファイルの保存中: res://scenes/main.tscn.remap
+[  96% ] savepack | ファイルの保存中: res://scenes/rider.tscn.remap
+[  96% ] savepack | ファイルの保存中: res://scripts/asset_loader.gd.remap
+[  96% ] savepack | ファイルの保存中: res://scripts/cloudscape.gd.remap
+[  96% ] savepack | ファイルの保存中: res://scripts/course.gd.remap
+[  96% ] savepack | ファイルの保存中: res://scripts/follow_camera.gd.remap
+[  96% ] savepack | ファイルの保存中: res://scripts/interface.gd.remap
+[  96% ] savepack | ファイルの保存中: res://scripts/main.gd.remap
+[  96% ] savepack | ファイルの保存中: res://scripts/rider.gd.remap
+[  96% ] savepack | ファイルの保存中: res://scripts/rider_pose.gd.remap
+[  96% ] savepack | ファイルの保存中: res://scripts/sentry.gd.remap
+[  96% ] savepack | ファイルの保存中: res://scripts/soundscape.gd.remap
+[  96% ] savepack | ファイルの保存中: res://.godot/global_script_class_cache.cfg
+[  96% ] savepack | ファイルの保存中: res://.godot/uid_cache.bin
+[  96% ] savepack | ファイルの保存中: res://project.binary
+[ DONE ] savepack
+
+Godot 4.7.2: single-thread Web build ready at dist/index.html

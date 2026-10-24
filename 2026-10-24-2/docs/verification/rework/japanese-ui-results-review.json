@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "skill": "yomiyasu",
+  "scope": "Japanese UI strings, web controls, one app catalog description, new result report and PR body",
+  "manual_review": "Compared the changed Japanese strings against originals, source mechanics, observed screenshots and test logs. Numeric changes reflect the approved redesign. Code syntax/identifiers/HTML/paths are not prose. Gate refers to a physical game object. Unverified full manual completion, sound, pad, long-session quality and user art/fun acceptance remain explicitly unverified. Removed two unnecessary pause commas in the new result report. Clarified the app catalog action sequence.",
+  "records": [
+    {
+      "file": "game/scripts/interface.gd",
+      "sha256": "fc553c261cbbe7ec8f9dcc4596609abfc0581eb35d86e72d6806b88544c3be7e",
+      "run_id": "20261024T192144Z-7fc1528f",
+      "attempt": 1,
+      "status": "executed",
+      "verify_status": "executed"
+    },
+    {
+      "file": "game/scripts/main.gd",
+      "sha256": "9ecd215b7a0da1706fffe79f5c91ee9522397fb5bc5aa27536a9302364aa34c0",
+      "run_id": "20261024T192145Z-5476ee96",
+      "attempt": 1,
+      "status": "executed",
+      "verify_status": "executed"
+    },
+    {
+      "file": "game/scripts/course.gd",
+      "sha256": "381297994708bcfcc3fd3ce272b248a9740ad4cbe02f22039dae3c6e02bc5cdb",
+      "run_id": "20261024T192146Z-d3d8a7ff",
+      "attempt": 1,
+      "status": "executed",
+      "verify_status": "executed"
+    },
+    {
+      "file": "game/web_shell.html",
+      "sha256": "117b5e3b0b32e7366d4487a681debf69bfed9376d5637c0a666ac0359cbf8f38",
+      "run_id": "20261024T192147Z-2447b1fe",
+      "attempt": 1,
+      "status": "executed",
+      "verify_status": "executed"
+    },
+    {
+      "file": "/Users/hayatok/.codex/worktrees/cloudsea-surfer/100challenge/apps.json",
+      "sha256": "27a5d9b1db42f500da2950408af975f429cb3fcdd98073f4b678602ddf003923",
+      "run_id": "20261024T192147Z-15a0e60e",
+      "attempt": 2,
+      "status": "executed",
+      "verify_status": "executed"
+    },
+    {
+      "file": "docs/verification/rework/RESULTS.md",
+      "sha256": "5807af422ba924daf3001d4ed89d56ad232110429177bfb993eee5bbf97a0426",
+      "run_id": "20261024T192147Z-df568be3",
+      "attempt": 2,
+      "status": "executed",
+      "verify_status": "executed"
+    },
+    {
+      "file": "/tmp/cloudsea-rework-pr-body.md",
+      "sha256": "a63939ccc0fc3a339d173f5ffcb5b3e2d8771dd8b22e9ff7adcbe62050f27e6b",
+      "run_id": "20261024T192148Z-3f693013",
+      "attempt": 1,
+      "status": "executed",
+      "verify_status": "executed"
+    }
+  ]
+}

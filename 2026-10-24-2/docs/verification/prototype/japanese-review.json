@@ -1,0 +1,79 @@
+{
+  "checks": [
+    {
+      "target": "readme",
+      "status": "executed",
+      "run_id": "20261024T163439Z-8c0164b5",
+      "problems": []
+    },
+    {
+      "target": "agents",
+      "status": "executed",
+      "run_id": "20261024T163514Z-a1d077bf",
+      "problems": []
+    },
+    {
+      "target": "implementation",
+      "status": "executed",
+      "run_id": "20261024T163514Z-619b5ef4",
+      "problems": []
+    },
+    {
+      "target": "history",
+      "status": "executed",
+      "run_id": "20261024T163514Z-73434423",
+      "problems": []
+    },
+    {
+      "target": "prototype",
+      "status": "executed",
+      "run_id": "20261024T173141Z-9a3dc85e",
+      "problems": []
+    },
+    {
+      "target": "interface",
+      "status": "executed",
+      "run_id": "20261024T163514Z-e9a1e665",
+      "problems": []
+    },
+    {
+      "target": "main",
+      "status": "executed",
+      "run_id": "20261024T163514Z-5d96db22",
+      "problems": []
+    },
+    {
+      "target": "catalog",
+      "status": "executed",
+      "run_id": "20261024T163514Z-0012e4a1",
+      "problems": []
+    },
+    {
+      "target": "ui-copy",
+      "status": "executed",
+      "run_id": "20261024T172236Z-0b4d9fe9",
+      "problems": []
+    },
+    {
+      "target": "web-shell",
+      "status": "executed",
+      "run_id": "20261024T171908Z-e9b1df7f",
+      "problems": []
+    },
+    {
+      "target": "pr-description",
+      "status": "executed",
+      "run_id": "20261024T171908Z-25ffd24f",
+      "problems": []
+    }
+  ],
+  "manual_decisions": [
+    "Kept literal gate and authoritative-document terminology.",
+    "Accepted implementation-stage status changes using source and actual run evidence.",
+    "GDScript colon and dash findings are syntax, not prose.",
+    "UI copy was extracted and compared against actual source hashes.",
+    "Removed one unnecessary comma in the verification prose.",
+    "Candidate counts are not readability or pass scores.",
+    "Delivery status and new record link were checked against the completed Astra review and successful Linux workflow; the layout wording avoids blaming the game for the capture-tool scale artifact."
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "bones": [
+    65
+  ],
+  "materials": [
+    {
+      "albedo": "res://assets/models/mio_cloudsea-mio-v2-rigged-source_basecolor.jpg",
+      "normal": "res://assets/models/mio_cloudsea-mio-v2-rigged-source_normal.jpg",
+      "roughness": "res://assets/models/mio_cloudsea-mio-v2-rigged-source_rm.png"
+    }
+  ]
+}

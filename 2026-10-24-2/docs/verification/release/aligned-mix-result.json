@@ -1,0 +1,20 @@
+{
+  "aligned_voices": 4,
+  "audio_driver": "Dummy",
+  "cue_cycles": 32,
+  "cue_order": "Alternating clean and release, all four voices started in the same frame",
+  "dc": -0.00113104722899436,
+  "default_master_065_equivalent_peak": 0.583380836248398,
+  "evidence_kind": "Deliberate mixer stress broader than normal game events; no listening assessment",
+  "float_peak": 0.897508978843689,
+  "grounded_carve_charge": 1,
+  "master_db": 0,
+  "peak_dbfs": -0.93922395933242,
+  "rms": 0.139655237827105,
+  "sample_frames": 598016,
+  "samples_at_or_above_full_scale": 0,
+  "seconds": 13.5604535147392,
+  "sound_volume": 1,
+  "speed": 40,
+  "wav": "mix-aligned-four-voices.wav"
+}

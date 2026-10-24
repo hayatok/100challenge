@@ -1,0 +1,427 @@
+{
+  "old": {
+    "source": "/Users/hayatok/.codex/worktrees/cloudsea-surfer/100challenge/2026-10-24-2/.cache/rework/legacy-mio.glb",
+    "bytes": 8798232,
+    "sha256": "70a343c829f5e4b79802435bbd24365219cd24c5e4e38e197393aeaf9536b074",
+    "source_sha256_unchanged_after_inspection": true,
+    "gltf_asset": {
+      "generator": "Tripo",
+      "version": "2.0"
+    },
+    "coordinate_convention": "glTF right-handed +Y up; +Z forward is asset-facing convention, confirmed separately by renders and toe bones",
+    "scene_bounds": {
+      "min": [
+        -0.2954100966453552,
+        2.1931373339612037e-07,
+        -0.09891507774591446
+      ],
+      "max": [
+        0.29541015625,
+        0.9797973036766052,
+        0.09890750795602798
+      ],
+      "size": [
+        0.5908202528953552,
+        0.9797970843628718,
+        0.19782258570194244
+      ]
+    },
+    "vertices": 28133,
+    "triangles": 40000,
+    "primitives": [
+      {
+        "vertices": 28133,
+        "indices": 120000,
+        "triangles": 40000,
+        "mode": 4,
+        "attributes": [
+          "POSITION",
+          "NORMAL",
+          "TEXCOORD_0",
+          "JOINTS_0",
+          "WEIGHTS_0"
+        ]
+      }
+    ],
+    "nodes": 67,
+    "skins": [
+      {
+        "bones": 65,
+        "bone_names": [
+          "mixamorig:Hips",
+          "mixamorig:LeftUpLeg",
+          "mixamorig:LeftLeg",
+          "mixamorig:LeftFoot",
+          "mixamorig:LeftToeBase",
+          "mixamorig:LeftToe_End",
+          "mixamorig:RightUpLeg",
+          "mixamorig:RightLeg",
+          "mixamorig:RightFoot",
+          "mixamorig:RightToeBase",
+          "mixamorig:RightToe_End",
+          "mixamorig:Spine",
+          "mixamorig:Spine1",
+          "mixamorig:Spine2",
+          "mixamorig:LeftShoulder",
+          "mixamorig:LeftArm",
+          "mixamorig:LeftForeArm",
+          "mixamorig:LeftHand",
+          "mixamorig:LeftHandIndex1",
+          "mixamorig:LeftHandIndex2",
+          "mixamorig:LeftHandIndex3",
+          "mixamorig:LeftHandIndex4",
+          "mixamorig:LeftHandMiddle1",
+          "mixamorig:LeftHandMiddle2",
+          "mixamorig:LeftHandMiddle3",
+          "mixamorig:LeftHandMiddle4",
+          "mixamorig:LeftHandPinky1",
+          "mixamorig:LeftHandPinky2",
+          "mixamorig:LeftHandPinky3",
+          "mixamorig:LeftHandPinky4",
+          "mixamorig:LeftHandRing1",
+          "mixamorig:LeftHandRing2",
+          "mixamorig:LeftHandRing3",
+          "mixamorig:LeftHandRing4",
+          "mixamorig:LeftHandThumb1",
+          "mixamorig:LeftHandThumb2",
+          "mixamorig:LeftHandThumb3",
+          "mixamorig:LeftHandThumb4",
+          "mixamorig:Neck",
+          "mixamorig:Head",
+          "mixamorig:HeadTop_End",
+          "mixamorig:RightShoulder",
+          "mixamorig:RightArm",
+          "mixamorig:RightForeArm",
+          "mixamorig:RightHand",
+          "mixamorig:RightHandIndex1",
+          "mixamorig:RightHandIndex2",
+          "mixamorig:RightHandIndex3",
+          "mixamorig:RightHandIndex4",
+          "mixamorig:RightHandMiddle1",
+          "mixamorig:RightHandMiddle2",
+          "mixamorig:RightHandMiddle3",
+          "mixamorig:RightHandMiddle4",
+          "mixamorig:RightHandPinky1",
+          "mixamorig:RightHandPinky2",
+          "mixamorig:RightHandPinky3",
+          "mixamorig:RightHandPinky4",
+          "mixamorig:RightHandRing1",
+          "mixamorig:RightHandRing2",
+          "mixamorig:RightHandRing3",
+          "mixamorig:RightHandRing4",
+          "mixamorig:RightHandThumb1",
+          "mixamorig:RightHandThumb2",
+          "mixamorig:RightHandThumb3",
+          "mixamorig:RightHandThumb4"
+        ],
+        "inverse_bind_count": 65,
+        "finite": true,
+        "min_abs_determinant": 0.9999982118611859
+      }
+    ],
+    "morph_targets": 0,
+    "animations": [],
+    "weights": {
+      "rows": 28133,
+      "sum_min": 0.9999999012798071,
+      "sum_max": 1.0000000521540642,
+      "max_abs_sum_error": 9.872019290924072e-08,
+      "outside_zero_one": 0,
+      "unweighted": 0,
+      "invalid_joint_references": 0
+    },
+    "finite_geometry_and_weights": true,
+    "node_matrices_finite": true,
+    "anatomical_directions": {
+      "up_neck_minus_hips": [
+        1.9207457095203136e-08,
+        0.9950372072569568,
+        -0.09950354855117324
+      ],
+      "left_foot_forward": [
+        -1.3595639520256545e-07,
+        -0.6196441809441529,
+        0.784882850508298
+      ],
+      "right_foot_forward": [
+        -4.033088285092082e-07,
+        -0.619643826743375,
+        0.7848831301401906
+      ],
+      "forward_projected_onto_body_plane": [
+        -3.5628912902534406e-07,
+        0.0995035485511739,
+        0.995037207256893
+      ]
+    },
+    "materials": [
+      {
+        "doubleSided": true,
+        "name": "tripo_mat_39d7752a-37bd-4272-822c-693facc4672a",
+        "normalTexture": {
+          "index": 0
+        },
+        "pbrMetallicRoughness": {
+          "baseColorTexture": {
+            "index": 1
+          },
+          "metallicRoughnessTexture": {
+            "index": 2
+          }
+        }
+      }
+    ],
+    "images": [
+      {
+        "mimeType": "image/jpeg",
+        "embedded_bytes": 441744,
+        "size": [
+          1024,
+          1024
+        ],
+        "sha256": "7a3d0b2eeacac20b6c5c547083265ad60c1b5d64ce0b743f672f3f0902a521cc",
+        "uri": null
+      },
+      {
+        "mimeType": "image/jpeg",
+        "embedded_bytes": 1362772,
+        "size": [
+          2048,
+          2048
+        ],
+        "sha256": "83c57844cf6d544a3b5d72375d3a874257967f6187c26e1d7883d576c262f8a8",
+        "uri": null
+      },
+      {
+        "mimeType": "image/png",
+        "embedded_bytes": 5267431,
+        "size": [
+          2048,
+          2048
+        ],
+        "sha256": "2b0bda27b531f29cc8a5c367fdd0060e584cfe300cd1424d886aa3b66e657f5e",
+        "uri": null
+      }
+    ],
+    "accessors_with_sparse": [],
+    "source_commit": "07c2730",
+    "source_origin": "07c2730:2026-10-24-2/game/assets/models/mio.glb",
+    "source_role": "Immutable legacy comparison input; current game path now contains the candidate."
+  },
+  "new": {
+    "source": "/Users/hayatok/Downloads/cloudsea-mio-v2-rigged-source.glb",
+    "bytes": 9182588,
+    "sha256": "dc73844328312fc1e6ab2324dc8253076037fe093b231355d8bdc3dac51784a3",
+    "source_sha256_unchanged_after_inspection": true,
+    "gltf_asset": {
+      "generator": "Tripo",
+      "version": "2.0"
+    },
+    "coordinate_convention": "glTF right-handed +Y up; +Z forward is asset-facing convention, confirmed separately by renders and toe bones",
+    "scene_bounds": {
+      "min": [
+        -0.249755859375,
+        9.41654434427619e-08,
+        -0.10693354904651642
+      ],
+      "max": [
+        0.249755859375,
+        0.9800415635108948,
+        0.10693354904651642
+      ],
+      "size": [
+        0.49951171875,
+        0.9800414693454513,
+        0.21386709809303284
+      ]
+    },
+    "vertices": 26678,
+    "triangles": 39999,
+    "primitives": [
+      {
+        "vertices": 26678,
+        "indices": 119997,
+        "triangles": 39999,
+        "mode": 4,
+        "attributes": [
+          "POSITION",
+          "NORMAL",
+          "TEXCOORD_0",
+          "JOINTS_0",
+          "WEIGHTS_0"
+        ]
+      }
+    ],
+    "nodes": 67,
+    "skins": [
+      {
+        "bones": 65,
+        "bone_names": [
+          "mixamorig:Hips",
+          "mixamorig:LeftUpLeg",
+          "mixamorig:LeftLeg",
+          "mixamorig:LeftFoot",
+          "mixamorig:LeftToeBase",
+          "mixamorig:LeftToe_End",
+          "mixamorig:RightUpLeg",
+          "mixamorig:RightLeg",
+          "mixamorig:RightFoot",
+          "mixamorig:RightToeBase",
+          "mixamorig:RightToe_End",
+          "mixamorig:Spine",
+          "mixamorig:Spine1",
+          "mixamorig:Spine2",
+          "mixamorig:LeftShoulder",
+          "mixamorig:LeftArm",
+          "mixamorig:LeftForeArm",
+          "mixamorig:LeftHand",
+          "mixamorig:LeftHandIndex1",
+          "mixamorig:LeftHandIndex2",
+          "mixamorig:LeftHandIndex3",
+          "mixamorig:LeftHandIndex4",
+          "mixamorig:LeftHandMiddle1",
+          "mixamorig:LeftHandMiddle2",
+          "mixamorig:LeftHandMiddle3",
+          "mixamorig:LeftHandMiddle4",
+          "mixamorig:LeftHandPinky1",
+          "mixamorig:LeftHandPinky2",
+          "mixamorig:LeftHandPinky3",
+          "mixamorig:LeftHandPinky4",
+          "mixamorig:LeftHandRing1",
+          "mixamorig:LeftHandRing2",
+          "mixamorig:LeftHandRing3",
+          "mixamorig:LeftHandRing4",
+          "mixamorig:LeftHandThumb1",
+          "mixamorig:LeftHandThumb2",
+          "mixamorig:LeftHandThumb3",
+          "mixamorig:LeftHandThumb4",
+          "mixamorig:Neck",
+          "mixamorig:Head",
+          "mixamorig:HeadTop_End",
+          "mixamorig:RightShoulder",
+          "mixamorig:RightArm",
+          "mixamorig:RightForeArm",
+          "mixamorig:RightHand",
+          "mixamorig:RightHandIndex1",
+          "mixamorig:RightHandIndex2",
+          "mixamorig:RightHandIndex3",
+          "mixamorig:RightHandIndex4",
+          "mixamorig:RightHandMiddle1",
+          "mixamorig:RightHandMiddle2",
+          "mixamorig:RightHandMiddle3",
+          "mixamorig:RightHandMiddle4",
+          "mixamorig:RightHandPinky1",
+          "mixamorig:RightHandPinky2",
+          "mixamorig:RightHandPinky3",
+          "mixamorig:RightHandPinky4",
+          "mixamorig:RightHandRing1",
+          "mixamorig:RightHandRing2",
+          "mixamorig:RightHandRing3",
+          "mixamorig:RightHandRing4",
+          "mixamorig:RightHandThumb1",
+          "mixamorig:RightHandThumb2",
+          "mixamorig:RightHandThumb3",
+          "mixamorig:RightHandThumb4"
+        ],
+        "inverse_bind_count": 65,
+        "finite": true,
+        "min_abs_determinant": 0.9999976823095101
+      }
+    ],
+    "morph_targets": 0,
+    "animations": [],
+    "weights": {
+      "rows": 26678,
+      "sum_min": 0.9999999031424522,
+      "sum_max": 1.0000000521540642,
+      "max_abs_sum_error": 9.685754776000977e-08,
+      "outside_zero_one": 0,
+      "unweighted": 0,
+      "invalid_joint_references": 0
+    },
+    "finite_geometry_and_weights": true,
+    "node_matrices_finite": true,
+    "anatomical_directions": {
+      "up_neck_minus_hips": [
+        1.0457833983285295e-07,
+        0.9981684851020508,
+        -0.06049525063230887
+      ],
+      "left_foot_forward": [
+        0.04554702417502075,
+        -0.7287799723078393,
+        0.6832314545977703
+      ],
+      "right_foot_forward": [
+        -0.04554749139062006,
+        -0.7287801123288914,
+        0.6832312740953166
+      ],
+      "forward_projected_onto_body_plane": [
+        -2.40182122041407e-07,
+        0.06049525063233245,
+        0.9981684851020262
+      ]
+    },
+    "materials": [
+      {
+        "doubleSided": true,
+        "name": "tripo_mat_ba00ec9b-960d-4ccb-a04d-c828ba501de6",
+        "normalTexture": {
+          "index": 0
+        },
+        "pbrMetallicRoughness": {
+          "baseColorTexture": {
+            "index": 1
+          },
+          "metallicRoughnessTexture": {
+            "index": 2
+          }
+        }
+      }
+    ],
+    "images": [
+      {
+        "mimeType": "image/jpeg",
+        "embedded_bytes": 521213,
+        "size": [
+          1024,
+          1024
+        ],
+        "sha256": "74105162cbae8f48c780509ca8f4a6a2bb9f0e91f151c95098a57b8937efa33b",
+        "uri": null
+      },
+      {
+        "mimeType": "image/jpeg",
+        "embedded_bytes": 1451074,
+        "size": [
+          2048,
+          2048
+        ],
+        "sha256": "796956d5bf95808e32768ad409f2d992f70177b30e792afdbd3d18caffb560be",
+        "uri": null
+      },
+      {
+        "mimeType": "image/png",
+        "embedded_bytes": 5559665,
+        "size": [
+          2048,
+          2048
+        ],
+        "sha256": "c5c69beaaf82858157c6c508f2928523981b657f9bea7570c0bc2b61b17a6fac",
+        "uri": null
+      }
+    ],
+    "accessors_with_sparse": [],
+    "candidate_integration": {
+      "game_path": "/Users/hayatok/.codex/worktrees/cloudsea-surfer/100challenge/2026-10-24-2/game/assets/models/mio.glb",
+      "same_sha256": true,
+      "status": "Candidate integrated by parent after inspection; user aesthetic approval remains pending."
+    }
+  },
+  "bone_compatibility": {
+    "exact_names_equal": true,
+    "missing_from_new": [],
+    "added": []
+  }
+}

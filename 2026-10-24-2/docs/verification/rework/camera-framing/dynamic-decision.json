@@ -1,0 +1,356 @@
+{
+  "evidence_kind": "Moving trajectory fixture, real Main/world/UI and newly imported character; not player-input playtesting or manual course completion",
+  "root_cause": "The previous world-space camera.position.lerp(target, 1-exp(-7*dt)) damped absolute rider translation. Constant forward movement therefore added approximately speed/7 metres to the desired trailing distance. A stationary framing fixture could not reveal this velocity-dependent error.",
+  "static_evidence_boundary": "comparison.json, selected.json and decision.json are retained as historical static-placement evidence. Their 21 successful static cases did not validate moving pursuit, actual gameplay framing, the newly imported character, or landing transitions.",
+  "changes": [
+    "Carry the rider horizontal displacement measured from consecutive interpolated render positions into camera position and look target before smoothing the relative orbit.",
+    "Carry terrain height changes separately. Apply 75 percent of interpolated jump-height change to camera height and 18 percent to gaze height, avoiding a second vertical smoothing lag at landing.",
+    "Teleport detection and reset seed all previous-position/ground/jump caches; large moves snap once instead of integrating an enormous displacement.",
+    "Retain 4.3 m orbit, 62-64 degree run FOV, fixed 62 degree reduced-motion FOV and zero reduced-motion roll. No new shake.",
+    "Change only the title offset to (3.6,1.65,1.2): about 18.4 degrees from world +X body-forward, retaining 48 degree FOV and the character on the right."
+  ],
+  "validation": {
+    "moving_samples": 1032,
+    "moving_cases_per_version": 7,
+    "board_mesh_samples_after": 44,
+    "all_sampled_board_hud_nonintersecting": true,
+    "minimum_board_hud_margin_px": 16.5396728515625,
+    "maximum_horizontal_distance_error_m": 0.007803726196289773,
+    "teleport_reset_distance_m": 4.29998779296875,
+    "pause_camera_unchanged": true,
+    "reduced_fov_fixed_62_and_zero_roll": true,
+    "syntax_check": "passed",
+    "git_diff_check": "passed"
+  },
+  "case_metrics": [
+    {
+      "case": "straight24",
+      "commanded_speed_m_s": 24.0,
+      "duration_s": 1.25,
+      "before": {
+        "horizontal_distance_all_frames_m": [
+          4.45725393295288,
+          7.58738136291504
+        ],
+        "head_to_foot_all_frames_percent": [
+          13.941162957085501,
+          23.6933347913954
+        ],
+        "settled_horizontal_distance_m": [
+          7.04387474060059,
+          7.58738136291504
+        ],
+        "settled_head_to_foot_percent": [
+          13.941162957085501,
+          14.9861356947157
+        ]
+      },
+      "after": {
+        "horizontal_distance_all_frames_m": [
+          4.30000019073486,
+          4.30000114440918
+        ],
+        "head_to_foot_all_frames_percent": [
+          24.375330607096398,
+          24.5446480645074
+        ],
+        "settled_horizontal_distance_m": [
+          4.30000019073486,
+          4.30000114440918
+        ],
+        "settled_head_to_foot_percent": [
+          24.375330607096398,
+          24.4082938300239
+        ]
+      }
+    },
+    {
+      "case": "straight40",
+      "commanded_speed_m_s": 40.0,
+      "duration_s": 0.8,
+      "before": {
+        "horizontal_distance_all_frames_m": [
+          4.54773426055908,
+          9.5664176940918
+        ],
+        "head_to_foot_all_frames_percent": [
+          10.057487487793,
+          21.489469740125898
+        ],
+        "settled_horizontal_distance_m": [
+          8.49501037597656,
+          9.5664176940918
+        ],
+        "settled_head_to_foot_percent": [
+          10.057487487793,
+          11.2974802652995
+        ]
+      },
+      "after": {
+        "horizontal_distance_all_frames_m": [
+          4.30000019073486,
+          4.30000114440918
+        ],
+        "head_to_foot_all_frames_percent": [
+          22.174826727973098,
+          22.7309290568034
+        ],
+        "settled_horizontal_distance_m": [
+          4.30000019073486,
+          4.30000114440918
+        ],
+        "settled_head_to_foot_percent": [
+          22.174826727973098,
+          22.2329584757487
+        ]
+      }
+    },
+    {
+      "case": "turn24",
+      "commanded_speed_m_s": 24.0,
+      "duration_s": 2.0,
+      "before": {
+        "horizontal_distance_all_frames_m": [
+          4.4449987411499,
+          7.58594512939453
+        ],
+        "head_to_foot_all_frames_percent": [
+          13.167737325032599,
+          23.6664877997504
+        ],
+        "settled_horizontal_distance_m": [
+          6.69058561325073,
+          7.58594512939453
+        ],
+        "settled_head_to_foot_percent": [
+          13.167737325032599,
+          14.935590955946202
+        ]
+      },
+      "after": {
+        "horizontal_distance_all_frames_m": [
+          4.29637861251831,
+          4.29999446868896
+        ],
+        "head_to_foot_all_frames_percent": [
+          23.0372492472331,
+          24.454286363389798
+        ],
+        "settled_horizontal_distance_m": [
+          4.29755449295044,
+          4.29958868026733
+        ],
+        "settled_head_to_foot_percent": [
+          23.0561786227756,
+          23.1033494737413
+        ]
+      }
+    },
+    {
+      "case": "turn40",
+      "commanded_speed_m_s": 40.0,
+      "duration_s": 1.35,
+      "before": {
+        "horizontal_distance_all_frames_m": [
+          4.5603985786438,
+          9.56686592102051
+        ],
+        "head_to_foot_all_frames_percent": [
+          9.369455973307291,
+          21.2672551472982
+        ],
+        "settled_horizontal_distance_m": [
+          8.62374305725098,
+          9.56686592102051
+        ],
+        "settled_head_to_foot_percent": [
+          9.369455973307291,
+          10.408007303873699
+        ]
+      },
+      "after": {
+        "horizontal_distance_all_frames_m": [
+          4.29219627380371,
+          4.29998922348022
+        ],
+        "head_to_foot_all_frames_percent": [
+          20.7634438408746,
+          22.5384394327799
+        ],
+        "settled_horizontal_distance_m": [
+          4.2923789024353,
+          4.29811668395996
+        ],
+        "settled_head_to_foot_percent": [
+          20.7634438408746,
+          20.7946946885851
+        ]
+      }
+    },
+    {
+      "case": "air24",
+      "commanded_speed_m_s": 24.0,
+      "duration_s": 1.2,
+      "before": {
+        "horizontal_distance_all_frames_m": [
+          4.44725036621094,
+          7.61090087890625
+        ],
+        "head_to_foot_all_frames_percent": [
+          13.1295670403375,
+          22.681079440646702
+        ],
+        "settled_horizontal_distance_m": [
+          7.35140991210938,
+          7.61090087890625
+        ],
+        "settled_head_to_foot_percent": [
+          13.4099621242947,
+          13.8778686523438
+        ]
+      },
+      "after": {
+        "horizontal_distance_all_frames_m": [
+          4.30000305175781,
+          4.30001831054688
+        ],
+        "head_to_foot_all_frames_percent": [
+          21.5546650356717,
+          26.331583658854203
+        ],
+        "settled_horizontal_distance_m": [
+          4.30000305175781,
+          4.30001831054688
+        ],
+        "settled_head_to_foot_percent": [
+          23.2804404364692,
+          24.3863042195638
+        ]
+      }
+    },
+    {
+      "case": "air40",
+      "commanded_speed_m_s": 40.0,
+      "duration_s": 1.2,
+      "before": {
+        "horizontal_distance_all_frames_m": [
+          4.55503845214844,
+          9.74468994140625
+        ],
+        "head_to_foot_all_frames_percent": [
+          9.02942021687825,
+          20.372356838650198
+        ],
+        "settled_horizontal_distance_m": [
+          8.75080871582031,
+          9.74468994140625
+        ],
+        "settled_head_to_foot_percent": [
+          9.864294264051649,
+          10.4372151692708
+        ]
+      },
+      "after": {
+        "horizontal_distance_all_frames_m": [
+          4.29998779296875,
+          4.30000305175781
+        ],
+        "head_to_foot_all_frames_percent": [
+          19.1483688354492,
+          24.444457160102
+        ],
+        "settled_horizontal_distance_m": [
+          4.29998779296875,
+          4.29998779296875
+        ],
+        "settled_head_to_foot_percent": [
+          21.0742526584201,
+          22.1737882826063
+        ]
+      }
+    },
+    {
+      "case": "reduced40",
+      "commanded_speed_m_s": 40.0,
+      "duration_s": 0.8,
+      "before": {
+        "horizontal_distance_all_frames_m": [
+          4.55882740020752,
+          9.65605735778809
+        ],
+        "head_to_foot_all_frames_percent": [
+          10.3395292494032,
+          21.838845147026902
+        ],
+        "settled_horizontal_distance_m": [
+          8.72567653656006,
+          9.65605735778809
+        ],
+        "settled_head_to_foot_percent": [
+          10.3395292494032,
+          11.4424429999457
+        ]
+      },
+      "after": {
+        "horizontal_distance_all_frames_m": [
+          4.30000019073486,
+          4.30000114440918
+        ],
+        "head_to_foot_all_frames_percent": [
+          23.0503124660916,
+          23.1356726752387
+        ],
+        "settled_horizontal_distance_m": [
+          4.30000019073486,
+          4.30000114440918
+        ],
+        "settled_head_to_foot_percent": [
+          23.0503124660916,
+          23.0694071451823
+        ]
+      }
+    }
+  ],
+  "title_decision": {
+    "compared_offsets": [
+      [
+        2.7,
+        1.7,
+        2.6
+      ],
+      [
+        3.4,
+        1.5,
+        1.6
+      ],
+      [
+        3.6,
+        1.65,
+        1.2
+      ]
+    ],
+    "idle_sample_seconds": [
+      0,
+      2
+    ],
+    "selected": "front18",
+    "reason": "The frontal view reveals the eyes and face more clearly through the asymmetric hair than the previous side view. The full board remains in frame with a clear gap from the left title panel at both idle samples.",
+    "images": [
+      "title-front18-idle0.png",
+      "title-front18-idle2.png"
+    ]
+  },
+  "limitations": [
+    "The trajectory driver controls actual rider transforms at physics ticks; game physics and player input are disabled to isolate camera pursuit. These are not successful gameplay runs.",
+    "Native GL Compatibility at 1280x720 only; parent must rebuild and verify Chrome and small viewport gameplay.",
+    "Airborne head-to-foot height varies with the jump tuck, and combined carve/boost lowers the body further; horizontal pursuit remains 4.3 m.",
+    "HUD mesh intersections are sampled every 12 trajectory ticks plus the last tick. Head/foot projection and camera distance are measured every trajectory frame."
+  ],
+  "camera_sha256": "a28f588f5988798abe392ff7937d1c2b7a793b5d2c2031756a32203989b8b1c3",
+  "model_sha256": "dc73844328312fc1e6ab2324dc8253076037fe093b231355d8bdc3dac51784a3",
+  "before_camera_sha256": "ddaa54c8727599852a71ac739cc985c01fa9fd70027d277f15e72461e6891f11",
+  "raw_record": "dynamic.json",
+  "title_record": "title-comparison.json",
+  "fixture": "render_dynamic.gd",
+  "title_fixture": "render_title.gd"
+}

@@ -1,0 +1,253 @@
+[
+  {
+    "id": "2026-09-01",
+    "date": "2026-09-01",
+    "sequence": 1,
+    "name": "やってる感",
+    "description": "具体的なことを言わずに、進んでいる感じを出す進捗報告ジェネレーター。",
+    "category": "文章ジェネレーター",
+    "thumbnail": "progress-manager-v2.png",
+    "accent": "#e63b32"
+  },
+  {
+    "id": "2026-09-02",
+    "date": "2026-09-02",
+    "sequence": 1,
+    "name": "いのちの庭",
+    "description": "768マスの大自然を、必要以上の設備で見守る8bitライフゲーム。",
+    "category": "ミニゲーム",
+    "thumbnail": "life-garden-cover.jpg",
+    "accent": "#4f8a3a"
+  },
+  {
+    "id": "2026-09-02-2",
+    "date": "2026-09-02",
+    "sequence": 2,
+    "name": "勇者監督局",
+    "description": "勝手に冒険する勇者へ、査定と攻略方針だけを出す観察型ダンジョンゲーム。",
+    "category": "ミニゲーム",
+    "thumbnail": "hero-supervision-cover.jpg",
+    "accent": "#c58a22"
+  },
+  {
+    "id": "2026-09-02-3",
+    "date": "2026-09-02",
+    "sequence": 3,
+    "name": "数字がわかるまで",
+    "description": "MLPの学習とCNNの局所計算・判断の証拠を、実値で観察するニューラルネット実験室。",
+    "category": "学習ツール",
+    "thumbnail": "neural-network-cover.jpg",
+    "accent": "#167a84"
+  },
+  {
+    "id": "2026-09-04",
+    "date": "2026-09-04",
+    "sequence": 1,
+    "name": "ぼんやりマート24",
+    "description": "客も仕入れも増築も勝手に進む、眺めるドット絵コンビニ経営ゲーム。",
+    "category": "放置系経営ゲーム",
+    "thumbnail": "bonnyari-mart-cover.svg",
+    "accent": "#327861"
+  },
+  {
+    "id": "2026-09-04-2",
+    "date": "2026-09-04",
+    "sequence": 2,
+    "name": "プリン通勤",
+    "description": "押して加速、離してブレーキ。倒れかけたプリンを戻して、停止線ぎりぎりを狙うワンボタンゲーム。",
+    "category": "ワンボタンゲーム",
+    "thumbnail": "pudding-cover.svg",
+    "accent": "#39786b"
+  },
+  {
+    "id": "2026-09-05",
+    "date": "2026-09-05",
+    "sequence": 1,
+    "name": "ホコリ無双",
+    "description": "掃除した道で逃げ、清掃機を復旧。道具の連携で大群に挑む6分間の3Dサバイバル。",
+    "category": "3Dサバイバルゲーム",
+    "thumbnail": "hokori-cover.png",
+    "accent": "#ed713b"
+  },
+  {
+    "id": "2026-09-05-2",
+    "date": "2026-09-05",
+    "sequence": 2,
+    "name": "LOOP EATER 2D",
+    "description": "移動で線を描き、群れを囲んでステージに。雨灯横丁の明かりを取り戻す2Dアクション。",
+    "category": "2D囲みアクション",
+    "thumbnail": "loop-eater-cover.png",
+    "accent": "#ed7a83"
+  },
+  {
+    "id": "2026-09-06",
+    "date": "2026-09-06",
+    "sequence": 1,
+    "name": "まちあかりマート",
+    "description": "120人の好みと街の変化を読み、仕入れ・売り場・シフトで五つ星を目指すコンビニ経営ゲーム。",
+    "category": "コンビニ経営ゲーム",
+    "thumbnail": "machiakari-cover.png",
+    "accent": "#39756c"
+  },
+  {
+    "id": "2026-09-06-2",
+    "date": "2026-09-06",
+    "sequence": 2,
+    "name": "へんないきものの系譜",
+    "description": "親の面影を持つ、ちょっと変な子が生まれる。遺伝と環境から生まれる生き物を眺める2D観察ゲーム。",
+    "category": "進化観察ゲーム",
+    "thumbnail": "lineage-cover.svg",
+    "accent": "#dc694b"
+  },
+  {
+    "id": "2026-09-08",
+    "date": "2026-09-08",
+    "sequence": 1,
+    "name": "こわさず、壊す。",
+    "description": "接合部を切り、床や梁を道に変える。残す支点と順序を考え、全16面の陶器を救う2D物理パズル。",
+    "category": "2D物理パズル",
+    "thumbnail": "rescue-cover.svg",
+    "accent": "#987333"
+  },
+  {
+    "id": "2026-09-09",
+    "date": "2026-09-09",
+    "sequence": 1,
+    "name": "ちび車グランプリ",
+    "description": "カーブの前で減速、出口で加速。小さな車でCPU3台と競う、Godot製3Dレースゲーム。",
+    "category": "3Dレースゲーム",
+    "thumbnail": "racing-cover.png",
+    "accent": "#d45735"
+  },
+  {
+    "id": "2026-09-12",
+    "date": "2026-09-12",
+    "sequence": 1,
+    "name": "まるのみ怪獣",
+    "description": "車を弾き、装甲を崩し、街を食べて大きくなる。3つの変異でボスへ挑む3D成長アクション。",
+    "category": "3D成長アクション",
+    "thumbnail": "marunomi-cover.png",
+    "accent": "#dc694b"
+  },
+  {
+    "id": "2026-09-15",
+    "date": "2026-09-15",
+    "sequence": 1,
+    "name": "説明書メーカー",
+    "description": "撮って、印をつけて、説明を書く。画像入りのHTML手順書を作るWindowsアプリ。",
+    "category": "Windowsアプリ / 手順書作成",
+    "thumbnail": "manual-maker.png",
+    "accent": "#167a84",
+    "type": "desktop"
+  },
+  {
+    "id": "2026-09-25",
+    "date": "2026-09-25",
+    "sequence": 1,
+    "name": "動く表紙の試着室",
+    "description": "言葉を入れて4案から選ぶ。好きな部分を残して試せる、動く表紙の制作室。",
+    "category": "モーショングラフィックス",
+    "thumbnail": "moving-cover-studio.png",
+    "accent": "#C94332"
+  },
+  {
+    "id": "2026-09-26",
+    "date": "2026-09-26",
+    "sequence": 1,
+    "name": "CELESTIAL",
+    "description": "星・太陽・月と文字が変形する、GPT–6シリーズの24秒コンセプト映像。",
+    "category": "モーショングラフィック作品",
+    "thumbnail": "celestial-cover.svg",
+    "accent": "#3d48ef"
+  },
+  {
+    "id": "2026-09-26-2",
+    "date": "2026-09-26",
+    "sequence": 2,
+    "name": "Type Motion Studio",
+    "description": "文章を場面にして、文字と図形が動く映像へ。再生しながら調整し、HTMLや音声付きMP4を書き出せる制作アプリ。",
+    "category": "モーショングラフィックス",
+    "thumbnail": "type-motion-studio.png",
+    "accent": "#3d48ef"
+  },
+  {
+    "id": "2026-09-27",
+    "date": "2026-09-27",
+    "sequence": 1,
+    "name": "Reality Sandbox",
+    "description": "Webカメラの片手で3D物理世界に触れる。手を振って20個のボールを押し飛ばすプレイグラウンド。",
+    "category": "Webカメラ × 3D物理",
+    "thumbnail": "reality-sandbox.svg",
+    "accent": "#70e9d9"
+  },
+  {
+    "id": "2026-09-28",
+    "date": "2026-09-28",
+    "sequence": 1,
+    "name": "夜勤タイピング",
+    "description": "深夜の商店街で、一文字ごとに発砲。迫るゾンビをローマ字で撃退する3Dタイピングシューター。",
+    "category": "3Dタイピングゲーム",
+    "thumbnail": "nightshift-cover.png",
+    "accent": "#edc779"
+  },
+  {
+    "id": "2026-09-30",
+    "date": "2026-09-30",
+    "sequence": 1,
+    "name": "まちの呼吸",
+    "description": "恵みも災いも与える神様の箱庭。雨・雷・地震・隕石が食と仕事、避難、街の発展・荒廃・復興につながるドット絵のシミュレーション。",
+    "category": "神様の箱庭ゲーム",
+    "thumbnail": "town-cover.png",
+    "accent": "#617b50"
+  },
+  {
+    "id": "2026-10-02",
+    "date": "2026-10-02",
+    "sequence": 1,
+    "name": "BLACK RELAY / 黒雨の街",
+    "description": "一語、一撃。人間型ゾンビが迫る商店街を進む、Godot製3Dタイピング・レールシューター。",
+    "category": "3Dタイピングホラー",
+    "thumbnail": "black-relay-cover.png",
+    "accent": "#ffad42"
+  },
+  {
+    "id": "2026-10-14",
+    "date": "2026-10-14",
+    "sequence": 1,
+    "name": "全力退勤",
+    "description": "消火器でオフィスチェアを走らせ、書類をまき散らして最速退勤する3D物理コメディ。",
+    "category": "3D物理コメディ",
+    "thumbnail": "zenryoku-taikin-cover.png",
+    "accent": "#E63B2F"
+  },
+  {
+    "id": "2026-10-16-2",
+    "date": "2026-10-16",
+    "sequence": 2,
+    "name": "日本の変わりかた",
+    "description": "写真を見比べ、数字を動かし、当時の人の記録を読む。1900年から現代までの日本の近現代史をたどるインタラクティブな教材。",
+    "category": "歴史 / インタラクティブ教材",
+    "thumbnail": "assets/education-cover.svg",
+    "accent": "#173746"
+  },
+  {
+    "id": "2026-10-18",
+    "date": "2026-10-18",
+    "sequence": 1,
+    "name": "音声の切り出し",
+    "description": "音声を送信せず、ブラウザ内で範囲選択・試聴・MP3/M4A保存。必要なところだけ切り出す音声ツール。",
+    "category": "音声ツール",
+    "thumbnail": "audio-cutter-cover.svg",
+    "accent": "#B73529"
+  },
+  {
+    "id": "2026-10-19",
+    "date": "2026-10-19",
+    "sequence": 1,
+    "name": "残響の魔女",
+    "description": "2秒前の自分と三つの夜を越える。武器と遺物を育て、庭園・回廊・鐘楼のボスに挑む2Dサバイバル。",
+    "category": "2Dサバイバルゲーム",
+    "thumbnail": "echo-witch-cover.png",
+    "accent": "#b8a174"
+  }
+]

@@ -1,0 +1,55 @@
+{
+  "review_scope": [
+    "AGENTS.md",
+    "README.md",
+    "docs/SPEC.md",
+    "docs/ART_DIRECTION.md",
+    "docs/verification/RESULTS.md"
+  ],
+  "checks_executed": [
+    "original lint",
+    "final lint",
+    "full diff reading",
+    "user request comparison",
+    "final hash verification"
+  ],
+  "checks_not_executed": [],
+  "decisions": [
+    "Removed unnecessary pauses after short subjects and corrected the folder sentence subject.",
+    "Retained 正本 as the authoritative-document term, ゲート as a physical game object, and 解像度 as the display term.",
+    "Retained parallel requirements and unknowns as lists because each item has an independent verification purpose.",
+    "Retained the fall-penalty contrast because elapsed recovery time must be added to the extra three seconds.",
+    "RESULTS introduces artifact-checks.json and completion wording after the file/link check actually ran; the meaning-risk candidates match this evidence.",
+    "The request wording 検討して is not a claim of implementation. All deliverables remain explicitly unimplemented design proposals.",
+    "The reduced-motion wording in SPEC is broad; ART_DIRECTION gives the initial concrete setting: 68-degree fixed FOV, no camera roll, no shake or speed lines."
+  ],
+  "candidate_counts_are_not_quality_scores": true,
+  "files": [
+    {
+      "file": "AGENTS.md",
+      "verify": "yomiyasu-check: executed via=verify run=20261024T140410Z-76728ba6 attempt=1 final=sha256:4743807b0091 mode=rewrite doc_type=manual checks=lint,diff,materials meaning_risk=0 replay=skipped",
+      "run_summary": "yomiyasu-check: executed via=run run=20261024T140410Z-76728ba6 attempt=1 final=sha256:4743807b0091 mode=rewrite doc_type=manual checks=lint,diff,materials meaning_risk=0"
+    },
+    {
+      "file": "README.md",
+      "verify": "yomiyasu-check: executed via=verify run=20261024T140410Z-a40033ce attempt=1 final=sha256:7b522ebd598d mode=rewrite doc_type=proposal checks=lint,diff,materials meaning_risk=0 replay=skipped",
+      "run_summary": "yomiyasu-check: executed via=run run=20261024T140410Z-a40033ce attempt=1 final=sha256:7b522ebd598d mode=rewrite doc_type=proposal checks=lint,diff,materials meaning_risk=0"
+    },
+    {
+      "file": "docs/SPEC.md",
+      "verify": "yomiyasu-check: executed via=verify run=20261024T140410Z-49227644 attempt=1 final=sha256:1051e124dd92 mode=rewrite doc_type=formal checks=lint,diff,materials meaning_risk=0 replay=skipped",
+      "run_summary": "yomiyasu-check: executed via=run run=20261024T140410Z-49227644 attempt=1 final=sha256:1051e124dd92 mode=rewrite doc_type=formal checks=lint,diff,materials meaning_risk=0"
+    },
+    {
+      "file": "docs/ART_DIRECTION.md",
+      "verify": "yomiyasu-check: executed via=verify run=20261024T140410Z-891e9969 attempt=1 final=sha256:ace82b0cf846 mode=rewrite doc_type=formal checks=lint,diff,materials meaning_risk=0 replay=skipped",
+      "run_summary": "yomiyasu-check: executed via=run run=20261024T140410Z-891e9969 attempt=1 final=sha256:ace82b0cf846 mode=rewrite doc_type=formal checks=lint,diff,materials meaning_risk=0"
+    },
+    {
+      "file": "docs/verification/RESULTS.md",
+      "verify": "yomiyasu-check: executed via=verify run=20261024T140410Z-c3a9dc9a attempt=1 final=sha256:71abc92bed93 mode=rewrite doc_type=article checks=lint,diff,materials meaning_risk=2 replay=skipped",
+      "run_summary": "yomiyasu-check: executed via=run run=20261024T140410Z-c3a9dc9a attempt=1 final=sha256:71abc92bed93 mode=rewrite doc_type=article checks=lint,diff,materials meaning_risk=2"
+    }
+  ],
+  "latest_revision": "adult-costume/review.json"
+}

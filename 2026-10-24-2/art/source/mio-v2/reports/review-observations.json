@@ -1,0 +1,83 @@
+{
+  "adoption": "Technical rig compatibility passes; visual defects remain for parent evaluation. This report does not approve final character quality.",
+  "source_sha256": {
+    "old": "70a343c829f5e4b79802435bbd24365219cd24c5e4e38e197393aeaf9536b074",
+    "new": "dc73844328312fc1e6ab2324dc8253076037fe093b231355d8bdc3dac51784a3"
+  },
+  "comparison_method": "Both imported meshes rendered at 1.68m height with identical orthographic cameras and original materials. Fullbody comparison rows are OLD, NEW, REF. Face comparison rows are OLD, NEW. Five columns are front, left, right, back, threequarter. Reference views are guidance, not measured blueprints.",
+  "visual_observations": [
+    {
+      "area": "face depth",
+      "evidence": [
+        "new_face_left.png",
+        "new_face_right.png",
+        "face-comparison.png"
+      ],
+      "observation": "The new profile has a visible nose bridge/tip, lip break and longer chin/jaw silhouette on both sides. The old face already had a protruding nose; the change is fuller facial modeling and changed proportions, not a flat-to-3D transition. Eye size is smaller relative to the face in the new model.",
+      "remaining": "The new nose tip is rounded and reflective, lip definition is rigid, and fine dark/bright streaks remain on the cheek and jaw. It does not reach the clean smooth reference face."
+    },
+    {
+      "area": "back of head",
+      "evidence": [
+        "new_face_back.png",
+        "new_face_right.png"
+      ],
+      "observation": "The new model has continuous rounded skull volume and layered overlapping locks around the rear. The old model also has full rear volume.",
+      "remaining": "New rear locks end in repeated blunt clusters, and several thick short spikes protrude at the crown. Individual locks remain fused; no hair bones are present."
+    },
+    {
+      "area": "body and clothing volume",
+      "evidence": [
+        "fullbody-comparison.png",
+        "new_left.png",
+        "new_right.png"
+      ],
+      "observation": "The new side silhouette preserves chest, abdomen, pelvis and boot depth rather than collapsing into a thin slab. Sleeve and raised collar rims and skirt edges have visible volume. The new front A-pose is closer to the input reference than the old wider arm pose.",
+      "remaining": "Surface noise and irregular dark/white folds remain on the jacket. Clothing/body are a single skinned surface, so rendered rim thickness does not establish physically separate fabric or clean hidden interiors."
+    },
+    {
+      "area": "duplicated design details",
+      "evidence": [
+        "new_face_front.png",
+        "new_face_left.png",
+        "new_front.png",
+        "new_right.png"
+      ],
+      "observation": "There are adjacent extra white cloud-like marks beside the intended left hair clip, adjacent cloud-like marks on the front top and skirt panel, and two nearby coral skirt tabs on the front-side waist. The reference calls for a single left clip and does not show these adjacent duplicated marks.",
+      "remaining": "These are source texture/geometry generation artifacts and were not edited in this inspection."
+    },
+    {
+      "area": "motion and intersections",
+      "evidence": [
+        "new-motion-contact-sheet.png",
+        "new-motion-multiview.png",
+        "../reports/new-motion-metrics.json"
+      ],
+      "observation": "The rest-derived controller retargets without bone-name edits. In the 48 timed poses and 32 multi-view captures, both boot anchors remain fixed; no knee or elbow bend reversal or obvious garment penetration was observed at the captured resolution.",
+      "remaining": "This is sampled fixture evidence. It does not prove absence of all self-intersections during continuous play, facial acting, hair movement, or performance on the published Web build."
+    }
+  ],
+  "rig": {
+    "bone_name_compatibility": {
+      "exact_names_equal": true,
+      "missing_from_new": [],
+      "added": []
+    },
+    "face_morphs": 0,
+    "hair_or_cloth_bones": 0,
+    "animations": 0,
+    "new_fixture_max_foot_error_leg_ratio": 4.04287496887047e-07,
+    "fixture_failures": []
+  },
+  "changes_to_game_or_sources": "None during independent model inspection. Source GLBs, game/assets/models/mio.glb and asset_loader.gd were not modified by this inspection.",
+  "implementation_recommendation": "No controller correction is required for the new skeleton dimensions in this fixture. Keep the adjacent duplicated marks and facial/material roughness in the known limitations; candidate integration does not constitute final visual approval.",
+  "source_provenance": {
+    "old_source": "/Users/hayatok/.codex/worktrees/cloudsea-surfer/100challenge/2026-10-24-2/.cache/rework/legacy-mio.glb",
+    "old_source_commit": "07c2730",
+    "old_original_path": "07c2730:2026-10-24-2/game/assets/models/mio.glb",
+    "new_raw_source": "/Users/hayatok/Downloads/cloudsea-mio-v2-rigged-source.glb",
+    "new_candidate_game_path": "2026-10-24-2/game/assets/models/mio.glb",
+    "new_candidate_game_sha256": "dc73844328312fc1e6ab2324dc8253076037fe093b231355d8bdc3dac51784a3",
+    "integration_status": "Parent integrated new candidate after reviewing these images. Generated defects remain documented; user aesthetic approval is pending."
+  }
+}

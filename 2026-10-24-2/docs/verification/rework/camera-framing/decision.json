@@ -1,0 +1,285 @@
+{
+  "evidence_kind": "Deterministic native Main/world/UI render fixture, not hands-on gameplay",
+  "godot": "4.7.2",
+  "renderer": "GL Compatibility",
+  "viewport": [
+    1280,
+    720
+  ],
+  "reference": "HeadTop_End and both foot bones projected with Camera3D.unproject_position; visible board mesh vertices projected for HUD intersections",
+  "selected": {
+    "follow_distance_m": 4.3,
+    "follow_height_m": 1.85,
+    "fov_base": 62.0,
+    "fov_max": 64.0,
+    "fixed_reduced_fov": 62.0,
+    "speed_distance_change_m": 0.0,
+    "boost_onset_distance_impulse_m": 0.08,
+    "gaze_offset_from_blended_ground_m": -1.1,
+    "airborne_height_follow": 0.75
+  },
+  "before": {
+    "follow_distance_m": 5.9,
+    "follow_height_m": 2.65,
+    "fov_base": 65.0,
+    "fov_max": 72.5,
+    "speed_distance_change_m": 0.65
+  },
+  "decision": "4.0 m filled too much of the frame and approached the HUD with the board tip. 4.5 m was readable but made crouched motion smaller. 4.3 m with a lower gaze kept the body readable and the whole board clear of the center HUD while preserving visible launch edges and landings. Speed distance expansion was removed to prevent shrinking the rider twice during boost.",
+  "normal_head_to_foot_percent": [
+    22.8813171386719,
+    25.432972378201
+  ],
+  "boost_head_to_foot_percent": [
+    20.951050652398003,
+    23.1045065985786
+  ],
+  "minimum_board_hud_margin_px": 11.1505737304688,
+  "all_21_board_hud_intersections_false": true,
+  "all_reduced_fov_fixed": true,
+  "all_reduced_roll_zero": true,
+  "reviewed_views": [
+    {
+      "s": 30,
+      "observation": "First curve remains visible beyond the rider."
+    },
+    {
+      "s": 85,
+      "observation": "Carve lean, board and curve exit are readable."
+    },
+    {
+      "s": 240,
+      "observation": "Takeoff marks, the gap and the first landing edge remain visible."
+    },
+    {
+      "s": 250,
+      "observation": "Airborne body and first landing platform remain in frame."
+    },
+    {
+      "s": 535,
+      "observation": "The second landing edge spans the view behind the body; side portions remain unobscured."
+    },
+    {
+      "s": 830,
+      "observation": "The final landing platform and portal remain visible in front."
+    },
+    {
+      "s": 860,
+      "observation": "After landing, the finish portal opening and roadway remain visible."
+    }
+  ],
+  "limitations": [
+    "Static poses and authored airborne height; not a successful manual jump or a full course run.",
+    "Only the currently imported 65-bone character was measured; the new character requires integration verification.",
+    "Only 1280x720 captured in this fixture.",
+    "Main state is fixture to prevent focus-loss pause overlays during automated capture; physics movement and audio processing are disabled.",
+    "The fixture waits two physics ticks after teleporting before exercising the actual follow camera so interpolation cannot retain the previous station.",
+    "The most compressed combined carve-plus-boost fixture is 21 percent head-to-foot; normal boost airborne is about 22 percent.",
+    "Hair and sole thickness extend outside the measured bone endpoints."
+  ],
+  "unchanged_title": "The title camera branch retains its previous offset, look target and 48 degree FOV.",
+  "camera_sha256": "ddaa54c8727599852a71ac739cc985c01fa9fd70027d277f15e72461e6891f11",
+  "model_sha256": "70a343c829f5e4b79802435bbd24365219cd24c5e4e38e197393aeaf9536b074",
+  "captures": {
+    "comparison": "comparison.json",
+    "selected": "selected.json"
+  },
+  "files": [
+    {
+      "name": "before-030.png",
+      "sha256": "9fdd816277b9df047ae73babd26138ad9cc4ce018a88a0c5181c0daf434dcbc0"
+    },
+    {
+      "name": "before-085.png",
+      "sha256": "c62919b17820df96d7442b095a1f683d43217cfea9f5f41f6b265a99100b7612"
+    },
+    {
+      "name": "before-240.png",
+      "sha256": "e622387f22c5f3cca50a413156329439559c839bff0fab7afdae9b899ed2a216"
+    },
+    {
+      "name": "before-250.png",
+      "sha256": "e9775e295a0c36d961054a555369066c3dcce0396689373b11023f120b0e2c34"
+    },
+    {
+      "name": "before-535.png",
+      "sha256": "51a6f2c987e38039a6078c1c0e423bd06216ffaf8d8b53071e1fd0f574567c86"
+    },
+    {
+      "name": "before-830.png",
+      "sha256": "e8a40a25f78d70a93a76e08d8cf35bacd7a145daeab704c5aaf9ea5584916553"
+    },
+    {
+      "name": "before-860.png",
+      "sha256": "a4c78710563dc06ff82db21b4e6a502dcd445c9e8c4a622ad0c9bbafeecae713"
+    },
+    {
+      "name": "near_40-030.png",
+      "sha256": "d3524e49da465dc5cc1f8e4e8657a66ece60246e093d1d6f14306b41071d3aae"
+    },
+    {
+      "name": "near_40-085.png",
+      "sha256": "0a29d163877366cdba730792870e8393341a5c3fc6b26e391d488ebc251c5b11"
+    },
+    {
+      "name": "near_40-240.png",
+      "sha256": "9e088018b36e2afcb99ac2f315ab572ad887c816e567f176b944e0356bc54dd3"
+    },
+    {
+      "name": "near_40-250.png",
+      "sha256": "6c42176d5d85c3a576ce0b051e07b5c29d269f9903b362e9865a7435a5a88cc6"
+    },
+    {
+      "name": "near_40-535.png",
+      "sha256": "6a595c9d00a5c6a38a025913ec9883b46ea76803fa7f96d9851997c4c5710d46"
+    },
+    {
+      "name": "near_40-830.png",
+      "sha256": "fa3bb8b2174eb050b212821d2c30868d1851476a7bee3f58da73e573a76e5177"
+    },
+    {
+      "name": "near_40-860.png",
+      "sha256": "3b21f65b7b0b056464d7acc6d34160993170ffdc5fa6aff85aafee9251034ae5"
+    },
+    {
+      "name": "near_42-030.png",
+      "sha256": "0da0315d200bac75adfca73f378fd33a2e45af09a615ffb0dbb9457f1867d39f"
+    },
+    {
+      "name": "near_42-085.png",
+      "sha256": "5a10836cdf9023600ee1e9ee39dd671784a088ef908a02cc42929771cdc598eb"
+    },
+    {
+      "name": "near_42-240.png",
+      "sha256": "877c781b024d0760b57ede87516a1ccf763edb84d62e0910624343f31d3b18c6"
+    },
+    {
+      "name": "near_42-250.png",
+      "sha256": "ec3c069161829013d1d4a8b43962c0bb4b306f2c3a64963e8befe584e65f71ab"
+    },
+    {
+      "name": "near_42-535.png",
+      "sha256": "73a571e3215af85c24d34b3b3f93daf4779d8363d00ca23fa3e4caf7b8e67a58"
+    },
+    {
+      "name": "near_42-830.png",
+      "sha256": "8de3a2628fbca19d6a183ccdcb8dfbdefe682147c2194f9114ef5cdf314c4012"
+    },
+    {
+      "name": "near_42-860.png",
+      "sha256": "af0c215b649edc4cd1541b94541b0e2057b951aceb0c632e46cc0e6c7b587f2f"
+    },
+    {
+      "name": "near_45-030.png",
+      "sha256": "d770ace56a49ec15a7f039190a1410590a7226b14b6aaba19aa99b029fa0d745"
+    },
+    {
+      "name": "near_45-085.png",
+      "sha256": "f13dfbd092800ccbc34e6f922c9bffda044cadd62b836de0bb63f7069d9da909"
+    },
+    {
+      "name": "near_45-240.png",
+      "sha256": "0ef20ebef3f6dd610c97657c13e0f598257e8ddc84de0215a1777c8fc3c200bd"
+    },
+    {
+      "name": "near_45-250.png",
+      "sha256": "8c39045cbdb2607f17d430a1d2815e54a7d073788bae2955371f27af13c0c057"
+    },
+    {
+      "name": "near_45-535.png",
+      "sha256": "6dc65ef6eb37c2e87a3561f4a9dd8b6205acaf7f2a7b647956479a853d371d5a"
+    },
+    {
+      "name": "near_45-830.png",
+      "sha256": "e9883859c98c9562ba48850ae3c0ebba6743635a8468cf64dca5b183d05a4c1d"
+    },
+    {
+      "name": "near_45-860.png",
+      "sha256": "edb6289fcbd1660fc2d68247d4ff98c2a179ca8bf864878b543e1dc41d3efc23"
+    },
+    {
+      "name": "selected_boost-030.png",
+      "sha256": "b5479b99e94f16f2697fc9ff95a24159e2380498285cfb4e474d7b4c844d26f0"
+    },
+    {
+      "name": "selected_boost-085.png",
+      "sha256": "3e4f5a7e9449e32869790ff502e7e7300fa928dbc55e2c75309cd9887b5f485d"
+    },
+    {
+      "name": "selected_boost-240.png",
+      "sha256": "9cfcbf43aff665762d745627ad071f03b8826397e1d022e2f352e1547b0c3c20"
+    },
+    {
+      "name": "selected_boost-250.png",
+      "sha256": "a3aa232197233d5defb3aff299760b20ab86d65ff2b9b96b45bfaa33d418e262"
+    },
+    {
+      "name": "selected_boost-535.png",
+      "sha256": "30a9f63127fe51735478c215cf8e2d85a50cc7b7c0beb3459deb56209e5434c0"
+    },
+    {
+      "name": "selected_boost-830.png",
+      "sha256": "c7376ac9c8471772babddfa3cac14c3a602630e5aa7d1f8dda7f01a1c522aa9f"
+    },
+    {
+      "name": "selected_boost-860.png",
+      "sha256": "71953dcb91dc8bfdad094f4a9dfc91678b319fb254ba26e10de2abe2d72e2b95"
+    },
+    {
+      "name": "selected_reduced-030.png",
+      "sha256": "083244f2868aea866bf36f9a6c9f915382acbcb3f8887bba954b67a1dbf8d3fc"
+    },
+    {
+      "name": "selected_reduced-085.png",
+      "sha256": "77fbd92e3a5b13e0549624050e4aafc9368db886793baf43359cdf196c0be1b4"
+    },
+    {
+      "name": "selected_reduced-240.png",
+      "sha256": "c4e5de073fdff1fbddc3fb2cb5f0aef7a88c3a29e4928eb5331b0f574b36c84b"
+    },
+    {
+      "name": "selected_reduced-250.png",
+      "sha256": "9c19406f21c7cdf4f475d1af9a0c48476092538e171aa2d98973aedecebfaef1"
+    },
+    {
+      "name": "selected_reduced-535.png",
+      "sha256": "86f948200e4a3956b46d7cd7600bc7e0dfdbc05d7ac3f62c4129d17f72fc5842"
+    },
+    {
+      "name": "selected_reduced-830.png",
+      "sha256": "12501065eda4574ca27b59e2f9e82f513ce2457314126df142f67c9703443738"
+    },
+    {
+      "name": "selected_reduced-860.png",
+      "sha256": "5935acb4e1f9ef5dc2c5c4b35cf8f704b2b965f0409bf6325cb2f2be059e96e0"
+    },
+    {
+      "name": "selected_run-030.png",
+      "sha256": "29cf8430fccbdde6f505dec260f8d4c749defcba905525a9dcf29108e31b80eb"
+    },
+    {
+      "name": "selected_run-085.png",
+      "sha256": "58a5b6217f4a5debe570370c6f97c19502889a24db7d186378e911468b8d3794"
+    },
+    {
+      "name": "selected_run-240.png",
+      "sha256": "7077b3a8530416d446d970dd794143f29d8558a499e11909cac748ddc86f457f"
+    },
+    {
+      "name": "selected_run-250.png",
+      "sha256": "47249877d894dc58be1d1d979a773a47d3adfa99607bc50cec49bafac3d3f6d5"
+    },
+    {
+      "name": "selected_run-535.png",
+      "sha256": "77b463eecc09731925b5969fcac99634ac212b19dcec621917ae5ef6821fce08"
+    },
+    {
+      "name": "selected_run-830.png",
+      "sha256": "8cba7b204dd923d3b86a686f559228371a443f9ce040ecc448970259247c66ce"
+    },
+    {
+      "name": "selected_run-860.png",
+      "sha256": "3e7a0d1c7c3a3572101f565c0ad270603472b5058521a3955ea8be420401d0ea"
+    }
+  ]
+}

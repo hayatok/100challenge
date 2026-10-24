@@ -1,0 +1,892 @@
+{
+  "camera_sha256": "ddaa54c8727599852a71ac739cc985c01fa9fd70027d277f15e72461e6891f11",
+  "candidates": [
+    {
+      "air_follow": 0.58,
+      "distance": 5.9,
+      "fov": 67.0,
+      "gaze": 0.8,
+      "height": 2.65,
+      "id": "before",
+      "speed_distance": 0.65
+    },
+    {
+      "air_follow": 0.75,
+      "distance": 4.0,
+      "fov": 60.0,
+      "gaze": -0.4,
+      "height": 1.7,
+      "id": "near_40",
+      "speed_distance": 0.0
+    },
+    {
+      "air_follow": 0.75,
+      "distance": 4.2,
+      "fov": 61.0,
+      "gaze": -0.4,
+      "height": 1.85,
+      "id": "near_42",
+      "speed_distance": 0.0
+    },
+    {
+      "air_follow": 0.75,
+      "distance": 4.5,
+      "fov": 62.0,
+      "gaze": -0.4,
+      "height": 2.0,
+      "id": "near_45",
+      "speed_distance": 0.0
+    }
+  ],
+  "cases": [
+    {
+      "airborne_fixture": false,
+      "board_overlaps_center_hud": false,
+      "board_px": [
+        627.6162109375,
+        535.384216308594
+      ],
+      "candidate": "before",
+      "feet_px": [
+        [
+          622.874694824219,
+          497.365905761719
+        ],
+        [
+          622.616760253906,
+          508.227691650391
+        ]
+      ],
+      "file": "before-030.png",
+      "head_px": [
+        635.083129882812,
+        390.795318603516
+      ],
+      "head_to_foot_fraction": 0.16310051812066,
+      "next_gap_landing_px": [
+        668.331848144531,
+        329.076446533203
+      ],
+      "s": 30.0
+    },
+    {
+      "airborne_fixture": false,
+      "board_overlaps_center_hud": false,
+      "board_px": [
+        642.881225585938,
+        536.45263671875
+      ],
+      "candidate": "before",
+      "feet_px": [
+        [
+          644.914184570312,
+          498.136016845703
+        ],
+        [
+          645.029846191406,
+          508.988189697266
+        ]
+      ],
+      "file": "before-085.png",
+      "head_px": [
+        687.866455078125,
+        403.781982421875
+      ],
+      "head_to_foot_fraction": 0.146119732326931,
+      "next_gap_landing_px": [
+        380.20751953125,
+        333.645538330078
+      ],
+      "s": 85.0
+    },
+    {
+      "airborne_fixture": false,
+      "board_overlaps_center_hud": false,
+      "board_px": [
+        640.0,
+        535.312133789062
+      ],
+      "candidate": "before",
+      "feet_px": [
+        [
+          635.334838867188,
+          497.267547607422
+        ],
+        [
+          635.056335449219,
+          508.122192382812
+        ]
+      ],
+      "file": "before-240.png",
+      "head_px": [
+        647.742309570312,
+        390.78759765625
+      ],
+      "head_to_foot_fraction": 0.162964714898003,
+      "next_gap_landing_px": [
+        640.0,
+        373.55322265625
+      ],
+      "s": 240.0
+    },
+    {
+      "airborne_fixture": true,
+      "board_overlaps_center_hud": false,
+      "board_px": [
+        640.0,
+        482.464019775391
+      ],
+      "candidate": "before",
+      "feet_px": [
+        [
+          635.319641113281,
+          445.462646484375
+        ],
+        [
+          635.039794921875,
+          453.847717285156
+        ]
+      ],
+      "file": "before-250.png",
+      "head_px": [
+        650.139221191406,
+        342.657592773438
+      ],
+      "head_to_foot_fraction": 0.154430728488498,
+      "next_gap_landing_px": [
+        640.0,
+        411.186828613281
+      ],
+      "s": 250.0
+    },
+    {
+      "airborne_fixture": true,
+      "board_overlaps_center_hud": false,
+      "board_px": [
+        640.0,
+        482.464660644531
+      ],
+      "candidate": "before",
+      "feet_px": [
+        [
+          635.319641113281,
+          445.463653564453
+        ],
+        [
+          635.039794921875,
+          453.84814453125
+        ]
+      ],
+      "file": "before-535.png",
+      "head_px": [
+        650.139343261719,
+        342.657623291016
+      ],
+      "head_to_foot_fraction": 0.154431279500326,
+      "next_gap_landing_px": [
+        640.0,
+        393.708618164062
+      ],
+      "s": 535.0
+    },
+    {
+      "airborne_fixture": true,
+      "board_overlaps_center_hud": false,
+      "board_px": [
+        640.0,
+        482.464752197266
+      ],
+      "candidate": "before",
+      "feet_px": [
+        [
+          635.319580078125,
+          445.463806152344
+        ],
+        [
+          635.039794921875,
+          453.848297119141
+        ]
+      ],
+      "file": "before-830.png",
+      "head_px": [
+        650.139343261719,
+        342.65771484375
+      ],
+      "head_to_foot_fraction": 0.154431364271376,
+      "next_gap_landing_px": [
+        640.0,
+        372.508209228516
+      ],
+      "s": 830.0
+    },
+    {
+      "airborne_fixture": false,
+      "board_overlaps_center_hud": false,
+      "board_px": [
+        640.0,
+        535.313049316406
+      ],
+      "candidate": "before",
+      "feet_px": [
+        [
+          635.334777832031,
+          497.269104003906
+        ],
+        [
+          635.056335449219,
+          508.122955322266
+        ]
+      ],
+      "file": "before-860.png",
+      "head_px": [
+        647.742309570312,
+        390.787750244141
+      ],
+      "head_to_foot_fraction": 0.162965562608507,
+      "next_gap_landing_px": [
+        0.0,
+        0.0
+      ],
+      "s": 860.0
+    },
+    {
+      "airborne_fixture": false,
+      "board_overlaps_center_hud": false,
+      "board_px": [
+        624.571472167969,
+        542.989624023438
+      ],
+      "candidate": "near_40",
+      "feet_px": [
+        [
+          616.28759765625,
+          477.478332519531
+        ],
+        [
+          615.574340820312,
+          494.292724609375
+        ]
+      ],
+      "file": "near_40-030.png",
+      "head_px": [
+        637.711242675781,
+        286.718566894531
+      ],
+      "head_to_foot_fraction": 0.288297441270616,
+      "next_gap_landing_px": [
+        671.608642578125,
+        310.452056884766
+      ],
+      "s": 30.0
+    },
+    {
+      "airborne_fixture": false,
+      "board_overlaps_center_hud": false,
+      "board_px": [
+        643.58251953125,
+        544.609924316406
+      ],
+      "candidate": "near_40",
+      "feet_px": [
+        [
+          647.125061035156,
+          478.578063964844
+        ],
+        [
+          647.442016601562,
+          495.357421875
+        ]
+      ],
+      "file": "near_40-085.png",
+      "head_px": [
+        723.786926269531,
+        309.386016845703
+      ],
+      "head_to_foot_fraction": 0.258293618096246,
+      "next_gap_landing_px": [
+        338.07080078125,
+        315.094329833984
+      ],
+      "s": 85.0
+    },
+    {
+      "airborne_fixture": false,
+      "board_overlaps_center_hud": false,
+      "board_px": [
+        640.0,
+        542.889953613281
+      ],
+      "candidate": "near_40",
+      "feet_px": [
+        [
+          631.892639160156,
+          477.339721679688
+        ],
+        [
+          631.137145996094,
+          494.137542724609
+        ]
+      ],
+      "file": "near_40-240.png",
+      "head_px": [
+        653.797668457031,
+        286.695465087891
+      ],
+      "head_to_foot_fraction": 0.288113996717665,
+      "next_gap_landing_px": [
+        640.0,
+        347.134429931641
+      ],
+      "s": 240.0
+    },
+    {
+      "airborne_fixture": true,
+      "board_overlaps_center_hud": false,
+      "board_px": [
+        640.0,
+        480.239044189453
+      ],
+      "candidate": "near_40",
+      "feet_px": [
+        [
+          631.859924316406,
+          416.317230224609
+        ],
+        [
+          631.100830078125,
+          429.134613037109
+        ]
+      ],
+      "file": "near_40-250.png",
+      "head_px": [
+        658.138793945312,
+        231.604476928711
+      ],
+      "head_to_foot_fraction": 0.274347411261665,
+      "next_gap_landing_px": [
+        640.0,
+        388.998382568359
+      ],
+      "s": 250.0
+    },
+    {
+      "airborne_fixture": true,
+      "board_overlaps_center_hud": false,
+      "board_px": [
+        640.0,
+        480.238708496094
+      ],
+      "candidate": "near_40",
+      "feet_px": [
+        [
+          631.859924316406,
+          416.317779541016
+        ],
+        [
+          631.100830078125,
+          429.134155273438
+        ]
+      ],
+      "file": "near_40-535.png",
+      "head_px": [
+        658.138977050781,
+        231.603988647461
+      ],
+      "head_to_foot_fraction": 0.27434745364719,
+      "next_gap_landing_px": [
+        640.0,
+        369.084381103516
+      ],
+      "s": 535.0
+    },
+    {
+      "airborne_fixture": true,
+      "board_overlaps_center_hud": false,
+      "board_px": [
+        640.0,
+        480.238861083984
+      ],
+      "candidate": "near_40",
+      "feet_px": [
+        [
+          631.85986328125,
+          416.318023681641
+        ],
+        [
+          631.100830078125,
+          429.134429931641
+        ]
+      ],
+      "file": "near_40-830.png",
+      "head_px": [
+        658.138977050781,
+        231.604110717773
+      ],
+      "head_to_foot_fraction": 0.274347665574816,
+      "next_gap_landing_px": [
+        640.0,
+        346.120666503906
+      ],
+      "s": 830.0
+    },
+    {
+      "airborne_fixture": false,
+      "board_overlaps_center_hud": false,
+      "board_px": [
+        640.0,
+        542.889953613281
+      ],
+      "candidate": "near_40",
+      "feet_px": [
+        [
+          631.892578125,
+          477.340942382812
+        ],
+        [
+          631.137145996094,
+          494.137420654297
+        ]
+      ],
+      "file": "near_40-860.png",
+      "head_px": [
+        653.797607421875,
+        286.695617675781
+      ],
+      "head_to_foot_fraction": 0.288113615247938,
+      "next_gap_landing_px": [
+        0.0,
+        0.0
+      ],
+      "s": 860.0
+    },
+    {
+      "airborne_fixture": false,
+      "board_overlaps_center_hud": false,
+      "board_px": [
+        625.054382324219,
+        545.037780761719
+      ],
+      "candidate": "near_42",
+      "feet_px": [
+        [
+          617.322082519531,
+          483.749267578125
+        ],
+        [
+          616.699157714844,
+          500.403686523438
+        ]
+      ],
+      "file": "near_42-030.png",
+      "head_px": [
+        637.264343261719,
+        307.023590087891
+      ],
+      "head_to_foot_fraction": 0.268583467271593,
+      "next_gap_landing_px": [
+        671.086730957031,
+        308.4716796875
+      ],
+      "s": 30.0
+    },
+    {
+      "airborne_fixture": false,
+      "board_overlaps_center_hud": false,
+      "board_px": [
+        643.471374511719,
+        546.707824707031
+      ],
+      "candidate": "near_42",
+      "feet_px": [
+        [
+          646.776794433594,
+          484.924407958984
+        ],
+        [
+          647.055053710938,
+          501.550994873047
+        ]
+      ],
+      "file": "near_42-085.png",
+      "head_px": [
+        718.14599609375,
+        328.322937011719
+      ],
+      "head_to_foot_fraction": 0.2405945248074,
+      "next_gap_landing_px": [
+        344.305969238281,
+        313.261810302734
+      ],
+      "s": 85.0
+    },
+    {
+      "airborne_fixture": false,
+      "board_overlaps_center_hud": false,
+      "board_px": [
+        640.0,
+        544.938232421875
+      ],
+      "candidate": "near_42",
+      "feet_px": [
+        [
+          632.439697265625,
+          483.609710693359
+        ],
+        [
+          631.772827148438,
+          500.248596191406
+        ]
+      ],
+      "file": "near_42-240.png",
+      "head_px": [
+        652.848266601562,
+        307.005249023438
+      ],
+      "head_to_foot_fraction": 0.26839353773329,
+      "next_gap_landing_px": [
+        640.0,
+        347.172241210938
+      ],
+      "s": 240.0
+    },
+    {
+      "airborne_fixture": true,
+      "board_overlaps_center_hud": false,
+      "board_px": [
+        640.0,
+        485.925964355469
+      ],
+      "candidate": "near_42",
+      "feet_px": [
+        [
+          632.412658691406,
+          426.067565917969
+        ],
+        [
+          631.743347167969,
+          439.193023681641
+        ]
+      ],
+      "file": "near_42-250.png",
+      "head_px": [
+        656.876708984375,
+        255.198043823242
+      ],
+      "head_to_foot_fraction": 0.255548583136665,
+      "next_gap_landing_px": [
+        640.0,
+        389.455108642578
+      ],
+      "s": 250.0
+    },
+    {
+      "airborne_fixture": true,
+      "board_overlaps_center_hud": false,
+      "board_px": [
+        640.0,
+        485.924987792969
+      ],
+      "candidate": "near_42",
+      "feet_px": [
+        [
+          632.412658691406,
+          426.067718505859
+        ],
+        [
+          631.743347167969,
+          439.192016601562
+        ]
+      ],
+      "file": "near_42-535.png",
+      "head_px": [
+        656.876831054688,
+        255.197784423828
+      ],
+      "head_to_foot_fraction": 0.255547544691298,
+      "next_gap_landing_px": [
+        640.0,
+        369.336090087891
+      ],
+      "s": 535.0
+    },
+    {
+      "airborne_fixture": true,
+      "board_overlaps_center_hud": false,
+      "board_px": [
+        640.0,
+        485.924926757812
+      ],
+      "candidate": "near_42",
+      "feet_px": [
+        [
+          632.41259765625,
+          426.067779541016
+        ],
+        [
+          631.743347167969,
+          439.192077636719
+        ]
+      ],
+      "file": "near_42-830.png",
+      "head_px": [
+        656.876831054688,
+        255.197708129883
+      ],
+      "head_to_foot_fraction": 0.255547735426161,
+      "next_gap_landing_px": [
+        640.0,
+        345.996826171875
+      ],
+      "s": 830.0
+    },
+    {
+      "airborne_fixture": false,
+      "board_overlaps_center_hud": false,
+      "board_px": [
+        640.0,
+        544.937438964844
+      ],
+      "candidate": "near_42",
+      "feet_px": [
+        [
+          632.439636230469,
+          483.610412597656
+        ],
+        [
+          631.772827148438,
+          500.247833251953
+        ]
+      ],
+      "file": "near_42-860.png",
+      "head_px": [
+        652.848205566406,
+        307.00537109375
+      ],
+      "head_to_foot_fraction": 0.26839230855306,
+      "next_gap_landing_px": [
+        0.0,
+        0.0
+      ],
+      "s": 860.0
+    },
+    {
+      "airborne_fixture": false,
+      "board_overlaps_center_hud": false,
+      "board_px": [
+        625.56103515625,
+        541.066772460938
+      ],
+      "candidate": "near_45",
+      "feet_px": [
+        [
+          618.477233886719,
+          484.954711914062
+        ],
+        [
+          617.953552246094,
+          500.644744873047
+        ]
+      ],
+      "file": "near_45-030.png",
+      "head_px": [
+        636.691711425781,
+        324.134887695312
+      ],
+      "head_to_foot_fraction": 0.24515257941352,
+      "next_gap_landing_px": [
+        670.620239257812,
+        306.907562255859
+      ],
+      "s": 30.0
+    },
+    {
+      "airborne_fixture": false,
+      "board_overlaps_center_hud": false,
+      "board_px": [
+        643.354858398438,
+        542.760559082031
+      ],
+      "candidate": "near_45",
+      "feet_px": [
+        [
+          646.38232421875,
+          486.191223144531
+        ],
+        [
+          646.617492675781,
+          501.860107421875
+        ]
+      ],
+      "file": "near_45-085.png",
+      "head_px": [
+        711.526184082031,
+        343.773132324219
+      ],
+      "head_to_foot_fraction": 0.219565243191189,
+      "next_gap_landing_px": [
+        350.52490234375,
+        311.817840576172
+      ],
+      "s": 85.0
+    },
+    {
+      "airborne_fixture": false,
+      "board_overlaps_center_hud": false,
+      "board_px": [
+        640.0,
+        540.969848632812
+      ],
+      "candidate": "near_45",
+      "feet_px": [
+        [
+          633.078308105469,
+          484.819519042969
+        ],
+        [
+          632.511779785156,
+          500.495819091797
+        ]
+      ],
+      "file": "near_45-240.png",
+      "head_px": [
+        651.731201171875,
+        324.119506835938
+      ],
+      "head_to_foot_fraction": 0.24496710035536,
+      "next_gap_landing_px": [
+        640.0,
+        347.294860839844
+      ],
+      "s": 240.0
+    },
+    {
+      "airborne_fixture": true,
+      "board_overlaps_center_hud": false,
+      "board_px": [
+        640.0,
+        486.148742675781
+      ],
+      "candidate": "near_45",
+      "feet_px": [
+        [
+          633.056457519531,
+          431.269775390625
+        ],
+        [
+          632.488342285156,
+          443.95947265625
+        ]
+      ],
+      "file": "near_45-250.png",
+      "head_px": [
+        655.396545410156,
+        276.029266357422
+      ],
+      "head_to_foot_fraction": 0.233236397637261,
+      "next_gap_landing_px": [
+        640.0,
+        389.506927490234
+      ],
+      "s": 250.0
+    },
+    {
+      "airborne_fixture": true,
+      "board_overlaps_center_hud": false,
+      "board_px": [
+        640.0,
+        486.148498535156
+      ],
+      "candidate": "near_45",
+      "feet_px": [
+        [
+          633.056457519531,
+          431.270385742188
+        ],
+        [
+          632.488342285156,
+          443.959045410156
+        ]
+      ],
+      "file": "near_45-535.png",
+      "head_px": [
+        655.396728515625,
+        276.028961181641
+      ],
+      "head_to_foot_fraction": 0.233236228095161,
+      "next_gap_landing_px": [
+        640.0,
+        369.454895019531
+      ],
+      "s": 535.0
+    },
+    {
+      "airborne_fixture": true,
+      "board_overlaps_center_hud": false,
+      "board_px": [
+        640.0,
+        486.148498535156
+      ],
+      "candidate": "near_45",
+      "feet_px": [
+        [
+          633.056396484375,
+          431.2705078125
+        ],
+        [
+          632.488342285156,
+          443.959167480469
+        ]
+      ],
+      "file": "near_45-830.png",
+      "head_px": [
+        655.396728515625,
+        276.028961181641
+      ],
+      "head_to_foot_fraction": 0.233236397637261,
+      "next_gap_landing_px": [
+        640.0,
+        345.999206542969
+      ],
+      "s": 830.0
+    },
+    {
+      "airborne_fixture": false,
+      "board_overlaps_center_hud": false,
+      "board_px": [
+        640.0,
+        540.969665527344
+      ],
+      "candidate": "near_45",
+      "feet_px": [
+        [
+          633.078247070312,
+          484.820556640625
+        ],
+        [
+          632.511779785156,
+          500.495574951172
+        ]
+      ],
+      "file": "near_45-860.png",
+      "head_px": [
+        651.731201171875,
+        324.119354248047
+      ],
+      "head_to_foot_fraction": 0.244966973198785,
+      "next_gap_landing_px": [
+        0.0,
+        0.0
+      ],
+      "s": 860.0
+    }
+  ],
+  "evidence_kind": "Deterministic rendering fixture, not human playtesting",
+  "head_bone": "mixamorig_HeadTop_End",
+  "head_metric": "Skeleton HeadTop_End to lowest projected foot joint; excludes hair and sole thickness",
+  "model": "Current game/assets/models/mio.glb; adoption is not assessed",
+  "model_sha256": "70a343c829f5e4b79802435bbd24365219cd24c5e4e38e197393aeaf9536b074",
+  "viewport": [
+    1280,
+    720
+  ]
+}

@@ -1,0 +1,87 @@
+{
+  "models": {
+    "old": {
+      "native_min": [
+        -0.2954099774360657,
+        -0.09890751540660858,
+        2.2260338994328777e-07
+      ],
+      "native_max": [
+        0.29541003704071045,
+        0.09891506284475327,
+        0.9797973036766052
+      ],
+      "height_normalization": 1.714640748020826,
+      "source": "/Users/hayatok/.codex/worktrees/cloudsea-surfer/100challenge/2026-10-24-2/.cache/rework/legacy-mio.glb",
+      "source_commit": "07c2730",
+      "source_origin": "07c2730:2026-10-24-2/game/assets/models/mio.glb",
+      "sha256": "70a343c829f5e4b79802435bbd24365219cd24c5e4e38e197393aeaf9536b074"
+    },
+    "new": {
+      "native_min": [
+        -0.249755859375,
+        -0.10693349689245224,
+        3.13089287828916e-09
+      ],
+      "native_max": [
+        0.24975590407848358,
+        0.10693351924419403,
+        0.9800416231155396
+      ],
+      "height_normalization": 1.7142129127396843,
+      "source": "/Users/hayatok/Downloads/cloudsea-mio-v2-rigged-source.glb",
+      "sha256": "dc73844328312fc1e6ab2324dc8253076037fe093b231355d8bdc3dac51784a3"
+    }
+  },
+  "views": {
+    "front": [
+      0,
+      -4,
+      0.9
+    ],
+    "left": [
+      4,
+      0,
+      0.9
+    ],
+    "right": [
+      -4,
+      0,
+      0.9
+    ],
+    "back": [
+      0,
+      4,
+      0.9
+    ],
+    "threequarter": [
+      3,
+      -4,
+      1.0
+    ]
+  },
+  "normalization": "Both whole characters normalized to 1.68m height; identical orthographic camera/light/material inputs. Source geometry and materials unmodified.",
+  "renders": [
+    "old_front.png",
+    "old_left.png",
+    "old_right.png",
+    "old_back.png",
+    "old_threequarter.png",
+    "old_face_front.png",
+    "old_face_left.png",
+    "old_face_right.png",
+    "old_face_back.png",
+    "old_face_threequarter.png",
+    "new_front.png",
+    "new_left.png",
+    "new_right.png",
+    "new_back.png",
+    "new_threequarter.png",
+    "new_face_front.png",
+    "new_face_left.png",
+    "new_face_right.png",
+    "new_face_back.png",
+    "new_face_threequarter.png"
+  ],
+  "provenance_note": "Existing renders used the same legacy bytes before the parent replaced the game model with the new candidate. No re-render was needed; future OLD renders use the preserved legacy cache."
+}

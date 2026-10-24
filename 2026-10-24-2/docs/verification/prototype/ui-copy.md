@@ -1,0 +1,63 @@
+# 画面文言の抜き書き
+
+- interface.gd 147: 風を読んで、走り出そう
+- interface.gd 153: コースを読み込めませんでした
+- interface.gd 183: 白環の通学路 · 
+- interface.gd 303: 雲海サーファー
+- interface.gd 304: 白環の通学路 · 90秒の試作
+- interface.gd 308: 走る
+- interface.gd 309: 設定
+- interface.gd 312: A / D 旋回  ·  Space ジャンプ
+- interface.gd 313: S ブレーキ  ·  Shift ブースト
+- interface.gd 324: 白環の通学路
+- interface.gd 349: 風力
+- interface.gd 381: 風を読んで、走り出そう
+- interface.gd 399: ひと息ついて、次の風へ。
+- interface.gd 400: 続ける
+- interface.gd 401: 最初から再挑戦
+- interface.gd 402: 設定
+- interface.gd 403: タイトルへ戻る
+- interface.gd 412: 現在の走行を終了しますか
+- interface.gd 413: 未完走の記録は保存されません。
+- interface.gd 414: 戻る
+- interface.gd 415: 終了する
+- interface.gd 426: 白環の通学路
+- interface.gd 428: 記録なし
+- interface.gd 430: 記録なし
+- interface.gd 434: 再挑戦
+- interface.gd 435: タイトルへ戻る
+- interface.gd 453: 設 定
+- interface.gd 455: 動きを減らす
+- interface.gd 467: 画面の揺れと視野角の変化を抑えます。
+- interface.gd 470: 全体の音量
+- interface.gd 482: A / D 旋回   S ブレーキ   Space ジャンプ / Shift ブースト   Esc ポーズ
+- interface.gd 483: 戻る
+- interface.gd 492: 準備できませんでした
+- interface.gd 493: コースを読み込めませんでした
+- interface.gd 496: 再試行
+- interface.gd 497: タイトルへ戻る
+- interface.gd 508: 自己ベスト  
+- interface.gd 508: 自己ベスト  記録なし
+- interface.gd 509: 自己ベスト  
+- interface.gd 509: 自己ベスト  記録なし
+- interface.gd 512: 自己ベスト更新  
+- interface.gd 514: 自己ベスト更新  
+- interface.gd 516: 記録を保存しました
+- interface.gd 516: 記録を保存できませんでした
+- interface.gd 519: 記録の保存状態を確認できません
+- interface.gd 547: 最初から走り直しますか
+- interface.gd 547: 現在の走行を終了しますか
+- interface.gd 575: 左スティック 旋回 · A ジャンプ · RT ブースト
+- interface.gd 575: 左スティック 旋回  ·  LT ブレーキ  ·  A ジャンプ  ·  RT ブースト
+- interface.gd 577: 左スティック 旋回  ·  A ジャンプ
+- interface.gd 578: LT ブレーキ  ·  RT ブースト
+- interface.gd 580: 左スティック 旋回   LT ブレーキ   A ジャンプ / RT ブースト   Menu ポーズ
+- interface.gd 582: A / D 旋回 · Space ジャンプ · Shift ブースト
+- interface.gd 582: A / D 旋回  ·  S ブレーキ  ·  Space ジャンプ  ·  Shift ブースト
+- interface.gd 584: A / D 旋回  ·  Space ジャンプ
+- interface.gd 585: S ブレーキ  ·  Shift ブースト
+- interface.gd 587: A / D 旋回   S ブレーキ   Space ジャンプ / Shift ブースト   Esc ポーズ
+- main.gd 99: 風を読んで、走り出そう
+- main.gd 219: 続けます
+- main.gd 293: 減速
+- main.gd 309: チェックポイントへ復帰 · 追加 +3.00秒

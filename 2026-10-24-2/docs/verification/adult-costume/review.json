@@ -1,0 +1,39 @@
+{
+  "request": "New age-19 adult sporty costume with visible midriff and open neckline",
+  "new_image": "art/concepts/06-mio-age19-costume.png",
+  "generator": "built-in image_gen.imagegen",
+  "reference_images": [],
+  "checks": [
+    "PNG CRC and source bytes match",
+    "new image, prompt and manifest agree",
+    "local Markdown links exist",
+    "preexisting tracked diff unchanged",
+    "yomiyasu lint, diff, materials and final hash verification"
+  ],
+  "decisions": [
+    "The ungenerated wording is intentionally replaced after the new PNG was generated and inspected.",
+    "The new local path, university-age image label and extra artwork count are supported by the PNG and manifest.",
+    "The university-age label does not decide the fictional school affiliation.",
+    "Previously generated artwork is preserved and explicitly identified as the earlier costume reference.",
+    "Literal technical terms in unaffected sections are retained."
+  ],
+  "not_verified": [
+    "new outfit in gameplay views",
+    "3D model",
+    "cloth movement",
+    "gameplay"
+  ],
+  "files": [
+    {
+      "file": "README.md",
+      "sha256": "4a0589cc0f6894d20d7ddbf58c2df91bfd291513a40409916a60f86eb484ef62",
+      "verify": "yomiyasu-check: executed via=verify run=20261024T142918Z-f3664929 attempt=1 final=sha256:4a0589cc0f68 mode=rewrite doc_type=proposal checks=lint,diff,materials meaning_risk=3 replay=skipped"
+    },
+    {
+      "file": "docs/ART_DIRECTION.md",
+      "sha256": "42400e1d8c4b5d998631313ea82c4425274099d46638c298997e2fca745bd1df",
+      "verify": "yomiyasu-check: executed via=verify run=20261024T142918Z-fdcec9b2 attempt=1 final=sha256:42400e1d8c4b mode=rewrite doc_type=formal checks=lint,diff,materials meaning_risk=5 replay=skipped"
+    }
+  ],
+  "candidate_counts_are_not_quality_scores": true
+}

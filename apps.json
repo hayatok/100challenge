@@ -249,5 +249,15 @@
     "category": "2Dサバイバルゲーム",
     "thumbnail": "echo-witch-cover.png",
     "accent": "#b8a174"
+  },
+  {
+    "id": "2026-10-24-2",
+    "date": "2026-10-24",
+    "sequence": 2,
+    "name": "雲海サーファー",
+    "description": "カーブで風をため、解放して加速し、ジャンプをつなぐ3D滑走ゲーム。900mの風路を自分で操る開発版。",
+    "category": "3D滑走ゲーム",
+    "thumbnail": "thumbnail.jpg",
+    "accent": "#168b8c"
   }
 ]

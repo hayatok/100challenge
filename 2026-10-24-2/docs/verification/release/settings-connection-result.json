@@ -1,0 +1,48 @@
+{
+  "all_passed": true,
+  "checks": [
+    {
+      "actual_master_db": -80.0,
+      "effects_camera_pose_all_receive_setting": true,
+      "passed": true,
+      "reduced_motion": false,
+      "requested_master_volume": 0.0
+    },
+    {
+      "actual_master_db": -80.0,
+      "effects_camera_pose_all_receive_setting": true,
+      "passed": true,
+      "reduced_motion": true,
+      "requested_master_volume": 0.0
+    },
+    {
+      "actual_master_db": -3.74173283576965,
+      "effects_camera_pose_all_receive_setting": true,
+      "passed": true,
+      "reduced_motion": false,
+      "requested_master_volume": 0.65
+    },
+    {
+      "actual_master_db": -3.74173283576965,
+      "effects_camera_pose_all_receive_setting": true,
+      "passed": true,
+      "reduced_motion": true,
+      "requested_master_volume": 0.65
+    },
+    {
+      "actual_master_db": 0.0,
+      "effects_camera_pose_all_receive_setting": true,
+      "passed": true,
+      "reduced_motion": false,
+      "requested_master_volume": 1.0
+    },
+    {
+      "actual_master_db": 0.0,
+      "effects_camera_pose_all_receive_setting": true,
+      "passed": true,
+      "reduced_motion": true,
+      "requested_master_volume": 1.0
+    }
+  ],
+  "scope": "Main settings routing to AudioServer and effect reduced-motion flags; no audible output or graphical particle-readback verification"
+}

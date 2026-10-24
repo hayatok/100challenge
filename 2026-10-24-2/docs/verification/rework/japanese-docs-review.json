@@ -1,0 +1,211 @@
+{
+  "schema_version": 1,
+  "created_at": "2026-10-24T19:19:35.308051+00:00",
+  "language": "en",
+  "skill": "/Users/hayatok/.codex/skills/yomiyasu/SKILL.md",
+  "scope": "Final prose review of four documentation files after parent integration, camera, ramp, pause, reward and recovery updates. No game, result report, app catalog, artwork or PR-body edits.",
+  "source_policy": "Parent pre-update snapshots copied from 2026-10-24-2/.cache/rework-before-final-docs. Previous originals preserved. Additional immediate pre-proofreading snapshots retained separately.",
+  "material": "docs/verification/rework/originals/final-pass/material.txt",
+  "previous_summary": "docs/verification/rework/originals/final-pass/japanese-docs-review.before.json",
+  "tool_record_policy": "Tool-generated state remains local under its own ignored directories; this portable summary records run ids and full final hashes.",
+  "changes_by_reviewer": [
+    "README: clarify sufficient-speed crossing without Space; change obsolete character production-in-progress wording to completed production.",
+    "REWORK: change repeated future production wording to completed production, preserving future comparison and adoption criteria.",
+    "AGENTS and IMPLEMENTATION: remove surplus blank lines only."
+  ],
+  "verification_boundary": "Yomiyasu execution and matching hashes do not prove readability, preserved meaning or gameplay acceptance. All candidates were manually compared against originals and raw sources.",
+  "records": [
+    {
+      "file": "README.md",
+      "source_snapshot": "docs/verification/rework/originals/final-pass/README.md",
+      "source_sha256": "f72c7a9841db831f2182ef10796c34e4d23eeaa5141370cb314846ec2c039d07",
+      "final_edit_input": "docs/verification/rework/originals/final-edit-inputs/README.md",
+      "final_sha256": "b8b139235b727c3d8d2d6100d0923745dce257096832816827216b879db18cea",
+      "run_id": "20261024T191820Z-57f9a597",
+      "attempt": 1,
+      "mode": "rewrite",
+      "doc_type": "manual",
+      "stance": "description",
+      "record": "docs/verification/rework/yomiyasu/final-pass/README/runs/20261024T191820Z-57f9a597/attempt-1.json",
+      "verification": "matched",
+      "verify_status_line": "yomiyasu-check: executed via=verify run=20261024T191820Z-57f9a597 attempt=1 final=sha256:b8b139235b72 mode=rewrite doc_type=manual checks=lint,diff,materials meaning_risk=17 replay=skipped",
+      "checks_executed": [
+        "original_lint",
+        "final_lint",
+        "source_final_diff",
+        "raw_material_comparison",
+        "manual_comparison",
+        "final_hash_verification"
+      ],
+      "final_lint_candidates": 1,
+      "candidate_count_note": "Diagnostic hints, not a readability score or approval.",
+      "manual_comparison": {
+        "scope": "Parent updates preserved; only light prose and obsolete production tense adjusted.",
+        "facts_preserved": [
+          "900 m and three gaps at 245-257, 530-546, 825-849 m",
+          "18 m long, 1.5 m high launch ramps",
+          "Studio subscription total 80 credits; separate developer paid API unused",
+          "Raw source 39999 triangles and 65 bones; runtime Toon material C duplicates source material without modifying GLB",
+          "Duplicated marks, waist tabs and rough hair/cloth remain; no face morphs or secondary hair/cloth bones",
+          "Pause preserves pose and earned resources; restart/checkpoint resets travel state",
+          "CARVE/CLEAN rescore blocked by max progress and 20 m ids; physical acceleration and wind recovery remain usable",
+          "Goal requires grounded rider within road; missed-platform detection hides rider before clipping through stone",
+          "Moving camera translation and jump/terrain compensation are distinct from historical static fixtures",
+          "Manual complete Chrome run, subjective sound quality and physical gamepad verification remain unconfirmed; no new completion claim made"
+        ],
+        "reviewed_candidates": [
+          "Intentional production status changes match completed Tripo manifest.",
+          "Technical identifiers, paths, report links and issue/PR references are intentional source references.",
+          "Numerical additions for ramp dimensions and scoring ids match code rather than unrelated coincidental numeric matches reported by lint.",
+          "The retained README negation distinguishes historical concepts from implemented content.",
+          "No evaluation result or user aesthetic approval was inferred from generation, test counts or material adoption."
+        ],
+        "unresolved_editorial_questions": []
+      }
+    },
+    {
+      "file": "AGENTS.md",
+      "source_snapshot": "docs/verification/rework/originals/final-pass/AGENTS.md",
+      "source_sha256": "ec9c73bbf688afc901c57fef98e63992c00a021459833b258af6da3e2c1101cd",
+      "final_edit_input": "docs/verification/rework/originals/final-edit-inputs/AGENTS.md",
+      "final_sha256": "d5a08dd191ff09ff029393409b64bfc9c3784c8a4fc1177e19a9948a1855ae78",
+      "run_id": "20261024T191820Z-be90c06c",
+      "attempt": 1,
+      "mode": "rewrite",
+      "doc_type": "manual",
+      "stance": "rules",
+      "record": "docs/verification/rework/yomiyasu/final-pass/AGENTS/runs/20261024T191820Z-be90c06c/attempt-1.json",
+      "verification": "matched",
+      "verify_status_line": "yomiyasu-check: executed via=verify run=20261024T191820Z-be90c06c attempt=1 final=sha256:d5a08dd191ff mode=rewrite doc_type=manual checks=lint,diff,materials meaning_risk=0 replay=skipped",
+      "checks_executed": [
+        "original_lint",
+        "final_lint",
+        "source_final_diff",
+        "raw_material_comparison",
+        "manual_comparison",
+        "final_hash_verification"
+      ],
+      "final_lint_candidates": 0,
+      "candidate_count_note": "Diagnostic hints, not a readability score or approval.",
+      "manual_comparison": {
+        "scope": "Parent updates preserved; only light prose and obsolete production tense adjusted.",
+        "facts_preserved": [
+          "900 m and three gaps at 245-257, 530-546, 825-849 m",
+          "18 m long, 1.5 m high launch ramps",
+          "Studio subscription total 80 credits; separate developer paid API unused",
+          "Raw source 39999 triangles and 65 bones; runtime Toon material C duplicates source material without modifying GLB",
+          "Duplicated marks, waist tabs and rough hair/cloth remain; no face morphs or secondary hair/cloth bones",
+          "Pause preserves pose and earned resources; restart/checkpoint resets travel state",
+          "CARVE/CLEAN rescore blocked by max progress and 20 m ids; physical acceleration and wind recovery remain usable",
+          "Goal requires grounded rider within road; missed-platform detection hides rider before clipping through stone",
+          "Moving camera translation and jump/terrain compensation are distinct from historical static fixtures",
+          "Manual complete Chrome run, subjective sound quality and physical gamepad verification remain unconfirmed; no new completion claim made"
+        ],
+        "reviewed_candidates": [
+          "Intentional production status changes match completed Tripo manifest.",
+          "Technical identifiers, paths, report links and issue/PR references are intentional source references.",
+          "Numerical additions for ramp dimensions and scoring ids match code rather than unrelated coincidental numeric matches reported by lint.",
+          "The retained README negation distinguishes historical concepts from implemented content.",
+          "No evaluation result or user aesthetic approval was inferred from generation, test counts or material adoption."
+        ],
+        "unresolved_editorial_questions": []
+      }
+    },
+    {
+      "file": "docs/REWORK.md",
+      "source_snapshot": "docs/verification/rework/originals/final-pass/REWORK.md",
+      "source_sha256": "2d519d5ce482ac551d37e32bc2e6d171a39ffb16fd639de15884b76fc2d6fbee",
+      "final_edit_input": "docs/verification/rework/originals/final-edit-inputs/REWORK.md",
+      "final_sha256": "557db21c63618bd264b97b32510f0853f2bab987a4e895caf4f0642429d78191",
+      "run_id": "20261024T191821Z-7508a00e",
+      "attempt": 1,
+      "mode": "rewrite",
+      "doc_type": "manual",
+      "stance": "description",
+      "record": "docs/verification/rework/yomiyasu/final-pass/REWORK/runs/20261024T191821Z-7508a00e/attempt-1.json",
+      "verification": "matched",
+      "verify_status_line": "yomiyasu-check: executed via=verify run=20261024T191821Z-7508a00e attempt=1 final=sha256:557db21c6361 mode=rewrite doc_type=manual checks=lint,diff,materials meaning_risk=12 replay=skipped",
+      "checks_executed": [
+        "original_lint",
+        "final_lint",
+        "source_final_diff",
+        "raw_material_comparison",
+        "manual_comparison",
+        "final_hash_verification"
+      ],
+      "final_lint_candidates": 0,
+      "candidate_count_note": "Diagnostic hints, not a readability score or approval.",
+      "manual_comparison": {
+        "scope": "Parent updates preserved; only light prose and obsolete production tense adjusted.",
+        "facts_preserved": [
+          "900 m and three gaps at 245-257, 530-546, 825-849 m",
+          "18 m long, 1.5 m high launch ramps",
+          "Studio subscription total 80 credits; separate developer paid API unused",
+          "Raw source 39999 triangles and 65 bones; runtime Toon material C duplicates source material without modifying GLB",
+          "Duplicated marks, waist tabs and rough hair/cloth remain; no face morphs or secondary hair/cloth bones",
+          "Pause preserves pose and earned resources; restart/checkpoint resets travel state",
+          "CARVE/CLEAN rescore blocked by max progress and 20 m ids; physical acceleration and wind recovery remain usable",
+          "Goal requires grounded rider within road; missed-platform detection hides rider before clipping through stone",
+          "Moving camera translation and jump/terrain compensation are distinct from historical static fixtures",
+          "Manual complete Chrome run, subjective sound quality and physical gamepad verification remain unconfirmed; no new completion claim made"
+        ],
+        "reviewed_candidates": [
+          "Intentional production status changes match completed Tripo manifest.",
+          "Technical identifiers, paths, report links and issue/PR references are intentional source references.",
+          "Numerical additions for ramp dimensions and scoring ids match code rather than unrelated coincidental numeric matches reported by lint.",
+          "The retained README negation distinguishes historical concepts from implemented content.",
+          "No evaluation result or user aesthetic approval was inferred from generation, test counts or material adoption."
+        ],
+        "unresolved_editorial_questions": []
+      }
+    },
+    {
+      "file": "docs/IMPLEMENTATION.md",
+      "source_snapshot": "docs/verification/rework/originals/final-pass/IMPLEMENTATION.md",
+      "source_sha256": "b225313ce52cd41526bab26da115e57eabc92b103f625cc5c396fb1d975b5f30",
+      "final_edit_input": "docs/verification/rework/originals/final-edit-inputs/IMPLEMENTATION.md",
+      "final_sha256": "40f37c74f7e06ae1d24cb5b71352716cad5c5fb89f7518843148ab52ca60c3bf",
+      "run_id": "20261024T191821Z-6c90a469",
+      "attempt": 1,
+      "mode": "rewrite",
+      "doc_type": "manual",
+      "stance": "description",
+      "record": "docs/verification/rework/yomiyasu/final-pass/IMPLEMENTATION/runs/20261024T191821Z-6c90a469/attempt-1.json",
+      "verification": "matched",
+      "verify_status_line": "yomiyasu-check: executed via=verify run=20261024T191821Z-6c90a469 attempt=1 final=sha256:40f37c74f7e0 mode=rewrite doc_type=manual checks=lint,diff,materials meaning_risk=8 replay=skipped",
+      "checks_executed": [
+        "original_lint",
+        "final_lint",
+        "source_final_diff",
+        "raw_material_comparison",
+        "manual_comparison",
+        "final_hash_verification"
+      ],
+      "final_lint_candidates": 0,
+      "candidate_count_note": "Diagnostic hints, not a readability score or approval.",
+      "manual_comparison": {
+        "scope": "Parent updates preserved; only light prose and obsolete production tense adjusted.",
+        "facts_preserved": [
+          "900 m and three gaps at 245-257, 530-546, 825-849 m",
+          "18 m long, 1.5 m high launch ramps",
+          "Studio subscription total 80 credits; separate developer paid API unused",
+          "Raw source 39999 triangles and 65 bones; runtime Toon material C duplicates source material without modifying GLB",
+          "Duplicated marks, waist tabs and rough hair/cloth remain; no face morphs or secondary hair/cloth bones",
+          "Pause preserves pose and earned resources; restart/checkpoint resets travel state",
+          "CARVE/CLEAN rescore blocked by max progress and 20 m ids; physical acceleration and wind recovery remain usable",
+          "Goal requires grounded rider within road; missed-platform detection hides rider before clipping through stone",
+          "Moving camera translation and jump/terrain compensation are distinct from historical static fixtures",
+          "Manual complete Chrome run, subjective sound quality and physical gamepad verification remain unconfirmed; no new completion claim made"
+        ],
+        "reviewed_candidates": [
+          "Intentional production status changes match completed Tripo manifest.",
+          "Technical identifiers, paths, report links and issue/PR references are intentional source references.",
+          "Numerical additions for ramp dimensions and scoring ids match code rather than unrelated coincidental numeric matches reported by lint.",
+          "The retained README negation distinguishes historical concepts from implemented content.",
+          "No evaluation result or user aesthetic approval was inferred from generation, test counts or material adoption."
+        ],
+        "unresolved_editorial_questions": []
+      }
+    }
+  ]
+}

@@ -1,0 +1,378 @@
+{
+  "tripo_task_id": "ba65bec9-9f19-4389-a148-f90559dbf57b",
+  "blender_version": "5.2.1 LTS",
+  "source_file": "cloudsea-arch-source.glb",
+  "output_file": "arch.glb",
+  "parameters": {
+    "triangle_budget": 16000,
+    "length_metres": 11.0,
+    "blender_rotation_xyz_degrees": [
+      0.0,
+      0.0,
+      180.0
+    ],
+    "uniform_scale": 11.222267193872785,
+    "expected_game_long_axis": "Y",
+    "source_local_weld_distance": 1e-06,
+    "sized_game_axis": "Y",
+    "operator_verified_source_top": "Z",
+    "operator_verified_source_front": "-Y"
+  },
+  "source_glb": {
+    "bytes": 63410104,
+    "sha256": "052df4ae257bedd0d211e9dabb66aedcf595b210f0ab970570a0b35e99edaa82",
+    "triangles": 1914942,
+    "meshes": 1,
+    "primitives": 1,
+    "uv_primitives": 1,
+    "materials": 1,
+    "images": [
+      {
+        "name": "cloudsea-arch-source_normal",
+        "mime": "image/jpeg",
+        "bytes": 603886,
+        "sha256": "7c1faf6faa92215d9d05ef019c2984ed6c44a107dd730fafca65625c82e66c79"
+      },
+      {
+        "name": "cloudsea-arch-source_basecolor",
+        "mime": "image/jpeg",
+        "bytes": 1086472,
+        "sha256": "a2ab0a5c6e271500c118823653924479526f1fa27e008b4d3cdaec379915bdfa"
+      },
+      {
+        "name": "cloudsea-arch-source_rm",
+        "mime": "image/jpeg",
+        "bytes": 573378,
+        "sha256": "f99336afdf63fcc9901c21ce3728f0233397e9acd7f4e5cbda4c5569457fe12e"
+      }
+    ],
+    "material_texture_bindings": [
+      {
+        "baseColorTexture": {
+          "image_sha256": "a2ab0a5c6e271500c118823653924479526f1fa27e008b4d3cdaec379915bdfa",
+          "texcoord": 0
+        },
+        "metallicRoughnessTexture": {
+          "image_sha256": "f99336afdf63fcc9901c21ce3728f0233397e9acd7f4e5cbda4c5569457fe12e",
+          "texcoord": 0
+        },
+        "normalTexture": {
+          "image_sha256": "7c1faf6faa92215d9d05ef019c2984ed6c44a107dd730fafca65625c82e66c79",
+          "texcoord": 0
+        }
+      }
+    ],
+    "skins": 0,
+    "skin_joints": [],
+    "animations": 0,
+    "animation_channels": []
+  },
+  "source_import": {
+    "triangles": 1914942,
+    "mesh_objects": 1,
+    "vertices": 1192661,
+    "blender_min": [
+      -0.4344177842140198,
+      -0.20283517241477966,
+      0.0
+    ],
+    "blender_max": [
+      0.4364014267921448,
+      0.2032317817211151,
+      0.980194091796875
+    ],
+    "blender_dimensions": [
+      0.8708192110061646,
+      0.4060669541358948,
+      0.980194091796875
+    ],
+    "game_dimensions_xyz": [
+      0.8708192110061646,
+      0.980194091796875,
+      0.4060669541358948
+    ],
+    "uv_layer_counts": [
+      1
+    ],
+    "armatures": 0,
+    "material_slots": 1
+  },
+  "normalized_source": {
+    "triangles": 1914942,
+    "mesh_objects": 1,
+    "vertices": 1192661,
+    "blender_min": [
+      -4.886282920837402,
+      -2.278496503829956,
+      0.0
+    ],
+    "blender_max": [
+      4.8862833976745605,
+      2.278496503829956,
+      11.0
+    ],
+    "blender_dimensions": [
+      9.772565841674805,
+      4.556993007659912,
+      11.0
+    ],
+    "game_dimensions_xyz": [
+      9.772565841674805,
+      11.0,
+      4.556993007659912
+    ],
+    "uv_layer_counts": [
+      1
+    ],
+    "armatures": 0,
+    "material_slots": 1
+  },
+  "reduced_mesh": {
+    "triangles": 16000,
+    "mesh_objects": 1,
+    "vertices": 7971,
+    "blender_min": [
+      -4.884791374206543,
+      -2.2817869186401367,
+      -0.0025975771714001894
+    ],
+    "blender_max": [
+      4.884170055389404,
+      2.2895121574401855,
+      10.995849609375
+    ],
+    "blender_dimensions": [
+      9.768960952758789,
+      4.571299076080322,
+      10.99844741821289
+    ],
+    "game_dimensions_xyz": [
+      9.768960952758789,
+      10.99844741821289,
+      4.571299076080322
+    ],
+    "uv_layer_counts": [
+      1
+    ],
+    "armatures": 0,
+    "material_slots": 1
+  },
+  "output_glb": {
+    "bytes": 2803608,
+    "sha256": "1fdbeedb9c6667d5a0a1c0292a48acb7af0840d5227e0f8ea1cb861278e87923",
+    "triangles": 16000,
+    "meshes": 1,
+    "primitives": 1,
+    "uv_primitives": 1,
+    "materials": 1,
+    "images": [
+      {
+        "name": "cloudsea-arch-source_normal",
+        "mime": "image/jpeg",
+        "bytes": 603886,
+        "sha256": "7c1faf6faa92215d9d05ef019c2984ed6c44a107dd730fafca65625c82e66c79"
+      },
+      {
+        "name": "cloudsea-arch-source_basecolor",
+        "mime": "image/jpeg",
+        "bytes": 1086472,
+        "sha256": "a2ab0a5c6e271500c118823653924479526f1fa27e008b4d3cdaec379915bdfa"
+      },
+      {
+        "name": "cloudsea-arch-source_rm",
+        "mime": "image/jpeg",
+        "bytes": 573378,
+        "sha256": "f99336afdf63fcc9901c21ce3728f0233397e9acd7f4e5cbda4c5569457fe12e"
+      }
+    ],
+    "material_texture_bindings": [
+      {
+        "baseColorTexture": {
+          "image_sha256": "a2ab0a5c6e271500c118823653924479526f1fa27e008b4d3cdaec379915bdfa",
+          "texcoord": 0
+        },
+        "metallicRoughnessTexture": {
+          "image_sha256": "f99336afdf63fcc9901c21ce3728f0233397e9acd7f4e5cbda4c5569457fe12e",
+          "texcoord": 0
+        },
+        "normalTexture": {
+          "image_sha256": "7c1faf6faa92215d9d05ef019c2984ed6c44a107dd730fafca65625c82e66c79",
+          "texcoord": 0
+        }
+      }
+    ],
+    "skins": 0,
+    "skin_joints": [],
+    "animations": 0,
+    "animation_channels": []
+  },
+  "clean_reimport": {
+    "triangles": 16000,
+    "mesh_objects": 1,
+    "vertices": 13804,
+    "blender_min": [
+      -4.884791374206543,
+      -2.2817869186401367,
+      -0.0025975771714001894
+    ],
+    "blender_max": [
+      4.884170055389404,
+      2.2895121574401855,
+      10.995849609375
+    ],
+    "blender_dimensions": [
+      9.768960952758789,
+      4.571299076080322,
+      10.99844741821289
+    ],
+    "game_dimensions_xyz": [
+      9.768960952758789,
+      10.99844741821289,
+      4.571299076080322
+    ],
+    "uv_layer_counts": [
+      1
+    ],
+    "armatures": 0,
+    "material_slots": 1
+  },
+  "source_decoded_images": [
+    {
+      "width": 2048,
+      "height": 2048,
+      "channels": 4,
+      "pixel_sha256": "02b062da41a53832a4b064d0e7e1b9c4f4b7213f68f0064ca90cf8d45cab6a2c"
+    },
+    {
+      "width": 2048,
+      "height": 2048,
+      "channels": 4,
+      "pixel_sha256": "1d4fec5ef4cc1a0644d801482c44d387d14f48526b65d36e4869cfd6ba1d90d6"
+    },
+    {
+      "width": 2048,
+      "height": 2048,
+      "channels": 4,
+      "pixel_sha256": "7c97431befa4248c20f2f05f24f5b365cb86ca41213a6b7fabcdabf72876708a"
+    }
+  ],
+  "output_decoded_images": [
+    {
+      "width": 2048,
+      "height": 2048,
+      "channels": 4,
+      "pixel_sha256": "02b062da41a53832a4b064d0e7e1b9c4f4b7213f68f0064ca90cf8d45cab6a2c"
+    },
+    {
+      "width": 2048,
+      "height": 2048,
+      "channels": 4,
+      "pixel_sha256": "1d4fec5ef4cc1a0644d801482c44d387d14f48526b65d36e4869cfd6ba1d90d6"
+    },
+    {
+      "width": 2048,
+      "height": 2048,
+      "channels": 4,
+      "pixel_sha256": "7c97431befa4248c20f2f05f24f5b365cb86ca41213a6b7fabcdabf72876708a"
+    }
+  ],
+  "welded_vertices": [
+    {
+      "object": "tripo_node_1cb51d57-6476-488c-b6f1-dc3f6faaffc4",
+      "vertices_before": 1192661,
+      "vertices_after": 957442
+    }
+  ],
+  "decimated_objects": [
+    "tripo_node_1cb51d57-6476-488c-b6f1-dc3f6faaffc4"
+  ],
+  "checks": {
+    "source_unchanged": true,
+    "length_within_1_percent": true,
+    "long_axis_matches": true,
+    "triangles_match_clean_reimport": true,
+    "within_triangle_budget_5_percent": true,
+    "uvs_present": true,
+    "material_count_preserved": true,
+    "image_count_preserved": true,
+    "decoded_texture_pixels_preserved": true,
+    "skin_joint_counts_preserved": true,
+    "animation_channel_counts_preserved": true,
+    "central_opening_clear_in_source": true,
+    "central_opening_clear_after_reimport": true,
+    "material_texture_bindings_preserved": true
+  },
+  "uv_processing": {
+    "original_layer_retained": true,
+    "coordinates_exact_preserved": false,
+    "unwrapped": false,
+    "textures_repainted": false
+  },
+  "render_comparison": {
+    "top": {
+      "rgb_mean_absolute_error_0_to_1": 0.0038195983040559944,
+      "rgb_max_absolute_error_0_to_1": 0.6588235422968864
+    },
+    "bottom": {
+      "rgb_mean_absolute_error_0_to_1": 0.0020744152540181477,
+      "rgb_max_absolute_error_0_to_1": 0.7176471278071404
+    },
+    "threequarter": {
+      "rgb_mean_absolute_error_0_to_1": 0.02818977731974351,
+      "rgb_max_absolute_error_0_to_1": 0.6470588892698288
+    },
+    "game-front-minus-z": {
+      "rgb_mean_absolute_error_0_to_1": 0.013076065622037886,
+      "rgb_max_absolute_error_0_to_1": 0.7803922286257148
+    },
+    "game-back-plus-z": {
+      "rgb_mean_absolute_error_0_to_1": 0.030898116176558337,
+      "rgb_max_absolute_error_0_to_1": 0.6941177174448967
+    }
+  },
+  "relative_dimension_change": [
+    0.0003688784475252843,
+    0.000141143798828125,
+    0.0031393658924564706
+  ],
+  "central_opening_qa": {
+    "source": {
+      "rays": 25,
+      "blocked": 0,
+      "clear": 25
+    },
+    "output": {
+      "rays": 25,
+      "blocked": 0,
+      "clear": 25
+    }
+  },
+  "orientation": {
+    "game_up_axis": "+Y",
+    "game_long_axis": "Y",
+    "front_back_semantic_verified": true,
+    "game_front_axis": "-Z",
+    "top_semantic_verified": true
+  },
+  "visual_quality_approved": false,
+  "committed_output": true,
+  "render_settings": {
+    "width": 768,
+    "height": 576,
+    "cycles_samples": 16,
+    "area_light_watts_per_squared_extent": 550,
+    "area_light_size_per_extent": 2
+  },
+  "selected_preview_files": [
+    {
+      "file": "previews/arch-source-1914942-threequarter.png",
+      "bytes": 653272,
+      "sha256": "f3b1853aa149e2c4cb9bcfb80aeac44e4cfb9bbb204617adae05321dc891c29e"
+    },
+    {
+      "file": "previews/arch-reduced-16000-threequarter.png",
+      "bytes": 644490,
+      "sha256": "7d16c7db5de08779a646b8ad572434b4dc7d2894a4cfd529952c4e39f7534712"
+    }
+  ]
+}

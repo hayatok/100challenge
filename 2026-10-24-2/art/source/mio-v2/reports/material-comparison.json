@@ -1,0 +1,71 @@
+{
+  "B": {
+    "diffuse_mode": "original",
+    "metallic": 0,
+    "normal_scale": 0.35,
+    "roughness": 1,
+    "specular_mode": "SPECULAR_DISABLED"
+  },
+  "C": {
+    "diffuse_mode": "DIFFUSE_TOON",
+    "metallic": 0,
+    "normal_scale": 0.35,
+    "roughness": 1,
+    "specular_mode": "SPECULAR_DISABLED"
+  },
+  "columns": [
+    "face_threequarter",
+    "face_left",
+    "fullbody"
+  ],
+  "description": "Temporary runtime material overrides in actual Main scene lighting. Distinct from unmodified raw Blender reference renders.",
+  "known_remaining_source_defects": [
+    "adjacent duplicated cloud marks",
+    "coral waist tabs",
+    "fused hair locks",
+    "baked color streaks"
+  ],
+  "original_material_settings": [
+    {
+      "class": "StandardMaterial3D",
+      "diffuse_mode": 0,
+      "mesh": "tripo_node_ba00ec9b-960d-4ccb-a04d-c828ba501de6",
+      "metallic": 1.0,
+      "metallic_texture": true,
+      "normal_enabled": true,
+      "normal_scale": 1.0,
+      "roughness": 1.0,
+      "roughness_texture": true,
+      "specular_mode": 0,
+      "surface": 0
+    }
+  ],
+  "rows": [
+    "A_original",
+    "B_matte_normal035",
+    "C_matte_normal035_toon"
+  ],
+  "source": "/Users/hayatok/.codex/worktrees/cloudsea-surfer/100challenge/2026-10-24-2/game/assets/models/mio.glb",
+  "source_sha256": "dc73844328312fc1e6ab2324dc8253076037fe093b231355d8bdc3dac51784a3",
+  "unchanged": [
+    "geometry",
+    "UVs",
+    "source textures",
+    "skin weights",
+    "game scripts",
+    "source materials"
+  ],
+  "viewport": [
+    768,
+    768
+  ],
+  "recommendation": {
+    "variant": "C_matte_normal035_toon",
+    "reason": "In the actual Main environment, C gives the clearest eyes, skin/hair separation and teal collar interior while removing the distracting fine white specular streaks. It better matches the intended anime-game rendering direction.",
+    "A_observation": "Original normal strength and specular response produce many narrow bright streaks on hair, collar, skin and glove/arm details. These emphasize the generated surface noise.",
+    "B_observation": "Lower normal strength and disabled specular smooth the chest, neck and hair response. Under the same Main light, face and navy hair remain dark and the hair layers merge more than in C.",
+    "C_observation": "The toon diffuse response lifts readable skin, eyes, jacket and teal collar colors. Collar folds, sleeve rims and hair silhouette retain visible volume, and navy clothing remains distinct from the pale jacket. Geometry and actual thickness are unchanged.",
+    "remaining_limits": "C retains hard light/shadow boundaries across the nose and cheek, baked color streaks and irregular jacket surface details. Adjacent duplicated cloud marks and coral tabs are source defects and remain. These nine static views do not approve final visual quality or show all headings and motion.",
+    "status": "Proposal only. No game material, loader or source asset was edited."
+  }
+}

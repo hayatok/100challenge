@@ -1,0 +1,38 @@
+{
+  "source_commit_before_release_fixes": "35f58ebecaae971d8a8b3e62bb378dda78ca1ba8",
+  "browser": "Chrome",
+  "viewport": [
+    960,
+    540
+  ],
+  "input_method": "CUA keyboard presses, visual observations between sections, repeated pauses; no autonomous steering script or QA teleport",
+  "completed_course": true,
+  "finish": {
+    "time_seconds": 63.13,
+    "score": 2825,
+    "falls": 6,
+    "saved_indicator": "record saved"
+  },
+  "observed": [
+    "all three real gaps jumped and landed",
+    "carve charge held across pause then released with a fresh S press",
+    "checkpoint recovery after side falls",
+    "second sentry hit feedback",
+    "finish, saved record indicator and retry resetting score/time"
+  ],
+  "limitations": [
+    "pause-segmented run, not uninterrupted natural human play or skill/difficulty acceptance",
+    "subjective sound",
+    "physical gamepad",
+    "long-session whole-game endurance",
+    "other browsers",
+    "final user model/fun acceptance"
+  ],
+  "screenshots": [
+    "local-first-landing.jpg",
+    "local-second-landing.jpg",
+    "local-final-flight.jpg",
+    "local-result.jpg",
+    "local-retry-pause.jpg"
+  ]
+}

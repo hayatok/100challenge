@@ -1,0 +1,364 @@
+{
+  "tripo_task_id": "1536168d-d4d5-4123-8cc4-1c135fa0a228",
+  "blender_version": "5.2.1 LTS",
+  "source_file": "cloudsea-sentry-source.glb",
+  "output_file": "sentry.glb",
+  "parameters": {
+    "triangle_budget": 10000,
+    "length_metres": 0.9,
+    "blender_rotation_xyz_degrees": [
+      0.0,
+      0.0,
+      180.0
+    ],
+    "uniform_scale": 1.5031192660550459,
+    "expected_game_long_axis": "X",
+    "source_local_weld_distance": 1e-06,
+    "sized_game_axis": "Y",
+    "operator_verified_source_top": "Z",
+    "operator_verified_source_front": "-Y"
+  },
+  "source_glb": {
+    "bytes": 62676456,
+    "sha256": "022fda5134b335aebcfec1b6e5921b98c4614c7ed78435fdbeec61c96d066ac7",
+    "triangles": 1922060,
+    "meshes": 1,
+    "primitives": 1,
+    "uv_primitives": 1,
+    "materials": 1,
+    "images": [
+      {
+        "name": "cloudsea-sentry-source_normal",
+        "mime": "image/jpeg",
+        "bytes": 281054,
+        "sha256": "416e8da589e35b9db38b29a44797dc06e467050d9ed0fc4d69bd10fae155c565"
+      },
+      {
+        "name": "cloudsea-sentry-source_basecolor",
+        "mime": "image/jpeg",
+        "bytes": 591448,
+        "sha256": "17fba9b917d4f691c31277cdad8d364c700923b351580a9d5ed0c867d7cfa7b0"
+      },
+      {
+        "name": "cloudsea-sentry-source_rm",
+        "mime": "image/jpeg",
+        "bytes": 253981,
+        "sha256": "ceb89771a3f1f0791b643c88e310c7bf332328ff415c4e0327f81a9783f42a06"
+      }
+    ],
+    "material_texture_bindings": [
+      {
+        "baseColorTexture": {
+          "image_sha256": "17fba9b917d4f691c31277cdad8d364c700923b351580a9d5ed0c867d7cfa7b0",
+          "texcoord": 0
+        },
+        "metallicRoughnessTexture": {
+          "image_sha256": "ceb89771a3f1f0791b643c88e310c7bf332328ff415c4e0327f81a9783f42a06",
+          "texcoord": 0
+        },
+        "normalTexture": {
+          "image_sha256": "416e8da589e35b9db38b29a44797dc06e467050d9ed0fc4d69bd10fae155c565",
+          "texcoord": 0
+        }
+      }
+    ],
+    "skins": 0,
+    "skin_joints": [],
+    "animations": 0,
+    "animation_channels": []
+  },
+  "source_import": {
+    "triangles": 1922060,
+    "mesh_objects": 1,
+    "vertices": 1202605,
+    "blender_min": [
+      -0.4898987412452698,
+      -0.3143616020679474,
+      0.0
+    ],
+    "blender_max": [
+      0.4898987412452698,
+      0.3145752251148224,
+      0.5987548828125
+    ],
+    "blender_dimensions": [
+      0.9797974824905396,
+      0.6289368271827698,
+      0.5987548828125
+    ],
+    "game_dimensions_xyz": [
+      0.9797974824905396,
+      0.5987548828125,
+      0.6289368271827698
+    ],
+    "uv_layer_counts": [
+      1
+    ],
+    "armatures": 0,
+    "material_slots": 1
+  },
+  "normalized_source": {
+    "triangles": 1922060,
+    "mesh_objects": 1,
+    "vertices": 1202605,
+    "blender_min": [
+      -0.7363762855529785,
+      -0.4726835787296295,
+      0.0
+    ],
+    "blender_max": [
+      0.7363762855529785,
+      0.4726835787296295,
+      0.8999999761581421
+    ],
+    "blender_dimensions": [
+      1.472752571105957,
+      0.945367157459259,
+      0.8999999761581421
+    ],
+    "game_dimensions_xyz": [
+      1.472752571105957,
+      0.8999999761581421,
+      0.945367157459259
+    ],
+    "uv_layer_counts": [
+      1
+    ],
+    "armatures": 0,
+    "material_slots": 1
+  },
+  "reduced_mesh": {
+    "triangles": 10000,
+    "mesh_objects": 1,
+    "vertices": 5000,
+    "blender_min": [
+      -0.7368916869163513,
+      -0.47277864813804626,
+      -3.693366306833923e-05
+    ],
+    "blender_max": [
+      0.7369514107704163,
+      0.4726265072822571,
+      0.8999013304710388
+    ],
+    "blender_dimensions": [
+      1.4738430976867676,
+      0.945405125617981,
+      0.8999382853507996
+    ],
+    "game_dimensions_xyz": [
+      1.4738430976867676,
+      0.8999382853507996,
+      0.945405125617981
+    ],
+    "uv_layer_counts": [
+      1
+    ],
+    "armatures": 0,
+    "material_slots": 1
+  },
+  "output_glb": {
+    "bytes": 1412364,
+    "sha256": "24cb2c7d489760d3b0b44789130386f4d1875b7cc51e90dfc764e3920749d928",
+    "triangles": 10000,
+    "meshes": 1,
+    "primitives": 1,
+    "uv_primitives": 1,
+    "materials": 1,
+    "images": [
+      {
+        "name": "cloudsea-sentry-source_normal",
+        "mime": "image/jpeg",
+        "bytes": 281054,
+        "sha256": "416e8da589e35b9db38b29a44797dc06e467050d9ed0fc4d69bd10fae155c565"
+      },
+      {
+        "name": "cloudsea-sentry-source_basecolor",
+        "mime": "image/jpeg",
+        "bytes": 591448,
+        "sha256": "17fba9b917d4f691c31277cdad8d364c700923b351580a9d5ed0c867d7cfa7b0"
+      },
+      {
+        "name": "cloudsea-sentry-source_rm",
+        "mime": "image/jpeg",
+        "bytes": 253981,
+        "sha256": "ceb89771a3f1f0791b643c88e310c7bf332328ff415c4e0327f81a9783f42a06"
+      }
+    ],
+    "material_texture_bindings": [
+      {
+        "baseColorTexture": {
+          "image_sha256": "17fba9b917d4f691c31277cdad8d364c700923b351580a9d5ed0c867d7cfa7b0",
+          "texcoord": 0
+        },
+        "metallicRoughnessTexture": {
+          "image_sha256": "ceb89771a3f1f0791b643c88e310c7bf332328ff415c4e0327f81a9783f42a06",
+          "texcoord": 0
+        },
+        "normalTexture": {
+          "image_sha256": "416e8da589e35b9db38b29a44797dc06e467050d9ed0fc4d69bd10fae155c565",
+          "texcoord": 0
+        }
+      }
+    ],
+    "skins": 0,
+    "skin_joints": [],
+    "animations": 0,
+    "animation_channels": []
+  },
+  "clean_reimport": {
+    "triangles": 10000,
+    "mesh_objects": 1,
+    "vertices": 6993,
+    "blender_min": [
+      -0.7368916869163513,
+      -0.47277864813804626,
+      -3.693366306833923e-05
+    ],
+    "blender_max": [
+      0.7369514107704163,
+      0.4726265072822571,
+      0.8999013304710388
+    ],
+    "blender_dimensions": [
+      1.4738430976867676,
+      0.945405125617981,
+      0.8999382853507996
+    ],
+    "game_dimensions_xyz": [
+      1.4738430976867676,
+      0.8999382853507996,
+      0.945405125617981
+    ],
+    "uv_layer_counts": [
+      1
+    ],
+    "armatures": 0,
+    "material_slots": 1
+  },
+  "source_decoded_images": [
+    {
+      "width": 2048,
+      "height": 2048,
+      "channels": 4,
+      "pixel_sha256": "5c6703a1087c6d628d1f263dfa9210963f1784b3666d1251230f7800ed2ac110"
+    },
+    {
+      "width": 2048,
+      "height": 2048,
+      "channels": 4,
+      "pixel_sha256": "d2eeb0b813f839c854af0dbe220fb1c8b72e67bfce35efe433965275f0079f8c"
+    },
+    {
+      "width": 2048,
+      "height": 2048,
+      "channels": 4,
+      "pixel_sha256": "fdd0cb378cd7c1af10df924cd4794e5d6d20ffb5b72bf9b1c4a587bd86ffdf86"
+    }
+  ],
+  "output_decoded_images": [
+    {
+      "width": 2048,
+      "height": 2048,
+      "channels": 4,
+      "pixel_sha256": "5c6703a1087c6d628d1f263dfa9210963f1784b3666d1251230f7800ed2ac110"
+    },
+    {
+      "width": 2048,
+      "height": 2048,
+      "channels": 4,
+      "pixel_sha256": "d2eeb0b813f839c854af0dbe220fb1c8b72e67bfce35efe433965275f0079f8c"
+    },
+    {
+      "width": 2048,
+      "height": 2048,
+      "channels": 4,
+      "pixel_sha256": "fdd0cb378cd7c1af10df924cd4794e5d6d20ffb5b72bf9b1c4a587bd86ffdf86"
+    }
+  ],
+  "welded_vertices": [
+    {
+      "object": "tripo_node_2623a541-4989-42f6-bf6b-4b35b1401ac1",
+      "vertices_before": 1202605,
+      "vertices_after": 961030
+    }
+  ],
+  "decimated_objects": [
+    "tripo_node_2623a541-4989-42f6-bf6b-4b35b1401ac1"
+  ],
+  "checks": {
+    "source_unchanged": true,
+    "length_within_1_percent": true,
+    "long_axis_matches": true,
+    "triangles_match_clean_reimport": true,
+    "within_triangle_budget_5_percent": true,
+    "uvs_present": true,
+    "material_count_preserved": true,
+    "image_count_preserved": true,
+    "decoded_texture_pixels_preserved": true,
+    "skin_joint_counts_preserved": true,
+    "animation_channel_counts_preserved": true,
+    "material_texture_bindings_preserved": true
+  },
+  "orientation": {
+    "game_up_axis": "+Y",
+    "game_long_axis": "X",
+    "front_back_semantic_verified": true,
+    "game_front_axis": "-Z",
+    "top_semantic_verified": true
+  },
+  "visual_quality_approved": false,
+  "render_comparison": {
+    "top": {
+      "rgb_mean_absolute_error_0_to_1": 0.002441122724143424,
+      "rgb_max_absolute_error_0_to_1": 0.49803927540779114
+    },
+    "bottom": {
+      "rgb_mean_absolute_error_0_to_1": 0.0019194086747321717,
+      "rgb_max_absolute_error_0_to_1": 0.7647059261798859
+    },
+    "threequarter": {
+      "rgb_mean_absolute_error_0_to_1": 0.0015729104856147926,
+      "rgb_max_absolute_error_0_to_1": 0.4588235914707184
+    },
+    "game-front-minus-z": {
+      "rgb_mean_absolute_error_0_to_1": 0.0020163262815113166,
+      "rgb_max_absolute_error_0_to_1": 0.6039216220378876
+    },
+    "game-back-plus-z": {
+      "rgb_mean_absolute_error_0_to_1": 0.0014728932098971598,
+      "rgb_max_absolute_error_0_to_1": 0.3960784673690796
+    }
+  },
+  "uv_processing": {
+    "original_layer_retained": true,
+    "coordinates_exact_preserved": false,
+    "unwrapped": false,
+    "textures_repainted": false
+  },
+  "relative_dimension_change": [
+    0.0007404682919627299,
+    6.854534330753071e-05,
+    4.016234160700688e-05
+  ],
+  "committed_output": true,
+  "render_settings": {
+    "width": 768,
+    "height": 576,
+    "cycles_samples": 16,
+    "area_light_watts_per_squared_extent": 550,
+    "area_light_size_per_extent": 2
+  },
+  "selected_preview_files": [
+    {
+      "file": "previews/sentry-source-1922060-game-front-minus-z.png",
+      "bytes": 455152,
+      "sha256": "6929e383ea1b3a94d5ec240b10c7e0142b421711081a1b6975a404aa7926c3aa"
+    },
+    {
+      "file": "previews/sentry-reduced-10000-game-front-minus-z.png",
+      "bytes": 453618,
+      "sha256": "fd1ded30e180d280966e6058de0b9923b29c5562fce87eb148d4794203ccfb11"
+    }
+  ]
+}

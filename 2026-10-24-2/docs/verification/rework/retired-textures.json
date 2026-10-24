@@ -1,0 +1,47 @@
+{
+  "reason": "Old extracted textures are no longer referenced by the imported candidate. The old self-contained GLB remains in Git at07c2730 and in .cache/rework/legacy-mio.glb.",
+  "removed": [
+    {
+      "file": "mio_anime_girl_3d_model_normal.jpg",
+      "bytes": 441744,
+      "sha256": "7a3d0b2eeacac20b6c5c547083265ad60c1b5d64ce0b743f672f3f0902a521cc"
+    },
+    {
+      "file": "mio_anime_girl_3d_model_normal.jpg.import",
+      "bytes": 1073,
+      "sha256": "4d0bfbea03c48a204cbca1feeb036a949c5342806d28e06dd60659713a301b59"
+    },
+    {
+      "file": "mio_anime_girl_3d_model_rm.png",
+      "bytes": 5267431,
+      "sha256": "2b0bda27b531f29cc8a5c367fdd0060e584cfe300cd1424d886aa3b66e657f5e"
+    },
+    {
+      "file": "mio_anime_girl_3d_model_rm.png.import",
+      "bytes": 1062,
+      "sha256": "18bb365e2a03fe53bac40f87c8d295119cf3ad8fd65f7fae6f48b128fdaaf500"
+    },
+    {
+      "file": "mio_anime_girl_3d_model_basecolor.jpg",
+      "bytes": 1362772,
+      "sha256": "83c57844cf6d544a3b5d72375d3a874257967f6187c26e1d7883d576c262f8a8"
+    },
+    {
+      "file": "mio_anime_girl_3d_model_basecolor.jpg.import",
+      "bytes": 1083,
+      "sha256": "4752205a727f68bd39078694bddf6643df78c233f9ef72a2ecf769bd4b92dce5"
+    }
+  ],
+  "used": {
+    "bones": [
+      65
+    ],
+    "materials": [
+      {
+        "albedo": "res://assets/models/mio_cloudsea-mio-v2-rigged-source_basecolor.jpg",
+        "normal": "res://assets/models/mio_cloudsea-mio-v2-rigged-source_normal.jpg",
+        "roughness": "res://assets/models/mio_cloudsea-mio-v2-rigged-source_rm.png"
+      }
+    ]
+  }
+}

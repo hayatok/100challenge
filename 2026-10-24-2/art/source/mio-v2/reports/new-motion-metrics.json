@@ -1,0 +1,1660 @@
+{
+  "axis_alignment_cases": [
+    {
+      "boost_hip_shift_along_travel": 0.0441358275711536,
+      "carve_hip_shift_into_edge": [
+        0.100124999880791,
+        0.100124999880791
+      ],
+      "heading": -0.8,
+      "right_edge_alignment": 0.998168468475342,
+      "travel_alignment": 1.00000011920929
+    },
+    {
+      "boost_hip_shift_along_travel": 0.0441358275711536,
+      "carve_hip_shift_into_edge": [
+        0.100125007331371,
+        0.100124999880791
+      ],
+      "heading": 0.0,
+      "right_edge_alignment": 0.998168468475342,
+      "travel_alignment": 1.0
+    },
+    {
+      "boost_hip_shift_along_travel": 0.0441358312964439,
+      "carve_hip_shift_into_edge": [
+        0.100125007331371,
+        0.100124999880791
+      ],
+      "heading": 0.8,
+      "right_edge_alignment": 0.998168468475342,
+      "travel_alignment": 1.00000011920929
+    }
+  ],
+  "columns": 6,
+  "description": "Deterministic raw GLB rig preview, not gameplay approval",
+  "failures": [],
+  "max_foot_error_leg_ratio": 0.000000404287496887047,
+  "multiview_rows": [
+    "idle",
+    "run",
+    "boost",
+    "carve_left",
+    "carve_right",
+    "jump_tuck",
+    "land_compress",
+    "finish_hand"
+  ],
+  "reset_snapshot": {
+    "arm_steer": 0.0,
+    "bone_count": 65,
+    "carve": 0.0,
+    "channels": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "context": "idle",
+    "edge_right_world": "(1.711074, 0.103702, 0.0)",
+    "events": {},
+    "foot_error_leg_ratio": 0.000000196554722521657,
+    "shoulder_steer": 0.0,
+    "stance_weight": 0.0,
+    "steer": 0.0,
+    "time": 0.0,
+    "travel_world": "(0.0, -0.0, -1.714213)"
+  },
+  "rig_has_cloth_or_hair_bones": false,
+  "rig_has_face_morphs": false,
+  "row_order": [
+    "idle",
+    "start",
+    "boost_start",
+    "jump",
+    "land",
+    "hit",
+    "finish",
+    "carve"
+  ],
+  "samples": [
+    {
+      "clip": "idle",
+      "snapshot": {
+        "arm_steer": 0.0,
+        "bone_count": 65,
+        "carve": 0.0,
+        "channels": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "context": "idle",
+        "edge_right_world": "(1.711074, 0.103702, 0.0)",
+        "events": {},
+        "foot_error_leg_ratio": 0.000000196554722521657,
+        "shoulder_steer": 0.0,
+        "stance_weight": 0.0,
+        "steer": 0.0,
+        "time": 0.0,
+        "travel_world": "(0.0, -0.0, -1.714213)"
+      },
+      "time": 0.0
+    },
+    {
+      "clip": "idle",
+      "snapshot": {
+        "arm_steer": 0.0,
+        "bone_count": 65,
+        "carve": 0.0,
+        "channels": [
+          -0.0140406341107872,
+          0.0,
+          -0.0140406341107872,
+          0.03,
+          -0.0145203170553936,
+          -0.00936042274052478,
+          0.000319788629737609,
+          -0.023401056851312,
+          0.0968021137026239
+        ],
+        "context": "idle",
+        "edge_right_world": "(1.711074, 0.103702, 0.0)",
+        "events": {},
+        "foot_error_leg_ratio": 0.000000103452183445868,
+        "shoulder_steer": 0.0,
+        "stance_weight": 0.0,
+        "steer": 0.0,
+        "time": 1.15,
+        "travel_world": "(0.0, -0.0, -1.714213)"
+      },
+      "time": 1.15
+    },
+    {
+      "clip": "idle",
+      "snapshot": {
+        "arm_steer": 0.0,
+        "bone_count": 65,
+        "carve": 0.0,
+        "channels": [
+          0.0145626822157434,
+          0.0,
+          0.0145626822157434,
+          0.03,
+          -0.000218658892128279,
+          0.00970845481049563,
+          0.00985422740524781,
+          0.0242711370262391,
+          0.00145772594752186
+        ],
+        "context": "idle",
+        "edge_right_world": "(1.711074, 0.103702, 0.0)",
+        "events": {},
+        "foot_error_leg_ratio": 0.00000025527247739465,
+        "shoulder_steer": 0.0,
+        "stance_weight": 0.0,
+        "steer": 0.0,
+        "time": 2.3,
+        "travel_world": "(0.0, -0.0, -1.714213)"
+      },
+      "time": 2.3
+    },
+    {
+      "clip": "idle",
+      "snapshot": {
+        "arm_steer": 0.0,
+        "bone_count": 65,
+        "carve": 0.0,
+        "channels": [
+          -0.00134548611111111,
+          0.0,
+          0.0,
+          -0.24,
+          -0.03,
+          0.015,
+          0.0,
+          -0.02,
+          0.188787615740741
+        ],
+        "context": "idle",
+        "edge_right_world": "(1.711074, 0.103702, 0.0)",
+        "events": {},
+        "foot_error_leg_ratio": 0.000000146735692255945,
+        "shoulder_steer": 0.0,
+        "stance_weight": 0.0,
+        "steer": 0.0,
+        "time": 3.45,
+        "travel_world": "(0.0, -0.0, -1.714213)"
+      },
+      "time": 3.45
+    },
+    {
+      "clip": "idle",
+      "snapshot": {
+        "arm_steer": 0.0,
+        "bone_count": 65,
+        "carve": 0.0,
+        "channels": [
+          -0.01,
+          0.0,
+          0.00148148148148147,
+          -0.222222222222222,
+          -0.0266666666666667,
+          0.0131481481481482,
+          0.0,
+          -0.0166666666666667,
+          0.107407407407407
+        ],
+        "context": "idle",
+        "edge_right_world": "(1.711074, 0.103702, 0.0)",
+        "events": {},
+        "foot_error_leg_ratio": 0.000000140239649854854,
+        "shoulder_steer": 0.0,
+        "stance_weight": 0.0,
+        "steer": 0.0,
+        "time": 4.6,
+        "travel_world": "(0.0, -0.0, -1.714213)"
+      },
+      "time": 4.6
+    },
+    {
+      "clip": "idle",
+      "snapshot": {
+        "arm_steer": 0.0,
+        "bone_count": 65,
+        "carve": 0.0,
+        "channels": [
+          0.0145203170553936,
+          0.0,
+          0.0193604227405248,
+          0.0,
+          0.0145203170553936,
+          -0.00968021137026239,
+          0.0,
+          0.024200528425656,
+          0.193604227405248
+        ],
+        "context": "idle",
+        "edge_right_world": "(1.711074, 0.103702, 0.0)",
+        "events": {},
+        "foot_error_leg_ratio": 0.000000158771278949598,
+        "shoulder_steer": 0.0,
+        "stance_weight": 0.0,
+        "steer": 0.0,
+        "time": 5.75,
+        "travel_world": "(0.0, -0.0, -1.714213)"
+      },
+      "time": 5.75
+    },
+    {
+      "clip": "start",
+      "snapshot": {
+        "arm_steer": 0.0,
+        "bone_count": 65,
+        "carve": 0.0,
+        "channels": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "context": "running",
+        "edge_right_world": "(1.711074, 0.103702, 0.0)",
+        "events": {
+          "start": {
+            "strength": 1.0,
+            "time": 0.0
+          }
+        },
+        "foot_error_leg_ratio": 0.000000325987068470619,
+        "shoulder_steer": 0.0,
+        "stance_weight": 1.0,
+        "steer": 0.0,
+        "time": 0.0,
+        "travel_world": "(0.0, -0.0, -1.714213)"
+      },
+      "time": 0.0
+    },
+    {
+      "clip": "start",
+      "snapshot": {
+        "arm_steer": 0.0,
+        "bone_count": 65,
+        "carve": 0.0,
+        "channels": [
+          0.0962962962962963,
+          -0.0296296296296296,
+          -0.0592592592592593,
+          -0.0740740740740741,
+          -0.037037037037037,
+          -0.0148148148148148,
+          -0.0222222222222222,
+          0.0296296296296296,
+          0.148148148148148
+        ],
+        "context": "running",
+        "edge_right_world": "(1.711074, 0.103702, 0.0)",
+        "events": {
+          "start": {
+            "strength": 1.0,
+            "time": 0.08
+          }
+        },
+        "foot_error_leg_ratio": 0.000000314007930298247,
+        "shoulder_steer": 0.0,
+        "stance_weight": 1.0,
+        "steer": 0.0,
+        "time": 0.0,
+        "travel_world": "(0.0, -0.0, -1.714213)"
+      },
+      "time": 0.08
+    },
+    {
+      "clip": "start",
+      "snapshot": {
+        "arm_steer": 0.0,
+        "bone_count": 65,
+        "carve": 0.0,
+        "channels": [
+          0.101875,
+          -0.0228125,
+          -0.03625,
+          -0.065625,
+          -0.0359375,
+          -0.0075,
+          -0.0096875,
+          0.024375,
+          0.23125
+        ],
+        "context": "running",
+        "edge_right_world": "(1.711074, 0.103702, 0.0)",
+        "events": {
+          "start": {
+            "strength": 1.0,
+            "time": 0.16
+          }
+        },
+        "foot_error_leg_ratio": 0.000000259585180848772,
+        "shoulder_steer": 0.0,
+        "stance_weight": 1.0,
+        "steer": 0.0,
+        "time": 0.0,
+        "travel_world": "(0.0, -0.0, -1.714213)"
+      },
+      "time": 0.16
+    },
+    {
+      "clip": "start",
+      "snapshot": {
+        "arm_steer": 0.0,
+        "bone_count": 65,
+        "carve": 0.0,
+        "channels": [
+          -0.05,
+          0.07,
+          0.2,
+          0.12,
+          0.04,
+          0.06,
+          0.1,
+          -0.06,
+          0.4
+        ],
+        "context": "running",
+        "edge_right_world": "(1.711074, 0.103702, 0.0)",
+        "events": {
+          "start": {
+            "strength": 1.0,
+            "time": 0.28
+          }
+        },
+        "foot_error_leg_ratio": 0.000000283490059533427,
+        "shoulder_steer": 0.0,
+        "stance_weight": 1.0,
+        "steer": 0.0,
+        "time": 0.0,
+        "travel_world": "(0.0, -0.0, -1.714213)"
+      },
+      "time": 0.28
+    },
+    {
+      "clip": "start",
+      "snapshot": {
+        "arm_steer": 0.0,
+        "bone_count": 65,
+        "carve": 0.0,
+        "channels": [
+          -0.0300367204311689,
+          0.0420514086036365,
+          0.120146881724676,
+          0.0720881290348055,
+          0.0240293763449352,
+          0.0360440645174027,
+          0.0600734408623379,
+          -0.0360440645174027,
+          0.240293763449352
+        ],
+        "context": "running",
+        "edge_right_world": "(1.711074, 0.103702, 0.0)",
+        "events": {
+          "start": {
+            "strength": 1.0,
+            "time": 0.44
+          }
+        },
+        "foot_error_leg_ratio": 0.000000359433067773905,
+        "shoulder_steer": 0.0,
+        "stance_weight": 1.0,
+        "steer": 0.0,
+        "time": 0.0,
+        "travel_world": "(0.0, -0.0, -1.714213)"
+      },
+      "time": 0.44
+    },
+    {
+      "clip": "start",
+      "snapshot": {
+        "arm_steer": 0.0,
+        "bone_count": 65,
+        "carve": 0.0,
+        "channels": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "context": "running",
+        "edge_right_world": "(1.711074, 0.103702, 0.0)",
+        "events": {
+          "start": {
+            "strength": 1.0,
+            "time": 0.7
+          }
+        },
+        "foot_error_leg_ratio": 0.000000325987068470619,
+        "shoulder_steer": 0.0,
+        "stance_weight": 1.0,
+        "steer": 0.0,
+        "time": 0.0,
+        "travel_world": "(0.0, -0.0, -1.714213)"
+      },
+      "time": 0.7
+    },
+    {
+      "clip": "boost_start",
+      "snapshot": {
+        "arm_steer": 0.0,
+        "bone_count": 65,
+        "carve": 0.0,
+        "channels": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "context": "running",
+        "edge_right_world": "(1.711074, 0.103702, 0.0)",
+        "events": {
+          "boost_start": {
+            "strength": 1.0,
+            "time": 0.0
+          }
+        },
+        "foot_error_leg_ratio": 0.000000325987068470619,
+        "shoulder_steer": 0.0,
+        "stance_weight": 1.0,
+        "steer": 0.0,
+        "time": 0.0,
+        "travel_world": "(0.0, -0.0, -1.714213)"
+      },
+      "time": 0.0
+    },
+    {
+      "clip": "boost_start",
+      "snapshot": {
+        "arm_steer": 0.0,
+        "bone_count": 65,
+        "carve": 0.0,
+        "channels": [
+          0.09856,
+          -0.03584,
+          -0.07168,
+          -0.07168,
+          -0.06272,
+          -0.03584,
+          -0.05376,
+          0.03584,
+          0.448
+        ],
+        "context": "running",
+        "edge_right_world": "(1.711074, 0.103702, 0.0)",
+        "events": {
+          "boost_start": {
+            "strength": 1.0,
+            "time": 0.08
+          }
+        },
+        "foot_error_leg_ratio": 0.000000185105796703524,
+        "shoulder_steer": 0.0,
+        "stance_weight": 1.0,
+        "steer": 0.0,
+        "time": 0.0,
+        "travel_world": "(0.0, -0.0, -1.714213)"
+      },
+      "time": 0.08
+    },
+    {
+      "clip": "boost_start",
+      "snapshot": {
+        "arm_steer": 0.0,
+        "bone_count": 65,
+        "carve": 0.0,
+        "channels": [
+          0.0529300291545189,
+          -0.000641399416909612,
+          0.0380758017492712,
+          -0.0327696793002915,
+          -0.066064139941691,
+          -0.0163848396501458,
+          -0.0167055393586006,
+          0.000641399416909612,
+          0.46064139941691
+        ],
+        "context": "running",
+        "edge_right_world": "(1.711074, 0.103702, 0.0)",
+        "events": {
+          "boost_start": {
+            "strength": 1.0,
+            "time": 0.16
+          }
+        },
+        "foot_error_leg_ratio": 0.000000162905484256295,
+        "shoulder_steer": 0.0,
+        "stance_weight": 1.0,
+        "steer": 0.0,
+        "time": 0.0,
+        "travel_world": "(0.0, -0.0, -1.714213)"
+      },
+      "time": 0.16
+    },
+    {
+      "clip": "boost_start",
+      "snapshot": {
+        "arm_steer": 0.0,
+        "bone_count": 65,
+        "carve": 0.0,
+        "channels": [
+          -0.0327696859353664,
+          0.0561766044606281,
+          0.205980883022303,
+          0.0374510696404187,
+          -0.0561766044606281,
+          0.0187255348202094,
+          0.0468138370505234,
+          -0.0561766044606281,
+          0.374510696404187
+        ],
+        "context": "running",
+        "edge_right_world": "(1.711074, 0.103702, 0.0)",
+        "events": {
+          "boost_start": {
+            "strength": 1.0,
+            "time": 0.28
+          }
+        },
+        "foot_error_leg_ratio": 0.000000194439048943839,
+        "shoulder_steer": 0.0,
+        "stance_weight": 1.0,
+        "steer": 0.0,
+        "time": 0.0,
+        "travel_world": "(0.0, -0.0, -1.714213)"
+      },
+      "time": 0.28
+    },
+    {
+      "clip": "boost_start",
+      "snapshot": {
+        "arm_steer": 0.0,
+        "bone_count": 65,
+        "carve": 0.0,
+        "channels": [
+          -0.00473145197997269,
+          0.00811106053709604,
+          0.0297405553026855,
+          0.00540737369139736,
+          -0.00811106053709604,
+          0.00270368684569868,
+          0.0067592171142467,
+          -0.00811106053709604,
+          0.0540737369139736
+        ],
+        "context": "running",
+        "edge_right_world": "(1.711074, 0.103702, 0.0)",
+        "events": {
+          "boost_start": {
+            "strength": 1.0,
+            "time": 0.44
+          }
+        },
+        "foot_error_leg_ratio": 0.000000192978111427869,
+        "shoulder_steer": 0.0,
+        "stance_weight": 1.0,
+        "steer": 0.0,
+        "time": 0.0,
+        "travel_world": "(0.0, -0.0, -1.714213)"
+      },
+      "time": 0.44
+    },
+    {
+      "clip": "boost_start",
+      "snapshot": {
+        "arm_steer": 0.0,
+        "bone_count": 65,
+        "carve": 0.0,
+        "channels": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "context": "running",
+        "edge_right_world": "(1.711074, 0.103702, 0.0)",
+        "events": {
+          "boost_start": {
+            "strength": 1.0,
+            "time": 0.7
+          }
+        },
+        "foot_error_leg_ratio": 0.0000000845932166770278,
+        "shoulder_steer": 0.0,
+        "stance_weight": 1.0,
+        "steer": 0.0,
+        "time": 0.0,
+        "travel_world": "(0.0, -0.0, -1.714213)"
+      },
+      "time": 0.7
+    },
+    {
+      "clip": "jump",
+      "snapshot": {
+        "arm_steer": 0.0,
+        "bone_count": 65,
+        "carve": 0.0,
+        "channels": [
+          0.08,
+          -0.02,
+          0.06,
+          0.0,
+          -0.02,
+          -0.05,
+          -0.04,
+          0.0,
+          0.4
+        ],
+        "context": "running",
+        "edge_right_world": "(1.711074, 0.103702, 0.0)",
+        "events": {
+          "jump": {
+            "strength": 1.0,
+            "time": 0.0
+          }
+        },
+        "foot_error_leg_ratio": 0.000000174540846532321,
+        "shoulder_steer": 0.0,
+        "stance_weight": 1.0,
+        "steer": 0.0,
+        "time": 0.0,
+        "travel_world": "(0.0, -0.0, -1.714213)"
+      },
+      "time": 0.0
+    },
+    {
+      "clip": "jump",
+      "snapshot": {
+        "arm_steer": 0.0,
+        "bone_count": 65,
+        "carve": 0.0,
+        "channels": [
+          -0.16,
+          0.04,
+          -0.1,
+          0.08,
+          0.03,
+          0.07,
+          0.07,
+          -0.08,
+          0.2
+        ],
+        "context": "running",
+        "edge_right_world": "(1.711074, 0.103702, 0.0)",
+        "events": {
+          "jump": {
+            "strength": 1.0,
+            "time": 0.09
+          }
+        },
+        "foot_error_leg_ratio": 0.00000019751891608603,
+        "shoulder_steer": 0.0,
+        "stance_weight": 1.0,
+        "steer": 0.0,
+        "time": 0.0,
+        "travel_world": "(0.0, -0.0, -1.714213)"
+      },
+      "time": 0.09
+    },
+    {
+      "clip": "jump",
+      "snapshot": {
+        "arm_steer": 0.0,
+        "bone_count": 65,
+        "carve": 0.0,
+        "channels": [
+          0.12,
+          0.01,
+          0.12,
+          -0.12,
+          -0.12,
+          -0.09,
+          -0.06,
+          0.07,
+          0.7
+        ],
+        "context": "running",
+        "edge_right_world": "(1.711074, 0.103702, 0.0)",
+        "events": {
+          "jump": {
+            "strength": 1.0,
+            "time": 0.27
+          }
+        },
+        "foot_error_leg_ratio": 0.000000144342511736854,
+        "shoulder_steer": 0.0,
+        "stance_weight": 1.0,
+        "steer": 0.0,
+        "time": 0.0,
+        "travel_world": "(0.0, -0.0, -1.714213)"
+      },
+      "time": 0.27
+    },
+    {
+      "clip": "jump",
+      "snapshot": {
+        "arm_steer": 0.0,
+        "bone_count": 65,
+        "carve": 0.0,
+        "channels": [
+          0.13,
+          0.0,
+          0.08,
+          -0.08,
+          -0.1,
+          -0.06,
+          0.02,
+          0.0,
+          0.65
+        ],
+        "context": "running",
+        "edge_right_world": "(1.711074, 0.103702, 0.0)",
+        "events": {
+          "jump": {
+            "strength": 1.0,
+            "time": 0.52
+          }
+        },
+        "foot_error_leg_ratio": 0.00000011283968333745,
+        "shoulder_steer": 0.0,
+        "stance_weight": 1.0,
+        "steer": 0.0,
+        "time": 0.0,
+        "travel_world": "(0.0, -0.0, -1.714213)"
+      },
+      "time": 0.52
+    },
+    {
+      "clip": "jump",
+      "snapshot": {
+        "arm_steer": 0.0,
+        "bone_count": 65,
+        "carve": 0.0,
+        "channels": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.02,
+          0.04,
+          0.04,
+          -0.05,
+          0.2
+        ],
+        "context": "running",
+        "edge_right_world": "(1.711074, 0.103702, 0.0)",
+        "events": {
+          "jump": {
+            "strength": 1.0,
+            "time": 0.76
+          }
+        },
+        "foot_error_leg_ratio": 0.000000206300903512032,
+        "shoulder_steer": 0.0,
+        "stance_weight": 1.0,
+        "steer": 0.0,
+        "time": 0.0,
+        "travel_world": "(0.0, -0.0, -1.714213)"
+      },
+      "time": 0.76
+    },
+    {
+      "clip": "jump",
+      "snapshot": {
+        "arm_steer": 0.0,
+        "bone_count": 65,
+        "carve": 0.0,
+        "channels": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "context": "running",
+        "edge_right_world": "(1.711074, 0.103702, 0.0)",
+        "events": {
+          "jump": {
+            "strength": 1.0,
+            "time": 1.0
+          }
+        },
+        "foot_error_leg_ratio": 0.000000206300903512032,
+        "shoulder_steer": 0.0,
+        "stance_weight": 1.0,
+        "steer": 0.0,
+        "time": 0.0,
+        "travel_world": "(0.0, -0.0, -1.714213)"
+      },
+      "time": 1.0
+    },
+    {
+      "clip": "land",
+      "snapshot": {
+        "arm_steer": 0.0,
+        "bone_count": 65,
+        "carve": 0.0,
+        "channels": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.05,
+          0.08,
+          0.0,
+          -0.03,
+          0.0
+        ],
+        "context": "running",
+        "edge_right_world": "(1.711074, 0.103702, 0.0)",
+        "events": {
+          "land": {
+            "strength": 1.0,
+            "time": 0.0
+          }
+        },
+        "foot_error_leg_ratio": 0.000000325987068470619,
+        "shoulder_steer": 0.0,
+        "stance_weight": 1.0,
+        "steer": 0.0,
+        "time": 0.0,
+        "travel_world": "(0.0, -0.0, -1.714213)"
+      },
+      "time": 0.0
+    },
+    {
+      "clip": "land",
+      "snapshot": {
+        "arm_steer": 0.0,
+        "bone_count": 65,
+        "carve": 0.0,
+        "channels": [
+          0.209175254271424,
+          0.0547556308952368,
+          0.16920580040952,
+          0.000122184552381592,
+          -0.0297556308952368,
+          -0.129389077238092,
+          0.0497250847571414,
+          0.129389077238092,
+          0.548625423785707
+        ],
+        "context": "running",
+        "edge_right_world": "(1.711074, 0.103702, 0.0)",
+        "events": {
+          "land": {
+            "strength": 1.0,
+            "time": 0.08
+          }
+        },
+        "foot_error_leg_ratio": 0.000000144342511736854,
+        "shoulder_steer": 0.0,
+        "stance_weight": 1.0,
+        "steer": 0.0,
+        "time": 0.0,
+        "travel_world": "(0.0, -0.0, -1.714213)"
+      },
+      "time": 0.08
+    },
+    {
+      "clip": "land",
+      "snapshot": {
+        "arm_steer": 0.0,
+        "bone_count": 65,
+        "carve": 0.0,
+        "channels": [
+          0.0554644020006042,
+          0.0092116746668457,
+          0.0211879426672485,
+          0.0228941626665772,
+          0.0157883253331543,
+          -0.0155291866671142,
+          -0.00151186599979859,
+          0.0155291866671142,
+          0.292440670001007
+        ],
+        "context": "running",
+        "edge_right_world": "(1.711074, 0.103702, 0.0)",
+        "events": {
+          "land": {
+            "strength": 1.0,
+            "time": 0.16
+          }
+        },
+        "foot_error_leg_ratio": 0.000000124560219283057,
+        "shoulder_steer": 0.0,
+        "stance_weight": 1.0,
+        "steer": 0.0,
+        "time": 0.0,
+        "travel_world": "(0.0, -0.0, -1.714213)"
+      },
+      "time": 0.16
+    },
+    {
+      "clip": "land",
+      "snapshot": {
+        "arm_steer": 0.0,
+        "bone_count": 65,
+        "carve": 0.0,
+        "channels": [
+          -0.04671875,
+          -0.02109375,
+          -0.07203125,
+          0.03375,
+          0.040625,
+          0.05671875,
+          -0.0321875,
+          -0.0559375,
+          0.084375
+        ],
+        "context": "running",
+        "edge_right_world": "(1.711074, 0.103702, 0.0)",
+        "events": {
+          "land": {
+            "strength": 1.0,
+            "time": 0.28
+          }
+        },
+        "foot_error_leg_ratio": 0.000000182337481684977,
+        "shoulder_steer": 0.0,
+        "stance_weight": 1.0,
+        "steer": 0.0,
+        "time": 0.0,
+        "travel_world": "(0.0, -0.0, -1.714213)"
+      },
+      "time": 0.28
+    },
+    {
+      "clip": "land",
+      "snapshot": {
+        "arm_steer": 0.0,
+        "bone_count": 65,
+        "carve": 0.0,
+        "channels": [
+          0.024799533459688,
+          0.0,
+          0.024799533459688,
+          0.0,
+          -0.0099198133838752,
+          -0.0148797200758128,
+          0.0099198133838752,
+          0.0198396267677504,
+          0.0
+        ],
+        "context": "running",
+        "edge_right_world": "(1.711074, 0.103702, 0.0)",
+        "events": {
+          "land": {
+            "strength": 1.0,
+            "time": 0.44
+          }
+        },
+        "foot_error_leg_ratio": 0.000000220103545973124,
+        "shoulder_steer": 0.0,
+        "stance_weight": 1.0,
+        "steer": 0.0,
+        "time": 0.0,
+        "travel_world": "(0.0, -0.0, -1.714213)"
+      },
+      "time": 0.44
+    },
+    {
+      "clip": "land",
+      "snapshot": {
+        "arm_steer": 0.0,
+        "bone_count": 65,
+        "carve": 0.0,
+        "channels": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "context": "running",
+        "edge_right_world": "(1.711074, 0.103702, 0.0)",
+        "events": {
+          "land": {
+            "strength": 1.0,
+            "time": 0.7
+          }
+        },
+        "foot_error_leg_ratio": 0.000000325987068470619,
+        "shoulder_steer": 0.0,
+        "stance_weight": 1.0,
+        "steer": 0.0,
+        "time": 0.0,
+        "travel_world": "(0.0, -0.0, -1.714213)"
+      },
+      "time": 0.7
+    },
+    {
+      "clip": "hit",
+      "snapshot": {
+        "arm_steer": 0.0,
+        "bone_count": 65,
+        "carve": 0.0,
+        "channels": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "context": "running",
+        "edge_right_world": "(1.711074, 0.103702, 0.0)",
+        "events": {
+          "hit": {
+            "strength": 1.0,
+            "time": 0.0
+          }
+        },
+        "foot_error_leg_ratio": 0.000000325987068470619,
+        "shoulder_steer": 0.0,
+        "stance_weight": 1.0,
+        "steer": 0.0,
+        "time": 0.0,
+        "travel_world": "(0.0, -0.0, -1.714213)"
+      },
+      "time": 0.0
+    },
+    {
+      "clip": "hit",
+      "snapshot": {
+        "arm_steer": 0.0,
+        "bone_count": 65,
+        "carve": 0.0,
+        "channels": [
+          0.12667638483965,
+          -0.0639067055393586,
+          -0.180058309037901,
+          -0.217842565597668,
+          0.0533527696793003,
+          0.0816909620991254,
+          0.0122157434402332,
+          0.109475218658892,
+          0.583381924198251
+        ],
+        "context": "running",
+        "edge_right_world": "(1.711074, 0.103702, 0.0)",
+        "events": {
+          "hit": {
+            "strength": 1.0,
+            "time": 0.08
+          }
+        },
+        "foot_error_leg_ratio": 0.000000232962880367365,
+        "shoulder_steer": 0.0,
+        "stance_weight": 1.0,
+        "steer": 0.0,
+        "time": 0.0,
+        "travel_world": "(0.0, -0.0, -1.714213)"
+      },
+      "time": 0.08
+    },
+    {
+      "clip": "hit",
+      "snapshot": {
+        "arm_steer": 0.0,
+        "bone_count": 65,
+        "carve": 0.0,
+        "channels": [
+          0.0818950437317784,
+          0.0181924198250729,
+          0.0886297376093294,
+          0.0806997084548105,
+          -0.0362099125364432,
+          -0.0302623906705539,
+          0.0420699708454811,
+          -0.032332361516035,
+          0.359475218658892
+        ],
+        "context": "running",
+        "edge_right_world": "(1.711074, 0.103702, 0.0)",
+        "events": {
+          "hit": {
+            "strength": 1.0,
+            "time": 0.16
+          }
+        },
+        "foot_error_leg_ratio": 0.000000128332062725591,
+        "shoulder_steer": 0.0,
+        "stance_weight": 1.0,
+        "steer": 0.0,
+        "time": 0.0,
+        "travel_world": "(0.0, -0.0, -1.714213)"
+      },
+      "time": 0.16
+    },
+    {
+      "clip": "hit",
+      "snapshot": {
+        "arm_steer": 0.0,
+        "bone_count": 65,
+        "carve": 0.0,
+        "channels": [
+          0.045,
+          0.02,
+          0.0599999999999999,
+          0.0549999999999999,
+          -0.02,
+          -0.025,
+          0.025,
+          -0.025,
+          0.225
+        ],
+        "context": "running",
+        "edge_right_world": "(1.711074, 0.103702, 0.0)",
+        "events": {
+          "hit": {
+            "strength": 1.0,
+            "time": 0.28
+          }
+        },
+        "foot_error_leg_ratio": 0.000000404287496887047,
+        "shoulder_steer": 0.0,
+        "stance_weight": 1.0,
+        "steer": 0.0,
+        "time": 0.0,
+        "travel_world": "(0.0, -0.0, -1.714213)"
+      },
+      "time": 0.28
+    },
+    {
+      "clip": "hit",
+      "snapshot": {
+        "arm_steer": 0.0,
+        "bone_count": 65,
+        "carve": 0.0,
+        "channels": [
+          0.016273729960228,
+          0.0,
+          -0.0325474599204559,
+          -0.0406843249005699,
+          0.016273729960228,
+          0.00813686498011399,
+          0.0,
+          0.016273729960228,
+          0.12205297470171
+        ],
+        "context": "running",
+        "edge_right_world": "(1.711074, 0.103702, 0.0)",
+        "events": {
+          "hit": {
+            "strength": 1.0,
+            "time": 0.44
+          }
+        },
+        "foot_error_leg_ratio": 0.000000130518619496306,
+        "shoulder_steer": 0.0,
+        "stance_weight": 1.0,
+        "steer": 0.0,
+        "time": 0.0,
+        "travel_world": "(0.0, -0.0, -1.714213)"
+      },
+      "time": 0.44
+    },
+    {
+      "clip": "hit",
+      "snapshot": {
+        "arm_steer": 0.0,
+        "bone_count": 65,
+        "carve": 0.0,
+        "channels": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "context": "running",
+        "edge_right_world": "(1.711074, 0.103702, 0.0)",
+        "events": {
+          "hit": {
+            "strength": 1.0,
+            "time": 0.7
+          }
+        },
+        "foot_error_leg_ratio": 0.000000325987068470619,
+        "shoulder_steer": 0.0,
+        "stance_weight": 1.0,
+        "steer": 0.0,
+        "time": 0.0,
+        "travel_world": "(0.0, -0.0, -1.714213)"
+      },
+      "time": 0.7
+    },
+    {
+      "clip": "finish",
+      "snapshot": {
+        "arm_steer": 0.0,
+        "bone_count": 65,
+        "carve": 0.0,
+        "channels": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "context": "running",
+        "edge_right_world": "(1.711074, 0.103702, 0.0)",
+        "events": {
+          "finish": {
+            "strength": 1.0,
+            "time": 0.0
+          }
+        },
+        "foot_error_leg_ratio": 0.000000325987068470619,
+        "shoulder_steer": 0.0,
+        "stance_weight": 1.0,
+        "steer": 0.0,
+        "time": 0.0,
+        "travel_world": "(0.0, -0.0, -1.714213)"
+      },
+      "time": 0.0
+    },
+    {
+      "clip": "finish",
+      "snapshot": {
+        "arm_steer": 0.0,
+        "bone_count": 65,
+        "carve": 0.0,
+        "channels": [
+          -0.0701603732322496,
+          -0.0099198133838752,
+          -0.0798396267677504,
+          0.121122612625747,
+          -0.0404811196967488,
+          -0.0291179472226272,
+          0.0200801866161248,
+          -0.0502405598483744,
+          0.202806531564368
+        ],
+        "context": "running",
+        "edge_right_world": "(1.711074, 0.103702, 0.0)",
+        "events": {
+          "finish": {
+            "strength": 1.0,
+            "time": 0.34
+          }
+        },
+        "foot_error_leg_ratio": 0.000000281690263927214,
+        "shoulder_steer": 0.0,
+        "stance_weight": 1.0,
+        "steer": 0.0,
+        "time": 0.0,
+        "travel_world": "(0.0, -0.0, -1.714213)"
+      },
+      "time": 0.34
+    },
+    {
+      "clip": "finish",
+      "snapshot": {
+        "arm_steer": 0.0,
+        "bone_count": 65,
+        "carve": 0.0,
+        "channels": [
+          -0.0898396267677504,
+          -0.0000801866161247982,
+          -0.0601603732322496,
+          0.258877387374253,
+          -0.0995188803032512,
+          0.0791179472226272,
+          0.0299198133838752,
+          -0.0797594401516256,
+          0.547193468435632
+        ],
+        "context": "running",
+        "edge_right_world": "(1.711074, 0.103702, 0.0)",
+        "events": {
+          "finish": {
+            "strength": 1.0,
+            "time": 0.68
+          }
+        },
+        "foot_error_leg_ratio": 0.000000190168298625728,
+        "shoulder_steer": 0.0,
+        "stance_weight": 1.0,
+        "steer": 0.0,
+        "time": 0.0,
+        "travel_world": "(0.0, -0.0, -1.714213)"
+      },
+      "time": 0.68
+    },
+    {
+      "clip": "finish",
+      "snapshot": {
+        "arm_steer": 0.0,
+        "bone_count": 65,
+        "carve": 0.0,
+        "channels": [
+          -0.06312,
+          0.0,
+          -0.05104,
+          0.20624,
+          -0.1,
+          0.04416,
+          0.02104,
+          -0.00832000000000001,
+          0.326
+        ],
+        "context": "running",
+        "edge_right_world": "(1.711074, 0.103702, 0.0)",
+        "events": {
+          "finish": {
+            "strength": 1.0,
+            "time": 1.02
+          }
+        },
+        "foot_error_leg_ratio": 0.000000130518619496306,
+        "shoulder_steer": 0.0,
+        "stance_weight": 1.0,
+        "steer": 0.0,
+        "time": 0.0,
+        "travel_world": "(0.0, -0.0, -1.714213)"
+      },
+      "time": 1.02
+    },
+    {
+      "clip": "finish",
+      "snapshot": {
+        "arm_steer": 0.0,
+        "bone_count": 65,
+        "carve": 0.0,
+        "channels": [
+          -0.06,
+          0.0,
+          -0.05,
+          0.183976296296296,
+          -0.0919881481481482,
+          0.0239762962962963,
+          0.0119881481481481,
+          -0.00801185185185186,
+          0.219881481481481
+        ],
+        "context": "running",
+        "edge_right_world": "(1.711074, 0.103702, 0.0)",
+        "events": {
+          "finish": {
+            "strength": 1.0,
+            "time": 1.36
+          }
+        },
+        "foot_error_leg_ratio": 0.0000002822587562413,
+        "shoulder_steer": 0.0,
+        "stance_weight": 1.0,
+        "steer": 0.0,
+        "time": 0.0,
+        "travel_world": "(0.0, -0.0, -1.714213)"
+      },
+      "time": 1.36
+    },
+    {
+      "clip": "finish",
+      "snapshot": {
+        "arm_steer": 0.0,
+        "bone_count": 65,
+        "carve": 0.0,
+        "channels": [
+          -0.06,
+          0.0,
+          -0.05,
+          0.16,
+          -0.08,
+          0.0,
+          0.0,
+          -0.02,
+          0.1
+        ],
+        "context": "running",
+        "edge_right_world": "(1.711074, 0.103702, 0.0)",
+        "events": {
+          "finish": {
+            "strength": 1.0,
+            "time": 1.7
+          }
+        },
+        "foot_error_leg_ratio": 0.0000002822587562413,
+        "shoulder_steer": 0.0,
+        "stance_weight": 1.0,
+        "steer": 0.0,
+        "time": 0.0,
+        "travel_world": "(0.0, -0.0, -1.714213)"
+      },
+      "time": 1.7
+    },
+    {
+      "clip": "carve",
+      "snapshot": {
+        "arm_steer": -0.8,
+        "bone_count": 65,
+        "carve": 1.0,
+        "channels": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "context": "running",
+        "edge_right_world": "(1.711074, 0.103702, 0.0)",
+        "events": {},
+        "foot_error_leg_ratio": 0.000000257010861138238,
+        "shoulder_steer": -1.0,
+        "stance_weight": 1.0,
+        "steer": -1.0,
+        "time": 0.0,
+        "travel_world": "(0.0, -0.0, -1.714213)"
+      },
+      "time": 0.0
+    },
+    {
+      "clip": "carve",
+      "snapshot": {
+        "arm_steer": -0.48,
+        "bone_count": 65,
+        "carve": 0.6,
+        "channels": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "context": "running",
+        "edge_right_world": "(1.711074, 0.103702, 0.0)",
+        "events": {},
+        "foot_error_leg_ratio": 0.000000136695216998527,
+        "shoulder_steer": -0.6,
+        "stance_weight": 1.0,
+        "steer": -0.6,
+        "time": 0.0,
+        "travel_world": "(0.0, -0.0, -1.714213)"
+      },
+      "time": 0.08
+    },
+    {
+      "clip": "carve",
+      "snapshot": {
+        "arm_steer": 0.0,
+        "bone_count": 65,
+        "carve": 0.0,
+        "channels": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "context": "running",
+        "edge_right_world": "(1.711074, 0.103702, 0.0)",
+        "events": {},
+        "foot_error_leg_ratio": 0.000000325987068470619,
+        "shoulder_steer": 0.0,
+        "stance_weight": 1.0,
+        "steer": 0.0,
+        "time": 0.0,
+        "travel_world": "(0.0, -0.0, -1.714213)"
+      },
+      "time": 0.16
+    },
+    {
+      "clip": "carve",
+      "snapshot": {
+        "arm_steer": 0.48,
+        "bone_count": 65,
+        "carve": 0.6,
+        "channels": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "context": "running",
+        "edge_right_world": "(1.711074, 0.103702, 0.0)",
+        "events": {},
+        "foot_error_leg_ratio": 0.0000000831063164840874,
+        "shoulder_steer": 0.6,
+        "stance_weight": 1.0,
+        "steer": 0.6,
+        "time": 0.0,
+        "travel_world": "(0.0, -0.0, -1.714213)"
+      },
+      "time": 0.28
+    },
+    {
+      "clip": "carve",
+      "snapshot": {
+        "arm_steer": 0.8,
+        "bone_count": 65,
+        "carve": 1.0,
+        "channels": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "context": "running",
+        "edge_right_world": "(1.711074, 0.103702, 0.0)",
+        "events": {},
+        "foot_error_leg_ratio": 0.00000011393922281854,
+        "shoulder_steer": 1.0,
+        "stance_weight": 1.0,
+        "steer": 1.0,
+        "time": 0.0,
+        "travel_world": "(0.0, -0.0, -1.714213)"
+      },
+      "time": 0.44
+    },
+    {
+      "clip": "carve",
+      "snapshot": {
+        "arm_steer": 0.0,
+        "bone_count": 65,
+        "carve": 0.0,
+        "channels": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "context": "running",
+        "edge_right_world": "(1.711074, 0.103702, 0.0)",
+        "events": {},
+        "foot_error_leg_ratio": 0.000000325987068470619,
+        "shoulder_steer": 0.0,
+        "stance_weight": 1.0,
+        "steer": 0.0,
+        "time": 0.0,
+        "travel_world": "(0.0, -0.0, -1.714213)"
+      },
+      "time": 0.7
+    }
+  ],
+  "source_sha256": "dc73844328312fc1e6ab2324dc8253076037fe093b231355d8bdc3dac51784a3"
+}

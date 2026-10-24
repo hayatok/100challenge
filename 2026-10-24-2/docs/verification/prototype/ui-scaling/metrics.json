@@ -1,0 +1,915 @@
+{
+  "cases": [
+    {
+      "controls": [
+        {
+          "logical_size": [
+            440.0,
+            64.0
+          ],
+          "name": "@Button@33",
+          "window_point_size": [
+            440.0,
+            64.0
+          ]
+        },
+        {
+          "logical_size": [
+            440.0,
+            64.0
+          ],
+          "name": "@Button@34",
+          "window_point_size": [
+            440.0,
+            64.0
+          ]
+        }
+      ],
+      "file": "title-1280x720.png",
+      "image_size": [
+        1280,
+        720
+      ],
+      "logical_to_window_points": [
+        1.0,
+        1.0
+      ],
+      "logical_viewport": [
+        1280.0,
+        720.0
+      ],
+      "panels": [
+        {
+          "rect": [
+            40.0,
+            138.0,
+            480.0,
+            444.0
+          ]
+        }
+      ],
+      "screen": "title",
+      "window_size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "controls": [],
+      "file": "countdown-1280x720.png",
+      "image_size": [
+        1280,
+        720
+      ],
+      "logical_to_window_points": [
+        1.0,
+        1.0
+      ],
+      "logical_viewport": [
+        1280.0,
+        720.0
+      ],
+      "panels": [
+        {
+          "rect": [
+            24.0,
+            24.0,
+            326.0,
+            126.0
+          ]
+        },
+        {
+          "rect": [
+            978.0,
+            24.0,
+            278.0,
+            129.0
+          ]
+        },
+        {
+          "rect": [
+            24.0,
+            600.0,
+            214.0,
+            99.0
+          ]
+        },
+        {
+          "rect": [
+            976.0,
+            600.0,
+            280.0,
+            96.0
+          ]
+        },
+        {
+          "rect": [
+            450.0,
+            245.0,
+            380.0,
+            230.0
+          ]
+        }
+      ],
+      "screen": "countdown",
+      "window_size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "controls": [],
+      "file": "run-1280x720.png",
+      "image_size": [
+        1280,
+        720
+      ],
+      "logical_to_window_points": [
+        1.0,
+        1.0
+      ],
+      "logical_viewport": [
+        1280.0,
+        720.0
+      ],
+      "panels": [
+        {
+          "rect": [
+            24.0,
+            24.0,
+            326.0,
+            126.0
+          ]
+        },
+        {
+          "rect": [
+            978.0,
+            24.0,
+            278.0,
+            129.0
+          ]
+        },
+        {
+          "rect": [
+            24.0,
+            600.0,
+            214.0,
+            99.0
+          ]
+        },
+        {
+          "rect": [
+            976.0,
+            600.0,
+            280.0,
+            96.0
+          ]
+        }
+      ],
+      "screen": "run",
+      "window_size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "controls": [
+        {
+          "logical_size": [
+            416.0,
+            64.0
+          ],
+          "name": "@Button@46",
+          "window_point_size": [
+            416.0,
+            64.0
+          ]
+        },
+        {
+          "logical_size": [
+            416.0,
+            64.0
+          ],
+          "name": "@Button@47",
+          "window_point_size": [
+            416.0,
+            64.0
+          ]
+        },
+        {
+          "logical_size": [
+            416.0,
+            64.0
+          ],
+          "name": "@Button@48",
+          "window_point_size": [
+            416.0,
+            64.0
+          ]
+        },
+        {
+          "logical_size": [
+            416.0,
+            64.0
+          ],
+          "name": "@Button@49",
+          "window_point_size": [
+            416.0,
+            64.0
+          ]
+        }
+      ],
+      "file": "pause-1280x720.png",
+      "image_size": [
+        1280,
+        720
+      ],
+      "logical_to_window_points": [
+        1.0,
+        1.0
+      ],
+      "logical_viewport": [
+        1280.0,
+        720.0
+      ],
+      "panels": [
+        {
+          "rect": [
+            24.0,
+            24.0,
+            326.0,
+            126.0
+          ]
+        },
+        {
+          "rect": [
+            978.0,
+            24.0,
+            278.0,
+            129.0
+          ]
+        },
+        {
+          "rect": [
+            24.0,
+            600.0,
+            214.0,
+            99.0
+          ]
+        },
+        {
+          "rect": [
+            976.0,
+            600.0,
+            280.0,
+            96.0
+          ]
+        },
+        {
+          "rect": [
+            412.0,
+            138.0,
+            456.0,
+            444.0
+          ]
+        }
+      ],
+      "screen": "pause",
+      "window_size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "controls": [
+        {
+          "logical_size": [
+            460.0,
+            64.0
+          ],
+          "name": "@Button@74",
+          "window_point_size": [
+            460.0,
+            64.0
+          ]
+        },
+        {
+          "logical_size": [
+            460.0,
+            64.0
+          ],
+          "name": "@Button@75",
+          "window_point_size": [
+            460.0,
+            64.0
+          ]
+        }
+      ],
+      "file": "results-1280x720.png",
+      "image_size": [
+        1280,
+        720
+      ],
+      "logical_to_window_points": [
+        1.0,
+        1.0
+      ],
+      "logical_viewport": [
+        1280.0,
+        720.0
+      ],
+      "panels": [
+        {
+          "rect": [
+            40.0,
+            90.0,
+            500.0,
+            540.0
+          ]
+        }
+      ],
+      "screen": "results",
+      "window_size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "controls": [
+        {
+          "logical_size": [
+            500.0,
+            64.0
+          ],
+          "name": "@CheckButton@80",
+          "window_point_size": [
+            500.0,
+            64.0
+          ]
+        },
+        {
+          "logical_size": [
+            500.0,
+            64.0
+          ],
+          "name": "@HSlider@85",
+          "window_point_size": [
+            500.0,
+            64.0
+          ]
+        },
+        {
+          "logical_size": [
+            500.0,
+            64.0
+          ],
+          "name": "@Button@87",
+          "window_point_size": [
+            500.0,
+            64.0
+          ]
+        }
+      ],
+      "file": "settings-1280x720.png",
+      "image_size": [
+        1280,
+        720
+      ],
+      "logical_to_window_points": [
+        1.0,
+        1.0
+      ],
+      "logical_viewport": [
+        1280.0,
+        720.0
+      ],
+      "panels": [
+        {
+          "rect": [
+            370.0,
+            120.0,
+            540.0,
+            480.0
+          ]
+        }
+      ],
+      "screen": "settings",
+      "window_size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "controls": [
+        {
+          "logical_size": [
+            540.0,
+            64.0
+          ],
+          "name": "@Button@93",
+          "window_point_size": [
+            540.0,
+            64.0
+          ]
+        },
+        {
+          "logical_size": [
+            540.0,
+            64.0
+          ],
+          "name": "@Button@94",
+          "window_point_size": [
+            540.0,
+            64.0
+          ]
+        }
+      ],
+      "file": "error-1280x720.png",
+      "image_size": [
+        1280,
+        720
+      ],
+      "logical_to_window_points": [
+        1.0,
+        1.0
+      ],
+      "logical_viewport": [
+        1280.0,
+        720.0
+      ],
+      "panels": [
+        {
+          "rect": [
+            350.0,
+            170.0,
+            580.0,
+            380.0
+          ]
+        }
+      ],
+      "screen": "error",
+      "window_size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "controls": [
+        {
+          "logical_size": [
+            440.0,
+            64.0
+          ],
+          "name": "@Button@33",
+          "window_point_size": [
+            330.0,
+            48.0
+          ]
+        },
+        {
+          "logical_size": [
+            440.0,
+            64.0
+          ],
+          "name": "@Button@34",
+          "window_point_size": [
+            330.0,
+            48.0
+          ]
+        }
+      ],
+      "file": "title-960x540.png",
+      "image_size": [
+        960,
+        540
+      ],
+      "logical_to_window_points": [
+        0.75,
+        0.75
+      ],
+      "logical_viewport": [
+        1280.0,
+        720.0
+      ],
+      "panels": [
+        {
+          "rect": [
+            40.0,
+            138.0,
+            480.0,
+            444.0
+          ]
+        }
+      ],
+      "screen": "title",
+      "window_size": [
+        960,
+        540
+      ]
+    },
+    {
+      "controls": [],
+      "file": "countdown-960x540.png",
+      "image_size": [
+        960,
+        540
+      ],
+      "logical_to_window_points": [
+        0.75,
+        0.75
+      ],
+      "logical_viewport": [
+        1280.0,
+        720.0
+      ],
+      "panels": [
+        {
+          "rect": [
+            24.0,
+            24.0,
+            326.0,
+            126.0
+          ]
+        },
+        {
+          "rect": [
+            978.0,
+            24.0,
+            278.0,
+            129.0
+          ]
+        },
+        {
+          "rect": [
+            24.0,
+            600.0,
+            214.0,
+            99.0
+          ]
+        },
+        {
+          "rect": [
+            976.0,
+            600.0,
+            280.0,
+            96.0
+          ]
+        },
+        {
+          "rect": [
+            450.0,
+            245.0,
+            380.0,
+            230.0
+          ]
+        }
+      ],
+      "screen": "countdown",
+      "window_size": [
+        960,
+        540
+      ]
+    },
+    {
+      "controls": [],
+      "file": "run-960x540.png",
+      "image_size": [
+        960,
+        540
+      ],
+      "logical_to_window_points": [
+        0.75,
+        0.75
+      ],
+      "logical_viewport": [
+        1280.0,
+        720.0
+      ],
+      "panels": [
+        {
+          "rect": [
+            24.0,
+            24.0,
+            326.0,
+            126.0
+          ]
+        },
+        {
+          "rect": [
+            978.0,
+            24.0,
+            278.0,
+            129.0
+          ]
+        },
+        {
+          "rect": [
+            24.0,
+            600.0,
+            214.0,
+            99.0
+          ]
+        },
+        {
+          "rect": [
+            976.0,
+            600.0,
+            280.0,
+            96.0
+          ]
+        }
+      ],
+      "screen": "run",
+      "window_size": [
+        960,
+        540
+      ]
+    },
+    {
+      "controls": [
+        {
+          "logical_size": [
+            416.0,
+            64.0
+          ],
+          "name": "@Button@46",
+          "window_point_size": [
+            312.0,
+            48.0
+          ]
+        },
+        {
+          "logical_size": [
+            416.0,
+            64.0
+          ],
+          "name": "@Button@47",
+          "window_point_size": [
+            312.0,
+            48.0
+          ]
+        },
+        {
+          "logical_size": [
+            416.0,
+            64.0
+          ],
+          "name": "@Button@48",
+          "window_point_size": [
+            312.0,
+            48.0
+          ]
+        },
+        {
+          "logical_size": [
+            416.0,
+            64.0
+          ],
+          "name": "@Button@49",
+          "window_point_size": [
+            312.0,
+            48.0
+          ]
+        }
+      ],
+      "file": "pause-960x540.png",
+      "image_size": [
+        960,
+        540
+      ],
+      "logical_to_window_points": [
+        0.75,
+        0.75
+      ],
+      "logical_viewport": [
+        1280.0,
+        720.0
+      ],
+      "panels": [
+        {
+          "rect": [
+            24.0,
+            24.0,
+            326.0,
+            126.0
+          ]
+        },
+        {
+          "rect": [
+            978.0,
+            24.0,
+            278.0,
+            129.0
+          ]
+        },
+        {
+          "rect": [
+            24.0,
+            600.0,
+            214.0,
+            99.0
+          ]
+        },
+        {
+          "rect": [
+            976.0,
+            600.0,
+            280.0,
+            96.0
+          ]
+        },
+        {
+          "rect": [
+            412.0,
+            138.0,
+            456.0,
+            444.0
+          ]
+        }
+      ],
+      "screen": "pause",
+      "window_size": [
+        960,
+        540
+      ]
+    },
+    {
+      "controls": [
+        {
+          "logical_size": [
+            460.0,
+            64.0
+          ],
+          "name": "@Button@74",
+          "window_point_size": [
+            345.0,
+            48.0
+          ]
+        },
+        {
+          "logical_size": [
+            460.0,
+            64.0
+          ],
+          "name": "@Button@75",
+          "window_point_size": [
+            345.0,
+            48.0
+          ]
+        }
+      ],
+      "file": "results-960x540.png",
+      "image_size": [
+        960,
+        540
+      ],
+      "logical_to_window_points": [
+        0.75,
+        0.75
+      ],
+      "logical_viewport": [
+        1280.0,
+        720.0
+      ],
+      "panels": [
+        {
+          "rect": [
+            40.0,
+            90.0,
+            500.0,
+            540.0
+          ]
+        }
+      ],
+      "screen": "results",
+      "window_size": [
+        960,
+        540
+      ]
+    },
+    {
+      "controls": [
+        {
+          "logical_size": [
+            500.0,
+            64.0
+          ],
+          "name": "@CheckButton@80",
+          "window_point_size": [
+            375.0,
+            48.0
+          ]
+        },
+        {
+          "logical_size": [
+            500.0,
+            64.0
+          ],
+          "name": "@HSlider@85",
+          "window_point_size": [
+            375.0,
+            48.0
+          ]
+        },
+        {
+          "logical_size": [
+            500.0,
+            64.0
+          ],
+          "name": "@Button@87",
+          "window_point_size": [
+            375.0,
+            48.0
+          ]
+        }
+      ],
+      "file": "settings-960x540.png",
+      "image_size": [
+        960,
+        540
+      ],
+      "logical_to_window_points": [
+        0.75,
+        0.75
+      ],
+      "logical_viewport": [
+        1280.0,
+        720.0
+      ],
+      "panels": [
+        {
+          "rect": [
+            370.0,
+            120.0,
+            540.0,
+            480.0
+          ]
+        }
+      ],
+      "screen": "settings",
+      "window_size": [
+        960,
+        540
+      ]
+    },
+    {
+      "controls": [
+        {
+          "logical_size": [
+            540.0,
+            64.0
+          ],
+          "name": "@Button@93",
+          "window_point_size": [
+            405.0,
+            48.0
+          ]
+        },
+        {
+          "logical_size": [
+            540.0,
+            64.0
+          ],
+          "name": "@Button@94",
+          "window_point_size": [
+            405.0,
+            48.0
+          ]
+        }
+      ],
+      "file": "error-960x540.png",
+      "image_size": [
+        960,
+        540
+      ],
+      "logical_to_window_points": [
+        0.75,
+        0.75
+      ],
+      "logical_viewport": [
+        1280.0,
+        720.0
+      ],
+      "panels": [
+        {
+          "rect": [
+            350.0,
+            170.0,
+            580.0,
+            380.0
+          ]
+        }
+      ],
+      "screen": "error",
+      "window_size": [
+        960,
+        540
+      ]
+    }
+  ],
+  "failures": [],
+  "fixture": "Real interface scene, synthetic layout data, engine clear-color backdrop",
+  "godot": "4.7.2-stable (official)",
+  "stretch_aspect": "expand",
+  "stretch_mode": "canvas_items"
+}

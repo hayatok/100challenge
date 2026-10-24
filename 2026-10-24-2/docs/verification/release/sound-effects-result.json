@@ -1,0 +1,487 @@
+{
+  "audio_driver": "Dummy",
+  "audio_mix_rate": 44100.0,
+  "audio_resource_ids": [
+    -9223371987546535819,
+    -9223371987462649735,
+    -9223371987395540868,
+    -9223371987311654783,
+    -9223371987261323133,
+    -9223371987227768700,
+    -9223371987194214267,
+    -9223371987160659834,
+    -9223371987127105401,
+    -9223371987093550968,
+    -9223371987059996535,
+    -9223371987026442102,
+    -9223371986992887669,
+    -9223371986959333236,
+    -9223371986925778803,
+    -9223371986892224370
+  ],
+  "checks": [
+    {
+      "check": "eight fixed AudioStreamPlayers",
+      "passed": true
+    },
+    {
+      "check": "four fixed effect nodes",
+      "passed": true
+    },
+    {
+      "check": "twelve precomputed cue WAV resources",
+      "passed": true
+    },
+    {
+      "check": "loop active and WAV loop enabled: Wind",
+      "passed": true
+    },
+    {
+      "check": "loop active and WAV loop enabled: CarveEdge",
+      "passed": true
+    },
+    {
+      "check": "loop active and WAV loop enabled: WindCharge",
+      "passed": true
+    },
+    {
+      "check": "loop active and WAV loop enabled: SurfPulse",
+      "passed": true
+    },
+    {
+      "check": "nonempty cue PCM: jump",
+      "passed": true
+    },
+    {
+      "check": "nonempty cue PCM: land",
+      "passed": true
+    },
+    {
+      "check": "nonempty cue PCM: clean",
+      "passed": true
+    },
+    {
+      "check": "nonempty cue PCM: gate",
+      "passed": true
+    },
+    {
+      "check": "nonempty cue PCM: hit",
+      "passed": true
+    },
+    {
+      "check": "nonempty cue PCM: finish",
+      "passed": true
+    },
+    {
+      "check": "nonempty cue PCM: count",
+      "passed": true
+    },
+    {
+      "check": "nonempty cue PCM: boost",
+      "passed": true
+    },
+    {
+      "check": "nonempty cue PCM: release",
+      "passed": true
+    },
+    {
+      "check": "nonempty cue PCM: near",
+      "passed": true
+    },
+    {
+      "check": "nonempty cue PCM: trick",
+      "passed": true
+    },
+    {
+      "check": "nonempty cue PCM: charge",
+      "passed": true
+    },
+    {
+      "check": "set_volume zero attenuates loops and music",
+      "passed": true
+    },
+    {
+      "check": "Main pause pauses loop streams",
+      "passed": true
+    },
+    {
+      "check": "music playback position stays fixed during Main pause",
+      "passed": true
+    },
+    {
+      "check": "effect clock stays fixed during Main pause",
+      "passed": true
+    },
+    {
+      "check": "resume countdown retains audio pause",
+      "passed": true
+    },
+    {
+      "check": "countdown end resumes audio",
+      "passed": true
+    },
+    {
+      "check": "Main reset clears continuous audio state",
+      "passed": true
+    },
+    {
+      "check": "Main reset stops cue voices",
+      "passed": true
+    },
+    {
+      "check": "Main reset clears ring and trail",
+      "passed": true
+    },
+    {
+      "check": "Main run activation enables effects",
+      "passed": true
+    },
+    {
+      "check": "Main inactive path disables effects and wind state",
+      "passed": true
+    },
+    {
+      "check": "audio resource identities fixed at frame 2400",
+      "passed": true
+    },
+    {
+      "check": "effect resource identities fixed at frame 2400",
+      "passed": true
+    },
+    {
+      "check": "component node counts fixed at frame 2400",
+      "passed": true
+    },
+    {
+      "check": "audio resource identities fixed at frame 4800",
+      "passed": true
+    },
+    {
+      "check": "effect resource identities fixed at frame 4800",
+      "passed": true
+    },
+    {
+      "check": "component node counts fixed at frame 4800",
+      "passed": true
+    },
+    {
+      "check": "audio resource identities fixed at frame 7200",
+      "passed": true
+    },
+    {
+      "check": "effect resource identities fixed at frame 7200",
+      "passed": true
+    },
+    {
+      "check": "component node counts fixed at frame 7200",
+      "passed": true
+    },
+    {
+      "check": "audio resource identities fixed at frame 9600",
+      "passed": true
+    },
+    {
+      "check": "effect resource identities fixed at frame 9600",
+      "passed": true
+    },
+    {
+      "check": "component node counts fixed at frame 9600",
+      "passed": true
+    },
+    {
+      "check": "audio resource identities fixed at frame 12000",
+      "passed": true
+    },
+    {
+      "check": "effect resource identities fixed at frame 12000",
+      "passed": true
+    },
+    {
+      "check": "component node counts fixed at frame 12000",
+      "passed": true
+    },
+    {
+      "check": "audio resource identities fixed at frame 14400",
+      "passed": true
+    },
+    {
+      "check": "effect resource identities fixed at frame 14400",
+      "passed": true
+    },
+    {
+      "check": "component node counts fixed at frame 14400",
+      "passed": true
+    },
+    {
+      "check": "audio resource identities fixed at frame 16800",
+      "passed": true
+    },
+    {
+      "check": "effect resource identities fixed at frame 16800",
+      "passed": true
+    },
+    {
+      "check": "component node counts fixed at frame 16800",
+      "passed": true
+    },
+    {
+      "check": "audio resource identities fixed at frame 19200",
+      "passed": true
+    },
+    {
+      "check": "effect resource identities fixed at frame 19200",
+      "passed": true
+    },
+    {
+      "check": "component node counts fixed at frame 19200",
+      "passed": true
+    },
+    {
+      "check": "audio resource identities fixed at frame 21600",
+      "passed": true
+    },
+    {
+      "check": "effect resource identities fixed at frame 21600",
+      "passed": true
+    },
+    {
+      "check": "component node counts fixed at frame 21600",
+      "passed": true
+    },
+    {
+      "check": "audio resource identities fixed at frame 24000",
+      "passed": true
+    },
+    {
+      "check": "effect resource identities fixed at frame 24000",
+      "passed": true
+    },
+    {
+      "check": "component node counts fixed at frame 24000",
+      "passed": true
+    },
+    {
+      "check": "grounded wake branch exercised",
+      "passed": true
+    },
+    {
+      "check": "reduced motion air-streak transform readback",
+      "passed": true,
+      "reason": "Headless Dummy renderer returns identity for a deliberately zeroed MultiMesh transform; graphics readback is unsupported in this backend.",
+      "status": "not_verified"
+    }
+  ],
+  "cue_events": 1000,
+  "effect_resource_ids": [
+    -9223371988167292828,
+    -9223371988200847262,
+    -9223371988184070045,
+    -9223371988100183960,
+    -9223371988133738394,
+    -9223371988116961177,
+    -9223371988033075092,
+    -9223371988066629526,
+    -9223371988049852309,
+    -9223371987999520658,
+    -9223371987982743441
+  ],
+  "evidence_kind": "Headless Godot 4.7.2 component/integration check; audio captured from actual Master-bus mixer under Dummy driver; no listening assessment",
+  "landing_fans": 422,
+  "limitations": [
+    "Native Dummy audio driver capture, not Chrome audio or hardware/device output.",
+    "No subjective listening, loudness preference or musical-quality judgment.",
+    "Accelerated fixed-step component updates, not a full-course reachability or manual gameplay test.",
+    "Headless renderer does not validate GPU cost or visible quality."
+  ],
+  "master_gain_db_during_recording": 0.0,
+  "phases": [
+    {
+      "dc_left": 0.0000164244706361769,
+      "dc_right": 0.0000164244706361769,
+      "float_peak": 0.0121955731883645,
+      "frames": 32768,
+      "name": "idle_music_unity_master",
+      "peak_dbfs": -38.2759556631447,
+      "rms": 0.00210877947436725,
+      "samples_at_or_above_full_scale": 0,
+      "seconds": 0.743038548752834,
+      "wav": "mix-idle_music_unity_master.wav"
+    },
+    {
+      "dc_left": -0.000285198799711457,
+      "dc_right": -0.000285198799711457,
+      "float_peak": 0.275873780250549,
+      "frames": 126976,
+      "name": "stress40_carve_charge_all_cues_unity_master",
+      "peak_dbfs": -11.1857914803485,
+      "rms": 0.0594418865279003,
+      "samples_at_or_above_full_scale": 0,
+      "seconds": 2.87927437641723,
+      "wav": "mix-stress40_carve_charge_all_cues_unity_master.wav"
+    },
+    {
+      "dc_left": -0.0000603563909126748,
+      "dc_right": -0.0000603563909126748,
+      "float_peak": 0.14966781437397,
+      "frames": 65536,
+      "name": "air40_jump_near_unity_master",
+      "peak_dbfs": -16.4974316675066,
+      "rms": 0.014648628840052,
+      "samples_at_or_above_full_scale": 0,
+      "seconds": 1.48607709750567,
+      "wav": "mix-air40_jump_near_unity_master.wav"
+    },
+    {
+      "dc_left": -0.000000025946050899892,
+      "dc_right": -0.000000025946050899892,
+      "float_peak": 0.00000342844759870786,
+      "frames": 16384,
+      "name": "sound_volume_zero",
+      "peak_dbfs": -109.298049680373,
+      "rms": 0.000000874555572846911,
+      "samples_at_or_above_full_scale": 0,
+      "seconds": 0.371519274376417,
+      "wav": "mix-sound_volume_zero.wav"
+    },
+    {
+      "dc_left": 0.0,
+      "dc_right": 0.0,
+      "float_peak": 0.0,
+      "frames": 16384,
+      "name": "main_pause",
+      "peak_dbfs": -200.0,
+      "rms": 0.0,
+      "samples_at_or_above_full_scale": 0,
+      "seconds": 0.371519274376417,
+      "wav": "mix-main_pause.wav"
+    },
+    {
+      "dc_left": 0.000255435793554121,
+      "dc_right": 0.000255435793554121,
+      "float_peak": 0.129095077514648,
+      "frames": 28672,
+      "name": "main_resume",
+      "peak_dbfs": -17.7818063473878,
+      "rms": 0.0330468251727646,
+      "samples_at_or_above_full_scale": 0,
+      "seconds": 0.65015873015873,
+      "wav": "mix-main_resume.wav"
+    }
+  ],
+  "pid": 79492,
+  "recording_note": "Unity Master gain is a conservative level check; product default 0.65 is quieter. Stress combines carve, charge and boost, including combinations broader than normal play.",
+  "snapshots": [
+    {
+      "audio_children": 8,
+      "effect_children": 4,
+      "frame": 2400,
+      "node_count": 321.0,
+      "object_count": 2234.0,
+      "orphan_nodes": 0.0,
+      "resource_count": 57.0,
+      "static_memory_bytes": 312672885.0
+    },
+    {
+      "audio_children": 8,
+      "effect_children": 4,
+      "frame": 4800,
+      "node_count": 321.0,
+      "object_count": 2234.0,
+      "orphan_nodes": 0.0,
+      "resource_count": 57.0,
+      "static_memory_bytes": 312675513.0
+    },
+    {
+      "audio_children": 8,
+      "effect_children": 4,
+      "frame": 7200,
+      "node_count": 321.0,
+      "object_count": 2234.0,
+      "orphan_nodes": 0.0,
+      "resource_count": 57.0,
+      "static_memory_bytes": 312678841.0
+    },
+    {
+      "audio_children": 8,
+      "effect_children": 4,
+      "frame": 9600,
+      "node_count": 321.0,
+      "object_count": 2234.0,
+      "orphan_nodes": 0.0,
+      "resource_count": 57.0,
+      "static_memory_bytes": 312682193.0
+    },
+    {
+      "audio_children": 8,
+      "effect_children": 4,
+      "frame": 12000,
+      "node_count": 321.0,
+      "object_count": 2234.0,
+      "orphan_nodes": 0.0,
+      "resource_count": 57.0,
+      "static_memory_bytes": 312686073.0
+    },
+    {
+      "audio_children": 8,
+      "effect_children": 4,
+      "frame": 14400,
+      "node_count": 321.0,
+      "object_count": 2234.0,
+      "orphan_nodes": 0.0,
+      "resource_count": 57.0,
+      "static_memory_bytes": 312689401.0
+    },
+    {
+      "audio_children": 8,
+      "effect_children": 4,
+      "frame": 16800,
+      "node_count": 321.0,
+      "object_count": 2234.0,
+      "orphan_nodes": 0.0,
+      "resource_count": 57.0,
+      "static_memory_bytes": 312692801.0
+    },
+    {
+      "audio_children": 8,
+      "effect_children": 4,
+      "frame": 19200,
+      "node_count": 321.0,
+      "object_count": 2234.0,
+      "orphan_nodes": 0.0,
+      "resource_count": 57.0,
+      "static_memory_bytes": 312696129.0
+    },
+    {
+      "audio_children": 8,
+      "effect_children": 4,
+      "frame": 21600,
+      "node_count": 321.0,
+      "object_count": 2234.0,
+      "orphan_nodes": 0.0,
+      "resource_count": 57.0,
+      "static_memory_bytes": 312699457.0
+    },
+    {
+      "audio_children": 8,
+      "effect_children": 4,
+      "frame": 24000,
+      "node_count": 321.0,
+      "object_count": 2234.0,
+      "orphan_nodes": 0.0,
+      "resource_count": 57.0,
+      "static_memory_bytes": 312702881.0
+    }
+  ],
+  "soak_frames": 24000,
+  "soak_simulated_seconds": 400,
+  "source_commit": "35f58ebecaae971d8a8b3e62bb378dda78ca1ba8",
+  "source_sha256": {
+    "effects": "93ced1fdb789f5e9fad27bb942a41a64edb4d7f027f704ec6e1d6212b3019f24",
+    "main": "9ecd215b7a0da1706fffe79f5c91ee9522397fb5bc5aa27536a9302364aa34c0",
+    "soundscape": "a1b08af7f1b52cf429d4a0c887cc1d0c4e73c9760422877ab99d6ec3cecc76b1"
+  },
+  "transform_readback_calibration": {
+    "supported": false,
+    "zero_transform_determinant_returned": 1.0
+  }
+}

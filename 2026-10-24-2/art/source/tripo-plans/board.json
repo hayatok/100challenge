@@ -1,0 +1,28 @@
+{
+  "dry_run": true,
+  "valid": true,
+  "input": "A compact single futuristic hover surfboard, broad ivory top, dark navy underside, thin turquoise edge, one coral stripe near nose, two dark navy grip pads, smooth aerodynamic surfboard shape, no wheels, no character, no text, stylized game prop",
+  "model": "v3.1-20260211",
+  "model_reason": "default high-fidelity \u2192 v3.1",
+  "steps": [
+    {
+      "name": "text-to-model",
+      "endpoint": "/v3/generation/text-to-model",
+      "task_type": "text_to_model",
+      "payload": {
+        "prompt": "A compact single futuristic hover surfboard, broad ivory top, dark navy underside, thin turquoise edge, one coral stripe near nose, two dark navy grip pads, smooth aerodynamic surfboard shape, no wheels, no character, no text, stylized game prop",
+        "model": "v3.1-20260211",
+        "face_limit": 25000,
+        "texture": true,
+        "pbr": true,
+        "texture_quality": "standard"
+      }
+    }
+  ],
+  "pending_uploads": [],
+  "deliverables": [],
+  "candidates": 1,
+  "warnings": [],
+  "errors": [],
+  "cost_notes": []
+}

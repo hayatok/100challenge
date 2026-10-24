@@ -1,0 +1,95 @@
+{
+  "mode": "Tripo Studio subscription credits; user chose Chrome Studio instead of API",
+  "API_used": false,
+  "assets": [
+    {
+      "name": "board",
+      "source_url": "https://studio.tripo3d.ai/ja/workspace/generate/53658dc0-a9e2-4922-8bb1-1f1f951d03d0",
+      "task_id": "53658dc0-a9e2-4922-8bb1-1f1f951d03d0",
+      "model_label": "H3.1",
+      "generation_credits": 55,
+      "privacy": "private",
+      "status": "imported_in_Godot",
+      "input_type": "text",
+      "prompt": "A single compact futuristic hover surfboard for an anime game. Broad ivory top, dark navy underside, thin turquoise illuminated edge, one coral stripe near the nose, two dark navy anti-slip foot pads. Smooth clean aerodynamic surfboard shape, about 1.85 metres long. No wheels, no person, no stand, no letters. Isolated object with clean stylized game materials.",
+      "source_file": "cloudsea-board-source.glb",
+      "source_triangles": 1912410,
+      "local_file": "game/assets/models/board.glb",
+      "qa_report": "art/source/studio/reports/board.json"
+    },
+    {
+      "name": "mio",
+      "task_id": "9b55ab2b-7e37-45f0-b403-2fe8636a9aaa",
+      "source_url": "https://studio.tripo3d.ai/ja/workspace/generate/9b55ab2b-7e37-45f0-b403-2fe8636a9aaa",
+      "model_label": "H3.1",
+      "generation_credits": 55,
+      "privacy": "private",
+      "status": "historical_initial_prototype_model",
+      "input_type": "image",
+      "input_file": "art/source/mio/ref/front.png",
+      "source_triangles": 1909377,
+      "retopology": {
+        "method": "standard triangle",
+        "target_faces": 40000,
+        "observed_faces": 40000,
+        "credits": 5
+      },
+      "rig": {
+        "preset": "Mixamo",
+        "credits": 20,
+        "export_skeleton": true
+      },
+      "qa_report": "art/source/studio/reports/mio.json",
+      "downloaded_basename": "anime+girl+3d+model.glb",
+      "source_sha256": "70a343c829f5e4b79802435bbd24365219cd24c5e4e38e197393aeaf9536b074",
+      "source_download_method": "user manually exported GLB with skeleton from Chrome Studio",
+      "historical_file": "game/assets/models/mio.glb",
+      "historical_commit": "07c2730e877ee608cd781e0c4fee242626dba05f",
+      "superseded_by": "art/source/mio-v2/manifest.json"
+    },
+    {
+      "name": "sentry",
+      "task_id": "1536168d-d4d5-4123-8cc4-1c135fa0a228",
+      "source_url": "https://studio.tripo3d.ai/ja/workspace/generate/1536168d-d4d5-4123-8cc4-1c135fa0a228",
+      "model_label": "H3.1",
+      "generation_credits": 55,
+      "privacy": "private",
+      "status": "imported_in_Godot",
+      "input_type": "text",
+      "prompt": "One hovering sentry drone for a bright anime sky surfing game. Compact ivory spherical body with a single large amber glowing eye facing forward, two short dark navy stabilizer fins extending sideways, thin turquoise trim. Clean elegant rounded silhouette. No weapons, no legs, no base, no text, no people, isolated single game prop.",
+      "local_file": "game/assets/models/sentry.glb",
+      "qa_report": "art/source/studio/reports/sentry.json"
+    },
+    {
+      "name": "arch",
+      "task_id": "ba65bec9-9f19-4389-a148-f90559dbf57b",
+      "source_url": "https://studio.tripo3d.ai/ja/workspace/generate/ba65bec9-9f19-4389-a148-f90559dbf57b",
+      "model_label": "H3.1",
+      "generation_credits": 55,
+      "privacy": "private",
+      "status": "imported_in_Godot",
+      "input_type": "text",
+      "prompt": "One freestanding ancient ivory stone aqueduct arch module. Elegant semicircular stone opening between two tall rectangular piers, thin carved geometric turquoise inlay at the top, sparse green moss on outer cornices. Stylized bright sky fantasy game architecture with a very wide clear empty opening. No ground platform, no people, no text. Isolated single object.",
+      "local_file": "game/assets/models/arch.glb",
+      "qa_report": "art/source/studio/reports/arch.json"
+    },
+    {
+      "name": "island",
+      "task_id": "4106c6ca-e74d-4567-9e56-2b1f4943e034",
+      "source_url": "https://studio.tripo3d.ai/ja/workspace/generate/4106c6ca-e74d-4567-9e56-2b1f4943e034",
+      "model_label": "H3.1",
+      "generation_credits": 55,
+      "privacy": "private",
+      "status": "imported_in_Godot",
+      "input_type": "text",
+      "prompt": "One small floating ancient garden island, flat circular ivory stone terrace on top of a tapering rocky underside, a short broken ivory column and sparse small green shrubs at the edge. Elegant stylized bright sky fantasy game environment prop. Compact single object floating in empty space. No people, no text, no background, no support or base.",
+      "local_file": "game/assets/models/island.glb",
+      "qa_report": "art/source/studio/reports/island.json"
+    }
+  ],
+  "generation_credits_total": 275,
+  "processing_credits_total": 25,
+  "Studio_credits_total": 300,
+  "scope": "Initial five-asset Studio batch. Its credit totals are historical; replacement character generation is recorded separately.",
+  "current_character_manifest": "art/source/mio-v2/manifest.json"
+}

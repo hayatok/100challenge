@@ -1,0 +1,189 @@
+{
+  "avatar_anchor_rotation_y": 1.5707963267949,
+  "avatar_anchor_y": 0.3,
+  "axes": {
+    "across": [
+      -1.0,
+      -3.83454334951239e-09,
+      -2.25910596896028e-07
+    ],
+    "forward": [
+      -2.2517100717323e-07,
+      0.0995035618543625,
+      0.995037198066711
+    ],
+    "up": [
+      1.86633766219302e-08,
+      0.995037198066711,
+      -0.0995035618543625
+    ]
+  },
+  "bone_count": 65,
+  "cases": [
+    {
+      "air": 0.0,
+      "boost": 0.0,
+      "camera": [
+        3.79999995231628,
+        1.39999997615814,
+        0.0
+      ],
+      "file": "surf_front.png",
+      "foot_error_local": [
+        1.32287155452104e-07,
+        1.05169370101521e-07
+      ],
+      "gaze_weight": 1.0
+    },
+    {
+      "air": 0.0,
+      "boost": 0.0,
+      "camera": [
+        0.0,
+        1.39999997615814,
+        3.79999995231628
+      ],
+      "file": "surf_side.png",
+      "foot_error_local": [
+        1.32287155452104e-07,
+        1.05169370101521e-07
+      ],
+      "gaze_weight": 1.0
+    },
+    {
+      "air": 0.0,
+      "boost": 0.0,
+      "camera": [
+        -3.79999995231628,
+        1.39999997615814,
+        0.0
+      ],
+      "file": "surf_back.png",
+      "foot_error_local": [
+        1.32287155452104e-07,
+        1.05169370101521e-07
+      ],
+      "gaze_weight": 1.0
+    },
+    {
+      "air": 0.0,
+      "boost": 1.0,
+      "camera": [
+        3.79999995231628,
+        1.39999997615814,
+        0.0
+      ],
+      "file": "boost_front.png",
+      "foot_error_local": [
+        1.31445219153647e-07,
+        8.63271196749338e-08
+      ],
+      "gaze_weight": 1.0
+    },
+    {
+      "air": 0.0,
+      "boost": 1.0,
+      "camera": [
+        0.0,
+        1.39999997615814,
+        3.79999995231628
+      ],
+      "file": "boost_side.png",
+      "foot_error_local": [
+        1.31445219153647e-07,
+        8.63271196749338e-08
+      ],
+      "gaze_weight": 1.0
+    },
+    {
+      "air": 0.0,
+      "boost": 1.0,
+      "camera": [
+        -3.79999995231628,
+        1.39999997615814,
+        0.0
+      ],
+      "file": "boost_back.png",
+      "foot_error_local": [
+        1.31445219153647e-07,
+        8.63271196749338e-08
+      ],
+      "gaze_weight": 1.0
+    },
+    {
+      "air": 1.0,
+      "boost": 0.0,
+      "camera": [
+        3.79999995231628,
+        1.39999997615814,
+        0.0
+      ],
+      "file": "air_front.png",
+      "foot_error_local": [
+        8.88620377281768e-08,
+        9.835048331297e-08
+      ],
+      "gaze_weight": 1.0
+    },
+    {
+      "air": 1.0,
+      "boost": 0.0,
+      "camera": [
+        0.0,
+        1.39999997615814,
+        3.79999995231628
+      ],
+      "file": "air_side.png",
+      "foot_error_local": [
+        8.88620377281768e-08,
+        9.835048331297e-08
+      ],
+      "gaze_weight": 1.0
+    },
+    {
+      "air": 1.0,
+      "boost": 0.0,
+      "camera": [
+        -3.79999995231628,
+        1.39999997615814,
+        0.0
+      ],
+      "file": "air_back.png",
+      "foot_error_local": [
+        8.88620377281768e-08,
+        9.835048331297e-08
+      ],
+      "gaze_weight": 1.0
+    },
+    {
+      "air": 0.0,
+      "boost": 0.0,
+      "camera": [
+        2.70000004768372,
+        1.70000004768372,
+        2.59999990463257
+      ],
+      "file": "title_neutral.png",
+      "gaze_weight": 0.0
+    }
+  ],
+  "godot": "4.7.2-stable (official)",
+  "leg_length_skeleton_units": 0.499137341976166,
+  "renderer": "gl_compatibility",
+  "viewport": [
+    900,
+    900
+  ],
+  "source_sha256": "70a343c829f5e4b79802435bbd24365219cd24c5e4e38e197393aeaf9536b074",
+  "game_model_sha256": "70a343c829f5e4b79802435bbd24365219cd24c5e4e38e197393aeaf9536b074",
+  "controller_sha256": "bda70b6d1ce5e3b482814463eecf53bedb06d2eeccf6fde24ffd57c2273fceaf",
+  "source_matches_game_model": true,
+  "scope": "Actual Godot renders of authentic Tripo 65-bone Mio with game board; static pose inspection, not completed gameplay validation.",
+  "limits": [
+    "Air images show the air pose on a stationary board; no jump trajectory is being claimed.",
+    "No character geometry, skin weights, materials, or Tripo export were modified.",
+    "Foot IK preserves ankle positions; exact mesh sole/curved-board contact has no collision solver.",
+    "Skeletal posing does not provide cloth simulation, facial animation, or authored animation clips.",
+    "Full course playback, UI composition, and pause/input integration are parent verification tasks."
+  ]
+}
