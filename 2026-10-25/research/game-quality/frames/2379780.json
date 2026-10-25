@@ -1,0 +1,72 @@
+{
+  "appid": 2379780,
+  "name": "Balatro",
+  "store_page": "https://store.steampowered.com/app/2379780/",
+  "retrieved_at": "2026-10-25T11:51:29.535273+00:00",
+  "source_metadata": "https://store.steampowered.com/api/appdetails?appids=2379780&cc=us&l=english",
+  "movie_name": "Accolades Gameplay Video",
+  "movie_id": 257198110,
+  "movie_url": "https://video.akamai.steamstatic.com/store_trailers/2379780/581550014/e9a47276c1efe4165c2e25e35a06d417d78e1724/1758033766/dash_h264.mpd?t=1759138871",
+  "media_source_sha256": "49e5f7f70d082e3907617c0e39a92a65ad3fb9e7cd2210da3003412541e2a1f8",
+  "hash_scope": "DASH manifest",
+  "duration_seconds": 38.6,
+  "source_kind": "publisher Steam store video; edited trailer",
+  "observation_limit": "selected still frames only; no full playback or player-input observation",
+  "frames": [
+    {
+      "id": "2379780@7.72",
+      "seconds": 7.72,
+      "file": "frames/2379780-007.72.jpg",
+      "sha256": "7942ec512abfa25eb2a201ea4db8a32faa57de6c67f888ef87bfa9e5163d4940",
+      "segment": {
+        "url": "https://video.akamai.steamstatic.com/store_trailers/2379780/581550014/e9a47276c1efe4165c2e25e35a06d417d78e1724/1758033766/dash_h264/chunk-stream1-00003.m4s",
+        "segment_start_seconds": 6.0,
+        "sha256": "2646388ae42f93b0ad97b68a124d31d0df705ab0edec3227d1f1d4aecee275d8"
+      }
+    },
+    {
+      "id": "2379780@13.51",
+      "seconds": 13.51,
+      "file": "frames/2379780-013.51.jpg",
+      "sha256": "ea9c6bfff6423511ddb155d3d1b160344c8d0ec06917c8b1ac913132d8553a8c",
+      "segment": {
+        "url": "https://video.akamai.steamstatic.com/store_trailers/2379780/581550014/e9a47276c1efe4165c2e25e35a06d417d78e1724/1758033766/dash_h264/chunk-stream1-00005.m4s",
+        "segment_start_seconds": 12.0,
+        "sha256": "dd2eb0d42019d4669f16447ef93231068f8d70ff5dc5c4b32d9c271ae029bad3"
+      }
+    },
+    {
+      "id": "2379780@19.30",
+      "seconds": 19.3,
+      "file": "frames/2379780-019.30.jpg",
+      "sha256": "7b0b9ac003ee5b5084e2924e7c8a1587e071aac15e4b3e8af46c1537f7df9649",
+      "segment": {
+        "url": "https://video.akamai.steamstatic.com/store_trailers/2379780/581550014/e9a47276c1efe4165c2e25e35a06d417d78e1724/1758033766/dash_h264/chunk-stream1-00007.m4s",
+        "segment_start_seconds": 18.0,
+        "sha256": "0000d7acbc9983cb26af0b1ceebe26c2e87580b4101fc64fcc003418332a281f"
+      }
+    },
+    {
+      "id": "2379780@25.09",
+      "seconds": 25.09,
+      "file": "frames/2379780-025.09.jpg",
+      "sha256": "190537e678b2f94b620a728b8e5f8ebc822741292e6c13fc371273d9124ef3c3",
+      "segment": {
+        "url": "https://video.akamai.steamstatic.com/store_trailers/2379780/581550014/e9a47276c1efe4165c2e25e35a06d417d78e1724/1758033766/dash_h264/chunk-stream1-00009.m4s",
+        "segment_start_seconds": 24.0,
+        "sha256": "5c55def001932f8e4cb00173c92063d34cc6c696bc288a0868df577eb8d7beee"
+      }
+    },
+    {
+      "id": "2379780@30.88",
+      "seconds": 30.88,
+      "file": "frames/2379780-030.88.jpg",
+      "sha256": "998ea49b54c5230403b68e07c64e69b2a20af97aac4874360f2b6fa7ff42666f",
+      "segment": {
+        "url": "https://video.akamai.steamstatic.com/store_trailers/2379780/581550014/e9a47276c1efe4165c2e25e35a06d417d78e1724/1758033766/dash_h264/chunk-stream1-00011.m4s",
+        "segment_start_seconds": 30.0,
+        "sha256": "1e94f1a757aa2706b067e2c3ea6853e3865a5d2b7a1edc0a8f1b6af91e4de468"
+      }
+    }
+  ]
+}

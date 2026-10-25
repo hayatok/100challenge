@@ -1,0 +1,83 @@
+{
+  "appid": 787480,
+  "name": "Phoenix Wright: Ace Attorney Trilogy",
+  "store_page": "https://store.steampowered.com/app/787480/",
+  "retrieved_at": "2026-10-25T12:10:08.342266+00:00",
+  "source_metadata": "https://store.steampowered.com/api/appdetails?appids=787480&cc=us&l=english",
+  "movie_name": "07_AAT_launchPV_full_STEAM_ESRB.mp4",
+  "movie_id": 256759766,
+  "movie_url": "https://video.akamai.steamstatic.com/store_trailers/787480/239435/232555fd414401435b69e15e6816fc9b2a306b5e/1750583929/dash_h264.mpd?t=1566464278",
+  "media_source_sha256": "2a60f366b8949be83c5c8a61ed51aac5be61e689557fae5c4e0c37e42eb1e78f",
+  "hash_scope": "DASH manifest",
+  "duration_seconds": 159.8,
+  "source_kind": "publisher Steam store video; edited trailer",
+  "observation_limit": "selected still frames only; no full playback or player-input observation",
+  "frames": [
+    {
+      "id": "787480@38.00",
+      "seconds": 38.0,
+      "file": "frames/787480-038.00.jpg",
+      "sha256": "0e029c01444a85938bbdb827b3daa891d20c9697acb8b6465333be0cf5bb7ac1",
+      "segment": {
+        "url": "https://video.akamai.steamstatic.com/store_trailers/787480/239435/232555fd414401435b69e15e6816fc9b2a306b5e/1750583929/dash_h264/chunk-stream1-00013.m4s",
+        "segment_start_seconds": 36.0,
+        "sha256": "2b95f46ca924ffe6bfde9b4a4204929b4b2c9fa1c174233c0c65ffe40cacb28d"
+      }
+    },
+    {
+      "id": "787480@44.00",
+      "seconds": 44.0,
+      "file": "frames/787480-044.00.jpg",
+      "sha256": "b217976bf288421285c45a3828eb1950f31d5d3f97e69bb7f0d7c8a15b72aac8",
+      "segment": {
+        "url": "https://video.akamai.steamstatic.com/store_trailers/787480/239435/232555fd414401435b69e15e6816fc9b2a306b5e/1750583929/dash_h264/chunk-stream1-00015.m4s",
+        "segment_start_seconds": 42.0,
+        "sha256": "11dce4c638d976f2d38b6f4d0794271006b9b9d93ce3d55641df790fef3b91b9"
+      }
+    },
+    {
+      "id": "787480@50.00",
+      "seconds": 50.0,
+      "file": "frames/787480-050.00.jpg",
+      "sha256": "29d905fa6b31b686856b40d7bd446b9ebe5cc53690d6da5d33ae57452a4cb7ce",
+      "segment": {
+        "url": "https://video.akamai.steamstatic.com/store_trailers/787480/239435/232555fd414401435b69e15e6816fc9b2a306b5e/1750583929/dash_h264/chunk-stream1-00017.m4s",
+        "segment_start_seconds": 48.0,
+        "sha256": "c959f986fd567164a75af57c02eddb7b19014916d61b675d14ca039b3863d5e2"
+      }
+    },
+    {
+      "id": "787480@65.00",
+      "seconds": 65.0,
+      "file": "frames/787480-065.00.jpg",
+      "sha256": "f532f5d12251ee84e4c35147a07e6b5a99e400eeebd046fb7ea7768063ac5eec",
+      "segment": {
+        "url": "https://video.akamai.steamstatic.com/store_trailers/787480/239435/232555fd414401435b69e15e6816fc9b2a306b5e/1750583929/dash_h264/chunk-stream1-00022.m4s",
+        "segment_start_seconds": 63.0,
+        "sha256": "4e4dc6e02f48b131fba56e36fc6ad9a8a7565070f1222363b7312b44b7f29cfe"
+      }
+    },
+    {
+      "id": "787480@80.00",
+      "seconds": 80.0,
+      "file": "frames/787480-080.00.jpg",
+      "sha256": "5bf6b7fcf8c2c08182e4e068d3b1aeaebeed9382dfbe4d492ed165362f0e6452",
+      "segment": {
+        "url": "https://video.akamai.steamstatic.com/store_trailers/787480/239435/232555fd414401435b69e15e6816fc9b2a306b5e/1750583929/dash_h264/chunk-stream1-00027.m4s",
+        "segment_start_seconds": 78.0,
+        "sha256": "ae8041d650ae09aa76f6a3ca274b362281cc1caefeff0498e9a726a6c0eb7b03"
+      }
+    },
+    {
+      "id": "787480@90.00",
+      "seconds": 90.0,
+      "file": "frames/787480-090.00.jpg",
+      "sha256": "93901aca0b273ce39058af0e12f55e69aa5b460d1b331ab4cd3aee6be3867e7a",
+      "segment": {
+        "url": "https://video.akamai.steamstatic.com/store_trailers/787480/239435/232555fd414401435b69e15e6816fc9b2a306b5e/1750583929/dash_h264/chunk-stream1-00031.m4s",
+        "segment_start_seconds": 90.0,
+        "sha256": "87f77d10737e736dae270528223e136bfddf45bc2bb737d3902e51ba5ef36368"
+      }
+    }
+  ]
+}

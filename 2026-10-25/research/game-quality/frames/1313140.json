@@ -1,0 +1,72 @@
+{
+  "appid": 1313140,
+  "name": "Cult of the Lamb",
+  "store_page": "https://store.steampowered.com/app/1313140/",
+  "retrieved_at": "2026-10-25T12:04:31.737283+00:00",
+  "source_metadata": "https://store.steampowered.com/api/appdetails?appids=1313140&cc=us&l=english",
+  "movie_name": "Cult of the Lamb - Launch Trailer",
+  "movie_id": 256900500,
+  "movie_url": "https://video.akamai.steamstatic.com/store_trailers/1313140/487074/8273bc686e5f6154bd4db6adacf13d424bd7cf52/1750671628/dash_h264.mpd?t=1660237676",
+  "media_source_sha256": "01673683a36745261b68d8874e7f09c18a0273d6489ddd7706d900d474450c11",
+  "hash_scope": "DASH manifest",
+  "duration_seconds": 83.3,
+  "source_kind": "publisher Steam store video; edited trailer",
+  "observation_limit": "selected still frames only; no full playback or player-input observation",
+  "frames": [
+    {
+      "id": "1313140@16.66",
+      "seconds": 16.66,
+      "file": "frames/1313140-016.66.jpg",
+      "sha256": "801bb38d1d49d307f99958f6d07a4dbeb5ed5336080922321129e5be5fa56444",
+      "segment": {
+        "url": "https://video.akamai.steamstatic.com/store_trailers/1313140/487074/8273bc686e5f6154bd4db6adacf13d424bd7cf52/1750671628/dash_h264/chunk-stream1-00006.m4s",
+        "segment_start_seconds": 15.0,
+        "sha256": "99d1ac856785b5238f14761c627fd3a4ec887dd50abfbec3ec4ea0ca694f6477"
+      }
+    },
+    {
+      "id": "1313140@29.15",
+      "seconds": 29.15,
+      "file": "frames/1313140-029.15.jpg",
+      "sha256": "910d60a8239c02a413ede6dd59a775b1e277663e839ec59fab670274dc4dae36",
+      "segment": {
+        "url": "https://video.akamai.steamstatic.com/store_trailers/1313140/487074/8273bc686e5f6154bd4db6adacf13d424bd7cf52/1750671628/dash_h264/chunk-stream1-00010.m4s",
+        "segment_start_seconds": 27.0,
+        "sha256": "a18fc928b0d77bdfd637089651974d1b4e7110879d0d9fa9bf6466048835954b"
+      }
+    },
+    {
+      "id": "1313140@41.65",
+      "seconds": 41.65,
+      "file": "frames/1313140-041.65.jpg",
+      "sha256": "f200966e60c8e309dd2d48690c353f6036dbdc5e3ece6f74d675d4a721f5ac68",
+      "segment": {
+        "url": "https://video.akamai.steamstatic.com/store_trailers/1313140/487074/8273bc686e5f6154bd4db6adacf13d424bd7cf52/1750671628/dash_h264/chunk-stream1-00014.m4s",
+        "segment_start_seconds": 39.0,
+        "sha256": "7f4c223c67bc034103760710ec411d337ed30ccc511cf3aef85b4f7085bb86bb"
+      }
+    },
+    {
+      "id": "1313140@54.15",
+      "seconds": 54.15,
+      "file": "frames/1313140-054.15.jpg",
+      "sha256": "f2b3e46da9392b9e1d5aebdf5094471d22fa74f99181e62ca036d5b8fae1ca73",
+      "segment": {
+        "url": "https://video.akamai.steamstatic.com/store_trailers/1313140/487074/8273bc686e5f6154bd4db6adacf13d424bd7cf52/1750671628/dash_h264/chunk-stream1-00019.m4s",
+        "segment_start_seconds": 54.0,
+        "sha256": "916bd71a789e83a30fb3f08f24184659ccf14aa5f9b255d797b5593c6bf4e6e0"
+      }
+    },
+    {
+      "id": "1313140@66.64",
+      "seconds": 66.64,
+      "file": "frames/1313140-066.64.jpg",
+      "sha256": "546fe094ae4d1e002093e21b7a261b148c87320057ea0d5bb2afd09825dfbd82",
+      "segment": {
+        "url": "https://video.akamai.steamstatic.com/store_trailers/1313140/487074/8273bc686e5f6154bd4db6adacf13d424bd7cf52/1750671628/dash_h264/chunk-stream1-00023.m4s",
+        "segment_start_seconds": 66.0,
+        "sha256": "9b5fee6a97dd541bd2f7884e509a40b4f45d62a3308faeb08b6eeafd95ed5321"
+      }
+    }
+  ]
+}

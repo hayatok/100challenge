@@ -1,0 +1,4 @@
+interface:
+  display_name: "ゲーム品質と設計改善"
+  short_description: "狙う体験からゲームの弱さを診断し、具体的な変更と試遊の確かめ方へつなぐ"
+  default_prompt: "$game-quality-design を使い、このゲームの良い点と弱い点を評価し、優先する変更と小さな試験を提案してください。"

@@ -1,0 +1,291 @@
+{
+  "tool": "yomiyasu_check.py",
+  "tool_version": "2.0.1",
+  "documents": 32,
+  "checks": [
+    "lint",
+    "draft-to-final comparison",
+    "final file hash verification"
+  ],
+  "manual_review": {
+    "focus": [
+      "subjects and predicates",
+      "rule-to-result explanations",
+      "source/observation/hypothesis boundaries",
+      "unchanged numbers, conditions and version limits"
+    ],
+    "changes": [
+      "BG3: separate walkthrough hindsight from pre-choice knowledge; remove unsupported prediction about resource-rich players",
+      "Cult: simplify hypothesis label formatting",
+      "PR: explain base branch relationship directly"
+    ],
+    "retained": [
+      "evidence IDs and bold source labels for navigation",
+      "negative statements that preserve evidence limits",
+      "YAML interface colon as syntax",
+      "literal gate in Factorio screenshot description",
+      "unchanged benchmark responses to preserve test output"
+    ],
+    "candidate_count_is_quality_score": false,
+    "limits": "Checks do not prove semantic equivalence or reader understanding; no human readability study"
+  },
+  "records_storage": "Full drafts and logs remain local in ignored verification/work/japanese/",
+  "files": [
+    {
+      "file": ".agents/skills/game-quality-design/SKILL.md",
+      "sha256": "ed4377b3bc90cdf2868c133fa64938641961fa89d8b6a787c6c175078c05904a",
+      "run_id": "20261025T123336Z-e3f9bb96",
+      "run_status": "executed",
+      "verify_status": "executed",
+      "local_records": "2026-10-25/research/game-quality/verification/work/japanese/6657e8c25e39/records"
+    },
+    {
+      "file": ".agents/skills/game-quality-design/agents/openai.yaml",
+      "sha256": "f64593ea031c7477de3f50ec49db24d404ea60580732335a602a680aad85e252",
+      "run_id": "20261025T123337Z-0eb1c619",
+      "run_status": "executed",
+      "verify_status": "executed",
+      "local_records": "2026-10-25/research/game-quality/verification/work/japanese/1d44341a945a/records"
+    },
+    {
+      "file": ".agents/skills/game-quality-design/references/case-evidence.md",
+      "sha256": "295d0c8be6911e3f5759b87a126d4e8da1c10b4746d60b4b459a1d42b5faabe6",
+      "run_id": "20261025T123337Z-5a3aaeef",
+      "run_status": "executed",
+      "verify_status": "executed",
+      "local_records": "2026-10-25/research/game-quality/verification/work/japanese/8cb95dcd96c5/records"
+    },
+    {
+      "file": ".agents/skills/game-quality-design/references/design-moves.md",
+      "sha256": "8dd0abf28a25dd65990db92af0a918a15d7d491b034f7aa2a612ff8e57d3e22c",
+      "run_id": "20261025T123337Z-444a3e3d",
+      "run_status": "executed",
+      "verify_status": "executed",
+      "local_records": "2026-10-25/research/game-quality/verification/work/japanese/fc6e7c32c7d7/records"
+    },
+    {
+      "file": ".agents/skills/game-quality-design/references/diagnosis.md",
+      "sha256": "43a58ea92cd4eb254b1dce3fdd7215c67e3eba1defa5b5f23101e5fe7449118c",
+      "run_id": "20261025T123338Z-118b4ba2",
+      "run_status": "executed",
+      "verify_status": "executed",
+      "local_records": "2026-10-25/research/game-quality/verification/work/japanese/99b8622d851e/records"
+    },
+    {
+      "file": "2026-10-25/research/game-quality/AGENTS.md",
+      "sha256": "fee05561912de4a34275a8e74e77625ca216370a4cf11dd66692a40fef6daa8a",
+      "run_id": "20261025T123338Z-434efc74",
+      "run_status": "executed",
+      "verify_status": "executed",
+      "local_records": "2026-10-25/research/game-quality/verification/work/japanese/ae3b92c1bf36/records"
+    },
+    {
+      "file": "2026-10-25/research/game-quality/PLAN.md",
+      "sha256": "d1042bc669b1f5dea12c75ab3c1b79889a70170074dcede9b24f0e6b72647ad9",
+      "run_id": "20261025T123338Z-d51483df",
+      "run_status": "executed",
+      "verify_status": "executed",
+      "local_records": "2026-10-25/research/game-quality/verification/work/japanese/41df73c97f43/records"
+    },
+    {
+      "file": "2026-10-25/research/game-quality/PR.md",
+      "sha256": "4ca1ceaf73da167a588fe3deaacf73859ba053bb752a53ff7eb692e1a4906e0b",
+      "run_id": "20261025T123339Z-46c410f0",
+      "run_status": "executed",
+      "verify_status": "executed",
+      "local_records": "2026-10-25/research/game-quality/verification/work/japanese/7aacea79ec12/records"
+    },
+    {
+      "file": "2026-10-25/research/game-quality/README.md",
+      "sha256": "794354a78f678690da59803b0ee8c6fafb763f45f2e7d4d20f55d12f0d1169d9",
+      "run_id": "20261025T123339Z-4c41aa3d",
+      "run_status": "executed",
+      "verify_status": "executed",
+      "local_records": "2026-10-25/research/game-quality/verification/work/japanese/40725eea0dbb/records"
+    },
+    {
+      "file": "2026-10-25/research/game-quality/cases/1086940-bg3.md",
+      "sha256": "0d5e50fab458a9cf3a3664306b02d49029c69e21415f586aa1149beeb4759776",
+      "run_id": "20261025T123340Z-c8722d55",
+      "run_status": "executed",
+      "verify_status": "executed",
+      "local_records": "2026-10-25/research/game-quality/verification/work/japanese/79ab5469daa6/records"
+    },
+    {
+      "file": "2026-10-25/research/game-quality/cases/1145350-hades2.md",
+      "sha256": "eb538934748423d39a571d6d8c3ddd921fc65d11c7b1ce0a9d4718d1a3563987",
+      "run_id": "20261025T123340Z-3b448aea",
+      "run_status": "executed",
+      "verify_status": "executed",
+      "local_records": "2026-10-25/research/game-quality/verification/work/japanese/43769a9e15cd/records"
+    },
+    {
+      "file": "2026-10-25/research/game-quality/cases/1245620-elden.md",
+      "sha256": "c4ff9771f2b60aa0a05da88cec89157205dfee6748e13b9187c00a78cb9997bd",
+      "run_id": "20261025T123340Z-f05f5227",
+      "run_status": "executed",
+      "verify_status": "executed",
+      "local_records": "2026-10-25/research/game-quality/verification/work/japanese/3a7c1b1a437d/records"
+    },
+    {
+      "file": "2026-10-25/research/game-quality/cases/1313140-cult.md",
+      "sha256": "24d4336246606224ccd29d359355b087293680b8b2d19e1d73df53a2d0dbacb3",
+      "run_id": "20261025T123341Z-bcbf60db",
+      "run_status": "executed",
+      "verify_status": "executed",
+      "local_records": "2026-10-25/research/game-quality/verification/work/japanese/a4a85eb839fe/records"
+    },
+    {
+      "file": "2026-10-25/research/game-quality/cases/1449690-walkingdead.md",
+      "sha256": "1d7d110497d915095ba5652f640ef1baee6ff9ce1e2e69b1246c93df31df52f6",
+      "run_id": "20261025T123341Z-f9225184",
+      "run_status": "executed",
+      "verify_status": "executed",
+      "local_records": "2026-10-25/research/game-quality/verification/work/japanese/64f9851f1140/records"
+    },
+    {
+      "file": "2026-10-25/research/game-quality/cases/1868140-dave.md",
+      "sha256": "dc9a01f8e0d862588012867ade5d3ba30cfc9ad81ffc3afcd872f150f0f7fb17",
+      "run_id": "20261025T123342Z-a4d2223d",
+      "run_status": "executed",
+      "verify_status": "executed",
+      "local_records": "2026-10-25/research/game-quality/verification/work/japanese/177413a3999d/records"
+    },
+    {
+      "file": "2026-10-25/research/game-quality/cases/2379780-balatro.md",
+      "sha256": "361f591b12bab270e5046d77985cbb9b8e91b605c4a984316cc7bbf8703c1d1d",
+      "run_id": "20261025T123342Z-49eb30f2",
+      "run_status": "executed",
+      "verify_status": "executed",
+      "local_records": "2026-10-25/research/game-quality/verification/work/japanese/65b804d3a06b/records"
+    },
+    {
+      "file": "2026-10-25/research/game-quality/cases/289070-civ6.md",
+      "sha256": "725c6a9ed0e093a4972aaa9542fcb403529df62747664f4af573094e6cf90530",
+      "run_id": "20261025T123343Z-796ab34b",
+      "run_status": "executed",
+      "verify_status": "executed",
+      "local_records": "2026-10-25/research/game-quality/verification/work/japanese/0317c6a94468/records"
+    },
+    {
+      "file": "2026-10-25/research/game-quality/cases/294100-rimworld.md",
+      "sha256": "91d420b9863806b4ace7846b91b2273b6ee8c6951ef91a50b3efc3ebc9ff799e",
+      "run_id": "20261025T123343Z-b515d88f",
+      "run_status": "executed",
+      "verify_status": "executed",
+      "local_records": "2026-10-25/research/game-quality/verification/work/japanese/3b5437548153/records"
+    },
+    {
+      "file": "2026-10-25/research/game-quality/cases/413150-stardew.md",
+      "sha256": "e9bc64b3c8c459b389874cb698f91135347dc66542fb105a3686803f5d85db08",
+      "run_id": "20261025T123343Z-f02a0170",
+      "run_status": "executed",
+      "verify_status": "executed",
+      "local_records": "2026-10-25/research/game-quality/verification/work/japanese/ffbb1cfb53fd/records"
+    },
+    {
+      "file": "2026-10-25/research/game-quality/cases/427520-factorio.md",
+      "sha256": "b1bad9595ac36cb38e1b7a2e7b787966bc08a22da44d90cb1a2d987791b8042b",
+      "run_id": "20261025T123344Z-5e220aea",
+      "run_status": "executed",
+      "verify_status": "executed",
+      "local_records": "2026-10-25/research/game-quality/verification/work/japanese/ac1452809955/records"
+    },
+    {
+      "file": "2026-10-25/research/game-quality/cases/457140-oxygen.md",
+      "sha256": "2b532ba9ee2aaa2a6d81ace7ea24d2b0607e7f65a931f23d45576409ab854abc",
+      "run_id": "20261025T123344Z-a2971b28",
+      "run_status": "executed",
+      "verify_status": "executed",
+      "local_records": "2026-10-25/research/game-quality/verification/work/japanese/77f28ee2e5fc/records"
+    },
+    {
+      "file": "2026-10-25/research/game-quality/cases/646570-spire.md",
+      "sha256": "02b3004837f2d14bfdb61cf14540db52717502b4c3ed87de6343b379df399fcf",
+      "run_id": "20261025T123345Z-4687135a",
+      "run_status": "executed",
+      "verify_status": "executed",
+      "local_records": "2026-10-25/research/game-quality/verification/work/japanese/e985c56a308f/records"
+    },
+    {
+      "file": "2026-10-25/research/game-quality/cases/787480-aceattorney.md",
+      "sha256": "db875c49e56627a2ec2c149073cbcd9d6260f933fe92eb41615977638f99c3f3",
+      "run_id": "20261025T123345Z-ead96a5f",
+      "run_status": "executed",
+      "verify_status": "executed",
+      "local_records": "2026-10-25/research/game-quality/verification/work/japanese/afeec6430a9b/records"
+    },
+    {
+      "file": "2026-10-25/research/game-quality/pilot-evaluation.md",
+      "sha256": "cf3dcb9c4f88e9ba68fbb236b6e47206f38ed2825d07b33e30faa896d19eb866",
+      "run_id": "20261025T123345Z-78cb3aaa",
+      "run_status": "executed",
+      "verify_status": "executed",
+      "local_records": "2026-10-25/research/game-quality/verification/work/japanese/b3525ad0ccad/records"
+    },
+    {
+      "file": "2026-10-25/research/game-quality/selection.md",
+      "sha256": "e9540d5d7a7cb0cfaaf9b6cba2424f4ac30aabf531e57bee9c0faa0f7cfe6014",
+      "run_id": "20261025T123346Z-90c9be1a",
+      "run_status": "executed",
+      "verify_status": "executed",
+      "local_records": "2026-10-25/research/game-quality/verification/work/japanese/001146030908/records"
+    },
+    {
+      "file": "2026-10-25/research/game-quality/synthesis.md",
+      "sha256": "92055848458650ff633a5640c79ddb214b07a7a717930bdbe9b5ca28913d14ec",
+      "run_id": "20261025T123346Z-c8235185",
+      "run_status": "executed",
+      "verify_status": "executed",
+      "local_records": "2026-10-25/research/game-quality/verification/work/japanese/591b8a406435/records"
+    },
+    {
+      "file": "2026-10-25/research/game-quality/verification/FORWARD_TEST.md",
+      "sha256": "d8c4088300a21aebce3a9ffdbf8365f5a7c68e7248cbeded2467f80ca126e5c4",
+      "run_id": "20261025T123347Z-8c7b063a",
+      "run_status": "executed",
+      "verify_status": "executed",
+      "local_records": "2026-10-25/research/game-quality/verification/work/japanese/1efa603957c8/records"
+    },
+    {
+      "file": "2026-10-25/research/game-quality/verification/RESULTS.md",
+      "sha256": "5c1e3d997a0dc6180cd529b486e3b91bdc641435fe5f21dd68ab4ecb63e56075",
+      "run_id": "20261025T123347Z-67b9b97c",
+      "run_status": "executed",
+      "verify_status": "executed",
+      "local_records": "2026-10-25/research/game-quality/verification/work/japanese/c7ad14284e3b/records"
+    },
+    {
+      "file": "2026-10-25/research/game-quality/verification/forward-test/baseline.md",
+      "sha256": "85b6fb5220c5a57af4e6835a47e36450dd61174104dc82c7cbb71c32291fb920",
+      "run_id": "20261025T123347Z-b9c31ba5",
+      "run_status": "executed",
+      "verify_status": "executed",
+      "local_records": "2026-10-25/research/game-quality/verification/work/japanese/cb76fd68ecfe/records"
+    },
+    {
+      "file": "2026-10-25/research/game-quality/verification/forward-test/brief.md",
+      "sha256": "66d7c5b6ca2270e989d8fd7a4c19c1a19fbb8582578a3b43688cc33475ec7747",
+      "run_id": "20261025T123348Z-5803de58",
+      "run_status": "executed",
+      "verify_status": "executed",
+      "local_records": "2026-10-25/research/game-quality/verification/work/japanese/dd33094492cb/records"
+    },
+    {
+      "file": "2026-10-25/research/game-quality/verification/forward-test/rubric.md",
+      "sha256": "239d81e1803d807301cfcd99475ca65c3bc491651084b3728af1cbaa16c52fe5",
+      "run_id": "20261025T123348Z-fdb92c30",
+      "run_status": "executed",
+      "verify_status": "executed",
+      "local_records": "2026-10-25/research/game-quality/verification/work/japanese/7fc165860c4e/records"
+    },
+    {
+      "file": "2026-10-25/research/game-quality/verification/forward-test/with-skill.md",
+      "sha256": "75fefd441872f3be4fb637ffc931449dddbfa174958fd9ad204f43de4c8a6000",
+      "run_id": "20261025T123349Z-7318535e",
+      "run_status": "executed",
+      "verify_status": "executed",
+      "local_records": "2026-10-25/research/game-quality/verification/work/japanese/4bf243d1aba8/records"
+    }
+  ]
+}

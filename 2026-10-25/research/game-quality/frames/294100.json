@@ -1,0 +1,72 @@
+{
+  "appid": 294100,
+  "name": "RimWorld",
+  "store_page": "https://store.steampowered.com/app/294100/",
+  "retrieved_at": "2026-10-25T11:51:32.149951+00:00",
+  "source_metadata": "https://store.steampowered.com/api/appdetails?appids=294100&cc=us&l=english",
+  "movie_name": "Launch trailer",
+  "movie_id": 256731486,
+  "movie_url": "https://video.akamai.steamstatic.com/store_trailers/294100/189193/b88a55b0c4df1e292fa85455c5157a31ad1da17c/1750502942/dash_h264.mpd?t=1539788136",
+  "media_source_sha256": "9a6d59081264743d676c9b913e7a659877567db92de47a05a06bc113db9b3dc3",
+  "hash_scope": "DASH manifest",
+  "duration_seconds": 133.3,
+  "source_kind": "publisher Steam store video; edited trailer",
+  "observation_limit": "selected still frames only; no full playback or player-input observation",
+  "frames": [
+    {
+      "id": "294100@26.66",
+      "seconds": 26.66,
+      "file": "frames/294100-026.66.jpg",
+      "sha256": "e52b4833a7ea4f817b6b676c6ba6fabf0a6a28b38425fe08f4cb3bf94858905e",
+      "segment": {
+        "url": "https://video.akamai.steamstatic.com/store_trailers/294100/189193/b88a55b0c4df1e292fa85455c5157a31ad1da17c/1750502942/dash_h264/chunk-stream1-00009.m4s",
+        "segment_start_seconds": 24.0,
+        "sha256": "c85a930db7d75f9153b08ecbe6025fa2893cd58ba90c42c365015efe38be4cd0"
+      }
+    },
+    {
+      "id": "294100@46.66",
+      "seconds": 46.66,
+      "file": "frames/294100-046.66.jpg",
+      "sha256": "e4089104eb7a64db2ae5615a3f5c7958da66808248a561085df0e50b5c331203",
+      "segment": {
+        "url": "https://video.akamai.steamstatic.com/store_trailers/294100/189193/b88a55b0c4df1e292fa85455c5157a31ad1da17c/1750502942/dash_h264/chunk-stream1-00016.m4s",
+        "segment_start_seconds": 45.0,
+        "sha256": "17d7f939e824ed643e249d5473a317086d3e4eb434312a6666bec56a8f29213d"
+      }
+    },
+    {
+      "id": "294100@66.65",
+      "seconds": 66.65,
+      "file": "frames/294100-066.65.jpg",
+      "sha256": "2e394b06bb680b94e20ec243a49b74e591aaa99154976b5118e82647c07e95fd",
+      "segment": {
+        "url": "https://video.akamai.steamstatic.com/store_trailers/294100/189193/b88a55b0c4df1e292fa85455c5157a31ad1da17c/1750502942/dash_h264/chunk-stream1-00023.m4s",
+        "segment_start_seconds": 66.0,
+        "sha256": "0f5a7e0b387bd073af74ea922eaa8c45e2a4f180da48fd5b9f9caa5c407ad911"
+      }
+    },
+    {
+      "id": "294100@86.65",
+      "seconds": 86.65,
+      "file": "frames/294100-086.65.jpg",
+      "sha256": "b2261e1171fdc3c9d88752d2ec12a8776a1c7122618b976577dc939dc1b85bb9",
+      "segment": {
+        "url": "https://video.akamai.steamstatic.com/store_trailers/294100/189193/b88a55b0c4df1e292fa85455c5157a31ad1da17c/1750502942/dash_h264/chunk-stream1-00029.m4s",
+        "segment_start_seconds": 84.0,
+        "sha256": "d7d404038ec8eb0fea09c97e7731d90f533c2c99c24472bb3cd5d2a3eccf195a"
+      }
+    },
+    {
+      "id": "294100@106.64",
+      "seconds": 106.64,
+      "file": "frames/294100-106.64.jpg",
+      "sha256": "bdecf9bdc853dcddf27b86563bc1868fc7f942bc21469faf83d6df55e76f5b5e",
+      "segment": {
+        "url": "https://video.akamai.steamstatic.com/store_trailers/294100/189193/b88a55b0c4df1e292fa85455c5157a31ad1da17c/1750502942/dash_h264/chunk-stream1-00036.m4s",
+        "segment_start_seconds": 105.0,
+        "sha256": "af63467686fb8224a136d46c00f9cf03cb67cb64409886d7da9e3416e34ef259"
+      }
+    }
+  ]
+}

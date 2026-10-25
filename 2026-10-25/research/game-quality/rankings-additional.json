@@ -1,0 +1,230 @@
+[
+  {
+    "kind": "tag-top-sellers",
+    "tag": "puzzle",
+    "tagid": 1664,
+    "region": "US",
+    "language": "english",
+    "retrieved_at": "2026-10-25T12:02:50.079405+00:00",
+    "source_url": "https://store.steampowered.com/search/results/?start=0&count=50&tags=1664&filter=topsellers&category1=998&cc=us&l=english&infinite=1",
+    "public_page": "https://store.steampowered.com/search/?tags=1664&filter=topsellers&category1=998&cc=us&l=english",
+    "sha256": "6f530356d3bb34cf0e5f2e7e09e6028f7139cd4dda39f2749a0f98cb5ccd349e",
+    "captured_rows": 50,
+    "entries": [
+      {
+        "position": 1,
+        "appid": 1551980,
+        "name": "Clive Barker's Hellraiser: Revival"
+      },
+      {
+        "position": 2,
+        "appid": 2315050,
+        "name": "We Were Here Tomorrow"
+      },
+      {
+        "position": 3,
+        "appid": 1478500,
+        "name": "Big Walk"
+      },
+      {
+        "position": 4,
+        "appid": 4656000,
+        "name": "BOMBANANA!"
+      },
+      {
+        "position": 5,
+        "appid": 5228920,
+        "name": "Brick by Brick: Tidy Up the Small Town!"
+      },
+      {
+        "position": 6,
+        "appid": 2087540,
+        "name": "Escape from Playtime"
+      },
+      {
+        "position": 7,
+        "appid": 3314580,
+        "name": "Trash Day"
+      },
+      {
+        "position": 8,
+        "appid": 418370,
+        "name": "Resident Evil 7 Biohazard"
+      },
+      {
+        "position": 9,
+        "appid": 2325290,
+        "name": "Sky: Children of the Light"
+      },
+      {
+        "position": 10,
+        "appid": 883710,
+        "name": "Resident Evil 2"
+      },
+      {
+        "position": 11,
+        "appid": 2121510,
+        "name": "Tenebris Somnia"
+      },
+      {
+        "position": 12,
+        "appid": 1659040,
+        "name": "HITMAN World of Assassination"
+      },
+      {
+        "position": 13,
+        "appid": 750920,
+        "name": "Shadow of the Tomb Raider: Definitive Edition"
+      },
+      {
+        "position": 14,
+        "appid": 499170,
+        "name": "Order of the Sinking Star"
+      },
+      {
+        "position": 15,
+        "appid": 5316540,
+        "name": "Tidy Up the Halloween Shop"
+      },
+      {
+        "position": 16,
+        "appid": 4380490,
+        "name": "Cat Mail Co."
+      },
+      {
+        "position": 17,
+        "appid": 391220,
+        "name": "Rise of the Tomb Raider™"
+      },
+      {
+        "position": 18,
+        "appid": 3164330,
+        "name": "Infinity Nikki"
+      },
+      {
+        "position": 19,
+        "appid": 2129530,
+        "name": "REANIMAL"
+      },
+      {
+        "position": 20,
+        "appid": 2525380,
+        "name": "Tomb Raider IV-VI Remastered"
+      }
+    ]
+  },
+  {
+    "kind": "tag-top-sellers",
+    "tag": "visual-novel",
+    "tagid": 3799,
+    "region": "US",
+    "language": "english",
+    "retrieved_at": "2026-10-25T12:02:50.081273+00:00",
+    "source_url": "https://store.steampowered.com/search/results/?start=0&count=50&tags=3799&filter=topsellers&category1=998&cc=us&l=english&infinite=1",
+    "public_page": "https://store.steampowered.com/search/?tags=3799&filter=topsellers&category1=998&cc=us&l=english",
+    "sha256": "fb20a9d1e253ef7f47f15a093ad2eb98816cb21aefa60c82cbe52e49ba35dbc7",
+    "captured_rows": 50,
+    "entries": [
+      {
+        "position": 1,
+        "appid": 1449690,
+        "name": "The Walking Dead: The Telltale Definitive Series"
+      },
+      {
+        "position": 2,
+        "appid": 3224770,
+        "name": "Umamusume: Pretty Derby"
+      },
+      {
+        "position": 3,
+        "appid": 2592160,
+        "name": "Dispatch"
+      },
+      {
+        "position": 4,
+        "appid": 1973530,
+        "name": "Limbus Company"
+      },
+      {
+        "position": 5,
+        "appid": 2869860,
+        "name": "Monster Prom 4: Monster Con"
+      },
+      {
+        "position": 6,
+        "appid": 3347400,
+        "name": "GIRLS' FRONTLINE 2: EXILIUM"
+      },
+      {
+        "position": 7,
+        "appid": 1665190,
+        "name": "Monster Prom 3: Monster Roadtrip"
+      },
+      {
+        "position": 8,
+        "appid": 4113940,
+        "name": "Sovereign Tower"
+      },
+      {
+        "position": 9,
+        "appid": 743450,
+        "name": "Monster Prom"
+      },
+      {
+        "position": 10,
+        "appid": 1140270,
+        "name": "Monster Prom 2: Monster Camp"
+      },
+      {
+        "position": 11,
+        "appid": 2201320,
+        "name": "Date Everything!"
+      },
+      {
+        "position": 12,
+        "appid": 3061570,
+        "name": "Persona5: The Phantom X"
+      },
+      {
+        "position": 13,
+        "appid": 2279440,
+        "name": "Soul Mates"
+      },
+      {
+        "position": 14,
+        "appid": 2967950,
+        "name": "The Witch's Bakery"
+      },
+      {
+        "position": 15,
+        "appid": 459820,
+        "name": "Crush Crush"
+      },
+      {
+        "position": 16,
+        "appid": 4833450,
+        "name": "Money for Girls: Amortized"
+      },
+      {
+        "position": 17,
+        "appid": 787480,
+        "name": "Phoenix Wright: Ace Attorney Trilogy"
+      },
+      {
+        "position": 18,
+        "appid": 207610,
+        "name": "The Walking Dead"
+      },
+      {
+        "position": 19,
+        "appid": 3052450,
+        "name": "Morimens"
+      },
+      {
+        "position": 20,
+        "appid": 2527160,
+        "name": "Desktop Explorer"
+      }
+    ]
+  }
+]

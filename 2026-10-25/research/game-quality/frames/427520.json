@@ -1,0 +1,72 @@
+{
+  "appid": 427520,
+  "name": "Factorio",
+  "store_page": "https://store.steampowered.com/app/427520/",
+  "retrieved_at": "2026-10-25T11:51:32.081373+00:00",
+  "source_metadata": "https://store.steampowered.com/api/appdetails?appids=427520&cc=us&l=english",
+  "movie_name": "Gameplay Trailer",
+  "movie_id": 256660593,
+  "movie_url": "https://video.akamai.steamstatic.com/store_trailers/427520/51955/69c15fc9a9f17f659effe7747375e96322b34eae/1750529735/dash_h264.mpd?t=1456427081",
+  "media_source_sha256": "a0476375d4d9d0cfe699c79ccfce59ce3f0637b00c5cf0f1ae9f9f9fda24cef6",
+  "hash_scope": "DASH manifest",
+  "duration_seconds": 142.3,
+  "source_kind": "publisher Steam store video; edited trailer",
+  "observation_limit": "selected still frames only; no full playback or player-input observation",
+  "frames": [
+    {
+      "id": "427520@28.46",
+      "seconds": 28.46,
+      "file": "frames/427520-028.46.jpg",
+      "sha256": "8b0e1c1dd37e0b4288494922f4ef93e560c45bb4fb478d5877ae3aa63360fcc3",
+      "segment": {
+        "url": "https://video.akamai.steamstatic.com/store_trailers/427520/51955/69c15fc9a9f17f659effe7747375e96322b34eae/1750529735/dash_h264/chunk-stream1-00010.m4s",
+        "segment_start_seconds": 27.0,
+        "sha256": "11c8d382a319d5b3453f747b644406b5bf04a13057c0fcba6866eb988927b718"
+      }
+    },
+    {
+      "id": "427520@49.80",
+      "seconds": 49.8,
+      "file": "frames/427520-049.80.jpg",
+      "sha256": "164f4f83d0d12aa8651f791933c5023c5886b92fc933b5f747d8b9650c31608a",
+      "segment": {
+        "url": "https://video.akamai.steamstatic.com/store_trailers/427520/51955/69c15fc9a9f17f659effe7747375e96322b34eae/1750529735/dash_h264/chunk-stream1-00017.m4s",
+        "segment_start_seconds": 48.0,
+        "sha256": "b659602b89c0cffd01e914cdca1c30be70e8db5608e938482ae09e5784050cca"
+      }
+    },
+    {
+      "id": "427520@71.15",
+      "seconds": 71.15,
+      "file": "frames/427520-071.15.jpg",
+      "sha256": "0081e4980bfec95c2d79ac5859fbbd733fd0a49530a1f211054f6571ed1cb3c2",
+      "segment": {
+        "url": "https://video.akamai.steamstatic.com/store_trailers/427520/51955/69c15fc9a9f17f659effe7747375e96322b34eae/1750529735/dash_h264/chunk-stream1-00024.m4s",
+        "segment_start_seconds": 69.0,
+        "sha256": "483843baa78a6d77eba320f25f3c2219d145c88767489fef2b5fa9cf3e59a788"
+      }
+    },
+    {
+      "id": "427520@92.50",
+      "seconds": 92.5,
+      "file": "frames/427520-092.50.jpg",
+      "sha256": "cd835ecbd0b2f0e8ddae2c9c455ff8dc936741dea15e472d18fa8470e65b3613",
+      "segment": {
+        "url": "https://video.akamai.steamstatic.com/store_trailers/427520/51955/69c15fc9a9f17f659effe7747375e96322b34eae/1750529735/dash_h264/chunk-stream1-00031.m4s",
+        "segment_start_seconds": 90.0,
+        "sha256": "721e3e22b5e1765f99e55a4ae6828cfc14dec4fdeaad0adc27b70c7c0a6acfc8"
+      }
+    },
+    {
+      "id": "427520@113.84",
+      "seconds": 113.84,
+      "file": "frames/427520-113.84.jpg",
+      "sha256": "6806228f764d3369ac66043c4e66fbec1ab461f3dc956ada54d14d43bc4b33ec",
+      "segment": {
+        "url": "https://video.akamai.steamstatic.com/store_trailers/427520/51955/69c15fc9a9f17f659effe7747375e96322b34eae/1750529735/dash_h264/chunk-stream1-00038.m4s",
+        "segment_start_seconds": 111.0,
+        "sha256": "fdab4ffd1506cc2d059fb394d19ea4e3d0aadf2be94092c1ef9f2d139acf322a"
+      }
+    }
+  ]
+}

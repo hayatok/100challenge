@@ -1,0 +1,21 @@
+{
+  "appid": 1313140,
+  "source_kind": "publisher Steam screenshot, not a video frame",
+  "source_metadata": "https://store.steampowered.com/api/appdetails?appids=1313140&cc=us&l=english",
+  "retrieved_at": "2026-10-25T12:10:03.774891+00:00",
+  "observation_limit": "single image; no before-after gameplay",
+  "images": [
+    {
+      "id": "1313140-screenshot-1",
+      "file": "frames/1313140-screenshot-1.jpg",
+      "source_url": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1313140/ss_805babf3c8dec217798c836daea48a63b47c192b.1920x1080.jpg?t=1786554901",
+      "sha256": "8206bb223e60013f522a0af7778f810084a79edadf0cf2e8e791e48e75fe7dbf"
+    },
+    {
+      "id": "1313140-screenshot-4",
+      "file": "frames/1313140-screenshot-4.jpg",
+      "source_url": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1313140/ss_f4ca3fd0416c3f41c57bc3809bb45f8f20e684ec.1920x1080.jpg?t=1786554901",
+      "sha256": "e163983217d39af3976be912702ffdf3e08efd081e1637416184e1caa8f47396"
+    }
+  ]
+}

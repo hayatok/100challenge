@@ -1,0 +1,72 @@
+{
+  "appid": 1449690,
+  "name": "The Walking Dead: The Telltale Definitive Series",
+  "store_page": "https://store.steampowered.com/app/1449690/",
+  "retrieved_at": "2026-10-25T12:06:08.015742+00:00",
+  "source_metadata": "https://store.steampowered.com/api/appdetails?appids=1449690&cc=us&l=english",
+  "movie_name": "The Walking Dead: The Telltale Definitive Series - trailer",
+  "movie_id": 256807400,
+  "movie_url": "https://video.akamai.steamstatic.com/store_trailers/1449690/323087/9f6178b56f02564042e8169bce9aa64e13a016e3/1750689981/dash_h264.mpd?t=1608055118",
+  "media_source_sha256": "065247d1e5bd30bd85e83f04c42850e47e09e960a42b6729d09682b2e9bf5ba4",
+  "hash_scope": "DASH manifest",
+  "duration_seconds": 33.2,
+  "source_kind": "publisher Steam store video; edited trailer",
+  "observation_limit": "selected still frames only; no full playback or player-input observation",
+  "frames": [
+    {
+      "id": "1449690@6.64",
+      "seconds": 6.64,
+      "file": "frames/1449690-006.64.jpg",
+      "sha256": "774352061830cae2daeb2418c02d0feba8f70b661914d5cb7508f4d1aed23bd5",
+      "segment": {
+        "url": "https://video.akamai.steamstatic.com/store_trailers/1449690/323087/9f6178b56f02564042e8169bce9aa64e13a016e3/1750689981/dash_h264/chunk-stream1-00003.m4s",
+        "segment_start_seconds": 6.0,
+        "sha256": "2e2b69983cff1f0b0cf52596cf6e2375670bd2d47f9a0c01b6db7d31fd802361"
+      }
+    },
+    {
+      "id": "1449690@11.62",
+      "seconds": 11.62,
+      "file": "frames/1449690-011.62.jpg",
+      "sha256": "e8ccbae9ad973fcb21892c94846957a39fd879f154826ad92e1765e83bdc34e5",
+      "segment": {
+        "url": "https://video.akamai.steamstatic.com/store_trailers/1449690/323087/9f6178b56f02564042e8169bce9aa64e13a016e3/1750689981/dash_h264/chunk-stream1-00004.m4s",
+        "segment_start_seconds": 9.0,
+        "sha256": "c3b17f92a20006e87804e51b468d02353193428eff6a522d9ac2fcb16bc589d8"
+      }
+    },
+    {
+      "id": "1449690@16.60",
+      "seconds": 16.6,
+      "file": "frames/1449690-016.60.jpg",
+      "sha256": "f1aaa8865e6d06c66270cebb29d61f1d24c9146714c2f0e7865dab989c67e962",
+      "segment": {
+        "url": "https://video.akamai.steamstatic.com/store_trailers/1449690/323087/9f6178b56f02564042e8169bce9aa64e13a016e3/1750689981/dash_h264/chunk-stream1-00006.m4s",
+        "segment_start_seconds": 15.0,
+        "sha256": "c272ecf5b96818d172f6c27ca0a429abccba6e9bdb4f5818bf27a05ab7e26a4a"
+      }
+    },
+    {
+      "id": "1449690@21.58",
+      "seconds": 21.58,
+      "file": "frames/1449690-021.58.jpg",
+      "sha256": "c882914d54b5689c6d467734af1aa097ad7810d3fd70435de3a00ebf7176d484",
+      "segment": {
+        "url": "https://video.akamai.steamstatic.com/store_trailers/1449690/323087/9f6178b56f02564042e8169bce9aa64e13a016e3/1750689981/dash_h264/chunk-stream1-00008.m4s",
+        "segment_start_seconds": 21.0,
+        "sha256": "8858dfb002fdcc70eee5f5d5d1165471f99603f5a7e5f8e11abd4e49bcbdbd1a"
+      }
+    },
+    {
+      "id": "1449690@26.56",
+      "seconds": 26.56,
+      "file": "frames/1449690-026.56.jpg",
+      "sha256": "614576ce34b1d8818bcf5e3e5ca16f32778ef59ba374a143fa9620c3938b4681",
+      "segment": {
+        "url": "https://video.akamai.steamstatic.com/store_trailers/1449690/323087/9f6178b56f02564042e8169bce9aa64e13a016e3/1750689981/dash_h264/chunk-stream1-00009.m4s",
+        "segment_start_seconds": 24.0,
+        "sha256": "bfeb5bb67da398a37728e79a434e777216a8d038b5ebabd5bf39de327a2e578c"
+      }
+    }
+  ]
+}

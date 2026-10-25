@@ -1,0 +1,83 @@
+{
+  "appid": 646570,
+  "name": "Slay the Spire",
+  "store_page": "https://store.steampowered.com/app/646570/",
+  "retrieved_at": "2026-10-25T11:38:17.387404+00:00",
+  "source_metadata": "https://store.steampowered.com/api/appdetails?appids=646570&cc=us&l=english",
+  "movie_name": "Launch Trailer",
+  "movie_id": 256740869,
+  "movie_url": "https://video.akamai.steamstatic.com/store_trailers/646570/205320/640196deb3169b2a1667340ab45f229af73caba7/1750566635/dash_h264.mpd?t=1548258737",
+  "media_source_sha256": "ae46172602a7949a5b89be1ce5e4a16f99559f665145b27db82ee45ee5ec195d",
+  "hash_scope": "DASH manifest",
+  "duration_seconds": 96.0,
+  "source_kind": "publisher Steam store video; edited trailer",
+  "observation_limit": "selected still frames only; no full playback or player-input observation",
+  "frames": [
+    {
+      "id": "646570@12.00",
+      "seconds": 12.0,
+      "file": "frames/646570-012.00.jpg",
+      "sha256": "a4b305b37675f7836ef8322e7f88137bc949d34309af94034a343eb0b682bcc2",
+      "segment": {
+        "url": "https://video.akamai.steamstatic.com/store_trailers/646570/205320/640196deb3169b2a1667340ab45f229af73caba7/1750566635/dash_h264/chunk-stream1-00005.m4s",
+        "segment_start_seconds": 12.0,
+        "sha256": "5ebaeb3500056e42c9de13b473384d5d275e0fec6956a931c79b48f98d2ec162"
+      }
+    },
+    {
+      "id": "646570@24.00",
+      "seconds": 24.0,
+      "file": "frames/646570-024.00.jpg",
+      "sha256": "4ccaaf6a4d937077adceed32ac0379a6dcd7e0f0a6cc75b2d173e795a312f241",
+      "segment": {
+        "url": "https://video.akamai.steamstatic.com/store_trailers/646570/205320/640196deb3169b2a1667340ab45f229af73caba7/1750566635/dash_h264/chunk-stream1-00009.m4s",
+        "segment_start_seconds": 24.0,
+        "sha256": "762238caa6778e1efca8867ff08f748ac679f23ae5e1d1604c2c306846443cf7"
+      }
+    },
+    {
+      "id": "646570@36.00",
+      "seconds": 36.0,
+      "file": "frames/646570-036.00.jpg",
+      "sha256": "0c565409b830cb2bea9eb5fb6dc0525e96708fa895202814479052c185394683",
+      "segment": {
+        "url": "https://video.akamai.steamstatic.com/store_trailers/646570/205320/640196deb3169b2a1667340ab45f229af73caba7/1750566635/dash_h264/chunk-stream1-00013.m4s",
+        "segment_start_seconds": 36.0,
+        "sha256": "e9d5da67feb03ff31480f03b9e53cbab3cc08cf0b6fabd14e78d462a4c8fec05"
+      }
+    },
+    {
+      "id": "646570@48.00",
+      "seconds": 48.0,
+      "file": "frames/646570-048.00.jpg",
+      "sha256": "54afe37297100e296dcd0d486903baae3d86e2e911abe25c59ba9b56767243e4",
+      "segment": {
+        "url": "https://video.akamai.steamstatic.com/store_trailers/646570/205320/640196deb3169b2a1667340ab45f229af73caba7/1750566635/dash_h264/chunk-stream1-00017.m4s",
+        "segment_start_seconds": 48.0,
+        "sha256": "1e821e66b1b741ac79e4619e033df6d9b3a4cd51b7df5d6b3eb8959160ee21df"
+      }
+    },
+    {
+      "id": "646570@60.00",
+      "seconds": 60.0,
+      "file": "frames/646570-060.00.jpg",
+      "sha256": "d28ecb9767becc14546345a322417b28996a6a8bfc2dfb20778f2c9d8d7b305c",
+      "segment": {
+        "url": "https://video.akamai.steamstatic.com/store_trailers/646570/205320/640196deb3169b2a1667340ab45f229af73caba7/1750566635/dash_h264/chunk-stream1-00021.m4s",
+        "segment_start_seconds": 60.0,
+        "sha256": "60b66eb79c2441e951038e5d84623af9bb1da0826b47877b9055947a711cfe09"
+      }
+    },
+    {
+      "id": "646570@72.00",
+      "seconds": 72.0,
+      "file": "frames/646570-072.00.jpg",
+      "sha256": "317c65f3784d30f546a0d0df88a58a1f8fe4c2084734350c44ad1bd420cf81cb",
+      "segment": {
+        "url": "https://video.akamai.steamstatic.com/store_trailers/646570/205320/640196deb3169b2a1667340ab45f229af73caba7/1750566635/dash_h264/chunk-stream1-00025.m4s",
+        "segment_start_seconds": 72.0,
+        "sha256": "228b3b6da7324051f0a0ce9a23d2fe8601ec7f28ab103931c32e7718c4db66d4"
+      }
+    }
+  ]
+}

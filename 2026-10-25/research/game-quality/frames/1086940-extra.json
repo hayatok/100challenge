@@ -1,0 +1,13 @@
+{
+  "appid": 1086940,
+  "file": "1086940-extra-dialogue-check.jpg",
+  "sha256": "874164a666b614aa7d7de00a6b362cd2a11d73d039002d1f5fdb853329642f38",
+  "source_kind": "public gameplay screenshot embedded in a third-party guide; not captured from a game session",
+  "source_page": "https://www.tomsguide.com/how-to/baldurs-gate-3-how-to-change-dice",
+  "source_image_url": "https://cdn.mos.cms.futurecdn.net/PoJAJ44WCzb4SYAj32P6pD.jpg",
+  "retrieved_at": "2026-10-25",
+  "retrieval_method": "direct HTTP GET of the publicly served image; no access controls bypassed",
+  "page_access_note": "The image was retrieved and viewed. The source article itself timed out when opened through the browsing tool.",
+  "visual_observation": "A dialogue-linked Persuasion Charisma check is on screen: DC 10, d20 prompt, +4 Charisma, +2 Persuasion Proficiency, Total Bonus +6. Prompt text refers to killing a hag to free someone.",
+  "limit": "This is not the Arabella/Kagha scene. It demonstrates the general dice-check UI only; it does not show a roll result or outcome."
+}
