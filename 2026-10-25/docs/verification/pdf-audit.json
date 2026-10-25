@@ -2,8 +2,8 @@
   {
     "file": "00-comparison.pdf",
     "pages": 2,
-    "bytes": 31614873,
-    "sha256": "b310d7c90fb5ec275fc1498118d199e544c93c270f69639ede564760fd66ef7c",
+    "bytes": 26543817,
+    "sha256": "b8d99d5a82d4d4053198fb276c2687d502aed8bc2a9ef8a3f69e7b6d228878d4",
     "all_section_text_present": true
   },
   {
@@ -25,13 +25,6 @@
     "pages": 7,
     "bytes": 6633655,
     "sha256": "e5cec01ac9dc68d8f5fad8deb9a9d20aa06bcdce71015e16b369f399ed246e72",
-    "all_section_text_present": true
-  },
-  {
-    "file": "04-inn.pdf",
-    "pages": 9,
-    "bytes": 6027874,
-    "sha256": "b33545162483066033dc072ec93dd38350ca8fceeabbb62897e3d24431985e7e",
     "all_section_text_present": true
   },
   {
