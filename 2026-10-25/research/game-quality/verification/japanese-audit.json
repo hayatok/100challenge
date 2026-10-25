@@ -17,7 +17,8 @@
     "changes": [
       "BG3: separate walkthrough hindsight from pre-choice knowledge; remove unsupported prediction about resource-rich players",
       "Cult: simplify hypothesis label formatting",
-      "PR: explain base branch relationship directly"
+      "PR: explain base branch relationship directly",
+      "Cleanup: remove cancelled-game application section and references; preserve generic research and evidence limits"
     ],
     "retained": [
       "evidence IDs and bold source labels for navigation",
@@ -29,7 +30,7 @@
     "candidate_count_is_quality_score": false,
     "limits": "Checks do not prove semantic equivalence or reader understanding; no human readability study"
   },
-  "records_storage": "Full drafts and logs remain local in ignored verification/work/japanese/",
+  "records_storage": "Unchanged generic research records remain in ignored verification/work/japanese/. Drafts and full logs for the three cleanup edits were removed after run/verify to honor project deletion; final hashes and run IDs remain here.",
   "files": [
     {
       "file": ".agents/skills/game-quality-design/SKILL.md",
@@ -81,11 +82,11 @@
     },
     {
       "file": "2026-10-25/research/game-quality/PLAN.md",
-      "sha256": "d1042bc669b1f5dea12c75ab3c1b79889a70170074dcede9b24f0e6b72647ad9",
-      "run_id": "20261025T123338Z-d51483df",
+      "sha256": "536fcdcdf01a55cfc925f3ed78820063f1dc6416d971a339acc9d05a8e26f450",
+      "run_id": "20261025T141008Z-ec2f4052",
       "run_status": "executed",
       "verify_status": "executed",
-      "local_records": "2026-10-25/research/game-quality/verification/work/japanese/41df73c97f43/records"
+      "local_records_retained": false
     },
     {
       "file": "2026-10-25/research/game-quality/PR.md",
@@ -233,11 +234,11 @@
     },
     {
       "file": "2026-10-25/research/game-quality/synthesis.md",
-      "sha256": "92055848458650ff633a5640c79ddb214b07a7a717930bdbe9b5ca28913d14ec",
-      "run_id": "20261025T123346Z-c8235185",
+      "sha256": "5936932b571e5f67faf4842133098322d29a96a78b73ded362f7a44f4349aa5f",
+      "run_id": "20261025T141008Z-40d2eb25",
       "run_status": "executed",
       "verify_status": "executed",
-      "local_records": "2026-10-25/research/game-quality/verification/work/japanese/591b8a406435/records"
+      "local_records_retained": false
     },
     {
       "file": "2026-10-25/research/game-quality/verification/FORWARD_TEST.md",
@@ -249,11 +250,11 @@
     },
     {
       "file": "2026-10-25/research/game-quality/verification/RESULTS.md",
-      "sha256": "5c1e3d997a0dc6180cd529b486e3b91bdc641435fe5f21dd68ab4ecb63e56075",
-      "run_id": "20261025T123347Z-67b9b97c",
+      "sha256": "998992f90059eec8883a5489690f614242105256379e54f9ebc656b76dd5591f",
+      "run_id": "20261025T141009Z-38684b80",
       "run_status": "executed",
       "verify_status": "executed",
-      "local_records": "2026-10-25/research/game-quality/verification/work/japanese/c7ad14284e3b/records"
+      "local_records_retained": false
     },
     {
       "file": "2026-10-25/research/game-quality/verification/forward-test/baseline.md",
