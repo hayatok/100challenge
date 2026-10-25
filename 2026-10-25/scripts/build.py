@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build the proposal sources, inspectable phone mockups and seven PDFs."""
+"""Build the proposal sources, inspectable phone mockups and six PDFs."""
 import argparse
 import html
 import json
@@ -28,7 +28,6 @@ MOCK = {
  '01-rail': ['工事点3 / 砲台の弾1', '線路を壁に変える', 'この線路の補給は止まります。砲台は攻撃を防げますが、反撃後の弾は0になります。', ['線路を選ぶ','壁に変える','取り消す'], 'セナ', 'その線路を壁に変えるなら、その後の補給も一緒に考えよう。'],
  '02-beast': ['行動点2 / 命令あと3回', '獣に待つよう命令する', '命令を1回使います。獣は穴の手前で待ち、見張りをやり過ごします。', ['行動を比べる','待機を命令','取り消す'], 'ミオ', '今日はあの子も、あなたの帰りを待っていたみたい。'],
  '03-garden': ['樹液3 / 木材0', '枝を切る前に確認', '木材を2個得ますが、この近道は消えます。木材は衝撃ガードの材料になります。', ['枝を選ぶ','この枝を切る','取り消す'], 'コトネ', 'これ、余った花で作ったの。……余ったから、だけじゃないけど。'],
- '04-inn': ['食事あと2食 / 明日の空室2', '120で今夜と明日を貸す', '客が120を払い、2泊します。食事は付きません。明日の空室は1室になります。', ['条件を比べる','契約する','取り消す'], 'マオ', '閉店後まで支配人でいなくても、いいでしょう？'],
  '05-detective': ['調査あと6回 / 同工房の品2点', '鑑定結果を公表する', '謝礼80を受け取ります。翌朝には在庫2点の相場が下がり、合計60の値下がりになります。', ['証拠を見る','公表する','保留する'], 'スイ', '見抜かれるのは得意じゃないの。あなたには、特に。'],
  '06-auction': ['現金6 / 食料2', '畑を担保に10で入札', '落札した場合、畑の収穫が止まり、食料が1足りなくなります。食料を買うと現金は0になり、借りた4の返済が残ります。', ['担保を選ぶ','入札する','取り消す'], 'リゼ', '今夜くらい、計算書は閉じましょう。二人分の時間は、残してあります。'],
 }
@@ -142,7 +141,7 @@ def html_files(all_data):
         for mode in ['play','talk']:
             (target/f'{d["id"]}-{mode}.html').write_text(mock_html(d,mode))
     cards=''.join(f'<article><img src="art/{d["id"]}.png" alt="{html.escape(d["title"])}の3面企画イメージ"><h2>{html.escape(d["title"])}</h2><p>{html.escape(d["genres"])}</p><p>{html.escape(d["facts"].get("summary", d["pitch"]))}</p><a href="output/pdf/{d["id"]}.pdf">企画書PDF</a> · <a href="concepts/{d["id"]}.md">編集元</a> · <a href="output/mocks/{d["id"]}-play.html">プレイ画面モック</a> · <a href="output/mocks/{d["id"]}-talk.html">交流画面モック</a></article>' for d in all_data)
-    (ROOT/'index.html').write_text(f'''<!doctype html><html lang="ja"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>6つのゲーム企画</title><style>body{{font-family:system-ui,sans-serif;background:#f4f0e8;color:#20252c;max-width:1100px;margin:32px auto;padding:0 20px;line-height:1.7}}h1{{font-size:32px}}.grid{{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px}}article{{background:#fffdf8;padding:20px;border-top:4px solid #b73529}}img{{width:100%;height:auto}}a{{color:#9c3028}}h2{{margin:12px 0 4px}}.intro{{max-width:760px}}</style><h1>6つのゲーム企画</h1><p class="intro">スマホWeb・片手縦持ち・1回10〜20分。ジャンルの掛け算と、成人ヒロインとの濃い交流を比較する企画資料です。掲載画面は未実装のイメージです。</p><p><a href="output/pdf/00-comparison.pdf">最初に比較資料を読む（2ページ）</a></p><div class="grid">{cards}</div></html>''')
+    (ROOT/'index.html').write_text(f'''<!doctype html><html lang="ja"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>5つのゲーム企画</title><style>body{{font-family:system-ui,sans-serif;background:#f4f0e8;color:#20252c;max-width:1100px;margin:32px auto;padding:0 20px;line-height:1.7}}h1{{font-size:32px}}.grid{{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px}}article{{background:#fffdf8;padding:20px;border-top:4px solid #b73529}}img{{width:100%;height:auto}}a{{color:#9c3028}}h2{{margin:12px 0 4px}}.intro{{max-width:760px}}</style><h1>5つのゲーム企画</h1><p class="intro">スマホWeb・片手縦持ち・1回10〜20分。ジャンルの掛け算と、成人ヒロインとの濃い交流を比較する企画資料です。掲載画面は未実装のイメージです。</p><p><a href="output/pdf/00-comparison.pdf">最初に比較資料を読む（2ページ）</a></p><div class="grid">{cards}</div></html>''')
 
 def proposals(all_data):
     for d in all_data:
@@ -203,12 +202,11 @@ def proposals(all_data):
 
 def comparison(all_data):
     c=canvas.Canvas(str(OUT/'00-comparison.pdf'),pagesize=A4)
-    c.setTitle('6つのゲーム企画 / ゲーム内容の比較');c.setAuthor('100challenge / Codex')
-    introduction='スマートフォンのブラウザで遊ぶ6案です。片手で操作し、1回10〜20分ずつ本編を進める想定です。登場するヒロインは全員成人で、各案に2人います。'
-    recommendation='企画者としては「六部屋の約束」を第一候補とします。宿の仕事を一緒に進めることで、経営の判断とヒロインとの会話を結び付けやすいと考えています。実際に面白いかは、試作して確かめる必要があります。'
+    c.setTitle('5つのゲーム企画 / ゲーム内容の比較');c.setAuthor('100challenge / Codex')
+    introduction='スマートフォンのブラウザで遊ぶ5案です。片手で操作し、1回10〜20分ずつ本編を進める想定です。登場するヒロインは全員成人で、各案に2人います。'
     for page in range(2):
         c.setFillColor(HexColor(PAPER));c.rect(0,0,W,H,fill=1,stroke=0)
-        para(c,'6つのゲーム企画' if page==0 else '6つのゲーム企画（続き）',40,798,W-80,25,INK,34)
+        para(c,'5つのゲーム企画' if page==0 else '5つのゲーム企画（続き）',40,798,W-80,25,INK,34)
         para(c,introduction,40,749,W-80,10.5,MUTED,17)
         for i,d in enumerate(all_data[page*3:page*3+3]):
             y=683-i*190
@@ -219,19 +217,19 @@ def comparison(all_data):
             bottom=para(c,body,170,y-52,W-210,11,INK,18)
             if bottom<y-185:raise ValueError('Comparison row too long: '+d['id'])
             c.linkURL(d['id']+'.pdf',(40,y-157,W-40,y+4),relative=1,thickness=0)
-        para(c,'画像は開発前の画面イメージです。ゲーム本体は、まだ実装していません。' if page==0 else recommendation,40,95,W-80,10.2,MUTED,16)
+        para(c,'画像は開発前の画面イメージです。ゲーム本体は、まだ実装していません。' if page==0 else '各案のルールと制作範囲は、個別の企画書で確認できます。面白さは、今後の試作で確かめます。',40,95,W-80,10.2,MUTED,16)
         c.setFont('JP',8);c.setFillColor(HexColor(MUTED));c.drawString(40,27,'ゲーム企画の比較 / 2026-10-25');c.drawRightString(W-40,27,f'{page+1} / 2');c.showPage()
     c.save()
-    text=['# 6つのゲーム企画の比較','',introduction,'']
+    text=['# 5つのゲーム企画の比較','',introduction,'']
     for d in all_data:
         text += [f'## {d["title"]}',d['genres'],'',d['facts']['summary'],'',d['facts']['moe'],'']
-    text += ['## 最初に試作する案','',recommendation,'','掲載画像は開発前の画面イメージです。実機での操作、長時間のプレイ、素材の量産、開発期間はまだ確認していません。','']
+    text += ['掲載画像は開発前の画面イメージです。実機での操作、長時間のプレイ、素材の量産、開発期間はまだ確認していません。','']
     (ROOT/'concepts'/'00-comparison.md').write_text('\n'.join(text))
 
 
 def main():
     ap=argparse.ArgumentParser();ap.add_argument('--prepare-only',action='store_true');ap.add_argument('--font',default='/Library/Fonts/Arial Unicode.ttf');args=ap.parse_args()
-    all_data=data();assert len(all_data)==6,'Expected six concept JSON files'
+    all_data=data();assert len(all_data)==5,'Expected five concept JSON files'
     for d in all_data:
         assert len(d['pages'])==6 and len(d['heroes'])==2
         assert all(h['age']>=20 for h in d['heroes'])

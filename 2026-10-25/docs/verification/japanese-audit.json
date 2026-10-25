@@ -18,12 +18,6 @@
     "verify_exit": 0
   },
   {
-    "file": "concepts/04-inn.json",
-    "sha256": "5515c54e8403bce14ffd42121a11db91e5e825ef5f517409bf792cda6af64343",
-    "run_exit": 0,
-    "verify_exit": 0
-  },
-  {
     "file": "concepts/05-detective.json",
     "sha256": "c39b9e0075b9072f44a2f06703ad195602fb1607342a867df54c8d28d2f887e1",
     "run_exit": 0,
@@ -37,7 +31,7 @@
   },
   {
     "file": "concepts/00-comparison.md",
-    "sha256": "e1062b76132e85a83c9be7a49175fe1a80c16b0a35d65ebb2cb33da7b7fe792f",
+    "sha256": "226712c7f70a3ab1b0988c52387903facffa80788ec44b993f71518543a9d609",
     "run_exit": 0,
     "verify_exit": 0
   },
@@ -56,12 +50,6 @@
   {
     "file": "concepts/03-garden.md",
     "sha256": "25a90b50846afd572f1280a0fe0b1ee88fc09882265da707b7e87669ecbae28c",
-    "run_exit": 0,
-    "verify_exit": 0
-  },
-  {
-    "file": "concepts/04-inn.md",
-    "sha256": "d959d5df5338022ed5a35aa40a50c82a7820331b4cfd24795448acfcd7b3a876",
     "run_exit": 0,
     "verify_exit": 0
   },
@@ -114,18 +102,6 @@
     "verify_exit": 0
   },
   {
-    "file": "output/mocks/04-inn-play.html",
-    "sha256": "3f490ce8e8dbab9e564a8e78e34eecc32148f9c8c93309305dd92b176a37f061",
-    "run_exit": 0,
-    "verify_exit": 0
-  },
-  {
-    "file": "output/mocks/04-inn-talk.html",
-    "sha256": "c1734aae2c235a8d24bd89a9bb1bb89ff8e289c8b0a129109d91a9c731fa8e45",
-    "run_exit": 0,
-    "verify_exit": 0
-  },
-  {
     "file": "output/mocks/05-detective-play.html",
     "sha256": "c3fe6eee28f925e078c8ef94f67f8cfff900b1b92dff72f22c6a156d8a52e63e",
     "run_exit": 0,
@@ -151,25 +127,25 @@
   },
   {
     "file": "index.html",
-    "sha256": "102d02dedead1d87db421079b9181ccce28db1ea110c79defb5a00e32a5f857d",
+    "sha256": "7bbaddff77d563dc46ba39429cd3e07681bb37d8e724d876ed93f5181b59c64c",
     "run_exit": 0,
     "verify_exit": 0
   },
   {
     "file": "README.md",
-    "sha256": "3ed13b88b29be2c2102fc8dc1ebad8fc5fddd59ae273407c33758b96d2a41d06",
+    "sha256": "e62612d6e61db50edd7f35569e1ad00093fa8dcdab8000a0fe68291fc1bd6ba6",
     "run_exit": 0,
     "verify_exit": 0
   },
   {
     "file": "AGENTS.md",
-    "sha256": "f60bdae6c7d644244213b8873184712d2901f597b404dd6782513cf25b9cfaba",
+    "sha256": "6f3f60eb7c6eaeb61eb5c84e61a0cc01d8d72e1ca90469b700db4db5a4601776",
     "run_exit": 0,
     "verify_exit": 0
   },
   {
     "file": "docs/BRIEF.md",
-    "sha256": "76d3020688c545d6b1364f9cc93532f95ea048ee5245700b8de2c69d6a49d473",
+    "sha256": "d72bf263016ba6e480e9bd5fb1af75347c5a3bf85fb7adaa87316bc372a20dde",
     "run_exit": 0,
     "verify_exit": 0
   },
@@ -181,25 +157,25 @@
   },
   {
     "file": "docs/PR.md",
-    "sha256": "b8054f7de53b0afd28ddf59a17ada2df44989444464fb32e1171a81b7af8371f",
+    "sha256": "5d3d32f883a5ae0971afd1d0c510c3f42f60ff1f5b70621e8552f96c62a7e596",
     "run_exit": 0,
     "verify_exit": 0
   },
   {
     "file": "docs/READABILITY.md",
-    "sha256": "89aa19d54befa4591b93574821df0ae2c00ea204231f6279ddac0ebde771f5e2",
+    "sha256": "4c527d6bf641082e27a788a31f67afb3a2c72a6e88596ece4bef075d84e454f9",
     "run_exit": 0,
     "verify_exit": 0
   },
   {
     "file": "docs/verification/RESULTS.md",
-    "sha256": "409a6aabf8fcc8b547ca5af805beea0069f4ee00930470301332c6383efdc128",
+    "sha256": "2668995a009c670e7ba79faffc03a942aaaca78531175f98ba4c8d18723bd7e4",
     "run_exit": 0,
     "verify_exit": 0
   },
   {
     "file": "scripts/build.py",
-    "sha256": "b8d4dbab75d19b05362ef9d336fa49de547f80c47ce764f3d2cf8f411281a118",
+    "sha256": "f616db05eec0412236a0c7ff0c0d63a97d1b29b415188d51f1c27c8535f9971d",
     "run_exit": 0,
     "verify_exit": 0
   }
