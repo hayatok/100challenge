@@ -1,0 +1,16 @@
+[
+  {
+    "width": 1280,
+    "links": 25,
+    "http200": true,
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "width": 390,
+    "links": 25,
+    "http200": true,
+    "overflow": false,
+    "errors": []
+  }
+]

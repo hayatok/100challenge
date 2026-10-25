@@ -1,0 +1,710 @@
+[
+  {
+    "filename": "01-rail-play.html",
+    "width": 390,
+    "height": 844,
+    "bad": [],
+    "bodyWidth": 390,
+    "bodyHeight": 844,
+    "buttons": [
+      {
+        "label": "選択",
+        "width": 64,
+        "height": 64
+      },
+      {
+        "label": "線路を選ぶ",
+        "width": 114,
+        "height": 46
+      },
+      {
+        "label": "防壁にする",
+        "width": 114,
+        "height": 46
+      },
+      {
+        "label": "取消",
+        "width": 114,
+        "height": 46
+      }
+    ],
+    "selectCancel": true,
+    "errors": []
+  },
+  {
+    "filename": "01-rail-play.html",
+    "width": 360,
+    "height": 800,
+    "bad": [],
+    "bodyWidth": 360,
+    "bodyHeight": 800,
+    "buttons": [
+      {
+        "label": "選択",
+        "width": 64,
+        "height": 64
+      },
+      {
+        "label": "線路を選ぶ",
+        "width": 104,
+        "height": 46
+      },
+      {
+        "label": "防壁にする",
+        "width": 104,
+        "height": 46
+      },
+      {
+        "label": "取消",
+        "width": 104,
+        "height": 46
+      }
+    ],
+    "selectCancel": true,
+    "errors": []
+  },
+  {
+    "filename": "01-rail-talk.html",
+    "width": 390,
+    "height": 844,
+    "bad": [],
+    "bodyWidth": 390,
+    "bodyHeight": 844,
+    "buttons": [
+      {
+        "label": "返事をする",
+        "width": 114,
+        "height": 46
+      },
+      {
+        "label": "ログ",
+        "width": 114,
+        "height": 46
+      },
+      {
+        "label": "設定",
+        "width": 114,
+        "height": 46
+      }
+    ],
+    "selectCancel": null,
+    "errors": []
+  },
+  {
+    "filename": "01-rail-talk.html",
+    "width": 360,
+    "height": 800,
+    "bad": [],
+    "bodyWidth": 360,
+    "bodyHeight": 800,
+    "buttons": [
+      {
+        "label": "返事をする",
+        "width": 104,
+        "height": 46
+      },
+      {
+        "label": "ログ",
+        "width": 104,
+        "height": 46
+      },
+      {
+        "label": "設定",
+        "width": 104,
+        "height": 46
+      }
+    ],
+    "selectCancel": null,
+    "errors": []
+  },
+  {
+    "filename": "02-beast-play.html",
+    "width": 390,
+    "height": 844,
+    "bad": [],
+    "bodyWidth": 390,
+    "bodyHeight": 844,
+    "buttons": [
+      {
+        "label": "選択",
+        "width": 64,
+        "height": 64
+      },
+      {
+        "label": "未来を比べる",
+        "width": 114,
+        "height": 46
+      },
+      {
+        "label": "待機を命令",
+        "width": 114,
+        "height": 46
+      },
+      {
+        "label": "取消",
+        "width": 114,
+        "height": 46
+      }
+    ],
+    "selectCancel": true,
+    "errors": []
+  },
+  {
+    "filename": "02-beast-play.html",
+    "width": 360,
+    "height": 800,
+    "bad": [],
+    "bodyWidth": 360,
+    "bodyHeight": 800,
+    "buttons": [
+      {
+        "label": "選択",
+        "width": 64,
+        "height": 64
+      },
+      {
+        "label": "未来を比べる",
+        "width": 104,
+        "height": 46
+      },
+      {
+        "label": "待機を命令",
+        "width": 104,
+        "height": 46
+      },
+      {
+        "label": "取消",
+        "width": 104,
+        "height": 46
+      }
+    ],
+    "selectCancel": true,
+    "errors": []
+  },
+  {
+    "filename": "02-beast-talk.html",
+    "width": 390,
+    "height": 844,
+    "bad": [],
+    "bodyWidth": 390,
+    "bodyHeight": 844,
+    "buttons": [
+      {
+        "label": "返事をする",
+        "width": 114,
+        "height": 46
+      },
+      {
+        "label": "ログ",
+        "width": 114,
+        "height": 46
+      },
+      {
+        "label": "設定",
+        "width": 114,
+        "height": 46
+      }
+    ],
+    "selectCancel": null,
+    "errors": []
+  },
+  {
+    "filename": "02-beast-talk.html",
+    "width": 360,
+    "height": 800,
+    "bad": [],
+    "bodyWidth": 360,
+    "bodyHeight": 800,
+    "buttons": [
+      {
+        "label": "返事をする",
+        "width": 104,
+        "height": 46
+      },
+      {
+        "label": "ログ",
+        "width": 104,
+        "height": 46
+      },
+      {
+        "label": "設定",
+        "width": 104,
+        "height": 46
+      }
+    ],
+    "selectCancel": null,
+    "errors": []
+  },
+  {
+    "filename": "03-garden-play.html",
+    "width": 390,
+    "height": 844,
+    "bad": [],
+    "bodyWidth": 390,
+    "bodyHeight": 844,
+    "buttons": [
+      {
+        "label": "選択",
+        "width": 64,
+        "height": 64
+      },
+      {
+        "label": "枝を選ぶ",
+        "width": 114,
+        "height": 46
+      },
+      {
+        "label": "剪定する",
+        "width": 114,
+        "height": 46
+      },
+      {
+        "label": "取消",
+        "width": 114,
+        "height": 46
+      }
+    ],
+    "selectCancel": true,
+    "errors": []
+  },
+  {
+    "filename": "03-garden-play.html",
+    "width": 360,
+    "height": 800,
+    "bad": [],
+    "bodyWidth": 360,
+    "bodyHeight": 800,
+    "buttons": [
+      {
+        "label": "選択",
+        "width": 64,
+        "height": 64
+      },
+      {
+        "label": "枝を選ぶ",
+        "width": 104,
+        "height": 46
+      },
+      {
+        "label": "剪定する",
+        "width": 104,
+        "height": 46
+      },
+      {
+        "label": "取消",
+        "width": 104,
+        "height": 46
+      }
+    ],
+    "selectCancel": true,
+    "errors": []
+  },
+  {
+    "filename": "03-garden-talk.html",
+    "width": 390,
+    "height": 844,
+    "bad": [],
+    "bodyWidth": 390,
+    "bodyHeight": 844,
+    "buttons": [
+      {
+        "label": "返事をする",
+        "width": 114,
+        "height": 46
+      },
+      {
+        "label": "ログ",
+        "width": 114,
+        "height": 46
+      },
+      {
+        "label": "設定",
+        "width": 114,
+        "height": 46
+      }
+    ],
+    "selectCancel": null,
+    "errors": []
+  },
+  {
+    "filename": "03-garden-talk.html",
+    "width": 360,
+    "height": 800,
+    "bad": [],
+    "bodyWidth": 360,
+    "bodyHeight": 800,
+    "buttons": [
+      {
+        "label": "返事をする",
+        "width": 104,
+        "height": 46
+      },
+      {
+        "label": "ログ",
+        "width": 104,
+        "height": 46
+      },
+      {
+        "label": "設定",
+        "width": 104,
+        "height": 46
+      }
+    ],
+    "selectCancel": null,
+    "errors": []
+  },
+  {
+    "filename": "04-inn-play.html",
+    "width": 390,
+    "height": 844,
+    "bad": [],
+    "bodyWidth": 390,
+    "bodyHeight": 844,
+    "buttons": [
+      {
+        "label": "選択",
+        "width": 64,
+        "height": 64
+      },
+      {
+        "label": "条件を比べる",
+        "width": 114,
+        "height": 46
+      },
+      {
+        "label": "契約する",
+        "width": 114,
+        "height": 46
+      },
+      {
+        "label": "取消",
+        "width": 114,
+        "height": 46
+      }
+    ],
+    "selectCancel": true,
+    "errors": []
+  },
+  {
+    "filename": "04-inn-play.html",
+    "width": 360,
+    "height": 800,
+    "bad": [],
+    "bodyWidth": 360,
+    "bodyHeight": 800,
+    "buttons": [
+      {
+        "label": "選択",
+        "width": 64,
+        "height": 64
+      },
+      {
+        "label": "条件を比べる",
+        "width": 104,
+        "height": 46
+      },
+      {
+        "label": "契約する",
+        "width": 104,
+        "height": 46
+      },
+      {
+        "label": "取消",
+        "width": 104,
+        "height": 46
+      }
+    ],
+    "selectCancel": true,
+    "errors": []
+  },
+  {
+    "filename": "04-inn-talk.html",
+    "width": 390,
+    "height": 844,
+    "bad": [],
+    "bodyWidth": 390,
+    "bodyHeight": 844,
+    "buttons": [
+      {
+        "label": "返事をする",
+        "width": 114,
+        "height": 46
+      },
+      {
+        "label": "ログ",
+        "width": 114,
+        "height": 46
+      },
+      {
+        "label": "設定",
+        "width": 114,
+        "height": 46
+      }
+    ],
+    "selectCancel": null,
+    "errors": []
+  },
+  {
+    "filename": "04-inn-talk.html",
+    "width": 360,
+    "height": 800,
+    "bad": [],
+    "bodyWidth": 360,
+    "bodyHeight": 800,
+    "buttons": [
+      {
+        "label": "返事をする",
+        "width": 104,
+        "height": 46
+      },
+      {
+        "label": "ログ",
+        "width": 104,
+        "height": 46
+      },
+      {
+        "label": "設定",
+        "width": 104,
+        "height": 46
+      }
+    ],
+    "selectCancel": null,
+    "errors": []
+  },
+  {
+    "filename": "05-detective-play.html",
+    "width": 390,
+    "height": 844,
+    "bad": [],
+    "bodyWidth": 390,
+    "bodyHeight": 844,
+    "buttons": [
+      {
+        "label": "選択",
+        "width": 64,
+        "height": 64
+      },
+      {
+        "label": "証拠を見る",
+        "width": 114,
+        "height": 46
+      },
+      {
+        "label": "公開する",
+        "width": 114,
+        "height": 46
+      },
+      {
+        "label": "保留",
+        "width": 114,
+        "height": 46
+      }
+    ],
+    "selectCancel": true,
+    "errors": []
+  },
+  {
+    "filename": "05-detective-play.html",
+    "width": 360,
+    "height": 800,
+    "bad": [],
+    "bodyWidth": 360,
+    "bodyHeight": 800,
+    "buttons": [
+      {
+        "label": "選択",
+        "width": 64,
+        "height": 64
+      },
+      {
+        "label": "証拠を見る",
+        "width": 104,
+        "height": 46
+      },
+      {
+        "label": "公開する",
+        "width": 104,
+        "height": 46
+      },
+      {
+        "label": "保留",
+        "width": 104,
+        "height": 46
+      }
+    ],
+    "selectCancel": true,
+    "errors": []
+  },
+  {
+    "filename": "05-detective-talk.html",
+    "width": 390,
+    "height": 844,
+    "bad": [],
+    "bodyWidth": 390,
+    "bodyHeight": 844,
+    "buttons": [
+      {
+        "label": "返事をする",
+        "width": 114,
+        "height": 46
+      },
+      {
+        "label": "ログ",
+        "width": 114,
+        "height": 46
+      },
+      {
+        "label": "設定",
+        "width": 114,
+        "height": 46
+      }
+    ],
+    "selectCancel": null,
+    "errors": []
+  },
+  {
+    "filename": "05-detective-talk.html",
+    "width": 360,
+    "height": 800,
+    "bad": [],
+    "bodyWidth": 360,
+    "bodyHeight": 800,
+    "buttons": [
+      {
+        "label": "返事をする",
+        "width": 104,
+        "height": 46
+      },
+      {
+        "label": "ログ",
+        "width": 104,
+        "height": 46
+      },
+      {
+        "label": "設定",
+        "width": 104,
+        "height": 46
+      }
+    ],
+    "selectCancel": null,
+    "errors": []
+  },
+  {
+    "filename": "06-auction-play.html",
+    "width": 390,
+    "height": 844,
+    "bad": [],
+    "bodyWidth": 390,
+    "bodyHeight": 844,
+    "buttons": [
+      {
+        "label": "選択",
+        "width": 64,
+        "height": 64
+      },
+      {
+        "label": "担保を選ぶ",
+        "width": 114,
+        "height": 46
+      },
+      {
+        "label": "入札する",
+        "width": 114,
+        "height": 46
+      },
+      {
+        "label": "取消",
+        "width": 114,
+        "height": 46
+      }
+    ],
+    "selectCancel": true,
+    "errors": []
+  },
+  {
+    "filename": "06-auction-play.html",
+    "width": 360,
+    "height": 800,
+    "bad": [],
+    "bodyWidth": 360,
+    "bodyHeight": 800,
+    "buttons": [
+      {
+        "label": "選択",
+        "width": 64,
+        "height": 64
+      },
+      {
+        "label": "担保を選ぶ",
+        "width": 104,
+        "height": 46
+      },
+      {
+        "label": "入札する",
+        "width": 104,
+        "height": 46
+      },
+      {
+        "label": "取消",
+        "width": 104,
+        "height": 46
+      }
+    ],
+    "selectCancel": true,
+    "errors": []
+  },
+  {
+    "filename": "06-auction-talk.html",
+    "width": 390,
+    "height": 844,
+    "bad": [],
+    "bodyWidth": 390,
+    "bodyHeight": 844,
+    "buttons": [
+      {
+        "label": "返事をする",
+        "width": 114,
+        "height": 46
+      },
+      {
+        "label": "ログ",
+        "width": 114,
+        "height": 46
+      },
+      {
+        "label": "設定",
+        "width": 114,
+        "height": 46
+      }
+    ],
+    "selectCancel": null,
+    "errors": []
+  },
+  {
+    "filename": "06-auction-talk.html",
+    "width": 360,
+    "height": 800,
+    "bad": [],
+    "bodyWidth": 360,
+    "bodyHeight": 800,
+    "buttons": [
+      {
+        "label": "返事をする",
+        "width": 104,
+        "height": 46
+      },
+      {
+        "label": "ログ",
+        "width": 104,
+        "height": 46
+      },
+      {
+        "label": "設定",
+        "width": 104,
+        "height": 46
+      }
+    ],
+    "selectCancel": null,
+    "errors": []
+  }
+]

@@ -1,0 +1,332 @@
+[
+  {
+    "file": "concepts/02-beast.md",
+    "sha256": "ec715e49de48fb5a98d4c79883aff58f61e77cf55e19ad04c0692527008ec6aa",
+    "verify": "yomiyasu-check: executed via=verify run=20261025T092129Z-b925f99e attempt=1 final=sha256:ec715e49de48 mode=rewrite doc_type=proposal checks=lint,diff,materials meaning_risk=0 replay=skipped",
+    "lint_counts": [
+      0,
+      0,
+      4
+    ]
+  },
+  {
+    "file": "concepts/04-inn.md",
+    "sha256": "ac53a34258f65b21ef368d2e4d71466efcb48e5ddd5472c4e978e06c3bdbf84d",
+    "verify": "yomiyasu-check: executed via=verify run=20261025T092130Z-c7a46ad3 attempt=1 final=sha256:ac53a34258f6 mode=rewrite doc_type=proposal checks=lint,diff,materials meaning_risk=1 replay=skipped",
+    "lint_counts": [
+      0,
+      3,
+      5
+    ]
+  },
+  {
+    "file": "concepts/03-garden.md",
+    "sha256": "56d21bfa755170fe5a2baefc32e0cf415024e3e4b7d2d663b48a105b0b940662",
+    "verify": "yomiyasu-check: executed via=verify run=20261025T092129Z-1d7c89c9 attempt=1 final=sha256:56d21bfa7551 mode=rewrite doc_type=proposal checks=lint,diff,materials meaning_risk=0 replay=skipped",
+    "lint_counts": [
+      0,
+      1,
+      5
+    ]
+  },
+  {
+    "file": "concepts/01-rail.md",
+    "sha256": "f0a6c19ae89d4e0893eaa39ecd822b96100f762cc0496b0d9b754983b120df74",
+    "verify": "yomiyasu-check: executed via=verify run=20261025T092128Z-be42b1a9 attempt=2 final=sha256:f0a6c19ae89d mode=rewrite doc_type=proposal checks=lint,diff,materials meaning_risk=0 replay=skipped",
+    "lint_counts": [
+      0,
+      1,
+      2
+    ]
+  },
+  {
+    "file": "concepts/00-comparison.md",
+    "sha256": "742cd79d3e65245cae3ee71cf9c1e17069ec76143f766dc8a145a1f437759771",
+    "verify": "yomiyasu-check: executed via=verify run=20261025T092128Z-d85cdde5 attempt=1 final=sha256:742cd79d3e65 mode=rewrite doc_type=proposal checks=lint,diff,materials meaning_risk=3 replay=skipped",
+    "lint_counts": [
+      0,
+      0,
+      4
+    ]
+  },
+  {
+    "file": "concepts/06-auction.md",
+    "sha256": "7779f1dd7da9c37997e03161ed3072a5f203689229c0f53d772a1e117f10b431",
+    "verify": "yomiyasu-check: executed via=verify run=20261025T092131Z-3947d218 attempt=1 final=sha256:7779f1dd7da9 mode=rewrite doc_type=proposal checks=lint,diff,materials meaning_risk=1 replay=skipped",
+    "lint_counts": [
+      0,
+      1,
+      4
+    ]
+  },
+  {
+    "file": "concepts/05-detective.md",
+    "sha256": "f668765a6d28924c7e2772e9d8a06428fca5bc39d6810282d8b36248f5fdc205",
+    "verify": "yomiyasu-check: executed via=verify run=20261025T092130Z-7c87408b attempt=1 final=sha256:f668765a6d28 mode=rewrite doc_type=proposal checks=lint,diff,materials meaning_risk=1 replay=skipped",
+    "lint_counts": [
+      0,
+      0,
+      4
+    ]
+  },
+  {
+    "file": "concepts/03-garden.json",
+    "sha256": "6c7c64431a6dae882a4e049a0919c36f0cf2c760e9657053b88d00546b7317e4",
+    "verify": "yomiyasu-check: executed via=verify run=20261025T092132Z-af36b825 attempt=1 final=sha256:6c7c64431a6d mode=rewrite doc_type=proposal checks=lint,diff,materials meaning_risk=0 replay=skipped",
+    "lint_counts": [
+      0,
+      2,
+      7
+    ]
+  },
+  {
+    "file": "concepts/05-detective.json",
+    "sha256": "6784d5af3d4c335da49d882df92edc1e7cf7649967a79556569afea3ce2ea607",
+    "verify": "yomiyasu-check: executed via=verify run=20261025T092133Z-a80edb36 attempt=1 final=sha256:6784d5af3d4c mode=rewrite doc_type=proposal checks=lint,diff,materials meaning_risk=2 replay=skipped",
+    "lint_counts": [
+      0,
+      0,
+      5
+    ]
+  },
+  {
+    "file": "concepts/06-auction.json",
+    "sha256": "9e8b01dcc46e29fffa7bfeb0a1b0bdde330622a875b40572706fd687090d3719",
+    "verify": "yomiyasu-check: executed via=verify run=20261025T092134Z-f5af416d attempt=1 final=sha256:9e8b01dcc46e mode=rewrite doc_type=proposal checks=lint,diff,materials meaning_risk=2 replay=skipped",
+    "lint_counts": [
+      0,
+      1,
+      4
+    ]
+  },
+  {
+    "file": "concepts/01-rail.json",
+    "sha256": "2487fcb043b51c17a97692cbf61f1fda21c93ee755f536f26e8b8e18a7ba4949",
+    "verify": "yomiyasu-check: executed via=verify run=20261025T092131Z-e02f0fc7 attempt=2 final=sha256:2487fcb043b5 mode=rewrite doc_type=proposal checks=lint,diff,materials meaning_risk=0 replay=skipped",
+    "lint_counts": [
+      0,
+      2,
+      3
+    ]
+  },
+  {
+    "file": "concepts/02-beast.json",
+    "sha256": "ae8f94704f302560ee0c2a9077eb4ab8d8941514b34b87c4bd3faa0372a17c89",
+    "verify": "yomiyasu-check: executed via=verify run=20261025T092132Z-34f23b9b attempt=1 final=sha256:ae8f94704f30 mode=rewrite doc_type=proposal checks=lint,diff,materials meaning_risk=0 replay=skipped",
+    "lint_counts": [
+      0,
+      0,
+      7
+    ]
+  },
+  {
+    "file": "concepts/04-inn.json",
+    "sha256": "1d687154ffb988109265d902faabde2a26bcca87d95b3110ea47bf926d6a8d78",
+    "verify": "yomiyasu-check: executed via=verify run=20261025T092133Z-b98a5b74 attempt=1 final=sha256:1d687154ffb9 mode=rewrite doc_type=proposal checks=lint,diff,materials meaning_risk=2 replay=skipped",
+    "lint_counts": [
+      0,
+      3,
+      6
+    ]
+  },
+  {
+    "file": "output/mocks/05-detective-play.html",
+    "sha256": "d3e7eecb08a5b249043829b2cfc5348389cbb0f95ce1e35f6b9605ac237b18af",
+    "verify": "yomiyasu-check: executed via=verify run=20261025T092138Z-31fcebeb attempt=1 final=sha256:d3e7eecb08a5 mode=rewrite doc_type=proposal checks=lint,diff,materials meaning_risk=0 replay=skipped",
+    "lint_counts": [
+      0,
+      0,
+      0
+    ]
+  },
+  {
+    "file": "output/mocks/03-garden-talk.html",
+    "sha256": "574cad399db984f18077bf3c1218073fa1e766612d84ead4a5299ed5ccfab6b5",
+    "verify": "yomiyasu-check: executed via=verify run=20261025T092136Z-5ed5b211 attempt=1 final=sha256:574cad399db9 mode=rewrite doc_type=proposal checks=lint,diff,materials meaning_risk=0 replay=skipped",
+    "lint_counts": [
+      0,
+      0,
+      0
+    ]
+  },
+  {
+    "file": "output/mocks/02-beast-talk.html",
+    "sha256": "fd91782ff05987bdda256d547c5af6b9db084fd9e4014adf86a5fe4579178ceb",
+    "verify": "yomiyasu-check: executed via=verify run=20261025T092136Z-92a6803e attempt=1 final=sha256:fd91782ff059 mode=rewrite doc_type=proposal checks=lint,diff,materials meaning_risk=0 replay=skipped",
+    "lint_counts": [
+      0,
+      0,
+      0
+    ]
+  },
+  {
+    "file": "output/mocks/06-auction-talk.html",
+    "sha256": "8510118d710eb03a838023863019763816477eff2d125777d361211edb2b50a7",
+    "verify": "yomiyasu-check: executed via=verify run=20261025T092139Z-0924aba2 attempt=1 final=sha256:8510118d710e mode=rewrite doc_type=proposal checks=lint,diff,materials meaning_risk=0 replay=skipped",
+    "lint_counts": [
+      0,
+      0,
+      0
+    ]
+  },
+  {
+    "file": "output/mocks/04-inn-talk.html",
+    "sha256": "2dfdf7059db4b09c3a5ddaae1f800ffa7950530ec5d9ef296c8c30d66b57cf26",
+    "verify": "yomiyasu-check: executed via=verify run=20261025T092137Z-e1b3e717 attempt=1 final=sha256:2dfdf7059db4 mode=rewrite doc_type=proposal checks=lint,diff,materials meaning_risk=0 replay=skipped",
+    "lint_counts": [
+      0,
+      0,
+      0
+    ]
+  },
+  {
+    "file": "output/mocks/01-rail-play.html",
+    "sha256": "558aedc3e1b9e2becdadcf64641be41de685f38c4198ea1391a6f9a07af74354",
+    "verify": "yomiyasu-check: executed via=verify run=20261025T092134Z-d94d9fde attempt=1 final=sha256:558aedc3e1b9 mode=rewrite doc_type=proposal checks=lint,diff,materials meaning_risk=0 replay=skipped",
+    "lint_counts": [
+      0,
+      0,
+      0
+    ]
+  },
+  {
+    "file": "output/mocks/05-detective-talk.html",
+    "sha256": "7ae5b26a20ce313c4f9a44839893118f202a4c6e1748a57a3df8b4a00f6a61f8",
+    "verify": "yomiyasu-check: executed via=verify run=20261025T092138Z-1fa90dd8 attempt=1 final=sha256:7ae5b26a20ce mode=rewrite doc_type=proposal checks=lint,diff,materials meaning_risk=0 replay=skipped",
+    "lint_counts": [
+      0,
+      0,
+      0
+    ]
+  },
+  {
+    "file": "output/mocks/03-garden-play.html",
+    "sha256": "74e3f39193f07ef635be8965b024ae6162eb43f4a4e5e486b3dcc38e8bffd4f7",
+    "verify": "yomiyasu-check: executed via=verify run=20261025T092136Z-966f0844 attempt=1 final=sha256:74e3f39193f0 mode=rewrite doc_type=proposal checks=lint,diff,materials meaning_risk=0 replay=skipped",
+    "lint_counts": [
+      0,
+      0,
+      0
+    ]
+  },
+  {
+    "file": "output/mocks/06-auction-play.html",
+    "sha256": "01a4072af8b709d05f8a321263440d5b6e538ebf282baf42336b87df955e7758",
+    "verify": "yomiyasu-check: executed via=verify run=20261025T092139Z-9923b328 attempt=1 final=sha256:01a4072af8b7 mode=rewrite doc_type=proposal checks=lint,diff,materials meaning_risk=0 replay=skipped",
+    "lint_counts": [
+      0,
+      0,
+      0
+    ]
+  },
+  {
+    "file": "output/mocks/02-beast-play.html",
+    "sha256": "fb0429cb751852fb478e87c1ddcd663f3be26c94bb6c30a0cfe2528f1c686b22",
+    "verify": "yomiyasu-check: executed via=verify run=20261025T092135Z-59e27169 attempt=1 final=sha256:fb0429cb7518 mode=rewrite doc_type=proposal checks=lint,diff,materials meaning_risk=0 replay=skipped",
+    "lint_counts": [
+      0,
+      0,
+      0
+    ]
+  },
+  {
+    "file": "output/mocks/01-rail-talk.html",
+    "sha256": "c12a366aa78135da27683524e9a05545abd27792852cf1f508ebc89b82837416",
+    "verify": "yomiyasu-check: executed via=verify run=20261025T092135Z-464465ad attempt=1 final=sha256:c12a366aa781 mode=rewrite doc_type=proposal checks=lint,diff,materials meaning_risk=0 replay=skipped",
+    "lint_counts": [
+      0,
+      0,
+      0
+    ]
+  },
+  {
+    "file": "output/mocks/04-inn-play.html",
+    "sha256": "5bacf40f0a06dc1dae3bb3618dca6ce478c9b6f15e259b637d47d042c810d087",
+    "verify": "yomiyasu-check: executed via=verify run=20261025T092137Z-8f78d09a attempt=1 final=sha256:5bacf40f0a06 mode=rewrite doc_type=proposal checks=lint,diff,materials meaning_risk=0 replay=skipped",
+    "lint_counts": [
+      0,
+      0,
+      0
+    ]
+  },
+  {
+    "file": "README.md",
+    "sha256": "039b325f48c6800fd3949cb0ae097ad24049a26a02aaef79e6db3d64f79f6a54",
+    "verify": "yomiyasu-check: executed via=verify run=20261025T092140Z-14b89a19 attempt=1 final=sha256:039b325f48c6 mode=rewrite doc_type=proposal checks=lint,diff,materials meaning_risk=0 replay=skipped",
+    "lint_counts": [
+      0,
+      0,
+      0
+    ]
+  },
+  {
+    "file": "AGENTS.md",
+    "sha256": "4301108d96d88bfb71434b293d9defafeafb057d5fe20ce8a25ff6bdd475474d",
+    "verify": "yomiyasu-check: executed via=verify run=20261025T092140Z-133c2ec0 attempt=1 final=sha256:4301108d96d8 mode=rewrite doc_type=proposal checks=lint,diff,materials meaning_risk=0 replay=skipped",
+    "lint_counts": [
+      0,
+      1,
+      0
+    ]
+  },
+  {
+    "file": "index.html",
+    "sha256": "9f56b21a61eed43dbdb547802e93887cca68611e1708908d278cfd02b754796a",
+    "verify": "yomiyasu-check: executed via=verify run=20261025T092140Z-1cd44cb6 attempt=1 final=sha256:9f56b21a61ee mode=rewrite doc_type=proposal checks=lint,diff,materials meaning_risk=0 replay=skipped",
+    "lint_counts": [
+      0,
+      0,
+      1
+    ]
+  },
+  {
+    "file": "docs/BRIEF.md",
+    "sha256": "9903ab60310308e4338d61886280bacc558e039fa126b141a6f9019e1853a1a2",
+    "verify": "yomiyasu-check: executed via=verify run=20261025T093000Z-dd1486eb attempt=1 final=sha256:9903ab603103 mode=rewrite doc_type=proposal checks=lint,diff meaning_risk=0 replay=skipped",
+    "lint_counts": [
+      0,
+      0,
+      4
+    ]
+  },
+  {
+    "file": "docs/DESIGN.md",
+    "sha256": "640465f81d644fc570e710780df1b226336291fd8c5b1bbd59f36e9f28fd69a8",
+    "verify": "yomiyasu-check: executed via=verify run=20261025T093001Z-97d877ff attempt=1 final=sha256:640465f81d64 mode=rewrite doc_type=proposal checks=lint,diff meaning_risk=0 replay=skipped",
+    "lint_counts": [
+      0,
+      0,
+      0
+    ]
+  },
+  {
+    "file": "docs/verification/RESULTS.md",
+    "sha256": "b5e1eeb3a0f9851e732944cafef04a62426c617762bfff40ad237adc059104fa",
+    "verify": "yomiyasu-check: executed via=verify run=20261025T093001Z-4e021161 attempt=1 final=sha256:b5e1eeb3a0f9 mode=rewrite doc_type=proposal checks=lint,diff meaning_risk=0 replay=skipped",
+    "lint_counts": [
+      0,
+      6,
+      2
+    ]
+  },
+  {
+    "file": "docs/PR.md",
+    "sha256": "930726838ad9b7eeffb061543b37259406c68f6b7352294e08a680eab0ce1090",
+    "verify": "yomiyasu-check: executed via=verify run=20261025T093001Z-341e37fa attempt=1 final=sha256:930726838ad9 mode=rewrite doc_type=proposal checks=lint,diff meaning_risk=0 replay=skipped",
+    "lint_counts": [
+      0,
+      0,
+      0
+    ]
+  },
+  {
+    "file": "art/manifest.json",
+    "sha256": "739be9a1136ab11fbc7d0effa8ce5d4bcd3f04b5ab81f42b36c98ef264b7f15c",
+    "verify": "yomiyasu-check: executed via=verify run=20261025T093002Z-023b6fb8 attempt=1 final=sha256:739be9a1136a mode=rewrite doc_type=proposal checks=lint,diff meaning_risk=0 replay=skipped",
+    "lint_counts": [
+      0,
+      0,
+      0
+    ]
+  }
+]

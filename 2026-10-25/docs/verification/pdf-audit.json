@@ -1,0 +1,51 @@
+[
+  {
+    "file": "00-comparison.pdf",
+    "pages": 2,
+    "bytes": 31582850,
+    "sha256": "b9fc9fc310ec06e03e717df3a9e758a6f9f6c86487f57efb86acfacd47f48155",
+    "section_text_complete": true
+  },
+  {
+    "file": "01-rail.pdf",
+    "pages": 6,
+    "bytes": 6851665,
+    "sha256": "85ae1f2a0f52d74923d287b163732d4f95d51262529bdbbf7e60fe7bb09b50f1",
+    "section_text_complete": true
+  },
+  {
+    "file": "02-beast.pdf",
+    "pages": 6,
+    "bytes": 7009386,
+    "sha256": "f09a626e5aa26a9512b82f1d1a153876b6998739740f53f8f6125cc5bd7e18dc",
+    "section_text_complete": true
+  },
+  {
+    "file": "03-garden.pdf",
+    "pages": 6,
+    "bytes": 7511368,
+    "sha256": "fbfd0181bcc0b269b3650a5b3b20984fae573da59cab30a226788b1f3410c0e4",
+    "section_text_complete": true
+  },
+  {
+    "file": "04-inn.pdf",
+    "pages": 6,
+    "bytes": 6793265,
+    "sha256": "877f141d2a7aa5601bd58b78be6da1aba00e1b3c0d27ac11c424a5191eeae6ef",
+    "section_text_complete": true
+  },
+  {
+    "file": "05-detective.pdf",
+    "pages": 6,
+    "bytes": 6698598,
+    "sha256": "0a4d6ccf39ca7e0f1773fc0474d25e658cf9258443b6dcfd6171cce0f45fa55d",
+    "section_text_complete": true
+  },
+  {
+    "file": "06-auction.pdf",
+    "pages": 6,
+    "bytes": 7351598,
+    "sha256": "3fa55248827066c00900e49c19c2f877106a9f41faeec09ae87ac82263838c48",
+    "section_text_complete": true
+  }
+]
