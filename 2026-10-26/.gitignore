@@ -1,0 +1,6 @@
+game/.godot/
+dist/
+.cache/
+.scratch/
+node_modules/
+*.log

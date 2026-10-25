@@ -1,0 +1,120 @@
+{
+  "tool": "yomiyasu_check.py 2.0.1",
+  "date": "2026-10-26 JST",
+  "meaning_and_readability_judged_by_tool": false,
+  "records": "Detailed originals and tool records are retained in ignored .scratch/japanese/.",
+  "reviewed_scope": "New Japanese prose, UI strings, item and character copy; only the new app entry was reviewed in the unchanged root catalog.",
+  "changes": [
+    "Corrected the README button name to the real UI label.",
+    "Clarified the trigger for full inventory loss and the map visibility description.",
+    "Used an approximate return distance label and excluded loan equipment from the stash promise.",
+    "Added character-specific empty-return dialogue and truthful zero-item result copy.",
+    "Removed unnecessary pauses in the design prose."
+  ],
+  "retained_candidates": [
+    "GDScript colons and exponent operators are required syntax, not prose formatting.",
+    "Parallel requirements and screen lists remain lists.",
+    "Short manual sentences retain consistent endings."
+  ],
+  "files": [
+    {
+      "file": "2026-10-26/README.md",
+      "sha256": "f22a3bdb0388486ff722838e64643126a0abdaf2fdbddea271fd2244242ae139",
+      "run_id": "20261025T161928Z-57299f31",
+      "attempt": 1,
+      "verification": "executed"
+    },
+    {
+      "file": "2026-10-26/AGENTS.md",
+      "sha256": "02e3ce1ca1d2b63d813368f66988f80d37526fc6cd43d4374ed624287eb19023",
+      "run_id": "20261025T162125Z-2e3c0330",
+      "attempt": 1,
+      "verification": "executed"
+    },
+    {
+      "file": "2026-10-26/docs/PLAN.md",
+      "sha256": "668ce504b32e63da8820be09c001ce7e1bdf1ba7bb21d4a2fd7f0ddf8e34573c",
+      "run_id": "20261025T162125Z-a9b43a5d",
+      "attempt": 1,
+      "verification": "executed"
+    },
+    {
+      "file": "2026-10-26/docs/ART_DIRECTION.md",
+      "sha256": "e3e06628ff7d7fd8b5287c853da022e6dd18b4784e0698a80ea1f280126fecff",
+      "run_id": "20261025T162125Z-9d78dc04",
+      "attempt": 1,
+      "verification": "executed"
+    },
+    {
+      "file": "2026-10-26/game/project.godot",
+      "sha256": "0da6de6159a61dd358bf2ab25fe89a122e0d296703d889fcfae47dd25bd36a29",
+      "run_id": "20261025T162126Z-83d1ddce",
+      "attempt": 1,
+      "verification": "executed"
+    },
+    {
+      "file": "2026-10-26/game/web_shell.html",
+      "sha256": "f40bd7f5d7744a5430b9d9482f17aed7b9bc8f675149852f781d6547c1b0dfcf",
+      "run_id": "20261025T162126Z-b6f0ae87",
+      "attempt": 1,
+      "verification": "executed"
+    },
+    {
+      "file": "2026-10-26/game/scripts/main.gd",
+      "sha256": "168dfe071b44db3d54f62f66dba9cb6d3b605360cb7fe91928b3ed9967b542b3",
+      "run_id": "20261025T162726Z-11e09a4c",
+      "attempt": 1,
+      "verification": "executed"
+    },
+    {
+      "file": "2026-10-26/game/scripts/save_store.gd",
+      "sha256": "5cbb7a1fea6953c42c1540b4310e497ffefef9232ce63d390ea0df5fb38811d4",
+      "run_id": "20261025T162127Z-5aeeaf98",
+      "attempt": 1,
+      "verification": "executed"
+    },
+    {
+      "file": "2026-10-26/game/scripts/world_data.gd",
+      "sha256": "9772bd5c2d9597aa2e18103f8d51b78b876e0b388a1aaa75dab5aff7516171f0",
+      "run_id": "20261025T162127Z-0f1198b1",
+      "attempt": 1,
+      "verification": "executed"
+    },
+    {
+      "file": "2026-10-26/game/scripts/board.gd",
+      "sha256": "6888853235be3ecf427cbdb3a0e1b7855b21e0dce6fdde9a8ddf7a5ce9fc0418",
+      "run_id": "20261025T162127Z-601d5780",
+      "attempt": 1,
+      "verification": "executed"
+    },
+    {
+      "file": "2026-10-26/game/scripts/rules.gd",
+      "sha256": "b07568c90b262c38e43380f672325f3e49e1f650b5c5b3d42747d5a6ec5876e3",
+      "run_id": "20261025T162128Z-ffe36918",
+      "attempt": 2,
+      "verification": "executed"
+    },
+    {
+      "file": "2026-10-26/game/tests/ui_test.gd",
+      "sha256": "fab0395cc341cb6f3000e54a7d84ebb5f83532b3d6a3b41ed867b04825c3819d",
+      "run_id": "20261025T162128Z-08842d8a",
+      "attempt": 1,
+      "verification": "executed"
+    },
+    {
+      "file": "2026-10-26/game/assets/art/asset-manifest.json",
+      "sha256": "5fc67cef8953410e99c4a1bad47a26fd59a321fa00b05ea45057dec7a70cb959",
+      "run_id": "20261025T162129Z-167b3abd",
+      "attempt": 2,
+      "verification": "executed"
+    },
+    {
+      "file": "apps.json",
+      "sha256": "565ca88df4836e2c433e382e353169a2dcdff3b208d7d65dc7c44c54240d0936",
+      "run_id": "20261025T162129Z-25e62b9b",
+      "attempt": 1,
+      "verification": "executed"
+    }
+  ],
+  "formatting_note": "A final EOF-only code formatting pass triggered another recorded check for main.gd; earlier records are retained. No Japanese wording changed in that pass."
+}

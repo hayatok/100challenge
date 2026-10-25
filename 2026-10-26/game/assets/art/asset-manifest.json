@@ -1,0 +1,368 @@
+{
+  "schemaVersion": 1,
+  "project": "SHIOGAERI / 潮還り",
+  "createdDate": "2026-10-26",
+  "sourceTool": "OpenAI built-in image_gen.imagegen",
+  "generationCount": 8,
+  "license": {
+    "kind": "AI-generated project assets",
+    "note": "Generated using the built-in OpenAI image tool for this project. No external stock, font or artist reference was supplied. Usage remains subject to applicable OpenAI terms; this record is provenance, not a copyright or exclusivity guarantee."
+  },
+  "processing": "All generated PNGs copied byte-for-byte. No pixel editing, cropping or normalization. Four AtlasTexture .tres resources sample the preserved atlas. Embedded generation metadata preserved.",
+  "artDirection": {
+    "medium": "Gouache and etched ink linework on weathered surfaces",
+    "palette": [
+      "slate",
+      "navy",
+      "teal",
+      "oxidized rust",
+      "ocher",
+      "warm cream"
+    ],
+    "camera": "Slightly top-down threequarter, except side-walking traveler",
+    "nativeSpriteTargetPx": [
+      40,
+      70
+    ],
+    "filter": "Smooth raster downscaling; verify sharpness in actual engine",
+    "animation": "Two separate traveler poses; no guaranteed stable animation registration"
+  },
+  "assets": [
+    {
+      "file": "harbor-cover.png",
+      "width": 1536,
+      "height": 1024,
+      "hasAlpha": false,
+      "sourcePath": "/Users/hayatok/.codex/generated_images/01a173b0-6850-78d0-8f2d-b0ba46180f50/exec-37d54a21-4b40-4543-885d-7b222e6e9feb.png",
+      "prompt": "Use case: stylized-concept\nAsset type: polished title-screen background for SHIOGAERI, a Japanese coastal salvage indie game.\nCreate one landscape 3:2 illustration, 1536x1024 composition. A dawn-flooded abandoned Japanese fishing harbor, viewed from inside wet broken timber-and-concrete architecture. Quiet dark shadow and textured walls occupy the LEFT 40 percent, intentionally simple and low contrast so native game title lettering can be placed there later. On the right half a small back-facing scavenger in an ocher hooded raincoat, heavy boots, a big worn satchel and a small warm lantern stands on a wet jetty facing a distant slender lighthouse. Floodwater among roofs, mooring ropes, crooked wooden pilings, rusted fishing equipment and crumbling harbor structures. Purposeful depth and light lead from the traveler to the distant lighthouse. Ocher traveler is small relative to the environment.\nStyle: handcrafted hand-painted gouache with fine etched ink linework, weathered paper texture, confident irregular brush edges and restrained detail. Desaturated slate/navy/teal, oxidized rust, ocher coat and warm cream dawn light. Evocative, eerie but quietly hopeful, carefully composed indie game concept art. Rich material differentiation, strong value hierarchy. No neon, pixel art, glossy 3D, cartoons, generic geometric placeholder art.\nNO words, letters, typography, UI, borders, logos, signatures or watermark. Keep left 40 percent quiet and dark. Complete standalone scene.",
+      "role": "Title background",
+      "status": "Visually accepted source; in-game crop and contrast pending",
+      "checks": [
+        "Viewed full image through view_image",
+        "Dimensions and alpha inspected with sips",
+        "Left 40 percent is dark with clear right-side traveler and distant lighthouse",
+        "No visible lettering or UI"
+      ],
+      "limitations": [
+        "Phone portrait cropping must be designed in engine; full landscape composition cannot fit a narrow viewport unchanged",
+        "Generated source art alone does not establish game quality"
+      ]
+    },
+    {
+      "file": "salvage-atlas.png",
+      "width": 1536,
+      "height": 1024,
+      "mode": "RGBA",
+      "hasAlpha": true,
+      "alphaMin": 0,
+      "alphaMax": 254,
+      "fullyTransparentPixels": 828880,
+      "sourcePath": "/Users/hayatok/.codex/generated_images/01a173b0-6850-78d0-8f2d-b0ba46180f50/exec-2a80e5ce-6191-46e5-94c4-e138f2538e76.png",
+      "prompt": "Use case: stylized-concept\nAsset type: transparent sprite atlas for SHIOGAERI coastal salvage indie game.\nCreate a genuine alpha-transparent PNG, 1536x1024, EXACTLY FOUR EQUAL COLUMNS and TWO EQUAL ROWS, eight separate subjects. Every cell is 384 pixels wide and 512 pixels tall. No grid lines. Each subject centered in its cell, complete silhouette and comfortable transparent margin; absolutely no overlapping cells, no labels.\nTOP ROW from left to right:\ncell 1: small coastal scavenger standing in front threequarter view, ocher hooded raincoat, dark boots, large weathered satchel and tiny warm cream lantern;\ncell 2: the SAME ocher raincoat scavenger, side view walking to the RIGHT, same large satchel and tiny lantern;\ncell 3: armored slate-blue crab with wide angular armored shell, readable big claws and articulated legs;\ncell 4: long-legged salt-marsh bird, elegant pale weathered feathers, slate wing, long beak, long thin legs.\nBOTTOM ROW left to right:\ncell 5: heavy rusted old diving-suit guard, round brass diving helmet, broad slate metal shoulder plates, bulky weighty boots, substantial silhouette;\ncell 6: salvage wooden chest, weathered dark wood and oxidized metal bands, lid closed;\ncell 7: rusty floodgate winch, wheel and spindle mounted on a small iron pedestal, sturdy readable shape;\ncell 8: a small old lighthouse, cream weathered plaster, slate cap, tiny warm light, short stone base.\nArt direction all eight: handcrafted hand-painted gouache with fine etched ink outlines, subtle weathered paper texture confined INSIDE the objects. Desaturated slate/navy/teal, oxidized rust, ocher coat, warm cream light. Confident irregular edges, material texture, clear chunky focal shapes and simple high contrast silhouettes that remain readable when reduced to 40–70 pixels. Slightly top-down threequarter game view except requested walking side view. Cohesive proportions and top-left light. Subject heights fit central 75% of cells. Ocher traveler and diving guard have same approximate height, crab/chest/winch shorter naturally.\nNO words, letters, logos, UI, borders, cell separators, floors, scenery, shadows extending out of cells, checkerboard background, painted background, neon, pixel art, glossy 3D. Background is empty alpha transparency, including between subjects.",
+      "role": "Eight sprite source subjects",
+      "status": "Original preserved; irregular AtlasTexture regions defined from visual inspection; in-engine verification pending",
+      "requestedGrid": {
+        "columns": 4,
+        "rows": 2,
+        "cellWidth": 384,
+        "cellHeight": 512
+      },
+      "subjects": [
+        "traveler-standing",
+        "traveler-walking-right",
+        "armored-crab",
+        "marsh-bird",
+        "diving-guard",
+        "salvage-chest",
+        "floodgate-winch",
+        "lighthouse"
+      ],
+      "checks": [
+        "Viewed full image through view_image",
+        "Bundled asset_report.py --require-alpha --json passed",
+        "All eight requested subjects present",
+        "Read-only alpha inspection confirms transparent corners and interstitial space"
+      ],
+      "limitations": [
+        "Equal-cell slicing clips or contaminates sprites: crab, chest and winch overrun 384px cell boundaries; guard and lighthouse cross the row boundary",
+        "Do not use requested grid as an approved atlas layout",
+        "Individual irregular sampling rectangles need manual definition and in-engine validation before use",
+        "Character proportions and anchor points vary across standing and walking poses",
+        "No true animation strip or collision data supplied",
+        "Readability at 40–70px remains unverified in-game",
+        "Alpha max is 254 rather than 255"
+      ],
+      "samplingResources": {
+        "crab": {
+          "resource": "crab.tres",
+          "region": [
+            746,
+            160,
+            444,
+            330
+          ]
+        },
+        "wader": {
+          "resource": "wader.tres",
+          "region": [
+            1191,
+            25,
+            337,
+            472
+          ]
+        },
+        "diver": {
+          "resource": "diver.tres",
+          "region": [
+            15,
+            491,
+            365,
+            519
+          ]
+        },
+        "chest": {
+          "resource": "crate.tres",
+          "region": [
+            403,
+            648,
+            403,
+            335
+          ]
+        }
+      }
+    },
+    {
+      "file": "isana.png",
+      "role": "Adult female playable character; fullbody hub portrait and world sprite source",
+      "width": 1024,
+      "height": 1536,
+      "mode": "RGBA",
+      "hasAlpha": true,
+      "sourcePath": "/Users/hayatok/.codex/generated_images/01a173b0-6850-78d0-8f2d-b0ba46180f50/exec-5fed44e5-1746-469b-ae50-fd933f3eafa7.png",
+      "prompt": "Use case: stylized-concept\nStandalone fullbody transparent game character illustration for SHIOGAERI, a Japanese flooded coastal salvage RPG. Subject ISANA, a beautiful ADULT woman courier in her late twenties: chestnut-brown high ponytail, refined mature friendly face, amber eyes, athletic everyday adult proportions. She wears a short ocher waterproof work coat, black work trousers, sturdy lace-up boots, large worn salvage satchel. Brass salvage-guild badge and muted teal waterproof cloth detail. Practical expedition gear, subtle salt-weathering. Relaxed expedition-ready stance, one hand holding satchel strap, other holding compact lantern. Complete visible hands, boots and equipment.\nArt: refined anime character face with painterly opaque-watercolor color planes, fine etched ink linework, handcrafted material texture, cohesive with atmospheric gouache coastal-harbor concept art. Slate/navy/teal base, ocher, rust and warm cream highlights. Beautiful expressive eyes, careful hair and cloth rendering, clear silhouette at72–96px. Slightly overhead threequarter view; entire figure head-to-toe, centered, generous empty margins all around (10–15%), portrait canvas 1024×1536. Top-left soft light. Pure genuine alpha transparency, no backdrop, no ground shadow.\nAvoid infant or chibi proportions, school uniform, sexualized or revealing outfit, oversized breasts, high heels, pinup pose, extra characters, labels, text, logos, borders, checkerboard texture, scenery, cropped body or equipment. One character only.",
+      "referenceImage": null,
+      "alpha": {
+        "min": 0,
+        "max": 254,
+        "fullyTransparentPixels": 1025920,
+        "pixelsAlpha1To8": 37804,
+        "pixelsAlpha9To127": 11148,
+        "cornerAlpha": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "contentBoundsAlphaGreaterThan8": [
+          186,
+          6,
+          881,
+          1528
+        ]
+      },
+      "status": "Visually accepted source; engine-scale readability and animation pending",
+      "checks": [
+        "Viewed full output with view_image",
+        "Read-only Pillow dimensions, alpha histogram, corners and thresholded bounds inspected",
+        "Complete head-to-toe silhouette, hands and equipment visually inspected",
+        "Broad brown preview glow lies in fully transparent RGB area; no opaque background rectangle detected"
+      ],
+      "limitations": [
+        "Margin is much tighter than requested; complete boots present but near lower edge",
+        "Sparse alpha1–8 speckles extend beyond visible silhouette",
+        "Single illustrated pose, not a true walking-animation strip",
+        "World readability, collision footprint and motion need actual Godot validation"
+      ]
+    },
+    {
+      "file": "ritsu.png",
+      "role": "Adult female playable character; fullbody hub portrait and world sprite source",
+      "width": 1024,
+      "height": 1536,
+      "mode": "RGBA",
+      "hasAlpha": true,
+      "sourcePath": "/Users/hayatok/.codex/generated_images/01a173b0-6850-78d0-8f2d-b0ba46180f50/exec-0a7e8ae9-c280-492a-be17-ed7e5e1dd02b.png",
+      "prompt": "Use case: stylized-concept. Create ONE independent fullbody transparent illustration of RITSU, a different beautiful ADULT woman in her early thirties for SHIOGAERI. Reference image is STYLE, MATERIALS, CAMERA, LIGHTING ONLY; do not copy the character's face, hairstyle, coat or bags. Match refined anime face rendering, painterly opaque-watercolor surfaces and fine etched ink lines.\nRitsu: tall, lean muscular diver, short asymmetric silver-gray bob, blue eyes, cool composed expression, angular mature facial structure. Navy practical diving work suit (opaque, sturdy and loose enough to work in, not skintight fashion), heavy diving boots, red-vermilion scarf, brass guild badge, small muted-teal waterproof cloth/tool pouch. Compact old diving rebreather/air apparatus carried at hip/back with brass fittings. Hands relaxed and clearly visible, calm ready-to-depart pose. Distinct long vertical silhouette.\nSlightly overhead threequarter view, head to toe, complete hair hands boots and all equipment; center figure occupying only 78 percent canvas height with truly generous empty margin above and below and on both sides. Portrait 1024×1536. Same top-left lighting and desaturated slate/navy/teal/rust/cream material palette. Beautiful adult woman, clearly differentiated from chestnut-haired courier reference. Readable at72–96px. Actual alpha-transparent empty background, NO backdrop or floor, no soft glow field.\nAvoid school uniform, juvenile or chibi proportions, swimsuit, cleavage, pinup pose, cropped feet, extra characters, letters, words, logos, borders, scenery, checkerboard, generic glossy 3D.",
+      "referenceImage": "game/assets/art/isana.png (style/material/camera reference only)",
+      "alpha": {
+        "min": 0,
+        "max": 254,
+        "fullyTransparentPixels": 1088421,
+        "pixelsAlpha1To8": 26810,
+        "pixelsAlpha9To127": 8981,
+        "cornerAlpha": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "contentBoundsAlphaGreaterThan8": [
+          260,
+          39,
+          854,
+          1510
+        ]
+      },
+      "status": "Visually accepted source; engine-scale readability and animation pending",
+      "checks": [
+        "Viewed full output with view_image",
+        "Read-only Pillow dimensions, alpha histogram, corners and thresholded bounds inspected",
+        "Complete head-to-toe silhouette, hands and equipment visually inspected",
+        "Broad brown preview glow lies in fully transparent RGB area; no opaque background rectangle detected"
+      ],
+      "limitations": [
+        "Margin is much tighter than requested; complete boots present but near lower edge",
+        "Sparse alpha1–8 speckles extend beyond visible silhouette",
+        "Single illustrated pose, not a true walking-animation strip",
+        "World readability, collision footprint and motion need actual Godot validation"
+      ]
+    },
+    {
+      "file": "kohaku.png",
+      "role": "Adult female playable character; fullbody hub portrait and world sprite source",
+      "width": 1024,
+      "height": 1536,
+      "mode": "RGBA",
+      "hasAlpha": true,
+      "sourcePath": "/Users/hayatok/.codex/generated_images/01a173b0-6850-78d0-8f2d-b0ba46180f50/exec-398aec95-cafb-4ddf-b40a-39a4fb569c5b.png",
+      "prompt": "Use case: stylized-concept. ONE independent fullbody transparent game illustration of KOHAKU for SHIOGAERI. Reference is STYLE/CAMERA/MATERIALS only, NOT face or body identity. Match fine etched outlines with painterly opaque-watercolor material planes, refined beautiful mature anime face, weathered practical coastal work clothing.\nKohaku is an ADULT woman mechanic in her early thirties, warm brown skin, copper-colored curly hair in a tousled medium-length mass, green eyes, broad friendly grin, strong broad-shouldered stocky muscular body. Distinct rounder warm face. Rust-vermilion sturdy work coveralls with sleeves rolled to forearms, heavy practical boots, protective goggles pushed up over forehead. Large salvager wrench held down in one hand, compact tool belt, brass guild badge, teal waterproof cloth tied at hip. Relaxed sturdy feet-apart expedition-ready stance. Complete hands and boots, normal adult proportions, not a teen or chibi.\nSlightly overhead threequarter view, top-left soft light. Centered head-to-toe on portrait 1024×1536 canvas; figure only 78% canvas height, truly generous margin all four sides, equipment fully inside. Slate/navy/teal/rust/cream palette. Reads at72–96px and works as large hub portrait. Actual alpha-transparent empty background. NO backdrop, no floor, no atmospheric glow or vignette.\nAvoid sexual costume, cleavage, exposed midriff, high heels, school uniform, copying reference face/hair, cropped limbs/equipment, extra figures, text, words, logo, cell borders, checkerboard or scenery.",
+      "referenceImage": "game/assets/art/isana.png (style/material/camera reference only)",
+      "alpha": {
+        "min": 0,
+        "max": 254,
+        "fullyTransparentPixels": 948266,
+        "pixelsAlpha1To8": 34012,
+        "pixelsAlpha9To127": 9499,
+        "cornerAlpha": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "contentBoundsAlphaGreaterThan8": [
+          63,
+          6,
+          897,
+          1525
+        ]
+      },
+      "status": "Visually accepted corrected source; rich brown skin brief met; engine-scale readability and animation pending",
+      "checks": [
+        "Viewed full output with view_image",
+        "Read-only Pillow dimensions, alpha histogram, corners and thresholded bounds inspected",
+        "Complete head-to-toe silhouette, hands and equipment visually inspected",
+        "Broad brown preview glow lies in fully transparent RGB area; no opaque background rectangle detected",
+        "One built-in identity-preserving skin correction inspected: rich warm brown face, neck, forearms and fingers consistent; copper curls, adult features, goggles, coveralls, gear and pose preserved."
+      ],
+      "limitations": [
+        "Margin is much tighter than requested; complete boots present but near lower edge",
+        "Sparse alpha1–8 speckles extend beyond visible silhouette",
+        "Single illustrated pose, not a true walking-animation strip",
+        "World readability, collision footprint and motion need actual Godot validation"
+      ],
+      "history": [
+        {
+          "file": "kohaku-v1.png",
+          "sourcePath": "/Users/hayatok/.codex/generated_images/01a173b0-6850-78d0-8f2d-b0ba46180f50/exec-90a3a38c-36df-475d-bade-b30fec608a4c.png",
+          "prompt": "Use case: stylized-concept. ONE independent fullbody transparent game illustration of KOHAKU for SHIOGAERI. Reference is STYLE/CAMERA/MATERIALS only, NOT face or body identity. Match fine etched outlines with painterly opaque-watercolor material planes, refined beautiful mature anime face, weathered practical coastal work clothing.\nKohaku is an ADULT woman mechanic in her early thirties, warm brown skin, copper-colored curly hair in a tousled medium-length mass, green eyes, broad friendly grin, strong broad-shouldered stocky muscular body. Distinct rounder warm face. Rust-vermilion sturdy work coveralls with sleeves rolled to forearms, heavy practical boots, protective goggles pushed up over forehead. Large salvager wrench held down in one hand, compact tool belt, brass guild badge, teal waterproof cloth tied at hip. Relaxed sturdy feet-apart expedition-ready stance. Complete hands and boots, normal adult proportions, not a teen or chibi.\nSlightly overhead threequarter view, top-left soft light. Centered head-to-toe on portrait 1024×1536 canvas; figure only 78% canvas height, truly generous margin all four sides, equipment fully inside. Slate/navy/teal/rust/cream palette. Reads at72–96px and works as large hub portrait. Actual alpha-transparent empty background. NO backdrop, no floor, no atmospheric glow or vignette.\nAvoid sexual costume, cleavage, exposed midriff, high heels, school uniform, copying reference face/hair, cropped limbs/equipment, extra figures, text, words, logo, cell borders, checkerboard or scenery.",
+          "reasonSuperseded": "Skin generated warm tan rather than specified rich brown; preserved original unchanged."
+        }
+      ],
+      "editPrompt": "Use case: identity-preserve\nEdit the supplied Kohaku character illustration. CHANGE ONLY exposed skin color: give her clearly rich warm BROWN skin, a deep warm chestnut/copper-brown complexion unmistakably darker than the current pale tan. Make the skin on face, neck, visible upper chest, both forearms, visible hands and fingers CONSISTENTLY rich warm brown. Preserve beautiful mature adult anime facial identity and green eyes, warm confident smile, all facial features and fine painterly shading. Natural convincing rich brown skin, with appropriate warm highlights and darker shadows, not an orange filter over the entire image.\nPRESERVE EXACTLY copper curly hair, goggles on forehead, rust-red practical work coveralls, broad sturdy adult physique, sleeves, brass guild badge, teal cloth accents, tool satchel, large wrench, full-body head-to-toe pose, hands, equipment, boots, composition, fine etched linework and opaque-watercolor game illustration style. Do not alter the clothes' colors or character identity. No new elements. Keep original fullbody dimensions1024×1536 and complete silhouette.\nBackground must remain genuine alpha transparency. No backdrop, floor, cast shadow, glow field, vignette, words, letters, logo or border. This is the same adult woman, with corrected rich warm brown skin only.",
+      "editReference": "game/assets/art/kohaku-v1.png"
+    },
+    {
+      "file": "sui.png",
+      "role": "Adult female playable character; fullbody hub portrait and world sprite source",
+      "width": 1024,
+      "height": 1536,
+      "mode": "RGBA",
+      "hasAlpha": true,
+      "sourcePath": "/Users/hayatok/.codex/generated_images/01a173b0-6850-78d0-8f2d-b0ba46180f50/exec-33e4a9ce-8cb7-4dda-bb26-ab66cd2ae489.png",
+      "prompt": "Use case: stylized-concept. ONE standalone fullbody transparent character illustration of SUI, a different beautiful ADULT woman surveyor in her late twenties, SHIOGAERI flooded coastal salvage RPG. Reference image is style, material rendering, lighting and angle ONLY. Do not copy its face, hair, body, equipment or coat.\nSui has very long straight black hair, pale violet eyes, light skin, a refined narrow mature face with a quiet curious expression, slender adult build. She wears a long weathered unbleached cream hooded expedition coat with hood down, layered muted teal tunic/clothes beneath, practical dark leggings and worn sturdy boots. Surveyor satchel carrying folded maps, brass measuring compass in one clearly visible hand; other hand rests on satchel strap. Small common brass salvage-guild badge, teal waterproof cloth detail. Long coat and straight hair form her distinctive vertical silhouette. Beautiful elegant adult, practical and capable.\nMatch refined mature anime face, fine etched ink linework, painterly opaque-watercolor color planes and weathered handmade materials from reference. Top-left light, desaturated slate/navy/teal with cream main coat. Slightly overhead threequarter view, relaxed expedition-ready stance, whole head to soles with all hands and equipment intact. Portrait 1024×1536, figure occupies only 78% height; generous truly empty margins on all sides. Readable at72–96px and as hub portrait.\nGenuine alpha transparency, empty transparent background. No backdrop, ground, ambient fog, glow field or vignette. No school uniform, juvenile proportions, chibi, sexualized costume, cleavage, exposed midriff, heels, pinup pose, duplicate figure, scenery, text, logos, words, borders or checkerboard. Do not crop boots or hair.",
+      "referenceImage": "game/assets/art/isana.png (style/material/camera reference only)",
+      "alpha": {
+        "min": 0,
+        "max": 254,
+        "fullyTransparentPixels": 954612,
+        "pixelsAlpha1To8": 42050,
+        "pixelsAlpha9To127": 16100,
+        "cornerAlpha": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "contentBoundsAlphaGreaterThan8": [
+          154,
+          25,
+          897,
+          1510
+        ]
+      },
+      "status": "Visually accepted source; engine-scale readability and animation pending",
+      "checks": [
+        "Viewed full output with view_image",
+        "Read-only Pillow dimensions, alpha histogram, corners and thresholded bounds inspected",
+        "Complete head-to-toe silhouette, hands and equipment visually inspected",
+        "Broad brown preview glow lies in fully transparent RGB area; no opaque background rectangle detected"
+      ],
+      "limitations": [
+        "Margin is much tighter than requested; complete boots present but near lower edge",
+        "Sparse alpha1–8 speckles extend beyond visible silhouette",
+        "Single illustrated pose, not a true walking-animation strip",
+        "World readability, collision footprint and motion need actual Godot validation"
+      ]
+    },
+    {
+      "file": "terrain-atlas.png",
+      "role": "Four overhead material sources",
+      "width": 1254,
+      "height": 1254,
+      "mode": "RGB",
+      "hasAlpha": false,
+      "sourcePath": "/Users/hayatok/.codex/generated_images/01a173b0-6850-78d0-8f2d-b0ba46180f50/exec-5a5570b0-5613-4de5-baee-6491195cbad0.png",
+      "prompt": "Use case: stylized-concept.\nCreate a production game material sheet 1536×1536 with EXACT 2 equal columns ×2 equal rows. FOUR QUADRANTS of 768×768 pixels, boundaries exactly at image midpoint. Fill each entire quadrant edge-to-edge with a different flat overhead ground material, no margins, no dividing lines, no labels, no objects.\nTOP LEFT: damp desaturated slate-blue cobblestone paving, irregular small worn stones, subtle salt and moss in joins.\nTOP RIGHT: dark rough seawall stone blocks, larger rectangular navy-slate weathered blocks with broad cracks.\nBOTTOM LEFT: horizontal weathered wooden dock boards, desaturated warm gray-brown planks with subtle rust marks and grain, all boards run horizontally.\nBOTTOM RIGHT: deep teal shallow tidal water, painterly gentle small ripples and restrained pale reflections.\nAll viewed completely FLAT OVERHEAD ORTHOGRAPHIC, evenly lit, no perspective, no horizon, no raised edges or 3D props, no cast shadows or vignette. Handcrafted opaque-watercolor/gouache material planes with fine etched detail and weathered paper feeling; cohesive with atmospheric Japanese flooded coastal salvage indie game. Slate/navy/teal/oxidized rust restrained palette. Modest small-scale texture so characters remain readable. Seamless-style material within each quadrant, repeating composition with no strong central feature. No words, no letters, no symbols, no UI, no framing, no neon, no pixel art, no glossy render. Opaque full canvas.",
+      "quadrants": {
+        "slateCobblestone": [
+          0,
+          0,
+          627,
+          627
+        ],
+        "seawallBlocks": [
+          627,
+          0,
+          627,
+          627
+        ],
+        "dockBoards": [
+          0,
+          627,
+          627,
+          627
+        ],
+        "tidalWater": [
+          627,
+          627,
+          627,
+          627
+        ]
+      },
+      "status": "Visually accepted flat materials; tiling and in-game contrast pending",
+      "checks": [
+        "Viewed full output with view_image",
+        "Read-only dimensions verified",
+        "Correct 2x2 material order, no visible text/objects/borders"
+      ],
+      "limitations": [
+        "Generated1254x1254 rather than requested1536x1536",
+        "Seamless repeat not verified; obvious repeated landmarks possible",
+        "Sampling a quadrant as an entire small tile may over-compress texture detail; verify at64px tile scale"
+      ]
+    }
+  ],
+  "currentAssetRoot": "game/assets/art",
+  "developmentTarget": "Godot 4 2D; engine integration and game-scale validation owned by parent",
+  "designAuthority": "docs/ART_DIRECTION.md was read fully before generating the four new adult female characters and terrain sheet."
+}
