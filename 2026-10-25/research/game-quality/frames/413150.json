@@ -1,0 +1,83 @@
+{
+  "appid": 413150,
+  "name": "Stardew Valley",
+  "store_page": "https://store.steampowered.com/app/413150/",
+  "retrieved_at": "2026-10-25T11:38:18.530964+00:00",
+  "source_metadata": "https://store.steampowered.com/api/appdetails?appids=413150&cc=us&l=english",
+  "movie_name": "Stardew Valley Trailer 1080p",
+  "movie_id": 256815967,
+  "movie_url": "https://video.akamai.steamstatic.com/store_trailers/413150/336433/0058de516bf7c46986ba1e81172ffd3c2ca6cad7/1750527541/dash_h264.mpd?t=1754692862",
+  "media_source_sha256": "5c02f34736c91b9f8f40b2b1c8c2ab424d0d385be2277ba428966197765938b3",
+  "hash_scope": "DASH manifest",
+  "duration_seconds": 182.0,
+  "source_kind": "publisher Steam store video; edited trailer",
+  "observation_limit": "selected still frames only; no full playback or player-input observation",
+  "frames": [
+    {
+      "id": "413150@15.00",
+      "seconds": 15.0,
+      "file": "frames/413150-015.00.jpg",
+      "sha256": "6ce88710fda0bda3c0ada5d8129002f58ede77a82412602430a700d280aaf370",
+      "segment": {
+        "url": "https://video.akamai.steamstatic.com/store_trailers/413150/336433/0058de516bf7c46986ba1e81172ffd3c2ca6cad7/1750527541/dash_h264/chunk-stream1-00006.m4s",
+        "segment_start_seconds": 15.0,
+        "sha256": "30715835be5cda3ac94f2acaf55e26548dafd67d9c252ac88e2df408d475916c"
+      }
+    },
+    {
+      "id": "413150@30.00",
+      "seconds": 30.0,
+      "file": "frames/413150-030.00.jpg",
+      "sha256": "e4ff3889473574d993a1b886ba6e51878be1dacc5ec69a51063fbc7d15d44181",
+      "segment": {
+        "url": "https://video.akamai.steamstatic.com/store_trailers/413150/336433/0058de516bf7c46986ba1e81172ffd3c2ca6cad7/1750527541/dash_h264/chunk-stream1-00011.m4s",
+        "segment_start_seconds": 30.0,
+        "sha256": "ce41abcce4c5e7fb02b783f4035ba7ac84d92c682c62769792ebc72cd5311879"
+      }
+    },
+    {
+      "id": "413150@45.00",
+      "seconds": 45.0,
+      "file": "frames/413150-045.00.jpg",
+      "sha256": "371a2ede99131e8f17c552633fd136254ec83a24af87f0e5b5c5bf22610a485d",
+      "segment": {
+        "url": "https://video.akamai.steamstatic.com/store_trailers/413150/336433/0058de516bf7c46986ba1e81172ffd3c2ca6cad7/1750527541/dash_h264/chunk-stream1-00016.m4s",
+        "segment_start_seconds": 45.0,
+        "sha256": "b77db13d93d56373a802c32a0701b054bd99e76afa18400ab45dd71ae4686256"
+      }
+    },
+    {
+      "id": "413150@60.00",
+      "seconds": 60.0,
+      "file": "frames/413150-060.00.jpg",
+      "sha256": "c4a7b89c1c605c76e732499d03a6d6b68e300083541b9bd4bb7f2bbf07752bd2",
+      "segment": {
+        "url": "https://video.akamai.steamstatic.com/store_trailers/413150/336433/0058de516bf7c46986ba1e81172ffd3c2ca6cad7/1750527541/dash_h264/chunk-stream1-00021.m4s",
+        "segment_start_seconds": 60.0,
+        "sha256": "5ca28a83aa213e5522b46d13bf590d1838f27269f16108e88c5360d89ad91303"
+      }
+    },
+    {
+      "id": "413150@75.00",
+      "seconds": 75.0,
+      "file": "frames/413150-075.00.jpg",
+      "sha256": "97cd38fc3dc977a1350a35a5399e569be51339c076e56125e2d8b508f0ad2313",
+      "segment": {
+        "url": "https://video.akamai.steamstatic.com/store_trailers/413150/336433/0058de516bf7c46986ba1e81172ffd3c2ca6cad7/1750527541/dash_h264/chunk-stream1-00026.m4s",
+        "segment_start_seconds": 75.0,
+        "sha256": "bdde9e53ff4117f0ee731ec5ff8b2337b76c77ae506ac06f070dd7feb14d5b1b"
+      }
+    },
+    {
+      "id": "413150@90.00",
+      "seconds": 90.0,
+      "file": "frames/413150-090.00.jpg",
+      "sha256": "117e7e9fd6535b65836d1b0692308e93d91221c065b462ad815f91689cd6c764",
+      "segment": {
+        "url": "https://video.akamai.steamstatic.com/store_trailers/413150/336433/0058de516bf7c46986ba1e81172ffd3c2ca6cad7/1750527541/dash_h264/chunk-stream1-00031.m4s",
+        "segment_start_seconds": 90.0,
+        "sha256": "a6e0988a2e2750f412494c705d0c563b383c4256b2b082202bab7e4db71bca5e"
+      }
+    }
+  ]
+}

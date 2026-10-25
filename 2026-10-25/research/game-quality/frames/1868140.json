@@ -1,0 +1,83 @@
+{
+  "appid": 1868140,
+  "name": "DAVE THE DIVER",
+  "store_page": "https://store.steampowered.com/app/1868140/",
+  "retrieved_at": "2026-10-25T11:57:08.855126+00:00",
+  "source_metadata": "https://store.steampowered.com/api/appdetails?appids=1868140&cc=us&l=english",
+  "movie_name": "DAVE THE DIVER_DIVE IN NOW Trailer",
+  "movie_id": 256955037,
+  "movie_url": "https://video.akamai.steamstatic.com/store_trailers/1868140/581787/bef9ffd11e17bcfa42e6609682e42cc296264c3f/1750739131/dash_h264.mpd?t=1734352317",
+  "media_source_sha256": "61e78d61a6492040db5f026375a952c6c436114ce52b53e3c063fae25b134a02",
+  "hash_scope": "DASH manifest",
+  "duration_seconds": 95.5,
+  "source_kind": "publisher Steam store video; edited trailer",
+  "observation_limit": "selected still frames only; no full playback or player-input observation",
+  "frames": [
+    {
+      "id": "1868140@5.00",
+      "seconds": 5.0,
+      "file": "frames/1868140-005.00.jpg",
+      "sha256": "0c9804705dd43da3401cd2b008dec11199731d1c3f52887b81a686d9cc5fed7f",
+      "segment": {
+        "url": "https://video.akamai.steamstatic.com/store_trailers/1868140/581787/bef9ffd11e17bcfa42e6609682e42cc296264c3f/1750739131/dash_h264/chunk-stream1-00002.m4s",
+        "segment_start_seconds": 3.0,
+        "sha256": "fd2794dc1b60a0b6ca11203662e6870bb740cdc26bd259b817df6bad93ee6540"
+      }
+    },
+    {
+      "id": "1868140@10.00",
+      "seconds": 10.0,
+      "file": "frames/1868140-010.00.jpg",
+      "sha256": "4c5b1a670e538e94da44466608bdbdf27b875c2271de65b20e22145a2f8703b1",
+      "segment": {
+        "url": "https://video.akamai.steamstatic.com/store_trailers/1868140/581787/bef9ffd11e17bcfa42e6609682e42cc296264c3f/1750739131/dash_h264/chunk-stream1-00004.m4s",
+        "segment_start_seconds": 9.0,
+        "sha256": "d963e0cf2a0b9e05fd7c8e9f66f6b3bad4361d606af8a31713f6175b552f248d"
+      }
+    },
+    {
+      "id": "1868140@25.00",
+      "seconds": 25.0,
+      "file": "frames/1868140-025.00.jpg",
+      "sha256": "ecf30dc69eab98743d36535685d517e0927f13e5299976c410fc6bddadbee020",
+      "segment": {
+        "url": "https://video.akamai.steamstatic.com/store_trailers/1868140/581787/bef9ffd11e17bcfa42e6609682e42cc296264c3f/1750739131/dash_h264/chunk-stream1-00009.m4s",
+        "segment_start_seconds": 24.0,
+        "sha256": "73837f4e8d7767b54d9b514cd25fa11d95c94c807b2801d29670c1f357432c59"
+      }
+    },
+    {
+      "id": "1868140@55.00",
+      "seconds": 55.0,
+      "file": "frames/1868140-055.00.jpg",
+      "sha256": "adb4f6f28461837a72e0f2092fe03d9e03afdf658939e59a0cd3cc4d3767f98e",
+      "segment": {
+        "url": "https://video.akamai.steamstatic.com/store_trailers/1868140/581787/bef9ffd11e17bcfa42e6609682e42cc296264c3f/1750739131/dash_h264/chunk-stream1-00019.m4s",
+        "segment_start_seconds": 54.0,
+        "sha256": "d1d1fc826a60ba5d50b609a8cb56d9f2111edeb87854a3d910384c672d8d7e6f"
+      }
+    },
+    {
+      "id": "1868140@65.00",
+      "seconds": 65.0,
+      "file": "frames/1868140-065.00.jpg",
+      "sha256": "1b1f025bd52ef0f111ac3686b9311eae5161d40649aef1274a7ea5028fda08d2",
+      "segment": {
+        "url": "https://video.akamai.steamstatic.com/store_trailers/1868140/581787/bef9ffd11e17bcfa42e6609682e42cc296264c3f/1750739131/dash_h264/chunk-stream1-00022.m4s",
+        "segment_start_seconds": 63.0,
+        "sha256": "5078e1ca1d6c63c6a5f46b3abbec24c2e513b7c085654b7f208ac69efe25d5f0"
+      }
+    },
+    {
+      "id": "1868140@80.00",
+      "seconds": 80.0,
+      "file": "frames/1868140-080.00.jpg",
+      "sha256": "90ff44cd9e219d837ebccef63ef90e42a1646278a3db68b6da07396f6e2ceab6",
+      "segment": {
+        "url": "https://video.akamai.steamstatic.com/store_trailers/1868140/581787/bef9ffd11e17bcfa42e6609682e42cc296264c3f/1750739131/dash_h264/chunk-stream1-00027.m4s",
+        "segment_start_seconds": 78.0,
+        "sha256": "da5c6c749c1038b3f585c6f99f4702922095fcb9c710806604a397dfbff2efa8"
+      }
+    }
+  ]
+}

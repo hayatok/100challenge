@@ -1,0 +1,72 @@
+{
+  "appid": 457140,
+  "name": "Oxygen Not Included",
+  "store_page": "https://store.steampowered.com/app/457140/",
+  "retrieved_at": "2026-10-25T11:55:09.891516+00:00",
+  "source_metadata": "https://store.steampowered.com/api/appdetails?appids=457140&cc=us&l=english",
+  "movie_name": "Early Access 2",
+  "movie_id": 256685295,
+  "movie_url": "https://video.akamai.steamstatic.com/store_trailers/457140/103374/3cc2b3498e96c43f0b38893c5225454917bfb20d/1750532755/dash_h264.mpd?t=1495142922",
+  "media_source_sha256": "61fd78ed55dd7635948971d9ff913f8230a9ab1d8fe25568c9595d634c15d60f",
+  "hash_scope": "DASH manifest",
+  "duration_seconds": 63.5,
+  "source_kind": "publisher Steam store video; edited trailer",
+  "observation_limit": "selected still frames only; no full playback or player-input observation",
+  "frames": [
+    {
+      "id": "457140@12.70",
+      "seconds": 12.7,
+      "file": "frames/457140-012.70.jpg",
+      "sha256": "a4b5ae40ff748b649e264cdff3366705c1a212219688ffe6e8861258ca60f5a5",
+      "segment": {
+        "url": "https://video.akamai.steamstatic.com/store_trailers/457140/103374/3cc2b3498e96c43f0b38893c5225454917bfb20d/1750532755/dash_h264/chunk-stream1-00005.m4s",
+        "segment_start_seconds": 12.0,
+        "sha256": "3ca3eae30c5c3a4ef9d1576f9f70338737114e855c5b39fea14efe6dc470d718"
+      }
+    },
+    {
+      "id": "457140@22.22",
+      "seconds": 22.22,
+      "file": "frames/457140-022.22.jpg",
+      "sha256": "83fe63cce61bd9c5c5a0d62e85fefae023ae0eac763dcf45062a6f06789b359c",
+      "segment": {
+        "url": "https://video.akamai.steamstatic.com/store_trailers/457140/103374/3cc2b3498e96c43f0b38893c5225454917bfb20d/1750532755/dash_h264/chunk-stream1-00008.m4s",
+        "segment_start_seconds": 21.0,
+        "sha256": "81b4e3c6b2bd5a7a040bd8891a087b87d02751bf7f460897e48cb247ecd28b78"
+      }
+    },
+    {
+      "id": "457140@31.75",
+      "seconds": 31.75,
+      "file": "frames/457140-031.75.jpg",
+      "sha256": "fa8fc998375c5897a531e30874c2d00d9740a8beb83f5631d1b3d5bbab55175e",
+      "segment": {
+        "url": "https://video.akamai.steamstatic.com/store_trailers/457140/103374/3cc2b3498e96c43f0b38893c5225454917bfb20d/1750532755/dash_h264/chunk-stream1-00011.m4s",
+        "segment_start_seconds": 30.0,
+        "sha256": "fa8be37b5a49709a9562231be1ab48c177c06509f82865542c4b3164c9b4251b"
+      }
+    },
+    {
+      "id": "457140@41.27",
+      "seconds": 41.27,
+      "file": "frames/457140-041.27.jpg",
+      "sha256": "02a9d716a05f324cdd3493f854351442bd1af1d155f89874ac8be2eff976e122",
+      "segment": {
+        "url": "https://video.akamai.steamstatic.com/store_trailers/457140/103374/3cc2b3498e96c43f0b38893c5225454917bfb20d/1750532755/dash_h264/chunk-stream1-00014.m4s",
+        "segment_start_seconds": 39.0,
+        "sha256": "3f06fc449bb5c7f27ee7be1f06ea2877fd2d55446c763ca3fbbc10090607b9af"
+      }
+    },
+    {
+      "id": "457140@50.80",
+      "seconds": 50.8,
+      "file": "frames/457140-050.80.jpg",
+      "sha256": "e37a449ddb606389007eb4f1ef6ff3735fceb665bc08e283f95b51e9d984f25c",
+      "segment": {
+        "url": "https://video.akamai.steamstatic.com/store_trailers/457140/103374/3cc2b3498e96c43f0b38893c5225454917bfb20d/1750532755/dash_h264/chunk-stream1-00017.m4s",
+        "segment_start_seconds": 48.0,
+        "sha256": "6aefa7a0134a8f3f597b385f1111f13d7b42e0797460f0a527c418b7e39516e4"
+      }
+    }
+  ]
+}

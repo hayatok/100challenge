@@ -1,0 +1,1524 @@
+[
+  {
+    "kind": "global-most-played",
+    "source_url": "https://api.steampowered.com/ISteamChartsService/GetMostPlayedGames/v1/",
+    "public_page": "https://store.steampowered.com/charts/mostplayed",
+    "retrieved_at": "2026-10-25T11:36:07.820845+00:00",
+    "rollup_date": 1792800000,
+    "sha256": "174dd9ff6500e8879ac084871f09788a4f8ec93a9387c7a3eb67d81f67b76f6e",
+    "entries": [
+      {
+        "rank": 1,
+        "appid": 730,
+        "last_week_rank": 1,
+        "peak_in_game": 1347645
+      },
+      {
+        "rank": 2,
+        "appid": 570,
+        "last_week_rank": 2,
+        "peak_in_game": 1082992
+      },
+      {
+        "rank": 3,
+        "appid": 578080,
+        "last_week_rank": 3,
+        "peak_in_game": 817009
+      },
+      {
+        "rank": 4,
+        "appid": 431960,
+        "last_week_rank": 4,
+        "peak_in_game": 126398
+      },
+      {
+        "rank": 5,
+        "appid": 1422450,
+        "last_week_rank": 5,
+        "peak_in_game": 257777
+      },
+      {
+        "rank": 6,
+        "appid": 1938090,
+        "last_week_rank": 17,
+        "peak_in_game": 227622
+      },
+      {
+        "rank": 7,
+        "appid": 1172470,
+        "last_week_rank": 6,
+        "peak_in_game": 233670
+      },
+      {
+        "rank": 8,
+        "appid": 1091500,
+        "last_week_rank": 38,
+        "peak_in_game": 162291
+      },
+      {
+        "rank": 9,
+        "appid": 1867240,
+        "last_week_rank": 7,
+        "peak_in_game": 201193
+      },
+      {
+        "rank": 10,
+        "appid": 3393110,
+        "last_week_rank": 8,
+        "peak_in_game": 256271
+      },
+      {
+        "rank": 11,
+        "appid": 271590,
+        "last_week_rank": 10,
+        "peak_in_game": 75747
+      },
+      {
+        "rank": 12,
+        "appid": 2868840,
+        "last_week_rank": 12,
+        "peak_in_game": 102435
+      },
+      {
+        "rank": 13,
+        "appid": 322170,
+        "last_week_rank": 9,
+        "peak_in_game": 77692
+      },
+      {
+        "rank": 14,
+        "appid": 2676230,
+        "last_week_rank": 13,
+        "peak_in_game": 197182
+      },
+      {
+        "rank": 15,
+        "appid": 236390,
+        "last_week_rank": 16,
+        "peak_in_game": 98326
+      },
+      {
+        "rank": 16,
+        "appid": 359550,
+        "last_week_rank": 15,
+        "peak_in_game": 85352
+      },
+      {
+        "rank": 17,
+        "appid": 2357570,
+        "last_week_rank": 14,
+        "peak_in_game": 70900
+      },
+      {
+        "rank": 18,
+        "appid": 553850,
+        "last_week_rank": 24,
+        "peak_in_game": 71961
+      },
+      {
+        "rank": 19,
+        "appid": 381210,
+        "last_week_rank": 21,
+        "peak_in_game": 71988
+      },
+      {
+        "rank": 20,
+        "appid": 250900,
+        "last_week_rank": 22,
+        "peak_in_game": 64348
+      },
+      {
+        "rank": 21,
+        "appid": 2767030,
+        "last_week_rank": 23,
+        "peak_in_game": 91784
+      },
+      {
+        "rank": 22,
+        "appid": 230410,
+        "last_week_rank": 19,
+        "peak_in_game": 91119
+      },
+      {
+        "rank": 23,
+        "appid": 892970,
+        "last_week_rank": 18,
+        "peak_in_game": 124046
+      },
+      {
+        "rank": 24,
+        "appid": 413150,
+        "last_week_rank": 25,
+        "peak_in_game": 99123
+      },
+      {
+        "rank": 25,
+        "appid": 2807960,
+        "last_week_rank": 20,
+        "peak_in_game": 54927
+      },
+      {
+        "rank": 26,
+        "appid": 105600,
+        "last_week_rank": 26,
+        "peak_in_game": 56090
+      },
+      {
+        "rank": 27,
+        "appid": 1808500,
+        "last_week_rank": 11,
+        "peak_in_game": 99824
+      },
+      {
+        "rank": 28,
+        "appid": 1973530,
+        "last_week_rank": 27,
+        "peak_in_game": 48263
+      },
+      {
+        "rank": 29,
+        "appid": 3240220,
+        "last_week_rank": 30,
+        "peak_in_game": 74735
+      },
+      {
+        "rank": 30,
+        "appid": 252490,
+        "last_week_rank": 31,
+        "peak_in_game": 131944
+      },
+      {
+        "rank": 31,
+        "appid": 550,
+        "last_week_rank": 29,
+        "peak_in_game": 43605
+      },
+      {
+        "rank": 32,
+        "appid": 2507950,
+        "last_week_rank": 32,
+        "peak_in_game": 125444
+      },
+      {
+        "rank": 33,
+        "appid": 292030,
+        "last_week_rank": 28,
+        "peak_in_game": 74684
+      },
+      {
+        "rank": 34,
+        "appid": 284160,
+        "last_week_rank": 49,
+        "peak_in_game": 43940
+      },
+      {
+        "rank": 35,
+        "appid": 227300,
+        "last_week_rank": 33,
+        "peak_in_game": 52089
+      },
+      {
+        "rank": 36,
+        "appid": 1203620,
+        "last_week_rank": 35,
+        "peak_in_game": 109752
+      },
+      {
+        "rank": 37,
+        "appid": 440,
+        "last_week_rank": 36,
+        "peak_in_game": 99228
+      },
+      {
+        "rank": 38,
+        "appid": 108600,
+        "last_week_rank": 34,
+        "peak_in_game": 69291
+      },
+      {
+        "rank": 39,
+        "appid": 322330,
+        "last_week_rank": 46,
+        "peak_in_game": 70456
+      },
+      {
+        "rank": 40,
+        "appid": 438100,
+        "last_week_rank": 39,
+        "peak_in_game": 63887
+      },
+      {
+        "rank": 41,
+        "appid": 4080220,
+        "last_week_rank": 40,
+        "peak_in_game": 74729
+      },
+      {
+        "rank": 42,
+        "appid": 1174180,
+        "last_week_rank": 41,
+        "peak_in_game": 50243
+      },
+      {
+        "rank": 43,
+        "appid": 4126040,
+        "last_week_rank": 37,
+        "peak_in_game": 49561
+      },
+      {
+        "rank": 44,
+        "appid": 394360,
+        "last_week_rank": 42,
+        "peak_in_game": 61892
+      },
+      {
+        "rank": 45,
+        "appid": 3405690,
+        "last_week_rank": 43,
+        "peak_in_game": 37979
+      },
+      {
+        "rank": 46,
+        "appid": 1203220,
+        "last_week_rank": 48,
+        "peak_in_game": 69508
+      },
+      {
+        "rank": 47,
+        "appid": 1086940,
+        "last_week_rank": 45,
+        "peak_in_game": 57096
+      },
+      {
+        "rank": 48,
+        "appid": 3241660,
+        "last_week_rank": 50,
+        "peak_in_game": 28938
+      },
+      {
+        "rank": 49,
+        "appid": 4000,
+        "last_week_rank": 56,
+        "peak_in_game": 38909
+      },
+      {
+        "rank": 50,
+        "appid": 1142710,
+        "last_week_rank": 47,
+        "peak_in_game": 58696
+      },
+      {
+        "rank": 51,
+        "appid": 1623730,
+        "last_week_rank": 51,
+        "peak_in_game": 63944
+      },
+      {
+        "rank": 52,
+        "appid": 252950,
+        "last_week_rank": 55,
+        "peak_in_game": 30612
+      },
+      {
+        "rank": 53,
+        "appid": 3527290,
+        "last_week_rank": 59,
+        "peak_in_game": 26820
+      },
+      {
+        "rank": 54,
+        "appid": 1304930,
+        "last_week_rank": 44,
+        "peak_in_game": 42688
+      },
+      {
+        "rank": 55,
+        "appid": 1364780,
+        "last_week_rank": 54,
+        "peak_in_game": 38545
+      },
+      {
+        "rank": 56,
+        "appid": 489830,
+        "last_week_rank": 60,
+        "peak_in_game": 38626
+      },
+      {
+        "rank": 57,
+        "appid": 1449850,
+        "last_week_rank": 57,
+        "peak_in_game": 22701
+      },
+      {
+        "rank": 58,
+        "appid": 2483190,
+        "last_week_rank": 58,
+        "peak_in_game": 22318
+      },
+      {
+        "rank": 59,
+        "appid": 1245620,
+        "last_week_rank": 63,
+        "peak_in_game": 37434
+      },
+      {
+        "rank": 60,
+        "appid": 1281930,
+        "last_week_rank": 62,
+        "peak_in_game": 38879
+      },
+      {
+        "rank": 61,
+        "appid": 1665460,
+        "last_week_rank": 66,
+        "peak_in_game": 24072
+      },
+      {
+        "rank": 62,
+        "appid": 1905180,
+        "last_week_rank": 67,
+        "peak_in_game": 32988
+      },
+      {
+        "rank": 63,
+        "appid": 221100,
+        "last_week_rank": 65,
+        "peak_in_game": 64165
+      },
+      {
+        "rank": 64,
+        "appid": 3419430,
+        "last_week_rank": 61,
+        "peak_in_game": 164125
+      },
+      {
+        "rank": 65,
+        "appid": 289070,
+        "last_week_rank": 68,
+        "peak_in_game": 47898
+      },
+      {
+        "rank": 66,
+        "appid": 2073850,
+        "last_week_rank": 93,
+        "peak_in_game": 29924
+      },
+      {
+        "rank": 67,
+        "appid": 4001890,
+        "last_week_rank": 52,
+        "peak_in_game": 25202
+      },
+      {
+        "rank": 68,
+        "appid": 2300320,
+        "last_week_rank": 71,
+        "peak_in_game": 51516
+      },
+      {
+        "rank": 69,
+        "appid": 1222670,
+        "last_week_rank": 70,
+        "peak_in_game": 32417
+      },
+      {
+        "rank": 70,
+        "appid": 632360,
+        "last_week_rank": 53,
+        "peak_in_game": 22906
+      },
+      {
+        "rank": 71,
+        "appid": 2246340,
+        "last_week_rank": 69,
+        "peak_in_game": 37974
+      },
+      {
+        "rank": 72,
+        "appid": 294100,
+        "last_week_rank": 77,
+        "peak_in_game": 45651
+      },
+      {
+        "rank": 73,
+        "appid": 3678970,
+        "last_week_rank": 73,
+        "peak_in_game": 74925
+      },
+      {
+        "rank": 74,
+        "appid": 1085660,
+        "last_week_rank": 72,
+        "peak_in_game": 34840
+      },
+      {
+        "rank": 75,
+        "appid": 2183900,
+        "last_week_rank": 74,
+        "peak_in_game": 25991
+      },
+      {
+        "rank": 76,
+        "appid": 244210,
+        "last_week_rank": 79,
+        "peak_in_game": 16815
+      },
+      {
+        "rank": 77,
+        "appid": 739630,
+        "last_week_rank": 78,
+        "peak_in_game": 19401
+      },
+      {
+        "rank": 78,
+        "appid": 4019220,
+        "last_week_rank": 64,
+        "peak_in_game": 26286
+      },
+      {
+        "rank": 79,
+        "appid": 291550,
+        "last_week_rank": 80,
+        "peak_in_game": 15033
+      },
+      {
+        "rank": 80,
+        "appid": 2073620,
+        "last_week_rank": 75,
+        "peak_in_game": 35797
+      },
+      {
+        "rank": 81,
+        "appid": 1366800,
+        "last_week_rank": 76,
+        "peak_in_game": 42389
+      },
+      {
+        "rank": 82,
+        "appid": 3513350,
+        "last_week_rank": 83,
+        "peak_in_game": 13808
+      },
+      {
+        "rank": 83,
+        "appid": 714010,
+        "last_week_rank": 84,
+        "peak_in_game": 7287
+      },
+      {
+        "rank": 84,
+        "appid": 261550,
+        "last_week_rank": 81,
+        "peak_in_game": 38766
+      },
+      {
+        "rank": 85,
+        "appid": 813780,
+        "last_week_rank": 85,
+        "peak_in_game": 28678
+      },
+      {
+        "rank": 86,
+        "appid": 945360,
+        "last_week_rank": 82,
+        "peak_in_game": 13428
+      },
+      {
+        "rank": 87,
+        "appid": 251570,
+        "last_week_rank": 86,
+        "peak_in_game": 37683
+      },
+      {
+        "rank": 88,
+        "appid": 5354030,
+        "last_week_rank": -1,
+        "peak_in_game": 27832
+      },
+      {
+        "rank": 89,
+        "appid": 2139460,
+        "last_week_rank": 122,
+        "peak_in_game": 40512
+      },
+      {
+        "rank": 90,
+        "appid": 960090,
+        "last_week_rank": 88,
+        "peak_in_game": 13545
+      },
+      {
+        "rank": 91,
+        "appid": 3259780,
+        "last_week_rank": -1,
+        "peak_in_game": 38182
+      },
+      {
+        "rank": 92,
+        "appid": 594650,
+        "last_week_rank": 91,
+        "peak_in_game": 29500
+      },
+      {
+        "rank": 93,
+        "appid": 1158310,
+        "last_week_rank": 89,
+        "peak_in_game": 29563
+      },
+      {
+        "rank": 94,
+        "appid": 2050650,
+        "last_week_rank": 96,
+        "peak_in_game": 18062
+      },
+      {
+        "rank": 95,
+        "appid": 4162040,
+        "last_week_rank": 110,
+        "peak_in_game": 13569
+      },
+      {
+        "rank": 96,
+        "appid": 1329410,
+        "last_week_rank": 109,
+        "peak_in_game": 14382
+      },
+      {
+        "rank": 97,
+        "appid": 3932890,
+        "last_week_rank": 94,
+        "peak_in_game": 38503
+      },
+      {
+        "rank": 98,
+        "appid": 2622380,
+        "last_week_rank": 99,
+        "peak_in_game": 31183
+      },
+      {
+        "rank": 99,
+        "appid": 582010,
+        "last_week_rank": 95,
+        "peak_in_game": 26355
+      },
+      {
+        "rank": 100,
+        "appid": 629520,
+        "last_week_rank": 97,
+        "peak_in_game": 18062
+      }
+    ]
+  },
+  {
+    "kind": "tag-top-sellers",
+    "tag": "deckbuilding",
+    "tagid": 32322,
+    "region": "US",
+    "language": "english",
+    "retrieved_at": "2026-10-25T11:36:08.149019+00:00",
+    "source_url": "https://store.steampowered.com/search/results/?start=0&count=50&tags=32322&filter=topsellers&category1=998&cc=us&l=english&infinite=1",
+    "public_page": "https://store.steampowered.com/search/?tags=32322&filter=topsellers&category1=998&cc=us&l=english",
+    "sha256": "90073a5be1d2061800e1f865283cbe2422df79d9e776b4122582dc9decab072a",
+    "entries": [
+      {
+        "position": 1,
+        "appid": 2141910,
+        "name": "Magic: The Gathering Arena"
+      },
+      {
+        "position": 2,
+        "appid": 2868840,
+        "name": "Slay the Spire 2"
+      },
+      {
+        "position": 3,
+        "appid": 799960,
+        "name": "Wizard101"
+      },
+      {
+        "position": 4,
+        "appid": 1449850,
+        "name": "Yu-Gi-Oh! Master Duel"
+      },
+      {
+        "position": 5,
+        "appid": 2379780,
+        "name": "Balatro"
+      },
+      {
+        "position": 6,
+        "appid": 3271280,
+        "name": "Shroom and Gloom"
+      },
+      {
+        "position": 7,
+        "appid": 646570,
+        "name": "Slay the Spire"
+      },
+      {
+        "position": 8,
+        "appid": 4075620,
+        "name": "Combolands: Roguelike Citybuilder"
+      },
+      {
+        "position": 9,
+        "appid": 3917700,
+        "name": "Dicevaders"
+      },
+      {
+        "position": 10,
+        "appid": 4557380,
+        "name": "Batomon Showdown"
+      },
+      {
+        "position": 11,
+        "appid": 1604270,
+        "name": "Broken Arrow"
+      },
+      {
+        "position": 12,
+        "appid": 3052450,
+        "name": "Morimens"
+      },
+      {
+        "position": 13,
+        "appid": 1385380,
+        "name": "Across the Obelisk"
+      },
+      {
+        "position": 14,
+        "appid": 2784470,
+        "name": "9 Kings"
+      },
+      {
+        "position": 15,
+        "appid": 1997040,
+        "name": "MARVEL SNAP"
+      },
+      {
+        "position": 16,
+        "appid": 1092790,
+        "name": "Inscryption"
+      },
+      {
+        "position": 17,
+        "appid": 1296610,
+        "name": "Peglin"
+      },
+      {
+        "position": 18,
+        "appid": 3500390,
+        "name": "Mega Man Star Force Legacy Collection"
+      },
+      {
+        "position": 19,
+        "appid": 3265700,
+        "name": "Vampire Crawlers: The Turbo Wildcard from Vampire Survivors"
+      },
+      {
+        "position": 20,
+        "appid": 544810,
+        "name": "KARDS - The WW2 Card Game"
+      }
+    ],
+    "scope_note": "First 20 displayed rows; omitted multi-app packages occurred only after row 20 in validation."
+  },
+  {
+    "kind": "tag-top-sellers",
+    "tag": "action-roguelike",
+    "tagid": 42804,
+    "region": "US",
+    "language": "english",
+    "retrieved_at": "2026-10-25T11:36:08.071186+00:00",
+    "source_url": "https://store.steampowered.com/search/results/?start=0&count=50&tags=42804&filter=topsellers&category1=998&cc=us&l=english&infinite=1",
+    "public_page": "https://store.steampowered.com/search/?tags=42804&filter=topsellers&category1=998&cc=us&l=english",
+    "sha256": "e7335aff7a1ccb12524f66c28a763269ad7d43e96542ff0a4ff245cad75b3ef7",
+    "entries": [
+      {
+        "position": 1,
+        "appid": 632360,
+        "name": "Risk of Rain 2"
+      },
+      {
+        "position": 2,
+        "appid": 1566200,
+        "name": "Tape to Tape"
+      },
+      {
+        "position": 3,
+        "appid": 3527290,
+        "name": "PEAK"
+      },
+      {
+        "position": 4,
+        "appid": 3892270,
+        "name": "Gamble With Your Friends"
+      },
+      {
+        "position": 5,
+        "appid": 3569420,
+        "name": "Chained Beasts"
+      },
+      {
+        "position": 6,
+        "appid": 3241660,
+        "name": "R.E.P.O."
+      },
+      {
+        "position": 7,
+        "appid": 548430,
+        "name": "Deep Rock Galactic"
+      },
+      {
+        "position": 8,
+        "appid": 3624140,
+        "name": "Wanderburg"
+      },
+      {
+        "position": 9,
+        "appid": 250900,
+        "name": "The Binding of Isaac: Rebirth"
+      },
+      {
+        "position": 10,
+        "appid": 588650,
+        "name": "Dead Cells"
+      },
+      {
+        "position": 11,
+        "appid": 1217060,
+        "name": "Gunfire Reborn"
+      },
+      {
+        "position": 12,
+        "appid": 3808690,
+        "name": "Pathogenic"
+      },
+      {
+        "position": 13,
+        "appid": 1794680,
+        "name": "Vampire Survivors"
+      },
+      {
+        "position": 14,
+        "appid": 5258340,
+        "name": "One Million Coins"
+      },
+      {
+        "position": 15,
+        "appid": 1313140,
+        "name": "Cult of the Lamb"
+      },
+      {
+        "position": 16,
+        "appid": 3228590,
+        "name": "Deadzone: Rogue"
+      },
+      {
+        "position": 17,
+        "appid": 3100310,
+        "name": "Arms of God"
+      },
+      {
+        "position": 18,
+        "appid": 2124120,
+        "name": "SULFUR"
+      },
+      {
+        "position": 19,
+        "appid": 2218750,
+        "name": "Halls of Torment"
+      },
+      {
+        "position": 20,
+        "appid": 1145350,
+        "name": "Hades II"
+      }
+    ],
+    "scope_note": "First 20 displayed rows; omitted multi-app packages occurred only after row 20 in validation."
+  },
+  {
+    "kind": "tag-top-sellers",
+    "tag": "colony-sim",
+    "tagid": 220585,
+    "region": "US",
+    "language": "english",
+    "retrieved_at": "2026-10-25T11:36:08.066246+00:00",
+    "source_url": "https://store.steampowered.com/search/results/?start=0&count=50&tags=220585&filter=topsellers&category1=998&cc=us&l=english&infinite=1",
+    "public_page": "https://store.steampowered.com/search/?tags=220585&filter=topsellers&category1=998&cc=us&l=english",
+    "sha256": "836c18ca5c5328ad2b14fc83cece4998a86cb51deeea77d09efa57d14fb53e54",
+    "entries": [
+      {
+        "position": 1,
+        "appid": 294100,
+        "name": "RimWorld"
+      },
+      {
+        "position": 2,
+        "appid": 3905010,
+        "name": "ONE PIECE: Grand Gourmet"
+      },
+      {
+        "position": 3,
+        "appid": 1062090,
+        "name": "Timberborn"
+      },
+      {
+        "position": 4,
+        "appid": 1313140,
+        "name": "Cult of the Lamb"
+      },
+      {
+        "position": 5,
+        "appid": 1363080,
+        "name": "Manor Lords"
+      },
+      {
+        "position": 6,
+        "appid": 463530,
+        "name": "Empires of the Undergrowth"
+      },
+      {
+        "position": 7,
+        "appid": 3469910,
+        "name": "Star Trek: Outposts Unknown"
+      },
+      {
+        "position": 8,
+        "appid": 1206560,
+        "name": "WorldBox - God Simulator"
+      },
+      {
+        "position": 9,
+        "appid": 690830,
+        "name": "Foundation"
+      },
+      {
+        "position": 10,
+        "appid": 1853440,
+        "name": "Tropico 7"
+      },
+      {
+        "position": 11,
+        "appid": 1162750,
+        "name": "Songs of Syx"
+      },
+      {
+        "position": 12,
+        "appid": 2646460,
+        "name": "Soulmask"
+      },
+      {
+        "position": 13,
+        "appid": 1419170,
+        "name": "My Singing Monsters"
+      },
+      {
+        "position": 14,
+        "appid": 2438680,
+        "name": "Airborne Empire"
+      },
+      {
+        "position": 15,
+        "appid": 1702010,
+        "name": "Sengoku Dynasty"
+      },
+      {
+        "position": 16,
+        "appid": 1771110,
+        "name": "Craftlings"
+      },
+      {
+        "position": 17,
+        "appid": 1594320,
+        "name": "Captain of Industry"
+      },
+      {
+        "position": 18,
+        "appid": 457140,
+        "name": "Oxygen Not Included"
+      },
+      {
+        "position": 19,
+        "appid": 1067360,
+        "name": "Pax Autocratica"
+      },
+      {
+        "position": 20,
+        "appid": 2001070,
+        "name": "Heart of the Machine"
+      }
+    ],
+    "scope_note": "First 20 displayed rows; omitted multi-app packages occurred only after row 20 in validation."
+  },
+  {
+    "kind": "tag-top-sellers",
+    "tag": "automation",
+    "tagid": 255534,
+    "region": "US",
+    "language": "english",
+    "retrieved_at": "2026-10-25T11:36:08.302696+00:00",
+    "source_url": "https://store.steampowered.com/search/results/?start=0&count=50&tags=255534&filter=topsellers&category1=998&cc=us&l=english&infinite=1",
+    "public_page": "https://store.steampowered.com/search/?tags=255534&filter=topsellers&category1=998&cc=us&l=english",
+    "sha256": "101973ef46adf6bef0423c48ba0f7b8ce91fc39a67f38685bcbb938775f70057",
+    "entries": [
+      {
+        "position": 1,
+        "appid": 5335510,
+        "name": "Moon Sweepers"
+      },
+      {
+        "position": 2,
+        "appid": 3164500,
+        "name": "Schedule I"
+      },
+      {
+        "position": 3,
+        "appid": 427520,
+        "name": "Factorio"
+      },
+      {
+        "position": 4,
+        "appid": 1623730,
+        "name": "Palworld"
+      },
+      {
+        "position": 5,
+        "appid": 529340,
+        "name": "Victoria 3"
+      },
+      {
+        "position": 6,
+        "appid": 526870,
+        "name": "Satisfactory"
+      },
+      {
+        "position": 7,
+        "appid": 1783560,
+        "name": "The Last Caretaker"
+      },
+      {
+        "position": 8,
+        "appid": 1284190,
+        "name": "The Planet Crafter"
+      },
+      {
+        "position": 9,
+        "appid": 1062090,
+        "name": "Timberborn"
+      },
+      {
+        "position": 10,
+        "appid": 5258340,
+        "name": "One Million Coins"
+      },
+      {
+        "position": 11,
+        "appid": 4358690,
+        "name": "Graveyard Keeper 2"
+      },
+      {
+        "position": 12,
+        "appid": 4098030,
+        "name": "Shipping Store Simulator 2037"
+      },
+      {
+        "position": 13,
+        "appid": 4732690,
+        "name": "Arknights: Endfield"
+      },
+      {
+        "position": 14,
+        "appid": 2646460,
+        "name": "Soulmask"
+      },
+      {
+        "position": 15,
+        "appid": 2104890,
+        "name": "RoadCraft"
+      },
+      {
+        "position": 16,
+        "appid": 2060160,
+        "name": "The Farmer Was Replaced"
+      },
+      {
+        "position": 17,
+        "appid": 2162800,
+        "name": "shapez 2 - Factory"
+      },
+      {
+        "position": 18,
+        "appid": 4210580,
+        "name": "Ore Factory Squad ⛏️"
+      },
+      {
+        "position": 19,
+        "appid": 2764460,
+        "name": "Sandustry"
+      },
+      {
+        "position": 20,
+        "appid": 5085740,
+        "name": "Needle In A Haystack"
+      }
+    ],
+    "scope_note": "First 20 displayed rows; omitted multi-app packages occurred only after row 20 in validation."
+  },
+  {
+    "kind": "tag-top-sellers",
+    "tag": "farming-sim",
+    "tagid": 87918,
+    "region": "US",
+    "language": "english",
+    "retrieved_at": "2026-10-25T11:36:08.287864+00:00",
+    "source_url": "https://store.steampowered.com/search/results/?start=0&count=50&tags=87918&filter=topsellers&category1=998&cc=us&l=english&infinite=1",
+    "public_page": "https://store.steampowered.com/search/?tags=87918&filter=topsellers&category1=998&cc=us&l=english",
+    "sha256": "d00d25ec7a2095d791c694f001a325c3770bb19aba28f59d94ddd3d8eb19347e",
+    "entries": [
+      {
+        "position": 1,
+        "appid": 1401590,
+        "name": "Disney Dreamlight Valley"
+      },
+      {
+        "position": 2,
+        "appid": 2300320,
+        "name": "Farming Simulator 25"
+      },
+      {
+        "position": 3,
+        "appid": 413150,
+        "name": "Stardew Valley"
+      },
+      {
+        "position": 4,
+        "appid": 3905010,
+        "name": "ONE PIECE: Grand Gourmet"
+      },
+      {
+        "position": 5,
+        "appid": 2707930,
+        "name": "Palia"
+      },
+      {
+        "position": 6,
+        "appid": 1062090,
+        "name": "Timberborn"
+      },
+      {
+        "position": 7,
+        "appid": 1488490,
+        "name": "Nivalis Nights"
+      },
+      {
+        "position": 8,
+        "appid": 4358690,
+        "name": "Graveyard Keeper 2"
+      },
+      {
+        "position": 9,
+        "appid": 3164330,
+        "name": "Infinity Nikki"
+      },
+      {
+        "position": 10,
+        "appid": 2209900,
+        "name": "Moonlight Peaks"
+      },
+      {
+        "position": 11,
+        "appid": 2142790,
+        "name": "Fields of Mistria"
+      },
+      {
+        "position": 12,
+        "appid": 3375110,
+        "name": "Tiny Eden"
+      },
+      {
+        "position": 13,
+        "appid": 380600,
+        "name": "Fishing Planet"
+      },
+      {
+        "position": 14,
+        "appid": 2060160,
+        "name": "The Farmer Was Replaced"
+      },
+      {
+        "position": 15,
+        "appid": 2009350,
+        "name": "Out of Ore"
+      },
+      {
+        "position": 16,
+        "appid": 1419170,
+        "name": "My Singing Monsters"
+      },
+      {
+        "position": 17,
+        "appid": 1084600,
+        "name": "My Time at Sandrock"
+      },
+      {
+        "position": 18,
+        "appid": 3195440,
+        "name": "Welcome to Elderfield"
+      },
+      {
+        "position": 19,
+        "appid": 1868140,
+        "name": "DAVE THE DIVER"
+      },
+      {
+        "position": 20,
+        "appid": 2939510,
+        "name": "Under Canopies"
+      }
+    ],
+    "scope_note": "First 20 displayed rows; omitted multi-app packages occurred only after row 20 in validation."
+  },
+  {
+    "kind": "tag-top-sellers",
+    "tag": "soulslike",
+    "tagid": 29482,
+    "region": "US",
+    "language": "english",
+    "retrieved_at": "2026-10-25T11:36:08.395426+00:00",
+    "source_url": "https://store.steampowered.com/search/results/?start=0&count=50&tags=29482&filter=topsellers&category1=998&cc=us&l=english&infinite=1",
+    "public_page": "https://store.steampowered.com/search/?tags=29482&filter=topsellers&category1=998&cc=us&l=english",
+    "sha256": "2bb13b045345c711299c9c015ce426aea9c22a95b3cdfea66e4b90065772d672",
+    "entries": [
+      {
+        "position": 1,
+        "appid": 4115450,
+        "name": "Phantom Blade Zero"
+      },
+      {
+        "position": 2,
+        "appid": 3513350,
+        "name": "Wuthering Waves"
+      },
+      {
+        "position": 3,
+        "appid": 3564740,
+        "name": "Where Winds Meet"
+      },
+      {
+        "position": 4,
+        "appid": 3321460,
+        "name": "Crimson Desert Enhanced"
+      },
+      {
+        "position": 5,
+        "appid": 1245620,
+        "name": "ELDEN RING"
+      },
+      {
+        "position": 6,
+        "appid": 4231820,
+        "name": "Castlevania: Belmont's Curse"
+      },
+      {
+        "position": 7,
+        "appid": 2694490,
+        "name": "Path of Exile 2"
+      },
+      {
+        "position": 8,
+        "appid": 3569420,
+        "name": "Chained Beasts"
+      },
+      {
+        "position": 9,
+        "appid": 3357650,
+        "name": "PRAGMATA"
+      },
+      {
+        "position": 10,
+        "appid": 2638890,
+        "name": "Onimusha: Way of the Sword"
+      },
+      {
+        "position": 11,
+        "appid": 2828710,
+        "name": "Valor Mortis"
+      },
+      {
+        "position": 12,
+        "appid": 1903340,
+        "name": "Clair Obscur: Expedition 33"
+      },
+      {
+        "position": 13,
+        "appid": 2584270,
+        "name": "Mortal Shell II"
+      },
+      {
+        "position": 14,
+        "appid": 588650,
+        "name": "Dead Cells"
+      },
+      {
+        "position": 15,
+        "appid": 2622380,
+        "name": "ELDEN RING NIGHTREIGN"
+      },
+      {
+        "position": 16,
+        "appid": 1371980,
+        "name": "No Rest for the Wicked"
+      },
+      {
+        "position": 17,
+        "appid": 2322010,
+        "name": "God of War Ragnarök"
+      },
+      {
+        "position": 18,
+        "appid": 3404260,
+        "name": "Dead as Disco"
+      },
+      {
+        "position": 19,
+        "appid": 962130,
+        "name": "Grounded"
+      },
+      {
+        "position": 20,
+        "appid": 2358720,
+        "name": "Black Myth: Wukong"
+      }
+    ],
+    "scope_note": "First 20 displayed rows; omitted multi-app packages occurred only after row 20 in validation."
+  },
+  {
+    "kind": "tag-top-sellers",
+    "tag": "story-rich",
+    "tagid": 1742,
+    "region": "US",
+    "language": "english",
+    "retrieved_at": "2026-10-25T11:36:08.587025+00:00",
+    "source_url": "https://store.steampowered.com/search/results/?start=0&count=50&tags=1742&filter=topsellers&category1=998&cc=us&l=english&infinite=1",
+    "public_page": "https://store.steampowered.com/search/?tags=1742&filter=topsellers&category1=998&cc=us&l=english",
+    "sha256": "8bd50b4619382027725602821850d234b749911f048731d6e2843149d7227241",
+    "entries": [
+      {
+        "position": 1,
+        "appid": 4435490,
+        "name": "Call of Duty®: Modern Warfare® 4"
+      },
+      {
+        "position": 2,
+        "appid": 1091500,
+        "name": "Cyberpunk 2077"
+      },
+      {
+        "position": 3,
+        "appid": 3259780,
+        "name": "FINAL FANTASY RESONANCE"
+      },
+      {
+        "position": 4,
+        "appid": 216150,
+        "name": "MapleStory"
+      },
+      {
+        "position": 5,
+        "appid": 4115450,
+        "name": "Phantom Blade Zero"
+      },
+      {
+        "position": 6,
+        "appid": 39210,
+        "name": "FINAL FANTASY XIV Online"
+      },
+      {
+        "position": 7,
+        "appid": 4126040,
+        "name": "Aniimo"
+      },
+      {
+        "position": 8,
+        "appid": 3010850,
+        "name": "Gears of War: E-Day"
+      },
+      {
+        "position": 9,
+        "appid": 3513350,
+        "name": "Wuthering Waves"
+      },
+      {
+        "position": 10,
+        "appid": 2288340,
+        "name": "ACE COMBAT 8: WINGS OF THEVE"
+      },
+      {
+        "position": 11,
+        "appid": 3764200,
+        "name": "Resident Evil Requiem"
+      },
+      {
+        "position": 12,
+        "appid": 4162040,
+        "name": "Zenless Zone Zero"
+      },
+      {
+        "position": 13,
+        "appid": 3960600,
+        "name": "Warrior Cats: Clans of the Forest"
+      },
+      {
+        "position": 14,
+        "appid": 3564740,
+        "name": "Where Winds Meet"
+      },
+      {
+        "position": 15,
+        "appid": 3321460,
+        "name": "Crimson Desert Enhanced"
+      },
+      {
+        "position": 16,
+        "appid": 294100,
+        "name": "RimWorld"
+      },
+      {
+        "position": 17,
+        "appid": 1086940,
+        "name": "Baldur's Gate 3"
+      },
+      {
+        "position": 18,
+        "appid": 2050650,
+        "name": "Resident Evil 4"
+      },
+      {
+        "position": 19,
+        "appid": 1938090,
+        "name": "Call of Duty®"
+      },
+      {
+        "position": 20,
+        "appid": 1551980,
+        "name": "Clive Barker's Hellraiser: Revival"
+      }
+    ],
+    "scope_note": "First 20 displayed rows; omitted multi-app packages occurred only after row 20 in validation."
+  },
+  {
+    "kind": "tag-top-sellers",
+    "tag": "turn-based-strategy",
+    "tagid": 1741,
+    "region": "US",
+    "language": "english",
+    "retrieved_at": "2026-10-25T11:36:08.551018+00:00",
+    "source_url": "https://store.steampowered.com/search/results/?start=0&count=50&tags=1741&filter=topsellers&category1=998&cc=us&l=english&infinite=1",
+    "public_page": "https://store.steampowered.com/search/?tags=1741&filter=topsellers&category1=998&cc=us&l=english",
+    "sha256": "fff254451d6282b2deeeef88f7cb0f1d78ffa8e74f88e38615331442100aa6ad",
+    "entries": [
+      {
+        "position": 1,
+        "appid": 2141910,
+        "name": "Magic: The Gathering Arena"
+      },
+      {
+        "position": 2,
+        "appid": 1142710,
+        "name": "Total War: WARHAMMER III"
+      },
+      {
+        "position": 3,
+        "appid": 1295660,
+        "name": "Sid Meier's Civilization VII"
+      },
+      {
+        "position": 4,
+        "appid": 2075800,
+        "name": "STAR WARS Zero Company™"
+      },
+      {
+        "position": 5,
+        "appid": 529340,
+        "name": "Victoria 3"
+      },
+      {
+        "position": 6,
+        "appid": 1973530,
+        "name": "Limbus Company"
+      },
+      {
+        "position": 7,
+        "appid": 1669000,
+        "name": "Age of Wonders 4"
+      },
+      {
+        "position": 8,
+        "appid": 289070,
+        "name": "Sid Meier’s Civilization® VI"
+      },
+      {
+        "position": 9,
+        "appid": 3347400,
+        "name": "GIRLS' FRONTLINE 2: EXILIUM"
+      },
+      {
+        "position": 10,
+        "appid": 2186680,
+        "name": "Warhammer 40,000: Rogue Trader"
+      },
+      {
+        "position": 11,
+        "appid": 2379780,
+        "name": "Balatro"
+      },
+      {
+        "position": 12,
+        "appid": 2426960,
+        "name": "Summoners War"
+      },
+      {
+        "position": 13,
+        "appid": 594570,
+        "name": "Total War: WARHAMMER II"
+      },
+      {
+        "position": 14,
+        "appid": 648410,
+        "name": "Colony Ship: A Post-Earth Role Playing Game"
+      },
+      {
+        "position": 15,
+        "appid": 2963950,
+        "name": "Persona 4 Revival "
+      },
+      {
+        "position": 16,
+        "appid": 213670,
+        "name": "South Park™: The Stick of Truth™"
+      },
+      {
+        "position": 17,
+        "appid": 2333480,
+        "name": "RAID: Shadow Legends"
+      },
+      {
+        "position": 18,
+        "appid": 4075620,
+        "name": "Combolands: Roguelike Citybuilder"
+      },
+      {
+        "position": 19,
+        "appid": 268500,
+        "name": "XCOM® 2"
+      },
+      {
+        "position": 20,
+        "appid": 686060,
+        "name": "Mewgenics"
+      }
+    ],
+    "scope_note": "First 20 displayed rows; omitted multi-app packages occurred only after row 20 in validation."
+  }
+]

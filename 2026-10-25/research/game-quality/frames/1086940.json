@@ -1,0 +1,72 @@
+{
+  "appid": 1086940,
+  "name": "Baldur's Gate 3",
+  "store_page": "https://store.steampowered.com/app/1086940/",
+  "retrieved_at": "2026-10-25T12:04:29.695983+00:00",
+  "source_metadata": "https://store.steampowered.com/api/appdetails?appids=1086940&cc=us&l=english",
+  "movie_name": "Baldur's Gate 3 - Launch Trailer",
+  "movie_id": 256961600,
+  "movie_url": "https://video.akamai.steamstatic.com/store_trailers/1086940/593544/008e33be9c000c5fdb38e630f13b1d5917d4561d/1750615002/dash_h264.mpd?t=1695393579",
+  "media_source_sha256": "dc6c9449eaee437bbe6730d6ad39fcf73a1e15333e51bdd08ee0be4142056af5",
+  "hash_scope": "DASH manifest",
+  "duration_seconds": 105.2,
+  "source_kind": "publisher Steam store video; edited trailer",
+  "observation_limit": "selected still frames only; no full playback or player-input observation",
+  "frames": [
+    {
+      "id": "1086940@21.04",
+      "seconds": 21.04,
+      "file": "frames/1086940-021.04.jpg",
+      "sha256": "d6c8380da7e4b41aaafc326a339b8c9c923fe700da8fba22a13582215a71c800",
+      "segment": {
+        "url": "https://video.akamai.steamstatic.com/store_trailers/1086940/593544/008e33be9c000c5fdb38e630f13b1d5917d4561d/1750615002/dash_h264/chunk-stream1-00008.m4s",
+        "segment_start_seconds": 21.0,
+        "sha256": "50090ca74662227de2f9303876913af26352cec7b504cf9a1a832439b1614d6a"
+      }
+    },
+    {
+      "id": "1086940@36.82",
+      "seconds": 36.82,
+      "file": "frames/1086940-036.82.jpg",
+      "sha256": "ff37d4cbd69248c549a026659d4f40f745fbf0be074027185d64b2620d8e0cd7",
+      "segment": {
+        "url": "https://video.akamai.steamstatic.com/store_trailers/1086940/593544/008e33be9c000c5fdb38e630f13b1d5917d4561d/1750615002/dash_h264/chunk-stream1-00013.m4s",
+        "segment_start_seconds": 36.0,
+        "sha256": "a617335e0009a0f8ab6a28312ac338f26eb7d27bad9ed3eb55bbd10600c49801"
+      }
+    },
+    {
+      "id": "1086940@52.60",
+      "seconds": 52.6,
+      "file": "frames/1086940-052.60.jpg",
+      "sha256": "3b59f42d31d6d7f253aa97141ab854fbf9d9a3415604fe9d9878c6394517e7a0",
+      "segment": {
+        "url": "https://video.akamai.steamstatic.com/store_trailers/1086940/593544/008e33be9c000c5fdb38e630f13b1d5917d4561d/1750615002/dash_h264/chunk-stream1-00018.m4s",
+        "segment_start_seconds": 51.0,
+        "sha256": "fa590b199ae1f131fc710a303e8d0f8a9896fdf62ee35eedf2c1f2da54fad507"
+      }
+    },
+    {
+      "id": "1086940@68.38",
+      "seconds": 68.38,
+      "file": "frames/1086940-068.38.jpg",
+      "sha256": "9c10ea4093a186f3f9271d3b4080e2716da0efacc6da236fba22551d004c00a6",
+      "segment": {
+        "url": "https://video.akamai.steamstatic.com/store_trailers/1086940/593544/008e33be9c000c5fdb38e630f13b1d5917d4561d/1750615002/dash_h264/chunk-stream1-00023.m4s",
+        "segment_start_seconds": 66.0,
+        "sha256": "bdfc1b0042c241159a0216fc220fb2b4a115bb4d5acf632c5bf7a931682adc11"
+      }
+    },
+    {
+      "id": "1086940@84.16",
+      "seconds": 84.16,
+      "file": "frames/1086940-084.16.jpg",
+      "sha256": "84ff20397d303f27db9078770aa1c1f12db04fb0669a690f646520fc6429dfa4",
+      "segment": {
+        "url": "https://video.akamai.steamstatic.com/store_trailers/1086940/593544/008e33be9c000c5fdb38e630f13b1d5917d4561d/1750615002/dash_h264/chunk-stream1-00029.m4s",
+        "segment_start_seconds": 84.0,
+        "sha256": "1232e65fb6fc050647b5730b082caff0f58d46737d2e98b81ad65c8a8df2d21b"
+      }
+    }
+  ]
+}

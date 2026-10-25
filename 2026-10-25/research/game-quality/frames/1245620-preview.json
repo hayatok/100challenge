@@ -1,0 +1,26 @@
+{
+  "appid": 1245620,
+  "name": "ELDEN RING - Gameplay Preview",
+  "source_url": "https://www.youtube.com/watch?v=JldMvQMO_5U",
+  "publisher": "BANDAI NAMCO Europe",
+  "source_kind": "publisher gameplay preview, edited pre-release video",
+  "retrieved_at": "2026-10-25T11:44:05.964857+00:00",
+  "duration_visible": "20:55",
+  "frames": [
+    {
+      "id": "1245620-preview@159",
+      "seconds": 159,
+      "file": "frames/1245620-preview-browser.png",
+      "sha256": "dcbf5ca87a2455d160c8985413f8ffff3b9e3fa5831f89bbb7f91b72ee909967",
+      "time_source": "visible YouTube player time"
+    },
+    {
+      "id": "1245620-preview@447",
+      "seconds": 447,
+      "file": "frames/1245620-preview-447.png",
+      "sha256": "b527001b863a09b3d57b092fbb0a54cef3f59d46190a93c905497abb650742be",
+      "time_source": "visible YouTube player time"
+    }
+  ],
+  "observation_limit": "Two paused browser screenshots; no full viewing; numerical HUD hidden"
+}

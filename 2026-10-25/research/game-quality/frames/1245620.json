@@ -1,0 +1,83 @@
+{
+  "appid": 1245620,
+  "name": "ELDEN RING",
+  "store_page": "https://store.steampowered.com/app/1245620/",
+  "retrieved_at": "2026-10-25T11:38:24.046206+00:00",
+  "source_metadata": "https://store.steampowered.com/api/appdetails?appids=1245620&cc=us&l=english",
+  "movie_name": "ELDEN RING - Official Gameplay Trailer",
+  "movie_id": 256839312,
+  "movie_url": "https://video.akamai.steamstatic.com/store_trailers/1245620/377844/2912096cfadf6d63b7a35b7e7bc4e488c91cb31e/1750649918/dash_h264.mpd?t=1739917125",
+  "media_source_sha256": "4005c95cc631d00e69c12ed3a7ed7817319c6d68130b7f5bfa51c46d27e2bb18",
+  "hash_scope": "DASH manifest",
+  "duration_seconds": 180.8,
+  "source_kind": "publisher Steam store video; edited trailer",
+  "observation_limit": "selected still frames only; no full playback or player-input observation",
+  "frames": [
+    {
+      "id": "1245620@15.00",
+      "seconds": 15.0,
+      "file": "frames/1245620-015.00.jpg",
+      "sha256": "15d8b2ebeefe05402b376c31c74cc4baad039cd61bef5d393e4ecb288151cc9d",
+      "segment": {
+        "url": "https://video.akamai.steamstatic.com/store_trailers/1245620/377844/2912096cfadf6d63b7a35b7e7bc4e488c91cb31e/1750649918/dash_h264/chunk-stream1-00006.m4s",
+        "segment_start_seconds": 15.0,
+        "sha256": "35123058ed2d5ef78b66ee0e07280849708e6c6d62bf59b7c19cbfdce61206f9"
+      }
+    },
+    {
+      "id": "1245620@30.00",
+      "seconds": 30.0,
+      "file": "frames/1245620-030.00.jpg",
+      "sha256": "1574f1ca48c5d8dd0e50e06ecb2cda0f0c85379a519a876532f43de283ed48b8",
+      "segment": {
+        "url": "https://video.akamai.steamstatic.com/store_trailers/1245620/377844/2912096cfadf6d63b7a35b7e7bc4e488c91cb31e/1750649918/dash_h264/chunk-stream1-00011.m4s",
+        "segment_start_seconds": 30.0,
+        "sha256": "2ecb7104420bab9a2455ba299d53e2998de3ffefb720a9da1ec4821b8d58f0bb"
+      }
+    },
+    {
+      "id": "1245620@45.00",
+      "seconds": 45.0,
+      "file": "frames/1245620-045.00.jpg",
+      "sha256": "96c3bf226019ba4e58c8d3f8abda42fbd9ab36bbfecb5b16b861bd96cf56c9b7",
+      "segment": {
+        "url": "https://video.akamai.steamstatic.com/store_trailers/1245620/377844/2912096cfadf6d63b7a35b7e7bc4e488c91cb31e/1750649918/dash_h264/chunk-stream1-00016.m4s",
+        "segment_start_seconds": 45.0,
+        "sha256": "3d1f61240eb3b17714ac86a037645631a3459f9d61347ac3d3f0d50e312bcaee"
+      }
+    },
+    {
+      "id": "1245620@60.00",
+      "seconds": 60.0,
+      "file": "frames/1245620-060.00.jpg",
+      "sha256": "5ca4576fab64f0c5a937e386cad3875a2fe5228d96d5013481d1c69714e8cf35",
+      "segment": {
+        "url": "https://video.akamai.steamstatic.com/store_trailers/1245620/377844/2912096cfadf6d63b7a35b7e7bc4e488c91cb31e/1750649918/dash_h264/chunk-stream1-00021.m4s",
+        "segment_start_seconds": 60.0,
+        "sha256": "d8b88ad17919a29a8eb86bb97b6eedd1dca673df36b8e5fd79cd3c40cc562ccc"
+      }
+    },
+    {
+      "id": "1245620@75.00",
+      "seconds": 75.0,
+      "file": "frames/1245620-075.00.jpg",
+      "sha256": "e2ef37cd08bdf7e959975ab306fe69db93a0a0bafce0ff176c98df936b4936a0",
+      "segment": {
+        "url": "https://video.akamai.steamstatic.com/store_trailers/1245620/377844/2912096cfadf6d63b7a35b7e7bc4e488c91cb31e/1750649918/dash_h264/chunk-stream1-00026.m4s",
+        "segment_start_seconds": 75.0,
+        "sha256": "df6e62e7067295e99ac950e6b43a9d25976a4c71ad8a18fd0fe386aa4912aea4"
+      }
+    },
+    {
+      "id": "1245620@90.00",
+      "seconds": 90.0,
+      "file": "frames/1245620-090.00.jpg",
+      "sha256": "f53f1fc07fed445a83688480bf852f21b1c554882be7d6c1049731535c7ceaaf",
+      "segment": {
+        "url": "https://video.akamai.steamstatic.com/store_trailers/1245620/377844/2912096cfadf6d63b7a35b7e7bc4e488c91cb31e/1750649918/dash_h264/chunk-stream1-00031.m4s",
+        "segment_start_seconds": 90.0,
+        "sha256": "fb66070af20c2dea0c6a7421397b33348cfdedcf6abd70c35fe9b2735a021046"
+      }
+    }
+  ]
+}

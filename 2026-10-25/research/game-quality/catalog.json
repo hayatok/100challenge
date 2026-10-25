@@ -1,0 +1,170 @@
+[
+  {
+    "appid": 413150,
+    "name": "Stardew Valley",
+    "release_date": {
+      "coming_soon": false,
+      "date": "Feb 26, 2016"
+    },
+    "steam_recommendations": 901806,
+    "source_url": "https://store.steampowered.com/api/appdetails?appids=413150&cc=us&l=english",
+    "retrieved_at": "2026-10-25T11:36:48.089244+00:00",
+    "sha256": "d9ccc6d4eab2541ac497c6c8eee75d18b5e4a937b481988d5426131e40e0eafc"
+  },
+  {
+    "appid": 646570,
+    "name": "Slay the Spire",
+    "release_date": {
+      "coming_soon": false,
+      "date": "Jan 23, 2019"
+    },
+    "steam_recommendations": 194529,
+    "source_url": "https://store.steampowered.com/api/appdetails?appids=646570&cc=us&l=english",
+    "retrieved_at": "2026-10-25T11:36:48.221027+00:00",
+    "sha256": "8be4eb30c23d64c015095c5f0230520399361c5f43716677085a312126f91a98"
+  },
+  {
+    "appid": 1245620,
+    "name": "ELDEN RING",
+    "release_date": {
+      "coming_soon": false,
+      "date": "Feb 24, 2022"
+    },
+    "steam_recommendations": 834726,
+    "source_url": "https://store.steampowered.com/api/appdetails?appids=1245620&cc=us&l=english",
+    "retrieved_at": "2026-10-25T11:36:48.104779+00:00",
+    "sha256": "2dca9ba106c6bf54564c2dbff1e99a837d06fba6c1c8bcac8f6e5d5ed25e73e0"
+  },
+  {
+    "appid": 2379780,
+    "name": "Balatro",
+    "release_date": {
+      "coming_soon": false,
+      "date": "Feb 20, 2024"
+    },
+    "steam_recommendations": 162261,
+    "source_url": "https://store.steampowered.com/api/appdetails?appids=2379780&cc=us&l=english",
+    "retrieved_at": "2026-10-25T11:51:07.369625+00:00",
+    "sha256": "f783d32ffca1a5ab8464190e57dfb895f21abafa8b45f041f86ee9513fd64106"
+  },
+  {
+    "appid": 1145350,
+    "name": "Hades II",
+    "release_date": {
+      "coming_soon": false,
+      "date": "Sep 25, 2025"
+    },
+    "steam_recommendations": 115488,
+    "source_url": "https://store.steampowered.com/api/appdetails?appids=1145350&cc=us&l=english",
+    "retrieved_at": "2026-10-25T11:51:07.363274+00:00",
+    "sha256": "0f83e75b4c6b183a612a912a1670f5e43e15f5cfa521176f2061ffe96d615030"
+  },
+  {
+    "appid": 294100,
+    "name": "RimWorld",
+    "release_date": {
+      "coming_soon": false,
+      "date": "Oct 17, 2018"
+    },
+    "steam_recommendations": 210705,
+    "source_url": "https://store.steampowered.com/api/appdetails?appids=294100&cc=us&l=english",
+    "retrieved_at": "2026-10-25T11:51:07.320903+00:00",
+    "sha256": "9b3b30739aab4fa1db36a4e0bea707a9a24edc2bc5ff81c3778d5dbaa449bc33"
+  },
+  {
+    "appid": 427520,
+    "name": "Factorio",
+    "release_date": {
+      "coming_soon": false,
+      "date": "Aug 14, 2020"
+    },
+    "steam_recommendations": 196857,
+    "source_url": "https://store.steampowered.com/api/appdetails?appids=427520&cc=us&l=english",
+    "retrieved_at": "2026-10-25T11:51:07.579426+00:00",
+    "sha256": "404edebe6050b67bbbb674da80d46497cfcb226d98feecaf288148473d2748e1"
+  },
+  {
+    "appid": 457140,
+    "name": "Oxygen Not Included",
+    "release_date": {
+      "coming_soon": false,
+      "date": "Jul 30, 2019"
+    },
+    "steam_recommendations": 136097,
+    "source_url": "https://store.steampowered.com/api/appdetails?appids=457140&cc=us&l=english",
+    "retrieved_at": "2026-10-25T11:51:07.529861+00:00",
+    "sha256": "90016efa373c57465d36d034f33e714cbc5ba2db56db8674c14c4e5647ebc273"
+  },
+  {
+    "appid": 1086940,
+    "name": "Baldur's Gate 3",
+    "release_date": {
+      "coming_soon": false,
+      "date": "Aug 3, 2023"
+    },
+    "steam_recommendations": 759745,
+    "source_url": "https://store.steampowered.com/api/appdetails?appids=1086940&cc=us&l=english",
+    "retrieved_at": "2026-10-25T11:51:07.535293+00:00",
+    "sha256": "522b05ccad09e809e4719b6cf39c11399ba071dad229e38551b051030df8a179"
+  },
+  {
+    "appid": 289070,
+    "name": "Sid Meier’s Civilization® VI",
+    "release_date": {
+      "coming_soon": false,
+      "date": "Oct 20, 2016"
+    },
+    "steam_recommendations": 277228,
+    "source_url": "https://store.steampowered.com/api/appdetails?appids=289070&cc=us&l=english",
+    "retrieved_at": "2026-10-25T11:51:08.037069+00:00",
+    "sha256": "dc4561d2c27c932289f1b79a2db6c2058b1fcf581ed9ee88482dd465704f676e"
+  },
+  {
+    "appid": 1868140,
+    "name": "DAVE THE DIVER",
+    "release_date": {
+      "coming_soon": false,
+      "date": "Jun 28, 2023"
+    },
+    "steam_recommendations": 144265,
+    "source_url": "https://store.steampowered.com/api/appdetails?appids=1868140&cc=us&l=english",
+    "retrieved_at": "2026-10-25T11:51:07.807630+00:00",
+    "sha256": "8d9ff6ebcabba29317cd95ae0e692eb3cad60206b564a8be92593c18de9f4dfb"
+  },
+  {
+    "appid": 1313140,
+    "name": "Cult of the Lamb",
+    "release_date": {
+      "coming_soon": false,
+      "date": "Aug 11, 2022"
+    },
+    "steam_recommendations": 113245,
+    "source_url": "https://store.steampowered.com/api/appdetails?appids=1313140&cc=us&l=english",
+    "retrieved_at": "2026-10-25T11:51:07.831392+00:00",
+    "sha256": "e582e4ad6da92022601afc8d545ab579e3c1c3b196fc7950de5d0b1d2c7e4fc5"
+  },
+  {
+    "appid": 1449690,
+    "name": "The Walking Dead: The Telltale Definitive Series",
+    "release_date": {
+      "coming_soon": false,
+      "date": "Oct 29, 2020"
+    },
+    "steam_recommendations": 37212,
+    "source_url": "https://store.steampowered.com/api/appdetails?appids=1449690&cc=us&l=english",
+    "retrieved_at": "2026-10-25T12:04:24.923126+00:00",
+    "sha256": "9b59ee0bd113d1e7c29fab14fe95e173c927b21105e7f403e7503757002fc9b2"
+  },
+  {
+    "appid": 787480,
+    "name": "Phoenix Wright: Ace Attorney Trilogy",
+    "release_date": {
+      "coming_soon": false,
+      "date": "Apr 9, 2019"
+    },
+    "steam_recommendations": 35994,
+    "source_url": "https://store.steampowered.com/api/appdetails?appids=787480&cc=us&l=english",
+    "retrieved_at": "2026-10-25T12:04:24.855206+00:00",
+    "sha256": "28f57818031e9c552269411bccf0f8434ef85583a2493a7b80b20c6d79c7986e"
+  }
+]

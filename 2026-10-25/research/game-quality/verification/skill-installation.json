@@ -1,0 +1,28 @@
+{
+  "source": ".agents/skills/game-quality-design",
+  "installed_path": "/Users/hayatok/.codex/skills/game-quality-design",
+  "installed_at": "2026-10-25T12:37:07.174699+00:00",
+  "identical_copy": true,
+  "files": [
+    {
+      "file": "SKILL.md",
+      "sha256": "ed4377b3bc90cdf2868c133fa64938641961fa89d8b6a787c6c175078c05904a"
+    },
+    {
+      "file": "agents/openai.yaml",
+      "sha256": "f64593ea031c7477de3f50ec49db24d404ea60580732335a602a680aad85e252"
+    },
+    {
+      "file": "references/case-evidence.md",
+      "sha256": "295d0c8be6911e3f5759b87a126d4e8da1c10b4746d60b4b459a1d42b5faabe6"
+    },
+    {
+      "file": "references/design-moves.md",
+      "sha256": "8dd0abf28a25dd65990db92af0a918a15d7d491b034f7aa2a612ff8e57d3e22c"
+    },
+    {
+      "file": "references/diagnosis.md",
+      "sha256": "43a58ea92cd4eb254b1dce3fdd7215c67e3eba1defa5b5f23101e5fe7449118c"
+    }
+  ]
+}

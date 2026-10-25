@@ -1,0 +1,72 @@
+{
+  "appid": 1145350,
+  "name": "Hades II",
+  "store_page": "https://store.steampowered.com/app/1145350/",
+  "retrieved_at": "2026-10-25T11:55:07.846152+00:00",
+  "source_metadata": "https://store.steampowered.com/api/appdetails?appids=1145350&cc=us&l=english",
+  "movie_name": "Hades II – v1.0 Showcase ",
+  "movie_id": 257206304,
+  "movie_url": "https://video.akamai.steamstatic.com/store_trailers/1145350/1078171228/d92eb59e06a0bc11acbab62a2fcc3981383b80fa/1758820310/dash_h264.mpd?t=1758942440",
+  "media_source_sha256": "11624328d4e5ef7d4134240e9d0b97d899a0d337e403a628bb5adafb440e0312",
+  "hash_scope": "DASH manifest",
+  "duration_seconds": 159.8,
+  "source_kind": "publisher Steam store video; edited trailer",
+  "observation_limit": "selected still frames only; no full playback or player-input observation",
+  "frames": [
+    {
+      "id": "1145350@31.96",
+      "seconds": 31.96,
+      "file": "frames/1145350-031.96.jpg",
+      "sha256": "5cf4635c55b0dfb98a657177ee49a3c7d7842f0f80657d5e4ac2881024d6cf7e",
+      "segment": {
+        "url": "https://video.akamai.steamstatic.com/store_trailers/1145350/1078171228/d92eb59e06a0bc11acbab62a2fcc3981383b80fa/1758820310/dash_h264/chunk-stream1-00011.m4s",
+        "segment_start_seconds": 30.0,
+        "sha256": "4c282c15e093d84f0608ef654afbd7a711665f9212869de49260716aa30e2830"
+      }
+    },
+    {
+      "id": "1145350@55.93",
+      "seconds": 55.93,
+      "file": "frames/1145350-055.93.jpg",
+      "sha256": "5ec6d50741fa762066a9ff86b434966f695873f1fcde6aea9687297927eac278",
+      "segment": {
+        "url": "https://video.akamai.steamstatic.com/store_trailers/1145350/1078171228/d92eb59e06a0bc11acbab62a2fcc3981383b80fa/1758820310/dash_h264/chunk-stream1-00019.m4s",
+        "segment_start_seconds": 54.0,
+        "sha256": "d7f210145a6f32d7f8b02e75f95ea5fd87dddd510b37c8be66a2c65f36e9f535"
+      }
+    },
+    {
+      "id": "1145350@79.90",
+      "seconds": 79.9,
+      "file": "frames/1145350-079.90.jpg",
+      "sha256": "1fabb6cb68afa19345f8357bf0ae2f2e8f2b66b4db6db22e916551cf621c5477",
+      "segment": {
+        "url": "https://video.akamai.steamstatic.com/store_trailers/1145350/1078171228/d92eb59e06a0bc11acbab62a2fcc3981383b80fa/1758820310/dash_h264/chunk-stream1-00027.m4s",
+        "segment_start_seconds": 78.0,
+        "sha256": "21ea86750cba8933f5dad063410e30f8bc85425bda8f020e862d46a0d006c276"
+      }
+    },
+    {
+      "id": "1145350@103.87",
+      "seconds": 103.87,
+      "file": "frames/1145350-103.87.jpg",
+      "sha256": "d54327ba8727f780745724b41df11d2aacdcbe5befe3987e471e13c1bc47f7ee",
+      "segment": {
+        "url": "https://video.akamai.steamstatic.com/store_trailers/1145350/1078171228/d92eb59e06a0bc11acbab62a2fcc3981383b80fa/1758820310/dash_h264/chunk-stream1-00035.m4s",
+        "segment_start_seconds": 102.0,
+        "sha256": "1d77a71faff79d14bc7e9128a4a1d650d201bc21c0b9eef530e968ce2591d714"
+      }
+    },
+    {
+      "id": "1145350@127.84",
+      "seconds": 127.84,
+      "file": "frames/1145350-127.84.jpg",
+      "sha256": "e8989a7dfaf9c341de46cbe2af1e40e376b8d32a9693ea0310a501e5d12dc92e",
+      "segment": {
+        "url": "https://video.akamai.steamstatic.com/store_trailers/1145350/1078171228/d92eb59e06a0bc11acbab62a2fcc3981383b80fa/1758820310/dash_h264/chunk-stream1-00043.m4s",
+        "segment_start_seconds": 126.0,
+        "sha256": "91d2e3e62e5646acb08d853f869ae239e344866dbefc0c3ac6caf8913aa77eb7"
+      }
+    }
+  ]
+}
