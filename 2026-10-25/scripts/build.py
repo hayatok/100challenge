@@ -91,7 +91,9 @@ def choice_diagram(c,d):
 def sources_md(d):
     result=[]
     for a in d['assets']:
-        result += [f'- {a["name"]} / {a["license"]} / {a["role"]}',f'  {a["url"]}']
+        result.append(f'- {a["name"]} / {a["license"]} / {a["role"]}')
+        if a['url']:
+            result.append(f'  {a["url"]}')
     for a in d['comparables']:
         result += [f'- 比較作：{a["name"]}。{a["difference"]}',f'  {a["url"]}']
     return '\n'.join(result)

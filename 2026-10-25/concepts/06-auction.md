@@ -136,7 +136,6 @@ Kenney Hexagon Kitは公式でCC0を確認した地形素材候補。地図の�
 - Kenney UI Audio / CC0（公式ページ表記を確認） / 入札確定、開札、返済の効果音候補。実ファイルの選別は制作時。
   https://kenney.nl/assets/ui-audio
 - オリジナル2D人物・CG / 新規制作時に権利条件を確定 / 二人の立ち絵とCG四点。地図と調和する絵巻調に統一する推奨方法。
-  
 - 比較作：Ozymandias。公式が紹介する簡略化した4Xと同時手番、戦術戦闘に代わるPowerに対し、本案は領地を担保にした競売と返済を拡張の中心に置く。地図のコンパクトさを比較し、同じルールとは扱わない。
   https://goblinzstudio.com/game/ozymandias/
 
