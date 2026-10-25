@@ -19,17 +19,17 @@ At 390 x 844, the checks included title/help, all four character selections, pac
 
 Reload was checked both during ordinary exploration and while a wader was showing a charge intent: turn 30, HP 20/28, seven carried items and the warning were restored without a turn advancing. Menus and focus changes did not advance game time. After the repair, the next departure used the wider field of view.
 
-At 360 x 740, harbor, inventory and expedition controls were checked for clipping and access to the primary action. At 1280 x 900, title, expedition, return confirmation, result and harbor were checked. Final touch targets use 52 logical pixels to remain above 44 CSS pixels at the small target. Safe areas were exercised with native UI insets of 44 at the top and 34 at the bottom; actual notched-device behavior remains unverified.
+A 837-to-790 CSS-pixel width change also switched the harbor across its layout breakpoint. At 360 x 740, harbor, inventory and expedition controls were checked for clipping and access to the primary action. At 1280 x 900, title, expedition, return confirmation, result and harbor were checked. Final touch targets use 52 logical pixels to remain above 44 CSS pixels at the small target. No new browser console errors were captured during the final inspection after 16:20 UTC. Safe areas were exercised with native UI insets of 44 at the top and 34 at the bottom; actual notched-device behavior remains unverified.
 
 Selected screenshots are real Web output, not generated mockups:
 
-- [Phone title](screens/web-phone-title.png), [prepared loadout](screens/web-phone-loadout.png), [Kohaku](screens/web-phone-kohaku.png)
-- [Charge warning](screens/web-phone-telegraph.png), [bomb result](screens/web-phone-bomb.png), [core recovered](screens/web-phone-core.png)
-- [Extraction](screens/web-phone-extracted.png), [repair](screens/web-phone-repaired.png), [loss](screens/web-phone-loss.png), [loan retry](screens/web-phone-loan-retry.png)
-- [Small harbor](screens/web-small-harbor.png), [small inventory](screens/web-small-inventory.png), [small expedition](screens/web-small-expedition.png)
-- [Desktop title](screens/web-desktop-title.png), [harbor](screens/web-desktop-harbor.png), [loan confirmation](screens/web-desktop-loan-confirmation.png), [empty return](screens/web-desktop-empty-return.png)
+- [Phone title](screens/web-phone-title.jpg), [prepared loadout](screens/web-phone-loadout.jpg), [Kohaku](screens/web-phone-kohaku.jpg)
+- [Charge warning](screens/web-phone-telegraph.jpg), [bomb result](screens/web-phone-bomb.jpg), [core recovered](screens/web-phone-core.jpg)
+- [Extraction](screens/web-phone-extracted.jpg), [repair](screens/web-phone-repaired.jpg), [loss](screens/web-phone-loss.jpg), [loan retry](screens/web-phone-loan-retry.jpg)
+- [Small harbor](screens/web-small-harbor.jpg), [small inventory](screens/web-small-inventory.jpg), [small expedition](screens/web-small-expedition.jpg), [tablet breakpoint](screens/web-tablet-breakpoint.jpg)
+- [Desktop title](screens/web-desktop-title.jpg), [harbor](screens/web-desktop-harbor.jpg), [loan confirmation](screens/web-desktop-loan-confirmation.jpg), [empty return](screens/web-desktop-empty-return.jpg)
 
-The full expedition screenshots were taken before the final button-size and empty-return dialogue refinements. The final layout captures are recorded after those changes. Generated asset previews and native scripted fixtures were used during development and are not counted as browser playthroughs.
+The full expedition and early phone-title screenshots were taken before the final button-size and empty-return dialogue refinements. The small-screen, tablet and desktop layout captures were recorded after those changes. The fresh [trial panel](screens/web-panel-title.jpg) uses the normal embedded-panel viewport; the [final phone expedition](screens/web-phone-expedition-final.jpg) uses the 390 x 844 test viewport. Screenshot files use the JPEG format returned by the browser tool. Generated asset previews and native scripted fixtures were used during development and are not counted as browser playthroughs.
 
 ## Fixes found during verification
 
@@ -38,7 +38,7 @@ The full expedition screenshots were taken before the final button-size and empt
 - World objects rendered above inventory panels; the overlay now has an explicit higher layer.
 - A time gate dropped deliberate rapid inputs. Input now resolves once per non-echo action event, with touch and physical-key mappings.
 - Invalid actions now show their reason in the HUD. Full healing, an empty bomb target and a full bag retain both the item and the turn.
-- Safe-area insets are read from CSS and applied to both the main frame and modals.
+- Safe-area insets are read from CSS and applied to both the main frame and modals. Harbor layouts also rebuild when crossing their width breakpoint, including width changes smaller than 80 logical pixels.
 - Return confirmation excludes loan items from the promised stash count; empty-return dialogue and result text reflect the zero-item receipt.
 
 ## Design and review
