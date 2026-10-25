@@ -11,7 +11,9 @@ from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.lib.colors import HexColor, Color, white
 from reportlab.lib.pagesizes import A4
-from reportlab.platypus import Paragraph
+from reportlab.platypus import (Paragraph, Spacer, Table, TableStyle, Flowable, KeepTogether,
+                               BaseDocTemplate, PageTemplate, Frame, PageBreak,
+                               NextPageTemplate)
 from reportlab.lib.styles import ParagraphStyle
 from reportlab.lib.utils import ImageReader
 
@@ -23,12 +25,12 @@ MUTED = '#56606C'
 PAPER = '#FAF8F3'
 BOUNDS = []
 MOCK = {
- '01-rail': ['工事点 3 / 残弾 1', 'レールを防壁へ', '補給2が停止。砲台は無傷、反撃後の残弾は0。', ['線路を選ぶ','防壁にする','取消'], 'セナ', 'その線を閉じるなら、次の一手まで一緒に考えよう。'],
- '02-beast': ['行動点 2 / 命令 3', '獣を待機させる', '命令を1回使い、見張りが過ぎるまで穴の手前で待つ。', ['未来を比べる','待機を命令','取消'], 'ミオ', '今日はあの子も、あなたの帰りを待っていたみたい。'],
- '03-garden': ['樹液 3 / 木材 0', '剪定中・時間停止', '木材2を得る。この近道を失い、作業台で衝撃ガードへ。', ['枝を選ぶ','剪定する','取消'], 'コトネ', 'これ、余った花で作ったの。……余ったから、だけじゃないけど。'],
- '04-inn': ['食数 2 / 明夜空室 2', '契約B：二夜で120', '食数を残す代わりに、明夜の空室は1になる。', ['条件を比べる','契約する','取消'], 'マオ', '閉店後まで支配人でいなくても、いいでしょう？'],
- '05-detective': ['調査枠 6 / 工房在庫 2', '工房印の矛盾を公表', '謝礼80を得る。翌朝の在庫評価は計60下がる。', ['証拠を見る','公開する','保留'], 'スイ', '見抜かれるのは得意じゃないの。あなたには、特に。'],
- '06-auction': ['食料 6 / 資金 8', '港の通行権に入札', '畑を担保にすると、返済まで収穫が2減る。', ['担保を選ぶ','入札する','取消'], 'リゼ', '今夜くらい、計算書は閉じましょう。二人分の時間は、残してあります。'],
+ '01-rail': ['工事点3 / 砲台の弾1', '線路を壁に変える', 'この線路の補給は止まります。砲台は攻撃を防げますが、反撃後の弾は0になります。', ['線路を選ぶ','壁に変える','取り消す'], 'セナ', 'その線路を壁に変えるなら、その後の補給も一緒に考えよう。'],
+ '02-beast': ['行動点2 / 命令あと3回', '獣に待つよう命令する', '命令を1回使います。獣は穴の手前で待ち、見張りをやり過ごします。', ['行動を比べる','待機を命令','取り消す'], 'ミオ', '今日はあの子も、あなたの帰りを待っていたみたい。'],
+ '03-garden': ['樹液3 / 木材0', '枝を切る前に確認', '木材を2個得ますが、この近道は消えます。木材は衝撃ガードの材料になります。', ['枝を選ぶ','この枝を切る','取り消す'], 'コトネ', 'これ、余った花で作ったの。……余ったから、だけじゃないけど。'],
+ '04-inn': ['食事あと2食 / 明日の空室2', '120で今夜と明日を貸す', '客が120を払い、2泊します。食事は付きません。明日の空室は1室になります。', ['条件を比べる','契約する','取り消す'], 'マオ', '閉店後まで支配人でいなくても、いいでしょう？'],
+ '05-detective': ['調査あと6回 / 同工房の品2点', '鑑定結果を公表する', '謝礼80を受け取ります。翌朝には在庫2点の相場が下がり、合計60の値下がりになります。', ['証拠を見る','公表する','保留する'], 'スイ', '見抜かれるのは得意じゃないの。あなたには、特に。'],
+ '06-auction': ['現金6 / 食料2', '畑を担保に10で入札', '落札した場合、畑の収穫が止まり、食料が1足りなくなります。食料を買うと現金は0になり、借りた4の返済が残ります。', ['担保を選ぶ','入札する','取り消す'], 'リゼ', '今夜くらい、計算書は閉じましょう。二人分の時間は、残してあります。'],
 }
 
 def data():
@@ -37,6 +39,44 @@ def data():
 def style(size=10.5, color=INK, leading=None):
     return ParagraphStyle('JP', fontName='JP', fontSize=size, leading=leading or size*1.62,
                           textColor=HexColor(color), wordWrap='CJK', spaceAfter=0)
+
+class ArtBlock(Flowable):
+    def __init__(self, path, width, height, panel=None):
+        super().__init__()
+        self.path, self.width, self.height, self.panel = path, width, height, panel
+
+    def draw(self):
+        art(self.canv, self.path, 0, 0, self.width, self.height, self.panel)
+
+def paragraph(text, size=11.2, color=INK, heading=False):
+    spec = style(size, color, size*1.65)
+    spec.spaceAfter = 8 if not heading else 5
+    spec.spaceBefore = 9 if heading else 0
+    spec.keepWithNext = heading
+    spec.allowWidows = 0
+    spec.allowOrphans = 0
+    return Paragraph(escape(str(text)).replace('\n', '<br/>'), spec)
+
+def text_sections(items, accent, size=11.2):
+    flows=[]
+    for item in items:
+        flows.append(paragraph(item['heading'], 12.5, accent, heading=True))
+        flows.extend(paragraph(part, size) for part in item['text'].split('\n\n') if part.strip())
+    return flows
+
+def chapter_header(c, doc, d, chapter):
+    c.setFillColor(HexColor(PAPER)); c.rect(0,0,W,H,fill=1,stroke=0)
+    c.setFillColor(HexColor(d['accent'])); c.rect(0,H-8,W,8,fill=1,stroke=0)
+    c.setFillColor(HexColor(MUTED)); c.setFont('Helvetica',8.5)
+    c.drawString(40,H-34,f'100CHALLENGE / CONCEPT {d["id"][:2]} / 2026.10.25')
+    title=d['pages'][chapter]['title']
+    size=min(21,(W-80)/pdfmetrics.stringWidth(title,'JP',1))
+    para(c,title,40,H-54,W-80,size,INK,28)
+    para(c,d['pages'][chapter]['lead'],40,H-96,W-80,10.5,MUTED,16)
+    c.setStrokeColor(HexColor('#D9D9D3')); c.line(40,42,W-40,42)
+    c.setFillColor(HexColor(MUTED)); c.setFont('JP',7.7)
+    c.drawString(40,27,'開発前の企画案です。ゲームの動作や面白さは、試作後に確認します。')
+    c.drawRightString(W-40,27,str(doc.page))
 
 def para(c, text, x, top, width, size=10.5, color=INK, leading=None):
     if not text:
@@ -49,26 +89,6 @@ def para(c, text, x, top, width, size=10.5, color=INK, leading=None):
     BOUNDS.append({'page':c.getPageNumber(),'bottom':round(top-height,2),'text':text[:35]})
     return top-height
 
-def sections(c, items, x, top, width, accent, size=10.5, gap=17):
-    for item in items:
-        top=para(c,item['heading'],x,top,width,12,accent,17)-7
-        top=para(c,item['text'],x,top,width,size)-gap
-    return top
-
-def frame(c,d,page):
-    c.setFillColor(HexColor(PAPER)); c.rect(0,0,W,H,fill=1,stroke=0)
-    c.setFillColor(HexColor(d['accent'])); c.rect(0,H-10,W,10,fill=1,stroke=0)
-    c.setFont('Helvetica',9); c.setFillColor(HexColor(MUTED))
-    c.drawString(40,H-36,f'100CHALLENGE / CONCEPT {d["id"][:2]} / 2026.10.25')
-    title=d['pages'][page]['title']
-    title_size=min(22,(W-80)/pdfmetrics.stringWidth(title,'JP',1))
-    para(c,title,40,H-57,W-80,title_size,INK,29)
-    para(c,d['pages'][page]['lead'],40,H-103,W-80,10.5,MUTED)
-    c.setStrokeColor(HexColor('#D9D9D3')); c.line(40,43,W-40,43)
-    c.setFont('JP',7.5); c.setFillColor(HexColor(MUTED))
-    c.drawString(40,28,'企画イメージ・未実装 / 面白さと性能は試作で確認する設計仮説')
-    c.drawRightString(W-40,28,f'{page+1:02d} / 06')
-
 def art(c,path,x,y,w,h,panel=None,focus=0.5):
     img=ImageReader(str(path)); iw,ih=img.getSize()
     c.saveState(); p=c.beginPath(); p.rect(x,y,w,h); c.clipPath(p,stroke=0)
@@ -79,14 +99,6 @@ def art(c,path,x,y,w,h,panel=None,focus=0.5):
         pw=iw/3; scale=max(w/pw,h/ih); dw,dh=iw*scale,ih*scale
         c.drawImage(img,x+(w-pw*scale)/2-panel*pw*scale,y+h/2-dh*focus,dw,dh)
     c.restoreState()
-
-def choice_diagram(c,d):
-    spec=MOCK[d['id']]; y=570; cw=(W-94)/2
-    for j,(head,body) in enumerate([('選んだ操作',spec[1]),('確定後の変化',spec[2])]):
-        x=40+j*(cw+14)
-        c.setFillColor(HexColor('#EEECE6')); c.roundRect(x,y,cw,102,7,fill=1,stroke=0)
-        para(c,head,x+14,y+86,cw-28,10,d['accent'])
-        para(c,body,x+14,y+60,cw-28,11)
 
 def sources_md(d):
     result=[]
@@ -100,7 +112,7 @@ def sources_md(d):
 
 def source_files(all_data):
     for d in all_data:
-        lines=[f'# {d["title"]}',d['genres'],'','企画イメージ・未実装。設計目標と見積は実測ではない。','',d['pitch'],'',
+        lines=[f'# {d["title"]}',d['genres'],'','開発前の企画案です。画像は完成後の画面を想像するためのもので、ゲームはまだ実装していません。プレイ時間と開発期間は目標です。','',d['pitch'],'',
                f'![3面の企画イメージ](../art/{d["id"]}.png)','']
         for i,p in enumerate(d['pages']):
             lines += [f'## {i+1}. {p["title"]}','',p['lead'],'']
@@ -115,122 +127,107 @@ def source_files(all_data):
 def mock_html(d,mode):
     s=MOCK[d['id']]; esc=html.escape
     dialog=mode=='talk'; idx=2 if dialog else 1
-    title='帰還後の交流' if dialog else s[0]
+    title='仕事のあとの会話' if dialog else s[0]
     focus=s[4] if dialog else s[1]
     desc=s[5] if dialog else s[2]
     buttons=['返事をする','ログ','設定'] if dialog else s[3]
     return f'''<!doctype html><html lang="ja"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>{esc(d['title'])}・画面モック</title>
-<style>*{{box-sizing:border-box}}html,body{{margin:0;width:100%;height:100%;overflow:hidden;background:#151a22;color:#fff;font-family:'Noto Sans JP','Hiragino Kaku Gothic ProN',sans-serif}}main{{height:100dvh;display:grid;grid-template-rows:44px minmax(0,1fr) 195px;padding-bottom:env(safe-area-inset-bottom)}}header{{display:flex;align-items:center;justify-content:space-between;padding:0 14px;background:#171d25;font-size:13px;gap:6px}}header span{{white-space:nowrap}}header small{{font-size:10px;color:#d7dce3}}.scene{{position:relative;overflow:hidden;min-height:0}}.art{{position:absolute;inset:0;background-image:url('../../art/{d['id']}.png');background-size:300% 100%;background-position:{idx*50}% 50%}}.scene:after{{content:'';position:absolute;inset:0;box-shadow:inset 0 -80px 60px -30px #10151aa0;pointer-events:none}}.badge{{position:absolute;z-index:1;top:12px;left:12px;background:#14202eea;border:1px solid #ffffff70;border-radius:4px;padding:7px 10px;font-size:12px}}.select{{position:absolute;z-index:2;left:40%;top:48%;width:64px;height:64px;border:3px solid #ffe7a2;border-radius:12px;background:#ffd96724;color:#fff;font-size:12px;box-shadow:0 0 0 7px #161f2970}}.panel{{padding:14px 16px 12px;background:#f7f2e9;color:#20252c;display:flex;flex-direction:column;gap:8px;min-height:0}}h1{{margin:0;font-size:17px;line-height:1.4}}p{{margin:0;font-size:14px;line-height:1.5;min-height:42px}}.actions{{display:flex;gap:8px;margin-top:auto}}button{{font:inherit;min-height:46px;border:2px solid #293440;border-radius:5px;background:#fffdf8;color:#20252c;font-size:13px;font-weight:600}}.actions button{{flex:1;padding:5px}}.actions .confirm{{background:{d['accent']};color:white;border-color:{d['accent']}}}button:focus-visible{{outline:3px solid #116daf;outline-offset:2px}}.notice{{font-size:10px;color:#5a626c;line-height:1.2}}.chosen{{background:#d5ad4345;border-color:#fff}}@media(max-height:740px){{main{{grid-template-rows:40px minmax(0,1fr) 187px}}.panel{{padding:10px 14px}}}}</style>
-<main><header><span>{esc(title)}</span><small>企画画面・未実装</small></header><section class="scene"><div class="art"></div><div class="badge">{esc('交流ログを任意に開ける' if dialog else '選択中も結果を確認')}</div>{'' if dialog else '<button class="select" aria-label="対象を選択">選択</button>'}</section><section class="panel"><h1>{esc(focus)}</h1><p id="description">{esc(desc)}</p><div class="actions">{''.join(f'<button class="{ "confirm" if n==1 else ""}">{esc(b)}</button>' for n,b in enumerate(buttons))}</div><div class="notice">静止画と選択表示のモック。ゲームの進行処理はありません。</div></section></main>
-<script>const original={json.dumps(desc,ensure_ascii=False)};const p=document.querySelector('#description');document.querySelectorAll('button').forEach((b)=>b.addEventListener('click',()=>{{if(['取消','保留'].includes(b.textContent)){{p.textContent=original;document.querySelector('.select')?.classList.remove('chosen')}}else if(b.classList.contains('select')){{b.classList.toggle('chosen');p.textContent='対象を選択中。下部で影響を読み、確定か取消を選びます。'}}else{{p.textContent='表示確認用のモックです。選択した操作：'+b.textContent;}}}}));</script></html>'''
+<style>*{{box-sizing:border-box}}html,body{{margin:0;width:100%;height:100%;overflow:hidden;background:#151a22;color:#fff;font-family:'Noto Sans JP','Hiragino Kaku Gothic ProN',sans-serif}}main{{height:100dvh;display:grid;grid-template-rows:56px minmax(0,1fr) 230px;padding-bottom:env(safe-area-inset-bottom)}}header{{display:flex;align-items:center;justify-content:space-between;padding:0 14px;background:#171d25;font-size:13px;gap:6px}}header span{{max-width:65%;font-size:12px;line-height:1.4}}header small{{max-width:35%;font-size:9px;color:#d7dce3;text-align:right}}.scene{{position:relative;overflow:hidden;min-height:0}}.art{{position:absolute;inset:0;background-image:url('../../art/{d['id']}.png');background-size:300% 100%;background-position:{idx*50}% 50%}}.scene:after{{content:'';position:absolute;inset:0;box-shadow:inset 0 -80px 60px -30px #10151aa0;pointer-events:none}}.badge{{position:absolute;z-index:1;top:12px;left:12px;background:#14202eea;border:1px solid #ffffff70;border-radius:4px;padding:7px 10px;font-size:12px}}.select{{position:absolute;z-index:2;left:40%;top:48%;width:64px;height:64px;border:3px solid #ffe7a2;border-radius:12px;background:#ffd96724;color:#fff;font-size:12px;box-shadow:0 0 0 7px #161f2970}}.panel{{padding:14px 16px 12px;background:#f7f2e9;color:#20252c;display:flex;flex-direction:column;gap:8px;min-height:0}}h1{{margin:0;font-size:17px;line-height:1.4}}p{{margin:0;font-size:14px;line-height:1.5;min-height:42px}}.actions{{display:flex;gap:8px;margin-top:auto}}button{{font:inherit;min-height:46px;border:2px solid #293440;border-radius:5px;background:#fffdf8;color:#20252c;font-size:13px;font-weight:600}}.actions button{{flex:1;padding:5px}}.actions .confirm{{background:{d['accent']};color:white;border-color:{d['accent']}}}button:focus-visible{{outline:3px solid #116daf;outline-offset:2px}}.notice{{font-size:10px;color:#5a626c;line-height:1.2}}.chosen{{background:#d5ad4345;border-color:#fff}}@media(max-height:740px){{main{{grid-template-rows:52px minmax(0,1fr) 226px}}.panel{{padding:10px 14px}}}}</style>
+<main><header><span>{esc(title)}</span><small>開発前の画面イメージ</small></header><section class="scene"><div class="art"></div><div class="badge">{esc(s[4]+'との会話' if dialog else '確定前に結果を確認')}</div>{'' if dialog else '<button class="select" aria-label="対象を選択">選択</button>'}</section><section class="panel"><h1>{esc(focus)}</h1><p id="description">{esc(desc)}</p><div class="actions">{''.join(f'<button class="{ "confirm" if n==(0 if dialog else 1) else ""}">{esc(b)}</button>' for n,b in enumerate(buttons))}</div><div class="notice">画面構成を確認する見本です。ゲームは進行しません。</div></section></main>
+<script>const original={json.dumps(desc,ensure_ascii=False)};const p=document.querySelector('#description');document.querySelectorAll('button').forEach((b)=>b.addEventListener('click',()=>{{if(['取り消す','保留する'].includes(b.textContent)){{p.textContent=original;document.querySelector('.select')?.classList.remove('chosen')}}else if(b.classList.contains('select')){{b.classList.toggle('chosen');p.textContent='対象を選びました。下の説明を読んで、実行するか取り消すかを決めてください。'}}else{{p.textContent='画面の表示例です。選んだ操作：'+b.textContent;}}}}));</script></html>'''
 
 def html_files(all_data):
     target=ROOT/'output'/'mocks'; target.mkdir(parents=True,exist_ok=True)
     for d in all_data:
         for mode in ['play','talk']:
             (target/f'{d["id"]}-{mode}.html').write_text(mock_html(d,mode))
-    cards=''.join(f'<article><img src="art/{d["id"]}.png" alt="{html.escape(d["title"])}の3面企画イメージ"><h2>{html.escape(d["title"])}</h2><p>{html.escape(d["genres"])}</p><p>{html.escape(d["facts"]["mechanic"])}</p><a href="output/pdf/{d["id"]}.pdf">6ページの企画書PDF</a> · <a href="concepts/{d["id"]}.md">編集元</a> · <a href="output/mocks/{d["id"]}-play.html">プレイ画面モック</a> · <a href="output/mocks/{d["id"]}-talk.html">交流画面モック</a></article>' for d in all_data)
+    cards=''.join(f'<article><img src="art/{d["id"]}.png" alt="{html.escape(d["title"])}の3面企画イメージ"><h2>{html.escape(d["title"])}</h2><p>{html.escape(d["genres"])}</p><p>{html.escape(d["facts"].get("summary", d["pitch"]))}</p><a href="output/pdf/{d["id"]}.pdf">企画書PDF</a> · <a href="concepts/{d["id"]}.md">編集元</a> · <a href="output/mocks/{d["id"]}-play.html">プレイ画面モック</a> · <a href="output/mocks/{d["id"]}-talk.html">交流画面モック</a></article>' for d in all_data)
     (ROOT/'index.html').write_text(f'''<!doctype html><html lang="ja"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>6つのゲーム企画</title><style>body{{font-family:system-ui,sans-serif;background:#f4f0e8;color:#20252c;max-width:1100px;margin:32px auto;padding:0 20px;line-height:1.7}}h1{{font-size:32px}}.grid{{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px}}article{{background:#fffdf8;padding:20px;border-top:4px solid #b73529}}img{{width:100%;height:auto}}a{{color:#9c3028}}h2{{margin:12px 0 4px}}.intro{{max-width:760px}}</style><h1>6つのゲーム企画</h1><p class="intro">スマホWeb・片手縦持ち・1回10〜20分。ジャンルの掛け算と、成人ヒロインとの濃い交流を比較する企画資料です。掲載画面は未実装のイメージです。</p><p><a href="output/pdf/00-comparison.pdf">最初に比較資料を読む（2ページ）</a></p><div class="grid">{cards}</div></html>''')
 
 def proposals(all_data):
     for d in all_data:
-        c=canvas.Canvas(str(OUT/f'{d["id"]}.pdf'),pagesize=A4)
-        c.setTitle(d['title']+' / ゲーム企画書'); c.setAuthor('100challenge / Codex')
+        doc=BaseDocTemplate(str(OUT/f'{d["id"]}.pdf'), pagesize=A4,
+                            title=d['title']+' / ゲーム企画書', author='100challenge / Codex',
+                            leftMargin=40,rightMargin=40,topMargin=148,bottomMargin=54)
+        templates=[]
+        for i in range(6):
+            frame=Frame(40,54,W-80,H-202,leftPadding=0,rightPadding=0,topPadding=0,bottomPadding=0)
+            templates.append(PageTemplate(id=f'chapter-{i}',frames=[frame],
+                onPage=lambda c,document,chapter=i:chapter_header(c,document,d,chapter)))
+        source_header={**d,'pages':d['pages']+[{'title':'素材と参考作品','lead':'使用候補の素材と、比較のために参照した作品を示します。'}]}
+        source_frame=Frame(40,54,W-80,H-202,leftPadding=0,rightPadding=0,topPadding=0,bottomPadding=0)
+        templates.append(PageTemplate(id='sources',frames=[source_frame],
+            onPage=lambda c,document:chapter_header(c,document,source_header,6)))
+        doc.addPageTemplates(templates)
         image=ROOT/'art'/f'{d["id"]}.png'
+        story=[]
         for i,p in enumerate(d['pages']):
-            frame(c,d,i)
+            if i:
+                story.extend([NextPageTemplate(f'chapter-{i}'),PageBreak()])
             if i==0:
-                para(c,d['title'],40,689,W-80,30,INK,39)
-                para(c,d['genres'],40,638,W-80,11,d['accent'])
-                art(c,image,40,372,W-80,229)
-                para(c,'左：キーアート / 中：プレイ美術案 / 右：交流案（配置・装備は省略）',40,359,W-80,8.5,MUTED)
-                y=para(c,d['pitch'],40,332,W-80,11)-22
-                sections(c,p['sections'],40,y,W-80,d['accent'],10.5,13)
-            elif i==1:
-                choice_diagram(c,d)
-                sections(c,p['sections'],40,542,W-80,d['accent'],10.5,16)
-            elif i==2:
-                for j,(head,key) in enumerate([('最初の15分','early'),('中盤の15分','mid')]):
-                    x=40+j*(W-65)/2; bw=(W-95)/2
-                    c.setFillColor(HexColor('#EEECE6'));c.roundRect(x,574,bw,103,7,fill=1,stroke=0)
-                    para(c,head,x+12,661,bw-24,11,d['accent'])
-                    para(c,d['facts'][key],x+12,635,bw-24,10)
-                sections(c,p['sections'],40,546,W-80,d['accent'],10.5,16)
+                story.extend([paragraph(d['title'],27),paragraph(d['genres'],11,d['accent']),
+                    ArtBlock(image,W-80,215),Spacer(1,7),
+                    paragraph('左は作品のイメージ、中央はプレイ画面の美術案、右は会話場面です。細かい配置や装備は本文と異なる場合があります。',9,MUTED),
+                    paragraph(d['pitch'],11.2)])
             elif i==3:
-                art(c,image,40,386,210,282,2)
-                y=674
+                profiles=[]
                 for h in d['heroes']:
-                    y=para(c,f'{h["name"]} / {h["age"]}歳',270,y,W-310,14,d['accent'])-5
-                    y=para(c,h['appearance']+' '+h['work'],270,y,W-310,9.7)-8
-                    y=para(c,h['dialogue'],270,y,W-310,10.2)-18
-                para(c,'交流イメージ。表情・衣装・演出は制作前の方向性。',40,373,W-80,8.3,MUTED)
-                sections(c,p['sections'],40,345,W-80,d['accent'],10.3,14)
+                    profiles.extend([paragraph(f'{h["name"]}（{h["age"]}歳）',12.5,d['accent'],heading=True),
+                                     paragraph(h['appearance'],10.7),paragraph(h['dialogue'],10.7)])
+                table=Table([[ArtBlock(image,185,250,2),profiles]],colWidths=[200,W-280])
+                table.setStyle(TableStyle([('VALIGN',(0,0),(-1,-1),'TOP'),('LEFTPADDING',(0,0),(-1,-1),0),
+                    ('RIGHTPADDING',(0,0),(-1,-1),0),('TOPPADDING',(0,0),(-1,-1),0),('BOTTOMPADDING',(0,0),(-1,-1),6)]))
+                story.extend([table,Spacer(1,4)])
             elif i==4:
-                for j,mode in enumerate(['play','talk']):
-                    x=73+j*252
-                    shot=ROOT/'output'/'mocks'/f'{d["id"]}-{mode}-390.png'
-                    c.setFillColor(HexColor('#19232F'));c.roundRect(x-4,337,168,354,13,fill=1,stroke=0)
-                    art(c,shot,x,341,160,346.25)
-                    para(c,'プレイ / 390×844' if j==0 else '交流 / 390×844',x,329,190,9,MUTED)
-                for j in range(2):
-                    sections(c,p['sections'][j*2:j*2+2],40+j*(W-65)/2,305,(W-95)/2,d['accent'],9.3,12)
-            else:
-                y=sections(c,p['sections'],40,687,W-80,d['accent'],9.8,13)
-                y=para(c,'素材と比較作 / 一次資料・確認日 2026-10-25',40,y+1,W-80,11,d['accent'])-7
+                picture=[ArtBlock(ROOT/'output'/'mocks'/f'{d["id"]}-play-390.png',160,346),Spacer(1,5),paragraph('プレイ画面の例',9.5,MUTED)]
+                table=Table([[picture,text_sections(p['sections'][:2],d['accent'])]],colWidths=[185,W-265])
+                table.setStyle(TableStyle([('VALIGN',(0,0),(-1,-1),'TOP'),('LEFTPADDING',(0,0),(-1,-1),0),('TOPPADDING',(0,0),(-1,-1),0),('BOTTOMPADDING',(0,0),(-1,-1),8)]))
+                story.append(table)
+            story.extend(text_sections(p['sections'][2:] if i==4 else p['sections'],d['accent']))
+            if i==5:
+                story.extend([NextPageTemplate('sources'),PageBreak()])
+                story.append(paragraph('以下は2026年10月25日に参照した情報です。素材を採用するときは、配布ファイルに付属する利用条件も確認します。',9.2,MUTED))
                 for a in d['assets']:
-                    y=para(c,a['name']+' / '+a['license']+' / '+a['role'],40,y,W-80,8.2,INK,11.5)
-                    y=link(c,a['url'],40,y-2,W-80)-5
+                    block=[paragraph(a['name']+' / '+a['license']+'。'+a['role'],10.2)]
+                    if a['url']:
+                        label=escape(a['url'])
+                        block.append(Paragraph(f'<link href="{label}" color="#315B82">{label}</link>',style(9.2,'#315B82',14)))
+                    block.append(Spacer(1,10));story.append(KeepTogether(block))
                 for a in d['comparables']:
-                    y=para(c,'比較：'+a['name']+'。'+a['difference'],40,y,W-80,8.2,INK,11.5)
-                    y=link(c,a['url'],40,y-2,W-80)-5
-            c.showPage()
-        c.save()
+                    block=[paragraph('参考作品：'+a['name']+'。'+a['difference'],10.2)]
+                    label=escape(a['url'])
+                    block.extend([Paragraph(f'<link href="{label}" color="#315B82">{label}</link>',style(9.2,'#315B82',14)),Spacer(1,10)])
+                    story.append(KeepTogether(block))
+        doc.build(story)
 
-def link(c,url,x,y,width):
-    # Avoid long URLs overflowing: the visible label is short and the annotation carries the full URL.
-    from urllib.parse import urlsplit
-    u=urlsplit(url); label=u.netloc+u.path
-    if len(label)>83: label=label[:80]+'...'
-    top=y
-    y=para(c,label,x,y,width,7.8,'#315B82',10)
-    c.linkURL(url,(x,y,x+width,top),relative=0,thickness=0)
-    return y
 
 def comparison(all_data):
     c=canvas.Canvas(str(OUT/'00-comparison.pdf'),pagesize=A4)
-    c.setTitle('6つのゲーム企画 / 比較と選定');c.setAuthor('100challenge / Codex')
+    c.setTitle('6つのゲーム企画 / ゲーム内容の比較');c.setAuthor('100challenge / Codex')
+    introduction='スマートフォンのブラウザで遊ぶ6案です。片手で操作し、1回10〜20分ずつ本編を進める想定です。登場するヒロインは全員成人で、各案に2人います。'
+    recommendation='企画者としては「六部屋の約束」を第一候補とします。宿の仕事を一緒に進めることで、経営の判断とヒロインとの会話を結び付けやすいと考えています。実際に面白いかは、試作して確かめる必要があります。'
     for page in range(2):
         c.setFillColor(HexColor(PAPER));c.rect(0,0,W,H,fill=1,stroke=0)
-        para(c,'6つのゲーム企画' if page==0 else '次に試す企画を選ぶ',40,798,W-80,26,INK,36)
-        para(c,'スマホWeb / 片手縦持ち / 10〜20分 / ゲーム中心の濃い交流' if page==0 else '評価は企画者の設計判断。面白さ・制作期間・実機性能は未検証。',40,751,W-80,10.5,MUTED)
-        if page==0:
-            for i,d in enumerate(all_data):
-                y=695-i*103
-                art(c,ROOT/'art'/f'{d["id"]}.png',40,y-77,112,77,0,focus=0.7)
-                para(c,d['id'][:2]+'  '+d['title'],165,y,W-205,14,d['accent'])
-                para(c,d['genres'],165,y-26,W-205,9.5,MUTED)
-                para(c,d['facts']['mechanic'],165,y-46,W-205,10,INK,14)
-                c.linkURL(d['id']+'.pdf',(40,y-78,W-40,y+5),relative=1,thickness=0)
-        else:
-            rows=[('総合の第一候補：六部屋の約束','空間と契約の損得が読みやすく、共同生活とヒロイン交流を自然につなげられる。最大の難所は契約条件のUI。まず一晩の予約調整を試す。'),
-                  ('戦略の手応えを優先：線路の砦','輸送と防壁が同じ設備を取り合うため、ジャンルの干渉を説明しやすい。閉鎖が緊急ボタンだけにならず、攻めの選択にもなるかを試す。'),
-                  ('相棒への愛着を優先：忍び獣の飼い方','獣の成長とヒロインとの共有体験がつながる。習慣の違いが解法の違いになり、命令を聞かない苛立ちにならないかが採否を決める。'),
-                  ('探索と手触りを優先：枝を刈る冒険者','道と装備を同じ植物から作る冒険。縦画面での移動と剪定の切替、退路を失う判断の楽しさを先に確認する。'),
-                  ('謎解きと会話を優先：値札の裏の探偵','真実の公開が経営に跳ね返る。事件分岐と価格変化の説明に制作量がかかるため、一つの品物で複数の納得できる選択を作れるかを見る。'),
-                  ('経済の駆け引きを優先：競売国家','拡張と生産停止が衝突する。競売AI、独走防止、返済予測が難所。19区画程度の小さな盤面で判断が成立するかを見る。')]
-            y=700
-            for heading,body in rows:
-                y=para(c,heading,40,y,W-80,12,'#B73529')-5
-                y=para(c,body,40,y,W-80,10.3)-16
-            y=para(c,'共通の採否基準',40,y,W-80,12,'#B73529')-5
-            para(c,'最初と中盤で判断が変わるか。片手で予測・確定・訂正できるか。失敗後も交流が続くか。ヒロインの表情や会話を量産できるか。初期装備でも本編を進め、好感度稼ぎを戦力の条件にしないか。',40,y,W-80,10.3)
-        c.setFont('JP',8);c.setFillColor(HexColor(MUTED));c.drawString(40,27,'企画比較 / 全案未実装 / 2026-10-25');c.drawRightString(W-40,27,f'{page+1} / 2');c.showPage()
+        para(c,'6つのゲーム企画' if page==0 else '6つのゲーム企画（続き）',40,798,W-80,25,INK,34)
+        para(c,introduction,40,749,W-80,10.5,MUTED,17)
+        for i,d in enumerate(all_data[page*3:page*3+3]):
+            y=683-i*190
+            art(c,ROOT/'art'/f'{d["id"]}.png',40,y-154,112,145,0,focus=0.62)
+            para(c,d['id'][:2]+'  '+d['title'],170,y,W-210,14,d['accent'],21)
+            para(c,d['genres'],170,y-27,W-210,10,MUTED,15)
+            body=d['facts']['summary']+'\n'+d['facts']['moe']
+            bottom=para(c,body,170,y-52,W-210,11,INK,18)
+            if bottom<y-185:raise ValueError('Comparison row too long: '+d['id'])
+            c.linkURL(d['id']+'.pdf',(40,y-157,W-40,y+4),relative=1,thickness=0)
+        para(c,'画像は開発前の画面イメージです。ゲーム本体は、まだ実装していません。' if page==0 else recommendation,40,95,W-80,10.2,MUTED,16)
+        c.setFont('JP',8);c.setFillColor(HexColor(MUTED));c.drawString(40,27,'ゲーム企画の比較 / 2026-10-25');c.drawRightString(W-40,27,f'{page+1} / 2');c.showPage()
     c.save()
-    text=['# 6つのゲーム企画の比較','','共通条件：スマホWeb、片手縦持ち、1回10〜20分。ゲーム中心の濃い交流。成人ヒロイン各2人。全案未実装。','']
+    text=['# 6つのゲーム企画の比較','',introduction,'']
     for d in all_data:
-        text += [f'## {d["title"]}',d['genres'],d['facts']['mechanic'],d['facts']['moe'],d['facts']['hardest'],d['facts']['effort'],'']
-    text += ['## 推奨と評価の限界','総合の第一候補は六部屋の約束。戦略優先なら線路の砦、愛着優先なら忍び獣の飼い方。これは設計上の判断であり、面白さを実証した順位ではない。','実機操作、長時間プレイ、アセットのインポートと量産、制作期間は未確認。','']
+        text += [f'## {d["title"]}',d['genres'],'',d['facts']['summary'],'',d['facts']['moe'],'']
+    text += ['## 最初に試作する案','',recommendation,'','掲載画像は開発前の画面イメージです。実機での操作、長時間のプレイ、素材の量産、開発期間はまだ確認していません。','']
     (ROOT/'concepts'/'00-comparison.md').write_text('\n'.join(text))
+
 
 def main():
     ap=argparse.ArgumentParser();ap.add_argument('--prepare-only',action='store_true');ap.add_argument('--font',default='/Library/Fonts/Arial Unicode.ttf');args=ap.parse_args()

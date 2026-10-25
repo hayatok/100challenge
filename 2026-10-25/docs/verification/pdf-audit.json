@@ -2,50 +2,50 @@
   {
     "file": "00-comparison.pdf",
     "pages": 2,
-    "bytes": 31582850,
-    "sha256": "b9fc9fc310ec06e03e717df3a9e758a6f9f6c86487f57efb86acfacd47f48155",
-    "section_text_complete": true
+    "bytes": 31614873,
+    "sha256": "b310d7c90fb5ec275fc1498118d199e544c93c270f69639ede564760fd66ef7c",
+    "all_section_text_present": true
   },
   {
     "file": "01-rail.pdf",
-    "pages": 6,
-    "bytes": 6851665,
-    "sha256": "85ae1f2a0f52d74923d287b163732d4f95d51262529bdbbf7e60fe7bb09b50f1",
-    "section_text_complete": true
+    "pages": 7,
+    "bytes": 6063675,
+    "sha256": "8006f00ec2988b272c7727fe71fe48204cffcbf6ffc61aadf1c0011c20187ed6",
+    "all_section_text_present": true
   },
   {
     "file": "02-beast.pdf",
-    "pages": 6,
-    "bytes": 7009386,
-    "sha256": "f09a626e5aa26a9512b82f1d1a153876b6998739740f53f8f6125cc5bd7e18dc",
-    "section_text_complete": true
+    "pages": 7,
+    "bytes": 6199568,
+    "sha256": "337aa03cb679f26b768e3456e2a7b4b03c0e8f546e25bf7c4c5a037dc3f29c2c",
+    "all_section_text_present": true
   },
   {
     "file": "03-garden.pdf",
-    "pages": 6,
-    "bytes": 7511368,
-    "sha256": "fbfd0181bcc0b269b3650a5b3b20984fae573da59cab30a226788b1f3410c0e4",
-    "section_text_complete": true
+    "pages": 7,
+    "bytes": 6633655,
+    "sha256": "e5cec01ac9dc68d8f5fad8deb9a9d20aa06bcdce71015e16b369f399ed246e72",
+    "all_section_text_present": true
   },
   {
     "file": "04-inn.pdf",
-    "pages": 6,
-    "bytes": 6793265,
-    "sha256": "877f141d2a7aa5601bd58b78be6da1aba00e1b3c0d27ac11c424a5191eeae6ef",
-    "section_text_complete": true
+    "pages": 9,
+    "bytes": 6027874,
+    "sha256": "b33545162483066033dc072ec93dd38350ca8fceeabbb62897e3d24431985e7e",
+    "all_section_text_present": true
   },
   {
     "file": "05-detective.pdf",
-    "pages": 6,
-    "bytes": 6698598,
-    "sha256": "0a4d6ccf39ca7e0f1773fc0474d25e658cf9258443b6dcfd6171cce0f45fa55d",
-    "section_text_complete": true
+    "pages": 11,
+    "bytes": 5944429,
+    "sha256": "72a61f49b808aadd56ee1b31d5100adb029fa694ced77005277a24d7e7b28f9f",
+    "all_section_text_present": true
   },
   {
     "file": "06-auction.pdf",
-    "pages": 6,
-    "bytes": 7351598,
-    "sha256": "3fa55248827066c00900e49c19c2f877106a9f41faeec09ae87ac82263838c48",
-    "section_text_complete": true
+    "pages": 9,
+    "bytes": 6512824,
+    "sha256": "c4f4642741c78ef832c5ee0a2647e54eba2982a7809d5df240fe67ab550f2f32",
+    "all_section_text_present": true
   }
 ]

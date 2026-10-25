@@ -18,12 +18,12 @@
         "height": 46
       },
       {
-        "label": "防壁にする",
+        "label": "壁に変える",
         "width": 114,
         "height": 46
       },
       {
-        "label": "取消",
+        "label": "取り消す",
         "width": 114,
         "height": 46
       }
@@ -50,12 +50,12 @@
         "height": 46
       },
       {
-        "label": "防壁にする",
+        "label": "壁に変える",
         "width": 104,
         "height": 46
       },
       {
-        "label": "取消",
+        "label": "取り消す",
         "width": 104,
         "height": 46
       }
@@ -131,7 +131,7 @@
         "height": 64
       },
       {
-        "label": "未来を比べる",
+        "label": "行動を比べる",
         "width": 114,
         "height": 46
       },
@@ -141,7 +141,7 @@
         "height": 46
       },
       {
-        "label": "取消",
+        "label": "取り消す",
         "width": 114,
         "height": 46
       }
@@ -163,7 +163,7 @@
         "height": 64
       },
       {
-        "label": "未来を比べる",
+        "label": "行動を比べる",
         "width": 104,
         "height": 46
       },
@@ -173,7 +173,7 @@
         "height": 46
       },
       {
-        "label": "取消",
+        "label": "取り消す",
         "width": 104,
         "height": 46
       }
@@ -254,12 +254,12 @@
         "height": 46
       },
       {
-        "label": "剪定する",
+        "label": "この枝を切る",
         "width": 114,
         "height": 46
       },
       {
-        "label": "取消",
+        "label": "取り消す",
         "width": 114,
         "height": 46
       }
@@ -286,12 +286,12 @@
         "height": 46
       },
       {
-        "label": "剪定する",
+        "label": "この枝を切る",
         "width": 104,
         "height": 46
       },
       {
-        "label": "取消",
+        "label": "取り消す",
         "width": 104,
         "height": 46
       }
@@ -377,7 +377,7 @@
         "height": 46
       },
       {
-        "label": "取消",
+        "label": "取り消す",
         "width": 114,
         "height": 46
       }
@@ -409,7 +409,7 @@
         "height": 46
       },
       {
-        "label": "取消",
+        "label": "取り消す",
         "width": 104,
         "height": 46
       }
@@ -490,12 +490,12 @@
         "height": 46
       },
       {
-        "label": "公開する",
+        "label": "公表する",
         "width": 114,
         "height": 46
       },
       {
-        "label": "保留",
+        "label": "保留する",
         "width": 114,
         "height": 46
       }
@@ -522,12 +522,12 @@
         "height": 46
       },
       {
-        "label": "公開する",
+        "label": "公表する",
         "width": 104,
         "height": 46
       },
       {
-        "label": "保留",
+        "label": "保留する",
         "width": 104,
         "height": 46
       }
@@ -613,7 +613,7 @@
         "height": 46
       },
       {
-        "label": "取消",
+        "label": "取り消す",
         "width": 114,
         "height": 46
       }
@@ -645,7 +645,7 @@
         "height": 46
       },
       {
-        "label": "取消",
+        "label": "取り消す",
         "width": 104,
         "height": 46
       }

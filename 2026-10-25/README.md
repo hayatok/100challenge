@@ -1,23 +1,25 @@
 # 6つのゲーム企画
 
-スマホWeb向けの本編ゲーム6案を、ジャンルの組み合わせ、ヒロインとの交流、制作量から比較する資料。
+スマートフォンのブラウザで遊ぶゲームを6案紹介します。各企画書では、プレイヤーの役割、目的、操作、選択した結果を順に説明しています。ヒロインとの関わり方や、開発に必要な作業も案ごとにまとめました。
 
-まず[index.html](index.html)で全案を見渡し、[比較PDF](output/pdf/00-comparison.pdf)から興味のある企画へ進める。
+最初に[比較PDF](output/pdf/00-comparison.pdf)を読むと、各ゲームで何をするのかが分かります。[一覧ページ](index.html)には、個別の企画書と画面見本へのリンクがあります。
 
 | 企画 | PDF | 編集元 |
 | --- | --- | --- |
-| 線路の砦 | [6ページ](output/pdf/01-rail.pdf) | [Markdown](concepts/01-rail.md) |
-| 忍び獣の飼い方 | [6ページ](output/pdf/02-beast.pdf) | [Markdown](concepts/02-beast.md) |
-| 枝を刈る冒険者 | [6ページ](output/pdf/03-garden.pdf) | [Markdown](concepts/03-garden.md) |
-| 六部屋の約束 | [6ページ](output/pdf/04-inn.pdf) | [Markdown](concepts/04-inn.md) |
-| 値札の裏の探偵 | [6ページ](output/pdf/05-detective.pdf) | [Markdown](concepts/05-detective.md) |
-| 競売国家 | [6ページ](output/pdf/06-auction.pdf) | [Markdown](concepts/06-auction.md) |
+| 線路の砦 | [企画書](output/pdf/01-rail.pdf) | [Markdown](concepts/01-rail.md) |
+| 忍び獣の飼い方 | [企画書](output/pdf/02-beast.pdf) | [Markdown](concepts/02-beast.md) |
+| 枝を刈る冒険者 | [企画書](output/pdf/03-garden.pdf) | [Markdown](concepts/03-garden.md) |
+| 六部屋の約束 | [企画書](output/pdf/04-inn.pdf) | [Markdown](concepts/04-inn.md) |
+| 値札の裏の探偵 | [企画書](output/pdf/05-detective.pdf) | [Markdown](concepts/05-detective.md) |
+| 競売国家 | [企画書](output/pdf/06-auction.pdf) | [Markdown](concepts/06-auction.md) |
 
 ## 資料の読み方
 
-全案とも未実装。掲載画像は企画検討用に生成したイメージであり、実装済み画面、完成アセット、量産品質の証明ではない。画面モックのボタンは選択表示だけを切り替える。実際のゲーム処理や保存処理はない。
+ゲーム本体はまだ実装していません。掲載画像は、完成後の画面を想像するために作成したものです。「画面モック」は画面構成を確認する見本を指し、ボタンを押すと説明が切り替わります。ゲームを進めたり、進行状況を保存したりする機能はありません。
 
-3〜6時間の本編と4〜6か月規模の開発期間は、範囲を比較するための設計目標と仮見積。工数、遊びやすさ、面白さ、端末性能の実測値ではない。金額は架空のゲーム内通貨である。
+本編の長さは3〜6時間、開発期間は4〜6か月を目標として記載しています。実際に制作して測った数値ではありません。ゲームの面白さや実機での操作性も、今後の試作で確認します。本文の金額はゲーム内の架空通貨です。
+
+企画書は6章構成です。説明を省略したり文字を小さくしたりして6ページへ収めることをやめ、内容に応じて改ページするようにしました。比較資料は2ページのまま、1ページに3案ずつ紹介します。
 
 ## 原本と再生成
 

@@ -36,7 +36,7 @@ try {
         await page.locator('.actions button').nth(2).tap();
         selectCancel = changed && await page.locator('#description').textContent() === initial;
         await page.locator('.confirm').tap();
-        if (!(await page.locator('#description').textContent()).includes('モック')) errors.push('Confirmation must label mock');
+        if (!(await page.locator('#description').textContent()).includes('画面の表示例')) errors.push('Confirmation must label mock');
       }
       const result = { filename, width, height, ...layout, selectCancel, errors };
       checks.push(result);
