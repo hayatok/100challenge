@@ -15,7 +15,8 @@ if(!v.stdout?.startsWith('4.7.2.stable')) {
   if(!existsSync(path.join(cache,name))){run('curl',['-fsSL','--retry','2',base+name+'.zip','-o',path.join(cache,'godot.zip')]);run('unzip',['-oq',path.join(cache,'godot.zip'),'-d',cache]);chmodSync(path.join(cache,name),0o755);}
 }
 const data=process.platform==='darwin'?path.join(os.homedir(),'Library/Application Support'):process.platform==='win32'?(process.env.APPDATA||path.join(os.homedir(),'AppData/Roaming')):(process.env.XDG_DATA_HOME||path.join(os.homedir(),'.local/share'));
-const templates=path.join(data,'Godot/export_templates/4.7.2.stable');
+const engineDataDir=process.platform==='linux'?'godot':'Godot';
+const templates=path.join(data,engineDataDir,'export_templates/4.7.2.stable');
 const names=['web_nothreads_debug.zip','web_nothreads_release.zip','version.txt'];
 if(!names.every(n=>existsSync(path.join(templates,n)))) {
   const archive=path.join(cache,'templates.tpz');

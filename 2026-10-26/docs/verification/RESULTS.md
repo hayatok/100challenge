@@ -40,6 +40,7 @@ The full expedition and early phone-title screenshots were taken before the fina
 - Invalid actions now show their reason in the HUD. Full healing, an empty bomb target and a full bag retain both the item and the turn.
 - Safe-area insets are read from CSS and applied to both the main frame and modals. Harbor layouts also rebuild when crossing their width breakpoint, including width changes smaller than 80 logical pixels.
 - Return confirmation excludes loan items from the promised stash count; empty-return dialogue and result text reflect the zero-item receipt.
+- The first [Linux CI run](https://github.com/hayatok/100challenge/actions/runs/40212184725) passed the rule and UI checks, then exposed a case-sensitive template path: Linux expects `godot/export_templates`, while macOS/Windows use `Godot/export_templates`. Setup now selects the directory for the host OS. The resulting CI status is tracked on the PR.
 
 ## Design and review
 
