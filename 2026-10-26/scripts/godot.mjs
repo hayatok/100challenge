@@ -20,7 +20,7 @@ if(mode==='editor'||mode==='play') {
   process.stdout.write(output);
   if(r.error || r.status!==0 || /(?:SCRIPT ERROR|ERROR:|FAIL:)/.test(output)) process.exit(1);
   if(mode==='build') {
-    copyFileSync(path.join(project,'assets/art/harbor-cover.png'),path.join(root,'dist/shiogaeri-cover.png'));
+    copyFileSync(path.join(project,'assets/art/r2/harbor-day.png'),path.join(root,'dist/shiogaeri-cover.png'));
     copyFileSync(path.join(project,'assets/fonts/NOTO-OFL.txt'),path.join(root,'dist/NOTO-OFL.txt'));
     copyFileSync(path.join(root,'THIRD_PARTY_NOTICES.md'),path.join(root,'dist/THIRD_PARTY_NOTICES.md'));
     for(const name of ['GODOT-LICENSE.txt','GODOT-COPYRIGHT.txt']) copyFileSync(path.join(root,name),path.join(root,'dist',name));

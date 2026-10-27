@@ -1,0 +1,8 @@
+[gd_resource type="AtlasTexture" load_steps=2 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/art/r2/crew-ritsu.png" id="1_sprite"]
+
+[resource]
+atlas = ExtResource("1_sprite")
+region = Rect2(0, 0, 360, 638)
+filter_clip = true

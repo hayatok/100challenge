@@ -42,6 +42,8 @@ npm run preview -- --port 4316
 
 Webの進行と設定は、このブラウザのlocalStorageへ保存する。サーバーへは送信しない。サイトの保存領域を消すと進行も消える。保存に失敗した場合は画面に表示する。ネイティブ版はGodotのuser領域へ保存する。
 
-素材は港町の画風と人物設定を決めてからGPT画像生成で制作した。4人の立ち絵、背景、地形、敵・小物を使用。生成記録は `game/assets/art/asset-manifest.json`、ライセンスは `THIRD_PARTY_NOTICES.md` を参照。
+現在の画面は、青緑の海と白壁が明るい港町を舞台にしている。人物の顔を使ったHUD、アイコン付きの鞄、戦利品の集計に加え、歩行・攻撃・回収の演出と場面に応じた音楽を実装した。音と動きは設定で調整できる。
 
-設計は `docs/PLAN.md` と `docs/ART_DIRECTION.md`、実施した検証と残る確認事項は `docs/verification/RESULTS.md` に記録する。実機のiPhone・Android、Safari、長時間のプレイと人間による面白さの評価は、別途確認する。
+素材は港町の画風と人物設定を決めてからGPT画像生成で制作した。4人の立ち絵・探索用の人物、背景、地形、敵・小物を使用。生成記録は `game/assets/art/asset-manifest.json` と `game/assets/art/r2/manifest.json`、音の制作記録は `game/assets/audio/manifest.json`、ライセンスは `THIRD_PARTY_NOTICES.md` を参照。
+
+ゲームの設計は `docs/PLAN.md`、現在の画面と演出の方針は `docs/PRESENTATION_R2.md` に記録している。初回の検証は `docs/verification/RESULTS.md`、今回の改修は `docs/verification/r2/RESULTS.md` を参照。実機のiPhone・Android、Safari、音の試聴、長時間のプレイと人間による面白さの評価は未実施。

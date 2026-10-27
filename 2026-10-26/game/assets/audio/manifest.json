@@ -1,0 +1,143 @@
+{
+  "title": "Sunlit Tideglass",
+  "authoring": "Original deterministic additive/filtered-noise synthesis by Codex for SHIOGAERI. No external recordings or samples.",
+  "license": "Project-original audio; same repository use as the game.",
+  "music": {
+    "bpm": 96,
+    "key": "D major",
+    "bars": 8,
+    "loop_seconds": 20.0
+  },
+  "sample_rate": 22050,
+  "channels": 1,
+  "encoding": "PCM signed 16-bit",
+  "metrics": {
+    "music_bed": {
+      "seconds": 20.0,
+      "peak_dbfs": -15.75,
+      "rms_dbfs": -28.08,
+      "boundary_delta": 0.002671,
+      "sha256": "c96ded5b8e09347896c60019dd5cb90e60a0a55a31b609a959395dfffedc8ed3"
+    },
+    "music_melody": {
+      "seconds": 20.0,
+      "peak_dbfs": -15.61,
+      "rms_dbfs": -29.49,
+      "boundary_delta": 0.0002701,
+      "sha256": "c253e05dfce99c4d6300aab99d83abd88d2aa621cc0d4e011c56546e11ba3de2"
+    },
+    "music_pulse": {
+      "seconds": 20.0,
+      "peak_dbfs": -17.44,
+      "rms_dbfs": -43.81,
+      "boundary_delta": 0.0,
+      "sha256": "152068151fb02ed14a0c64f840966075ed101a2f62527a0cab011adecb216836"
+    },
+    "music_tide": {
+      "seconds": 20.0,
+      "peak_dbfs": -20.19,
+      "rms_dbfs": -30.18,
+      "boundary_delta": 0.0,
+      "sha256": "00f65f7519dc8e341899ebfbfb8d9a0dbbb4bd226494ab4fc58e36219c486d9f"
+    },
+    "step_0": {
+      "seconds": 0.22,
+      "peak_dbfs": -9.45,
+      "rms_dbfs": -28.2,
+      "boundary_delta": 0.0,
+      "sha256": "017dd785ca0b3c7406d270c7250969cf4c4e8a6cc9a9a8108bdc36bbd2ac45c2"
+    },
+    "step_1": {
+      "seconds": 0.22,
+      "peak_dbfs": -7.84,
+      "rms_dbfs": -27.66,
+      "boundary_delta": 0.0,
+      "sha256": "426cbe7f6c4b259e2fabda3a8aed520633e5a28b5a71775d43db502e24905af7"
+    },
+    "step_2": {
+      "seconds": 0.22,
+      "peak_dbfs": -8.04,
+      "rms_dbfs": -27.86,
+      "boundary_delta": 0.0,
+      "sha256": "5ed88fd2bdd99e1af40a2953c2b7eab461bdca98fd56d8a118b98491a68680c9"
+    },
+    "click": {
+      "seconds": 0.14,
+      "peak_dbfs": -8.9,
+      "rms_dbfs": -17.89,
+      "boundary_delta": 0.0,
+      "sha256": "d6bfbda6a9366e67e8707eb7f51deecdab5e243ea4eb31f9c9816e1899be972e"
+    },
+    "attack": {
+      "seconds": 0.38,
+      "peak_dbfs": -4.24,
+      "rms_dbfs": -20.79,
+      "boundary_delta": 0.0,
+      "sha256": "b62b7f30efcf1f069a6d7d93406c70ff7a3a6fe6a5bc08825621b87bac0ff5ad"
+    },
+    "hurt": {
+      "seconds": 0.4,
+      "peak_dbfs": -2.37,
+      "rms_dbfs": -17.37,
+      "boundary_delta": 0.0,
+      "sha256": "490f05fecc3e5820847f4e29f7771bf0a36163ba89e8ad03654fdc6b39396e0d"
+    },
+    "loot": {
+      "seconds": 0.88,
+      "peak_dbfs": -10.19,
+      "rms_dbfs": -22.34,
+      "boundary_delta": 9.4e-06,
+      "sha256": "b531221d492affcd240fadb0312cb172b738dda3b98a3a6d0b26f529b5434224"
+    },
+    "use": {
+      "seconds": 0.72,
+      "peak_dbfs": -10.02,
+      "rms_dbfs": -21.5,
+      "boundary_delta": 2.7e-06,
+      "sha256": "38476ec962ff56888bb9f69eebe714068893f5e6ac17c1c06c065d24172ca0d7"
+    },
+    "tide": {
+      "seconds": 1.65,
+      "peak_dbfs": -9.17,
+      "rms_dbfs": -23.82,
+      "boundary_delta": 0.0,
+      "sha256": "370db0ea85bec92eef7cc9d52309ee8a40e4dc9970626848ce1e077ae9ea31f1"
+    },
+    "extract": {
+      "seconds": 1.95,
+      "peak_dbfs": -10.2,
+      "rms_dbfs": -22.63,
+      "boundary_delta": 0.0,
+      "sha256": "4467e3eda726fa56f4e4901aa33f3a58a351ac53a49af5352d75e52d5331b79d"
+    },
+    "death": {
+      "seconds": 1.8,
+      "peak_dbfs": -9.49,
+      "rms_dbfs": -24.34,
+      "boundary_delta": 0.0,
+      "sha256": "a2ac9b6b4ab449a8397885ddd378e870905e186e00630bc24fa1d52f8e5dac25"
+    },
+    "repair": {
+      "seconds": 1.4,
+      "peak_dbfs": -10.15,
+      "rms_dbfs": -22.49,
+      "boundary_delta": 0.0,
+      "sha256": "cec0cdda8dcff7d0310f92f3056c63c91128233a8581b25bfec4bea4aa689679"
+    },
+    "depart": {
+      "seconds": 0.94,
+      "peak_dbfs": -9.78,
+      "rms_dbfs": -21.6,
+      "boundary_delta": 7e-06,
+      "sha256": "92b608d2dd19f98be7205151cbaa2194e60fef397d91f396e0c476242b9e2734"
+    },
+    "sea": {
+      "seconds": 8.0,
+      "peak_dbfs": -20.02,
+      "rms_dbfs": -35.49,
+      "boundary_delta": 0.0002278,
+      "sha256": "5456041e012213cbd54598174445c412d6c9435e71d6b24acc0d016fb7181ee9"
+    }
+  },
+  "verification_limits": "Peak/RMS and boundary delta are technical metrics, not LUFS or human listening approval."
+}

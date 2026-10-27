@@ -1,0 +1,58 @@
+{
+  "scope": "Changed Japanese UI strings, loading copy and README for presentation revision2",
+  "records": [
+    {
+      "file": "game/scripts/main.gd",
+      "sha256": "4154d60d5f81de5117173c66f3ac1294033fe18ae2e06b03c8d97ce69c60afcd",
+      "run_id": "20261027T153138Z-771a39c5",
+      "attempt": 2,
+      "mode": "rewrite",
+      "checks": [
+        "original lint",
+        "final lint",
+        "diff",
+        "manual meaning comparison",
+        "verify"
+      ],
+      "verified": true
+    },
+    {
+      "file": "README.md",
+      "sha256": "2d05799a800862c7e8eee8866fabb6fb7e8ffbd05262539112d0ba4c9e58c061",
+      "run_id": "20261027T153140Z-9e315b52",
+      "attempt": 1,
+      "mode": "rewrite",
+      "checks": [
+        "original lint",
+        "final lint",
+        "diff",
+        "manual meaning comparison",
+        "verify"
+      ],
+      "verified": true
+    },
+    {
+      "file": "game/web_shell.html",
+      "sha256": "83406f6ce92513bfeb29104705159ad239ef3a0348d725a11e9a42c97df66b3b",
+      "run_id": "20261027T153140Z-b0d0d0b8",
+      "attempt": 1,
+      "mode": "rewrite",
+      "checks": [
+        "original lint",
+        "final lint",
+        "diff",
+        "manual meaning comparison",
+        "verify"
+      ],
+      "verified": true
+    }
+  ],
+  "originals_and_full_records": ".scratch/quality-r2/original and .scratch/quality-r2/japanese (ignored)",
+  "decisions": [
+    "Preserved imperative labels and short adventure copy for the player-facing game.",
+    "Retained185 GDScript colon candidates as syntax and one repeated-ending candidate as clear save instructions.",
+    "Checked new terminology, loss rules, itemUID actions and unverified physical-device/audio/fun statements against the implementation and recorded play.",
+    "Counts are not scores and hashes do not prove natural prose or unchanged meaning."
+  ],
+  "limits": "No Japanese strings in the new world VFX/motif/ambient/theme sources. Tests reference the same inspected button strings."
+}
