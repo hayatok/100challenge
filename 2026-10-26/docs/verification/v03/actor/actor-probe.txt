@@ -1,0 +1,3 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+v0.3 actor probe: 132 checks, 0 failures. Native resources, direction/contact/tool/recoil/stage/pause/reduced behavior; no human playtest.

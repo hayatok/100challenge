@@ -13,11 +13,11 @@ Recorded on 2026-10-28 JST with native Godot 4.7.2 Compatibility on Apple M5. Th
 
 ## Automated verification
 
-`actor-probe.log`: **132 checks, 0 failures**. `actor_probe.gd` checks all four crew identities, null-texture stage configuration, full directional frames, absence of rectangular foot slices, side mirroring, alternating contacts, stable repeated presentation, exact movement settlement, grounded idle, tool anticipation/contact/recovery, supplied recoil direction, local pause/resume, focus pause, quiet arrival, held loss, reduced motion and distinct enemy attacks. It also checks a same-turn queued hurt keeps its recoil direction. The fixture waits for initial process frames before timing clips, so startup loading time does not substitute for action playback time.
+`actor-probe.txt`: **132 checks, 0 failures**. `actor_probe.gd` checks all four crew identities, null-texture stage configuration, full directional frames, absence of rectangular foot slices, side mirroring, alternating contacts, stable repeated presentation, exact movement settlement, grounded idle, tool anticipation/contact/recovery, supplied recoil direction, local pause/resume, focus pause, quiet arrival, held loss, reduced motion and distinct enemy attacks. It also checks a same-turn queued hurt keeps its recoil direction. The fixture waits for initial process frames before timing clips, so startup loading time does not substitute for action playback time.
 
-`region-probe.log`: **120 checks, 0 failures** using the existing v0.2 district probe with the new actor implementation. Coverage includes same-seed district switches, state immutability, 625 ground cells, authored blocked landmark anchors, hidden enemy/container/landmark visibility, 48-percent player-foot focus, distinct water and paused clocks.
+`region-probe.txt`: **120 checks, 0 failures** using the existing v0.2 district probe with the new actor implementation. Coverage includes same-seed district switches, state immutability, 625 ground cells, authored blocked landmark anchors, hidden enemy/container/landmark visibility, 48-percent player-foot focus, distinct water and paused clocks.
 
-`import.log`: Godot native import succeeded after the final runtime actor edits. `git diff --check` passed for the actor script, scene and brief. Rules and integrated UI/Web export are checked separately by the parent integrator.
+`import.txt`: Godot native import succeeded after the final runtime actor edits. `git diff --check` passed for the actor script, scene and brief. Rules and integrated UI/Web export are checked separately by the parent integrator.
 
 ## Native operation and selected frames
 
