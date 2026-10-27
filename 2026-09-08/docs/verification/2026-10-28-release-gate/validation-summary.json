@@ -1,0 +1,100 @@
+{
+  "base_commit": "50b64467e607af0f3faf87aaf145cf4a3d46550d",
+  "commands": [
+    {
+      "command": "npm run check (2026-09-08)",
+      "exit_code": 0,
+      "campaign_checks": 63,
+      "campaign_failures": 0,
+      "ui_checks": 2243,
+      "ui_failures": 0,
+      "import": "passed",
+      "web_release_build": "passed"
+    },
+    {
+      "command": "npm test (repository root)",
+      "exit_code": 0,
+      "tests": 38,
+      "failures": 0
+    }
+  ],
+  "japanese_strings": [
+    {
+      "path": "2026-09-08/game/core/campaign.gd",
+      "japanese_strings_before": 68,
+      "japanese_strings_after": 68,
+      "identical": true,
+      "japanese_strings_sha256": "c8b6e7cbc24e9053fd9d19c90504bcd651aa50e4760df6a4685d11ac5874f71a"
+    },
+    {
+      "path": "2026-09-08/game/tests/run.gd",
+      "japanese_strings_before": 0,
+      "japanese_strings_after": 0,
+      "identical": true,
+      "japanese_strings_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    }
+  ],
+  "unchanged_runtime_files": [
+    {
+      "path": "2026-09-08/game/core/world.gd",
+      "sha256": "3b6034c70f8900a7f38e2b6b38bd7235da86047c307f4bd614d4942c731d49c3",
+      "matches_base": true
+    },
+    {
+      "path": "2026-09-08/game/core/beam.gd",
+      "sha256": "94d270fe908ba24068618ec58f8fbd17aa05460fed83da35c75ed94230b85c5b",
+      "matches_base": true
+    },
+    {
+      "path": "2026-09-08/game/core/cable.gd",
+      "sha256": "37231209a485477bed84d3303803aecf32cc1bfb4f1c0e2b286bdefb5ffeb12b",
+      "matches_base": true
+    },
+    {
+      "path": "2026-09-08/game/core/ceramic.gd",
+      "sha256": "66328b4facca5604efd3390224fa916791b30767da7444da56d17d8a39dd2325",
+      "matches_base": true
+    },
+    {
+      "path": "2026-09-08/game/main.gd",
+      "sha256": "46a93b69411dc6794f516d0e6d24cae6e816cec7cee70fc1ab16da96566cd291",
+      "matches_base": true
+    },
+    {
+      "path": "2026-09-08/game/core/progress.gd",
+      "sha256": "2af335a8a14cf396eb3887244dc5f309ddab6264d43142227a2d609f2a9dc1ac",
+      "matches_base": true
+    },
+    {
+      "path": "2026-09-08/game/core/ledger.gd",
+      "sha256": "c2dbbb78dc221809a97b8fd332ae27bf9f709fe0a801a17d5aa9d468a6450c07",
+      "matches_base": true
+    },
+    {
+      "path": "2026-09-08/game/project.godot",
+      "sha256": "c14e1b3043b702042fa71237ee6b02efc785c2a4d661cad14649b4c580552d8d",
+      "matches_base": true
+    }
+  ],
+  "trap_metadata_consumers": [
+    "game/tests/run.gd"
+  ],
+  "trap_metadata_declarations": [
+    "game/core/campaign.gd"
+  ],
+  "source_files_after": [
+    {
+      "path": "2026-09-08/game/core/campaign.gd",
+      "sha256": "0952bb5054ef5aff1e03f6904a2c7254c96c48ee5fe97b417b995cec766c86a3"
+    },
+    {
+      "path": "2026-09-08/game/tests/run.gd",
+      "sha256": "d473d3b27075e18640917658be47f350f915ace7550d21dae7b6e276e4b04c7f"
+    }
+  ],
+  "limitations": [
+    "Linux selective CI and standard Pages full gate are pending.",
+    "No human playtest or new browser interaction was performed by this worker.",
+    "The existing legal early-gate route can remain trajectory-sensitive; this change does not alter physics."
+  ]
+}

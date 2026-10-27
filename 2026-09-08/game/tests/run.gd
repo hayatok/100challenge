@@ -48,9 +48,10 @@ func run() -> void:
 				waiting[j]["at"] += float(j+1)*3.0
 			r = await trial(d,waiting,1.0)
 			verify(r["won"],"%02d patient" % [i+1],r)
-			for trap: Array in d["traps"]:
+			for trap_index: int in range(d["traps"].size()):
+				var trap: Array = d["traps"][trap_index]
 				r = await trial(d,trap)
-				verify(not r["won"] or i == 2,"%02d trap" % [i+1],r)
+				verify(not r["won"] or i == 2,"%02d trap %d actions=%s" % [i+1,trap_index+1,JSON.stringify(trap)],r)
 			var cuts: Array = []
 			for pin: int in range(d["pins"].size()):
 				cuts.append({"pin":pin,"at":0.5})
