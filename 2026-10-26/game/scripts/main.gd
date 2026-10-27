@@ -9,6 +9,7 @@ const BoardScene = preload("res://scenes/board.tscn")
 const Scenery = preload("res://scripts/ui_scenery.gd")
 const Motif = preload("res://scripts/ui_motif.gd")
 const CampaignView = preload("res://scripts/campaign_ui.gd")
+const CrewStage = preload("res://scripts/crew_stage.gd")
 const SHORT_NAMES := {"knife":"ナイフ", "loanKnife":"貸出ナイフ", "coat":"雨具", "harpoon":"銛", "medicine":"救急包", "bomb":"爆薬", "flare":"発煙筒", "scrap":"銅の端材", "core":"集光芯", "pearl":"潮真珠", "pumpGear":"揚水歯車", "chart":"航路図", "sunLens":"太陽レンズ"}
 const NAMES := {"isana": "ISANA", "ritsu": "RITSU", "kohaku": "KOHAKU", "sui": "SUI"}
 const SYMBOLS := {"knife": "╱", "loanKnife": "╱", "harpoon": "↟", "coat": "衣", "medicine": "＋", "bomb": "●", "flare": "灯", "scrap": "銅", "core": "芯", "pearl": "○"}
@@ -53,6 +54,7 @@ var inventory_detail: VBoxContainer
 var inventory_selection := ""
 var inventory_slots: Dictionary = {}
 var ui_tweens: Array[Tween] = []
+var crew_stages: Array[Control] = []
 var focus_paused := false
 
 func _ready() -> void:
@@ -173,8 +175,8 @@ func _spacer(parent: Node) -> void:
 
 func _portrait(character: String, minimum: Vector2, close_up: bool = false) -> TextureRect:
 	var image := TextureRect.new()
-	image.texture = load("res://assets/art/%s.png" % character)
-	if close_up:
+	image.texture = UiPalette.portrait(character)
+	if close_up and not ResourceLoader.exists("res://assets/art/v03/portraits/%s.png" % character):
 		var crop := AtlasTexture.new()
 		crop.atlas = image.texture
 		crop.region = Rect2(image.texture.get_width()*0.16, 0, image.texture.get_width()*0.75, image.texture.get_height()*0.68)
@@ -187,11 +189,25 @@ func _portrait(character: String, minimum: Vector2, close_up: bool = false) -> T
 	image.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	return image
 
+func _crew_stage(character: String, minimum: Vector2, phase: String, celebrate: bool) -> Control:
+	var stage := CrewStage.new()
+	stage.character = character
+	stage.phase = phase
+	stage.celebrate = celebrate
+	stage.reduced_motion = settings.reduced or qa_session
+	stage.custom_minimum_size = minimum
+	stage.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	stage.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	stage.set_meta("receipt_character", character)
+	crew_stages.append(stage)
+	return stage
+
 func _render() -> void:
 	for tween: Tween in ui_tweens:
 		if tween != null and tween.is_valid():
 			tween.kill()
 	ui_tweens.clear()
+	crew_stages.clear()
 	last_size = size
 	_clear(header)
 	_clear(content)
@@ -341,6 +357,7 @@ func _harbor() -> void:
 	stage.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	hero.add_child(stage)
 	var motif := Motif.new()
+	motif.accent = UiPalette.crew_accent(state.character)
 	motif.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	stage.add_child(motif)
 	var portrait := _portrait(state.character, Vector2.ZERO, size.x < 760)
@@ -416,7 +433,7 @@ func _campaign(page: String = "jobs") -> void:
 	if state.mode != "harbor":
 		return
 	var titles := {"jobs":"港と仲間の依頼帳", "routes":"次の遠征の航路", "exchange":"港の物資交換", "crew":"回収屋の休憩室"}
-	var body := _open_modal(titles.get(page,"港の依頼帳"),460)
+	var body := _open_modal(titles.get(page,"港の依頼帳"),560 if page == "crew" else 460)
 	CampaignView.build(body,state,page,self)
 	_resize_layout()
 
@@ -868,14 +885,14 @@ func _result() -> void:
 	var hero:=HBoxContainer.new()
 	hero.custom_minimum_size.y=180 if size.x<760 else 240
 	hero_panel.add_child(hero)
-	var portrait:=_portrait(state.character,Vector2(125 if size.x<760 else 190,175),size.x<760)
-	hero.add_child(portrait)
+	var stage := _crew_stage(state.character,Vector2(112 if size.x<760 else 180,180),"arrival" if success else "loss",success and not receipt.inventory.is_empty())
+	hero.add_child(stage)
 	var words:=VBoxContainer.new()
 	words.size_flags_horizontal=Control.SIZE_EXPAND_FILL
 	words.size_flags_vertical=Control.SIZE_SHRINK_CENTER
 	hero.add_child(words)
 	words.add_child(_label("WELCOME HOME" if success else "EXPEDITION LOST",11,UiPalette.SUCCESS if success else UiPalette.DANGER))
-	words.add_child(_label("帰還成功" if success else "回収失敗",36,UiPalette.INK if success else UiPalette.DANGER))
+	words.add_child(_label("帰還成功" if success else "回収失敗",30,UiPalette.INK if success else UiPalette.DANGER))
 	words.add_child(_label("%d手の遠征 / %d個を%s" % [receipt.turns,receipt.inventory.size(),"倉庫へ" if success else "失いました"],13))
 	var result_line: String=who.lossLine if not success else who.emptyLine if receipt.inventory.is_empty() else who.returnLine
 	words.add_child(_label("「%s」" % result_line,14))
@@ -984,6 +1001,9 @@ func _settings() -> void:
 		settings.reduced = value
 		if is_instance_valid(board):
 			board.present(state, [], value)
+		for stage: Control in crew_stages:
+			if is_instance_valid(stage):
+				stage.set_reduced_motion(value)
 		scenery.configure(screen, value)
 		_sync_presentation()
 		_set_notice(Store.save_settings(settings)) if not qa_session else _set_notice(""))
@@ -1204,6 +1224,9 @@ func _pulse(control:Control) -> void:
 
 func _sync_presentation() -> void:
 	var paused:=focus_paused or is_instance_valid(modal)
+	for stage: Control in crew_stages:
+		if is_instance_valid(stage):
+			stage.set_presentation_paused(paused)
 	if is_instance_valid(scenery):
 		scenery.set_presentation_paused(paused)
 	if is_instance_valid(board) and board.has_method("set_presentation_paused"):

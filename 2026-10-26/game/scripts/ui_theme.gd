@@ -31,10 +31,23 @@ static func box(fill: Color = SURFACE, border: Color = LINE, margin: int = 12) -
 static func icon(kind: String) -> Texture2D:
 	return load("res://assets/ui/%s.svg" % ("knife" if kind == "loanKnife" else kind)) as Texture2D
 
+static func portrait(character: String) -> Texture2D:
+	var path := "res://assets/art/v03/portraits/%s.png" % character
+	return load(path if ResourceLoader.exists(path) else "res://assets/art/%s.png" % character) as Texture2D
+
+static func crew_accent(character: String) -> Color:
+	return {"isana":Color("efbd69"),"ritsu":Color("ba6d6c"),"kohaku":Color("d9855d"),"sui":Color("77bab5")}.get(character, PRIMARY)
+
 static func avatar(character: String) -> Texture2D:
-	var texture: Texture2D = load("res://assets/art/%s.png" % character)
+	var texture: Texture2D = portrait(character)
 	var crop := AtlasTexture.new()
 	crop.atlas = texture
+	if ResourceLoader.exists("res://assets/art/v03/portraits/%s.png" % character):
+		var centers := {"isana":Vector2(0.385,0.185),"ritsu":Vector2(0.4,0.155),"kohaku":Vector2(0.465,0.2),"sui":Vector2(0.45,0.215)}
+		var center: Vector2 = centers.get(character,Vector2(0.4,0.2)) * texture.get_size()
+		var side := texture.get_width() * 0.44
+		crop.region = Rect2(Vector2(center.x - side * 0.5,maxf(0,center.y - side * 0.5)),Vector2.ONE * side)
+		return crop
 	var side := texture.get_width() * 0.65
 	crop.region = Rect2(texture.get_width() * 0.175, 0, side, side)
 	return crop

@@ -1,6 +1,6 @@
 # v0.3 art and motion brief
 
-Status: the parent integrator approved this direction and asset-only source production during v0.2 on 2026-10-28 JST. Generated originals and QA stay in ignored `.scratch/versions/v03/art/` until v0.2 is committed. Actor code and imported game assets remain on hold until the parent integrator opens the v0.3 implementation phase.
+Status: the parent integrator approved this direction and asset-only source production during v0.2 on 2026-10-28 JST. v0.2 was committed as `c750371`; the parent integrator then opened v0.3 implementation. The accepted 24 directional poses, seven original images, prompts, manifest and source QA are now in `game/assets/art/v03/`, with native SpriteFrames in `game/resources/crew/`. No additional generation beyond the approved seventh call was used.
 
 ## Intended experience
 
@@ -50,3 +50,11 @@ Capture actual native and exported Web sequences for all four workers at 390 by 
 Run the pure rules, save and deliberate-input suites; verify presentation does not mutate a state snapshot. Check pause midway through walking, tool anticipation and an effect schedule, resume without duplication, then repeat under reduced motion. Review real-size clips for baseline drift, sliding feet, hand/tool detachment, wrong facing, coat popping, face changes, unreadable numbers and scenery covering the route. Keep source captures and output paths under the version verification folder. Automated captures and agent operation are not human first-play testing; report human playtesting as unperformed unless a human actually plays.
 
 The v0.3 milestone requires implementation, these checks, Japanese copy review where applicable and the mandatory Astra review. This proposal is preparation only and does not count as a completed version or release approval.
+
+## Implemented actor and handoff
+
+`game/scenes/actor.tscn` now contains editable AnimationPlayer clips and a complete directional AnimatedSprite2D. The old rectangular boot slices were removed. Each crew resource has down/up/side contact pairs; side-left mirrors the side source. Resolved movement alternates contact poses, a pose-specific hand socket follows the actual painted hand, and a small native salvage hook has anticipation, contact and recovery. The hook is a presentation tool, not a claim to display the equipped item model. The sources contain two contacts per facing and no dedicated passing frame; this remains an explicit production limit. Idle keeps the feet grounded. Recoil accepts an optional direction away from the attacker. Crab, wader and diver retain distinct editable attack and ready clips.
+
+Public stage API: `configure(null, character, true, reduced)`, `set_stage_scale(1.65)`, then `play_arrival(has_receipt_items)` or `play_loss()`. `set_presentation_paused(bool)` freezes clips and bound tweens; application focus changes are also handled. At a scale of 1.65, the 94-unit field figure is about 155 units tall and the foot baseline is `actor.position.y + 19 * scale`. Quiet arrival only lowers the tool; it does not perform the arrival step. The parent UI owns receipt effects and suppression of empty-return celebrations.
+
+Source QA and actual native clip/game captures are recorded separately in `docs/verification/v03/actor/ACTOR_MOTION.md`. The parent integrator owns the final combined Web checks, Japanese copy checks, mandatory Astra review, CI, publication and the user's requested stop after v0.3 publication.

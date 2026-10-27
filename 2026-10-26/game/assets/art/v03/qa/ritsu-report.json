@@ -1,0 +1,165 @@
+{
+  "name": "ritsu",
+  "source": "2026-10-26/.scratch/versions/v03/art/originals/ritsu-sixposes-02.png",
+  "dimensions": [
+    1536,
+    1024
+  ],
+  "mode": "RGBA",
+  "alphaZeroFraction": 0.6480693817138672,
+  "alphaMax": 254,
+  "isolationNote": "six isolated connected source silhouettes",
+  "poses": [
+    {
+      "pose": "down_left",
+      "file": "normalized/ritsu_down_left.png",
+      "sourceSlot": [
+        0,
+        0,
+        512,
+        512
+      ],
+      "sourceVisibleBounds": [
+        161,
+        9,
+        468,
+        509
+      ],
+      "canvas": [
+        320,
+        320
+      ],
+      "visibleHeight": 288,
+      "footOrigin": [
+        160,
+        304
+      ]
+    },
+    {
+      "pose": "up_left",
+      "file": "normalized/ritsu_up_left.png",
+      "sourceSlot": [
+        512,
+        0,
+        1024,
+        512
+      ],
+      "sourceVisibleBounds": [
+        610,
+        8,
+        928,
+        508
+      ],
+      "canvas": [
+        320,
+        320
+      ],
+      "visibleHeight": 288,
+      "footOrigin": [
+        160,
+        304
+      ]
+    },
+    {
+      "pose": "side_left",
+      "file": "normalized/ritsu_side_left.png",
+      "sourceSlot": [
+        1024,
+        0,
+        1536,
+        512
+      ],
+      "sourceVisibleBounds": [
+        1043,
+        10,
+        1436,
+        503
+      ],
+      "canvas": [
+        320,
+        320
+      ],
+      "visibleHeight": 288,
+      "footOrigin": [
+        160,
+        304
+      ]
+    },
+    {
+      "pose": "down_right",
+      "file": "normalized/ritsu_down_right.png",
+      "sourceSlot": [
+        0,
+        512,
+        512,
+        1024
+      ],
+      "sourceVisibleBounds": [
+        145,
+        517,
+        466,
+        1016
+      ],
+      "canvas": [
+        320,
+        320
+      ],
+      "visibleHeight": 288,
+      "footOrigin": [
+        160,
+        304
+      ]
+    },
+    {
+      "pose": "up_right",
+      "file": "normalized/ritsu_up_right.png",
+      "sourceSlot": [
+        512,
+        512,
+        1024,
+        1024
+      ],
+      "sourceVisibleBounds": [
+        610,
+        517,
+        927,
+        1009
+      ],
+      "canvas": [
+        320,
+        320
+      ],
+      "visibleHeight": 288,
+      "footOrigin": [
+        160,
+        304
+      ]
+    },
+    {
+      "pose": "side_right",
+      "file": "normalized/ritsu_side_right.png",
+      "sourceSlot": [
+        1024,
+        512,
+        1536,
+        1024
+      ],
+      "sourceVisibleBounds": [
+        1058,
+        518,
+        1477,
+        997
+      ],
+      "canvas": [
+        320,
+        320
+      ],
+      "visibleHeight": 288,
+      "footOrigin": [
+        160,
+        304
+      ]
+    }
+  ],
+  "status": "source QA only; not an in-game motion validation"
+}

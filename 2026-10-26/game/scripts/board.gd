@@ -9,6 +9,7 @@ const PATTERN_SPAN := 2
 const LANDMARK_SHADER = preload("res://shaders/coastal_landmark.gdshader")
 const ART_ROOT := "res://assets/art/"
 const R2_ROOT := "res://assets/art/r2/"
+const V03_TERRAIN_ROOT := "res://assets/art/v03/terrain/"
 const RuleData = preload("res://scripts/rules.gd")
 const WorldDataFile = preload("res://scripts/world_data.gd")
 const DistrictData = preload("res://scripts/campaign_data.gd")
@@ -643,14 +644,20 @@ func _play_events(events: Array) -> void:
 					player_actor.face(point - player_point)
 					player_actor.play_reaction("attack")
 				if actor != null and actor.visible:
-					effects.schedule(0.13, actor.play_reaction.bind("hurt"))
+					effects.schedule(0.13, actor.play_reaction.bind("hurt", (point - player_point).normalized()))
 				if _visible.has(_key(int(event.get("x", player["x"])), int(event.get("y", player["y"])))):
 					effects.strike(player_point.lerp(point, 0.55), (point - player_point).normalized())
 					if event.has("amount"):
-						effects.number("−%s" % event["amount"], point + Vector2(0, -61), Color("a35a27"))
+						effects.schedule(0.13, effects.number.bind("−%s" % event["amount"], point + Vector2(0, -61), Color("a35a27")))
 			"hurt":
+				var away := Vector2.ZERO
+				for enemy: Dictionary in _run["enemies"]:
+					if str(enemy["id"]) == actor_id:
+						away = (player_point - _cell_position(int(enemy["x"]), int(enemy["y"]))).normalized()
+						break
+				var contact_delay := 0.2 if actor != null and actor.kind == "diver" else 0.12
 				if player_actor != null:
-					effects.schedule(0.2 if actor != null and actor.kind == "diver" else 0.12, player_actor.play_reaction.bind("hurt"))
+					effects.schedule(contact_delay, player_actor.play_reaction.bind("hurt", away))
 				if actor != null and actor != player_actor and actor.visible:
 					actor.face(player_point - actor.position)
 					actor.play_reaction("attack")
@@ -658,7 +665,7 @@ func _play_events(events: Array) -> void:
 				else:
 					effects.impact(player_point, Color("f18a72"), 5)
 				if event.has("amount"):
-					effects.number("−%s" % event["amount"], player_point + Vector2(0, -64), Color("cc5a42"))
+					effects.schedule(contact_delay, effects.number.bind("−%s" % event["amount"], player_point + Vector2(0, -64), Color("cc5a42")))
 			"loot":
 				if event.has("amount") and int(event["amount"]) > 0:
 					effects.loot(point, int(event["amount"]), str(event.get("text", "")).contains("集光芯"))
@@ -737,7 +744,7 @@ func _add_prop(kind: String, at: Vector2, target_size: Vector2, opacity: float) 
 func _texture(kind: String) -> Texture2D:
 	if _textures.has(kind):
 		return _textures[kind]
-	for root: String in [R2_ROOT, ART_ROOT]:
+	for root: String in [V03_TERRAIN_ROOT, R2_ROOT, ART_ROOT]:
 		for filename: String in [kind + ".tres", kind + ".png", "prop-" + kind + ".png", "enemy-" + kind + ".png"]:
 			var path := root + filename
 			if ResourceLoader.exists(path):

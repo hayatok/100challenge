@@ -6,13 +6,15 @@ The user requested continuing development until explicitly stopped, with GitHub 
 
 The desired loop is: choose a meaningful job and region, commit a loadout, discover routes and loot, decide what to risk, return real items, improve the harbor or a companion's circumstances, then choose a different expedition. Death still loses all carried items and equipment; stored items and completed town/character progress remain. Add choices and encounters, not a compulsory resource treadmill or inflated combat statistics.
 
+Latest steering on2026-10-28 JST: finish the current v0.3, publish the first pair, verify the public build, then stop development. Do not begin v0.4 or schedule further continuation. Do not create or resume automatic follow-ups at that checkpoint. The later-pair proposals below are retained as future ideas, not authorized active work after this stop.
+
 ## Publication cadence
 
 Count completed versions since the latest verified Pages publication, rather than relying on odd/even version numbers. The first pair is v0.2 + v0.3. Then v0.4 + v0.5, and so on. A version is complete only after its implementation, relevant tests, actual screen/operation checks, Japanese review and mandatory Astra review. At each pair boundary: update the PR, require passing current-head CI, merge the reviewed change, tag the exact intended main commit through the existing Pages route, verify the deployed Linux artifact/public files and gameplay, record the URL and version, then begin the next pair. Deployment success alone is not human acceptance of fun or commercial quality.
 
-No extra permission is required for that scoped cycle. Explicit stop/pause requests take precedence. Preserve a recoverable history and save migrations; never reset player storage to make a new version appear correct. A thread heartbeat checks for continuation every 30 minutes; it should notify only on a published pair, actionable failure or a decision requiring the user.
+No extra permission is required for the first pair's publication. The latest stop request takes precedence over the original repeating cycle. Preserve a recoverable history and save migrations; never reset player storage to make a new version appear correct. The proposed heartbeat was reported absent by the app and no active goal was returned; do not create a replacement or restart development after this checkpoint.
 
-## v0.2 — routes, reconstruction and companion jobs (in progress)
+## v0.2 — routes, reconstruction and companion jobs (complete)
 
 Goal: replace the single-map, single-repair dead end with a complete campaign and a useful salvage economy. Context: pure rules/world generators, strict version1 save validation, existing four workers, turn/save invariants and the Sunlit Tideglass presentation. Constraints: Godot4.7.2, single-thread Compatibility Web, no new runtime dependency, no automatic turn progression, no automatic receipt duplication or meta progress from lost loot.
 
@@ -25,7 +27,7 @@ Goal: replace the single-map, single-repair dead end with a complete campaign an
 
 Done when: an automated rules route and an actual exported-game route cover first completion, unlocking/selecting another district, delivery, exchange, save/reload and a death that preserves town progress but loses the actual carried items. Inspect all4 district layouts and map/objective/exit connectivity across seeds. No estimated play length is to be reported as measured human playtime.
 
-## v0.3 — living crew and region presentation (next)
+## v0.3 — living crew and region presentation (complete; release checkpoint)
 
 Goal: make characters and places visibly move and read as a cohesive adventure. Work may be prepared in parallel with v0.2, but it counts as a separate completed version only after independent integration and checks.
 
@@ -45,5 +47,5 @@ v0.4: expedition modifiers, encounter variants and equipment choices that change
 | Version | Status | Gameplay/visual evidence | Publication |
 | --- | --- | --- | --- |
 |0.1|Baseline at5624789|One district, presentation R2; see its verification record|Not published for this app|
-|0.2|In progress|Campaign, maps, exchange and save migration|First pair pending|
-|0.3|Planned/preparation allowed|Crew motion and district presentation|Publish after0.2+0.3 pass|
+|0.2|Complete at c750371|Campaign/maps/exchange;5328 rules +208 UI/store; actual Web extractions/deliveries/trade/death; Astra review; CI40545309242 passed|Paired with0.3; release outcome in Issue214|
+|0.3|Complete; release checkpoint|Directional crew/portraits/terrain; receipt motion;5328 rules +469 UI/store; actual Web; Japanese/Astra review|Publish pair, verify public game, then stop. Exact SHA/tag/outcome in Issue214|

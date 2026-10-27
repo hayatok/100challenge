@@ -1,0 +1,73 @@
+{
+  "scope": "v0.3 README and changed Japanese-bearing UI/test files",
+  "procedure": "Direct Bash CLI lint/run/verify. Originals/full records remain in ignored .scratch/versions/v03/original and japanese. Final API/test changes were rerun and verified.",
+  "records": [
+    {
+      "file": "game/scripts/main.gd",
+      "sha256": "2bce72879afb00c82443b62c415c5e7af05f7d1b057229b1c22d67d0a89c6210",
+      "run_id": "20261027T171121Z-aac9c378",
+      "attempt": 2,
+      "mode": "rewrite",
+      "checks": [
+        "source lint",
+        "final lint",
+        "full diff",
+        "manual meaning comparison",
+        "verify"
+      ],
+      "verified": true
+    },
+    {
+      "file": "README.md",
+      "sha256": "46dcf8f859ed51f15483fa02fa5911d4476871677e70d042b81e62750117fe32",
+      "run_id": "20261027T171122Z-171b9a0b",
+      "attempt": 1,
+      "mode": "rewrite",
+      "checks": [
+        "source lint",
+        "final lint",
+        "full diff",
+        "manual meaning comparison",
+        "verify"
+      ],
+      "verified": true
+    },
+    {
+      "file": "game/scripts/campaign_ui.gd",
+      "sha256": "2df3a088eeeb2b1e42fab495adce7428975c0d0dd9ad8b4d6435b0a466368281",
+      "run_id": "20261027T171122Z-695d78ae",
+      "attempt": 1,
+      "mode": "rewrite",
+      "checks": [
+        "source lint",
+        "final lint",
+        "full diff",
+        "manual meaning comparison",
+        "verify"
+      ],
+      "verified": true
+    },
+    {
+      "file": "game/tests/ui_test.gd",
+      "sha256": "98d4d5c35e371c832468e793d86d9995bb6465cea87a16f3e653c4dac0b82005",
+      "run_id": "20261027T171123Z-616d8e7c",
+      "attempt": 2,
+      "mode": "rewrite",
+      "checks": [
+        "source lint",
+        "final lint",
+        "full diff",
+        "manual meaning comparison",
+        "verify"
+      ],
+      "verified": true
+    }
+  ],
+  "decisions": [
+    "Version0.3 and the stop-after-publication instruction match the latest user request. Counts, loss/storage conditions and unperformed device/human checks are preserved.",
+    "Retained the existing comma before the list of district names; it separates the topic from the four listed names.",
+    "Retained required GDScript colons and clear repeated save instructions. API/layout changes do not invent new dialogue, rewards or equipped weapon models.",
+    "Checked portrait names/roles, receipt counts/value, empty/loss messages and reduced-motion copy in actual exported Web screens."
+  ],
+  "limits": "Candidate counts and matching hashes are procedure evidence, not prose-quality scores or proof of preserved meaning."
+}

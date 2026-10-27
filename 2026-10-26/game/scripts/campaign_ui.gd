@@ -127,8 +127,21 @@ static func _exchange(body: VBoxContainer, state: Dictionary, host: Control) -> 
 static func _crew(body: VBoxContainer, state: Dictionary, host: Control) -> void:
 	var character: String = state.character
 	var who: Dictionary = Data.CHARACTERS[character]
-	body.add_child(host._avatar(character, 82))
-	body.add_child(host._label(who.name + " / " + who.role, 23))
+	var heading := HBoxContainer.new()
+	heading.custom_minimum_size.y = 192
+	body.add_child(heading)
+	var portrait: TextureRect = host._portrait(character,Vector2(124,192),true)
+	portrait.set_meta("crew_portrait",character)
+	heading.add_child(portrait)
+	var identity := VBoxContainer.new()
+	identity.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	identity.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	heading.add_child(identity)
+	identity.add_child(host._label(host.NAMES[character],12,Palette.GOLD))
+	identity.add_child(host._label(who.name,28))
+	identity.add_child(host._label(who.role,16,Palette.MUTED))
+	identity.add_child(host._rule())
+	identity.add_child(host._label(who.trait,14,Palette.SUCCESS))
 	for line: String in Data.dialogue(state, character):
 		body.add_child(host._label("「%s」" % line, 17))
 	body.add_child(host._rule())

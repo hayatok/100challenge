@@ -20,7 +20,7 @@ func _initialize() -> void:
 	root.add_child(ui)
 	await process_frame
 	await process_frame
-	for test: String in ["test_characters", "test_safe_area", "test_turn_input", "test_storage", "test_result_receipt", "test_inventory_uid_actions", "test_inventory_focus_and_full_health", "test_world_overlay_phone_bounds", "test_presentation_pause_and_motion", "test_empty_extraction_readability", "test_campaign_phone_navigation", "test_campaign_routes_and_follow", "test_campaign_delivery", "test_campaign_exchange", "test_campaign_crew_and_reload", "test_campaign_modal_during_screen_entry"]:
+	for test: String in ["test_characters", "test_safe_area", "test_turn_input", "test_storage", "test_result_receipt", "test_inventory_uid_actions", "test_inventory_focus_and_full_health", "test_world_overlay_phone_bounds", "test_presentation_pause_and_motion", "test_empty_extraction_readability", "test_campaign_phone_navigation", "test_campaign_routes_and_follow", "test_campaign_delivery", "test_campaign_exchange", "test_campaign_crew_and_reload", "test_campaign_modal_during_screen_entry", "test_v03_portraits_and_crew_navigation", "test_v03_truthful_result_stages", "test_v03_stage_pause_and_reduced_motion", "test_v03_live_reduced_motion_toggle"]:
 		if await call(test) != true:
 			failed += 1
 			push_error("FAIL: did not complete " + test)
@@ -748,7 +748,7 @@ func test_campaign_crew_and_reload() -> bool:
 		ui._enter()
 		ui._campaign("crew")
 		await settle_layout()
-		var all_lines: bool = label_contains(ui.modal, RulesData.CHARACTERS[character].name + " / " + RulesData.CHARACTERS[character].role)
+		var all_lines: bool = find_label(ui.modal, RulesData.CHARACTERS[character].name) != null and find_label(ui.modal, RulesData.CHARACTERS[character].role) != null
 		for line: String in RulesData.dialogue(ui.state, character):
 			all_lines = all_lines and label_contains(ui.modal, line)
 		check(all_lines, "crew page displays the selected %s and current campaign dialogue" % character)
@@ -797,4 +797,258 @@ func test_campaign_crew_and_reload() -> bool:
 	for suffix: String in ["", ".bak", ".tmp", ".pre-v2", ".pre-v2.bak"]:
 		if FileAccess.file_exists(path + suffix):
 			DirAccess.remove_absolute(path + suffix)
+	return true
+
+func texture_base_path(texture: Texture2D) -> String:
+	return texture_base_path(texture.atlas) if texture is AtlasTexture else texture.resource_path
+
+func matching_textures(parent: Node, path: String) -> Array[TextureRect]:
+	var matches: Array[TextureRect] = []
+	for child: Node in parent.get_children():
+		if child is TextureRect and child.texture != null and texture_base_path(child.texture) == path:
+			matches.append(child)
+		matches.append_array(matching_textures(child, path))
+	return matches
+
+func test_v03_portraits_and_crew_navigation() -> bool:
+	for phone: Vector2i in [Vector2i(390, 844), Vector2i(360, 740)]:
+		root.size = phone
+		for character: String in RulesData.CHARACTERS:
+			ui._close_modal()
+			ui.state = RulesData.apply_action(RulesData.new_game(), {"type": "choose", "character": character}).state
+			ui._enter()
+			await settle_layout()
+			var snapshot: String = JSON.stringify(ui.state)
+			var all_avatars_new: bool = true
+			for other: String in RulesData.CHARACTERS:
+				var path: String = "res://assets/art/v03/portraits/%s.png" % other
+				var textures: Array[TextureRect] = matching_textures(ui.content, path)
+				all_avatars_new = all_avatars_new and textures.size() >= (2 if other == character else 1)
+			check(all_avatars_new, "%s %s harbor portrait and all four avatars use the new portrait assets" % [phone, character])
+			ui._campaign("crew")
+			await settle_layout()
+			var portraits: Array[TextureRect] = matching_textures(ui.modal, "res://assets/art/v03/portraits/%s.png" % character)
+			check(portraits.size() == 1 and portraits[0].get_meta("crew_portrait", "") == character and portraits[0].size.x >= 124 and portraits[0].size.y >= 192, "%s %s conversation shows its actual new large portrait" % [phone, character])
+			var truthful: bool = find_label(ui.modal, RulesData.CHARACTERS[character].name) != null and find_label(ui.modal, RulesData.CHARACTERS[character].role) != null
+			for line: String in RulesData.dialogue(ui.state, character):
+				truthful = truthful and label_contains(ui.modal, line)
+			check(truthful and fits_visible_stage(ui.modal_panel), "%s %s identity and every dialogue line remain present in a fitting crew panel" % [phone, character])
+			var close: Button = find_button(ui.modal, "閉じる")
+			var jobs: Button = find_button(ui.modal, "依頼帳を開く")
+			if close == null or jobs == null:
+				return false
+			close.grab_focus()
+			key_press(KEY_TAB)
+			await settle_layout()
+			var css: Vector2 = jobs.size * Vector2(phone) / ui.size
+			check(ui.get_viewport().gui_get_focus_owner() == jobs and inside_clipping_ancestors(jobs) and css.x >= 44 and css.y >= 44, "%s %s crew job action scrolls into view through keyboard navigation" % [phone, character])
+			key_press(KEY_TAB)
+			await settle_layout()
+			check(ui.get_viewport().gui_get_focus_owner() == close and inside_clipping_ancestors(close), "%s %s crew close stays reachable after the scrolled job action" % [phone, character])
+			check(JSON.stringify(ui.state) == snapshot, "%s %s portrait reading and scrolling preserve the entire state" % [phone, character])
+			jobs.pressed.emit()
+			await settle_layout()
+			check(label_contains(ui.modal, "港の復興") and JSON.stringify(ui.state) == snapshot, "%s %s crew job action opens the actual jobs page without resolving time" % [phone, character])
+			key_press(KEY_ESCAPE)
+			await settle_layout()
+			check(not is_instance_valid(ui.modal), "%s %s crew-to-jobs path closes through Escape" % [phone, character])
+	root.size = Vector2i(390, 844)
+	await settle_layout()
+	return true
+
+func staged_receipt(character: String, outcome: String) -> Dictionary:
+	var prepared: Dictionary = RulesData.apply_action(RulesData.new_game(), {"type": "choose", "character": character}).state
+	if outcome != "empty":
+		for item: Dictionary in prepared.profile.stash.duplicate():
+			if item.kind in ["knife", "medicine"]:
+				prepared = RulesData.apply_action(prepared, {"type": "pack", "uid": item.uid}).state
+	prepared = RulesData.apply_action(prepared, {"type": "depart", "seed": 7}).state
+	if outcome == "dead":
+		prepared.run.player.hp = 1
+		var crab: Dictionary = prepared.run.enemies[0].duplicate(true)
+		crab.kind = "crab"
+		crab.hp = RulesData.ENEMIES.crab.hp
+		crab.x = 12
+		crab.y = 22
+		prepared.run.enemies = [crab]
+		check(RulesData.validate_state(prepared), "death staging fixture has valid equipment, enemy and ownership")
+		prepared = RulesData.apply_action(prepared, {"type": "wait"}).state
+	else:
+		prepared = RulesData.apply_action(prepared, {"type": "interact"}).state
+	check(prepared.mode == "result" and prepared.result.outcome == ("dead" if outcome == "dead" else "extracted") and RulesData.validate_state(prepared), "%s %s result fixture resolves through the real rules" % [character, outcome])
+	return prepared
+
+func receipt_stage() -> Control:
+	for stage: Control in ui.crew_stages:
+		if stage.get_meta("receipt_character", "") == ui.state.character:
+			return stage
+	return null
+
+func test_v03_truthful_result_stages() -> bool:
+	var previous_reduced: bool = ui.settings.reduced
+	ui.settings.reduced = true
+	for phone: Vector2i in [Vector2i(390, 844), Vector2i(360, 740)]:
+		root.size = phone
+		for character: String in RulesData.CHARACTERS:
+			for outcome: String in ["extracted", "empty", "dead"]:
+				ui._close_modal()
+				ui.state = staged_receipt(character, outcome)
+				var snapshot: String = JSON.stringify(ui.state)
+				var owned: Array = ui.state.profile.stash.duplicate(true)
+				var receipt: Dictionary = ui.state.result.duplicate(true)
+				ui._enter()
+				await settle_layout()
+				var stage: Control = receipt_stage()
+				check(stage != null and stage.character == character and stage.phase == ("loss" if outcome == "dead" else "arrival") and stage.celebrate == (outcome == "extracted"), "%s %s %s native receipt stage uses the actual character and truthful outcome" % [phone, character, outcome])
+				if stage == null:
+					return false
+				var actor: Node2D = stage.get_node("Actor")
+				var player: AnimationPlayer = actor.get_node("AnimationPlayer")
+				check(actor.kind == character and actor.is_player and not player.is_playing() and stage.reduced_motion and inside_clipping_ancestors(stage), "%s %s %s native actor is visible, static and correctly identified" % [phone, character, outcome])
+				var count_text: String = "%d手の遠征 / %d個を%s" % [receipt.turns, receipt.inventory.size(), "失いました" if outcome == "dead" else "倉庫へ"]
+				var truthful: bool = find_label(ui.content, count_text) != null and find_label(ui.content, "%d pt" % receipt.value) != null and find_label(ui.content, "回収失敗" if outcome == "dead" else "帰還成功") != null
+				for item: Dictionary in receipt.inventory:
+					truthful = truthful and find_label(ui.content, ui.SHORT_NAMES[item.kind]) != null
+				check(truthful and JSON.stringify(ui.state) == snapshot, "%s %s %s staging preserves and displays the actual receipt items, count and value" % [phone, character, outcome])
+				var retry: Button = find_button(ui.content, "港で支度をする")
+				check(retry != null and not retry.disabled and inside_clipping_ancestors(retry), "%s %s %s result permits immediate harbor return" % [phone, character, outcome])
+				if retry == null:
+					return false
+				retry.pressed.emit()
+				await settle_layout()
+				check(ui.qa_session and ui.state.mode == "harbor" and ui.state.profile.stash == owned and ui.state.result == null and not is_instance_valid(stage) and RulesData.validate_state(ui.state), "%s %s %s immediate return frees the decorative actor and preserves actual ownership" % [phone, character, outcome])
+	ui.settings.reduced = previous_reduced
+	root.size = Vector2i(390, 844)
+	await settle_layout()
+	return true
+
+func render_receipt_with_motion(reduced: bool) -> void:
+	# State and screen are already resolved. Only pure UI construction runs with
+	# QA off, which allows the production actor's animation path to be exercised.
+	ui.settings.reduced = reduced
+	ui.screen = ui.state.mode
+	ui.qa_session = false
+	ui._render()
+	ui.qa_session = true
+
+func actor_visual_state(actor: Node2D) -> Array:
+	var body: Node2D = actor.get_node("Facing/BodyPivot")
+	return [body.position, body.rotation, body.scale, body.modulate, actor.get_node("Facing/BodyPivot/ToolSocket/WeaponPivot").rotation]
+
+func test_v03_stage_pause_and_reduced_motion() -> bool:
+	ui._close_modal()
+	var previous_reduced: bool = ui.settings.reduced
+	ui.state = staged_receipt("isana", "extracted")
+	var snapshot: String = JSON.stringify(ui.state)
+	render_receipt_with_motion(false)
+	var stage: Control = receipt_stage()
+	if stage == null:
+		return false
+	var actor: Node2D = stage.get_node("Actor")
+	var player: AnimationPlayer = actor.get_node("AnimationPlayer")
+	check(ui.qa_session and not stage.reduced_motion and player.is_playing(), "production receipt animation starts with QA restored before any action or wait")
+	await create_timer(0.05).timeout
+	ui._settings()
+	await settle_layout()
+	var clock: float = player.current_animation_position
+	var pose: Array = actor_visual_state(actor)
+	await create_timer(0.06).timeout
+	check(is_equal_approx(player.current_animation_position, clock) and actor_visual_state(actor) == pose, "a settings overlay freezes both the receipt clip clock and the visible actor pose")
+	ui._close_modal()
+	await create_timer(0.05).timeout
+	check(player.current_animation_position > clock, "closing the overlay resumes the receipt clip instead of restarting it")
+	ui._notification(Control.NOTIFICATION_APPLICATION_FOCUS_OUT)
+	clock = player.current_animation_position
+	pose = actor_visual_state(actor)
+	await create_timer(0.06).timeout
+	check(is_equal_approx(player.current_animation_position, clock) and actor_visual_state(actor) == pose, "focus loss freezes the receipt clip and native actor pose")
+	ui._notification(Control.NOTIFICATION_APPLICATION_FOCUS_IN)
+	await create_timer(0.05).timeout
+	check(player.current_animation_position > clock and JSON.stringify(ui.state) == snapshot, "focus return continues receipt animation while preserving the full resolved state")
+	var static_poses: Dictionary = {}
+	for outcome: String in ["extracted", "empty", "dead"]:
+		ui.state = staged_receipt("isana", outcome)
+		snapshot = JSON.stringify(ui.state)
+		render_receipt_with_motion(true)
+		await settle_layout()
+		stage = receipt_stage()
+		if stage == null:
+			return false
+		actor = stage.get_node("Actor")
+		player = actor.get_node("AnimationPlayer")
+		pose = actor_visual_state(actor)
+		await create_timer(0.06).timeout
+		static_poses[outcome] = pose
+		check(ui.qa_session and stage.reduced_motion and not player.is_playing() and actor_visual_state(actor) == pose and JSON.stringify(ui.state) == snapshot, "%s reduced-motion receipt chooses a stable pose without changing the result" % outcome)
+	check(static_poses.dead != static_poses.extracted and static_poses.empty == static_poses.extracted, "reduced motion distinguishes loss from a quiet or successful arrival")
+	ui.state = staged_receipt("ritsu", "extracted")
+	var owned: Array = ui.state.profile.stash.duplicate(true)
+	render_receipt_with_motion(false)
+	stage = receipt_stage()
+	await create_timer(0.04).timeout
+	var retry: Button = find_button(ui.content, "港で支度をする")
+	check(stage != null and stage.get_node("Actor/AnimationPlayer").is_playing() and retry != null and not retry.disabled and ui.qa_session, "harbor return is available while the production arrival clip is still playing")
+	if retry == null:
+		return false
+	retry.pressed.emit()
+	await settle_layout()
+	check(ui.state.mode == "harbor" and ui.state.profile.stash == owned and not is_instance_valid(stage) and RulesData.validate_state(ui.state), "return during the arrival clip frees its stage without changing already-transferred items")
+	ui.settings.reduced = previous_reduced
+	ui._render()
+	await settle_layout()
+	return true
+
+func test_v03_live_reduced_motion_toggle() -> bool:
+	ui._close_modal()
+	var previous_reduced: bool = ui.settings.reduced
+	for outcome: String in ["extracted", "empty", "dead"]:
+		ui.state = staged_receipt("kohaku", outcome)
+		var snapshot: String = JSON.stringify(ui.state)
+		# Obtain the displayed reduced pose independently, then start the same
+		# resolved receipt with production motion to exercise its live setting.
+		render_receipt_with_motion(true)
+		await settle_layout()
+		var static_stage: Control = receipt_stage()
+		if static_stage == null:
+			return false
+		var expected_pose: Array = actor_visual_state(static_stage.get_node("Actor"))
+		render_receipt_with_motion(false)
+		var stage: Control = receipt_stage()
+		if stage == null:
+			return false
+		var actor: Node2D = stage.get_node("Actor")
+		var player: AnimationPlayer = actor.get_node("AnimationPlayer")
+		await create_timer(0.05).timeout
+		check(ui.qa_session and player.is_playing() and player.current_animation_position > 0.0, "%s live setting fixture starts partway through the production outcome clip with QA restored" % outcome)
+		ui._settings()
+		await settle_layout()
+		var motion: CheckButton = find_button(ui.modal, "動きを減らす") as CheckButton
+		if motion == null:
+			return false
+		check(not motion.button_pressed and not stage.reduced_motion, "%s settings reflect the existing animated receipt before changing preference" % outcome)
+		motion.button_pressed = true
+		check(ui.settings.reduced and stage.reduced_motion and actor.reduced_motion and receipt_stage() == stage, "%s actual settings toggle updates the existing receipt stage and actor" % outcome)
+		ui._close_modal()
+		await settle_layout()
+		var pose: Array = actor_visual_state(actor)
+		var held_clip: StringName = player.current_animation
+		await create_timer(0.08).timeout
+		check(not player.is_playing() and actor_visual_state(actor) == expected_pose and actor_visual_state(actor) == pose and player.current_animation == held_clip, "%s enabling reduced motion mid-clip holds the appropriate static outcome after closing settings" % outcome)
+		check(JSON.stringify(ui.state) == snapshot and RulesData.validate_state(ui.state), "%s live reduction leaves the resolved receipt and concrete ownership unchanged" % outcome)
+		ui._settings()
+		await settle_layout()
+		motion = find_button(ui.modal, "動きを減らす") as CheckButton
+		if motion == null:
+			return false
+		check(motion.button_pressed, "%s reopened settings retain the reduced-motion preference" % outcome)
+		motion.button_pressed = false
+		ui._close_modal()
+		await settle_layout()
+		held_clip = player.current_animation
+		await create_timer(0.08).timeout
+		check(not ui.settings.reduced and not stage.reduced_motion and not actor.reduced_motion and not player.is_playing() and actor_visual_state(actor) == pose and player.current_animation == held_clip, "%s restoring full motion holds the resolved outcome instead of replaying its clip" % outcome)
+		check(ui.qa_session and JSON.stringify(ui.state) == snapshot and RulesData.validate_state(ui.state), "%s toggling motion off and on cannot replay receipt ownership or rewards" % outcome)
+	ui.settings.reduced = previous_reduced
+	ui._render()
+	await settle_layout()
 	return true
