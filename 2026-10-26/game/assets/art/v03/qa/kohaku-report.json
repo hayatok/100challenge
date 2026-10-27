@@ -1,0 +1,165 @@
+{
+  "name": "kohaku",
+  "source": "2026-10-26/.scratch/versions/v03/art/originals/kohaku-sixposes-01.png",
+  "dimensions": [
+    1536,
+    1024
+  ],
+  "mode": "RGBA",
+  "alphaZeroFraction": 0.6243508656819662,
+  "alphaMax": 254,
+  "isolationNote": "six isolated connected source silhouettes",
+  "poses": [
+    {
+      "pose": "down_left",
+      "file": "normalized/kohaku_down_left.png",
+      "sourceSlot": [
+        0,
+        0,
+        512,
+        512
+      ],
+      "sourceVisibleBounds": [
+        176,
+        10,
+        469,
+        504
+      ],
+      "canvas": [
+        320,
+        320
+      ],
+      "visibleHeight": 288,
+      "footOrigin": [
+        160,
+        304
+      ]
+    },
+    {
+      "pose": "up_left",
+      "file": "normalized/kohaku_up_left.png",
+      "sourceSlot": [
+        512,
+        0,
+        1024,
+        512
+      ],
+      "sourceVisibleBounds": [
+        622,
+        11,
+        930,
+        505
+      ],
+      "canvas": [
+        320,
+        320
+      ],
+      "visibleHeight": 288,
+      "footOrigin": [
+        160,
+        304
+      ]
+    },
+    {
+      "pose": "side_left",
+      "file": "normalized/kohaku_side_left.png",
+      "sourceSlot": [
+        1024,
+        0,
+        1536,
+        512
+      ],
+      "sourceVisibleBounds": [
+        1098,
+        8,
+        1469,
+        501
+      ],
+      "canvas": [
+        320,
+        320
+      ],
+      "visibleHeight": 288,
+      "footOrigin": [
+        160,
+        304
+      ]
+    },
+    {
+      "pose": "down_right",
+      "file": "normalized/kohaku_down_right.png",
+      "sourceSlot": [
+        0,
+        512,
+        512,
+        1024
+      ],
+      "sourceVisibleBounds": [
+        164,
+        511,
+        463,
+        1006
+      ],
+      "canvas": [
+        320,
+        320
+      ],
+      "visibleHeight": 288,
+      "footOrigin": [
+        160,
+        304
+      ]
+    },
+    {
+      "pose": "up_right",
+      "file": "normalized/kohaku_up_right.png",
+      "sourceSlot": [
+        512,
+        512,
+        1024,
+        1024
+      ],
+      "sourceVisibleBounds": [
+        598,
+        511,
+        907,
+        1006
+      ],
+      "canvas": [
+        320,
+        320
+      ],
+      "visibleHeight": 288,
+      "footOrigin": [
+        160,
+        304
+      ]
+    },
+    {
+      "pose": "side_right",
+      "file": "normalized/kohaku_side_right.png",
+      "sourceSlot": [
+        1024,
+        512,
+        1536,
+        1024
+      ],
+      "sourceVisibleBounds": [
+        1098,
+        510,
+        1495,
+        997
+      ],
+      "canvas": [
+        320,
+        320
+      ],
+      "visibleHeight": 288,
+      "footOrigin": [
+        160,
+        304
+      ]
+    }
+  ],
+  "status": "source QA only; not an in-game motion validation"
+}

@@ -1,0 +1,299 @@
+{
+  "schemaVersion": 1,
+  "title": "SHIOGAERI Sunlit Tideglass presentation revision2",
+  "sourceTool": "OpenAI built-in image_gen.imagegen",
+  "generationCount": 5,
+  "generationBreakdown": "Four new family images plus one corrective crew edit; no API/CLI/Tripo path",
+  "designAuthority": "docs/PRESENTATION_R2.md and docs/ART_DIRECTION.md read before creation",
+  "familyReference": "harbor-day.png",
+  "license": {
+    "kind": "AI-generated project assets",
+    "note": "Generated with OpenAI built-in image tool for this project; no external artist/game/stock images used. Applicable OpenAI terms govern use; provenance does not guarantee copyright or exclusivity."
+  },
+  "assets": [
+    {
+      "file": "harbor-day.png",
+      "source": "exec-751d2288-ee7c-4cc1-bcbf-e7adae2eb4ac.png",
+      "prompt": "Use case: stylized-concept\nCreate a polished hand-painted anime adventure game harbor panorama, wide landscape 1536×1024, for SHIOGAERI. A BRIGHT inviting Japanese-inspired coastal recovery town during a sunny break in weather: sparkling clear turquoise sea, pale limestone quays and steps, white stucco buildings with coral tile roofs, honey-colored timber docks, teal canvas awnings, a cream lighthouse on the distant headland, fishing boats with ropes and nets, small bright flowers in planters, gulls, foamy waves. Old flooded alleys and ruins still suggest salvage adventures, but sunlight and warm human life dominate. Carefully layered environment with rich crafted architecture, purposeful visual storytelling, confident beautiful anime-adventure background painting, clean readable silhouettes, simplified luminous material planes, selective fine ink outlines and painterly gouache texture. Upper-left warm afternoon sunlight, blue open sky with luminous cream clouds, rich teal shadow without black or gray wash. Sophisticated color harmony: turquoise, pale warm cream, coral, honey gold. Open water and pale sky provide breathing room; dense charming town fills middle distance. Composition works behind native title UI, no baked UI. Avoid gloomy nighttime, monochrome ruins, photorealism, generic 3D, pixel art, overbusy scratch texture. NO letters, words, logos, watermark, frames, borders, UI or characters close to camera.",
+      "dimensions": [
+        1536,
+        1024
+      ],
+      "mode": "RGB",
+      "status": "Family target visually accepted by art owner and parent before related generation",
+      "sourcePath": "/Users/hayatok/.codex/generated_images/01a173b0-6850-78d0-8f2d-b0ba46180f50/exec-751d2288-ee7c-4cc1-bcbf-e7adae2eb4ac.png"
+    },
+    {
+      "file": "terrain-day.png",
+      "source": "exec-54f6d041-ecba-4488-8b1e-7e46daafb052.png",
+      "prompt": "Create a game overhead material sheet, matching reference image's BRIGHT turquoise/pale limestone/coral/honey timber sunny anime-adventure palette and hand-painted simplified planes. Reference is STYLE/COLOR only, do NOT draw a harbor scene.\nSquare1536×1536 canvas, EXACT2×2 equal quadrants with boundaries at midpoint. Each quadrant FILLED edge-to-edge with one flat material. TOP LEFT: warm PALE limestone pavement, small soft-edged irregular paving stones, cream and light sandy beige, faint teal moss joins. TOP RIGHT: white stucco and pale masonry with scattered coral-red brick sections, weathered cheerful coastal walls, warm cream dominant. BOTTOM LEFT: honey-golden horizontal dock timber boards, readable restrained knots/grain and subtle old nails. BOTTOM RIGHT: CLEAR BRIGHT TURQUOISE shallow tidal water, light aqua and teal caustic ripples, small pale foam traces.\nPure flat orthographic OVERHEAD material textures, uniform neutral upper-left daylight, no perspective, no horizons, NO props, buildings, roofs, objects, text or borders. No dividing lines or margins. Polished hand-painted anime adventure game terrain, clean simplified surfaces and controlled small detail, suitable to display each quadrant across4×4 64px tiles. Seamless-style repeating material within each quadrant, no strong center motif. Avoid dark gray overall, noisy grunge, muddy brown, photorealism, pixel art, glossy3D. Opaque canvas.",
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "mode": "RGB",
+      "reference": "harbor-day.png",
+      "quadrants": {
+        "stone": [
+          0,
+          0,
+          627,
+          627
+        ],
+        "masonry": [
+          627,
+          0,
+          627,
+          627
+        ],
+        "timber": [
+          0,
+          627,
+          627,
+          627
+        ],
+        "water": [
+          627,
+          627,
+          627,
+          627
+        ]
+      },
+      "limits": [
+        "Requested1536x1536 but generated1254x1254",
+        "No seamless-repeat guarantee; actual repetition and4x4-cell material scale require native verification"
+      ],
+      "sourcePath": "/Users/hayatok/.codex/generated_images/01a173b0-6850-78d0-8f2d-b0ba46180f50/exec-54f6d041-ecba-4488-8b1e-7e46daafb052.png"
+    },
+    {
+      "file": "props-day.png",
+      "source": "exec-5ae22aa1-520c-4f7b-be7a-0b294b96c45d.png",
+      "prompt": "Create SIX separated game architecture/prop sprites on genuine ALPHA TRANSPARENCY for a polished bright hand-painted anime adventure coastal salvage game. Reference image is STYLE/COLOR/LIGHTING family only. Match warm upper-left sunlight, pale limestone, white stucco/coral roofs, honey timber, teal canvas, confident fine outlines and clean painterly planes. Cheerful sunlit harbor craftsmanship with modest weathering and salvage traces. NOT a whole environment.\n1536×1024 landscape, requested3columns×2rows; SIX complete isolated objects with a WIDE transparent gutter between ALL objects. Each object entirely inside its own loose cell and no overlap, no shared ground. Full silhouettes, generous margins. Slightly overhead THREEQUARTER game camera, same angle and lighting for all. Readable when each used80–128px.\nTOP LEFT: small elegant white limestone lighthouse with coral roof cap and teal door, complete little base.\nTOP CENTER: small cream-and-teal fishing boat, honey timber inside, short mast, coil of rope, complete hull with no surrounding water.\nTOP RIGHT: charming honey timber market stall with broad coral/cream striped canopy, baskets and small crates; compact silhouette.\nBOTTOM LEFT: old little clinic facade in white stucco with coral roof, teal shutters, a plant, modest cracks; a tiny nonletter decorative circular brass emblem, no signs.\nBOTTOM CENTER: pump/workshop structure: compact honey-timber and pale-stone shed with rusty brass pump wheel, teal awning, toolbox.\nBOTTOM RIGHT: compact bright flower-and-rope planter, small pale stone box with pink/coral/cream flowers, green leaves and coiled rope.\nNo text, letters, labels, logos, framing, cell borders, UI. Empty background must be actual transparent alpha, no checkerboard or atmospheric glow. No ground squares, discs, floor, puddles or contact shadows beyond objects. Distinct silhouettes and clean blank space, no cropped mast/roof/equipment. Avoid photorealistic3D, dark grimy palette, neon, pixel art.",
+      "dimensions": [
+        1536,
+        1024
+      ],
+      "mode": "RGBA",
+      "reference": "harbor-day.png",
+      "alpha": {
+        "min": 0,
+        "max": 254,
+        "fullyTransparentPixels": 646870,
+        "cornerAlpha": [
+          0,
+          0,
+          1,
+          0
+        ]
+      },
+      "crops": {
+        "prop_lighthouse": [
+          10,
+          9,
+          476,
+          533
+        ],
+        "prop_boat": [
+          514,
+          22,
+          503,
+          508
+        ],
+        "prop_market": [
+          1049,
+          85,
+          485,
+          456
+        ],
+        "prop_clinic": [
+          12,
+          552,
+          589,
+          455
+        ],
+        "prop_pump": [
+          601,
+          550,
+          415,
+          451
+        ],
+        "prop_planter": [
+          1048,
+          629,
+          481,
+          373
+        ]
+      },
+      "limits": [
+        "Generated objects exceed requested equal-cell layout; only inspected irregular regions are approved",
+        "Buildings are illustrated sprites, not collision geometry",
+        "Prop feet/shadows and wall-anchor placement need native verification"
+      ],
+      "sourcePath": "/Users/hayatok/.codex/generated_images/01a173b0-6850-78d0-8f2d-b0ba46180f50/exec-5ae22aa1-520c-4f7b-be7a-0b294b96c45d.png"
+    },
+    {
+      "file": "crew-field-v1.png",
+      "source": "exec-9445eed3-a2d6-4415-9350-0b03096243e9.png",
+      "prompt": "Create FOUR independent separated field miniatures of ADULT female coastal salvage workers, all facing toward camera in matching slightly overhead threequarter camera, relaxed expedition-ready standing stance. Genuine transparent alpha sprite sheet. Bright polished anime adventure game family matching reference harbor's clean painterly material planes, warm upper-left sunlight and confident fine outlines. Compact ADULT workwear miniatures with about3.5-head proportions, cute and readable at88px height but mature adult facial features, NOT infants/children or schoolgirls. Complete head-to-boots figures, tools and hands intact. Landscape1536×1024, four people in ONE horizontal row with wide completely transparent gutters. Every character same approximate height, generous top/bottom and outer margins, no overlap. Distinct faces, hair, body and silhouette.\nLEFTMOST ISANA: beautiful adult courier, chestnut high ponytail, amber eyes, short ocher waterproof coat, black work trousers, lace boots, large salvage satchel and tiny brass lantern. Athletic friendly energetic expression.\nSECOND RITSU: beautiful adult diver, short asymmetric silver-gray bob, blue eyes, lean tall physique simplified in miniature, navy diving work suit, thick boots, vermilion red scarf, compact diving apparatus/tool pouch. Composed face.\nTHIRD KOHAKU: beautiful adult mechanic, copper curls, green eyes, CLEAR RICH WARM BROWN SKIN on face/neck/hands, broad sturdy physique, rust-red work coveralls, goggles on forehead, large wrench and toolbelt. Cheerful confident smile. Keep skin significantly deeper brown than other women.\nRIGHTMOST SUI: beautiful adult surveyor, long flowing black hair, pale violet eyes, fair skin, long ivory hooded coat with hood down, teal layers, survey satchel and brass compass. Quiet curious expression.\nEvery worker has common small brass guild badge and teal waterproof-cloth accent, practical comfortable adult occupation outfits. Clean readable value separation, warm cream highlights, bright saturated but tasteful ocher/coral/teal/navy. No dark wash or excessive microtexture. No cleavage, sexual costumes, exposed midriff, heels, juvenile baby faces, pixel art, giant anime heads or generic clones.\nNO backdrop, floor, drop shadows, atmosphere, text, words, labels, cell lines, borders, logo, scenery or checkerboard. Preserve full silhouettes within separated regions, truly transparent empty background.",
+      "dimensions": [
+        1536,
+        1024
+      ],
+      "mode": "RGBA",
+      "reference": "harbor-day.png",
+      "status": "Rejected field proportions and crowded layout; original retained",
+      "sourcePath": "/Users/hayatok/.codex/generated_images/01a173b0-6850-78d0-8f2d-b0ba46180f50/exec-9445eed3-a2d6-4415-9350-0b03096243e9.png"
+    },
+    {
+      "file": "crew-field.png",
+      "source": "exec-608ccce4-5730-4bdb-bc63-4145e44cfb59.png",
+      "prompt": "Edit this four-woman crew sheet for actual SMALL FIELD SPRITES. Preserve their beautiful ADULT facial identity, hair, skin colors, costumes, tools, and bright painterly anime-adventure line/color style. CHANGE PROPORTIONS AND LAYOUT decisively.\nMake all four into COMPACT ABOUT3.5-HEAD-TALL adult game miniatures: head is roughly28% of total figure height, torso30%, short sturdy legs42%. Simplify tiny straps/details to clean broad color shapes readable at88pixels, keep adult confident expressions and adult work outfits, no infant/child design.\nCHANGE canvas layout to SQUARE1536×1536 with FOUR figures in2columns×2rows. Each figure must stay inside its quadrant with very broad TRANSPARENT GUTTERS; at least100px entirely empty between silhouettes, plus80px external margin. Each person body including tools no more than500px wide and600px tall. Full boots, hair, hands and equipment, no overlap or clipping.\nTOP LEFT Isana: chestnut high ponytail, ocher short coat, black trousers, satchel/lantern.\nTOP RIGHT Ritsu: silver asymmetric bob, blue eyes, navy diver suit, red scarf/airpack.\nBOTTOM LEFT Kohaku: copper curls, green eyes, rich warm BROWN skin, broad sturdy physique, rust-red coveralls, goggles, large wrench.\nBOTTOM RIGHT Sui: long black hair, pale violet eyes, pale skin, ivory long coat/teal layers, survey satchel/compass.\nSame slightly overhead threequarter toward-camera stance, matching light from upper left, identical field scale. Distinct silhouettes and work identities. TRUE ALPHA TRANSPARENT empty background, no backdrop/floor/atmospheric glow, no text/labels/borders/lines/graphics. Preserve exact rich brown skin on Kohaku's face and hands. Do not return the same tall adult-body proportions or single-row crowded layout.",
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "mode": "RGBA",
+      "reference": "crew-field-v1.png",
+      "alpha": {
+        "min": 0,
+        "max": 255,
+        "fullyTransparentPixels": 917507,
+        "cornerAlpha": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "status": "Accepted compact field family after corrective call; individual extraction required",
+      "limits": [
+        "Approximately3.5–4heads, not measured exactly3.5 for all",
+        "Requested generous layout margins ignored: rectangular source bounds overlap neighboring silhouettes",
+        "Use isolated crew PNG resources instead of direct rectangular source atlas crops",
+        "Full portrait identity translated into simplified miniature; native88–94px readability and movement pending"
+      ],
+      "sourcePath": "/Users/hayatok/.codex/generated_images/01a173b0-6850-78d0-8f2d-b0ba46180f50/exec-608ccce4-5730-4bdb-bc63-4145e44cfb59.png"
+    }
+  ],
+  "extraction": {
+    "authorization": "Parent explicitly authorized deterministic sprite slicing and normalization of existing alpha components, no painting, recoloring or completion.",
+    "source": "crew-field.png",
+    "script": "extract_crew.py",
+    "method": "Four connected components of original alpha>8, each>1000pixels. Extend component selection outward2pixels to retain native low-alpha antialiasing. Preserve original RGB and alpha of selected pixels; set excluded pixels' alpha to0. Crop to component bounds plus4pixel margin. Original sheet remains unchanged.",
+    "outputs": [
+      {
+        "character": "isana",
+        "file": "crew-isana.png",
+        "sourceRect": [
+          143,
+          3,
+          426,
+          664
+        ],
+        "dimensions": [
+          426,
+          664
+        ],
+        "alphaMin": 0,
+        "alphaMax": 255,
+        "fullyTransparentPixels": 113742,
+        "cornerAlpha": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "character": "ritsu",
+        "file": "crew-ritsu.png",
+        "sourceRect": [
+          752,
+          40,
+          360,
+          638
+        ],
+        "dimensions": [
+          360,
+          638
+        ],
+        "alphaMin": 0,
+        "alphaMax": 255,
+        "fullyTransparentPixels": 89108,
+        "cornerAlpha": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "character": "kohaku",
+        "file": "crew-kohaku.png",
+        "sourceRect": [
+          166,
+          624,
+          425,
+          628
+        ],
+        "dimensions": [
+          425,
+          628
+        ],
+        "alphaMin": 0,
+        "alphaMax": 255,
+        "fullyTransparentPixels": 112941,
+        "cornerAlpha": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "character": "sui",
+        "file": "crew-sui.png",
+        "sourceRect": [
+          714,
+          650,
+          428,
+          599
+        ],
+        "dimensions": [
+          428,
+          599
+        ],
+        "alphaMin": 0,
+        "alphaMax": 255,
+        "fullyTransparentPixels": 90425,
+        "cornerAlpha": [
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    ],
+    "resources": "crew_*.tres each references isolated PNG with full image Rect2",
+    "limits": [
+      "RGB of excluded pixels remains original under zero alpha, so alpha-ignoring viewers can show ghost RGB; proper Godot alpha composition must be checked",
+      "Isolated antialias speckles away from principal components discarded"
+    ]
+  },
+  "validation": {
+    "performed": [
+      "All5 generated outputs viewed with view_image",
+      "Dimensions, true alpha histogram, corner samples and actual connected-component bounds measured with read-only Pillow/NumPy",
+      "All4 isolated crew outputs viewed; suspected neighbor RGB samples confirmed alpha0",
+      "Six props have separate actual silhouette components; regions are not equal-grid assumptions",
+      "Original generated PNGs copied byte-for-byte; extraction creates sibling derived sprites"
+    ],
+    "pending": [
+      "Native Godot prop-region edge audit",
+      "Terrain repeated appearance",
+      "88–94px actual moving field character readability",
+      "Whole phone HUD/world composition",
+      "Human assessment of richness, enjoyment or commercial readiness"
+    ]
+  }
+}

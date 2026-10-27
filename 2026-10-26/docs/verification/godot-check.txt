@@ -1,0 +1,103 @@
+
+> shiogaeri@0.1.0 check
+> node scripts/godot.mjs import && npm test && npm run build
+
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+[   0% ] first_scan_filesystem | Started プロジェクトの初期化 (5 steps)
+[   0% ] first_scan_filesystem | ファイル構造をスキャン中...
+[  16% ] first_scan_filesystem | グローバルクラス名を読み込み中...
+[  33% ] first_scan_filesystem | GDExtensionを検証中...
+[  50% ] first_scan_filesystem | 自動読み込みスクリプトを作成中...
+[  66% ] first_scan_filesystem | プラグインを初期化中...
+[  83% ] first_scan_filesystem | ファイルスキャンを開始...
+[ DONE ] first_scan_filesystem
+
+[   0% ] loading_editor_layout | Started エディターの読み込み (5 steps)
+[   0% ] loading_editor_layout | エディターレイアウトを読み込み中...
+[  16% ] loading_editor_layout | ドックを読み込み中...
+[ DONE ] loading_editor_layout
+
+
+> shiogaeri@0.1.0 test
+> node scripts/godot.mjs test && node scripts/godot.mjs ui
+
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+Rules tests: 1794 passed, 0 failed
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+UI/store tests: 34 passed, 0 failed
+
+> shiogaeri@0.1.0 build
+> node scripts/godot.mjs build
+
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+[   0% ] first_scan_filesystem | Started プロジェクトの初期化 (5 steps)
+[   0% ] first_scan_filesystem | ファイル構造をスキャン中...
+[  16% ] first_scan_filesystem | グローバルクラス名を読み込み中...
+[  33% ] first_scan_filesystem | GDExtensionを検証中...
+[  50% ] first_scan_filesystem | 自動読み込みスクリプトを作成中...
+[  66% ] first_scan_filesystem | プラグインを初期化中...
+[  83% ] first_scan_filesystem | ファイルスキャンを開始...
+[ DONE ] first_scan_filesystem
+
+[   0% ] savepack | Started パック中 (102 steps)
+[   1% ] savepack | ファイルの保存中: res://assets/art/asset-manifest.json
+[   4% ] savepack | ファイルの保存中: res://.godot/exported/133200997/export-a52a33bb9451d4142d941536803fc22c-crab.res
+[   8% ] savepack | ファイルの保存中: res://.godot/exported/133200997/export-9cb1d3bec712824c805603b5b2ca1207-crate.res
+[  12% ] savepack | ファイルの保存中: res://.godot/exported/133200997/export-de19587060883fd26f825df506314a47-diver.res
+[  15% ] savepack | ファイルの保存中: res://.godot/imported/harbor-cover.png-48189b42875ca3ae7e5f356b812e9768.ctex
+[  15% ] savepack | ファイルの保存中: res://assets/art/harbor-cover.png.import
+[  19% ] savepack | ファイルの保存中: res://.godot/imported/isana.png-7d5d66cdc30d2147b7d04d1eac65ef21.ctex
+[  19% ] savepack | ファイルの保存中: res://assets/art/isana.png.import
+[  23% ] savepack | ファイルの保存中: res://.godot/imported/kohaku-v1.png-7f96d95e52cece1beeeae2c5e8fc65a9.ctex
+[  23% ] savepack | ファイルの保存中: res://assets/art/kohaku-v1.png.import
+[  26% ] savepack | ファイルの保存中: res://.godot/imported/kohaku.png-6171e7ba0c02f0555462f49a87bc70e3.ctex
+[  26% ] savepack | ファイルの保存中: res://assets/art/kohaku.png.import
+[  30% ] savepack | ファイルの保存中: res://.godot/imported/ritsu.png-03c3c671c626d3a19f388b620db8cfab.ctex
+[  30% ] savepack | ファイルの保存中: res://assets/art/ritsu.png.import
+[  33% ] savepack | ファイルの保存中: res://.godot/imported/salvage-atlas.png-890cc17044dc963c5b99a18dc151b6f2.ctex
+[  33% ] savepack | ファイルの保存中: res://assets/art/salvage-atlas.png.import
+[  37% ] savepack | ファイルの保存中: res://.godot/imported/sui.png-15aac9a8de15c4e6048a6465899286c8.ctex
+[  37% ] savepack | ファイルの保存中: res://assets/art/sui.png.import
+[  40% ] savepack | ファイルの保存中: res://.godot/imported/terrain-atlas.png-04cfe23ff00f95f994738b1c443ccd3d.ctex
+[  40% ] savepack | ファイルの保存中: res://assets/art/terrain-atlas.png.import
+[  44% ] savepack | ファイルの保存中: res://.godot/exported/133200997/export-78fa22315d5b4ff447350546972841c2-wader.res
+[  48% ] savepack | ファイルの保存中: res://.godot/imported/NotoSansCJKjp-Medium.otf-13e73020c76b4f29e64c8dc55585dbcb.fontdata
+[  48% ] savepack | ファイルの保存中: res://assets/fonts/NotoSansCJKjp-Medium.otf.import
+[  51% ] savepack | ファイルの保存中: res://.godot/imported/icon.svg-56083ea2a1f1a4f1e49773bdc6d7826c.ctex
+[  51% ] savepack | ファイルの保存中: res://assets/icon.svg.import
+[  55% ] savepack | ファイルの保存中: res://.godot/exported/133200997/export-49c150869b35693972ad98356c3d2310-actor.scn
+[  59% ] savepack | ファイルの保存中: res://.godot/exported/133200997/export-7af1610c67933587f82174b6bfa726df-board.scn
+[  62% ] savepack | ファイルの保存中: res://.godot/exported/133200997/export-3ad5c15c4f3250da0cc7c1af1770d85f-main.scn
+[  66% ] savepack | ファイルの保存中: res://scripts/actor.gdc
+[  69% ] savepack | ファイルの保存中: res://scripts/board.gdc
+[  73% ] savepack | ファイルの保存中: res://scripts/main.gdc
+[  76% ] savepack | ファイルの保存中: res://scripts/rules.gdc
+[  80% ] savepack | ファイルの保存中: res://scripts/save_store.gdc
+[  84% ] savepack | ファイルの保存中: res://scripts/sound.gdc
+[  87% ] savepack | ファイルの保存中: res://scripts/ui_theme.gdc
+[  91% ] savepack | ファイルの保存中: res://scripts/world_data.gdc
+[  95% ] savepack | ファイルの保存中: res://shaders/water.gdshader
+[  95% ] savepack | ファイルの保存中: res://assets/art/crab.tres.remap
+[  95% ] savepack | ファイルの保存中: res://assets/art/crate.tres.remap
+[  95% ] savepack | ファイルの保存中: res://assets/art/diver.tres.remap
+[  95% ] savepack | ファイルの保存中: res://assets/art/wader.tres.remap
+[  95% ] savepack | ファイルの保存中: res://scenes/actor.tscn.remap
+[  95% ] savepack | ファイルの保存中: res://scenes/board.tscn.remap
+[  95% ] savepack | ファイルの保存中: res://scenes/main.tscn.remap
+[  95% ] savepack | ファイルの保存中: res://scripts/actor.gd.remap
+[  95% ] savepack | ファイルの保存中: res://scripts/board.gd.remap
+[  95% ] savepack | ファイルの保存中: res://scripts/main.gd.remap
+[  95% ] savepack | ファイルの保存中: res://scripts/rules.gd.remap
+[  95% ] savepack | ファイルの保存中: res://scripts/save_store.gd.remap
+[  95% ] savepack | ファイルの保存中: res://scripts/sound.gd.remap
+[  95% ] savepack | ファイルの保存中: res://scripts/ui_theme.gd.remap
+[  95% ] savepack | ファイルの保存中: res://scripts/world_data.gd.remap
+[  95% ] savepack | ファイルの保存中: res://.godot/global_script_class_cache.cfg
+[  95% ] savepack | ファイルの保存中: res://assets/icon.svg
+[  95% ] savepack | ファイルの保存中: res://.godot/uid_cache.bin
+[  95% ] savepack | ファイルの保存中: res://project.binary
+[ DONE ] savepack

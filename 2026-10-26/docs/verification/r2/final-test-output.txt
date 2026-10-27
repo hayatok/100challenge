@@ -1,0 +1,12 @@
+Final npm test after the empty-receipt layout fix.
+Delegated runner: expedition_rules; actual tool result copied after exit 0.
+
+> shiogaeri@0.1.0 test
+> node scripts/godot.mjs test && node scripts/godot.mjs ui
+
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+Rules tests: 1794 passed, 0 failed
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+UI/store tests: 92 passed, 0 failed

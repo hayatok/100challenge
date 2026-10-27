@@ -1,0 +1,190 @@
+{
+  "tool": "OpenAI built-in image_gen",
+  "generation_calls": 5,
+  "provenance": "Generated for this project; no external artwork supplied. Existing project art references preserve identity. Original metadata retained in copied source PNGs.",
+  "normalization": "RGBA conversion, uniform Lanczos resize and transparent padding only. No repainting.",
+  "evidence_limit": "Native-size composites are source QA; actual game integration and human playtesting not performed by this asset worker.",
+  "assets": [
+    {
+      "id": "isana",
+      "file": "game/assets/art/v03/portraits/isana.png",
+      "source_generated_path": "/Users/hayatok/.codex/generated_images/01a17e47-9966-7c11-8e2b-0bd3916f1435/exec-5784de3c-f080-46e0-b33c-8b4b34cb5538.png",
+      "source_copy": "/Users/hayatok/.codex/worktrees/shio-no-kaishu/100challenge/2026-10-26/.scratch/versions/v03/portraits/isana-source.png",
+      "source_sha256": "34b7fafc271ddece278f3f46a6aa446c091fe95e257b22f8b8167a4acfe070dc",
+      "sha256": "f90f3da7bb3af29a3ddff8df2ebe056f49b287c6ac7b4f3efe2785024048a2ce",
+      "original_size": [
+        1086,
+        1448
+      ],
+      "source_alpha_bbox": [
+        0,
+        0,
+        1086,
+        1448
+      ],
+      "placed_size": [
+        736,
+        981
+      ],
+      "offset": [
+        16,
+        16
+      ],
+      "size": [
+        768,
+        1024
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "fully_transparent_pixels": 293282,
+      "fully_opaque_pixels": 1172,
+      "face_rect_normalized_xywh": [
+        0.3,
+        0.105,
+        0.17,
+        0.16
+      ],
+      "prompt": "Use case: stylized-concept. Production conversation portrait for SHIOGAERI, Sunlit Tideglass bright harbor adventure. Reference 1 locks adult Isana identity and costume, reference 2 locks brighter ochre/teal costume family but NOT its miniature proportions. Reillustrate one beautiful clearly adult late-twenties woman with chestnut high ponytail, teal ribbon, amber eyes, warm lively open smile, ochre waterproof short coat, teal neckcloth, brass guild badge, dark work trousers and recovery shoulder satchel. Polished Japanese anime RPG illustration, smooth clean color planes and confident delicate outlines, lovely clear eyes and naturally drawn five-finger hands. Warm upper-left daylight, bright warm skin, controlled simple folds, no grain or stippled paint. Knees-up three-quarter body, face large enough to read at 180x240; natural relaxed shoulders, one open friendly hand near chest, other resting naturally near satchel strap. Entire hair and hands within canvas with margin. Adult proportions, practical tasteful clothing. Actual transparent background, isolated cutout, no scenery, shadows/background plate, white board, text, frame, labels or signature. No child/chibi proportions, extra fingers, oil texture, dark muddy tones. 3:4 portrait composition.\n",
+      "qa_status": "Source-scale visual QA; integration pending"
+    },
+    {
+      "id": "ritsu",
+      "file": "game/assets/art/v03/portraits/ritsu.png",
+      "source_generated_path": "/Users/hayatok/.codex/generated_images/01a17e47-9966-7c11-8e2b-0bd3916f1435/exec-c8974890-0762-42b9-bfdb-38e5d1223e2e.png",
+      "source_copy": "/Users/hayatok/.codex/worktrees/shio-no-kaishu/100challenge/2026-10-26/.scratch/versions/v03/portraits/ritsu-source.png",
+      "source_sha256": "d03b435f748999207417c46c8fd384bbb4dababb97fdf8d98cbaaf1186713391",
+      "sha256": "18319b934849640894cf6b2892a1ee9e24dc551782a1007688bab9786d363798",
+      "original_size": [
+        1086,
+        1448
+      ],
+      "source_alpha_bbox": [
+        0,
+        14,
+        1086,
+        1448
+      ],
+      "placed_size": [
+        736,
+        972
+      ],
+      "offset": [
+        16,
+        16
+      ],
+      "size": [
+        768,
+        1024
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "fully_transparent_pixels": 296845,
+      "fully_opaque_pixels": 1085,
+      "face_rect_normalized_xywh": [
+        0.31,
+        0.075,
+        0.18,
+        0.16
+      ],
+      "prompt": "Use case: stylized-concept. Create ONE polished anime RPG conversation portrait for Sunlit Tideglass bright harbor adventure. Reference 1 is adult Ritsu identity/costume; reference 2 is approved bright field costume; reference 3 Isana sets coherent smooth illustrated family but Ritsu MUST have her own face. Ritsu is a beautiful clearly adult early-thirties tall athletic woman, silver asymmetric short bob, cool blue eyes, mature angular face, composed subtle friendly smile. Navy diving work suit, red scarf, compact brass air tanks and tubing behind shoulder, brass guild badge, teal cloth accents, dark gloves. Knees-up three-quarter body, large clear face and both hands fully visible; one hand relaxed near chest acknowledging conversation, other resting near belt. Adult proportions. Upper-left warm daylight, luminous skin, clean smooth opaque planes, confident delicate outlines, simple controlled folds and readable materials. No grain, no oil stippling or dark muddy legacy treatment. Entire hair/hands inside frame, transparent margin; isolated transparent RGBA cutout, NO scenery, background plate, white board, ground shadow, text, frames, signatures, extra fingers, childish/chibi proportions or exaggerated grin. 3:4 portrait canvas.\n",
+      "qa_status": "Source-scale visual QA; integration pending"
+    },
+    {
+      "id": "kohaku",
+      "file": "game/assets/art/v03/portraits/kohaku.png",
+      "source_generated_path": "/Users/hayatok/.codex/generated_images/01a17e47-9966-7c11-8e2b-0bd3916f1435/exec-91a872b0-4741-44cc-82af-3c2d63fface3.png",
+      "source_copy": "/Users/hayatok/.codex/worktrees/shio-no-kaishu/100challenge/2026-10-26/.scratch/versions/v03/portraits/kohaku-source.png",
+      "source_sha256": "e600cef4d98bbf343f07d9f81cbc0761875d57806b9517ec5bc15057472ffece",
+      "sha256": "437944fa7261a456db846248ec7e2d8ee08c7bb8c6865ec5a8ed9a7ffcdb1cab",
+      "original_size": [
+        1086,
+        1448
+      ],
+      "source_alpha_bbox": [
+        0,
+        10,
+        1064,
+        1448
+      ],
+      "placed_size": [
+        734,
+        992
+      ],
+      "offset": [
+        17,
+        16
+      ],
+      "size": [
+        768,
+        1024
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "fully_transparent_pixels": 332546,
+      "fully_opaque_pixels": 1049,
+      "face_rect_normalized_xywh": [
+        0.37,
+        0.115,
+        0.19,
+        0.17
+      ],
+      "prompt": "Use case: stylized-concept. Create ONE polished anime RPG conversation portrait for Sunlit Tideglass sunlit harbor adventure. Reference 1 adult Kohaku identity/costume; reference 2 bright field costume; reference 3 Isana establishes family rendering but NOT face/build. Kohaku is a beautiful clearly adult late-twenties sturdy strong woman with rich warm brown skin, voluminous copper curls, green eyes, forehead brass goggles, broader cheerful face, naturally confident friendly smile. Rust-orange rolled-sleeve work coveralls, cream undershirt, teal waist cloth, practical tool belt and passive side tool pouch, brass guild badge. Her strong build and broad face differ from Isana. Knees-up three-quarter body, large clear face, natural relaxed weight on one hip, one open hand making conversational gesture near waist, other resting on hip; five anatomically correct fingers each. No handheld tool required. Warm upper-left daylight, luminous brown skin, clean smooth opaque color planes, controlled fabric folds, confident delicate outlines, no grain or oil stippling. Entire hair and both hands within frame with transparent margin, bottom at knees. Actual transparent RGBA isolated cutout; no scenery, background/shadow/white plate, text, labels, frames, signature, extra fingers, childish proportions, dark gritty paint. 3:4 portrait composition.\n",
+      "qa_status": "Source-scale visual QA; integration pending"
+    },
+    {
+      "id": "sui",
+      "file": "game/assets/art/v03/portraits/sui.png",
+      "source_generated_path": "/Users/hayatok/.codex/generated_images/01a17e47-9966-7c11-8e2b-0bd3916f1435/exec-a3b11e7e-2116-484c-ba1e-536f5178efd2.png",
+      "source_copy": "/Users/hayatok/.codex/worktrees/shio-no-kaishu/100challenge/2026-10-26/.scratch/versions/v03/portraits/sui-source.png",
+      "source_sha256": "6e3dfd4246dd640fde9f5beeb92c941512f2a8a09967ffe0c411e8e7ef7a7192",
+      "sha256": "08b65fbe48e9d81915398c1459836590a11ba3780d6d23df73e9e3ccf577bf2e",
+      "original_size": [
+        1086,
+        1448
+      ],
+      "source_alpha_bbox": [
+        62,
+        128,
+        1069,
+        1448
+      ],
+      "placed_size": [
+        736,
+        965
+      ],
+      "offset": [
+        16,
+        16
+      ],
+      "size": [
+        768,
+        1024
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "fully_transparent_pixels": 314653,
+      "fully_opaque_pixels": 977,
+      "face_rect_normalized_xywh": [
+        0.36,
+        0.14,
+        0.18,
+        0.15
+      ],
+      "prompt": "undefined\n",
+      "qa_status": "Source-scale visual QA; integration pending"
+    }
+  ],
+  "sui_correction_prompt": "Use case: identity-preserve. Correct this exact Sui portrait ONLY for framing. Preserve her beautiful mature adult face, pale violet eyes, black hairstyle, ivory coat, teal clothing, natural hands, pose, rendering and upper-left sunlight exactly. Reduce the complete figure to 86 percent scale and recenter it on a portrait canvas with ample genuine transparent padding on top, left and right. Reconstruct the small missing outermost right hair tips so ALL hair is completely inside frame with at least 40 px transparent margin. Both hands, sleeves and satchel intact. Knees-up bottom crop remains acceptable. Do NOT add scenery, text, frames, shadow plate or white backing. Actual transparent RGBA cutout. No new accessories, no costume change, no oil grain.\n",
+  "rejected_sui_original": {
+    "path": "/Users/hayatok/.codex/generated_images/01a17e47-9966-7c11-8e2b-0bd3916f1435/exec-134b8e10-ad7a-442e-b240-ac0bd984340f.png",
+    "reason": "Right hair clipped at canvas edge; superseded by call 5."
+  }
+}

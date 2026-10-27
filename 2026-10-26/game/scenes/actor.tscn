@@ -1,0 +1,365 @@
+[gd_scene load_steps=21 format=3]
+
+[ext_resource type="Script" path="res://scripts/actor.gd" id="1_actor"]
+
+[sub_resource type="Animation" id="Anim_RESET"]
+resource_name = "RESET"
+length = 0.001
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:action_displacement")
+tracks/0/interp = 1
+tracks/0/keys = {"times":PackedFloat32Array(0),"transitions":PackedFloat32Array(1),"update":0,"values":[0.0]}
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:stance_drop")
+tracks/1/interp = 1
+tracks/1/keys = {"times":PackedFloat32Array(0),"transitions":PackedFloat32Array(1),"update":0,"values":[0.0]}
+tracks/2/type = "value"
+tracks/2/path = NodePath(".:pose_rotation")
+tracks/2/interp = 1
+tracks/2/keys = {"times":PackedFloat32Array(0),"transitions":PackedFloat32Array(1),"update":0,"values":[0.0]}
+tracks/3/type = "value"
+tracks/3/path = NodePath("Facing/BodyPivot:scale")
+tracks/3/interp = 1
+tracks/3/keys = {"times":PackedFloat32Array(0),"transitions":PackedFloat32Array(1),"update":0,"values":[Vector2(1,1)]}
+tracks/4/type = "value"
+tracks/4/path = NodePath("Facing/BodyPivot:modulate")
+tracks/4/interp = 1
+tracks/4/keys = {"times":PackedFloat32Array(0),"transitions":PackedFloat32Array(1),"update":0,"values":[Color(1,1,1,1)]}
+tracks/5/type = "value"
+tracks/5/path = NodePath("Facing/BodyPivot/ToolSocket/WeaponPivot:rotation")
+tracks/5/interp = 1
+tracks/5/keys = {"times":PackedFloat32Array(0),"transitions":PackedFloat32Array(1),"update":0,"values":[0.0]}
+
+[sub_resource type="Animation" id="Anim_crew_idle"]
+resource_name = "crew_idle"
+length = 3.6
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/path = NodePath("Facing/BodyPivot/ToolSocket/WeaponPivot:rotation")
+tracks/0/interp = 1
+tracks/0/keys = {"times":PackedFloat32Array(0,1.8,3.6),"transitions":PackedFloat32Array(1,1,1),"update":0,"values":[0.02,-0.035,0.02]}
+
+[sub_resource type="Animation" id="Anim_idle"]
+resource_name = "idle"
+length = 3.2
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:stance_drop")
+tracks/0/interp = 1
+tracks/0/keys = {"times":PackedFloat32Array(0,1.6,3.2),"transitions":PackedFloat32Array(1,1,1),"update":0,"values":[0.0,0.9,0.0]}
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:pose_rotation")
+tracks/1/interp = 1
+tracks/1/keys = {"times":PackedFloat32Array(0,1.6,3.2),"transitions":PackedFloat32Array(1,1,1),"update":0,"values":[-0.006,0.006,-0.006]}
+
+[sub_resource type="Animation" id="Anim_ready"]
+resource_name = "ready"
+length = 1
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:stance_drop")
+tracks/0/interp = 1
+tracks/0/keys = {"times":PackedFloat32Array(0,0.5,1),"transitions":PackedFloat32Array(1,1,1),"update":0,"values":[2.0,3.0,2.0]}
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:pose_rotation")
+tracks/1/interp = 1
+tracks/1/keys = {"times":PackedFloat32Array(0,0.5,1),"transitions":PackedFloat32Array(1,1,1),"update":0,"values":[-0.05,-0.08,-0.05]}
+
+[sub_resource type="Animation" id="Anim_wader_ready"]
+resource_name = "wader_ready"
+length = 0.9
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:action_displacement")
+tracks/0/interp = 1
+tracks/0/keys = {"times":PackedFloat32Array(0,0.45,0.9),"transitions":PackedFloat32Array(1,1,1),"update":0,"values":[-3.0,-5.0,-3.0]}
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:stance_drop")
+tracks/1/interp = 1
+tracks/1/keys = {"times":PackedFloat32Array(0,0.45,0.9),"transitions":PackedFloat32Array(1,1,1),"update":0,"values":[3.0,4.0,3.0]}
+tracks/2/type = "value"
+tracks/2/path = NodePath(".:pose_rotation")
+tracks/2/interp = 1
+tracks/2/keys = {"times":PackedFloat32Array(0,0.45,0.9),"transitions":PackedFloat32Array(1,1,1),"update":0,"values":[-0.07,-0.11,-0.07]}
+
+[sub_resource type="Animation" id="Anim_crab_ready"]
+resource_name = "crab_ready"
+length = 1.3
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/path = NodePath("Facing/BodyPivot:scale")
+tracks/0/interp = 1
+tracks/0/keys = {"times":PackedFloat32Array(0,0.65,1.3),"transitions":PackedFloat32Array(1,1,1),"update":0,"values":[Vector2(1.08,0.93),Vector2(1.12,0.9),Vector2(1.08,0.93)]}
+
+[sub_resource type="Animation" id="Anim_diver_ready"]
+resource_name = "diver_ready"
+length = 1.6
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/path = NodePath("Facing/BodyPivot:scale")
+tracks/0/interp = 1
+tracks/0/keys = {"times":PackedFloat32Array(0,0.8,1.6),"transitions":PackedFloat32Array(1,1,1),"update":0,"values":[Vector2(1.04,0.97),Vector2(1.06,0.95),Vector2(1.04,0.97)]}
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:action_displacement")
+tracks/1/interp = 1
+tracks/1/keys = {"times":PackedFloat32Array(0,0.8,1.6),"transitions":PackedFloat32Array(1,1,1),"update":0,"values":[-2.0,-3.0,-2.0]}
+
+[sub_resource type="Animation" id="Anim_crew_step"]
+resource_name = "crew_step"
+length = 0.22
+tracks/0/type = "value"
+tracks/0/path = NodePath("Facing/BodyPivot/ToolSocket/WeaponPivot:rotation")
+tracks/0/interp = 1
+tracks/0/keys = {"times":PackedFloat32Array(0,0.07,0.12,0.22),"transitions":PackedFloat32Array(1,1,1,1),"update":0,"values":[-0.18,0.12,-0.12,0.0]}
+tracks/1/type = "method"
+tracks/1/path = NodePath(".")
+tracks/1/keys = {"times":PackedFloat32Array(0.105),"transitions":PackedFloat32Array(1),"values":[{"method":&"_land_next_contact","args":[]}]}
+
+[sub_resource type="Animation" id="Anim_step"]
+resource_name = "step"
+length = 0.22
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:stance_drop")
+tracks/0/interp = 1
+tracks/0/keys = {"times":PackedFloat32Array(0,0.08,0.17,0.22),"transitions":PackedFloat32Array(1,1,1,1),"update":0,"values":[1.0,-2.0,1.0,0.0]}
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:pose_rotation")
+tracks/1/interp = 1
+tracks/1/keys = {"times":PackedFloat32Array(0,0.1,0.22),"transitions":PackedFloat32Array(1,1,1),"update":0,"values":[-0.035,0.035,0.0]}
+
+[sub_resource type="Animation" id="Anim_crew_attack"]
+resource_name = "crew_attack"
+length = 0.36
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:action_displacement")
+tracks/0/interp = 1
+tracks/0/keys = {"times":PackedFloat32Array(0,0.09,0.13,0.21,0.36),"transitions":PackedFloat32Array(1,1,1,1,1),"update":0,"values":[0.0,-5.0,7.0,3.0,0.0]}
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:stance_drop")
+tracks/1/interp = 1
+tracks/1/keys = {"times":PackedFloat32Array(0,0.09,0.13,0.36),"transitions":PackedFloat32Array(1,1,1,1),"update":0,"values":[0.0,1.5,0.0,0.0]}
+tracks/2/type = "value"
+tracks/2/path = NodePath(".:pose_rotation")
+tracks/2/interp = 1
+tracks/2/keys = {"times":PackedFloat32Array(0,0.09,0.13,0.36),"transitions":PackedFloat32Array(1,1,1,1),"update":0,"values":[0.0,-0.035,0.04,0.0]}
+tracks/3/type = "value"
+tracks/3/path = NodePath("Facing/BodyPivot/ToolSocket/WeaponPivot:rotation")
+tracks/3/interp = 1
+tracks/3/keys = {"times":PackedFloat32Array(0,0.09,0.13,0.23,0.36),"transitions":PackedFloat32Array(1,1,1,1,1),"update":0,"values":[0.0,-2.05,-0.65,-0.4,0.0]}
+tracks/4/type = "method"
+tracks/4/path = NodePath(".")
+tracks/4/keys = {"times":PackedFloat32Array(0.105,0.3),"transitions":PackedFloat32Array(1,1),"values":[{"method":&"_action_contact","args":[]},{"method":&"_restore_contact","args":[]}]}
+
+[sub_resource type="Animation" id="Anim_attack"]
+resource_name = "attack"
+length = 0.36
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:action_displacement")
+tracks/0/interp = 1
+tracks/0/keys = {"times":PackedFloat32Array(0,0.1,0.14,0.25,0.36),"transitions":PackedFloat32Array(1,1,1,1,1),"update":0,"values":[0.0,-6.0,12.0,5.0,0.0]}
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:pose_rotation")
+tracks/1/interp = 1
+tracks/1/keys = {"times":PackedFloat32Array(0,0.1,0.14,0.36),"transitions":PackedFloat32Array(1,1,1,1),"update":0,"values":[0.0,-0.13,0.13,0.0]}
+
+[sub_resource type="Animation" id="Anim_crab_attack"]
+resource_name = "crab_attack"
+length = 0.29
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:action_displacement")
+tracks/0/interp = 1
+tracks/0/keys = {"times":PackedFloat32Array(0,0.08,0.12,0.19,0.29),"transitions":PackedFloat32Array(1,1,1,1,1),"update":0,"values":[0.0,-4.0,13.0,4.0,0.0]}
+tracks/1/type = "value"
+tracks/1/path = NodePath("Facing/BodyPivot:scale")
+tracks/1/interp = 1
+tracks/1/keys = {"times":PackedFloat32Array(0,0.08,0.12,0.29),"transitions":PackedFloat32Array(1,1,1,1),"update":0,"values":[Vector2(1,1),Vector2(1.2,0.81),Vector2(0.94,1.04),Vector2(1,1)]}
+
+[sub_resource type="Animation" id="Anim_wader_attack"]
+resource_name = "wader_attack"
+length = 0.39
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:action_displacement")
+tracks/0/interp = 1
+tracks/0/keys = {"times":PackedFloat32Array(0,0.12,0.16,0.25,0.39),"transitions":PackedFloat32Array(1,1,1,1,1),"update":0,"values":[0.0,-10.0,17.0,7.0,0.0]}
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:stance_drop")
+tracks/1/interp = 1
+tracks/1/keys = {"times":PackedFloat32Array(0,0.12,0.16,0.39),"transitions":PackedFloat32Array(1,1,1,1),"update":0,"values":[0.0,4.0,-2.0,0.0]}
+tracks/2/type = "value"
+tracks/2/path = NodePath(".:pose_rotation")
+tracks/2/interp = 1
+tracks/2/keys = {"times":PackedFloat32Array(0,0.12,0.16,0.39),"transitions":PackedFloat32Array(1,1,1,1),"update":0,"values":[0.0,-0.12,0.14,0.0]}
+
+[sub_resource type="Animation" id="Anim_diver_attack"]
+resource_name = "diver_attack"
+length = 0.46
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:action_displacement")
+tracks/0/interp = 1
+tracks/0/keys = {"times":PackedFloat32Array(0,0.17,0.21,0.29,0.46),"transitions":PackedFloat32Array(1,1,1,1,1),"update":0,"values":[0.0,-6.0,12.0,7.0,0.0]}
+tracks/1/type = "value"
+tracks/1/path = NodePath("Facing/BodyPivot:scale")
+tracks/1/interp = 1
+tracks/1/keys = {"times":PackedFloat32Array(0,0.17,0.21,0.46),"transitions":PackedFloat32Array(1,1,1,1),"update":0,"values":[Vector2(1,1),Vector2(1.06,1.04),Vector2(1.1,0.9),Vector2(1,1)]}
+tracks/2/type = "value"
+tracks/2/path = NodePath(".:pose_rotation")
+tracks/2/interp = 1
+tracks/2/keys = {"times":PackedFloat32Array(0,0.17,0.21,0.46),"transitions":PackedFloat32Array(1,1,1,1),"update":0,"values":[0.0,-0.075,0.075,0.0]}
+
+[sub_resource type="Animation" id="Anim_hurt"]
+resource_name = "hurt"
+length = 0.29
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:action_displacement")
+tracks/0/interp = 1
+tracks/0/keys = {"times":PackedFloat32Array(0,0.045,0.12,0.29),"transitions":PackedFloat32Array(1,1,1,1),"update":0,"values":[0.0,8.0,-2.0,0.0]}
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:pose_rotation")
+tracks/1/interp = 1
+tracks/1/keys = {"times":PackedFloat32Array(0,0.045,0.12,0.29),"transitions":PackedFloat32Array(1,1,1,1),"update":0,"values":[0.0,0.06,-0.015,0.0]}
+tracks/2/type = "value"
+tracks/2/path = NodePath("Facing/BodyPivot:scale")
+tracks/2/interp = 1
+tracks/2/keys = {"times":PackedFloat32Array(0,0.045,0.29),"transitions":PackedFloat32Array(1,1,1),"update":0,"values":[Vector2(1,1),Vector2(1.02,0.96),Vector2(1,1)]}
+tracks/3/type = "value"
+tracks/3/path = NodePath("Facing/BodyPivot:modulate")
+tracks/3/interp = 1
+tracks/3/keys = {"times":PackedFloat32Array(0,0.035,0.1,0.29),"transitions":PackedFloat32Array(1,1,1,1),"update":0,"values":[Color(1,1,1,1),Color(1.8,0.9,0.7,1),Color(1.1,0.8,0.72,1),Color(1,1,1,1)]}
+tracks/4/type = "value"
+tracks/4/path = NodePath("Facing/BodyPivot/ToolSocket/WeaponPivot:rotation")
+tracks/4/interp = 1
+tracks/4/keys = {"times":PackedFloat32Array(0,0.05,0.29),"transitions":PackedFloat32Array(1,1,1),"update":0,"values":[0.0,0.7,0.0]}
+
+[sub_resource type="Animation" id="Anim_arrival"]
+resource_name = "arrival"
+length = 0.62
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:action_displacement")
+tracks/0/interp = 1
+tracks/0/keys = {"times":PackedFloat32Array(0,0.15,0.3,0.62),"transitions":PackedFloat32Array(1,1,1,1),"update":0,"values":[-2.0,2.0,0.0,0.0]}
+tracks/1/type = "value"
+tracks/1/path = NodePath("Facing/BodyPivot/ToolSocket/WeaponPivot:rotation")
+tracks/1/interp = 1
+tracks/1/keys = {"times":PackedFloat32Array(0,0.15,0.35,0.62),"transitions":PackedFloat32Array(1,1,1,1),"update":0,"values":[-0.35,-0.65,-0.35,-0.4]}
+tracks/2/type = "value"
+tracks/2/path = NodePath(".:pose_rotation")
+tracks/2/interp = 1
+tracks/2/keys = {"times":PackedFloat32Array(0,0.15,0.62),"transitions":PackedFloat32Array(1,1,1),"update":0,"values":[0.0,-0.025,0.0]}
+tracks/3/type = "method"
+tracks/3/path = NodePath(".")
+tracks/3/keys = {"times":PackedFloat32Array(0.18,0.48),"transitions":PackedFloat32Array(1,1),"values":[{"method":&"_action_contact","args":[]},{"method":&"_restore_contact","args":[]}]}
+
+[sub_resource type="Animation" id="Anim_arrival_quiet"]
+resource_name = "arrival_quiet"
+length = 0.4
+tracks/0/type = "value"
+tracks/0/path = NodePath("Facing/BodyPivot/ToolSocket/WeaponPivot:rotation")
+tracks/0/interp = 1
+tracks/0/keys = {"times":PackedFloat32Array(0,0.4),"transitions":PackedFloat32Array(1,1),"update":0,"values":[0.0,-0.4]}
+
+[sub_resource type="Animation" id="Anim_loss"]
+resource_name = "loss"
+length = 0.55
+tracks/0/type = "value"
+tracks/0/path = NodePath("Facing/BodyPivot/ToolSocket/WeaponPivot:rotation")
+tracks/0/interp = 1
+tracks/0/keys = {"times":PackedFloat32Array(0,0.25,0.55),"transitions":PackedFloat32Array(1,1,1),"update":0,"values":[0.0,-0.35,-0.65]}
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:pose_rotation")
+tracks/1/interp = 1
+tracks/1/keys = {"times":PackedFloat32Array(0,0.25,0.55),"transitions":PackedFloat32Array(1,1,1),"update":0,"values":[0.0,0.06,0.08]}
+tracks/2/type = "value"
+tracks/2/path = NodePath("Facing/BodyPivot:scale")
+tracks/2/interp = 1
+tracks/2/keys = {"times":PackedFloat32Array(0,0.55),"transitions":PackedFloat32Array(1,1),"update":0,"values":[Vector2(1,1),Vector2(1.02,0.96)]}
+tracks/3/type = "value"
+tracks/3/path = NodePath("Facing/BodyPivot:modulate")
+tracks/3/interp = 1
+tracks/3/keys = {"times":PackedFloat32Array(0,0.55),"transitions":PackedFloat32Array(1,1),"update":0,"values":[Color(1,1,1,1),Color(0.86,0.9,0.94,1)]}
+
+[sub_resource type="AnimationLibrary" id="AnimLibrary"]
+_data = {&"RESET":SubResource("Anim_RESET"), &"crew_idle":SubResource("Anim_crew_idle"), &"idle":SubResource("Anim_idle"), &"ready":SubResource("Anim_ready"), &"wader_ready":SubResource("Anim_wader_ready"), &"crab_ready":SubResource("Anim_crab_ready"), &"diver_ready":SubResource("Anim_diver_ready"), &"crew_step":SubResource("Anim_crew_step"), &"step":SubResource("Anim_step"), &"crew_attack":SubResource("Anim_crew_attack"), &"attack":SubResource("Anim_attack"), &"crab_attack":SubResource("Anim_crab_attack"), &"wader_attack":SubResource("Anim_wader_attack"), &"diver_attack":SubResource("Anim_diver_attack"), &"hurt":SubResource("Anim_hurt"), &"arrival":SubResource("Anim_arrival"), &"arrival_quiet":SubResource("Anim_arrival_quiet"), &"loss":SubResource("Anim_loss")}
+
+[node name="Actor" type="Node2D"]
+y_sort_enabled = true
+script = ExtResource("1_actor")
+
+[node name="Shadow" type="Polygon2D" parent="."]
+position = Vector2(3,21)
+color = Color(0.12,0.34,0.37,0.25)
+polygon = PackedVector2Array(-22,0,-18,-7,0,-10,18,-7,22,0,18,7,0,10,-18,7)
+z_index = -1
+
+[node name="GroundRing" type="Line2D" parent="."]
+position = Vector2(0,19)
+points = PackedVector2Array(-23,0,-18,-9,0,-12,18,-9,23,0,18,9,0,12,-18,9,-23,0)
+width = 2.5
+default_color = Color(0.1,0.61,0.66,0.95)
+antialiased = true
+
+[node name="Facing" type="Node2D" parent="."]
+position = Vector2(0,19)
+
+[node name="BodyPivot" type="Node2D" parent="Facing"]
+
+[node name="Sprite" type="Sprite2D" parent="Facing/BodyPivot"]
+texture_filter = 2
+
+[node name="Crew" type="AnimatedSprite2D" parent="Facing/BodyPivot"]
+visible = false
+offset = Vector2(0,-144)
+scale = Vector2(0.3263889,0.3263889)
+texture_filter = 2
+
+[node name="ToolSocket" type="Node2D" parent="Facing/BodyPivot"]
+visible = false
+
+[node name="WeaponPivot" type="Node2D" parent="Facing/BodyPivot/ToolSocket"]
+scale = Vector2(0.72,0.72)
+
+[node name="BladeOutline" type="Polygon2D" parent="Facing/BodyPivot/ToolSocket/WeaponPivot"]
+polygon = PackedVector2Array(1,-3,13,-3,22,-1,25,-6,28,-6,27,1,22,5,11,3,1,3)
+color = Color(0.19,0.29,0.3,1)
+
+[node name="Blade" type="Polygon2D" parent="Facing/BodyPivot/ToolSocket/WeaponPivot"]
+polygon = PackedVector2Array(4,-1.5,13,-1.5,23,0,26,-3,25,1,22,3,12,1.5,4,1.5)
+color = Color(0.88,0.93,0.83,1)
+
+[node name="Edge" type="Line2D" parent="Facing/BodyPivot/ToolSocket/WeaponPivot"]
+points = PackedVector2Array(6,-1,14,-1,23,0)
+width = 1.1
+default_color = Color(1,0.99,0.84,1)
+antialiased = true
+
+[node name="Grip" type="Line2D" parent="Facing/BodyPivot/ToolSocket/WeaponPivot"]
+points = PackedVector2Array(-4,0,4,0)
+width = 4.4
+default_color = Color(0.42,0.31,0.22,1)
+antialiased = true
+
+[node name="Guard" type="Line2D" parent="Facing/BodyPivot/ToolSocket/WeaponPivot"]
+points = PackedVector2Array(4,-4,4,4)
+width = 2.2
+default_color = Color(0.9,0.69,0.31,1)
+antialiased = true
+
+[node name="HandCover" type="Polygon2D" parent="Facing/BodyPivot/ToolSocket/WeaponPivot"]
+polygon = PackedVector2Array(-3,-2,0,-3,3,-1,3,2,0,3,-3,2)
+color = Color(0.29,0.25,0.21,1)
+
+[node name="HealthBack" type="Polygon2D" parent="."]
+visible = false
+position = Vector2(0,-76)
+color = Color(0.14,0.3,0.34,0.95)
+polygon = PackedVector2Array(-22,-5,22,-5,22,5,-22,5)
+z_index = 8
+
+[node name="HealthFill" type="Polygon2D" parent="."]
+visible = false
+position = Vector2(0,-76)
+color = Color(0.96,0.48,0.36,1)
+polygon = PackedVector2Array(-19,-2,19,-2,19,2,-19,2)
+z_index = 9
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {&"":SubResource("AnimLibrary")}

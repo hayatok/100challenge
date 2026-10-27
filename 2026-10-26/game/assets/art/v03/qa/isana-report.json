@@ -1,0 +1,165 @@
+{
+  "name": "isana",
+  "source": "2026-10-26/.scratch/versions/v03/art/originals/isana-sixposes-02.png",
+  "dimensions": [
+    1536,
+    1024
+  ],
+  "mode": "RGBA",
+  "alphaZeroFraction": 0.6480394999186198,
+  "alphaMax": 254,
+  "isolationNote": "six isolated connected source silhouettes",
+  "poses": [
+    {
+      "pose": "down_left",
+      "file": "normalized/isana_down_left.png",
+      "sourceSlot": [
+        0,
+        0,
+        512,
+        512
+      ],
+      "sourceVisibleBounds": [
+        200,
+        6,
+        498,
+        506
+      ],
+      "canvas": [
+        320,
+        320
+      ],
+      "visibleHeight": 288,
+      "footOrigin": [
+        160,
+        304
+      ]
+    },
+    {
+      "pose": "up_left",
+      "file": "normalized/isana_up_left.png",
+      "sourceSlot": [
+        512,
+        0,
+        1024,
+        512
+      ],
+      "sourceVisibleBounds": [
+        643,
+        7,
+        924,
+        507
+      ],
+      "canvas": [
+        320,
+        320
+      ],
+      "visibleHeight": 288,
+      "footOrigin": [
+        160,
+        304
+      ]
+    },
+    {
+      "pose": "side_left",
+      "file": "normalized/isana_side_left.png",
+      "sourceSlot": [
+        1024,
+        0,
+        1536,
+        512
+      ],
+      "sourceVisibleBounds": [
+        1076,
+        6,
+        1391,
+        497
+      ],
+      "canvas": [
+        320,
+        320
+      ],
+      "visibleHeight": 288,
+      "footOrigin": [
+        160,
+        304
+      ]
+    },
+    {
+      "pose": "down_right",
+      "file": "normalized/isana_down_right.png",
+      "sourceSlot": [
+        0,
+        512,
+        512,
+        1024
+      ],
+      "sourceVisibleBounds": [
+        178,
+        511,
+        472,
+        1006
+      ],
+      "canvas": [
+        320,
+        320
+      ],
+      "visibleHeight": 288,
+      "footOrigin": [
+        160,
+        304
+      ]
+    },
+    {
+      "pose": "up_right",
+      "file": "normalized/isana_up_right.png",
+      "sourceSlot": [
+        512,
+        512,
+        1024,
+        1024
+      ],
+      "sourceVisibleBounds": [
+        605,
+        511,
+        896,
+        1006
+      ],
+      "canvas": [
+        320,
+        320
+      ],
+      "visibleHeight": 288,
+      "footOrigin": [
+        160,
+        304
+      ]
+    },
+    {
+      "pose": "side_right",
+      "file": "normalized/isana_side_right.png",
+      "sourceSlot": [
+        1024,
+        512,
+        1536,
+        1024
+      ],
+      "sourceVisibleBounds": [
+        1065,
+        513,
+        1474,
+        999
+      ],
+      "canvas": [
+        320,
+        320
+      ],
+      "visibleHeight": 288,
+      "footOrigin": [
+        160,
+        304
+      ]
+    }
+  ],
+  "status": "source QA only; not an in-game motion validation"
+}

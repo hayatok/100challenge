@@ -259,5 +259,15 @@
     "category": "3D滑走ゲーム",
     "thumbnail": "thumbnail.jpg",
     "accent": "#168b8c"
+  },
+  {
+    "id": "2026-10-26",
+    "date": "2026-10-26",
+    "sequence": 1,
+    "name": "潮還り / SHIOGAERI",
+    "description": "4人の回収屋から一人を選び、潮に沈む街へ。一手ずつ戦い、道具を使い、戦利品を港へ持ち帰る探索ゲーム。倒れると携行品をすべて失う。",
+    "category": "ターン制・探索ローグライク",
+    "thumbnail": "shiogaeri-cover.png",
+    "accent": "#e4b36b"
   }
 ]

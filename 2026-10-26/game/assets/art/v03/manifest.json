@@ -1,0 +1,752 @@
+{
+  "schemaVersion": 1,
+  "status": "Imported approved24-pose family; native actor clips and actual rules-driven game motion inspected. Combined Web/release verification is owned by parent integrator.",
+  "tool": "OpenAI built-in image_gen.imagegen",
+  "budget": {
+    "originalSheets": 4,
+    "correctiveEdits": 2,
+    "usedOriginals": 4,
+    "usedCorrections": 3,
+    "exceptionalSuiCorrection": 1,
+    "totalCap": 7,
+    "initialCap": 6
+  },
+  "generationEntries": [
+    {
+      "id": "isana-original",
+      "sourcePath": "/Users/hayatok/.codex/generated_images/01a17e17-1b7f-7173-a297-e71d7cbc436b/exec-712dd96f-70f7-446e-a6e6-b554f5975f23.png",
+      "localOriginal": "originals/isana-sixposes-01.png",
+      "promptFile": "prompts/isana-prompt.txt",
+      "prompt": "Use case: stylized-concept\nAsset type: game animation sprite sheet with actual transparent background, not a presentation board.\nPrimary request: Draw exactly SIX isolated full-body poses of the SAME adult female recovery worker Isana in a two-row, three-column sheet. These are directional alternating walking CONTACT poses for a hand-painted anime adventure game, viewed from a slightly overhead orthographic 2D camera, approximately 3.5-head game proportions. They must be usable as paired walking animation frames, with visibly different legs, arm counter-swing, coat hem and ponytail.\nInput images: Image1 is the current Isana game miniature: primary STYLE, COSTUME, PALETTE, FACE and PROPORTIONS reference. Image2 is her adult portrait: secondary identity and costume detail only. Preserve recognizable chestnut ponytail with teal ribbon, amber-brown eyes, ochre-yellow coat, teal scarf accents, cream shirt, dark trousers, leather gloves, sturdy brown boots and compact brown satchel. Adult face and adult identity even at simplified game scale. Do not copy the portrait's tall realistic proportions.\nComposition: evenly spaced 3 columns ×2 rows, six full bodies on genuine transparent RGBA, no frames or dividing lines, generous clear padding between them. Consistent approximately same height, head size and baseline within each row. Full figure entirely inside its slot. TOP LEFT: facing DOWN toward viewer, LEFT foot forward in planted contact, right foot trailing, right arm forward. BOTTOM LEFT: same down-facing character, RIGHT foot forward in planted contact, left foot trailing, left arm forward. TOP MIDDLE: facing UP away from viewer, LEFT foot forward contact. BOTTOM MIDDLE: same up-facing character, RIGHT foot forward contact. TOP RIGHT: clean rightward SIDE profile, LEFT leg forward contact, right leg back. BOTTOM RIGHT: same right-facing side profile, RIGHT leg forward contact, left leg back. Those three directional pairs are the entire image, exactly six sprites.\nPose: true purposeful walking at contact, visibly bent moving limbs and weight over planted foot, substantial left/right alternation, both boots clearly distinct and anatomically plausible; same body mass, face, hair, costume, equipment across frames. Keep hands empty in all poses for a separate game tool sprite; no held lantern, no sword, no built-in weapon. Gloves and both hands readable. Satchel remains at consistent hip and supports stride. No jumping, no wide action attacks, no identical neutral standing copies. No floor or contact shadow.\nStyle: polished bright hand-painted anime adventure illustration matching the miniature, confident dark-brown outlines, simplified luminous material planes, limited fine texture, sunlight upper left. Clear silhouette and distinct boots readable at 94 pixels tall.\nTechnical: landscape transparent RGBA sprite sheet approximately1536×1024, three evenly spaced columns and two rows. No scenery, no gradient backdrop, no white background, no checkerboard painted into image, no text, letters, labels, logos or watermark. Keep all transparent padding genuinely empty. Only the six requested character sprites.\n"
+    },
+    {
+      "id": "isana-correction",
+      "sourcePath": "/Users/hayatok/.codex/generated_images/01a17e17-1b7f-7173-a297-e71d7cbc436b/exec-a0b78f97-ace5-44af-b0c1-3a25c6ffdb52.png",
+      "localOriginal": "originals/isana-sixposes-02.png",
+      "promptFile": "prompts/isana-correction-prompt.txt",
+      "prompt": "Use case: precise-object-edit. Correct this transparent six-pose Isana walking sheet for true alternating contact frames. Keep the TOP ROW and all spacing, framing, transparent background, adult identity, chestnut ponytail/teal ribbon, ochre coat, teal accents, cream shirt, dark pants, satchel, lighting, line weight and body proportions unchanged. Change ONLY the BOTTOM ROW walking poses: each bottom sprite must show the OPPOSITE leading physical leg and OPPOSITE arm counter-swing from the sprite directly above it. This is a walking animation contact swap, not a duplicate stance or a small hair variation. Bottom LEFT front-view sprite: put her foreground planted boot and extended leg clearly on the VIEWER'S LEFT side, and put the other boot/trailing leg behind on VIEWER'S RIGHT; right arm back, left arm forward in opposition to the actual legs. Bottom MIDDLE back-view sprite: put the extended far/forward boot on VIEWER'S RIGHT side, with the other leg visibly trailing, swap arm swing relative to the top back view. Bottom RIGHT right-facing side sprite: near leg must trail clearly toward LEFT while the far leg extends forward toward RIGHT; near arm swings FORWARD to RIGHT and far arm BACK to LEFT. Make the knee bends, boot overlaps and coat hem visually resolve which leg is in front. Both boots must remain clean distinct forms. Same body mass and head size, genuinely opaque character pixels with antialiased transparent edges, absolutely transparent empty background. No new objects, no weapons, no held lantern, no text or shadows. Exactly six complete isolated sprites, threecolumns andtworows asinput.\n"
+    },
+    {
+      "id": "ritsu-original",
+      "sourcePath": "/Users/hayatok/.codex/generated_images/01a17e17-1b7f-7173-a297-e71d7cbc436b/exec-d5c2fc0d-0f8e-4579-97c7-333c691bbbb7.png",
+      "localOriginal": "originals/ritsu-sixposes-01.png",
+      "promptFile": "prompts/ritsu-prompt.txt",
+      "prompt": "Use case: stylized-concept\nAsset type: transparent directional walking sprite sheet for SHIOGAERI, exactly six isolated full-body sprites.\nReferences: Image 1 is the accepted Isana SHEET: copy its three facing columns, two alternating contact rows, camera angle, line weight, bright hand-painted anime game style and field proportions only. Do NOT copy her face, hair or clothes. Image 2 is Ritsu's current game miniature: PRIMARY identity/costume/color reference. Image 3 is her portrait: secondary adult identity reference. All reference women are adults. Draw ONLY Ritsu in all six poses.\nCharacter identity: silver asymmetrical bob, blue eyes, navy fitted salvage jumpsuit, bright red scarf, teal badge, dark gloves, brass harness and air tank backpack, dark sturdy boots, compact hip pouches. Preserve the same costume design, hair and adult face throughout, approximately 3.5-head field miniature proportions. Bright simplified readable material planes, controlled detail, upper-left sunny light. No dark background.\nLayout: 1536 by 1024 landscape, three even columns and two rows with generous transparent gaps. TOP LEFT: DOWN toward camera, left foot forward contact. BOTTOM LEFT: DOWN, opposite right foot forward contact, visibly opposing legs and arms. TOP MIDDLE: UP away from camera, left foot forward contact. BOTTOM MIDDLE: UP, opposite right foot forward contact. TOP RIGHT: clean RIGHTWARD SIDE profile, near leg forward and near arm back. BOTTOM RIGHT: SAME rightward side profile, near leg BACK and near arm FORWARD, far leg forward. Exactly those six sprites. BOTH physical legs change stance between each pair: no same leading leg twice; alternate knee bends, boot overlaps, shoulder/arm counter-swing and cloth/hair settling. The planted boot in the DOWN pair must clearly change from viewer right to viewer left. The planted boot in UP pair changes from viewer left to viewer right. Same head size, body mass and baseline throughout. Full figures with both boots inside image, no clipping.\nHands EMPTY so engine can attach a separate tool. Do not hold wrench, lantern, compass, gun or weapon; belt pouches and backpack are fine. No ground shadow. No scenery, symbols, circles, UI, numbers, letters, labels, signature or watermark. Real RGBA transparent background, no white board, checkerboard or gradient. Confident clean silhouette readable at 94 pixels tall. Preserve adult identity and body proportions of existing game miniature; do not create a child."
+    },
+    {
+      "id": "kohaku-original",
+      "sourcePath": "/Users/hayatok/.codex/generated_images/01a17e17-1b7f-7173-a297-e71d7cbc436b/exec-d249774f-1762-4d72-9fea-d4ea6452fa9f.png",
+      "localOriginal": "originals/kohaku-sixposes-01.png",
+      "promptFile": "prompts/kohaku-prompt.txt",
+      "prompt": "Use case: stylized-concept\nAsset type: transparent directional walking sprite sheet for SHIOGAERI, exactly six isolated full-body sprites.\nReferences: Image 1 is the accepted Isana SHEET: copy its three facing columns, two alternating contact rows, camera angle, line weight, bright hand-painted anime game style and field proportions only. Do NOT copy her face, hair or clothes. Image 2 is Kohaku's current game miniature: PRIMARY identity/costume/color reference. Image 3 is her portrait: secondary adult identity reference. All reference women are adults. Draw ONLY Kohaku in all six poses.\nCharacter identity: copper-orange curly hair, green eyes, warm brown skin preserved in every facing, brass goggles on head, rust orange mechanic overalls, cream rolled sleeve shirt, teal bandanna accent, brown gloves and sturdy brown work boots, compact tool pouch. Preserve the same costume design, hair and adult face throughout, approximately 3.5-head field miniature proportions. Bright simplified readable material planes, controlled detail, upper-left sunny light. No dark background.\nLayout: 1536 by 1024 landscape, three even columns and two rows with generous transparent gaps. TOP LEFT: DOWN toward camera, left foot forward contact. BOTTOM LEFT: DOWN, opposite right foot forward contact, visibly opposing legs and arms. TOP MIDDLE: UP away from camera, left foot forward contact. BOTTOM MIDDLE: UP, opposite right foot forward contact. TOP RIGHT: clean RIGHTWARD SIDE profile, near leg forward and near arm back. BOTTOM RIGHT: SAME rightward side profile, near leg BACK and near arm FORWARD, far leg forward. Exactly those six sprites. BOTH physical legs change stance between each pair: no same leading leg twice; alternate knee bends, boot overlaps, shoulder/arm counter-swing and cloth/hair settling. The planted boot in the DOWN pair must clearly change from viewer right to viewer left. The planted boot in UP pair changes from viewer left to viewer right. Same head size, body mass and baseline throughout. Full figures with both boots inside image, no clipping.\nHands EMPTY so engine can attach a separate tool. Do not hold wrench, lantern, compass, gun or weapon; belt pouches and backpack are fine. No ground shadow. No scenery, symbols, circles, UI, numbers, letters, labels, signature or watermark. Real RGBA transparent background, no white board, checkerboard or gradient. Confident clean silhouette readable at 94 pixels tall. Preserve adult identity and body proportions of existing game miniature; do not create a child.\nCRITICAL CONTACT GEOMETRY: In the TOP LEFT front-facing sprite, extend the boot on the VIEWER RIGHT forward and make the other boot trail to viewer LEFT. In the BOTTOM LEFT front-facing sprite, extend the boot on the VIEWER LEFT forward and make the other boot trail to viewer RIGHT. The front pair must show the foreground shin/boot on DIFFERENT SCREEN SIDES. Do not draw the same leading leg in both. In TOP MIDDLE back-facing sprite, the extended sole is on VIEWER LEFT; in BOTTOM MIDDLE back-facing sprite, the extended sole is on VIEWER RIGHT. Use these exact opposite screen-side arrangements, matching Isana reference.\n"
+    },
+    {
+      "id": "sui-original",
+      "sourcePath": "/Users/hayatok/.codex/generated_images/01a17e17-1b7f-7173-a297-e71d7cbc436b/exec-5fc0674c-d862-47e0-bea5-7db157467320.png",
+      "localOriginal": "originals/sui-sixposes-01.png",
+      "promptFile": "prompts/sui-prompt.txt",
+      "prompt": "Use case: stylized-concept\nAsset type: transparent directional walking sprite sheet for SHIOGAERI, exactly six isolated full-body sprites.\nReferences: Image 1 is the accepted Isana SHEET: copy its three facing columns, two alternating contact rows, camera angle, line weight, bright hand-painted anime game style and field proportions only. Do NOT copy her face, hair or clothes. Image 2 is Sui's current game miniature: PRIMARY identity/costume/color reference. Image 3 is her portrait: secondary adult identity reference. All reference women are adults. Draw ONLY Sui in all six poses.\nCharacter identity: long flowing black hair with teal ribbon, violet eyes, ivory long expedition coat, teal tunic and scarf, dark trousers, brown sturdy boots, satchel and rolled chart. Preserve the same costume design, hair and adult face throughout, approximately 3.5-head field miniature proportions. Bright simplified readable material planes, controlled detail, upper-left sunny light. No dark background.\nLayout: 1536 by 1024 landscape, three even columns and two rows with generous transparent gaps. TOP LEFT: DOWN toward camera, left foot forward contact. BOTTOM LEFT: DOWN, opposite right foot forward contact, visibly opposing legs and arms. TOP MIDDLE: UP away from camera, left foot forward contact. BOTTOM MIDDLE: UP, opposite right foot forward contact. TOP RIGHT: clean RIGHTWARD SIDE profile, near leg forward and near arm back. BOTTOM RIGHT: SAME rightward side profile, near leg BACK and near arm FORWARD, far leg forward. Exactly those six sprites. BOTH physical legs change stance between each pair: no same leading leg twice; alternate knee bends, boot overlaps, shoulder/arm counter-swing and cloth/hair settling. The planted boot in the DOWN pair must clearly change from viewer right to viewer left. The planted boot in UP pair changes from viewer left to viewer right. Same head size, body mass and baseline throughout. Full figures with both boots inside image, no clipping.\nHands EMPTY so engine can attach a separate tool. Do not hold wrench, lantern, compass, gun or weapon; belt pouches and backpack are fine. No ground shadow. No scenery, symbols, circles, UI, numbers, letters, labels, signature or watermark. Real RGBA transparent background, no white board, checkerboard or gradient. Confident clean silhouette readable at 94 pixels tall. Preserve adult identity and body proportions of existing game miniature; do not create a child.\nCRITICAL CONTACT GEOMETRY: In the TOP LEFT front-facing sprite, extend the boot on the VIEWER RIGHT forward and make the other boot trail to viewer LEFT. In the BOTTOM LEFT front-facing sprite, extend the boot on the VIEWER LEFT forward and make the other boot trail to viewer RIGHT. The front pair must show the foreground shin/boot on DIFFERENT SCREEN SIDES. Do not draw the same leading leg in both. In TOP MIDDLE back-facing sprite, the extended sole is on VIEWER LEFT; in BOTTOM MIDDLE back-facing sprite, the extended sole is on VIEWER RIGHT. Use these exact opposite screen-side arrangements, matching Isana reference.\n"
+    },
+    {
+      "id": "ritsu-correction",
+      "sourcePath": "/Users/hayatok/.codex/generated_images/01a17e17-1b7f-7173-a297-e71d7cbc436b/exec-55e5282b-f60b-4606-af81-7cf6b43fd17e.png",
+      "localOriginal": "originals/ritsu-sixposes-02.png",
+      "promptFile": "prompts/ritsu-correction-prompt.txt",
+      "prompt": "Use case: precise-object-edit. Correct ONLY the BOTTOM LEFT front-facing Ritsu sprite in this six-pose sprite sheet. The two front sprites currently repeat the same forward physical leg. Make the bottom-left sprite have the OPPOSITE physical leg extended forward: the knee and planted boot on VIEWER'S LEFT must be clearly forward/larger/lower in the image, while the boot on VIEWER'S RIGHT must trail behind/higher. Bring that left-screen knee out from the hip, and visibly swing the opposite arm forward and the other arm back. Match the exact opposite leg arrangement of the bottom-left Isana in image2, but preserve Ritsu's silver asymmetrical bob, blue eyes, adult face, navy salvage suit, red scarf, brass backpack tank, belt pouches and sturdy dark brass-trimmed boots. Same head size, same body mass, same light and linework. All other FIVE sprites must remain unchanged: preserve their positions, poses, costume, face, limbs and transparent padding. No text, floor, shadow, checkerboard or background; keep a genuinely transparent RGBA canvas. Exactly six isolated complete sprites, no additional content.\n"
+    },
+    {
+      "id": "sui-correction",
+      "sourcePath": "/Users/hayatok/.codex/generated_images/01a17e17-1b7f-7173-a297-e71d7cbc436b/exec-5fced28a-e897-4d7a-aa01-67f430c4e442.png",
+      "localOriginal": "originals/sui-sixposes-02.png",
+      "promptFile": "prompts/sui-correction-prompt.txt",
+      "prompt": "Use case: precise-object-edit. This is a technical isolation correction for the supplied six-pose Sui game animation sprite sheet. Keep the exact SAME adult Sui identity, long black hair/teal ribbon/violet eyes, ivory coat, teal clothes, satchel, every pose/facing/leading leg/arm swing, line weight, colors and lighting. Do NOT redesign her. Change ONLY layout scale and separation: uniformly reduce EACH of the SIX full figures to about 88% of its current size, preserving its proportions; center each in its own three-column/two-row slot. Canvas stays landscape1536x1024 with exactly six full characters. Put at least32pixels of fully transparent padding around every figure, and a clear fully transparent gap between top-row boot soles and bottom-row hair. Hair tips, coat tails, hands and both boots must all fit completely inside each figure's own cell. Nothing from one figure may touch or overlap another. Do not crop, erase or cut off any sole, toe, hair strand or clothing to achieve separation: actually scale down the entire intact figure. Preserve the six distinct walking contact motions exactly, especially the alternate leading leg in each directional pair. True transparent RGBA background, no painted checkerboard, no dark glow or scenery, no floor shadows. No text, labels, frames or extra objects. Production sprite sheet, not a concept board.\n",
+      "approval": "Parent explicitly approved seventh call after rejecting seam-trim draft, 2026-10-28 JST"
+    }
+  ],
+  "selected": {
+    "isana": "originals/isana-sixposes-02.png",
+    "ritsu": "originals/ritsu-sixposes-02.png",
+    "kohaku": "originals/kohaku-sixposes-01.png",
+    "sui": "originals/sui-sixposes-02.png"
+  },
+  "normalization": "Six measured connected silhouettes per selected source;320x320 output,288px visible art,baseline304. normalize_sheet.py stored with source QA.",
+  "knownLimitations": [
+    "Two contact poses per facing; no passing-pose source frame. Timing, visible tool and weight shifts are authored in editable Godot clips. Source QA alone does not establish convincing in-game motion.",
+    "Source art keeps simplified field proportions and established adult identities; portraits remain separate assets."
+  ],
+  "rights": "Generated project assets with OpenAI built-in tool; no external artist/game references. Preserve original files and provenance. Applicable OpenAI terms govern use.",
+  "rejectedDrafts": [
+    "Sui original sheet has touching soles/hair. Earlier measured seam-split draft rejected, never imported; corrected seventh-call source normalized without seam clipping."
+  ],
+  "sourceReports": [
+    {
+      "name": "isana",
+      "source": "2026-10-26/.scratch/versions/v03/art/originals/isana-sixposes-02.png",
+      "dimensions": [
+        1536,
+        1024
+      ],
+      "mode": "RGBA",
+      "alphaZeroFraction": 0.6480394999186198,
+      "alphaMax": 254,
+      "isolationNote": "six isolated connected source silhouettes",
+      "poses": [
+        {
+          "pose": "down_left",
+          "file": "crew/isana_down_left.png",
+          "sourceSlot": [
+            0,
+            0,
+            512,
+            512
+          ],
+          "sourceVisibleBounds": [
+            200,
+            6,
+            498,
+            506
+          ],
+          "canvas": [
+            320,
+            320
+          ],
+          "visibleHeight": 288,
+          "footOrigin": [
+            160,
+            304
+          ]
+        },
+        {
+          "pose": "up_left",
+          "file": "crew/isana_up_left.png",
+          "sourceSlot": [
+            512,
+            0,
+            1024,
+            512
+          ],
+          "sourceVisibleBounds": [
+            643,
+            7,
+            924,
+            507
+          ],
+          "canvas": [
+            320,
+            320
+          ],
+          "visibleHeight": 288,
+          "footOrigin": [
+            160,
+            304
+          ]
+        },
+        {
+          "pose": "side_left",
+          "file": "crew/isana_side_left.png",
+          "sourceSlot": [
+            1024,
+            0,
+            1536,
+            512
+          ],
+          "sourceVisibleBounds": [
+            1076,
+            6,
+            1391,
+            497
+          ],
+          "canvas": [
+            320,
+            320
+          ],
+          "visibleHeight": 288,
+          "footOrigin": [
+            160,
+            304
+          ]
+        },
+        {
+          "pose": "down_right",
+          "file": "crew/isana_down_right.png",
+          "sourceSlot": [
+            0,
+            512,
+            512,
+            1024
+          ],
+          "sourceVisibleBounds": [
+            178,
+            511,
+            472,
+            1006
+          ],
+          "canvas": [
+            320,
+            320
+          ],
+          "visibleHeight": 288,
+          "footOrigin": [
+            160,
+            304
+          ]
+        },
+        {
+          "pose": "up_right",
+          "file": "crew/isana_up_right.png",
+          "sourceSlot": [
+            512,
+            512,
+            1024,
+            1024
+          ],
+          "sourceVisibleBounds": [
+            605,
+            511,
+            896,
+            1006
+          ],
+          "canvas": [
+            320,
+            320
+          ],
+          "visibleHeight": 288,
+          "footOrigin": [
+            160,
+            304
+          ]
+        },
+        {
+          "pose": "side_right",
+          "file": "crew/isana_side_right.png",
+          "sourceSlot": [
+            1024,
+            512,
+            1536,
+            1024
+          ],
+          "sourceVisibleBounds": [
+            1065,
+            513,
+            1474,
+            999
+          ],
+          "canvas": [
+            320,
+            320
+          ],
+          "visibleHeight": 288,
+          "footOrigin": [
+            160,
+            304
+          ]
+        }
+      ],
+      "status": "source QA only; not an in-game motion validation"
+    },
+    {
+      "name": "ritsu",
+      "source": "2026-10-26/.scratch/versions/v03/art/originals/ritsu-sixposes-02.png",
+      "dimensions": [
+        1536,
+        1024
+      ],
+      "mode": "RGBA",
+      "alphaZeroFraction": 0.6480693817138672,
+      "alphaMax": 254,
+      "isolationNote": "six isolated connected source silhouettes",
+      "poses": [
+        {
+          "pose": "down_left",
+          "file": "crew/ritsu_down_left.png",
+          "sourceSlot": [
+            0,
+            0,
+            512,
+            512
+          ],
+          "sourceVisibleBounds": [
+            161,
+            9,
+            468,
+            509
+          ],
+          "canvas": [
+            320,
+            320
+          ],
+          "visibleHeight": 288,
+          "footOrigin": [
+            160,
+            304
+          ]
+        },
+        {
+          "pose": "up_left",
+          "file": "crew/ritsu_up_left.png",
+          "sourceSlot": [
+            512,
+            0,
+            1024,
+            512
+          ],
+          "sourceVisibleBounds": [
+            610,
+            8,
+            928,
+            508
+          ],
+          "canvas": [
+            320,
+            320
+          ],
+          "visibleHeight": 288,
+          "footOrigin": [
+            160,
+            304
+          ]
+        },
+        {
+          "pose": "side_left",
+          "file": "crew/ritsu_side_left.png",
+          "sourceSlot": [
+            1024,
+            0,
+            1536,
+            512
+          ],
+          "sourceVisibleBounds": [
+            1043,
+            10,
+            1436,
+            503
+          ],
+          "canvas": [
+            320,
+            320
+          ],
+          "visibleHeight": 288,
+          "footOrigin": [
+            160,
+            304
+          ]
+        },
+        {
+          "pose": "down_right",
+          "file": "crew/ritsu_down_right.png",
+          "sourceSlot": [
+            0,
+            512,
+            512,
+            1024
+          ],
+          "sourceVisibleBounds": [
+            145,
+            517,
+            466,
+            1016
+          ],
+          "canvas": [
+            320,
+            320
+          ],
+          "visibleHeight": 288,
+          "footOrigin": [
+            160,
+            304
+          ]
+        },
+        {
+          "pose": "up_right",
+          "file": "crew/ritsu_up_right.png",
+          "sourceSlot": [
+            512,
+            512,
+            1024,
+            1024
+          ],
+          "sourceVisibleBounds": [
+            610,
+            517,
+            927,
+            1009
+          ],
+          "canvas": [
+            320,
+            320
+          ],
+          "visibleHeight": 288,
+          "footOrigin": [
+            160,
+            304
+          ]
+        },
+        {
+          "pose": "side_right",
+          "file": "crew/ritsu_side_right.png",
+          "sourceSlot": [
+            1024,
+            512,
+            1536,
+            1024
+          ],
+          "sourceVisibleBounds": [
+            1058,
+            518,
+            1477,
+            997
+          ],
+          "canvas": [
+            320,
+            320
+          ],
+          "visibleHeight": 288,
+          "footOrigin": [
+            160,
+            304
+          ]
+        }
+      ],
+      "status": "source QA only; not an in-game motion validation"
+    },
+    {
+      "name": "kohaku",
+      "source": "2026-10-26/.scratch/versions/v03/art/originals/kohaku-sixposes-01.png",
+      "dimensions": [
+        1536,
+        1024
+      ],
+      "mode": "RGBA",
+      "alphaZeroFraction": 0.6243508656819662,
+      "alphaMax": 254,
+      "isolationNote": "six isolated connected source silhouettes",
+      "poses": [
+        {
+          "pose": "down_left",
+          "file": "crew/kohaku_down_left.png",
+          "sourceSlot": [
+            0,
+            0,
+            512,
+            512
+          ],
+          "sourceVisibleBounds": [
+            176,
+            10,
+            469,
+            504
+          ],
+          "canvas": [
+            320,
+            320
+          ],
+          "visibleHeight": 288,
+          "footOrigin": [
+            160,
+            304
+          ]
+        },
+        {
+          "pose": "up_left",
+          "file": "crew/kohaku_up_left.png",
+          "sourceSlot": [
+            512,
+            0,
+            1024,
+            512
+          ],
+          "sourceVisibleBounds": [
+            622,
+            11,
+            930,
+            505
+          ],
+          "canvas": [
+            320,
+            320
+          ],
+          "visibleHeight": 288,
+          "footOrigin": [
+            160,
+            304
+          ]
+        },
+        {
+          "pose": "side_left",
+          "file": "crew/kohaku_side_left.png",
+          "sourceSlot": [
+            1024,
+            0,
+            1536,
+            512
+          ],
+          "sourceVisibleBounds": [
+            1098,
+            8,
+            1469,
+            501
+          ],
+          "canvas": [
+            320,
+            320
+          ],
+          "visibleHeight": 288,
+          "footOrigin": [
+            160,
+            304
+          ]
+        },
+        {
+          "pose": "down_right",
+          "file": "crew/kohaku_down_right.png",
+          "sourceSlot": [
+            0,
+            512,
+            512,
+            1024
+          ],
+          "sourceVisibleBounds": [
+            164,
+            511,
+            463,
+            1006
+          ],
+          "canvas": [
+            320,
+            320
+          ],
+          "visibleHeight": 288,
+          "footOrigin": [
+            160,
+            304
+          ]
+        },
+        {
+          "pose": "up_right",
+          "file": "crew/kohaku_up_right.png",
+          "sourceSlot": [
+            512,
+            512,
+            1024,
+            1024
+          ],
+          "sourceVisibleBounds": [
+            598,
+            511,
+            907,
+            1006
+          ],
+          "canvas": [
+            320,
+            320
+          ],
+          "visibleHeight": 288,
+          "footOrigin": [
+            160,
+            304
+          ]
+        },
+        {
+          "pose": "side_right",
+          "file": "crew/kohaku_side_right.png",
+          "sourceSlot": [
+            1024,
+            512,
+            1536,
+            1024
+          ],
+          "sourceVisibleBounds": [
+            1098,
+            510,
+            1495,
+            997
+          ],
+          "canvas": [
+            320,
+            320
+          ],
+          "visibleHeight": 288,
+          "footOrigin": [
+            160,
+            304
+          ]
+        }
+      ],
+      "status": "source QA only; not an in-game motion validation"
+    },
+    {
+      "name": "sui",
+      "source": "2026-10-26/.scratch/versions/v03/art/originals/sui-sixposes-02.png",
+      "dimensions": [
+        1536,
+        1024
+      ],
+      "mode": "RGBA",
+      "alphaZeroFraction": 0.6406370798746744,
+      "alphaMax": 254,
+      "isolationNote": "six isolated connected source silhouettes",
+      "poses": [
+        {
+          "pose": "down_left",
+          "file": "crew/sui_down_left.png",
+          "sourceSlot": [
+            0,
+            0,
+            512,
+            512
+          ],
+          "sourceVisibleBounds": [
+            145,
+            58,
+            458,
+            482
+          ],
+          "canvas": [
+            320,
+            320
+          ],
+          "visibleHeight": 288,
+          "footOrigin": [
+            160,
+            304
+          ]
+        },
+        {
+          "pose": "up_left",
+          "file": "crew/sui_up_left.png",
+          "sourceSlot": [
+            512,
+            0,
+            1024,
+            512
+          ],
+          "sourceVisibleBounds": [
+            616,
+            62,
+            937,
+            481
+          ],
+          "canvas": [
+            320,
+            320
+          ],
+          "visibleHeight": 288,
+          "footOrigin": [
+            160,
+            304
+          ]
+        },
+        {
+          "pose": "side_left",
+          "file": "crew/sui_side_left.png",
+          "sourceSlot": [
+            1024,
+            0,
+            1536,
+            512
+          ],
+          "sourceVisibleBounds": [
+            1101,
+            66,
+            1457,
+            476
+          ],
+          "canvas": [
+            320,
+            320
+          ],
+          "visibleHeight": 288,
+          "footOrigin": [
+            160,
+            304
+          ]
+        },
+        {
+          "pose": "down_right",
+          "file": "crew/sui_down_right.png",
+          "sourceSlot": [
+            0,
+            512,
+            512,
+            1024
+          ],
+          "sourceVisibleBounds": [
+            131,
+            531,
+            459,
+            966
+          ],
+          "canvas": [
+            320,
+            320
+          ],
+          "visibleHeight": 288,
+          "footOrigin": [
+            160,
+            304
+          ]
+        },
+        {
+          "pose": "up_right",
+          "file": "crew/sui_up_right.png",
+          "sourceSlot": [
+            512,
+            512,
+            1024,
+            1024
+          ],
+          "sourceVisibleBounds": [
+            618,
+            533,
+            941,
+            960
+          ],
+          "canvas": [
+            320,
+            320
+          ],
+          "visibleHeight": 288,
+          "footOrigin": [
+            160,
+            304
+          ]
+        },
+        {
+          "pose": "side_right",
+          "file": "crew/sui_side_right.png",
+          "sourceSlot": [
+            1024,
+            512,
+            1536,
+            1024
+          ],
+          "sourceVisibleBounds": [
+            1088,
+            543,
+            1482,
+            952
+          ],
+          "canvas": [
+            320,
+            320
+          ],
+          "visibleHeight": 288,
+          "footOrigin": [
+            160,
+            304
+          ]
+        }
+      ],
+      "status": "source QA only; not an in-game motion validation"
+    }
+  ],
+  "runtime": {
+    "spriteFrames": "res://resources/crew/{id}_motion.tres",
+    "scene": "res://scenes/actor.tscn",
+    "actorHeight": 94,
+    "baselineOffset": 19,
+    "handSockets": "Measured per-character/per-pose coordinates in actor.gd",
+    "tool": "Native small salvage hook; generic presentation tool, not equipped-item model",
+    "motionEvidence": "docs/verification/v03/actor/ACTOR_MOTION.md"
+  }
+}
