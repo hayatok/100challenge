@@ -91,7 +91,8 @@ static func all() -> Array[Dictionary]:
 	d["pins"] = [pin(1),{"beam":2,"end":1,"other":0},{"cable":0,"at":Vector2(640,100)}]
 	d["hints"] = ["重りの綱は、何につながっている？","③の綱を残して①。台が上で止まってから②。"]
 	d["solution"] = [action(0,0.5),action(1,5)]
-	d["traps"] = [[action(2,0.5),action(0,1)],[action(1,0.5),action(0,5)]]
+	# Test metadata: opening the gate cannot lift the load without releasing the weight.
+	d["traps"] = [[action(2,0.5),action(0,1)],[action(1,0.5)]]
 	result.append(d)
 
 	d = base("降りた、そのあと",Rect2(190,455,150,100),[Vector2(500,170)])
