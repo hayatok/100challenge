@@ -8,7 +8,8 @@ const Sound = preload("res://scripts/sound.gd")
 const BoardScene = preload("res://scenes/board.tscn")
 const Scenery = preload("res://scripts/ui_scenery.gd")
 const Motif = preload("res://scripts/ui_motif.gd")
-const SHORT_NAMES := {"knife":"ナイフ", "loanKnife":"貸出ナイフ", "coat":"雨具", "harpoon":"銛", "medicine":"救急包", "bomb":"爆薬", "flare":"発煙筒", "scrap":"銅の端材", "core":"集光芯", "pearl":"潮真珠"}
+const CampaignView = preload("res://scripts/campaign_ui.gd")
+const SHORT_NAMES := {"knife":"ナイフ", "loanKnife":"貸出ナイフ", "coat":"雨具", "harpoon":"銛", "medicine":"救急包", "bomb":"爆薬", "flare":"発煙筒", "scrap":"銅の端材", "core":"集光芯", "pearl":"潮真珠", "pumpGear":"揚水歯車", "chart":"航路図", "sunLens":"太陽レンズ"}
 const NAMES := {"isana": "ISANA", "ritsu": "RITSU", "kohaku": "KOHAKU", "sui": "SUI"}
 const SYMBOLS := {"knife": "╱", "loanKnife": "╱", "harpoon": "↟", "coat": "衣", "medicine": "＋", "bomb": "●", "flare": "灯", "scrap": "銅", "core": "芯", "pearl": "○"}
 
@@ -201,7 +202,7 @@ func _render() -> void:
 	brand.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	header.add_child(brand)
 	brand.add_child(_icon("anchor", 27))
-	var brand_label := _label("潮還り  /  SHIOGAERI", 14)
+	var brand_label := _label("潮還り  /  v%s" % ProjectSettings.get_setting("application/config/version","0.2.0"), 14)
 	brand_label.autowrap_mode = TextServer.AUTOWRAP_OFF
 	brand_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	brand_label.size_flags_vertical = Control.SIZE_SHRINK_CENTER
@@ -269,7 +270,7 @@ func _title() -> void:
 	begin.grab_focus()
 	_spacer(content)
 	var caption := _panel(content, 10)
-	caption.add_child(_label("次の遠征  /  好きな回収屋で港町へ" if state.profile.lampRepaired else "最初の仕事  /  旧灯台の集光芯を持ち帰ろう", 13))
+	caption.add_child(_label("港の復興  /  %s" % Data.campaign_summary(state).title, 13))
 
 func _begin() -> void:
 	audio.start_ambience()
@@ -307,6 +308,14 @@ func _harbor() -> void:
 	top.add_child(record)
 	if not harbor_feedback.is_empty():
 		heading.add_child(_label(harbor_feedback, 13, UiPalette.SUCCESS))
+	var progress: Dictionary = Data.campaign_summary(state)
+	var district: Dictionary = Data.current_district(state)
+	heading.add_child(_label("復興 %d/%d  /  %s  /  %d G" % [progress.completed,progress.total,district.name,state.profile.credits],13,UiPalette.GOLD))
+	var services := HBoxContainer.new()
+	heading.add_child(services)
+	for entry: Array in [["依頼帳","jobs"],["航路","routes"],["物資交換","exchange"]]:
+		var page: String = entry[1]
+		services.add_child(_button(entry[0],func(): _campaign(page)))
 	var outer := ScrollContainer.new()
 	outer.follow_focus = true
 	outer.size_flags_vertical = Control.SIZE_EXPAND_FILL
@@ -348,6 +357,7 @@ func _harbor() -> void:
 	info.add_child(_rule())
 	info.add_child(_label(who.trait, 15, UiPalette.SUCCESS))
 	info.add_child(_label("「%s」" % who.idleLine, 13))
+	info.add_child(_button("%sと話す" % who.name,func(): _campaign("crew")))
 	var choices := HBoxContainer.new()
 	choices.add_theme_constant_override("separation", 7)
 	cast.add_child(choices)
@@ -401,6 +411,64 @@ func _has_kind(items: Array, kind: String) -> bool:
 		if item.kind == kind:
 			return true
 	return false
+
+func _campaign(page: String = "jobs") -> void:
+	if state.mode != "harbor":
+		return
+	var titles := {"jobs":"港と仲間の依頼帳", "routes":"次の遠征の航路", "exchange":"港の物資交換", "crew":"回収屋の休憩室"}
+	var body := _open_modal(titles.get(page,"港の依頼帳"),460)
+	CampaignView.build(body,state,page,self)
+	_resize_layout()
+
+func _campaign_action(action: Dictionary, page: String) -> void:
+	_close_modal()
+	_act(action)
+	if state.mode == "harbor":
+		_campaign(page)
+
+func _confirm_delivery(contract: Dictionary) -> void:
+	var body := _open_modal("%sへ品を届ける" % Data.CHARACTERS[contract.character].name,340)
+	body.add_child(_label(contract.title,20))
+	for requirement: Dictionary in contract.requirements:
+		body.add_child(_label("%s × %d" % [Data.ITEMS[requirement.kind].name,requirement.count],15))
+	body.add_child(_label("上の品を倉庫から渡します。お礼は倉庫と港の所持金へ受け取ります。",14,UiPalette.MUTED))
+	body.add_child(_button("品を渡して依頼を完了する",func(): _campaign_action({"type":"claim_contract","id":contract.id},"jobs"),true))
+	body.add_child(_button("依頼帳へ戻る",func(): _campaign("jobs")))
+
+func _confirm_sale(item: Dictionary) -> void:
+	var needed: Array[String] = []
+	for contract: Dictionary in Data.contracts(state):
+		if contract.status == "claimed":
+			continue
+		for requirement: Dictionary in contract.requirements:
+			if requirement.kind == item.kind:
+				needed.append(contract.title)
+	if needed.is_empty():
+		_campaign_action({"type":"sell","uid":item.uid},"exchange")
+		return
+	var body := _open_modal("依頼にも使う品です",300)
+	body.add_child(_label("%sを%d Gで売ります。" % [Data.ITEMS[item.kind].name,Data.ITEMS[item.kind].value],17))
+	body.add_child(_label("使う依頼：" + " / ".join(needed),14,UiPalette.GOLD))
+	body.add_child(_button("この品を売る",func(): _campaign_action({"type":"sell","uid":item.uid},"exchange"),true))
+	body.add_child(_button("売らずに戻る",func(): _campaign("exchange")))
+
+func _field_objective() -> String:
+	var active: String = str(state.profile.activeContract)
+	for contract: Dictionary in Data.contracts(state):
+		if contract.id != active or contract.status == "claimed":
+			continue
+		var gathered := true
+		for requirement: Dictionary in contract.requirements:
+			var held: int = int(requirement.owned)
+			for item: Dictionary in state.run.inventory:
+				if item.kind == requirement.kind:
+					held += 1
+			if held < int(requirement.count):
+				gathered = false
+		if gathered:
+			return "依頼の品が揃った。港へ戻ろう"
+		return "%s / %s" % [Data.current_district(state).name,contract.title]
+	return "%s / 自由回収" % Data.current_district(state).name
 
 func _harbor_items(parent: Node, title: String, items: Array, action: String) -> void:
 	var box := VBoxContainer.new()
@@ -590,7 +658,7 @@ func _update_hud(events: Array) -> void:
 	tide_label.text = "%s  /  あと%d手" % [tides[int(run.tide)],remaining] if run.tide < 3 else "満潮  /  高架を帰ろう"
 	tide_meter.value = int(run.turn)%32 if run.tide < 3 else 32
 	tide_label.add_theme_color_override("font_color",UiPalette.DANGER if run.tide < 3 and remaining <= 4 else UiPalette.INK)
-	objective_label.text = "集光芯を確保！港へ帰ろう" if _has_kind(run.inventory,"core") else "自由回収 / 宝を港へ" if state.profile.lampRepaired else "北東の旧灯台で、集光芯を探そう"
+	objective_label.text = _field_objective()
 	cargo_value_label.text = "%d pt" % _value(run.inventory)
 	var tile: Dictionary = run.tiles[int(player.y)][int(player.x)]
 	var distance := absi(int(player.x)-int(run.exit.x))+absi(int(player.y)-int(run.exit.y))
@@ -687,6 +755,11 @@ func _cell_selected(x: int, y: int) -> void:
 
 func _open_modal(title: String, content_height: float = 540) -> VBoxContainer:
 	_close_modal()
+	# A freshly rebuilt screen must remain visible when its overlay pauses motion.
+	for tween: Tween in ui_tweens:
+		if tween != null and tween.is_valid() and tween.get_meta("screen_entry",false):
+			tween.kill()
+	content.modulate.a = 1.0
 	inventory_detail = null
 	inventory_slots.clear()
 	modal_body_height = content_height
@@ -885,7 +958,8 @@ func _map() -> void:
 	view.custom_minimum_size = Vector2(280, 280)
 	body.add_child(view)
 	body.add_child(_label("赤い点：現在地 / 金色：帰還地点\n青：水路・浸水 / 地図は見えた範囲を記録します。", 14))
-	body.add_child(_label("旧灯台は北東。集光芯と銅の端材を持ち帰り、港の灯りを修理しよう。", 15, UiPalette.GOLD))
+	var district: Dictionary = Data.current_district(state)
+	body.add_child(_label("%s / %s" % [district.name,district.objective], 15, UiPalette.GOLD))
 
 func _settings() -> void:
 	pending_item = ""
@@ -1052,16 +1126,15 @@ func _field_hint() -> String:
 	var run:Dictionary=state.run
 	if not pending_item.is_empty():
 		return "矢印で投げる方向を選ぼう。取り消しはEsc・設定。"
-	if _has_kind(run.inventory,"core"):
-		return "集光芯を確保したよ。欲張るか、港へ帰るか。"
 	if run.player.hp<=run.player.maxHp*0.3:
 		return "体力が少ない。救急包を使うか、高架で港へ戻ろう。"
 	var visible:Dictionary=Data.visible_tiles(run)
 	for enemy:Dictionary in run.enemies:
 		if visible.has("%d,%d" % [enemy.x,enemy.y]) and enemy.has("intent"):
 			return "鳥が構えている！正面から横へ一歩、避けよう。"
-	var phrases:Dictionary={"isana":"荷箱を見つけたら、隣で調べよう。帰りの鞄も空けておいてね。","ritsu":"木の高架は満潮でも沈まない。帰り道を覚えておこう。","kohaku":"爆薬は敵にも壁にも使える。道具の使いどころを探そう。","sui":"見えた道は地図に残るよ。北東の灯台を目指そう。"}
-	return phrases[state.character]
+	if _field_objective().contains("揃った"):
+		return "必要な品は確保したよ。帰りの道具を残して港へ戻ろう。"
+	return Data.current_district(state).objective + "。荷箱は隣で調べられるよ。"
 
 func _select_inventory(uid:String) -> void:
 	if not is_instance_valid(inventory_detail) or not inventory_slots.has(uid):
@@ -1114,6 +1187,7 @@ func _animate_in(control:Control,delay:float=0.0) -> void:
 		return
 	control.modulate.a=0
 	var tween:=control.create_tween()
+	tween.set_meta("screen_entry",control == content)
 	_track_tween(tween, is_instance_valid(modal) and modal.is_ancestor_of(control))
 	if delay>0:
 		tween.tween_interval(delay)

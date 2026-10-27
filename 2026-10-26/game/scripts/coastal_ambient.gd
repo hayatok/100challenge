@@ -1,6 +1,7 @@
 extends Node2D
 ## Decorative gulls have no relationship to explored cells or game state.
 var reduced_motion := false
+var district := "quay"
 var area := Rect2(0, 0, 700, 700)
 var _time := 0.0
 var _gulls: Array[Node2D] = []
@@ -32,6 +33,7 @@ func _process(delta: float) -> void:
 func _update_gulls() -> void:
 	for i in _gulls.size():
 		var gull := _gulls[i]
+		gull.visible = i == 0 or district != "market"
 		gull.position = area.position + Vector2(fposmod(_time * (14 + i * 3) + i * 183, area.size.x + 80) - 40, area.size.y * (0.18 + i * 0.19) + sin(_time * 0.2 + i) * 10)
 		var flap := sin(_time * 2.0 + i * 1.8) * 3.0
 		var wings: Line2D = gull.get_node("Wings")

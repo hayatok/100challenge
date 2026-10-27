@@ -20,7 +20,7 @@ func _initialize() -> void:
 	root.add_child(ui)
 	await process_frame
 	await process_frame
-	for test: String in ["test_characters", "test_safe_area", "test_turn_input", "test_storage", "test_result_receipt", "test_inventory_uid_actions", "test_inventory_focus_and_full_health", "test_world_overlay_phone_bounds", "test_presentation_pause_and_motion", "test_empty_extraction_readability"]:
+	for test: String in ["test_characters", "test_safe_area", "test_turn_input", "test_storage", "test_result_receipt", "test_inventory_uid_actions", "test_inventory_focus_and_full_health", "test_world_overlay_phone_bounds", "test_presentation_pause_and_motion", "test_empty_extraction_readability", "test_campaign_phone_navigation", "test_campaign_routes_and_follow", "test_campaign_delivery", "test_campaign_exchange", "test_campaign_crew_and_reload", "test_campaign_modal_during_screen_entry"]:
 		if await call(test) != true:
 			failed += 1
 			push_error("FAIL: did not complete " + test)
@@ -463,4 +463,338 @@ func test_empty_extraction_readability() -> bool:
 		check(ui.screen == "harbor" and ui.state.mode == "harbor" and ui.state.profile.stash == stash and ui.state.profile.extracts == 1 and RulesData.validate_state(ui.state), "%s empty-result CTA returns to harbor without duplicating inventory" % phone)
 	root.size = Vector2i(390, 844)
 	await settle_layout()
+	return true
+
+func meta_button(parent: Node, key: String, value: String) -> Button:
+	for button: Button in descendant_buttons(parent):
+		if str(button.get_meta(key, "")) == value:
+			return button
+	return null
+
+func label_contains(parent: Node, fragment: String) -> bool:
+	for child: Node in parent.get_children():
+		if child is Label and child.text.contains(fragment):
+			return true
+		if label_contains(child, fragment):
+			return true
+	return false
+
+func inside_clipping_ancestors(control: Control) -> bool:
+	var rect: Rect2 = control.get_global_rect()
+	var ancestor: Node = control.get_parent()
+	while ancestor != null:
+		if ancestor is Control and ancestor.clip_contents and not ancestor.get_global_rect().grow(1).encloses(rect):
+			return false
+		ancestor = ancestor.get_parent()
+	return fits_visible_stage(control)
+
+func stash_has(uid: String) -> bool:
+	for item: Dictionary in ui.state.profile.stash:
+		if item.uid == uid:
+			return true
+	return false
+
+# Progression fixtures add concrete resources with fresh UIDs. They are validated
+# before use; all completion, packing, extraction and trading still use Rules.
+func supply_contract(state: Dictionary, id: String) -> Dictionary:
+	var prepared: Dictionary = state.duplicate(true)
+	for kind: String in RulesData.Campaign.CONTRACTS[id].requirements:
+		var required: int = RulesData.Campaign.CONTRACTS[id].requirements[kind]
+		var owned: int = 0
+		for item: Dictionary in prepared.profile.stash:
+			if item.kind == kind:
+				owned += 1
+		for count: int in range(maxi(0, required - owned)):
+			prepared.profile.stash.append({"uid": "i%d" % prepared.nextId, "kind": kind})
+			prepared.nextId += 1
+	check(RulesData.validate_state(prepared), "resource fixture for %s remains a valid owned-item state" % id)
+	return prepared
+
+func progress_through(ids: Array) -> Dictionary:
+	var prepared: Dictionary = RulesData.new_game()
+	for id: String in ids:
+		prepared = supply_contract(prepared, id)
+		prepared = RulesData.apply_action(prepared, {"type": "claim_contract", "id": id}).state
+	check(RulesData.validate_state(prepared), "campaign fixture resolves real claims into a valid harbor")
+	return prepared
+
+func test_campaign_phone_navigation() -> bool:
+	for phone: Vector2i in [Vector2i(390, 844), Vector2i(360, 740)]:
+		root.size = phone
+		ui._close_modal()
+		ui.state = RulesData.new_game()
+		ui.harbor_feedback = ""
+		ui._enter()
+		await settle_layout()
+		ui._resize_layout()
+		await settle_layout()
+		var snapshot: String = JSON.stringify(ui.state)
+		for entry: Array in [["依頼帳", "jobs"], ["航路", "routes"], ["物資交換", "exchange"], ["イサナと話す", "crew"]]:
+			var opener: Button = find_button(ui.content, entry[0])
+			check(opener != null, "%s harbor exposes %s" % [phone, entry[1]])
+			if opener == null:
+				return false
+			opener.grab_focus()
+			await settle_layout()
+			var scale_to_phone: Vector2 = Vector2(phone) / ui.size
+			var opener_css: Vector2 = opener.size * scale_to_phone
+			check(inside_clipping_ancestors(opener) and opener.size.x >= 52 and opener.size.y >= 52 and opener_css.x >= 44 and opener_css.y >= 44, "%s %s harbor action is reachable at a usable touch size" % [phone, entry[1]])
+			opener.pressed.emit()
+			await settle_layout()
+			check(is_instance_valid(ui.modal_panel) and fits_visible_stage(ui.modal_panel), "%s %s panel fits the phone" % [phone, entry[1]])
+			var buttons: Array[Button] = descendant_buttons(ui.modal)
+			var targets_fit: bool = true
+			var enabled_count: int = 0
+			var reached: Dictionary = {}
+			for button: Button in buttons:
+				var css: Vector2 = button.size * scale_to_phone
+				targets_fit = targets_fit and button.size.x >= 52 and button.size.y >= 52 and css.x >= 44 and css.y >= 44
+				if not button.disabled:
+					enabled_count += 1
+			var reachable: bool = true
+			for step: int in range(enabled_count):
+				key_press(KEY_TAB)
+				await settle_layout()
+				var focused: Control = ui.get_viewport().gui_get_focus_owner()
+				reachable = reachable and is_instance_valid(focused) and ui.modal.is_ancestor_of(focused) and inside_clipping_ancestors(focused)
+				if is_instance_valid(focused):
+					reached[focused.get_instance_id()] = true
+			check(targets_fit, "%s %s actions retain 52 logical and 44 CSS pixel targets" % [phone, entry[1]])
+			check(reachable and reached.size() == enabled_count, "%s Tab reaches and scrolls every enabled %s action into view" % [phone, entry[1]])
+			key_press(KEY_ESCAPE)
+			await settle_layout()
+			check(JSON.stringify(ui.state) == snapshot, "%s reading and focusing %s does not alter state or time" % [phone, entry[1]])
+	root.size = Vector2i(390, 844)
+	await settle_layout()
+	return true
+
+func test_campaign_routes_and_follow() -> bool:
+	ui.state = RulesData.new_game()
+	ui._enter()
+	ui._campaign("routes")
+	await settle_layout()
+	for id: String in RulesData.Campaign.DISTRICTS:
+		var route: Button = meta_button(ui.modal, "district_id", id)
+		check(route != null and route.disabled, "initial %s route is selected or locked" % id)
+		var expected: String = "灯台の波止場 / 選択中" if id == "quay" else RulesData.Campaign.DISTRICTS[id].lockReason
+		check(label_contains(ui.modal, expected), "route page explains the actual %s selection or lock" % id)
+	ui._close_modal()
+	ui.state = progress_through(["beacon", "pump", "channel"])
+	ui._enter()
+	for id: String in ["market", "canal", "observatory", "quay"]:
+		ui._campaign("routes")
+		await settle_layout()
+		var route: Button = meta_button(ui.modal, "district_id", id)
+		check(route != null and not route.disabled, "unlocked %s route can be selected" % id)
+		if route == null:
+			return false
+		route.pressed.emit()
+		await settle_layout()
+		check(ui.state.profile.selectedDistrict == id and label_contains(ui.modal, RulesData.Campaign.DISTRICTS[id].name + " / 選択中"), "%s route callback selects and displays its own district ID" % id)
+	ui._campaign("jobs")
+	await settle_layout()
+	var follow: Button = meta_button(ui.modal, "contract_id", "network")
+	check(follow != null and not follow.disabled, "unlocked final job can be tracked")
+	if follow == null:
+		return false
+	follow.pressed.emit()
+	await settle_layout()
+	check(ui.state.profile.activeContract == "network" and ui.state.profile.selectedDistrict == "observatory" and RulesData.validate_state(ui.state), "following a job dispatches its actual ID and chooses its destination")
+	ui._close_modal()
+	ui.state = RulesData.apply_action(ui.state, {"type": "depart", "seed": 7}).state
+	ui._enter()
+	await settle_layout()
+	var snapshot: String = JSON.stringify(ui.state)
+	for page: String in ["jobs", "routes", "exchange", "crew"]:
+		ui._campaign(page)
+	check(not is_instance_valid(ui.modal) and JSON.stringify(ui.state) == snapshot and ui.state.run.turn == 0, "harbor campaign pages cannot open or change an active expedition turn")
+	return true
+
+func test_campaign_delivery() -> bool:
+	var prepared: Dictionary = supply_contract(RulesData.new_game(), "beacon")
+	var material_uids: Array[String] = []
+	for item: Dictionary in prepared.profile.stash.duplicate():
+		if item.kind in ["core", "scrap"]:
+			material_uids.append(item.uid)
+			prepared = RulesData.apply_action(prepared, {"type": "pack", "uid": item.uid}).state
+	prepared = RulesData.apply_action(prepared, {"type": "depart", "seed": 7}).state
+	prepared = RulesData.apply_action(prepared, {"type": "interact"}).state
+	check(prepared.result.inventory.size() == 2 and RulesData.validate_state(prepared), "delivery fixture extracts concrete materials into an already-owned receipt")
+	ui.state = prepared
+	ui._enter()
+	await settle_layout()
+	var return_to_harbor: Button = find_button(ui.content, "港で支度をする")
+	if return_to_harbor == null:
+		return false
+	return_to_harbor.pressed.emit()
+	await settle_layout()
+	ui._campaign("jobs")
+	await settle_layout()
+	var deliver: Button = meta_button(ui.modal, "delivery_id", "beacon")
+	check(deliver != null and not deliver.disabled and label_contains(ui.modal, "灯台の集光芯   1 / 1"), "returned real stash materials enable the matching delivery")
+	if deliver == null:
+		return false
+	var snapshot: String = JSON.stringify(ui.state)
+	deliver.pressed.emit()
+	await settle_layout()
+	check(JSON.stringify(ui.state) == snapshot and label_contains(ui.modal, "灯台の集光芯 × 1"), "delivery opens a concrete, read-only requirements confirmation")
+	var confirm: Button = find_button(ui.modal, "品を渡して依頼を完了する")
+	if confirm == null:
+		return false
+	confirm.pressed.emit()
+	await settle_layout()
+	var consumed: bool = true
+	for uid: String in material_uids:
+		consumed = consumed and not stash_has(uid)
+	check(consumed and ui.state.profile.credits == 20 and ui.state.profile.completedContracts == ["beacon"] and ui.state.profile.lampRepaired, "confirmed delivery consumes actual material UIDs once and awards the real harbor progress")
+	check(RulesData.Campaign.unlocked(ui.state, "market") and meta_button(ui.modal, "delivery_id", "beacon") == null and RulesData.validate_state(ui.state), "claimed job becomes complete and opens the market without stale receipt ownership")
+	check(label_contains(ui.modal, "灯台の集光芯 × 1 / 納品済み"), "claimed delivery describes consumed requirements as delivered")
+	snapshot = JSON.stringify(ui.state)
+	ui._campaign_action({"type": "claim_contract", "id": "beacon"}, "jobs")
+	await settle_layout()
+	check(JSON.stringify(ui.state) == snapshot, "a repeated delivery callback cannot consume or reward twice")
+	ui._close_modal()
+	return true
+
+func test_campaign_modal_during_screen_entry() -> bool:
+	ui._close_modal()
+	ui.state = RulesData.new_game()
+	ui._enter()
+	await settle_layout()
+	var previous_reduced: bool = ui.settings.reduced
+	check(ui.qa_session, "entry-animation regression starts with player-save protection enabled")
+	var snapshot: String = JSON.stringify(ui.state)
+	for page: String in ["jobs", "routes", "exchange", "crew"]:
+		ui._close_modal()
+		# Only construct controls while QA is off, so the real fade starts. No
+		# action, settings callback, or persistence call may run in this section.
+		ui.qa_session = false
+		ui.settings.reduced = false
+		ui._render()
+		var fade_started: bool = is_zero_approx(ui.content.modulate.a)
+		ui._campaign(page)
+		ui.qa_session = true
+		ui.settings.reduced = previous_reduced
+		check(fade_started and is_equal_approx(ui.content.modulate.a, 1.0), "%s opened during real screen entry keeps the rebuilt harbor visible immediately" % page)
+		await create_timer(0.34).timeout
+		await settle_layout()
+		check(is_equal_approx(ui.content.modulate.a, 1.0) and is_instance_valid(ui.modal_panel) and is_equal_approx(ui.modal_panel.modulate.a, 1.0), "%s overlay finishes appearing while the paused harbor remains visible" % page)
+		check(JSON.stringify(ui.state) == snapshot and RulesData.validate_state(ui.state) and ui.qa_session, "%s entry and modal animation leave state unchanged with QA protection restored" % page)
+	ui._close_modal()
+	ui.settings.reduced = previous_reduced
+	ui._render()
+	await settle_layout()
+	return true
+
+func test_campaign_exchange() -> bool:
+	ui.state = RulesData.new_game()
+	ui._enter()
+	ui._campaign("exchange")
+	await settle_layout()
+	var all_unaffordable: bool = true
+	for kind: String in RulesData.Campaign.SHOP:
+		var buy: Button = meta_button(ui.modal, "buy_kind", kind)
+		all_unaffordable = all_unaffordable and buy != null and buy.disabled and buy.text.contains(str(RulesData.Campaign.SHOP[kind]))
+	check(all_unaffordable and label_contains(ui.modal, "港の所持金  0 G"), "zero real credits disable every purchase at its recorded price")
+	var second_uid: String = ui.state.profile.stash[3].uid
+	var first_uid: String = ui.state.profile.stash[2].uid
+	var sell: Button = meta_button(ui.modal, "sell_uid", second_uid)
+	if sell == null:
+		return false
+	var snapshot: String = JSON.stringify(ui.state)
+	sell.pressed.emit()
+	await settle_layout()
+	check(JSON.stringify(ui.state) == snapshot and label_contains(ui.modal, "リツの救護棚") and label_contains(ui.modal, "救急包を8 Gで売ります。"), "selling a quest supply warns with its actual job and price before changing ownership")
+	var cancel: Button = find_button(ui.modal, "売らずに戻る")
+	if cancel == null:
+		return false
+	cancel.pressed.emit()
+	await settle_layout()
+	check(JSON.stringify(ui.state) == snapshot, "cancelling a sale keeps both duplicate supplies and credits")
+	sell = meta_button(ui.modal, "sell_uid", second_uid)
+	sell.pressed.emit()
+	await settle_layout()
+	var confirm: Button = find_button(ui.modal, "この品を売る")
+	if confirm == null:
+		return false
+	confirm.pressed.emit()
+	await settle_layout()
+	check(not stash_has(second_uid) and stash_has(first_uid) and ui.state.profile.credits == 8, "sale callback removes only the chosen duplicate UID and credits its real value")
+	var knife_uid: String = ui.state.profile.stash[0].uid
+	sell = meta_button(ui.modal, "sell_uid", knife_uid)
+	if sell == null:
+		return false
+	sell.pressed.emit()
+	await settle_layout()
+	check(not stash_has(knife_uid) and ui.state.profile.credits == 20, "nonquest sale immediately trades the actual knife for 12 credits")
+	var buy_medicine: Button = meta_button(ui.modal, "buy_kind", "medicine")
+	var expensive: Button = meta_button(ui.modal, "buy_kind", "coat")
+	check(buy_medicine != null and not buy_medicine.disabled and expensive != null and expensive.disabled, "purchase affordances update against the actual 20 credits")
+	if buy_medicine == null:
+		return false
+	var next_uid: String = "i%d" % ui.state.nextId
+	var stash_count: int = ui.state.profile.stash.size()
+	buy_medicine.pressed.emit()
+	await settle_layout()
+	check(ui.state.profile.credits == 10 and ui.state.profile.stash.size() == stash_count + 1 and stash_has(next_uid) and ui.state.profile.stash[-1].kind == "medicine" and RulesData.validate_state(ui.state), "purchase spends 10 real credits and stores exactly one newly owned medicine UID")
+	ui._close_modal()
+	return true
+
+func test_campaign_crew_and_reload() -> bool:
+	ui.state = progress_through(["beacon", "pump", "channel"])
+	ui.state = RulesData.apply_action(ui.state, {"type": "choose_district", "district": "observatory"}).state
+	for character: String in RulesData.CHARACTERS:
+		ui.state = RulesData.apply_action(ui.state, {"type": "choose", "character": character}).state
+		ui._enter()
+		ui._campaign("crew")
+		await settle_layout()
+		var all_lines: bool = label_contains(ui.modal, RulesData.CHARACTERS[character].name + " / " + RulesData.CHARACTERS[character].role)
+		for line: String in RulesData.dialogue(ui.state, character):
+			all_lines = all_lines and label_contains(ui.modal, line)
+		check(all_lines, "crew page displays the selected %s and current campaign dialogue" % character)
+		ui._close_modal()
+	ui.state = supply_contract(ui.state, "sui_atlas")
+	ui.state = RulesData.apply_action(ui.state, {"type": "claim_contract", "id": "sui_atlas"}).state
+	ui._enter()
+	ui._campaign("crew")
+	await settle_layout()
+	check(label_contains(ui.modal, "この依頼は完了しました。") and label_contains(ui.modal, "航路帳ができた。") and find_button(ui.modal, "依頼帳を開く") == null, "actual companion delivery changes the selected crew conversation and completion affordance")
+	ui._close_modal()
+	var path := "user://qa-campaign-ui.json"
+	var snapshot: String = JSON.stringify(ui.state)
+	check(Store.save_game(ui.state, "shiogaeri-qa-campaign-ui", path).is_empty(), "campaign UI state saves through the real store")
+	var loaded: Dictionary = Store.load_game("shiogaeri-qa-campaign-ui", path)
+	check(loaded.found and not loaded.corrupt and JSON.stringify(loaded.state) == snapshot, "campaign selection, jobs, credits and owned UIDs survive the store roundtrip")
+	ui.state = loaded.state
+	ui._enter()
+	ui._campaign("routes")
+	await settle_layout()
+	check(label_contains(ui.modal, "岬の観測所 / 選択中") and ui.state.character == "sui", "reloaded UI renders the persisted destination and companion")
+	ui._close_modal()
+	# A late v1 result must migrate without losing the already-transferred item.
+	var legacy: Dictionary = RulesData.new_game()
+	legacy = RulesData.apply_action(legacy, {"type": "pack", "uid": legacy.profile.stash[0].uid}).state
+	legacy = RulesData.apply_action(legacy, {"type": "depart", "seed": 7}).state
+	legacy = RulesData.apply_action(legacy, {"type": "wait"}).state
+	legacy = RulesData.apply_action(legacy, {"type": "interact"}).state
+	legacy.version = 1
+	for key: String in ["credits", "selectedDistrict", "activeContract", "completedContracts"]:
+		legacy.profile.erase(key)
+	check(Store.write_value("shiogaeri-qa-campaign-ui", path, legacy).is_empty(), "late legacy result is written only to the QA file")
+	loaded = Store.load_game("shiogaeri-qa-campaign-ui", path)
+	check(not loaded.corrupt and loaded.state.version == 2 and loaded.state.result.turns == 1 and loaded.state.result.inventory == legacy.result.inventory and loaded.state.profile.stash == legacy.profile.stash, "late v1 result migrates its resolved turn, receipt and real ownership unchanged")
+	ui.state = loaded.state
+	ui._enter()
+	await settle_layout()
+	check(ui.screen == "result" and find_button(ui.content, "港で支度をする") != null and RulesData.validate_state(ui.state), "migrated late result has a usable valid UI")
+	legacy.result.inventory[0].kind = "medicine"
+	Store.write_value("shiogaeri-qa-campaign-ui", path, legacy)
+	loaded = Store.load_game("shiogaeri-qa-campaign-ui", path)
+	ui._set_notice(loaded.error)
+	await settle_layout()
+	check(loaded.corrupt and loaded.found and not loaded.error.is_empty() and ui.notice.visible and ui.notice.text == loaded.error, "invalid legacy receipt is rejected and its store error is readable in the actual notice")
+	ui._set_notice("")
+	for suffix: String in ["", ".bak", ".tmp", ".pre-v2", ".pre-v2.bak"]:
+		if FileAccess.file_exists(path + suffix):
+			DirAccess.remove_absolute(path + suffix)
 	return true

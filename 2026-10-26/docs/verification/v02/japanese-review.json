@@ -1,0 +1,111 @@
+{
+  "scope": "v0.2 changed Japanese product copy, UI references and README",
+  "records": [
+    {
+      "file": "game/scripts/main.gd",
+      "sha256": "d27565295e66f662d94cb0a70007579f1516ed7a5301ae046e3c3c4218d8fd8e",
+      "run_id": "20261027T164159Z-3cf8a575",
+      "attempt": 1,
+      "mode": "rewrite",
+      "checks": [
+        "lint",
+        "diff",
+        "manual meaning comparison",
+        "verify"
+      ],
+      "verified": true
+    },
+    {
+      "file": "README.md",
+      "sha256": "7b76730cb5bf53cf0e9eed546e5f4fa4955726f585a8ad35aea123747136ed51",
+      "run_id": "20261027T164200Z-40d128b4",
+      "attempt": 2,
+      "mode": "rewrite",
+      "checks": [
+        "lint",
+        "diff",
+        "manual meaning comparison",
+        "verify"
+      ],
+      "verified": true
+    },
+    {
+      "file": "game/scripts/rules.gd",
+      "sha256": "eecf9ba0d9304cf995c864fc7edd63b6b9dc8f551eaac857cb8e5286719ff8c5",
+      "run_id": "20261027T164200Z-efd24262",
+      "attempt": 1,
+      "mode": "rewrite",
+      "checks": [
+        "lint",
+        "diff",
+        "manual meaning comparison",
+        "verify"
+      ],
+      "verified": true
+    },
+    {
+      "file": "game/scripts/save_store.gd",
+      "sha256": "701c53655a97ef4484fdd16a5af380b35e05a751b9b1b46a89feeef7f19662de",
+      "run_id": "20261027T164202Z-8b3f9e90",
+      "attempt": 1,
+      "mode": "rewrite",
+      "checks": [
+        "lint",
+        "diff",
+        "manual meaning comparison",
+        "verify"
+      ],
+      "verified": true
+    },
+    {
+      "file": "game/tests/ui_test.gd",
+      "sha256": "d78d63b7afbb59626b1a2aa12cc14cec6c0e4050d0e081521430cc72fee4465b",
+      "run_id": "20261027T164202Z-084d2562",
+      "attempt": 1,
+      "mode": "rewrite",
+      "checks": [
+        "lint",
+        "diff",
+        "manual meaning comparison",
+        "verify"
+      ],
+      "verified": true
+    },
+    {
+      "file": "game/scripts/campaign_data.gd",
+      "sha256": "48b04e112240382b206d19af01e1727c353bbcb571af3f5c272437957f87f828",
+      "run_id": "20261027T164204Z-5608aff3",
+      "attempt": 1,
+      "mode": "compose",
+      "checks": [
+        "lint",
+        "materials",
+        "manual meaning comparison",
+        "verify"
+      ],
+      "verified": true
+    },
+    {
+      "file": "game/scripts/campaign_ui.gd",
+      "sha256": "a70434670c414cd255c5f07b0df8bd1c5e2e3a973b95ed339d62464f21603f3e",
+      "run_id": "20261027T164204Z-d9d874f1",
+      "attempt": 1,
+      "mode": "compose",
+      "checks": [
+        "lint",
+        "materials",
+        "manual meaning comparison",
+        "verify"
+      ],
+      "verified": true
+    }
+  ],
+  "procedure": "Direct Bash CLI run/verify; originals and full records in ignored .scratch/versions/v02/original and japanese-cli. Earlier exploratory subprocess-based checks were superseded and are not used as the final procedure record.",
+  "decisions": [
+    "Clarified that reconstruction progress opens routes; companion delivery does not promise a new route.",
+    "Displayed completed deliveries as already delivered, and used G consistently in exchange feedback.",
+    "Retained necessary GDScript syntax and short game labels; repeated save instructions are clear.",
+    "Checked actual quantities, ownership, stage-dependent dialogue and pending human/device evidence against rules and play."
+  ],
+  "limits": "Candidate counts and matching hashes do not establish natural prose or preserved meaning; source strings were also read and inspected in real screens."
+}

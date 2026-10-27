@@ -2,11 +2,12 @@ extends SceneTree
 
 const RulesEngine = preload("res://scripts/rules.gd")
 const World = preload("res://scripts/world_data.gd")
+const Store = preload("res://scripts/save_store.gd")
 var passed: int = 0
 var failed: int = 0
 
 func _initialize() -> void:
-	for test: String in ["test_initial_and_traits", "test_immutable_replay", "test_invalid_actions", "test_extraction_once_and_loan", "test_death_and_restart", "test_inventory_overflow_and_drop", "test_tools", "test_enemy_timing", "test_tide_and_visibility", "test_seed_connectivity", "test_save_validation", "test_complete_goal_route", "test_combat_save_boundaries", "test_tool_save_boundaries"]:
+	for test: String in ["test_initial_and_traits", "test_immutable_replay", "test_invalid_actions", "test_extraction_once_and_loan", "test_death_and_restart", "test_inventory_overflow_and_drop", "test_tools", "test_enemy_timing", "test_tide_and_visibility", "test_seed_connectivity", "test_save_validation", "test_complete_goal_route", "test_combat_save_boundaries", "test_tool_save_boundaries", "test_campaign_deliveries_and_exchange", "test_campaign_ownership_boundaries", "test_legacy_migration", "test_district_topology", "test_actual_campaign_route", "test_legacy_store_backup"]:
 		if call(test) != true:
 			failed += 1
 			push_error("%s did not finish (runtime error or failed route)" % test)
@@ -264,7 +265,7 @@ func test_save_validation() -> bool:
 		bad.erase(field)
 		expect(not RulesEngine.validate_state(bad), "missing field " + field)
 	var mutations: Array = [
-		func(s: Dictionary) -> void: s.version = 2,
+		func(s: Dictionary) -> void: s.version = 3,
 		func(s: Dictionary) -> void: s.run.player.hp = 0,
 		func(s: Dictionary) -> void: s.run.turn = 1.5,
 		func(s: Dictionary) -> void: s.run.player.maxHp = 999,
@@ -430,4 +431,295 @@ func test_tool_save_boundaries() -> bool:
 	if state.is_empty():
 		return false
 	expect(state.run.tiles[20][13].type == "floor" and state.run.enemies.is_empty(), "bomb opens wall and removes both foes inside blast")
+	return true
+
+# Campaign tests use real item UIDs and action results; no duplicate delivery receipts.
+func test_campaign_deliveries_and_exchange() -> bool:
+	var state: Dictionary = RulesEngine.new_game()
+	expect(act(state, {"type": "choose_district", "district": "market"}) == state, "locked district does not change selection")
+	expect(act(state, {"type": "buy", "kind": "medicine"}) == state, "cannot buy without credits")
+	var initial: String = JSON.stringify(state)
+	RulesEngine.contracts(state)
+	RulesEngine.dialogue(state, "isana")
+	RulesEngine.campaign_summary(state)
+	RulesEngine.shop_rows(state)
+	expect(JSON.stringify(state) == initial, "campaign inspection never mutates state")
+	for story: String in RulesEngine.Campaign.STORY_IDS:
+		state = act(state, {"type": "accept_contract", "id": story})
+		var definition: Dictionary = RulesEngine.Campaign.CONTRACTS[story]
+		expect(state.profile.activeContract == story and state.profile.selectedDistrict == definition.district, "accepted job selects its real destination " + story)
+		for material: String in definition.requirements:
+			for n: int in range(int(definition.requirements[material])):
+				state.profile.stash.append(RulesEngine._new_item(state, material))
+		var before_count: int = state.profile.stash.size()
+		var delivered: Array = []
+		for row: Dictionary in RulesEngine.contracts(state):
+			if row.id == story:
+				expect(row.status == "ready", "stored materials make delivery ready")
+				for requirement: Dictionary in row.requirements:
+					for item: Dictionary in state.profile.stash:
+						if item.kind == requirement.kind:
+							delivered.append(item.uid)
+		state = act(state, {"type": "claim_contract", "id": story})
+		expect(story in state.profile.completedContracts and state.profile.stash.size() < before_count, "claim consumes real stash items " + story)
+		for item_uid: String in delivered:
+			expect(RulesEngine._find_item(state.profile.stash, item_uid).is_empty(), "delivered UID removed once")
+		expect(act(state, {"type": "claim_contract", "id": story}) == state, "cannot claim job twice " + story)
+		expect(RulesEngine.validate_state(JSON.parse_string(JSON.stringify(state))), "campaign delivery round-trips " + story)
+	expect(RulesEngine.campaign_summary(state).completed == 4, "all four reconstruction arcs finish")
+	for character: String in RulesEngine.CHARACTERS:
+		var id: String = RulesEngine.Campaign.PERSONAL[character]
+		var before_line: Array = RulesEngine.dialogue(state, character)
+		state = act(state, {"type": "accept_contract", "id": id})
+		for material: String in RulesEngine.Campaign.CONTRACTS[id].requirements:
+			for n: int in range(int(RulesEngine.Campaign.CONTRACTS[id].requirements[material])):
+				state.profile.stash.append(RulesEngine._new_item(state, material))
+		state = act(state, {"type": "claim_contract", "id": id})
+		expect(id in state.profile.completedContracts and RulesEngine.validate_state(state), "personal delivery persists " + id)
+		expect(before_line != RulesEngine.dialogue(state, character), "personal completion changes actual dialogue " + character)
+		for reward_kind: String in RulesEngine.Campaign.CONTRACTS[id].reward.items:
+			var found: bool = false
+			for item: Dictionary in state.profile.stash:
+				found = found or item.kind == reward_kind
+			expect(found, "personal reward is a real stored item " + reward_kind)
+	var sold: Dictionary = state.profile.stash[0]
+	var credits: int = state.profile.credits
+	state = act(state, {"type": "sell", "uid": sold.uid})
+	expect(state.profile.credits == credits + int(RulesEngine.ITEMS[sold.kind].value) and RulesEngine._find_item(state.profile.stash, sold.uid).is_empty(), "sale removes chosen UID and pays exact price")
+	expect(act(state, {"type": "sell", "uid": sold.uid}) == state, "sale cannot pay the same UID twice")
+	credits = state.profile.credits
+	var new_id: int = state.nextId
+	state = act(state, {"type": "buy", "kind": "medicine"})
+	expect(state.profile.credits == credits - 10 and state.nextId == new_id + 1 and state.profile.stash.back().kind == "medicine", "purchase has real cost and fresh ownership")
+	for row: Dictionary in RulesEngine.shop_rows(state):
+		expect(row.affordable == (state.profile.credits >= row.price), "shop affordability matches exact credits")
+	var saved: Dictionary = state.profile.duplicate(true)
+	state = act(state, {"type": "depart", "seed": 4})
+	state.run.player.hp = 1
+	state.run.enemies = [enemy("crab", 12, 22)]
+	state = act(state, {"type": "wait"})
+	expect(state.result.outcome == "dead" and state.profile.stash == saved.stash and state.profile.credits == saved.credits and state.profile.completedContracts == saved.completedContracts, "death loses carried gear while retaining campaign, credits and stash")
+	expect(RulesEngine.validate_state(state), "campaign death remains saveable")
+	return true
+
+func test_campaign_ownership_boundaries() -> bool:
+	var state: Dictionary = RulesEngine.new_game()
+	state.profile.stash.append(RulesEngine._new_item(state, "core"))
+	state.profile.stash.append(RulesEngine._new_item(state, "scrap"))
+	var core: String = state.profile.stash[-2].uid
+	state = act(state, {"type": "pack", "uid": core})
+	expect(act(state, {"type": "claim_contract", "id": "beacon"}) == state, "carried item cannot fund harbor delivery")
+	expect(act(state, {"type": "sell", "uid": core}) == state, "packed item cannot be sold")
+	state = act(state, {"type": "unpack", "uid": core})
+	state = act(state, {"type": "repair"})
+	expect(state.profile.lampRepaired and "beacon" in state.profile.completedContracts, "old repair action completes first reconstruction")
+	expect(act(state, {"type": "repair"}) == state, "legacy repair cannot duplicate reward")
+	state = act(state, {"type": "depart", "seed": 1})
+	for action: Dictionary in [{"type": "choose_district", "district": "market"}, {"type": "accept_contract", "id": "pump"}, {"type": "sell", "uid": state.run.weapon}, {"type": "buy", "kind": "medicine"}, {"type": "claim_contract", "id": "pump"}]:
+		expect(act(state, action) == state, "harbor-only action costs no expedition turn " + action.type)
+	return true
+
+func legacy_fixture(state: Dictionary) -> Dictionary:
+	var old: Dictionary = state.duplicate(true)
+	old.version = 1
+	for field: String in ["credits", "selectedDistrict", "activeContract", "completedContracts"]:
+		old.profile.erase(field)
+	if old.run is Dictionary:
+		old.run.erase("district")
+	return JSON.parse_string(JSON.stringify(old))
+
+func test_legacy_migration() -> bool:
+	var harbor: Dictionary = RulesEngine.new_game()
+	harbor = act(harbor, {"type": "pack", "uid": harbor.profile.stash[0].uid})
+	var expedition: Dictionary = prepared("sui", 42)
+	expedition.run.turn = 64
+	expedition.run.tide = 2
+	expedition.run.player.hp = 12
+	expedition.run.enemies[0]["target"] = {"x": 12, "y": 20, "turns": 3}
+	expedition.run.enemies[2]["intent"] = {"dx": 0, "dy": 1}
+	var extracted: Dictionary = act(prepared(), {"type": "interact"})
+	var dead: Dictionary = prepared()
+	dead.run.player.hp = 1
+	dead.run.enemies = [enemy("crab", 12, 22)]
+	dead = act(dead, {"type": "wait"})
+	var repaired: Dictionary = RulesEngine.new_game()
+	repaired.profile.lampRepaired = true
+	repaired.profile.completedContracts = ["beacon"]
+	repaired.profile.activeContract = ""
+	for current: Dictionary in [harbor, expedition, extracted, dead, repaired]:
+		var old: Dictionary = legacy_fixture(current)
+		var before: String = JSON.stringify(old)
+		var migrated: Dictionary = RulesEngine.migrate_state(old)
+		expect(not migrated.is_empty() and RulesEngine.validate_state(migrated), "strict legacy fixture migrates " + current.mode)
+		if migrated.is_empty():
+			return false
+		expect(JSON.stringify(old) == before, "migration never edits original legacy object")
+		expect(migrated.profile.stash == current.profile.stash and migrated.loadout == current.loadout and migrated.result == current.result and migrated.nextId == current.nextId, "migration preserves ownership and receipt")
+		if current.run is Dictionary:
+			expect(migrated.run == current.run, "in-flight legacy state keeps every resolved field and adds district only")
+		if current.profile.lampRepaired:
+			expect(migrated.profile.completedContracts == ["beacon"], "repaired legacy lamp already unlocks market without reward duplication")
+		expect(RulesEngine.migrate_state(migrated) == migrated, "migration is idempotent")
+	var malformed: Dictionary = legacy_fixture(expedition)
+	malformed.run.player.hp = 0
+	expect(RulesEngine.migrate_state(malformed).is_empty(), "migration cannot rescue invalid legacy HP")
+	malformed = legacy_fixture(expedition)
+	malformed.run["district"] = "quay"
+	expect(RulesEngine.migrate_state(malformed).is_empty(), "legacy unknown fields remain rejected")
+	malformed = legacy_fixture(harbor)
+	malformed.profile.stash[0].kind = "pumpGear"
+	expect(RulesEngine.migrate_state(malformed).is_empty(), "legacy does not accept newly introduced item kinds")
+	for mutation: Callable in [func(s: Dictionary) -> void: s.profile.credits = -1, func(s: Dictionary) -> void: s.profile.completedContracts = ["network"], func(s: Dictionary) -> void: s.profile.completedContracts = ["beacon", "beacon"], func(s: Dictionary) -> void: s.profile.selectedDistrict = "observatory", func(s: Dictionary) -> void: s.profile.activeContract = "network", func(s: Dictionary) -> void: s.profile.lampRepaired = true]:
+		var bad: Dictionary = RulesEngine.new_game()
+		mutation.call(bad)
+		expect(not RulesEngine.validate_state(bad), "inconsistent v2 campaign state rejected")
+	return true
+
+func test_district_topology() -> bool:
+	var signatures: Dictionary = {}
+	for district: String in RulesEngine.Campaign.DISTRICTS:
+		var variants: Dictionary = {}
+		for seed_value: int in range(32):
+			var world: Dictionary = World.create_world(seed_value, true, district)
+			world.tide = 3
+			var reachable: Dictionary = flood(world)
+			var dry: Dictionary = flood(world, true)
+			var goal_key: String = "%d,%d" % [world.goal.x, world.goal.y]
+			expect(dry.has(goal_key), "district has dry objective/exit route " + district + " seed " + str(seed_value))
+			for crate: Dictionary in world.containers:
+				expect(reachable.has("%d,%d" % [crate.x, crate.y]), "district cache reachable " + district + "/" + crate.id)
+			for foe: Dictionary in world.enemies:
+				expect(World.is_walkable(world, foe.x, foe.y) and RulesEngine._distance(foe, world.exit) >= 10, "district enemy has legal safe-entry spawn " + district + "/" + foe.id)
+			for landmark: Dictionary in RulesEngine.Campaign.DISTRICTS[district].landmarks:
+				expect(world.tiles[landmark.y][landmark.x].type in ["wall", "water"], "district art anchored to actual blocked geometry " + district)
+			variants[JSON.stringify(world.containers) + JSON.stringify(world.enemies)] = true
+			var geometry: String = ""
+			for row: Array in world.tiles:
+				for tile: Dictionary in row:
+					geometry += tile.type.left(1) + str(tile.elevation)
+			if seed_value == 0:
+				signatures[geometry] = true
+			expect(world == with_tide(World.create_world(seed_value, true, district), 3), "district seed deterministic " + district)
+		expect(variants.size() > 1, "district seeds vary cache/enemy choices " + district)
+	expect(signatures.size() == 4, "four districts have genuinely different collision/elevation geometry")
+	return true
+
+func first_dry_step(run: Dictionary, target: Dictionary) -> Dictionary:
+	var start: String = "%d,%d" % [run.player.x, run.player.y]
+	var queue: Array = [{"x": run.player.x, "y": run.player.y, "first": {}}]
+	var seen: Dictionary = {start: true}
+	var index: int = 0
+	while index < queue.size():
+		var cell: Dictionary = queue[index]
+		index += 1
+		for d: Dictionary in RulesEngine.DIRECTIONS:
+			var x: int = cell.x + d.x
+			var y: int = cell.y + d.y
+			var k: String = "%d,%d" % [x, y]
+			if seen.has(k) or not World.is_walkable(run, x, y) or int(run.tiles[y][x].elevation) <= 3:
+				continue
+			var first: Dictionary = cell.first if not cell.first.is_empty() else d
+			if x == target.x and y == target.y:
+				return first
+			seen[k] = true
+			queue.append({"x": x, "y": y, "first": first})
+	return {}
+
+func campaign_travel(state: Dictionary, target: Dictionary) -> Dictionary:
+	for step: int in range(180):
+		if state.mode != "expedition":
+			return state
+		if state.run.player.x == target.x and state.run.player.y == target.y:
+			return state
+		var action: Dictionary
+		if state.run.player.hp <= int(state.run.player.maxHp) - 10 and not uid(state, "medicine").is_empty():
+			action = {"type": "use", "uid": uid(state, "medicine")}
+		else:
+			var direction: Dictionary = first_dry_step(state.run, target)
+			if direction.is_empty():
+				expect(false, "no dry step on actual district route " + state.run.district)
+				return state
+			var foe: Variant = RulesEngine._enemy_at(state.run, int(state.run.player.x) + int(direction.x), int(state.run.player.y) + int(direction.y))
+			if foe != null and not uid(state, "bomb").is_empty() and foe.hp > int(RulesEngine.stats(state).attack):
+				action = {"type": "use", "uid": uid(state, "bomb"), "dx": direction.x, "dy": direction.y}
+			else:
+				action = {"type": "move", "dx": direction.x, "dy": direction.y}
+		state = act(state, action)
+		var loaded: Variant = JSON.parse_string(JSON.stringify(state))
+		expect(RulesEngine.validate_state(loaded), "actual district route saves complete resolved turn")
+		state = RulesEngine.migrate_state(loaded)
+	return state
+
+func stash_kind(state: Dictionary, kind: String) -> Dictionary:
+	for item: Dictionary in state.profile.stash:
+		if item.kind == kind:
+			return item
+	return {}
+
+func test_actual_campaign_route() -> bool:
+	for seed_value: int in [7, 42, 1234]:
+		var state: Dictionary = act(RulesEngine.new_game(), {"type": "choose", "character": "ritsu"})
+		for story: String in RulesEngine.Campaign.STORY_IDS:
+			state = act(state, {"type": "accept_contract", "id": story})
+			# Recovered treasure funds supplies; the channel delivery needs one pearl.
+			var kept_pearl: bool = false
+			for item: Dictionary in state.profile.stash.duplicate():
+				if item.kind == "pearl":
+					if story == "channel" and not kept_pearl:
+						kept_pearl = true
+					else:
+						state = act(state, {"type": "sell", "uid": item.uid})
+			for kind: String in ["knife", "coat", "medicine", "medicine", "bomb", "flare"]:
+				var item: Dictionary = stash_kind(state, kind)
+				if item.is_empty():
+					state = act(state, {"type": "buy", "kind": kind})
+					item = stash_kind(state, kind)
+				if not item.is_empty():
+					state = act(state, {"type": "pack", "uid": item.uid})
+			state = act(state, {"type": "depart", "seed": seed_value})
+			state = campaign_travel(state, {"x": 12, "y": 21})
+			state = act(state, {"type": "interact"})
+			state = campaign_travel(state, state.run.goal.duplicate())
+			if state.mode != "expedition":
+				expect(false, "actual campaign survives objective " + story + " seed " + str(seed_value))
+				return false
+			state = act(state, {"type": "interact"})
+			state = campaign_travel(state, state.run.exit.duplicate())
+			if state.mode != "expedition":
+				expect(false, "actual campaign survives return " + story + " seed " + str(seed_value))
+				return false
+			state = act(state, {"type": "interact"})
+			expect(state.mode == "result" and state.result.outcome == "extracted", "actual district completes extraction " + story)
+			state = act(state, {"type": "return"})
+			state = act(state, {"type": "claim_contract", "id": story})
+			expect(story in state.profile.completedContracts and RulesEngine.validate_state(state), "one actual expedition funds reconstruction " + story + " seed " + str(seed_value))
+		expect(RulesEngine.campaign_summary(state).completed == 4, "all four districts complete without inserted inventory " + str(seed_value))
+	return true
+
+
+func test_legacy_store_backup() -> bool:
+	var key: String = "shiogaeri-qa-v02-migration"
+	var path: String = "user://qa-v02-migration.json"
+	var old: Dictionary = legacy_fixture(prepared("sui", 7))
+	var raw: String = JSON.stringify(old, "  ")
+	expect(Store._write_serialized(key, path, raw).is_empty(), "legacy native fixture written under isolated QA path")
+	var loaded: Dictionary = Store.load_game(key, path)
+	expect(loaded.found and not loaded.corrupt and loaded.error.is_empty() and loaded.state.version == 2, "store loads valid legacy into v2 without writing it")
+	expect(Store.read_value(key, path).raw == raw, "load alone leaves original v1 bytes unchanged")
+	# A directory at the backup destination simulates an unwritable backup.
+	DirAccess.make_dir_absolute(path + ".pre-v2")
+	var error: String = Store.save_game(loaded.state, key, path)
+	expect(not error.is_empty() and Store.read_value(key, path).raw == raw, "failed backup visibly refuses to overwrite original legacy save")
+	DirAccess.remove_absolute(path + ".pre-v2")
+	expect(Store.save_game(loaded.state, key, path).is_empty(), "store retries backup and writes v2 only after backup succeeds")
+	expect(Store.read_value(key + "-pre-v2", path + ".pre-v2").raw == raw, "pre-v2 backup retains exact original bytes including formatting")
+	loaded = Store.load_game(key, path)
+	expect(loaded.state.version == 2 and RulesEngine.validate_state(loaded.state), "migrated native save reloads with complete run")
+	var malformed: String = "{broken-save"
+	Store._write_serialized(key, path, malformed)
+	loaded = Store.load_game(key, path)
+	expect(loaded.corrupt and Store.read_value(key, path).raw == malformed, "corrupt raw source stays untouched on load")
+	for suffix: String in ["", ".bak", ".tmp", ".pre-v2", ".pre-v2.bak", ".pre-v2.tmp"]:
+		if FileAccess.file_exists(path + suffix):
+			DirAccess.remove_absolute(path + suffix)
 	return true

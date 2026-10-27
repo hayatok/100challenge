@@ -11,6 +11,7 @@ const ART_ROOT := "res://assets/art/"
 const R2_ROOT := "res://assets/art/r2/"
 const RuleData = preload("res://scripts/rules.gd")
 const WorldDataFile = preload("res://scripts/world_data.gd")
+const DistrictData = preload("res://scripts/campaign_data.gd")
 const FONT_PATH := "res://assets/fonts/NotoSansCJKjp-Medium.otf"
 
 @onready var world: Node2D = $World
@@ -38,6 +39,8 @@ var _tile_set: TileSet
 var _character := "isana"
 var _reduce := false
 var _seed := -999
+var _district := ""
+var _palette: Dictionary = {}
 var _last_turn := -1
 var _last_tide := -1
 var _camera_tween: Tween
@@ -79,8 +82,11 @@ func present(state: Dictionary, events: Array = [], reduced_motion: bool = false
 		_seen[str(key)] = true
 	for key: Variant in _visible:
 		_seen[str(key)] = true
-	var map_changed := not _has_world or int(_run.get("seed", 0)) != _seed or int(_run.get("turn", 0)) < _last_turn
+	var incoming_district := str(_run.get("district", "quay"))
+	var map_changed := not _has_world or incoming_district != _district or int(_run.get("seed", 0)) != _seed or int(_run.get("turn", 0)) < _last_turn
 	if map_changed:
+		_district = incoming_district
+		_apply_district_palette()
 		_seed = int(_run.get("seed", 0))
 		_last_turn = -1
 		_build_map()
@@ -207,6 +213,14 @@ func _create_terrain() -> void:
 		else:
 			part = _temporary_terrain(tile_index)
 			part.resize(patch_size, patch_size)
+		if not _palette.is_empty() and tile_index in [0, 1] and _district != "quay":
+			var tint := _district_color("stone")
+			for py in part.get_height():
+				for px in part.get_width():
+					var original := part.get_pixel(px, py)
+					var shade := original.get_luminance() / 0.76
+					var graded := Color(tint.r * shade, tint.g * shade, tint.b * shade, original.a)
+					part.set_pixel(px, py, original.lerp(graded, 0.48 if tile_index == 0 else 0.3))
 		atlas_image.blit_rect(part, Rect2i(0, 0, patch_size, patch_size), Vector2i(tile_index * patch_size, 0))
 	var atlas_source := TileSetAtlasSource.new()
 	atlas_source.texture = ImageTexture.create_from_image(atlas_image)
@@ -295,8 +309,9 @@ func _refresh_terrain() -> void:
 			var tile: Dictionary = tiles[y][x]
 			var kind := str(tile.get("type", "floor"))
 			var raised := int(tile.get("elevation", 1)) >= 5
-			ground.set_cell(Vector2i(x, y), 0, _atlas_coordinate(2 if raised and kind != "wall" else 0, x, y))
-			var outer_harbor := kind == "wall" and (y == 24 or (x in [0, 24] and y >= 18))
+			var timber := raised and kind != "wall" and (_district == "quay" or (_district == "canal" and _adjoins_deep_water(x, y)))
+			ground.set_cell(Vector2i(x, y), 0, _atlas_coordinate(2 if timber else 0, x, y))
+			var outer_harbor := _district == "quay" and kind == "wall" and (y == 24 or (x in [0, 24] and y >= 18))
 			if outer_harbor or _is_flooded(x, y):
 				water.set_cell(Vector2i(x, y), 0, _atlas_coordinate(3, x, y))
 				if outer_harbor:
@@ -308,8 +323,10 @@ func _refresh_terrain() -> void:
 				_add_wall_face(x, y)
 			elif raised:
 				_line(depth, Vector2(x * TILE + 2, y * TILE + TILE - 2), Vector2((x + 1) * TILE - 2, (y + 1) * TILE - 2), Color("fff0bd"), 2)
-				if x == 12 and y % 3 == 0:
+				if _district in ["quay", "canal"] and y % 3 == 0 and (_tile_type(x - 1, y) == "water" or _tile_type(x + 1, y) == "water"):
 					_add_pier_post(Vector2(x * TILE + 4, y * TILE + 44))
+				if _district == "canal":
+					_add_bridge_rails(x, y)
 			if kind == "gate":
 				_line(depth, Vector2(x * TILE + 4, y * TILE + 7), Vector2(x * TILE + 4, y * TILE + 55), Color("e7cda2"), 5)
 				_line(depth, Vector2((x + 1) * TILE - 4, y * TILE + 7), Vector2((x + 1) * TILE - 4, y * TILE + 55), Color("e7cda2"), 5)
@@ -345,9 +362,9 @@ func _add_wall_face(x: int, y: int) -> void:
 	var face := Polygon2D.new()
 	face.position = origin + Vector2(1, 49)
 	face.polygon = _rect_polygon(Vector2.ZERO, Vector2(62, 13))
-	face.color = Color("e5dbbf")
+	face.color = _district_color("stone").darkened(0.06)
 	depth.add_child(face)
-	_line(depth, origin + Vector2(0, 48), origin + Vector2(64, 48), Color("fff1d1"), 5)
+	_line(depth, origin + Vector2(0, 48), origin + Vector2(64, 48), _district_color("stone").lightened(0.35), 5)
 	_line(depth, origin + Vector2(1, 62), origin + Vector2(64, 62), Color(0.25, 0.49, 0.5, 0.3), 2)
 	if (x * 3 + y * 5) % 7 == 0:
 		_line(depth, origin + Vector2(19, 50), origin + Vector2(21, 59), Color(0.55, 0.63, 0.54, 0.35), 1.3)
@@ -361,14 +378,15 @@ func _refresh_fog() -> void:
 	for key: Variant in _fog_cells:
 		var cover: Polygon2D = _fog_cells[key]
 		cover.visible = not _visible.has(key)
-		cover.color = Color(0.77, 0.87, 0.83, 0.57) if _seen.has(key) else Color("b8d8d4")
+		cover.color = _district_color("water").lightened(0.52)
+		cover.color.a = 0.57 if _seen.has(key) else 1.0
 	for entry: Dictionary in _landmark_nodes:
 		var known := _seen.has(entry.key)
 		var prop: Sprite2D = entry.node
 		prop.visible = known
 		if entry.get("mooring") != null:
 			(entry.mooring as CanvasItem).visible = known
-		prop.modulate = Color.WHITE if _visible.has(entry.key) else Color(0.84, 0.94, 0.92, 0.62)
+		prop.modulate = entry.tint if _visible.has(entry.key) else Color(entry.tint, 0.62)
 
 func _refresh_landmark_clearance() -> void:
 	var image := Image.create(25, 25, false, Image.FORMAT_RGBA8)
@@ -402,7 +420,13 @@ func _refresh_details() -> void:
 			if str(tile.get("type", "")) != "floor" or _is_flooded(x, y):
 				continue
 			var variant := int(tile.get("variant", 0)) + x * 13 + y * 17
-			if variant % 17 == 0:
+			if _district == "observatory" and variant % 13 == 0:
+				_add_survey_marker(_cell_position(x, y) + Vector2(23, 20))
+			elif _district == "market" and variant % 11 == 0:
+				_add_market_basket(_cell_position(x, y) + Vector2(-22, 20))
+			elif _district == "canal" and variant % 13 == 0:
+				_add_reeds(_cell_position(x, y) + Vector2(24, 20))
+			elif variant % 17 == 0:
 				_add_rope(_cell_position(x, y) + Vector2(21, 19))
 			elif variant % 19 == 0:
 				_add_flowers(_cell_position(x, y) + Vector2(-22, 19))
@@ -471,43 +495,32 @@ func _add_flowers(at: Vector2) -> void:
 		details.add_child(petal)
 
 func _build_landmarks() -> void:
-	# Each building remains anchored on a blocked tile; projection is visual only.
-	var anchors := [
-		{"kind":"prop_market", "x":9, "y":13, "width":122.0},
-		{"kind":"prop_clinic", "x":16, "y":13, "width":134.0, "offset":Vector2(-22, 0)},
-		{"kind":"prop_pump", "x":8, "y":4, "width":118.0},
-		{"kind":"prop_lighthouse", "x":18, "y":3, "height":196.0},
-		{"kind":"prop_boat", "x":11, "y":24, "width":126.0},
-		{"kind":"prop_boat", "x":13, "y":24, "width":119.0},
-		{"kind":"prop_planter", "x":9, "y":24, "width":53.0},
-		{"kind":"prop_planter", "x":14, "y":24, "width":53.0}]
-	var occupied: Dictionary = {}
-	for anchor: Dictionary in anchors:
-		occupied[_key(int(anchor.x), int(anchor.y))] = true
-	for y in range(2, 24):
-		for x in range(1, 24):
-			if _tile_type(x, y) == "wall" and (x * 5 + y * 7) % 19 == 0 and not occupied.has(_key(x, y)):
-				anchors.append({"kind":"prop_planter", "x":x, "y":y, "width":47.0})
+	# District authors own anchor positions; never slide a prop onto an unrelated cell.
+	var anchors: Array = (DistrictData.DISTRICTS.get(_district, DistrictData.DISTRICTS.quay).landmarks as Array).duplicate(true)
+	if _district == "quay":
+		anchors.append_array([{"kind":"boat", "x":11,"y":24}, {"kind":"boat", "x":13,"y":24}, {"kind":"palms", "x":9,"y":24}, {"kind":"palms", "x":14,"y":24}])
 	for anchor: Dictionary in anchors:
 		var x := int(anchor.x)
 		var y := int(anchor.y)
 		if _tile_type(x, y) not in ["wall", "water"]:
-			var replacement := x - 1
-			if _tile_type(replacement, y) not in ["wall", "water"]:
-				continue
-			x = replacement
-		var texture := _texture(str(anchor.kind))
+			continue
+		var authored_kind := str(anchor.kind)
+		var kind := "prop_" + authored_kind
+		var texture := _texture(kind)
+		if authored_kind in ["arch", "palms"]:
+			texture = _architectural_texture(authored_kind)
 		if texture == null:
 			continue
-		var factor: float = float(anchor.height) / texture.get_height() if anchor.has("height") else float(anchor.width) / texture.get_width()
+		var width := float({"market":128, "clinic":138, "pump":119, "boat":124, "palms":60, "arch":108}.get(authored_kind, 110))
+		var factor: float = 196.0 / texture.get_height() if authored_kind == "lighthouse" else width / texture.get_width()
 		var prop := Sprite2D.new()
 		prop.texture = texture
 		prop.scale = Vector2.ONE * factor
 		# Set the base on the wall's southern edge. Height grows into the skyline.
 		var base := _cell_position(x, y) + Vector2(0, 27)
-		prop.position = base - Vector2(0, texture.get_height() * factor * 0.5) + Vector2(anchor.get("offset", Vector2.ZERO))
+		prop.position = base - Vector2(0, texture.get_height() * factor * 0.5)
 		var mooring: Line2D
-		if str(anchor.kind) == "prop_boat":
+		if authored_kind == "boat":
 			# Boats float off the quay rather than placing their hull on paving.
 			prop.position.y += 50
 			var side := 1.0 if x == 13 else -1.0
@@ -524,8 +537,9 @@ func _build_landmarks() -> void:
 		material.set_shader_parameter("map_center", prop.position)
 		material.set_shader_parameter("map_scale", factor)
 		prop.material = material
+		prop.modulate = _landmark_tint(authored_kind)
 		landmarks.add_child(prop)
-		_landmark_nodes.append({"node":prop, "key":_key(x, y), "kind":str(anchor.kind), "base":base, "mooring":mooring})
+		_landmark_nodes.append({"node":prop, "key":_key(x, y), "kind":kind, "base":base, "mooring":mooring, "tint":_landmark_tint(authored_kind)})
 
 func _refresh_actors(immediate: bool) -> void:
 	var active_ids: Dictionary = {}
@@ -773,3 +787,87 @@ func _clear_children(parent: Node) -> void:
 	for child: Node in parent.get_children():
 		parent.remove_child(child)
 		child.queue_free()
+
+func _district_color(role: String) -> Color:
+	return Color(str(_palette.get(role, {"stone":"#d9c8a6", "water":"#57b9bf", "accent":"#e2b260"}.get(role, "#ffffff"))))
+
+func _apply_district_palette() -> void:
+	_palette = DistrictData.DISTRICTS.get(_district, DistrictData.DISTRICTS.quay).palette
+	var stone := _district_color("stone")
+	ground.modulate = Color(0.84 + stone.r * 0.16, 0.81 + stone.g * 0.2, 0.8 + stone.b * 0.24)
+	walls.modulate = Color(0.8 + stone.r * 0.22, 0.78 + stone.g * 0.24, 0.76 + stone.b * 0.28)
+	var sea := _district_color("water")
+	$Ocean.color = sea
+	var water_material := water.material as ShaderMaterial
+	water_material.set_shader_parameter("water_tint", Color(sea.r / 0.34, sea.g / 0.73, sea.b / 0.75))
+	water_material.set_shader_parameter("flow_direction", Vector2(0.7, 0.16) if _district == "canal" else Vector2(0.08, 0.35))
+	water_material.set_shader_parameter("wave_density", 140.0 if _district == "canal" else 65.0 if _district == "market" else 90.0)
+	water_material.set_shader_parameter("glint_strength", 0.035 if _district == "market" else 0.055 if _district == "observatory" else 0.08)
+	ambient.district = _district
+	_create_terrain()
+
+func _landmark_tint(kind: String) -> Color:
+	if kind in ["arch", "palms", "boat"]:
+		return Color.WHITE
+	match _district:
+		"market": return Color(1.06, 0.91, 0.8)
+		"canal": return Color(0.82, 1.0, 0.92)
+		"observatory": return Color(0.92, 0.89, 1.08)
+	return Color.WHITE
+
+func _architectural_texture(kind: String) -> Texture2D:
+	var cache_key := _district + "_" + kind
+	if _textures.has(cache_key):
+		return _textures[cache_key]
+	var stone := _district_color("stone").to_html(false)
+	var accent := _district_color("accent").to_html(false)
+	# Native vector silhouettes share the same inspected anchor/clearance contract as painted props.
+	var content := ""
+	if kind == "arch":
+		content = '<path d="M12 130V65Q12 12 64 12Q116 12 116 65V130H91V68Q91 39 64 39Q37 39 37 68V130Z" fill="#%s" stroke="#667d83" stroke-width="4"/><path d="M8 111H41V130H8ZM87 111H120V130H87Z" fill="#%s" stroke="#667d83" stroke-width="3"/><path d="M10 60H35M95 60H118M22 31L43 49M106 31L86 49M64 12V39" stroke="#fff6dc" stroke-width="4"/><path d="M48 10H80V20H48Z" fill="#%s" stroke="#667d83" stroke-width="3"/>' % [stone, stone, accent]
+	else:
+		content = '<ellipse cx="67" cy="133" rx="36" ry="9" fill="#497b742e"/><path d="M55 126Q66 89 61 49M73 126Q85 94 83 65" fill="none" stroke="#a98c58" stroke-width="9"/><path d="M61 49Q29 14 14 49Q37 32 61 49Q52 10 82 8Q65 23 61 49Q85 22 114 45Q89 36 61 49M83 65Q61 34 43 62Q66 49 83 65Q99 40 123 68Q103 55 83 65" fill="#6c9d79" stroke="#4b806c" stroke-width="3"/><path d="M35 115H95L88 138H42Z" fill="#%s" stroke="#687f79" stroke-width="4"/>' % accent
+	var svg := '<svg xmlns="http://www.w3.org/2000/svg" width="128" height="144" viewBox="0 0 128 144">%s</svg>' % content
+	var image := Image.new()
+	if image.load_svg_from_string(svg, 2.0) != OK:
+		return null
+	var texture := ImageTexture.create_from_image(image)
+	_textures[cache_key] = texture
+	return texture
+
+func _add_bridge_rails(x: int, y: int) -> void:
+	# Rails follow actual elevated dry cells adjoining permanent canals.
+	for side: int in [-1, 1]:
+		if _tile_type(x + side, y) != "water":
+			continue
+		var edge := Vector2(x * TILE + (4 if side < 0 else 60), y * TILE)
+		_line(depth, edge + Vector2(0, 2), edge + Vector2(0, 62), Color("e8dab7"), 3)
+		for py: int in [8, 56]:
+			_add_pier_post(edge + Vector2(0, py))
+
+func _add_survey_marker(at: Vector2) -> void:
+	_line(details, at, at + Vector2(0, -19), Color("697c96"), 3)
+	_line(details, at + Vector2(-6, -17), at + Vector2(6, -17), _district_color("accent"), 3)
+	_line(details, at + Vector2(-4, 2), at + Vector2(4, 2), Color("f5efdb"), 5)
+
+func _add_market_basket(at: Vector2) -> void:
+	var basket := Polygon2D.new()
+	basket.position = at
+	basket.polygon = PackedVector2Array([Vector2(-7,-8),Vector2(7,-8),Vector2(5,3),Vector2(-5,3)])
+	basket.color = Color("bf9864")
+	details.add_child(basket)
+	_line(details, at + Vector2(-6,-8), at + Vector2(6,-8), Color("f1cd89"), 3)
+	for dx: int in [-4,0,4]:
+		_line(details, at + Vector2(dx,-8), at + Vector2(dx,-13), Color("e67e66"), 4)
+
+func _add_reeds(at: Vector2) -> void:
+	for i in 4:
+		var bottom := at + Vector2(i * 2 - 3, 3)
+		_line(details, bottom, bottom + Vector2(i - 2, -15 - i % 2 * 5), Color("779b75"), 1.8)
+		_line(details, bottom + Vector2(i - 2, -12 - i % 2 * 5), bottom + Vector2(i - 2, -17 - i % 2 * 5), Color("c9b781"), 2.6)
+
+func _adjoins_deep_water(x: int, y: int) -> bool:
+	for offset: Vector2i in [Vector2i.UP, Vector2i.DOWN, Vector2i.LEFT, Vector2i.RIGHT]:
+		if _tile_type(x + offset.x, y + offset.y) == "water":
+			return true
+	return false

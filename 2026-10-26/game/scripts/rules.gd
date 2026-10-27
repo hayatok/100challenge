@@ -2,6 +2,7 @@ class_name Rules
 extends RefCounted
 
 const World = preload("res://scripts/world_data.gd")
+const Campaign = preload("res://scripts/campaign_data.gd")
 const ITEMS: Dictionary = {
 	"knife": {"name": "回収ナイフ", "description": "隣の敵を攻撃する。攻撃力3。", "category": "weapon", "icon": "knife", "value": 12, "attack": 3},
 	"loanKnife": {"name": "貸出ナイフ", "description": "武器を持たずに出発すると借りられる。攻撃力3。帰還時に返却する。", "category": "weapon", "icon": "knife", "value": 0, "attack": 3},
@@ -10,13 +11,16 @@ const ITEMS: Dictionary = {
 	"medicine": {"name": "救急包", "description": "体力を10回復する。使用に1手。", "category": "consumable", "icon": "medicine", "value": 8},
 	"bomb": {"name": "爆薬", "description": "隣の壁を壊す。着弾点と周囲1マスの敵に8ダメージ。使用に1手。自分は傷つかない。", "category": "consumable", "icon": "bomb", "value": 14},
 	"flare": {"name": "発煙筒", "description": "隣の場所へ投げ、8マス以内の敵を4手引きつける。使用に1手。", "category": "consumable", "icon": "flare", "value": 9},
-	"scrap": {"name": "銅の端材", "description": "港の灯りの修理に1個使う。", "category": "material", "icon": "scrap", "value": 6},
+	"scrap": {"name": "銅の端材", "description": "港や市場の再建、仲間の仕事に使う。必要な数は仕事ごとに異なる。", "category": "material", "icon": "scrap", "value": 6},
 	"core": {"name": "灯台の集光芯", "description": "持ち帰り、銅の端材1個と合わせて港の灯りを直す。次の遠征から視界が1マス広がる。", "category": "material", "icon": "core", "value": 50},
+	"pumpGear": {"name": "揚水機の歯車", "description": "市場の揚水機と港の灯りに使う。予備も1個持ち帰ろう。", "category": "material", "icon": "pumpGear", "value": 28},
+	"chart": {"name": "運河の航路図", "description": "測量所に残された航路図。港へ届けると観測所への船路が開く。", "category": "material", "icon": "chart", "value": 36},
+	"sunLens": {"name": "太陽レンズ", "description": "観測所の保管庫にあるレンズ。港を結ぶ灯りの最後の部品。", "category": "material", "icon": "sunLens", "value": 60},
 	"pearl": {"name": "潮真珠", "description": "沈んだ街で見つかる宝。持ち帰ると倉庫に残る。", "category": "treasure", "icon": "pearl", "value": 24}}
 const ENEMIES: Dictionary = {
 	"crab": {"name": "錆ガニ", "description": "近づくと追い、隣で爪を振るう。", "hp": 5, "attack": 2},
 	"wader": {"name": "潮歩き", "description": "縦横3マス以内で構え、次の手に直線を突進する。横へ避けよう。", "hp": 7, "attack": 3},
-	"diver": {"name": "潜り守", "description": "灯台を守る重い潜水服。偶数の手だけ動き、隣で強く殴る。", "hp": 11, "attack": 4}}
+	"diver": {"name": "潜り守", "description": "重要な荷を守る重い潜水服。偶数の手だけ動き、隣で強く殴る。", "hp": 11, "attack": 4}}
 const CHARACTERS: Dictionary = {
 	"isana": {"name": "イサナ", "role": "運び屋", "description": "道具を大事にする、人懐こい運び屋。", "trait": "携行枠＋2", "color": "#e4b36b", "idleLine": "持ち帰る分の鞄も空けておこう。", "returnLine": "ただいま。ちゃんと持って帰ったよ。", "emptyLine": "身軽で帰ってきちゃった。次は収穫も欲しいね。", "lossLine": "次は荷物を欲張らずに行こう。"},
 	"ritsu": {"name": "リツ", "role": "潜水士", "description": "危険を先に見て動く、落ち着いた潜水士。", "trait": "最大体力＋4", "color": "#abbfce", "idleLine": "潮と帰り道を確かめてから。", "returnLine": "港に着いた。これで一息。", "emptyLine": "無事に戻れた。今日はそれでよし。", "lossLine": "あの一手を覚えておく。"},
@@ -25,7 +29,7 @@ const CHARACTERS: Dictionary = {
 const DIRECTIONS: Array = [{"x": 0, "y": -1}, {"x": -1, "y": 0}, {"x": 1, "y": 0}, {"x": 0, "y": 1}]
 
 static func new_game() -> Dictionary:
-	var state: Dictionary = {"version": 1, "mode": "harbor", "character": "isana", "profile": {"stash": [], "runs": 0, "extracts": 0, "deaths": 0, "lampRepaired": false}, "loadout": [], "run": null, "result": null, "nextId": 1}
+	var state: Dictionary = {"version": 2, "mode": "harbor", "character": "isana", "profile": {"stash": [], "runs": 0, "extracts": 0, "deaths": 0, "lampRepaired": false, "credits": 0, "selectedDistrict": "quay", "activeContract": "beacon", "completedContracts": []}, "loadout": [], "run": null, "result": null, "nextId": 1}
 	for kind: String in ["knife", "coat", "medicine", "medicine", "bomb", "bomb", "flare", "flare"]:
 		state.profile.stash.append(_new_item(state, kind))
 	return state
@@ -34,6 +38,21 @@ static func _new_item(state: Dictionary, kind: String) -> Dictionary:
 	var item: Dictionary = {"uid": "i%d" % int(state.nextId), "kind": kind}
 	state.nextId += 1
 	return item
+
+static func current_district(state: Dictionary) -> Dictionary:
+	return Campaign.current_district(state)
+
+static func campaign_summary(state: Dictionary) -> Dictionary:
+	return Campaign.campaign_summary(state)
+
+static func contracts(state: Dictionary) -> Array:
+	return Campaign.contracts(state)
+
+static func dialogue(state: Dictionary, character: String) -> Array:
+	return Campaign.dialogue(state, character)
+
+static func shop_rows(state: Dictionary) -> Array:
+	return Campaign.shop_rows(state)
 
 static func stats(state: Dictionary) -> Dictionary:
 	var run: Variant = state.get("run")
@@ -386,27 +405,71 @@ static func _harbor_action(input: Dictionary, state: Dictionary, action: Diction
 			return _invalid(input, "携行枠がいっぱい。")
 		source.erase(item)
 		destination.append(item)
-	elif kind == "repair":
-		if state.profile.lampRepaired:
-			return _invalid(input, "港の灯りは修理済み。")
-		var core: Dictionary = {}
-		var scrap: Dictionary = {}
-		for item: Dictionary in state.profile.stash:
-			if item.kind == "core":
-				core = item
-			if item.kind == "scrap":
-				scrap = item
-		if core.is_empty() or scrap.is_empty():
-			return _invalid(input, "倉庫に灯台の集光芯と銅の端材が1個ずつ必要。")
-		state.profile.stash.erase(core)
-		state.profile.stash.erase(scrap)
-		state.profile.lampRepaired = true
-		_event(events, "repair", "港の灯りを直した。次の遠征から視界が1マス広がる。")
+	elif kind == "choose_district":
+		var district: Variant = action.get("district")
+		if not district is String or not Campaign.unlocked(state, district):
+			return _invalid(input, "その地区への船路はまだ開いていない。")
+		state.profile.selectedDistrict = district
+	elif kind == "accept_contract":
+		var id: Variant = action.get("id")
+		if not id is String or not Campaign.CONTRACTS.has(id):
+			return _invalid(input, "引き受ける仕事を選ぼう。")
+		var row: Dictionary = _contract(state, id)
+		if row.status in ["locked", "claimed"]:
+			return _invalid(input, "この仕事はまだ引き受けられないか、すでに完了している。")
+		state.profile.activeContract = id
+		state.profile.selectedDistrict = row.district
+		_event(events, "message", "「%s」を引き受けた。必要な品は倉庫へ持ち帰ろう。" % row.title)
+	elif kind in ["claim_contract", "repair"]:
+		var id: Variant = "beacon" if kind == "repair" else action.get("id")
+		if not id is String or not Campaign.CONTRACTS.has(id):
+			return _invalid(input, "届ける仕事を選ぼう。")
+		var row: Dictionary = _contract(state, id)
+		if row.status != "ready":
+			return _invalid(input, "倉庫に必要な品がそろっていないか、まだ届けられない仕事。")
+		var delivery_count: int = 0
+		for requirement: Dictionary in row.requirements:
+			delivery_count += int(requirement.count)
+		if state.profile.stash.size() - delivery_count + row.reward.items.size() > 10000 or not _integer(int(state.profile.credits) + int(row.reward.credits)):
+			return _invalid(input, "倉庫か所持金が上限に達するため、受け取れない。")
+		# Resolve each requirement against concrete stash UIDs, never receipts or carried items.
+		for requirement: Dictionary in row.requirements:
+			var remaining: int = int(requirement.count)
+			for item: Dictionary in state.profile.stash.duplicate():
+				if remaining > 0 and item.kind == requirement.kind:
+					state.profile.stash.erase(item)
+					remaining -= 1
+		state.profile.completedContracts.append(id)
+		state.profile.credits += int(row.reward.credits)
+		for reward_kind: String in row.reward.items:
+			state.profile.stash.append(_new_item(state, reward_kind))
+		if state.profile.activeContract == id:
+			state.profile.activeContract = ""
+		if id == "beacon":
+			state.profile.lampRepaired = true
+		_event(events, "repair" if id == "beacon" else "contract", "「%s」を完了した。%d Gを受け取った。%s" % [row.title, row.reward.credits, "次の遠征から視界が1マス広がる。" if id == "beacon" else ""])
+	elif kind == "sell":
+		var item: Dictionary = _find_item(state.profile.stash, action.get("uid"))
+		if item.is_empty() or item.kind == "loanKnife" or int(ITEMS[item.kind].value) <= 0 or not _integer(int(state.profile.credits) + int(ITEMS[item.kind].value)):
+			return _invalid(input, "売れる倉庫の品を選ぼう。")
+		state.profile.stash.erase(item)
+		state.profile.credits += int(ITEMS[item.kind].value)
+		_event(events, "message", "%sを%d Gで売った。" % [ITEMS[item.kind].name, ITEMS[item.kind].value])
+	elif kind == "buy":
+		var item_kind: Variant = action.get("kind")
+		if not item_kind is String or not Campaign.SHOP.has(item_kind):
+			return _invalid(input, "交換所の道具を選ぼう。")
+		var price: int = int(Campaign.SHOP[item_kind])
+		if int(state.profile.credits) < price or state.profile.stash.size() >= 10000:
+			return _invalid(input, "所持金が足りないか、倉庫がいっぱい。")
+		state.profile.credits -= price
+		state.profile.stash.append(_new_item(state, item_kind))
+		_event(events, "message", "%sを%d Gで買い、倉庫に入れた。" % [ITEMS[item_kind].name, price])
 	elif kind == "depart":
 		if action.has("seed") and not _integer(action.seed, 0, 4294967295):
 			return _invalid(input, "遠征の種は0から4294967295の整数で指定する。")
 		var seed_value: int = int(action.get("seed", ((int(state.profile.runs) + 1) * 2654435761) & 0xffffffff))
-		var world: Dictionary = World.create_world(seed_value, state.profile.lampRepaired)
+		var world: Dictionary = World.create_world(seed_value, state.profile.lampRepaired, state.profile.selectedDistrict)
 		var inventory: Array = state.loadout
 		var weapon: Variant = null
 		var armor: Variant = null
@@ -433,12 +496,18 @@ static func _harbor_action(input: Dictionary, state: Dictionary, action: Diction
 		state.loadout = []
 		state.mode = "expedition"
 		state.profile.runs += 1
-		_event(events, "depart", "船着き場を出た。北への高架は、満潮でも沈まない。")
+		_event(events, "depart", "%sへ出た。%s" % [current_district(state).name, current_district(state).objective])
 		_remember(world)
 		world.log.append(events[0].text)
 	else:
 		return _invalid(input, "港では持ち物を選んで出発しよう。")
 	return {"state": state, "events": events}
+
+static func _contract(state: Dictionary, id: String) -> Dictionary:
+	for row: Dictionary in contracts(state):
+		if row.id == id:
+			return row
+	return {}
 
 static func _use_item(state: Dictionary, action: Dictionary, events: Array) -> String:
 	var run: Dictionary = state.run
@@ -533,14 +602,37 @@ static func _unique_items(items: Array, next_id: int) -> bool:
 
 # Accept integral JSON floats, then normalize only when applying a valid action.
 static func validate_state(value: Variant) -> bool:
+	return _validate_state(value, false)
+
+static func migrate_state(value: Variant) -> Dictionary:
+	if validate_state(value):
+		return _normalize(value)
+	if not _validate_state(value, true):
+		return {}
+	var migrated: Dictionary = _normalize(value)
+	migrated.version = 2
+	migrated.profile["credits"] = 0
+	migrated.profile["selectedDistrict"] = "quay"
+	migrated.profile["activeContract"] = "" if migrated.profile.lampRepaired else "beacon"
+	migrated.profile["completedContracts"] = ["beacon"] if migrated.profile.lampRepaired else []
+	if migrated.run is Dictionary:
+		migrated.run["district"] = "quay"
+	return migrated if validate_state(migrated) else {}
+
+static func _validate_state(value: Variant, legacy: bool) -> bool:
 	if not _fields(value, ["version", "mode", "character", "profile", "loadout", "run", "result", "nextId"]):
 		return false
-	if value.version != 1 or not _integer(value.version, 1, 1) or value.mode not in ["harbor", "expedition", "result"] or not value.character is String or not CHARACTERS.has(value.character) or not _integer(value.nextId, 1):
+	if not _integer(value.version, 1 if legacy else 2, 1 if legacy else 2) or value.mode not in ["harbor", "expedition", "result"] or not value.character is String or not CHARACTERS.has(value.character) or not _integer(value.nextId, 1):
 		return false
 	var profile: Variant = value.profile
-	if not _fields(profile, ["stash", "runs", "extracts", "deaths", "lampRepaired"]):
+	var profile_fields: Array = ["stash", "runs", "extracts", "deaths", "lampRepaired"]
+	if not legacy:
+		profile_fields.append_array(["credits", "selectedDistrict", "activeContract", "completedContracts"])
+	if not _fields(profile, profile_fields):
 		return false
 	if not _items(profile.stash, 10000) or not _integer(profile.runs) or not _integer(profile.extracts) or not _integer(profile.deaths) or not profile.lampRepaired is bool:
+		return false
+	if not legacy and not _valid_campaign(value):
 		return false
 	for item: Dictionary in profile.stash:
 		if item.kind == "loanKnife":
@@ -554,7 +646,9 @@ static func validate_state(value: Variant) -> bool:
 	var all: Array = profile.stash.duplicate()
 	all.append_array(value.loadout)
 	if value.mode == "expedition":
-		if value.result != null or not value.loadout.is_empty() or not _valid_run(value.run, value.character, profile.lampRepaired, all):
+		if value.result != null or not value.loadout.is_empty() or not _valid_run(value.run, value.character, profile.lampRepaired, all, legacy):
+			return false
+		if not legacy and (value.run.district != profile.selectedDistrict or not Campaign.unlocked(value, value.run.district)):
 			return false
 	elif value.run != null:
 		return false
@@ -576,10 +670,44 @@ static func validate_state(value: Variant) -> bool:
 		return false
 	if int(profile.runs) != int(profile.extracts) + int(profile.deaths) + (1 if value.mode == "expedition" else 0):
 		return false
+	if legacy:
+		var legacy_items: Array = all.duplicate()
+		if value.result is Dictionary:
+			legacy_items.append_array(value.result.inventory)
+		for item: Dictionary in legacy_items:
+			if item.kind in ["pumpGear", "chart", "sunLens"]:
+				return false
 	return _unique_items(all, int(value.nextId))
 
-static func _valid_run(run: Variant, character: String, lamp: bool, all: Array) -> bool:
-	if not _fields(run, ["seed", "turn", "tide", "player", "inventory", "weapon", "armor", "tiles", "width", "height", "enemies", "containers", "seen", "exit", "log", "goal", "sight"]):
+static func _valid_campaign(state: Dictionary) -> bool:
+	var profile: Dictionary = state.profile
+	if not _integer(profile.credits) or not profile.selectedDistrict is String or not Campaign.DISTRICTS.has(profile.selectedDistrict) or not profile.activeContract is String or not _list(profile.completedContracts, Campaign.CONTRACTS.size()):
+		return false
+	var unique: Dictionary = {}
+	for id: Variant in profile.completedContracts:
+		if not id is String or not Campaign.CONTRACTS.has(id) or unique.has(id):
+			return false
+		var required: String = Campaign.CONTRACTS[id].requires
+		if not required.is_empty() and required not in profile.completedContracts:
+			return false
+		unique[id] = true
+	if profile.lampRepaired != ("beacon" in profile.completedContracts) or not Campaign.unlocked(state, profile.selectedDistrict):
+		return false
+	if not profile.activeContract.is_empty():
+		if not Campaign.CONTRACTS.has(profile.activeContract) or profile.activeContract in profile.completedContracts:
+			return false
+		var required: String = Campaign.CONTRACTS[profile.activeContract].requires
+		if not required.is_empty() and required not in profile.completedContracts:
+			return false
+	return true
+
+static func _valid_run(run: Variant, character: String, lamp: bool, all: Array, legacy: bool = false) -> bool:
+	var fields: Array = ["seed", "turn", "tide", "player", "inventory", "weapon", "armor", "tiles", "width", "height", "enemies", "containers", "seen", "exit", "log", "goal", "sight"]
+	if not legacy:
+		fields.append("district")
+	if not _fields(run, fields):
+		return false
+	if not legacy and (not run.district is String or not Campaign.DISTRICTS.has(run.district)):
 		return false
 	if not _integer(run.seed, 0, 4294967295) or not _integer(run.turn) or not _integer(run.tide, 0, 3) or int(run.tide) != mini(3, int(run.turn) / 32) or not _integer(run.width, 25, 25) or not _integer(run.height, 25, 25):
 		return false

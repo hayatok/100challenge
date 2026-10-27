@@ -1,0 +1,30 @@
+> shiogaeri@0.2.0 check
+> node scripts/godot.mjs import && npm test && npm run build
+
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+[ DONE ] first_scan_filesystem
+
+[ DONE ] update_scripts_classes
+
+[ DONE ] loading_editor_layout
+
+
+> shiogaeri@0.2.0 test
+> node scripts/godot.mjs test && node scripts/godot.mjs ui
+
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+Rules tests: 5328 passed, 0 failed
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+UI/store tests: 208 passed, 0 failed
+
+> shiogaeri@0.2.0 build
+> node scripts/godot.mjs build
+
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+[ DONE ] first_scan_filesystem
+
+[ DONE ] savepack

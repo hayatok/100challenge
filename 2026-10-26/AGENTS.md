@@ -1,6 +1,6 @@
 # SHIOGAERI / 潮還り
 
-This is a browser-local, turn-based extraction roguelike for touch screens. Read `docs/PLAN.md` and `docs/CONTRACT.md` before editing. The initial work is one complete expedition, not a release authorization.
+This is a browser-local, turn-based extraction roguelike for touch screens. Read `docs/PLAN.md`, `docs/CONTRACT.md` and `docs/VERSION_PLAN.md` before editing.
 
 - Use Godot 4.7.2, GDScript and the Compatibility renderer, with single-thread Web export. Scenes, resources, animations and controls must be editable in Godot.
 - Keep deterministic rules in `game/scripts/rules.gd` and `game/scripts/world_data.gd`. UI, animation, sound and storage cannot advance a turn.
@@ -11,4 +11,5 @@ This is a browser-local, turn-based extraction roguelike for touch screens. Read
 - Follow `docs/PLAN.md` and `docs/ART_DIRECTION.md` before generating assets. Verify character identity, alpha, crops and game-scale readability. Keep prompts and provenance in `game/assets/art/`.
 - The current presentation is defined in `docs/PRESENTATION_R2.md`; its sunlit palette and asset family replace the first prototype's dark direction. Preserve the turn/save contracts during presentation work.
 - Commands: `npm test`, `npm run check`, `npm run build`, `npm run dev` (Godot editor), `npm run preview -- --port 4316` (Web build).
-- Keep verification under `docs/verification/`. Follow the user's root instructions for Japanese review and the mandatory Astra review. Do not publish, tag or merge as part of this milestone.
+- Keep verification under `docs/verification/`. Follow the user's root instructions for Japanese review and the mandatory Astra review.
+- The user authorized continuing versioned development until explicitly stopped on 2026-10-28 JST, including Pages publication after each two completed new versions. Read `docs/VERSION_PLAN.md` for the cadence; this supersedes the initial local-only milestone. Use reviewed PRs, passing current-head CI, the existing tagged Pages route and actual public-build verification. Do not change repository visibility, environment protection or unrelated applications.

@@ -4,6 +4,11 @@ const RulesData = preload("res://scripts/rules.gd")
 const KEY := "shiogaeri-save-v1"
 const SETTINGS := "shiogaeri-settings-v1"
 const PATH := "user://expedition.json"
+const LEGACY_BACKUP_KEY := "shiogaeri-save-v1-pre-v2"
+const LEGACY_BACKUP_PATH := "user://expedition.pre-v2.json"
+static var legacy_raw_pending: String = ""
+static var legacy_key_pending: String = ""
+static var legacy_path_pending: String = ""
 
 static func read_value(key: String, native_path: String) -> Dictionary:
 	if OS.has_feature("web"):
@@ -22,7 +27,9 @@ static func read_value(key: String, native_path: String) -> Dictionary:
 	return {"raw": file.get_as_text(), "error": ""}
 
 static func write_value(key: String, native_path: String, value: Dictionary) -> String:
-	var serialized := JSON.stringify(value)
+	return _write_serialized(key, native_path, JSON.stringify(value))
+
+static func _write_serialized(key: String, native_path: String, serialized: String) -> String:
 	if OS.has_feature("web"):
 		var code := "(function(){try{localStorage.setItem(%s,%s);return '';}catch(e){return 'error';}})()" % [JSON.stringify(key), JSON.stringify(serialized)]
 		var error: Variant = JavaScriptBridge.eval(code)
@@ -42,22 +49,33 @@ static func write_value(key: String, native_path: String, value: Dictionary) -> 
 		return "保存ファイルを更新できませんでした。"
 	return ""
 
-static func load_game() -> Dictionary:
-	var read := read_value(KEY, PATH)
+static func load_game(key: String = KEY, native_path: String = PATH) -> Dictionary:
+	legacy_raw_pending = ""
+	var read := read_value(key, native_path)
 	if not read.error.is_empty():
 		return {"state": RulesData.new_game(), "error": read.error, "corrupt": false, "found": false}
 	if read.raw.is_empty():
 		return {"state": RulesData.new_game(), "error": "", "corrupt": false, "found": false}
 	var parser := JSON.new()
 	var decoded: Variant = parser.data if parser.parse(read.raw) == OK else null
-	if not RulesData.validate_state(decoded):
+	var migrated: Dictionary = RulesData.migrate_state(decoded)
+	if migrated.is_empty():
 		return {"state": RulesData.new_game(), "error": "保存データを読み込めませんでした。新しく始めると、このデータを置き換えます。", "corrupt": true, "found": true}
-	return {"state": decoded, "error": "", "corrupt": false, "found": true}
+	if decoded.version == 1:
+		legacy_raw_pending = read.raw
+		legacy_key_pending = key
+		legacy_path_pending = native_path
+	return {"state": migrated, "error": "", "corrupt": false, "found": true}
 
-static func save_game(state: Dictionary) -> String:
+static func save_game(state: Dictionary, key: String = KEY, native_path: String = PATH) -> String:
 	if not RulesData.validate_state(state):
 		return "状態を保存できませんでした。"
-	return write_value(KEY, PATH, state)
+	if not legacy_raw_pending.is_empty() and key == legacy_key_pending and native_path == legacy_path_pending:
+		var backup_error: String = _write_serialized(LEGACY_BACKUP_KEY if key == KEY else key + "-pre-v2", LEGACY_BACKUP_PATH if native_path == PATH else native_path + ".pre-v2", legacy_raw_pending)
+		if not backup_error.is_empty():
+			return "旧データの控えを保存できなかったため、進行データを更新していません。" + backup_error
+		legacy_raw_pending = ""
+	return write_value(key, native_path, state)
 
 static func load_settings() -> Dictionary:
 	var raw := read_value(SETTINGS, "user://settings.json")
