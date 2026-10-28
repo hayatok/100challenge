@@ -229,3 +229,112 @@ static func _observatory(seed_value: int, lamp_repaired: bool) -> Dictionary:
 	world.enemies = [_enemy("observatory-guard", "diver", [12, 4], 11), _enemy("observatory-west", "wader", [5, 8], 7), _enemy("observatory-east", "wader", [19, 9], 7), _enemy("observatory-terrace", "crab", [10, 12], 5), _enemy("observatory-archive", "crab", [13, 14], 5)]
 	_landing(world, lamp_repaired)
 	return world
+
+# v0.4 keeps the shipped generator above unchanged for migrated expeditions.
+# Compact maps are authored encounter graphs; seeds vary surface and optional
+# guard placement, never the guaranteed dry delivery route.
+static func create_encounter_world(seed_value: int, lamp_repaired: bool = false, district: String = "quay") -> Dictionary:
+	var rng: Dictionary = {"value": seed_value & 0xffffffff}
+	var tiles: Array = []
+	var wet: bool = district == "canal"
+	for y: int in range(19):
+		var row: Array = []
+		for x: int in range(17):
+			row.append({"type": "water" if wet and x > 0 and x < 16 and y > 0 and y < 18 else "wall", "elevation": 0 if wet else 9, "zone": "船着き場" if y >= 15 else "帰路の分岐" if y >= 12 else "回収区画" if y >= 6 else "奥の保管庫", "variant": _random(rng, 4)})
+		tiles.append(row)
+	var goal: Array = [8, 9]
+	var first_guard: Array = [4, 13]
+	var charge_guard: Array = [10, 9]
+	var optional_guard: Array = [12, 3]
+	var optional_crab: Array = [9, 3]
+	var salvage: Array = [12, 2]
+	var supplies: Array = [4, 11]
+	match district:
+		"market":
+			_area(tiles, 3, 6, 13, 11, 1)
+			_area(tiles, 3, 13, 13, 15)
+			_area(tiles, 2, 2, 5, 4)
+			_area(tiles, 11, 2, 14, 4)
+			_line(tiles, [3, 14], [3, 3])
+			_line(tiles, [13, 14], [13, 3])
+			_line(tiles, [3, 8], [13, 8])
+			_line(tiles, [3, 5], [13, 5])
+			_line(tiles, [8, 5], [8, 3])
+			_area(tiles, 6, 2, 10, 4)
+			goal = [8, 8]
+			first_guard = [3, 13]
+			charge_guard = [10, 8]
+			optional_guard = [8, 3]
+			optional_crab = [12, 3]
+			salvage = [8, 2]
+			supplies = [3, 10]
+		"canal":
+			_area(tiles, 2, 11, 6, 14, 2)
+			_area(tiles, 9, 6, 14, 10, 1)
+			_area(tiles, 3, 1, 7, 4, 3)
+			_line(tiles, [8, 16], [4, 16])
+			_line(tiles, [4, 16], [4, 12])
+			_line(tiles, [4, 13], [11, 13])
+			_line(tiles, [11, 13], [11, 3])
+			_line(tiles, [11, 3], [5, 3])
+			_line(tiles, [8, 15], [8, 9], 1)
+			_line(tiles, [8, 9], [11, 9])
+			# The low central pier has a bombable raised obstruction.
+			_paint(tiles, 8, 12, "wall")
+			goal = [11, 8]
+			first_guard = [4, 13]
+			charge_guard = [12, 8]
+			optional_guard = [5, 3]
+			optional_crab = [4, 2]
+			salvage = [5, 2]
+			supplies = [4, 11]
+		"observatory":
+			_area(tiles, 3, 13, 13, 15)
+			_area(tiles, 6, 7, 10, 10, 1)
+			_area(tiles, 6, 2, 10, 4)
+			_line(tiles, [3, 14], [3, 4])
+			_line(tiles, [13, 14], [13, 4])
+			_line(tiles, [3, 4], [13, 4])
+			_line(tiles, [3, 9], [13, 9])
+			_line(tiles, [8, 13], [8, 9])
+			_paint(tiles, 8, 12, "wall")
+			first_guard = [3, 13]
+			charge_guard = [11, 9]
+			optional_guard = [8, 3]
+			optional_crab = [7, 2]
+			salvage = [9, 2]
+			supplies = [3, 10]
+		_:
+			district = "quay"
+			_area(tiles, 4, 13, 12, 15)
+			_area(tiles, 2, 7, 12, 11)
+			_area(tiles, 7, 2, 14, 5)
+			_line(tiles, [4, 14], [4, 9])
+			_line(tiles, [12, 9], [12, 3])
+			_line(tiles, [8, 13], [8, 9])
+			_paint(tiles, 8, 12, "wall")
+	# A common visible breach connects the landing route to the middle area.
+	# The intact elevated flank remains viable without buying a bomb.
+	_area(tiles, 6, 15, 10, 17)
+	_line(tiles, [8, 17], [8, 13])
+	_paint(tiles, 8, 17, "exit")
+	var cargo: Dictionary = {"quay": ["core", "scrap"], "market": ["pumpGear", "pumpGear", "scrap", "scrap"], "canal": ["chart", "pearl"], "observatory": ["sunLens", "pearl"]}
+	var extra: Array = ["pearl", "pearl", "harpoon", "bomb"]
+	if district == "observatory":
+		extra = ["pearl", "pumpGear", "harpoon", "bomb"]
+	var world: Dictionary = {"width": 17, "height": 19, "tiles": tiles, "district": district, "exit": {"x": 8, "y": 17}, "goal": {"x": goal[0], "y": goal[1]}, "sight": 6 if lamp_repaired else 5,
+		"encounters": [{"id": "approach", "name": "帰路の分岐", "x": 2, "y": 12, "w": 13, "h": 4}, {"id": "delivery", "name": "回収区画", "x": 2, "y": 6, "w": 13, "h": 6}, {"id": "salvage", "name": "奥の保管庫", "x": 2, "y": 1, "w": 13, "h": 5}],
+		"containers": [_crate("delivery-" + district, goal, cargo[district]), _crate("field-supplies", supplies, ["medicine", "flare", "scrap"]), _crate("deep-salvage", salvage, extra)],
+		"enemies": [_enemy("approach-guard", "crab", first_guard, 5), _enemy("delivery-charge", "wader", charge_guard, 7), _enemy("salvage-guard", "diver", optional_guard, 11), _enemy("salvage-crab", "crab", optional_crab, 5)], "landmarks": []}
+	# Vary an optional guard's facing without moving it into a guaranteed route.
+	world.enemies[3].facing = {"x": -1 if _random(rng, 2) == 0 else 1, "y": 0}
+	var kinds: Array = ["lighthouse", "market", "clinic", "pump"]
+	var landmark_kind: String = str(kinds[["quay", "market", "canal", "observatory"].find(district)])
+	world.landmarks.append({"kind": "boat" if wet else "clinic", "x": 5, "y": 17})
+	world.landmarks.append({"kind": "palms" if wet else "arch", "x": 11, "y": 17})
+	var primary_placed: bool = false
+	for candidate: Array in [[8, 1], [15, 5], [1, 10], [15, 15]]:
+		if tiles[candidate[1]][candidate[0]].type in ["wall", "water"]:
+			world.landmarks.append({"kind": "arch" if primary_placed else landmark_kind, "x": candidate[0], "y": candidate[1]})
+			primary_placed = true
+	return world

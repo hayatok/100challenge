@@ -1,5 +1,19 @@
 # Implementation contract
 
+## Current v0.4 / schema 3
+
+The current public facade is `rules.gd`. State version is 3. New departures use `run.ruleset = "encounter-v04"`, a 17x19 authored encounter world, `crewCharges` (0..3), `surveyUntil` (resolved turn), and validated `encounters` and `landmarks` metadata. The delivery cache is in the middle area; optional salvage lies farther in. The four existing campaigns and UID ownership contract remain. The frozen schema 2 description below applies to legacy runs, not to new map dimensions or new actions.
+
+`migrate_state` validates exact old v1/v2 data before copying it to schema 3. Old in-flight runs add only `ruleset = "legacy-v03"`; resolution delegates to frozen `legacy_v03_rules.gd` with all original item, enemy, tool and tide effects. The original `world_data.create_world` generator remains intact. After that run finishes, the next departure uses the new ruleset. The save key stays the same. Before overwriting a valid v1/v2 source, `save_store.gd` retains the exact raw bytes under `shiogaeri-save-v1-pre-v3` on Web or `user://expedition.pre-v3.json` for the normal native slot (or the custom slot path plus `.pre-v3`); backup failure blocks the write. Existing pre-v2 backups remain preserved.
+
+Pure query APIs: `crew_info(state)` returns name, description, charges, maxCharges, targeted and available. `preview_action(state, action)` resolves an isolated deep copy and returns valid, reason, incoming damage, resourceCost `{items, crewCharges}` and destination `{x,y}`. It does not return hidden cargo or mutate state. `threats(state)` returns visible enemyId/kind/cells/text/phase information; the renderer must not duplicate AI/damage rules or draw hidden enemies.
+
+New action `{type:"crew", dx?, dy?}` costs one resolved turn and one of three expedition uses only on success. Isana moves two clear cardinal cells; Ritsu reduces each enemy hit this turn by 3 to a minimum of 0 (not tide damage); Kohaku deals 2, pushes an adjacent foe up to two clear cells and stuns the current and following enemy phases; Sui surveys radius 5 through walls for three resolved turns including activation and retains discovered map knowledge. No-effect/invalid targets spend neither turn nor charge. New actions do not apply to legacy runs. Descriptions and availability come from the rule query.
+
+Presentation metadata uses exact JSON rows: encounters `{id,name,x,y,w,h}` and landmarks `{kind,x,y}` at actual wall/water anchors. Board APIs preserve `present`, `cell_selected` and `get_visible_tiles`, adding `set_playable_rect(Rect2)` and `set_action_preview(Dictionary)`. The field shell places touch controls outside the world and derives risk previews through Rules. All presentation remains unable to advance time or transfer items.
+
+## Frozen v0.3 / schema 2 reference
+
 Engine files: `game/scripts/rules.gd`, `game/scripts/world_data.gd`. No DOM, external dependencies, dates, or browser storage inside the engine. JSON-serializable state. Godot 4.7.2 RefCounted scripts with static methods; load directly with preload.
 
 Exports from rules.gd:

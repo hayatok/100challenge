@@ -1,6 +1,7 @@
 class_name Rules
 extends RefCounted
 
+const Legacy = preload("res://scripts/legacy_v03_rules.gd")
 const World = preload("res://scripts/world_data.gd")
 const Campaign = preload("res://scripts/campaign_data.gd")
 const ITEMS: Dictionary = {
@@ -29,7 +30,7 @@ const CHARACTERS: Dictionary = {
 const DIRECTIONS: Array = [{"x": 0, "y": -1}, {"x": -1, "y": 0}, {"x": 1, "y": 0}, {"x": 0, "y": 1}]
 
 static func new_game() -> Dictionary:
-	var state: Dictionary = {"version": 2, "mode": "harbor", "character": "isana", "profile": {"stash": [], "runs": 0, "extracts": 0, "deaths": 0, "lampRepaired": false, "credits": 0, "selectedDistrict": "quay", "activeContract": "beacon", "completedContracts": []}, "loadout": [], "run": null, "result": null, "nextId": 1}
+	var state: Dictionary = {"version": 3, "mode": "harbor", "character": "isana", "profile": {"stash": [], "runs": 0, "extracts": 0, "deaths": 0, "lampRepaired": false, "credits": 0, "selectedDistrict": "quay", "activeContract": "beacon", "completedContracts": []}, "loadout": [], "run": null, "result": null, "nextId": 1}
 	for kind: String in ["knife", "coat", "medicine", "medicine", "bomb", "bomb", "flare", "flare"]:
 		state.profile.stash.append(_new_item(state, kind))
 	return state
@@ -40,7 +41,14 @@ static func _new_item(state: Dictionary, kind: String) -> Dictionary:
 	return item
 
 static func current_district(state: Dictionary) -> Dictionary:
-	return Campaign.current_district(state)
+	var row: Dictionary = Campaign.current_district(state)
+	if not state.get("run") is Dictionary or state.run.get("ruleset") == "encounter-v04":
+		var objective: Dictionary = {"quay": "中央の回収区画で集光芯を回収する", "market": "中央の揚水小屋で歯車を回収する", "canal": "中央の測量所で航路図を回収する", "observatory": "中央の保管庫で太陽レンズを回収する"}
+		row.objective = objective[row.id]
+		row.subtitle = "中央の荷を持ち帰るか、奥の保管庫へ進むか"
+		if state.get("run") is Dictionary:
+			row.goal = state.run.goal.duplicate()
+	return row
 
 static func campaign_summary(state: Dictionary) -> Dictionary:
 	return Campaign.campaign_summary(state)
@@ -115,12 +123,14 @@ static func _clear_sight(run: Dictionary, from: Dictionary, to: Dictionary) -> b
 	return true
 
 static func visible_tiles(run: Dictionary, radius: int = -1) -> Dictionary:
+	if run.get("ruleset") == "legacy-v03":
+		return Legacy.visible_tiles(run, radius)
 	if radius < 0:
 		radius = int(run.sight)
 	var visible: Dictionary = {}
 	for y: int in range(maxi(0, int(run.player.y) - radius), mini(int(run.height) - 1, int(run.player.y) + radius) + 1):
 		for x: int in range(maxi(0, int(run.player.x) - radius), mini(int(run.width) - 1, int(run.player.x) + radius) + 1):
-			if (x - int(run.player.x)) ** 2 + (y - int(run.player.y)) ** 2 <= radius ** 2 and _clear_sight(run, run.player, {"x": x, "y": y}):
+			if (x - int(run.player.x)) ** 2 + (y - int(run.player.y)) ** 2 <= radius ** 2 and (_clear_sight(run, run.player, {"x": x, "y": y}) or (int(run.get("surveyUntil", 0)) >= int(run.turn) and int(run.get("surveyUntil", 0)) > 0 and (x - int(run.player.x)) ** 2 + (y - int(run.player.y)) ** 2 <= 25)):
 				visible[_key(x, y)] = true
 	return visible
 
@@ -156,6 +166,8 @@ static func _finish(state: Dictionary, events: Array, outcome: String, cause: St
 static func _hurt(state: Dictionary, events: Array, amount: int, cause: String, actor_id: String) -> void:
 	var player: Dictionary = state.run.player
 	var damage: int = maxi(1, amount - int(stats(state).defense))
+	if state.run.get("brace", false):
+		damage = maxi(0, damage - 3)
 	player.hp = maxi(0, int(player.hp) - damage)
 	_event(events, "hurt", "%s。体力が%d減った。" % [cause, damage], {"x": player.x, "y": player.y, "amount": damage, "actorId": actor_id})
 	if int(player.hp) == 0:
@@ -261,6 +273,8 @@ static func _resolve_turn(state: Dictionary, events: Array) -> void:
 	elif int(run.turn) in [28, 60, 92]:
 		_event(events, "message", "あと4手で潮が上がる。高架の道へ戻ろう。")
 	_enemy_turn(state, events)
+	if state.run != null:
+		run.erase("brace")
 	if state.run != null and World.is_flooded(run, int(run.player.x), int(run.player.y)):
 		run.player.hp = maxi(0, int(run.player.hp) - 1)
 		_event(events, "hurt", "浸水した道で体力が1減った。", {"x": run.player.x, "y": run.player.y, "amount": 1})
@@ -292,6 +306,15 @@ static func _normalize(value: Variant) -> Variant:
 	return value
 
 static func apply_action(input: Dictionary, action: Dictionary) -> Dictionary:
+	if input.get("run") is Dictionary and input.run.get("ruleset") == "legacy-v03":
+		var old: Dictionary = input.duplicate(true)
+		old.version = 2
+		old.run.erase("ruleset")
+		var resolved: Dictionary = Legacy.apply_action(old, action)
+		resolved.state.version = 3
+		if resolved.state.run is Dictionary:
+			resolved.state.run["ruleset"] = "legacy-v03"
+		return resolved
 	var state: Dictionary = _normalize(input)
 	var events: Array = []
 	var kind: String = str(action.get("type", ""))
@@ -371,6 +394,10 @@ static func apply_action(input: Dictionary, action: Dictionary) -> Dictionary:
 		ground.items.append(item)
 		ground.searched = false
 		_event(events, "loot", "%sを足元に置いた。" % ITEMS[item.kind].name, {"x": run.player.x, "y": run.player.y})
+	elif kind == "crew":
+		var error: String = _crew_action(state, action, events)
+		if not error.is_empty():
+			return _invalid(input, error)
 	elif kind == "use":
 		var error: String = _use_item(state, action, events)
 		if not error.is_empty():
@@ -469,7 +496,7 @@ static func _harbor_action(input: Dictionary, state: Dictionary, action: Diction
 		if action.has("seed") and not _integer(action.seed, 0, 4294967295):
 			return _invalid(input, "遠征の種は0から4294967295の整数で指定する。")
 		var seed_value: int = int(action.get("seed", ((int(state.profile.runs) + 1) * 2654435761) & 0xffffffff))
-		var world: Dictionary = World.create_world(seed_value, state.profile.lampRepaired, state.profile.selectedDistrict)
+		var world: Dictionary = World.create_encounter_world(seed_value, state.profile.lampRepaired, state.profile.selectedDistrict)
 		var inventory: Array = state.loadout
 		var weapon: Variant = null
 		var armor: Variant = null
@@ -491,6 +518,9 @@ static func _harbor_action(input: Dictionary, state: Dictionary, action: Diction
 			container.items = items
 		var derived: Dictionary = stats(state)
 		world.merge({"seed": seed_value, "turn": 0, "tide": 0, "player": {"x": world.exit.x, "y": world.exit.y, "hp": derived.maxHp, "maxHp": derived.maxHp, "facing": {"x": 0, "y": -1}}, "inventory": inventory, "weapon": weapon, "armor": armor, "seen": [], "log": []})
+		world["crewCharges"] = 3
+		world["surveyUntil"] = 0
+		world["ruleset"] = "encounter-v04"
 		world.sight = derived.sight
 		state.run = world
 		state.loadout = []
@@ -534,6 +564,8 @@ static func _use_item(state: Dictionary, action: Dictionary, events: Array) -> S
 				return "そこに爆薬で壊せる壁や敵はいない。"
 			if wall:
 				run.tiles[y][x].type = "floor"
+				# A breached decorative anchor is no longer blocked geometry.
+				run.landmarks = run.landmarks.filter(func(anchor: Dictionary) -> bool: return int(anchor.x) != x or int(anchor.y) != y)
 			_event(events, "use", "爆薬で壁を壊した。" if wall else "爆薬を投げた。", {"x": x, "y": y})
 			for enemy: Dictionary in targets:
 				_strike(run, events, enemy, 8, "爆薬が炸裂した")
@@ -573,7 +605,7 @@ static func _list(value: Variant, maximum: int) -> bool:
 	return value is Array and value.size() <= maximum
 
 static func _position(value: Variant) -> bool:
-	return _fields(value, ["x", "y"]) and _integer(value.x, 0, 24) and _integer(value.y, 0, 24)
+	return _fields(value, ["x", "y"]) and _integer(value.x, 0, 16) and _integer(value.y, 0, 18)
 
 static func _vector(value: Variant) -> bool:
 	return _fields(value, ["x", "y"]) and _direction(value.x, value.y)
@@ -602,37 +634,39 @@ static func _unique_items(items: Array, next_id: int) -> bool:
 
 # Accept integral JSON floats, then normalize only when applying a valid action.
 static func validate_state(value: Variant) -> bool:
-	return _validate_state(value, false)
+	if not value is Dictionary or not _integer(value.get("version"), 3, 3):
+		return false
+	if value.get("run") is Dictionary and value.run.get("ruleset") == "legacy-v03":
+		var old: Dictionary = value.duplicate(true)
+		old.version = 2
+		old.run.erase("ruleset")
+		return Legacy.validate_state(old)
+	return _validate_state(value)
 
 static func migrate_state(value: Variant) -> Dictionary:
 	if validate_state(value):
 		return _normalize(value)
-	if not _validate_state(value, true):
+	# The shipped v1/v2 validators are frozen in Legacy. Never normalize first.
+	var migrated: Dictionary = Legacy.migrate_state(value)
+	if migrated.is_empty():
 		return {}
-	var migrated: Dictionary = _normalize(value)
-	migrated.version = 2
-	migrated.profile["credits"] = 0
-	migrated.profile["selectedDistrict"] = "quay"
-	migrated.profile["activeContract"] = "" if migrated.profile.lampRepaired else "beacon"
-	migrated.profile["completedContracts"] = ["beacon"] if migrated.profile.lampRepaired else []
+	migrated.version = 3
 	if migrated.run is Dictionary:
-		migrated.run["district"] = "quay"
+		migrated.run["ruleset"] = "legacy-v03"
 	return migrated if validate_state(migrated) else {}
 
-static func _validate_state(value: Variant, legacy: bool) -> bool:
+static func _validate_state(value: Variant) -> bool:
 	if not _fields(value, ["version", "mode", "character", "profile", "loadout", "run", "result", "nextId"]):
 		return false
-	if not _integer(value.version, 1 if legacy else 2, 1 if legacy else 2) or value.mode not in ["harbor", "expedition", "result"] or not value.character is String or not CHARACTERS.has(value.character) or not _integer(value.nextId, 1):
+	if not _integer(value.version, 3, 3) or value.mode not in ["harbor", "expedition", "result"] or not value.character is String or not CHARACTERS.has(value.character) or not _integer(value.nextId, 1):
 		return false
 	var profile: Variant = value.profile
-	var profile_fields: Array = ["stash", "runs", "extracts", "deaths", "lampRepaired"]
-	if not legacy:
-		profile_fields.append_array(["credits", "selectedDistrict", "activeContract", "completedContracts"])
+	var profile_fields: Array = ["stash", "runs", "extracts", "deaths", "lampRepaired", "credits", "selectedDistrict", "activeContract", "completedContracts"]
 	if not _fields(profile, profile_fields):
 		return false
 	if not _items(profile.stash, 10000) or not _integer(profile.runs) or not _integer(profile.extracts) or not _integer(profile.deaths) or not profile.lampRepaired is bool:
 		return false
-	if not legacy and not _valid_campaign(value):
+	if not _valid_campaign(value):
 		return false
 	for item: Dictionary in profile.stash:
 		if item.kind == "loanKnife":
@@ -646,9 +680,9 @@ static func _validate_state(value: Variant, legacy: bool) -> bool:
 	var all: Array = profile.stash.duplicate()
 	all.append_array(value.loadout)
 	if value.mode == "expedition":
-		if value.result != null or not value.loadout.is_empty() or not _valid_run(value.run, value.character, profile.lampRepaired, all, legacy):
+		if value.result != null or not value.loadout.is_empty() or not _valid_run(value.run, value.character, profile.lampRepaired, all):
 			return false
-		if not legacy and (value.run.district != profile.selectedDistrict or not Campaign.unlocked(value, value.run.district)):
+		if value.run.district != profile.selectedDistrict or not Campaign.unlocked(value, value.run.district):
 			return false
 	elif value.run != null:
 		return false
@@ -670,13 +704,6 @@ static func _validate_state(value: Variant, legacy: bool) -> bool:
 		return false
 	if int(profile.runs) != int(profile.extracts) + int(profile.deaths) + (1 if value.mode == "expedition" else 0):
 		return false
-	if legacy:
-		var legacy_items: Array = all.duplicate()
-		if value.result is Dictionary:
-			legacy_items.append_array(value.result.inventory)
-		for item: Dictionary in legacy_items:
-			if item.kind in ["pumpGear", "chart", "sunLens"]:
-				return false
 	return _unique_items(all, int(value.nextId))
 
 static func _valid_campaign(state: Dictionary) -> bool:
@@ -701,25 +728,23 @@ static func _valid_campaign(state: Dictionary) -> bool:
 			return false
 	return true
 
-static func _valid_run(run: Variant, character: String, lamp: bool, all: Array, legacy: bool = false) -> bool:
-	var fields: Array = ["seed", "turn", "tide", "player", "inventory", "weapon", "armor", "tiles", "width", "height", "enemies", "containers", "seen", "exit", "log", "goal", "sight"]
-	if not legacy:
-		fields.append("district")
+static func _valid_run(run: Variant, character: String, lamp: bool, all: Array) -> bool:
+	var fields: Array = ["seed", "turn", "tide", "player", "inventory", "weapon", "armor", "tiles", "width", "height", "enemies", "containers", "seen", "exit", "log", "goal", "sight", "district", "ruleset", "crewCharges", "surveyUntil", "encounters", "landmarks"]
 	if not _fields(run, fields):
 		return false
-	if not legacy and (not run.district is String or not Campaign.DISTRICTS.has(run.district)):
+	if not run.district is String or not Campaign.DISTRICTS.has(run.district) or run.ruleset != "encounter-v04" or not _integer(run.crewCharges, 0, 3) or not _integer(run.turn) or not _integer(run.surveyUntil, 0, int(run.turn) + 2):
 		return false
-	if not _integer(run.seed, 0, 4294967295) or not _integer(run.turn) or not _integer(run.tide, 0, 3) or int(run.tide) != mini(3, int(run.turn) / 32) or not _integer(run.width, 25, 25) or not _integer(run.height, 25, 25):
+	if not _integer(run.seed, 0, 4294967295) or not _integer(run.turn) or not _integer(run.tide, 0, 3) or int(run.tide) != mini(3, int(run.turn) / 32) or not _integer(run.width, 17, 17) or not _integer(run.height, 19, 19):
 		return false
 	var sight: int = 5 + (1 if lamp else 0) + (1 if character == "sui" else 0)
 	var max_hp: int = 28 if character == "ritsu" else 24
-	if not _integer(run.sight, sight, sight) or not _fields(run.player, ["x", "y", "hp", "maxHp", "facing"]) or not _integer(run.player.x, 0, 24) or not _integer(run.player.y, 0, 24) or not _integer(run.player.maxHp, max_hp, max_hp) or not _integer(run.player.hp, 1, max_hp) or not _vector(run.player.facing):
+	if not _integer(run.sight, sight, sight) or not _fields(run.player, ["x", "y", "hp", "maxHp", "facing"]) or not _integer(run.player.x, 0, 16) or not _integer(run.player.y, 0, 18) or not _integer(run.player.maxHp, max_hp, max_hp) or not _integer(run.player.hp, 1, max_hp) or not _vector(run.player.facing):
 		return false
-	if not _list(run.tiles, 25) or run.tiles.size() != 25:
+	if not _list(run.tiles, 25) or run.tiles.size() != 19:
 		return false
 	var exit_count: int = 0
 	for row: Variant in run.tiles:
-		if not _list(row, 25) or row.size() != 25:
+		if not _list(row, 25) or row.size() != 17:
 			return false
 		for tile: Variant in row:
 			if not _fields(tile, ["type", "elevation", "zone"], ["variant"]) or tile.type not in ["floor", "wall", "water", "gate", "exit"] or not _integer(tile.elevation, 0, 9) or not _text(tile.zone, 30):
@@ -728,6 +753,8 @@ static func _valid_run(run: Variant, character: String, lamp: bool, all: Array, 
 				return false
 			if tile.type == "exit":
 				exit_count += 1
+	if not _valid_metadata(run):
+		return false
 	if exit_count != 1 or not _position(run.exit) or not _position(run.goal) or run.tiles[int(run.exit.y)][int(run.exit.x)].type != "exit" or not World.is_walkable(run, int(run.player.x), int(run.player.y)) or not World.is_walkable(run, int(run.goal.x), int(run.goal.y)):
 		return false
 	if not _items(run.inventory, 14 if character == "isana" else 12):
@@ -743,7 +770,7 @@ static func _valid_run(run: Variant, character: String, lamp: bool, all: Array, 
 	var enemy_ids: Dictionary = {}
 	var occupied: Dictionary = {}
 	for enemy: Variant in run.enemies:
-		if not _fields(enemy, ["id", "kind", "x", "y", "hp"], ["facing", "intent", "stunned", "target"]) or not _text(enemy.id, 80) or not enemy.kind is String or not ENEMIES.has(enemy.kind) or not _integer(enemy.x, 0, 24) or not _integer(enemy.y, 0, 24) or not _integer(enemy.hp, 1, int(ENEMIES[enemy.kind].hp)):
+		if not _fields(enemy, ["id", "kind", "x", "y", "hp"], ["facing", "intent", "stunned", "target"]) or not _text(enemy.id, 80) or not enemy.kind is String or not ENEMIES.has(enemy.kind) or not _integer(enemy.x, 0, 16) or not _integer(enemy.y, 0, 18) or not _integer(enemy.hp, 1, int(ENEMIES[enemy.kind].hp)):
 			return false
 		if not World.is_walkable(run, int(enemy.x), int(enemy.y)) or _distance(enemy, run.player) == 0 or enemy_ids.has(enemy.id) or occupied.has(_key(int(enemy.x), int(enemy.y))):
 			return false
@@ -755,13 +782,13 @@ static func _valid_run(run: Variant, character: String, lamp: bool, all: Array, 
 			return false
 		if enemy.has("intent") and (enemy.kind != "wader" or not _fields(enemy.intent, ["dx", "dy"]) or not _direction(enemy.intent.dx, enemy.intent.dy)):
 			return false
-		if enemy.has("target") and (not _fields(enemy.target, ["x", "y", "turns"]) or not _integer(enemy.target.x, 0, 24) or not _integer(enemy.target.y, 0, 24) or not _integer(enemy.target.turns, 1, 4) or not World.is_walkable(run, int(enemy.target.x), int(enemy.target.y))):
+		if enemy.has("target") and (not _fields(enemy.target, ["x", "y", "turns"]) or not _integer(enemy.target.x, 0, 16) or not _integer(enemy.target.y, 0, 18) or not _integer(enemy.target.turns, 1, 4) or not World.is_walkable(run, int(enemy.target.x), int(enemy.target.y))):
 			return false
 	if not _list(run.containers, 1000):
 		return false
 	var container_ids: Dictionary = {}
 	for container: Variant in run.containers:
-		if not _fields(container, ["id", "x", "y", "items", "searched"]) or not _text(container.id, 100) or not _integer(container.x, 0, 24) or not _integer(container.y, 0, 24) or not _items(container.items, 100) or not container.searched is bool:
+		if not _fields(container, ["id", "x", "y", "items", "searched"]) or not _text(container.id, 100) or not _integer(container.x, 0, 16) or not _integer(container.y, 0, 18) or not _items(container.items, 100) or not container.searched is bool:
 			return false
 		if not World.is_walkable(run, int(container.x), int(container.y)) or container_ids.has(container.id):
 			return false
@@ -778,7 +805,7 @@ static func _valid_run(run: Variant, character: String, lamp: bool, all: Array, 
 			return false
 		var x: int = int(parts[0])
 		var y: int = int(parts[1])
-		if x < 0 or y < 0 or x > 24 or y > 24 or cell != _key(x, y):
+		if x < 0 or y < 0 or x > 16 or y > 18 or cell != _key(x, y):
 			return false
 		seen[cell] = true
 	for cell: String in visible_tiles(run):
@@ -786,5 +813,162 @@ static func _valid_run(run: Variant, character: String, lamp: bool, all: Array, 
 			return false
 	for line: Variant in run.log:
 		if not _text(line, 500):
+			return false
+	return true
+
+# Prediction resolves the same action on a private snapshot; inventory/log events
+# are deliberately omitted so inspecting a cache never discloses its contents.
+static func preview_action(state: Dictionary, action: Dictionary) -> Dictionary:
+	var destination: Dictionary = {"x": 0, "y": 0}
+	if state.get("run") is Dictionary:
+		destination = {"x": int(state.run.player.x), "y": int(state.run.player.y)}
+	var resolved: Dictionary = apply_action(state.duplicate(true), action.duplicate(true))
+	var valid: bool = resolved.state != state
+	var damage: int = 0
+	for entry: Dictionary in resolved.events:
+		if entry.type == "hurt":
+			damage += int(entry.amount)
+	if resolved.state.get("run") is Dictionary:
+		destination = {"x": int(resolved.state.run.player.x), "y": int(resolved.state.run.player.y)}
+	elif state.get("run") is Dictionary:
+		# A fatal move still has a meaningful resolved destination.
+		for entry: Dictionary in resolved.events:
+			if entry.type in ["move", "death"] and entry.has("x"):
+				destination = {"x": int(entry.x), "y": int(entry.y)}
+	var charges: int = 0
+	if valid and str(action.get("type")) == "crew":
+		charges = 1
+	return {"valid": valid, "reason": "" if valid else str(resolved.events[0].text) if not resolved.events.is_empty() else "その操作はできない。", "damage": damage, "resourceCost": {"items": 1 if valid and action.get("type") == "use" else 0, "crewCharges": charges}, "destination": destination}
+
+static func crew_info(state: Dictionary) -> Dictionary:
+	var data: Dictionary = {
+		"isana": {"name": "運び足", "description": "通れる2マスを一息で進む。敵がいる方向には使えない。1手・1回消費。", "targeted": true},
+		"ritsu": {"name": "踏ん張る", "description": "この手の敵の攻撃を1発ごとに3軽減する（最低0）。潮の傷は防げない。1手・1回消費。", "targeted": false},
+		"kohaku": {"name": "押し返す", "description": "隣の敵に2ダメージ。指定した方向へ最大2マス押し、この手と次の手の行動を止める。1手・1回消費。", "targeted": true},
+		"sui": {"name": "見通す", "description": "半径5マスを壁越しに3手見通す（使用した手を含む）。地図の記録は残る。1手・1回消費。", "targeted": false}}
+	var row: Dictionary = data[str(state.get("character", "isana"))].duplicate(true)
+	var current: bool = state.get("run") is Dictionary and state.run.get("ruleset") == "encounter-v04"
+	row["charges"] = int(state.run.crewCharges) if current else 0
+	row["maxCharges"] = 3 if current else 0
+	row["available"] = current and int(row.charges) > 0
+	if state.get("run") is Dictionary and not current:
+		row.description = "旧版の遠征では使えない。帰還後の新しい遠征で使える。"
+	return row
+
+static func _incoming_enemy_damage(state: Dictionary) -> int:
+	var resolved: Dictionary = apply_action(state, {"type": "wait"})
+	var total: int = 0
+	for entry: Dictionary in resolved.events:
+		if entry.type == "hurt" and entry.has("actorId"):
+			total += int(entry.amount)
+	return total
+
+static func _crew_action(state: Dictionary, action: Dictionary, events: Array) -> String:
+	var run: Dictionary = state.run
+	var origin: Dictionary = {"x": int(run.player.x), "y": int(run.player.y)}
+	if run.get("ruleset") != "encounter-v04" or int(run.crewCharges) <= 0:
+		return "この遠征で使える技は残っていない。"
+	if state.character in ["isana", "kohaku"] and not _direction(action.get("dx"), action.get("dy")):
+		return "技を使う方向を選ぼう。"
+	match str(state.character):
+		"isana":
+			for step: int in range(1, 3):
+				var x: int = int(run.player.x) + int(action.dx) * step
+				var y: int = int(run.player.y) + int(action.dy) * step
+				if not World.is_walkable(run, x, y) or _enemy_at(run, x, y) != null:
+					return "前の2マスが空いている方向を選ぼう。"
+			run.player.x += int(action.dx) * 2
+			run.player.y += int(action.dy) * 2
+			run.player.facing = {"x": int(action.dx), "y": int(action.dy)}
+			_event(events, "move", "運び足で2マス進んだ。", {"x": run.player.x, "y": run.player.y})
+		"ritsu":
+			if _incoming_enemy_damage(state) <= 0:
+				return "この手に受ける敵の攻撃はない。"
+			run["brace"] = true
+			_event(events, "use", "踏ん張った。この手の敵の攻撃を1発ごとに3軽減する。")
+		"kohaku":
+			var foe: Variant = _enemy_at(run, int(run.player.x) + int(action.dx), int(run.player.y) + int(action.dy))
+			if foe == null:
+				return "押し返す敵が隣にいない。"
+			_strike(run, events, foe, 2, "工具で押し返した")
+			if int(foe.hp) > 0:
+				for step: int in range(2):
+					var x: int = int(foe.x) + int(action.dx)
+					var y: int = int(foe.y) + int(action.dy)
+					if not World.is_walkable(run, x, y) or _enemy_at(run, x, y) != null:
+						break
+					foe.x = x
+					foe.y = y
+				foe["stunned"] = 2
+				foe.erase("intent")
+				_event(events, "use", "敵を押し返した。この手と次の手は動けない。", {"x": foe.x, "y": foe.y, "actorId": foe.id})
+		"sui":
+			var visible: Dictionary = visible_tiles(run)
+			var expands: bool = false
+			for y: int in range(maxi(0, int(run.player.y) - 5), mini(int(run.height), int(run.player.y) + 6)):
+				for x: int in range(maxi(0, int(run.player.x) - 5), mini(int(run.width), int(run.player.x) + 6)):
+					if (x - int(run.player.x)) ** 2 + (y - int(run.player.y)) ** 2 <= 25 and not visible.has(_key(x, y)):
+						expands = true
+			if not expands:
+				return "今の位置から見通せる範囲は、すでに見えている。"
+			run.surveyUntil = int(run.turn) + 3
+			_event(events, "use", "壁越しに半径5マスを見通した。使用した手を含めて3手続く。")
+	run.crewCharges -= 1
+	_event(events, "crew", "%sを使った。残り%d回。" % [crew_info(state).name, int(run.crewCharges)], {"character": state.character, "x": run.player.x, "y": run.player.y, "fromX": origin.x, "fromY": origin.y})
+	return ""
+
+static func threats(state: Dictionary) -> Array:
+	if not state.get("run") is Dictionary:
+		return []
+	var run: Dictionary = state.run
+	var visible: Dictionary = visible_tiles(run)
+	var result: Array = []
+	for foe: Dictionary in run.enemies:
+		if not visible.has(_key(int(foe.x), int(foe.y))):
+			continue
+		var cells: Array = []
+		var phase: String = "approach"
+		var text: String = "近づくと追ってくる。"
+		if int(foe.get("stunned", 0)) > 0:
+			phase = "stunned"
+			text = "あと%d手は動けない。" % int(foe.stunned)
+		elif foe.has("target"):
+			phase = "lured"
+			text = "発煙筒へ向かう。残り%d手。" % int(foe.target.turns)
+		elif foe.kind == "wader" and foe.has("intent"):
+			phase = "charge"
+			text = "次の手にこの直線を3マス突進する。"
+			for step: int in range(1, 4):
+				var x: int = int(foe.x) + int(foe.intent.dx) * step
+				var y: int = int(foe.y) + int(foe.intent.dy) * step
+				if not World.is_walkable(run, x, y) or _enemy_at(run, x, y, foe.id) != null:
+					break
+				cells.append({"x": x, "y": y})
+		elif foe.kind == "diver" and (int(run.turn) + 1) % 2 != 0:
+			phase = "rest"
+			text = "次の手は動かない。偶数の手に動く。"
+		else:
+			phase = "windup" if foe.kind == "wader" and _distance(foe, run.player) <= 3 and (foe.x == run.player.x or foe.y == run.player.y) else "melee" if _distance(foe, run.player) == 1 else "approach"
+			text = "次の手、隣にいると攻撃する。" if foe.kind != "wader" else "縦横3マスで構え、その次の手に突進する。"
+			for d: Dictionary in DIRECTIONS:
+				var x: int = int(foe.x) + int(d.x)
+				var y: int = int(foe.y) + int(d.y)
+				if World.is_walkable(run, x, y):
+					cells.append({"x": x, "y": y})
+		result.append({"enemyId": foe.id, "kind": foe.kind, "cells": cells, "text": text, "phase": phase})
+	return result
+
+static func _valid_metadata(run: Dictionary) -> bool:
+	if not _list(run.encounters, 3) or run.encounters.size() != 3 or not _list(run.landmarks, 30):
+		return false
+	var ids: Dictionary = {}
+	for area: Variant in run.encounters:
+		if not _fields(area, ["id", "name", "x", "y", "w", "h"]) or not _text(area.id, 40) or ids.has(area.id) or not _text(area.name, 40) or not _integer(area.x, 0, 16) or not _integer(area.y, 0, 18) or not _integer(area.w, 1, 17 - int(area.x)) or not _integer(area.h, 1, 19 - int(area.y)):
+			return false
+		ids[area.id] = true
+	for anchor: Variant in run.landmarks:
+		if not _fields(anchor, ["kind", "x", "y"]) or anchor.kind not in ["lighthouse", "market", "clinic", "pump", "arch", "palms", "boat"] or not _position({"x": anchor.x, "y": anchor.y}):
+			return false
+		if run.tiles[int(anchor.y)][int(anchor.x)].type not in ["wall", "water"]:
 			return false
 	return true

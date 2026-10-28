@@ -10,6 +10,7 @@ const Scenery = preload("res://scripts/ui_scenery.gd")
 const Motif = preload("res://scripts/ui_motif.gd")
 const CampaignView = preload("res://scripts/campaign_ui.gd")
 const CrewStage = preload("res://scripts/crew_stage.gd")
+const ExpeditionHUD = preload("res://scenes/expedition_hud.tscn")
 const SHORT_NAMES := {"knife":"ナイフ", "loanKnife":"貸出ナイフ", "coat":"雨具", "harpoon":"銛", "medicine":"救急包", "bomb":"爆薬", "flare":"発煙筒", "scrap":"銅の端材", "core":"集光芯", "pearl":"潮真珠", "pumpGear":"揚水歯車", "chart":"航路図", "sunLens":"太陽レンズ"}
 const NAMES := {"isana": "ISANA", "ritsu": "RITSU", "kohaku": "KOHAKU", "sui": "SUI"}
 const SYMBOLS := {"knife": "╱", "loanKnife": "╱", "harpoon": "↟", "coat": "衣", "medicine": "＋", "bomb": "●", "flare": "灯", "scrap": "銅", "core": "芯", "pearl": "○"}
@@ -32,6 +33,9 @@ var modal_panel: PanelContainer
 var modal_scroll: ScrollContainer
 var modal_body_height := 540.0
 var pending_item := ""
+var pending_crew := false
+var field_hud: Control
+var safe_insets := Vector4.ZERO
 var status_label: Label
 var hp_label: Label
 var tide_label: Label
@@ -92,8 +96,8 @@ func _resize_layout() -> void:
 	if is_instance_valid(modal_panel):
 		modal_panel.custom_minimum_size.x = minf(540, overlay.size.x - 28)
 		modal_scroll.custom_minimum_size.y = minf(overlay.size.y - (405 if is_instance_valid(inventory_detail) else 205), modal_body_height)
-	if is_instance_valid(control_dock):
-		control_dock.custom_minimum_size.x = minf(size.x - 56, 520)
+	if is_instance_valid(field_hud):
+		field_hud.call_deferred("_adapt")
 	var crossed_breakpoint := (size.x > 760.0) != (last_size.x > 760.0)
 	if (crossed_breakpoint or absf(size.x - last_size.x) > 80.0) and screen != "expedition" and not is_instance_valid(modal):
 		_render()
@@ -111,11 +115,13 @@ func _read_safe_area() -> void:
 	_apply_safe_area(Vector4(float(data[0]) * scale_x, float(data[1]) * scale_y, float(data[2]) * scale_x, float(data[3]) * scale_y))
 
 func _apply_safe_area(insets: Vector4) -> void:
+	safe_insets = insets
+	var base := 8 if screen == "expedition" else 18
 	var safe: MarginContainer = %SafeFrame
-	safe.add_theme_constant_override("margin_left", 18 + ceili(insets.x))
-	safe.add_theme_constant_override("margin_top", 18 + ceili(insets.y))
-	safe.add_theme_constant_override("margin_right", 18 + ceili(insets.z))
-	safe.add_theme_constant_override("margin_bottom", 18 + ceili(insets.w))
+	safe.add_theme_constant_override("margin_left", base + ceili(insets.x))
+	safe.add_theme_constant_override("margin_top", base + ceili(insets.y))
+	safe.add_theme_constant_override("margin_right", base + ceili(insets.z))
+	safe.add_theme_constant_override("margin_bottom", base + ceili(insets.w))
 	overlay.offset_left = insets.x
 	overlay.offset_top = insets.y
 	overlay.offset_right = -insets.z
@@ -212,8 +218,12 @@ func _render() -> void:
 	_clear(header)
 	_clear(content)
 	board = null
+	field_hud = null
 	control_dock = null
 	world_overlay = null
+	header.visible = screen != "expedition"
+	backdrop.visible = screen != "expedition"
+	_apply_safe_area(safe_insets)
 	var brand := HBoxContainer.new()
 	brand.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	header.add_child(brand)
@@ -232,7 +242,7 @@ func _render() -> void:
 	help.size_flags_horizontal = Control.SIZE_SHRINK_END
 	help.custom_minimum_size.x = 84
 	header.add_child(help)
-	shade.color = Color(1, 0.98, 0.85, 0.07 if screen == "title" else 0.25)
+	shade.color = Color("173f4d") if screen == "expedition" else Color(1, 0.98, 0.85, 0.07 if screen == "title" else 0.25)
 	var success: bool = state.mode == "result" and state.result.outcome == "extracted"
 	scenery.configure(screen, settings.reduced, success)
 	audio.set_scene("result_extracted" if success else "result_dead" if screen == "result" else screen, int(state.run.tide) if state.run is Dictionary else 0)
@@ -472,8 +482,11 @@ func _confirm_sale(item: Dictionary) -> void:
 func _field_objective() -> String:
 	var active: String = str(state.profile.activeContract)
 	for contract: Dictionary in Data.contracts(state):
-		if contract.id != active or contract.status == "claimed":
+		if contract.status in ["claimed", "locked"]:
 			continue
+		if contract.id != active:
+			if not active.is_empty() or contract.id not in Data.Campaign.STORY_IDS or contract.district != state.run.district:
+				continue
 		var gathered := true
 		for requirement: Dictionary in contract.requirements:
 			var held: int = int(requirement.owned)
@@ -525,138 +538,59 @@ func _basic_loadout() -> void:
 	_render()
 
 func _expedition() -> void:
-	content.add_theme_constant_override("separation", 7)
-	var top := _panel(content, 9)
-	var hud := HBoxContainer.new()
-	top.add_child(hud)
-	hud.add_child(_avatar(state.character, 48))
-	var health := VBoxContainer.new()
-	health.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	health.add_theme_constant_override("separation", 3)
-	hud.add_child(health)
-	hp_label = _label("", 15)
-	health.add_child(hp_label)
-	hp_bar = ProgressBar.new()
-	hp_bar.custom_minimum_size.y = 11
-	hp_bar.show_percentage = false
-	health.add_child(hp_bar)
-	var counters := VBoxContainer.new()
-	counters.custom_minimum_size.x = 82
-	hud.add_child(counters)
-	turn_label = _label("", 12, UiPalette.MUTED)
-	bag_label = _label("", 13, UiPalette.GOLD)
-	counters.add_child(turn_label)
-	counters.add_child(bag_label)
-	var tide_row := HBoxContainer.new()
-	top.add_child(tide_row)
-	tide_row.add_child(_icon("wave", 24))
-	tide_label = _label("", 12, UiPalette.INK)
-	tide_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	tide_row.add_child(tide_label)
-	tide_meter = ProgressBar.new()
-	tide_meter.custom_minimum_size = Vector2(68,8)
-	tide_meter.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-	tide_meter.max_value = 32
-	tide_meter.show_percentage = false
-	tide_row.add_child(tide_meter)
-	var frame := PanelContainer.new()
-	frame.add_theme_stylebox_override("panel", UiPalette.box(Color("8ecfce"), Color("4b8d98"), 0))
-	frame.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	content.add_child(frame)
+	content.add_theme_constant_override("separation", 0)
+	field_hud = ExpeditionHUD.instantiate()
+	content.add_child(field_hud)
+	field_hud.direction_requested.connect(_direction)
+	field_hud.interact_requested.connect(_interact)
+	field_hud.inventory_requested.connect(_inventory)
+	field_hud.map_requested.connect(_map)
+	field_hud.crew_requested.connect(_crew_action)
+	field_hud.settings_requested.connect(_settings)
+	field_hud.feedback_requested.connect(func(): audio.play_event("click"))
+	field_hud.portrait.texture = UiPalette.avatar(state.character)
+	hp_label = field_hud.hp_label
+	hp_bar = field_hud.hp_bar
+	tide_label = field_hud.tide_label
+	bag_label = field_hud.bag_label
+	turn_label = field_hud.turn_label
+	objective_label = field_hud.objective_label
+	cargo_value_label = field_hud.value_label
+	log_label = field_hud.status_label
+	status_label = field_hud.status_label
+	interact_button = field_hud.interact_button
+	control_dock = field_hud.controls
+	world_overlay = field_hud.controls_panel
 	board = BoardScene.instantiate()
-	board.custom_minimum_size = Vector2(0,320)
-	board.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	board.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	frame.add_child(board)
+	board.custom_minimum_size = Vector2.ZERO
+	field_hud.world_slot.add_child(board)
+	board.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	board.cell_selected.connect(_cell_selected)
-	world_overlay = Control.new()
-	world_overlay.z_index = 40
-	world_overlay.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	frame.add_child(world_overlay)
-	var objective := PanelContainer.new()
-	objective.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	objective.set_anchors_and_offsets_preset(Control.PRESET_TOP_WIDE)
-	objective.offset_left = 9
-	objective.offset_right = -9
-	objective.offset_top = 9
-	objective.add_theme_stylebox_override("panel", UiPalette.box(Color(1,0.98,0.89,0.95), UiPalette.LINE, 7))
-	world_overlay.add_child(objective)
-	var goal_row := HBoxContainer.new()
-	goal_row.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	objective.add_child(goal_row)
-	goal_row.add_child(_icon("compass",22))
-	objective_label = _label("",12)
-	objective_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	goal_row.add_child(objective_label)
-	cargo_value_label = _label("",12,UiPalette.GOLD)
-	cargo_value_label.custom_minimum_size.x = 55
-	cargo_value_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
-	goal_row.add_child(cargo_value_label)
-	var dock := CenterContainer.new()
-	dock.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	dock.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_WIDE)
-	dock.offset_top = -178
-	dock.offset_bottom = -9
-	world_overlay.add_child(dock)
-	var controls := HBoxContainer.new()
-	control_dock = controls
-	controls.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	controls.custom_minimum_size.x = minf(size.x-56,520)
-	controls.add_theme_constant_override("separation",10)
-	dock.add_child(controls)
-	var pad := GridContainer.new()
-	pad.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	pad.columns = 3
-	pad.add_theme_constant_override("h_separation",4)
-	pad.add_theme_constant_override("v_separation",4)
-	controls.add_child(pad)
-	for entry: Array in [["",0,0],["↑",0,-1],["",0,0],["←",-1,0],["待つ",0,0],["→",1,0],["",0,0],["↓",0,1],["",0,0]]:
-		if entry[0] == "":
-			var blank := Control.new()
-			blank.mouse_filter = Control.MOUSE_FILTER_IGNORE
-			blank.custom_minimum_size = Vector2(52,52)
-			pad.add_child(blank)
-		else:
-			var dx: int = entry[1]
-			var dy: int = entry[2]
-			var button := _button(entry[0],func(): _direction(dx,dy))
-			button.custom_minimum_size = Vector2(52,52)
-			button.add_theme_font_size_override("font_size",12 if entry[0] == "待つ" else 24)
-			button.tooltip_text = "一手待つ" if dx == 0 and dy == 0 else "一マス移動。隣の敵がいれば攻撃。"
-			pad.add_child(button)
-	var actions := VBoxContainer.new()
-	actions.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	actions.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	controls.add_child(actions)
-	interact_button = _button("調べる",_interact,true)
-	interact_button.icon = UiPalette.icon("chest")
-	interact_button.expand_icon = true
-	interact_button.add_theme_constant_override("icon_max_width",25)
-	actions.add_child(interact_button)
-	var bag := _button("持ち物 [I]",_inventory)
-	bag.icon = UiPalette.icon("bag")
-	bag.expand_icon = true
-	bag.add_theme_constant_override("icon_max_width",24)
-	actions.add_child(bag)
-	var map_button := _button("地図 [M]",_map)
-	map_button.icon = UiPalette.icon("map")
-	map_button.expand_icon = true
-	map_button.add_theme_constant_override("icon_max_width",24)
-	actions.add_child(map_button)
-	var radio := _panel(content,8)
-	var radio_row := HBoxContainer.new()
-	radio.add_child(radio_row)
-	radio_row.add_child(_avatar(state.character,40))
-	var words := VBoxContainer.new()
-	words.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	words.add_theme_constant_override("separation",2)
-	radio_row.add_child(words)
-	status_label = _label("",11,UiPalette.GOLD)
-	words.add_child(status_label)
-	log_label = _label("",13)
-	log_label.custom_minimum_size.y = 40
-	words.add_child(log_label)
 	_update_hud([])
+
+func _crew_action() -> void:
+	if state.mode != "expedition":
+		return
+	pending_item = ""
+	if pending_crew:
+		pending_crew = false
+		_update_hud([])
+		return
+	var info: Dictionary = Data.crew_info(state)
+	var body := _open_modal(str(info.name), 250)
+	body.add_child(_label(str(info.description)))
+	body.add_child(_label("残り %d / %d回。この遠征の間だけ使えます。" % [info.charges, info.maxCharges], 14, UiPalette.GOLD))
+	var use := _button("方向を選ぶ / 1手" if info.targeted else "使う / 1手", func():
+		_close_modal()
+		if bool(info.targeted):
+			pending_crew = true
+			_update_hud([])
+		else:
+			_act({"type": "crew"}), true)
+	use.disabled = not bool(info.available)
+	body.add_child(use)
+	if not bool(info.available):
+		body.add_child(_label(str(info.get("reason", "今の状況では使えません。")), 14))
 
 func _update_hud(events: Array) -> void:
 	if state.mode != "expedition":
@@ -667,34 +601,46 @@ func _update_hud(events: Array) -> void:
 	hp_label.text = "%s  %d / %d" % [who.name,player.hp,player.maxHp]
 	hp_bar.max_value = player.maxHp
 	hp_bar.value = player.hp
-	hp_label.add_theme_color_override("font_color",UiPalette.DANGER if player.hp <= player.maxHp*0.3 else UiPalette.INK)
+	hp_label.add_theme_color_override("font_color",Color("ffb99a") if player.hp <= player.maxHp*0.3 else Color("fff6dc"))
 	turn_label.text = "%03d 手" % int(run.turn)
-	bag_label.text = "携行 %d/%d" % [run.inventory.size(),Data.stats(state).capacity]
+	bag_label.text = "%d/%d" % [run.inventory.size(),Data.stats(state).capacity]
 	var remaining := 32*(int(run.tide)+1)-int(run.turn)
 	var tides := ["干潮","満ち始め","上げ潮","満潮"]
 	tide_label.text = "%s  /  あと%d手" % [tides[int(run.tide)],remaining] if run.tide < 3 else "満潮  /  高架を帰ろう"
-	tide_meter.value = int(run.turn)%32 if run.tide < 3 else 32
-	tide_label.add_theme_color_override("font_color",UiPalette.DANGER if run.tide < 3 and remaining <= 4 else UiPalette.INK)
+	tide_label.add_theme_color_override("font_color",Color("ffba99") if run.tide < 3 and remaining <= 4 else Color("c1e2d6"))
 	objective_label.text = _field_objective()
 	cargo_value_label.text = "%d pt" % _value(run.inventory)
 	var tile: Dictionary = run.tiles[int(player.y)][int(player.x)]
 	var distance := absi(int(player.x)-int(run.exit.x))+absi(int(player.y)-int(run.exit.y))
-	status_label.text = "%s / 帰還まで目安%dマス" % [tile.zone,distance]
+	var field_status := ""
 	if not pending_item.is_empty():
-		status_label.text = "使う方向を選ぶ / 設定・Escで取り消し"
+		field_status = "道具を使う方向を選ぶ / Escで取り消し"
+	elif pending_crew:
+		field_status = "技を使う方向を選ぶ / Escで取り消し"
 	elif WorldDataFile.is_flooded(run,player.x,player.y):
-		status_label.text = "浸水中 / 一手終えると体力−1。高架へ！"
+		field_status = "浸水中 / 一手終えると体力−1。高架へ！"
 	interact_button.text = "帰還する" if int(player.x)==int(run.exit.x) and int(player.y)==int(run.exit.y) else "調べる [E]"
 	interact_button.icon = UiPalette.icon("anchor" if int(player.x)==int(run.exit.x) and int(player.y)==int(run.exit.y) else "chest")
 	var lines: Array = []
 	for entry: Dictionary in events:
 		if entry.text not in ["1マス進んだ。","その場で様子を見た。"] and not lines.has(entry.text):
 			lines.append(entry.text)
-	if lines.is_empty():
-		lines.append(_field_hint())
-	if lines.size()>2:
-		lines=lines.slice(lines.size()-2)
-	log_label.text="\n".join(lines)
+	if not field_status.is_empty():
+		field_hud.show_feedback(field_status, true)
+	elif not lines.is_empty():
+		field_hud.show_feedback(str(lines.back()))
+	elif events.is_empty():
+		field_hud.clear_feedback()
+	var crew: Dictionary = Data.crew_info(state)
+	field_hud.crew_button.text = "技を取り消す" if pending_crew else "%s  %d/%d" % [crew.name,crew.charges,crew.maxCharges]
+	field_hud.crew_button.tooltip_text = str(crew.description)
+	var previews: Dictionary = {}
+	for step: Vector2i in [Vector2i.UP, Vector2i.LEFT, Vector2i.RIGHT, Vector2i.DOWN, Vector2i.ZERO]:
+		var action := {"type":"crew" if pending_crew else "wait" if step == Vector2i.ZERO else "move", "dx":step.x, "dy":step.y}
+		if not pending_item.is_empty():
+			action = {"type":"use", "uid":pending_item, "dx":step.x, "dy":step.y}
+		previews["%d,%d" % [step.x,step.y]] = Data.preview_action(state, action)
+	field_hud.show_previews(previews)
 	board.present(state,events,settings.reduced)
 	audio.set_scene("expedition",int(run.tide))
 
@@ -702,10 +648,13 @@ func _direction(dx: int, dy: int) -> void:
 	if is_instance_valid(modal):
 		return
 	if dx == 0 and dy == 0:
-		if pending_item.is_empty():
+		if pending_item.is_empty() and not pending_crew:
 			_act({"type": "wait"})
 		return
-	if not pending_item.is_empty():
+	if pending_crew:
+		pending_crew = false
+		_act({"type":"crew", "dx":dx, "dy":dy})
+	elif not pending_item.is_empty():
 		var uid := pending_item
 		pending_item = ""
 		_act({"type": "use", "uid": uid, "dx": dx, "dy": dy})
@@ -729,6 +678,7 @@ func _act(action: Dictionary) -> void:
 		_render()
 
 func _interact() -> void:
+	pending_crew = false
 	if state.mode != "expedition":
 		return
 	pending_item = ""
@@ -768,7 +718,7 @@ func _cell_selected(x: int, y: int) -> void:
 				body.add_child(_label(Data.ENEMIES[enemy.kind].description))
 				body.add_child(_label("体力 %d  /  攻撃 %d" % [enemy.hp, Data.ENEMIES[enemy.kind].attack], 14, UiPalette.GOLD))
 				return
-		status_label.text = "隣のマスをタップして移動。離れた場所へは自動移動しません。"
+		field_hud.show_feedback("隣のマスをタップして移動。離れた場所へは自動移動しません。")
 
 func _open_modal(title: String, content_height: float = 540) -> VBoxContainer:
 	_close_modal()
@@ -827,6 +777,7 @@ func _close_modal() -> void:
 	_sync_presentation()
 
 func _inventory() -> void:
+	pending_crew = false
 	if state.mode != "expedition":
 		return
 	var columns := 3 if size.x < 760 else 4
@@ -980,6 +931,7 @@ func _map() -> void:
 
 func _settings() -> void:
 	pending_item = ""
+	pending_crew = false
 	if screen == "expedition" and is_instance_valid(board):
 		_update_hud([])
 	var body := _open_modal("設定と中断",360)
@@ -1016,7 +968,7 @@ func _settings() -> void:
 
 func _help() -> void:
 	var body := _open_modal("回収屋の心得")
-	for entry: Array in [["一手ずつ、考える", "矢印ボタン、矢印キー、WASDで一マス移動。隣の敵に向かって進むと攻撃します。長押しで連続移動しません。"], ["調べる・拾う", "荷箱の隣か上で「調べる」。Eキーでも操作できます。鞄に入りきらない品は、その場に残ります。"], ["道具で切り抜ける", "持ち物はIキー。救急包で回復し、爆薬で敵や壁を破壊し、発煙筒で敵を誘導できます。使用と装備変更は一手です。"], ["潮と敵を読む", "潮は32・64・96手で変わります。低い道は浸水すると一手ごとに体力を1失います。木の高架は沈みません。構えた鳥の正面からは横へ避けよう。"], ["持ち帰って初めて、自分の物", "南の船着き場で「帰還」。倒れると装備と携行品をすべて失います。倉庫の品は残り、武器がなくても貸出ナイフで再出発できます。"], ["最初の仕事", "北東の旧灯台で集光芯を見つけ、銅の端材と一緒に持ち帰ろう。港の灯りを修理すると、次回から視界が1マス広がります。"]]:
+	for entry: Array in [["一手ずつ、考える", "矢印ボタン、矢印キー、WASDで一マス移動。隣の敵に向かって進むと攻撃します。長押しで連続移動しません。"], ["調べる・拾う", "荷箱の隣か上で「調べる」。Eキーでも操作できます。鞄に入りきらない品は、その場に残ります。"], ["仲間の技で道を作る", "新しい遠征では、仲間ごとの技を3回使えます。Qキーか技のボタンで効果を読み、方向を選ぶ技は矢印で決定。取り消しや効かない使い方では、手数も回数も減りません。"], ["道具で切り抜ける", "持ち物はIキー。救急包で回復し、爆薬で敵や壁を破壊し、発煙筒で敵を誘導できます。使用と装備変更は一手です。"], ["潮と敵を読む", "潮は32・64・96手で変わります。低い道は浸水すると一手ごとに体力を1失います。高い道は沈みません。構えた鳥の正面からは横へ避けよう。"], ["持ち帰って初めて、自分の物", "南の船着き場で「帰還」。倒れると装備と携行品をすべて失います。倉庫の品は残り、武器がなくても貸出ナイフで再出発できます。"], ["最初の仕事", "中央の回収区画で集光芯を見つけ、銅の端材と一緒に持ち帰ろう。奥の保管庫には追加の戦利品があります。港の灯りを修理すると、次回から視界が1マス広がります。"]]:
 		body.add_child(_label(entry[0], 18, UiPalette.GOLD))
 		body.add_child(_label(entry[1], 15))
 
@@ -1039,8 +991,9 @@ func _input(event: InputEvent) -> void:
 	if event.keycode == KEY_ESCAPE:
 		if is_instance_valid(modal):
 			_close_modal()
-		elif not pending_item.is_empty():
+		elif not pending_item.is_empty() or pending_crew:
 			pending_item = ""
+			pending_crew = false
 			_update_hud([])
 		else:
 			_settings()
@@ -1073,6 +1026,8 @@ func _input(event: InputEvent) -> void:
 		_inventory()
 	elif event.is_action_pressed("area_map"):
 		_map()
+	elif event.keycode == KEY_Q:
+		_crew_action()
 	else:
 		return
 	get_viewport().set_input_as_handled()
@@ -1224,6 +1179,8 @@ func _pulse(control:Control) -> void:
 
 func _sync_presentation() -> void:
 	var paused:=focus_paused or is_instance_valid(modal)
+	if is_instance_valid(field_hud):
+		field_hud.set_paused(paused)
 	for stage: Control in crew_stages:
 		if is_instance_valid(stage):
 			stage.set_presentation_paused(paused)

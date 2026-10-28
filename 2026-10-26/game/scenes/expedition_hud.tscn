@@ -1,0 +1,297 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/expedition_hud.gd" id="1_hud"]
+
+[node name="ExpeditionHUD" type="HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 8
+script = ExtResource("1_hud")
+
+[node name="Sidebar" type="PanelContainer" parent="."]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(260, 0)
+layout_mode = 2
+
+[node name="Body" type="VBoxContainer" parent="Sidebar"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="SidebarTop" type="VBoxContainer" parent="Sidebar/Body"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Legend" type="Label" parent="Sidebar/Body"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "移動：矢印キー / WASD\n調べる：E　持ち物：I\n地図：M　仲間の技：Q"
+autowrap_mode = 3
+
+[node name="Spacer" type="Control" parent="Sidebar/Body"]
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+
+[node name="TouchToggle" type="Button" parent="Sidebar/Body"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(52, 52)
+layout_mode = 2
+text = "タッチ操作を開く"
+
+[node name="SidebarBottom" type="VBoxContainer" parent="Sidebar/Body"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Column" type="VBoxContainer" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 4
+
+[node name="Instruments" type="PanelContainer" parent="Column"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 68)
+layout_mode = 2
+
+[node name="Row" type="HBoxContainer" parent="Column/Instruments"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Portrait" type="TextureRect" parent="Column/Instruments/Row"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+size_flags_vertical = 4
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Vitals" type="VBoxContainer" parent="Column/Instruments/Row"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme_override_constants/separation = 2
+
+[node name="Health" type="Label" parent="Column/Instruments/Row/Vitals"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "イサナ 24 / 24"
+
+[node name="HealthBar" type="ProgressBar" parent="Column/Instruments/Row/Vitals"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 6)
+layout_mode = 2
+show_percentage = false
+
+[node name="Tide" type="Label" parent="Column/Instruments/Row/Vitals"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "干潮 / あと32手"
+
+[node name="Cargo" type="VBoxContainer" parent="Column/Instruments/Row"]
+custom_minimum_size = Vector2(44, 0)
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_constants/separation = 0
+
+[node name="Name" type="Label" parent="Column/Instruments/Row/Cargo"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "携行"
+horizontal_alignment = 1
+
+[node name="CargoCount" type="Label" parent="Column/Instruments/Row/Cargo"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "1/14"
+horizontal_alignment = 1
+
+[node name="Settings" type="Button" parent="Column/Instruments/Row"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(52, 52)
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_font_sizes/font_size = 16
+text = "設定"
+
+[node name="Purpose" type="PanelContainer" parent="Column"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 28)
+layout_mode = 2
+
+[node name="Body" type="VBoxContainer" parent="Column/Purpose"]
+layout_mode = 2
+
+[node name="GoalRow" type="HBoxContainer" parent="Column/Purpose/Body"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="Objective" type="Label" parent="Column/Purpose/Body/GoalRow"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 16
+text = "港へ灯りを"
+text_overrun_behavior = 3
+
+[node name="Turn" type="Label" parent="Column/Purpose/Body/GoalRow"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "000手"
+
+[node name="CargoValue" type="Label" parent="Column/Purpose/Body/GoalRow"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "0pt"
+
+[node name="Feedback" type="Label" parent="Column/Purpose/Body"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+autowrap_mode = 3
+
+[node name="DesktopSummary" type="HBoxContainer" parent="Column/Purpose/Body"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="World" type="Control" parent="Column"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+mouse_filter = 1
+clip_contents = true
+
+[node name="ControlsPanel" type="PanelContainer" parent="Column"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 156)
+layout_mode = 2
+z_index = 40
+
+[node name="ControlsStack" type="VBoxContainer" parent="Column/ControlsPanel"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Controls" type="HBoxContainer" parent="Column/ControlsPanel/ControlsStack"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Pad" type="GridContainer" parent="Column/ControlsPanel/ControlsStack/Controls"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/h_separation = 4
+theme_override_constants/v_separation = 4
+columns = 3
+
+[node name="NW" type="Control" parent="Column/ControlsPanel/ControlsStack/Controls/Pad"]
+custom_minimum_size = Vector2(52, 52)
+layout_mode = 2
+mouse_filter = 2
+
+[node name="Up" type="Button" parent="Column/ControlsPanel/ControlsStack/Controls/Pad"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(52, 52)
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "↑"
+
+[node name="NE" type="Control" parent="Column/ControlsPanel/ControlsStack/Controls/Pad"]
+custom_minimum_size = Vector2(52, 52)
+layout_mode = 2
+mouse_filter = 2
+
+[node name="Left" type="Button" parent="Column/ControlsPanel/ControlsStack/Controls/Pad"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(52, 52)
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "←"
+
+[node name="Wait" type="Button" parent="Column/ControlsPanel/ControlsStack/Controls/Pad"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(52, 52)
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "待つ"
+
+[node name="Right" type="Button" parent="Column/ControlsPanel/ControlsStack/Controls/Pad"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(52, 52)
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "→"
+
+[node name="SW" type="Control" parent="Column/ControlsPanel/ControlsStack/Controls/Pad"]
+custom_minimum_size = Vector2(52, 52)
+layout_mode = 2
+mouse_filter = 2
+
+[node name="Down" type="Button" parent="Column/ControlsPanel/ControlsStack/Controls/Pad"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(52, 52)
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "↓"
+
+[node name="SE" type="Control" parent="Column/ControlsPanel/ControlsStack/Controls/Pad"]
+custom_minimum_size = Vector2(52, 52)
+layout_mode = 2
+mouse_filter = 2
+
+[node name="Actions" type="VBoxContainer" parent="Column/ControlsPanel/ControlsStack/Controls"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 4
+
+[node name="Interact" type="Button" parent="Column/ControlsPanel/ControlsStack/Controls/Actions"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(52, 52)
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "調べる"
+
+[node name="CrewAction" type="Button" parent="Column/ControlsPanel/ControlsStack/Controls/Actions"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(52, 52)
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "仲間の技　3/3"
+
+[node name="Utilities" type="HBoxContainer" parent="Column/ControlsPanel/ControlsStack/Controls/Actions"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="Inventory" type="Button" parent="Column/ControlsPanel/ControlsStack/Controls/Actions/Utilities"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(52, 52)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 16
+text = "持ち物"
+
+[node name="Map" type="Button" parent="Column/ControlsPanel/ControlsStack/Controls/Actions/Utilities"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(52, 52)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 16
+text = "地図"
+
+[node name="FeedbackTimer" type="Timer" parent="."]
+unique_name_in_owner = true
+wait_time = 5.0
+one_shot = true

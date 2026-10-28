@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="DistrictVisualProfile" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/district_visual_profile.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+floor_color = Color(0.792, 0.843, 0.733, 1)
+wall_cap = Color(0.839, 0.906, 0.804, 1)
+wall_face = Color(0.357, 0.529, 0.482, 1)
+water_color = Color(0.251, 0.596, 0.584, 1)
+deep_water_color = Color(0.153, 0.443, 0.49, 1)
+accent_color = Color(0.463, 0.655, 0.569, 1)

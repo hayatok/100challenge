@@ -6,13 +6,13 @@ The user requested continuing development until explicitly stopped, with GitHub 
 
 The desired loop is: choose a meaningful job and region, commit a loadout, discover routes and loot, decide what to risk, return real items, improve the harbor or a companion's circumstances, then choose a different expedition. Death still loses all carried items and equipment; stored items and completed town/character progress remain. Add choices and encounters, not a compulsory resource treadmill or inflated combat statistics.
 
-Latest steering on2026-10-28 JST: finish the current v0.3, publish the first pair, verify the public build, then stop development. Do not begin v0.4 or schedule further continuation. Do not create or resume automatic follow-ups at that checkpoint. The later-pair proposals below are retained as future ideas, not authorized active work after this stop.
+Latest steering on 2026-10-29 JST: resume continuing development until stopped, with substantial redesign of play, graphics, staging and HUD toward commercial quality. The user explicitly rejects minor fixes as the main work. This supersedes the 2026-10-28 pause after the verified v0.3 publication. See V04_REBUILD.md and V04_ART_BRIEF.md. Work in versions, preserve saves and evaluate actual operation at each checkpoint. A thread heartbeat was created and its view succeeded for continuity; it must honor any later stop instruction.
 
 ## Publication cadence
 
 Count completed versions since the latest verified Pages publication, rather than relying on odd/even version numbers. The first pair is v0.2 + v0.3. Then v0.4 + v0.5, and so on. A version is complete only after its implementation, relevant tests, actual screen/operation checks, Japanese review and mandatory Astra review. At each pair boundary: update the PR, require passing current-head CI, merge the reviewed change, tag the exact intended main commit through the existing Pages route, verify the deployed Linux artifact/public files and gameplay, record the URL and version, then begin the next pair. Deployment success alone is not human acceptance of fun or commercial quality.
 
-No extra permission is required for the first pair's publication. The latest stop request takes precedence over the original repeating cycle. Preserve a recoverable history and save migrations; never reset player storage to make a new version appear correct. The proposed heartbeat was reported absent by the app and no active goal was returned; do not create a replacement or restart development after this checkpoint.
+The renewed continuation request restores the established cadence after v0.3: publish each two completed versions through reviewed PRs and the existing Pages route. Preserve a recoverable history and save migrations; never reset player storage to make a new version appear correct. The previous absent/deleted automation and pause remain historical records, not the current instruction.
 
 ## v0.2 — routes, reconstruction and companion jobs (complete)
 
@@ -38,9 +38,9 @@ Goal: make characters and places visibly move and read as a cohesive adventure. 
 
 Done when: actual native/Web motion sequences at phone sizes show the above actions and all districts; pure state, input, pause and save tests remain correct; Japanese and Astra reviews complete. Publish v0.2+v0.3 as the first pair and verify the public game.
 
-## Next pair candidates
+## Current pair: v0.4 and v0.5
 
-v0.4: expedition modifiers, encounter variants and equipment choices that change tactics; replay contracts after the main reconstruction. v0.5: more companion chapters, distinctive enemy/boss behavior and authored encounter/motion polish. Refine this pair after playing the previous one; do not automatically implement a feature count as proof of quality.
+v0.4 rebuilds expeditions with compact encounters, worker techniques, truthful action previews, strict legacy-run migration, a much larger playable field and a new HUD. v0.5 rebuilds the character animation pipeline and stages the districts/harbor/results around that playable field. Both must be assessed through actual operation. Later pairs follow concrete observed weaknesses; do not automatically implement a feature count as proof of quality.
 
 ## Ledger
 
@@ -48,4 +48,6 @@ v0.4: expedition modifiers, encounter variants and equipment choices that change
 | --- | --- | --- | --- |
 |0.1|Baseline at5624789|One district, presentation R2; see its verification record|Not published for this app|
 |0.2|Complete at c750371|Campaign/maps/exchange;5328 rules +208 UI/store; actual Web extractions/deliveries/trade/death; Astra review; CI40545309242 passed|Paired with0.3; release outcome in Issue214|
-|0.3|Complete; release checkpoint|Directional crew/portraits/terrain; receipt motion;5328 rules +469 UI/store; actual Web; Japanese/Astra review|Publish pair, verify public game, then stop. Exact SHA/tag/outcome in Issue214|
+|0.3|Published baseline|Directional crew/portraits/terrain; receipt motion;5328 rules +469 UI/store; actual Web; Japanese/Astra review|Verified release-2026-10-28-2 at e1a83a7; Pages40562758716; Issue214|
+|0.4|Local checkpoint complete; PR/CI next|Compact encounters, techniques, HUD/world rebuild;5328 legacy+3907 tactical+643 UI/store; actual Web return/unlock/deep salvage/loss/retry/legacy continuation; Japanese/Astra review; see verification/v04/RESULTS.md|Pair with0.5 before Pages|
+|0.5|Prototype in progress|Articulated actor feasibility; no production adoption yet; world/harbor/results staging remains|Second version of the next pair|

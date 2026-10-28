@@ -94,3 +94,24 @@ static func make_theme() -> Theme:
 	t.set_stylebox("grabber_highlight", "VScrollBar", box(SEA, INK, 0))
 	t.set_stylebox("grabber_pressed", "VScrollBar", box(Color("47898e"), INK, 0))
 	return t
+
+static func field_panel(fill: Color = Color("173f4d"), margin: int = 8) -> StyleBoxFlat:
+	var s := box(fill, Color("6a9d9c"), margin)
+	s.set_border_width_all(1)
+	s.set_corner_radius_all(4)
+	s.shadow_size = 0
+	return s
+
+static func make_field_theme() -> Theme:
+	var t := make_theme()
+	for kind: String in ["Label", "Button"]:
+		t.set_color("font_color", kind, Color("fff6dc"))
+	for style: String in ["normal", "hover", "pressed"]:
+		t.set_stylebox(style, "Button", field_panel(Color("235966") if style == "hover" else Color("123844") if style == "pressed" else Color("1b4a58"), 4))
+	for color_name: String in ["font_hover_color", "font_focus_color", "font_pressed_color", "font_hover_pressed_color"]:
+		t.set_color(color_name, "Button", Color("fff6dc"))
+	t.set_stylebox("disabled", "Button", field_panel(Color("304c52"), 4))
+	t.set_color("font_disabled_color", "Button", Color("b7c6bd"))
+	t.set_stylebox("background", "ProgressBar", field_panel(Color("102d37"), 0))
+	t.set_stylebox("fill", "ProgressBar", field_panel(Color("65cbb0"), 0))
+	return t

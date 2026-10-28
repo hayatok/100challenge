@@ -1,6 +1,6 @@
 extends SceneTree
 
-const RulesEngine = preload("res://scripts/rules.gd")
+const RulesEngine = preload("res://scripts/legacy_v03_rules.gd")
 const World = preload("res://scripts/world_data.gd")
 const Store = preload("res://scripts/save_store.gd")
 var passed: int = 0
@@ -11,7 +11,7 @@ func _initialize() -> void:
 		if call(test) != true:
 			failed += 1
 			push_error("%s did not finish (runtime error or failed route)" % test)
-	print("Rules tests: %d passed, %d failed" % [passed, failed])
+	print("Legacy v0.3 rules tests: %d passed, %d failed" % [passed, failed])
 	quit(1 if failed > 0 else 0)
 
 func expect(condition: bool, label: String) -> void:
@@ -704,22 +704,22 @@ func test_legacy_store_backup() -> bool:
 	var raw: String = JSON.stringify(old, "  ")
 	expect(Store._write_serialized(key, path, raw).is_empty(), "legacy native fixture written under isolated QA path")
 	var loaded: Dictionary = Store.load_game(key, path)
-	expect(loaded.found and not loaded.corrupt and loaded.error.is_empty() and loaded.state.version == 2, "store loads valid legacy into v2 without writing it")
+	expect(loaded.found and not loaded.corrupt and loaded.error.is_empty() and loaded.state.version == 3, "store loads valid legacy into v3 without writing it")
 	expect(Store.read_value(key, path).raw == raw, "load alone leaves original v1 bytes unchanged")
 	# A directory at the backup destination simulates an unwritable backup.
-	DirAccess.make_dir_absolute(path + ".pre-v2")
+	DirAccess.make_dir_absolute(path + ".pre-v3")
 	var error: String = Store.save_game(loaded.state, key, path)
 	expect(not error.is_empty() and Store.read_value(key, path).raw == raw, "failed backup visibly refuses to overwrite original legacy save")
-	DirAccess.remove_absolute(path + ".pre-v2")
-	expect(Store.save_game(loaded.state, key, path).is_empty(), "store retries backup and writes v2 only after backup succeeds")
-	expect(Store.read_value(key + "-pre-v2", path + ".pre-v2").raw == raw, "pre-v2 backup retains exact original bytes including formatting")
+	DirAccess.remove_absolute(path + ".pre-v3")
+	expect(Store.save_game(loaded.state, key, path).is_empty(), "store retries backup and writes v3 only after backup succeeds")
+	expect(Store.read_value(key + "-pre-v3", path + ".pre-v3").raw == raw, "pre-v3 backup retains exact original bytes including formatting")
 	loaded = Store.load_game(key, path)
-	expect(loaded.state.version == 2 and RulesEngine.validate_state(loaded.state), "migrated native save reloads with complete run")
+	expect(loaded.state.version == 3 and preload("res://scripts/rules.gd").validate_state(loaded.state), "migrated native save reloads with complete run")
 	var malformed: String = "{broken-save"
 	Store._write_serialized(key, path, malformed)
 	loaded = Store.load_game(key, path)
 	expect(loaded.corrupt and Store.read_value(key, path).raw == malformed, "corrupt raw source stays untouched on load")
-	for suffix: String in ["", ".bak", ".tmp", ".pre-v2", ".pre-v2.bak", ".pre-v2.tmp"]:
+	for suffix: String in ["", ".bak", ".tmp", ".pre-v3", ".pre-v3.bak", ".pre-v3.tmp"]:
 		if FileAccess.file_exists(path + suffix):
 			DirAccess.remove_absolute(path + suffix)
 	return true
