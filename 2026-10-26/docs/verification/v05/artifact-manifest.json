@@ -1,0 +1,182 @@
+{
+  "recorded": "2026-10-29 JST",
+  "base_commit": "ebabd8f58a345f91c0c41b6f5901ab328c0a47ea",
+  "scope": "Local production-UI checkpoint; source/runtime version0.4.0; v0.5 and3D adoption incomplete.",
+  "check": {
+    "command": "npm run check",
+    "observed_process_exit": 0,
+    "legacy": 5328,
+    "tactical": 3907,
+    "components": 1150,
+    "main_ui_store": 771,
+    "all_failures": 0,
+    "web_export": true,
+    "raw_log_source": ".scratch/versions/v05/web/check-final-ui-checkpoint.log",
+    "raw_log_sha256": "4d8f53fe09193d7238eb1a79b1a50609dca0bcd2b681be2212294398a381d4df",
+    "committed_log": "check-output.txt",
+    "committed_log_sha256": "0f153f7a05204c7b44abfdb9a8dc7e15a6e4a0d36d49fe5c37a6b51d76ec8fdd",
+    "log_normalization": "ANSI terminal formatting and trailing whitespace removed; raw output retained in ignored working evidence."
+  },
+  "current_and_frozen_rules_unchanged_from_base": {
+    "game/scripts/rules.gd": "f80b3119173692855f89459f77ac51d2a881cfd040f2d40b04dfc36b2f0990ae",
+    "game/scripts/legacy_v03_rules.gd": "a9005f02706274fd80c27b71521ec6ef46668519c2b36f6e9a587f82b911fbed"
+  },
+  "source_hashes": {
+    "game/scripts/main.gd": "f56008936e1557909f7e6b9df06c5b4365054de10ed1b9315fcede2b2d63ef9d",
+    "game/scripts/presentation_v05/harbor.gd": "f1008c1f82c85b9125968ffcfabc88f0e2699c991ae964c30706e6fa435b0ad1",
+    "game/scripts/presentation_v05/result.gd": "04d1350b43245e123a8dd4adbe34dd6a1f081a3a7be90a081f333b84eee7bfef",
+    "game/scripts/presentation_v05/presentation.gd": "48eede66b59837fb37b5957dd8948ec0f58a98314f89c536345a4a036eb620cd",
+    "game/scenes/presentation_v05/harbor.tscn": "1b6c8d8833821d5453610210fc4aee750dce9e8aa1a19a7d3c76012cd5c7b9af",
+    "game/scenes/presentation_v05/result.tscn": "bc6008b07481cfed8d7a5b8716faa4c0b11cee5613ead566b03d0c5801e0ea07",
+    "game/scenes/presentation_v05/item_tile.tscn": "1fcfd494838302c5ecc58adaf42f62b1c43cb89eb5e27fb95954d1d4568ff2f5",
+    "game/tests/presentation_v05_test.gd": "72aea53a2ddbc17c3f1b70160224b3bcad8c8bb3cebd0564c4813d1e8e7adaa0",
+    "game/tests/ui_test.gd": "935ca60a4324e98756198517b9a9a00f034a9eb9f7c1c788efad82a84f026406",
+    "README.md": "1af646d787c2ff5266867662f5f2ff9e15400e252faf97db3e24c86cc915535a",
+    "docs/VERSION_PLAN.md": "d853c1fc52b330d3a92ed4d5f99450348a34480ed950eb75bf0b43e6da201f39",
+    "scripts/godot.mjs": "4f4a4a594313052813ae60d36e0efedbb4dae2a929bd96fbfa32c8f81a8cd31b"
+  },
+  "artifacts": [
+    {
+      "file": "web-harbor-390.png",
+      "source": ".scratch/versions/v05/web/harbor-390x844.png",
+      "sha256": "5dd4a1d03eb1d5f20d4dc05dc1e69613b6ed23d4243cd3ab2c0cc5eb8954159b",
+      "bytes": 70795,
+      "class": "actual exported Web operation by parent agent",
+      "scope": "Initial actual showcase; before later factual feedback/empty-label corrections."
+    },
+    {
+      "file": "web-preparation-390.png",
+      "source": ".scratch/versions/v05/web/preparation-390x844.png",
+      "sha256": "075a968aa91f549121a85da8d305bd306c3769f78ebf2523736bbaa9a78a7b17",
+      "bytes": 49104,
+      "class": "actual exported Web operation by parent agent",
+      "scope": "Actual five-item preparation before transfer; phone layout unchanged by later factual corrections."
+    },
+    {
+      "file": "web-first-return-360.png",
+      "source": ".scratch/versions/v05/web/real-extraction-6items-103pt-16turns-360x740.png",
+      "sha256": "9b481f46a90e0b46869c119abcc2e41e983a5e905070bfeff949f10af63f5d28",
+      "bytes": 51382,
+      "class": "actual exported Web operation by parent agent",
+      "scope": "Actual Isana16-turn journey,6items103pt; before final feedback-only/empty-label correction."
+    },
+    {
+      "file": "web-beacon-completed-desktop.png",
+      "source": ".scratch/versions/v05/web/real-beacon-completed-1280x800.png",
+      "sha256": "019d0ca06d662f80c6888ff47ac63e075f9137170bd532349154d520e81f4d28",
+      "bytes": 111103,
+      "class": "actual exported Web operation by parent agent",
+      "scope": "Actual delivery20G/restoration1/4; no automatic route change."
+    },
+    {
+      "file": "web-harbor-desktop.png",
+      "source": ".scratch/versions/v05/web/harbor-final-1280x800.png",
+      "sha256": "719b16e7dc56ac8e37ddbe32005523ac5fd15007e365c9388f93f363f55a518d",
+      "bytes": 150241,
+      "class": "actual exported Web operation by parent agent",
+      "scope": "Actual permanent preparation/no desktop close toggle; before final feedback-only correction."
+    },
+    {
+      "file": "web-loss-360.png",
+      "source": ".scratch/versions/v05/web/real-kohaku-death-5items-49pt-28turns-final-360x740.png",
+      "sha256": "266aa549554852a7abfa44ed922903a7cbb23de78d12d284335497dcf7aa73d1",
+      "bytes": 47937,
+      "class": "actual exported Web operation by parent agent",
+      "scope": "Final UI build; actual Kohaku5-item49pt loss on turn28 to crab attack."
+    },
+    {
+      "file": "web-loss-reloaded-360.png",
+      "source": ".scratch/versions/v05/web/real-death-after-reload-final-360x740.png",
+      "sha256": "a4d598f7e90190438571073e0fa3856c8f671a9264a5abf166d04c9cd1f4d31d",
+      "bytes": 47924,
+      "class": "actual exported Web operation by parent agent",
+      "scope": "Final UI build; actual reloaded loss receipt."
+    },
+    {
+      "file": "web-retry-return-360.png",
+      "source": ".scratch/versions/v05/web/post-loss-retry-return-2items-17pt-final-360x740.png",
+      "sha256": "0af176a57244d0b40c781e55d9573622d0285df88d977e24e18d6fa265f8ffff",
+      "bytes": 52763,
+      "class": "actual exported Web operation by parent agent",
+      "scope": "Final UI build; two surviving owned items returned for17pt, loan excluded, turn0."
+    },
+    {
+      "file": "web-empty-result-360.png",
+      "source": ".scratch/versions/v05/web/simplified-empty-result-final-360x740.png",
+      "sha256": "46a4d4e0192497019198f1dd5bcf1c95062b4c69fb28860d22b2e47045b87c0e",
+      "bytes": 55988,
+      "class": "actual exported Web operation by parent agent",
+      "scope": "Final UI build; actual empty return with one neutral explanation."
+    },
+    {
+      "file": "web-positive-feedback-360.png",
+      "source": ".scratch/versions/v05/web/corrected-positive-harbor-feedback-final-360x740.png",
+      "sha256": "28d872fa18c6656603ceea7d09a22ae500d547a68eed233eaf73565f2d697125",
+      "bytes": 57495,
+      "class": "actual exported Web operation by parent agent",
+      "scope": "Final UI build; structured two-item count without inferred loan history."
+    },
+    {
+      "file": "web-empty-feedback-360.png",
+      "source": ".scratch/versions/v05/web/corrected-empty-harbor-feedback-final-360x740.png",
+      "sha256": "38499c9325271ae575dac21ae9b06fcad898f85494abad684304b38b4cabe290",
+      "bytes": 57249,
+      "class": "actual exported Web operation by parent agent",
+      "scope": "Final UI build; neutral zero-item feedback."
+    },
+    {
+      "file": "web-retained-credits-360.png",
+      "source": ".scratch/versions/v05/web/post-loss-credits20-final-360x740.png",
+      "sha256": "00bf163c1f3737fc65b98946d37fed5d40225c1661423875587a9e8bf83dd978",
+      "bytes": 33570,
+      "class": "actual exported Web operation by parent agent",
+      "scope": "Final UI build; actual20G after loss/retry, no purchase/sale."
+    },
+    {
+      "file": "web-retained-stash-360.png",
+      "source": ".scratch/versions/v05/web/post-loss-warehouse2-after-reload-final-360x740.png",
+      "sha256": "c7f9ab7115beb4239508a9cff587e12ef5d471b05970d14edce244e2a0533dc5",
+      "bytes": 40608,
+      "class": "actual exported Web operation by parent agent",
+      "scope": "Final UI build; reload shows zero carried/two stored items and repaired lamp."
+    },
+    {
+      "file": "native-owned-empty-result.png",
+      "source": ".scratch/versions/v05/ui/astra-fixes-2/owned-empty-result-native.png",
+      "sha256": "c3e2739bf7b0dcf36e09e228839861ddcb55e33cf777066ce254e21522cccdaa",
+      "bytes": 1505094,
+      "class": "native actual-Main QA fixture",
+      "scope": "Rules-derived owned-knife/drop/empty path; native fixture, not an exported-Web play journey."
+    },
+    {
+      "file": "native-owned-empty-harbor.png",
+      "source": ".scratch/versions/v05/ui/astra-fixes-2/owned-empty-harbor-native.png",
+      "sha256": "fdc46d459e73409329f6d2e3ee0ad270c4013ae898db7bbcee7db165931ee85b",
+      "bytes": 1058647,
+      "class": "native actual-Main QA fixture",
+      "scope": "Rules-derived owned-knife/drop/empty path; native fixture, not an exported-Web play journey."
+    },
+    {
+      "file": "browser-warnings-errors.json",
+      "source": ".scratch/versions/v05/web/final-browser-warnings-errors.json",
+      "sha256": "309e09bd466bbd94216bb261b3227d826f363673535a409d5c8e655c39ef17f0",
+      "bytes": 112,
+      "class": "browser inspection data",
+      "scope": "Read after final actual UI journeys on QA origin4343."
+    },
+    {
+      "file": "browser-360-metrics.json",
+      "source": ".scratch/versions/v05/web/final-360-metrics.json",
+      "sha256": "0a4aa99c9ad09305d57725e0e5a22fce17c9d8b0f9761bbe76888f65fd6c1c79",
+      "bytes": 289,
+      "class": "browser inspection data",
+      "scope": "Read after final actual UI journeys on QA origin4343."
+    }
+  ],
+  "limits": [
+    "Agent operation and native fixtures are not human first-play acceptance.",
+    "Physical phones, Safari, listening, endurance and commercial acceptance unverified.",
+    "3D pilots/assets are ignored working evidence and are not production dependencies.",
+    "Screens identify their capture revision; historical journeys are not relabelled as final-build screenshots."
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "canvas": {
+    "height": 740,
+    "rect": {
+      "bottom": 740,
+      "height": 740,
+      "left": 0,
+      "right": 360,
+      "top": 0,
+      "width": 360,
+      "x": 0,
+      "y": 0
+    },
+    "width": 360
+  },
+  "devicePixelRatio": 1,
+  "innerHeight": 740,
+  "innerWidth": 360
+}

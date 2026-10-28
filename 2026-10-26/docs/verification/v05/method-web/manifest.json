@@ -1,0 +1,61 @@
+{
+  "scope": "Unmodified actual exported-game QA screenshots; not production3D adoption",
+  "source_manifest": "2026-10-26/.scratch/versions/v05/prototype/adventure-web/manifest.json",
+  "files": [
+    {
+      "file": "pilot-field-390.jpg",
+      "source": "05-field-turn4.jpg",
+      "codec": "JPEG",
+      "size": [
+        390,
+        844
+      ],
+      "bytes": 36627,
+      "sha256": "9465e5ea876be8a5a37ec24502e068b27fd8361dbeded03742d20bc994c9ff7a"
+    },
+    {
+      "file": "pilot-breach-360.jpg",
+      "source": "15-opened-floor-center-tap-small.jpg",
+      "codec": "JPEG",
+      "size": [
+        360,
+        739
+      ],
+      "bytes": 32536,
+      "sha256": "009b64a2866a3e852b001e30da262727c1932805d5410e7e74f3ef467d702a4a"
+    },
+    {
+      "file": "pilot-return-360.jpg",
+      "source": "22-return-result-small.jpg",
+      "codec": "JPEG",
+      "size": [
+        360,
+        739
+      ],
+      "bytes": 52996,
+      "sha256": "50d02139c330a9bf97329bed35e200005410d34b7524fba9fee2b51ee539fa59"
+    },
+    {
+      "file": "pilot-loss-desktop.jpg",
+      "source": "32-loss-result-desktop.jpg",
+      "codec": "JPEG",
+      "size": [
+        1281,
+        901
+      ],
+      "bytes": 193741,
+      "sha256": "469a9ce78c3144c8c240eb1f417a9ea3b2e87a26455f4ed76618c5dbfbf5cff5"
+    },
+    {
+      "file": "pilot-harbor-afterloss-desktop.jpg",
+      "source": "33-harbor-afterloss-desktop.jpg",
+      "codec": "JPEG",
+      "size": [
+        1281,
+        901
+      ],
+      "bytes": 164067,
+      "sha256": "56391e9d2f96963ae3e9a4b7fc747f35c7691dc3d573d8b4f36dde74d1071b48"
+    }
+  ]
+}

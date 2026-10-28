@@ -20,7 +20,10 @@ static func _card(parent: Control, host: Control) -> VBoxContainer:
 static func _routes(body: VBoxContainer, state: Dictionary, host: Control) -> void:
 	body.add_child(host._label("行き先によって、道と潮、拾える物が変わります。出発前に選ぼう。", 14, Palette.MUTED))
 	for id: String in Data.Campaign.DISTRICTS:
-		var district: Dictionary = Data.Campaign.DISTRICTS[id]
+		var query: Dictionary = state.duplicate(true)
+		query.run = null
+		query.profile.selectedDistrict = id
+		var district: Dictionary = Data.current_district(query)
 		var unlocked: bool = Data.Campaign.unlocked(state, id)
 		var card := _card(body, host)
 		var title: String = district.name + (" / 選択中" if state.profile.selectedDistrict == id else "")

@@ -162,5 +162,42 @@ func wave(at: Vector2) -> void:
 	for i in 3:
 		ripple(at + Vector2((i - 1) * 40, 20), 0.85 + i * 0.12, Color(0.85, 1, 0.98, 0.8), 6.0)
 
+func technique(character: String, origin: Vector2, destination: Vector2) -> void:
+	# Resolved crew events select presentation only; this node cannot spend charges.
+	match character:
+		"isana":
+			if reduced_motion:
+				impact(destination, Color("bce9dd"), 3)
+				return
+			var wake := Line2D.new()
+			wake.points = PackedVector2Array([origin + Vector2(0, 21), destination + Vector2(0, 21)])
+			wake.width = 8
+			wake.default_color = Color(0.84, 0.98, 0.91, 0.65)
+			wake.antialiased = true
+			add_child(wake)
+			var fade := wake.create_tween().set_parallel(true)
+			fade.tween_property(wake, "width", 1.0, 0.35).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+			fade.tween_property(wake, "modulate:a", 0.0, 0.35)
+			fade.chain().tween_callback(wake.queue_free)
+		"ritsu":
+			var shield := Line2D.new()
+			shield.position = destination + Vector2(0, -16)
+			shield.points = PackedVector2Array([Vector2(-22,-20), Vector2(0,-27), Vector2(22,-20), Vector2(18,8), Vector2(0,22), Vector2(-18,8), Vector2(-22,-20)])
+			shield.width = 5.0
+			shield.default_color = Color("c9f5ed")
+			shield.antialiased = true
+			add_child(shield)
+			var fade := shield.create_tween()
+			fade.tween_interval(0.2)
+			fade.tween_property(shield, "modulate:a", 0.0, 0.25)
+			fade.tween_callback(shield.queue_free)
+		"kohaku":
+			impact(destination + Vector2(0,-10), Color("e8b36a"), 5)
+		"sui":
+			if reduced_motion:
+				impact(destination, Color("e4fff2"), 3)
+			else:
+				ripple(destination, 0.65, Color(0.86, 1.0, 0.94, 0.65), 9.0)
+
 func _diamond(horizontal: float, vertical: float) -> PackedVector2Array:
 	return PackedVector2Array([Vector2(-horizontal, 0), Vector2(0, -vertical), Vector2(horizontal, 0), Vector2(0, vertical)])

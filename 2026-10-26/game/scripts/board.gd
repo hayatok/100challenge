@@ -14,6 +14,12 @@ const RuleData = preload("res://scripts/rules.gd")
 const WorldDataFile = preload("res://scripts/world_data.gd")
 const DistrictData = preload("res://scripts/campaign_data.gd")
 const FONT_PATH := "res://assets/fonts/NotoSansCJKjp-Medium.otf"
+const VisualProfile = preload("res://scripts/district_visual_profile.gd")
+
+@export var quay_profile: Resource = preload("res://resources/districts/quay.tres")
+@export var market_profile: Resource = preload("res://resources/districts/market.tres")
+@export var canal_profile: Resource = preload("res://resources/districts/canal.tres")
+@export var observatory_profile: Resource = preload("res://resources/districts/observatory.tres")
 
 @onready var world: Node2D = $World
 @onready var ground: TileMapLayer = $World/Ground
@@ -57,12 +63,19 @@ var _crate_nodes: Dictionary = {}
 var _previous_positions: Dictionary = {}
 var _light_texture: Texture2D
 var _font: Font
+var _state: Dictionary = {}
+var _action_preview: Dictionary = {}
+var _playable_rect := Rect2()
+var _profile: Resource
+var _water_glints: Array[Vector2] = []
+var _selected_cell := Vector2i(-1, -1)
 
 func _ready() -> void:
 	resized.connect(_on_resized)
 	gui_input.connect(_on_gui_input)
 	visibility_changed.connect(_update_motion_state)
 	_font = load(FONT_PATH) as Font
+	_profile = quay_profile
 	_create_terrain()
 	_create_light_texture()
 
@@ -75,6 +88,7 @@ func present(state: Dictionary, events: Array = [], reduced_motion: bool = false
 		return
 	# Result overlays retain the final resolved place instead of destroying it.
 	var incoming: Dictionary = state["run"]
+	_state = state
 	_character = str(state.get("character", incoming.get("character", "isana")))
 	_run = incoming
 	_visible = _compute_visibility(_run)
@@ -84,7 +98,7 @@ func present(state: Dictionary, events: Array = [], reduced_motion: bool = false
 	for key: Variant in _visible:
 		_seen[str(key)] = true
 	var incoming_district := str(_run.get("district", "quay"))
-	var map_changed := not _has_world or incoming_district != _district or int(_run.get("seed", 0)) != _seed or int(_run.get("turn", 0)) < _last_turn
+	var map_changed := not _has_world or incoming_district != _district or int(_run.get("seed", 0)) != _seed or int(_run.get("turn", 0)) < _last_turn or ground.get_used_rect().size != Vector2i(int(_run.get("width", 25)), int(_run.get("height", 25)))
 	if map_changed:
 		_district = incoming_district
 		_apply_district_palette()
@@ -98,6 +112,11 @@ func present(state: Dictionary, events: Array = [], reduced_motion: bool = false
 	_refresh_details()
 	_refresh_actors(map_changed)
 	_refresh_telegraphs()
+	_water_glints.clear()
+	for key: String in _visible:
+		var xy := key.split(",")
+		if _is_flooded(int(xy[0]), int(xy[1])):
+			_water_glints.append(_cell_position(int(xy[0]), int(xy[1])))
 	_position_camera(map_changed or _reduce)
 	if int(_run.get("turn", 0)) != _last_turn or map_changed:
 		_play_events(events)
@@ -108,6 +127,21 @@ func present(state: Dictionary, events: Array = [], reduced_motion: bool = false
 
 func get_visible_tiles() -> Dictionary:
 	return _visible.duplicate()
+
+func set_playable_rect(rect: Rect2) -> void:
+	_playable_rect = rect
+	if is_node_ready() and _has_world:
+		_position_camera(true)
+
+func set_action_preview(preview: Dictionary) -> void:
+	_action_preview = preview.duplicate(true)
+	if is_node_ready() and _has_world:
+		_refresh_telegraphs()
+
+func _usable_rect() -> Rect2:
+	if _playable_rect.has_area():
+		return _playable_rect.intersection(Rect2(Vector2.ZERO, size))
+	return Rect2(Vector2.ZERO, size)
 
 func set_presentation_paused(paused: bool) -> void:
 	_overlay_paused = paused
@@ -125,14 +159,8 @@ func _process(delta: float) -> void:
 	_glint_clock += delta
 	if _glint_clock > 2.6:
 		_glint_clock = 0.0
-		var candidates: Array[String] = []
-		for key: String in _visible:
-			var xy := key.split(",")
-			if _is_flooded(int(xy[0]), int(xy[1])):
-				candidates.append(key)
-		if not candidates.is_empty():
-			var selected := candidates[int(_motion_time * 7) % candidates.size()].split(",")
-			effects.ripple(_cell_position(int(selected[0]), int(selected[1])), 0.9, Color(1, 1, 0.9, 0.65), 1.5)
+		if not _water_glints.is_empty():
+			effects.ripple(_water_glints[int(_motion_time * 7) % _water_glints.size()], 0.9, Color(1, 1, 0.9, 0.42), 1.5)
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_APPLICATION_FOCUS_OUT:
@@ -162,9 +190,13 @@ func _on_gui_input(event: InputEvent) -> void:
 	if _run.is_empty() or _presentation_paused():
 		return
 	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+		if not _usable_rect().has_point(event.position):
+			return
 		var local: Vector2 = (event.position - world.position) / world.scale
 		var cell := Vector2i(floori(local.x / TILE), floori(local.y / TILE))
 		if _in_bounds(cell.x, cell.y):
+			_selected_cell = cell
+			_refresh_telegraphs()
 			cell_selected.emit(cell.x, cell.y)
 		accept_event()
 
@@ -176,16 +208,22 @@ func _position_camera(immediate: bool) -> void:
 	if size.x < 1 or size.y < 1 or _run.is_empty():
 		return
 	var p: Dictionary = _run["player"]
-	var zoom_factor := clampf(size.x / (7.35 * TILE), 0.66, 1.08)
-	# Keep enough route in view above the character while respecting the map edge.
-	var center := Vector2(size.x * 0.5, size.y * 0.48)
+	var usable := _usable_rect()
+	if not usable.has_area():
+		return
+	var columns: float = _profile.phone_columns if usable.size.x < 650.0 else _profile.desktop_columns
+	var zoom_factor := clampf(usable.size.x / (columns * TILE), 0.58, 1.38)
+	# The player foot and approach lanes are framed inside the shell's real usable area.
+	var center := usable.position + Vector2(usable.size.x * 0.5, usable.size.y * float(_profile.player_foot_height))
 	var feet := _cell_position(int(p["x"]), int(p["y"])) + Vector2(0, 19)
 	var destination := center - feet * zoom_factor
 	var map_size := Vector2(int(_run.get("width", 25)), int(_run.get("height", 25))) * TILE * zoom_factor
-	destination.x = clampf(destination.x, size.x * 0.5 - map_size.x, size.x * 0.5)
-	destination.y = clampf(destination.y, minf(16.0, size.y - map_size.y - maxf(TILE * zoom_factor * 4.0, size.y * 0.58)), size.y * 0.48)
+	# Allow a coastal margin at map edges, while keeping the player at the same foot line.
+	var margin := TILE * zoom_factor * 2.0
+	destination.x = clampf(destination.x, usable.end.x - map_size.x - margin, usable.position.x + margin)
+	destination.y = clampf(destination.y, usable.end.y - map_size.y - usable.size.y * 0.32, usable.position.y + usable.size.y * 0.48)
 	world.scale = Vector2.ONE * zoom_factor
-	ambient.area = Rect2(-destination / zoom_factor, size / zoom_factor)
+	ambient.area = Rect2((usable.position - destination) / zoom_factor, usable.size / zoom_factor)
 	if _camera_tween != null and _camera_tween.is_valid():
 		_camera_tween.kill()
 	if immediate:
@@ -214,14 +252,25 @@ func _create_terrain() -> void:
 		else:
 			part = _temporary_terrain(tile_index)
 			part.resize(patch_size, patch_size)
-		if not _palette.is_empty() and tile_index in [0, 1] and _district != "quay":
-			var tint := _district_color("stone")
-			for py in part.get_height():
-				for px in part.get_width():
-					var original := part.get_pixel(px, py)
-					var shade := original.get_luminance() / 0.76
-					var graded := Color(tint.r * shade, tint.g * shade, tint.b * shade, original.a)
-					part.set_pixel(px, py, original.lerp(graded, 0.48 if tile_index == 0 else 0.3))
+		# Retain the painted family's grain without allowing individual stones to compete
+		# with actors, cargo or intent. Material seams form quiet, broad floor planes.
+		var base: Color = [_profile.floor_color, _profile.wall_cap, _profile.timber_color, _profile.water_color][tile_index]
+		for py in part.get_height():
+			for px in part.get_width():
+				var original := part.get_pixel(px, py)
+				var shade := clampf(original.get_luminance() / 0.76, 0.7, 1.18)
+				var grain: float = _profile.painted_grain * (1.6 if tile_index == 2 else 0.7 if tile_index == 3 else 1.0)
+				var result := base.lerp(base * Color(shade, shade, shade, 1.0), grain)
+				if tile_index == 0:
+					var joint := py % 64 == 0 or (px + (64 if py >= 64 else 0)) % 128 == 0
+					if joint:
+						result = base.darkened(0.095)
+					elif py % 64 == 2:
+						result = base.lightened(0.10)
+				elif tile_index == 2 and py % 16 == 0:
+					result = base.darkened(0.16)
+				part.set_pixel(px, py, result)
+
 		atlas_image.blit_rect(part, Rect2i(0, 0, patch_size, patch_size), Vector2i(tile_index * patch_size, 0))
 	var atlas_source := TileSetAtlasSource.new()
 	atlas_source.texture = ImageTexture.create_from_image(atlas_image)
@@ -274,14 +323,16 @@ func _build_map() -> void:
 	_landmark_nodes.clear()
 	_crate_nodes.clear()
 	_previous_positions.clear()
+	_action_preview.clear()
+	_selected_cell = Vector2i(-1, -1)
 	_actor_nodes.clear()
 	_fog_cells.clear()
 	ground.clear()
 	water.clear()
 	walls.clear()
 	outer_sea.clear()
-	for y in range(-8, 41):
-		for x in range(-8, 34):
+	for y in range(-12, int(_run.get("height", 25)) + 13):
+		for x in range(-12, int(_run.get("width", 25)) + 13):
 			outer_sea.set_cell(Vector2i(x, y), 0, _atlas_coordinate(3, posmod(x, PATTERN_SPAN), posmod(y, PATTERN_SPAN)))
 	var tiles: Array = _run.get("tiles", [])
 	for y in tiles.size():
@@ -300,6 +351,7 @@ func _refresh_terrain() -> void:
 	if signature == _terrain_signature:
 		return
 	_terrain_signature = signature
+	ground.clear()
 	water.clear()
 	walls.clear()
 	_clear_children(shore)
@@ -310,9 +362,9 @@ func _refresh_terrain() -> void:
 			var tile: Dictionary = tiles[y][x]
 			var kind := str(tile.get("type", "floor"))
 			var raised := int(tile.get("elevation", 1)) >= 5
-			var timber := raised and kind != "wall" and (_district == "quay" or (_district == "canal" and _adjoins_deep_water(x, y)))
+			var timber := raised and kind != "wall" and ((_tile_type(x - 1, y) == "water" and _tile_type(x + 1, y) == "water") or (_tile_type(x, y - 1) == "water" and _tile_type(x, y + 1) == "water"))
 			ground.set_cell(Vector2i(x, y), 0, _atlas_coordinate(2 if timber else 0, x, y))
-			var outer_harbor := _district == "quay" and kind == "wall" and (y == 24 or (x in [0, 24] and y >= 18))
+			var outer_harbor := str(_run.get("ruleset", "legacy-v03")) != "encounter-v04" and _district == "quay" and kind == "wall" and (y == 24 or (x in [0, 24] and y >= 18))
 			if outer_harbor or _is_flooded(x, y):
 				water.set_cell(Vector2i(x, y), 0, _atlas_coordinate(3, x, y))
 				if outer_harbor:
@@ -323,11 +375,10 @@ func _refresh_terrain() -> void:
 				walls.set_cell(Vector2i(x, y), 0, _atlas_coordinate(1, x, y))
 				_add_wall_face(x, y)
 			elif raised:
-				_line(depth, Vector2(x * TILE + 2, y * TILE + TILE - 2), Vector2((x + 1) * TILE - 2, (y + 1) * TILE - 2), Color("fff0bd"), 2)
-				if _district in ["quay", "canal"] and y % 3 == 0 and (_tile_type(x - 1, y) == "water" or _tile_type(x + 1, y) == "water"):
-					_add_pier_post(Vector2(x * TILE + 4, y * TILE + 44))
+				_add_raised_edges(x, y)
 				if _district == "canal":
 					_add_bridge_rails(x, y)
+
 			if kind == "gate":
 				_line(depth, Vector2(x * TILE + 4, y * TILE + 7), Vector2(x * TILE + 4, y * TILE + 55), Color("e7cda2"), 5)
 				_line(depth, Vector2((x + 1) * TILE - 4, y * TILE + 7), Vector2((x + 1) * TILE - 4, y * TILE + 55), Color("e7cda2"), 5)
@@ -352,23 +403,67 @@ func _add_water_edges(x: int, y: int) -> void:
 		_line(shore, start, end, Color(0.98, 1, 0.91, 0.94), 2.4)
 
 func _add_wall_face(x: int, y: int) -> void:
-	# Low retaining walls are distinct from the authored houses and workshops.
+	# Roof planes join across the blocked footprint. Only exposed faces receive depth.
 	var origin := Vector2(x, y) * TILE
 	if _tile_type(x, y + 1) != "wall":
 		var cast_shadow := Polygon2D.new()
 		cast_shadow.position = origin
-		cast_shadow.polygon = PackedVector2Array([Vector2(2, 53), Vector2(63, 53), Vector2(70, 71), Vector2(9, 71)])
-		cast_shadow.color = Color(0.2, 0.5, 0.53, 0.13)
+		cast_shadow.polygon = PackedVector2Array([Vector2(0, 53), Vector2(64, 53), Vector2(76, 80), Vector2(12, 80)])
+		cast_shadow.color = Color(0.10, 0.28, 0.29, 0.19)
 		depth.add_child(cast_shadow)
-	var face := Polygon2D.new()
-	face.position = origin + Vector2(1, 49)
-	face.polygon = _rect_polygon(Vector2.ZERO, Vector2(62, 13))
-	face.color = _district_color("stone").darkened(0.06)
-	depth.add_child(face)
-	_line(depth, origin + Vector2(0, 48), origin + Vector2(64, 48), _district_color("stone").lightened(0.35), 5)
-	_line(depth, origin + Vector2(1, 62), origin + Vector2(64, 62), Color(0.25, 0.49, 0.5, 0.3), 2)
-	if (x * 3 + y * 5) % 7 == 0:
-		_line(depth, origin + Vector2(19, 50), origin + Vector2(21, 59), Color(0.55, 0.63, 0.54, 0.35), 1.3)
+		var face := Polygon2D.new()
+		face.position = origin + Vector2(0, 42)
+		face.polygon = _rect_polygon(Vector2.ZERO, Vector2(TILE, 22))
+		face.color = _profile.wall_face
+		depth.add_child(face)
+		_line(depth, origin + Vector2(0, 42), origin + Vector2(64, 42), _profile.wall_cap.lightened(0.14), 5)
+		_line(depth, origin + Vector2(0, 64), origin + Vector2(64, 64), Color("3f6567"), 3)
+		if (x + y) % 3 == 0:
+			_line(depth, origin + Vector2(31, 46), origin + Vector2(31, 61), Color(0.20, 0.35, 0.35, 0.28), 2)
+	for side: int in [-1, 1]:
+		if _tile_type(x + side, y) != "wall":
+			var edge_x := origin.x + (2 if side < 0 else 62)
+			_line(depth, Vector2(edge_x, origin.y), Vector2(edge_x, origin.y + 44), _profile.wall_cap.lightened(0.15) if side < 0 else _profile.wall_face, 4)
+	if _tile_type(x, y - 1) != "wall":
+		_line(depth, origin + Vector2(0, 2), origin + Vector2(64, 2), _profile.wall_cap.lightened(0.18), 4)
+	var open_sides := 0
+	for offset: Vector2i in [Vector2i.UP, Vector2i.RIGHT, Vector2i.DOWN, Vector2i.LEFT]:
+		if WorldDataFile.is_walkable(_run, x + offset.x, y + offset.y):
+			open_sides += 1
+	if open_sides >= 3:
+		# An actual isolated blocking cell reads as breachable rubble rather than floor.
+		var crack := Line2D.new()
+		crack.position = origin
+		crack.points = PackedVector2Array([Vector2(35, 3), Vector2(27, 16), Vector2(37, 25), Vector2(25, 40)])
+		crack.width = 4
+		crack.default_color = Color("647b76")
+		depth.add_child(crack)
+		_line(depth, origin + Vector2(28, 17), origin + Vector2(14, 12), Color("647b76"), 3)
+		_line(depth, origin + Vector2(37, 25), origin + Vector2(49, 20), Color("647b76"), 3)
+
+func _add_raised_edges(x: int, y: int) -> void:
+	var origin := Vector2(x, y) * TILE
+	for offset: Vector2i in [Vector2i.UP, Vector2i.RIGHT, Vector2i.DOWN, Vector2i.LEFT]:
+		var neighbor := Vector2i(x, y) + offset
+		if _in_bounds(neighbor.x, neighbor.y):
+			var tile: Dictionary = _run.tiles[neighbor.y][neighbor.x]
+			if int(tile.get("elevation", 1)) >= 5 or str(tile.get("type", "floor")) == "wall":
+				continue
+		var a := origin
+		var b := origin
+		if offset == Vector2i.UP:
+			b += Vector2(TILE, 0)
+		elif offset == Vector2i.DOWN:
+			a += Vector2(0, TILE)
+			b += Vector2(TILE, TILE)
+		elif offset == Vector2i.LEFT:
+			b += Vector2(0, TILE)
+		else:
+			a += Vector2(TILE, 0)
+			b += Vector2(TILE, TILE)
+		_line(depth, a + Vector2(3, 8), b + Vector2(3, 8), Color(0.10, 0.29, 0.30, 0.30), 12)
+		_line(depth, a, b, Color("6a8178"), 7)
+		_line(depth, a - Vector2(0, 2), b - Vector2(0, 2), Color("f7e3af"), 3)
 
 func _add_pier_post(at: Vector2) -> void:
 	_line(depth, at + Vector2(2, 4), at + Vector2(2, -10), Color(0.27, 0.42, 0.4, 0.25), 8)
@@ -382,7 +477,8 @@ func _refresh_fog() -> void:
 		cover.color = _district_color("water").lightened(0.52)
 		cover.color.a = 0.57 if _seen.has(key) else 1.0
 	for entry: Dictionary in _landmark_nodes:
-		var known := _seen.has(entry.key)
+		var anchor: Vector2i = entry.anchor
+		var known := _seen.has(entry.key) and _tile_type(anchor.x, anchor.y) in ["wall", "water"]
 		var prop: Sprite2D = entry.node
 		prop.visible = known
 		if entry.get("mooring") != null:
@@ -390,7 +486,8 @@ func _refresh_fog() -> void:
 		prop.modulate = entry.tint if _visible.has(entry.key) else Color(entry.tint, 0.62)
 
 func _refresh_landmark_clearance() -> void:
-	var image := Image.create(25, 25, false, Image.FORMAT_RGBA8)
+	var map_dimensions := Vector2i(int(_run.get("width", 25)), int(_run.get("height", 25)))
+	var image := Image.create(map_dimensions.x, map_dimensions.y, false, Image.FORMAT_RGBA8)
 	image.fill(Color.BLACK)
 	for key: String in _visible:
 		var xy := key.split(",")
@@ -398,7 +495,7 @@ func _refresh_landmark_clearance() -> void:
 		var y := int(xy[1])
 		if WorldDataFile.is_walkable(_run, x, y):
 			image.set_pixel(x, y, Color.WHITE)
-	if _route_mask == null:
+	if _route_mask == null or _route_mask.get_width() != map_dimensions.x or _route_mask.get_height() != map_dimensions.y:
 		_route_mask = ImageTexture.create_from_image(image)
 	else:
 		_route_mask.update(image)
@@ -407,6 +504,7 @@ func _refresh_landmark_clearance() -> void:
 	for entry: Dictionary in _landmark_nodes:
 		var material: ShaderMaterial = (entry.node as Sprite2D).material
 		material.set_shader_parameter("route_mask", _route_mask)
+		material.set_shader_parameter("map_dimensions", Vector2(map_dimensions))
 		material.set_shader_parameter("player_feet", feet)
 
 func _refresh_details() -> void:
@@ -421,6 +519,9 @@ func _refresh_details() -> void:
 			if str(tile.get("type", "")) != "floor" or _is_flooded(x, y):
 				continue
 			var variant := int(tile.get("variant", 0)) + x * 13 + y * 17
+			# Decoration belongs at route margins and stays below tactical contrast.
+			if not _adjoins_deep_water(x, y) and not _adjoins_wall(x, y):
+				continue
 			if _district == "observatory" and variant % 13 == 0:
 				_add_survey_marker(_cell_position(x, y) + Vector2(23, 20))
 			elif _district == "market" and variant % 11 == 0:
@@ -444,6 +545,19 @@ func _refresh_details() -> void:
 		if not _visible.has(_key(x, y)):
 			continue
 		var empty := bool(container.get("searched", false)) and (container.get("items", []) as Array).is_empty()
+		if not empty and str(container.get("id", "")).begins_with("delivery-"):
+			var cargo_edge := Line2D.new()
+			cargo_edge.position = _cell_position(x, y) + Vector2(0, 15)
+			cargo_edge.points = PackedVector2Array([Vector2(0, -28), Vector2(28, 0), Vector2(0, 19), Vector2(-28, 0), Vector2(0, -28)])
+			cargo_edge.width = 4.0
+			cargo_edge.default_color = Color("a47729")
+			details.add_child(cargo_edge)
+			var cargo_light := Line2D.new()
+			cargo_light.points = cargo_edge.points
+			cargo_light.position = cargo_edge.position
+			cargo_light.width = 1.5
+			cargo_light.default_color = Color("fff0a8")
+			details.add_child(cargo_light)
 		var crate := _painted_crate(_cell_position(x, y) + Vector2(0, 12), empty)
 		_crate_nodes[_key(x, y)] = crate
 	var exit_cell: Dictionary = _run.get("exit", {})
@@ -497,8 +611,9 @@ func _add_flowers(at: Vector2) -> void:
 
 func _build_landmarks() -> void:
 	# District authors own anchor positions; never slide a prop onto an unrelated cell.
-	var anchors: Array = (DistrictData.DISTRICTS.get(_district, DistrictData.DISTRICTS.quay).landmarks as Array).duplicate(true)
-	if _district == "quay":
+	var compact := str(_run.get("ruleset", "legacy-v03")) == "encounter-v04"
+	var anchors: Array = _run.get("landmarks", []) if compact else (DistrictData.DISTRICTS.get(_district, DistrictData.DISTRICTS.quay).landmarks as Array).duplicate(true)
+	if not compact and _district == "quay":
 		anchors.append_array([{"kind":"boat", "x":11,"y":24}, {"kind":"boat", "x":13,"y":24}, {"kind":"palms", "x":9,"y":24}, {"kind":"palms", "x":14,"y":24}])
 	for anchor: Dictionary in anchors:
 		var x := int(anchor.x)
@@ -512,8 +627,8 @@ func _build_landmarks() -> void:
 			texture = _architectural_texture(authored_kind)
 		if texture == null:
 			continue
-		var width := float({"market":128, "clinic":138, "pump":119, "boat":124, "palms":60, "arch":108}.get(authored_kind, 110))
-		var factor: float = 196.0 / texture.get_height() if authored_kind == "lighthouse" else width / texture.get_width()
+		var width := float({"market":150, "clinic":160, "pump":142, "boat":124, "palms":72, "arch":116}.get(authored_kind, 130)) * float(_profile.landmark_scale)
+		var factor: float = 215.0 / texture.get_height() if authored_kind == "lighthouse" else width / texture.get_width()
 		var prop := Sprite2D.new()
 		prop.texture = texture
 		prop.scale = Vector2.ONE * factor
@@ -540,7 +655,7 @@ func _build_landmarks() -> void:
 		prop.material = material
 		prop.modulate = _landmark_tint(authored_kind)
 		landmarks.add_child(prop)
-		_landmark_nodes.append({"node":prop, "key":_key(x, y), "kind":kind, "base":base, "mooring":mooring, "tint":_landmark_tint(authored_kind)})
+		_landmark_nodes.append({"node":prop, "key":_key(x, y), "anchor":Vector2i(x,y), "kind":kind, "base":base, "mooring":mooring, "tint":_landmark_tint(authored_kind)})
 
 func _refresh_actors(immediate: bool) -> void:
 	var active_ids: Dictionary = {}
@@ -585,48 +700,76 @@ func _refresh_telegraphs() -> void:
 	var player: Dictionary = _run["player"]
 	for delta: Vector2i in [Vector2i.UP, Vector2i.DOWN, Vector2i.LEFT, Vector2i.RIGHT]:
 		var cell := Vector2i(int(player["x"]), int(player["y"])) + delta
-		if not _visible.has(_key(cell.x, cell.y)) or _tile_type(cell.x, cell.y) in ["water", "wall"]:
-			continue
-		var origin := Vector2(cell) * TILE
-		var hint_color := Color(0.1, 0.55, 0.62, 0.64)
-		for corner: Vector2 in [Vector2(6, 6), Vector2(58, 6), Vector2(58, 58), Vector2(6, 58)]:
-			var sign_x := 1.0 if corner.x < 32 else -1.0
-			var sign_y := 1.0 if corner.y < 32 else -1.0
-			var mark := Line2D.new()
-			mark.points = PackedVector2Array([origin + corner + Vector2(0, sign_y * 7), origin + corner, origin + corner + Vector2(sign_x * 7, 0)])
-			mark.width = 1.25
-			mark.default_color = hint_color
-			telegraphs.add_child(mark)
-	for enemy: Dictionary in _run.get("enemies", []):
-		var x := int(enemy["x"])
-		var y := int(enemy["y"])
-		if not _visible.has(_key(x, y)) or not enemy.get("intent") is Dictionary or (enemy["intent"] as Dictionary).is_empty():
-			continue
-		var intent: Dictionary = enemy["intent"]
-		var delta := Vector2i(int(intent.get("dx", 0)), int(intent.get("dy", 0)))
-		if delta == Vector2i.ZERO:
-			continue
-		for distance in range(1, 4):
-			var target := Vector2i(x, y) + delta * distance
-			if not _in_bounds(target.x, target.y) or _tile_type(target.x, target.y) in ["wall", "water"]:
+		if _visible.has(_key(cell.x, cell.y)) and WorldDataFile.is_walkable(_run, cell.x, cell.y):
+			_cell_outline(cell, Color(0.18, 0.49, 0.52, 0.35), 1.4, 10.0)
+	# This is a view of the rule-owned prediction. Never infer charge distance here.
+	for threat: Dictionary in RuleData.threats(_state):
+		var source := Vector2i(-1, -1)
+		for enemy: Dictionary in _run.get("enemies", []):
+			if str(enemy.get("id", "")) == str(threat.get("enemyId", "")):
+				source = Vector2i(int(enemy.x), int(enemy.y))
 				break
-			if not _visible.has(_key(target.x, target.y)):
+		if not _visible.has(_key(source.x, source.y)):
+			continue
+		for target: Dictionary in threat.get("cells", []):
+			var cell := Vector2i(int(target.x), int(target.y))
+			if not _visible.has(_key(cell.x, cell.y)):
 				continue
+			var center := _cell_position(cell.x, cell.y)
 			var panel := Polygon2D.new()
-			panel.position = Vector2(target) * TILE
-			panel.polygon = _rect_polygon(Vector2(5, 5), Vector2(TILE - 10, TILE - 10))
-			panel.color = Color(0.98, 0.42, 0.32, 0.28)
+			panel.position = center
+			panel.polygon = _rect_polygon(Vector2(-27, -27), Vector2(54, 54))
+			panel.color = Color(0.89, 0.27, 0.17, 0.23)
 			telegraphs.add_child(panel)
-			var c := _cell_position(target.x, target.y)
-			var direction := Vector2(delta)
-			var side := direction.orthogonal() * 9
-			var tip := c + direction * 11
-			var arrow := Line2D.new()
-			arrow.points = PackedVector2Array([c - direction * 7 + side, tip, c - direction * 7 - side])
-			arrow.width = 3
-			arrow.default_color = Color("c45544")
-			arrow.antialiased = true
+			_cell_outline(cell, Color("ffe3b7"), 7.5, 5.0)
+			_cell_outline(cell, Color("a73e30"), 3.8, 5.0)
+			var direction := Vector2(cell - source).normalized()
+			if direction == Vector2.ZERO:
+				direction = Vector2.UP
+			var side := direction.orthogonal() * 10
+			var tip := center + direction * 15
+			var arrow := Polygon2D.new()
+			arrow.polygon = PackedVector2Array([center - direction * 8 + side, tip, center - direction * 8 - side, center - direction * 2])
+			arrow.color = Color("a83f30")
 			telegraphs.add_child(arrow)
+			_symbol("!", center + Vector2(19, -24), Color("fff3d5"), Color("9b372b"))
+	if _selected_cell.x >= 0 and _visible.has(_key(_selected_cell.x, _selected_cell.y)):
+		_cell_outline(_selected_cell, Color("e5ffff"), 5.5, 9.0)
+		_cell_outline(_selected_cell, Color("297e8a"), 2.2, 9.0)
+	if not _action_preview.is_empty() and _action_preview.get("destination") is Dictionary:
+		var target: Dictionary = _action_preview.destination
+		var cell := Vector2i(int(target.get("x", -1)), int(target.get("y", -1)))
+		if _in_bounds(cell.x, cell.y) and _visible.has(_key(cell.x, cell.y)):
+			var valid := bool(_action_preview.get("valid", false))
+			_cell_outline(cell, Color("efffff"), 7.0, 3.0)
+			_cell_outline(cell, Color("227c8a") if valid else Color("9b473d"), 3.5, 3.0)
+			_symbol("+" if valid else "×", _cell_position(cell.x, cell.y) + Vector2(-18, -22), Color("eaffff"), Color("206577") if valid else Color("9b473d"))
+
+func _cell_outline(cell: Vector2i, color: Color, width: float, inset: float) -> void:
+	var mark := Line2D.new()
+	mark.position = Vector2(cell) * TILE
+	mark.points = PackedVector2Array([Vector2(inset, inset), Vector2(TILE - inset, inset), Vector2(TILE - inset, TILE - inset), Vector2(inset, TILE - inset), Vector2(inset, inset)])
+	mark.width = width
+	mark.default_color = color
+	mark.antialiased = true
+	telegraphs.add_child(mark)
+
+func _symbol(text: String, at: Vector2, color: Color, backing: Color) -> void:
+	var disc := Polygon2D.new()
+	disc.position = at
+	disc.polygon = PackedVector2Array([Vector2(-10, -10), Vector2(10, -10), Vector2(10, 10), Vector2(-10, 10)])
+	disc.color = backing
+	telegraphs.add_child(disc)
+	var label := Label.new()
+	label.position = at - Vector2(10, 14)
+	label.size = Vector2(20, 26)
+	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	label.text = text
+	label.add_theme_font_override("font", _font)
+	label.add_theme_font_size_override("font_size", 20)
+	label.add_theme_color_override("font_color", color)
+	label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	telegraphs.add_child(label)
 
 func _play_events(events: Array) -> void:
 	effects.reduced_motion = _reduce
@@ -678,6 +821,9 @@ func _play_events(events: Array) -> void:
 					bounce.tween_property(crate, "position:y", crate.position.y, 0.17).set_trans(Tween.TRANS_BOUNCE).set_ease(Tween.EASE_OUT)
 			"use":
 				effects.impact(point, Color("76c6a1"), 10)
+			"crew":
+				var origin := _cell_position(int(event.get("fromX", player.x)), int(event.get("fromY", player.y)))
+				effects.technique(str(event.get("character", _character)), origin, point)
 			"kill":
 				if _visible.has(_key(int(event.get("x", -1)), int(event.get("y", -1)))):
 					effects.impact(point, Color("59b8b0"), 12)
@@ -800,16 +946,15 @@ func _district_color(role: String) -> Color:
 
 func _apply_district_palette() -> void:
 	_palette = DistrictData.DISTRICTS.get(_district, DistrictData.DISTRICTS.quay).palette
-	var stone := _district_color("stone")
-	ground.modulate = Color(0.84 + stone.r * 0.16, 0.81 + stone.g * 0.2, 0.8 + stone.b * 0.24)
-	walls.modulate = Color(0.8 + stone.r * 0.22, 0.78 + stone.g * 0.24, 0.76 + stone.b * 0.28)
-	var sea := _district_color("water")
-	$Ocean.color = sea
+	_profile = {"quay":quay_profile, "market":market_profile, "canal":canal_profile, "observatory":observatory_profile}.get(_district, quay_profile)
+	ground.modulate = Color.WHITE
+	walls.modulate = Color.WHITE
+	$Ocean.color = _profile.deep_water_color
 	var water_material := water.material as ShaderMaterial
-	water_material.set_shader_parameter("water_tint", Color(sea.r / 0.34, sea.g / 0.73, sea.b / 0.75))
+	water_material.set_shader_parameter("water_tint", Color.WHITE)
+	water_material.set_shader_parameter("deep_color", _profile.deep_water_color)
 	water_material.set_shader_parameter("flow_direction", Vector2(0.7, 0.16) if _district == "canal" else Vector2(0.08, 0.35))
-	water_material.set_shader_parameter("wave_density", 140.0 if _district == "canal" else 65.0 if _district == "market" else 90.0)
-	water_material.set_shader_parameter("glint_strength", 0.035 if _district == "market" else 0.055 if _district == "observatory" else 0.08)
+	water_material.set_shader_parameter("glint_strength", 0.035)
 	ambient.district = _district
 	_create_terrain()
 
@@ -876,5 +1021,11 @@ func _add_reeds(at: Vector2) -> void:
 func _adjoins_deep_water(x: int, y: int) -> bool:
 	for offset: Vector2i in [Vector2i.UP, Vector2i.DOWN, Vector2i.LEFT, Vector2i.RIGHT]:
 		if _tile_type(x + offset.x, y + offset.y) == "water":
+			return true
+	return false
+
+func _adjoins_wall(x: int, y: int) -> bool:
+	for offset: Vector2i in [Vector2i.UP, Vector2i.DOWN, Vector2i.LEFT, Vector2i.RIGHT]:
+		if _tile_type(x + offset.x, y + offset.y) == "wall":
 			return true
 	return false
