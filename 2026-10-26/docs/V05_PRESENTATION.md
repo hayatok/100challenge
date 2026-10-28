@@ -1,5 +1,9 @@
 # v0.5: characters grounded in a coastal adventure
 
+## Final release scope selected by the user
+
+On 2026-10-29 JST the user explicitly selected publication of the completed UI/gameplay changes and holding the unadopted3D trials, followed by ending development after Pages verification. The v0.5 release therefore uses the existing four-worker2D art/animation family. The3D character, environment, camera and tool candidates below remain preserved comparisons, with their unresolved quality gates recorded; they are excluded from the production project and public build. Do not describe the planned3D family or commercial-quality target as achieved. The numbered3D production sequence is held, not automatically resumed after this release. See [the release record](verification/v05/RELEASE.md).
+
 ## Goal, context and constraints
 
 The user requested a substantial rebuild of graphics, motion, HUD and staging toward commercial quality, continuing until stopped. v0.4 at ebabd8f is the first checkpoint: compact tactical encounters and a field HUD, with old-save preservation. Its CI run 40730747738 passed. v0.5 is the second version before the next Pages publication. This brief began before asset generation; the progress snapshot below records subsequent outputs without treating the version as finished.

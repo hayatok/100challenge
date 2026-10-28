@@ -1,0 +1,140 @@
+{
+  "scope": "Production2D0.5.0 release candidate; no3D adoption or publication claim",
+  "userDecision": "Publish completed UI/gameplay, hold unadopted3D, stop after public verification",
+  "developmentBase": "267d920f691be33ee779873a18c0892b96adce04",
+  "checks": {
+    "legacy": {
+      "passed": 5328,
+      "failed": 0
+    },
+    "tacticalMigration": {
+      "passed": 3907,
+      "failed": 0
+    },
+    "presentation": {
+      "passed": 1150,
+      "failed": 0
+    },
+    "mainUiStore": {
+      "passed": 771,
+      "failed": 0
+    }
+  },
+  "rootTests": {
+    "passed": 38,
+    "failed": 0
+  },
+  "productionIsolation": {
+    "beforeFiles": 184,
+    "changedSinceBefore": [
+      "game/project.godot"
+    ],
+    "change": "version0.4.0 to0.5.0 only; code/art unchanged",
+    "glbFiles": 0,
+    "experimentalExportPaths": 0
+  },
+  "localWeb": "Fresh localhost4390 production export: preparation transfer/focus, T1 save/reload, actual2turn5item61pt return, resultreload, stash8/carry0;390x844/360x740/1280x900; browser warnings/errors empty.",
+  "screenshots": {
+    "release-preparation-390.jpg": {
+      "source": "app-local release browser/03-preparation-390.jpg",
+      "bytes": 49110,
+      "sha256": "eba5086bb3452593c32fa8a4e0e85bc81900b8243028814372a83419aafc110c",
+      "codec": "JPEG"
+    },
+    "release-return-360.jpg": {
+      "source": "app-local release browser/09-return-reloaded-360.jpg",
+      "bytes": 49650,
+      "sha256": "7a5976ac0a02da11d78c12d873df64f816eb2fde129d7a543c737ff1f8358e58",
+      "codec": "JPEG"
+    },
+    "release-harbor-desktop.jpg": {
+      "source": "app-local release browser/11-harbor-desktop.jpg",
+      "bytes": 166185,
+      "sha256": "083acc3ed51e60957ada9d1daccccc30bc4d404d1492fd6c63d1381f21e369a7",
+      "codec": "JPEG"
+    }
+  },
+  "macOSArtifact": {
+    "scope": "macOS local release candidate0.5.0; not Linux/public equivalence",
+    "files": {
+      "GODOT-COPYRIGHT.txt": {
+        "bytes": 100108,
+        "sha256": "cb1980c88089573bcacd7221d777c689bb8bbd778799f24c27fca0fe5f774d6d"
+      },
+      "GODOT-LICENSE.txt": {
+        "bytes": 1149,
+        "sha256": "b0435e3b3e4e55238f05f4b306f30524a1b2e20147810d436eaa554fa6855c80"
+      },
+      "NOTO-OFL.txt": {
+        "bytes": 4301,
+        "sha256": "6a73f9541c2de74158c0e7cf6b0a58ef774f5a780bf191f2d7ec9cc53efe2bf2"
+      },
+      "THIRD_PARTY_NOTICES.md": {
+        "bytes": 1046,
+        "sha256": "98d3889afdd240b1542121df44a2b8129f08821d9e6b613f88b7d33fa6029dcd"
+      },
+      "index.apple-touch-icon.png": {
+        "bytes": 12670,
+        "sha256": "8573372dc53bff9211e21c6c962aee3cd0b7cd669b58ce9b183685d9b40f1767"
+      },
+      "index.audio.position.worklet.js": {
+        "bytes": 2973,
+        "sha256": "be33985bc7160d6bf9646f259cd86b259cd67b02ccb297ee5c44f8ac84327bc8"
+      },
+      "index.audio.worklet.js": {
+        "bytes": 7298,
+        "sha256": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3"
+      },
+      "index.html": {
+        "bytes": 3528,
+        "sha256": "8c1158cf281526de381c6e1e9f59bb7942cf3b7350462971608c196c3c9d9b54"
+      },
+      "index.icon.png": {
+        "bytes": 4503,
+        "sha256": "d5fa7839d886b7de89e0e0e9fbad09be3af806f3e5761eb6644ba3fd30c83c72"
+      },
+      "index.js": {
+        "bytes": 279815,
+        "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba"
+      },
+      "index.pck": {
+        "bytes": 48805336,
+        "sha256": "f5e3640a3cd16c84b8fbe5aa678e9da5fbc81b140dd41b341dbba55fb8eeac56"
+      },
+      "index.png": {
+        "bytes": 21443,
+        "sha256": "3cb4495c0b98dfbe4b663cbf2b6836473572339beb66d902367893162a70be0e"
+      },
+      "index.wasm": {
+        "bytes": 39514754,
+        "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0"
+      },
+      "qa-desktop.html": {
+        "bytes": 488,
+        "sha256": "2e6a61e54d0d5f8d39d7b32dc61b82167e1bd74c90497370f208b71f3498c12b"
+      },
+      "qa-phone.html": {
+        "bytes": 495,
+        "sha256": "318d2ec1062e1fbbf7d7d526c822c18e31f10ef362bc9053804b87c1d01c84c4"
+      },
+      "qa-small.html": {
+        "bytes": 496,
+        "sha256": "9253d1f6812822b4d38876feef900c93500b28a92a31bc0d2d037fd3d4a58977"
+      },
+      "shiogaeri-cover.png": {
+        "bytes": 3439259,
+        "sha256": "312ae34d715844595ca9a46687311499311dbb5b128ca88de3425b7272727cb7"
+      }
+    }
+  },
+  "japanese": {
+    "file": "README.md",
+    "sha256": "dec856f4567f7f3ab40019a7f759dc62d4d2d7abf304cf4341b4f1b84dfb3769",
+    "verify": "20261028T232152Z-63f2302f; finaldec856f4567f; run/verify agree;3lintinfo candidates retained outside changed scope; counts are not scores"
+  },
+  "limits": [
+    "No physical phones/Safari/audio listening/endurance/human fun/commercial acceptance.",
+    "Current-headCI/merge/tag/deployment/Linux-public comparison remain publication steps.",
+    "3Dsource/body/family/environment work is held and excluded."
+  ]
+}
