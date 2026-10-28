@@ -48,6 +48,8 @@ The isolated quay scene has editable limestone/architecture, shared light/shadow
 
 Local working evidence is under `.scratch/versions/v05/prototype/`: GPT references and prompts, original GLBs, `tripo/provenance.json`, Blender build/master/comparison records, `tripo/rig-inspection` and the isolated `diorama` project. These ignored working files are not shipped production assets. Keep the active worktree and cloud/source downloads until the needed asset masters are preserved through the final adoption workflow.
 
+The subsequent [character/adventure comparison checkpoint](verification/v05/METHOD_CHECKPOINT.md) records the rejected whole-head scaling hypotheses, the separate exposed-face R2 source, preserved originals and measured provider changes. It supplements this initial R1 snapshot. R2 uses its own 54-joint rig-only export and 65-joint motion export; production still uses the existing 2D family while actual engine, motion and environment gates remain open.
+
 ## Gates and production sequence
 
 1. Inspect the one-character imported rig: actual skeleton, mesh/materials, orientation/feet, clip names/durations, all four facings, gait contact/passing, attack/recoil/search silhouettes. Compare at actual phone scale beside the v0.4 actor. A static model or a whole-mesh bob does not pass.
