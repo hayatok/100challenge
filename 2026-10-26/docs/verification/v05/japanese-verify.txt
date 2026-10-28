@@ -1,0 +1,32 @@
+game/scripts/main.gd
+yomiyasu-check: executed via=verify run=20261028T184444Z-11ab8ab0 attempt=1 final=sha256:f56008936e15 mode=rewrite doc_type=manual checks=lint,diff,materials meaning_risk=3 replay=skipped
+
+game/scripts/presentation_v05/harbor.gd
+yomiyasu-check: executed via=verify run=20261028T182257Z-99a76955 attempt=1 final=sha256:f1008c1f82c8 mode=rewrite doc_type=manual checks=lint,diff,materials meaning_risk=8 replay=skipped
+
+game/scripts/presentation_v05/result.gd
+yomiyasu-check: executed via=verify run=20261028T184450Z-8b68433d attempt=1 final=sha256:04d1350b4324 mode=rewrite doc_type=manual checks=lint,diff,materials meaning_risk=0 replay=skipped
+
+game/scripts/presentation_v05/presentation.gd
+yomiyasu-check: executed via=verify run=20261028T175828Z-842c34bf attempt=1 final=sha256:48eede66b598 mode=rewrite doc_type=manual checks=lint,diff,materials meaning_risk=0 replay=skipped
+
+game/scenes/presentation_v05/harbor.tscn
+yomiyasu-check: executed via=verify run=20261028T175829Z-4f74cf15 attempt=1 final=sha256:1b6c8d883382 mode=rewrite doc_type=manual checks=lint,diff,materials meaning_risk=1 replay=skipped
+
+game/scenes/presentation_v05/result.tscn
+yomiyasu-check: executed via=verify run=20261028T175830Z-24e43eda attempt=1 final=sha256:bc6008b07481 mode=rewrite doc_type=manual checks=lint,diff,materials meaning_risk=1 replay=skipped
+
+game/scenes/presentation_v05/item_tile.tscn
+yomiyasu-check: executed via=verify run=20261028T175831Z-6d1a149e attempt=1 final=sha256:1fcfd4948383 mode=rewrite doc_type=manual checks=lint,diff,materials meaning_risk=0 replay=skipped
+
+game/tests/presentation_v05_test.gd
+yomiyasu-check: executed via=verify run=20261028T184452Z-e3c456f8 attempt=1 final=sha256:72aea53a2ddb mode=rewrite doc_type=manual checks=lint,diff,materials meaning_risk=2 replay=skipped
+
+game/tests/ui_test.gd
+yomiyasu-check: executed via=verify run=20261028T184446Z-2c8c3c24 attempt=1 final=sha256:935ca60a4324 mode=rewrite doc_type=manual checks=lint,diff,materials meaning_risk=32 replay=skipped
+
+README.md
+yomiyasu-check: executed via=verify run=20261028T184042Z-5ed81b83 attempt=2 final=sha256:1af646d787c2 mode=rewrite doc_type=manual checks=lint,diff,materials meaning_risk=10 replay=skipped
+
+docs/VERSION_PLAN.md
+yomiyasu-check: executed via=verify run=20261028T192752Z-bfc8cd58 attempt=1 final=sha256:d853c1fc52b3 mode=rewrite doc_type=manual checks=lint,diff,materials meaning_risk=7 replay=skipped

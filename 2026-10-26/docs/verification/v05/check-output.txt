@@ -1,0 +1,371 @@
+
+> shiogaeri@0.4.0 check
+> node scripts/godot.mjs import && npm test && npm run build
+
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+[   0% ] first_scan_filesystem | Started プロジェクトの初期化 (5 steps)
+[   0% ] first_scan_filesystem | ファイル構造をスキャン中...
+[  16% ] first_scan_filesystem | グローバルクラス名を読み込み中...
+[  33% ] first_scan_filesystem | GDExtensionを検証中...
+[  50% ] first_scan_filesystem | 自動読み込みスクリプトを作成中...
+[  66% ] first_scan_filesystem | プラグインを初期化中...
+[  83% ] first_scan_filesystem | ファイルスキャンを開始...
+[ DONE ] first_scan_filesystem
+
+[   0% ] update_scripts_classes | Started グローバルクラスを登録中... (4 steps)
+[   0% ] update_scripts_classes |
+[  20% ] update_scripts_classes |
+[  40% ] update_scripts_classes |
+[  60% ] update_scripts_classes |
+[ DONE ] update_scripts_classes
+
+[   0% ] loading_editor_layout | Started エディターの読み込み (5 steps)
+[   0% ] loading_editor_layout | エディターレイアウトを読み込み中...
+[  16% ] loading_editor_layout | ドックを読み込み中...
+[ DONE ] loading_editor_layout
+
+
+> shiogaeri@0.4.0 test
+> node scripts/godot.mjs test && node scripts/godot.mjs ui
+
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+Legacy v0.3 rules tests: 5328 passed, 0 failed
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+v0.4 tactical/migration tests: 3907 passed, 0 failed
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+Presentation v0.5 components: 1150 passed, 0 failed
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+Field allocation: (390, 844) world CSS=(374.0, 530.0) controls CSS=(374.0, 180.0)
+Field allocation: (360, 740) world CSS=(345.9512, 464.6919) controls CSS=(345.9512, 157.8199)
+Field allocation: (1280, 800) world CSS=(1010.726, 784.8341) controls CSS=(231.3481, 170.6161)
+Desktop sidebar: logical=(260.0, 828.0) CSS=(246.5185, 784.8341)
+Objective allocation: text=依頼の品が揃った。港へ戻ろう lines=1 visible=1 size=(236.0, 24.0) minimum=(1.0, 24.0) goal=(236.0, 24.0) sidebar=(260.0, 828.0)
+Objective allocation: text=依頼の品が揃った。港へ戻ろう lines=1 visible=1 size=(236.0, 24.0) minimum=(1.0, 24.0) goal=(236.0, 24.0) sidebar=(260.0, 828.0)
+BASIC bounds diagnostic viewport=(390, 844) root=[P: (0.0, 0.0), S: (390.0, 844.0)] view=[P: (18.0, 82.0), S: (354.0, 744.0)] basic=[P: (28.0, 684.0), S: (163.0, 52.0)] departure=[P: (28.0, 766.0), S: (334.0, 52.0)]
+BASIC bounds diagnostic viewport=(360, 740) root=[P: (0.0, 0.0), S: (410.0, 844.0)] view=[P: (18.0, 82.0), S: (374.0, 744.0)] basic=[P: (28.0, 684.0), S: (173.0, 52.0)] departure=[P: (28.0, 766.0), S: (354.0, 52.0)]
+BASIC bounds diagnostic viewport=(1280, 800) root=[P: (0.0, 0.0), S: (1350.0, 844.0)] view=[P: (18.0, 82.0), S: (1314.0, 744.0)] basic=[P: (28.0, 684.0), S: (1294.0, 52.0)] departure=[P: (28.0, 766.0), S: (1294.0, 52.0)]
+PACK focus diagnostic viewport=(390, 844) before={ "open": true, "scroll": 1924, "focus_uid": "i30" } after={ "open": true, "scroll": 124, "focus_uid": "i30" } focused=Transfer:<Button#420000827876> carryfocus=true carryrect=[P: (37.0, 231.0), S: (151.0, 52.0)] scrollrect=[P: (30.0, 231.0), S: (330.0, 406.0)]
+UNPACK focus diagnostic viewport=(390, 844) after={ "open": true, "scroll": 2075, "focus_uid": "i30" } transferfocus=true transferrect=[P: (206.0, 585.0), S: (147.0, 52.0)] scrollrect=[P: (30.0, 231.0), S: (330.0, 406.0)]
+READONLY scroll diagnostic viewport=(390, 844) retained=2075 after={ "open": true, "scroll": 2075, "focus_uid": "i30" }
+PACK focus diagnostic viewport=(360, 740) before={ "open": true, "scroll": 1924, "focus_uid": "i30" } after={ "open": true, "scroll": 124, "focus_uid": "i30" } focused=Transfer:<Button#478284876105> carryfocus=true carryrect=[P: (37.0, 231.0), S: (161.0, 52.0)] scrollrect=[P: (30.0, 231.0), S: (350.0, 406.0)]
+UNPACK focus diagnostic viewport=(360, 740) after={ "open": true, "scroll": 2075, "focus_uid": "i30" } transferfocus=true transferrect=[P: (216.0, 585.0), S: (157.0, 52.0)] scrollrect=[P: (30.0, 231.0), S: (350.0, 406.0)]
+READONLY scroll diagnostic viewport=(360, 740) retained=2075 after={ "open": true, "scroll": 2075, "focus_uid": "i30" }
+PACK focus diagnostic viewport=(1280, 800) before={ "open": false, "scroll": 1106, "focus_uid": "i30" } after={ "open": false, "scroll": 124, "focus_uid": "i30" } focused=Transfer:<Button#536568925075> carryfocus=true carryrect=[P: (702.0, 189.0), S: (195.0, 52.0)] scrollrect=[P: (695.0, 189.0), S: (625.0, 469.0)]
+UNPACK focus diagnostic viewport=(1280, 800) after={ "open": false, "scroll": 1257, "focus_uid": "i30" } transferfocus=true transferrect=[P: (913.0, 606.0), S: (189.0, 52.0)] scrollrect=[P: (695.0, 189.0), S: (625.0, 469.0)]
+READONLY scroll diagnostic viewport=(1280, 800) retained=1257 after={ "open": false, "scroll": 1257, "focus_uid": "i30" }
+UI/store tests: 771 passed, 0 failed
+
+> shiogaeri@0.4.0 build
+> node scripts/godot.mjs build
+
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+[   0% ] first_scan_filesystem | Started プロジェクトの初期化 (5 steps)
+[   0% ] first_scan_filesystem | ファイル構造をスキャン中...
+[  16% ] first_scan_filesystem | グローバルクラス名を読み込み中...
+[  33% ] first_scan_filesystem | GDExtensionを検証中...
+[  50% ] first_scan_filesystem | 自動読み込みスクリプトを作成中...
+[  66% ] first_scan_filesystem | プラグインを初期化中...
+[  83% ] first_scan_filesystem | ファイルスキャンを開始...
+[ DONE ] first_scan_filesystem
+
+[   0% ] savepack | Started パック中 (102 steps)
+[   1% ] savepack | ファイルの保存中: res://.godot/imported/crew-field-v1.png-e8f36b42542a37ea2813575e998d9d9b.ctex
+[   1% ] savepack | ファイルの保存中: res://assets/art/r2/crew-field-v1.png.import
+[   1% ] savepack | ファイルの保存中: res://.godot/imported/crew-field.png-0be501a1ce7428d81288bd2e6ec0b749.ctex
+[   1% ] savepack | ファイルの保存中: res://assets/art/r2/crew-field.png.import
+[   2% ] savepack | ファイルの保存中: res://.godot/imported/crew-isana.png-6aa8967bea6f47a1a77aa2f76e1a31a4.ctex
+[   2% ] savepack | ファイルの保存中: res://assets/art/r2/crew-isana.png.import
+[   3% ] savepack | ファイルの保存中: res://.godot/imported/crew-kohaku.png-378d981ca664eb92baabca6009eadf75.ctex
+[   3% ] savepack | ファイルの保存中: res://assets/art/r2/crew-kohaku.png.import
+[   3% ] savepack | ファイルの保存中: res://.godot/imported/crew-ritsu.png-86d03b85490dae0e00ceff32e1b28dad.ctex
+[   3% ] savepack | ファイルの保存中: res://assets/art/r2/crew-ritsu.png.import
+[   4% ] savepack | ファイルの保存中: res://.godot/imported/crew-sui.png-26f2f72bad89d60616d23a56399d7347.ctex
+[   4% ] savepack | ファイルの保存中: res://assets/art/r2/crew-sui.png.import
+[   5% ] savepack | ファイルの保存中: res://.godot/exported/133200997/export-056a7898db00b240f4d061cb883bfafc-crew_isana.res
+[   5% ] savepack | ファイルの保存中: res://.godot/exported/133200997/export-d76c8f119bd6850e5021359c0d8d818b-crew_kohaku.res
+[   6% ] savepack | ファイルの保存中: res://.godot/exported/133200997/export-2d2cdd42c020e4bfb6a31fad3eab8b1a-crew_ritsu.res
+[   7% ] savepack | ファイルの保存中: res://.godot/exported/133200997/export-14b8b515e0908e61a764b20059b90503-crew_sui.res
+[   7% ] savepack | ファイルの保存中: res://.godot/imported/harbor-day.png-a819ce85446a30424c879fc5c7b5b3f9.ctex
+[   7% ] savepack | ファイルの保存中: res://assets/art/r2/harbor-day.png.import
+[   8% ] savepack | ファイルの保存中: res://assets/art/r2/manifest.json
+[   9% ] savepack | ファイルの保存中: res://.godot/imported/props-day.png-e86681ab759aace5c184e02eca9cf01f.ctex
+[   9% ] savepack | ファイルの保存中: res://assets/art/r2/props-day.png.import
+[   9% ] savepack | ファイルの保存中: res://.godot/exported/133200997/export-c63b6d9a3443b7521a26a59a4cf4146b-prop_boat.res
+[  10% ] savepack | ファイルの保存中: res://.godot/exported/133200997/export-70dca32204e7bebd1bd155fd3358eece-prop_clinic.res
+[  11% ] savepack | ファイルの保存中: res://.godot/exported/133200997/export-1bf198cc7360f0bb452ca252cf8b0275-prop_lighthouse.res
+[  11% ] savepack | ファイルの保存中: res://.godot/exported/133200997/export-3e8ebd52b3dac196f86b71c7ff13e9d9-prop_market.res
+[  12% ] savepack | ファイルの保存中: res://.godot/exported/133200997/export-030ad1b3d264bd521db11246e37f1c64-prop_planter.res
+[  13% ] savepack | ファイルの保存中: res://.godot/exported/133200997/export-deac1fd4bde4d25db30f903fc53ed7dc-prop_pump.res
+[  13% ] savepack | ファイルの保存中: res://.godot/imported/terrain-day.png-7adb167ef2053f0f592e6bc129ea8df8.ctex
+[  13% ] savepack | ファイルの保存中: res://assets/art/r2/terrain-day.png.import
+[  14% ] savepack | ファイルの保存中: res://.godot/imported/isana_down_left.png-dd67603505edefd553438f094c2d0520.ctex
+[  14% ] savepack | ファイルの保存中: res://assets/art/v03/crew/isana_down_left.png.import
+[  15% ] savepack | ファイルの保存中: res://.godot/imported/isana_down_right.png-84a3b9e8f091e3b37c0e972b265db480.ctex
+[  15% ] savepack | ファイルの保存中: res://assets/art/v03/crew/isana_down_right.png.import
+[  15% ] savepack | ファイルの保存中: res://.godot/imported/isana_side_left.png-de3080bf147deb52dca369cfb8205ed6.ctex
+[  15% ] savepack | ファイルの保存中: res://assets/art/v03/crew/isana_side_left.png.import
+[  16% ] savepack | ファイルの保存中: res://.godot/imported/isana_side_right.png-367921c51f9bb51bc4e2890aac7e614f.ctex
+[  16% ] savepack | ファイルの保存中: res://assets/art/v03/crew/isana_side_right.png.import
+[  17% ] savepack | ファイルの保存中: res://.godot/imported/isana_up_left.png-05d8913856a55651018b1b5048868a86.ctex
+[  17% ] savepack | ファイルの保存中: res://assets/art/v03/crew/isana_up_left.png.import
+[  17% ] savepack | ファイルの保存中: res://.godot/imported/isana_up_right.png-680839ffb13c1cb51f6ccf7adc788b39.ctex
+[  17% ] savepack | ファイルの保存中: res://assets/art/v03/crew/isana_up_right.png.import
+[  18% ] savepack | ファイルの保存中: res://.godot/imported/kohaku_down_left.png-272b6f165476b7a0cc9e42a0708664c7.ctex
+[  18% ] savepack | ファイルの保存中: res://assets/art/v03/crew/kohaku_down_left.png.import
+[  19% ] savepack | ファイルの保存中: res://.godot/imported/kohaku_down_right.png-2e1a22c35f741fae54683ca382b5372c.ctex
+[  19% ] savepack | ファイルの保存中: res://assets/art/v03/crew/kohaku_down_right.png.import
+[  19% ] savepack | ファイルの保存中: res://.godot/imported/kohaku_side_left.png-756af466d761857e08c452346a3bd408.ctex
+[  19% ] savepack | ファイルの保存中: res://assets/art/v03/crew/kohaku_side_left.png.import
+[  20% ] savepack | ファイルの保存中: res://.godot/imported/kohaku_side_right.png-95a445ccc80e48ae8b0454fdfb46ba20.ctex
+[  20% ] savepack | ファイルの保存中: res://assets/art/v03/crew/kohaku_side_right.png.import
+[  21% ] savepack | ファイルの保存中: res://.godot/imported/kohaku_up_left.png-c2af84a948a270d09283f67aa3d74c92.ctex
+[  21% ] savepack | ファイルの保存中: res://assets/art/v03/crew/kohaku_up_left.png.import
+[  21% ] savepack | ファイルの保存中: res://.godot/imported/kohaku_up_right.png-8b2f3dba5c88eab847460e4af3116807.ctex
+[  21% ] savepack | ファイルの保存中: res://assets/art/v03/crew/kohaku_up_right.png.import
+[  22% ] savepack | ファイルの保存中: res://.godot/imported/ritsu_down_left.png-b22a855a9d9db625786cb07776579af2.ctex
+[  22% ] savepack | ファイルの保存中: res://assets/art/v03/crew/ritsu_down_left.png.import
+[  23% ] savepack | ファイルの保存中: res://.godot/imported/ritsu_down_right.png-5748f364b70374f525935a45fff296d5.ctex
+[  23% ] savepack | ファイルの保存中: res://assets/art/v03/crew/ritsu_down_right.png.import
+[  23% ] savepack | ファイルの保存中: res://.godot/imported/ritsu_side_left.png-75669e761c1c8c1c55eb7d191e216c49.ctex
+[  23% ] savepack | ファイルの保存中: res://assets/art/v03/crew/ritsu_side_left.png.import
+[  24% ] savepack | ファイルの保存中: res://.godot/imported/ritsu_side_right.png-e4f93a14a21aa7f2f5d6f637b097fd94.ctex
+[  24% ] savepack | ファイルの保存中: res://assets/art/v03/crew/ritsu_side_right.png.import
+[  25% ] savepack | ファイルの保存中: res://.godot/imported/ritsu_up_left.png-09fbc2ff74a3ea96fecd294edfa8fd3d.ctex
+[  25% ] savepack | ファイルの保存中: res://assets/art/v03/crew/ritsu_up_left.png.import
+[  25% ] savepack | ファイルの保存中: res://.godot/imported/ritsu_up_right.png-e5cf44f24a61f8c189dccda1b8ecd4fe.ctex
+[  25% ] savepack | ファイルの保存中: res://assets/art/v03/crew/ritsu_up_right.png.import
+[  26% ] savepack | ファイルの保存中: res://.godot/imported/sui_down_left.png-941b8dfb6d0ff443d369fa26ce7f0319.ctex
+[  26% ] savepack | ファイルの保存中: res://assets/art/v03/crew/sui_down_left.png.import
+[  27% ] savepack | ファイルの保存中: res://.godot/imported/sui_down_right.png-eabd5bff2e8538fe637f742615feaa50.ctex
+[  27% ] savepack | ファイルの保存中: res://assets/art/v03/crew/sui_down_right.png.import
+[  27% ] savepack | ファイルの保存中: res://.godot/imported/sui_side_left.png-a7d9bec6292beee29f47f849b2a9d456.ctex
+[  27% ] savepack | ファイルの保存中: res://assets/art/v03/crew/sui_side_left.png.import
+[  28% ] savepack | ファイルの保存中: res://.godot/imported/sui_side_right.png-a47f2a1fc930995a5d02d04714a7007e.ctex
+[  28% ] savepack | ファイルの保存中: res://assets/art/v03/crew/sui_side_right.png.import
+[  29% ] savepack | ファイルの保存中: res://.godot/imported/sui_up_left.png-a4784002f33f8c746726649482f1acce.ctex
+[  29% ] savepack | ファイルの保存中: res://assets/art/v03/crew/sui_up_left.png.import
+[  29% ] savepack | ファイルの保存中: res://.godot/imported/sui_up_right.png-7e01cc1db0f11bc62123f6713e8c03bb.ctex
+[  29% ] savepack | ファイルの保存中: res://assets/art/v03/crew/sui_up_right.png.import
+[  30% ] savepack | ファイルの保存中: res://shaders/coastal_landmark.gdshader
+[  31% ] savepack | ファイルの保存中: res://scripts/world_data.gdc
+[  31% ] savepack | ファイルの保存中: res://shaders/water.gdshader
+[  32% ] savepack | ファイルの保存中: res://scripts/world_effects.gdc
+[  33% ] savepack | ファイルの保存中: res://shaders/coastal_mist.gdshader
+[  33% ] savepack | ファイルの保存中: res://scripts/ui_theme.gdc
+[  33% ] savepack | ファイルの保存中: res://scripts/ui_scenery.gdc
+[  34% ] savepack | ファイルの保存中: res://.godot/imported/isana.png-525ae3824b7c3e9f662de94647d1b4a7.ctex
+[  34% ] savepack | ファイルの保存中: res://assets/art/v03/portraits/isana.png.import
+[  34% ] savepack | ファイルの保存中: res://.godot/imported/kohaku.png-133f5304ba416407c26c3fe9493cd943.ctex
+[  34% ] savepack | ファイルの保存中: res://assets/art/v03/portraits/kohaku.png.import
+[  35% ] savepack | ファイルの保存中: res://assets/art/v03/portraits/manifest.json
+[  36% ] savepack | ファイルの保存中: res://.godot/imported/ritsu.png-6541726c3fe57f59010d1b387744f3ee.ctex
+[  36% ] savepack | ファイルの保存中: res://assets/art/v03/portraits/ritsu.png.import
+[  36% ] savepack | ファイルの保存中: res://.godot/imported/sui.png-a39ab77ac8322448840a13857e073b21.ctex
+[  36% ] savepack | ファイルの保存中: res://assets/art/v03/portraits/sui.png.import
+[  37% ] savepack | ファイルの保存中: res://scripts/expedition_hud.gdc
+[  38% ] savepack | ファイルの保存中: res://scripts/sound.gdc
+[  38% ] savepack | ファイルの保存中: res://scripts/save_store.gdc
+[  39% ] savepack | ファイルの保存中: res://scripts/rules.gdc
+[  40% ] savepack | ファイルの保存中: res://scripts/district_visual_profile.gdc
+[  40% ] savepack | ファイルの保存中: res://scripts/coastal_ambient.gdc
+[  41% ] savepack | ファイルの保存中: res://scripts/ui_motif.gdc
+[  42% ] savepack | ファイルの保存中: res://scripts/legacy_v03_rules.gdc
+[  42% ] savepack | ファイルの保存中: res://scripts/main.gdc
+[  43% ] savepack | ファイルの保存中: res://scripts/crew_stage.gdc
+[  44% ] savepack | ファイルの保存中: res://assets/art/v03/terrain/manifest.json
+[  44% ] savepack | ファイルの保存中: res://.godot/imported/terrain-day.png-4468f0c5b3a0a16a1b74cffb3fd9a52c.ctex
+[  44% ] savepack | ファイルの保存中: res://assets/art/v03/terrain/terrain-day.png.import
+[  45% ] savepack | ファイルの保存中: res://assets/art/v03/manifest.json
+[  46% ] savepack | ファイルの保存中: res://assets/art/asset-manifest.json
+[  46% ] savepack | ファイルの保存中: res://.godot/exported/133200997/export-a52a33bb9451d4142d941536803fc22c-crab.res
+[  47% ] savepack | ファイルの保存中: res://.godot/exported/133200997/export-9cb1d3bec712824c805603b5b2ca1207-crate.res
+[  48% ] savepack | ファイルの保存中: res://.godot/exported/133200997/export-de19587060883fd26f825df506314a47-diver.res
+[  48% ] savepack | ファイルの保存中: res://.godot/imported/harbor-cover.png-48189b42875ca3ae7e5f356b812e9768.ctex
+[  48% ] savepack | ファイルの保存中: res://assets/art/harbor-cover.png.import
+[  49% ] savepack | ファイルの保存中: res://.godot/imported/isana.png-7d5d66cdc30d2147b7d04d1eac65ef21.ctex
+[  49% ] savepack | ファイルの保存中: res://assets/art/isana.png.import
+[  50% ] savepack | ファイルの保存中: res://.godot/imported/kohaku-v1.png-7f96d95e52cece1beeeae2c5e8fc65a9.ctex
+[  50% ] savepack | ファイルの保存中: res://assets/art/kohaku-v1.png.import
+[  51% ] savepack | ファイルの保存中: res://.godot/imported/kohaku.png-6171e7ba0c02f0555462f49a87bc70e3.ctex
+[  51% ] savepack | ファイルの保存中: res://assets/art/kohaku.png.import
+[  51% ] savepack | ファイルの保存中: res://.godot/imported/ritsu.png-03c3c671c626d3a19f388b620db8cfab.ctex
+[  51% ] savepack | ファイルの保存中: res://assets/art/ritsu.png.import
+[  52% ] savepack | ファイルの保存中: res://.godot/imported/salvage-atlas.png-890cc17044dc963c5b99a18dc151b6f2.ctex
+[  52% ] savepack | ファイルの保存中: res://assets/art/salvage-atlas.png.import
+[  53% ] savepack | ファイルの保存中: res://.godot/imported/sui.png-15aac9a8de15c4e6048a6465899286c8.ctex
+[  53% ] savepack | ファイルの保存中: res://assets/art/sui.png.import
+[  53% ] savepack | ファイルの保存中: res://.godot/imported/terrain-atlas.png-04cfe23ff00f95f994738b1c443ccd3d.ctex
+[  53% ] savepack | ファイルの保存中: res://assets/art/terrain-atlas.png.import
+[  54% ] savepack | ファイルの保存中: res://.godot/exported/133200997/export-78fa22315d5b4ff447350546972841c2-wader.res
+[  55% ] savepack | ファイルの保存中: res://.godot/imported/attack.wav-825b62c1f9509f7d19a957a51a526957.sample
+[  55% ] savepack | ファイルの保存中: res://assets/audio/attack.wav.import
+[  55% ] savepack | ファイルの保存中: res://.godot/imported/click.wav-726094e36c7052fadb6392aaf7409595.sample
+[  55% ] savepack | ファイルの保存中: res://assets/audio/click.wav.import
+[  56% ] savepack | ファイルの保存中: res://.godot/imported/death.wav-021a45cab225299ddf24ec88f548f45a.sample
+[  56% ] savepack | ファイルの保存中: res://assets/audio/death.wav.import
+[  57% ] savepack | ファイルの保存中: res://.godot/imported/depart.wav-5069c0362b219955ccac5a2282acd36f.sample
+[  57% ] savepack | ファイルの保存中: res://assets/audio/depart.wav.import
+[  57% ] savepack | ファイルの保存中: res://.godot/imported/extract.wav-188a196c9d3c2b30e7846c3c1eaf69e4.sample
+[  57% ] savepack | ファイルの保存中: res://assets/audio/extract.wav.import
+[  58% ] savepack | ファイルの保存中: res://.godot/imported/hurt.wav-e638edfaf88190ba3ffee0adc26b7375.sample
+[  58% ] savepack | ファイルの保存中: res://assets/audio/hurt.wav.import
+[  59% ] savepack | ファイルの保存中: res://.godot/imported/loot.wav-df6d7dae11e482db29a48f6b842a16a1.sample
+[  59% ] savepack | ファイルの保存中: res://assets/audio/loot.wav.import
+[  59% ] savepack | ファイルの保存中: res://assets/audio/manifest.json
+[  60% ] savepack | ファイルの保存中: res://.godot/imported/music_bed.wav-e595da6b11d37b762af860c0be00132a.sample
+[  60% ] savepack | ファイルの保存中: res://assets/audio/music_bed.wav.import
+[  61% ] savepack | ファイルの保存中: res://.godot/imported/music_melody.wav-3b4cb5f75d7614b358829a5090444c65.sample
+[  61% ] savepack | ファイルの保存中: res://assets/audio/music_melody.wav.import
+[  61% ] savepack | ファイルの保存中: res://.godot/imported/music_pulse.wav-4f98bc4a1fddde5f4838ae1dd2fd641f.sample
+[  61% ] savepack | ファイルの保存中: res://assets/audio/music_pulse.wav.import
+[  62% ] savepack | ファイルの保存中: res://.godot/imported/music_tide.wav-1828fb5301e1fddd89d0fb3b70c50e8a.sample
+[  62% ] savepack | ファイルの保存中: res://assets/audio/music_tide.wav.import
+[  63% ] savepack | ファイルの保存中: res://.godot/imported/repair.wav-8a2cf68f778f018ee037ee623bf556eb.sample
+[  63% ] savepack | ファイルの保存中: res://assets/audio/repair.wav.import
+[  63% ] savepack | ファイルの保存中: res://.godot/imported/sea.wav-0af703b5267f6283598f8f235be8b341.sample
+[  63% ] savepack | ファイルの保存中: res://assets/audio/sea.wav.import
+[  64% ] savepack | ファイルの保存中: res://.godot/imported/step_0.wav-44113591e2075e238e6129f2a1ec6bce.sample
+[  64% ] savepack | ファイルの保存中: res://assets/audio/step_0.wav.import
+[  65% ] savepack | ファイルの保存中: res://.godot/imported/step_1.wav-7ec443649fa4497f89790a09140af2e3.sample
+[  65% ] savepack | ファイルの保存中: res://assets/audio/step_1.wav.import
+[  65% ] savepack | ファイルの保存中: res://.godot/imported/step_2.wav-de264c747b480e96351d3db7a35a9809.sample
+[  65% ] savepack | ファイルの保存中: res://assets/audio/step_2.wav.import
+[  66% ] savepack | ファイルの保存中: res://.godot/imported/tide.wav-89290e2546c8cf97a2dcdd56dab91a9d.sample
+[  66% ] savepack | ファイルの保存中: res://assets/audio/tide.wav.import
+[  66% ] savepack | ファイルの保存中: res://.godot/imported/use.wav-87d55d5f3e373c5b5dc5bc97d6bc5d29.sample
+[  66% ] savepack | ファイルの保存中: res://assets/audio/use.wav.import
+[  66% ] savepack | ファイルの保存中: res://.godot/imported/NotoSansCJKjp-Medium.otf-13e73020c76b4f29e64c8dc55585dbcb.fontdata
+[  66% ] savepack | ファイルの保存中: res://assets/fonts/NotoSansCJKjp-Medium.otf.import
+[  67% ] savepack | ファイルの保存中: res://.godot/imported/anchor.svg-98cc165332709193941e31a1606a5eba.ctex
+[  67% ] savepack | ファイルの保存中: res://assets/ui/anchor.svg.import
+[  68% ] savepack | ファイルの保存中: res://.godot/imported/arrow.svg-a3ea65a6d0d0e8ace9d593e7c870f64a.ctex
+[  68% ] savepack | ファイルの保存中: res://assets/ui/arrow.svg.import
+[  68% ] savepack | ファイルの保存中: res://.godot/imported/bag.svg-608360e3d7ce7f99663344db4743e7c4.ctex
+[  68% ] savepack | ファイルの保存中: res://assets/ui/bag.svg.import
+[  69% ] savepack | ファイルの保存中: res://.godot/imported/bomb.svg-ac75558ac74080abaa958cacf511ab38.ctex
+[  69% ] savepack | ファイルの保存中: res://assets/ui/bomb.svg.import
+[  70% ] savepack | ファイルの保存中: res://.godot/imported/boot.svg-17189210b9949ece6ba234f5b3438db5.ctex
+[  70% ] savepack | ファイルの保存中: res://assets/ui/boot.svg.import
+[  70% ] savepack | ファイルの保存中: res://.godot/imported/chart.svg-d607ec783b2a903eab9c0554cd6916c5.ctex
+[  70% ] savepack | ファイルの保存中: res://assets/ui/chart.svg.import
+[  71% ] savepack | ファイルの保存中: res://.godot/imported/chest.svg-1e658909f8e85b89d30527c9d02eeaf6.ctex
+[  71% ] savepack | ファイルの保存中: res://assets/ui/chest.svg.import
+[  72% ] savepack | ファイルの保存中: res://.godot/imported/close.svg-48602a5fd3dfc407a0a61efbc721d36a.ctex
+[  72% ] savepack | ファイルの保存中: res://assets/ui/close.svg.import
+[  72% ] savepack | ファイルの保存中: res://.godot/imported/coat.svg-c449049d9e3645bf2412eea4279e32ab.ctex
+[  72% ] savepack | ファイルの保存中: res://assets/ui/coat.svg.import
+[  73% ] savepack | ファイルの保存中: res://.godot/imported/compass.svg-df0739f212c0c1037c80f1192353a336.ctex
+[  73% ] savepack | ファイルの保存中: res://assets/ui/compass.svg.import
+[  74% ] savepack | ファイルの保存中: res://.godot/imported/core.svg-5b6c8ea4233a7e76ae3facce1dfa4821.ctex
+[  74% ] savepack | ファイルの保存中: res://assets/ui/core.svg.import
+[  74% ] savepack | ファイルの保存中: res://.godot/imported/flare.svg-ce49f624fd12bf01de9470ae5091319d.ctex
+[  74% ] savepack | ファイルの保存中: res://assets/ui/flare.svg.import
+[  75% ] savepack | ファイルの保存中: res://.godot/imported/gear.svg-71d75c57145b3797cac8d4eb6104b786.ctex
+[  75% ] savepack | ファイルの保存中: res://assets/ui/gear.svg.import
+[  76% ] savepack | ファイルの保存中: res://.godot/imported/harpoon.svg-b2fb63e7ef10fb1a80bc3b1ec7a70808.ctex
+[  76% ] savepack | ファイルの保存中: res://assets/ui/harpoon.svg.import
+[  76% ] savepack | ファイルの保存中: res://.godot/imported/heart.svg-868478f36e3b083b60aeb03e93785b2d.ctex
+[  76% ] savepack | ファイルの保存中: res://assets/ui/heart.svg.import
+[  77% ] savepack | ファイルの保存中: res://.godot/imported/knife.svg-aa1a6a49f8dbe4ef566dfcf39badfc77.ctex
+[  77% ] savepack | ファイルの保存中: res://assets/ui/knife.svg.import
+[  78% ] savepack | ファイルの保存中: res://.godot/imported/map.svg-2ccf08082f853641dac066dfcda8b7fc.ctex
+[  78% ] savepack | ファイルの保存中: res://assets/ui/map.svg.import
+[  78% ] savepack | ファイルの保存中: res://.godot/imported/medicine.svg-5070e9beb0bed8fa2db97861afdf5773.ctex
+[  78% ] savepack | ファイルの保存中: res://assets/ui/medicine.svg.import
+[  79% ] savepack | ファイルの保存中: res://.godot/imported/pearl.svg-6c26c6fb87ad6d50e4f2c7908bb23a66.ctex
+[  79% ] savepack | ファイルの保存中: res://assets/ui/pearl.svg.import
+[  80% ] savepack | ファイルの保存中: res://.godot/imported/pumpGear.svg-7e724b408e75aba811721c8089e37301.ctex
+[  80% ] savepack | ファイルの保存中: res://assets/ui/pumpGear.svg.import
+[  80% ] savepack | ファイルの保存中: res://.godot/imported/scrap.svg-72542a69d338684229c38ed77ee9a61f.ctex
+[  80% ] savepack | ファイルの保存中: res://assets/ui/scrap.svg.import
+[  81% ] savepack | ファイルの保存中: res://.godot/imported/star.svg-d7cc32eb444d309a6a6b3f9735b0426d.ctex
+[  81% ] savepack | ファイルの保存中: res://assets/ui/star.svg.import
+[  82% ] savepack | ファイルの保存中: res://.godot/imported/sunLens.svg-69eab3e637c86873c678fd548ebc46a5.ctex
+[  82% ] savepack | ファイルの保存中: res://assets/ui/sunLens.svg.import
+[  82% ] savepack | ファイルの保存中: res://.godot/imported/wave.svg-fff79f603cbcb4abee3d75d194b452c4.ctex
+[  82% ] savepack | ファイルの保存中: res://assets/ui/wave.svg.import
+[  83% ] savepack | ファイルの保存中: res://.godot/imported/icon.svg-56083ea2a1f1a4f1e49773bdc6d7826c.ctex
+[  83% ] savepack | ファイルの保存中: res://assets/icon.svg.import
+[  84% ] savepack | ファイルの保存中: res://.godot/exported/133200997/export-0e8253f5e30dbb939d1e181b2514334b-isana_motion.res
+[  84% ] savepack | ファイルの保存中: res://.godot/exported/133200997/export-26042fcb4f35ef3c849bc08fff93ec87-kohaku_motion.res
+[  85% ] savepack | ファイルの保存中: res://.godot/exported/133200997/export-8355176a29c50a0f061ff15c444c7f25-ritsu_motion.res
+[  86% ] savepack | ファイルの保存中: res://.godot/exported/133200997/export-d7af5f10b7c5752e59b27d9dd4b2f9f3-sui_motion.res
+[  86% ] savepack | ファイルの保存中: res://.godot/exported/133200997/export-10217feb143e0ebdad13f009f098393a-canal.res
+[  87% ] savepack | ファイルの保存中: res://.godot/exported/133200997/export-b20d7566b68fe28153d003710fcc0006-market.res
+[  88% ] savepack | ファイルの保存中: res://.godot/exported/133200997/export-227212581594bb915e925518971d7aa8-observatory.res
+[  88% ] savepack | ファイルの保存中: res://.godot/exported/133200997/export-4a34c49497189cd4d74c9dffa0a15618-quay.res
+[  89% ] savepack | ファイルの保存中: res://.godot/exported/133200997/export-f4a24192236250409fc501e157a01fba-harbor.scn
+[  90% ] savepack | ファイルの保存中: res://.godot/exported/133200997/export-64b6637a1089224b7ac54f2e347996b4-item_tile.scn
+[  90% ] savepack | ファイルの保存中: res://.godot/exported/133200997/export-4f828eb380d195e376faf43da238a6a7-result.scn
+[  91% ] savepack | ファイルの保存中: res://.godot/exported/133200997/export-49c150869b35693972ad98356c3d2310-actor.scn
+[  92% ] savepack | ファイルの保存中: res://.godot/exported/133200997/export-7af1610c67933587f82174b6bfa726df-board.scn
+[  92% ] savepack | ファイルの保存中: res://.godot/exported/133200997/export-e85c764083d6947fd8bc5f45da40adf0-expedition_hud.scn
+[  93% ] savepack | ファイルの保存中: res://.godot/exported/133200997/export-3ad5c15c4f3250da0cc7c1af1770d85f-main.scn
+[  94% ] savepack | ファイルの保存中: res://scripts/presentation_v05/harbor.gdc
+[  94% ] savepack | ファイルの保存中: res://scripts/presentation_v05/presentation.gdc
+[  95% ] savepack | ファイルの保存中: res://scripts/presentation_v05/result.gdc
+[  96% ] savepack | ファイルの保存中: res://scripts/actor.gdc
+[  96% ] savepack | ファイルの保存中: res://scripts/board.gdc
+[  97% ] savepack | ファイルの保存中: res://scripts/campaign_data.gdc
+[  98% ] savepack | ファイルの保存中: res://scripts/campaign_ui.gdc
+[  98% ] savepack | ファイルの保存中: res://assets/art/r2/crew_isana.tres.remap
+[  98% ] savepack | ファイルの保存中: res://assets/art/r2/crew_kohaku.tres.remap
+[  98% ] savepack | ファイルの保存中: res://assets/art/r2/crew_ritsu.tres.remap
+[  98% ] savepack | ファイルの保存中: res://assets/art/r2/crew_sui.tres.remap
+[  98% ] savepack | ファイルの保存中: res://assets/art/r2/prop_boat.tres.remap
+[  98% ] savepack | ファイルの保存中: res://assets/art/r2/prop_clinic.tres.remap
+[  98% ] savepack | ファイルの保存中: res://assets/art/r2/prop_lighthouse.tres.remap
+[  98% ] savepack | ファイルの保存中: res://assets/art/r2/prop_market.tres.remap
+[  98% ] savepack | ファイルの保存中: res://assets/art/r2/prop_planter.tres.remap
+[  98% ] savepack | ファイルの保存中: res://assets/art/r2/prop_pump.tres.remap
+[  98% ] savepack | ファイルの保存中: res://scripts/world_data.gd.remap
+[  98% ] savepack | ファイルの保存中: res://scripts/world_effects.gd.remap
+[  98% ] savepack | ファイルの保存中: res://scripts/ui_theme.gd.remap
+[  98% ] savepack | ファイルの保存中: res://scripts/ui_scenery.gd.remap
+[  98% ] savepack | ファイルの保存中: res://scripts/expedition_hud.gd.remap
+[  98% ] savepack | ファイルの保存中: res://scripts/sound.gd.remap
+[  98% ] savepack | ファイルの保存中: res://scripts/save_store.gd.remap
+[  98% ] savepack | ファイルの保存中: res://scripts/rules.gd.remap
+[  98% ] savepack | ファイルの保存中: res://scripts/district_visual_profile.gd.remap
+[  98% ] savepack | ファイルの保存中: res://scripts/coastal_ambient.gd.remap
+[  98% ] savepack | ファイルの保存中: res://scripts/ui_motif.gd.remap
+[  98% ] savepack | ファイルの保存中: res://scripts/legacy_v03_rules.gd.remap
+[  98% ] savepack | ファイルの保存中: res://scripts/main.gd.remap
+[  98% ] savepack | ファイルの保存中: res://scripts/crew_stage.gd.remap
+[  98% ] savepack | ファイルの保存中: res://assets/art/crab.tres.remap
+[  98% ] savepack | ファイルの保存中: res://assets/art/crate.tres.remap
+[  98% ] savepack | ファイルの保存中: res://assets/art/diver.tres.remap
+[  98% ] savepack | ファイルの保存中: res://assets/art/wader.tres.remap
+[  98% ] savepack | ファイルの保存中: res://resources/crew/isana_motion.tres.remap
+[  98% ] savepack | ファイルの保存中: res://resources/crew/kohaku_motion.tres.remap
+[  98% ] savepack | ファイルの保存中: res://resources/crew/ritsu_motion.tres.remap
+[  98% ] savepack | ファイルの保存中: res://resources/crew/sui_motion.tres.remap
+[  98% ] savepack | ファイルの保存中: res://resources/districts/canal.tres.remap
+[  98% ] savepack | ファイルの保存中: res://resources/districts/market.tres.remap
+[  98% ] savepack | ファイルの保存中: res://resources/districts/observatory.tres.remap
+[  98% ] savepack | ファイルの保存中: res://resources/districts/quay.tres.remap
+[  98% ] savepack | ファイルの保存中: res://scenes/presentation_v05/harbor.tscn.remap
+[  98% ] savepack | ファイルの保存中: res://scenes/presentation_v05/item_tile.tscn.remap
+[  98% ] savepack | ファイルの保存中: res://scenes/presentation_v05/result.tscn.remap
+[  98% ] savepack | ファイルの保存中: res://scenes/actor.tscn.remap
+[  98% ] savepack | ファイルの保存中: res://scenes/board.tscn.remap
+[  98% ] savepack | ファイルの保存中: res://scenes/expedition_hud.tscn.remap
+[  98% ] savepack | ファイルの保存中: res://scenes/main.tscn.remap
+[  98% ] savepack | ファイルの保存中: res://scripts/presentation_v05/harbor.gd.remap
+[  98% ] savepack | ファイルの保存中: res://scripts/presentation_v05/presentation.gd.remap
+[  98% ] savepack | ファイルの保存中: res://scripts/presentation_v05/result.gd.remap
+[  98% ] savepack | ファイルの保存中: res://scripts/actor.gd.remap
+[  98% ] savepack | ファイルの保存中: res://scripts/board.gd.remap
+[  98% ] savepack | ファイルの保存中: res://scripts/campaign_data.gd.remap
+[  98% ] savepack | ファイルの保存中: res://scripts/campaign_ui.gd.remap
+[  98% ] savepack | ファイルの保存中: res://.godot/global_script_class_cache.cfg
+[  98% ] savepack | ファイルの保存中: res://assets/icon.svg
+[  98% ] savepack | ファイルの保存中: res://.godot/uid_cache.bin
+[  98% ] savepack | ファイルの保存中: res://project.binary
+[ DONE ] savepack

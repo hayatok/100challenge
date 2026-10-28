@@ -11,6 +11,8 @@ const Motif = preload("res://scripts/ui_motif.gd")
 const CampaignView = preload("res://scripts/campaign_ui.gd")
 const CrewStage = preload("res://scripts/crew_stage.gd")
 const ExpeditionHUD = preload("res://scenes/expedition_hud.tscn")
+const HarborView = preload("res://scenes/presentation_v05/harbor.tscn")
+const ResultView = preload("res://scenes/presentation_v05/result.tscn")
 const SHORT_NAMES := {"knife":"ナイフ", "loanKnife":"貸出ナイフ", "coat":"雨具", "harpoon":"銛", "medicine":"救急包", "bomb":"爆薬", "flare":"発煙筒", "scrap":"銅の端材", "core":"集光芯", "pearl":"潮真珠", "pumpGear":"揚水歯車", "chart":"航路図", "sunLens":"太陽レンズ"}
 const NAMES := {"isana": "ISANA", "ritsu": "RITSU", "kohaku": "KOHAKU", "sui": "SUI"}
 const SYMBOLS := {"knife": "╱", "loanKnife": "╱", "harpoon": "↟", "coat": "衣", "medicine": "＋", "bomb": "●", "flare": "灯", "scrap": "銅", "core": "芯", "pearl": "○"}
@@ -35,6 +37,8 @@ var modal_body_height := 540.0
 var pending_item := ""
 var pending_crew := false
 var field_hud: Control
+var harbor_view: Control
+var result_view: Control
 var safe_insets := Vector4.ZERO
 var status_label: Label
 var hp_label: Label
@@ -80,6 +84,7 @@ func _ready() -> void:
 	add_child(scenery)
 	move_child(scenery, 2)
 	_set_notice(loaded.error)
+	get_viewport().gui_focus_changed.connect(func(_focused: Control): _sync_presentation())
 	resize_timer = Timer.new()
 	resize_timer.one_shot = true
 	resize_timer.wait_time = 0.18
@@ -209,6 +214,7 @@ func _crew_stage(character: String, minimum: Vector2, phase: String, celebrate: 
 	return stage
 
 func _render() -> void:
+	var preparation: Dictionary = harbor_view.capture_preparation_state() if screen == "harbor" and is_instance_valid(harbor_view) else {}
 	for tween: Tween in ui_tweens:
 		if tween != null and tween.is_valid():
 			tween.kill()
@@ -217,8 +223,11 @@ func _render() -> void:
 	last_size = size
 	_clear(header)
 	_clear(content)
+	content.add_theme_constant_override("separation", 12)
 	board = null
 	field_hud = null
+	harbor_view = null
+	result_view = null
 	control_dock = null
 	world_overlay = null
 	header.visible = screen != "expedition"
@@ -248,7 +257,7 @@ func _render() -> void:
 	audio.set_scene("result_extracted" if success else "result_dead" if screen == "result" else screen, int(state.run.tide) if state.run is Dictionary else 0)
 	match screen:
 		"title": _title()
-		"harbor": _harbor()
+		"harbor": _harbor(preparation)
 		"expedition": _expedition()
 		"result": _result()
 	_animate_in(content)
@@ -313,125 +322,57 @@ func _begin() -> void:
 	_enter()
 
 func _enter() -> void:
+	harbor_view = null
 	screen = state.mode
 	pending_item = ""
 	_render()
 
-func _harbor() -> void:
-	var profile: Dictionary = state.profile
-	var who: Dictionary = Data.CHARACTERS[state.character]
-	var heading := _panel(content, 10)
-	var top := HBoxContainer.new()
-	heading.add_child(top)
-	top.add_child(_icon("anchor", 25))
-	var name_label := _label("回収組合の港", 23)
-	name_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	top.add_child(name_label)
-	var record := _label("生還 %d / %d" % [int(profile.extracts), int(profile.runs)], 12, UiPalette.MUTED)
-	record.autowrap_mode = TextServer.AUTOWRAP_OFF
-	record.custom_minimum_size.x = 80
-	record.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
-	top.add_child(record)
-	if not harbor_feedback.is_empty():
-		heading.add_child(_label(harbor_feedback, 13, UiPalette.SUCCESS))
-	var progress: Dictionary = Data.campaign_summary(state)
-	var district: Dictionary = Data.current_district(state)
-	heading.add_child(_label("復興 %d/%d  /  %s  /  %d G" % [progress.completed,progress.total,district.name,state.profile.credits],13,UiPalette.GOLD))
-	var services := HBoxContainer.new()
-	heading.add_child(services)
-	for entry: Array in [["依頼帳","jobs"],["航路","routes"],["物資交換","exchange"]]:
-		var page: String = entry[1]
-		services.add_child(_button(entry[0],func(): _campaign(page)))
-	var outer := ScrollContainer.new()
-	outer.follow_focus = true
-	outer.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	outer.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
-	content.add_child(outer)
-	var area: BoxContainer = HBoxContainer.new() if size.x > 760 else VBoxContainer.new()
-	area.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	area.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	area.add_theme_constant_override("separation", 16)
-	outer.add_child(area)
-	var cast := VBoxContainer.new()
-	cast.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	area.add_child(cast)
-	var hero_panel := PanelContainer.new()
-	hero_panel.add_theme_stylebox_override("panel", UiPalette.box(Color("fff4d9"), Color("9dc8bf"), 8))
-	cast.add_child(hero_panel)
-	var hero := HBoxContainer.new()
-	hero.custom_minimum_size.y = 220 if size.x < 760 else 350
-	hero_panel.add_child(hero)
-	var stage := Control.new()
-	stage.custom_minimum_size = Vector2(145, 215 if size.x < 760 else 340)
-	stage.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	stage.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	hero.add_child(stage)
-	var motif := Motif.new()
-	motif.accent = UiPalette.crew_accent(state.character)
-	motif.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	stage.add_child(motif)
-	var portrait := _portrait(state.character, Vector2.ZERO, size.x < 760)
-	portrait.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	stage.add_child(portrait)
-	var info := VBoxContainer.new()
-	info.custom_minimum_size.x = 130
-	info.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	info.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-	hero.add_child(info)
-	info.add_child(_label(NAMES[state.character], 12, UiPalette.GOLD))
-	info.add_child(_label(who.name, 30))
-	info.add_child(_label(who.role, 14, UiPalette.MUTED))
-	info.add_child(_rule())
-	info.add_child(_label(who.trait, 15, UiPalette.SUCCESS))
-	info.add_child(_label("「%s」" % who.idleLine, 13))
-	info.add_child(_button("%sと話す" % who.name,func(): _campaign("crew")))
-	var choices := HBoxContainer.new()
-	choices.add_theme_constant_override("separation", 7)
-	cast.add_child(choices)
-	for key: String in Data.CHARACTERS:
-		var char_id := key
-		var button := _button("", func(): _act({"type":"choose", "character":char_id}), state.character == key)
-		button.custom_minimum_size.y = 77
-		button.set_meta("character_id", key)
-		button.tooltip_text = Data.CHARACTERS[key].name + " / " + Data.CHARACTERS[key].trait
-		choices.add_child(button)
-		var inner := VBoxContainer.new()
-		inner.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		inner.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-		inner.offset_top = 4
-		inner.offset_bottom = -4
-		inner.alignment = BoxContainer.ALIGNMENT_CENTER
-		inner.add_theme_constant_override("separation", 0)
-		button.add_child(inner)
-		inner.add_child(_avatar(key, 43))
-		var label := _label(Data.CHARACTERS[key].name, 12)
-		label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		inner.add_child(label)
-	var cargo := _panel(area, 12)
-	cargo.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	cargo.add_child(_section("遠征の支度", "bag"))
-	var columns := HBoxContainer.new()
-	columns.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	cargo.add_child(columns)
-	_harbor_items(columns, "倉庫  %d" % profile.stash.size(), profile.stash, "pack")
-	_harbor_items(columns, "携行 %d/%d" % [state.loadout.size(), Data.stats(state).capacity], state.loadout, "unpack")
-	var preparation := HBoxContainer.new()
-	cargo.add_child(preparation)
-	preparation.add_child(_button("基本の支度", _basic_loadout))
-	var repair := _button("灯りを修理" if not profile.lampRepaired else "修復済み", func(): _act({"type":"repair"}))
-	repair.disabled = profile.lampRepaired or not _has_kind(profile.stash,"core") or not _has_kind(profile.stash,"scrap")
-	repair.tooltip_text = "集光芯と銅の端材を1個ずつ使う。次回から視界＋1。"
-	preparation.add_child(repair)
-	var stats: Dictionary = Data.stats(state)
-	cargo.add_child(_label("攻撃 %d   防御 %d   体力 %d" % [stats.attack,stats.defense,stats.maxHp], 13, UiPalette.MUTED))
-	var footer := _panel(content, 10)
-	footer.add_child(_label("倒れると、装備を含む携行品をすべて失います。倉庫の品は残ります。", 12, UiPalette.INK))
-	var depart := _button("この装備で出発する", func(): _act({"type":"depart"}), true)
-	depart.icon = UiPalette.icon("compass")
-	depart.expand_icon = true
-	depart.add_theme_constant_override("icon_max_width", 27)
-	footer.add_child(depart)
-	depart.grab_focus()
+func _mount_presentation(scene: PackedScene) -> Control:
+	# These scrollable scenes consume the allocated viewport. Their temporary
+	# wrapped-label minimum must not resize the application's outer VBox.
+	var slot := Control.new()
+	slot.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	slot.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	content.add_child(slot)
+	var view: Control = scene.instantiate()
+	slot.add_child(view)
+	view.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	slot.resized.connect(func(): view.set_deferred("size", slot.size))
+	view.minimum_size_changed.connect(func(): view.set_deferred("size", slot.size))
+	return view
+
+func _harbor(preparation: Dictionary = {}) -> void:
+	content.add_theme_constant_override("separation", 0)
+	harbor_view = _mount_presentation(HarborView)
+	harbor_view.character_requested.connect(func(character: String):
+		audio.play_event("click")
+		_act({"type":"choose", "character":character}))
+	harbor_view.conversation_requested.connect(func():
+		audio.play_event("click")
+		_campaign("crew"))
+	harbor_view.page_requested.connect(func(page: String):
+		audio.play_event("click")
+		_campaign(page))
+	harbor_view.pack_requested.connect(func(uid: String):
+		audio.play_event("click")
+		_act({"type":"pack", "uid":uid}))
+	harbor_view.unpack_requested.connect(func(uid: String):
+		audio.play_event("click")
+		_act({"type":"unpack", "uid":uid}))
+	harbor_view.basic_loadout_requested.connect(func():
+		audio.play_event("click")
+		_basic_loadout())
+	harbor_view.repair_requested.connect(func():
+		audio.play_event("click")
+		_act({"type":"repair"}))
+	harbor_view.departure_requested.connect(func():
+		audio.play_event("click")
+		_act({"type":"depart"}))
+	harbor_view.preparation_visibility_changed.connect(func(_open: bool): _sync_presentation())
+	harbor_view.present(state, harbor_feedback)
+	# The detailed portrait stays until a new character stage passes its art gate.
+	if not preparation.is_empty():
+		harbor_view.restore_preparation_state(preparation)
 
 func _has_kind(items: Array, kind: String) -> bool:
 	for item: Dictionary in items:
@@ -499,33 +440,6 @@ func _field_objective() -> String:
 			return "依頼の品が揃った。港へ戻ろう"
 		return "%s / %s" % [Data.current_district(state).name,contract.title]
 	return "%s / 自由回収" % Data.current_district(state).name
-
-func _harbor_items(parent: Node, title: String, items: Array, action: String) -> void:
-	var box := VBoxContainer.new()
-	box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	parent.add_child(box)
-	box.add_child(_label(title, 14, UiPalette.GOLD))
-	var scroll := ScrollContainer.new()
-	scroll.follow_focus = true
-	scroll.custom_minimum_size.y = 145
-	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
-	box.add_child(scroll)
-	var list := VBoxContainer.new()
-	list.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	scroll.add_child(list)
-	if items.is_empty():
-		list.add_child(_label("ここに持ち出す品を。" if action == "unpack" else "品はありません。", 12, UiPalette.MUTED))
-	for item: Dictionary in items:
-		var uid: String = item.uid
-		var button := _button(str(SHORT_NAMES[item.kind]), func(): _act({"type":action,"uid":uid}))
-		button.icon = UiPalette.icon(item.kind)
-		button.expand_icon = true
-		button.add_theme_constant_override("icon_max_width", 28)
-		button.add_theme_font_size_override("font_size", 13)
-		button.clip_text = true
-		button.tooltip_text = Data.ITEMS[item.kind].name + " / " + Data.ITEMS[item.kind].description
-		list.add_child(button)
 
 func _basic_loadout() -> void:
 	var picked: Array = []
@@ -668,7 +582,11 @@ func _act(action: Dictionary) -> void:
 	_persist()
 	for event: Dictionary in events:
 		audio.play_event(event.type)
-		harbor_feedback = event.text
+		if event.type == "extract":
+			var amount: int = int(event.amount)
+			harbor_feedback = "持ち帰った品はありません。" if amount == 0 else "%d個の品を倉庫に持ち帰りました。" % amount
+		else:
+			harbor_feedback = event.text
 	if state.mode != screen:
 		_close_modal()
 		_enter()
@@ -829,73 +747,16 @@ func _inventory() -> void:
 	_resize_layout()
 
 func _result() -> void:
-	var receipt: Dictionary=state.result
-	var success: bool=receipt.outcome=="extracted"
-	var who: Dictionary=Data.CHARACTERS[state.character]
-	var hero_panel:=_panel(content,12)
-	var hero:=HBoxContainer.new()
-	hero.custom_minimum_size.y=180 if size.x<760 else 240
-	hero_panel.add_child(hero)
-	var stage := _crew_stage(state.character,Vector2(112 if size.x<760 else 180,180),"arrival" if success else "loss",success and not receipt.inventory.is_empty())
-	hero.add_child(stage)
-	var words:=VBoxContainer.new()
-	words.size_flags_horizontal=Control.SIZE_EXPAND_FILL
-	words.size_flags_vertical=Control.SIZE_SHRINK_CENTER
-	hero.add_child(words)
-	words.add_child(_label("WELCOME HOME" if success else "EXPEDITION LOST",11,UiPalette.SUCCESS if success else UiPalette.DANGER))
-	words.add_child(_label("帰還成功" if success else "回収失敗",30,UiPalette.INK if success else UiPalette.DANGER))
-	words.add_child(_label("%d手の遠征 / %d個を%s" % [receipt.turns,receipt.inventory.size(),"倉庫へ" if success else "失いました"],13))
-	var result_line: String=who.lossLine if not success else who.emptyLine if receipt.inventory.is_empty() else who.returnLine
-	words.add_child(_label("「%s」" % result_line,14))
-	if not success:
-		words.add_child(_label("原因：%s" % receipt.cause,13,UiPalette.DANGER))
-	var paper:=_panel(content,12)
-	(paper.get_parent() as Control).size_flags_vertical=Control.SIZE_EXPAND_FILL
-	paper.size_flags_vertical=Control.SIZE_EXPAND_FILL
-	var reward_row:=HBoxContainer.new()
-	paper.add_child(reward_row)
-	reward_row.add_child(_icon("star" if success else "bag",35))
-	var heading:=_label("持ち帰った戦利品" if success else "失った携行品",20)
-	heading.size_flags_horizontal=Control.SIZE_EXPAND_FILL
-	reward_row.add_child(heading)
-	var points:=_label("%d pt" % receipt.value,22,UiPalette.GOLD if success else UiPalette.DANGER)
-	points.custom_minimum_size.x=80
-	points.horizontal_alignment=HORIZONTAL_ALIGNMENT_RIGHT
-	reward_row.add_child(points)
-	paper.add_child(_rule())
-	var scroll:=ScrollContainer.new()
-	scroll.follow_focus = true
-	scroll.size_flags_vertical=Control.SIZE_EXPAND_FILL
-	scroll.custom_minimum_size.y=120
-	scroll.horizontal_scroll_mode=ScrollContainer.SCROLL_MODE_DISABLED
-	paper.add_child(scroll)
-	var grid:=GridContainer.new()
-	grid.columns=3 if size.x<760 else 6
-	grid.size_flags_horizontal=Control.SIZE_EXPAND_FILL
-	scroll.add_child(grid)
-	var index:=0
-	for item: Dictionary in receipt.inventory:
-		var tile:=_panel(grid,7)
-		tile.add_child(_icon(item.kind,33))
-		var label:=_label(str(SHORT_NAMES[item.kind]),12,UiPalette.INK if success else UiPalette.DANGER)
-		label.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
-		tile.add_child(label)
-		_animate_in(tile,minf(index*0.06,0.65))
-		index+=1
-	if receipt.inventory.is_empty():
-		grid.columns = 1
-		var empty := _label("持ち帰った品はありません。" if success else "携行品はありませんでした。",14,UiPalette.MUTED)
-		empty.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		grid.add_child(empty)
-	var message: String="倉庫の品は残っています。次の支度を整えよう。" if not success else "港に戻りました。次の支度を整えよう。" if receipt.inventory.is_empty() else "戦利品を倉庫へ保管しました。次の遠征に持ち出せます。"
-	paper.add_child(_label(message,13,UiPalette.MUTED))
-	var retry:=_button("港で支度をする",func(): _act({"type":"return"}),true)
-	content.add_child(retry)
-	retry.grab_focus()
-	if success and not settings.reduced:
-		var value_tween:=create_tween()
-		_track_tween(value_tween)
-		value_tween.tween_method(func(value:float): points.text="%d pt" % roundi(value),0.0,float(receipt.value),0.6).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	content.add_theme_constant_override("separation", 0)
+	result_view = _mount_presentation(ResultView)
+	result_view.continue_requested.connect(func():
+		audio.play_event("click")
+		_act({"type":"return"}))
+	result_view.present(state)
+	var receipt: Dictionary = state.result
+	var success: bool = receipt.outcome == "extracted"
+	var stage := _crew_stage(state.character, Vector2.ZERO, "arrival" if success else "loss", success and not receipt.inventory.is_empty())
+	result_view.attach_stage(stage)
 
 func _map() -> void:
 	if state.mode != "expedition":
@@ -991,6 +852,8 @@ func _input(event: InputEvent) -> void:
 	if event.keycode == KEY_ESCAPE:
 		if is_instance_valid(modal):
 			_close_modal()
+		elif screen == "harbor" and is_instance_valid(harbor_view) and harbor_view.preparation_open:
+			harbor_view.close_preparation()
 		elif not pending_item.is_empty() or pending_crew:
 			pending_item = ""
 			pending_crew = false
@@ -1178,7 +1041,12 @@ func _pulse(control:Control) -> void:
 	tween.tween_property(control,"scale",Vector2.ONE,0.12).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 
 func _sync_presentation() -> void:
-	var paused:=focus_paused or is_instance_valid(modal)
+	var reading_preparation: bool = screen == "harbor" and is_instance_valid(harbor_view) and harbor_view.preparation_open
+	if not reading_preparation and screen == "harbor" and is_instance_valid(harbor_view):
+		var focused: Control = get_viewport().gui_get_focus_owner()
+		reading_preparation = is_instance_valid(focused) and harbor_view.preparation_scroll.is_ancestor_of(focused)
+	var blocked: bool = focus_paused or is_instance_valid(modal)
+	var paused: bool = blocked or reading_preparation
 	if is_instance_valid(field_hud):
 		field_hud.set_paused(paused)
 	for stage: Control in crew_stages:
@@ -1192,7 +1060,7 @@ func _sync_presentation() -> void:
 		audio.set_active(not paused)
 	for tween:Tween in ui_tweens:
 		if tween!=null and tween.is_valid():
-			if focus_paused or (paused and not tween.get_meta("overlay",false)):
+			if focus_paused or (blocked and not tween.get_meta("overlay",false)):
 				tween.pause()
 			else:
 				tween.play()

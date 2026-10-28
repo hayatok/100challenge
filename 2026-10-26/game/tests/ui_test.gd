@@ -21,7 +21,7 @@ func _initialize() -> void:
 	root.add_child(ui)
 	await process_frame
 	await process_frame
-	for test: String in ["test_v04_compact_departure_and_reload", "test_v04_field_allocation", "test_v04_crew_controls", "test_v04_visibility", "test_v04_objective_continuity", "test_v04_objective_layout_roundtrip", "test_characters", "test_safe_area", "test_turn_input", "test_storage", "test_result_receipt", "test_inventory_uid_actions", "test_inventory_focus_and_full_health", "test_world_overlay_phone_bounds", "test_presentation_pause_and_motion", "test_empty_extraction_readability", "test_campaign_phone_navigation", "test_campaign_routes_and_follow", "test_campaign_delivery", "test_campaign_exchange", "test_campaign_crew_and_reload", "test_campaign_modal_during_screen_entry", "test_v03_portraits_and_crew_navigation", "test_v03_truthful_result_stages", "test_v03_stage_pause_and_reduced_motion", "test_v03_live_reduced_motion_toggle"]:
+	for test: String in ["test_v04_compact_departure_and_reload", "test_v04_field_allocation", "test_v04_crew_controls", "test_v04_visibility", "test_v04_objective_continuity", "test_v04_objective_layout_roundtrip", "test_v05_harbor_entry_and_basic_loadout", "test_v05_preparation_transfer_and_reload", "test_v05_preparation_reading_pause", "test_v05_immediate_result", "test_v05_extract_feedback", "test_v05_storage_notice_and_corrupt", "test_characters", "test_safe_area", "test_turn_input", "test_storage", "test_result_receipt", "test_inventory_uid_actions", "test_inventory_focus_and_full_health", "test_world_overlay_phone_bounds", "test_presentation_pause_and_motion", "test_empty_extraction_readability", "test_campaign_phone_navigation", "test_campaign_routes_and_follow", "test_campaign_delivery", "test_campaign_exchange", "test_campaign_crew_and_reload", "test_campaign_modal_during_screen_entry", "test_v03_portraits_and_crew_navigation", "test_v03_truthful_result_stages", "test_v03_stage_pause_and_reduced_motion", "test_v03_live_reduced_motion_toggle"]:
 		if await call(test) != true:
 			failed += 1
 			push_error("FAIL: did not complete " + test)
@@ -343,6 +343,242 @@ func test_v04_objective_layout_roundtrip() -> bool:
 	timer.wait_time = original_wait
 	return true
 
+func test_v05_harbor_entry_and_basic_loadout() -> bool:
+	for viewport: Vector2i in [Vector2i(390, 844), Vector2i(360, 740), Vector2i(1280, 800)]:
+		root.size = viewport
+		ui._close_modal()
+		ui._apply_safe_area(Vector4.ZERO)
+		ui.state = RulesData.new_game()
+		ui.harbor_feedback = ""
+		ui._enter()
+		await settle_layout()
+		var view: Control = ui.harbor_view
+		var basic: Button = view.get_node("%BasicLoadout")
+		var prepare: Button = view.get_node("%OpenPreparation")
+		var css: Vector2 = Vector2(viewport) / ui.size
+		check(view.get_script().resource_path.ends_with("presentation_v05/harbor.gd") and not view.preparation_open and view.get_node("%PreparationPane").is_visible_in_tree() == (viewport.x >= 760), "%s Main starts in the new harbor with preparation explicitly closed" % viewport)
+		check(view.stage_slot.get_child_count() == 0 and view.get_node("%Portrait").is_visible_in_tree() and texture_base_path(view.get_node("%Portrait").texture) == "res://assets/art/v03/portraits/isana.png", "%s actual harbor retains the detailed worker portrait until a new stage is adopted" % viewport)
+		var pinned: bool = true
+		for button: Button in ([basic, prepare, view.departure_button] if viewport.x < 760 else [basic, view.departure_button]):
+			var touch: Vector2 = button.size * css
+			pinned = pinned and button.is_visible_in_tree() and inside_clipping_ancestors(button) and touch.x >= 44 and touch.y >= 44
+		check(pinned and not basic.disabled, "%s basic loadout and departure plus the phone preparation entry are immediately visible and usable" % viewport)
+		if viewport.x >= 760:
+			check(not prepare.is_visible_in_tree() and view.get_node("%PreparationPane").is_visible_in_tree() and is_equal_approx(basic.size.x, view.get_node("%QuickPreparation").size.x), "desktop exposes the full-width basic action without pretending the permanent preparation can close")
+		var roster: Button = meta_button(view, "character_id", "sui")
+		check(roster != null and roster.text.is_empty() and roster.accessibility_name == RulesData.CHARACTERS.sui.name and find_label(roster, RulesData.CHARACTERS.sui.name) != null, "%s portrait roster exposes the actual character through metadata and accessible inner text" % viewport)
+		if roster == null:
+			return false
+		var expected: Dictionary = RulesData.apply_action(ui.state, {"type": "choose", "character": "sui"}).state
+		roster.pressed.emit()
+		await settle_layout()
+		check(ui.state == expected and ui.state.character == "sui", "%s actual roster signal changes only the chosen worker through Rules" % viewport)
+		var source: Dictionary = ui.state.duplicate(true)
+		basic = ui.harbor_view.get_node("%BasicLoadout")
+		basic.pressed.emit()
+		await settle_layout()
+		await settle_layout()
+		var kinds: Array[String] = []
+		var exact_uids: bool = true
+		for item: Dictionary in ui.state.loadout:
+			kinds.append(item.kind)
+			exact_uids = exact_uids and item in source.profile.stash
+		kinds.sort()
+		check(kinds == ["bomb", "coat", "flare", "knife", "medicine"] and exact_uids and ui.state.profile.runs == 0 and ui.state.run == null and RulesData.validate_state(ui.state), "%s pinned basic preparation transfers one real UID of each eligible type without departing" % viewport)
+		print("BASIC bounds diagnostic viewport=%s root=%s view=%s basic=%s departure=%s" % [viewport,ui.get_global_rect(),ui.harbor_view.get_global_rect(),ui.harbor_view.get_node("%BasicLoadout").get_global_rect(),ui.harbor_view.departure_button.get_global_rect()])
+		check(not ui.harbor_view.preparation_open and inside_clipping_ancestors(ui.harbor_view.get_node("%BasicLoadout")), "%s quick preparation leaves the harbor showcase and shortcut available" % viewport)
+		var snapshot: String = JSON.stringify(ui.state)
+		if viewport.x < 760:
+			ui.harbor_view.get_node("%OpenPreparation").pressed.emit()
+			await settle_layout()
+			check(ui.harbor_view.preparation_open and ui.harbor_view.get_node("%PreparationPane").is_visible_in_tree() and JSON.stringify(ui.state) == snapshot, "%s opening preparation shows real cargo without changing ownership or time" % viewport)
+			key_press(KEY_ESCAPE)
+			await settle_layout()
+			check(not ui.harbor_view.preparation_open and not is_instance_valid(ui.modal) and JSON.stringify(ui.state) == snapshot, "%s Escape closes the preparation pane before settings and does not resolve a rule action" % viewport)
+	root.size = Vector2i(390, 844)
+	await settle_layout()
+	return true
+
+func test_v05_preparation_transfer_and_reload() -> bool:
+	for viewport: Vector2i in [Vector2i(390, 844), Vector2i(360, 740), Vector2i(1280, 800)]:
+		root.size = viewport
+		ui._close_modal()
+		var prepared: Dictionary = RulesData.new_game()
+		for index: int in range(24):
+			prepared.profile.stash.append(RulesData._new_item(prepared, "scrap"))
+		check(RulesData.validate_state(prepared), "%s long preparation fixture has actual unique owned item IDs" % viewport)
+		ui.state = prepared
+		ui.harbor_feedback = ""
+		ui._enter()
+		await settle_layout()
+		if viewport.x < 760:
+			ui.harbor_view.get_node("%OpenPreparation").pressed.emit()
+		await settle_layout()
+		var uid: String = ui.state.profile.stash[-3].uid
+		var transfer: Button = meta_button(ui.harbor_view.get_node("%StashItems"), "item_uid", uid)
+		if transfer == null:
+			return false
+		transfer.grab_focus()
+		await settle_layout()
+		var before: Dictionary = ui.harbor_view.capture_preparation_state()
+		check(before.open == (viewport.x < 760) and before.scroll > 0 and before.focus_uid == uid and inside_clipping_ancestors(transfer), "%s a late stash item can be focused and scrolled into the open preparation pane" % viewport)
+		var expected: Dictionary = RulesData.apply_action(ui.state, {"type": "pack", "uid": uid}).state
+		transfer.pressed.emit()
+		await settle_layout()
+		await settle_layout()
+		var carry: Button = meta_button(ui.harbor_view.get_node("%CarryItems"), "item_uid", uid)
+		var after: Dictionary = ui.harbor_view.capture_preparation_state()
+		print("PACK focus diagnostic viewport=%s before=%s after=%s focused=%s carryfocus=%s carryrect=%s scrollrect=%s" % [viewport,before,after,ui.get_viewport().gui_get_focus_owner(),carry.has_focus() if carry != null else false,carry.get_global_rect() if carry != null else Rect2(),ui.harbor_view.preparation_scroll.get_global_rect()])
+		check(ui.state == expected and ui.harbor_view.preparation_open == (viewport.x < 760) and ui.state.loadout[-1].uid == uid and not stash_has(uid) and RulesData.validate_state(ui.state), "%s actual pack callback moves the selected UID once and keeps preparation open" % viewport)
+		check(carry != null and carry.has_focus() and after.focus_uid == uid and inside_clipping_ancestors(carry), "%s reconstructed preparation follows keyboard focus to that exact UID in the carry bag" % viewport)
+		if carry == null:
+			return false
+		expected = RulesData.apply_action(ui.state, {"type": "unpack", "uid": uid}).state
+		carry.pressed.emit()
+		await settle_layout()
+		await settle_layout()
+		transfer = meta_button(ui.harbor_view.get_node("%StashItems"), "item_uid", uid)
+		after = ui.harbor_view.capture_preparation_state()
+		print("UNPACK focus diagnostic viewport=%s after=%s transferfocus=%s transferrect=%s scrollrect=%s" % [viewport,after,transfer.has_focus() if transfer != null else false,transfer.get_global_rect() if transfer != null else Rect2(),ui.harbor_view.preparation_scroll.get_global_rect()])
+		check(ui.state == expected and ui.harbor_view.preparation_open == (viewport.x < 760) and stash_has(uid) and ui.state.loadout.is_empty(), "%s actual unpack returns the same UID to stash without a second transfer or closing preparation" % viewport)
+		check(transfer != null and transfer.has_focus() and after.focus_uid == uid and after.scroll > 0 and inside_clipping_ancestors(transfer), "%s unpack restores the selected stash UID and its scroll visibility after rebuilding" % viewport)
+		var snapshot: String = JSON.stringify(ui.state)
+		var retained_scroll: int = ui.harbor_view.preparation_scroll.scroll_vertical
+		ui._render()
+		await settle_layout()
+		await settle_layout()
+		after = ui.harbor_view.capture_preparation_state()
+		print("READONLY scroll diagnostic viewport=%s retained=%d after=%s" % [viewport,retained_scroll,after])
+		check(ui.harbor_view.preparation_open == (viewport.x < 760) and after.focus_uid == uid and absi(int(after.scroll) - retained_scroll) <= 1 and JSON.stringify(ui.state) == snapshot, "%s a read-only harbor rebuild preserves open state, scroll and focused item UID exactly" % viewport)
+		var path := "user://qa-v05-preparation.json"
+		check(Store.save_game(ui.state, "shiogaeri-qa-v05-preparation", path).is_empty(), "%s preparation state saves only the real game data into a QA slot" % viewport)
+		var loaded: Dictionary = Store.load_game("shiogaeri-qa-v05-preparation", path)
+		check(loaded.found and not loaded.corrupt and JSON.stringify(loaded.state) == snapshot, "%s transferred ownership and selected worker survive the real store reload" % viewport)
+		ui.state = loaded.state
+		ui._enter()
+		await settle_layout()
+		check(not ui.harbor_view.preparation_open and ui.state.profile.stash[-1].uid == uid and JSON.stringify(ui.state) == snapshot, "%s reload opens a clean harbor while preserving every real owned item" % viewport)
+		for suffix: String in ["", ".bak", ".tmp"]:
+			if FileAccess.file_exists(path + suffix):
+				DirAccess.remove_absolute(path + suffix)
+	root.size = Vector2i(390, 844)
+	await settle_layout()
+	return true
+
+func test_v05_preparation_reading_pause() -> bool:
+	ui._close_modal()
+	ui.state = RulesData.new_game()
+	var previous_reduced: bool = ui.settings.reduced
+	ui.settings.reduced = false
+	ui._enter()
+	await settle_layout()
+	var snapshot: String = JSON.stringify(ui.state)
+	ui.harbor_view.open_preparation()
+	await settle_layout()
+	var clock: float = ui.scenery.clock
+	await create_timer(0.07).timeout
+	check(is_equal_approx(ui.scenery.clock, clock) and JSON.stringify(ui.state) == snapshot, "preparation reading pauses the actual harbor background without changing the save")
+	ui._settings()
+	await settle_layout()
+	key_press(KEY_ESCAPE)
+	await settle_layout()
+	await create_timer(0.06).timeout
+	check(ui.harbor_view.preparation_open and is_equal_approx(ui.scenery.clock, clock) and JSON.stringify(ui.state) == snapshot, "closing settings preserves preparation reading and keeps the background paused")
+	key_press(KEY_ESCAPE)
+	await settle_layout()
+	await create_timer(0.06).timeout
+	check(not ui.harbor_view.preparation_open and ui.scenery.clock > clock and JSON.stringify(ui.state) == snapshot, "closing preparation resumes only presentation and never advances harbor time")
+	root.size = Vector2i(1280, 800)
+	ui._enter()
+	await settle_layout()
+	var transfer: Button = meta_button(ui.harbor_view.get_node("%StashItems"), "item_uid", ui.state.profile.stash[0].uid)
+	if transfer == null:
+		return false
+	transfer.grab_focus()
+	await settle_layout()
+	clock = ui.scenery.clock
+	await create_timer(0.06).timeout
+	check(not ui.harbor_view.preparation_open and ui.harbor_view.get_node("%PreparationPane").is_visible_in_tree() and is_equal_approx(ui.scenery.clock, clock) and JSON.stringify(ui.state) == snapshot, "focusing the always-visible desktop preparation pauses the background even without opening a phone pane")
+	ui.harbor_view.departure_button.grab_focus()
+	await settle_layout()
+	await create_timer(0.06).timeout
+	check(ui.scenery.clock > clock and JSON.stringify(ui.state) == snapshot, "leaving desktop preparation focus resumes presentation without changing the game")
+	root.size = Vector2i(390, 844)
+	ui._render()
+	await settle_layout()
+	ui.harbor_view.get_node("%OpenPreparation").pressed.emit()
+	await settle_layout()
+	var reading_uid: String = ui.state.profile.stash[-1].uid
+	meta_button(ui.harbor_view.get_node("%StashItems"), "item_uid", reading_uid).grab_focus()
+	await settle_layout()
+	for viewport: Vector2i in [Vector2i(1280, 800), Vector2i(390, 844)]:
+		root.size = viewport
+		await create_timer(0.24).timeout
+		await settle_layout()
+		var reading: Dictionary = ui.harbor_view.capture_preparation_state()
+		var focused_item: Button = meta_button(ui.harbor_view.get_node("%StashItems"), "item_uid", reading_uid)
+		check(reading.open and reading.focus_uid == reading_uid and focused_item.has_focus() and inside_clipping_ancestors(focused_item) and JSON.stringify(ui.state) == snapshot, "%s phone-wide-phone resize preserves the open reading context and visible exact UID" % viewport)
+		check(ui.harbor_view.get_node("%OpenPreparation").is_visible_in_tree() == (viewport.x < 760), "%s only phone layout offers a preparation toggle" % viewport)
+		clock = ui.scenery.clock
+		await create_timer(0.06).timeout
+		check(is_equal_approx(ui.scenery.clock, clock), "%s resizing while reading keeps the background paused" % viewport)
+	key_press(KEY_ESCAPE)
+	await settle_layout()
+	check(not ui.harbor_view.preparation_open and ui.harbor_view.get_node("%OpenPreparation").has_focus() and JSON.stringify(ui.state) == snapshot, "returning to phone preserves Escape closure and restores visible entry focus")
+	ui.settings.reduced = previous_reduced
+	ui._render()
+	await settle_layout()
+	return true
+
+func test_v05_immediate_result() -> bool:
+	ui._close_modal()
+	var previous_reduced: bool = ui.settings.reduced
+	for outcome: String in ["extracted", "empty", "dead"]:
+		ui.state = staged_receipt("isana", outcome)
+		var snapshot: String = JSON.stringify(ui.state)
+		render_receipt_with_motion(false)
+		var view: Control = ui.result_view
+		var receipt: Dictionary = ui.state.result
+		check(view != null and view.get_script().resource_path.ends_with("presentation_v05/result.gd") and view.get_node("%Value").text == "%d pt" % receipt.value and view.get_node("%Count").text.begins_with(str(receipt.inventory.size())) and view.get_node("%Turns").text == "%d手の遠征" % receipt.turns and view.continue_button != null and not view.continue_button.disabled, "%s new result exposes exact value, count, turn and next action before any animation frame" % outcome)
+		var stage: Control = receipt_stage()
+		check(stage != null and stage.get_parent() == view.stage_slot and stage.phase == ("loss" if outcome == "dead" else "arrival") and stage.celebrate == (outcome == "extracted"), "%s Main attaches the real outcome stage to the new result component" % outcome)
+		await settle_layout()
+		check(JSON.stringify(ui.state) == snapshot and inside_clipping_ancestors(view.continue_button), "%s result animation preserves the already-resolved receipt and pinned return action" % outcome)
+	ui.settings.reduced = previous_reduced
+	ui._render()
+	await settle_layout()
+	return true
+
+func test_v05_storage_notice_and_corrupt() -> bool:
+	ui._close_modal()
+	root.size = Vector2i(360, 740)
+	ui.state = RulesData.new_game()
+	ui._enter()
+	await settle_layout()
+	var snapshot: String = JSON.stringify(ui.state)
+	var blocked := "user://qa-v05-blocked-store"
+	DirAccess.make_dir_absolute(blocked)
+	var error: String = Store.save_game(ui.state, "shiogaeri-qa-v05-blocked-store", blocked)
+	ui._set_notice(error)
+	await settle_layout()
+	check(not error.is_empty() and ui.notice.is_visible_in_tree() and ui.notice.text == error and fits_visible_stage(ui.notice) and fits_visible_stage(ui.harbor_view.departure_button) and JSON.stringify(ui.state) == snapshot, "new harbor keeps the actual storage failure and primary action visible at the small phone size")
+	ui._set_notice("")
+	DirAccess.remove_absolute(blocked)
+	ui.corrupt = true
+	ui.screen = "title"
+	ui._render()
+	ui._begin()
+	await settle_layout()
+	check(ui.corrupt and is_instance_valid(ui.modal) and find_button(ui.modal, "新しく始める") != null and fits_visible_stage(ui.modal_panel) and JSON.stringify(ui.state) == snapshot, "corrupt-save entry still requires the existing visible replacement decision without writing state")
+	key_press(KEY_ESCAPE)
+	await settle_layout()
+	check(ui.corrupt and not is_instance_valid(ui.modal) and JSON.stringify(ui.state) == snapshot, "cancelling corrupt-save confirmation preserves the original refusal to overwrite")
+	ui.corrupt = false
+	ui._enter()
+	root.size = Vector2i(390, 844)
+	await settle_layout()
+	return true
+
 func test_characters() -> bool:
 	check(ui.qa_session, "QA does not overwrite real saves")
 	for key: String in RulesData.CHARACTERS:
@@ -465,7 +701,7 @@ func test_result_receipt() -> bool:
 
 func find_button(parent: Node, text: String) -> Button:
 	for child: Node in parent.get_children():
-		if child is Button and child.text == text:
+		if child is Button and (child.text == text or child.accessibility_name == text or (child.text.is_empty() and find_label(child, text) != null)):
 			return child
 		var found := find_button(child, text)
 		if found != null:
@@ -759,8 +995,8 @@ func test_empty_extraction_readability() -> bool:
 		await settle_layout()
 		ui._resize_layout()
 		await settle_layout()
-		var empty: Label = find_label(ui.content, "持ち帰った品はありません。")
-		check(empty != null, "%s empty extraction explains its empty receipt" % phone)
+		var empty: Label = ui.result_view.get_node("%Ownership")
+		check(empty != null and empty.text == "持ち帰った品はありません。", "%s empty extraction explains its empty receipt" % phone)
 		if empty == null:
 			return false
 		var available_width: float = (empty.get_parent() as Control).size.x
@@ -1218,10 +1454,17 @@ func test_v03_truthful_result_stages() -> bool:
 				var actor: Node2D = stage.get_node("Actor")
 				var player: AnimationPlayer = actor.get_node("AnimationPlayer")
 				check(actor.kind == character and actor.is_player and not player.is_playing() and stage.reduced_motion and inside_clipping_ancestors(stage), "%s %s %s native actor is visible, static and correctly identified" % [phone, character, outcome])
-				var count_text: String = "%d手の遠征 / %d個を%s" % [receipt.turns, receipt.inventory.size(), "失いました" if outcome == "dead" else "倉庫へ"]
-				var truthful: bool = find_label(ui.content, count_text) != null and find_label(ui.content, "%d pt" % receipt.value) != null and find_label(ui.content, "回収失敗" if outcome == "dead" else "帰還成功") != null
+				var count_text: String = "%d個を%s" % [receipt.inventory.size(), "失いました" if outcome == "dead" else "倉庫へ"]
+				var result: Control = ui.result_view
+				var truthful: bool = result.get_node("%Count").text == count_text and result.get_node("%Turns").text == "%d手の遠征" % receipt.turns and result.get_node("%Value").text == "%d pt" % receipt.value and result.get_node("%Outcome").text == ("回収失敗" if outcome == "dead" else "無事に帰港" if outcome == "empty" else "帰還成功")
+				var rows: Node = result.get_node("%Items")
+				var row_uids: Array[String] = []
+				for row: Node in rows.get_children():
+					if row.has_meta("item_uid"):
+						row_uids.append(str(row.get_meta("item_uid")))
+				truthful = truthful and row_uids.size() == receipt.inventory.size()
 				for item: Dictionary in receipt.inventory:
-					truthful = truthful and find_label(ui.content, ui.SHORT_NAMES[item.kind]) != null
+					truthful = truthful and row_uids.count(item.uid) == 1 and find_label(rows, RulesData.ITEMS[item.kind].name) != null
 				check(truthful and JSON.stringify(ui.state) == snapshot, "%s %s %s staging preserves and displays the actual receipt items, count and value" % [phone, character, outcome])
 				var retry: Button = find_button(ui.content, "港で支度をする")
 				check(retry != null and not retry.disabled and inside_clipping_ancestors(retry), "%s %s %s result permits immediate harbor return" % [phone, character, outcome])
@@ -1364,4 +1607,53 @@ func test_v03_live_reduced_motion_toggle() -> bool:
 	ui.settings.reduced = previous_reduced
 	ui._render()
 	await settle_layout()
+	return true
+
+func test_v05_extract_feedback() -> bool:
+	ui._close_modal()
+	root.size = Vector2i(390, 844)
+	for legacy: bool in [false, true]:
+		for history: String in ["loan-only", "owned-drop", "owned-return"]:
+			ui.state = RulesData.new_game()
+			ui.harbor_feedback = ""
+			ui._enter()
+			await settle_layout()
+			var uid: String = ui.state.profile.stash[0].uid
+			if history != "loan-only":
+				ui._act({"type":"pack", "uid":uid})
+				await settle_layout()
+			if legacy:
+				ui.state = apply_ui_action(ui.state, {"type":"depart", "seed":7}).state
+				ui._enter()
+			else:
+				ui._act({"type":"depart", "seed":7})
+			await settle_layout()
+			check(ui.state.run.inventory.size() == 1 and ui.state.run.inventory[0].kind == ("loanKnife" if history == "loan-only" else "knife"), "%s %s feedback fixture departs with the actual intended weapon" % [legacy, history])
+			if history == "owned-drop":
+				ui._act({"type":"drop", "uid":uid})
+				await settle_layout()
+				check(ui.state.run.inventory.is_empty() and RulesData.validate_state(ui.state), "%s own-knife history genuinely drops its UID through Main" % legacy)
+			var before: String = JSON.stringify(ui.state)
+			var expected: Dictionary = RulesData.apply_action(ui.state, {"type":"interact"})
+			var extract: Dictionary = {}
+			for event: Dictionary in expected.events:
+				if event.type == "extract":
+					extract = event
+			var count: int = 1 if history == "owned-return" else 0
+			check(not extract.is_empty() and extract.amount == count and extract.text == "%d個の品を倉庫に持ち帰った。貸出品は返却した。" % count, "%s %s original Rules event is unchanged and contains the confirmed count" % [legacy, history])
+			ui._interact()
+			await settle_layout()
+			check(JSON.stringify(ui.state) == before, "%s %s return confirmation does not change game data" % [legacy, history])
+			var confirm: Button = find_button(ui.modal, "持ち帰って遠征を終える")
+			if confirm == null:
+				return false
+			confirm.pressed.emit()
+			await settle_layout()
+			var message: String = "持ち帰った品はありません。" if count == 0 else "%d個の品を倉庫に持ち帰りました。" % count
+			check(ui.state == expected.state and ui.state.result.inventory.size() == count and ui.harbor_feedback == message and RulesData.validate_state(ui.state), "%s %s Main adapts only the extract message while preserving the complete Rules result" % [legacy, history])
+			var expected_return: Dictionary = RulesData.apply_action(ui.state, {"type":"return"}).state
+			ui.result_view.continue_button.pressed.emit()
+			await settle_layout()
+			var feedback: Label = ui.harbor_view.get_node("%Feedback")
+			check(ui.state == expected_return and ui.screen == "harbor" and feedback.is_visible_in_tree() and feedback.text == message and inside_clipping_ancestors(feedback), "%s %s actual result-to-harbor flow shows only supported count facts and preserves ownership" % [legacy, history])
 	return true

@@ -1,0 +1,194 @@
+{
+  "recorded": "2026-10-29 JST",
+  "scope": "v0.5 UI checkpoint and documentation; no experimental3D adoption or version completion.",
+  "method": "Direct CLI lint/run/verify with retained originals. This consolidation checks current full SHA256 against each recorded final input and the successful verify output.",
+  "manual_review": "Compared actual UI conditions, owned-item and empty-result semantics, source/runtime/public version boundaries and the publication gates. Required code colons, identifiers, seeds, layout values and existing gameplay voice remain. README scope-setting commas and the literal bomb-opened shortcut are intentional; candidate counts are not scores. The parent retained the saved draft after Sol capacity failures and reran README checks for its changed final wording. VERSION_PLAN also has a separate factual-update record after the complete local check finished; earlier full-update records remain in the active worktree. English method/result evidence is read against the raw command output, screenshots and artifact hashes.",
+  "documentation_candidates": {
+    "README.md": {
+      "original": 3,
+      "final": 4
+    },
+    "docs/VERSION_PLAN.md": {
+      "original": 2,
+      "final": 2
+    }
+  },
+  "files": [
+    {
+      "file": "game/scripts/main.gd",
+      "sha256": "f56008936e1557909f7e6b9df06c5b4365054de10ed1b9315fcede2b2d63ef9d",
+      "run_id": "20261028T184444Z-11ab8ab0",
+      "attempt": 1,
+      "created_at": "2026-10-28T18:44:44Z",
+      "record": ".scratch/versions/v05/ui/astra-fixes-2/records/main.gd/runs/20261028T184444Z-11ab8ab0/attempt-1.json",
+      "checks": [
+        "lint",
+        "diff",
+        "materials"
+      ],
+      "final_hash_matches": true,
+      "verify_log": ".scratch/versions/v05/ui/astra-fixes-2/verify-main.gd.log",
+      "verify_line": "yomiyasu-check: executed via=verify run=20261028T184444Z-11ab8ab0 attempt=1 final=sha256:f56008936e15 mode=rewrite doc_type=manual checks=lint,diff,materials meaning_risk=3 replay=skipped"
+    },
+    {
+      "file": "game/scripts/presentation_v05/harbor.gd",
+      "sha256": "f1008c1f82c85b9125968ffcfabc88f0e2699c991ae964c30706e6fa435b0ad1",
+      "run_id": "20261028T182257Z-99a76955",
+      "attempt": 1,
+      "created_at": "2026-10-28T18:22:57Z",
+      "record": ".scratch/versions/v05/ui/astra-fixes-1/records/harbor.gd/runs/20261028T182257Z-99a76955/attempt-1.json",
+      "checks": [
+        "lint",
+        "diff",
+        "materials"
+      ],
+      "final_hash_matches": true,
+      "verify_log": ".scratch/versions/v05/ui/astra-fixes-1/verify-harbor.gd.log",
+      "verify_line": "yomiyasu-check: executed via=verify run=20261028T182257Z-99a76955 attempt=1 final=sha256:f1008c1f82c8 mode=rewrite doc_type=manual checks=lint,diff,materials meaning_risk=8 replay=skipped"
+    },
+    {
+      "file": "game/scripts/presentation_v05/result.gd",
+      "sha256": "04d1350b43245e123a8dd4adbe34dd6a1f081a3a7be90a081f333b84eee7bfef",
+      "run_id": "20261028T184450Z-8b68433d",
+      "attempt": 1,
+      "created_at": "2026-10-28T18:44:50Z",
+      "record": ".scratch/versions/v05/ui/astra-fixes-2/records/result.gd/runs/20261028T184450Z-8b68433d/attempt-1.json",
+      "checks": [
+        "lint",
+        "diff",
+        "materials"
+      ],
+      "final_hash_matches": true,
+      "verify_log": ".scratch/versions/v05/ui/astra-fixes-2/verify-result.gd.log",
+      "verify_line": "yomiyasu-check: executed via=verify run=20261028T184450Z-8b68433d attempt=1 final=sha256:04d1350b4324 mode=rewrite doc_type=manual checks=lint,diff,materials meaning_risk=0 replay=skipped"
+    },
+    {
+      "file": "game/scripts/presentation_v05/presentation.gd",
+      "sha256": "48eede66b59837fb37b5957dd8948ec0f58a98314f89c536345a4a036eb620cd",
+      "run_id": "20261028T175828Z-842c34bf",
+      "attempt": 1,
+      "created_at": "2026-10-28T17:58:28Z",
+      "record": ".scratch/versions/v05/ui/records-pass2/presentation.gd/runs/20261028T175828Z-842c34bf/attempt-1.json",
+      "checks": [
+        "lint",
+        "diff",
+        "materials"
+      ],
+      "final_hash_matches": true,
+      "verify_log": ".scratch/versions/v05/ui/verify-pass2-presentation.gd.log",
+      "verify_line": "yomiyasu-check: executed via=verify run=20261028T175828Z-842c34bf attempt=1 final=sha256:48eede66b598 mode=rewrite doc_type=manual checks=lint,diff,materials meaning_risk=0 replay=skipped"
+    },
+    {
+      "file": "game/scenes/presentation_v05/harbor.tscn",
+      "sha256": "1b6c8d8833821d5453610210fc4aee750dce9e8aa1a19a7d3c76012cd5c7b9af",
+      "run_id": "20261028T175829Z-4f74cf15",
+      "attempt": 1,
+      "created_at": "2026-10-28T17:58:29Z",
+      "record": ".scratch/versions/v05/ui/records-pass2/harbor.tscn/runs/20261028T175829Z-4f74cf15/attempt-1.json",
+      "checks": [
+        "lint",
+        "diff",
+        "materials"
+      ],
+      "final_hash_matches": true,
+      "verify_log": ".scratch/versions/v05/ui/verify-pass2-harbor.tscn.log",
+      "verify_line": "yomiyasu-check: executed via=verify run=20261028T175829Z-4f74cf15 attempt=1 final=sha256:1b6c8d883382 mode=rewrite doc_type=manual checks=lint,diff,materials meaning_risk=1 replay=skipped"
+    },
+    {
+      "file": "game/scenes/presentation_v05/result.tscn",
+      "sha256": "bc6008b07481cfed8d7a5b8716faa4c0b11cee5613ead566b03d0c5801e0ea07",
+      "run_id": "20261028T175830Z-24e43eda",
+      "attempt": 1,
+      "created_at": "2026-10-28T17:58:30Z",
+      "record": ".scratch/versions/v05/ui/records-pass2/result.tscn/runs/20261028T175830Z-24e43eda/attempt-1.json",
+      "checks": [
+        "lint",
+        "diff",
+        "materials"
+      ],
+      "final_hash_matches": true,
+      "verify_log": ".scratch/versions/v05/ui/verify-pass2-result.tscn.log",
+      "verify_line": "yomiyasu-check: executed via=verify run=20261028T175830Z-24e43eda attempt=1 final=sha256:bc6008b07481 mode=rewrite doc_type=manual checks=lint,diff,materials meaning_risk=1 replay=skipped"
+    },
+    {
+      "file": "game/scenes/presentation_v05/item_tile.tscn",
+      "sha256": "1fcfd494838302c5ecc58adaf42f62b1c43cb89eb5e27fb95954d1d4568ff2f5",
+      "run_id": "20261028T175831Z-6d1a149e",
+      "attempt": 1,
+      "created_at": "2026-10-28T17:58:31Z",
+      "record": ".scratch/versions/v05/ui/records-pass2/item_tile.tscn/runs/20261028T175831Z-6d1a149e/attempt-1.json",
+      "checks": [
+        "lint",
+        "diff",
+        "materials"
+      ],
+      "final_hash_matches": true,
+      "verify_log": ".scratch/versions/v05/ui/verify-pass2-item_tile.tscn.log",
+      "verify_line": "yomiyasu-check: executed via=verify run=20261028T175831Z-6d1a149e attempt=1 final=sha256:1fcfd4948383 mode=rewrite doc_type=manual checks=lint,diff,materials meaning_risk=0 replay=skipped"
+    },
+    {
+      "file": "game/tests/presentation_v05_test.gd",
+      "sha256": "72aea53a2ddbc17c3f1b70160224b3bcad8c8bb3cebd0564c4813d1e8e7adaa0",
+      "run_id": "20261028T184452Z-e3c456f8",
+      "attempt": 1,
+      "created_at": "2026-10-28T18:44:52Z",
+      "record": ".scratch/versions/v05/ui/astra-fixes-2/records/presentation_v05_test.gd/runs/20261028T184452Z-e3c456f8/attempt-1.json",
+      "checks": [
+        "lint",
+        "diff",
+        "materials"
+      ],
+      "final_hash_matches": true,
+      "verify_log": ".scratch/versions/v05/ui/astra-fixes-2/verify-presentation_v05_test.gd.log",
+      "verify_line": "yomiyasu-check: executed via=verify run=20261028T184452Z-e3c456f8 attempt=1 final=sha256:72aea53a2ddb mode=rewrite doc_type=manual checks=lint,diff,materials meaning_risk=2 replay=skipped"
+    },
+    {
+      "file": "game/tests/ui_test.gd",
+      "sha256": "935ca60a4324e98756198517b9a9a00f034a9eb9f7c1c788efad82a84f026406",
+      "run_id": "20261028T184446Z-2c8c3c24",
+      "attempt": 1,
+      "created_at": "2026-10-28T18:44:46Z",
+      "record": ".scratch/versions/v05/ui/astra-fixes-2/records/ui_test.gd/runs/20261028T184446Z-2c8c3c24/attempt-1.json",
+      "checks": [
+        "lint",
+        "diff",
+        "materials"
+      ],
+      "final_hash_matches": true,
+      "verify_log": ".scratch/versions/v05/ui/astra-fixes-2/verify-ui_test.gd.log",
+      "verify_line": "yomiyasu-check: executed via=verify run=20261028T184446Z-2c8c3c24 attempt=1 final=sha256:935ca60a4324 mode=rewrite doc_type=manual checks=lint,diff,materials meaning_risk=32 replay=skipped"
+    },
+    {
+      "file": "README.md",
+      "sha256": "1af646d787c2ff5266867662f5f2ff9e15400e252faf97db3e24c86cc915535a",
+      "run_id": "20261028T184042Z-5ed81b83",
+      "attempt": 2,
+      "created_at": "2026-10-28T19:18:54Z",
+      "record": ".scratch/versions/v05/docs/records/README/runs/20261028T184042Z-5ed81b83/attempt-2.json",
+      "checks": [
+        "lint",
+        "diff",
+        "materials"
+      ],
+      "final_hash_matches": true,
+      "verify_log": ".scratch/versions/v05/docs/README-verify.log",
+      "verify_line": "yomiyasu-check: executed via=verify run=20261028T184042Z-5ed81b83 attempt=2 final=sha256:1af646d787c2 mode=rewrite doc_type=manual checks=lint,diff,materials meaning_risk=10 replay=skipped"
+    },
+    {
+      "file": "docs/VERSION_PLAN.md",
+      "sha256": "d853c1fc52b330d3a92ed4d5f99450348a34480ed950eb75bf0b43e6da201f39",
+      "run_id": "20261028T192752Z-bfc8cd58",
+      "attempt": 1,
+      "created_at": "2026-10-28T19:27:52Z",
+      "record": ".scratch/versions/v05/docs/records/VERSION_PLAN_final_check/runs/20261028T192752Z-bfc8cd58/attempt-1.json",
+      "checks": [
+        "lint",
+        "diff",
+        "materials"
+      ],
+      "final_hash_matches": true,
+      "verify_log": ".scratch/versions/v05/docs/VERSION_PLAN-verify.log",
+      "verify_line": "yomiyasu-check: executed via=verify run=20261028T192752Z-bfc8cd58 attempt=1 final=sha256:d853c1fc52b3 mode=rewrite doc_type=manual checks=lint,diff,materials meaning_risk=7 replay=skipped"
+    }
+  ]
+}
