@@ -1,0 +1,182 @@
+[
+  {
+    "file": "concepts/01-rail.json",
+    "sha256": "170f2b0e317ed406e9e5ac130b48df1099031d9f86177452f09eaed636a86c9e",
+    "run_exit": 0,
+    "verify_exit": 0
+  },
+  {
+    "file": "concepts/02-beast.json",
+    "sha256": "b586e8237e09ad7931fbde2430aa061f03f2dcfc6238dcd432a30ec76e9c42ff",
+    "run_exit": 0,
+    "verify_exit": 0
+  },
+  {
+    "file": "concepts/03-garden.json",
+    "sha256": "ef786f4206d94b931e2b1544bf2259c64160a6632823452144d1459d2d997a09",
+    "run_exit": 0,
+    "verify_exit": 0
+  },
+  {
+    "file": "concepts/05-detective.json",
+    "sha256": "c39b9e0075b9072f44a2f06703ad195602fb1607342a867df54c8d28d2f887e1",
+    "run_exit": 0,
+    "verify_exit": 0
+  },
+  {
+    "file": "concepts/06-auction.json",
+    "sha256": "0638d778ec7df9d995b113c5f7065af3f9f30962719982edb99ec36cac976a08",
+    "run_exit": 0,
+    "verify_exit": 0
+  },
+  {
+    "file": "concepts/00-comparison.md",
+    "sha256": "226712c7f70a3ab1b0988c52387903facffa80788ec44b993f71518543a9d609",
+    "run_exit": 0,
+    "verify_exit": 0
+  },
+  {
+    "file": "concepts/01-rail.md",
+    "sha256": "7afed0966f30ee445a95d52acda768908e3bec4e9f2e053562d50c8ae1fe334c",
+    "run_exit": 0,
+    "verify_exit": 0
+  },
+  {
+    "file": "concepts/02-beast.md",
+    "sha256": "b75ca9bc35e414efb3484e35197779297b72d24a7d1256bd2dc8b929cb945827",
+    "run_exit": 0,
+    "verify_exit": 0
+  },
+  {
+    "file": "concepts/03-garden.md",
+    "sha256": "25a90b50846afd572f1280a0fe0b1ee88fc09882265da707b7e87669ecbae28c",
+    "run_exit": 0,
+    "verify_exit": 0
+  },
+  {
+    "file": "concepts/05-detective.md",
+    "sha256": "f2854481910e38476b16344b3d2fce4a0bb067e1fcab5d2b9d5add3df9439026",
+    "run_exit": 0,
+    "verify_exit": 0
+  },
+  {
+    "file": "concepts/06-auction.md",
+    "sha256": "5d7db6cefbd808834a24fc1da12e8bb8b3f5246ba18f86e4a2250ba35bee3e94",
+    "run_exit": 0,
+    "verify_exit": 0
+  },
+  {
+    "file": "output/mocks/01-rail-play.html",
+    "sha256": "54426f7807598bbdd20ef0ba97fa3d8facfe7abd959387de9c8d6f244a0d81f8",
+    "run_exit": 0,
+    "verify_exit": 0
+  },
+  {
+    "file": "output/mocks/01-rail-talk.html",
+    "sha256": "0221bedf8e83bdc22450003be4e3b4347edd7992cf75990739a5506b3f2de364",
+    "run_exit": 0,
+    "verify_exit": 0
+  },
+  {
+    "file": "output/mocks/02-beast-play.html",
+    "sha256": "2b39c901c94580a9491bd400832416687c29e39928fa2c0881475a7c6d94d151",
+    "run_exit": 0,
+    "verify_exit": 0
+  },
+  {
+    "file": "output/mocks/02-beast-talk.html",
+    "sha256": "c840c6724c8f0c2d9c9ea19fdac450d72f8804bf0a28ad30a9856c56736e016b",
+    "run_exit": 0,
+    "verify_exit": 0
+  },
+  {
+    "file": "output/mocks/03-garden-play.html",
+    "sha256": "7fac78ae12d9673fb2123154141534f45de9664007110aeeb491244040699998",
+    "run_exit": 0,
+    "verify_exit": 0
+  },
+  {
+    "file": "output/mocks/03-garden-talk.html",
+    "sha256": "1119397677cd1a5d5ef5166063c646ba3b6f620732ab80556dc43ebf98e514bc",
+    "run_exit": 0,
+    "verify_exit": 0
+  },
+  {
+    "file": "output/mocks/05-detective-play.html",
+    "sha256": "c3fe6eee28f925e078c8ef94f67f8cfff900b1b92dff72f22c6a156d8a52e63e",
+    "run_exit": 0,
+    "verify_exit": 0
+  },
+  {
+    "file": "output/mocks/05-detective-talk.html",
+    "sha256": "9a27a64c62ba58ecd2152e60d79a3f8cf42e4664f7142c1f14db0ec1bb7b2522",
+    "run_exit": 0,
+    "verify_exit": 0
+  },
+  {
+    "file": "output/mocks/06-auction-play.html",
+    "sha256": "20d26d43a3b77c6461b5c5a816f18ec6c79a4ae461e354094e099ea114c3a35a",
+    "run_exit": 0,
+    "verify_exit": 0
+  },
+  {
+    "file": "output/mocks/06-auction-talk.html",
+    "sha256": "7f5db21149d28c3872ca418f4391113422f918fb226edf5c85fedcf825fe8324",
+    "run_exit": 0,
+    "verify_exit": 0
+  },
+  {
+    "file": "index.html",
+    "sha256": "7bbaddff77d563dc46ba39429cd3e07681bb37d8e724d876ed93f5181b59c64c",
+    "run_exit": 0,
+    "verify_exit": 0
+  },
+  {
+    "file": "README.md",
+    "sha256": "e62612d6e61db50edd7f35569e1ad00093fa8dcdab8000a0fe68291fc1bd6ba6",
+    "run_exit": 0,
+    "verify_exit": 0
+  },
+  {
+    "file": "AGENTS.md",
+    "sha256": "6f3f60eb7c6eaeb61eb5c84e61a0cc01d8d72e1ca90469b700db4db5a4601776",
+    "run_exit": 0,
+    "verify_exit": 0
+  },
+  {
+    "file": "docs/BRIEF.md",
+    "sha256": "d72bf263016ba6e480e9bd5fb1af75347c5a3bf85fb7adaa87316bc372a20dde",
+    "run_exit": 0,
+    "verify_exit": 0
+  },
+  {
+    "file": "docs/DESIGN.md",
+    "sha256": "5b5866aa2dc4d8573bbdfae75ebcc9231b3b7326fb8c40bacc6e11564b7a8098",
+    "run_exit": 0,
+    "verify_exit": 0
+  },
+  {
+    "file": "docs/PR.md",
+    "sha256": "5d3d32f883a5ae0971afd1d0c510c3f42f60ff1f5b70621e8552f96c62a7e596",
+    "run_exit": 0,
+    "verify_exit": 0
+  },
+  {
+    "file": "docs/READABILITY.md",
+    "sha256": "4c527d6bf641082e27a788a31f67afb3a2c72a6e88596ece4bef075d84e454f9",
+    "run_exit": 0,
+    "verify_exit": 0
+  },
+  {
+    "file": "docs/verification/RESULTS.md",
+    "sha256": "2668995a009c670e7ba79faffc03a942aaaca78531175f98ba4c8d18723bd7e4",
+    "run_exit": 0,
+    "verify_exit": 0
+  },
+  {
+    "file": "scripts/build.py",
+    "sha256": "f616db05eec0412236a0c7ff0c0d63a97d1b29b415188d51f1c27c8535f9971d",
+    "run_exit": 0,
+    "verify_exit": 0
+  }
+]
