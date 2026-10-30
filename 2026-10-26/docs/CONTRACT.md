@@ -1,6 +1,24 @@
 # Implementation contract
 
-## Current v0.4 / schema 3
+## Current v0.6 / schema 4
+
+`rules.gd` is the public facade. `rules_v05.gd` freezes the shipped schema3 implementation (only its class name changes); `legacy_v03_rules.gd` and `world_data.gd` retain older behavior. `v06_rules.gd`, `v06_world.gd` and `v06_campaign.gd` own new departures. Valid existing in-flight saves remain schema3 and resolve through the frozen engine, including their terminal turn and receipt. Returning from that result adopts schema4. Loading an old harbor/result adopts schema4 immediately. Unsupported/corrupt sources are rejected before normalization.
+
+Schema4 adds root `preparation:{weapon:UID|null,armor:UID|null}` and profile `commissionCycle:integer`. Preparation slots refer to carried UIDs, never extra copies. Pack selects equipment only for an empty slot. Unpacking a selected piece clears its reference. Harbor `equip` and `unpack_all` are free. Departure uses those exact references; if no weapon is carried, the existing free returnable loan is provided. The UI requires explicitly choosing a remaining weapon after unpacking the selected one.
+
+New run `ruleset="expedition-v06"`, width25/height29, adds `depth:1..3`, `stairs:{x,y}`, `layoutName:String`; other ownership, equipment, turn, tide, sight, encounter and landmark fields retain their roles. Each resolved full map is serialized. Seed changes room shapes, connection graph, objective/loot positions and guards. All required points have an elevated route. Hidden containers and enemies remain undisclosed by geometric map knowledge.
+
+- `nearby_containers(state)` returns currently visible adjacent caches, with `{id,x,y,searched,count,name}`; unopened count is−1.
+- `container_contents(state,id)` (alias `contents`) returns copied item dictionaries only from an opened, currently visible adjacent cache. Otherwise returns[].
+- `interact` at the landing extracts; `interact` with `containerId` inspects one cache for one turn, without moving its items. Reopening is a free read.
+- `take {containerId,uid}`, `take_all {containerId}` and `swap {containerId,uid,dropUid}` each cost one turn on success. Swap atomically puts the carried UID in that same cache and takes the chosen cache UID; swapping equipped gear clears its reference. Overflow remains. Invalid, remote or unsearched access spends nothing. Enemy/tide phases run after the inventory transaction; death still loses the resulting carried inventory.
+- `advance` is available only standing on stairs at depth1/2. It generates the next sector and advances one turn, preserving HP, items, gear, crew uses, seed and total clock/tide. Survey expires; seen knowledge is rebuilt for the new map. No healing or supply refill. Old-sector ground items cannot be revisited. The next sector has an extraction landing; depth3 is final.
+
+Original story/companion claims, amounts and completed IDs persist. Personal jobs additionally grant real medicine/bomb/flare purchase discounts (never below resale value), or atlas geometry knowledge. `salvage_order` is a repeatable tracked job after beacon completion. Its requirements/reward change by commissionCycle; a claim consumes actual stash UIDs and increments the cycle. It is not inserted into completedContracts. Currency bounds and no-double-consumption apply.
+
+The save key remains `shiogaeri-save-v1`. Before overwriting valid schema3 with schema4, Store retains exact raw source bytes at `shiogaeri-save-v1-pre-v4` or `user://expedition.pre-v4.json` (custom slots get corresponding suffixes). Backup failure blocks the update. Existing pre-v2/pre-v3 protections remain. Rendering, sorting, modal state, focus and animation cannot advance time or transfer items.
+
+## Frozen v0.4-v0.5 / schema 3
 
 The current public facade is `rules.gd`. State version is 3. New departures use `run.ruleset = "encounter-v04"`, a 17x19 authored encounter world, `crewCharges` (0..3), `surveyUntil` (resolved turn), and validated `encounters` and `landmarks` metadata. The delivery cache is in the middle area; optional salvage lies farther in. The four existing campaigns and UID ownership contract remain. The frozen schema 2 description below applies to legacy runs, not to new map dimensions or new actions.
 

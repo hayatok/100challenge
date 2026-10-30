@@ -186,8 +186,15 @@ func receipt_fixture(dead: bool, count: int) -> Dictionary:
 	state = Data.apply_action(state, {"type":"depart", "seed":40}).state
 	if dead:
 		state.run.player.hp = 1
-		state.run.player.x = 4
-		state.run.player.y = 14
+		var adjacent: Dictionary = {}
+		for direction: Dictionary in Data.DIRECTIONS:
+			var x: int = int(state.run.player.x) + int(direction.x)
+			var y: int = int(state.run.player.y) + int(direction.y)
+			if Data.World.is_walkable(state.run, x, y):
+				adjacent = {"x":x, "y":y}
+				break
+		check(not adjacent.is_empty(), "generated landing has a valid adjacent loss-fixture cell")
+		state.run.enemies = [{"id":"receipt-crab", "kind":"crab", "x":adjacent.x, "y":adjacent.y, "hp":Data.ENEMIES.crab.hp, "facing":{"x":0,"y":1}, "stunned":0}]
 		Data._remember(state.run)
 		check(Data.validate_state(state), "loss fixture is valid before the enemy turn")
 		state = Data.apply_action(state, {"type":"wait"}).state

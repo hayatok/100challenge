@@ -1,4 +1,15 @@
-# SHIOGAERI continuous development
+# SHIOGAERI version ledger
+
+## Latest user direction — 2026-10-30 JST
+
+The user reopened development after the verified v0.5 publication and explicitly requested a fundamental gameplay redesign: inventory operation, quest purpose, stage variety and replayability. Implement one cohesive v0.6 expedition rebuild; see V06_REBUILD.md and Issue #220. This supersedes the previous stop only for this new bounded request. The held 3D trials remain held. Do not recreate the old development heartbeat or treat its stale instructions as new authorization. Complete implementation, actual operation, Japanese review and mandatory Astra review. A single new version does not trigger Pages under the previous two-version cadence.
+
+Published baseline: v0.5 at0827c289435c55f8d608588697b5bb2e2cbd2e68, tagrelease-2026-10-29, Pages40788631408. The same-run Linux14-file public comparison and existing public-save continuation were verified; see Issue218/PR219.
+
+## v0.6 — generated multi-sector expeditions and deliberate cargo
+
+Implemented on codex/shio-v06-expeditions; local integration checks completed. Final review and CI outcomes are tracked in Issue #220 and its linked PR. New room graphs and loot, up to3 sectors per departure, inspected/selected loot and atomic swaps, explicit preparation gear, useful companion milestones and repeatable salvage orders. Strict schema4 adoption preserves original in-flight runs. Test and Web evidence belong in verification/v06/RESULTS.md.
+
 
 ## Goal, context and authorization
 
@@ -64,4 +75,5 @@ That checkpoint did not complete the original3D plan. The later explicit user-se
 |0.2|Complete at c750371|Campaign/maps/exchange;5328 rules +208 UI/store; actual Web extractions/deliveries/trade/death; Astra review; CI40545309242 passed|Paired with0.3; release outcome in Issue214|
 |0.3|Published baseline|Directional crew/portraits/terrain; receipt motion;5328 rules +469 UI/store; actual Web; Japanese/Astra review|Verified release-2026-10-28-2 at e1a83a7; Pages40562758716; Issue214|
 |0.4|Committed development checkpoint at ebabd8f; CI40730747738 passed|Compact encounters, techniques, HUD/world rebuild;5328 legacy+3907 tactical+643 UI/store; actual Web return/unlock/deep salvage/loss/retry/legacy continuation; Japanese/Astra review; see verification/v04/RESULTS.md|Pair with0.5 before Pages|
-|0.5|Final user-scoped release candidate|Harbor/preparation/results integrated; existing2D family retained;3D trials explicitly held. Prior UI check/Web evidence in verification/v05/RESULTS.md; final checks in verification/v05/RELEASE.md|Runtime0.5.0; PR219 release preparation; publication still requires reviewed current-head CI and exact Linux/public verification|
+|0.5|Published at0827c289|Harbor/preparation/results; existing2D family retained;3D held. Exact Linux/public14-file match and public-save continuation verified; Issue218/PR219|release-2026-10-29; Pages40788631408|
+|0.6|Local implementation complete; integration in Issue220|Generated room graphs and3 sectors, selected cargo/swap, explicit gear, companion effects and repeat orders; see verification/v06/RESULTS.md|No Pages publication for this single new version|

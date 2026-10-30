@@ -46,6 +46,7 @@ var _tile_set: TileSet
 var _character := "isana"
 var _reduce := false
 var _seed := -999
+var _sector := -1
 var _district := ""
 var _palette: Dictionary = {}
 var _last_turn := -1
@@ -98,11 +99,12 @@ func present(state: Dictionary, events: Array = [], reduced_motion: bool = false
 	for key: Variant in _visible:
 		_seen[str(key)] = true
 	var incoming_district := str(_run.get("district", "quay"))
-	var map_changed := not _has_world or incoming_district != _district or int(_run.get("seed", 0)) != _seed or int(_run.get("turn", 0)) < _last_turn or ground.get_used_rect().size != Vector2i(int(_run.get("width", 25)), int(_run.get("height", 25)))
+	var map_changed := not _has_world or int(_run.get("depth", 0)) != _sector or incoming_district != _district or int(_run.get("seed", 0)) != _seed or int(_run.get("turn", 0)) < _last_turn or ground.get_used_rect().size != Vector2i(int(_run.get("width", 25)), int(_run.get("height", 25)))
 	if map_changed:
 		_district = incoming_district
 		_apply_district_palette()
 		_seed = int(_run.get("seed", 0))
+		_sector = int(_run.get("depth", 0))
 		_last_turn = -1
 		_build_map()
 	else:
@@ -178,7 +180,7 @@ func _update_motion_state() -> void:
 	(water.material as ShaderMaterial).set_shader_parameter("reduced_motion", _reduce)
 	ambient.reduced_motion = _reduce
 	effects.reduced_motion = _reduce
-	if _camera_tween != null and _camera_tween.is_valid():
+	if _camera_tween != null and _camera_tween.is_valid() and _camera_tween.get_loops_left() != 0:
 		if pause_motion:
 			_camera_tween.pause()
 		else:
@@ -364,7 +366,7 @@ func _refresh_terrain() -> void:
 			var raised := int(tile.get("elevation", 1)) >= 5
 			var timber := raised and kind != "wall" and ((_tile_type(x - 1, y) == "water" and _tile_type(x + 1, y) == "water") or (_tile_type(x, y - 1) == "water" and _tile_type(x, y + 1) == "water"))
 			ground.set_cell(Vector2i(x, y), 0, _atlas_coordinate(2 if timber else 0, x, y))
-			var outer_harbor := str(_run.get("ruleset", "legacy-v03")) != "encounter-v04" and _district == "quay" and kind == "wall" and (y == 24 or (x in [0, 24] and y >= 18))
+			var outer_harbor := str(_run.get("ruleset", "legacy-v03")) == "legacy-v03" and _district == "quay" and kind == "wall" and (y == 24 or (x in [0, 24] and y >= 18))
 			if outer_harbor or _is_flooded(x, y):
 				water.set_cell(Vector2i(x, y), 0, _atlas_coordinate(3, x, y))
 				if outer_harbor:
@@ -563,6 +565,9 @@ func _refresh_details() -> void:
 	var exit_cell: Dictionary = _run.get("exit", {})
 	if not exit_cell.is_empty() and _seen.has(_key(int(exit_cell["x"]), int(exit_cell["y"]))):
 		_add_exit(int(exit_cell["x"]), int(exit_cell["y"]))
+	var passage: Dictionary = _run.get("stairs", {})
+	if not passage.is_empty() and int(_run.get("depth", 3)) < 3 and _seen.has(_key(int(passage.x), int(passage.y))):
+		_add_passage(int(passage.x), int(passage.y), int(_run.depth) + 1)
 
 func _painted_crate(at: Vector2, empty: bool) -> Node2D:
 	var crate := Node2D.new()
@@ -611,7 +616,7 @@ func _add_flowers(at: Vector2) -> void:
 
 func _build_landmarks() -> void:
 	# District authors own anchor positions; never slide a prop onto an unrelated cell.
-	var compact := str(_run.get("ruleset", "legacy-v03")) == "encounter-v04"
+	var compact := str(_run.get("ruleset", "legacy-v03")) in ["encounter-v04", "expedition-v06"]
 	var anchors: Array = _run.get("landmarks", []) if compact else (DistrictData.DISTRICTS.get(_district, DistrictData.DISTRICTS.quay).landmarks as Array).duplicate(true)
 	if not compact and _district == "quay":
 		anchors.append_array([{"kind":"boat", "x":11,"y":24}, {"kind":"boat", "x":13,"y":24}, {"kind":"palms", "x":9,"y":24}, {"kind":"palms", "x":14,"y":24}])
@@ -873,6 +878,30 @@ func _add_exit(x: int, y: int) -> void:
 	flag.polygon = PackedVector2Array([Vector2(0, 0), Vector2(17, 3), Vector2(11, 8), Vector2(0, 7)])
 	flag.color = Color("f29a72")
 	details.add_child(flag)
+
+func _add_passage(x: int, y: int, next_depth: int) -> void:
+	var center := _cell_position(x, y)
+	var ring := Line2D.new()
+	ring.position = center + Vector2(0, 13)
+	ring.points = PackedVector2Array([Vector2(-24, -18), Vector2(24, -18), Vector2(29, 1), Vector2(0, 20), Vector2(-29, 1), Vector2(-24, -18)])
+	ring.default_color = Color("36696a")
+	ring.width = 4
+	details.add_child(ring)
+	for i: int in range(3):
+		_line(details, center + Vector2(-13 + i * 2, 9 - i * 7), center + Vector2(17 + i * 2, 9 - i * 7), Color("fff0b4"), 5)
+	_line(details, center + Vector2(25, 4), center + Vector2(25, -41), Color("386772"), 4)
+	var signboard := Polygon2D.new()
+	signboard.position = center + Vector2(25, -37)
+	signboard.polygon = PackedVector2Array([Vector2(-14,-12), Vector2(20,-12), Vector2(26,0), Vector2(20,12), Vector2(-14,12)])
+	signboard.color = Color("ffe0a1")
+	details.add_child(signboard)
+	var text := Label.new()
+	text.text = "%dF" % next_depth
+	text.position = signboard.position + Vector2(-9, -12)
+	text.add_theme_font_override("font", _font)
+	text.add_theme_font_size_override("font_size", 16)
+	text.add_theme_color_override("font_color", Color("244b52"))
+	details.add_child(text)
 
 func _add_prop(kind: String, at: Vector2, target_size: Vector2, opacity: float) -> Sprite2D:
 	var texture := _texture(kind)

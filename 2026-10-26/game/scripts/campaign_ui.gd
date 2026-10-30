@@ -18,7 +18,7 @@ static func _card(parent: Control, host: Control) -> VBoxContainer:
 	return box
 
 static func _routes(body: VBoxContainer, state: Dictionary, host: Control) -> void:
-	body.add_child(host._label("行き先によって、道と潮、拾える物が変わります。出発前に選ぼう。", 14, Palette.MUTED))
+	body.add_child(host._label("地形・荷箱・敵の配置は遠征ごとに変わります。各地区は最大3層。依頼品を持ち帰るか、奥の道具を狙うかを選ぼう。", 14, Palette.MUTED))
 	for id: String in Data.Campaign.DISTRICTS:
 		var query: Dictionary = state.duplicate(true)
 		query.run = null
@@ -55,6 +55,10 @@ static func _jobs(body: VBoxContainer, state: Dictionary, host: Control) -> void
 		var statuses := {"locked":"まだ届いていない依頼", "available":"受けられます", "ready":"倉庫の品を届けられます", "claimed":"完了"}
 		words.add_child(host._label("追跡中" if row.accepted and row.status != "claimed" else statuses[row.status], 13, Palette.SUCCESS if row.status in ["ready","claimed"] else Palette.GOLD))
 		card.add_child(host._label(row.description, 14))
+		if row.has("effect"):
+			card.add_child(host._label("届けると：" + str(row.effect), 14, Palette.SUCCESS))
+		if row.has("sources") and row.status != "claimed":
+			card.add_child(host._label("探す場所：" + str(row.sources), 13, Palette.MUTED))
 		if row.status == "locked":
 			card.add_child(host._label(row.lockReason, 13, Palette.GOLD))
 		else:
@@ -75,7 +79,7 @@ static func _jobs(body: VBoxContainer, state: Dictionary, host: Control) -> void
 		card.add_child(host._label("お礼：" + " / ".join(rewards), 13, Palette.GOLD))
 		if row.status == "claimed":
 			continue
-		var actions := HBoxContainer.new()
+		var actions := VBoxContainer.new()
 		card.add_child(actions)
 		var follow: Button = host._button("追跡中" if row.accepted else "この依頼を追う",func(): host._campaign_action({"type":"accept_contract","id":row.id},"jobs"))
 		follow.set_meta("contract_id",row.id)

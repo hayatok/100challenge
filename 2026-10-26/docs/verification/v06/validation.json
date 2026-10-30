@@ -1,0 +1,72 @@
+{
+  "version": "0.6.0",
+  "engine": "Godot 4.7.2 stable",
+  "commands": [
+    {
+      "command": "npm run check (app)",
+      "exitCode": 0
+    },
+    {
+      "command": "npm test (repository root)",
+      "exitCode": 0,
+      "tests": 38
+    },
+    {
+      "command": "npm run build:site -- --prebuilt (repository root)",
+      "exitCode": 0
+    }
+  ],
+  "suites": {
+    "legacyRules": 5328,
+    "frozenTactics": 3907,
+    "worldInvariants": 437955,
+    "v06Rules": 235,
+    "presentation": 1217,
+    "preparation": 168,
+    "cargoUI": 77,
+    "mainUIStore": 771
+  },
+  "failed": 0,
+  "logSha256": {
+    ".scratch/versions/v06/final-check.txt": "999272c7a01aeb7b01320fad2ab58e93a91e83d47a6d972b2bbc2d895e0b9d61",
+    ".scratch/versions/v06/root-tests.txt": "f800da4a01adad5d06e51ba0beafde94e2b31ec62eb7c585f2a2a3195c337b69",
+    ".scratch/versions/v06/site-build.txt": "ff92eb668c8cfb7aa12e62ba4b00c7bba6763b9ed34886703e30161303068cd1"
+  },
+  "normalBrowserRun": {
+    "turns": 63,
+    "deepestSector": 2,
+    "returnedItems": 14,
+    "receiptValuePoints": 245,
+    "stashAfterReturn": 17,
+    "carriedAfterReturn": 0,
+    "originalPublicStorageTouched": false
+  },
+  "finalSmoke": {
+    "origin": "http://localhost:4397/",
+    "metrics": {
+      "height": 720,
+      "scrollHeight": 720,
+      "scrollWidth": 1280,
+      "title": "潮還り / SHIOGAERI",
+      "width": 1280
+    },
+    "operations": [
+      "fresh title",
+      "harbor",
+      "basic loadout:5 items",
+      "depart:sector1 T0 HP24",
+      "inventory open/close",
+      "map open/close at390 and360",
+      "settings open/close",
+      "reduced motion on/off",
+      "viewport reset; default desktop"
+    ],
+    "logs": []
+  },
+  "localExport": {
+    "kind": "macOS Web export; not a Linux/public artifact comparison",
+    "pckSha256": "4c68fd491d7c361a9b907b021c80ec03ab22ccc3054423cdf5b3b7668b0fb4bd"
+  },
+  "publication": "none; public remains v0.5",
+  "review": "Required gpt-6-astra outcomes tracked on Issue220 / linked PR."
+}
