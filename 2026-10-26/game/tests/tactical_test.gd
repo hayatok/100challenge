@@ -1,6 +1,6 @@
 extends SceneTree
 
-const RulesEngine = preload("res://scripts/rules.gd")
+const RulesEngine = preload("res://scripts/rules_v05.gd")
 const Legacy = preload("res://scripts/legacy_v03_rules.gd")
 const World = preload("res://scripts/world_data.gd")
 const Store = preload("res://scripts/save_store.gd")

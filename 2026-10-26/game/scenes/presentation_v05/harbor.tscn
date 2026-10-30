@@ -236,7 +236,7 @@ layout_mode = 2
 [node name="PreparationHeading" type="Label" parent="Layout/Columns/PreparationPane/PreparationLayout/PreparationHeader"]
 unique_name_in_owner = true
 layout_mode = 2
-text = "遠征の荷物"
+text = "遠征の支度"
 autowrap_mode = 3
 theme_override_font_sizes/font_size = 22
 size_flags_horizontal = 3
@@ -251,6 +251,14 @@ size_flags_horizontal = 3
 [node name="Stats" type="Label" parent="Layout/Columns/PreparationPane/PreparationLayout"]
 unique_name_in_owner = true
 layout_mode = 2
+text = ""
+autowrap_mode = 3
+theme_override_font_sizes/font_size = 13
+
+[node name="ItemDescription" type="Label" parent="Layout/Columns/PreparationPane/PreparationLayout"]
+unique_name_in_owner = true
+layout_mode = 2
+visible = false
 text = ""
 autowrap_mode = 3
 theme_override_font_sizes/font_size = 13
@@ -278,31 +286,111 @@ theme_override_constants/separation = 10
 [node name="EquipmentTitle" type="Label" parent="Layout/Columns/PreparationPane/PreparationLayout/PreparationScroll/Preparation"]
 unique_name_in_owner = true
 layout_mode = 2
-text = "出発時の装備"
+text = "出発時の装備 / 港では0手"
 autowrap_mode = 3
 theme_override_font_sizes/font_size = 16
 
-[node name="Equipment" type="Label" parent="Layout/Columns/PreparationPane/PreparationLayout/PreparationScroll/Preparation"]
+[node name="Equipment" type="HBoxContainer" parent="Layout/Columns/PreparationPane/PreparationLayout/PreparationScroll/Preparation"]
 unique_name_in_owner = true
 layout_mode = 2
-text = ""
+theme_override_constants/separation = 8
+
+[node name="WeaponSlot" type="PanelContainer" parent="Layout/Columns/PreparationPane/PreparationLayout/PreparationScroll/Preparation/Equipment"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Content" type="VBoxContainer" parent="Layout/Columns/PreparationPane/PreparationLayout/PreparationScroll/Preparation/Equipment/WeaponSlot"]
+layout_mode = 2
+theme_override_constants/separation = 3
+
+[node name="Title" type="Label" parent="Layout/Columns/PreparationPane/PreparationLayout/PreparationScroll/Preparation/Equipment/WeaponSlot/Content"]
+layout_mode = 2
+text = "武器"
+theme_override_font_sizes/font_size = 12
+
+[node name="Icon" type="TextureRect" parent="Layout/Columns/PreparationPane/PreparationLayout/PreparationScroll/Preparation/Equipment/WeaponSlot/Content"]
+layout_mode = 2
+custom_minimum_size = Vector2(26, 26)
+expand_mode = 1
+stretch_mode = 5
+mouse_filter = 2
+
+[node name="Name" type="Label" parent="Layout/Columns/PreparationPane/PreparationLayout/PreparationScroll/Preparation/Equipment/WeaponSlot/Content"]
+layout_mode = 2
+text = "未装備"
 autowrap_mode = 3
 theme_override_font_sizes/font_size = 14
 
-[node name="CarryTitle" type="Label" parent="Layout/Columns/PreparationPane/PreparationLayout/PreparationScroll/Preparation"]
+[node name="ArmorSlot" type="PanelContainer" parent="Layout/Columns/PreparationPane/PreparationLayout/PreparationScroll/Preparation/Equipment"]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Content" type="VBoxContainer" parent="Layout/Columns/PreparationPane/PreparationLayout/PreparationScroll/Preparation/Equipment/ArmorSlot"]
+layout_mode = 2
+theme_override_constants/separation = 3
+
+[node name="Title" type="Label" parent="Layout/Columns/PreparationPane/PreparationLayout/PreparationScroll/Preparation/Equipment/ArmorSlot/Content"]
+layout_mode = 2
+text = "防具"
+theme_override_font_sizes/font_size = 12
+
+[node name="Icon" type="TextureRect" parent="Layout/Columns/PreparationPane/PreparationLayout/PreparationScroll/Preparation/Equipment/ArmorSlot/Content"]
+layout_mode = 2
+custom_minimum_size = Vector2(26, 26)
+expand_mode = 1
+stretch_mode = 5
+mouse_filter = 2
+
+[node name="Name" type="Label" parent="Layout/Columns/PreparationPane/PreparationLayout/PreparationScroll/Preparation/Equipment/ArmorSlot/Content"]
+layout_mode = 2
+text = "未装備"
+autowrap_mode = 3
+theme_override_font_sizes/font_size = 14
+
+[node name="EquipmentHint" type="Label" parent="Layout/Columns/PreparationPane/PreparationLayout/PreparationScroll/Preparation"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "装備も携行枠に含みます。遠征中の装備変更は1手。"
+autowrap_mode = 3
+theme_override_font_sizes/font_size = 12
+
+[node name="CarryHeader" type="HBoxContainer" parent="Layout/Columns/PreparationPane/PreparationLayout/PreparationScroll/Preparation"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="CarryTitle" type="Label" parent="Layout/Columns/PreparationPane/PreparationLayout/PreparationScroll/Preparation/CarryHeader"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
 text = ""
 autowrap_mode = 3
-theme_override_font_sizes/font_size = 20
+theme_override_font_sizes/font_size = 18
+
+[node name="UnpackAll" type="Button" parent="Layout/Columns/PreparationPane/PreparationLayout/PreparationScroll/Preparation/CarryHeader"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "全て戻す"
+custom_minimum_size = Vector2(84, 52)
+theme_override_font_sizes/font_size = 13
+tooltip_text = "装備を含む携行品を全て倉庫へ戻す。港では0手。"
+
+[node name="CapacityHint" type="Label" parent="Layout/Columns/PreparationPane/PreparationLayout/PreparationScroll/Preparation"]
+unique_name_in_owner = true
+layout_mode = 2
+visible = false
+text = "携行枠が満杯です。品を倉庫へ戻すと、別の品を詰められます。"
+autowrap_mode = 3
+theme_override_font_sizes/font_size = 13
 
 [node name="CarryItems" type="GridContainer" parent="Layout/Columns/PreparationPane/PreparationLayout/PreparationScroll/Preparation"]
 unique_name_in_owner = true
 layout_mode = 2
-columns = 2
+columns = 1
 size_flags_horizontal = 3
 theme_override_constants/h_separation = 8
-theme_override_constants/v_separation = 8
+theme_override_constants/v_separation = 4
 
 [node name="StashTitle" type="Label" parent="Layout/Columns/PreparationPane/PreparationLayout/PreparationScroll/Preparation"]
 unique_name_in_owner = true
@@ -314,10 +402,10 @@ theme_override_font_sizes/font_size = 20
 [node name="StashItems" type="GridContainer" parent="Layout/Columns/PreparationPane/PreparationLayout/PreparationScroll/Preparation"]
 unique_name_in_owner = true
 layout_mode = 2
-columns = 2
+columns = 1
 size_flags_horizontal = 3
 theme_override_constants/h_separation = 8
-theme_override_constants/v_separation = 8
+theme_override_constants/v_separation = 4
 
 [node name="Divider" type="HSeparator" parent="Layout/Columns/PreparationPane/PreparationLayout/PreparationScroll/Preparation"]
 unique_name_in_owner = true

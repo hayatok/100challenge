@@ -1,0 +1,56 @@
+{
+  "method": "Direct CLI lint/diff run followed by verify against actual files; originals retained in app scratch.",
+  "interpretation": "Candidate counts are not quality scores. Code identifiers and unchanged literals were not rewritten to silence lint. Read changed UI strings in their actual screens.",
+  "records": [
+    {
+      "file": "README.md",
+      "sha256": "af63446a4e787757546f5215d3177adb943403c4d299296ae0d44d757aa5a245",
+      "verification": "yomiyasu-check: executed via=verify run=20261030T140058Z-a9382f85 attempt=2 final=sha256:af63446a4e78 mode=rewrite doc_type=manual checks=lint,diff meaning_risk=4 replay=skipped"
+    },
+    {
+      "file": "game/scripts/main.gd",
+      "sha256": "25b4a8dde4c024c50b691563dc6d2fa79780dea2f56a658eba8ac2d8339d3a27",
+      "verification": "yomiyasu-check: executed via=verify run=20261030T140135Z-c4511a53 attempt=2 final=sha256:25b4a8dde4c0 mode=rewrite doc_type=manual checks=lint,diff meaning_risk=26 replay=skipped"
+    },
+    {
+      "file": "game/scripts/campaign_ui.gd",
+      "sha256": "37ee84c88ce2db90bdaf6c47fcb0fc1350e8db6d7e48a678c5f98091555b0e57",
+      "verification": "yomiyasu-check: executed via=verify run=20261030T140136Z-3e1c3d55 attempt=1 final=sha256:37ee84c88ce2 mode=rewrite doc_type=manual checks=lint,diff meaning_risk=0 replay=skipped"
+    },
+    {
+      "file": "game/scripts/presentation_v05/harbor.gd",
+      "sha256": "2a95041a26757d47a63c0778182d187757a0928b8403ac054b1e7c10db974a5b",
+      "verification": "yomiyasu-check: executed via=verify run=20261030T140137Z-e7429eb4 attempt=1 final=sha256:2a95041a2675 mode=rewrite doc_type=manual checks=lint,diff meaning_risk=6 replay=skipped"
+    },
+    {
+      "file": "game/scripts/presentation_v05/presentation.gd",
+      "sha256": "50844e4972532e79e85365ba72f74ac251fdd26d8d46d43e7e4fbfb4100814ab",
+      "verification": "yomiyasu-check: executed via=verify run=20261030T140138Z-65b9fecc attempt=1 final=sha256:50844e497253 mode=rewrite doc_type=manual checks=lint,diff meaning_risk=6 replay=skipped"
+    },
+    {
+      "file": "game/scenes/presentation_v05/harbor.tscn",
+      "sha256": "56cc2c906d11dce823a638f6a58fd1cda95a8d9214843c26e86e47907ff41b00",
+      "verification": "yomiyasu-check: executed via=verify run=20261030T140138Z-c5d5f4d0 attempt=1 final=sha256:56cc2c906d11 mode=rewrite doc_type=manual checks=lint,diff meaning_risk=8 replay=skipped"
+    },
+    {
+      "file": "game/scripts/v06_campaign.gd",
+      "sha256": "03343b60467c9858cc7c43edd680b77a0f7b7aa3c4d5f57af0c039b1095cda9c",
+      "verification": "yomiyasu-check: executed via=verify run=20261030T140139Z-621e6e93 attempt=1 final=sha256:03343b60467c mode=rewrite doc_type=manual checks=lint,diff meaning_risk=2 replay=skipped"
+    },
+    {
+      "file": "game/scripts/v06_rules.gd",
+      "sha256": "78710181652804eacb791a6768a6dd53a7839772168563251c1de707aacd7811",
+      "verification": "yomiyasu-check: executed via=verify run=20261030T140139Z-bedc9d02 attempt=1 final=sha256:787101816528 mode=rewrite doc_type=manual checks=lint,diff meaning_risk=1 replay=skipped"
+    },
+    {
+      "file": "game/scripts/v06_world.gd",
+      "sha256": "08204b7f070c9bba3076121ed1ae8157ad452eeb4b968d6b7a6db9b04df4a321",
+      "verification": "yomiyasu-check: executed via=verify run=20261030T140140Z-8974c07d attempt=1 final=sha256:08204b7f070c mode=rewrite doc_type=manual checks=lint,diff meaning_risk=1 replay=skipped"
+    },
+    {
+      "file": "game/scripts/save_store.gd",
+      "sha256": "4416670a020843b1400ab4e0a774add2773ead21645af6a370a9550fb335d064",
+      "verification": "yomiyasu-check: executed via=verify run=20261030T140140Z-4a1c5899 attempt=1 final=sha256:4416670a0208 mode=rewrite doc_type=manual checks=lint,diff meaning_risk=0 replay=skipped"
+    }
+  ]
+}

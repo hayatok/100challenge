@@ -15,7 +15,7 @@ if(mode==='editor'||mode==='play') {
   const args={presentation:['--script','res://tests/presentation_v05_test.gd'], tactical:['--script','res://tests/tactical_test.gd'], import:['--editor','--import','--quit'], test:['--script','res://tests/rules_test.gd'], ui:['--script','res://tests/ui_test.gd','--','--qa'], build:['--export-release','Web']};
   if(!args[mode]) throw Error('Unknown Godot mode');
   mkdirSync(path.join(root,'dist'),{recursive:true});
-  const suites=mode==='test'?[args.test,args.tactical,args.presentation]:[args[mode]];
+  const suites=mode==='test'?[args.test,args.tactical,['--script','res://tests/v06_world_test.gd'],['--script','res://tests/v06_rules_test.gd'],args.presentation,['--script','res://tests/v06_preparation_test.gd'],['--script','res://tests/v06_cargo_ui_test.gd']]:[args[mode]];
   for(const suite of suites) {
     const r=spawnSync(binary,['--headless','--path',project,...suite],{encoding:'utf8',maxBuffer:32*1024*1024,timeout:300000});
     const output=(r.stdout||'')+(r.stderr||'');

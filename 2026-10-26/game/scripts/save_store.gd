@@ -6,6 +6,8 @@ const SETTINGS := "shiogaeri-settings-v1"
 const PATH := "user://expedition.json"
 const LEGACY_BACKUP_KEY := "shiogaeri-save-v1-pre-v3"
 const LEGACY_BACKUP_PATH := "user://expedition.pre-v3.json"
+const V4_BACKUP_KEY := "shiogaeri-save-v1-pre-v4"
+const V4_BACKUP_PATH := "user://expedition.pre-v4.json"
 static var legacy_raw_pending: String = ""
 static var legacy_key_pending: String = ""
 static var legacy_path_pending: String = ""
@@ -89,6 +91,10 @@ static func save_game(state: Dictionary, key: String = KEY, native_path: String 
 		if not backup_error.is_empty():
 			return "旧データの控えを保存できなかったため、進行データを更新していません。" + backup_error
 		legacy_raw_pending = ""
+	if decoded is Dictionary and decoded.get("version") == 3 and RulesData.V05.validate_state(decoded) and state.get("version") == 4:
+		var backup_error: String = _write_serialized(V4_BACKUP_KEY if key == KEY else key + "-pre-v4", V4_BACKUP_PATH if native_path == PATH else native_path + ".pre-v4", source.raw)
+		if not backup_error.is_empty():
+			return "旧データの控えを保存できなかったため、進行データを更新していません。" + backup_error
 	return write_value(key, native_path, state)
 
 static func load_settings() -> Dictionary:

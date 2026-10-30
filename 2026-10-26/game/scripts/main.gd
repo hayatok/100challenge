@@ -61,6 +61,9 @@ var world_overlay: Control
 var inventory_detail: VBoxContainer
 var inventory_selection := ""
 var inventory_slots: Dictionary = {}
+var inventory_container := ""
+var inventory_swap_uid := ""
+var inventory_origin := "bag"
 var ui_tweens: Array[Tween] = []
 var crew_stages: Array[Control] = []
 var focus_paused := false
@@ -143,6 +146,7 @@ func _label(text: String, font_size: int = 16, color: Color = UiPalette.INK) -> 
 	label.add_theme_font_size_override("font_size", font_size)
 	label.add_theme_color_override("font_color", color)
 	label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	# Seed text measurement before its container supplies the final width.
 	label.size.x = 280
 	label.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -359,6 +363,8 @@ func _harbor(preparation: Dictionary = {}) -> void:
 	harbor_view.unpack_requested.connect(func(uid: String):
 		audio.play_event("click")
 		_act({"type":"unpack", "uid":uid}))
+	harbor_view.equip_requested.connect(func(uid: String): _act({"type":"equip", "uid":uid}))
+	harbor_view.unpack_all_requested.connect(func(): _act({"type":"unpack_all"}))
 	harbor_view.basic_loadout_requested.connect(func():
 		audio.play_event("click")
 		_basic_loadout())
@@ -437,7 +443,7 @@ func _field_objective() -> String:
 			if held < int(requirement.count):
 				gathered = false
 		if gathered:
-			return "依頼の品が揃った。港へ戻ろう"
+			return "依頼品確保 / 帰還か、次の層へ" if state.run.has("depth") and int(state.run.depth) < 3 else "依頼の品が揃った。港へ戻ろう"
 		return "%s / %s" % [Data.current_district(state).name,contract.title]
 	return "%s / 自由回収" % Data.current_district(state).name
 
@@ -516,7 +522,7 @@ func _update_hud(events: Array) -> void:
 	hp_bar.max_value = player.maxHp
 	hp_bar.value = player.hp
 	hp_label.add_theme_color_override("font_color",Color("ffb99a") if player.hp <= player.maxHp*0.3 else Color("fff6dc"))
-	turn_label.text = "%03d 手" % int(run.turn)
+	turn_label.text = "%d層 · %d手" % [int(run.depth), int(run.turn)] if run.has("depth") else "%03d 手" % int(run.turn)
 	bag_label.text = "%d/%d" % [run.inventory.size(),Data.stats(state).capacity]
 	var remaining := 32*(int(run.tide)+1)-int(run.turn)
 	var tides := ["干潮","満ち始め","上げ潮","満潮"]
@@ -535,6 +541,12 @@ func _update_hud(events: Array) -> void:
 		field_status = "浸水中 / 一手終えると体力−1。高架へ！"
 	interact_button.text = "帰還する" if int(player.x)==int(run.exit.x) and int(player.y)==int(run.exit.y) else "調べる [E]"
 	interact_button.icon = UiPalette.icon("anchor" if int(player.x)==int(run.exit.x) and int(player.y)==int(run.exit.y) else "chest")
+	if run.get("ruleset") == "expedition-v06" and not (player.x == run.exit.x and player.y == run.exit.y):
+		if player.x == run.stairs.x and player.y == run.stairs.y and int(run.depth) < 3:
+			interact_button.text = "%d層へ進む [E]" % (int(run.depth) + 1)
+		elif not Data.nearby_containers(state).is_empty():
+			interact_button.text = "荷箱を開く [E]"
+	objective_label.tooltip_text = Data.current_district(state).objective
 	var lines: Array = []
 	for entry: Dictionary in events:
 		if entry.text not in ["1マス進んだ。","その場で様子を見た。"] and not lines.has(entry.text):
@@ -606,15 +618,56 @@ func _interact() -> void:
 		for item: Dictionary in run.inventory:
 			if item.kind != "loanKnife":
 				owned_count += 1
-		var body := _open_modal("港へ帰還", 180)
-		body.add_child(_label("%d個の品を倉庫へ持ち帰ります。もう少し探すなら、戻って探索を続けられます。" % owned_count))
+		var body := _open_modal("港へ帰還", 200)
+		body.add_child(_label("%d個の品を倉庫へ持ち帰ります。探索を続けるなら、閉じて戻れます。" % owned_count))
 		if owned_count < run.inventory.size():
 			body.add_child(_label("貸出ナイフは帰還時に返却します。", 13, UiPalette.MUTED))
 		body.add_child(_button("持ち帰って遠征を終える", func():
 			_close_modal()
 			_act({"type": "interact"}), true))
+	elif run.get("ruleset") == "expedition-v06":
+		var nearby: Array = Data.nearby_containers(state)
+		var at_stairs: bool = run.player.x == run.stairs.x and run.player.y == run.stairs.y and int(run.depth) < 3
+		if at_stairs and nearby.is_empty():
+			_confirm_advance()
+		elif nearby.size() == 1 and not at_stairs:
+			_open_container(str(nearby[0].id))
+		elif not nearby.is_empty() or at_stairs:
+			var body := _open_modal("ここでできること", 260)
+			for cache: Dictionary in nearby:
+				var id: String = cache.id
+				body.add_child(_button("%s / %s" % [cache.name, "開く・0手" if cache.searched else "調査・1手"], func(): _open_container(id)))
+			if at_stairs:
+				body.add_child(_button("次の層へ進む", _confirm_advance, true))
+		else:
+			field_hud.show_feedback("荷箱の隣で調べる。通路の旗から次の層へ進めます。")
 	else:
 		_act({"type": "interact"})
+
+func _open_container(id: String) -> void:
+	_close_modal()
+	var unopened := false
+	for cache: Dictionary in Data.nearby_containers(state):
+		if cache.id == id:
+			unopened = not cache.searched
+	if unopened:
+		_act({"type":"interact", "containerId":id})
+	if state.mode == "expedition":
+		inventory_selection = ""
+		inventory_swap_uid = ""
+		_inventory(id)
+
+func _confirm_advance() -> void:
+	if state.mode != "expedition":
+		return
+	var body := _open_modal("%d層へ進む" % (int(state.run.depth) + 1), 280)
+	body.add_child(_label("持ち帰るか、もう一層探すか。", 21))
+	body.add_child(_label("体力 %d/%d  /  携行 %d/%d" % [state.run.player.hp, state.run.player.maxHp, state.run.inventory.size(), Data.stats(state).capacity], 16, UiPalette.GOLD))
+	body.add_child(_label("進むと1手が経過します。体力・道具・技の残り回数は引き継ぎます。この層の箱や置いた品には戻れません。次の層にも帰還地点があります。", 14))
+	body.add_child(_button("荷を持って先へ進む / 1手", func():
+		_close_modal()
+		_act({"type":"advance"}), true))
+	body.add_child(_button("この層の探索へ戻る", _close_modal))
 
 func _cell_selected(x: int, y: int) -> void:
 	if state.mode != "expedition" or is_instance_valid(modal):
@@ -694,57 +747,118 @@ func _close_modal() -> void:
 		inventory_slots.clear()
 	_sync_presentation()
 
-func _inventory() -> void:
+func _inventory(container_id: String = "") -> void:
 	pending_crew = false
+	pending_item = ""
 	if state.mode != "expedition":
 		return
-	var columns := 3 if size.x < 760 else 4
-	var rows := ceili(float(state.run.inventory.size()) / columns)
-	var body := _open_modal("回収鞄  %d / %d" % [state.run.inventory.size(),Data.stats(state).capacity],minf(300,32 + maxi(1,rows) * 92))
+	inventory_container = container_id
+	if container_id.is_empty():
+		inventory_swap_uid = ""
+		inventory_origin = "bag"
+	var capacity: int = Data.stats(state).capacity
+	var contents: Array = Data.container_contents(state, container_id) if not container_id.is_empty() else []
+	var title := "荷箱と回収鞄" if not container_id.is_empty() else "回収鞄  %d / %d" % [state.run.inventory.size(), capacity]
+	var body := _open_modal(title, 370)
+	body.add_theme_constant_override("separation", 9)
 	var column := modal_scroll.get_parent()
 	var panel := PanelContainer.new()
-	panel.add_theme_stylebox_override("panel",UiPalette.box(UiPalette.PAPER,UiPalette.LINE,10))
+	panel.add_theme_stylebox_override("panel", UiPalette.box(UiPalette.PAPER, UiPalette.LINE, 10))
 	column.add_child(panel)
-	column.move_child(panel,1)
+	column.move_child(panel, column.get_child_count() - 2)
 	inventory_detail = VBoxContainer.new()
+	inventory_detail.add_theme_constant_override("separation", 6)
 	panel.add_child(inventory_detail)
-	body.add_child(_label("読む間は手数が進みません。道具を選んで使おう。",12,UiPalette.MUTED))
-	var grid := GridContainer.new()
-	grid.columns = columns
-	grid.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	body.add_child(grid)
+	var derived: Dictionary = Data.stats(state)
+	var summary := "体力 %d/%d  ·  携行 %d/%d\n攻撃 %d / 防御 %d" % [state.run.player.hp, state.run.player.maxHp, state.run.inventory.size(), capacity, derived.attack, derived.defense]
+	body.add_child(_label(summary, 15, UiPalette.INK))
+	body.add_child(_label("読む・選ぶ操作は0手。回収・交換・装備・使用・置く操作は各1手。", 12, UiPalette.MUTED))
 	inventory_slots.clear()
-	for item: Dictionary in state.run.inventory:
-		var uid: String = item.uid
-		var button := _button("",func(): _select_inventory(uid))
-		button.custom_minimum_size=Vector2(83,86)
-		button.tooltip_text=Data.ITEMS[item.kind].name
-		button.set_meta("item_uid",uid)
-		grid.add_child(button)
-		var inner:=VBoxContainer.new()
-		inner.mouse_filter=Control.MOUSE_FILTER_IGNORE
-		inner.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-		inner.offset_top=6
-		inner.offset_bottom=-5
-		inner.add_theme_constant_override("separation",1)
-		inner.alignment=BoxContainer.ALIGNMENT_CENTER
-		button.add_child(inner)
-		inner.add_child(_icon(item.kind,39))
-		var name_label:=_label(str(SHORT_NAMES[item.kind]),12)
-		name_label.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
-		inner.add_child(name_label)
-		if uid==state.run.weapon or uid==state.run.armor:
-			var equipped:=_label("装備中",10,UiPalette.SUCCESS)
-			equipped.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
-			inner.add_child(equipped)
-		inventory_slots[uid]=button
+	if not container_id.is_empty():
+		var heading := HBoxContainer.new()
+		body.add_child(heading)
+		heading.add_child(_label("箱に残っている品  %d" % contents.size(), 16))
+		var take_all := _button("入る分を回収", func(): _cargo_action({"type":"take_all", "containerId":container_id}))
+		take_all.set_meta("cargo_action", "take_all")
+		take_all.size_flags_horizontal = Control.SIZE_SHRINK_END
+		take_all.disabled = contents.is_empty() or state.run.inventory.size() >= capacity
+		heading.add_child(take_all)
+		if contents.is_empty():
+			body.add_child(_label("この箱は空です。鞄の品を置くと、足元の荷箱に残ります。", 14, UiPalette.MUTED))
+		else:
+			_cargo_grid(body, contents, "cache")
+		body.add_child(_rule())
+	body.add_child(_label("自分の鞄" + (" / 交換する品を選ぶ" if not inventory_swap_uid.is_empty() else ""), 16))
+	_cargo_grid(body, state.run.inventory, "bag")
 	if state.run.inventory.is_empty():
-		inventory_detail.add_child(_label("鞄は空です。荷箱を探してみよう。"))
+		inventory_detail.add_child(_label("鞄は空です。箱から持ち帰る品を選ぼう。"))
+	elif inventory_slots.has(inventory_selection):
+		_select_inventory(inventory_selection, str(inventory_slots[inventory_selection].get_meta("item_origin", "bag")))
+	elif not inventory_swap_uid.is_empty() and not state.run.inventory.is_empty():
+		_select_inventory(str(state.run.inventory[0].uid), "bag")
+	elif not contents.is_empty():
+		_select_inventory(str(contents[0].uid), "cache")
 	else:
-		if not inventory_slots.has(inventory_selection):
-			inventory_selection=state.run.inventory[0].uid
-		_select_inventory(inventory_selection)
+		_select_inventory(str(state.run.inventory[0].uid), "bag")
+	if inventory_slots.has(inventory_selection):
+		inventory_slots[inventory_selection].call_deferred("grab_focus")
 	_resize_layout()
+
+func _cargo_grid(body: VBoxContainer, items: Array, origin: String) -> void:
+	var grid := GridContainer.new()
+	grid.columns = 3 if size.x < 760 else 4
+	grid.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	grid.add_theme_constant_override("h_separation", 5)
+	grid.add_theme_constant_override("v_separation", 5)
+	body.add_child(grid)
+	for item: Dictionary in items:
+		var uid: String = item.uid
+		var button := _button("", func(): _select_inventory(uid, origin))
+		button.custom_minimum_size = Vector2(76, 83)
+		button.tooltip_text = Data.ITEMS[item.kind].name
+		button.accessibility_name = Data.ITEMS[item.kind].name + (" / 箱の品" if origin == "cache" else " / 携行品")
+		button.set_meta("item_uid", uid)
+		button.set_meta("item_origin", origin)
+		grid.add_child(button)
+		var inner := VBoxContainer.new()
+		inner.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		inner.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		inner.offset_top = 4
+		inner.offset_bottom = -4
+		inner.add_theme_constant_override("separation", 0)
+		inner.alignment = BoxContainer.ALIGNMENT_CENTER
+		button.add_child(inner)
+		inner.add_child(_icon(item.kind, 32))
+		var caption := _label(str(SHORT_NAMES.get(item.kind, Data.ITEMS[item.kind].name)), 12)
+		caption.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		inner.add_child(caption)
+		var badge := "装備中" if origin == "bag" and uid in [state.run.weapon, state.run.armor] else "依頼の品" if not _item_purpose(str(item.kind)).is_empty() else "%d G" % Data.ITEMS[item.kind].value
+		var note := _label(badge, 10, UiPalette.SUCCESS if badge == "装備中" else UiPalette.MUTED)
+		note.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		inner.add_child(note)
+		inventory_slots[uid] = button
+
+func _item_purpose(kind: String) -> String:
+	for contract: Dictionary in Data.contracts(state):
+		if contract.status in ["claimed", "locked"]:
+			continue
+		for requirement: Dictionary in contract.requirements:
+			if requirement.kind == kind:
+				var carried := 0
+				for item: Dictionary in state.run.inventory if state.run is Dictionary else state.loadout:
+					if item.kind == kind: carried += 1
+				return "%s  倉庫%d＋携行%d / 必要%d" % [contract.title, requirement.owned, carried, requirement.count]
+	return ""
+
+func _cargo_action(action: Dictionary) -> void:
+	var cache := inventory_container
+	var scroll_offset := modal_scroll.scroll_vertical if is_instance_valid(modal_scroll) else 0
+	_act(action)
+	if state.mode == "expedition":
+		inventory_swap_uid = ""
+		_inventory(cache)
+		if is_instance_valid(modal_scroll):
+			modal_scroll.set_deferred("scroll_vertical", scroll_offset)
 
 func _result() -> void:
 	content.add_theme_constant_override("separation", 0)
@@ -761,7 +875,7 @@ func _result() -> void:
 func _map() -> void:
 	if state.mode != "expedition":
 		return
-	var body := _open_modal("回収屋の地図")
+	var body := _open_modal("回収屋の地図 / %d層" % int(state.run.depth) if state.run.has("depth") else "回収屋の地図")
 	var run: Dictionary = state.run
 	var image := Image.create(run.width, run.height, false, Image.FORMAT_RGB8)
 	var seen: Dictionary = {}
@@ -778,6 +892,8 @@ func _map() -> void:
 				if tile.type == "exit":
 					color = Color("e4b36b")
 			image.set_pixel(x, y, color)
+	if run.has("stairs") and int(run.depth) < 3 and seen.has("%d,%d" % [run.stairs.x, run.stairs.y]):
+		image.set_pixel(run.stairs.x, run.stairs.y, Color("ac67ba"))
 	image.set_pixel(run.player.x, run.player.y, Color("cc684d"))
 	var view := TextureRect.new()
 	view.texture = ImageTexture.create_from_image(image)
@@ -786,9 +902,12 @@ func _map() -> void:
 	view.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	view.custom_minimum_size = Vector2(280, 280)
 	body.add_child(view)
-	body.add_child(_label("赤い点：現在地 / 金色：帰還地点\n青：水路・浸水 / 地図は見えた範囲を記録します。", 14))
+	body.add_child(_label("赤い点：現在地 / 金色：帰還地点\n紫：次の層 / 青：水路・浸水\n地図は見えた範囲を記録します。", 14))
 	var district: Dictionary = Data.current_district(state)
 	body.add_child(_label("%s / %s" % [district.name,district.objective], 15, UiPalette.GOLD))
+	if run.has("depth"):
+		body.add_child(_label("遠征 #%d · 第%d層" % [state.profile.runs, run.depth], 14, UiPalette.MUTED))
+		body.add_child(_label("旗の帰還地点に立って調べると港へ。数字の通路は次の層へ進みます。", 13))
 
 func _settings() -> void:
 	pending_item = ""
@@ -829,7 +948,22 @@ func _settings() -> void:
 
 func _help() -> void:
 	var body := _open_modal("回収屋の心得")
-	for entry: Array in [["一手ずつ、考える", "矢印ボタン、矢印キー、WASDで一マス移動。隣の敵に向かって進むと攻撃します。長押しで連続移動しません。"], ["調べる・拾う", "荷箱の隣か上で「調べる」。Eキーでも操作できます。鞄に入りきらない品は、その場に残ります。"], ["仲間の技で道を作る", "新しい遠征では、仲間ごとの技を3回使えます。Qキーか技のボタンで効果を読み、方向を選ぶ技は矢印で決定。取り消しや効かない使い方では、手数も回数も減りません。"], ["道具で切り抜ける", "持ち物はIキー。救急包で回復し、爆薬で敵や壁を破壊し、発煙筒で敵を誘導できます。使用と装備変更は一手です。"], ["潮と敵を読む", "潮は32・64・96手で変わります。低い道は浸水すると一手ごとに体力を1失います。高い道は沈みません。構えた鳥の正面からは横へ避けよう。"], ["持ち帰って初めて、自分の物", "南の船着き場で「帰還」。倒れると装備と携行品をすべて失います。倉庫の品は残り、武器がなくても貸出ナイフで再出発できます。"], ["最初の仕事", "中央の回収区画で集光芯を見つけ、銅の端材と一緒に持ち帰ろう。奥の保管庫には追加の戦利品があります。港の灯りを修理すると、次回から視界が1マス広がります。"]]:
+	var old_run: bool = state.get("run") is Dictionary and state.run.get("ruleset") != "expedition-v06"
+	var entries: Array = [
+		["一手ずつ考える", "方向ボタン・矢印キー・WASDで1マス移動。隣の敵へ進むと攻撃します。長押しでは連続移動しません。"],
+		["品を選んで持ち帰る", "荷箱の隣でEか『調べる』。調査に1手、品の回収に1手かかります。読む・選ぶ操作は0手。満杯でも箱の品と携行品1個を1手で交換できます。"],
+		["帰還か、次の層か", "地形・荷箱・敵は遠征ごとに変わります。数字の旗に立って調べると次の層へ進みます。最大3層で、各層から帰還できます。前の層に残した品には戻れません。"],
+		["道具と仲間の技", "持ち物はI、技はQ。救急包で回復、爆薬で敵や壁を破壊、発煙筒で敵を誘導できます。技は遠征全体で3回。取り消しや効果のない使用では手数も回数も減りません。"],
+		["潮と敵を読む", "潮は32・64・96手で変化します。浸水した低い道で一手を終えると体力−1。高い道は沈みません。構えた敵の正面から横へ避けよう。"],
+		["帰還で荷を確保する", "旗がある船着き場に立って調べると港へ戻れます。倒れると装備・携行品をすべて失い、倉庫と完了した依頼は残ります。武器がなくても貸出ナイフで再出発できます。"],
+		["最初の依頼", "波止場の1層目を探し、金枠の荷箱から集光芯と銅の端材を持ち帰ろう。港で納品すると灯りが直り、市場への航路と次の依頼が開きます。" ]]
+	if old_run:
+		entries[1][1] = "この遠征は旧ルールで続きます。荷箱の隣で調べると、入る分を回収します。"
+		entries[2][1] = "この遠征は更新前の地形を保っています。港へ帰って次に出発すると、毎回変わる最大3層の探索に切り替わります。"
+		if state.run.get("ruleset") == "legacy-v03":
+			entries[3][1] = "この遠征では仲間の技は使えません。Iで鞄を開き、救急包・爆薬・発煙筒を使えます。"
+		entries[6][1] = Data.current_district(state).objective + "。港へ持ち帰り、倉庫から納品します。"
+	for entry: Array in entries:
 		body.add_child(_label(entry[0], 18, UiPalette.GOLD))
 		body.add_child(_label(entry[1], 15))
 
@@ -970,55 +1104,77 @@ func _field_hint() -> String:
 	for enemy:Dictionary in run.enemies:
 		if visible.has("%d,%d" % [enemy.x,enemy.y]) and enemy.has("intent"):
 			return "鳥が構えている！正面から横へ一歩、避けよう。"
-	if _field_objective().contains("揃った"):
-		return "必要な品は確保したよ。帰りの道具を残して港へ戻ろう。"
-	return Data.current_district(state).objective + "。荷箱は隣で調べられるよ。"
+	if _field_objective().contains("揃った") or _field_objective().contains("依頼品確保"):
+		return "依頼品は確保した。帰還すれば納品できる。先へ進むなら道具と体力を確かめよう。"
+	return Data.current_district(state).objective + "。荷箱は隣で調べよう。"
 
-func _select_inventory(uid:String) -> void:
+func _select_inventory(uid: String, origin: String = "bag") -> void:
 	if not is_instance_valid(inventory_detail) or not inventory_slots.has(uid):
 		return
-	inventory_selection=uid
+	inventory_selection = uid
+	inventory_origin = origin
 	_clear(inventory_detail)
-	var selected:Dictionary={}
-	for item:Dictionary in state.run.inventory:
-		if item.uid==uid:
-			selected=item
+	var items: Array = state.run.inventory if origin == "bag" else Data.container_contents(state, inventory_container)
+	var selected: Dictionary = Data._find_item(items, uid)
 	if selected.is_empty():
 		return
-	for key:String in inventory_slots:
-		inventory_slots[key].add_theme_stylebox_override("normal",UiPalette.box(Color("f7d990") if key==uid else UiPalette.SURFACE,UiPalette.GOLD if key==uid else UiPalette.LINE,5))
-	var info:Dictionary=Data.ITEMS[selected.kind]
-	var equipped:bool=uid==state.run.weapon or uid==state.run.armor
-	var row:=HBoxContainer.new()
+	for key: String in inventory_slots:
+		inventory_slots[key].add_theme_stylebox_override("normal", UiPalette.box(Color("f7d990") if key == uid else UiPalette.SURFACE, UiPalette.GOLD if key == uid else UiPalette.LINE, 5))
+	var info: Dictionary = Data.ITEMS[selected.kind]
+	var equipped: bool = origin == "bag" and uid in [state.run.weapon, state.run.armor]
+	var row := HBoxContainer.new()
 	inventory_detail.add_child(row)
-	row.add_child(_icon(selected.kind,42))
-	var title:=_label(info.name+(" / 装備中" if equipped else ""),18)
-	title.size_flags_horizontal=Control.SIZE_EXPAND_FILL
-	row.add_child(title)
-	inventory_detail.add_child(_label(info.description,13,UiPalette.MUTED))
-	var buttons:=HBoxContainer.new()
+	row.add_child(_icon(selected.kind, 32))
+	row.add_child(_label(info.name + (" / 装備中" if equipped else ""), 17))
+	inventory_detail.add_child(_label(info.description, 12, UiPalette.MUTED))
+	var purpose := _item_purpose(selected.kind)
+	if not purpose.is_empty():
+		inventory_detail.add_child(_label(purpose, 12, UiPalette.SUCCESS))
+	if info.category in ["weapon", "armor"] and not equipped and inventory_swap_uid.is_empty():
+		var stat_key := "attack" if info.category == "weapon" else "defense"
+		var current: Dictionary = Data._find_item(state.run.inventory, state.run[info.category])
+		var old_value: int = int(Data.ITEMS[current.kind].get(stat_key, 0)) if not current.is_empty() else 0
+		inventory_detail.add_child(_label("%s %d → %d" % ["装備した場合の攻撃" if stat_key == "attack" else "装備した場合の防御", old_value, int(info.get(stat_key, 0))], 13, UiPalette.GOLD))
+	var buttons := HBoxContainer.new()
 	inventory_detail.add_child(buttons)
-	var kind:String=selected.kind
-	if info.category=="consumable":
-		var full_health: bool = kind == "medicine" and state.run.player.hp == state.run.player.maxHp
-		var use_button := _button("体力は満タン" if full_health else "使う / 1手",func():
-			_close_modal()
-			if kind in ["bomb","flare"]:
-				pending_item=uid
-				_update_hud([])
-			else:
-				_act({"type":"use","uid":uid}))
-		use_button.disabled = full_health
-		buttons.add_child(use_button)
-	elif info.category in ["weapon","armor"]:
-		var equip:=_button("装備中" if equipped else "装備 / 1手",func():
-			_close_modal()
-			_act({"type":"equip","uid":uid}))
-		equip.disabled=equipped
-		buttons.add_child(equip)
-	buttons.add_child(_button("置く / 1手",func():
-		_close_modal()
-		_act({"type":"drop","uid":uid})))
+	if origin == "cache":
+		var full: bool = state.run.inventory.size() >= int(Data.stats(state).capacity)
+		var take := _button("鞄は満杯" if full else "回収 / 1手", func(): _cargo_action({"type":"take", "containerId":inventory_container, "uid":uid}), true)
+		take.disabled = full
+		take.set_meta("cargo_action", "take")
+		buttons.add_child(take)
+		buttons.add_child(_button("携行品と交換", func():
+			inventory_swap_uid = uid
+			inventory_selection = ""
+			inventory_origin = "bag"
+			_inventory(inventory_container)))
+	elif not inventory_swap_uid.is_empty():
+		var target: Dictionary = Data._find_item(Data.container_contents(state, inventory_container), inventory_swap_uid)
+		if not target.is_empty():
+			inventory_detail.add_child(_label("この品を箱へ置き、%sを回収します。%s" % [Data.ITEMS[target.kind].name, "装備も外れます。" if equipped else ""], 12))
+			buttons.add_child(_button("この品と交換 / 1手", func(): _cargo_action({"type":"swap", "containerId":inventory_container, "uid":inventory_swap_uid, "dropUid":uid}), true))
+		buttons.add_child(_button("交換をやめる", func():
+			inventory_swap_uid = ""
+			_inventory(inventory_container)))
+	else:
+		var kind: String = selected.kind
+		if info.category == "consumable":
+			var full_health: bool = kind == "medicine" and state.run.player.hp == state.run.player.maxHp
+			var use_button := _button("体力は満タン" if full_health else "使う / 1手", func():
+				if kind in ["bomb", "flare"]:
+					_close_modal()
+					pending_item = uid
+					_update_hud([])
+				else:
+					_cargo_action({"type":"use", "uid":uid}))
+			use_button.disabled = full_health
+			buttons.add_child(use_button)
+		elif info.category in ["weapon", "armor"]:
+			var equip := _button("装備中" if equipped else "装備 / 1手", func(): _cargo_action({"type":"equip", "uid":uid}))
+			equip.disabled = equipped
+			buttons.add_child(equip)
+		buttons.add_child(_button("置く / 1手", func(): _cargo_action({"type":"drop", "uid":uid})))
+	_resize_layout()
 
 func _animate_in(control:Control,delay:float=0.0) -> void:
 	if settings.reduced or qa_session:
@@ -1059,7 +1215,7 @@ func _sync_presentation() -> void:
 	if is_instance_valid(audio):
 		audio.set_active(not paused)
 	for tween:Tween in ui_tweens:
-		if tween!=null and tween.is_valid():
+		if tween!=null and tween.is_valid() and tween.get_loops_left() != 0:
 			if focus_paused or (blocked and not tween.get_meta("overlay",false)):
 				tween.pause()
 			else:
@@ -1067,7 +1223,7 @@ func _sync_presentation() -> void:
 
 func _track_tween(tween: Tween, on_overlay: bool = false) -> void:
 	for i: int in range(ui_tweens.size()-1,-1,-1):
-		if ui_tweens[i] == null or not ui_tweens[i].is_valid():
+		if ui_tweens[i] == null or not ui_tweens[i].is_valid() or ui_tweens[i].get_loops_left() == 0:
 			ui_tweens.remove_at(i)
 	tween.set_meta("overlay",on_overlay)
 	ui_tweens.append(tween)

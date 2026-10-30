@@ -55,7 +55,9 @@ static func mission(state: Dictionary) -> String:
 		needs.append("%s %d/%d" % [Data.ITEMS[requirement.kind].name, requirement.owned, requirement.count])
 	return "%s%s\n%s" % [selected.title, " / 納品できます" if selected.status == "ready" else "", "・".join(needs)]
 
-static func item_row(item: Dictionary, action_text: String = "", equipped: bool = false) -> Control:
+static func item_row(item: Dictionary, action_text: String = "", equipped: bool = false, compact: bool = false) -> Control:
+	if compact:
+		return _preparation_row(item, action_text, equipped)
 	var tile: PanelContainer = preload("res://scenes/presentation_v05/item_tile.tscn").instantiate()
 	tile.set_meta("item_uid", item.uid)
 	tile.set_meta("item_kind", item.kind)
@@ -70,6 +72,76 @@ static func item_row(item: Dictionary, action_text: String = "", equipped: bool 
 	button.tooltip_text = "%s / %s" % [Data.ITEMS[item.kind].name, Data.ITEMS[item.kind].description]
 	button.set_meta("item_uid", item.uid)
 	return tile
+
+## Preparation keeps the full item name next to separate ownership actions.
+## Result receipts retain the authored tile layout through item_row's default.
+static func _preparation_row(item: Dictionary, action_text: String, equipped: bool) -> Control:
+	var row := PanelContainer.new()
+	row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	row.set_meta("item_uid", item.uid)
+	row.set_meta("item_kind", item.kind)
+	var box := Palette.box(Color("e2eee1") if equipped else Color("f4efdb"), Color("8fa59a"), 4)
+	box.set_corner_radius_all(4)
+	box.set_border_width_all(1)
+	box.shadow_size = 0
+	row.add_theme_stylebox_override("panel", box)
+	var content := HBoxContainer.new()
+	content.name = "Content"
+	content.add_theme_constant_override("separation", 4)
+	row.add_child(content)
+	var inspect := Button.new()
+	inspect.name = "Inspect"
+	inspect.text = ""
+	inspect.custom_minimum_size = Vector2(96, 52)
+	inspect.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	inspect.accessibility_name = "%sの説明を読む" % Data.ITEMS[item.kind].name
+	inspect.tooltip_text = Data.ITEMS[item.kind].description
+	inspect.set_meta("item_uid", item.uid)
+	inspect.set_meta("item_action", "inspect")
+	for state: String in ["normal", "hover", "pressed"]:
+		inspect.add_theme_stylebox_override(state, StyleBoxEmpty.new())
+	content.add_child(inspect)
+	var identity := HBoxContainer.new()
+	identity.name = "Identity"
+	identity.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	inspect.add_child(identity)
+	identity.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	identity.offset_left = 2
+	identity.offset_right = -2
+	identity.add_theme_constant_override("separation", 4)
+	var icon := TextureRect.new()
+	icon.texture = Palette.icon(item.kind)
+	icon.custom_minimum_size = Vector2(26, 26)
+	icon.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	identity.add_child(icon)
+	var words := VBoxContainer.new()
+	words.name = "Words"
+	words.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	words.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	words.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	words.add_theme_constant_override("separation", 1)
+	identity.add_child(words)
+	var name_label := label(Data.ITEMS[item.kind].name, 14)
+	name_label.name = "Name"
+	words.add_child(name_label)
+	var detail := label("装備中" if equipped else "説明を見る", 12, Palette.SUCCESS if equipped else Palette.MUTED)
+	detail.name = "Detail"
+	words.add_child(detail)
+	var transfer := Button.new()
+	transfer.name = "Transfer"
+	transfer.text = action_text
+	transfer.custom_minimum_size = Vector2(52, 52)
+	transfer.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	transfer.add_theme_font_size_override("font_size", 13)
+	transfer.set_meta("item_uid", item.uid)
+	transfer.set_meta("item_action", "transfer")
+	transfer.accessibility_name = "%sを%s" % [Data.ITEMS[item.kind].name, action_text]
+	transfer.tooltip_text = "%sを倉庫から携行品へ移す" % Data.ITEMS[item.kind].name if action_text == "詰める" else "%sを携行品から倉庫へ戻す" % Data.ITEMS[item.kind].name
+	content.add_child(transfer)
+	return row
 
 static func secondary(button: Button) -> void:
 	for state: String in ["normal", "hover", "pressed"]:

@@ -21,7 +21,7 @@ func _initialize() -> void:
 	root.add_child(ui)
 	await process_frame
 	await process_frame
-	for test: String in ["test_v04_compact_departure_and_reload", "test_v04_field_allocation", "test_v04_crew_controls", "test_v04_visibility", "test_v04_objective_continuity", "test_v04_objective_layout_roundtrip", "test_v05_harbor_entry_and_basic_loadout", "test_v05_preparation_transfer_and_reload", "test_v05_preparation_reading_pause", "test_v05_immediate_result", "test_v05_extract_feedback", "test_v05_storage_notice_and_corrupt", "test_characters", "test_safe_area", "test_turn_input", "test_storage", "test_result_receipt", "test_inventory_uid_actions", "test_inventory_focus_and_full_health", "test_world_overlay_phone_bounds", "test_presentation_pause_and_motion", "test_empty_extraction_readability", "test_campaign_phone_navigation", "test_campaign_routes_and_follow", "test_campaign_delivery", "test_campaign_exchange", "test_campaign_crew_and_reload", "test_campaign_modal_during_screen_entry", "test_v03_portraits_and_crew_navigation", "test_v03_truthful_result_stages", "test_v03_stage_pause_and_reduced_motion", "test_v03_live_reduced_motion_toggle"]:
+	for test: String in ["test_v06_generated_departure_and_reload", "test_v04_field_allocation", "test_v04_crew_controls", "test_v04_visibility", "test_v04_objective_continuity", "test_v04_objective_layout_roundtrip", "test_v05_harbor_entry_and_basic_loadout", "test_v05_preparation_transfer_and_reload", "test_v05_preparation_reading_pause", "test_v05_immediate_result", "test_v05_extract_feedback", "test_v05_storage_notice_and_corrupt", "test_characters", "test_safe_area", "test_turn_input", "test_storage", "test_result_receipt", "test_inventory_uid_actions", "test_inventory_focus_and_full_health", "test_world_overlay_phone_bounds", "test_presentation_pause_and_motion", "test_empty_extraction_readability", "test_campaign_phone_navigation", "test_campaign_routes_and_follow", "test_campaign_delivery", "test_campaign_exchange", "test_campaign_crew_and_reload", "test_campaign_modal_during_screen_entry", "test_v03_portraits_and_crew_navigation", "test_v03_truthful_result_stages", "test_v03_stage_pause_and_reduced_motion", "test_v03_live_reduced_motion_toggle"]:
 		if await call(test) != true:
 			failed += 1
 			push_error("FAIL: did not complete " + test)
@@ -37,14 +37,16 @@ func apply_ui_action(state: Dictionary, action: Dictionary) -> Dictionary:
 	if action.get("type") != "depart":
 		return RulesData.apply_action(state, action)
 	check(RulesData.validate_state(state) and state.mode == "harbor", "legacy UI departure starts with a valid harbor")
-	var old: Dictionary = state.duplicate(true)
-	old.version = 2
+	var old: Dictionary = Legacy.new_game()
+	for field: String in ["character", "profile", "loadout", "nextId"]:
+		old[field] = state[field].duplicate(true) if state[field] is Dictionary or state[field] is Array else state[field]
+	old.profile.erase("commissionCycle")
 	var resolved: Dictionary = Legacy.apply_action(old, action)
 	resolved.state = RulesData.migrate_state(resolved.state)
 	check(not resolved.state.is_empty() and RulesData.validate_state(resolved.state) and resolved.state.run.ruleset == "legacy-v03", "legacy UI fixture passes frozen rules and strict v3 migration")
 	return resolved
 
-func test_v04_compact_departure_and_reload() -> bool:
+func test_v06_generated_departure_and_reload() -> bool:
 	ui._close_modal()
 	ui.state = RulesData.new_game()
 	ui._enter()
@@ -55,13 +57,13 @@ func test_v04_compact_departure_and_reload() -> bool:
 	var owned: Array = ui.state.profile.stash.duplicate(true)
 	depart.pressed.emit()
 	await settle_layout()
-	check(ui.state.version == 3 and ui.state.run.ruleset == "encounter-v04" and ui.state.run.width == 17 and ui.state.run.height == 19 and RulesData.validate_state(ui.state), "actual harbor departure starts the valid compact v3 ruleset")
+	check(ui.state.version == 4 and ui.state.run.ruleset == "expedition-v06" and ui.state.run.width == 25 and ui.state.run.height == 29 and RulesData.validate_state(ui.state), "actual harbor departure starts the valid generated v4 ruleset")
 	check(ui.state.run.crewCharges == 3 and ui.state.run.inventory.size() == 1 and ui.state.run.inventory[0].kind == "loanKnife", "fresh UI departure shows finite techniques and the retry loan")
 	var path := "user://qa-v04-ui.json"
 	var snapshot: String = JSON.stringify(ui.state)
 	check(Store.save_game(ui.state, "shiogaeri-qa-v04-ui", path).is_empty(), "compact UI state saves through production store into the QA slot")
 	var loaded: Dictionary = Store.load_game("shiogaeri-qa-v04-ui", path)
-	check(loaded.found and not loaded.corrupt and JSON.stringify(loaded.state) == snapshot and loaded.state.version == 3, "compact UI reload preserves the entire v3 state")
+	check(loaded.found and not loaded.corrupt and JSON.stringify(loaded.state) == snapshot and loaded.state.version == 4, "generated UI reload preserves the entire v4 state")
 	ui.state = loaded.state
 	ui._enter()
 	await settle_layout()
@@ -79,7 +81,7 @@ func test_v04_compact_departure_and_reload() -> bool:
 		return false
 	retry.pressed.emit()
 	await settle_layout()
-	check(ui.state.mode == "harbor" and ui.state.version == 3 and ui.state.profile.stash == owned and ui.state.profile.extracts == 1, "compact result returns to the v3 harbor without another transfer")
+	check(ui.state.mode == "harbor" and ui.state.version == 4 and ui.state.profile.stash == owned and ui.state.profile.extracts == 1, "generated result returns to the v4 harbor without another transfer")
 	check(Store.save_game(ui.state, "shiogaeri-qa-v04-ui", path).is_empty() and Store.load_game("shiogaeri-qa-v04-ui", path).state == ui.state, "completed compact return remains saveable and reloadable")
 	for suffix: String in ["", ".bak", ".tmp"]:
 		if FileAccess.file_exists(path + suffix):
@@ -144,7 +146,7 @@ func test_v04_field_allocation() -> bool:
 
 func test_v04_crew_controls() -> bool:
 	ui._close_modal()
-	ui.state = RulesData.apply_action(RulesData.new_game(), {"type": "depart", "seed": 7}).state
+	ui.state = RulesData.migrate_state(RulesData.V05.apply_action(RulesData.V05.new_game(), {"type": "depart", "seed": 7}).state)
 	ui._enter()
 	await settle_layout()
 	var snapshot: String = JSON.stringify(ui.state)
@@ -198,7 +200,7 @@ func test_v04_crew_controls() -> bool:
 
 func test_v04_visibility() -> bool:
 	ui._close_modal()
-	ui.state = RulesData.apply_action(RulesData.new_game(), {"type": "depart", "seed": 7}).state
+	ui.state = RulesData.migrate_state(RulesData.V05.apply_action(RulesData.V05.new_game(), {"type": "depart", "seed": 7}).state)
 	# Put one existing enemy in a genuinely visible, legal cell; the distant
 	# enemies keep their authored positions behind the current fog.
 	ui.state.run.enemies[0].x = 8
@@ -268,7 +270,7 @@ func test_v04_objective_continuity() -> bool:
 	check(harbor.profile.activeContract.is_empty() and "beacon" in harbor.profile.completedContracts and RulesData.validate_state(harbor), "objective continuity starts after the real beacon claim cleared explicit tracking")
 	var market: Dictionary = RulesData.apply_action(harbor, {"type": "choose_district", "district": "market"}).state
 	market = RulesData.apply_action(market, {"type": "depart", "seed": 7}).state
-	check(market.run.ruleset == "encounter-v04" and market.run.district == "market" and market.profile.activeContract.is_empty() and RulesData.validate_state(market), "new compact market departure retains the intentionally empty tracking field")
+	check(market.run.ruleset == "expedition-v06" and market.run.district == "market" and market.profile.activeContract.is_empty() and RulesData.validate_state(market), "new compact market departure retains the intentionally empty tracking field")
 	ui.state = market
 	var snapshot: String = JSON.stringify(ui.state)
 	ui._enter()
@@ -292,7 +294,7 @@ func test_v04_objective_layout_roundtrip() -> bool:
 		if item.kind in ["core", "scrap"]:
 			prepared = RulesData.apply_action(prepared, {"type": "pack", "uid": item.uid}).state
 	ui.state = RulesData.apply_action(prepared, {"type": "depart", "seed": 7}).state
-	check(RulesData.validate_state(ui.state) and ui.state.run.ruleset == "encounter-v04", "long objective fixture carries the actual ready delivery in a valid compact run")
+	check(RulesData.validate_state(ui.state) and ui.state.run.ruleset == "expedition-v06", "long objective fixture carries the actual ready delivery in a valid compact run")
 	root.size = Vector2i(1280, 800)
 	ui._enter()
 	await settle_layout()
@@ -756,7 +758,7 @@ func test_inventory_uid_actions() -> bool:
 	await settle_layout()
 	check(not carries(medicines[1]) and carries(medicines[0]), "use consumes selected medicine UID and preserves its identical neighbor")
 	check(ui.state.run.turn == 1 and ui.state.run.player.hp == 21, "selected medicine heals once and resolves one turn")
-	check(not is_instance_valid(ui.modal) and RulesData.validate_state(ui.state), "medicine closes inventory with a saveable resolved state")
+	check(is_instance_valid(ui.modal) and RulesData.validate_state(ui.state), "medicine keeps inventory open with a saveable resolved state")
 	# Direction selection belongs to the selected UID and is itself a read-only step.
 	ui.state.run.tiles[23][13].type = "wall"
 	ui._inventory()
@@ -1016,7 +1018,7 @@ func test_empty_extraction_readability() -> bool:
 
 func meta_button(parent: Node, key: String, value: String) -> Button:
 	for button: Button in descendant_buttons(parent):
-		if str(button.get_meta(key, "")) == value:
+		if str(button.get_meta(key, "")) == value and (key != "item_uid" or button.get_meta("item_action", "transfer") == "transfer"):
 			return button
 	return null
 
@@ -1327,11 +1329,13 @@ func test_campaign_crew_and_reload() -> bool:
 	legacy = apply_ui_action(legacy, {"type": "wait"}).state
 	legacy = apply_ui_action(legacy, {"type": "interact"}).state
 	legacy.version = 1
+	legacy.erase("preparation")
+	legacy.profile.erase("commissionCycle")
 	for key: String in ["credits", "selectedDistrict", "activeContract", "completedContracts"]:
 		legacy.profile.erase(key)
 	check(Store.write_value("shiogaeri-qa-campaign-ui", path, legacy).is_empty(), "late legacy result is written only to the QA file")
 	loaded = Store.load_game("shiogaeri-qa-campaign-ui", path)
-	check(not loaded.corrupt and loaded.state.version == 3 and loaded.state.result.turns == 1 and loaded.state.result.inventory == legacy.result.inventory and loaded.state.profile.stash == legacy.profile.stash, "late v1 result migrates its resolved turn, receipt and real ownership unchanged")
+	check(not loaded.corrupt and loaded.state.version == 4 and loaded.state.result.turns == 1 and loaded.state.result.inventory == legacy.result.inventory and loaded.state.profile.stash == legacy.profile.stash, "late v1 result migrates its resolved turn, receipt and real ownership unchanged")
 	ui.state = loaded.state
 	ui._enter()
 	await settle_layout()
@@ -1391,9 +1395,19 @@ func test_v03_portraits_and_crew_navigation() -> bool:
 			await settle_layout()
 			var css: Vector2 = jobs.size * Vector2(phone) / ui.size
 			check(ui.get_viewport().gui_get_focus_owner() == jobs and inside_clipping_ancestors(jobs) and css.x >= 44 and css.y >= 44, "%s %s crew job action scrolls into view through keyboard navigation" % [phone, character])
-			key_press(KEY_TAB)
-			await settle_layout()
-			check(ui.get_viewport().gui_get_focus_owner() == close and inside_clipping_ancestors(close), "%s %s crew close stays reachable after the scrolled job action" % [phone, character])
+			# A companion can now have a personal job and a repeat salvage order.
+			# Traverse every real action before wrapping to the fixed close button.
+			var returned_to_close: bool = false
+			var actions_fit: bool = true
+			for step: int in range(descendant_buttons(ui.modal).size()):
+				key_press(KEY_TAB)
+				await settle_layout()
+				var focused: Control = ui.get_viewport().gui_get_focus_owner()
+				actions_fit = actions_fit and is_instance_valid(focused) and ui.modal.is_ancestor_of(focused) and inside_clipping_ancestors(focused)
+				if focused == close:
+					returned_to_close = true
+					break
+			check(returned_to_close and actions_fit, "%s %s crew close stays reachable after all scrolled job actions" % [phone, character])
 			check(JSON.stringify(ui.state) == snapshot, "%s %s portrait reading and scrolling preserve the entire state" % [phone, character])
 			jobs.pressed.emit()
 			await settle_layout()
