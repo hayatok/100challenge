@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#F4F0E8" />
+    <meta name="description" content="Markdownを書きながら、書き方を確かめる。メモや手順書の作成と、8つの記法の練習ができるノートです。" />
+    <title>かきかたノート — Markdownを書く・試す</title>
+  </head>
+  <body>
+    <div id="app">
+      <header class="app-header">
+        <a class="brand" href="./" aria-label="かきかたノート ホーム"><span class="brand-mark" aria-hidden="true">M<span>↓</span></span><span>かきかたノート<small>書いて、見て、覚えていく。</small></span></a>
+        <p class="header-note">Markdownを書く・試すための作業机</p>
+      </header>
+      <main>
+        <section class="document-bar" aria-label="文書の操作">
+          <div class="title-field"><label for="document-title">ファイル名</label><div class="filename"><input id="document-title" type="text" maxlength="100" autocomplete="off" spellcheck="false" /><span>.md</span></div></div>
+          <div class="file-actions"><button id="open-file" type="button">開く</button><button id="copy-document" type="button">コピー</button><button id="download-document" class="primary" type="button">.mdを保存 <span aria-hidden="true">↓</span></button></div>
+          <input id="file-input" type="file" accept=".md,.markdown,.txt,text/plain,text/markdown" hidden />
+        </section>
+        <div class="workspace">
+          <section class="writing-desk" aria-label="文書を作る">
+            <div class="desk-topline"><div><span class="eyebrow">YOUR NOTE</span><h1>書きながら、書き方を知る。</h1></div><div class="template-field"><label for="template-select">ひな形から始める</label><select id="template-select"><option value="">ひな形を選ぶ</option><option value="memo">メモ</option><option value="procedure">手順書</option><option value="blank">空白の文書</option></select></div></div>
+            <div class="toolbar" aria-label="書式を挿入"><div id="format-buttons" class="format-buttons"></div><button id="undo" class="undo-button" type="button" disabled>元に戻す</button></div>
+            <div class="mobile-tabs" role="tablist" aria-label="表示の切り替え"><button id="write-tab" type="button" role="tab" aria-selected="true" aria-controls="editor-pane">書く</button><button id="preview-tab" type="button" role="tab" aria-selected="false" aria-controls="preview-pane" tabindex="-1">プレビュー</button></div>
+            <div class="panes" data-view="write">
+              <section id="editor-pane" class="editor-pane"><div class="pane-heading"><label for="editor">Markdown</label><span>記号で、文章にかたちを。</span></div><textarea id="editor" aria-describedby="editor-help" spellcheck="false" placeholder="# はじめてのメモ&#10;&#10;ここから書き始めましょう。"></textarea><div class="editor-footer"><span id="editor-help">書式ボタンから記法を挿入できます</span><span id="character-count">0文字</span></div></section>
+              <section id="preview-pane" class="preview-pane" aria-label="プレビュー"><div class="pane-heading"><span>プレビュー</span><span>仕上がりを確かめる</span></div><div id="preview" class="markdown-body"></div></section>
+            </div>
+            <div class="document-status"><span id="save-status" role="status" aria-live="polite"></span><span>本文はこのブラウザに保存されます</span></div>
+          </section>
+          <aside class="guide" aria-labelledby="guide-title"><div class="guide-heading"><span class="eyebrow">WRITING GUIDE</span><h2 id="guide-title">書き方の手引き</h2><p>必要なときに、一つずつ。</p></div><label for="lesson-select">調べる記法</label><select id="lesson-select"></select><div class="lesson-state"><span id="used-state"></span><span id="completed-state"></span></div><div id="lesson-content"><h3 id="lesson-summary"></h3><pre id="lesson-syntax"></pre><p id="lesson-explanation"></p><p id="extension-note" class="extension-note" hidden>タスクと表はGFM（GitHub Flavored Markdown）の拡張記法です。</p></div><button id="start-exercise" type="button" class="practice-button">自分で試す <span aria-hidden="true">→</span></button><section id="exercise" class="exercise" aria-label="記法の練習" hidden><h3>小さな練習</h3><p id="exercise-prompt"></p><label for="exercise-answer">練習の回答</label><textarea id="exercise-answer" rows="5" spellcheck="false"></textarea><div id="exercise-preview-wrap" class="exercise-preview-wrap" hidden><p>練習のプレビュー</p><div id="exercise-preview" class="markdown-body"></div></div><button id="check-exercise" type="button">確かめる</button><p id="exercise-feedback" class="feedback" role="status" aria-live="polite"></p><details id="answer-details"><summary>ヒント・解答例を見る</summary><p id="exercise-hint"></p><pre id="exercise-example"></pre></details></section><div class="learning-progress"><span id="progress-count"></span><div id="progress-markers" class="progress-markers" aria-hidden="true"></div><p>本文で使った記法と、練習の完了は別に記録します。</p></div></aside>
+        </div>
+        <p id="action-status" class="action-status" role="status" aria-live="polite"></p>
+      </main>
+      <footer class="app-footer"><span>かきかたノート</span><span>あなたの文章を、あなたの手で。</span></footer>
+    </div>
+    <dialog id="replace-dialog" aria-labelledby="replace-heading"><h2 id="replace-heading">本文を置き換えますか？</h2><p>現在の本文が、選んだ内容に置き換わります。</p><p>置き換えた後は「元に戻す」で戻せます。</p><div class="dialog-actions"><button id="replace-cancel" type="button" autofocus>キャンセル</button><button id="replace-confirm" type="button" class="primary">置き換える</button></div></dialog>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
