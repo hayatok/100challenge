@@ -269,5 +269,15 @@
     "category": "ターン制・探索ローグライク",
     "thumbnail": "shiogaeri-cover.png",
     "accent": "#e4b36b"
+  },
+  {
+    "id": "2026-11-03",
+    "date": "2026-11-03",
+    "sequence": 1,
+    "name": "かきかたノート",
+    "description": "メモや手順書を書きながらMarkdownの記法を確かめる。プレビューと小さな練習を備えた文書作成ツール。",
+    "category": "文書作成 / Markdown学習",
+    "thumbnail": "cover.svg",
+    "accent": "#B73529"
   }
 ]
