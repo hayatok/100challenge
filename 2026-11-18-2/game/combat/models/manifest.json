@@ -13,6 +13,7 @@
     "weapon_1": 1,
     "weapon_2": 1
   },
+  "materials": "one color/PBR/emission atlas material per mesh pivot",
   "inferred": [
     "rear costume",
     "mechanisms",

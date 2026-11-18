@@ -202,9 +202,14 @@ func _flare(point: Vector3) -> void:
 	light.global_position = point+Vector3.UP*0.3
 	light.light_color = Color(1,0.1,0.02)
 	light.omni_range = 12
-	light.light_energy = 4
+	light.light_energy = 4.0 if flash else 0.0
 	var tween := light.create_tween()
-	tween.tween_property(light,"light_energy",0.0,3.0)
+	if flash:
+		tween.tween_property(light,"light_energy",0.0,3.0)
+	else:
+		# Preserve the persistent lure marker without a sudden lighting pulse.
+		tween.tween_property(light,"light_energy",0.45,0.7)
+		tween.tween_property(light,"light_energy",0.0,2.3)
 	tween.tween_callback(light.queue_free)
 
 func _make_tracer(start: Vector3, end: Vector3) -> void:

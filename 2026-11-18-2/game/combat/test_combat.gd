@@ -66,6 +66,10 @@ func run() -> void:
 	boss._boss_update(0.9,8,Vector3.FORWARD)
 	motion = boss._boss_update(0.1,8,Vector3.FORWARD)
 	require(boss.boss_state == "charge" and motion.speed > 8,"boss warning becomes dangerous charge")
+	require(boss._boss_sweep_hits(boss.global_position+Vector3(0,0,-3)),"sweep hits front inside red arc")
+	require(not boss._boss_sweep_hits(boss.global_position+Vector3(0,0,3)),"same-distance rear avoids sweep")
+	require(boss._boss_sweep_hits(boss.global_position+Vector3(sin(1.2)*3,0,-cos(1.2)*3)),"sweep inner angle matches tell")
+	require(not boss._boss_sweep_hits(boss.global_position+Vector3(sin(1.4)*3,0,-cos(1.4)*3)),"outside red arc avoids sweep")
 	boss._boss_enter("sweep_windup",0.1)
 	boss._boss_update(0.2,8,Vector3.FORWARD)
 	require(boss.boss_state == "sweep","boss charged sweep")
@@ -105,6 +109,18 @@ func run() -> void:
 	await physics_frame
 	player._fire()
 	require(target_dummy.hp == prior_hp,"wall stops hitscan")
+	player.configure({"flash":false})
+	for slot in range(3):
+		player.unlock_weapon(slot)
+		player.ammo[slot] = 5
+		player._fire()
+		player._physics_process(0.01)
+		require(not player.flame.visible and player.muzzle.light_energy == 0,"flash off removes weapon %d pulse" % slot)
+	player._flare(Vector3(30,2,30))
+	var signal_light: OmniLight3D = arena.get_child(arena.get_child_count()-1)
+	require(signal_light.light_energy == 0,"flash off flare starts dark")
+	await create_timer(0.25).timeout
+	require(signal_light.light_energy > 0 and signal_light.light_energy < 0.45,"flash off flare slowly builds dim marker")
 	player.receive_damage(1000)
 	require(player.dead,"player death")
 	print("COMBAT CHECKS: ",checks, " FAILURES: ", failures)

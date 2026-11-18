@@ -22,8 +22,12 @@ var host: Viewport
 var chapter_clips := false
 var chapter_start := {}
 var last_observed_position := Vector3.INF
+var retry_allowed := false
+var deaths := 0
 var events: FileAccess
 func _initialize() -> void:
+	seed(918)
+	retry_allowed = "--retry" in OS.get_cmdline_user_args()
 	gpu = "--capture" in OS.get_cmdline_user_args()
 	capture_boss = "--capture-boss" in OS.get_cmdline_user_args()
 	chapter_clips = "--capture-chapters" in OS.get_cmdline_user_args()
@@ -68,11 +72,18 @@ func drive() -> void:
 		finish(0)
 		return
 	if voyage.mode == "won":
-		note({"result":"won","kills":voyage.kills,"elapsed":voyage.elapsed})
+		note({"result":"won","kills":voyage.kills,"elapsed":voyage.elapsed,"deaths":deaths})
 		finish(0)
 		return
 	if voyage.mode == "dead":
-		note({"result":"death","chapter":voyage.chapter,"checkpoint":voyage.checkpoint,"kills":voyage.kills})
+		deaths += 1
+		note({"result":"death","chapter":voyage.chapter,"checkpoint":voyage.checkpoint,"kills":voyage.kills,"attempt":deaths})
+		if retry_allowed and deaths<=3:
+			voyage.bridge.retry_requested.emit()
+			last_progress = tick
+			status = ""
+			note({"action":"normal_checkpoint_retry"})
+			return
 		finish(2)
 		return
 	if voyage.mode == "paused":

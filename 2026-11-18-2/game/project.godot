@@ -16,9 +16,6 @@ window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
 window/handheld/orientation=0
 
-[gui]
-theme/custom_font="res://media/jp.ttf"
-
 [input_devices]
 pointing/emulate_mouse_from_touch=true
 pointing/emulate_touch_from_mouse=false

@@ -1,6 +1,8 @@
 extends CharacterBody3D
 signal defeated(enemy: Node3D)
 signal feedback(event: String, position: Vector3)
+const BOSS_SWEEP_RADIUS := 4.0
+const BOSS_SWEEP_HALF_ANGLE := 1.3
 var kind := 0
 var target: Node3D
 var hp := 65.0
@@ -201,12 +203,12 @@ func _build_boss_tells() -> void:
 	material.cull_mode = BaseMaterial3D.CULL_DISABLED
 	arc.surface_begin(Mesh.PRIMITIVE_TRIANGLES,material)
 	for i in range(24):
-		var a := lerpf(-1.3,1.3,i/24.0)
-		var b := lerpf(-1.3,1.3,(i+1)/24.0)
-		var p := Vector3(sin(a)*3.8,0.045,-cos(a)*3.8)
-		var q := Vector3(sin(a)*4.15,0.045,-cos(a)*4.15)
-		var r := Vector3(sin(b)*4.15,0.045,-cos(b)*4.15)
-		var t := Vector3(sin(b)*3.8,0.045,-cos(b)*3.8)
+		var a := lerpf(-BOSS_SWEEP_HALF_ANGLE,BOSS_SWEEP_HALF_ANGLE,i/24.0)
+		var b := lerpf(-BOSS_SWEEP_HALF_ANGLE,BOSS_SWEEP_HALF_ANGLE,(i+1)/24.0)
+		var p := Vector3(sin(a)*(BOSS_SWEEP_RADIUS-0.25),0.045,-cos(a)*(BOSS_SWEEP_RADIUS-0.25))
+		var q := Vector3(sin(a)*BOSS_SWEEP_RADIUS,0.045,-cos(a)*BOSS_SWEEP_RADIUS)
+		var r := Vector3(sin(b)*BOSS_SWEEP_RADIUS,0.045,-cos(b)*BOSS_SWEEP_RADIUS)
+		var t := Vector3(sin(b)*(BOSS_SWEEP_RADIUS-0.25),0.045,-cos(b)*(BOSS_SWEEP_RADIUS-0.25))
 		for vertex in [p,q,r,p,r,t]: arc.surface_add_vertex(vertex)
 	arc.surface_end()
 	boss_arc.mesh = arc
@@ -258,8 +260,10 @@ func _boss_update(delta: float, distance: float, direction: Vector3) -> Dictiona
 			direction = charge_dir
 			travel = 8.5 if boss_phase == 1 else 10.0
 			if distance < 1.9 and attack_timer <= 0:
-				target.receive_damage(28,global_position)
-				attack_timer = 1.0
+				var charge_sight := PhysicsRayQueryParameters3D.create(global_position+Vector3.UP,target.global_position+Vector3.UP,1)
+				if get_world_3d().direct_space_state.intersect_ray(charge_sight).is_empty():
+					target.receive_damage(28,global_position)
+					attack_timer = 1.0
 			if _boss_wall_hit():
 				_boss_enter("exposed",3.1,"boss_exposed")
 			elif boss_timer <= 0:
@@ -274,10 +278,18 @@ func _boss_update(delta: float, distance: float, direction: Vector3) -> Dictiona
 		"sweep":
 			if not boss_swept:
 				boss_swept = true
-				if distance < 4.0:
+				if _boss_sweep_hits(target.global_position):
 					var sight := PhysicsRayQueryParameters3D.create(global_position+Vector3.UP,target.global_position+Vector3.UP,1)
 					if get_world_3d().direct_space_state.intersect_ray(sight).is_empty(): target.receive_damage(22,global_position)
 			if boss_timer <= 0: _boss_enter("exposed",2.0,"boss_exposed")
 		"exposed":
 			if boss_timer <= 0: _boss_enter("hunt",1.2)
 	return {"direction":direction,"speed":travel}
+
+func _boss_sweep_hits(point: Vector3) -> bool:
+	var offset := point-global_position
+	if absf(offset.y)>2.0: return false
+	offset.y = 0
+	if offset.length()>BOSS_SWEEP_RADIUS: return false
+	if offset.length()<0.01: return true
+	return (-global_basis.z).dot(offset.normalized()) >= cos(BOSS_SWEEP_HALF_ANGLE)

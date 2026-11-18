@@ -46,6 +46,56 @@ atlas_material('apron_print',(296,813,35,66))
 atlas_material('navy_fabric',(255,824,38,45))
 atlas_material('orange_fabric',(686,756,35,80))
 
+# One portable atlas material: base color preserves face/decal UVs; small data maps
+# preserve each source material's roughness/metal response and the ember emission.
+ATLAS_COLS=5;ATLAS_ROWS=4;TILE=64;PAD=2
+atlas_slots={name:i for i,name in enumerate(materials)}
+base=bpy.data.images.new('combat_atlas_color',ATLAS_COLS*TILE,ATLAS_ROWS*TILE)
+base_pixels=[0.0]*(ATLAS_COLS*TILE*ATLAS_ROWS*TILE*4)
+data=bpy.data.images.new('combat_atlas_rough_metal',ATLAS_COLS*4,ATLAS_ROWS*4);data.colorspace_settings.name='Non-Color'
+data_pixels=[0.0]*(ATLAS_COLS*4*ATLAS_ROWS*4*4)
+emission=bpy.data.images.new('combat_atlas_emission',ATLAS_COLS*4,ATLAS_ROWS*4)
+emission_pixels=[0.0]*(ATLAS_COLS*4*ATLAS_ROWS*4*4)
+for name,index in atlas_slots.items():
+    material=materials[name];bs=material.node_tree.nodes.get('Principled BSDF')
+    source_tex=next(n for n in material.node_tree.nodes if n.type=='TEX_IMAGE').image
+    iw,ih=source_tex.size;pixels=list(source_tex.pixels);column=index%ATLAS_COLS;row=index//ATLAS_COLS
+    for y in range(TILE):
+        sy=round(max(0,min(1,(y-PAD)/(TILE-PAD*2-1)))*(ih-1))
+        for x in range(TILE):
+            sx=round(max(0,min(1,(x-PAD)/(TILE-PAD*2-1)))*(iw-1))
+            target=((row*TILE+y)*(ATLAS_COLS*TILE)+column*TILE+x)*4
+            base_pixels[target:target+4]=pixels[(sy*iw+sx)*4:(sy*iw+sx)*4+4]
+    for y in range(4):
+        for x in range(4):
+            target=((row*4+y)*(ATLAS_COLS*4)+column*4+x)*4
+            data_pixels[target:target+4]=[1,bs.inputs['Roughness'].default_value,bs.inputs['Metallic'].default_value,1]
+            emission_pixels[target:target+4]=[1,.15,.005,1] if name=='ember' else [0,0,0,1]
+base.pixels=base_pixels;data.pixels=data_pixels;emission.pixels=emission_pixels
+for im in [base,data,emission]:im.pack()
+atlas=bpy.data.materials.new('COMBAT_ATLAS');atlas.use_nodes=True
+bs=atlas.node_tree.nodes.get('Principled BSDF')
+def atlas_tex(im):
+    node=atlas.node_tree.nodes.new('ShaderNodeTexImage');node.image=im;node.interpolation='Closest';return node
+atlas.node_tree.links.new(atlas_tex(base).outputs['Color'],bs.inputs['Base Color'])
+separate=atlas.node_tree.nodes.new('ShaderNodeSeparateColor')
+atlas.node_tree.links.new(atlas_tex(data).outputs['Color'],separate.inputs['Color'])
+atlas.node_tree.links.new(separate.outputs['Green'],bs.inputs['Roughness'])
+atlas.node_tree.links.new(separate.outputs['Blue'],bs.inputs['Metallic'])
+atlas.node_tree.links.new(atlas_tex(emission).outputs['Color'],bs.inputs['Emission Color']);bs.inputs['Emission Strength'].default_value=.65
+
+def atlas_mesh(obj):
+    mesh=obj.data;uv=mesh.uv_layers.active
+    for poly in mesh.polygons:
+        name=mesh.materials[poly.material_index].name;index=atlas_slots[name]
+        column=index%ATLAS_COLS;row=index//ATLAS_COLS
+        for loop in poly.loop_indices:
+            u,v=uv.data[loop].uv
+            u=max(0,min(1,u));v=max(0,min(1,v))
+            uv.data[loop].uv=((column+(PAD+u*(TILE-PAD*2))/TILE)/ATLAS_COLS,(row+(PAD+v*(TILE-PAD*2))/TILE)/ATLAS_ROWS)
+        poly.material_index=0
+    mesh.materials.clear();mesh.materials.append(atlas)
+
 def face_surface(parent,kind):
     verts=[];uvs=[]
     for row,(z,width,y) in enumerate([(-.23,.105,-.12),(-.11,.155,-.175),(.07,.18,-.17),(.22,.165,-.10)]):
@@ -115,6 +165,8 @@ def export(name,root):
         for obj in objects:obj.select_set(True)
         bpy.context.view_layer.objects.active=objects[0];bpy.ops.object.join()
         objects[0].name=pivot.name+'_batched'
+    for obj in root.children_recursive:
+        if obj.type=='MESH':atlas_mesh(obj)
     wrapper=empty(name+'_asset',(0,0,0))
     root.parent=wrapper
     root=wrapper
@@ -266,4 +318,4 @@ scene=bpy.context.scene; scene.render.engine='CYCLES'; scene.cycles.samples=16; 
 scene.world.color=(.13,.13,.13)
 bpy.ops.wm.save_as_mainfile(filepath=str(ROOT/'modeling/combat_assets.blend'))
 scene.render.filepath=str(REVIEW/'lineup.png'); bpy.ops.render.render(write_still=True)
-(OUT/'manifest.json').write_text(json.dumps({'generator':'modeling/01_build_assets.py','units':'metres','front':'-Z in Godot','joint_animation':'runtime rigid limb pivots','texture':'original pixel wear plus cropped supplied cast atlas face/fabric panels','mesh_parts':counts,'inferred':['rear costume','mechanisms','exact dimensions'],'reference':['art/market.png','art/cast.png','art/weapons.png']},indent=2))
+(OUT/'manifest.json').write_text(json.dumps({'generator':'modeling/01_build_assets.py','units':'metres','front':'-Z in Godot','joint_animation':'runtime rigid limb pivots','texture':'original pixel wear plus cropped supplied cast atlas face/fabric panels','mesh_parts':counts,'materials':'one color/PBR/emission atlas material per mesh pivot','inferred':['rear costume','mechanisms','exact dimensions'],'reference':['art/market.png','art/cast.png','art/weapons.png']},indent=2))
