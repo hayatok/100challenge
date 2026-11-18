@@ -11,7 +11,7 @@ OUT.mkdir(parents=True, exist_ok=True)
 lengths = dict(fire0=.17, fire1=.43, fire2=.79, reload=.84, switch=.15,
                empty=.1, flesh=.12, kill=.46, hurt=.34, attack=.33,
                charge_warning=1.14, flare=.94, bell=2.5, gate=1.36,
-               crash=1.42, depart=3.5, hum0=4, hum1=4, hum2=4, step0=.21, step1=.19, step2=.27, chain=1.05)
+               crash=1.42, depart=3.5, hum0=4, hum1=4, hum2=4, step0=.21, step1=.19, step2=.27, chain=1.05, discharge=.88)
 for index, (name, length) in enumerate(lengths.items()):
     rng = Random(index + 417)
     samples = array("h")
@@ -45,6 +45,9 @@ for index, (name, length) in enumerate(lengths.items()):
             if name == "step2": sound += .13*tone(392)*decay(12)
         elif name == "chain":
             sound = sum((.29*tone(650+104*j)+.44*previous)*exp(-12*(t-p)) for j,p in enumerate([0,.17,.34,.42,.62]) if t>=p)
+        elif name == "discharge":
+            crackle = (.59*n+.37*tone(714)) * (0.32+.68*abs(tone(37))) * decay(8)
+            sound = crackle + .62*sin(2*pi*(51*t+3*(1-decay(13))))*decay(5) + .2*tone(583)*decay(3.4)
         elif name == "flesh": sound = (n*.46 + tone(117)*.65)*decay(34)
         elif name == "flare": sound = (previous*1.4+tone(66)*.7)*decay(4)
         elif name == "gate": sound = (.32*tone(69)+.5*previous+ .18*tone(192))*(.4+.5*abs(tone(11)))*sin(pi*t/length)

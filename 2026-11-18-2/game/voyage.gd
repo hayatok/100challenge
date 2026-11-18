@@ -1,6 +1,7 @@
 extends Node3D
 
 const Geometry = preload("res://build/harbor_geometry.gd")
+const RushDirector = preload("res://combat/rush_director.gd")
 const Harbor = preload("res://world/harbor.gd")
 const Player = preload("res://combat/player.gd")
 const Enemy = preload("res://combat/enemy.gd")
@@ -20,6 +21,13 @@ var kills := 0
 var elapsed := 0.0
 var objective := ""
 var mode := "title"
+var rush: RushDirector
+var rush_best := 0
+var rush_bonus := 0
+var bonus_left := 0.0
+var incoming_kinds: Array = []
+var incoming_points: Array = []
+var arrival_left := 0.0
 var stride_left := 0.0
 var saved: Dictionary = {}
 var settings: Dictionary = {}
@@ -42,11 +50,14 @@ func _ready() -> void:
 	if config.load(storage) == OK:
 		var stored_settings = config.get_value("options", "values", {})
 		if stored_settings is Dictionary: settings = stored_settings
+		var best = config.get_value("rush", "best", 0)
+		if best is int and best >= 0: rush_best = best
 		var data = config.get_value("run", "entry", {})
 		if data is Dictionary and _valid_entry(data): saved = data
 	add_child(sound)
 	add_child(bridge)
 	bridge.begin.connect(_begin)
+	bridge.rush_requested.connect(_begin_rush)
 	bridge.retry_requested.connect(_retry)
 	bridge.resume_requested.connect(_resume)
 	bridge.pause_requested.connect(_pause)
@@ -56,7 +67,7 @@ func _ready() -> void:
 	bridge.options_changed.connect(_configure)
 	bridge.set_options(settings)
 	sound.set_volume(settings.get("volume",0.7))
-	bridge.show_title(not saved.is_empty())
+	bridge.show_title(not saved.is_empty(), rush_best)
 
 func _valid_entry(data: Dictionary) -> bool:
 	if data.get("version") != 1 or not data.get("player") is Dictionary: return false
@@ -76,6 +87,7 @@ func _commit() -> void:
 	var config := ConfigFile.new()
 	config.set_value("options", "values", settings)
 	config.set_value("run", "entry", saved)
+	config.set_value("rush", "best", rush_best)
 	var scratch := storage + ".tmp"
 	if config.save(scratch) == OK:
 		var err := DirAccess.rename_absolute(ProjectSettings.globalize_path(scratch), ProjectSettings.globalize_path(storage))
@@ -84,6 +96,7 @@ func _commit() -> void:
 func _configure(values: Dictionary) -> void:
 	settings = values.duplicate()
 	if is_instance_valid(player): player.configure(settings)
+	if rush and world: world.set_rush_flash(settings.get("flash",true))
 	sound.set_volume(settings.get("volume",0.7))
 	_commit()
 
@@ -94,6 +107,9 @@ func _begin(continued: bool) -> void:
 	kills = 0
 	elapsed = 0.0
 	_enter(0,0,{})
+
+func _begin_rush() -> void:
+	_enter(0, 0, {}, true)
 
 func _retry() -> void:
 	if not _valid_entry(saved): return
@@ -106,12 +122,15 @@ func _dispose_stage() -> void:
 	if is_instance_valid(session):
 		remove_child(session)
 		session.queue_free()
+	incoming_kinds.clear()
+	incoming_points.clear()
+	rush = null
 	session = null
 	world = null
 	player = null
 	remaining = 0
 
-func _enter(next_chapter: int, point: int, inventory: Dictionary) -> void:
+func _enter(next_chapter: int, point: int, inventory: Dictionary, arcade := false) -> void:
 	_dispose_stage()
 	chapter = next_chapter
 	checkpoint = point
@@ -121,21 +140,30 @@ func _enter(next_chapter: int, point: int, inventory: Dictionary) -> void:
 	add_child(session)
 	world = Harbor.new()
 	session.add_child(world)
-	world.objective.connect(func(line: String): objective = line)
-	world.spawn_wave.connect(_spawn)
-	world.encounter_changed.connect(_checkpoint)
-	world.chapter_finished.connect(_exit_reached)
 	world.bell_rang.connect(_ring)
 	world.sound.connect(sound.effect)
-	world.supplied.connect(_supply)
-	world.build(chapter,checkpoint)
+	if arcade:
+		rush = RushDirector.new()
+		bonus_left = 0.0
+		world.rush_discharge.connect(_discharge)
+		world.build_rush()
+		world.set_rush_flash(settings.get("flash",true))
+	else:
+		world.objective.connect(func(line: String): objective = line)
+		world.spawn_wave.connect(_spawn)
+		world.encounter_changed.connect(_checkpoint)
+		world.chapter_finished.connect(_exit_reached)
+		world.supplied.connect(_supply)
+		world.build(chapter,checkpoint)
 	Geometry.batch(world)
 	player = Player.new()
 	player.position = world.spawn_position()
 	player.rotation.y = world.spawn_yaw()
 	session.add_child(player)
 	player.configure(settings)
-	if not inventory.is_empty(): player.restore(inventory)
+	if arcade:
+		player.restore({"weapon":0, "owned":[true,true,false], "ammo":[120,24,0]})
+	elif not inventory.is_empty(): player.restore(inventory)
 	player.died.connect(_die)
 	player.feedback.connect(_feedback)
 	if chapter >= 1 and not player.owned[1]: player.unlock_weapon(1)
@@ -144,8 +172,12 @@ func _enter(next_chapter: int, point: int, inventory: Dictionary) -> void:
 	hud_cache.clear()
 	cue_left = 0.0
 	bridge.show_play()
-	world.start_encounter()
-	_save_position()
+	if arcade:
+		sound.battle(false)
+		_advance_rush(0.0)
+	else:
+		world.start_encounter()
+		_save_position()
 	_update_hud()
 
 func _checkpoint(point: int) -> void:
@@ -159,7 +191,7 @@ func _save_position() -> void:
 	_commit()
 
 func _spawn(kinds: Array, positions: Array) -> void:
-	remaining = kinds.size()
+	remaining += kinds.size()
 	for i in range(kinds.size()):
 		var actor := Enemy.new()
 		actor.setup(int(kinds[i]),player)
@@ -171,8 +203,11 @@ func _spawn(kinds: Array, positions: Array) -> void:
 
 func _defeated(_enemy: Node3D) -> void:
 	if mode != "play": return
-	kills += 1
 	remaining -= 1
+	if rush:
+		rush.register_kill()
+		return
+	kills += 1
 	if remaining == 0:
 		# Spawning another wave can synchronously repopulate remaining.
 		world.notify_clear()
@@ -180,7 +215,65 @@ func _defeated(_enemy: Node3D) -> void:
 
 func _ring(point: Vector3) -> void:
 	for actor in get_tree().get_nodes_in_group("enemies"):
-		if actor.kind < 2: actor.lure(point,4.5)
+		if actor.kind < 2: actor.lure(point, 7.0 if rush else 4.5)
+
+func _discharge(point: Vector3, radius: float) -> void:
+	if not rush or mode != "play": return
+	var before := rush.kills
+	for actor in get_tree().get_nodes_in_group("enemies"):
+		var offset: Vector3 = actor.global_position - point
+		offset.y = 0.0
+		if offset.length_squared() <= radius * radius:
+			actor.receive_shot(270.0, actor.global_position + Vector3.UP, offset.normalized())
+	var previous := rush.score
+	rush.register_discharge(rush.kills - before)
+	if rush.score > previous:
+		rush_bonus = rush.score - previous
+		bonus_left = 2.0
+
+func _advance_rush(delta: float) -> void:
+	bonus_left = maxf(0.0, bonus_left - delta)
+	var stage_before := rush.stage
+	# Let the announced group arrive before reserving another spawn lane.
+	var occupied := remaining if incoming_kinds.is_empty() else RushDirector.ALIVE_LIMITS.back() as int
+	var kinds := rush.advance(delta, occupied)
+	if rush.finished:
+		_finish_rush(true)
+		return
+	if rush.stage > stage_before:
+		player.refill()
+		player.give_health(25)
+	if not incoming_kinds.is_empty():
+		arrival_left -= delta
+		if arrival_left <= 0.0:
+			var arriving: Array = []
+			var positions: Array = []
+			for i in range(incoming_points.size()):
+				if player.global_position.distance_to(incoming_points[i]) >= 3.0:
+					arriving.append(incoming_kinds[i])
+					positions.append(incoming_points[i])
+			if not arriving.is_empty(): _spawn(arriving, positions)
+			incoming_kinds.clear()
+			incoming_points.clear()
+	if not kinds.is_empty():
+		incoming_kinds = kinds
+		incoming_points = world.rush_spawn_points(rush.wave, kinds.size(), player.global_position)
+		arrival_left = 1.0
+		world.warn_rush_spawns(incoming_points, arrival_left)
+
+func _finish_rush(survived: bool) -> void:
+	if mode != "play": return
+	mode = "rush_result"
+	player.set_controls(Vector2.ZERO, Vector2.ZERO, false)
+	session.process_mode = Node.PROCESS_MODE_DISABLED
+	var record := rush.score > rush_best
+	if record:
+		rush_best = rush.score
+		_commit()
+	sound.stop_all()
+	if survived: sound.ending()
+	bridge.show_rush_result({"score":rush.score, "best":rush_best, "kills":rush.kills,
+		"best_discharge":rush.best_discharge, "survived":survived, "new_best":record})
 
 func _supply() -> void:
 	player.give_health(45)
@@ -211,7 +304,11 @@ func _exit_reached() -> void:
 
 func _physics_process(delta: float) -> void:
 	if mode != "play" or not is_instance_valid(player): return
-	elapsed += delta
+	if rush:
+		_advance_rush(delta)
+		if mode != "play": return
+	else:
+		elapsed += delta
 	cue_left = maxf(0.0,cue_left-delta)
 	var control := bridge.consume_controls()
 	player.set_controls(control.move,control.look,control.fire)
@@ -224,7 +321,12 @@ func _physics_process(delta: float) -> void:
 func _update_hud() -> void:
 	var state := player.snapshot()
 	state.ammo = state.ammo[state.weapon]
-	state.merge({"chapter":chapter+1,"checkpoint":str(checkpoint+1)+"/3","kills":kills,"objective":boss_cue if cue_left > 0 else objective})
+	if rush:
+		state.merge({"rush":true, "seconds":ceili(rush.time_left), "score":rush.score,
+			"stage":rush.stage, "bell_ready":world.rush_bell_ready(),
+			"bonus":rush_bonus if bonus_left > 0.0 else 0})
+	else:
+		state.merge({"chapter":chapter+1,"checkpoint":str(checkpoint+1)+"/3","kills":kills,"objective":boss_cue if cue_left > 0 else objective})
 	if state != hud_cache:
 		hud_cache = state
 		bridge.update_hud(state)
@@ -244,6 +346,9 @@ func _resume() -> void:
 
 func _die() -> void:
 	if mode != "play": return
+	if rush:
+		_finish_rush(false)
+		return
 	mode = "dead"
 	get_tree().paused = true
 	bridge.show_death()
@@ -253,4 +358,4 @@ func _title() -> void:
 	get_tree().paused = false
 	_dispose_stage()
 	sound.stop_all()
-	bridge.show_title(not saved.is_empty())
+	bridge.show_title(not saved.is_empty(), rush_best)

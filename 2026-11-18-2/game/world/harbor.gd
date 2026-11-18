@@ -4,11 +4,13 @@ signal spawn_wave(kinds: Array, positions: Array)
 signal encounter_changed(checkpoint: int)
 signal chapter_finished
 signal bell_rang(point: Vector3)
+signal rush_discharge(point: Vector3, radius: float)
 signal sound(event: String, point: Vector3)
 signal objective(text: String)
 signal supplied
 
 const PROP = preload("res://world/prop.gd")
+const RUSH_BELL = preload("res://world/rush_bell.gd")
 var chapter := 0
 var checkpoint := 0
 var wave := 0
@@ -32,8 +34,117 @@ var detour_fight := 0
 var route_points: Array[Vector3] = []
 var service_exit: StaticBody3D
 var service_lights: Array[OmniLight3D] = []
+var rush_bells: Array[RUSH_BELL] = []
+var rush_warning_lights: Array[OmniLight3D] = []
+var rush_warning_left := 0.0
 
-func build(chapter_index: int, checkpoint_index: int) -> void:
+func build_rush() -> void:
+	_reset(0, 0, 0.34)
+	_shell(0)
+	_market(0, false)
+	intro_shutter.position.y = 7.35
+	# Seal the edge of the market floor and give the far spawn line a loading shutter.
+	_box(Vector3(0, 3.5, 0.12), Vector3(28, 7, 0.5), "steel")
+	_box(Vector3(0, 3.5, -35.9), Vector3(28, 7, 0.7), "steel")
+	_box(Vector3(0, 2.3, -35.48), Vector3(13.6, 4.6, 0.2), "black", false)
+	for slat in range(16):
+		_box(Vector3(0, 0.24 + slat * 0.27, -35.33), Vector3(13.5, 0.24, 0.125), "steel", false)
+	_lamp(Vector3(-6, 5.7, -9), Color("72e9cc"), 2.05)
+	_lamp(Vector3(-4.8, 5.5, -23.5), Color("73d9d1"), 2.05)
+	_lamp(Vector3(8.3, 5.3, -12.8), Color("f3ab55"), 2.5)
+	_lamp(Vector3(6, 5.4, -27), Color("ffba72"), 2.5)
+	_rush_trusses()
+	_floor_details(0)
+	_add_rush_bell(Vector3(-3.45, 0, -8.8))
+	_add_rush_bell(Vector3(3.8, 0, -24.4))
+	for position in [Vector3(-4, 3.2, -34.7), Vector3(4, 3.2, -34.7),
+			Vector3(-4, 3.2, -0.65), Vector3(4, 3.2, -0.65)]:
+		var beacon := OmniLight3D.new()
+		beacon.position = position
+		beacon.light_color = Color("ff512e")
+		beacon.omni_range = 9.0
+		beacon.light_energy = 3.1
+		beacon.visible = false
+		add_child(beacon)
+		var marker := MeshInstance3D.new()
+		var mesh := BoxMesh.new()
+		mesh.size = Vector3(0.37, 0.16, 0.18)
+		marker.mesh = mesh
+		var red := StandardMaterial3D.new()
+		red.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+		red.albedo_color = Color("ff522e")
+		marker.material_override = red
+		beacon.add_child(marker)
+		rush_warning_lights.append(beacon)
+
+func _rush_trusses() -> void:
+	# Box beams and braces give the open shutter a visible frame and break up the ceiling.
+	for z in [-7.0, -16.6, -25.5, -34.3]:
+		_box(Vector3(0, 6.42, z), Vector3(27.1, 0.16, 0.2), "black", false)
+		_box(Vector3(0, 6.96, z), Vector3(27.1, 0.16, 0.2), "black", false)
+		for segment in range(8):
+			var brace := _box(Vector3((float(segment) - 3.5) * 3.3, 6.7, z),
+				Vector3(3.45, 0.14, 0.16), "steel", false)
+			brace.rotation.z = 0.164 if segment % 2 == 0 else -0.164
+
+func _add_rush_bell(point: Vector3) -> void:
+	var bell := RUSH_BELL.new()
+	bell.position = point
+	bell.setup(rush_bells.size() + 1, mats.steel, mats.yellow)
+	bell.add_to_group("rush_bells")
+	add_child(bell)
+	rush_bells.append(bell)
+	bell.lure.connect(func(center: Vector3):
+		bell_rang.emit(center)
+		sound.emit("bell", center)
+	)
+	bell.discharge.connect(func(center: Vector3, radius: float):
+		rush_discharge.emit(center, radius)
+		sound.emit("discharge", center)
+	)
+
+func set_rush_flash(enabled: bool) -> void:
+	for bell in rush_bells:
+		bell.set_flash(enabled)
+
+func rush_bell_ready() -> bool:
+	for bell in rush_bells:
+		if bell.state == RUSH_BELL.State.READY:
+			return true
+	return false
+
+func rush_spawn_points(wave_index: int, count: int, player_position: Vector3) -> Array:
+	# Each lane is between the fish stalls. Start at the far shutter, then rotate sides and ends.
+	var order := [0, 1, 3, 0, 2, 1, 2, 3]
+	var lane: int = order[posmod(wave_index, order.size())]
+	var positions: Array = []
+	if count <= 0:
+		return positions
+	for flank in [lane, lane ^ 1, lane ^ 3, lane ^ 2]:
+		var side := -1.0 if flank % 2 == 0 else 1.0
+		var back: bool = flank < 2
+		for row in range(3):
+			for x in [2.15, 4.0, 5.65]:
+				var depth := -33.6 + row * 1.6 if back else -1.7 - row * 1.6
+				var point := Vector3(side * x, 0.2, depth)
+				if point.distance_squared_to(player_position) >= 9.0 * 9.0:
+					positions.append(point)
+					if positions.size() == count:
+						return positions
+	return positions
+
+func warn_rush_spawns(points: Array, seconds: float) -> void:
+	rush_warning_left = seconds
+	for beacon in rush_warning_lights:
+		beacon.visible = false
+	if seconds <= 0.0:
+		return
+	for point: Vector3 in points:
+		var lane := (0 if point.z < -18 else 2) + (0 if point.x < 0.0 else 1)
+		if lane < rush_warning_lights.size():
+			rush_warning_lights[lane].visible = true
+
+func _reset(chapter_index: int, checkpoint_index: int, ambient := -1.0) -> void:
 	chapter = clampi(chapter_index, 0, 2)
 	checkpoint = clampi(checkpoint_index, 0, 2)
 	rng.seed = 417
@@ -45,6 +156,9 @@ func build(chapter_index: int, checkpoint_index: int) -> void:
 	detour_fight = 0
 	route_points.clear()
 	service_lights.clear()
+	rush_bells.clear()
+	rush_warning_lights.clear()
+	rush_warning_left = 0.0
 	for child in get_children():
 		remove_child(child)
 		child.queue_free()
@@ -56,7 +170,10 @@ func build(chapter_index: int, checkpoint_index: int) -> void:
 	cleared = false
 	finished = false
 	_materials()
-	_environment()
+	_environment(ambient)
+
+func build(chapter_index: int, checkpoint_index: int) -> void:
+	_reset(chapter_index, checkpoint_index)
 	for bay in range(3):
 		_shell(bay)
 		match chapter:
@@ -106,7 +223,12 @@ func start_encounter() -> void:
 		if is_instance_valid(intro_shutter):
 			create_tween().tween_property(intro_shutter, "position:y", 6.8, 2.8).set_trans(Tween.TRANS_SINE)
 
-func _process(_delta: float) -> void:
+func _process(delta: float) -> void:
+	if rush_warning_left > 0.0:
+		rush_warning_left -= delta
+		if rush_warning_left <= 0.0:
+			for beacon in rush_warning_lights:
+				beacon.visible = false
 	if not armed or finished:
 		return
 	var player := get_tree().get_first_node_in_group("player") as Node3D
@@ -304,7 +426,7 @@ func _shell(bay: int) -> void:
 	if bay == 0:
 		_box(Vector3(0, 3.5, 1), Vector3(28, 7, 0.5), "steel")
 
-func _market(bay: int) -> void:
+func _market(bay: int, campaign_bells := true) -> void:
 	var z := -float(bay) * 36
 	for side in [-1.0, 1.0]:
 		for row in range(4 if bay == 0 else 2):
@@ -321,9 +443,10 @@ func _market(bay: int) -> void:
 	_sign("場内\n禁煙", Vector3(12.25, 2.7, z - 2.91), 0.012)
 	_box(Vector3(-10, 4, z - 3), Vector3(5, 1.4, 0.15), "white", false)
 	_sign("競り場  04:17", Vector3(-10, 4, z - 2.89), 0.018)
-	_bell(Vector3(5.8, 2.3, z - 12))
+	if campaign_bells:
+		_bell(Vector3(5.8, 2.3, z - 12))
 	if bay == 0:
-		_market_entrance()
+		_market_entrance(campaign_bells)
 	if bay == 1:
 		_box(Vector3(0, 0.42, z - 21), Vector3(3, 0.84, 5), "wood")
 		_sign("競売番号  四一七", Vector3(0, 3.8, z - 21), 0.018)
@@ -427,11 +550,11 @@ func _sign(value: String, pos: Vector3, pixel := 0.024) -> void:
 		var width := maxf(2.0, value.length() * pixel * 40.0)
 		_box(pos + Vector3(0, 0, -0.09), Vector3(width + 0.4, pixel * 68.0, 0.12), "black", false)
 
-func _lamp(pos: Vector3, tint: Color) -> void:
+func _lamp(pos: Vector3, tint: Color, energy := 3.2) -> void:
 	var light := OmniLight3D.new()
 	light.position = pos
 	light.light_color = tint
-	light.light_energy = 3.2
+	light.light_energy = energy
 	light.omni_range = 17
 	add_child(light)
 	var fixture := _box(pos, Vector3(3.2, 0.15, 0.5), "white", false)
@@ -498,14 +621,14 @@ func _hook(pos: Vector3) -> void:
 		)
 	)
 
-func _environment() -> void:
+func _environment(ambient: float) -> void:
 	var environment := WorldEnvironment.new()
 	var env := Environment.new()
 	env.background_mode = Environment.BG_COLOR
 	env.background_color = Color("dc9379") if chapter == 2 else Color("132a32")
 	env.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
 	env.ambient_light_color = Color("b4c8d0")
-	env.ambient_light_energy = 0.5 if chapter < 2 else 0.55
+	env.ambient_light_energy = ambient if ambient >= 0.0 else (0.5 if chapter < 2 else 0.55)
 	env.tonemap_mode = Environment.TONE_MAPPER_FILMIC
 	environment.environment = env
 	add_child(environment)
@@ -611,11 +734,12 @@ func _crate_face(pos: Vector3, size: Vector2) -> void:
 	print_mesh.position = pos
 	add_child(print_mesh)
 
-func _market_entrance() -> void:
+func _market_entrance(campaign_bells: bool) -> void:
 	# A foreground bell, angled crate silhouettes and the opening shutter frame the first worker.
-	_bell(Vector3(-3.6, 3.0, -7.8))
-	_box(Vector3(-4.25, 3.2, -7.8), Vector3(0.45, 6.4, 0.5), "steel")
-	_box(Vector3(-3.8, 4.0, -7.8), Vector3(1.3, 0.2, 0.35), "gold", false)
+	if campaign_bells:
+		_bell(Vector3(-3.6, 3.0, -7.8))
+		_box(Vector3(-4.25, 3.2, -7.8), Vector3(0.45, 6.4, 0.5), "steel")
+		_box(Vector3(-3.8, 4.0, -7.8), Vector3(1.3, 0.2, 0.35), "gold", false)
 	intro_shutter = _box(Vector3(1.4, 3.5, -17.0), Vector3(6.8, 17.2, 0.4), "steel")
 	intro_shutter.rotation.z = PI / 2
 	intro_shutter.set_meta("animated", true)

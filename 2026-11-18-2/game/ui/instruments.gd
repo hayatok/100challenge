@@ -58,21 +58,10 @@ func _draw() -> void:
 	var health := clampi(int(state.get("hp", 100)), 0, 100)
 	var current := clampi(int(state.get("weapon", 0)), 0, WEAPONS.size() - 1)
 	var accent := RED if health <= 25 else MINT
-	var w := minf(size.x - (112 if touch else 32) * s, 555 * s)
-	var objective := str(state.get("objective", ""))
-	var chapter := "第%02d章" % int(state.get("chapter", 1))
-	var checkpoint := str(state.get("checkpoint", ""))
-	var paragraph := TextParagraph.new()
-	paragraph.width = maxf(1.0, w - 30 * s)
-	paragraph.break_flags = (TextServer.BREAK_MANDATORY | TextServer.BREAK_WORD_BOUND
-		| TextServer.BREAK_ADAPTIVE)
-	var objective_size := roundi(19 * s)
-	paragraph.add_string(wrap_objective(objective, paragraph.width, objective_size), font, objective_size)
-	var paragraph_height := paragraph.get_size().y
-	plate(Rect2(pad, pad, w, maxf(65 * s, paragraph_height + 35 * s)), GOLD)
-	line_text(chapter, Vector2(31, 37) * s, 13 * s, GOLD)
-	line_text(checkpoint, Vector2(103, 37) * s, 13 * s, MUTED, w - 112 * s)
-	paragraph.draw(get_canvas_item(), Vector2(31, 43) * s, INK)
+	if state.get("rush", false):
+		draw_rush(s, pad)
+	else:
+		draw_objective(s, pad)
 
 	var hp_rect := Rect2(pad, size.y - 68 * s, 178 * s, 52 * s)
 	plate(hp_rect, accent)
@@ -109,6 +98,54 @@ func _draw() -> void:
 		draw_touch(s)
 	else:
 		draw_weapon_slots(s)
+
+func draw_objective(s: float, pad: float) -> void:
+	var w := minf(size.x - (112 if touch else 32) * s, 555 * s)
+	var objective := str(state.get("objective", ""))
+	var chapter := "第%02d章" % int(state.get("chapter", 1))
+	var checkpoint := str(state.get("checkpoint", ""))
+	var paragraph := TextParagraph.new()
+	paragraph.width = maxf(1.0, w - 30 * s)
+	paragraph.break_flags = (TextServer.BREAK_MANDATORY | TextServer.BREAK_WORD_BOUND
+		| TextServer.BREAK_ADAPTIVE)
+	var objective_size := roundi(19 * s)
+	paragraph.add_string(wrap_objective(objective, paragraph.width, objective_size), font, objective_size)
+	var paragraph_height := paragraph.get_size().y
+	plate(Rect2(pad, pad, w, maxf(65 * s, paragraph_height + 35 * s)), GOLD)
+	line_text(chapter, Vector2(31, 37) * s, 13 * s, GOLD)
+	line_text(checkpoint, Vector2(103, 37) * s, 13 * s, MUTED, w - 112 * s)
+	paragraph.draw(get_canvas_item(), Vector2(31, 43) * s, INK)
+
+
+func draw_rush(s: float, pad: float) -> void:
+	var seconds := maxi(0, int(state.get("seconds", 90)))
+	var clock_color := RED if seconds <= 10 else GOLD
+	var ticket := Rect2(pad, pad, 264 * s, 60 * s)
+	plate(ticket, clock_color)
+	var left := ticket.position
+	var rule_x := left.x + 119 * s
+	draw_line(Vector2(rule_x, left.y + 9 * s), Vector2(rule_x, ticket.end.y - 9 * s), EDGE, s)
+	line_text("残り時間", left + Vector2(13, 21) * s, 13 * s, MUTED)
+	line_text("得点", left + Vector2(131, 21) * s, 13 * s, MUTED)
+	line_text("%02d:%02d" % [floori(seconds / 60.0), seconds % 60],
+		left + Vector2(13, 49) * s, 28 * s, clock_color)
+	line_text("%06d" % int(state.get("score", 0)),
+		left + Vector2(131, 49) * s, 28 * s, GOLD, 123 * s)
+
+	var bell_ready: bool = state.get("bell_ready", false)
+	var guide_color := MINT if bell_ready else GOLD
+	var guide := "帯電中　光る輪の鐘を撃つ" if bell_ready else "鐘を撃って誘い、帯電したらもう一度撃つ"
+	var available_width := (pause_rect().position.x if touch else size.x - pad) - pad - 8 * s
+	var help := Rect2(pad, ticket.end.y + 5 * s, minf(386 * s, available_width), 29 * s)
+	plate(help, guide_color)
+	line_text("第%d段階" % int(state.get("stage", 1)), help.position + Vector2(10, 20) * s, 13 * s, guide_color)
+	line_text(guide, help.position + Vector2(76, 20) * s, 15 * s, INK, help.size.x - 85 * s)
+	var bonus := int(state.get("bonus", 0))
+	if bonus > 0:
+		var badge := Rect2(ticket.end.x + 7 * s, pad, 136 * s, 29 * s)
+		if badge.end.x <= pad + available_width:
+			plate(badge, MINT)
+			line_text("同時撃破 +%d" % bonus, badge.position + Vector2(10, 20) * s, 15 * s, MINT)
 
 func wrap_objective(value: String, width: float, font_size: int) -> String:
 	var sentence_end := value.find("。") + 1
