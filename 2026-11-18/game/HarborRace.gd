@@ -7,6 +7,13 @@ const Effects := preload("res://presentation/RaceEffects.gd")
 const Racer := preload("res://racers/RacerVisual.gd")
 const DRAG_THRESHOLD := 9.0
 const TAP_SECONDS := 0.33
+const COUNTDOWN_SECONDS := 2.5
+const CHASE_FOV := 62.0
+# The apron is eight metres deep. Rivals slow into the nearest free mark behind the portrait.
+const FINISH_SPOTS := [
+	Vector2(-3.40, 1.1), Vector2(-1.70, 1.6), Vector2(0.0, 1.1), Vector2(1.70, 1.6), Vector2(3.40, 1.1),
+	Vector2(-3.0, 2.55), Vector2(-0.90, 2.75), Vector2(0.95, 2.75), Vector2(3.0, 2.55)
+]
 # Keep Retina interface pixels sharp while limiting the cost of shading the 3D race.
 const MOBILE_RENDER_PIXELS := 820000.0
 const MOBILE_WHARF_RENDER_PIXELS := 590000.0
@@ -15,6 +22,7 @@ var selected_course := ""
 @onready var cam: Camera3D = $FollowCamera
 @onready var chase_offset: Vector3 = $ChaseOffset.position
 @onready var chase_focus: Vector3 = $ChaseLookAhead.position
+@onready var portrait_offset: Vector3 = $PortraitOffset.position
 @onready var hud := $Overlay/HUD
 @onready var audio := $Audio
 @onready var portrait_fill: DirectionalLight3D = $PortraitFill
@@ -31,6 +39,8 @@ var countdown := 0.0
 var last_count := 0
 var idle_time := 0.0
 var finish_elapsed := 0.0
+var finish_marks := {}
+var result_cheered := false
 var target_x := 0.0
 var jump_queued := false
 var boost_queued := false
@@ -132,6 +142,8 @@ func _option_changed(option: String, value: bool) -> void:
 	match option:
 		"motion":
 			reduced = value
+			if reduced:
+				effects.reset()
 			settings.set_value("display", option, value)
 		"sound":
 			sfx = value
@@ -170,6 +182,8 @@ func _choose_course(id: String) -> void:
 					mesh.lod_bias = 0.3 if id == Courses.WHARF else 1.0
 		selected_course = id
 		_size_mobile_render()
+		for figure in figures:
+			figure.light_for_course(id == Courses.YARD)
 		portrait_fill.light_energy = 0.10 if id == Courses.YARD else wharf_fill_energy
 		portrait_fill.light_color = Color("#c1d8ff") if id == Courses.YARD else wharf_fill_color
 	start_race()
@@ -184,26 +198,31 @@ func _show_course_menu() -> void:
 
 func start_race() -> void:
 	get_viewport().disable_3d = false
+	portrait_fill.show()
 	sim.reset(selected_course)
 	_reset_input()
 	target_x = sim.runners[0].x
 	camera_x = target_x
 	mode = "countdown"
-	countdown = 2.5
+	countdown = COUNTDOWN_SECONDS
 	last_count = 3
 	finish_elapsed = 0.0
+	finish_marks.clear()
+	result_cheered = false
 	idle_time = 0.0
 	foot_half = -1
 	last_state = "idle"
 	audio.reset()
 	effects.reset()
+	for figure in figures:
+		figure.reset_performance()
 	hud.set_mode(mode)
 	hud.update_race(1, 0, true)
 	hud.set_actions(sim.runners[0])
 	hud.set_count("3")
 	_play("count")
 	_sync_figures()
-	_grid_camera()
+	_grid_camera(0.0)
 
 func pause_race() -> void:
 	if mode not in ["racing", "countdown"]:
@@ -331,16 +350,16 @@ func _physics_process(dt: float) -> void:
 			last_count = tick
 			_play("count")
 			hud.set_count(str(tick))
-		for i in figures.size():
-			figures[i].pose("idle", idle_time, fposmod(idle_time + i*0.13, 1.0), 0.0)
-		if countdown > 1.64 and not reduced:
-			_grid_camera(true)
-		elif countdown > 0.76:
-			_grid_camera()
-		if countdown <= 0.76:
+		var progress := clampf(1.0 - countdown / COUNTDOWN_SECONDS, 0.0, 1.0)
+		for figure in figures:
+			figure.prepare(progress, idle_time, dt)
+		if countdown > 0.61:
+			_grid_camera(progress)
+		else:
 			_chase_camera(dt, false)
 		if countdown <= 0.0:
 			mode = "racing"
+			portrait_fill.hide()
 			hud.set_mode(mode)
 			audio.start_music(song)
 			_play("go")
@@ -366,12 +385,20 @@ func _physics_process(dt: float) -> void:
 		_reset_input()
 		target_x = player.x
 		camera_x = player.x
-	_sync_figures()
+	_sync_figures(dt)
 	if mode == "result":
 		finish_elapsed += dt
 		_result_camera(dt)
+		if not result_cheered and figures[0].celebration_start >= 0.0:
+			result_cheered = true
+			if not reduced:
+				effects.burst(figures[0].position, "finish")
 		return
 	_player_sounds(player)
+	if not reduced and player.state in ["sprint", "dive"]:
+		effects.trace(figures[0].trail_point(0, player.state), figures[0].trail_point(1, player.state), player.state)
+	else:
+		effects.release_trail()
 	if player.boosts_left < before_boosts:
 		_play("boost")
 		if not reduced:
@@ -382,42 +409,69 @@ func _physics_process(dt: float) -> void:
 	hud.set_actions(player)
 	if player.finish_time >= 0.0:
 		mode = "result"
+		portrait_fill.show()
 		_reset_input()
 		finish_elapsed = 0.0
 		audio.end_music()
-		if not reduced:
-			effects.burst(figures[0].position, "finish")
+		effects.release_trail()
 		_play("finish")
 		hud.show_result(sim.rank_of(0), player.finish_time, Courses.DATA[selected_course].name)
 
-func _sync_figures() -> void:
+func _finish_position(index: int, runner: Dictionary) -> Vector3:
+	var progress := 1.0 - pow(1.0 - clampf(float(runner.elapsed) / 1.0, 0.0, 1.0), 2.0)
+	var line := float(sim.finish_distance)
+	var mark := Vector2(clampf(runner.x, -3.6, 3.6), 3.65)
+	if index > 0:
+		if not finish_marks.has(index):
+			var best := -1
+			var shortest := INF
+			var used := finish_marks.values()
+			for place in FINISH_SPOTS.size():
+				var spot: Vector2 = FINISH_SPOTS[place]
+				var distance := spot.distance_squared_to(Vector2(runner.x, 1.60))
+				if not used.has(place) and distance < shortest:
+					shortest = distance
+					best = place
+			finish_marks[index] = best
+		mark = FINISH_SPOTS[finish_marks[index]]
+	return Vector3(lerpf(runner.x, mark.x, progress), runner.y,
+		-lerpf(runner.p, line + mark.y, progress))
+
+func _sync_figures(dt := 0.0) -> void:
 	course.set_mechanisms(sim.bridge_angle, sim.bar_angles, sim.time)
 	for i in figures.size():
 		var r: Dictionary = sim.runners[i]
-		figures[i].position = Vector3(r.x, r.y, -r.p)
+		var finished: bool = r.finish_time >= 0.0
+		figures[i].position = _finish_position(i, r) if finished else Vector3(r.x, r.y, -r.p)
 		var bend := 0.0
 		if selected_course == Courses.YARD and Yard.on_outer(r.x, r.p):
 			bend = atan(Yard.outer_slope(r.p))
 		figures[i].rotation.y = -bend - float(r.steer) * 0.17
-		figures[i].pose(r.state, r.elapsed, r.phase, r.steer)
+		if mode == "countdown":
+			figures[i].prepare(0.0, idle_time, dt)
+		else:
+			figures[i].race_pose(r, sim.time, idle_time, dt, finished and sim.rank_of(i) == 1)
 		var floor_y: float = sim._surface(r.x, r.p)
 		var shadow := shadows[i]
 		shadow.visible = r.state != "fall" and is_finite(floor_y) and floor_y > -1.5
 		if shadow.visible:
-			shadow.position = Vector3(r.x, floor_y + 0.025, -r.p)
+			shadow.position = Vector3(figures[i].position.x, floor_y + 0.025, figures[i].position.z)
 			shadow.rotation.x = sim.bridge_angle if sim._on_bridge(r.x, r.p) else 0.0
 			shadow.scale = Vector3.ONE * clampf(1.0 - (float(r.y) - floor_y) * 0.16, 0.6, 1.0)
 
-func _grid_camera(wide := false) -> void:
-	if wide:
+func _grid_camera(progress: float) -> void:
+	if progress < 0.20 and not reduced:
 		var aspect := get_viewport().get_visible_rect().size.aspect()
 		var distance := maxf(5.8, 8.0 / (aspect * 1.06))
+		cam.fov = 63.0
 		cam.position = Vector3(0.0, 1.79, -distance)
 		cam.look_at(Vector3(0, 0.9, 0))
 		return
 	var x := float(sim.runners[0].x)
-	cam.position = Vector3(x + 1.0, 1.45, -3.4)
-	cam.look_at(Vector3(x, 0.79, 0.0))
+	var travel := 0.0 if reduced else smoothstep(0.20, 0.76, progress)
+	cam.fov = 52.0
+	cam.position = Vector3(x, 0.0, 0.0) + portrait_offset + Vector3(0.22 * (1.0 - travel), 0.03, -0.15 * (1.0 - travel))
+	cam.look_at(Vector3(x - 0.08, 0.82, 0.0))
 
 func _chase_camera(dt: float, snap: bool) -> void:
 	var r: Dictionary = sim.runners[0]
@@ -428,6 +482,14 @@ func _chase_camera(dt: float, snap: bool) -> void:
 		base.y = clampf(floor_y, -0.55, 0.8)
 	var follow := base + chase_offset
 	var focus := base + chase_focus
+	var wanted_fov := CHASE_FOV
+	if not reduced:
+		if r.state == "sprint":
+			wanted_fov += 4.0
+		elif r.state == "dive":
+			wanted_fov += 2.0
+		follow.x -= float(r.steer) * 0.20
+	cam.fov = wanted_fov if snap or mode == "countdown" else lerpf(cam.fov, wanted_fov, 1.0 - exp(-8.0 * dt))
 	if selected_course == Courses.WHARF:
 		var to_bar := INF
 		for p: float in Simulation.BARS:
@@ -449,20 +511,48 @@ func _chase_camera(dt: float, snap: bool) -> void:
 	else:
 		cam.position = cam.position.lerp(follow, 1.0-exp(-13.0*dt))
 	cam.look_at(focus)
+	if mode == "racing":
+		_clear_chase_view(dt)
+	for figure in figures:
+		figure.face_camera(cam.position, idle_time)
+
+func _clear_chase_view(dt: float) -> void:
+	# At a shared landing, another racer's head can fill the camera directly in front of Nagi.
+	var player_aim := figures[0].position + Vector3.UP * 0.76
+	var ray := player_aim - cam.position
+	var depth := ray.length()
+	var direction := ray / depth
+	for index in range(1, figures.size()):
+		var figure := figures[index]
+		var offset: Vector3 = figure.position + Vector3.UP * 0.76 - cam.position
+		var along := offset.dot(direction)
+		var visibility := 1.0
+		if along > 0.0 and along < depth + 0.20:
+			var across := (offset - direction * along).length()
+			visibility = lerpf(0.065, 1.0, smoothstep(0.20, 0.83, across))
+		figure.set_camera_visibility(visibility, dt)
 
 func _result_camera(dt: float) -> void:
+	for index in range(1, figures.size()):
+		figures[index].set_camera_visibility(1.0, dt)
 	var pos := figures[0].position
-	var aim := pos + Vector3(0, 0.89, 0)
+	var aim := pos + Vector3(0, 0.66, 0)
 	# Turn across the open centre so the outside gatepost cannot pass in front of the winner.
 	var side := -1.0 if pos.x > 0.0 else 1.0
-	var offset := Vector3(side * 1.15, 1.60, -3.6)
+	var offset := Vector3(side * 0.92, 1.29, -2.56)
 	if reduced:
 		cam.position = pos + offset
+		cam.fov = 53.0
 	else:
-		var angle := PI * smoothstep(0.0, 1.0, minf(1.0, finish_elapsed/1.12))
-		var radius := lerpf(4.9, 3.6, minf(1.0, finish_elapsed/1.12))
-		cam.position = pos + Vector3(side * (sin(angle)*radius*0.72 + 1.15*(angle/PI)), lerpf(3.45,1.60,angle/PI), cos(angle)*radius)
+		var turn := smoothstep(0.0, 1.0, finish_elapsed / 1.18)
+		var angle := PI * turn
+		var radius := lerpf(chase_offset.z, -offset.z, turn)
+		cam.fov = lerpf(CHASE_FOV, 53.0, turn)
+		cam.position = pos + Vector3(side * sin(angle) * radius * 0.65 + offset.x * turn,
+			lerpf(chase_offset.y, offset.y, turn), cos(angle) * radius)
 	cam.look_at(aim)
+	for figure in figures:
+		figure.face_camera(cam.position, idle_time)
 
 func _player_sounds(r: Dictionary) -> void:
 	if r.state != last_state and not (r.state == "fall" and last_state == "splash"):
@@ -477,7 +567,10 @@ func _player_sounds(r: Dictionary) -> void:
 				_play("land")
 				if not reduced:
 					effects.burst(figures[0].position + Vector3.UP*0.04,"land")
-			"stumble": _play("bump")
+			"stumble":
+				_play("bump")
+				if not reduced:
+					effects.burst(figures[0].position + Vector3.UP * 1.12, "stumble")
 			"fall": _play("splash")
 	if r.state == "fall" and float(r.y) < -0.8 and last_state != "splash":
 		if not reduced:

@@ -46,7 +46,7 @@ def side_edges(y):
             return front+(next_front-front)*t,rear+(next_rear-rear)*t
     return NAGI_SIDE[-1][1:]
 
-def profile(c, theta, v):
+def hair_profile(c, theta, v):
     """Surface in design pixels; +Y is rear, +X the subject's left."""
     top, bottom=c['stations'][0][0],c['stations'][-1][0]
     sy=top+(bottom-top)*v
@@ -61,12 +61,11 @@ def profile(c, theta, v):
         face,occiput=side_edges(sy)
         centre=(face+occiput)*.5
         y=centre-603-(occiput-face)*.5*f
+        # The forward eye belongs to the independent face. Across the
+        # side of the bob the hair sweeps smoothly past the temporal bone.
         if f>0:
-            # Pair the pupil in the front and side drawings. At portrait row
-            # 145, x=305 in front corresponds to x≈565 on the profile.
-            # A deep cheek carries this same eye around into the side view.
-            band=max(0,min(1,(sy-116)/18))*max(0,min(1,(200-sy)/18))
-            y+=26*sin(2*abs(theta))*band
+            band=exp(-((sy-151)/40)**2)
+            y+=2.6*sin(2*abs(theta))*band
         # The illustrated fringe curves around the cheeks below the ears.
         x*=1-.040*(.6+.4*cos(theta)**2)
     if f>0:
@@ -78,3 +77,47 @@ def profile(c, theta, v):
         x+=sin(theta)*amp
         y-=cos(theta)*amp
     return x,y,z
+
+def profile(c, theta, v):
+    """Face surface. A separate scalp and individual locks surround this volume."""
+    top, bottom = c['stations'][0][0], c['stations'][-1][0]
+    sy = top + (bottom - top) * v
+    k = c['k']
+    r = station_width(c, sy) * k
+    front = max(0, cos(theta))
+    # A rounded jaw rolls under the cheek into the neck well before the bob ends.
+    jaw = max(0, (v - .79) / .21)
+    width = r * (.83 - .46 * jaw ** 1.35)
+    if c is CAST[0]:
+        # Measured visible half-widths on the frontal sheet: at rows
+        # 170/180/186/190 the cheek spans 50/42/29/12 px. A rounded chin
+        # needs a closed ellipsoidal end, not a wide, flat final ring.
+        face_row=21+171*v
+        blend=max(0,min(1,(face_row-143)/20))
+        blend=blend*blend*(3-2*blend)
+        cheek_row=max(0,(face_row-163)/29)
+        chin_radius=54.2*max(.00006,1-cheek_row**2)**.5
+        width=width*(1-blend)+chin_radius*blend
+    x = width * sin(theta)
+    if c is CAST[0]:
+        # The short nose and brow sit in front of the forehead. The broad
+        # cheek rounds toward the point of the chin in both orthogonal views.
+        planes = ((21,5),(55,-24),(84,-39),(107,-47),(128,-53),
+                  (148,-57),(160,-56),(172,-54),(182,-47),(188,-38),(192,-29))
+        near = planes[-1][1]
+        for (a,f),(b,g) in zip(planes,planes[1:]):
+            if face_row <= b:
+                near = f + (g-f)*max(0,(face_row-a)/(b-a))
+                break
+        depth=(7-near)*min(1,width/53.5)**.82
+        y=near+depth*(1-cos(theta))
+    else:
+        depth = r * (.84 - .14 * v * v)
+        y = 11 - depth * cos(theta)
+    cheek = exp(-((abs(theta) - .53) / .35) ** 2 - ((v - .82) / .105) ** 2)
+    y -= 5.8 * cheek * front
+    y += 4.5 * jaw * jaw * front
+    z = (c['floor'] - sy) * k + (5.7 + 8.5 * sin(theta) ** 2) * v ** 6
+    if c is CAST[0]:z=c['floor']-face_row
+    z -= 19 * max(0,1-v/.37)**2
+    return x, y, z

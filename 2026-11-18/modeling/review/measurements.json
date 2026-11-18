@@ -1,43 +1,57 @@
 [
   {
     "bib": 1,
-    "height_m": 1.5012,
+    "height_m": 1.4835,
     "bounds_blender_xyz_m": [
       [
-        -0.447,
-        -0.5017,
+        -0.4748,
+        -0.5127,
         -0.0
       ],
       [
-        0.4332,
-        0.3067,
-        1.5012
+        0.4665,
+        0.356,
+        1.4835
       ]
     ],
-    "triangles": 27696,
-    "glb_bytes": 1909912,
+    "triangles": 45872,
+    "body_triangles": 43640,
+    "face_triangles": 2232,
+    "glb_bytes": 2730932,
     "bones": 19,
-    "surfaces": 1,
+    "surfaces": 2,
+    "material_count": 1,
+    "expression_targets": [
+      "Focus",
+      "Startle",
+      "Cheer",
+      "Blink",
+      "FocusBlink",
+      "StartleBlink"
+    ],
     "clips": [
+      "finish_win",
+      "finish",
       "slide",
       "dive",
-      "sprint",
-      "finish",
       "fall",
       "stumble",
       "land",
       "jump",
+      "sprint",
       "run",
+      "launch",
+      "ready",
       "idle"
     ],
     "dive_reach_ahead_of_head_m": [
-      0.129,
-      0.125
+      0.124,
+      0.12
     ],
     "slide_contacts_at_normalized_phase": {
       "0": {
-        "lowest_part": "Forearm.R",
-        "height_m": 0.0
+        "lowest_part": "Forearm.L",
+        "height_m": -0.0
       },
       "0.4": {
         "lowest_part": "Chest",
@@ -48,57 +62,115 @@
         "height_m": -0.0004
       }
     },
+    "brow_visibility_idle": [
+      {
+        "yaw_deg": 0,
+        "pitch_deg": 0,
+        "visible_brow_area_fractions": [
+          1.0,
+          1.0
+        ]
+      },
+      {
+        "yaw_deg": 0,
+        "pitch_deg": 12,
+        "visible_brow_area_fractions": [
+          1.0,
+          1.0
+        ]
+      },
+      {
+        "yaw_deg": 0,
+        "pitch_deg": 23,
+        "visible_brow_area_fractions": [
+          0.974,
+          1.0
+        ]
+      },
+      {
+        "yaw_deg": 12,
+        "pitch_deg": 15,
+        "visible_brow_area_fractions": [
+          1.0,
+          1.0
+        ]
+      },
+      {
+        "yaw_deg": -12,
+        "pitch_deg": 15,
+        "visible_brow_area_fractions": [
+          1.0,
+          0.978
+        ]
+      },
+      {
+        "yaw_deg": 23,
+        "pitch_deg": 15,
+        "visible_brow_area_fractions": [
+          0.882,
+          0.997
+        ]
+      },
+      {
+        "yaw_deg": -23,
+        "pitch_deg": 15,
+        "visible_brow_area_fractions": [
+          0.995,
+          0.859
+        ]
+      }
+    ],
     "left_sole_support_Y_up_m": {
       "run": [
         [
           0,
-          0.0006
+          -0.0
         ],
         [
           0.05,
-          0.003
+          0.0
         ],
         [
           0.1,
-          0.0042
+          0.0
         ],
         [
           0.15,
-          0.0045
+          0.0
         ],
         [
           0.2,
-          0.004
+          0.0
         ],
         [
           0.25,
-          0.0116
+          0.012
         ],
         [
           0.28,
-          0.0226
+          0.0252
         ]
       ],
       "land": [
         [
           0,
-          -0.0045
+          0.0
         ],
         [
           0.25,
-          0.0001
+          -0.005
         ],
         [
           0.5,
-          0.0011
+          -0.0076
         ],
         [
           0.75,
-          -0.0041
+          0.0168
         ],
         [
           1,
-          0.0
+          0.0549
         ]
       ],
       "sprint": [
@@ -120,61 +192,75 @@
         ],
         [
           0.2,
-          0.0024
+          0.0018
         ],
         [
           0.25,
-          0.0135
+          0.0161
         ],
         [
           0.28,
-          0.0362
+          0.039
         ],
         [
           0.5,
-          0.2057
+          0.2084
         ],
         [
           0.63,
-          0.2244
+          0.2288
         ]
       ]
     }
   },
   {
     "bib": 2,
-    "height_m": 1.4323,
+    "height_m": 1.4316,
     "bounds_blender_xyz_m": [
       [
-        -0.4427,
-        -0.4612,
+        -0.435,
+        -0.4611,
         -0.0
       ],
       [
-        0.4427,
-        0.259,
-        1.4323
+        0.4365,
+        0.3243,
+        1.4316
       ]
     ],
-    "triangles": 33684,
-    "glb_bytes": 1872904,
+    "triangles": 48980,
+    "body_triangles": 46748,
+    "face_triangles": 2232,
+    "glb_bytes": 2605228,
     "bones": 19,
-    "surfaces": 1,
+    "surfaces": 2,
+    "material_count": 1,
+    "expression_targets": [
+      "Focus",
+      "Startle",
+      "Cheer",
+      "Blink",
+      "FocusBlink",
+      "StartleBlink"
+    ],
     "clips": [
+      "finish_win",
+      "finish",
       "slide",
       "dive",
-      "sprint",
-      "finish",
       "fall",
       "stumble",
       "land",
       "jump",
+      "sprint",
       "run",
+      "launch",
+      "ready",
       "idle"
     ],
     "dive_reach_ahead_of_head_m": [
-      0.093,
-      0.098
+      0.073,
+      0.078
     ],
     "slide_contacts_at_normalized_phase": {
       "0": {
@@ -193,38 +279,52 @@
   },
   {
     "bib": 3,
-    "height_m": 1.4981,
+    "height_m": 1.4871,
     "bounds_blender_xyz_m": [
       [
-        -0.3587,
-        -0.392,
+        -0.3502,
+        -0.3998,
         -0.0
       ],
       [
-        0.5294,
-        0.2154,
-        1.4981
+        0.5226,
+        0.2828,
+        1.4871
       ]
     ],
-    "triangles": 30160,
-    "glb_bytes": 1723748,
+    "triangles": 42000,
+    "body_triangles": 39768,
+    "face_triangles": 2232,
+    "glb_bytes": 2346992,
     "bones": 19,
-    "surfaces": 1,
+    "surfaces": 2,
+    "material_count": 1,
+    "expression_targets": [
+      "Focus",
+      "Startle",
+      "Cheer",
+      "Blink",
+      "FocusBlink",
+      "StartleBlink"
+    ],
     "clips": [
+      "finish_win",
+      "finish",
       "slide",
       "dive",
-      "sprint",
-      "finish",
       "fall",
       "stumble",
       "land",
       "jump",
+      "sprint",
       "run",
+      "launch",
+      "ready",
       "idle"
     ],
     "dive_reach_ahead_of_head_m": [
-      0.181,
-      0.176
+      0.157,
+      0.152
     ],
     "slide_contacts_at_normalized_phase": {
       "0": {
@@ -243,42 +343,56 @@
   },
   {
     "bib": 4,
-    "height_m": 1.5307,
+    "height_m": 1.5142,
     "bounds_blender_xyz_m": [
       [
-        -0.4366,
-        -0.48,
+        -0.4401,
+        -0.4887,
         -0.0
       ],
       [
-        0.4366,
-        0.413,
-        1.5307
+        0.4641,
+        0.4068,
+        1.5142
       ]
     ],
-    "triangles": 27778,
-    "glb_bytes": 1693944,
+    "triangles": 43194,
+    "body_triangles": 40962,
+    "face_triangles": 2232,
+    "glb_bytes": 2427676,
     "bones": 19,
-    "surfaces": 1,
+    "surfaces": 2,
+    "material_count": 1,
+    "expression_targets": [
+      "Focus",
+      "Startle",
+      "Cheer",
+      "Blink",
+      "FocusBlink",
+      "StartleBlink"
+    ],
     "clips": [
+      "finish_win",
+      "finish",
       "slide",
       "dive",
-      "sprint",
-      "finish",
       "fall",
       "stumble",
       "land",
       "jump",
+      "sprint",
       "run",
+      "launch",
+      "ready",
       "idle"
     ],
     "dive_reach_ahead_of_head_m": [
-      0.038,
-      0.043
+      0.037,
+      0.042
     ],
     "slide_contacts_at_normalized_phase": {
       "0": {
-        "lowest_part": "Forearm.L",
+        "lowest_part": "Forearm.R",
         "height_m": -0.0
       },
       "0.4": {
@@ -293,38 +407,52 @@
   },
   {
     "bib": 5,
-    "height_m": 1.4114,
+    "height_m": 1.4054,
     "bounds_blender_xyz_m": [
       [
-        -0.4306,
-        -0.4693,
+        -0.4228,
+        -0.4735,
         -0.0
       ],
       [
-        0.4263,
-        0.2655,
-        1.4114
+        0.4167,
+        0.3429,
+        1.4054
       ]
     ],
-    "triangles": 32884,
-    "glb_bytes": 1886268,
+    "triangles": 49288,
+    "body_triangles": 46232,
+    "face_triangles": 3056,
+    "glb_bytes": 2704944,
     "bones": 19,
-    "surfaces": 1,
+    "surfaces": 2,
+    "material_count": 1,
+    "expression_targets": [
+      "Focus",
+      "Startle",
+      "Cheer",
+      "Blink",
+      "FocusBlink",
+      "StartleBlink"
+    ],
     "clips": [
+      "finish_win",
+      "finish",
       "slide",
       "dive",
-      "sprint",
-      "finish",
       "fall",
       "stumble",
       "land",
       "jump",
+      "sprint",
       "run",
+      "launch",
+      "ready",
       "idle"
     ],
     "dive_reach_ahead_of_head_m": [
-      0.116,
-      0.121
+      0.055,
+      0.059
     ],
     "slide_contacts_at_normalized_phase": {
       "0": {
@@ -343,38 +471,52 @@
   },
   {
     "bib": 6,
-    "height_m": 1.4495,
+    "height_m": 1.4435,
     "bounds_blender_xyz_m": [
       [
-        -0.4477,
-        -0.456,
+        -0.4474,
+        -0.4676,
         -0.0
       ],
       [
-        0.4093,
-        0.2608,
-        1.4495
+        0.4369,
+        0.3237,
+        1.4435
       ]
     ],
-    "triangles": 26444,
-    "glb_bytes": 1611704,
+    "triangles": 40896,
+    "body_triangles": 38664,
+    "face_triangles": 2232,
+    "glb_bytes": 2321656,
     "bones": 19,
-    "surfaces": 1,
+    "surfaces": 2,
+    "material_count": 1,
+    "expression_targets": [
+      "Focus",
+      "Startle",
+      "Cheer",
+      "Blink",
+      "FocusBlink",
+      "StartleBlink"
+    ],
     "clips": [
+      "finish_win",
+      "finish",
       "slide",
       "dive",
-      "sprint",
-      "finish",
       "fall",
       "stumble",
       "land",
       "jump",
+      "sprint",
       "run",
+      "launch",
+      "ready",
       "idle"
     ],
     "dive_reach_ahead_of_head_m": [
-      0.125,
-      0.121
+      0.1,
+      0.095
     ],
     "slide_contacts_at_normalized_phase": {
       "0": {
@@ -382,8 +524,8 @@
         "height_m": -0.0
       },
       "0.4": {
-        "lowest_part": "Chest",
-        "height_m": 0.0
+        "lowest_part": "Thigh.L",
+        "height_m": -0.0
       },
       "0.88": {
         "lowest_part": "Foot.L",
