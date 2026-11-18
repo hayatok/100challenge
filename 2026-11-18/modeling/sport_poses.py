@@ -128,8 +128,12 @@ def sport_pose(rig, bib, state, t, support):
             plant = (-43, 66, 4) if offset == 1 else (89, 125, 145)
             keys = [(0, (94 + 5 * offset, 126 + 9 * offset, 161, -44, -69, -83, 12)),
                     (.20, (95 + 6 * offset, 119 + 8 * offset, 158, -51, -98, -96, 8)),
-                    (.44, (91 + 4 * offset, 106 + 5 * offset, 162, -70, -96, -96, 5)),
-                    (.67, (*plant, -38, -53, -73, 12)),
+                    (.357, (92 + 4 * offset, 108 + 5 * offset, 155, -68, -96, -96, 5)),
+                    # Bring the leading foot underneath the hip before straightening
+                    # the torso. The planted sole takes the load from the chest.
+                    (.567, (31 if offset == 1 else 91, 96 if offset == 1 else 119,
+                            84 if offset == 1 else 155, -61, -82, -88, 8)),
+                    (.787, (*plant, -38, -53, -73, 12)),
                     (.85, (-69 if offset == 1 else 46, 57 if offset == 1 else 121,
                             0 if offset == 1 else 125, -16, -44, -57, 16)), (1, end)]
             thigh, shin, toe, arm, elbow, wrist, lift = sample(t, keys)

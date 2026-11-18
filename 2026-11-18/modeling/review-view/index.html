@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#faf6ef">
+  <title>選手の回転台｜リボンラリー！</title>
+  <link rel="stylesheet" href="review.css">
+  <script type="module" src="review.js"></script>
+</head>
+<body>
+  <main>
+    <header>
+      <div class="heading">
+        <p class="brand">リボンラリー！</p>
+        <h1>選手の回転台</h1>
+      </div>
+      <a class="play-link" href="../">レースで遊ぶ<span aria-hidden="true"> ↗</span></a>
+    </header>
+    <section aria-label="モデルの比較">
+      <div class="settings">
+        <label>選手
+          <select id="racer">
+            <option value="01">01　ナギ</option>
+            <option value="02">02　スズ</option>
+            <option value="03">03　リッカ</option>
+            <option value="04">04　アン</option>
+            <option value="05">05　ネネ</option>
+            <option value="06">06　ミオ</option>
+          </select>
+        </label>
+        <label>ポーズ
+          <select id="pose"><option value="idle">待機</option><option value="run">走行</option></select>
+        </label>
+        <label>視点の高さ
+          <select id="height"><option value="level">水平</option><option value="high">上から</option></select>
+        </label>
+      </div>
+      <div class="stage" id="stage">
+        <figure>
+          <figcaption>
+            <label for="revision">修正前</label>
+            <select id="revision" aria-label="比較する旧版"><option value="v03">v0.3</option><option value="v02">v0.2</option></select>
+          </figcaption>
+          <div class="photo"><canvas role="img" aria-label="修正前の選手" id="old"></canvas></div>
+        </figure>
+        <figure>
+          <figcaption><span>修正後</span><strong>v0.3.1</strong></figcaption>
+          <div class="photo"><canvas role="img" aria-label="修正後の選手" id="now"></canvas></div>
+        </figure>
+      </div>
+      <div id="message" role="status" hidden>
+        <span id="message-text"></span><button id="retry" type="button" hidden>再読み込み</button>
+      </div>
+      <div class="rotation">
+        <div class="rotation-line">
+          <button type="button" id="previous" aria-label="一つ前の角度">‹</button>
+          <output id="angle" aria-live="polite"></output>
+          <button type="button" id="next" aria-label="一つ先の角度">›</button>
+        </div>
+        <div id="directions" role="group" aria-label="向きを選ぶ">
+          <button type="button" data-frame="0">正面</button>
+          <button type="button" data-frame="4">右横</button>
+          <button type="button" data-frame="8">背面</button>
+          <button type="button" data-frame="12">左横</button>
+        </div>
+        <p class="hint">選手を左右にドラッグすると、22.5°ずつ回せます。</p>
+      </div>
+    </section>
+    <section class="reference" aria-labelledby="ref-heading">
+      <h2 id="ref-heading">ナギの三面図</h2>
+      <img id="reference" src="nagi-reference.webp" alt="ナギの原画。正面、リボンのある側の横顔、背面。" width="1230" height="410">
+    </section>
+  </main>
+</body>
+</html>

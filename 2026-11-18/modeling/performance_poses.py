@@ -176,8 +176,9 @@ def idle(pose, bib, t):
     pose.body(0, 2 + cos(a), .9*cos(a + .6), sway*2, -sway, 1.7*sin(a - .4))
     for side, sign in SIDES:
         arm = relaxed(sign)
-        pose.arm(side, sign, (arm[0], arm[1] + 1.2*sin(a + sign*.7), arm[2] + sway*sign))
-    pose.feet(sway, 0, -5 + cos(a), [(sign*35, 0, 0, 0, 4) for _, sign in SIDES])
+        pose.arm(side, sign, (arm[0] + sign*3, arm[1] + 1.2*sin(a + sign*.7),
+                             arm[2] - 2 + sway*sign), hand_roll=-8)
+    pose.feet(sway, 0, -2.2 + .65*cos(a), [(sign*35, 0, 0, 0, 4) for _, sign in SIDES])
 
 
 # Each row gives the preparation accent, rebound and when that racer comes out
