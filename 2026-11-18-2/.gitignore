@@ -1,0 +1,7 @@
+dist/
+.cache/
+game/.godot/
+.scratch/
+node_modules/
+modeling/*.log
+modeling/*.blend1

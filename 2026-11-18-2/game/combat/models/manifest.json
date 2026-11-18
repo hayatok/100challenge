@@ -1,0 +1,27 @@
+{
+  "generator": "modeling/01_build_assets.py",
+  "units": "metres",
+  "front": "-Z in Godot",
+  "joint_animation": "runtime rigid limb pivots",
+  "texture": "original pixel wear plus cropped supplied cast atlas face/fabric panels",
+  "mesh_parts": {
+    "enemy_0": 9,
+    "enemy_1": 8,
+    "enemy_2": 9,
+    "enemy_3": 9,
+    "weapon_0": 9,
+    "weapon_1": 1,
+    "weapon_2": 1
+  },
+  "materials": "one color/PBR/emission atlas material per mesh pivot",
+  "inferred": [
+    "rear costume",
+    "mechanisms",
+    "exact dimensions"
+  ],
+  "reference": [
+    "art/market.png",
+    "art/cast.png",
+    "art/weapons.png"
+  ]
+}

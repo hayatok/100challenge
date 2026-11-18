@@ -289,5 +289,15 @@
     "category": "3D障害物レース",
     "thumbnail": "cover.jpg",
     "accent": "#e95743"
+  },
+  {
+    "id": "2026-11-18-2",
+    "date": "2026-11-18",
+    "sequence": 2,
+    "name": "屍港最終便",
+    "description": "夜明け前の魚市場から最終フェリーへ。荷役鐘で群れを誘い、三つの戦場を撃ち抜くゾンビFPS。",
+    "category": "ホラーFPS",
+    "thumbnail": "cover.jpg",
+    "accent": "#dc9c48"
   }
 ]

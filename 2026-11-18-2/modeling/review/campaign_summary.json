@@ -1,0 +1,87 @@
+{
+  "input": "automated three-finger ScreenTouch/ScreenDrag events through production bridge._input and consume_controls",
+  "not_evidence_of": [
+    "two-thumb ergonomics",
+    "browser OS input",
+    "human completion time",
+    "mobile FPS"
+  ],
+  "final_native_result": {
+    "deaths": 0,
+    "elapsed": 302.066666666721,
+    "kills": 263,
+    "result": "won",
+    "sim_seconds": 302.083333333333
+  },
+  "boss_states": [
+    "chain_windup",
+    "charge",
+    "exposed",
+    "hunt",
+    "phase_turn",
+    "sweep",
+    "sweep_windup",
+    "windup"
+  ],
+  "tests": {
+    "combat_checks": 40,
+    "failures": 0,
+    "controlled_render_draw_calls_before": 83,
+    "controlled_render_draw_calls_after": 44,
+    "controlled_render_primitives": 7128
+  },
+  "videos": {
+    "chapter_1": "/tmp/dead-freight-run/chapter-0-atlas.mp4",
+    "chapter_2": "/tmp/dead-freight-run/chapter-1-atlas.mp4",
+    "chapter_3": "/tmp/dead-freight-run/chapter-2-atlas.mp4",
+    "reviewed_boss": "/tmp/dead-freight-run/boss-reviewed.mp4"
+  },
+  "video_notes": "Silent 960x540 GPU capture, 6 fps. Chapter clips are 15 second openings before the boss sweep review correction; reviewed_boss is after that correction. Old campaign-baseline.mp4 uses superseded assets and progression.",
+  "pc_headless": "Input.mouse_mode stays VISIBLE (0), so production capture guard rejects mouse motion/fire; not a pass.",
+  "shutdown_notes": "Resolved in QA harness by stop_all, 150 ms real wall-clock frame wait, freeing audio owners and test viewport, then another 150 ms real wait. Verbose native and headless complete campaigns and the 40-check combat log contain no WARNING/ERROR/leak lines. Earlier logs are retained as historical evidence.",
+  "source_sha256": {
+    "game/combat/player.gd": "947bd21037a956777c64e46101b63a5f34e6d2f554a79a2cbc416c3603ef7fe5",
+    "game/combat/enemy.gd": "501b508ca74790a6cb70e83e3dbd95ae16f91f5e3efe01a0cec016856d18d78d",
+    "modeling/01_build_assets.py": "583ba551078ed8aa9c5e75a08574b342bb50351f48b10cb2513c56a4c6608ff9",
+    "modeling/qa_campaign.gd": "25f3205f9d9ba8959407664be9dbf80dd23e5a113fe98287842f9ca86575a6c9"
+  },
+  "shutdown_validation": {
+    "/tmp/dead-freight-run/shutdown-headless.log": {
+      "error_or_warning_lines": [],
+      "result": {
+        "deaths": 1,
+        "elapsed": 298.450000000057,
+        "kills": 263,
+        "result": "won",
+        "sim_seconds": 345.483333333333
+      },
+      "flush_complete": true,
+      "combat_pass": false
+    },
+    "/tmp/dead-freight-run/shutdown-native.log": {
+      "error_or_warning_lines": [],
+      "result": {
+        "deaths": 0,
+        "elapsed": 301.200000000055,
+        "kills": 263,
+        "result": "won",
+        "sim_seconds": 301.216666666667
+      },
+      "flush_complete": true,
+      "combat_pass": false
+    },
+    "/tmp/dead-freight-run/combat-40-final.log": {
+      "error_or_warning_lines": [],
+      "result": null,
+      "flush_complete": false,
+      "combat_pass": true
+    }
+  },
+  "latest_native_result": {
+    "deaths": 0,
+    "elapsed": 301.200000000055,
+    "kills": 263,
+    "result": "won",
+    "sim_seconds": 301.216666666667
+  }
+}

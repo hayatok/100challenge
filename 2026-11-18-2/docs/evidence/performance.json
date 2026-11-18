@@ -1,0 +1,64 @@
+{
+  "desktop": {
+    "environment": "MacBook Air M5, Chrome 157, 1280x720, ordinary export, saved checkpoint fixture on final deck",
+    "metric": "WebGL drawing frames (time between draw-bearing animation frames)",
+    "res": {
+      "frames": 368,
+      "seconds": 6.1164000000000005,
+      "fps": 60.002615917860176,
+      "medianMs": 16.699999999999818,
+      "p95Ms": 16.700000000000728,
+      "meanDrawCalls": 455.5842391304348
+    },
+    "errs": []
+  },
+  "touch": {
+    "environment": "Match final-wave encounter, 14 active enemies including captain, 874x292 CSS, DPR 3, 720-pixel 3D target. Safari iPhone 17 Pro iOS 26.5 Simulator and Chrome 157 Mac touch emulation.",
+    "metric": "Godot Engine FPS samples over wall time, initial transition included",
+    "runs": [
+      {
+        "browser": "safari",
+        "enemies": 14,
+        "duration_s": 11.928,
+        "samples": 61,
+        "buffer": "(2622, 876)",
+        "render_scale": 0.274599552154541,
+        "median": 32,
+        "p10": 26,
+        "worst": 2,
+        "peak": 36,
+        "initial": [
+          2,
+          2,
+          2,
+          26,
+          26,
+          26
+        ],
+        "steady_low": 26,
+        "steady_p10": 27
+      },
+      {
+        "browser": "chromium",
+        "enemies": 14,
+        "duration_s": 11.86,
+        "samples": 56,
+        "buffer": "(2622, 876)",
+        "render_scale": 0.274599552154541,
+        "median": 60.0,
+        "p10": 25,
+        "worst": 23,
+        "peak": 60,
+        "initial": [
+          23,
+          23,
+          23,
+          23,
+          23
+        ],
+        "steady_low": 25,
+        "steady_p10": 54
+      }
+    ]
+  }
+}
