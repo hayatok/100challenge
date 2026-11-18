@@ -1,0 +1,48 @@
+[gd_scene format=3 uid="uid://32dvw5t57xjq"]
+
+[ext_resource type="Script" uid="uid://bfjemallxt0ql" path="res://HarborRace.gd" id="1"]
+[ext_resource type="PackedScene" path="res://course/Course.tscn" id="2"]
+[ext_resource type="Script" uid="uid://bph0db7p4isje" path="res://presentation/HarborHUD.gd" id="3"]
+[ext_resource type="Script" uid="uid://blto86lt0sj15" path="res://presentation/RaceAudio.gd" id="4"]
+
+[node name="HarborRace" type="Node3D" unique_id=1063592098]
+script = ExtResource("1")
+
+[node name="ShiokazeWharf" parent="." unique_id=199292706 instance=ExtResource("2")]
+
+[node name="PortraitFill" type="DirectionalLight3D" parent="."]
+rotation = Vector3(-0.35, 3.0, 0)
+light_color = Color(1, 0.96, 0.91, 1)
+light_energy = 0.55
+light_cull_mask = 2
+sky_mode = 1
+
+[node name="Racers" type="Node3D" parent="." unique_id=1470143634]
+
+[node name="FollowCamera" type="Camera3D" parent="." unique_id=1229800112]
+transform = Transform3D(1, 0, 0, 0, 0.95233357, 0.30505863, 0, -0.30505863, 0.95233357, -0.8, 3.4, 4.8)
+current = true
+fov = 65.0
+near = 0.13
+far = 290.0
+
+[node name="ChaseOffset" type="Marker3D" parent="." unique_id=215106383]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.45, 4.9)
+
+[node name="ChaseLookAhead" type="Marker3D" parent="." unique_id=686904293]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.53, -4.8)
+
+[node name="Audio" type="Node" parent="." unique_id=870884052]
+script = ExtResource("4")
+
+[node name="Overlay" type="CanvasLayer" parent="." unique_id=1429681823]
+
+[node name="HUD" type="Control" parent="Overlay" unique_id=1230288935]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("3")

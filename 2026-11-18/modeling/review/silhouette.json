@@ -1,0 +1,8 @@
+{
+  "alignment": "bounding-box height and horizontal centre, neutral poses",
+  "iou": {
+    "front": 0.862,
+    "side": 0.841,
+    "rear": 0.874
+  }
+}

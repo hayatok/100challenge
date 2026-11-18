@@ -1,0 +1,6 @@
+.cache/
+dist/
+game/.godot/
+*.blend[0-9]
+*.tmp
+__pycache__/

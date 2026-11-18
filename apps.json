@@ -279,5 +279,15 @@
     "category": "文書作成 / Markdown学習",
     "thumbnail": "cover.svg",
     "accent": "#B73529"
+  },
+  {
+    "id": "2026-11-18",
+    "date": "2026-11-18",
+    "sequence": 1,
+    "name": "リボンラリー！",
+    "description": "港の桟橋で6人の障害物競走。ライバルが橋を傾ける前に、跳ぶか回り込むかを決めよう。",
+    "category": "3D障害物レース",
+    "thumbnail": "cover.jpg",
+    "accent": "#e95743"
   }
 ]
