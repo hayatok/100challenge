@@ -12,6 +12,7 @@ const modes = {
   play: [],
   import: ['--headless', '--editor', '--import'],
   test: ['--headless', '--script', 'res://race/tests/simulation_test.gd'],
+  models: ['--headless', '--script', path.join(root, 'modeling', 'test_import.gd')],
   build: ['--headless', '--export-release', 'Web', path.join(dist, 'index.html')],
 };
 if (!Object.hasOwn(modes, command)) throw new Error('Unknown Godot command');
@@ -27,7 +28,7 @@ if (result.error || result.status !== 0 || /SCRIPT ERROR:|^ERROR:|^FAIL:/m.test(
   process.stderr.write(output);
   throw result.error || new Error('Godot ' + command + ' failed');
 }
-if (command === 'test') process.stdout.write(output);
+if (command === 'test' || command === 'models') process.stdout.write(output);
 if (command === 'build') {
   copyFileSync(path.join(project, 'media', 'cover.jpg'), path.join(dist, 'cover.jpg'));
   for (const name of ['GODOT-LICENSE.txt', 'GODOT-COPYRIGHT.txt']) {

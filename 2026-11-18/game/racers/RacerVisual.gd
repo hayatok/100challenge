@@ -1,5 +1,8 @@
 extends Node3D
 
+const Race := preload("res://race/RaceSimulation.gd")
+const FLIGHT_SECONDS := 2.0 * Race.TAKEOFF_SPEED / Race.GRAVITY
+
 const FILES := [
 	"res://racers/01.glb", "res://racers/02.glb", "res://racers/03.glb",
 	"res://racers/04.glb", "res://racers/05.glb", "res://racers/06.glb"
@@ -34,7 +37,7 @@ func pose(state: String, elapsed: float, phase: float, steer: float) -> void:
 		"run":
 			t = fposmod(phase, 1.0) * duration
 		"jump":
-			t = clampf(phase, 0.0, 1.0) * duration
+			t = clampf(elapsed / FLIGHT_SECONDS, 0.0, 1.0) * duration
 		"idle", "finish":
 			t = fposmod(elapsed, duration)
 		_:

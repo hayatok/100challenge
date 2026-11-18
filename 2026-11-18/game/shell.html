@@ -8,9 +8,10 @@
 <title>リボンラリー！｜潮風ふ頭</title>
 $GODOT_HEAD_INCLUDE
 <style>
+:root{--safe-top:env(safe-area-inset-top,0px);--safe-right:env(safe-area-inset-right,0px);--safe-bottom:env(safe-area-inset-bottom,0px);--safe-left:env(safe-area-inset-left,0px)}
 *{box-sizing:border-box} html,body{margin:0;height:100%;background:#122537;color:#fff8e7;font-family:system-ui,sans-serif;overflow:hidden}
-#canvas{display:block;width:100%;height:100%;touch-action:none;outline:0} #load{position:fixed;inset:0;background:#122537;display:grid;place-items:center;padding:20px} #load[hidden],[hidden]{display:none!important}
-main{width:min(490px,100%);text-align:center} main img{width:100%;border-radius:12px} h1{font-size:26px;margin:18px 0 6px} p{margin:12px 0}progress{width:65%;height:8px;accent-color:#ff7050}button{font:inherit;font-weight:700;border:0;border-radius:8px;background:#fff0bc;color:#10243a;padding:14px 24px}small{display:block;margin-top:24px;font-size:11px} a{color:#bbd4df}
+#canvas{display:block;width:100%;height:100%;max-width:100%;max-height:100%;touch-action:none;outline:0} #load{position:fixed;inset:0;background:#122537;display:grid;place-items:center;padding:max(20px,var(--safe-top)) max(20px,var(--safe-right)) max(20px,var(--safe-bottom)) max(20px,var(--safe-left))} #load[hidden],[hidden]{display:none!important}
+main{width:min(490px,100%);text-align:center} main img{width:100%;border-radius:12px} h1{font-size:26px;margin:18px 0 6px} p{margin:12px 0}progress{width:65%;height:8px;accent-color:#ff7050}button{min-width:44px;min-height:44px;font:inherit;font-weight:700;border:0;border-radius:8px;background:#fff0bc;color:#10243a;padding:14px 24px}small{display:block;margin-top:24px;font-size:11px} a{display:inline-grid;min-width:44px;min-height:44px;place-items:center;color:#bbd4df}
 </style>
 </head>
 <body>
@@ -22,6 +23,15 @@ const meter = document.getElementById('meter');
 const message = document.getElementById('message');
 const retry = document.getElementById('retry');
 retry.onclick = () => location.reload();
+function ribbonRallyViewport() {
+  const bounds = document.getElementById('canvas').getBoundingClientRect();
+  const style = getComputedStyle(document.documentElement);
+  const inset = side => parseFloat(style.getPropertyValue('--safe-' + side)) || 0;
+  return {
+    width: bounds.width, height: bounds.height,
+    top: inset('top'), right: inset('right'), bottom: inset('bottom'), left: inset('left')
+  };
+}
 function failed() {
   meter.hidden = true;
   message.textContent = '読み込めませんでした。通信とブラウザのWebGL 2設定をご確認ください。';

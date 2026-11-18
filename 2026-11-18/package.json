@@ -7,7 +7,7 @@
     "setup": "node scripts/setup.mjs",
     "dev": "node scripts/godot.mjs editor",
     "play": "node scripts/godot.mjs play",
-    "test": "node scripts/godot.mjs test",
+    "test": "node scripts/godot.mjs test && node scripts/godot.mjs models",
     "build": "node scripts/godot.mjs build",
     "check": "node scripts/godot.mjs import && npm test && npm run build",
     "preview": "python3 -m http.server 4173 --directory dist"

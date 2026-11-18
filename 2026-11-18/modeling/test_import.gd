@@ -39,6 +39,16 @@ func verify() -> void:
 			maximum = maxf(maximum, reference.angle_to(rig.get_bone_pose_rotation(thigh)))
 		if maximum < 0.55 or mesh.mesh.get_surface_count() != 1:
 			failed = true
+		# Stride phase stays fixed in the air. The thigh should tuck and extend again.
+		visual.pose("jump", 0.02, 0.3, 0.0)
+		var launch := rig.get_bone_pose_rotation(thigh)
+		visual.pose("jump", Visual.FLIGHT_SECONDS * 0.5, 0.3, 0.0)
+		var apex := rig.get_bone_pose_rotation(thigh)
+		visual.pose("jump", Visual.FLIGHT_SECONDS * 0.94, 0.3, 0.0)
+		var approach := rig.get_bone_pose_rotation(thigh)
+		if launch.angle_to(apex) < 0.4 or apex.angle_to(approach) < 0.4:
+			push_error("Jump pose did not advance for bib %02d" % (index + 1))
+			failed = true
 		print("Bib %02d  bones %d  surfaces %d  max thigh change %.3f rad" % [
 			index + 1, rig.get_bone_count(), mesh.mesh.get_surface_count(), maximum
 		])

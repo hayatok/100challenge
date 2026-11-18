@@ -15,6 +15,7 @@ const GOLD := Color("#ffd26e")
 const FACE := preload("res://media/HarborUI.otf")
 const PORTRAIT := preload("res://media/title-portrait.jpg")
 const WIDE := preload("res://media/cover.jpg")
+const MIN_HIT_PIXELS := 44.0
 
 var title := Control.new()
 var poster := TextureRect.new()
@@ -41,6 +42,7 @@ var result_time := Label.new()
 var result_retry := Button.new()
 var go := Button.new()
 var resume := Button.new()
+var restart := Button.new()
 var reduce := CheckButton.new()
 var sound := CheckButton.new()
 var music := CheckButton.new()
@@ -49,10 +51,13 @@ var rank_tween: Tween
 var left_held := false
 var right_held := false
 var mode := "title"
+var browser: JavaScriptObject
 
 func _ready() -> void:
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
+	if OS.has_feature("web"):
+		browser = JavaScriptBridge.get_interface("window")
 	var ui_theme := Theme.new()
 	ui_theme.default_font = FACE
 	ui_theme.default_font_size = 18
@@ -66,6 +71,7 @@ func _ready() -> void:
 	_build_pause()
 	_build_result()
 	resized.connect(_layout)
+	get_window().size_changed.connect(_layout)
 	_layout()
 	set_mode("title")
 
@@ -198,7 +204,6 @@ func _build_pause() -> void:
 		toggle.toggled.connect(_on_option.bind(option[2]))
 	_button(resume, pause_stack, "再開", true)
 	resume.pressed.connect(func(): resume_requested.emit())
-	var restart := Button.new()
 	_button(restart, pause_stack, "最初から")
 	restart.pressed.connect(func(): start_requested.emit())
 
@@ -224,34 +229,69 @@ func _layout() -> void:
 		return
 	var w := size.x
 	var h := size.y
+	var pixels := Vector2(get_window().size)
+	var safe := Vector4.ZERO
+	if browser and browser.ribbonRallyViewport:
+		var metrics: JavaScriptObject = browser.ribbonRallyViewport()
+		if float(metrics.width) > 0.0 and float(metrics.height) > 0.0:
+			pixels = Vector2(float(metrics.width), float(metrics.height))
+		safe = Vector4(float(metrics.left), float(metrics.top), float(metrics.right), float(metrics.bottom))
+	elif OS.get_name() in ["Android", "iOS"]:
+		var window_rect := Rect2(Vector2(get_window().position), pixels)
+		var inner := window_rect.intersection(Rect2(DisplayServer.get_display_safe_area()))
+		if inner.has_area():
+			safe = Vector4(
+				inner.position.x - window_rect.position.x, inner.position.y - window_rect.position.y,
+				window_rect.end.x - inner.end.x, window_rect.end.y - inner.end.y
+			)
+	var units_per_pixel := maxf(w / maxf(1.0, pixels.x), h / maxf(1.0, pixels.y))
+	var min_hit := ceilf(MIN_HIT_PIXELS * units_per_pixel)
+	safe *= units_per_pixel
+	for button: Button in [go, left, right, halt, jump, resume, restart, result_retry]:
+		button.custom_minimum_size = Vector2(maxf(48.0, min_hit), maxf(50.0, min_hit))
+	for toggle: CheckButton in [reduce, sound, music]:
+		toggle.custom_minimum_size.y = maxf(44.0, min_hit)
+
 	var portrait := w < h * 0.95
 	var inset := 20.0
-	var width := minf(w - 2.0 * inset, 346.0)
-	var panel_h := 161.0
+	var left_edge := inset + safe.x
+	var top_edge := inset + safe.y
+	var right_edge := w - inset - safe.z
+	var bottom_edge := h - inset - safe.w
+	var width := minf(right_edge - left_edge, 346.0)
+	var centered_x := (left_edge + right_edge - width) * 0.5
+	var panel_h := maxf(161.0, title_stack.get_combined_minimum_size().y + 10.0)
 	if portrait:
 		poster.texture = PORTRAIT
 		# Keep the entire lettering and foreground face in view on narrow phones.
-		var image_h := minf(h - panel_h + 30.0, w * 1.55)
-		_place(poster, 0, 0, w, image_h)
-		_place(title_panel, (w-width)*0.5, minf(h-panel_h-inset, (image_h+h-panel_h)*0.5-8), width, panel_h)
+		var image_h := minf(h - safe.y - safe.w - panel_h + 30.0, w * 1.55)
+		_place(poster, safe.x, safe.y, w - safe.x - safe.z, image_h)
+		var title_top := minf(bottom_edge-panel_h, (safe.y+image_h+h-safe.w-panel_h)*0.5-8)
+		_place(title_panel, centered_x, title_top, width, panel_h)
 	else:
 		poster.texture = WIDE
 		_place(poster, 0, 0, w, h)
-		_place(title_panel, w-width-inset*1.5, h-panel_h-inset*1.5, width, panel_h)
+		_place(title_panel, right_edge-width-10, bottom_edge-panel_h-10, width, panel_h)
 	_place(title_stack, 16, 5, width-32, panel_h-10)
-	_place(rank_panel, inset, inset, 109, 61)
+	_place(rank_panel, left_edge, top_edge, 109, 61)
 	_place(rank_caption, 0, 3, 109, 19)
 	_place(rank_label, 0, 14, 109, 43)
-	_place(halt, w-inset-52, inset, 52, 50)
-	_place(course_progress, inset, inset+69, 109, 7)
-	_place(left, inset, h-82, 60, 56)
-	_place(right, inset+64, h-82, 60, 56)
-	_place(jump, w-inset-106, h-85, 106, 59)
+	var halt_w := maxf(52.0, min_hit)
+	_place(halt, right_edge-halt_w, top_edge, halt_w, maxf(50.0, min_hit))
+	_place(course_progress, left_edge, top_edge+69, 109, 7)
+	var arrow_w := maxf(60.0, min_hit)
+	var arrow_h := maxf(56.0, min_hit)
+	var jump_h := maxf(59.0, min_hit)
+	_place(left, left_edge, bottom_edge-6-arrow_h, arrow_w, arrow_h)
+	_place(right, left_edge+arrow_w+4, bottom_edge-6-arrow_h, arrow_w, arrow_h)
+	_place(jump, right_edge-106, bottom_edge-6-jump_h, 106, jump_h)
 	_place(count, 0, h*0.25, w, 105)
-	_place(pause_panel, (w-width)*0.5, (h-366)*0.5, width, 366)
-	_place(pause_stack, 20, 8, width-40, 350)
-	_place(result_panel, (w-width)*0.5, h-190, width, 167)
-	_place(result_stack, 18, 4, width-36, 158)
+	var pause_h := maxf(366.0, pause_stack.get_combined_minimum_size().y + 16.0)
+	_place(pause_panel, centered_x, (top_edge+bottom_edge-pause_h)*0.5, width, pause_h)
+	_place(pause_stack, 20, 8, width-40, pause_h-16)
+	var result_h := maxf(167.0, result_stack.get_combined_minimum_size().y + 9.0)
+	_place(result_panel, centered_x, bottom_edge-3-result_h, width, result_h)
+	_place(result_stack, 18, 4, width-36, result_h-9)
 
 func set_mode(value: String) -> void:
 	mode = value

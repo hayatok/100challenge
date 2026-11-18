@@ -27,6 +27,7 @@ var finish_elapsed := 0.0
 var target_x := 0.0
 var jump_queued := false
 var hold_direction := 0
+var digital_steering := false
 var active_pointer := -1
 var press_origin := Vector2.ZERO
 var press_x := 0.0
@@ -121,6 +122,7 @@ func _option_changed(option: String, value: bool) -> void:
 	settings.save("user://preferences.cfg")
 
 func _reset_input() -> void:
+	_stop_digital_steering()
 	active_pointer = -1
 	dragged = false
 	jump_queued = false
@@ -176,6 +178,9 @@ func _notification(what: int) -> void:
 			pause_race()
 
 func _input(event: InputEvent) -> void:
+	if _capture_course_pointer(event):
+		get_viewport().set_input_as_handled()
+		return
 	if event is InputEventKey and event.pressed and not event.echo:
 		if event.keycode == KEY_ESCAPE or event.keycode == KEY_P:
 			if mode == "paused":
@@ -188,45 +193,67 @@ func _input(event: InputEvent) -> void:
 			get_viewport().set_input_as_handled()
 
 func _unhandled_input(event: InputEvent) -> void:
-	if mode != "racing" or event.device == InputEvent.DEVICE_ID_EMULATION:
+	if mode != "racing" or active_pointer != -1 or event.device == InputEvent.DEVICE_ID_EMULATION:
 		return
-	if event is InputEventScreenTouch:
+	if event is InputEventScreenTouch and event.pressed and not event.canceled:
+		_begin_course_pointer(event.index, event.position)
+	elif event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
+		_begin_course_pointer(-2, event.position)
+
+func _begin_course_pointer(id: int, point: Vector2) -> void:
+	if hud.over_race_button(point):
+		return
+	active_pointer = id
+	press_origin = point
+	press_x = target_x
+	press_msec = Time.get_ticks_msec()
+	dragged = false
+
+func _capture_course_pointer(event: InputEvent) -> bool:
+	if mode != "racing" or active_pointer == -1 or event.device == InputEvent.DEVICE_ID_EMULATION:
+		return false
+	# A gesture that began on the course keeps its motion and release over the HUD.
+	if event is InputEventScreenTouch and event.index == active_pointer:
 		if event.canceled:
-			if event.index == active_pointer:
-				active_pointer = -1
-			return
-		_pointer(event.index, event.position, event.pressed)
-	elif event is InputEventScreenDrag:
-		_drag(event.index, event.position)
-	elif event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
-		_pointer(-2, event.position, event.pressed)
-	elif event is InputEventMouseMotion:
-		_drag(-2, event.position)
+			active_pointer = -1
+			return true
+		if not event.pressed:
+			_end_course_pointer(event.position)
+			return true
+	elif event is InputEventScreenDrag and event.index == active_pointer:
+		_drag(event.position)
+		return true
+	elif active_pointer == -2:
+		if event is InputEventMouseMotion:
+			_drag(event.position)
+			return true
+		if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and not event.pressed:
+			_end_course_pointer(event.position)
+			return true
+	return false
 
-func _pointer(id: int, point: Vector2, down: bool) -> void:
-	if down:
-		if active_pointer != -1 or hud.over_race_button(point):
-			return
-		active_pointer = id
-		press_origin = point
-		press_x = target_x
-		press_msec = Time.get_ticks_msec()
-		dragged = false
-	elif id == active_pointer:
-		_drag(id, point)
-		if not dragged and Time.get_ticks_msec() - press_msec < TAP_SECONDS * 1000.0:
-			jump_queued = true
-		active_pointer = -1
+func _end_course_pointer(point: Vector2) -> void:
+	_drag(point)
+	if not dragged and Time.get_ticks_msec() - press_msec < TAP_SECONDS * 1000.0:
+		jump_queued = true
+	active_pointer = -1
 
-func _drag(id: int, point: Vector2) -> void:
-	if id != active_pointer:
-		return
+func _drag(point: Vector2) -> void:
 	var delta := point - press_origin
 	if delta.length() >= DRAG_THRESHOLD:
 		dragged = true
 	if dragged:
 		var distance: float = delta.x / minf(480.0, hud.size.x) * 14.5
 		target_x = clampf(press_x + distance, -5.2, 9.0)
+
+func _stop_digital_steering() -> void:
+	if not digital_steering:
+		return
+	digital_steering = false
+	var player: Dictionary = sim.runners[0]
+	player.vx = 0.0
+	if active_pointer == -1 or not dragged:
+		target_x = player.x
 
 func _physics_process(dt: float) -> void:
 	if mode == "title" or mode == "paused":
@@ -257,10 +284,14 @@ func _physics_process(dt: float) -> void:
 	var player: Dictionary = sim.runners[0]
 	var before_respawn: int = player.respawns
 	var steer := hold_direction + int(Input.is_key_pressed(KEY_RIGHT) or Input.is_key_pressed(KEY_D)) - int(Input.is_key_pressed(KEY_LEFT) or Input.is_key_pressed(KEY_A))
+	var step_target: float
 	if mode == "racing" and steer != 0:
-		# Keep the target close while steering with buttons. Releasing is an immediate stop.
-		target_x = clampf(float(player.x) + signf(steer) * 0.5, -5.2, 9.0)
-	sim.step(dt, target_x, jump_queued and mode == "racing")
+		digital_steering = true
+		step_target = clampf(float(player.x) + signf(steer) * 0.5, -5.2, 9.0)
+	else:
+		_stop_digital_steering()
+		step_target = target_x
+	sim.step(dt, step_target, jump_queued and mode == "racing")
 	jump_queued = false
 	if before_respawn != player.respawns:
 		_reset_input()
