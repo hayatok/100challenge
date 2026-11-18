@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#101c1b">
+<meta name="description" content="封鎖された魚市場から夜明けのフェリーへ。荷役鐘で群れを誘う、三章の一人称ゾンビシューティング。">
+<title>屍港最終便</title>
+$GODOT_HEAD_INCLUDE
+<style>
+*{box-sizing:border-box}html,body{margin:0;height:100%;overflow:hidden;background:#101c1b;color:#e8e1cd;font-family:system-ui,sans-serif}canvas{display:block;width:100%;height:100%;touch-action:none;outline:none}
+#load{position:fixed;inset:0;display:grid;align-items:end;background:linear-gradient(transparent 25%,#07110fee),url(cover.jpg) center/cover;padding:max(5vw,env(safe-area-inset-bottom)) 7vw}#load[hidden],[hidden]{display:none!important}
+h1{font-size:clamp(36px,7vw,78px);letter-spacing:.09em;margin:0}p{margin:8px 0;color:#c2cfbe}progress{width:min(320px,80vw);height:8px;accent-color:#d7a24a}button{min-height:44px;padding:8px 25px;background:#e7b85c;color:#182420;border:0;font-weight:700}
+</style>
+</head><body>
+<canvas id="canvas" tabindex="0" aria-label="屍港最終便 ゲーム画面"></canvas>
+<div id="load" role="status"><main><h1>屍港最終便</h1><p id="message">港を読み込み中…</p><progress id="meter"></progress><button hidden id="retry">読み込み直す</button></main></div>
+<noscript>遊ぶにはJavaScriptを有効にしてください。</noscript>
+<script>
+const meter=document.getElementById('meter'), retry=document.getElementById('retry');
+retry.onclick=()=>location.reload();
+function failed(){meter.hidden=true;document.getElementById('message').textContent='読み込めませんでした。通信環境とWebGL 2の設定をご確認ください。';retry.hidden=false}
+</script>
+<script src="$GODOT_URL" onerror="failed()"></script>
+<script>
+if(typeof Engine!=='undefined'){
+ const engine=new Engine($GODOT_CONFIG);
+ if(Engine.getMissingFeatures({threads:$GODOT_THREADS_ENABLED}).length)failed();
+ else engine.startGame({onProgress(loaded,total){if(total>0){meter.max=total;meter.value=loaded}}})
+ .then(()=>{document.getElementById('load').hidden=true;document.getElementById('canvas').focus()}).catch(failed);
+}
+</script></body></html>

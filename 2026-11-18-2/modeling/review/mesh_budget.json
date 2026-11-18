@@ -1,0 +1,51 @@
+[
+  {
+    "asset": "enemy_3.glb",
+    "mesh_objects": 9,
+    "material_surfaces": 23,
+    "triangles": 2072,
+    "bytes": 199680
+  },
+  {
+    "asset": "enemy_2.glb",
+    "mesh_objects": 9,
+    "material_surfaces": 18,
+    "triangles": 1396,
+    "bytes": 134528
+  },
+  {
+    "asset": "enemy_0.glb",
+    "mesh_objects": 9,
+    "material_surfaces": 17,
+    "triangles": 1168,
+    "bytes": 127928
+  },
+  {
+    "asset": "enemy_1.glb",
+    "mesh_objects": 8,
+    "material_surfaces": 14,
+    "triangles": 1196,
+    "bytes": 122888
+  },
+  {
+    "asset": "weapon_2.glb",
+    "mesh_objects": 1,
+    "material_surfaces": 5,
+    "triangles": 844,
+    "bytes": 78144
+  },
+  {
+    "asset": "weapon_1.glb",
+    "mesh_objects": 1,
+    "material_surfaces": 5,
+    "triangles": 944,
+    "bytes": 84568
+  },
+  {
+    "asset": "weapon_0.glb",
+    "mesh_objects": 9,
+    "material_surfaces": 11,
+    "triangles": 1296,
+    "bytes": 110212
+  }
+]
