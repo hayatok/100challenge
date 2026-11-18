@@ -6,6 +6,7 @@ from math import sin, cos, pi, sqrt, atan2, acos
 HERE=Path(__file__).resolve().parent
 sys.path.insert(0,str(HERE))
 from forms import CAST, PALETTE, M, profile, EYES, station_width
+from sport_poses import sport_pose, support_geometry
 args=sys.argv[sys.argv.index('--')+1:]
 TEX=Path(args[0]); GAME=HERE.parent/'game'/'racers'
 V=Vector
@@ -75,6 +76,19 @@ class Surface:
         bybone={}
         for i,k in enumerate(self.bones):bybone.setdefault(k,[]).append(i)
         for k,idx in bybone.items():ob.vertex_groups.new(name=k).add(idx,1,'REPLACE')
+        if self.name.startswith('Nagi'):
+            # The rim follows the secondary rig gradually, including the hair cap
+            # under the separate locks. The fringe and painted face stay on Head.
+            locks=[ob.vertex_groups.get(name) or ob.vertex_groups.new(name=name)
+                   for name in ('Lock.R','Lock.L')]
+            head_group=ob.vertex_groups['Head']
+            for vertex in bybone['Head']:
+                x,y,z=(coord/M for coord in self.verts[vertex])
+                peripheral=clamp((abs(x)-57)/29,0,1)*clamp((y+34)/27,0,1)
+                weight=.83*peripheral*clamp((277-z)/60,0,1)
+                if weight:
+                    locks[int(x>0)].add([vertex],weight,'REPLACE')
+                    head_group.add([vertex],1-weight,'REPLACE')
         mod=ob.modifiers.new('Competition rig','ARMATURE');mod.object=rig
         ob.parent=rig
         return ob
@@ -93,7 +107,7 @@ def make_material(i):
 def skel(i):
     bones={'Pelvis':((0,0,115),None),'Chest':((0,0,126),'Pelvis'),'Head':((0,0,194),'Chest'),
            'Ornament':((0,15,264),'Head'),'Blink':((0,15,262),'Head')}
-    if i==0:bones['Ornament']=((64,-34,324),'Head')
+    if i==0:bones['Ornament']=((83,-25,324),'Head')
     if i==2:bones['Ornament']=((-28,48,340),'Head')
     if i==3:bones['Ornament']=((0,7,329),'Head')
     if i==5:bones['Ornament']=((41,73,238),'Head')
@@ -103,6 +117,8 @@ def skel(i):
             ('Foot',(sgn*32,0,37),'Shin.'+s),('UpperArm',(sgn*33,1,184),'Chest'),
             ('Forearm',(sgn*60,-1,153),'UpperArm.'+s),('Hand',(sgn*76,-5,130),'Forearm.'+s),
             ('Lock',(sgn*67,12,245),'Head')]:
+            if i==4 and name=='Lock':
+                pos=(sgn*65,12,217)
             bones[name+'.'+s]=(pos,parent)
     arm=bpy.data.armatures.new('Skeleton_'+CAST[i]['name'])
     rig=bpy.data.objects.new(CAST[i]['name']+'_Rig',arm);bpy.context.collection.objects.link(rig)
@@ -142,27 +158,39 @@ def decoration(g,i):
             # Coordinates in the calibrated front view. Convex folded cross-sections
             # give the loops volume and carry the original designer's crease painting.
             rings=[]
+            # Sideways bow centre and folds are taken from the profile, where
+            # the upper loop reaches back and the swallow tail hangs over the ear.
             for t in [.035,.36,.72,1,.72,.36,.035]:
                 front=len(rings)<4; row=[]
                 for px,py in outline:
                     qx=center[0]+(px-center[0])*t;qy=center[1]+(py-center[1])*t
-                    x=qx-273+8
+                    x=qx-273+4
                     r=station_width(CAST[0],qy)
-                    theta=math.asin(clamp(x/max(r,.01),-.997,.997))
-                    face_y=profile(CAST[0],theta,clamp((qy-21)/177,0,1))[1]
-                    yy=min(-22+.80*(qx-343)+.13*(qy-74),face_y-4)
-                    yy-=max(0,min(1,(qy-77)/16))*15
-                    yy+=(1 if not front else -1)*depth*(1-t*t)
+                    if center[1]<60:
+                        yy=-22+(72-qy)*.42+(qx-343)*1.07
+                    elif center[1]<90:
+                        yy=-24+(qx-343)*1.72+(75-qy)*.27
+                    else:
+                        yy=-27+(qx-343)*.89-(qy-76)*.53
+                    sy=clamp((qy-21)/177,0,1)
+                    _,mid,_=profile(CAST[0],pi/2,sy)
+                    _,edge,_=profile(CAST[0],0 if yy<mid else pi,sy)
+                    shell=.96*r*sqrt(max(0,1-((yy-mid)/max(1,abs(edge-mid)))**2))
+                    x=max(x,shell+3.5)
+                    x+=(1 if front else -1)*depth*(1-t*t)
+                    yy-=(1 if front else -1)*depth*(1-t*t)
                     row.append((x,yy,398-qy))
                 rings.append(row)
             def bow_uv(a,b):
-                px,yy,z=rings[a][b%len(outline)]
-                return uv(710+(px+273-8-311)*154/75,561+(398-z-12)*250/125)
+                t=(.035,.36,.72,1,.72,.36,.035)[a]
+                px,py=outline[b%len(outline)]
+                return uv(710+(center[0]+(px-center[0])*t-311)*154/75,
+                          561+(center[1]+(py-center[1])*t-12)*250/125)
             g.grid(rings,'Ornament',15,tex=bow_uv)
         bow_surface([(343,72),(331,68),(321,62),(316,53),(315,41),(316,31),(321,21),(327,15),(332,17),(340,25),(349,35),(352,43),(351,52),(347,62)],(333,45),8)
         bow_surface([(343,72),(349,66),(357,61),(366,60),(374,62),(378,68),(378,79),(375,91),(371,98),(364,98),(354,90),(348,83)],(363,78),7)
         bow_surface([(343,76),(350,79),(359,88),(370,103),(381,118),(377,122),(357,132),(352,130),(348,116),(344,95)],(358,104),4)
-        g.oval((77,-36,325),(8.5,8,10),'Ornament',15,20)
+        g.oval((83,-25,325),(10,10,10),'Ornament',15,20)
     if i==1:
         for s,sign in [('L',1),('R',-1)]:
             b='Lock.'+s
@@ -227,6 +255,22 @@ def decoration(g,i):
 
 def outer_hair(g,i):
     c=CAST[i]
+    if i==0:
+        # The turnaround's longest face-framing lock curves forward below the
+        # ear and ends in a pointed cheek-length tip. Build its own cross section.
+        for side,sign in [('L',1),('R',-1)]:
+            rows=[]
+            for a in range(15):
+                u=a/14;v=.38+.63*u
+                angle=sign*(.88+.17*sin(pi*u)-.22*u**2)
+                p=V(profile(c,angle,min(1,v)))
+                radial=V((sin(angle),-cos(angle),0));tangent=V((cos(angle),sin(angle),0))
+                p+=radial*(2.4+2.4*sin(pi*u))
+                p.z-=max(0,v-1)*200
+                radius=max(.10,sin(pi*(.035+.965*u))**.72)
+                rows.append([p+tangent*9*radius*sin(b*pi/6)+radial*4.7*radius*cos(b*pi/6)
+                             for b in range(12)])
+            g.grid(rows,'Lock.'+side,'hair',tex=lambda a,b:uv(880+124*b/12,586+211*a/14))
     # Individual layered locks flare free of the main head at the bob's cut edge.
     styles=[(12,.28,1.03),(8,.26,1.02),(7,.18,1.02),(9,.30,1.03),(9,.24,1.02),(8,.20,1.03)]
     count,sweep,end=styles[i]
@@ -238,6 +282,11 @@ def outer_hair(g,i):
             t=a/nt
             vc=start+(end-start)*t
             theta=ang+sweep*sin(t*pi*.90+j*.24)-.16*(1-t)
+            if i==0:
+                # Lower side locks curl forward beside the cheek. Stagger their
+                # ends so that the nape has individual points seen from behind.
+                theta-=math.copysign(.20*t*t,sin(ang))
+                vc+=.025*cos(2*j)*t*t
             if vc<=1:p=V(profile(c,theta,vc))
             else:
                 p=V(profile(c,theta,1))
@@ -247,11 +296,17 @@ def outer_hair(g,i):
             strength=max(.015,sin(pi*(.02+.98*t))**.58)
             width=(10+3*sin(j*2.4))*strength
             depth=(4.6+1.8*sin(j+.4))*strength
+            if i==0:
+                depth*=.83
             p+=norm*(.4+1.0*sin(pi*t))
             rows.append([p+tan*(width*sin(b*2*pi/nr))+norm*(depth*cos(b*2*pi/nr)) for b in range(nr)])
         def lookup(a,b):
             t=a/nt;theta=ang+sweep*sin(t*pi*.90+j*.24)-.16*(1-t)
             theta+=(width if a==nt else 8)*sin(b*2*pi/nr)/94
+            if i==0:
+                # Paint stays on the swept geometry instead of exposing the
+                # ear projection as a second coloured patch on the hair.
+                theta-=math.copysign(.20*t*t,sin(ang))
             theta=(theta+pi)%(2*pi)-pi
             return uv(1+1022*(theta+pi)/(2*pi),1+min(1,start+(end-start)*t)*509)
         g.grid(rows,'Head','hair',tex=lookup)
@@ -335,7 +390,21 @@ def clothes(g,i):
             ([(13,29,40,x,-8),(18,30,40.5,x,-8),(24,28.5,36,x,-6),(33,24,30,x,-2),(39,19,20,x,4)],'shoe'),
             ([(33,19,18,x,5),(39,20,19,x,5),(42,17,16,x,5)],'shoe')]:
             n=36
-            rows=[[(cx+rx*sin(-pi+j*2*pi/n),cy-ry*cos(-pi+j*2*pi/n),z) for j in range(n)] for z,rx,ry,cx,cy in rings]
+            rows=[]
+            for z,rx,ry,cx,cy in rings:
+                row=[]
+                for j in range(n):
+                    a=-pi+j*2*pi/n
+                    xx=cx+rx*sin(a); yy=cy-ry*cos(a); zz=z
+                    if i==0:
+                        # The profile has a long toe, an upright heel and a
+                        # visible arch cut into the dark outsole underfoot.
+                        toe=max(0,cos(a))
+                        yy+=1.4-8.8*toe*clamp((43-z)/30,0,1)
+                        zz+=2.7*toe**4+4.1*max(0,1-abs(yy-9)/15)*clamp((13-z)/13,0,1)
+                        if 5<=z<=16: zz+=1.7
+                    row.append((xx,yy,zz))
+                rows.append(row)
             g.grid(rows,foot,cc,tex=lambda a,b:uv(1+685*b/n,761+55*(rings[a][0])/42))
         g.oval((x,-13,36),(12,15,9),foot,'shoe',16)
         for q in range(3):
@@ -347,14 +416,18 @@ def clothes(g,i):
         for yy in [-30,-12,7,17]:
             g.oval((x,yy,.9),(18 if yy<10 else 12,3.8,.9),foot,14,12,4)
 
-CLIPS={'idle':60,'run':20,'jump':24,'land':10,'stumble':24,'fall':24,'finish':48}
+CLIPS={'idle':60,'run':20,'jump':24,'land':10,'stumble':24,'fall':24,'finish':48,
+       'sprint':16,'dive':9,'slide':21}
 def clamp(x,a,b):return max(a,min(b,x))
-def make_pose(rig,i,state,t):
+def make_pose(rig,i,state,t,support):
     pbs=rig.pose.bones
     swing=2*pi*t
     for b in pbs:
         b.rotation_mode='QUATERNION'
         b.rotation_quaternion=Quaternion(); b.location=(0,0,0);b.scale=(1,1,1)
+    if state in ('sprint','dive','slide'):
+        sport_pose(rig,i,state,t,support)
+        return
     def rotate(name,x=0,y=0,z=0):
         b=pbs[name];basis=b.bone.matrix_local.to_quaternion()
         b.rotation_quaternion=basis.inverted()@Euler((x,y,z)).to_quaternion()@basis
@@ -433,13 +506,13 @@ def make_pose(rig,i,state,t):
         rotate('Lock.'+side,hair*(1 if i==4 else .7),k*hair*.45)
     blink=1. if ((state=='idle' and .80<t<.88) or (state=='land' and .14<t<.43) or (state=='stumble' and t<.24) or (state=='finish' and .80<t<.89)) else .01
     pbs['Blink'].scale=(blink,blink,blink)
-def actions(rig,i):
+def actions(rig,i,support):
     anim=rig.animation_data_create()
     for state,frames in CLIPS.items():
         act=bpy.data.actions.new(f'{CAST[i]["name"]}_{state}');anim.action=act
         for frame in range(frames+1):
-            if state!='run' and frame%2 and frame!=frames:continue
-            make_pose(rig,i,state,frame/frames)
+            if state not in ('run','sprint','dive','slide') and frame%2 and frame!=frames:continue
+            make_pose(rig,i,state,frame/frames,support)
             for b in rig.pose.bones:
                 b.keyframe_insert('rotation_quaternion',frame=frame,group=b.name)
                 if b.name=='Pelvis':b.keyframe_insert('location',frame=frame,group=b.name)
@@ -447,7 +520,7 @@ def actions(rig,i):
         track=anim.nla_tracks.new();track.name=state
         track.strips.new(state,0,act);track.mute=True
         anim.action=None
-    make_pose(rig,i,'idle',0)
+    make_pose(rig,i,'idle',0,support)
 def main():
     bpy.ops.wm.read_factory_settings(use_empty=True)
     sc=bpy.context.scene;sc.render.fps=30
@@ -455,7 +528,7 @@ def main():
     for i,c in enumerate(CAST):
         rig=skel(i);g=Surface(c['name']+'_painted_mesh')
         head(g,i);outer_hair(g,i);decoration(g,i);clothes(g,i)
-        ob=g.object(make_material(i),rig);actions(rig,i)
+        ob=g.object(make_material(i),rig);actions(rig,i,support_geometry(g))
         rig.rotation_euler.z=pi
         bpy.ops.object.select_all(action='DESELECT');rig.select_set(True);ob.select_set(True)
         bpy.context.view_layer.objects.active=rig;bpy.context.view_layer.update()

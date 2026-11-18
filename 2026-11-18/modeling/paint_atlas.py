@@ -60,7 +60,7 @@ for i,c in enumerate(CAST):
         col=col*(1-repair)+mirror*repair
         bx=977-x
         rear=sample(back,977+np.abs(bx-977),sy)
-        sx=620+y
+        sx=603+y
         sidecol=sample(side,sx,sy)
         # The front artwork already supplies both eyes. Only project the temporal
         # hair/ear from the profile, and restore the near-side bow occlusion using
@@ -69,6 +69,14 @@ for i,c in enumerate(CAST):
         restore=(1-smooth(675,697,sx))*(1-smooth(127,149,sy))
         sidecol=sidecol*(1-restore[:,:,None])+sidehair*restore[:,:,None]
         w=smooth(1.09,1.53,af)[:,:,None]
+        # The cheek is visible in profile between the bangs and the side lock.
+        # Retain the front eyes, then blend into the actual ear and profile eye.
+        cheek=smooth(115,138,sy)[:,:,None]
+        w=w*(1-cheek)+smooth(.59,1.06,af)[:,:,None]*cheek
+        # The ear lies behind the cheek locks. Reserve its projection for the
+        # side-on part of the mesh where it cannot bleed across the frontal bob.
+        ear_region=(smooth(596,609,sx)*smooth(129,143,sy)*(1-smooth(187,198,sy)))[:,:,None]
+        w*=1-ear_region*(1-smooth(1.26,1.51,af)[:,:,None])
         col=col*(1-w)+sidecol*w
         w=smooth(1.79,2.42,af)[:,:,None]
     else:

@@ -1,24 +1,28 @@
 # リボンラリー！
 
-港の桟橋を舞台にした、スマホ縦持ちの3D障害物レース。赤いリボンのナギを操作して、5人のライバルと灯台を目指す。内側の浮き橋には選手の重みがかかる。橋の先端が沈んだら早めに跳ぶか、外の桟橋を走ろう。
+赤いリボンのナギと5人のライバルが走る、スマホ縦持ちの3D障害物レース。潮風ふ頭では選手の重みで浮き橋が傾く。夕焼けコンテナヤードではクレーンが吊ったコンテナが水路を横切る。その屋根に飛び乗るか、加速を残して外の桟橋を回ろう。
 
-[ブラウザで遊ぶ](https://hayatok.github.io/100challenge/2026-11-18/) · [実際のプレイ映像（18秒・音声あり）](docs/verification/gameplay.mp4)
-
-![6人が並んで出発桟橋を走るゲーム画面](docs/verification/race.jpg)
+[ブラウザで遊ぶ](https://hayatok.github.io/100challenge/2026-11-18/) · [夕焼けコンテナヤードのプレイ映像（音声あり）](docs/verification/v02-yard.mp4)
 
 ## 操作
+
+タイトルの写真を選ぶと、そのコースでレースが始まる。全員が自動で前進する。
 
 | 操作 | スマートフォン | キーボード |
 | --- | --- | --- |
 | 左右に移動 | コースを左右にドラッグ、または下の矢印を長押し | ← → または A・D |
 | ジャンプ | コースを短くタップ、または「ジャンプ」 | スペースまたは ↑ |
+| ダイブ | ジャンプ中にもう一度タップ、または「ダイブ」 | 空中でもう一度スペースまたは ↑ |
+| 加速 | 地上で「加速」。残り回数はボタンの旗で確認 | Shift |
 | ポーズ・再開 | 右上のポーズボタン、続けるときは「再開」 | Esc または P |
 
-走者は自動で前進する。バーに触れるとよろけ、海に落ちると桟橋に戻る。ポーズ画面で音楽、効果音、カメラなどの動きを調整できる。
+加速は1レース2回。頂点付近でダイブすると遠くに届くが、着地後はお腹で滑って減速する。海に落ちると直前の目印から復帰する。音楽・効果音・カメラの動きはポーズ画面で切り替えられる。結果画面からは同じコースに再挑戦したり、別のコースに移ったりできる。
 
 ## シーンとモデルを開く
 
-Godot 4.7.2のシーンエディタで `game/project.godot` を開く。メインシーンは `game/HarborRace.tscn`。追走カメラとその注視点を編集できる。桟橋や回転バーの配置は `game/course/Course.tscn` にある。6人の衣装、骨格、動きは [Blenderの原本](modeling/ribbon-rally.blend) に収録した。
+Godot 4.7.2で `game/project.godot` を開く。追走カメラと注視点はメインシーンの `game/HarborRace.tscn` にある。シーンエディタで `game/course/Course.tscn` を開くと潮風ふ頭を、`game/course/Yard.tscn` を開くとコンテナヤードを見渡せる。ヤードの床幅や足場の大きさを変えるときは `game/race/YardLayout.gd` を編集し、`game/course/BuildYard.gd` でシーンを再生成する。
+
+6人の衣装、骨格、走りとダイブの動きは[Blenderの原本](modeling/ribbon-rally.blend)に収録した。音楽と効果音の生成元は `scripts/make_audio.py`。GodotとフォントのライセンスはWeb版に同梱する。
 
 このフォルダで次のコマンドを使える。Linux x86-64では `setup` がエディタも取得する。macOSとWindowsではGodot 4.7.2をインストールしてから実行する。
 
@@ -28,12 +32,11 @@ npm run setup
 npm run dev
 ```
 
-`npm run check` は素材を読み込み、レースのテストを実行し、Web版を `dist/` に書き出す。`npm run preview` で書き出したゲームを起動できる。
+`npm run check` は素材を読み込み、走行・モデル・画面遷移をテストして、Web版を `dist/` に書き出す。`npm run preview` で書き出したゲームを起動できる。
 
-## 原画との比較・試遊記録
+## 原画と試遊記録
 
 - [ナギの原画とモデルの三面比較](modeling/review/nagi-turnaround.webp)と[6人の正面・背面](modeling/review/cast.webp)。ライバル5人の後ろ姿は正面の設定画から補った。
-- [ジャンプと着地のポーズ比較](modeling/review/motion.webp)と[モデルの計測記録](modeling/README.md)。ナギは横から見たリボンと靴の後端に原画との差がある。
-- Godot版は縦390×800と横1024×760でスタートから再挑戦まで操作した。浮き橋を跳び越える走行で優勝タイムは38.51秒。[ゴール画面](docs/verification/finish.jpg)
-- iPhone 17eのiOS 26.5シミュレーターでは、Safariでドラッグとタップ、ポーズと再開、浮き橋からの落水と復帰、完走と再挑戦を確認した。iPhone・Androidの実機での描画速度は未計測。[Safariのジャンプ画面](docs/verification/ios-safari.jpg)
-- [企画時の原画とゲーム仕様](docs/game-design.md)。ゲーム内の音楽・効果音の生成元は `scripts/make_audio.py`。GodotとフォントのライセンスはWeb版に同梱する。
+- [加速・ダイブ・立ち上がりのポーズ](modeling/review/sport-motion.webp)と[モデルの計測記録](modeling/README.md)。ナギのリボンは原画と比べて横から見ると少し前に付いている。
+- [v0.2の試遊と計測](docs/verification/v0.2.md)、[iPhoneのSafariシミュレーターで走った水路の分岐](docs/verification/v02-yard-safari.jpg)、[ダイブ中の画面](docs/verification/v02-dive-safari.jpg)。
+- [初版の潮風ふ頭のプレイ映像](docs/verification/gameplay.mp4)と[原画・ゲーム仕様](docs/game-design.md)、[v0.2の開発計画](docs/v0.2-plan.md)。

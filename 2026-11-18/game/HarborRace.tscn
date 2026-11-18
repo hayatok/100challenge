@@ -1,17 +1,16 @@
 [gd_scene format=3 uid="uid://32dvw5t57xjq"]
 
 [ext_resource type="Script" uid="uid://bfjemallxt0ql" path="res://HarborRace.gd" id="1"]
-[ext_resource type="PackedScene" path="res://course/Course.tscn" id="2"]
 [ext_resource type="Script" uid="uid://bph0db7p4isje" path="res://presentation/HarborHUD.gd" id="3"]
 [ext_resource type="Script" uid="uid://blto86lt0sj15" path="res://presentation/RaceAudio.gd" id="4"]
 
 [node name="HarborRace" type="Node3D" unique_id=1063592098]
 script = ExtResource("1")
 
-[node name="ShiokazeWharf" parent="." unique_id=199292706 instance=ExtResource("2")]
+[node name="Course" type="Node3D" parent="." unique_id=661886546]
 
-[node name="PortraitFill" type="DirectionalLight3D" parent="."]
-rotation = Vector3(-0.35, 3.0, 0)
+[node name="PortraitFill" type="DirectionalLight3D" parent="." unique_id=684154009]
+transform = Transform3D(-0.9899925, -0.04838974, 0.13256428, 0, 0.9393727, 0.3428978, -0.14112, 0.33946624, -0.92997193, 0, 0, 0)
 light_color = Color(1, 0.96, 0.91, 1)
 light_energy = 0.55
 light_cull_mask = 2
@@ -22,7 +21,7 @@ sky_mode = 1
 [node name="FollowCamera" type="Camera3D" parent="." unique_id=1229800112]
 transform = Transform3D(1, 0, 0, 0, 0.95233357, 0.30505863, 0, -0.30505863, 0.95233357, -0.8, 3.4, 4.8)
 current = true
-fov = 65.0
+fov = 67.0
 near = 0.13
 far = 290.0
 

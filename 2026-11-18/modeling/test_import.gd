@@ -1,7 +1,7 @@
 extends SceneTree
 
 const Visual = preload("res://racers/RacerVisual.gd")
-const STATES = ["idle", "run", "jump", "land", "stumble", "fall", "finish"]
+const STATES = ["idle", "run", "jump", "land", "stumble", "fall", "finish", "sprint", "dive", "slide"]
 
 func _initialize() -> void:
 	call_deferred("verify")
@@ -48,6 +48,28 @@ func verify() -> void:
 		var approach := rig.get_bone_pose_rotation(thigh)
 		if launch.angle_to(apex) < 0.4 or apex.angle_to(approach) < 0.4:
 			push_error("Jump pose did not advance for bib %02d" % (index + 1))
+			failed = true
+		visual.pose("sprint", 0, 0.12, 0.0)
+		var left_support := rig.get_bone_pose_rotation(thigh)
+		visual.pose("sprint", 0, 0.62, 0.0)
+		if left_support.angle_to(rig.get_bone_pose_rotation(thigh)) < 0.7:
+			push_error("Sprint did not alternate knees for bib %02d" % (index + 1))
+			failed = true
+		var chest := rig.find_bone("Chest")
+		visual.pose("dive", 0.0, 0.0, 0.0)
+		var launch_chest := rig.get_bone_global_pose(chest).basis.get_rotation_quaternion()
+		visual.pose("dive", 0.3, 0.0, 0.0)
+		var reaching := rig.get_bone_global_pose(chest).basis.get_rotation_quaternion()
+		visual.pose("dive", 1.35, 0.73, 0.0)
+		var held := rig.get_bone_global_pose(chest).basis.get_rotation_quaternion()
+		if launch_chest.angle_to(reaching) < 0.7 or reaching.angle_to(held) > 0.01:
+			push_error("Dive reach or hold failed for bib %02d" % (index + 1))
+			failed = true
+		visual.pose("slide", 0.14, 0.0, 0.0)
+		var prone := rig.get_bone_global_pose(chest).basis.get_rotation_quaternion()
+		visual.pose("slide", Visual.Race.SLIDE_SECONDS, 0.0, 0.0)
+		if prone.angle_to(rig.get_bone_global_pose(chest).basis.get_rotation_quaternion()) < 0.7:
+			push_error("Slide recovery failed for bib %02d" % (index + 1))
 			failed = true
 		print("Bib %02d  bones %d  surfaces %d  max thigh change %.3f rad" % [
 			index + 1, rig.get_bone_count(), mesh.mesh.get_surface_count(), maximum

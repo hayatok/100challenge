@@ -1,5 +1,7 @@
 extends RefCounted
 
+const Yard = preload("res://race/YardLayout.gd")
+
 const START_X := [-1.6, -3.7, -0.1, 1.35, 2.85, 4.25]
 const FINISH := 150.0
 const DECK_EDGE := 4.7
@@ -31,6 +33,12 @@ const MAX_SPEED := 3.92
 const LATERAL_SPEED := 4.0
 const TAKEOFF_SPEED := 7.65
 const GRAVITY := 17.8
+const BOOST_COUNT := 2
+const BOOST_DURATION := 1.2
+const BOOST_FACTOR := 1.3
+const DIVE_FACTOR := 1.5
+const SLIDE_SECONDS := 0.35
+const SLIDE_FACTOR := 0.38
 const STEP_HEIGHT := 0.17
 const TIE_TOLERANCE := 0.00001
 
@@ -41,6 +49,9 @@ const RIVAL_RISK := [0.0, 1.15, 0.75, 0.75, 0.04, 0.36]
 const JUMP_LOOKAHEAD := [0.0, 0.48, 0.37, 0.59, 0.42, 0.56]
 
 var runners: Array = []
+var course_id := "wharf"
+var finish_distance := FINISH
+var checkpoints := CHECKPOINTS
 var time: float = 0.0
 var bridge_angle: float = 0.0
 var bar_angles := PackedFloat32Array()
@@ -51,7 +62,10 @@ func _init() -> void:
 	reset()
 
 
-func reset() -> void:
+func reset(selected_course := "wharf") -> void:
+	course_id = "yard" if selected_course == "yard" else "wharf"
+	finish_distance = Yard.FINISH if course_id == "yard" else FINISH
+	checkpoints = Yard.CHECKPOINTS if course_id == "yard" else CHECKPOINTS
 	time = 0.0
 	bridge_angle = 0.0
 	_bridge_velocity = 0.0
@@ -62,19 +76,24 @@ func reset() -> void:
 			"x": x, "p": 0.0, "y": 0.0, "state": "idle", "elapsed": 0.0,
 			"phase": 0.0, "steer": 0.0, "finish_time": -1.0, "respawns": 0,
 			"vx": 0.0, "vy": 0.0, "speed": 0.0, "grounded": true,
-			"jump_buffer": 0.0, "stagger": 0.0, "bar_cooldown": 0.0,
+			"boosts_left": BOOST_COUNT, "boost_left": 0.0, "dive_ready": false,
+			"transport_x": 0.0, "stagger": 0.0, "bar_cooldown": 0.0,
 			"crate_contact": false, "checkpoint": 0, "route": 0, "bridge_misses": 0,
 		})
 
 
-func step(dt: float, player_target_x: float, jump_pressed: bool) -> void:
+func step(dt: float, player_target_x: float, action_pressed: bool, boost_pressed := false) -> void:
+	if dt <= 0.0:
+		return
+	for runner: Dictionary in runners:
+		runner.transport_x = 0.0
 	var remaining := dt
-	var jump := jump_pressed
 	while remaining > 0.000001:
 		var tick := minf(remaining, STEP)
-		_advance(tick, player_target_x, jump)
+		_advance(tick, player_target_x + runners[0].transport_x, action_pressed, boost_pressed)
 		remaining -= tick
-		jump = false
+		action_pressed = false
+		boost_pressed = false
 
 
 func rank_of(index: int) -> int:
@@ -89,20 +108,24 @@ func rank_of(index: int) -> int:
 	return rank
 
 
-func _advance(dt: float, player_target_x: float, jump_pressed: bool) -> void:
+func _advance(dt: float, player_target_x: float, action: bool, boost: bool) -> void:
 	var tick_start := time
 	time += dt
-	_update_bridge(dt)
-	for index in BARS.size():
-		bar_angles[index] = fposmod(BAR_START[index] + BAR_SPIN[index] * time, TAU)
+	if course_id == "wharf":
+		_update_bridge(dt)
+		for index in BARS.size():
+			bar_angles[index] = fposmod(BAR_START[index] + BAR_SPIN[index] * time, TAU)
 
 	# Decide from the same starting positions before moving any runner.
-	var targets := PackedVector2Array([Vector2(player_target_x, float(jump_pressed))])
+	var intents := PackedVector3Array([Vector3(player_target_x, float(action), float(boost))])
 	for index in range(1, runners.size()):
-		targets.append(_rival_intent(index))
+		if course_id == "yard":
+			intents.append(_yard_intent(index))
+		else:
+			intents.append(_wharf_intent(index))
 	for index in runners.size():
-		var intent := targets[index]
-		_move_runner(runners[index], dt, tick_start, intent.x, intent.y > 0.0)
+		var intent := intents[index]
+		_move_runner(runners[index], dt, tick_start, intent.x, intent.y > 0.0, intent.z > 0.0)
 	_resolve_shoulders(dt)
 
 
@@ -117,7 +140,7 @@ func _update_bridge(dt: float) -> void:
 
 
 func _on_bridge(x: float, p: float) -> bool:
-	return p >= BRIDGE_START and p < BRIDGE_END and _on_inner(x)
+	return course_id == "wharf" and p >= BRIDGE_START and p < BRIDGE_END and _on_inner(x)
 
 
 func _on_inner(x: float) -> bool:
@@ -129,6 +152,8 @@ func _outer_shift(p: float) -> float:
 
 
 func _ground_height(x: float, p: float) -> float:
+	if course_id == "yard":
+		return Yard.ground_height(x, p)
 	if p < SPLIT_START or p >= SPLIT_END:
 		return 0.0 if absf(x) <= DECK_EDGE else -INF
 	if _on_bridge(x, p):
@@ -140,6 +165,9 @@ func _ground_height(x: float, p: float) -> float:
 
 
 func _surface(x: float, p: float) -> float:
+	if course_id == "yard":
+		var roof := Yard.roof_at(x, p, time)
+		return Yard.ROOFS[roof].height if roof >= 0 else Yard.ground_height(x, p)
 	if _crate_height(x, p) > 0.0:
 		return CRATE_HEIGHT
 	return _ground_height(x, p)
@@ -152,7 +180,7 @@ func _crate_height(x: float, p: float) -> float:
 	return 0.0
 
 
-func _move_runner(runner: Dictionary, dt: float, tick_start: float, target_x: float, jump: bool) -> void:
+func _move_runner(runner: Dictionary, dt: float, tick_start: float, target_x: float, action: bool, boost: bool) -> void:
 	runner.elapsed += dt
 	if runner.state == "fall":
 		_update_fall(runner, dt)
@@ -174,48 +202,32 @@ func _move_runner(runner: Dictionary, dt: float, tick_start: float, target_x: fl
 	var y: float = runner.y
 	runner.stagger = maxf(0.0, runner.stagger - dt)
 	runner.bar_cooldown = maxf(0.0, runner.bar_cooldown - dt)
-	runner.jump_buffer = 0.11 if jump else maxf(0.0, runner.jump_buffer - dt)
-	if runner.grounded and runner.jump_buffer > 0.0 and runner.stagger <= 0.0:
-		runner.jump_buffer = 0.0
-		runner.grounded = false
-		runner.vy = TAKEOFF_SPEED
-		_set_state(runner, "jump")
-
-	var lateral_limit := LATERAL_SPEED if runner.grounded else LATERAL_SPEED * 0.62
-	var speed_limit := MAX_SPEED
-	if runner.stagger > 0.0:
-		lateral_limit *= 0.76
-		speed_limit *= 0.42
-	var steer_error := clampf(target_x, -6.0, 9.5) - x
-	var desired_vx := clampf(steer_error * 8.0, -lateral_limit, lateral_limit)
-	runner.vx = move_toward(runner.vx, desired_vx, 21.0 * dt)
-	runner.steer = clampf(runner.vx / LATERAL_SPEED, -1.0, 1.0)
-	runner.speed = move_toward(runner.speed, speed_limit, 12.0 * dt)
-	var new_x := x + float(runner.vx) * dt
+	var sliding: bool = runner.state == "slide" and runner.elapsed < SLIDE_SECONDS
+	_apply_actions(runner, action, boost, sliding)
+	var sprinting: bool = runner.boost_left > 0.000001
+	_update_velocity(runner, target_x, dt, sprinting, sliding)
 	var new_p := p + _forward_speed(runner, p, x) * dt
+	var carry := 0.0
+	if course_id == "yard":
+		carry = _yard_transport(runner, tick_start, p, new_p)
+	var new_x := x + float(runner.vx) * dt + carry
 
 	var new_y := y
 	if not runner.grounded:
 		runner.vy -= GRAVITY * dt
 		new_y += runner.vy * dt
 
-	var crate_height := _crate_height(new_x, new_p)
-	var hit_crate := crate_height > 0.0 and crate_height > new_y + STEP_HEIGHT and _crate_height(x, p) == 0.0
-	if hit_crate:
-		if _crate_height(new_x, p) > 0.0:
-			new_x = x
-			runner.vx = 0.0
-		else:
-			new_p = p
-			runner.speed = minf(runner.speed, MAX_SPEED * 0.42)
-		if not runner.crate_contact:
-			_stumble(runner, 0.26)
-	runner.crate_contact = hit_crate
-
-	var floor_height := _surface(new_x, new_p)
+	runner.transport_x += carry
 	runner.x = new_x
 	runner.p = new_p
 	runner.y = new_y
+	if course_id == "yard":
+		_block_practice_container(runner, x, p, y)
+	else:
+		_block_crates(runner, x, p)
+	new_x = runner.x
+	new_p = runner.p
+	var floor_height := _surface(new_x, new_p)
 	if floor_height == -INF:
 		if runner.grounded or new_y <= WATER_HEIGHT:
 			_begin_fall(runner)
@@ -227,35 +239,140 @@ func _move_runner(runner: Dictionary, dt: float, tick_start: float, target_x: fl
 	else:
 		_land_or_follow_surface(runner, floor_height)
 
-	for bar_index in BARS.size():
-		if runner.bar_cooldown <= 0.0 and runner.y < BAR_HEIGHT + BAR_HALF_THICKNESS:
-			if _bar_contact(new_x, new_p, bar_index, bar_angles[bar_index]):
-				runner.bar_cooldown = 0.9
-				runner.speed = minf(runner.speed, MAX_SPEED * 0.52)
-				_stumble(runner, 0.49)
+	if course_id == "wharf":
+		_hit_bars(runner, new_x, new_p)
 
 	if runner.grounded:
 		var next: int = runner.checkpoint + 1
-		if next < CHECKPOINTS.size() and new_p >= CHECKPOINTS[next]:
+		if next < checkpoints.size() and new_p >= checkpoints[next]:
 			runner.checkpoint = next
-		if runner.stagger <= 0.0 and (runner.state != "land" or runner.elapsed >= 0.14):
-			_set_state(runner, "run")
-	elif runner.stagger <= 0.0:
+		var recovering: bool = (runner.state == "land" and runner.elapsed < 0.14
+			or runner.state == "slide" and runner.elapsed < SLIDE_SECONDS)
+		if runner.stagger <= 0.0 and not recovering:
+			_set_state(runner, "sprint" if sprinting else "run")
+	elif runner.stagger <= 0.0 and runner.state != "dive":
 		_set_state(runner, "jump")
 
-	if runner.state == "run" or runner.state == "stumble" or runner.state == "land":
+	if runner.state in ["run", "sprint", "stumble", "land"]:
 		runner.phase = fposmod(runner.phase + (new_p - p) / 1.65, 1.0)
-	if new_p >= FINISH and floor_height != -INF:
-		var crossing := (FINISH - p) / (new_p - p) if p < FINISH else 1.0
+	if new_p >= finish_distance and floor_height != -INF:
+		var crossing := (finish_distance - p) / (new_p - p) if p < finish_distance else 1.0
 		runner.finish_time = tick_start + dt * crossing
 		runner.steer = 0.0
+		runner.boost_left = 0.0
+		runner.dive_ready = false
 		_set_state(runner, "finish")
+
+
+func _apply_actions(runner: Dictionary, action: bool, boost: bool, sliding: bool) -> void:
+	if runner.stagger > 0.0 or sliding:
+		return
+	if boost and runner.grounded and runner.boosts_left > 0 and runner.boost_left <= 0.0:
+		runner.boosts_left -= 1
+		runner.boost_left = BOOST_DURATION
+	if action:
+		if runner.grounded:
+			runner.grounded = false
+			runner.vy = TAKEOFF_SPEED
+			runner.dive_ready = true
+			_set_state(runner, "jump")
+		elif runner.dive_ready:
+			runner.dive_ready = false
+			runner.vy = minf(runner.vy, 0.0)
+			_set_state(runner, "dive")
+
+
+func _update_velocity(runner: Dictionary, target_x: float, dt: float, sprinting: bool, sliding: bool) -> void:
+	var lateral_limit := LATERAL_SPEED if runner.grounded else LATERAL_SPEED * 0.62
+	var speed_limit := MAX_SPEED
+	if sprinting:
+		lateral_limit *= 0.7
+		speed_limit *= BOOST_FACTOR
+	if runner.state == "dive":
+		speed_limit = MAX_SPEED * DIVE_FACTOR
+		runner.speed = speed_limit
+	elif sliding:
+		speed_limit = MAX_SPEED * SLIDE_FACTOR
+	if runner.stagger > 0.0:
+		lateral_limit *= 0.76
+		speed_limit = MAX_SPEED * 0.42
+	runner.boost_left = maxf(0.0, runner.boost_left - dt)
+	var steer_error := clampf(target_x, -6.0, 13.5) - float(runner.x)
+	var desired_vx := clampf(steer_error * 8.0, -lateral_limit, lateral_limit)
+	runner.vx = move_toward(runner.vx, desired_vx, 21.0 * dt)
+	runner.steer = clampf(runner.vx / LATERAL_SPEED, -1.0, 1.0)
+	runner.speed = move_toward(runner.speed, speed_limit, 12.0 * dt)
+
+
+func _block_practice_container(runner: Dictionary, old_x: float, old_p: float, old_y: float) -> void:
+	# Below the training roof a runner meets its front wall, or is pushed
+	# aside if the crane brings the load across the wide catch deck.
+	var practice: Dictionary = Yard.ROOFS[0]
+	if Yard.roof_at(runner.x, runner.p, time) != 0 or maxf(old_y, runner.y) + STEP_HEIGHT >= practice.height:
+		runner.crate_contact = false
+		return
+	if old_p < practice.p - practice.length * 0.5:
+		runner.p = old_p
+		runner.speed = 0.0
+	else:
+		var center := Yard.roof_x(0, time)
+		var side := -1.0 if old_x < center else 1.0
+		var edge: float = center + side * (practice.width * 0.5 + 0.001)
+		runner.transport_x += edge - float(runner.x)
+		runner.x = edge
+	if not runner.crate_contact:
+		_stumble(runner, 0.26)
+	runner.crate_contact = true
+
+
+func _block_crates(runner: Dictionary, old_x: float, old_p: float) -> void:
+	var height := _crate_height(runner.x, runner.p)
+	if height == 0.0 or height <= float(runner.y) + STEP_HEIGHT or _crate_height(old_x, old_p) > 0.0:
+		runner.crate_contact = false
+		return
+	if _crate_height(runner.x, old_p) > 0.0:
+		runner.x = old_x
+		runner.vx = 0.0
+	else:
+		runner.p = old_p
+		runner.speed = minf(runner.speed, MAX_SPEED * 0.42)
+	if not runner.crate_contact:
+		_stumble(runner, 0.26)
+	runner.crate_contact = true
+
+
+func _hit_bars(runner: Dictionary, x: float, p: float) -> void:
+	if runner.bar_cooldown > 0.0 or runner.y >= BAR_HEIGHT + BAR_HALF_THICKNESS:
+		return
+	for index in BARS.size():
+		if _bar_contact(x, p, index, bar_angles[index]):
+			runner.bar_cooldown = 0.9
+			runner.speed = minf(runner.speed, MAX_SPEED * 0.52)
+			_stumble(runner, 0.49)
+			return
+
+
+func _yard_transport(runner: Dictionary, previous_time: float, p: float, new_p: float) -> float:
+	if Yard.on_outer(runner.x, p):
+		# Auto-run follows the actual pier tangent. Steering remains relative to it.
+		return Yard.outer_x(new_p) - Yard.outer_x(p)
+	if not runner.grounded:
+		return 0.0
+	var roof := Yard.roof_at(runner.x, p, previous_time)
+	if roof >= 0 and is_equal_approx(runner.y, Yard.ROOFS[roof].height):
+		return Yard.roof_x(roof, time) - Yard.roof_x(roof, previous_time)
+	return Yard.belt_speed(runner.x, p) * (time - previous_time)
 
 
 func _forward_speed(runner: Dictionary, p: float, x: float) -> float:
 	var speed: float = runner.speed
 	var lateral: float = runner.vx / LATERAL_SPEED
 	var steering_scale := sqrt(1.0 - 0.36 * lateral * lateral)
+	if course_id == "yard":
+		if Yard.on_outer(x, p):
+			var slope := Yard.outer_slope(p)
+			return speed * steering_scale / sqrt(1.0 + slope * slope)
+		return speed * steering_scale
 	if p >= SPLIT_START and p < SPLIT_END and not _on_inner(x):
 		var grade := OUTER_BOW * PI / (SPLIT_END - SPLIT_START)
 		grade *= cos(PI * (p - SPLIT_START) / (SPLIT_END - SPLIT_START))
@@ -272,8 +389,13 @@ func _land_or_follow_surface(runner: Dictionary, floor_height: float) -> void:
 		runner.y = floor_height
 		runner.grounded = true
 		runner.vy = 0.0
-		if just_landed and runner.stagger <= 0.0:
-			_set_state(runner, "land")
+		if just_landed:
+			runner.dive_ready = false
+			if runner.state == "dive":
+				runner.speed = MAX_SPEED * SLIDE_FACTOR
+				_set_state(runner, "slide")
+			elif runner.stagger <= 0.0:
+				_set_state(runner, "land")
 
 
 func _set_state(runner: Dictionary, state: String) -> void:
@@ -284,13 +406,16 @@ func _set_state(runner: Dictionary, state: String) -> void:
 
 func _stumble(runner: Dictionary, duration: float) -> void:
 	runner.stagger = maxf(runner.stagger, duration)
-	runner.jump_buffer = 0.0
+	runner.dive_ready = false
 	_set_state(runner, "stumble")
 
 
 func _begin_fall(runner: Dictionary) -> void:
-	if runner.p >= SPLIT_START and runner.p < SPLIT_END:
+	if (course_id == "wharf" and runner.p >= SPLIT_START and runner.p < SPLIT_END
+		or course_id == "yard" and runner.p >= Yard.SPLIT_START and runner.p < Yard.SPLIT_END):
 		runner.bridge_misses += 1
+	runner.boost_left = 0.0
+	runner.dive_ready = false
 	runner.grounded = false
 	runner.vy = minf(runner.vy, 0.0)
 	_set_state(runner, "fall")
@@ -304,8 +429,12 @@ func _update_fall(runner: Dictionary, dt: float) -> void:
 	runner.y = maxf(WATER_HEIGHT - 1.1, runner.y + runner.vy * dt)
 	if runner.elapsed < 0.84:
 		return
-	runner.p = CHECKPOINTS[runner.checkpoint]
+	runner.p = checkpoints[runner.checkpoint]
 	runner.x = clampf(runner.x, -4.05, 4.05)
+	if course_id == "yard" and runner.p == Yard.CHECKPOINTS[2]:
+		# The approach is short. Face the continuous pier on recovery so a
+		# missed jump never forces another attempt at the water crossing.
+		runner.x = Yard.OUTER_CENTER
 	runner.y = 0.0
 	runner.vx = 0.0
 	runner.vy = 0.0
@@ -313,7 +442,7 @@ func _update_fall(runner: Dictionary, dt: float) -> void:
 	runner.steer = 0.0
 	runner.phase = 0.0
 	runner.grounded = true
-	runner.jump_buffer = 0.0
+	runner.dive_ready = false
 	runner.stagger = 0.0
 	runner.bar_cooldown = 0.0
 	runner.crate_contact = false
@@ -334,7 +463,7 @@ func _bar_contact(x: float, p: float, index: int, angle: float) -> bool:
 	return offset.distance_squared_to(direction * projection) < reach * reach
 
 
-func _rival_intent(index: int) -> Vector2:
+func _wharf_intent(index: int) -> Vector3:
 	var runner: Dictionary = runners[index]
 	var p: float = runner.p
 	var x: float = runner.x
@@ -373,7 +502,68 @@ func _rival_intent(index: int) -> Vector2:
 			jump = jump or _bar_contact(
 				future_x, future_p, bar_index, bar_angles[bar_index] + BAR_SPIN[bar_index] * ahead
 			)
-	return Vector2(target, float(jump))
+	if not runner.grounded:
+		jump = runner.dive_ready and runner.vy <= 0.35 and p > BRIDGE_END - 1.5 and p < BRIDGE_END
+	var boost_at := 41.0 + index * 1.1
+	var finish_boost := FINISH - 4.0 - index * 1.6
+	var boost := (p >= boost_at and p < boost_at + 0.8 or p >= finish_boost and p < finish_boost + 0.8)
+	return Vector3(target, float(jump), float(boost))
+
+
+func _yard_intent(index: int) -> Vector3:
+	var runner: Dictionary = runners[index]
+	var p: float = runner.p
+	var target: float = RIVAL_LANES[index]
+	var action := false
+	var boost_at := 40.0 + 1.3 * index
+	if index == 2:
+		boost_at = Yard.GAP_START - 2.3
+	elif index == 4:
+		boost_at = Yard.SPLIT_END + 1.0
+	# Take the training roof or use the open apron alongside it.
+	if p > 49.0 and p < 64.0:
+		if index == 2 or index == 3:
+			target = Yard.roof_x(0, time + 0.35)
+			action = p > 54.7 and p < 56.1 and runner.grounded
+			if runner.dive_ready and runner.vy <= 0.35:
+				action = true
+		else:
+			target = 3.75 if index >= 4 else -4.4
+	if p >= 78.0 and p < Yard.SPLIT_END:
+		if runner.route == 0:
+			# Predict where the far roof will be when this runner reaches it.
+			var approach_time := (Yard.GAP_START + 2.3 - p) / MAX_SPEED
+			if index == 2 and runner.boosts_left > 0:
+				approach_time -= 0.25
+			var landing_x := Yard.roof_x(1, time + approach_time)
+			var takeoff_x := -3.35 + (index - 2) * 0.29
+			var reach := 2.58 if index < 4 else 1.1
+			runner.route = 1 if runner.bridge_misses == 0 and absf(landing_x - takeoff_x) < reach else 2
+		if runner.route == 2:
+			target = Yard.outer_x(p) + (index - 3) * 0.38
+		else:
+			target = _yard_inner_target(runner, index)
+			if runner.grounded:
+				action = (p > Yard.GAP_START - 0.75 and p < Yard.GAP_START
+					or p > Yard.GAP_END - 2.25 and p < Yard.GAP_END - 1.4)
+			elif runner.dive_ready and runner.vy <= 0.35 and p >= Yard.GAP_END - 1.0:
+				action = true
+	if p >= Yard.SPLIT_END:
+		runner.route = 0
+	var finish_boost := Yard.FINISH - 5.5 - 1.6 * index
+	var boost := (p >= boost_at and p < boost_at + 0.8 or p >= finish_boost and p < finish_boost + 0.8)
+	return Vector3(target, float(action), float(boost))
+
+
+func _yard_inner_target(runner: Dictionary, index: int) -> float:
+	var p: float = runner.p
+	var lane := -3.35 + (index - 2) * 0.29
+	if p < 103.0 or p > Yard.GAP_END:
+		return lane
+	if p >= Yard.GAP_END - 3.0:
+		return clampf(Yard.roof_x(1, time), Yard.INNER_LEFT + 0.6, Yard.INNER_RIGHT - 0.6)
+	var ahead := maxf(0.0, (Yard.GAP_START + 2.5 - p) / MAX_SPEED)
+	return Yard.roof_x(1, time + ahead) + (index - 2) * 0.14
 
 
 func _choose_route(index: int) -> int:

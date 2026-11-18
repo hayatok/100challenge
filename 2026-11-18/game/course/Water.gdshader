@@ -34,17 +34,22 @@ void fragment() {
 	float spread = 0.64 + 0.19 * swell + 0.1 * sin(p.y * 0.071 + p.x * 0.12);
 	vec3 color = mix(blue_water.rgb, lagoon.rgb, clamp(spread, 0.0, 1.0));
 	float distance_to_camera = length(CAMERA_POSITION_WORLD - world_position);
-	float glints = glint(p, t) * (1.0 - smoothstep(11.0, 49.0, distance_to_camera));
-	float broad = glint(p * 0.41, t * 0.55) * 0.16;
+	float glints = 0.0;
+	if (distance_to_camera < 49.0) {
+		glints = glint(p, t) * (1.0 - smoothstep(11.0, 49.0, distance_to_camera));
+	}
+	float broad = smoothstep(0.91, 1.34, swell) * 0.10;
 	float foam_mask = 0.0;
-	if (p.y >= -6.0 && p.y <= 158.0) {
-		if (p.y <= 52.0 || p.y >= 94.0) {
-			foam_mask = foam(abs(p.x) - 4.87, p, t);
-		} else {
+	if (abs(p.x) < 9.0 && p.y >= -6.0 && p.y <= 158.0) {
+		float edge = abs(p.x) - 4.87;
+		if (p.y > 52.0 && p.y < 94.0) {
 			float drift = 3.5 * sin(3.14159265 * (p.y - 52.0) / 42.0);
-			float outside = foam(abs(p.x - (3.0 + drift)) - 2.16, p, t);
-			float inside = foam(abs(p.x + 2.45) - 2.4, p, t);
-			foam_mask = max(outside, inside);
+			float outside = abs(p.x - (3.0 + drift)) - 2.16;
+			float inside = abs(p.x + 2.45) - 2.4;
+			edge = abs(outside) < abs(inside) ? outside : inside;
+		}
+		if (abs(edge) < 0.31) {
+			foam_mask = foam(edge, p, t);
 		}
 	}
 	float highlights = clamp(glints * 0.75 + broad + 0.8 * foam_mask, 0.0, 0.93);

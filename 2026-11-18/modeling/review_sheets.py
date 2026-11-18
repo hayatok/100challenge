@@ -62,4 +62,19 @@ for j,n in enumerate(['idle','jump','land','run','stumble','finish']):
     motion.paste(fit(rim,(190,293)),(j*200+5,371))
     ImageDraw.Draw(motion).text((j*200+14,675),n.upper(),font=small,fill=blue)
 motion.save(out/'motion.webp',quality=90)
+
+# Each angle shares the same camera, framing and ground plane across all six
+# samples; no per-pose cropping or resizing can disguise the change in height.
+strip=Image.new('RGB',(1324,486),cream)
+draw=ImageDraw.Draw(strip)
+for j,name in enumerate(['Left support','Right support','Reach','Forearms','Belly slide','Foot plant']):
+    x=8+218*j
+    draw.text((x+4,7),name,font=font,fill=blue)
+    for y,view in [(53,'profile'),(278,'chase')]:
+        img=bg(Image.open(render/f'{view}-{j}.png'))
+        strip.paste(img.resize((214,195),Image.Resampling.LANCZOS),(x,y))
+draw.text((12,33),'NAGI  /  GLB PROFILE',font=small,fill=blue)
+draw.line((9,251,1315,251),fill='#d8c8b9')
+draw.text((12,257),'REAR THREE-QUARTER',font=small,fill=blue)
+strip.save(out/'sport-motion.webp',quality=88)
 (out/'silhouette.json').write_text(json.dumps({'alignment':'bounding-box height and horizontal centre, neutral poses','iou':mask_scores},indent=2)+'\n')

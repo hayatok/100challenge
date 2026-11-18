@@ -1,18 +1,25 @@
 extends Node3D
 
 const Simulation := preload("res://race/RaceSimulation.gd")
+const Courses := preload("res://Courses.gd")
+const Yard := preload("res://race/YardLayout.gd")
 const Effects := preload("res://presentation/RaceEffects.gd")
 const Racer := preload("res://racers/RacerVisual.gd")
 const DRAG_THRESHOLD := 9.0
 const TAP_SECONDS := 0.33
-const FINISH_DISTANCE := 150.0
-
-@onready var course := $ShiokazeWharf
+# Keep Retina interface pixels sharp while limiting the cost of shading the 3D race.
+const MOBILE_RENDER_PIXELS := 820000.0
+const MOBILE_WHARF_RENDER_PIXELS := 590000.0
+var course: Node3D
+var selected_course := ""
 @onready var cam: Camera3D = $FollowCamera
 @onready var chase_offset: Vector3 = $ChaseOffset.position
 @onready var chase_focus: Vector3 = $ChaseLookAhead.position
 @onready var hud := $Overlay/HUD
 @onready var audio := $Audio
+@onready var portrait_fill: DirectionalLight3D = $PortraitFill
+@onready var wharf_fill_energy := portrait_fill.light_energy
+@onready var wharf_fill_color := portrait_fill.light_color
 
 var effects := Effects.new()
 var sim := Simulation.new()
@@ -26,6 +33,7 @@ var idle_time := 0.0
 var finish_elapsed := 0.0
 var target_x := 0.0
 var jump_queued := false
+var boost_queued := false
 var hold_direction := 0
 var digital_steering := false
 var active_pointer := -1
@@ -42,6 +50,7 @@ var sfx := true
 var song := true
 var web_pause_callback: JavaScriptObject
 var web_window: JavaScriptObject
+var web_canvas: JavaScriptObject
 
 func _ready() -> void:
 	add_child(effects)
@@ -59,6 +68,10 @@ func _ready() -> void:
 	var system_reduced := false
 	if OS.has_feature("web"):
 		web_window = JavaScriptBridge.get_interface("window")
+		if int(web_window.navigator.maxTouchPoints) > 0:
+			web_canvas = web_window.document.getElementById("canvas")
+			get_viewport().size_changed.connect(_size_mobile_render)
+			_size_mobile_render()
 		system_reduced = bool(web_window.matchMedia("(prefers-reduced-motion: reduce)").matches)
 		web_pause_callback = JavaScriptBridge.create_callback(_on_web_visibility)
 		web_window.document.addEventListener("visibilitychange", web_pause_callback)
@@ -66,20 +79,27 @@ func _ready() -> void:
 	sfx = settings.get_value("audio", "sound", true)
 	song = settings.get_value("audio", "music", true)
 	hud.set_options(reduced, sfx, song)
+	hud.course_requested.connect(_choose_course)
+	hud.course_menu_requested.connect(_show_course_menu)
 	hud.start_requested.connect(start_race)
 	hud.pause_requested.connect(pause_race)
 	hud.resume_requested.connect(resume_race)
-	hud.jump_requested.connect(func(): jump_queued = true)
+	hud.jump_requested.connect(func(): jump_queued = mode == "racing")
+	hud.boost_requested.connect(func(): boost_queued = mode == "racing")
 	hud.steering_changed.connect(func(direction): hold_direction = direction)
 	hud.option_changed.connect(_option_changed)
-	_sync_figures()
-	_grid_camera()
 	# The title is fully illustrated. Avoid drawing a covered 3D viewport every frame.
 	get_viewport().disable_3d = true
 
 func _exit_tree() -> void:
 	if web_window and web_pause_callback:
 		web_window.document.removeEventListener("visibilitychange", web_pause_callback)
+
+func _size_mobile_render() -> void:
+	if web_canvas:
+		var pixels := maxf(1.0, float(web_canvas.width) * float(web_canvas.height))
+		var budget := MOBILE_WHARF_RENDER_PIXELS if selected_course == Courses.WHARF else MOBILE_RENDER_PIXELS
+		get_viewport().scaling_3d_scale = clampf(sqrt(budget / pixels), 0.35, 1.0)
 
 func _on_web_visibility(_arguments: Array) -> void:
 	if web_window.document.hidden:
@@ -126,11 +146,45 @@ func _reset_input() -> void:
 	active_pointer = -1
 	dragged = false
 	jump_queued = false
+	boost_queued = false
 	hold_direction = 0
+
+func _choose_course(id: String) -> void:
+	if not Courses.DATA.has(id):
+		return
+	if selected_course != id:
+		var next_scene := load(Courses.DATA[id].scene) as PackedScene
+		if next_scene == null:
+			return
+		if course:
+			$Course.remove_child(course)
+			course.free()
+		course = next_scene.instantiate()
+		$Course.add_child(course)
+		if web_canvas:
+			if id == Courses.WHARF:
+				course.set_mobile_profile()
+			# Keep Nagi's near-camera mesh intact when the rivals fill the starting grid.
+			for rival in figures.slice(1):
+				for mesh: MeshInstance3D in rival.find_children("*", "MeshInstance3D", true, false):
+					mesh.lod_bias = 0.3 if id == Courses.WHARF else 1.0
+		selected_course = id
+		_size_mobile_render()
+		portrait_fill.light_energy = 0.10 if id == Courses.YARD else wharf_fill_energy
+		portrait_fill.light_color = Color("#c1d8ff") if id == Courses.YARD else wharf_fill_color
+	start_race()
+
+func _show_course_menu() -> void:
+	mode = "title"
+	_reset_input()
+	audio.reset()
+	effects.reset()
+	hud.set_mode(mode)
+	get_viewport().disable_3d = true
 
 func start_race() -> void:
 	get_viewport().disable_3d = false
-	sim.reset()
+	sim.reset(selected_course)
 	_reset_input()
 	target_x = sim.runners[0].x
 	camera_x = target_x
@@ -145,6 +199,7 @@ func start_race() -> void:
 	effects.reset()
 	hud.set_mode(mode)
 	hud.update_race(1, 0, true)
+	hud.set_actions(sim.runners[0])
 	hud.set_count("3")
 	_play("count")
 	_sync_figures()
@@ -170,7 +225,8 @@ func resume_race() -> void:
 	if mode == "countdown":
 		hud.set_count(str(last_count))
 	else:
-		hud.update_race(sim.rank_of(0), float(sim.runners[0].p)/FINISH_DISTANCE, true)
+		hud.update_race(sim.rank_of(0), float(sim.runners[0].p)/sim.finish_distance, true)
+		hud.set_actions(sim.runners[0])
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_APPLICATION_FOCUS_OUT or what == NOTIFICATION_APPLICATION_PAUSED:
@@ -190,6 +246,9 @@ func _input(event: InputEvent) -> void:
 			get_viewport().set_input_as_handled()
 		elif mode == "racing" and (event.keycode == KEY_SPACE or event.keycode == KEY_UP):
 			jump_queued = true
+			get_viewport().set_input_as_handled()
+		elif mode == "racing" and event.keycode == KEY_SHIFT:
+			boost_queued = true
 			get_viewport().set_input_as_handled()
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -244,7 +303,12 @@ func _drag(point: Vector2) -> void:
 		dragged = true
 	if dragged:
 		var distance: float = delta.x / minf(480.0, hud.size.x) * 14.5
-		target_x = clampf(press_x + distance, -5.2, 9.0)
+		target_x = _clamp_lane(press_x + distance)
+
+func _clamp_lane(x: float) -> float:
+	if selected_course == Courses.YARD:
+		return clampf(x, -5.2, Yard.OUTER_CENTER + Yard.OUTER_BOW + Yard.OUTER_WIDTH * 0.5 + 0.7)
+	return clampf(x, -5.2, 9.0)
 
 func _stop_digital_steering() -> void:
 	if not digital_steering:
@@ -283,16 +347,21 @@ func _physics_process(dt: float) -> void:
 		return
 	var player: Dictionary = sim.runners[0]
 	var before_respawn: int = player.respawns
+	var before_boosts: int = player.boosts_left
 	var steer := hold_direction + int(Input.is_key_pressed(KEY_RIGHT) or Input.is_key_pressed(KEY_D)) - int(Input.is_key_pressed(KEY_LEFT) or Input.is_key_pressed(KEY_A))
 	var step_target: float
 	if mode == "racing" and steer != 0:
 		digital_steering = true
-		step_target = clampf(float(player.x) + signf(steer) * 0.5, -5.2, 9.0)
+		step_target = _clamp_lane(float(player.x) + signf(steer) * 0.5)
 	else:
 		_stop_digital_steering()
 		step_target = target_x
-	sim.step(dt, step_target, jump_queued and mode == "racing")
+	sim.step(dt, step_target, jump_queued and mode == "racing", boost_queued and mode == "racing")
 	jump_queued = false
+	boost_queued = false
+	if player.transport_x != 0.0:
+		target_x = _clamp_lane(target_x + player.transport_x)
+		press_x += player.transport_x
 	if before_respawn != player.respawns:
 		_reset_input()
 		target_x = player.x
@@ -303,9 +372,14 @@ func _physics_process(dt: float) -> void:
 		_result_camera(dt)
 		return
 	_player_sounds(player)
+	if player.boosts_left < before_boosts:
+		_play("boost")
+		if not reduced:
+			effects.burst(figures[0].position + Vector3.UP * 0.20, "boost")
 	_chase_camera(dt, before_respawn != player.respawns)
 	hud.set_marker(cam.unproject_position(figures[0].position + Vector3.UP * 1.65))
-	hud.update_race(sim.rank_of(0), float(player.p)/FINISH_DISTANCE, reduced)
+	hud.update_race(sim.rank_of(0), float(player.p)/sim.finish_distance, reduced)
+	hud.set_actions(player)
 	if player.finish_time >= 0.0:
 		mode = "result"
 		_reset_input()
@@ -314,14 +388,17 @@ func _physics_process(dt: float) -> void:
 		if not reduced:
 			effects.burst(figures[0].position, "finish")
 		_play("finish")
-		hud.show_result(sim.rank_of(0), player.finish_time)
+		hud.show_result(sim.rank_of(0), player.finish_time, Courses.DATA[selected_course].name)
 
 func _sync_figures() -> void:
 	course.set_mechanisms(sim.bridge_angle, sim.bar_angles, sim.time)
 	for i in figures.size():
 		var r: Dictionary = sim.runners[i]
 		figures[i].position = Vector3(r.x, r.y, -r.p)
-		figures[i].rotation.y = -float(r.steer) * 0.17
+		var bend := 0.0
+		if selected_course == Courses.YARD and Yard.on_outer(r.x, r.p):
+			bend = atan(Yard.outer_slope(r.p))
+		figures[i].rotation.y = -bend - float(r.steer) * 0.17
 		figures[i].pose(r.state, r.elapsed, r.phase, r.steer)
 		var floor_y: float = sim._surface(r.x, r.p)
 		var shadow := shadows[i]
@@ -351,11 +428,22 @@ func _chase_camera(dt: float, snap: bool) -> void:
 		base.y = clampf(floor_y, -0.55, 0.8)
 	var follow := base + chase_offset
 	var focus := base + chase_focus
-	# Aim toward the visible pivot as a racer reaches the outside edge.
-	var to_bar := minf(absf(35.0-float(r.p)), absf(125.0-float(r.p)))
-	var show_pivot := 1.0 - smoothstep(3.5, 12.0, to_bar)
-	focus.x = lerpf(camera_x, 0.0, 0.54*show_pivot)
-	follow.z += 0.48*show_pivot
+	if selected_course == Courses.WHARF:
+		var to_bar := INF
+		for p: float in Simulation.BARS:
+			to_bar = minf(to_bar, absf(p - float(r.p)))
+		var show_pivot := 1.0 - smoothstep(3.5, 12.0, to_bar)
+		focus.x = lerpf(camera_x, 0.0, 0.54*show_pivot)
+		follow.z += 0.48*show_pivot
+	else:
+		var p := float(r.p)
+		var fork := smoothstep(Yard.SPLIT_START-15, Yard.SPLIT_START, p) * (1.0-smoothstep(Yard.SPLIT_START, Yard.SPLIT_START+16, p))
+		focus.x = lerpf(camera_x, 0.8, fork * 0.46)
+		if Yard.on_outer(r.x, p):
+			focus.x += Yard.outer_x(p-chase_focus.z) - Yard.outer_x(p)
+		if not reduced:
+			follow.y += fork * 0.65
+			follow.z += fork * 0.48
 	if mode == "countdown" or snap:
 		cam.position = follow
 	else:
@@ -365,19 +453,26 @@ func _chase_camera(dt: float, snap: bool) -> void:
 func _result_camera(dt: float) -> void:
 	var pos := figures[0].position
 	var aim := pos + Vector3(0, 0.89, 0)
-	var offset := Vector3(1.15, 1.60, -3.6)
+	# Turn across the open centre so the outside gatepost cannot pass in front of the winner.
+	var side := -1.0 if pos.x > 0.0 else 1.0
+	var offset := Vector3(side * 1.15, 1.60, -3.6)
 	if reduced:
 		cam.position = pos + offset
 	else:
 		var angle := PI * smoothstep(0.0, 1.0, minf(1.0, finish_elapsed/1.12))
 		var radius := lerpf(4.9, 3.6, minf(1.0, finish_elapsed/1.12))
-		cam.position = pos + Vector3(sin(angle)*radius + 1.15*(angle/PI), lerpf(3.45,1.60,angle/PI), cos(angle)*radius)
+		cam.position = pos + Vector3(side * (sin(angle)*radius*0.72 + 1.15*(angle/PI)), lerpf(3.45,1.60,angle/PI), cos(angle)*radius)
 	cam.look_at(aim)
 
 func _player_sounds(r: Dictionary) -> void:
 	if r.state != last_state and not (r.state == "fall" and last_state == "splash"):
 		match r.state:
 			"jump": _play("jump")
+			"dive": _play("dive")
+			"slide":
+				_play("slide")
+				if not reduced:
+					effects.burst(figures[0].position, "slide")
 			"land":
 				_play("land")
 				if not reduced:
@@ -390,7 +485,7 @@ func _player_sounds(r: Dictionary) -> void:
 		last_state = "splash"
 	elif r.state != "fall" or last_state != "splash":
 		last_state = r.state
-	if r.state == "run":
+	if r.state in ["run", "sprint"]:
 		var half := int(float(r.phase)*2) % 2
 		if half != foot_half:
 			_play("step")

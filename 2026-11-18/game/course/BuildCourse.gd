@@ -92,8 +92,8 @@ func setup_environment() -> void:
 	sun.shadow_normal_bias = 2.0
 	sun.shadow_opacity = 0.88
 	sun.shadow_blur = 1.35
-	sun.directional_shadow_blend_splits = true
-	sun.directional_shadow_max_distance = 48.0
+	sun.directional_shadow_mode = DirectionalLight3D.SHADOW_ORTHOGONAL
+	sun.directional_shadow_max_distance = 32.0
 	add(course, sun, "Sun")
 
 	var water := MeshInstance3D.new()
@@ -131,8 +131,8 @@ func setup_meshes() -> void:
 	meshes["Turned"] = cylinder_mesh(painted, 0.43, 0.5, 16)
 	meshes["Cone"] = cylinder_mesh(painted, 0.0, 0.5, 14)
 	meshes["MetalRound"] = cylinder_mesh(metal, 0.5, 0.5, 16)
-	meshes["Rope"] = cylinder_mesh(painted, 0.5, 0.5, 7)
-	meshes["Dome"] = sphere_mesh(painted, 16, 8)
+	meshes["Rope"] = cylinder_mesh(painted, 0.5, 0.5, 6)
+	meshes["Dome"] = sphere_mesh(painted, 12, 5)
 	meshes["Rock"] = sphere_mesh(painted, 7, 4)
 
 	var flag := SurfaceTool.new()
@@ -149,25 +149,47 @@ func rounded_board(material: Material, bevel := 0.032) -> Mesh:
 	surface.begin(Mesh.PRIMITIVE_TRIANGLES)
 	surface.set_material(material)
 	var flat := 0.5 - bevel
-	var side: Array[float] = [-0.5, -flat, flat, 0.5]
+	# Six broad faces, twelve bevels and eight corners. A rounded grid on
+	# every face repeats invisible detail on thousands of small pier parts.
 	for normal: Vector3 in [Vector3.UP, Vector3.DOWN, Vector3.RIGHT,
 			Vector3.LEFT, Vector3.FORWARD, Vector3.BACK]:
-		var tangent := Vector3.RIGHT if absf(normal.y) > 0.5 else normal.cross(Vector3.UP)
-		var bitangent := normal.cross(tangent)
-		for row in range(3):
-			for column in range(3):
-				var a := normal * 0.5 + tangent * side[column] + bitangent * side[row]
-				var b := normal * 0.5 + tangent * side[column + 1] + bitangent * side[row]
-				var c := normal * 0.5 + tangent * side[column + 1] + bitangent * side[row + 1]
-				var d := normal * 0.5 + tangent * side[column] + bitangent * side[row + 1]
-				for point: Vector3 in [a, c, b, a, d, c]:
-					var core := point.clamp(Vector3.ONE * -flat, Vector3.ONE * flat)
-					var unit := (point - core).normalized()
-					surface.set_normal(unit)
-					surface.set_uv(Vector2(point.x, point.z))
-					surface.add_vertex(core + unit * bevel)
+		var u := Vector3.RIGHT if absf(normal.y) > 0.5 else normal.cross(Vector3.UP)
+		var v := normal.cross(u)
+		var center := normal * 0.5
+		var a := center - (u + v) * flat
+		var b := center + (u - v) * flat
+		var c := center + (u + v) * flat
+		var d := center + (v - u) * flat
+		board_triangle(surface, a, b, c, flat)
+		board_triangle(surface, a, c, d, flat)
+	var axes := [Vector3.RIGHT, Vector3.UP, Vector3.BACK]
+	for index in 3:
+		var along: Vector3 = axes[index] * flat
+		for first_sign: float in [-1.0, 1.0]:
+			for second_sign: float in [-1.0, 1.0]:
+				var u: Vector3 = axes[(index + 1) % 3] * first_sign
+				var v: Vector3 = axes[(index + 2) % 3] * second_sign
+				var first := u * 0.5 + v * flat
+				var second := u * flat + v * 0.5
+				board_triangle(surface, first - along, second - along, second + along, flat)
+				board_triangle(surface, first - along, second + along, first + along, flat)
+	for x: float in [-1.0, 1.0]:
+		for y: float in [-1.0, 1.0]:
+			for z: float in [-1.0, 1.0]:
+				var corner := Vector3(x, y, z) * flat
+				board_triangle(surface, corner + Vector3.RIGHT * x * bevel,
+					corner + Vector3.UP * y * bevel, corner + Vector3.BACK * z * bevel, flat)
 	surface.index()
 	return surface.commit()
+
+
+func board_triangle(surface: SurfaceTool, a: Vector3, b: Vector3, c: Vector3, flat: float) -> void:
+	# Godot front faces wind clockwise; the cube's center is the origin.
+	var vertices := [a, c, b] if (b - a).cross(c - a).dot(a) > 0.0 else [a, b, c]
+	for vertex: Vector3 in vertices:
+		surface.set_normal((vertex - vertex.clamp(-Vector3.ONE * flat, Vector3.ONE * flat)).normalized())
+		surface.set_uv(Vector2(vertex.x, vertex.z))
+		surface.add_vertex(vertex)
 
 
 func mesh_triangle(surface: SurfaceTool, a: Vector3, b: Vector3, c: Vector3) -> void:

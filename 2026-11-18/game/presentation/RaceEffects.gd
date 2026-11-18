@@ -58,6 +58,11 @@ func burst(origin: Vector3, event: String) -> void:
 			life += 0.28
 			color = Color("#a7f6ff") if i%2 else Color.WHITE
 			dimensions *= 1.7
+		elif event == "boost" or event == "slide":
+			location.x += rng.randf_range(-0.24, 0.24)
+			v = Vector3(cos(axis)*0.7, rng.randf_range(0.35, 0.9), rng.randf_range(1.7, 3.1))
+			dimensions = Vector3(0.04, 0.022, 0.26 if event == "boost" else 0.11)
+			color = Color("#fff4bc") if event == "boost" else Color("#e9cc9b")
 		pieces.append({"pos":location,"v":v,"age":0.0,"life":life,"scale":dimensions,"color":color,"spin":axis})
 
 func advance(dt: float) -> void:
