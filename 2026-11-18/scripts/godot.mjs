@@ -1,5 +1,5 @@
 import { spawnSync } from 'node:child_process';
-import { copyFileSync, mkdirSync } from 'node:fs';
+import { copyFileSync, cpSync, mkdirSync } from 'node:fs';
 import path from 'node:path';
 import { root, engineBinary } from './engine.mjs';
 
@@ -31,6 +31,7 @@ if (result.error || result.status !== 0 || /SCRIPT ERROR:|^ERROR:|^FAIL:/m.test(
 }
 if (['test', 'models', 'flow'].includes(command)) process.stdout.write(output);
 if (command === 'build') {
+  cpSync(path.join(root, 'modeling', 'review-view'), path.join(dist, 'model-review'), { recursive: true });
   copyFileSync(path.join(project, 'media', 'cover.jpg'), path.join(dist, 'cover.jpg'));
   for (const name of ['GODOT-LICENSE.txt', 'GODOT-COPYRIGHT.txt']) {
     copyFileSync(path.join(root, name), path.join(dist, name));

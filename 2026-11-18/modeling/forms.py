@@ -93,17 +93,22 @@ def profile(c, theta, v):
         # 170/180/186/190 the cheek spans 50/42/29/12 px. A rounded chin
         # needs a closed ellipsoidal end, not a wide, flat final ring.
         face_row=21+171*v
-        blend=max(0,min(1,(face_row-143)/20))
-        blend=blend*blend*(3-2*blend)
-        cheek_row=max(0,(face_row-163)/29)
-        chin_radius=54.2*max(.00006,1-cheek_row**2)**.5
-        width=width*(1-blend)+chin_radius*blend
+        cheek_widths=((21,7),(55,49),(83,58),(105,61),(124,61),
+                      (141,60),(156,57),(163,54.2))
+        if face_row >= 163:
+            cheek_row=(face_row-163)/29
+            width=54.2*max(.00006,1-cheek_row**2)**.5
+        else:
+            for (a,r0),(b,r1) in zip(cheek_widths,cheek_widths[1:]):
+                if face_row <= b:
+                    width=r0+(r1-r0)*max(0,(face_row-a)/(b-a))
+                    break
     x = width * sin(theta)
     if c is CAST[0]:
         # The short nose and brow sit in front of the forehead. The broad
         # cheek rounds toward the point of the chin in both orthogonal views.
         planes = ((21,5),(55,-24),(84,-39),(107,-47),(128,-53),
-                  (148,-57),(160,-56),(172,-54),(182,-47),(188,-38),(192,-29))
+                  (148,-54),(160,-56),(172,-54),(182,-47),(188,-38),(192,-29))
         near = planes[-1][1]
         for (a,f),(b,g) in zip(planes,planes[1:]):
             if face_row <= b:
@@ -111,6 +116,13 @@ def profile(c, theta, v):
                 break
         depth=(7-near)*min(1,width/53.5)**.82
         y=near+depth*(1-cos(theta))
+        # The profile drawing shows a recessed eye, a short upturned nose,
+        # and about eleven pixels of the mouth corner behind the near lip.
+        # Their depth must survive a true side view in both directions.
+        y += 7.1*(1-exp(-(x/15)**2))*exp(-((face_row-144)/17)**2)*front
+        y -= 6.2*exp(-(x/6.1)**2-((face_row-154.8)/4.3)**2)
+        y -= 2.7*exp(-(x/5.2)**2-((face_row-147)/10.5)**2)
+        y += 10.2*(1-exp(-(x/10.5)**2))*exp(-((face_row-171)/14.8)**2)*front
     else:
         depth = r * (.84 - .14 * v * v)
         y = 11 - depth * cos(theta)

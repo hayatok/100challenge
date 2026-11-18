@@ -5,8 +5,10 @@ from mathutils import Vector, Euler, Quaternion
 from math import sin, cos, pi, sqrt, atan2, acos
 HERE=Path(__file__).resolve().parent
 sys.path.insert(0,str(HERE))
-from forms import CAST, PALETTE, M, profile, hair_profile, station_width
+from forms import CAST, PALETTE, M, profile
 from hair_sculpt import cap_and_locks
+from nagi_bob import build_bob
+from visor import build_visor
 from face_rig import build_face
 from athletic_kit import sleeve, hand, legs, sneaker
 from performance_poses import PERFORMANCE_CLIPS, performance_pose
@@ -111,7 +113,7 @@ def make_material(i):
 def skel(i):
     bones={'Pelvis':((0,0,115),None),'Chest':((0,0,126),'Pelvis'),'Head':((0,0,194),'Chest'),
            'Ornament':((0,15,264),'Head'),'Blink':((0,15,262),'Head')}
-    if i==0:bones['Ornament']=((87,-46,324),'Head')
+    if i==0:bones['Ornament']=((78,-30,329),'Head')
     if i==2:bones['Ornament']=((-28,48,340),'Head')
     if i==3:bones['Ornament']=((0,7,329),'Head')
     if i==5:bones['Ornament']=((41,73,238),'Head')
@@ -140,6 +142,13 @@ def head(g,i):
     # Warm ear cups sit behind the free temple locks. The small nose follows
     # the same curved skin as the eyes and protrudes only near its rounded tip.
     for sign in (-1,1):
+        if i == 0:
+            # The exposed pinna occupies x=615..642 and rows 137..174 in
+            # profile. Set its helix and bowl just outside the temple opening.
+            g.oval((sign*79,25,242),(7.4,13.3,17.8),'Head','skin',24,14)
+            g.oval((sign*84.1,24,242),(3.8,8.6,12.3),'Head',23,18,10)
+            g.oval((sign*86.1,22.3,238.8),(2.5,5.4,7.5),'Head','skin',16,9)
+            continue
         xx,yy,zz=profile(c,sign*1.28,.78)
         g.oval((xx,yy+(9 if i==0 else -2),zz+2),(8.5,6.8,12.8),'Head','skin',18,10)
         g.oval((xx+sign*4.7,yy+(6 if i==0 else -5.4),zz+1.3),(4.4,3.4,7.4),'Head',23,14,8)
@@ -152,41 +161,51 @@ def head(g,i):
 def decoration(g,i):
     lock=lambda points,r,b='Ornament',c='hair',flat=.7:g.tube(points,r,b,c,flat,12,3)
     if i==0:
-        # The left-temple bow is asymmetrical. One loop points upward, one extends out;
-        # two folded swallow tails trail lower on the side of the bob.
-        def bow_surface(outline,center,depth):
-            # Coordinates in the calibrated front view. Convex folded cross-sections
-            # give the loops volume and carry the original designer's crease painting.
-            rings=[]
-            # Sideways bow centre and folds are taken from the profile, where
-            # the upper loop reaches back and the swallow tail hangs over the ear.
-            for t in [.035,.36,.72,1,.72,.36,.035]:
-                front=len(rings)<4; row=[]
-                for px,py in outline:
-                    qx=center[0]+(px-center[0])*t;qy=center[1]+(py-center[1])*t
-                    # All panels meet at the same temple knot. Project
-                    # them onto the side of the hair, then roll the silk
-                    # away from the scalp around the fold.
-                    sy=clamp((qy-21)/177,0,1)
-                    yy=-46+(qx-343)*.96-(qy-75)*.22
-                    _,mid,_=hair_profile(CAST[0],pi/2,sy)
-                    _,edge,_=hair_profile(CAST[0],0 if yy<mid else pi,sy)
-                    r=station_width(CAST[0],qy)
-                    shell=.975*r*sqrt(max(0,1-((yy-mid)/max(1,abs(edge-mid)))**2))
-                    x=max(qx-273+13,shell+7.4)+(1 if front else -1)*depth*(1-t*t)
-                    yy-=(1 if front else -1)*depth*.55*(1-t*t)
-                    row.append((x,yy,398-qy))
-                rings.append(row)
-            def bow_uv(a,b):
-                t=(.035,.36,.72,1,.72,.36,.035)[a]
-                px,py=outline[b%len(outline)]
-                return uv(710+(center[0]+(px-center[0])*t-311)*154/75,
-                          561+(center[1]+(py-center[1])*t-12)*250/125)
-            g.grid(rings,'Ornament',15,tex=bow_uv)
-        bow_surface([(343,72),(331,68),(321,62),(316,53),(315,41),(316,31),(321,21),(327,15),(332,17),(340,25),(349,35),(352,43),(351,52),(347,62)],(333,45),8)
-        bow_surface([(343,72),(349,66),(357,61),(366,60),(374,62),(378,68),(378,79),(375,91),(371,98),(364,98),(354,90),(348,83)],(363,78),7)
-        bow_surface([(343,76),(350,79),(359,88),(370,103),(381,118),(377,122),(357,132),(352,130),(348,116),(344,95)],(358,104),4)
-        g.oval((87,-46,325),(10,10,10),'Ornament',15,20)
+        # X and row come from the front panel; Y comes from the same bow in
+        # profile. Each folded lobe turns back to the knot on the temple.
+        def bow_lobe(outline, centre, depth, paint_outline, paint_centre):
+            rings = []
+            strokes = []
+            for t, face in ((.025,1),(.38,1),(.76,1),(1,0),(.76,-1),(.38,-1),(.025,-1)):
+                ring = []
+                ink = []
+                for (px,py,row),(art_x,art_y) in zip(outline,paint_outline,strict=True):
+                    x = centre[0]+(px-centre[0])*t
+                    y = centre[1]+(py-centre[1])*t
+                    z = centre[2]+(row-centre[2])*t
+                    lift = face*depth*(1-t*t)
+                    # The tilt couples the broad front and side projections.
+                    # Both free wings curve away from the pinned central knot.
+                    x=77+(x-81)*1.14
+                    y=-30+(y-18)*.89
+                    ring.append((x+lift*.60, y-.92*lift, 398-z))
+                    # Each 3D edge is paired with its actual point on the
+                    # painted lobe. Stay inside the silk on both folded faces;
+                    # extrapolating X from the temple once sampled a black gutter.
+                    reach=.83*t
+                    sample_x=paint_centre[0]+(art_x-paint_centre[0])*reach
+                    sample_y=paint_centre[1]+(art_y-paint_centre[1])*reach
+                    ink.append(uv(710+(sample_x-311)*154/75,
+                                  561+(sample_y-12)*250/125))
+                rings.append(ring)
+                strokes.append(ink)
+            g.grid(rings,'Ornament',15,tex=lambda j,k:strokes[j][k%len(outline)])
+        bow_lobe([(81,17,72),(65,6,66),(50,-2,57),(44,-3,46),(45,0,36),
+                  (50,9,25),(57,25,16),(61,37,13),(65,41,18),(72,45,28),
+                  (78,46,39),(79,43,49),(77,35,59)], (63,22,43),7.5,
+                 [(343,71),(329,65),(320,58),(317,48),(317,36),(321,26),(326,18),
+                  (329,17),(334,20),(340,27),(348,37),(350,48),(347,60)], (333,44))
+        bow_lobe([(81,17,70),(87,24,64),(94,39,60),(100,52,59),(104,67,63),
+                  (106,77,70),(106,78,79),(103,72,90),(98,61,101),(92,50,103),
+                  (85,36,92),(80,25,82)], (94,48,78),6.5,
+                 [(344,72),(349,67),(357,63),(365,62),(373,64),(376,69),
+                  (376,78),(373,89),(370,96),(365,96),(355,89),(349,81)], (362,77))
+        bow_lobe([(82,18,74),(88,21,78),(97,31,89),(104,44,104),
+                  (110,51,119),(106,43,123),(96,17,132),(91,7,132),
+                  (87,8,117),(84,12,95)], (95,23,104),3.9,
+                 [(344,77),(350,80),(358,89),(369,103),(379,117),
+                  (376,120),(357,130),(354,129),(348,116),(345,95)], (357,103))
+        g.oval((78,-30,328),(8.5,10.5,9.4),'Ornament',15,20)
     if i==1:
         for s,sign in [('L',1),('R',-1)]:
             b='Lock.'+s
@@ -222,33 +241,7 @@ def decoration(g,i):
         for j in range(4):g.oval((-51+j*13,25,343+j*2),(10,10,10),'Ornament',20)
     if i==3:
         # Woven visor band wraps around the skull, and the crescent bill projects forward.
-        n=68
-        def visor_band(a,level):
-            z=287+level+15*sin(a)
-            v=clamp((CAST[i]['floor']-z/CAST[i]['k']-50)/166,0,1)
-            p=V(hair_profile(CAST[i],a,v))
-            normal=V((sin(a),-cos(a),0))
-            p+=normal*(9+3.5*max(0,cos(a))+.7*sin(pi*level/39))
-            p.z=z
-            return p
-        band=[[visor_band(-pi+j*2*pi/n,dz) for j in range(n)] for dz in (0,2,11,27,37,39)]
-        g.grid(band,'Head',12)
-        brim=[]
-        for j in range(8):
-            t=j/7;row=[]
-            for k in range(37):
-                a=-1.43+k*2.86/36
-                p=visor_band(a,3)
-                p+=V((sin(a)*10*t,-(7+15*cos(a))*t,
-                      -3.1*t+3.6*sin(pi*t)))
-                row.append(p)
-            brim.append(row)
-        g.grid(brim,'Head',12,False,True,cap=False)
-        g.tube(brim[-1],[1.85]*len(brim[-1]),'Head',29,n=8,steps=1)
-        def mark(a,z,offset=0):
-            return visor_band(a,z)+V((sin(a),-cos(a),0))*(1.1+offset)
-        g.polygon([mark(-.12,13),mark(.12,13),mark(0,29)],'Head',9)
-        g.polygon([mark(-.028,16,.3),mark(.074,16,.3),mark(-.01,24,.3)],'Head',12)
+        build_visor(g)
         lock([(-2,9,350),(-10,13,370),(-27,17,382),(-47,19,383),(-56,21,378)],[8,10,8,4,.5],c='hair')
         for s,sign in [('L',1),('R',-1)]:
             lock([(sign*69,18,300),(sign*87,17,287),(sign*100,10,279),(sign*111,7,284)],[11,11,7,.6],'Lock.'+s)
@@ -291,7 +284,7 @@ def bib(g,rear=False):
             y=sign*(27.6+2*(1-(u*2)**2)+.7*sin(t*pi))
             row.append((x,y,145+29*t))
         rings.append(row)
-    g.grid(rings,'Chest',9,False,rear,lambda a,b:uv(1+254*b/10,600+158*(1-a/6)),False)
+    g.grid(rings,'Chest',9,False,False,lambda a,b:uv(1+254*b/10,600+158*(1-a/6)),False)
 
 def clothes(g,i):
     torso=[(124,35,22.8,0,1.4),(128,37.7,24.8,0,1.7),(132,41,26.2,0,1.6),(138,42.8,27.4,0,1.5),(146,41.6,28.1,0,.9),(155,37.8,27.4,0,.4),(170,36.7,26,0,.2),(181,34.7,23,0,.1),(190,29,20,0,1),(197,18,14,0,2)]
@@ -359,7 +352,12 @@ def main():
     rigs=[]
     for i,c in enumerate(CAST):
         rig=skel(i);g=Surface(c['name']+'_painted_mesh')
-        head(g,i);cap_and_locks(g,i);decoration(g,i);clothes(g,i)
+        head(g,i)
+        if i == 0:
+            build_bob(g)
+        else:
+            cap_and_locks(g,i)
+        decoration(g,i);clothes(g,i)
         material=make_material(i)
         ob=g.object(material,rig);face=build_face(i,rig,material)
         # Contact solvers sample the owner of the deformed surface. The

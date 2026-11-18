@@ -2,7 +2,7 @@
 
 赤いリボンのナギと5人のライバルが走る、スマホ縦持ちの3D障害物レース。潮風ふ頭では選手の重みで浮き橋が傾く。夕焼けコンテナヤードではクレーンが吊ったコンテナが水路を横切る。その屋根に飛び乗るか、加速を残して外の桟橋を回ろう。
 
-[ブラウザで遊ぶ](https://hayatok.github.io/100challenge/2026-11-18/) · [2コースのプレイ映像（音声あり）](docs/verification/v03-performance.mp4)
+[ブラウザで遊ぶ](https://hayatok.github.io/100challenge/2026-11-18/) · [選手の回転台でモデルを見比べる](https://hayatok.github.io/100challenge/2026-11-18/model-review/) · [v0.3のプレイ映像（音声あり）](docs/verification/v03-performance.mp4)
 
 ## 操作
 
@@ -36,8 +36,8 @@ npm run dev
 
 ## 原画と試遊記録
 
-- [ナギの原画とモデルの三面比較](modeling/review/nagi-turnaround.webp)と[6人の正面・背面](modeling/review/cast.webp)。ライバル5人の後ろ姿は正面の設定画から補った。
-- [同じカメラで写した旧版と新版のナギ](docs/verification/v03-character.webp)、[6人の表情](modeling/review/expressions.webp)、[加速・ダイブ・立ち上がりのポーズ](modeling/review/sport-motion.webp)。
+- [v0.3.1の多視点比較と試遊](docs/verification/v0.3.1.md)。ナギには三面図、ライバル5人には正面の設定画がある。
+- v0.3の[ナギの三面比較](modeling/review/nagi-turnaround.webp)、[6人の正面・背面](modeling/review/cast.webp)、[表情](modeling/review/expressions.webp)、[加速・ダイブ・立ち上がりのポーズ](modeling/review/sport-motion.webp)。
 - [v0.3の試遊と計測](docs/verification/v0.3.md)と[Blenderモデルの作り方](modeling/README.md)。
 - [v0.2の試遊と計測](docs/verification/v0.2.md)、[iPhoneのSafariシミュレーターで走った水路の分岐](docs/verification/v02-yard-safari.jpg)、[ダイブ中の画面](docs/verification/v02-dive-safari.jpg)。
 - [初版の潮風ふ頭のプレイ映像](docs/verification/gameplay.mp4)と[原画・ゲーム仕様](docs/game-design.md)、[v0.2の開発計画](docs/v0.2-plan.md)。

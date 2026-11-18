@@ -1,4 +1,4 @@
-"""Ribbon-shaped hair built over the calibrated crown in design-sheet pixels."""
+"""Individual swept styles for the five rivals in design-sheet coordinates."""
 from math import asin, cos, pi, sin, sqrt
 from mathutils import Vector
 from forms import CAST, hair_profile, station_width
@@ -29,11 +29,7 @@ def cubic(path, t):
 # space. X is relative to the face centre; Y is the row in the original art.
 # Left/right contours meet at a common root and at a tip or blunt cut.
 FRINGE = [
-    [((-2,39),(-37,30),(-66,85),(-60,151), (-27,46),(-49,85),(-54,121)),
-     ((-5,38),(-22,43),(-28,90),(-24,110), (-11,52),(-13,96),(-15,120)),
-     ((-2,39),(-17,40),(-15,98),(-10,124), (11,36),(12,99),(7,124)),
-     ((5,39),(7,54),(12,100),(10,119), (24,44),(24,87),(23,108)),
-     ((6,39),(24,47),(43,85),(58,117), (54,45),(70,105),(70,151))],
+    None,
     [((-3,83),(-28,72),(-66,122),(-69,179),(-24,107),(-46,165),(-38,185)),
      ((-4,83),(-16,93),(-32,133),(-19,145),(-8,147),(0,147),(23,149)),
      ((1,83),(8,89),(12,119),(21,135),(31,130),(25,104),(17,94)),
@@ -80,16 +76,9 @@ def plate(g, rows, bone, coordinates=None, length=1):
 
 def frontal_point(c, x, sy):
     v = max(.006,min(1,(sy-c['stations'][0][0])/(c['stations'][-1][0]-c['stations'][0][0])))
-    radius = station_width(c,sy) * (.96 if c is CAST[0] else 1)
+    radius = station_width(c,sy)
     angle = asin(max(-.988,min(.988,x/max(1,radius))))
     xx,y,z = hair_profile(c,angle,v)
-    # The scalp's calibrated profile nose and cheek do not belong to a forelock.
-    # Continue the curve of the fringe near the eye instead of plunging into it.
-    if c is CAST[0]:
-        from forms import side_edges
-        a,b=side_edges(sy)
-        mx=(a+b)/2-603
-        y=mx-(b-a)/2*cos(angle)
     return Vector((x*c['k'],y,(c['floor']-sy)*c['k'])), Vector((sin(angle)*.64,-cos(angle),.14)).normalized()
 
 
@@ -108,12 +97,6 @@ def bangs(g, i):
             for k in range(9):
                 u=k/8
                 point=left.lerp(right,u)
-                if i==0:
-                    # Roll the cut into an offset point. The centre lock dips
-                    # furthest; adjacent ends turn diagonally toward the part.
-                    end=max(0,(t-.76)/.24)**2
-                    point=point.lerp(left.lerp(right,.46 if index==2 else .69),end*.96)
-                    point.y+=end*(4.2 if index==2 else 1.0)
                 p,n=frontal_point(c,*point)
                 coords.append(panel(i,*point))
                 crown=sin(pi*u)**.8 * sin(pi*(.015+.97*t))**.51
@@ -121,33 +104,9 @@ def bangs(g, i):
                 # stays a few millimetres proud of each overlapping neighbour.
                 relief=(4.5+1.25*index)*sin(pi*t)**.6+(.85+9*crown)
                 p+=n*relief
-                if i==0:p.y+=10.5*t**2.5
                 row.append((p, n*(1+7.5*crown)))
             rows.append(row);maps.append(coords)
         plate(g,rows,'Head',None if i==3 or (i==2 and index==3) else maps,.83+.04*(index%3))
-    if i==0:
-        # Two short, curved flyaways break the rim of the triangular parts.
-        # Both stop above the brow line even from the elevated race camera.
-        for sign in (-1,1):
-            for main in (True,False):
-                path=(Vector((3,38)),Vector((22,43)),Vector((32,79)),Vector((36,102))) if main else (
-                      Vector((23,54)),Vector((38,61)),Vector((51,83)),Vector((47,106)))
-                rows=[]
-                for j in range(17):
-                    t=j/16
-                    point=cubic(path,t)
-                    width=(7.4 if main else 3.2)*max(.012,sin(pi*t)**.72)
-                    row=[]
-                    for k in range(7):
-                        u=k/6
-                        p,normal=frontal_point(c,sign*(point.x+(2*u-1)*width),point.y)
-                        crest=sin(pi*u)*sin(pi*t)**.62
-                        p+=normal*(2.0+4.5*crest)
-                        p.y+=7.0*t*t
-                        row.append((p,normal*(.65+4*crest)))
-                    rows.append(row)
-                plate(g,rows,'Head',length=.79)
-
 
 
 def cap_and_locks(g, i):
@@ -155,16 +114,12 @@ def cap_and_locks(g, i):
     n=72
     def cap_end(a):
         side=min(1,abs(a)/1.47)
-        if i==0:
-            # Behind each angled brow, the scalp terminates above the
-            # illustrated triangular part, including from the raised race camera.
-            side=max(0,min(1,(abs(a)-.67)/.86))
-            # The hairline rises inside the two brow windows. Its
-            # curved boundary stays under the shorter overlapping flyaways.
-            front=.353-.080*max(0,1-((abs(a)-.42)/.26)**2)
-            return front+(.994-front+.014*cos(7*a+.6))*side*side*(3-2*side)
-        low=.487
-        return .42+(low+.013*cos(7*a+.6))*side*side*(3-2*side)
+        # The centre lies under the illustrated fringe rather than ending
+        # as a horizontal strip of bare forehead. Side layers frame the eye.
+        fringe_row=(0,142,141,141,147,137)[i]
+        top,bottom=c['stations'][0][0],c['stations'][-1][0]
+        front=(fringe_row-top)/(bottom-top)
+        return front+(.905-front+.013*cos(7*a+.6))*side*side*(3-2*side)
     rows=[]
     for j in range(24):
         t=j/23;row=[]
@@ -173,7 +128,6 @@ def cap_and_locks(g, i):
             p=Vector(hair_profile(c,a,t*cap_end(a)))
             nrm=Vector((sin(a),-cos(a),.58*(1-t)))
             p-=nrm*(1.3+4.5*t)
-            if i==0:p.z-=8.5*t**5*min(1,abs(a)/1.38)
             p.z+=2.6*(1-t)**2
             if j==0:
                 p.x*=.11
@@ -181,20 +135,11 @@ def cap_and_locks(g, i):
                 p.z+=.8
             row.append(p)
         rows.append(row)
+    def crown_uv(angle, v):
+        return (.501+.498*max(0,min(1,(angle+pi)/(2*pi))),1-(2+315*max(0,min(1,v)))/1024)
     def scalp_quad(a,b):
-        # Assign the front or back panel to the whole quad. Interpolating one
-        # atlas island into the next would paint a streak along the temple.
-        angle=abs(-pi+2*pi*(b+.5)/n)
-        rear=angle>2.20
-        corners=[]
-        for row,col in ((a,b),(a,b+1),(a+1,b+1),(a+1,b)):
-            x,_,z=rows[row][col%n]
-            if rear or (angle<.73 and i!=3):
-                corners.append(panel(i,x/c['k'],c['floor']-z/c['k'],rear))
-            else:
-                local=(-pi+2*pi*(col%n)/n)
-                corners.append(tile(.26+.23*cos(6*local),.07+.84*row/23))
-        return corners
+        return [crown_uv(-pi+2*pi*col/n,(row/23)*cap_end(-pi+2*pi*col/n))
+                for row,col in ((a,b),(a,b+1),(a+1,b+1),(a+1,b))]
     # The front and rear edges end at different heights. Capping that
     # nonplanar opening spans the forehead with a dark polygon across
     # both parts. Roll the edge back into the hair at each angle instead.
@@ -240,7 +185,6 @@ def cap_and_locks(g, i):
                 p.z-=(v-sample_v)*(c['stations'][-1][0]-c['stations'][0][0])*c['k']
                 radial=Vector((sin(angle),-cos(angle),.22*(1-t))).normalized()
                 p.z-=max(0,v-1)*190
-                if i==0:p.z-=9*t**4*(.63+.37*back)
                 if v>.78:
                     curl=max(0,(v-.78)/.26)
                     p-=radial*(4+4*back)*curl*curl
@@ -249,14 +193,18 @@ def cap_and_locks(g, i):
                 # upper plane, a thin edge and a returning lower lip on each lock.
                 crest=sin(pi*u)**.81
                 relief=(5.9+.58*flare*back)*fullness*crest-2.3+2.4*sin(1.7*pi*t+j*.63)+1.0*cross
-                if temple:relief+=5*sin(pi*t)**1.6
-                coords.append(panel(i,p.x/c['k'],c['floor']-p.z/c['k'],back>.35))
+                root=max(0,1-t/.52)
+                relief-=6.2*root*root
+                if temple:relief+=3*sin(pi*t)**1.6
+                # Each lock stays on one side of the cylindrical seam.
+                theta=angle-2*pi if anchor>pi else angle
+                coords.append(crown_uv(theta,v))
                 p+=radial*relief
                 p.z+=1.8*(1-t)**3
                 row.append((p,radial*(1.1+6.7*fullness*crest)))
             rows.append(row);maps.append(coords)
         first=len(g.verts)
-        plate(g,rows,'Head',maps if back>.78 else None,.9+.05*sin(j))
+        plate(g,rows,'Head',maps)
         # Roots stay on the scalp. Ends trail the side bones during turns,
         # landings and changes of speed, also on rivals with short styles.
         if temple or abs(sin(anchor))>.55:
@@ -271,13 +219,13 @@ def cap_and_locks(g, i):
         for a in range(17):
             t=a/16
             angle=sign*(.99+.20*sin(pi*t)-.35*t*t)
-            v=.24+(.74 if i==0 else .69)*t
+            v=.24+.69*t
             p=Vector(hair_profile(c,angle,v))
             radial=Vector((sin(angle),-cos(angle),.16*(1-t))).normalized()
             tangent=Vector((cos(angle),sin(angle),0))
             p+=radial*(3.2+5.6*sin(pi*t))
             p.z-=2.4*sin(pi*t)
-            width=(14.6 if i==0 else 10.6)*max(.015,sin(pi*t)**.65)
+            width=10.6*max(.015,sin(pi*t)**.65)
             ring=[]; coords=[]
             for k in range(8):
                 u=k/7
@@ -289,34 +237,8 @@ def cap_and_locks(g, i):
         first=len(g.verts)
         plate(g,sections,'Head')
         g.feather(first,len(g.verts),len(sections),'Lock.L' if sign>0 else 'Lock.R',.71)
-    if i==0:
-        # A broad temple section turns away from the eye, curls in front
-        # of the earlobe and thins beside the cheek like the turnaround.
-        for sign in (-1,1):
-            rows=[];maps=[]
-            left=(Vector((44,70)),Vector((59,100)),Vector((73,138)),Vector((48,169)))
-            right=(Vector((44,70)),Vector((85,95)),Vector((91,162)),Vector((54,181)))
-            for j in range(19):
-                t=j/18
-                inside,outside=cubic(left,t),cubic(right,t)
-                row=[];coords=[]
-                for k in range(9):
-                    u=k/8
-                    pos=inside.lerp(outside,u)
-                    end=max(0,(t-.72)/.28)**1.7
-                    pos=pos.lerp(inside.lerp(outside,.46),.975*end)
-                    pos.x-=2.8*end
-                    p,normal=frontal_point(c,sign*pos.x,pos.y)
-                    crest=sin(pi*u)**.76*sin(pi*t)**.53
-                    p+=normal*(1.3+6.9*crest)
-                    row.append((p,normal*(1+5.3*crest)))
-                    coords.append(tile(.1+.8*u,.13+.83*t))
-                rows.append(row);maps.append(coords)
-            first=len(g.verts)
-            plate(g,rows,'Head',maps)
-            g.feather(first,len(g.verts),len(rows),'Lock.L' if sign>0 else 'Lock.R',.68)
     bangs(g,i)
-    if i in (0,1,3,5):
+    if i in (1,3,5):
         # A pair of free, tapering outer strands leaves slivers of sky between
         # the moving ends and the bob, as in the airborne and profile sheets.
         for sign in (-1,1):
@@ -329,7 +251,7 @@ def cap_and_locks(g, i):
                 p=Vector(hair_profile(c,angle,v))
                 radial=Vector((sin(angle),-cos(angle),.07))
                 tangent=Vector((cos(angle),sin(angle),0))
-                p+=radial*((13 if i==0 else 10)*sin(pi*t)**1.1+4.4*sin(2*pi*t))
+                p+=radial*(6.5*sin(pi*t)**1.1+2.4*sin(2*pi*t))
                 p.z+=4*sin(pi*t)
                 radius=max(.018,sin(pi*t)**.57)
                 row=[]
