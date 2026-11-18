@@ -1,0 +1,18 @@
+{
+  "type": "Instrumented Web export; real title click and browser pointer lock, scripted PC input events through production input handler",
+  "result": {
+    "result": 0,
+    "retry": false,
+    "state": {
+      "deaths": 0,
+      "elapsed": 300.433333333389,
+      "kills": 263,
+      "mode": "won",
+      "result": "won",
+      "sim_seconds": 300.316666666667,
+      "wall_ms": 321346
+    },
+    "lock": false,
+    "wall_seconds": 301.192
+  }
+}

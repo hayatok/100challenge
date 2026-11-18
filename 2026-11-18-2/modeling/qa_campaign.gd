@@ -208,11 +208,23 @@ func capture(index: int, section: String = "") -> void:
 func finish(code: int) -> void:
 	physics_frame.disconnect(drive)
 	events.close()
-	voyage.get_parent().remove_child(voyage)
-	voyage.queue_free()
-	await process_frame
-	await process_frame
+	# The fixed-fps harness can simulate 0.12 s before the audio thread runs once.
+	# Stop playback and wait real wall-clock frames before and after freeing audio owners.
+	voyage.sound.stop_all()
+	await _audio_flush()
+	voyage.free()
+	voyage = null
+	if host != root:
+		host.free()
+		host = null
+	await _audio_flush()
+	print("QA_SHUTDOWN_FLUSH_COMPLETE")
 	quit(code)
+
+func _audio_flush() -> void:
+	var deadline := Time.get_ticks_msec()+150
+	while Time.get_ticks_msec()<deadline:
+		await process_frame
 
 func _submit_controls(move: Vector3, look: Vector2, fire: bool) -> void:
 	if input_mode == "bridge":
