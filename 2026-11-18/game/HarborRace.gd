@@ -161,8 +161,13 @@ func _choose_course(id: String) -> void:
 			course.free()
 		course = next_scene.instantiate()
 		$Course.add_child(course)
-		if web_canvas and id == Courses.WHARF:
-			course.set_mobile_profile()
+		if web_canvas:
+			if id == Courses.WHARF:
+				course.set_mobile_profile()
+			# Keep Nagi's near-camera mesh intact when the rivals fill the starting grid.
+			for rival in figures.slice(1):
+				for mesh: MeshInstance3D in rival.find_children("*", "MeshInstance3D", true, false):
+					mesh.lod_bias = 0.3 if id == Courses.WHARF else 1.0
 		selected_course = id
 		_size_mobile_render()
 		portrait_fill.light_energy = 0.10 if id == Courses.YARD else wharf_fill_energy
