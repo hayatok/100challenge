@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 664 555" width="664" height="555" role="img" aria-labelledby="title desc">
+  <title id="title">夕焼けコンテナヤードのコース案</title>
+  <desc id="desc">下から上へ走る。横送りベルトと、下に受け床のある吊り足場を試す。水路では左の動くコンテナか、右の固定桟橋を選び、ゴール直前で合流する。距離と配置は試作用。</desc>
+  <defs>
+    <pattern id="sea" width="27" height="24" patternUnits="userSpaceOnUse">
+      <rect width="27" height="24" fill="#d9eeea"/>
+      <path d="M3 17q3-2 6 0t6 0" fill="none" stroke="#b9dcd6" stroke-width="1"/>
+    </pattern>
+    <pattern id="planks" width="10" height="10" patternUnits="userSpaceOnUse">
+      <rect width="10" height="10" fill="#f5d59b"/>
+      <path d="M0 9.5h10" stroke="#d6af73" stroke-width="1"/>
+    </pattern>
+    <pattern id="checks" width="14" height="14" patternUnits="userSpaceOnUse">
+      <rect width="14" height="14" fill="#fffcf0"/>
+      <path d="M0 0h7v7H0zm7 7h7v7H7z" fill="#27463e"/>
+    </pattern>
+    <g id="belt">
+      <rect x="-24" y="-10" width="48" height="20" rx="3" fill="#275b59" stroke="#193c39" stroke-width="1.4"/>
+      <path d="m-11-5-6 5 6 5m12-10-6 5 6 5m12-10-6 5 6 5" fill="none" stroke="#e7ffdf" stroke-width="2.6" stroke-linejoin="round"/>
+    </g>
+    <g id="load">
+      <rect x="-21" y="-12" width="42" height="24" rx="2" fill="#ce624e" stroke="#743d32" stroke-width="1.8"/>
+      <path d="M-15-7v14m7-14v14m8-14v14m8-14v14m7-14v14" stroke="#f9b399" stroke-width="2"/>
+    </g>
+  </defs>
+  <rect width="664" height="555" rx="16" fill="#faf7ee"/>
+  <g font-family="-apple-system, BlinkMacSystemFont, 'Hiragino Sans', 'Noto Sans JP', sans-serif" fill="#253e38">
+    <text x="24" y="40" font-size="25" font-weight="700">夕焼けコンテナヤード</text>
+    <text x="25" y="64" font-size="13">コース案　約170 m　／　下から上へ進む</text>
+    <rect x="22" y="81" width="302" height="450" rx="12" fill="url(#sea)" stroke="#a0c7c0"/>
+
+    <!-- Two routes follow the same approach and rejoin before the straight. -->
+    <path d="M161 509V327 M161 182V99" stroke="#997c54" stroke-width="78" fill="none"/>
+    <path d="M161 509V327 M161 182V99" stroke="url(#planks)" stroke-width="74" fill="none"/>
+    <path d="M160 326C201 309 273 305 273 262V239C273 202 218 198 163 178" fill="none" stroke="#997c54" stroke-width="42"/>
+    <path d="M160 326C201 309 273 305 273 262V239C273 202 218 198 163 178" fill="none" stroke="url(#planks)" stroke-width="38"/>
+    <path d="M162 329Q121 326 117 308V285 M117 229V218Q119 195 165 175" fill="none" stroke="#997c54" stroke-width="52"/>
+    <path d="M162 329Q121 326 117 308V285 M117 229V218Q119 195 165 175" fill="none" stroke="url(#planks)" stroke-width="48"/>
+    <rect x="100" y="352" width="125" height="64" rx="6" fill="url(#planks)" stroke="#af8959" stroke-width="1.5"/>
+
+    <!-- Inner takeoff, a laterally moving roof, and an outer fixed pier. -->
+    <path d="M120 314q-4-10-4-20m-1-11v-11m0-25v-21" fill="none" stroke="#387368" stroke-width="3" stroke-dasharray="4 4" stroke-linecap="round"/>
+    <path d="M77 258h93m-93 0 6-4m-6 4 6 4m87-4-6-4m6 4-6 4" fill="none" stroke="#39564c" stroke-width="1.7"/>
+    <rect x="143" y="247" width="33" height="22" rx="2" fill="none" stroke="#658d84" stroke-dasharray="3 3"/>
+    <use href="#load" transform="translate(110 258)"/>
+    <use href="#belt" transform="translate(130 311) scale(.77)"/>
+    <path d="m110 289 13 0m-14-2h13" stroke="#fff8e8" stroke-width="2"/>
+    <path d="M197 308q49-11 61-23m13-26v-15m-4-22q-17-14-38-16" stroke="#9c7849" stroke-width="2" stroke-dasharray="4 5" stroke-linecap="round" fill="none"/>
+    <path d="m267 249 4-7 4 7" fill="none" stroke="#735636" stroke-width="2" stroke-linecap="round"/>
+
+    <!-- The introductory moving roof has a continuous catch deck below it. -->
+    <path d="M112 382h98m-98 0 5-4m-5 4 5 4m93-4-5-4m5 4-5 4" fill="none" stroke="#7d6d4a" stroke-width="1.7"/>
+    <use href="#load" transform="translate(148 382) scale(.86)"/>
+    <use href="#belt" transform="translate(151 452)"/>
+    <path d="M184 434v-9m-4 4 4-5 4 5 M155 155v-14m-5 6 5-7 5 7" stroke="#856d46" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    <rect x="123" y="105" width="76" height="10" fill="url(#checks)" stroke="#617363" stroke-width=".8"/>
+    <g text-anchor="middle" font-size="12" font-weight="700">
+      <rect x="130" y="86" width="64" height="18" rx="6" fill="#284b43"/><text x="162" y="100" fill="#fffaf0">ゴール</text>
+      <path d="M126 485h70" stroke="#fdf9e8" stroke-width="4"/>
+      <rect x="124" y="493" width="76" height="22" rx="6" fill="#284b43"/><text x="162" y="509" fill="#fffaf0">スタート</text>
+    </g>
+
+    <g fill="none" stroke="#608b80" stroke-width="1.3">
+      <path d="M210 147h122"/><path d="M285 250h47"/><path d="M230 381h102"/><path d="M209 453h123"/>
+    </g>
+    <g font-size="12" font-weight="700" fill="#477468" letter-spacing=".5">
+      <text x="345" y="127">140–170 m</text>
+      <text x="345" y="217">85–140 m</text>
+      <text x="345" y="353">40–85 m</text>
+      <text x="345" y="437">0–40 m</text>
+    </g>
+    <g font-size="19" font-weight="700">
+      <text x="345" y="152">ゴール前の直線</text>
+      <text x="345" y="243">水路の分岐</text>
+      <text x="345" y="379">飛び乗りの練習</text>
+      <text x="345" y="463">搬入口のベルト</text>
+    </g>
+    <g font-size="14" fill="#394d46">
+      <text x="345" y="176">加速を温存した選手が追い上げる。</text>
+      <text x="345" y="267">左は横に動くコンテナの屋根。</text>
+      <text x="345" y="289">右は待ち時間のない固定桟橋。</text>
+      <text x="345" y="403">屋根を外しても下の床から走れる。</text>
+      <text x="345" y="487">矢印の向きに足元が流れる。</text>
+    </g>
+  </g>
+</svg>
