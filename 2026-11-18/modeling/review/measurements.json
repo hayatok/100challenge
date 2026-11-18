@@ -1,0 +1,230 @@
+[
+  {
+    "bib": 1,
+    "height_m": 1.4999,
+    "bounds_blender_xyz_m": [
+      [
+        -0.4702,
+        -0.509,
+        -0.0
+      ],
+      [
+        0.4468,
+        0.2832,
+        1.4999
+      ]
+    ],
+    "triangles": 26984,
+    "glb_bytes": 1848916,
+    "bones": 19,
+    "surfaces": 1,
+    "clips": [
+      "finish",
+      "fall",
+      "stumble",
+      "land",
+      "jump",
+      "run",
+      "idle"
+    ],
+    "left_sole_support_Y_up_m": {
+      "run": [
+        [
+          0,
+          0.0006
+        ],
+        [
+          0.05,
+          0.003
+        ],
+        [
+          0.1,
+          0.0042
+        ],
+        [
+          0.15,
+          0.0045
+        ],
+        [
+          0.2,
+          0.004
+        ],
+        [
+          0.25,
+          0.0066
+        ],
+        [
+          0.28,
+          0.0183
+        ]
+      ],
+      "land": [
+        [
+          0,
+          -0.0045
+        ],
+        [
+          0.25,
+          0.0001
+        ],
+        [
+          0.5,
+          0.0011
+        ],
+        [
+          0.75,
+          -0.0041
+        ],
+        [
+          1,
+          0.0
+        ]
+      ]
+    }
+  },
+  {
+    "bib": 2,
+    "height_m": 1.4323,
+    "bounds_blender_xyz_m": [
+      [
+        -0.4427,
+        -0.4612,
+        -0.0
+      ],
+      [
+        0.4427,
+        0.259,
+        1.4323
+      ]
+    ],
+    "triangles": 33684,
+    "glb_bytes": 1819640,
+    "bones": 19,
+    "surfaces": 1,
+    "clips": [
+      "finish",
+      "fall",
+      "stumble",
+      "land",
+      "jump",
+      "run",
+      "idle"
+    ]
+  },
+  {
+    "bib": 3,
+    "height_m": 1.4981,
+    "bounds_blender_xyz_m": [
+      [
+        -0.3587,
+        -0.392,
+        -0.0
+      ],
+      [
+        0.5294,
+        0.2154,
+        1.4981
+      ]
+    ],
+    "triangles": 30160,
+    "glb_bytes": 1669092,
+    "bones": 19,
+    "surfaces": 1,
+    "clips": [
+      "finish",
+      "fall",
+      "stumble",
+      "land",
+      "jump",
+      "run",
+      "idle"
+    ]
+  },
+  {
+    "bib": 4,
+    "height_m": 1.5307,
+    "bounds_blender_xyz_m": [
+      [
+        -0.4366,
+        -0.48,
+        -0.0
+      ],
+      [
+        0.4366,
+        0.413,
+        1.5307
+      ]
+    ],
+    "triangles": 27778,
+    "glb_bytes": 1639516,
+    "bones": 19,
+    "surfaces": 1,
+    "clips": [
+      "finish",
+      "fall",
+      "stumble",
+      "land",
+      "jump",
+      "run",
+      "idle"
+    ]
+  },
+  {
+    "bib": 5,
+    "height_m": 1.4114,
+    "bounds_blender_xyz_m": [
+      [
+        -0.4306,
+        -0.4693,
+        -0.0
+      ],
+      [
+        0.4263,
+        0.2655,
+        1.4114
+      ]
+    ],
+    "triangles": 32884,
+    "glb_bytes": 1832288,
+    "bones": 19,
+    "surfaces": 1,
+    "clips": [
+      "finish",
+      "fall",
+      "stumble",
+      "land",
+      "jump",
+      "run",
+      "idle"
+    ]
+  },
+  {
+    "bib": 6,
+    "height_m": 1.4495,
+    "bounds_blender_xyz_m": [
+      [
+        -0.4477,
+        -0.456,
+        -0.0
+      ],
+      [
+        0.4093,
+        0.2608,
+        1.4495
+      ]
+    ],
+    "triangles": 26444,
+    "glb_bytes": 1557532,
+    "bones": 19,
+    "surfaces": 1,
+    "clips": [
+      "finish",
+      "fall",
+      "stumble",
+      "land",
+      "jump",
+      "run",
+      "idle"
+    ]
+  }
+]
