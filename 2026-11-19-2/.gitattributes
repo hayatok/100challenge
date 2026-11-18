@@ -1,0 +1,3 @@
+# Unity names these files after their exact uncompressed bytes.
+web-player/Build/** binary
+Game/Assets/Resources/**/*.bytes binary

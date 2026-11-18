@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en"><meta charset="utf-8"><title>Web player touch input inspection</title>
+<style>body{background:#192221;color:#faf7e4;font:16px system-ui}iframe{border:0;display:block}pre{white-space:pre-wrap}</style>
+<iframe id="game" allow="autoplay" title="Evacuation Control"></iframe><pre id="results">Loading the inspection build…</pre>
+<script>
+(async () => {
+    const params = new URLSearchParams(location.search);
+    const frame = document.querySelector('#game'), log = document.querySelector('#results');
+    frame.width = params.get('width') || 844;
+    frame.height = params.get('height') || 390;
+    frame.src = 'index.html?controls=touch'+(params.has('failure')?'&duty-failure=1':'');
+    const win = frame.contentWindow;
+    const pause = ms => new Promise(resolve => setTimeout(resolve, ms));
+    const audit = () => win.evacInspection;
+    const wait = async (name, probe, time = 12000) => {
+        const end=performance.now()+time;
+        do {const value=probe();if(value)return value;await pause(50);} while(performance.now()<end);
+        throw new Error(name+' timed out, state '+JSON.stringify(audit()?.state)+'; buttons '+Object.keys(audit()?.buttons||{}).join(',')+'; recent presses '+(audit()?.clicks||[]).join(','));
+    };
+    const active = new Map();
+    let canvas;
+    function finger(kind, id, x, y) {
+        const bounds=canvas.getBoundingClientRect();
+        const t=new win.Touch({identifier:id,target:canvas,clientX:bounds.x+x*bounds.width,clientY:bounds.y+y*bounds.height,
+            radiusX:5,radiusY:5,force:.7});
+        if(kind==='touchend')active.delete(id); else active.set(id,t);
+        canvas.dispatchEvent(new win.TouchEvent(kind,{touches:[...active.values()],targetTouches:[...active.values()],
+            changedTouches:[t],bubbles:true,cancelable:true}));
+    }
+    async function button(pattern) {
+        const xy=await wait('Button '+pattern,()=>Object.entries(audit().buttons).find(([k])=>pattern.test(k))?.[1]);
+        const before=audit().frame;
+        finger('touchstart',8,...xy);
+        await wait('Contact on '+pattern,()=>audit().frame>before && audit().state.fingers>0);
+        finger('touchend',8,...xy);
+        await wait('Release of '+pattern,()=>audit().state.fingers===0);
+    }
+    await wait('Unity',()=>audit()?.state?.phase==='Title',90000);
+    canvas=win.document.querySelector('canvas');
+    log.textContent='Loaded '+frame.width+'×'+frame.height+'.';
+    const custom=params.has('custom');
+    if (custom) {
+        await button(/^設定$/);
+        await button(/^タッチ操作$/);
+        await button(/^内側$/);
+        await button(/^上$/);
+        await button(/^設定に戻る$/);
+        await button(/^キー設定$/);
+        await button(/^装填　/);
+        const key=(type)=>new win.KeyboardEvent(type,{key:'v',code:'KeyV',keyCode:86,which:86,bubbles:true,cancelable:true});
+        canvas.dispatchEvent(key('keydown'));await pause(140);canvas.dispatchEvent(key('keyup'));
+        await wait('Keyboard assignment V',()=>Object.keys(audit().buttons).some(k=>/^装填　V$/.test(k)));
+        await button(/^初期設定に戻す$/);
+        await button(/^設定に戻る$/);
+        await button(/^戻る$/);
+    }
+    if (params.has('duty')) {
+        if(params.has('failure')) {
+            await button(/^作戦を選ぶ/);await button(/^出動する/);await button(/^一時停止/);
+            await button(/^タイトルへ$/);await button(/^タイトルに戻る$/);
+            await wait('Preserved regular campaign',()=>audit().state.phase==='Title');
+        }
+        await button(/^救援当直/);
+        await button(/^03 /);
+        await button(/^この当直を始める$/);
+        if(params.has('failure')) {
+            await wait('Failed at a later duty stage',()=>audit()?.duty?.expected>=1 && audit().state.phase==='Debrief');
+            await button(/^直前の記録から$/);
+            await wait('Restored the correct duty checkpoint and preserved campaign files',()=>
+                audit().state.phase==='Playing' && audit().duty.sector===audit().duty.expected && audit().duty.unchanged);
+        } else await wait('Independent duty',()=>audit().state.phase==='Playing');
+        await button(/^一時停止/);
+        await wait('Duty pause',()=>audit().state.phase==='Paused');
+        log.textContent='PASS '+frame.width+'×'+frame.height+' | Opened district 03 from the duty desk, deployed and paused.'+
+            (params.has('failure')?' Recovered stage '+(audit().duty.expected+1)+' from the defeat screen and retained the regular campaign.':'');
+        return;
+    }
+    await button(/^作戦を選ぶ/);await wait('Briefing',()=>audit().state.phase==='Briefing');
+    await button(/^出動する/);await wait('Command',()=>audit().state.phase==='Playing');
+    if(!Object.keys(audit().buttons).some(k=>k.includes('を直接操作')))await button(/^名簿/);
+    await button(/を直接操作$/);await wait('Direct',()=>audit().state.mode==='FPS');
+    const start={...audit().state};
+    finger('touchstart',1,.13,.78);await pause(100);finger('touchmove',1,.17,.63);
+    finger('touchstart',2,.64,.49);await pause(90);finger('touchmove',2,.72,.50);
+    const trigger=custom?[.77,.68]:[.86,.72];
+    finger('touchstart',3,...trigger);await pause(610);
+    const after={...audit().state};
+    for(const [id,p] of [[1,[.17,.63]],[2,[.72,.50]],[3,trigger]])finger('touchend',id,...p);
+    await wait('All three fingers released',()=>audit().state.fingers===0);
+    const walked=Math.hypot(after.x-start.x,after.z-start.z);
+    if(!(walked>.4 && Math.abs(after.yaw-start.yaw)>1 && after.ammo<start.ammo && audit().maxFingers>=3))
+        throw new Error('Concurrent move/look/fire failed. '+JSON.stringify({start,after,maxFingers:audit().maxFingers,walked}));
+    await button(/^装填$/);
+    await wait('Reload above '+after.ammo+' rounds',()=>audit().state.ammo>after.ammo,8000);
+    await button(/^指揮に戻る/);await wait('Return',()=>audit().state.mode==='RTS');
+    await button(/^現場からの要請/);await button(/^引き受ける/);await button(/を現場へ$/);
+    await button(/^一時停止/);await wait('Pause',()=>audit().state.phase==='Paused');
+    log.textContent='PASS '+frame.width+'×'+frame.height+' | Three simultaneous DOM touch contacts in Unity. '+
+        'Movement '+walked.toFixed(2)+' m, yaw '+(after.yaw-start.yaw).toFixed(1)+'°, ammunition '+start.ammo+' → '+after.ammo+
+        '. Reload, RTS return, optional dispatch and pause passed.'+(custom?' Rebinding, reset and repositioned fire control passed.':'');
+})().catch(error => {document.querySelector('#results').textContent='FAIL '+error.message;});
+</script></html>

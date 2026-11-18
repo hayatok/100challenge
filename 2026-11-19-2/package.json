@@ -1,0 +1,10 @@
+{
+  "name": "evacuation-control",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/verify-web.mjs",
+    "check": "npm run build"
+  }
+}
