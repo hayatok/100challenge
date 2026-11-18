@@ -1,6 +1,7 @@
 extends CanvasLayer
 
 signal begin(continued: bool)
+signal rush_requested
 signal resume_requested
 signal pause_requested
 signal retry_requested
@@ -31,17 +32,20 @@ var _menu: Control
 var _panel: PanelContainer
 var _font: Font
 var _title_image: Texture2D
+var _rush_image: AtlasTexture
 var _buttons: Array[Button] = []
 var _first_setting: Control
 var _content: VBoxContainer
 var _guide: Label
+var _menu_heading: Label
 var _settings_layout: BoxContainer
-var _title_actions: BoxContainer
+var _menu_actions: BoxContainer
 var _mode := "title"
 var _settings_from := "title"
 var _pause_reason := ""
 var _settings := DEFAULTS.duplicate()
 var _has_save := false
+var _rush_best := 0
 var _results: Dictionary = {}
 var _touch := false
 var _movement := {}
@@ -64,6 +68,13 @@ func _ready() -> void:
 	var title_path := "res://media/title.jpg"
 	if ResourceLoader.exists(title_path):
 		_title_image = load(title_path) as Texture2D
+	var rush_path := "res://media/rush.jpg"
+	if ResourceLoader.exists(rush_path):
+		_rush_image = AtlasTexture.new()
+		_rush_image.atlas = load(rush_path) as Texture2D
+		# Frame the arena clear of the sample HUD baked into the concept art.
+		_rush_image.region = Rect2(0, 88, _rush_image.atlas.get_width(), 628)
+		_rush_image.filter_clip = true
 	_touch = DisplayServer.is_touchscreen_available()
 	for action: StringName in BINDINGS:
 		if not InputMap.has_action(action):
@@ -86,8 +97,9 @@ func _ready() -> void:
 	_instruments.hide()
 	show_title(false)
 
-func show_title(has_save: bool) -> void:
+func show_title(has_save: bool, rush_best: int = 0) -> void:
 	_has_save = has_save
+	_rush_best = rush_best
 	_show_menu("title")
 
 func show_play() -> void:
@@ -111,6 +123,10 @@ func show_death() -> void:
 func show_result(stats: Dictionary) -> void:
 	_results = stats.duplicate()
 	_show_menu("result")
+
+func show_rush_result(stats: Dictionary) -> void:
+	_results = stats.duplicate()
+	_show_menu("rush_result")
 
 func set_options(settings: Dictionary) -> void:
 	_settings = DEFAULTS.duplicate()
@@ -175,7 +191,7 @@ func _on_resize() -> void:
 		if _mode == "pause" and not _buttons.is_empty():
 			_buttons[0].disabled = _needs_landscape()
 			_buttons[0].text = "画面を横向きにしてください" if _needs_landscape() else "任務に戻る"
-		elif _mode == "title" and not _needs_landscape() and is_instance_valid(_content):
+		elif not _needs_landscape() and is_instance_valid(_content):
 			var notice := _content.get_node_or_null("RotateNotice")
 			if notice != null:
 				notice.queue_free()
@@ -216,8 +232,16 @@ func _input(event: InputEvent) -> void:
 				_request_pause("rotate")
 				return
 	if _mode != "play":
-		if event.is_action_pressed("freight_pause") and _mode == "settings":
-			_show_menu(_settings_from)
+		if event.is_action_pressed("freight_pause"):
+			match _mode:
+				"settings":
+					_show_menu(_settings_from)
+				"rush_briefing":
+					_show_menu("title")
+				"rush_result":
+					title_requested.emit()
+				_:
+					return
 			get_viewport().set_input_as_handled()
 		return
 	if event.device == InputEvent.DEVICE_ID_EMULATION:
@@ -336,8 +360,9 @@ func _clear_menu() -> void:
 	_buttons.clear()
 	_first_setting = null
 	_guide = null
+	_menu_heading = null
 	_settings_layout = null
-	_title_actions = null
+	_menu_actions = null
 	if is_instance_valid(_menu):
 		_root.remove_child(_menu)
 		_menu.queue_free()
@@ -354,16 +379,18 @@ func _show_menu(mode: String) -> void:
 	_menu.mouse_filter = Control.MOUSE_FILTER_STOP
 	_root.add_child(_menu)
 	_menu.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	if mode == "title" and _title_image != null:
+	var rush_menu := mode in ["rush_briefing", "rush_result"]
+	var backdrop: Texture2D = _rush_image if rush_menu else _title_image if mode == "title" else null
+	if backdrop != null:
 		var artwork := TextureRect.new()
 		artwork.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		artwork.texture = _title_image
+		artwork.texture = backdrop
 		artwork.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		artwork.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
 		_menu.add_child(artwork)
 		artwork.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	var scrim := ColorRect.new()
-	scrim.color = Color(0.023, 0.046, 0.041, 0.36 if mode == "title" else 0.78)
+	scrim.color = Color(0.023, 0.046, 0.041, 0.36 if backdrop != null else 0.78)
 	scrim.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_menu.add_child(scrim)
 	scrim.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
@@ -392,7 +419,7 @@ func _show_menu(mode: String) -> void:
 	margin.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	margin.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	for side in ["left", "right", "top", "bottom"]:
-		var padding := 14 if mode == "title" and side in ["top", "bottom"] else 20
+		var padding := 10 if (mode == "title" or rush_menu) and side in ["top", "bottom"] else 20
 		margin.add_theme_constant_override("margin_" + side, padding)
 	scroll.add_child(margin)
 	_content = VBoxContainer.new()
@@ -405,12 +432,24 @@ func _show_menu(mode: String) -> void:
 			_body("市場を抜け、港の最終便に乗れ。")
 			if _has_save:
 				_button("続きから", func(): _start(true), true)
-				_title_actions = BoxContainer.new()
-				_title_actions.add_theme_constant_override("separation", 8)
-				_content.add_child(_title_actions)
-			_button("最初から", func(): _start(false), not _has_save, _title_actions)
-			_button("設定", _open_settings, false, _title_actions)
+			else:
+				_button("最初から", func(): _start(false), true)
+			_add_menu_actions()
+			if _has_save:
+				_button("最初から", func(): _start(false), false, _menu_actions)
+			_button("終鈴ラッシュ", func(): _show_menu("rush_briefing"), false, _menu_actions)
+			_button("設定", _open_settings, false, _menu_actions)
 			_guide = _body(TOUCH_GUIDE if _touch else DESKTOP_GUIDE)
+		"rush_briefing":
+			_heading("", "終鈴ラッシュ")
+			_body("90秒間生き延び、できるだけ多くの敵を倒そう。")
+			_body("鐘を撃つと敵が集まる。\n帯電した鐘をもう一度撃つと放電。\n放電で敵をまとめて倒すとボーナスが入る。")
+			_body("最高得点　%d" % _rush_best)
+			_add_menu_actions()
+			_button("開始", _start_rush, true, _menu_actions)
+			_button("戻る", func(): _show_menu("title"), false, _menu_actions)
+		"rush_result":
+			_show_rush_result_content()
 		"pause":
 			_heading("", "一時停止")
 			if _pause_reason == "focus":
@@ -454,12 +493,17 @@ func _layout_menu() -> void:
 		desired_width = 620.0 if compact_landscape else 426.0
 	if is_instance_valid(_settings_layout):
 		_settings_layout.vertical = not compact_landscape
-	if is_instance_valid(_title_actions):
-		_title_actions.vertical = not compact_landscape
+	if is_instance_valid(_content):
+		_content.add_theme_constant_override("separation", 5 if compact_landscape else 8)
+	if _mode == "title" and is_instance_valid(_menu_heading):
+		_menu_heading.add_theme_font_size_override("font_size", 39 if compact_landscape else 46)
+	if is_instance_valid(_menu_actions):
+		_menu_actions.vertical = not compact_landscape
 	var width := minf(available.x - 2.0 * pad, desired_width)
-	var limit := 432.0 if _mode == "settings" or _mode == "title" else 338.0
+	var limit := 432.0 if _mode in ["settings", "title", "rush_briefing"] else 338.0
 	var height := minf(limit, available.y - 2.0 * pad)
-	var x := clampf(available.x * 0.055, pad, 74.0) if _mode == "title" and available.x >= 680.0 else (available.x - width) / 2.0
+	var has_art := _mode in ["title", "rush_briefing", "rush_result"]
+	var x := clampf(available.x * 0.055, pad, 74.0) if has_art and available.x >= 680.0 else (available.x - width) / 2.0
 	_panel.position = Vector2(x, (available.y - height) / 2.0) * menu_scale
 	_panel.size = Vector2(width, height)
 	_panel.scale = Vector2.ONE * menu_scale
@@ -510,9 +554,9 @@ func _label(value: String, font_size: int, color: Color) -> Label:
 func _heading(kicker: String, title: String) -> void:
 	if not kicker.is_empty():
 		_content.add_child(_label(kicker, 14, GOLD))
-	var heading := _label(title, 46 if _mode == "title" else 32, INK)
-	heading.autowrap_mode = TextServer.AUTOWRAP_ARBITRARY
-	_content.add_child(heading)
+	_menu_heading = _label(title, 32, INK)
+	_menu_heading.autowrap_mode = TextServer.AUTOWRAP_ARBITRARY
+	_content.add_child(_menu_heading)
 	var rule := HSeparator.new()
 	rule.add_theme_stylebox_override("separator", _surface(BORDER, BORDER, 0, 0, 1))
 	_content.add_child(rule)
@@ -522,6 +566,11 @@ func _body(value: String) -> Label:
 	label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_content.add_child(label)
 	return label
+
+func _add_menu_actions() -> void:
+	_menu_actions = BoxContainer.new()
+	_menu_actions.add_theme_constant_override("separation", 8)
+	_content.add_child(_menu_actions)
 
 func _button(value: String, action: Callable, primary := false, parent: Container = null) -> Button:
 	var button := Button.new()
@@ -549,6 +598,12 @@ func _start(continued: bool) -> void:
 		_open_rotate_notice()
 		return
 	begin.emit(continued)
+
+func _start_rush() -> void:
+	if _needs_landscape():
+		_open_rotate_notice()
+		return
+	rush_requested.emit()
 
 func _open_rotate_notice() -> void:
 	if is_instance_valid(_content.get_node_or_null("RotateNotice")):
@@ -640,3 +695,13 @@ func _result_rows() -> void:
 		_body("撃破数　%d" % int(_results["kills"]))
 	if _results.has("hp"):
 		_body("残り体力　%d" % int(_results["hp"]))
+
+func _show_rush_result_content() -> void:
+	_heading("生還" if _results["survived"] else "力尽きた", "終鈴ラッシュ")
+	_content.add_child(_label("得点　%d" % int(_results["score"]), 27, GOLD))
+	var best := "最高得点　%d（更新）" if _results["new_best"] else "最高得点　%d"
+	_body(best % int(_results["best"]))
+	_body("撃破　%d体　　放電で一度に最大%d体" % [int(_results["kills"]), int(_results["best_discharge"])])
+	_add_menu_actions()
+	_button("再挑戦", _start_rush, true, _menu_actions)
+	_button("タイトルへ", func(): title_requested.emit(), false, _menu_actions)

@@ -8,6 +8,8 @@ const dist = path.join(root, 'dist');
 const modes = {
   editor: ['--editor'], play: [], import: ['--headless', '--editor', '--import'],
   test: ['--headless','--script','res://tests/campaign.gd'],
+  rush: ['--headless','--script','res://tests/rush_rules.gd'],
+  arcade: ['--headless','--script','res://tests/rush_voyage.gd'],
   combat: ['--headless','--script','res://combat/test_combat.gd'],
   build: ['--headless','--export-release','Web',path.join(dist,'index.html')]
 };
@@ -22,7 +24,7 @@ if (result.error || result.status !== 0 || /SCRIPT ERROR:|^ERROR:|^FAIL:/m.test(
   process.stderr.write(log);
   throw result.error || new Error('Godot ' + command + ' failed');
 }
-if (command === 'test' || command === 'combat') process.stdout.write(log);
+if (['test','combat','rush','arcade'].includes(command)) process.stdout.write(log);
 if (command === 'build') {
   for (const name of ['GODOT-LICENSE.txt','GODOT-COPYRIGHT.txt']) copyFileSync(path.join(root,name),path.join(dist,name));
   for (const [source,dest] of [['title.jpg','cover.jpg'],['NOTO-OFL.txt','NOTO-OFL.txt']]) {

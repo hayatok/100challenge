@@ -1,6 +1,6 @@
 extends Node
 
-const EVENTS := ["fire0","fire1","fire2","reload","switch","empty","flesh","kill","hurt","attack","charge_warning","flare","bell","gate","crash","depart","hum0","hum1","hum2","step0","step1","step2","chain"]
+const EVENTS := ["fire0","fire1","fire2","reload","switch","empty","flesh","kill","hurt","attack","charge_warning","flare","bell","gate","crash","depart","hum0","hum1","hum2","step0","step1","step2","chain","discharge"]
 var samples := {}
 var music := AudioStreamPlayer.new()
 var ambient := AudioStreamPlayer.new()
