@@ -5,7 +5,11 @@ from mathutils import Vector, Euler, Quaternion
 from math import sin, cos, pi, sqrt, atan2, acos
 HERE=Path(__file__).resolve().parent
 sys.path.insert(0,str(HERE))
-from forms import CAST, PALETTE, M, profile, EYES, station_width
+from forms import CAST, PALETTE, M, profile, hair_profile, station_width
+from hair_sculpt import cap_and_locks
+from face_rig import build_face
+from athletic_kit import sleeve, hand, legs, sneaker
+from performance_poses import PERFORMANCE_CLIPS, performance_pose
 from sport_poses import sport_pose, support_geometry
 args=sys.argv[sys.argv.index('--')+1:]
 TEX=Path(args[0]); GAME=HERE.parent/'game'/'racers'
@@ -17,9 +21,9 @@ def pigment(k):
 
 class Surface:
     def __init__(self,name):
-        self.name=name;self.verts=[];self.faces=[];self.uvs=[];self.bones=[]
+        self.name=name;self.verts=[];self.faces=[];self.uvs=[];self.bones=[];self.blends=[]
 
-    def grid(self,rows,bone,color,wrapped=True,reverse=False,tex=None,cap=True):
+    def grid(self,rows,bone,color,wrapped=True,reverse=False,tex=None,cap=True,face_tex=None):
         base=len(self.verts); n=len(rows[0]); nr=len(rows)
         for row in rows:
             self.verts.extend([tuple(v*M for v in p) for p in row])
@@ -33,6 +37,7 @@ class Surface:
                 j=(b+1)%n
                 f=[a*n+b,a*n+j,(a+1)*n+j,(a+1)*n+b]
                 coords=[tex(a,b),tex(a,b+1),tex(a+1,b+1),tex(a+1,b)] if tex else None
+                if face_tex: coords=face_tex(a,b)
                 face(f,coords)
         if cap and wrapped:
             face(list(reversed(range(n)))); face([(nr-1)*n+j for j in range(n)])
@@ -65,6 +70,14 @@ class Surface:
     def polygon(self,pts,bone,color):
         offset=len(self.verts);self.verts.extend([tuple(x*M for x in p) for p in pts])
         self.bones.extend([bone]*len(pts));self.faces.append(tuple(range(offset,offset+len(pts))));self.uvs.append([pigment(color)]*len(pts))
+    def feather(self, first, end, rows, bone, strength):
+        per_row = (end-first)//rows
+        for index in range(first, end):
+            along = ((index-first)//per_row)/(rows-1)
+            t = clamp((along-.37)/.56,0,1)
+            if t:
+                self.blends.append((index,bone,strength*t*t*(3-2*t)))
+
     def object(self,material,rig):
         mesh=bpy.data.meshes.new(self.name);mesh.from_pydata(self.verts,[],self.faces);mesh.update()
         ob=bpy.data.objects.new(self.name,mesh);bpy.context.collection.objects.link(ob)
@@ -76,19 +89,10 @@ class Surface:
         bybone={}
         for i,k in enumerate(self.bones):bybone.setdefault(k,[]).append(i)
         for k,idx in bybone.items():ob.vertex_groups.new(name=k).add(idx,1,'REPLACE')
-        if self.name.startswith('Nagi'):
-            # The rim follows the secondary rig gradually, including the hair cap
-            # under the separate locks. The fringe and painted face stay on Head.
-            locks=[ob.vertex_groups.get(name) or ob.vertex_groups.new(name=name)
-                   for name in ('Lock.R','Lock.L')]
-            head_group=ob.vertex_groups['Head']
-            for vertex in bybone['Head']:
-                x,y,z=(coord/M for coord in self.verts[vertex])
-                peripheral=clamp((abs(x)-57)/29,0,1)*clamp((y+34)/27,0,1)
-                weight=.83*peripheral*clamp((277-z)/60,0,1)
-                if weight:
-                    locks[int(x>0)].add([vertex],weight,'REPLACE')
-                    head_group.add([vertex],1-weight,'REPLACE')
+        for vertex,bone,weight in self.blends:
+            group=ob.vertex_groups.get(bone) or ob.vertex_groups.new(name=bone)
+            group.add([vertex],weight,'REPLACE')
+            ob.vertex_groups[self.bones[vertex]].add([vertex],1-weight,'REPLACE')
         mod=ob.modifiers.new('Competition rig','ARMATURE');mod.object=rig
         ob.parent=rig
         return ob
@@ -107,7 +111,7 @@ def make_material(i):
 def skel(i):
     bones={'Pelvis':((0,0,115),None),'Chest':((0,0,126),'Pelvis'),'Head':((0,0,194),'Chest'),
            'Ornament':((0,15,264),'Head'),'Blink':((0,15,262),'Head')}
-    if i==0:bones['Ornament']=((83,-25,324),'Head')
+    if i==0:bones['Ornament']=((87,-46,324),'Head')
     if i==2:bones['Ornament']=((-28,48,340),'Head')
     if i==3:bones['Ornament']=((0,7,329),'Head')
     if i==5:bones['Ornament']=((41,73,238),'Head')
@@ -132,22 +136,18 @@ def skel(i):
 def head(g,i):
     c=CAST[i]; n=84; steps=48
     rows=[[profile(c,-pi+2*pi*j/n,k/steps) for j in range(n)] for k in range(steps+1)]
-    g.grid(rows,'Head','hair',reverse=True,tex=lambda a,b:uv(1+(1022*b/n),1+509*a/steps))
-    # Soft eyelid appliqués follow the head's actual UV surface. At rest their driving
-    # bone scales them into the skull, leaving the painted open eyes fully exposed.
-    for j,(ex,ey,ew,eh) in enumerate(EYES[i]):
-        coords=[]
-        for b in range(8):
-            y=ey+(b/7-.5)*2.55*eh
-            v=(y-c['stations'][0][0])/(c['stations'][-1][0]-c['stations'][0][0]);row=[]
-            r=station_width(c,y)
-            for a in range(13):
-                x=ex+(a/12-.5)*ew*2.6
-                theta=math.asin(max(-.98,min(.98,(x-c['cx'])/r)))
-                p=V(profile(c,theta,v));p.y-=.46;row.append(p)
-            coords.append(row)
-        g.grid(coords,'Blink','skin',False,True,lambda b,a:uv(300+j*160+139*a/12,640+99*b/7),False)
-    g.oval((0,0,198),(18,14,20),'Chest','skin')
+    g.grid(rows,'Head','hair',reverse=True,tex=lambda a,b:uv(1+(1022*b/n),325+185*a/steps))
+    # Warm ear cups sit behind the free temple locks. The small nose follows
+    # the same curved skin as the eyes and protrudes only near its rounded tip.
+    for sign in (-1,1):
+        xx,yy,zz=profile(c,sign*1.28,.78)
+        g.oval((xx,yy+(9 if i==0 else -2),zz+2),(8.5,6.8,12.8),'Head','skin',18,10)
+        g.oval((xx+sign*4.7,yy+(6 if i==0 else -5.4),zz+1.3),(4.4,3.4,7.4),'Head',23,14,8)
+    nose_row=[157,184,186,181,189,178][i]
+    v=(nose_row-c['stations'][0][0])/(c['stations'][-1][0]-c['stations'][0][0])
+    p=V(profile(c,0,v))
+    g.oval(p+V((0,.45,.8)),(2.85,2.8,2.15),'Head','skin',14,8)
+    g.oval((0,0,198),(17,14,20),'Chest','skin')
 
 def decoration(g,i):
     lock=lambda points,r,b='Ornament',c='hair',flat=.7:g.tube(points,r,b,c,flat,12,3)
@@ -164,21 +164,17 @@ def decoration(g,i):
                 front=len(rings)<4; row=[]
                 for px,py in outline:
                     qx=center[0]+(px-center[0])*t;qy=center[1]+(py-center[1])*t
-                    x=qx-273+4
-                    r=station_width(CAST[0],qy)
-                    if center[1]<60:
-                        yy=-22+(72-qy)*.42+(qx-343)*1.07
-                    elif center[1]<90:
-                        yy=-24+(qx-343)*1.72+(75-qy)*.27
-                    else:
-                        yy=-27+(qx-343)*.89-(qy-76)*.53
+                    # All panels meet at the same temple knot. Project
+                    # them onto the side of the hair, then roll the silk
+                    # away from the scalp around the fold.
                     sy=clamp((qy-21)/177,0,1)
-                    _,mid,_=profile(CAST[0],pi/2,sy)
-                    _,edge,_=profile(CAST[0],0 if yy<mid else pi,sy)
-                    shell=.96*r*sqrt(max(0,1-((yy-mid)/max(1,abs(edge-mid)))**2))
-                    x=max(x,shell+3.5)
-                    x+=(1 if front else -1)*depth*(1-t*t)
-                    yy-=(1 if front else -1)*depth*(1-t*t)
+                    yy=-46+(qx-343)*.96-(qy-75)*.22
+                    _,mid,_=hair_profile(CAST[0],pi/2,sy)
+                    _,edge,_=hair_profile(CAST[0],0 if yy<mid else pi,sy)
+                    r=station_width(CAST[0],qy)
+                    shell=.975*r*sqrt(max(0,1-((yy-mid)/max(1,abs(edge-mid)))**2))
+                    x=max(qx-273+13,shell+7.4)+(1 if front else -1)*depth*(1-t*t)
+                    yy-=(1 if front else -1)*depth*.55*(1-t*t)
                     row.append((x,yy,398-qy))
                 rings.append(row)
             def bow_uv(a,b):
@@ -190,57 +186,89 @@ def decoration(g,i):
         bow_surface([(343,72),(331,68),(321,62),(316,53),(315,41),(316,31),(321,21),(327,15),(332,17),(340,25),(349,35),(352,43),(351,52),(347,62)],(333,45),8)
         bow_surface([(343,72),(349,66),(357,61),(366,60),(374,62),(378,68),(378,79),(375,91),(371,98),(364,98),(354,90),(348,83)],(363,78),7)
         bow_surface([(343,76),(350,79),(359,88),(370,103),(381,118),(377,122),(357,132),(352,130),(348,116),(344,95)],(358,104),4)
-        g.oval((83,-25,325),(10,10,10),'Ornament',15,20)
+        g.oval((87,-46,325),(10,10,10),'Ornament',15,20)
     if i==1:
         for s,sign in [('L',1),('R',-1)]:
             b='Lock.'+s
-            center=V((sign*68,20,334))
-            g.oval(center,(32,29,31),b,'hair',24,12)
-            # Coiled bun sections wind around a diagonal axis, creating the scalloped edge.
+            center=V((sign*70,12,339))
+            g.oval(center,(32.5,28,30),b,'hair',24,12)
+            for lobe in range(6):
+                angle=lobe*2*pi/6
+                coil=[center+V((sign*(25-7*u)*cos(angle+1.26*u),
+                                (22-5*u)*sin(angle+1.26*u),-15+39*u)) for u in (0,.21,.49,.76,1)]
+                lock(coil,[8,12,14,12,3],b,'hair',.89)
             for t in range(6):
-                a=t*2*pi/6
-                coil=[center+V(((35-4*u)*cos(a+u*1.85),(32-5*u)*sin(a+u*1.85),-18+45*u)) for u in [0,.22,.47,.70,1]]
-                lock(coil,[9,12,12,11,4],b,'hair',.84)
-            for t in range(7):
-                a=(t-3)*.34
-                g.oval((sign*(46+27*sin(a)), -11,323-17*sin(a)),(5.5,6,6),b,12,12,6)
-            lock([(sign*82,-18,284),(sign*95,-19,267),(sign*82,-27,246),(sign*89,-30,229),(sign*99,-25,237)],[7,9,7,4,.4],b)
+                phase=t/5
+                g.oval((sign*(49+38*phase),-17.5-8*sin(pi*phase),337-26*phase),
+                       (5.3,6,5.8),b,12,14,7)
+            for j in (0,1):
+                x=sign*(84+7*j)
+                lock([(x,-14+4*j,292-7*j),(x+sign*9,-25,270),
+                      (x-sign*4,-40,252-9*j),(x+sign*6,-38,237-10*j),
+                      (x+sign*13,-30,242-11*j)], [8,11,9,5,.4],b,'hair',.78)
     if i==2:
-        g.oval((-33,49,335),(27,25,16),'Ornament',20)
-        # High fountain ponytail arcs over its tie, behind the left shoulder in front view.
-        for q in [-1,-.5,0,.5,1]:
-            path=[(-30+q*13,54+q*7,338),(-46+q*13,68,365),(-72+q*13,75,363),(-94+q*10,72,337),(-108+q*8,64,289),(-96+q*9,62,236),(-105+q*10,52,188),(-113+q*10,45,149),(-98+q*13,46+q*8,121+q*13),(-72+q*14,50+q*10,146+q*16)]
-            lock(path,[9,13,15,16,16,16,14,12,7,.5],flat=.82)
-        for j in range(4):g.oval((-51+j*13,27,343+j*2),(10,10,10),'Ornament',20)
+        # Separate overlapping waves unfurl from the high tie. Vary the
+        # bend and free end of each lock, including the hollow return loop.
+        for offset in (-1,0,1):
+            q=offset
+            path=[(-30+9*q,47+6*q,338),(-47+9*q,57+7*q,358+5*q),
+                  (-71+11*q,64+8*q,354+6*q),(-86+12*q,68+9*q,322),
+                  (-93+11*q,68+9*q,283),(-85+9*q,63+11*q,249),
+                  (-86+11*q,53+11*q,218),(-106+8*q,42+11*q,186+4*q),
+                  (-111+9*q,34+10*q,154+6*q),(-98+12*q,31+11*q,136+8*q),
+                  (-79+12*q,33+11*q,143+11*q),(-75+12*q,37+11*q,154+11*q)]
+            lock(path,[9,16,19,19,18,16,16,15,13,11,6,.4],flat=.66)
+        g.oval((-33,39,337),(26,19,14),'Ornament',20)
+        for j in range(4):g.oval((-51+j*13,25,343+j*2),(10,10,10),'Ornament',20)
     if i==3:
         # Woven visor band wraps around the skull, and the crescent bill projects forward.
-        z=289
-        # Tilt the brim on the same diagonal as the illustrated visor.
-        band=[]
-        for dz,rx,ry in [(0,86,76),(4,88,77),(15,85,75),(19,82,71)]:
-            band.append([(rx*sin(a*2*pi/64),12-ry*cos(a*2*pi/64),z+dz+15*sin(a*2*pi/64)) for a in range(64)])
+        n=68
+        def visor_band(a,level):
+            z=287+level+15*sin(a)
+            v=clamp((CAST[i]['floor']-z/CAST[i]['k']-50)/166,0,1)
+            p=V(hair_profile(CAST[i],a,v))
+            normal=V((sin(a),-cos(a),0))
+            p+=normal*(9+3.5*max(0,cos(a))+.7*sin(pi*level/39))
+            p.z=z
+            return p
+        band=[[visor_band(-pi+j*2*pi/n,dz) for j in range(n)] for dz in (0,2,11,27,37,39)]
         g.grid(band,'Head',12)
-        br=[]
-        for q in range(7):
-            t=q/6;row=[]
-            for j in range(37):
-                a=-1.38+j*2.76/36
-                row.append(((86+t*14)*sin(a),12-(76+t*38*max(.1,cos(a)))*cos(a),z+4+15*sin(a)+t*(4+7*cos(a))-5*sin(a)**2))
-            br.append(row)
-        g.grid(br,'Head',12,False,True,cap=False)
-        g.tube(br[-1], [2]*len(br[-1]),'Head',29,n=7,steps=1)
+        brim=[]
+        for j in range(8):
+            t=j/7;row=[]
+            for k in range(37):
+                a=-1.43+k*2.86/36
+                p=visor_band(a,3)
+                p+=V((sin(a)*10*t,-(7+15*cos(a))*t,
+                      -3.1*t+3.6*sin(pi*t)))
+                row.append(p)
+            brim.append(row)
+        g.grid(brim,'Head',12,False,True,cap=False)
+        g.tube(brim[-1],[1.85]*len(brim[-1]),'Head',29,n=8,steps=1)
+        def mark(a,z,offset=0):
+            return visor_band(a,z)+V((sin(a),-cos(a),0))*(1.1+offset)
+        g.polygon([mark(-.12,13),mark(.12,13),mark(0,29)],'Head',9)
+        g.polygon([mark(-.028,16,.3),mark(.074,16,.3),mark(-.01,24,.3)],'Head',12)
         lock([(-2,9,350),(-10,13,370),(-27,17,382),(-47,19,383),(-56,21,378)],[8,10,8,4,.5],c='hair')
         for s,sign in [('L',1),('R',-1)]:
             lock([(sign*69,18,300),(sign*87,17,287),(sign*100,10,279),(sign*111,7,284)],[11,11,7,.6],'Lock.'+s)
     if i==4:
         for s,sign in [('L',1),('R',-1)]:
             b='Lock.'+s
-            for j in range(5):
-                cx=sign*(65+2*j)
-                z=211-j*12
-                for cross in [-1,1]:
-                    lock([(cx+cross*9,12,z+11),(cx+cross*9,8+cross*3,z+5),(cx+cross*3,4,z-2),(cx-cross*6,9,z-8)],[6,9-j*.45,8-j*.4,4],b,'hair',.85)
-            lock([(sign*74,12,156),(sign*78,11,143),(sign*81,8,126),(sign*71,7,111),(sign*65,6,111)],[7,12,12,7,.4],b)
+            for strand in range(3):
+                path=[];radii=[]
+                for step in range(24):
+                    t=step/23
+                    phase=t*4.7*pi+strand*2*pi/3
+                    path.append((sign*(65+12*t+(9-3*t)*sin(phase)),
+                                 -5-(6.8-2*t)*cos(phase),224-68*t))
+                    radii.append(8.1-2.8*t)
+                g.tube(path,radii,b,'hair',.81,10,2)
+            for offset in (-1,1):
+                lock([(sign*77,-6+3*offset,156),(sign*(78+4*offset),-7,145),
+                      (sign*(81+4*offset),-9,131),(sign*(74+5*offset),-8,116),
+                      (sign*(68+4*offset),-3+3*offset,114+2*offset)],
+                     [5.4,9.1,9,5,.4],b)
             for p in [-1,1]:
                 lock([(sign*76,0,156),(sign*76+p*11,-1,159),(sign*76+p*16,2,164)],[3,7,5],b,14,.6)
             g.oval((sign*76,-2,156),(5,5,6),b,14)
@@ -252,64 +280,6 @@ def decoration(g,i):
         for t in range(5):
             a=t*1.256
             lock([center+V((25*cos(a),20*sin(a),10)),center+V((31*cos(a+.9),23*sin(a+.9),4)),center+V((20*cos(a+1.8),18*sin(a+1.8),-16)),center+V((4,2,-18))],[8,11,8,3])
-
-def outer_hair(g,i):
-    c=CAST[i]
-    if i==0:
-        # The turnaround's longest face-framing lock curves forward below the
-        # ear and ends in a pointed cheek-length tip. Build its own cross section.
-        for side,sign in [('L',1),('R',-1)]:
-            rows=[]
-            for a in range(15):
-                u=a/14;v=.38+.63*u
-                angle=sign*(.88+.17*sin(pi*u)-.22*u**2)
-                p=V(profile(c,angle,min(1,v)))
-                radial=V((sin(angle),-cos(angle),0));tangent=V((cos(angle),sin(angle),0))
-                p+=radial*(2.4+2.4*sin(pi*u))
-                p.z-=max(0,v-1)*200
-                radius=max(.10,sin(pi*(.035+.965*u))**.72)
-                rows.append([p+tangent*9*radius*sin(b*pi/6)+radial*4.7*radius*cos(b*pi/6)
-                             for b in range(12)])
-            g.grid(rows,'Lock.'+side,'hair',tex=lambda a,b:uv(880+124*b/12,586+211*a/14))
-    # Individual layered locks flare free of the main head at the bob's cut edge.
-    styles=[(12,.28,1.03),(8,.26,1.02),(7,.18,1.02),(9,.30,1.03),(9,.24,1.02),(8,.20,1.03)]
-    count,sweep,end=styles[i]
-    for j in range(count):
-        ang=.96+j*(2*pi-1.92)/(count-1)
-        if abs(ang-pi)<.32:continue
-        start=.21+.09*sin(j*3.1);rows=[];nt=14;nr=10
-        for a in range(nt+1):
-            t=a/nt
-            vc=start+(end-start)*t
-            theta=ang+sweep*sin(t*pi*.90+j*.24)-.16*(1-t)
-            if i==0:
-                # Lower side locks curl forward beside the cheek. Stagger their
-                # ends so that the nape has individual points seen from behind.
-                theta-=math.copysign(.20*t*t,sin(ang))
-                vc+=.025*cos(2*j)*t*t
-            if vc<=1:p=V(profile(c,theta,vc))
-            else:
-                p=V(profile(c,theta,1))
-                p.z-=(vc-1)*130
-                p-=V((sin(theta),-cos(theta),0))*(vc-1)*290
-            norm=V((sin(theta),-cos(theta),.30*(1-t))).normalized();tan=V((cos(theta),sin(theta),0))
-            strength=max(.015,sin(pi*(.02+.98*t))**.58)
-            width=(10+3*sin(j*2.4))*strength
-            depth=(4.6+1.8*sin(j+.4))*strength
-            if i==0:
-                depth*=.83
-            p+=norm*(.4+1.0*sin(pi*t))
-            rows.append([p+tan*(width*sin(b*2*pi/nr))+norm*(depth*cos(b*2*pi/nr)) for b in range(nr)])
-        def lookup(a,b):
-            t=a/nt;theta=ang+sweep*sin(t*pi*.90+j*.24)-.16*(1-t)
-            theta+=(width if a==nt else 8)*sin(b*2*pi/nr)/94
-            if i==0:
-                # Paint stays on the swept geometry instead of exposing the
-                # ear projection as a second coloured patch on the hair.
-                theta-=math.copysign(.20*t*t,sin(ang))
-            theta=(theta+pi)%(2*pi)-pi
-            return uv(1+1022*(theta+pi)/(2*pi),1+min(1,start+(end-start)*t)*509)
-        g.grid(rows,'Head','hair',tex=lookup)
 
 def bib(g,rear=False):
     sign=1 if rear else -1
@@ -324,12 +294,21 @@ def bib(g,rear=False):
     g.grid(rings,'Chest',9,False,rear,lambda a,b:uv(1+254*b/10,600+158*(1-a/6)),False)
 
 def clothes(g,i):
-    torso=[(125,37,24,0,2),(129,39,26,0,2),(138,41,27,0,1),(153,39,28,0,0),(170,36,25.5,0,0),(181,34,23,0,0),(190,29,20,0,1),(197,18,14,0,2)]
+    torso=[(124,35,22.8,0,1.4),(128,37.7,24.8,0,1.7),(132,41,26.2,0,1.6),(138,42.8,27.4,0,1.5),(146,41.6,28.1,0,.9),(155,37.8,27.4,0,.4),(170,36.7,26,0,.2),(181,34.7,23,0,.1),(190,29,20,0,1),(197,18,14,0,2)]
     n=48
-    rings=[[(x+rx*sin(-pi+j*2*pi/n),y-ry*cos(-pi+j*2*pi/n),z) for j in range(n)] for z,rx,ry,x,y in torso]
+    rings=[]
+    for z,rx,ry,x,y in torso:
+        radius=max(0,1-abs(z-138)/18)
+        row=[]
+        for j in range(n):
+            a=-pi+j*2*pi/n
+            side=abs(sin(a))
+            fold=1.6*sin(5*a+.13*z)*side*radius
+            row.append((x+(rx+fold)*sin(a),y-(ry+fold)*cos(a),z+1.3*side*sin(2*a+.7)*radius))
+        rings.append(row)
     g.grid(rings,'Chest','jacket',tex=lambda a,b:uv(1+1022*b/n,819+204*(torso[a][0]-125)/72))
-    for z0,z1,c in [(126,130,'sleeve'),(130,134,9)]:
-        g.loft([(z0,38,25,0,2),(z1,39,26,0,2)],'Chest',c)
+    for z0,z1,c in [(124,126,10),(126,128,'sleeve'),(128,130,9)]:
+        g.loft([(z0,37.7,25.4,0,1.7),(z1,38.9,26.2,0,1.7)],'Chest',c)
     g.tube([(0,-24,127),(0,-28,144),(0,-28.4,157),(0,-24.8,174),(0,-18,189),(0,-13,198)],[2,2,2,1.8,1.7,1.6],'Chest',10,n=8)
     for s in [-1,1]:
         g.polygon([(s*3,-15,194),(s*15,-13,200),(s*26,-12,192),(s*15,-20,182)],'Chest',10 if i in [0,5] else 'sleeve')
@@ -344,174 +323,27 @@ def clothes(g,i):
     g.polygon([(15,-20.8,179),(20,-20,179),(17,-19,186)],'Chest',9 if i in [0,1] else 'jacket')
     g.loft([(109,29,24,0,1),(120,35,25,0,1),(128,35,24,0,1)],'Pelvis','pants')
     for s,k in [('L',1),('R',-1)]:
-        up='UpperArm.'+s;lo='Forearm.'+s;hand='Hand.'+s
-        thigh='Thigh.'+s;shin='Shin.'+s;foot='Foot.'+s
-        def P(x,y,z):return (k*x,y,z)
-        # Raglan jacket sleeves ease out at the elbow, then gather into a striped cuff.
-        def A(x,y,z):
-            return P(x+max(0,x-33)*.30,y,z-max(0,131-z)*.57)
-        g.tube([A(33,1,184),A(39,0,178),A(48,0,164),A(54,-1,153)],[13.5,14.5,13.2,12.5],up,'sleeve',n=16)
-        g.oval(A(54,-1,153),(12.6,12.6,12.6),lo,'sleeve',16)
-        fore_color='skin' if i==3 else 'sleeve'
-        g.tube([A(53,-1,155),A(58,-2,147),A(63,-4,139),A(66,-5,131)],[12.4,12.5,12,10.5],lo,fore_color,n=16)
-        for z,xx,cc in [(137,64,'sock'),(134,65,9),(131,66,'sleeve')]:
-            g.tube([A(xx,-4,z+1.4),A(xx+.8,-5,z-1.4)],[11.2,10.8],lo,cc,n=16,steps=1)
-        if i in [1,2,5]:
-            g.tube([A(40,-7,180),A(46,-9,172),A(51,-10,164),A(54,-9,158)],[1.9,2.2,2.2,1.9],up,9,n=7)
-        g.polygon([A(40,-11,180),A(47,-11,177),A(50,-12,170),A(42,-13,172)],up,9)
-        g.polygon([A(41,-11.4,178.5),A(47,-11.6,176),A(48,-12.5,172)],up,10)
-        # Relaxed hands with a separate thumb and four tapered, curved fingers.
-        g.oval(A(69,-6,124),(8,6.9,11),hand,'skin',16,9)
-        for f in range(4):
-            xx=65+f*3; zz=118+abs(f-1.5)*1.4
-            g.tube([A(xx,-7,zz+5),A(xx+2.2,-8,zz),A(xx+2.7,-9,zz-4+abs(f-1))],[2.5,2.3,1.2],hand,'skin',n=8)
-        g.tube([A(65,-8,126),A(62,-11,122),A(61,-11,117)],[3.4,3,1.5],hand,'skin',n=8)
-        long=i in [2,5]
-        # Shorts or tracksuit trousers with a side stripe and ribbed ankle.
-        g.oval(P(26,0,98),(16,15,27),thigh,'skin')
-        if long:
-            g.tube([P(23,0,121),P(24,1,107),P(27,0,91),P(28,-1,77)],[20,21,20,17],thigh,'pants',n=18)
-            g.tube([P(28,-1,79),P(29,0,65),P(31,2,48),P(32,1,38)],[17,19 if i==5 else 17,19 if i==5 else 14,13],shin,'pants',n=18)
-            for spacing in ([0,3.5] if i==2 else [0]):
-                g.tube([P(41+spacing,-7,120),P(43+spacing,-6,105),P(45+spacing,-6,89),P(44+spacing,-6,77)],[1.2,1.6,1.6,1.3],thigh,9,n=6)
-                g.tube([P(44+spacing,-6,79),P(46+spacing,-5,67),P(47+spacing,-5,51),P(43+spacing,-4,39)],[1.3,1.7,1.6,.9],shin,9,n=6)
-        else:
-            g.tube([P(23,0,121),P(24,0,113),P(25,0,102)],[20,21,20],thigh,'pants',n=20)
-            g.tube([P(25,0,103),P(25.5,0,99)],[20.4,20],thigh,9,n=20,steps=1)
-            g.tube([P(41,-4,120),P(43,-4,113),P(44,-4,104)],[1.8,2,1.8],thigh,9,n=7)
-            g.tube([P(27,-1,82),P(28,-1,75),P(30,1,61),P(32,0,40)],[15.4,15.3,14,12.5],shin,'skin',n=20)
-            g.tube([P(29,0,74),P(30,1,65),P(32,0,43),P(32,0,34)],[16.1,16,13.7,13],shin,9,n=20)
-            g.tube([P(29.5,.5,69),P(30,1,63)],[16.2,16.1],shin,'sock',n=20,steps=1)
-        # Shoes are lasted over an asymmetric toe box; rubber sole has its own rounded lip.
-        x=k*33
-        for rings,cc in [
-            ([(0,25,36,x,-8),(1.6,29,40,x,-8),(4.2,30,41,x,-8)],14),
-            ([(3.1,29.7,41,x,-8),(5,31,42,x,-8),(13,31.5,42.5,x,-8),(16,30.3,41,x,-8)],9),
-            ([(13,29,40,x,-8),(18,30,40.5,x,-8),(24,28.5,36,x,-6),(33,24,30,x,-2),(39,19,20,x,4)],'shoe'),
-            ([(33,19,18,x,5),(39,20,19,x,5),(42,17,16,x,5)],'shoe')]:
-            n=36
-            rows=[]
-            for z,rx,ry,cx,cy in rings:
-                row=[]
-                for j in range(n):
-                    a=-pi+j*2*pi/n
-                    xx=cx+rx*sin(a); yy=cy-ry*cos(a); zz=z
-                    if i==0:
-                        # The profile has a long toe, an upright heel and a
-                        # visible arch cut into the dark outsole underfoot.
-                        toe=max(0,cos(a))
-                        yy+=1.4-8.8*toe*clamp((43-z)/30,0,1)
-                        zz+=2.7*toe**4+4.1*max(0,1-abs(yy-9)/15)*clamp((13-z)/13,0,1)
-                        if 5<=z<=16: zz+=1.7
-                    row.append((xx,yy,zz))
-                rows.append(row)
-            g.grid(rows,foot,cc,tex=lambda a,b:uv(1+685*b/n,761+55*(rings[a][0])/42))
-        g.oval((x,-13,36),(12,15,9),foot,'shoe',16)
-        for q in range(3):
-            y=-17-q*6;z=36-q*3
-            g.tube([(x-14,y+2,z-2),(x-9,y-1,z+.9),(x,y-2,z+2.2),(x+9,y-1,z+1),(x+14,y+1,z-2)],[2,2.6,2.8,2.6,2],foot,9,n=8)
-        g.tube([(x-18,-37,20),(x-13,-43,19),(x,-47,18),(x+13,-43,19),(x+18,-37,20)],[1,1.6,1.7,1.6,1],foot,9,n=7)
-        g.tube([(x+k*16,17,33),(x+k*22,12,29),(x+k*26,4,23),(x+k*29,-3,20)],[2,3,3,1.1],foot,9,n=7)
-        # Raised tread pods are visible during toe-off and jumping.
-        for yy in [-30,-12,7,17]:
-            g.oval((x,yy,.9),(18 if yy<10 else 12,3.8,.9),foot,14,12,4)
+        foot='Foot.'+s
+        sleeve(g,i,s,k)
+        hand(g,s,k)
+        legs(g,i,s,k)
+        sneaker(g,s,k)
 
-CLIPS={'idle':60,'run':20,'jump':24,'land':10,'stumble':24,'fall':24,'finish':48,
-       'sprint':16,'dive':9,'slide':21}
 def clamp(x,a,b):return max(a,min(b,x))
+
 def make_pose(rig,i,state,t,support):
-    pbs=rig.pose.bones
-    swing=2*pi*t
-    for b in pbs:
+    for b in rig.pose.bones:
         b.rotation_mode='QUATERNION'
-        b.rotation_quaternion=Quaternion(); b.location=(0,0,0);b.scale=(1,1,1)
-    if state in ('sprint','dive','slide'):
-        sport_pose(rig,i,state,t,support)
-        return
-    def rotate(name,x=0,y=0,z=0):
-        b=pbs[name];basis=b.bone.matrix_local.to_quaternion()
-        b.rotation_quaternion=basis.inverted()@Euler((x,y,z)).to_quaternion()@basis
-    def translate(name,x,y,z):
-        b=pbs[name];b.location=b.bone.matrix_local.to_quaternion().inverted()@(V((x,y,z))*M)
-    bb=.5-.5*cos(swing)
-    shift=0;lean=0;turn=0;roll=0;head_nod=0;hair=0
-    if state=='idle':
-        shift=1.1*bb;head_nod=.012*cos(swing);hair=.035*sin(swing)
-    if state=='run':
-        shift=-25+11*sin(2*swing);lean=.13; turn=.065*sin(swing);head_nod=.034*cos(2*swing);hair=.10*sin(2*swing-.85)
-    if state=='jump':
-        shift=-4-12*math.exp(-((t-.06)/.11)**2);lean=.14+.12*sin(pi*t);head_nod=-.045*sin(pi*t);hair=.21*sin(2*pi*t-.5)
-    if state=='land':
-        shift=-17*max(0,sin(pi*(.15+.85*t)))**1.5;lean=.24*(1-t);head_nod=.08*sin(pi*t);hair=.23*sin(2*pi*t-.45)*(1-t)
-    if state=='stumble':
-        shift=-8*sin(pi*t);lean=.35*sin(pi*t);roll=.16*sin(4*pi*t)*(1-t);hair=.27*sin(4*pi*t-.4)*(1-t)
-    if state=='fall':
-        shift=-7*sin(pi*t);lean=.18*sin(pi*t);roll=.18*sin(2*pi*t);hair=.25*sin(pi*t)
-    if state=='finish':
-        shift=1.6*bb;head_nod=-.06*bb;hair=.065*sin(swing)
-    translate('Pelvis',0,0,shift)
-    rotate('Chest',lean,roll,turn)
-    rotate('Head',-.66*lean+head_nod,-roll*.42,-turn*.45)
-    rotate('Ornament',hair,.055*sin(swing-.5) if state!='idle' else 0,hair*.48)
-    for side,k in [('L',1),('R',-1)]:
-        phase=(t+(.5 if k<0 else 0))%1
-        th=0;kn=0;ankle=0; arm=0;el=0;sidearm=0;hand=0
-        if state=='idle':
-            arm=-.045*bb;el=-.10-.05*bb
-            if i==3 and k>0:
-                arm=-1.75*bb;el=-1.4*bb;sidearm=.94*bb
-        if state=='run':
-            # Two-link leg IK anchors soles throughout the support half of the cycle.
-            if phase<.28:
-                q=phase/.28;ay=-57+117*q
-                rise=15*max(0,(q-.72)/.28)**2
-                toe=.30*max(0,(q-.72)/.28)**2
-            else:
-                q=(phase-.28)/.72;ay=1.5+58.5*cos(q*pi);rise=15*(1-q)+35*sin(q*pi);toe=.3*(1-q)-.22*sin(q*pi)
-            length=clamp(sqrt(ay*ay+(116+shift-37-rise)**2),12,78.7)
-            kn=acos(clamp((length*length-39*39-40*40)/(2*39*40),-1,1))
-            th=atan2(ay,(116+shift-37-rise))-atan2(40*sin(kn),39+40*cos(kn))
-            ankle=-th-kn+toe
-            arm=.68*cos(phase*2*pi-.08);el=-.85+.25*sin(phase*2*pi);sidearm=.06
-        if state=='jump':
-            apex=sin(pi*t);early=math.exp(-((t-.07)/.14)**2)
-            th=(-1.19 if k>0 else .17)*apex-.42*early
-            kn=(.55 if k>0 else 1.35)*apex+.86*early
-            ankle=-.48*(th+kn)
-            arm=(-.94 if k<0 else .52)*apex;el=-.34-.33*early
-            sidearm=.48*apex+.14;hand=-.2*apex
-        if state=='land':
-            compression=max(0,sin(pi*(.15+.85*t)))
-            th=(-.70 if k>0 else -.39)*compression
-            kn=(1.31 if k>0 else 1.04)*compression
-            ankle=-th-kn;arm=-.92*compression;el=-.32*compression
-            sidearm=(.59 if i==1 else .25)*compression
-        if state in ['fall','stumble']:
-            th=(-.52 if k>0 else .45)*sin(pi*t);kn=.47*sin(pi*t)
-            ankle=-th*.6;arm=-.25+(.74 if k>0 else -.88)*sin(swing)
-            el=-.43;sidearm=.92*sin(pi*t)+.1
-        if state=='finish':
-            if i==4:
-                arm=-1.79 if k>0 else -.05;el=-1.16 if k>0 else -.1; sidearm=.52 if k>0 else .03
-            elif i==5:
-                sidearm=(.99+.24*sin(swing*2)) if k>0 else .05;el=(-1.14-.2*bb) if k>0 else -.1
-            else:
-                arm=-.48-.22*bb;el=-1.05-.13*bb;sidearm=.94+.12*bb
-        rotate('Thigh.'+side,th)
-        rotate('Shin.'+side,kn)
-        rotate('Foot.'+side,ankle)
-        rotate('UpperArm.'+side,arm,-k*sidearm)
-        rotate('Forearm.'+side,el)
-        rotate('Hand.'+side,hand,0,k*sidearm*.15)
-        rotate('Lock.'+side,hair*(1 if i==4 else .7),k*hair*.45)
-    blink=1. if ((state=='idle' and .80<t<.88) or (state=='land' and .14<t<.43) or (state=='stumble' and t<.24) or (state=='finish' and .80<t<.89)) else .01
-    pbs['Blink'].scale=(blink,blink,blink)
+        b.rotation_quaternion=Quaternion()
+        b.location=(0,0,0)
+        b.scale=(1,1,1)
+    performance_pose(rig,i,state,t,support)
+
 def actions(rig,i,support):
     anim=rig.animation_data_create()
-    for state,frames in CLIPS.items():
+    for state,frames in PERFORMANCE_CLIPS.items():
         act=bpy.data.actions.new(f'{CAST[i]["name"]}_{state}');anim.action=act
         for frame in range(frames+1):
-            if state not in ('run','sprint','dive','slide') and frame%2 and frame!=frames:continue
             make_pose(rig,i,state,frame/frames,support)
             for b in rig.pose.bones:
                 b.keyframe_insert('rotation_quaternion',frame=frame,group=b.name)
@@ -527,10 +359,16 @@ def main():
     rigs=[]
     for i,c in enumerate(CAST):
         rig=skel(i);g=Surface(c['name']+'_painted_mesh')
-        head(g,i);outer_hair(g,i);decoration(g,i);clothes(g,i)
-        ob=g.object(make_material(i),rig);actions(rig,i,support_geometry(g))
+        head(g,i);cap_and_locks(g,i);decoration(g,i);clothes(g,i)
+        material=make_material(i)
+        ob=g.object(material,rig);face=build_face(i,rig,material)
+        # Contact solvers sample the owner of the deformed surface. The
+        # sleeve cuff, knee and hair tips may be driven by the following bone.
+        for vertex,bone,weight in g.blends:
+            if weight>=.5:g.bones[vertex]=bone
+        actions(rig,i,support_geometry(g))
         rig.rotation_euler.z=pi
-        bpy.ops.object.select_all(action='DESELECT');rig.select_set(True);ob.select_set(True)
+        bpy.ops.object.select_all(action='DESELECT');rig.select_set(True);ob.select_set(True);face.select_set(True)
         bpy.context.view_layer.objects.active=rig;bpy.context.view_layer.update()
         bpy.ops.export_scene.gltf(filepath=str(GAME/f'{i+1:02}.glb'),export_format='GLB',use_selection=True,export_animations=True,export_animation_mode='NLA_TRACKS',export_force_sampling=True,export_frame_step=1,export_optimize_animation_size=True,export_yup=True,export_apply=False,export_cameras=False,export_lights=False)
         rigs.append(rig)

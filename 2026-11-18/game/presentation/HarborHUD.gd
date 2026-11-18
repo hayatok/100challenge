@@ -378,7 +378,7 @@ func _layout() -> void:
 	_place(jump, right_edge-106, bottom_edge-6-jump_h, 106, jump_h)
 	var boost_h := maxf(48, min_hit)
 	_place(boost, right_edge-99, bottom_edge-jump_h-14-boost_h, 99, boost_h)
-	_place(count, 0, h*0.25, w, 105)
+	_place(count, left_edge, top_edge + 13.0, 99, 92)
 	var pause_h := maxf(366.0, pause_stack.get_combined_minimum_size().y + 16.0)
 	_place(pause_panel, centered_x, (top_edge+bottom_edge-pause_h)*0.5, width, pause_h)
 	_place(pause_stack, 20, 8, width-40, pause_h-16)
@@ -390,6 +390,8 @@ func set_mode(value: String) -> void:
 	mode = value
 	title.visible = mode == "title"
 	race.visible = mode in ["countdown", "racing"]
+	rank_panel.visible = mode == "racing"
+	course_progress.visible = mode == "racing"
 	pause_screen.visible = mode == "paused"
 	result_panel.visible = mode == "result"
 	left.visible = mode == "racing"

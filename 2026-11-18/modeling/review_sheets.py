@@ -47,8 +47,16 @@ for n,(name,cx,lo,hi) in enumerate([('front',273,150,390),('side',603,515,740),(
 g.line((10,329,1090,329),fill='#d8c8b9',width=1)
 g.text((13,332),'EXPORTED GLB  /  ORTHOGRAPHIC',font=small,fill=blue)
 panel.save(out/'nagi-turnaround.webp',quality=90)
-team=Image.new('RGB',(1390,1048),cream)
-for y,title,im in [(0,'REFERENCE  /  CAST SHEET',source('racers.png')),(342,'EXPORTED GLBS  /  FRONT',Image.open(render/'cast-front.png')),(692,'EXPORTED GLBS  /  REAR',Image.open(render/'cast-rear.png'))]:
+face_sheet=Image.new('RGB',(1324,330),cream)
+for column,(name,im) in enumerate((('DRAWING',ref.crop((150,11,390,202))),
+        ('EXPORTED GLB  /  FRONT',Image.open(render/'face-front.png')),
+        ('ELEVATED 23 DEGREES',Image.open(render/'face-raised.png')),
+        ('THREE-QUARTER',Image.open(render/'face-quarter.png')))):
+    label_text(face_sheet,10+330*column,8,name)
+    face_sheet.paste(fit(im,(320,275)),(5+330*column,40))
+face_sheet.save(out/'nagi-face.webp',quality=93)
+team=Image.new('RGB',(1390,1392),cream)
+for y,title,im in [(0,'REFERENCE  /  CAST SHEET',source('racers.png')),(342,'EXPORTED GLBS  /  FRONT',Image.open(render/'cast-front.png')),(692,'EXPORTED GLBS  /  THREE-QUARTER',Image.open(render/'cast-quarter.png')),(1040,'EXPORTED GLBS  /  REAR',Image.open(render/'cast-rear.png'))]:
     label_text(team,16,y+4,title)
     if y==0:im=im.crop((0,25,im.width,690))
     im=fit(im,(1372,315));team.paste(im,(9,y+28))
@@ -77,4 +85,12 @@ draw.text((12,33),'NAGI  /  GLB PROFILE',font=small,fill=blue)
 draw.line((9,251,1315,251),fill='#d8c8b9')
 draw.text((12,257),'REAR THREE-QUARTER',font=small,fill=blue)
 strip.save(out/'sport-motion.webp',quality=88)
+performance=Image.new('RGB',(1272,902),cream)
+for r,(clip,title) in enumerate((('ready','PRE-RACE'),('launch','FIRST PUSH'),('finish','FINISH'),('finish_win','WIN'))):
+    y=224*r
+    label_text(performance,10,y+4,title)
+    for i in range(6):
+        frame=bg(Image.open(render/f'performance-{i}-{clip}.png'))
+        performance.paste(frame.resize((198,198),Image.Resampling.LANCZOS),(9+210*i,y+24))
+performance.save(out/'performance.webp',quality=90)
 (out/'silhouette.json').write_text(json.dumps({'alignment':'bounding-box height and horizontal centre, neutral poses','iou':mask_scores},indent=2)+'\n')

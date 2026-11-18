@@ -2,7 +2,7 @@
 
 赤いリボンのナギと5人のライバルが走る、スマホ縦持ちの3D障害物レース。潮風ふ頭では選手の重みで浮き橋が傾く。夕焼けコンテナヤードではクレーンが吊ったコンテナが水路を横切る。その屋根に飛び乗るか、加速を残して外の桟橋を回ろう。
 
-[ブラウザで遊ぶ](https://hayatok.github.io/100challenge/2026-11-18/) · [夕焼けコンテナヤードのプレイ映像（音声あり）](docs/verification/v02-yard.mp4)
+[ブラウザで遊ぶ](https://hayatok.github.io/100challenge/2026-11-18/) · [2コースのプレイ映像（音声あり）](docs/verification/v03-performance.mp4)
 
 ## 操作
 
@@ -22,7 +22,7 @@
 
 Godot 4.7.2で `game/project.godot` を開く。追走カメラと注視点はメインシーンの `game/HarborRace.tscn` にある。シーンエディタで `game/course/Course.tscn` を開くと潮風ふ頭を、`game/course/Yard.tscn` を開くとコンテナヤードを見渡せる。ヤードの床幅や足場の大きさを変えるときは `game/race/YardLayout.gd` を編集し、`game/course/BuildYard.gd` でシーンを再生成する。
 
-6人の衣装、骨格、走りとダイブの動きは[Blenderの原本](modeling/ribbon-rally.blend)に収録した。音楽と効果音の生成元は `scripts/make_audio.py`。GodotとフォントのライセンスはWeb版に同梱する。
+6人の髪や衣装、顔の動き、スタート前からゴール後までのポーズは[Blenderの原本](modeling/ribbon-rally.blend)に収録した。音楽と効果音の生成元は `scripts/make_audio.py`。GodotとフォントのライセンスはWeb版に同梱する。
 
 このフォルダで次のコマンドを使える。Linux x86-64では `setup` がエディタも取得する。macOSとWindowsではGodot 4.7.2をインストールしてから実行する。
 
@@ -37,6 +37,7 @@ npm run dev
 ## 原画と試遊記録
 
 - [ナギの原画とモデルの三面比較](modeling/review/nagi-turnaround.webp)と[6人の正面・背面](modeling/review/cast.webp)。ライバル5人の後ろ姿は正面の設定画から補った。
-- [加速・ダイブ・立ち上がりのポーズ](modeling/review/sport-motion.webp)と[モデルの計測記録](modeling/README.md)。ナギのリボンは原画と比べて横から見ると少し前に付いている。
+- [同じカメラで写した旧版と新版のナギ](docs/verification/v03-character.webp)、[6人の表情](modeling/review/expressions.webp)、[加速・ダイブ・立ち上がりのポーズ](modeling/review/sport-motion.webp)。
+- [v0.3の試遊と計測](docs/verification/v0.3.md)と[Blenderモデルの作り方](modeling/README.md)。
 - [v0.2の試遊と計測](docs/verification/v0.2.md)、[iPhoneのSafariシミュレーターで走った水路の分岐](docs/verification/v02-yard-safari.jpg)、[ダイブ中の画面](docs/verification/v02-dive-safari.jpg)。
 - [初版の潮風ふ頭のプレイ映像](docs/verification/gameplay.mp4)と[原画・ゲーム仕様](docs/game-design.md)、[v0.2の開発計画](docs/v0.2-plan.md)。

@@ -1,7 +1,7 @@
 """Render exported GLBs back in a clean Blender scene; no source-scene objects are used."""
 import bpy, sys, math
 from pathlib import Path
-from mathutils import Vector
+from mathutils import Vector, Quaternion
 from math import pi
 HERE=Path(__file__).resolve().parent
 root=HERE.parent
@@ -38,7 +38,7 @@ def act(arm,name,fraction):
     if not arm.animation_data:return
     for tr in arm.animation_data.nla_tracks:
         tr.mute=True
-        if tr.name.lower().startswith(name):
+        if tr.name.lower()==name:
             strip=tr.strips[0]
             arm.animation_data.action=strip.action
             if strip.action_slot:arm.animation_data.action_slot=strip.action_slot
@@ -53,15 +53,42 @@ if '--sport' in args:
         for index,(name,fraction) in enumerate([('sprint',.13),('sprint',.63),('dive',.82),
                                                 ('slide',0),('slide',.40),('slide',.88)]):
             act(arm,name,fraction);save(f'{view}-{index}')
+elif '--performance' in args:
+    # Per-racer accent frames, sampled directly from the exported actions.
+    # Keep identical camera scale and floor level for every pose.
+    for i in range(6):
+        rt,arm=add(i)
+        cam_side=(1 if i==3 else -1)*2.1
+        camera((cam_side,4,1.21),(0,.02,.76),1.74,334,334)
+        beats=(('ready',(.28,.44,.26,.42,.50,.33)[i]),('launch',.67),
+               ('finish',(.40,.46,.41,.48,.52,.50)[i]),
+               ('finish_win',(.40,.46,.41,.48,.52,.50)[i]))
+        for clip,phase in beats:
+            act(arm,clip,phase)
+            save(f'performance-{i}-{clip}')
+        for ob in list(rt)+list(arm.children_recursive):ob.hide_render=True
 elif '--single' in args:
     rt,arm=add(0);act(arm,'idle',0)
     for name,pos in [('front',(0,4,.78)),('side',(-4,0,.78)),('rear',(0,-4,.78)),('three-quarter',(-2.2,4,1.25))]:
         camera(pos,(0,0,.75),1.66,390,390);save(name)
+    for name,yaw,pitch in [('face-front',0,0),('face-raised',0,23),('face-quarter',12,15)]:
+        a,e=math.radians(yaw),math.radians(pitch)
+        ray=Vector((math.sin(a)*math.cos(e),math.cos(a)*math.cos(e),math.sin(e)))
+        aim=Vector((0,.04,1.13))
+        camera(aim+ray*4,aim,1.12,468,400)
+        save(name)
 else:
     for i in range(6):
         roots,arm=add(i);act(arm,'idle',0)
         for r in roots:r.location.x=-(i-2.5)*.98
     camera((0,7,.85),(0,0,.76),6,1560,420);save('cast-front')
+    for roots,arm in models:
+        for ob in roots:ob.rotation_mode='QUATERNION';ob.rotation_quaternion=Quaternion((0,0,1),.48)@ob.rotation_quaternion
+    save('cast-quarter')
+    for roots,arm in models:
+        for ob in roots:
+            ob.rotation_quaternion=Quaternion((0,0,1),-.48)@ob.rotation_quaternion
+            ob.location.x=-ob.location.x
     camera((0,-7,1.45),(0,0,.75),6,1560,420);save('cast-rear')
     for i,(roots,arm) in enumerate(models):
         for r in roots:r.hide_render=i>0
