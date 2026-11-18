@@ -2,6 +2,9 @@ extends Node
 
 var track := preload("res://media/regatta.wav") as AudioStreamWAV
 const CUES := {
+	"boost": preload("res://media/boost.wav"),
+	"dive": preload("res://media/dive.wav"),
+	"slide": preload("res://media/slide.wav"),
 	"count": preload("res://media/count.wav"),
 	"go": preload("res://media/go.wav"),
 	"step": preload("res://media/step.wav"),

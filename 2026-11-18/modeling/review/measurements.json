@@ -1,24 +1,27 @@
 [
   {
     "bib": 1,
-    "height_m": 1.4999,
+    "height_m": 1.5012,
     "bounds_blender_xyz_m": [
       [
-        -0.4702,
-        -0.509,
+        -0.447,
+        -0.5017,
         -0.0
       ],
       [
-        0.4468,
-        0.2832,
-        1.4999
+        0.4332,
+        0.3067,
+        1.5012
       ]
     ],
-    "triangles": 26984,
-    "glb_bytes": 1848916,
+    "triangles": 27696,
+    "glb_bytes": 1909912,
     "bones": 19,
     "surfaces": 1,
     "clips": [
+      "slide",
+      "dive",
+      "sprint",
       "finish",
       "fall",
       "stumble",
@@ -27,6 +30,24 @@
       "run",
       "idle"
     ],
+    "dive_reach_ahead_of_head_m": [
+      0.129,
+      0.125
+    ],
+    "slide_contacts_at_normalized_phase": {
+      "0": {
+        "lowest_part": "Forearm.R",
+        "height_m": 0.0
+      },
+      "0.4": {
+        "lowest_part": "Chest",
+        "height_m": 0.0
+      },
+      "0.88": {
+        "lowest_part": "Foot.L",
+        "height_m": -0.0004
+      }
+    },
     "left_sole_support_Y_up_m": {
       "run": [
         [
@@ -51,11 +72,11 @@
         ],
         [
           0.25,
-          0.0066
+          0.0116
         ],
         [
           0.28,
-          0.0183
+          0.0226
         ]
       ],
       "land": [
@@ -79,6 +100,44 @@
           1,
           0.0
         ]
+      ],
+      "sprint": [
+        [
+          0,
+          0.0014
+        ],
+        [
+          0.05,
+          -0.0021
+        ],
+        [
+          0.1,
+          -0.0012
+        ],
+        [
+          0.15,
+          -0.0013
+        ],
+        [
+          0.2,
+          0.0024
+        ],
+        [
+          0.25,
+          0.0135
+        ],
+        [
+          0.28,
+          0.0362
+        ],
+        [
+          0.5,
+          0.2057
+        ],
+        [
+          0.63,
+          0.2244
+        ]
       ]
     }
   },
@@ -98,10 +157,13 @@
       ]
     ],
     "triangles": 33684,
-    "glb_bytes": 1819640,
+    "glb_bytes": 1872904,
     "bones": 19,
     "surfaces": 1,
     "clips": [
+      "slide",
+      "dive",
+      "sprint",
       "finish",
       "fall",
       "stumble",
@@ -109,7 +171,25 @@
       "jump",
       "run",
       "idle"
-    ]
+    ],
+    "dive_reach_ahead_of_head_m": [
+      0.093,
+      0.098
+    ],
+    "slide_contacts_at_normalized_phase": {
+      "0": {
+        "lowest_part": "Forearm.L",
+        "height_m": -0.0
+      },
+      "0.4": {
+        "lowest_part": "Chest",
+        "height_m": 0.0
+      },
+      "0.88": {
+        "lowest_part": "Foot.R",
+        "height_m": -0.0004
+      }
+    }
   },
   {
     "bib": 3,
@@ -127,10 +207,13 @@
       ]
     ],
     "triangles": 30160,
-    "glb_bytes": 1669092,
+    "glb_bytes": 1723748,
     "bones": 19,
     "surfaces": 1,
     "clips": [
+      "slide",
+      "dive",
+      "sprint",
       "finish",
       "fall",
       "stumble",
@@ -138,7 +221,25 @@
       "jump",
       "run",
       "idle"
-    ]
+    ],
+    "dive_reach_ahead_of_head_m": [
+      0.181,
+      0.176
+    ],
+    "slide_contacts_at_normalized_phase": {
+      "0": {
+        "lowest_part": "Forearm.L",
+        "height_m": -0.0
+      },
+      "0.4": {
+        "lowest_part": "Chest",
+        "height_m": 0.0
+      },
+      "0.88": {
+        "lowest_part": "Foot.L",
+        "height_m": -0.0004
+      }
+    }
   },
   {
     "bib": 4,
@@ -156,10 +257,13 @@
       ]
     ],
     "triangles": 27778,
-    "glb_bytes": 1639516,
+    "glb_bytes": 1693944,
     "bones": 19,
     "surfaces": 1,
     "clips": [
+      "slide",
+      "dive",
+      "sprint",
       "finish",
       "fall",
       "stumble",
@@ -167,7 +271,25 @@
       "jump",
       "run",
       "idle"
-    ]
+    ],
+    "dive_reach_ahead_of_head_m": [
+      0.038,
+      0.043
+    ],
+    "slide_contacts_at_normalized_phase": {
+      "0": {
+        "lowest_part": "Forearm.L",
+        "height_m": -0.0
+      },
+      "0.4": {
+        "lowest_part": "Chest",
+        "height_m": 0.0
+      },
+      "0.88": {
+        "lowest_part": "Foot.R",
+        "height_m": -0.0004
+      }
+    }
   },
   {
     "bib": 5,
@@ -185,10 +307,13 @@
       ]
     ],
     "triangles": 32884,
-    "glb_bytes": 1832288,
+    "glb_bytes": 1886268,
     "bones": 19,
     "surfaces": 1,
     "clips": [
+      "slide",
+      "dive",
+      "sprint",
       "finish",
       "fall",
       "stumble",
@@ -196,7 +321,25 @@
       "jump",
       "run",
       "idle"
-    ]
+    ],
+    "dive_reach_ahead_of_head_m": [
+      0.116,
+      0.121
+    ],
+    "slide_contacts_at_normalized_phase": {
+      "0": {
+        "lowest_part": "Forearm.L",
+        "height_m": -0.0
+      },
+      "0.4": {
+        "lowest_part": "Chest",
+        "height_m": 0.0
+      },
+      "0.88": {
+        "lowest_part": "Foot.R",
+        "height_m": -0.0004
+      }
+    }
   },
   {
     "bib": 6,
@@ -214,10 +357,13 @@
       ]
     ],
     "triangles": 26444,
-    "glb_bytes": 1557532,
+    "glb_bytes": 1611704,
     "bones": 19,
     "surfaces": 1,
     "clips": [
+      "slide",
+      "dive",
+      "sprint",
       "finish",
       "fall",
       "stumble",
@@ -225,6 +371,24 @@
       "jump",
       "run",
       "idle"
-    ]
+    ],
+    "dive_reach_ahead_of_head_m": [
+      0.125,
+      0.121
+    ],
+    "slide_contacts_at_normalized_phase": {
+      "0": {
+        "lowest_part": "Forearm.L",
+        "height_m": -0.0
+      },
+      "0.4": {
+        "lowest_part": "Chest",
+        "height_m": 0.0
+      },
+      "0.88": {
+        "lowest_part": "Foot.L",
+        "height_m": -0.0004
+      }
+    }
   }
 ]

@@ -1,9 +1,12 @@
 extends Control
 
 signal start_requested
+signal course_requested(id: String)
+signal course_menu_requested
 signal pause_requested
 signal resume_requested
 signal jump_requested
+signal boost_requested
 signal steering_changed(direction: int)
 signal option_changed(option: String, value: bool)
 
@@ -15,6 +18,7 @@ const GOLD := Color("#ffd26e")
 const FACE := preload("res://media/HarborUI.otf")
 const PORTRAIT := preload("res://media/title-portrait.jpg")
 const WIDE := preload("res://media/cover.jpg")
+const Courses := preload("res://Courses.gd")
 const MIN_HIT_PIXELS := 44.0
 
 var title := Control.new()
@@ -29,6 +33,10 @@ var halt := Button.new()
 var left := Button.new()
 var right := Button.new()
 var jump := Button.new()
+var boost := Button.new()
+var boost_label := Label.new()
+var flags := Control.new()
+var boosts_left := 2
 var course_progress := ProgressBar.new()
 var count := Label.new()
 var marker := Label.new()
@@ -40,7 +48,11 @@ var result_stack := VBoxContainer.new()
 var result_rank := Label.new()
 var result_time := Label.new()
 var result_retry := Button.new()
-var go := Button.new()
+var result_courses := Button.new()
+var pause_courses := Button.new()
+var course_buttons: Array[Button] = []
+var instructions := Label.new()
+var last_course := Courses.YARD
 var resume := Button.new()
 var restart := Button.new()
 var reduce := CheckButton.new()
@@ -142,12 +154,39 @@ func _build_title() -> void:
 	title_panel.add_child(title_stack)
 	title_stack.alignment = BoxContainer.ALIGNMENT_CENTER
 	title_stack.add_theme_constant_override("separation", 6)
-	var course_name := Label.new()
-	_label(course_name, title_stack, "潮風ふ頭", 31, INK)
-	var instructions := Label.new()
-	_label(instructions, title_stack, "左右にドラッグ　・　タップでジャンプ", 15, INK)
-	_button(go, title_stack, "レース開始　▶", true, 22)
-	go.pressed.connect(func(): start_requested.emit())
+	_label(Label.new(), title_stack, "コースを選ぶ", 22, INK)
+	var choices := HBoxContainer.new()
+	title_stack.add_child(choices)
+	choices.add_theme_constant_override("separation", 9)
+	for id: String in Courses.ORDER:
+		var card := Button.new()
+		_button(card, choices, "")
+		card.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		card.accessibility_name = Courses.DATA[id].name + "でレース開始"
+		var inside := VBoxContainer.new()
+		card.add_child(inside)
+		inside.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		inside.offset_left = 5
+		inside.offset_right = -5
+		inside.offset_top = 5
+		inside.offset_bottom = -3
+		inside.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		inside.add_theme_constant_override("separation", 2)
+		var photo := TextureRect.new()
+		inside.add_child(photo)
+		photo.texture = load(Courses.DATA[id].photo)
+		photo.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		photo.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+		photo.size_flags_vertical = Control.SIZE_EXPAND_FILL
+		photo.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		_label(Label.new(), inside, Courses.DATA[id].name, 16, INK)
+		course_buttons.append(card)
+		card.pressed.connect(_pick.bind(id))
+	_label(instructions, title_stack, "", 14, INK)
+
+func _pick(id: String) -> void:
+	last_course = id
+	course_requested.emit(id)
 
 func _build_race() -> void:
 	_panel(rank_panel, race, NAVY, CREAM, 17)
@@ -164,6 +203,23 @@ func _build_race() -> void:
 		btn.button_up.connect(_hold.bind(btn, false))
 	_button(jump, race, "ジャンプ", true, 18)
 	jump.button_down.connect(func(): jump_requested.emit())
+	_button(boost, race, "")
+	var row := HBoxContainer.new()
+	boost.add_child(row)
+	row.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	row.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	row.alignment = BoxContainer.ALIGNMENT_CENTER
+	row.add_theme_constant_override("separation", 4)
+	_label(boost_label, row, "加速", 17, INK)
+	flags.custom_minimum_size = Vector2(27, 18)
+	flags.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	flags.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	row.add_child(flags)
+	flags.draw.connect(_draw_flags)
+	boost.button_down.connect(func(): boost_requested.emit())
+	for button: Button in [jump, boost]:
+		button.add_theme_stylebox_override("disabled", _box(Color("#d7cdb8"), INK, 14, 2))
+		button.add_theme_color_override("font_disabled_color", INK)
 	race.add_child(course_progress)
 	course_progress.show_percentage = false
 	course_progress.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -174,6 +230,30 @@ func _build_race() -> void:
 	_label(count, race, "", 66)
 	_outline(count, 11)
 	count.z_index = 4
+
+func _draw_flags() -> void:
+	for i in 2:
+		var x := 2.0 + i * 13.0
+		var edge := INK if i < boosts_left else Color("#777568")
+		flags.draw_line(Vector2(x, 2), Vector2(x, 16), edge, 1.8, true)
+		var flag := PackedVector2Array([Vector2(x, 2), Vector2(x+9, 2), Vector2(x+6, 5.6), Vector2(x+9, 9), Vector2(x, 9)])
+		flags.draw_colored_polygon(flag, RED if i < boosts_left else Color("#ded5bd"))
+		flag.append(flag[0])
+		flags.draw_polyline(flag, edge, 1.0, true)
+
+func set_actions(runner: Dictionary) -> void:
+	var airborne: bool = runner.state == "jump" or runner.state == "dive"
+	var caption := "ダイブ" if airborne else "ジャンプ"
+	if jump.text != caption:
+		jump.text = caption
+		jump.accessibility_name = caption
+	var ready: bool = runner.grounded and runner.stagger <= 0.0 and runner.state != "slide"
+	jump.disabled = not (ready or runner.dive_ready)
+	boost.disabled = not ready or runner.boosts_left == 0 or runner.boost_left > 0.0
+	if boosts_left != runner.boosts_left or boost.accessibility_name.is_empty():
+		boosts_left = runner.boosts_left
+		boost.accessibility_name = "加速　残り%d回" % boosts_left
+		flags.queue_redraw()
 
 func _hold(btn: Button, pressed: bool) -> void:
 	if btn == left:
@@ -206,6 +286,8 @@ func _build_pause() -> void:
 	resume.pressed.connect(func(): resume_requested.emit())
 	_button(restart, pause_stack, "最初から")
 	restart.pressed.connect(func(): start_requested.emit())
+	_button(pause_courses, pause_stack, "コース選択")
+	pause_courses.pressed.connect(func(): course_menu_requested.emit())
 
 func _on_option(value: bool, option: String) -> void:
 	option_changed.emit(option, value)
@@ -219,6 +301,8 @@ func _build_result() -> void:
 	_label(result_time, result_stack, "", 17, INK)
 	_button(result_retry, result_stack, "もう一度　▶", true, 21)
 	result_retry.pressed.connect(func(): start_requested.emit())
+	_button(result_courses, result_stack, "コース選択", false, 17)
+	result_courses.pressed.connect(func(): course_menu_requested.emit())
 
 func _place(control: Control, x: float, y: float, w: float, h: float) -> void:
 	control.position = Vector2(x, y)
@@ -247,20 +331,23 @@ func _layout() -> void:
 	var units_per_pixel := maxf(w / maxf(1.0, pixels.x), h / maxf(1.0, pixels.y))
 	var min_hit := ceilf(MIN_HIT_PIXELS * units_per_pixel)
 	safe *= units_per_pixel
-	for button: Button in [go, left, right, halt, jump, resume, restart, result_retry]:
+	for button: Button in [left, right, halt, jump, boost, resume, restart, result_retry, result_courses, pause_courses]:
 		button.custom_minimum_size = Vector2(maxf(48.0, min_hit), maxf(50.0, min_hit))
+	for card: Button in course_buttons:
+		card.custom_minimum_size = Vector2(min_hit, maxf(84.0, min_hit))
 	for toggle: CheckButton in [reduce, sound, music]:
 		toggle.custom_minimum_size.y = maxf(44.0, min_hit)
 
 	var portrait := w < h * 0.95
+	instructions.text = "ドラッグで移動　タップでジャンプ、空中でダイブ" if portrait or DisplayServer.is_touchscreen_available() else "← → 移動　スペースでジャンプ・ダイブ　Shiftで加速"
 	var inset := 20.0
 	var left_edge := inset + safe.x
 	var top_edge := inset + safe.y
 	var right_edge := w - inset - safe.z
 	var bottom_edge := h - inset - safe.w
-	var width := minf(right_edge - left_edge, 346.0)
+	var width := minf(right_edge - left_edge, 408.0)
 	var centered_x := (left_edge + right_edge - width) * 0.5
-	var panel_h := maxf(161.0, title_stack.get_combined_minimum_size().y + 10.0)
+	var panel_h := maxf(167.0, title_stack.get_combined_minimum_size().y + 16.0)
 	if portrait:
 		poster.texture = PORTRAIT
 		# Keep the entire lettering and foreground face in view on narrow phones.
@@ -276,7 +363,7 @@ func _layout() -> void:
 		var cover_scale := maxf(available.x / artwork_size.x, available.y / artwork_size.y)
 		_place(poster, safe.x, safe.y, artwork_size.x * cover_scale, artwork_size.y * cover_scale)
 		_place(title_panel, right_edge-width-10, bottom_edge-panel_h-10, width, panel_h)
-	_place(title_stack, 16, 5, width-32, panel_h-10)
+	_place(title_stack, 10, 6, width-20, panel_h-12)
 	_place(rank_panel, left_edge, top_edge, 109, 61)
 	_place(rank_caption, 0, 3, 109, 19)
 	_place(rank_label, 0, 14, 109, 43)
@@ -289,6 +376,8 @@ func _layout() -> void:
 	_place(left, left_edge, bottom_edge-6-arrow_h, arrow_w, arrow_h)
 	_place(right, left_edge+arrow_w+4, bottom_edge-6-arrow_h, arrow_w, arrow_h)
 	_place(jump, right_edge-106, bottom_edge-6-jump_h, 106, jump_h)
+	var boost_h := maxf(48, min_hit)
+	_place(boost, right_edge-99, bottom_edge-jump_h-14-boost_h, 99, boost_h)
 	_place(count, 0, h*0.25, w, 105)
 	var pause_h := maxf(366.0, pause_stack.get_combined_minimum_size().y + 16.0)
 	_place(pause_panel, centered_x, (top_edge+bottom_edge-pause_h)*0.5, width, pause_h)
@@ -306,6 +395,7 @@ func set_mode(value: String) -> void:
 	left.visible = mode == "racing"
 	right.visible = mode == "racing"
 	jump.visible = mode == "racing"
+	boost.visible = mode == "racing"
 	marker.visible = mode == "racing"
 	count.text = ""
 	left_held = false
@@ -318,7 +408,7 @@ func set_mode(value: String) -> void:
 	elif mode == "result":
 		result_retry.grab_focus()
 	elif mode == "title":
-		go.grab_focus()
+		course_buttons[Courses.ORDER.find(last_course)].grab_focus()
 	elif get_viewport().gui_get_focus_owner():
 		get_viewport().gui_get_focus_owner().release_focus()
 
@@ -344,10 +434,10 @@ func set_marker(screen_position: Vector2) -> void:
 	marker.size = Vector2(44, 28)
 	marker.position = screen_position - Vector2(22, 25)
 
-func show_result(rank: int, seconds: float) -> void:
+func show_result(rank: int, seconds: float, course_name: String) -> void:
 	set_mode("result")
 	result_rank.text = "優勝！" if rank == 1 else "%d位でゴール！" % rank
-	result_time.text = "%d位 / 6人　　%.2f 秒" % [rank, seconds]
+	result_time.text = "%s　 %.2f 秒" % [course_name, seconds]
 
 func set_options(motion: bool, sfx: bool, song: bool) -> void:
 	reduce.set_pressed_no_signal(motion)
@@ -355,7 +445,7 @@ func set_options(motion: bool, sfx: bool, song: bool) -> void:
 	music.set_pressed_no_signal(song)
 
 func over_race_button(point: Vector2) -> bool:
-	for btn: Button in [left, right, halt, jump]:
+	for btn: Button in [left, right, halt, jump, boost]:
 		if btn.is_visible_in_tree() and btn.get_global_rect().has_point(point):
 			return true
 	return false

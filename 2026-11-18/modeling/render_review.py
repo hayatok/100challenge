@@ -42,10 +42,18 @@ def act(arm,name,fraction):
             strip=tr.strips[0]
             arm.animation_data.action=strip.action
             if strip.action_slot:arm.animation_data.action_slot=strip.action_slot
-            sc.frame_set(round(strip.action.frame_range[0]+fraction*(strip.action.frame_range[1]-strip.action.frame_range[0])))
+            frame=strip.action.frame_range[0]+fraction*(strip.action.frame_range[1]-strip.action.frame_range[0])
+            sc.frame_set(int(frame),subframe=frame-int(frame))
 def save(name):
     sc.render.filepath=str(out/(name+'.png'));bpy.ops.render.render(write_still=True)
-if '--single' in args:
+if '--sport' in args:
+    _,arm=add(0)
+    for view,position in [('profile',(-5,.06,.81)),('chase',(-1.65,-4.6,2.55))]:
+        camera(position,(0,.03,.76),1.94,380,346)
+        for index,(name,fraction) in enumerate([('sprint',.13),('sprint',.63),('dive',.82),
+                                                ('slide',0),('slide',.40),('slide',.88)]):
+            act(arm,name,fraction);save(f'{view}-{index}')
+elif '--single' in args:
     rt,arm=add(0);act(arm,'idle',0)
     for name,pos in [('front',(0,4,.78)),('side',(-4,0,.78)),('rear',(0,-4,.78)),('three-quarter',(-2.2,4,1.25))]:
         camera(pos,(0,0,.75),1.66,390,390);save(name)

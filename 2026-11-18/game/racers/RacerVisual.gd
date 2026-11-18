@@ -34,13 +34,16 @@ func pose(state: String, elapsed: float, phase: float, steer: float) -> void:
 	var duration := player.get_animation(state).length
 	var t: float
 	match state:
-		"run":
+		"run", "sprint":
 			t = fposmod(phase, 1.0) * duration
 		"jump":
 			t = clampf(elapsed / FLIGHT_SECONDS, 0.0, 1.0) * duration
+		"slide":
+			t = clampf(elapsed / Race.SLIDE_SECONDS, 0.0, 1.0) * duration
 		"idle", "finish":
 			t = fposmod(elapsed, duration)
 		_:
+			# A long fall holds the last reaching pose of the dive.
 			t = clampf(elapsed, 0.0, duration)
 	player.seek(t, true)
-	model.rotation.z = clampf(steer, -1.0, 1.0) * (0.075 if state == "run" else 0.035)
+	model.rotation.z = clampf(steer, -1.0, 1.0) * (0.075 if state in ["run", "sprint"] else 0.035)

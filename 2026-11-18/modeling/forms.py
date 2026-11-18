@@ -32,6 +32,20 @@ def station_width(c, y):
             return ra+(rb-ra)*max(0,(y-a)/(b-a))
     return stations[-1][1]
 
+# Side silhouette samples, registered to the ankle at x=603 on the 1,250 px sheet.
+# The bangs project past the nose. Behind them the cheeks taper towards the neck.
+NAGI_SIDE = [(21,603,632),(35,570,682),(55,548,704),(75,534,716),
+             (100,526,726),(119,526,730),(128,532,731),(136,548,731),
+             (147,550,730),(158,545,726),(168,547,721),(181,554,708),
+             (191,568,694),(198,583,677)]
+
+def side_edges(y):
+    for (a,front,rear),(b,next_front,next_rear) in zip(NAGI_SIDE,NAGI_SIDE[1:]):
+        if y<=b:
+            t=max(0,(y-a)/(b-a))
+            return front+(next_front-front)*t,rear+(next_rear-rear)*t
+    return NAGI_SIDE[-1][1:]
+
 def profile(c, theta, v):
     """Surface in design pixels; +Y is rear, +X the subject's left."""
     top, bottom=c['stations'][0][0],c['stations'][-1][0]
@@ -43,6 +57,18 @@ def profile(c, theta, v):
     front=(.87-.21*v*v)*r
     rear=(.99+.04*v)*r
     y=15-(front if f>=0 else rear)*f
+    if c is CAST[0]:
+        face,occiput=side_edges(sy)
+        centre=(face+occiput)*.5
+        y=centre-603-(occiput-face)*.5*f
+        if f>0:
+            # Pair the pupil in the front and side drawings. At portrait row
+            # 145, x=305 in front corresponds to x≈565 on the profile.
+            # A deep cheek carries this same eye around into the side view.
+            band=max(0,min(1,(sy-116)/18))*max(0,min(1,(200-sy)/18))
+            y+=26*sin(2*abs(theta))*band
+        # The illustrated fringe curves around the cheeks below the ears.
+        x*=1-.040*(.6+.4*cos(theta)**2)
     if f>0:
         y-=3*exp(-(theta/.16)**2-((v-.77)/.08)**2)
     z=(c['floor']-sy)*c['k']

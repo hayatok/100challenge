@@ -27,11 +27,32 @@ for i in range(1,7):
     bounds=[[round(min(p[j] for p in points),4) for j in range(3)],[round(max(p[j] for p in points),4) for j in range(3)]]
     mesh.data.calc_loop_triangles()
     row={'bib':i,'height_m':round(bounds[1][2]-bounds[0][2],4),'bounds_blender_xyz_m':bounds,'triangles':len(mesh.data.loop_triangles),'glb_bytes':file.stat().st_size,'bones':len(arm.data.bones),'surfaces':len(mesh.material_slots),'clips':list(tracks)}
+    # The reimported rig faces +Y in Blender. Measure the leading surface of
+    # each hand against the actual head mesh and the lowest rigidly bound
+    # surfaces at the three contact beats.
+    groups={group.name:[] for group in mesh.vertex_groups}
+    for vertex in mesh.data.vertices:
+        weight=max(vertex.groups,key=lambda item:item.weight)
+        groups[mesh.vertex_groups[weight.group].name].append(vertex.index)
+    ev=pose('dive',.82)
+    vertices=[ev.matrix_world@v.co for v in ev.data.vertices]
+    face=max(vertices[j].y for j in groups['Head'])
+    row['dive_reach_ahead_of_head_m']=[
+        round(max(vertices[j].y for j in groups['Hand.'+side])-face,3) for side in ('L','R')]
+    contacts={}
+    for fraction in (0,.4,.88):
+        ev=pose('slide',fraction)
+        vertices=[ev.matrix_world@v.co for v in ev.data.vertices]
+        floor,part=min((min(vertices[j].z for j in ids),name)
+                       for name,ids in groups.items() if ids and name!='Blink')
+        contacts[str(fraction)]={'lowest_part':part,'height_m':round(floor,4)}
+    row['slide_contacts_at_normalized_phase']=contacts
     if i==1:
         gi=mesh.vertex_groups['Foot.L'].index
         ids=[v.index for v in mesh.data.vertices if any(g.group==gi and g.weight>.99 for g in v.groups)]
         row['left_sole_support_Y_up_m']={}
-        for state,fractions in [('run',[0,.05,.10,.15,.20,.25,.28]),('land',[0,.25,.50,.75,1])]:
+        for state,fractions in [('run',[0,.05,.10,.15,.20,.25,.28]),('land',[0,.25,.50,.75,1]),
+                                ('sprint',[0,.05,.10,.15,.20,.25,.28,.50,.63])]:
             arr=[]
             for frac in fractions:
                 ev=pose(state,frac)

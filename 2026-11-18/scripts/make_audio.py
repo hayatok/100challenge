@@ -99,6 +99,26 @@ def cues():
         play(out,i*.125,.35,lambda t,f=f: math.sin(TAU*f*t)*min(1,t/.008)*math.exp(-12*t),.62)
     pcm(OUT/"finish.wav",out)
 
+    # Air cutting past the ribbon, followed by a short cloth-on-wood landing.
+    for name, length in [("boost", .24), ("dive", .18), ("slide", .25)]:
+        out = []
+        filtered = 0.0
+        for i in range(round(length * RATE)):
+            t = i / RATE
+            u = t / length
+            filtered += 0.14 * (rng.uniform(-1, 1) - filtered)
+            envelope = math.sin(math.pi * u) ** (1.2 if name == "boost" else .8)
+            if name == "boost":
+                tone = math.sin(TAU * (290*t + 1000*t*t))
+                value = .30 * tone + .63 * filtered
+            elif name == "dive":
+                tone = math.sin(TAU * (410*t - 740*t*t))
+                value = .13 * tone + .90 * filtered
+            else:
+                value = filtered * (1.05 + .38 * math.sin(TAU * 29*t)) * (1-u)
+            out.append(envelope * value)
+        pcm(OUT/(name+".wav"), out)
+
 
 if __name__ == "__main__":
     soundtrack()
