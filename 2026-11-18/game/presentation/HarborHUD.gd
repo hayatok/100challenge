@@ -270,7 +270,11 @@ func _layout() -> void:
 		_place(title_panel, centered_x, title_top, width, panel_h)
 	else:
 		poster.texture = WIDE
-		_place(poster, 0, 0, w, h)
+		# The logo is printed in the upper left. Crop the lower edge first on wide displays.
+		var artwork_size := WIDE.get_size()
+		var available := Vector2(w - safe.x - safe.z, h - safe.y - safe.w)
+		var cover_scale := maxf(available.x / artwork_size.x, available.y / artwork_size.y)
+		_place(poster, safe.x, safe.y, artwork_size.x * cover_scale, artwork_size.y * cover_scale)
 		_place(title_panel, right_edge-width-10, bottom_edge-panel_h-10, width, panel_h)
 	_place(title_stack, 16, 5, width-32, panel_h-10)
 	_place(rank_panel, left_edge, top_edge, 109, 61)
