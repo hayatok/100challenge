@@ -66,6 +66,7 @@ namespace Evac
                 foreach(var curb in parkedFleet)Add(curb.center.x,curb.center.y,curb.width,curb.height,2.8f);
             foreach(var box in DistrictLandmarks.Solids(index))Add(box.x,box.z,box.width,box.depth,box.height);
             foreach(var box in ApproachBlocks.Solids(index)) Add(box.x,box.z,box.width,box.depth,box.height);
+            AddRefugeFurniture(index);
             foreach(var solid in solids)
             {
                 var r=solid.walking;

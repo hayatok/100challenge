@@ -1,4 +1,5 @@
 mergeInto(LibraryManager.library,{
+    InspectFloodColumns: function() { return new URLSearchParams(location.search).get('flood-columns')==='1'?1:0; },
     InspectDutyFailure: function(sector,expected,unchanged) {
         var audit=window.evacInspection||(window.evacInspection={buttons:{}});
         audit.duty={sector:sector,expected:expected,unchanged:!!unchanged};

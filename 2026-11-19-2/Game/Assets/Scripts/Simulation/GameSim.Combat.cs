@@ -36,6 +36,7 @@ namespace Evac
             if(!IsDuty)StepSearch(dt);
             StepDistrictIncident(dt);
             PrepareWing(dt);
+            PrepareColumns();
             ScreenArea(dt);
             CheckDutySite();
             foreach(var u in state.units)
@@ -64,7 +65,8 @@ namespace Evac
                 }
                 else if(IsCivilian(u))
                 {
-                    if(IsWingAide(u))ServeWingAide(u,dt);
+                    if(a.column>0)StepColumnPerson(u,dt);
+                    else if(IsWingAide(u))ServeWingAide(u,dt);
                     else if(WingPassenger(u))RouteWingPassenger(u,dt);
                     else if(WingResident(u))FollowWing(u,dt);
                     else if(RideDistrictCart(u)){}
@@ -74,10 +76,11 @@ namespace Evac
                     else if(a.auxiliary)RequestPatient(u);else Civilian(u,a,dt);
                 }
                 else Infected(u,a,dt);
-                u.escortId=IsSoldier(u) && ChapterHandsBusy(u) && ChapterResident!=null ? ChapterResident.id : a.escort;
+                u.escortId=ColumnHandsBusy(u)?ColumnCarriedId(1):IsSoldier(u) && ChapterHandsBusy(u) && ChapterResident!=null ? ChapterResident.id : a.escort;
                 u.carryingCargo=a.cargo || (IsSoldier(u) && ChapterHandsBusy(u) && ChapterResident==null);
             }
             if(Result!=SimResult.Active)return;
+            CheckColumns();
             HandleSector();
             BeginChapterRetreat();
             bool alive=false;
@@ -113,9 +116,9 @@ namespace Evac
             float distance=Mathf.Min(delta.magnitude,speed*slowdown*dt);
             var previous=u.pos;
             var next=walkMap.Move(previous,previous+delta.normalized*distance);
-            u.pos=FleetEnabled?MoveAroundFleet(u,next):next;
+            u.pos=LimitStretcherPush(u,FleetEnabled?MoveAroundFleet(u,next):next);
             u.moving=FlatSq(previous,u.pos)>.000001f;
-            if(u.moving)u.yaw=Mathf.Atan2(delta.x,delta.z)*Mathf.Rad2Deg;
+            if(u.moving || ColumnHandsBusy(u))u.yaw=Mathf.Atan2(delta.x,delta.z)*Mathf.Rad2Deg;
             return (goal-u.pos).sqrMagnitude<.28f;
         }
 
@@ -132,6 +135,7 @@ namespace Evac
         void Soldier(Unit u,ActorMemory a,float dt)
         {
             var group=state.squads[u.squad];var order=(SquadOrder)group.order;
+            if(ColumnCrew(u,dt))return;
             if(TravelWing(u,dt))return;
             if(DeployingBeacon(u,dt))return;
             if(TravelToAlarm(u,dt))return;
@@ -236,10 +240,11 @@ namespace Evac
             bool lamp=!bell && BeaconLures(e,target);
             bool broadcast=!bell && !lamp && WingActive && WingRegion==2 && WingDone(1) && (Wing.alternateMask&2)==0 &&
                 Wing.crowdArrived<2 && e.pos.z>92 && (target==null || FlatSq(target.pos,e.pos)>9);
-            bool diverted=bell || lamp || broadcast;
+            bool columnPA=!bell && !lamp && !broadcast && ColumnsActive && !MarketColumn && Line(0).open && !Line(0).finished && e.pos.z>20 && (target==null || FlatSq(target.pos,e.pos)>9);
+            bool diverted=bell || lamp || broadcast || columnPA;
             e.distracted=diverted;
             if(bell)AlarmAttracted++;
-            Vector3 goal=bell?AlarmApproach(e):lamp?BeaconPoint:broadcast?WingPosition(0):target==null?(FleetEnabled?FleetVehiclePosition(0):Route.exit):target.pos;
+            Vector3 goal=bell?AlarmApproach(e):lamp?BeaconPoint:broadcast?WingPosition(0):columnPA?ColumnControlPoint(0):target==null?(FleetEnabled?FleetVehiclePosition(0):Route.exit):target.pos;
             float range=target==null?2.9f:1.45f;
             if(e.windup>0)
             {
@@ -330,7 +335,8 @@ namespace Evac
             if(u.kind==UnitKind.Infected)state.kills++;
             else if(IsCivilian(u))
             {
-                if(IsWingAide(u)){SoundNotice(u.name+"が補給所で倒れました");}
+                if(Brain(u).column>0){Brain(u).columnOutcome=3;Line(Brain(u).column-1).lost++;SoundNotice(u.name+"を失いました");}
+                else if(IsWingAide(u)){SoundNotice(u.name+"が補給所で倒れました");}
                 else if(WingPassenger(u)){SoundNotice(u.name+"を失いました");}
                 else if(WingResident(u)){Wing.lost=true;SoundNotice(u.name+"を失いました");}
                 else if(IsChapterLiaison(u)){Chapter.liaisonLost=true;SoundNotice(u.name+"が補給に戻れません");}
@@ -370,7 +376,7 @@ namespace Evac
 
         bool StartReload(Unit u)
         {
-            if(u==null || ChapterHandsBusy(u) || u.vaultDuration>0 || u.reload>0 || u.ammo>=18 || u.reserve<=0 || Brain(u).escort>=0 || Brain(u).cargo)return false;
+            if(u==null || ColumnHandsBusy(u) || ChapterHandsBusy(u) || u.vaultDuration>0 || u.reload>0 || u.ammo>=18 || u.reserve<=0 || Brain(u).escort>=0 || Brain(u).cargo)return false;
             u.reload=1.55f;return true;
         }
         public bool Reload() => Result==SimResult.Active && StartReload(Controlled);
@@ -381,9 +387,9 @@ namespace Evac
             var a=Brain(u);
             if(u.dodgeTime>0){u.yaw=yaw;return;}
             worldDirection.y=0;worldDirection=Vector3.ClampMagnitude(worldDirection,1);
-            float speed=a.escort>=0 || ChapterHandsBusy(u)?2.7f:a.cargo?3f:5.3f;
+            float speed=a.escort>=0 || ColumnHandsBusy(u) || ChapterHandsBusy(u)?2.7f:a.cargo?3f:5.3f;
             if(u.hp<40)speed*=.72f;
-            u.pos=AvoidFleetBodies(geometry.Move(u.pos,u.pos+worldDirection*speed*Mathf.Clamp(dt,0,.25f)));
+            u.pos=LimitStretcherPush(u,AvoidFleetBodies(geometry.Move(u.pos,u.pos+worldDirection*speed*Mathf.Clamp(dt,0,.25f))));
             u.yaw=yaw;u.moving=worldDirection.sqrMagnitude>.001f;
         }
         public bool Dodge(Vector3 worldDirection)
@@ -392,7 +398,7 @@ namespace Evac
             if(u==null || u.vaultDuration>0 || Result!=SimResult.Active || u.dodgeTime>0 || u.hp<40)return false;
             var a=Brain(u);
             float cost=u.wounded?.68f:.56f;
-            if(a.escort>=0 || a.cargo || ChapterHandsBusy(u) || u.stamina<cost || a.stun>0)return false;
+            if(a.escort>=0 || a.cargo || ColumnHandsBusy(u) || ChapterHandsBusy(u) || u.stamina<cost || a.stun>0)return false;
             worldDirection.y=0;
             if(worldDirection.sqrMagnitude<.01f)
                 worldDirection=Quaternion.Euler(0,u.yaw+90,0)*Vector3.forward;
@@ -416,7 +422,7 @@ namespace Evac
         public bool Shoot(Vector3 aimDirection)
         {
             var s=Controlled;
-            if(s==null || ChapterHandsBusy(s) || s.vaultDuration>0 || s.dodgeTime>0 || Result!=SimResult.Active || s.reload>0 || s.ammo<=0 || Brain(s).escort>=0 || Brain(s).cargo || Brain(s).fireDelay>0)return false;
+            if(s==null || ColumnHandsBusy(s) || ChapterHandsBusy(s) || s.vaultDuration>0 || s.dodgeTime>0 || Result!=SimResult.Active || s.reload>0 || s.ammo<=0 || Brain(s).escort>=0 || Brain(s).cargo || Brain(s).fireDelay>0)return false;
             LastShotHit=false;
             Vector3 aim=aimDirection.normalized;
             if(aim.sqrMagnitude<.9f)return false;

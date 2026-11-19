@@ -55,7 +55,7 @@ namespace Evac
             Vector2 walk=ControlPreferences.Movement();
             Vector2 look=Vector2.zero;
             var soldier=sim.Controlled;
-            bool canAim=soldier.reload<=0 && soldier.dodgeTime<=0 && soldier.vaultDuration<=0 && !soldier.carryingCargo && soldier.escortId<0;
+            bool canAim=PushedColumn<0 && soldier.reload<=0 && soldier.dodgeTime<=0 && soldier.vaultDuration<=0 && !soldier.carryingCargo && soldier.escortId<0;
             focusAim=canAim && (TouchUI?touchAim:HasMouseLook && Input.GetMouseButton(1));
             aimBlend=Mathf.MoveTowards(aimBlend,focusAim?1:0,dt*(focusAim?6.2f:8f));
             if(TouchUI)
@@ -114,7 +114,7 @@ namespace Evac
                 if(t.phase==TouchPhase.Began)
                 {
                     if(ui.BlocksPointer(t.position))continue;
-                    if(Vector2.Distance(t.position,FireCenter)<radius*.95f && fireFinger<0) fireFinger=id;
+                    if(PushedColumn<0 && Vector2.Distance(t.position,FireCenter)<radius*.95f && fireFinger<0) fireFinger=id;
                     else if(t.position.x<Screen.width*.42f&&moveFinger<0){moveFinger=id;touchOrigin=t.position;}
                     else if(lookFinger<0){lookFinger=id;}
                 }
@@ -271,6 +271,7 @@ namespace Evac
             BeaconTag();
             ChapterMarker();
             WingMarker();
+            ColumnMarkers();
             WaypointMarkers();
             if(blendingView)return;
             if(sim.Controlled!=null)
@@ -283,15 +284,16 @@ namespace Evac
                     Box(cx-134,cy+28,268,31,new Color(.05f,.08f,.07f,.88f));
                     GUI.Label(new Rect(cx-134,cy+28,268,31),"クリックで視点操作",worldText);
                 }
+                bool handsFree=PushedColumn<0;
                 float gap=5+recoil*5, len=4;
                 Color c=hitTime>0?new Color(1,.66f,.28f):new Color(.86f,.93f,.84f,.88f);
-                if(aimBlend<.88f || hitTime>0)
+                if(handsFree && (aimBlend<.88f || hitTime>0))
                 {
                     c.a*=hitTime>0?1:1-aimBlend;
                     Box(cx-gap-len,cy,len,1.5f,c);Box(cx+gap,cy,len,1.5f,c);
                     Box(cx,cy-gap-len,1.5f,len,c);Box(cx,cy+gap,1.5f,len,c);
                 }
-                if(aimBlend>.5f)
+                if(handsFree && aimBlend>.5f)
                 {
                     float dot=Mathf.Clamp(Screen.height*.0032f,1.8f,4);
                     Box(cx-dot*.5f,cy-dot*.5f,dot,dot,new Color(1,.30f,.17f,aimBlend));
@@ -304,14 +306,14 @@ namespace Evac
                     sim.OrderFor(pawn.squad)==SquadOrder.Engineer?"作業地点":"集合場所";
                 Vector3 tag=next+Vector3.up*1.85f;
                 float distance=Vector3.Distance(pawn.pos,next);
-                if(!chapterOnSite && distance>3)WorldTag(tag,hint+" "+Mathf.RoundToInt(distance)+"m",new Color(1,.84f,.50f),false);
+                if(handsFree && !chapterOnSite && distance>3)WorldTag(tag,hint+" "+Mathf.RoundToInt(distance)+"m",new Color(1,.84f,.50f),false);
                 if(TouchUI)
                 {
                     float r=ThumbRadius;
                     var home=moveFinger>=0?touchOrigin:new Vector2(Screen.width*.13f,Screen.height*.23f);
                     Pad(home,r,"移動",moveFinger>=0);
                     if(moveFinger>=0)Pad(home+touchWalk*r*.63f,r*.32f,"",true);
-                    Pad(FireCenter,r*.77f,"射撃",fireFinger>=0);
+                    if(handsFree)Pad(FireCenter,r*.77f,"射撃",fireFinger>=0);
                 }
             }
             else

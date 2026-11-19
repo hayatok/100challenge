@@ -109,7 +109,7 @@ namespace Evac
             if (Event.current.type == EventType.Repaint) pointerBlocks.Clear();
             if (lastPhase != G.Phase)
             {
-                wingOpen = bookOpen = requestOpen = requestLog = fieldDispatchOpen = fleetOpen = searchDeskOpen = false;
+                columnDesk = wingOpen = bookOpen = requestOpen = requestLog = fieldDispatchOpen = fleetOpen = searchDeskOpen = false;
                 dutyMenuOpen = false;
                 settingsOpen = creditsOpen = dispatchOpen = fieldPanel = orderPickerOpen = false;
                 continueFailed = false;
@@ -127,7 +127,7 @@ namespace Evac
 
             if (G.Phase == "Playing" && lastMode != G.Mode)
             {
-                wingOpen = bookOpen = requestOpen = fieldDispatchOpen = fleetOpen = searchDeskOpen = false;
+                columnDesk = wingOpen = bookOpen = requestOpen = fieldDispatchOpen = fleetOpen = searchDeskOpen = false;
                 fieldPanel = orderPickerOpen = false;
                 lastMode = G.Mode;
                 if (lastMode == "FPS" && !directGuideSeen)
@@ -159,6 +159,7 @@ namespace Evac
                 case "Briefing": DrawBriefing(); break;
                 case "Playing":
                     if (wingOpen && !G.IsDuty && (Field.WingActive || Field.WingComplete)) DrawWing();
+                    else if (bookOpen && columnDesk && !G.IsDuty && Field.ColumnCount>0) DrawColumnDesk();
                     else if (bookOpen && !G.IsDuty) DrawBook();
                     else if (searchDeskOpen && !G.IsDuty) DrawSearchDesk();
                     else if (fieldDispatchOpen && !G.IsDuty) FieldDesk();

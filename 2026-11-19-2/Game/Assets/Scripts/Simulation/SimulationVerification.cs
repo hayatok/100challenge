@@ -72,6 +72,7 @@ namespace Evac
                 new GameSim().VerifyLateResponses(report);
                 new GameSim().VerifyFieldTools(report);
                 new GameSim().VerifyWing(report);
+                new GameSim().VerifyColumns(report);
                 report.AppendLine(GameSim.VerifyWaypointOrders());
                 DutyVerification.Run(report);
                 VerifyCrowd(report);
@@ -157,6 +158,7 @@ namespace Evac
                         if(game.DistrictOutcome(game.Sector)==0 && game.DistrictAssignment(0)<0 &&
                             (index>0 || game.Boarded>=game.SectorGoal))
                             game.DispatchDistrict(0,game.Sector,(index+game.Sector)%2==0);
+                        game.DriveColumnInspection();
                         game.DriveWingInspection();
                         game.Tick(.1f);
                         // Enter the same simulation, spend an actual round, then save and resume mid-reload.
@@ -193,7 +195,7 @@ namespace Evac
                     Check(game.Result==SimResult.Victory,difficulty+" mission "+(index+1)+" failed: "+game.Objective+" sector="+game.Sector+" boarded="+game.Boarded+" delivered="+game.Delivered+" fails="+game.Lost+" passage="+game.PassageOpen+" elapsed="+game.Elapsed+" vehicle="+game.VehicleHealth+" district="+game.DistrictProgress(game.Sector)+" assigned="+game.DistrictAssignment(0)+" pos="+game.Units[0].pos+game.FleetDiagnostics());
                     Check(game.Units.Count(c=>c.boarded)==game.Boarded,"Vehicle count mismatch");
                     Check(game.CampaignRescued==rescuedAtStart+game.Boarded && game.IsComplete(index),"Campaign transfer");
-                    report.AppendLine("Mission "+(index+1)+" "+game.Boarded+"/"+mission.population+", "+game.Elapsed.ToString("0.0")+"s, supplies "+game.Stock+", kills "+game.Kills);
+                    report.AppendLine("Mission "+(index+1)+" "+game.Boarded+"/"+mission.population+", "+game.Elapsed.ToString("0.0")+"s, supplies "+game.Stock+", kills "+game.Kills+(game.ColumnCount>0?", extra passengers "+game.CampaignColumnRescued(index)+", sheltered "+game.CampaignColumnSheltered(index):""));
                     if(index<7) Check(game.Next(),"Next operation");
                 }
                 Check(!game.Next() && game.Unlocked==7,"Ending");
@@ -397,6 +399,7 @@ namespace Evac
             for(int step=0;step<2300 && !game.CanDepart;step++)
             {
                 if(game.ChapterPhase==3){FirstPersonChapter(game);continue;}
+                if(game.ColumnsActive && !game.ColumnsComplete)game.ManualColumnTrip(0,1);
                 if(game.WingActive && !game.WingComplete && game.Sector==game.SectorCount-1 && game.DistrictOutcome(game.Sector)!=0){
                     game.ManualWingTrip(0,1);game.ManualWingTrip(2,0);game.ManualWingTrip(4,0);
                 }

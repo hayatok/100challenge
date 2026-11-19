@@ -68,6 +68,7 @@ namespace Evac
                 if (CanDepart) return "出発可能。残る住民を待つか、出発を指示";
                 if(IsDuty)return DutyObjective();
                 if(ChapterField)return ChapterTitle+"　"+ChapterInstruction;
+                if(ColumnsActive && !ColumnsComplete && Sector==SectorCount-1)return ColumnTitle(ColumnFinished(0)?1:0)+"　"+ColumnStatus(ColumnFinished(0)?1:0);
                 if(FleetDecisionPending)return FleetReport;
                 if(WingActive && !WingComplete && Sector==SectorCount-1)return WingTitle+"　"+WingStatus;
                 if(Boarded>=SectorGoal && DistrictOutcome(Sector)==0)return SectorName+"　"+DistrictWorkLabel(Sector);
@@ -96,11 +97,11 @@ namespace Evac
         void SoundNotice(string message) { Notice=message; NoticeSerial++; }
 
         public void StartMission(int index,Difficulty difficulty)=>StartOperation(index,difficulty,false);
-        void StartOperation(int index,Difficulty difficulty,bool duty,bool useWing=true)
+        void StartOperation(int index,Difficulty difficulty,bool duty,bool useWing=true,bool useColumns=true)
         {
             int n=Mathf.Clamp(index,0,Missions.Length-1);
             bool training=!duty && n==0;
-            state=new MissionMemory { wingRevision=duty || !useWing?0:1, wing=duty || !useWing?null:new WingMemory(), duty=duty, index=n, difficulty=Mathf.Clamp((int)difficulty,0,2),random=(uint)(71109+n*179),
+            state=new MissionMemory { columnVersion=!duty && useColumns && (n==0 || n==5)?1:0, wingRevision=duty || !useWing?0:1, wing=duty || !useWing?null:new WingMemory(), duty=duty, index=n, difficulty=Mathf.Clamp((int)difficulty,0,2),random=(uint)(71109+n*179),
                 waveIn=n==0?25:17, water=n==5?.91f:.26f, deadline=(n==0?360:720) * (difficulty==Difficulty.Hard?.8f:1),
                 crates=4+n, stock=4+(!duty && n>0?Mathf.Min(12,campaign.freight[n-1]):0) };
             if(!duty && n>0 && campaign.complete[n-1])
@@ -115,6 +116,7 @@ namespace Evac
                 state.deadline=300*(difficulty==Difficulty.Hard?.85f:1);
                 state.requestState=(int)RequestState.Unplayed;
             }
+            if(!duty && n>0)state.volunteers+=CampaignColumnRescued(n-1)/2;
             state.depotRounds=144+state.stock*6+state.volunteers*18;
             state.medPacks=3+state.volunteers;
             if(!duty && n>0 && campaign.wingReturns?.Length==8){
@@ -177,7 +179,7 @@ namespace Evac
             return u;
         }
 
-        public void Retry() { if(IsReady) StartOperation(state.index,Level,IsDuty,state.wingRevision==1); }
+        public void Retry() { if(IsReady) StartOperation(state.index,Level,IsDuty,state.wingRevision==1,state.columnVersion==1); }
         public bool Next()
         {
             if(!IsReady || IsDuty || Result!=SimResult.Victory || state.index>=7) return false;
@@ -199,7 +201,7 @@ namespace Evac
                 if(s==null || s.districtTask<0 || s.districtTask>sectors)return false;
             if(m.districtOutcome!=null)
                 foreach(int outcome in m.districtOutcome)if(outcome<0 || outcome>2)return false;
-            return ValidWing(m) && ValidFleet(m) && ValidChapter(m.chapter);
+            return ValidColumns(m) && ValidWing(m) && ValidFleet(m) && ValidChapter(m.chapter);
         }
         bool Restore(string slot)
         {
@@ -294,6 +296,7 @@ namespace Evac
             campaign.chapterContacts[n*2+1]=Chapter.retreatContact;
             RecordRequest();
             RecordSearch();
+            RecordColumns(n);
             if(campaign.wingReturns?.Length!=8)campaign.wingReturns=new int[8];
             if(WingComplete && !Wing.lost)campaign.wingReturns[n]=WingDone(5)?2:1;
             campaign.bestTotal=Sum(campaign.best);EvacStorage.Write("campaign",campaign);

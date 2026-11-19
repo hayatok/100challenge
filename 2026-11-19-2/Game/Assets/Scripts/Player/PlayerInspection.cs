@@ -17,7 +17,8 @@ namespace Evac
             string[] args=Environment.GetCommandLineArgs();
             int index=Array.IndexOf(args,"-film");
             filmRequested=index>=0;
-            if(!filmRequested)index=Array.IndexOf(args,"-campaign-inspection");
+            if(!filmRequested){index=Array.IndexOf(args,"-column-film");columnFilmRequested=index>=0;}
+            if(!filmRequested && !columnFilmRequested)index=Array.IndexOf(args,"-campaign-inspection");
             if(index<0 || index+1>=args.Length)return;
             inspectionFolder=Path.GetFullPath(args[index+1]);
             Directory.CreateDirectory(inspectionFolder);
@@ -28,6 +29,7 @@ namespace Evac
         void Start()
         {
             if(inspectionFolder==null)return;
+            if(columnFilmRequested){StartCoroutine(ColumnFilm());return;}
             if(filmRequested){StartCoroutine(Film());return;}
             var args=Environment.GetCommandLineArgs();
             int i=Array.IndexOf(args,"-render-minutes");
@@ -248,7 +250,7 @@ namespace Evac
                     Resume();CommandMode();
                 }
                 int sector=-1;
-                bool drewWing=false, enteredWing=false;
+                bool drewWing=false, enteredWing=false, sawColumns=false, sawStretcher=false;
                 for(int i=0;i<14000&&sim.Result==SimResult.Active&&!sim.CanDepart;i++)
                 {
                     if(sim.ChapterPhase==1 || sim.ChapterPhase==3)
@@ -270,6 +272,28 @@ namespace Evac
                         if(m>0)sim.Order(2,SquadOrder.Engineer,sim.EngineerDestination);
                     }
                     sim.DriveWingInspection();
+                    sim.DriveColumnInspection();
+                    if(sim.ColumnsActive && !sawColumns)
+                    {
+                        sawColumns=true;LocateColumn(0);FrameCamera(0,true);
+                        yield return new WaitForEndOfFrame();
+                        ui.OpenColumn(0);yield return Picture(m==5?"flood-column-ledger":"market-column-ledger");
+                        ui.CloseFieldOverlay();
+                        yield return Picture(m==5?"flood-column-command":"market-column-command");
+                    }
+                    if(m==5 && !sawStretcher && sim.ColumnsActive && sim.ColumnCarrierId(1)>=0 && sim.ColumnCarriedId(1)>=0)
+                    {
+                        int carrier=roster.FindIndex(s=>s.id==sim.ColumnCarrierId(1));
+                        if(carrier>=0)
+                        {
+                            sawStretcher=true;Possess(carrier);pitch=19;
+                            yield return new WaitForSecondsRealtime(.75f);
+                            yield return Picture("stretcher-direct");
+                            CommandMode();zoom=5;
+                            yield return new WaitForSecondsRealtime(.70f);
+                            yield return Picture("stretcher-command");
+                        }
+                    }
                     if(sim.WingActive && m%2==0)
                     {
                         if(!drewWing)
@@ -299,6 +323,7 @@ namespace Evac
                         sim.DispatchDistrict(0,sim.Sector,(m+sim.Sector)%2==0);
                     sim.Tick(.1f);
                 }
+                if((m==0 || m==5) && !sawColumns)throw new Exception("Missing evacuation column: "+m);
                 if(!sim.CanDepart)throw new Exception("Departure unavailable: "+sim.Mission.title+" "+sim.Objective+" "+sim.WingStatus);
                 if(m%2==0 && (!drewWing || !enteredWing))throw new Exception("Unverified building entry: "+m);
                 Depart();

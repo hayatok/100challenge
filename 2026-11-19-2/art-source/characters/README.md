@@ -37,3 +37,11 @@ three viewmodel meshes.
 `viewmodel.py` wraps the fingers around each hand's grip. The runtime moves
 the support arm and detached equipment through the reload, and uses the
 same object and wrist motion when the player carries cargo.
+
+The gait bake also exports `ActorGait.Keys.cs` from the same sampled curves.
+Near characters hold the active ankle in world space during stance. Their
+CPU leg solve shares the shader's rest pivots, and the shoe keeps its authored
+heel-to-toe pitch. The crowd's distant meshes continue to sample gait
+without contact tracking. Companion poses use the paired shoulder position
+when available. A patient on the stretcher uses the same civilian mesh,
+rotated onto the mattress with a separate resting pose.

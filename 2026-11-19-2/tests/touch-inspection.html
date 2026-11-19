@@ -8,7 +8,7 @@
     const frame = document.querySelector('#game'), log = document.querySelector('#results');
     frame.width = params.get('width') || 844;
     frame.height = params.get('height') || 390;
-    frame.src = 'index.html?controls=touch'+(params.has('failure')?'&duty-failure=1':'');
+    frame.src = 'index.html?controls=touch'+(params.has('failure')?'&duty-failure=1':'')+(params.has('flood-columns')?'&flood-columns=1':'');
     const win = frame.contentWindow;
     const pause = ms => new Promise(resolve => setTimeout(resolve, ms));
     const audit = () => win.evacInspection;
@@ -35,7 +35,7 @@
         finger('touchend',8,...xy);
         await wait('Release of '+pattern,()=>audit().state.fingers===0);
     }
-    await wait('Unity',()=>audit()?.state?.phase==='Title',90000);
+    await wait('Unity',()=>audit()?.state?.phase===(params.has('flood-columns')?'Playing':'Title'),90000);
     canvas=win.document.querySelector('canvas');
     log.textContent='Loaded '+frame.width+'×'+frame.height+'.';
     const custom=params.has('custom');
@@ -75,8 +75,10 @@
             (params.has('failure')?' Recovered stage '+(audit().duty.expected+1)+' from the defeat screen and retained the regular campaign.':'');
         return;
     }
-    await button(/^作戦を選ぶ/);await wait('Briefing',()=>audit().state.phase==='Briefing');
-    await button(/^出動する/);await wait('Command',()=>audit().state.phase==='Playing');
+    if(!params.has('flood-columns')){
+        await button(/^作戦を選ぶ/);await wait('Briefing',()=>audit().state.phase==='Briefing');
+        await button(/^出動する/);await wait('Command',()=>audit().state.phase==='Playing');
+    }
     const articles=()=>Object.keys(audit().buttons);
     async function capture(name) {
         if(params.get('capture')==='series'){
@@ -89,6 +91,94 @@
         await pause(250);
         log.textContent='CAPTURE '+name+' '+frame.width+'×'+frame.height;
         return true;
+    }
+    if(params.has('flood-columns')){
+        await wait('Flooded rail inspection fixture',()=>articles().includes('避難隊列'),90000);
+        if(await capture('flood-map'))return;
+        await button(/^避難隊列$/);
+        await wait('Two separate rosters',()=>articles().includes('北改札の歩行列') && articles().includes('救護室の介助列'));
+        if(params.has('bearer-fps')){
+            await button(/^救護室の介助列$/);await button(/^警備班$/);await button(/^担架を引き受ける$/);
+            await wait('Bearer physically reached patient',()=>articles().some(k=>/^担架　.+に入る$/.test(k)),150000);
+            if(await capture('bearer-ready'))return;
+            await button(/^担架　.+に入る$/);
+            await wait('Possessed physical bearer',()=>audit().state.mode==='FPS' && articles().includes('担架の引き継ぎ'));
+            const arrivalFrame=audit().frame, arrivalTime=performance.now();
+            await wait('First-person camera settled across rendered frames',()=>
+                performance.now()-arrivalTime>=1200 && audit().frame>=arrivalFrame+36 && audit().state.mode==='FPS',30000);
+            if(articles().includes('照準')||articles().includes('装填'))throw new Error('Weapon controls available while carrying');
+            if(await capture('bearer-fps'))return;
+            await button(/^担架の引き継ぎ$/);
+            await button(/^担架を下ろす$/);
+            await button(/^閉じる$/);
+            await wait('Released patient and restored controls',()=>articles().includes('照準') && articles().includes('装填'));
+            if(await capture('bearer-released'))return;
+            await button(/^指揮に戻る$/);
+            log.textContent='PASS '+frame.width+'×'+frame.height+' | Squad walked to the patient. Possessed the named bearer, saw the physical carrying HUD, put down the stretcher and returned to command.';
+            return;
+        }
+        await button(/^北改札の歩行列$/);
+        await button(/^警備班$/);await button(/^誘導放送を入れる$/);
+        await button(/^救護室の介助列$/);
+        await button(/^誘導班$/);
+        if(await capture('flood-column-roll'))return;
+        await button(/^保守通路経由$/);await button(/^列を止める$/);await button(/^同行を再開$/);
+        await button(/^整備班$/);await button(/^防火扉を開ける$/);
+        await button(/^負傷者を手当て/);
+        if(params.has('stretcher')){await button(/^警備班$/);await button(/^担架を引き受ける$/);}
+        await button(/^地図で隊列を見る$/);
+        await wait('Back on station floor',()=>!articles().includes('閉じる'));
+        for(let i=0;i<2 && articles().includes('畳む');i++)await button(/^畳む$/);
+        if(await capture('flood-dispatched'))return;
+        log.textContent='PASS '+frame.width+'×'+frame.height+' | Inspector prepared operation 06. Tapped both resident manifests, dispatched PA and bypass crews, led the assisted column, held and resumed it, and called for first aid.';
+        return;
+    }
+    if(params.has('column')){
+        await button(/^現場方針を決める$/);
+        await button(/^店先と停留所の名簿を照合$/);
+        await button(/を現場へ$/);
+        await wait('Column reported after the prologue',()=>articles().includes('避難隊列'),90000);
+        await button(/^避難隊列$/);
+        await wait('Market options',()=>articles().includes('軒下から誘導') && articles().includes('表通りで誘導'));
+        if(params.has('local-guide')){
+            await button(/^地図で隊列を見る$/);
+            if(!articles().includes('次の命令を選ぶ'))await button(/^班への命令$/);
+            await button(/^次の命令を選ぶ$/);await button(/^警戒$/);
+            for(let i=0;i<2 && articles().includes('畳む');i++)await button(/^畳む$/);
+            await pause(800);
+            finger('touchstart',7,.5,.5);await wait('Map contact',()=>audit().state.fingers>0);
+            finger('touchend',7,.5,.5);await wait('Map release',()=>audit().state.fingers===0);
+            // Let the escort walk from the bus to the two residents at the marked position.
+            await pause(9500);
+            if(!articles().some(k=>k.includes('を直接操作')))await button(/^名簿/);
+            await button(/を直接操作$/);
+            await wait('Soldier at column',()=>audit().state.mode==='FPS');
+            await button(/^作戦手帳$/);await button(/^避難隊列$/);
+            await button(/^表通りで誘導$/);await button(/^列を止める$/);await button(/^同行を再開$/);
+            if(await capture('near-guide'))return;
+            await button(/^閉じる$/);
+            if(await capture('near-guide-street'))return;
+            log.textContent='PASS '+frame.width+'×'+frame.height+' | Walked from bus to the named market residents, possessed on site, guided, held and resumed the column on foot.';
+            return;
+        }
+        if(await capture('column-roll'))return;
+        await button(/^警備班$/);
+        await button(/^軒下から誘導$/);
+        await button(/^列を止める$/);
+        await button(/^同行を再開$/);
+        await button(/^横戸を開ける$/);
+        await button(/^地図で隊列を見る$/);
+        await wait('Located column on map',()=>!articles().includes('閉じる'));
+        if(!articles().some(k=>k.includes('を直接操作')))await button(/^名簿/);
+        await button(/を直接操作$/);
+        await wait('Possessed column escort',()=>audit().state.mode==='FPS');
+        if(await capture('column-street-fps'))return;
+        await button(/^作戦手帳$/);await button(/^避難隊列$/);
+        await wait('On-foot roster',()=>articles().includes('隊列の位置を確認'));
+        if(await capture('column-fps'))return;
+        await button(/^閉じる$/);
+        log.textContent='PASS '+frame.width+'×'+frame.height+' | Market column roster, route B escort, hold, resume, side gate, location, possession and on-foot manifest.';
+        return;
     }
     if(params.has('wing')){
         await button(/^現場方針を決める$/);
