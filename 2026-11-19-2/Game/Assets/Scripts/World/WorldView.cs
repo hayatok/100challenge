@@ -317,7 +317,13 @@ namespace Evac
                 m.phase = Mathf.Repeat(m.phase + dt*angularSpeed, Mathf.PI*2);
             }
             Vector4 marketPose=market.Blend(kind,dt,ref m.market);
-            if (possessed)
+            // Followers can share a waypoint with the camera carrier. Keep their head and
+            // upper torso out of the eye point while their simulation continues normally.
+            Vector3 eyeOffset = crowdCameraPosition - position;
+            bool overlapsEye = kind != 1 && activity != 5 && hp01 > 0 && playerCamera &&
+                !playerCamera.orthographic && eyeOffset.y > .85f && eyeOffset.y < 2.05f &&
+                eyeOffset.x * eyeOffset.x + eyeOffset.z * eyeOffset.z < .45f * .45f;
+            if (possessed || overlapsEye)
             {
                 m.tracking=false;
                 motions[id]=m;

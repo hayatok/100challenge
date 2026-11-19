@@ -10,6 +10,14 @@ mergeInto(LibraryManager.library,{
         audit.market={leader:leader,pawn:pawn,x:x,z:z,lift:lift,boarded:boarded,finished:!!finished,
             meeting:!!meeting,waiting:!!waiting,clock:clock};
     },
+    InspectHud: function(action,count,banner,mode,frame) {
+        var audit=window.evacInspection||(window.evacInspection={buttons:{}});
+        audit.hud={action:UTF8ToString(action),count:UTF8ToString(count),banner:UTF8ToString(banner),mode:UTF8ToString(mode),frame:frame};
+    },
+    InspectBearing: function(destination,offscreen,frame) {
+        var audit=window.evacInspection||(window.evacInspection={buttons:{}});
+        audit.bearing={destination:UTF8ToString(destination),offscreen:!!offscreen,frame:frame};
+    },
     InspectClick: function(label) {
         var audit=window.evacInspection||(window.evacInspection={buttons:{}});
         if(!audit.clicks)audit.clicks=[];

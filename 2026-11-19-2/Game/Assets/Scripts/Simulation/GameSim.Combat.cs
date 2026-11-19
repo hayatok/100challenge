@@ -2,6 +2,8 @@ using UnityEngine;
 
 namespace Evac
 {
+    internal enum FireBlock { None, Unavailable, Stretcher, Carrying, Escorting, Moving, Reloading, Empty, NoReserve, Cooldown }
+
     public partial class GameSim
     {
         public void Tick(float dt)
@@ -377,12 +379,16 @@ namespace Evac
             target.stagger=a.stun;target.windup=0;a.chargeTime=0;a.preparingCharge=false;
         }
 
+        bool CanStartReload(Unit u) => u!=null && !ColumnHandsBusy(u) && !ChapterHandsBusy(u) &&
+            u.vaultDuration<=0 && u.reload<=0 && u.ammo<18 && u.reserve>0 && Brain(u).escort<0 && !Brain(u).cargo;
+
         bool StartReload(Unit u)
         {
-            if(u==null || ColumnHandsBusy(u) || ChapterHandsBusy(u) || u.vaultDuration>0 || u.reload>0 || u.ammo>=18 || u.reserve<=0 || Brain(u).escort>=0 || Brain(u).cargo)return false;
+            if(!CanStartReload(u))return false;
             u.reload=1.55f;return true;
         }
         public bool Reload() => Result==SimResult.Active && StartReload(Controlled);
+        internal bool CanReloadField => Result==SimResult.Active && CanStartReload(Controlled);
         public void Move(Vector3 worldDirection,float yaw,float dt)
         {
             Unit u=Controlled;
@@ -422,10 +428,27 @@ namespace Evac
             if(a.exhausted>0){a.exhausted=Mathf.Max(0,a.exhausted-dt);return;}
             u.stamina=Mathf.Min(1,u.stamina+dt*(u.wounded?.12f:.19f));
         }
+        internal FireBlock FieldFireBlock
+        {
+            get
+            {
+                var s=Controlled;
+                if(s==null || Result!=SimResult.Active)return FireBlock.Unavailable;
+                var memory=Brain(s);
+                if(ColumnHandsBusy(s))return FireBlock.Stretcher;
+                if(ChapterHandsBusy(s) || memory.cargo)return FireBlock.Carrying;
+                if(memory.escort>=0)return FireBlock.Escorting;
+                if(s.vaultDuration>0 || s.dodgeTime>0)return FireBlock.Moving;
+                if(s.reload>0)return FireBlock.Reloading;
+                if(s.ammo<=0)return s.reserve>0?FireBlock.Empty:FireBlock.NoReserve;
+                return memory.fireDelay>0?FireBlock.Cooldown:FireBlock.None;
+            }
+        }
+
         public bool Shoot(Vector3 aimDirection)
         {
+            if(FieldFireBlock!=FireBlock.None)return false;
             var s=Controlled;
-            if(s==null || ColumnHandsBusy(s) || ChapterHandsBusy(s) || s.vaultDuration>0 || s.dodgeTime>0 || Result!=SimResult.Active || s.reload>0 || s.ammo<=0 || Brain(s).escort>=0 || Brain(s).cargo || Brain(s).fireDelay>0)return false;
             LastShotHit=false;
             Vector3 aim=aimDirection.normalized;
             if(aim.sqrMagnitude<.9f)return false;

@@ -8,61 +8,109 @@ namespace Evac
 
         int BodySize => G.LargeText ? 20 : 17;
 
+        bool directRadioOpen;
+
         bool GuideVisible => Time.unscaledTime < guideUntil;
         void ToggleGuide() => guideUntil = GuideVisible ? 0 : float.PositiveInfinity;
 
         static string Key(ControlAction action) => ControlPreferences.KeyLabel(action);
         static string MovementKeys => Key(ControlAction.Forward)+Key(ControlAction.StrafeLeft)+Key(ControlAction.Backward)+Key(ControlAction.StrafeRight);
-        float BoardHeight => G.TouchUI ? 88 : 76;
+        const float BoardHeight = 84;
 
-        void DrawBoard()
+        bool DrawBoard()
         {
             float height = BoardHeight;
-            float missionWidth = G.TouchUI ? Mathf.Min(w * .41f, 465) : 336;
-            Rect mission = R(14, 12, missionWidth, height);
+            const float top = 12, gap = 6, pauseWidth = 82, bookWidth = 118, statusWidth = 249;
+            float pauseX = w - 14 - pauseWidth;
+            float bookX = pauseX - bookWidth - gap;
+            float statusX = (G.IsDuty ? pauseX : bookX) - statusWidth - gap;
+            float missionWidth = Mathf.Min(statusX - 24, G.TouchUI ? 371 : 432);
+            Rect mission = R(14, top, missionWidth, height);
             Instrument(mission);
             Fill(R(mission.x, mission.y, 4, mission.height), Rail);
-            string district = G.DistrictName(G.MissionIndex);
-            string banner = G.IsDuty ? $"{district}　救援当直 {G.DutyIndex + 1:00}号" :
-                $"{district}　{G.MissionIndex + 1:00}号作戦";
-            Text(R(26, 17, mission.width - 24, 22), banner, 14, Mist);
-            Text(R(26, 38, mission.width - 24, G.TouchUI ? 41 : 28),
-                ChapterTask ? Field.ChapterTitle : FieldName, G.TouchUI ? 27 : 22, Cream, true);
-            if (G.SectorCount > 0)
+
+            string section = ChapterTask ? Field.ChapterTitle : G.SectorCount > 0 ? G.SectorName : FieldName;
+            G.TryFieldNavigation(out string action, out string destination, out _, out bool marketTask);
+            if (string.IsNullOrEmpty(action)) action = section;
+            if (destination == action) destination = "";
+            string task = string.IsNullOrEmpty(destination) ? action : action + "　／　" + destination;
+            string banner = string.IsNullOrEmpty(G.SoldierName) ? G.DistrictName(G.MissionIndex) :
+                G.SoldierName + "　／　" + G.DistrictName(G.MissionIndex);
+            if (G.IsDuty) banner += $"　救援当直 {G.DutyIndex + 1:00}号";
+            string location = FieldLocation(section);
+            if (task != location) banner += "　" + location;
+            float textWidth = mission.width - 24;
+            Text(R(26, top + 3, textWidth, 25), banner,
+                FieldLineSize(banner, textWidth, G.LargeText ? 17 : 14, false), Mist);
+            Rect taskLine = R(26, top + 27, mission.width - 24, height - 31);
+            int taskSize = G.LargeText ? 22 : 20;
+            measurement.text = task;
+            if (!string.IsNullOrEmpty(destination) && TextStyle(taskSize, true, TextAnchor.MiddleLeft).CalcSize(measurement).x > textWidth)
             {
-                string sector = ChapterTask ? (Field.ChapterPhase==1?"前哨":"撤収")+"　"+(Field.ChapterChoice<0?"方針を選択":Field.ChapterOptionTitle(Field.ChapterChoice)) : $"{G.SectorNumber}/{G.SectorCount}　{G.SectorName}";
-                if (!ChapterTask && G.SectorGoal > 0) sector += $"　目標 {G.SectorGoal}人";
-                Text(R(26, mission.yMax - 23, mission.width - 24, 19), sector, 14, Amber, true);
+                float lineHeight = taskLine.height / 2;
+                Text(R(taskLine.x, taskLine.y, textWidth, lineHeight), action,
+                    FieldLineSize(action, textWidth, G.LargeText ? 20 : 18, true), Cream, true);
+                Text(R(taskLine.x, taskLine.y + lineHeight, textWidth, lineHeight), destination,
+                    FieldLineSize(destination, textWidth, G.LargeText ? 18 : 16, false), Mist);
+            }
+            else
+            {
+                Text(taskLine, task, FieldLineSize(task, textWidth, taskSize, true), Cream, true);
             }
 
-            float boardWidth = G.TouchUI ? 248 : 256;
-            float x = w - boardWidth - 108;
-            Rect board = R(x, 12, boardWidth, height);
-            Instrument(board);
-            Text(R(x + 13, 16, 130, 22), G.IsDuty ? "救出人数" : "乗車人数", 14, Mist, true);
-            Text(R(x + 13, 34, 140, 37), $"{G.Saved:00} / {G.Population:00}", G.TouchUI ? 31 : 26, Amber, true);
-            Text(R(x + boardWidth - 103, 16, 90, 22), "残り時間", 14, Mist, false, TextAnchor.MiddleRight);
-            Text(R(x + boardWidth - 119, 35, 106, 33), Clock(G.Remaining), G.TouchUI ? 27 : 23,
+            Rect status = R(statusX, top, statusWidth, height);
+            Instrument(status);
+            string label = G.IsDuty ? "救出人数" : "乗車人数";
+            bool hasQuota = G.Needed > 0;
+            if (hasQuota) label += "／目標";
+            string count = hasQuota ? $"{G.Saved} / {G.Needed}" : $"{G.Saved}";
+            int labelSize = G.LargeText ? 16 : 14;
+            int digits = G.LargeText ? 31 : 28;
+            Text(R(statusX + 13, top + 3, 139, 25), label, labelSize, Mist, true);
+            bool goalMet = hasQuota && G.Saved >= G.Needed;
+            Text(R(statusX + 13, top + 27, 139, 36), count, digits, goalMet ? Green : Amber, true);
+            Text(R(status.xMax - 108, top + 3, 95, 25), "残り時間", labelSize, Mist, false, TextAnchor.MiddleRight);
+            Text(R(status.xMax - 108, top + 27, 95, 36), Clock(G.Remaining), digits,
                 G.Remaining < 30 ? new Color32(255, 160, 132, 255) : Cream, true, TextAnchor.MiddleRight);
-            float total = Mathf.Max(1, G.Population);
-            Rect boarding = R(x + 13, board.yMax - 12, boardWidth - 26, 4);
-            Bar(boarding, G.Saved / total, Amber);
-            float quotaX = boarding.x + boarding.width * Mathf.Clamp01(G.Needed / total);
-            Fill(R(quotaX - 1, boarding.y - 2, 2, boarding.height + 4), Cream);
-            if (Button(R(w - 96, 12, 82, G.TouchUI ? 57 : 39), "一時停止", dark: true)) Submit(G.Pause);
+            if (hasQuota)
+                Bar(R(statusX + 13, status.yMax - 9, statusWidth - 26, 4), (float)G.Saved / G.Needed, goalMet ? Green : Amber);
+
+            float buttonHeight = G.TouchUI ? 56 : 40;
+            if (Button(R(pauseX, top, pauseWidth, buttonHeight), "一時停止", dark: true)) Submit(G.Pause);
+            if (!G.IsDuty && Button(R(bookX, top, bookWidth, buttonHeight), "作戦手帳", dark: true))
+                ToggleBook();
             if (G.TouchUI)
             {
-                Text(R(w - 96, 73, 82, 24), G.Mode == "FPS" ? "直接操作" : "部隊指揮", 15, Cream,
+                Rect modeLabel = R(pauseX, top + 59, pauseWidth, 25);
+                Instrument(modeLabel);
+                Text(modeLabel, G.Mode == "FPS" ? "直接操作" : "部隊指揮", G.LargeText ? 17 : 15, Cream,
                     true, TextAnchor.MiddleCenter);
             }
-            else if (G.Mode == "FPS")
-            {
-                Text(R(w - 96, 55, 82, 33), "F1 操作", 15, Cream, true, TextAnchor.MiddleCenter);
-            }
-            else if (Button(R(w - 96, 55, 82, 33), "F1 操作", selected: GuideVisible, dark: true))
-            {
+            else if (Button(R(pauseX, top + 44, pauseWidth, 32), "F1 操作", selected: GuideVisible, dark: true))
                 ToggleGuide();
-            }
+
+#if UNITY_WEBGL && EVAC_WEB_TEST && !UNITY_EDITOR
+            ReportFieldHud(task, count, banner);
+#endif
+            return marketTask;
+        }
+
+        int FieldLineSize(string line, float width, int size, bool bold)
+        {
+            measurement.text = line;
+            while (size > 14 && TextStyle(size, bold, TextAnchor.MiddleLeft).CalcSize(measurement).x > width)
+                size--;
+            return size;
+        }
+
+        string FieldLocation(string section)
+        {
+            var actor = G.Current;
+            if (!Field.WingActive || actor == null || !actor.active || actor.pos.z < 93 || Mathf.Abs(actor.pos.x) >= 14.5f)
+                return section;
+            if (Mathf.Abs(actor.pos.x) <= 3.5f) return Field.WingTitle;
+            int row = actor.pos.z < 110 ? 0 : actor.pos.z < 130 ? 1 : 2;
+            return Field.WingRoomName(row * 2 + (actor.pos.x < 0 ? 0 : 1));
         }
 
         void Instrument(Rect box)
@@ -75,8 +123,7 @@ namespace Evac
 
         void DrawCommand()
         {
-            DrawBoard();
-            DrawFieldAccess(false);
+            DrawFieldAccess(DrawBoard());
             if(G.PickingLamp)
                 Text(R(w*.40f,h*.64f,w*.2f,33),"設置する場所を選択",18,Amber,true,TextAnchor.MiddleCenter);
             float rosterWidth = Mathf.Min(w * .32f, G.TouchUI ? 340 : 326);
@@ -299,7 +346,7 @@ namespace Evac
 
         void DrawDirect()
         {
-            DrawDirectStrip();
+            DrawBoard();
             int pushed=G.PushedColumn;
             if(pushed>=0)
             {
@@ -319,7 +366,7 @@ namespace Evac
             if(person==null)return;
             float width=G.TouchUI?271:242;
             float panelHeight=G.TouchUI?84:91;
-            var panel=R(w-width-14,G.TouchUI?79:h-232,width,panelHeight);
+            var panel=R(w-width-14,G.TouchUI?BoardHeight+21:h-232,width,panelHeight);
             Instrument(panel);
             Fill(R(panel.x,panel.y,4,panel.height),Green);
             float x=panel.x+11;
@@ -373,30 +420,34 @@ namespace Evac
 
         void DrawTouchDirect()
         {
-            Rect identity = R(14, 76, 208, 64);
+            float equipmentY = BoardHeight + 21;
+            Rect identity = R(14, equipmentY, 208, 64);
             Instrument(identity);
-            Text(R(25,79,185,23),G.SoldierName+"　"+G.Health01.ToString("0%"),18,Cream,true);
-            Bar(R(25,105,184,5),G.Health01,G.Health01<.3f?Rail:Green);
-            Text(R(25,113,69,22),"スタミナ",14,Mist);
-            Bar(R(91,121,118,4),G.Stamina01,Amber);
-            Rect ammo=R(w-191,76,177,53);
+            Text(R(25,equipmentY+3,185,23),G.SoldierName+"　"+G.Health01.ToString("0%"),18,Cream,true);
+            Bar(R(25,equipmentY+29,184,5),G.Health01,G.Health01<.3f?Rail:Green);
+            Text(R(25,equipmentY+37,69,22),"スタミナ",14,Mist);
+            Bar(R(91,equipmentY+45,118,4),G.Stamina01,Amber);
+            Rect ammo=R(w-191,equipmentY,177,53);
             Instrument(ammo);
             Text(R(ammo.x+9,ammo.y+3,158,17),"残弾 ／ 予備弾",13,Mist);
             Text(R(ammo.x+9,ammo.y+19,158,31),G.Ammo.ToString("00")+" ／ "+G.Reserve.ToString("00"),22,Amber,true);
-            if(Button(R(14,147,142,48),"班に無線指示",selected:directRadioOpen,dark:true))directRadioOpen=!directRadioOpen;
-            if(directRadioOpen)DrawSquads(R(14,201,264,52),atAim:true);
+            if(Button(R(14,equipmentY+71,142,48),"班に無線指示",selected:directRadioOpen,dark:true))directRadioOpen=!directRadioOpen;
+            if(directRadioOpen)DrawSquads(R(14,equipmentY+125,264,52),atAim:true);
             float actionY = h - 73;
             float actionX = w - 170;
             if (!string.IsNullOrEmpty(G.ContextAction) && Button(R(actionX - 166, actionY, 158, 59), G.ContextAction, true))
                 Submit(G.TryAction);
             if (Button(R(actionX, actionY, 156, 59), "指揮に戻る", dark: true)) Submit(G.CommandMode);
-            if (Button(R(w - 295, 139, 87, 51), "照準", selected:G.Aiming, dark:true))
+            FireBlock fireBlock = Field.FieldFireBlock;
+            bool canAim = fireBlock is FireBlock.None or FireBlock.Cooldown or FireBlock.Empty or FireBlock.NoReserve;
+            if (Button(R(w - 295, equipmentY + 63, 87, 51), "照準", enabled: canAim, selected: G.Aiming, dark: true))
                 Submit(G.ToggleTouchAim);
-            if (Button(R(w - 202, 139, 92, 51), "緊急回避", dark: true))
+            if (Button(R(w - 202, equipmentY + 63, 92, 51), "緊急回避", dark: true))
                 Submit(G.DodgeTouch);
-            if (Button(R(w - 104, 139, 90, 51), G.Reserve > 0 ? "装填" : "予備弾なし", enabled: G.Reserve > 0, dark: true))
+            string reloadLabel = fireBlock == FireBlock.Reloading ? "装填中" : G.Reserve > 0 ? "装填" : "予備弾なし";
+            if (Button(R(w - 104, equipmentY + 63, 90, 51), reloadLabel, enabled: Field.CanReloadField, dark: true))
                 Submit(G.Reload);
-            if(GuideVisible) DrawRadio(236,125,w-459,"",G.Radio,false);
+            if (GuideVisible) DrawRadio(236, equipmentY + 45, w - 546, "", G.Radio, false, equipmentY);
             if (G.IsDuty) DrawRadio(246, h - 14, w - 588, G.Objective, "", false);
         }
 
@@ -408,7 +459,7 @@ namespace Evac
                 G.Ammo == 0 ? Cream : Amber, true);
         }
 
-        void DrawRadio(float x, float bottom, float width, string objective, string message, bool interactive)
+        void DrawRadio(float x, float bottom, float width, string objective, string message, bool interactive, float top = 0)
         {
             if(!string.IsNullOrEmpty(message))message=G.RadioSpeaker+"　"+message;
             int radioSize = G.LargeText ? 18 : 15;
@@ -418,7 +469,7 @@ namespace Evac
 
             float gap = objectiveHeight > 0 && messageHeight > 0 ? 8 : 0;
             float height = objectiveHeight + messageHeight + gap + 18;
-            Rect box = R(x, bottom - height, width, height);
+            Rect box = R(x, Mathf.Max(top, bottom - height), width, height);
             Panel(box, Case, Edge, interactive);
             float y = box.y + 9;
             if (objectiveHeight > 0)

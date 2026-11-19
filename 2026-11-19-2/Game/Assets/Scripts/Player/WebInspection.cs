@@ -7,6 +7,12 @@ namespace Evac
     public sealed partial class GameSession
     {
         [DllImport("__Internal")] static extern void InspectState(string phase,string mode,int ammo,float x,float z,float yaw,int fingers);
+        [DllImport("__Internal")] static extern void InspectBearing(string destination,int offscreen,int frame);
+        void InspectFieldBearing(string destination,bool offscreen)
+        {
+            if (Event.current.type==EventType.Repaint)
+                InspectBearing(destination,offscreen ? 1 : 0,Time.frameCount);
+        }
         [DllImport("__Internal")] static extern int InspectDutyFailure(int sector,int expected,int unchanged);
         [DllImport("__Internal")] static extern int InspectFloodColumns();
         [DllImport("__Internal")] static extern void InspectMarket(int leader,int pawn,float towardX,float towardZ,float lift,int boarded,int finished,int meeting,int waiting,float clock);
@@ -51,6 +57,11 @@ namespace Evac
     public sealed partial class GameUI
     {
         [DllImport("__Internal")] static extern void InspectClick(string label);
+        [DllImport("__Internal")] static extern void InspectHud(string action,string count,string banner,string mode,int frame);
+        void ReportFieldHud(string action,string count,string banner)
+        {
+            if (Event.current.type==EventType.Repaint) InspectHud(action,count,banner,G.Mode,Time.frameCount);
+        }
         [DllImport("__Internal")] static extern void InspectButton(string label,float x,float y,int frame);
         void ReportButton(Rect button,string label)
         {

@@ -9,6 +9,38 @@ namespace Evac
 {
     public partial class GameSim
     {
+        internal void VerifySquadDestinations()
+        {
+            StartMission(2,Difficulty.Standard);
+            Chapter.phase=2;
+            Tick(.1f);
+            var guide=soldiers.Find(u=>u.squad==1);
+            var resident=state.units.Find(u=>IsCivilian(u) && u.active && !Brain(u).auxiliary && Brain(u).column==0);
+            Verify(resident!=null && Order(guide.squad,SquadOrder.Guide,guide.pos),"Prepare ordinary guide order");
+            resident.pos=guide.pos;
+            Brain(resident).injured=true;
+            Brain(guide).route=1;
+            var target=FieldNavigation(guide);
+            Verify(target.point==resident.pos && target.destination==resident.name && Brain(guide).escort<0,
+                "Guide marker identifies the resident without picking them up during rendering");
+            Guide(guide,Brain(guide),.1f);
+            var escorted=FieldNavigation(guide);
+            Verify(Brain(guide).escort==resident.id && escorted.action.Contains(resident.name) &&
+                escorted.point==(Brain(resident).route<1?Brain(resident).personalGate:Door(resident)),
+                "Guide AI picked up the indicated resident and guidance uses their own route");
+
+            var engineer=soldiers.Find(u=>u.squad==2);
+            Verify(Order(engineer.squad,SquadOrder.Engineer,ActiveWorks),"Prepare ordinary engineer order");
+            Brain(engineer).route=1;
+            state.delivered=state.sectionDelivered+RequiredTrips;
+            state.sectionRepair=1;state.repaired=true;state.site=1;state.built=false;state.crates=1;
+            Verify(FieldNavigation(engineer).point==ActiveDepot,"Construction goes to the depot");
+            state.built=true;
+            Verify(FieldNavigation(engineer).point==ActiveCache,"Spare supply pickup goes to the cache");
+            state.crates=0;
+            Verify(FieldNavigation(engineer).point==ActiveDepot,"Empty cache returns the engineer to the depot");
+        }
+
         internal int[] MakeAlarmTrial(Unit operatorUnit)
         {
             var victim=soldiers.Find(u=>u!=operatorUnit);
@@ -65,6 +97,7 @@ namespace Evac
                 report.AppendLine("Departure signal waits for the final sector and its rescue conditions.");
                 VerifyDefense(report);
                 VerifyDodge(report);
+                new GameSim().VerifySquadDestinations();
                 VerifyRush(report);
                 VerifyAlarm(report);
                 new GameSim().FleetAndDistrictChecks(report);
@@ -223,6 +256,7 @@ namespace Evac
                 {
                     WalkTo(game,game.RequestPoint);
                     Check(game.Interact() && game.Controlled.carryingCargo,"Collect named supply");
+                    Check(game.FieldNavigation(game.Controlled).point==game.RequestPoint,"Named supply has its own delivery destination");
                     if(item==0)
                     {
                         Check(game.Save(),"Optional cargo suspend");game=new GameSim();
@@ -294,6 +328,7 @@ namespace Evac
             u.hp=100;u.wounded=false;
             WalkTo(restored,restored.ActiveCache);
             Check(restored.Interact() && u.carryingCargo && !restored.Dodge(Vector3.right),"Load blocks dodge");
+            Check(restored.FieldNavigation(u).point==restored.ActiveDepot,"Ordinary cargo directs its carrier to the active depot");
             report.AppendLine("Dodge displacement, exhaustion, save, handoff, recovery, injury, cargo and wall collision passed.");
         }
 
@@ -412,6 +447,8 @@ namespace Evac
                     {
                         WalkTo(game,casualty.pos);
                         Check(game.Interact() && soldier.escortId==casualty.id,"Shoulder rescue");
+                        var nav=game.FieldNavigation(soldier);
+                        Check(nav.point.HasValue && nav.action.Contains(casualty.name),"Guidance follows the actual shoulder rescue");
                         Check(!game.Shoot(Vector3.forward) && !game.Dodge(Vector3.right),"Both hands occupied");
                         WalkTo(game,game.ActiveGate);WalkTo(game,game.ActiveExit);
                         Check(casualty.boarded,"Carried civilian boarded");

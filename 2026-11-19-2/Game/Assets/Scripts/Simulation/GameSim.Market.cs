@@ -39,7 +39,7 @@ namespace Evac
         }
         public bool WaitForMarketOpener(int id){
             if(!CanWaitForMarketOpener(id))return false;
-            var l=MarketLine;l.marketMeeting=true;l.operatorId=id;Save();
+            var l=MarketLine;l.marketMeeting=true;l.marketManualOpener=0;l.operatorId=id;Save();
             return true;
         }
         Unit MeetingCrew(int squad,out Unit guide){
@@ -59,6 +59,20 @@ namespace Evac
             if(l.lead!=guide.id || l.held)l.joined=FlatSq(guide.pos,ColumnPosition(0))<16;
             l.route=1;l.lead=guide.id;l.held=false;
             return WaitForMarketOpener(opener.id)?opener.id:-1;
+        }
+        internal void AssignMarketOpener(int id){
+            var l=MarketLine;
+            var u=Find(id);
+            if(u==null || !u.active || !ColumnsActive || l==null || l.finished || l.open || l.operatorId>=0 ||
+                MarketGateCrew(u.squad)!=id)return;
+            l.marketManualOpener=id+1;Save();
+        }
+        void ClearMarketNavigation(int squad){
+            var l=MarketLine;
+            if(l==null)return;
+            if(Find(l.marketManualOpener-1)?.squad==squad)l.marketManualOpener=0;
+            if(Find(l.marketOpener-1)?.squad==squad)l.marketOpener=0;
+            if(Find(l.marketLastGuide-1)?.squad==squad)l.marketLastGuide=0;
         }
         public void CancelMarketMeeting(){
             if(!MarketMeeting)return;

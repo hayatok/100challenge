@@ -92,6 +92,17 @@ namespace Evac
             return false;
         }
 
+        internal bool CoversFieldLabel(Rect screenTopLeft)
+        {
+            if (G.Phase != "Playing" || FieldOverlay) return true;
+            if (scale <= 0f) return false;
+            Vector2 minimum = ToLogical(new Vector2(screenTopLeft.xMin, Screen.height - screenTopLeft.yMin));
+            Rect label = new Rect(minimum, screenTopLeft.size / scale);
+            foreach (Rect rect in pointerBlocks)
+                if (rect.Overlaps(label)) return true;
+            return false;
+        }
+
         Vector2 ToLogical(Vector2 point) => new Vector2((point.x - safeArea.x) / scale, (safeArea.yMax - point.y) / scale);
 
         void OnGUI()

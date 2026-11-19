@@ -8,7 +8,7 @@ namespace Evac
         int moveFinger=-1,lookFinger=-1,fireFinger=-1,mapFinger=-1;
         int tapUnit=-1, pinSquad;
         float lastTap, pinAt=-20, stride, stepAt, travelSpeed, dodgeRoll,mapYaw;
-        bool mouseMap, mapDragged, focusAim, touchAim;
+        bool mouseMap, mapDragged, focusAim, touchAim, touchFireArmed;
         float aimBlend, runBlend, stepWeight, turnBank, kickVelocity, cameraKick;
         Vector2 footDrive;
         public bool Aiming => focusAim;
@@ -23,6 +23,9 @@ namespace Evac
         }
         Vector3 pinPoint;
         GUIStyle worldText;
+        Rect navigationLabel;
+        Vector3 navigationPoint;
+        float fireFeedbackUntil;
         static Vector2 FireCenter => Screen.safeArea.min + Vector2.Scale(ControlPreferences.FirePosition,Screen.safeArea.size);
         static float ThumbRadius => Mathf.Clamp(Screen.height*.097f,29,100);
 #if UNITY_WEBGL && !UNITY_EDITOR
@@ -34,6 +37,8 @@ namespace Evac
         void ClearTouches()
         {
             moveFinger=lookFinger=fireFinger=mapFinger=-1;
+            fireFeedbackUntil=0;
+            touchFireArmed=false;
             touchWalk=touchLook=Vector2.zero; mouseMap=mapDragged=false;
         }
         void ShowOrderPin(Vector3 p){pinPoint=p;pinAt=Time.time;pinSquad=SelectedSquad;}
@@ -55,7 +60,7 @@ namespace Evac
             Vector2 walk=ControlPreferences.Movement();
             Vector2 look=Vector2.zero;
             var soldier=sim.Controlled;
-            bool canAim=PushedColumn<0 && soldier.reload<=0 && soldier.dodgeTime<=0 && soldier.vaultDuration<=0 && !soldier.carryingCargo && soldier.escortId<0;
+            bool canAim=sim.FieldFireBlock is FireBlock.None or FireBlock.Cooldown or FireBlock.Empty or FireBlock.NoReserve;
             focusAim=canAim && (TouchUI?touchAim:HasMouseLook && Input.GetMouseButton(1));
             aimBlend=Mathf.MoveTowards(aimBlend,focusAim?1:0,dt*(focusAim?6.2f:8f));
             if(TouchUI)
@@ -89,7 +94,13 @@ namespace Evac
                 sound.Footfall(right,travelSpeed,Mathf.Abs(soldier.pos.z)>48,missionIndex/2);
                 stepAt+=Mathf.PI;
             }
-            if((!TouchUI && HasMouseLook && Input.GetMouseButton(0))||fireFinger>=0) FireOnce();
+            if(touchFireArmed && sim.FieldFireBlock is not (FireBlock.None or FireBlock.Cooldown))
+                touchFireArmed=false;
+            if((!TouchUI && HasMouseLook && Input.GetMouseButton(0)) || touchFireArmed)
+            {
+                FireOnce();
+                if(soldier.ammo<=0)touchFireArmed=false;
+            }
         }
         public void Dodge(Vector2 direction)
         {
@@ -114,7 +125,14 @@ namespace Evac
                 if(t.phase==TouchPhase.Began)
                 {
                     if(ui.BlocksPointer(t.position))continue;
-                    if(PushedColumn<0 && Vector2.Distance(t.position,FireCenter)<radius*.95f && fireFinger<0) fireFinger=id;
+                    if(PushedColumn<0 && Vector2.Distance(t.position,FireCenter)<radius*.95f && fireFinger<0)
+                    {
+                        fireFinger=id;
+                        fireFeedbackUntil=Time.unscaledTime+1.4f;
+                        var fire=sim.FieldFireBlock;
+                        touchFireArmed=fire is FireBlock.None or FireBlock.Cooldown;
+                        if(fire==FireBlock.Empty)Reload();
+                    }
                     else if(t.position.x<Screen.width*.42f&&moveFinger<0){moveFinger=id;touchOrigin=t.position;}
                     else if(lookFinger<0){lookFinger=id;}
                 }
@@ -122,7 +140,7 @@ namespace Evac
                 {
                     if(id==moveFinger){moveFinger=-1;touchWalk=Vector2.zero;}
                     if(id==lookFinger)lookFinger=-1;
-                    if(id==fireFinger)fireFinger=-1;
+                    if(id==fireFinger){fireFinger=-1;touchFireArmed=false;}
                     continue;
                 }
                 if(id==moveFinger)touchWalk=Vector2.ClampMagnitude((t.position-touchOrigin)/radius,1);
@@ -265,6 +283,8 @@ namespace Evac
             if(Phase!="Playing" || ui==null || ui.FieldOverlay || Event.current.type!=EventType.Repaint)return;
             bool chapterOnSite=sim.ChapterPhase==1 || sim.ChapterPhase==3;
             if(worldText==null)worldText=new GUIStyle(GUI.skin.label){font=Resources.Load<Font>("UI/NotoSansJP"),alignment=TextAnchor.MiddleCenter};
+            navigationLabel=default;
+            if(!blendingView)DrawFieldNavigation();
             DrawFieldContacts();
             DrawSearchMarkers();
             DrawFleetMarkers();
@@ -284,7 +304,8 @@ namespace Evac
                     Box(cx-134,cy+28,268,31,new Color(.05f,.08f,.07f,.88f));
                     GUI.Label(new Rect(cx-134,cy+28,268,31),"クリックで視点操作",worldText);
                 }
-                bool handsFree=PushedColumn<0;
+                var fire=sim.FieldFireBlock;
+                bool handsFree=fire is not (FireBlock.Stretcher or FireBlock.Carrying or FireBlock.Escorting);
                 float gap=5+recoil*5, len=4;
                 Color c=hitTime>0?new Color(1,.66f,.28f):new Color(.86f,.93f,.84f,.88f);
                 if(handsFree && (aimBlend<.88f || hitTime>0))
@@ -299,22 +320,13 @@ namespace Evac
                     Box(cx-dot*.5f,cy-dot*.5f,dot,dot,new Color(1,.30f,.17f,aimBlend));
                 }
                 if(hurtTime>0){var shade=new Color(.68f,.13f,.075f,hurtTime*.5f);Box(0,0,Screen.width,Screen.height*.022f,shade);Box(0,Screen.height*.978f,Screen.width,Screen.height*.022f,shade);}
-                var pawn=sim.Controlled;
-                Vector3 next=pawn.escortId>=0?sim.ActiveExit:pawn.carryingCargo?sim.ActiveDepot:
-                    sim.OrderFor(pawn.squad)==SquadOrder.Engineer?sim.EngineerDestination:sim.ActiveAssembly;
-                string hint=pawn.escortId>=0?"乗車口":pawn.carryingCargo?"搬入先":
-                    sim.OrderFor(pawn.squad)==SquadOrder.Engineer?"作業地点":"集合場所";
-                Vector3 tag=next+Vector3.up*1.85f;
-                float distance=Vector3.Distance(pawn.pos,next);
-                if(HeadingForMarketGate)DrawMarketGateBearing();
-                else if(handsFree && !chapterOnSite && distance>3)WorldTag(tag,hint+" "+Mathf.RoundToInt(distance)+"m",new Color(1,.84f,.50f),false);
                 if(TouchUI)
                 {
                     float r=ThumbRadius;
                     var home=moveFinger>=0?touchOrigin:new Vector2(Screen.width*.13f,Screen.height*.23f);
                     Pad(home,r,"移動",moveFinger>=0);
                     if(moveFinger>=0)Pad(home+touchWalk*r*.63f,r*.32f,"",true);
-                    if(handsFree)Pad(FireCenter,r*.77f,"射撃",fireFinger>=0);
+                    if(fire!=FireBlock.Stretcher)DrawFirePad(fire,r*.77f);
                 }
             }
             else
@@ -336,6 +348,132 @@ namespace Evac
                 if(t<4)WorldTag(pinPoint+Vector3.up*.45f,SquadName(pinSquad)+" ▼",new Color(.52f,1,.73f),false);
             }
         }
+
+        void DrawFieldNavigation()
+        {
+            if(!TryFieldNavigation(out _,out string destination,out var point))return;
+            var pawn=sim.Controlled;
+            Vector3 from=pawn!=null?pawn.pos:mapCenter;
+            Vector3 delta=point-from;
+            float distance=new Vector2(delta.x,delta.z).magnitude;
+            Color tint=new Color(.62f,.94f,.82f);
+            string label=pawn!=null?destination+"　"+Mathf.RoundToInt(distance)+" m":destination;
+            var view=eye.WorldToScreenPoint(point+Vector3.up*1.65f);
+            var rect=FieldLabel(view.x,Screen.height-view.y,label);
+            bool anchored=view.z>0 && FieldLabelClear(rect);
+            if(anchored)
+            {
+                Box(view.x-1,rect.yMax,2,5,tint);
+            }
+            else
+            {
+                float bearing=Mathf.DeltaAngle(pawn!=null?pawn.yaw:mapYaw,Mathf.Atan2(delta.x,delta.z)*Mathf.Rad2Deg);
+                string side=pawn!=null
+                    ? distance<1?"足元":Mathf.Abs(bearing)>145?"後方":Mathf.Abs(bearing)<18?"正面":bearing<0?"左手":"右手"
+                    : Mathf.Abs(bearing)>145?"地図の下":Mathf.Abs(bearing)<35?"地図の上":bearing<0?"地図の左":"地図の右";
+                label=side+"　"+label;
+                if(!TryPlaceBearing(label,out rect))return;
+            }
+            navigationLabel=rect;
+            navigationPoint=point;
+            PaintFieldLabel(rect,label,tint);
+#if UNITY_WEBGL && EVAC_WEB_TEST && !UNITY_EDITOR
+            if(pawn!=null)InspectFieldBearing(destination,!anchored);
+#endif
+        }
+
+        static readonly float[] BearingRows={.39f,.32f,.59f,.67f,.25f};
+
+        bool TryPlaceBearing(string label,out Rect rect)
+        {
+            var safe=Screen.safeArea;
+            foreach(float fraction in BearingRows)
+            {
+                rect=FieldLabel(safe.center.x,Screen.height-safe.yMax+safe.height*fraction,label);
+                if(FieldLabelClear(rect))return true;
+            }
+            rect=default;
+            return false;
+        }
+
+        Rect FieldLabel(float x,float bottom,string label)
+        {
+            float height=Mathf.Clamp(Screen.height*.041f,18,32);
+            worldText.fontSize=Mathf.RoundToInt(height*.69f);
+            float width=worldText.CalcSize(new GUIContent(label)).x+18;
+            return new Rect(x-width*.5f,bottom-height,width,height);
+        }
+
+        bool FieldLabelClear(Rect rect)
+        {
+            var safe=Screen.safeArea;
+            if(rect.xMin<safe.xMin+6 || rect.xMax>safe.xMax-6 ||
+                Screen.height-rect.yMax<safe.yMin+6 || Screen.height-rect.yMin>safe.yMax-6 ||
+                navigationLabel.Overlaps(rect))return false;
+            if(sim.Controlled!=null)
+            {
+                float cy=Screen.height*.5f;
+                if(rect.Overlaps(new Rect(Screen.width*.5f-13,cy-14,26,28)))return false;
+                if(!TouchUI && !HasMouseLook && rect.Overlaps(new Rect(Screen.width*.5f-134,cy+28,268,31)))return false;
+                if(TouchUI)
+                {
+                    var move=moveFinger>=0?touchOrigin:new Vector2(Screen.width*.13f,Screen.height*.23f);
+                    if(OverlapsPad(move,ThumbRadius) || (PushedColumn<0 && OverlapsPad(FireCenter,ThumbRadius*.77f)))return false;
+                }
+            }
+            return !ui.CoversFieldLabel(rect);
+
+            bool OverlapsPad(Vector2 point,float radius) => rect.Overlaps(new Rect(
+                point.x-radius,Screen.height-point.y-radius,radius*2,radius*2));
+        }
+
+        void PaintFieldLabel(Rect rect,string label,Color tint)
+        {
+            Box(rect.x,rect.y,rect.width,rect.height,new Color(.055f,.09f,.08f,.9f));
+            Box(rect.x,rect.y,3,rect.height,tint);
+            worldText.fontSize=Mathf.RoundToInt(rect.height*.69f);
+            worldText.normal.textColor=tint;
+            GUI.Label(rect,label,worldText);
+        }
+
+        void DrawFirePad(FireBlock fire,float radius)
+        {
+            string label=fire switch
+            {
+                FireBlock.Carrying=>"搬送中",
+                FireBlock.Escorting=>"誘導中",
+                FireBlock.Moving=>"行動中",
+                FireBlock.Reloading=>"装填中",
+                FireBlock.Empty=>"装填",
+                FireBlock.NoReserve=>"弾薬なし",
+                _=>"射撃"
+            };
+            Color? tint=fire switch
+            {
+                FireBlock.None or FireBlock.Cooldown=>null,
+                FireBlock.Empty=>new Color(1,.84f,.50f),
+                _=>new Color(.69f,.75f,.71f)
+            };
+            Pad(FireCenter,radius,label,fireFinger>=0,tint);
+            if(fireFinger<0 && Time.unscaledTime>=fireFeedbackUntil)return;
+            string hint=fire switch
+            {
+                FireBlock.Carrying or FireBlock.Escorting when !string.IsNullOrEmpty(ContextAction)=>ContextAction,
+                FireBlock.Carrying or FireBlock.Escorting=>"支援中は射撃できません",
+                FireBlock.NoReserve=>"予備弾なし",
+                _=>null
+            };
+            if(hint==null)return;
+            var center=FireCenter;
+            float y=Screen.height-center.y;
+            var rect=FieldLabel(center.x,y-radius-8,hint);
+            if(!FieldLabelClear(rect))
+            {
+                rect.x=center.x-radius-8-rect.width;
+                rect.y=y-rect.height*.5f;
+            }
+            if(FieldLabelClear(rect))PaintFieldLabel(rect,hint,new Color(1,.84f,.50f));
+        }
         void RouteSegment(Vector3 a,Vector3 b,Color tint)
         {
             Vector3 pa=eye.WorldToScreenPoint(a+Vector3.up*.14f),pb=eye.WorldToScreenPoint(b+Vector3.up*.14f);
@@ -351,20 +489,27 @@ namespace Evac
         }
         static void Box(float x,float y,float w,float h,Color c)
         {var old=GUI.color;GUI.color=c;GUI.DrawTexture(new Rect(x,y,w,h),Texture2D.whiteTexture);GUI.color=old;}
-        void Pad(Vector2 p,float r,string label,bool press)
+        void Pad(Vector2 p,float r,string label,bool press,Color? tint=null)
         {
             var rect=new Rect(p.x-r,Screen.height-p.y-r,r*2,r*2);
             GUI.DrawTexture(rect,Texture2D.whiteTexture,ScaleMode.StretchToFill,true,0,new Color(.07f,.1f,.09f,press?.68f:.42f),0,r);
-            GUI.DrawTexture(rect,Texture2D.whiteTexture,ScaleMode.StretchToFill,true,0,new Color(.95f,.88f,.68f,.7f),1.5f,r);
+            var ring=tint??new Color(.95f,.88f,.68f);
+            ring.a=.7f;
+            GUI.DrawTexture(rect,Texture2D.whiteTexture,ScaleMode.StretchToFill,true,0,ring,1.5f,r);
             worldText.fontSize=Mathf.RoundToInt(Mathf.Clamp(r*.39f,12,31));
-            worldText.normal.textColor=Color.white;GUI.Label(rect,label,worldText);
+            worldText.normal.textColor=tint??Color.white;GUI.Label(rect,label,worldText);
         }
         void WorldTag(Vector3 position,string label,Color c,bool tick)
         {
             Vector3 p=eye.WorldToScreenPoint(position);if(p.z<=0)return;
             float h=Mathf.Clamp(Screen.height*.032f,17,32), w=Mathf.Max(58,h*(label.Length+1));
             var rect=new Rect(p.x-w*.5f,Screen.height-p.y-h,w,h);
-            if(ui.BlocksPointer(new Vector2(p.x,p.y+h*.5f)))return;
+            if(navigationLabel.width>0)
+            {
+                var delta=position-navigationPoint;
+                if(delta.x*delta.x+delta.z*delta.z<.04f || navigationLabel.Overlaps(rect))return;
+            }
+            if(ui.CoversFieldLabel(new Rect(rect.x,rect.y,rect.width,rect.height+(tick?5:0))))return;
             Box(rect.x,rect.y,w,h,new Color(.055f,.09f,.08f,.87f));
             Box(rect.x,rect.y,3,h,c);
             worldText.fontSize=Mathf.RoundToInt(h*.59f);worldText.normal.textColor=c;GUI.Label(rect,label,worldText);
