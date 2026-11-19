@@ -289,5 +289,15 @@
     "category": "3D障害物レース",
     "thumbnail": "cover.jpg",
     "accent": "#e95743"
+  },
+  {
+    "id": "2026-11-19-2",
+    "date": "2026-11-19",
+    "sequence": 2,
+    "name": "避難指令",
+    "description": "感染者が迫る街で班を指揮し、隊員を直接操作して住民を避難させる。",
+    "category": "RTS・FPS",
+    "thumbnail": "cover.jpg",
+    "accent": "#B73529"
   }
 ]

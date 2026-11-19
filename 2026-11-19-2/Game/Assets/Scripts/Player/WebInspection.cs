@@ -1,0 +1,43 @@
+#if UNITY_WEBGL && EVAC_WEB_TEST && !UNITY_EDITOR
+using System.Runtime.InteropServices;
+using UnityEngine;
+
+namespace Evac
+{
+    public sealed partial class GameSession
+    {
+        [DllImport("__Internal")] static extern void InspectState(string phase,string mode,int ammo,float x,float z,float yaw,int fingers);
+        [DllImport("__Internal")] static extern int InspectDutyFailure(int sector,int expected,int unchanged);
+        bool preparedFailure;
+        int expectedSector=-1;
+        string normalRecord, normalCheckpoint;
+        void ReportControls()
+        {
+            Unit u=sim.Controlled;
+            var pos=u?.pos??Vector3.zero;
+            InspectState(Phase,Mode,Ammo,pos.x,pos.z,u?.yaw??0,FieldTouches.Count);
+            if(!IsDuty)return;
+            bool intact=preparedFailure && normalRecord==PlayerPrefs.GetString("evac-suspend") &&
+                normalCheckpoint==PlayerPrefs.GetString("evac-checkpoint");
+            if(InspectDutyFailure(sim.Sector,expectedSector,intact?1:0)!=0 && !preparedFailure && Phase=="Playing" && DutyIndex==2)
+            {
+                normalRecord=PlayerPrefs.GetString("evac-suspend");
+                normalCheckpoint=PlayerPrefs.GetString("evac-checkpoint");
+                preparedFailure=true;
+                expectedSector=sim.PrepareDutyCheckpointFailure();
+            }
+        }
+    }
+    public sealed partial class GameUI
+    {
+        [DllImport("__Internal")] static extern void InspectClick(string label);
+        [DllImport("__Internal")] static extern void InspectButton(string label,float x,float y,int frame);
+        void ReportButton(Rect button,string label)
+        {
+            if(Event.current.type!=EventType.Repaint)return;
+            var pt=button.center;
+            InspectButton(label,(safeArea.x+pt.x*scale)/Screen.width,(Screen.height-safeArea.yMax+pt.y*scale)/Screen.height,Time.frameCount);
+        }
+    }
+}
+#endif
