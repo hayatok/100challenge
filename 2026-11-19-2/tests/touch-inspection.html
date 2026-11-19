@@ -167,16 +167,41 @@
         await button(/^避難隊列$/);
         await wait('Live market map',()=>articles().includes('店主の名簿'));
         if(await capture('market-map'))return;
-        await button(/^軒下から誘導$/);
-        await wait('Guide assigned',()=>articles().some(k=>/^先導　.+に入る$/.test(k)));
+        if(params.has('dispatch-first')){
+            await button(/^横戸を開ける$/);
+            await wait('Opener dispatched before choosing a route',()=>audit().state.mode==='RTS' &&
+                articles().some(k=>/で横戸へ$/.test(k)) && articles().includes('横戸で待ち合わせ'));
+            await wait('Gate opened under AI command before selecting the route',()=>audit().market.lift>=.82);
+            await button(/^軒下から誘導$/);
+            await wait('Guide joined after the gate opened',()=>audit().market.leader>=0);
+            await wait('Both residents at the bus',()=>audit().market.boarded===2,60000);
+            log.textContent='PASS '+frame.width+'×'+frame.height+' | Dispatched the AI opener before choosing a route; sent the guide, and both shopkeepers boarded in RTS.';
+            return;
+        }
+        const meeting=params.has('rendezvous');
+        let leader;
+        if(meeting){
+            await button(/^横戸で待ち合わせ$/);
+            await wait('Opener took the radio',()=>audit().market?.meeting && audit().state.mode==='FPS');
+            leader=audit().market.leader;
+        } else {
+            await button(/^軒下から誘導$/);
+            await wait('Guide assigned',()=>articles().some(k=>/^先導　.+に入る$/.test(k)));
+            leader=audit().market.leader;
+        }
         if(params.has('map-only')){
             await button(/^横戸を開ける$/);
             if(await capture('market-orders'))return;
             log.textContent='PASS '+frame.width+'×'+frame.height+' | Compared both routes and sent separate guide and gate operator from map.';return;
         }
-        const leader=audit().market.leader;
-        await button(/で横戸へ$/);
+        if(!meeting)await button(/で横戸へ$/);
         await wait('Independent second soldier',()=>audit().state.mode==='FPS' && audit().market.pawn!==leader && audit().market.pawn>=0);
+        if(meeting){
+            const begin=audit().market.clock;
+            await wait('Residents waiting after eighteen seconds',()=>{
+                const m=audit().market;return m.clock>=begin+18 && m.waiting && m.meeting && !m.finished && m.boarded===0;
+            },70000);
+        }
         // Look toward the marked shutter using the ordinary right-thumb gesture.
         async function faceDoor() {
             for(let i=0;i<12;i++){
@@ -218,7 +243,7 @@
         await button(/^指揮に戻る$/);
         await wait('Returned to same market operation',()=>audit().state.mode==='RTS');
         await wait('Shopkeepers boarded',()=>audit().market.boarded===2,55000);
-        log.textContent='PASS '+frame.width+'×'+frame.height+' | Sent guide, took a different soldier, walked to the gate by touch, lifted it, returned to command, and both shopkeepers boarded.';
+        log.textContent='PASS '+frame.width+'×'+frame.height+' | '+(meeting?'Guide and both residents waited for a deliberate opener for 18 simulation seconds. ':'')+'Sent guide, took a different soldier, walked to the gate by touch, lifted it, returned to command, and both shopkeepers boarded.';
         return;
     }
     if(params.has('column')){

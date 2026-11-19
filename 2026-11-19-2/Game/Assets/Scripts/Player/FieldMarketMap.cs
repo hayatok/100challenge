@@ -46,8 +46,15 @@ namespace Evac
 
         internal Vector3 MarketScreenPoint(Vector3 p) => eye.WorldToScreenPoint(p);
 
+        internal void MeetAtMarketGate()
+        {
+            int opener = sim.MeetAtMarketGate(SelectedSquad);
+            if (opener >= 0) PossessMarketOpener(opener);
+        }
+
         internal void PossessMarketOpener(int id)
         {
+            if (sim.CanWaitForMarketOpener(id)) sim.WaitForMarketOpener(id);
             PossessFieldActor(id);
             if (sim.Controlled?.id == id) marketGatePawn = id;
         }
@@ -65,8 +72,9 @@ namespace Evac
             }
         }
 
-        bool HeadingForMarketGate => marketGatePawn >= 0 && sim.Controlled?.id == marketGatePawn &&
-            missionIndex == 0 && sim.ColumnsActive && !sim.ColumnsComplete && !sim.ColumnControlOpen(0);
+        bool HeadingForMarketGate => missionIndex == 0 && sim.Controlled != null && sim.ColumnsActive &&
+            !sim.ColumnsComplete && !sim.ColumnControlOpen(0) && (sim.Controlled.id == marketGatePawn ||
+            sim.MarketMeeting && sim.Controlled.id == sim.ColumnOperatorId(0));
 
         void DrawMarketGateBearing()
         {

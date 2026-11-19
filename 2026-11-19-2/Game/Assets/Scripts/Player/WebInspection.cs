@@ -9,7 +9,7 @@ namespace Evac
         [DllImport("__Internal")] static extern void InspectState(string phase,string mode,int ammo,float x,float z,float yaw,int fingers);
         [DllImport("__Internal")] static extern int InspectDutyFailure(int sector,int expected,int unchanged);
         [DllImport("__Internal")] static extern int InspectFloodColumns();
-        [DllImport("__Internal")] static extern void InspectMarket(int leader,int pawn,float towardX,float towardZ,float lift,int boarded,int finished);
+        [DllImport("__Internal")] static extern void InspectMarket(int leader,int pawn,float towardX,float towardZ,float lift,int boarded,int finished,int meeting,int waiting,float clock);
         bool preparedFlood,preparedFailure;
         int expectedSector=-1;
         string normalRecord, normalCheckpoint;
@@ -32,7 +32,9 @@ namespace Evac
                 var corner = u==null ? Vector3.zero : sim.ColumnNavigationStep(pos, sim.ColumnControlPoint(0));
                 int boarded=0;
                 for(int i=0;i<sim.ColumnMemberCount(0);i++) if(sim.ColumnMemberOutcome(0,i)==1)boarded++;
-                InspectMarket(sim.ColumnLeaderId(0),u?.id??-1,corner.x,corner.z,sim.MarketGateLift,boarded,sim.ColumnsComplete?1:0);
+                int leader=sim.ColumnLeaderId(0);
+                InspectMarket(leader,u?.id??-1,corner.x,corner.z,sim.MarketGateLift,boarded,
+                    sim.ColumnsComplete?1:0,sim.MarketMeeting?1:0,sim.MarketWaiting(leader)?1:0,sim.Elapsed);
             }
             if(!IsDuty)return;
             bool intact=preparedFailure && normalRecord==PlayerPrefs.GetString("evac-suspend") &&

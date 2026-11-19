@@ -11,7 +11,7 @@ namespace Evac
         public Vector3 refuge;
         public float stretcherYaw;
         public int marketStep, marketFirst, marketEnemy, impactCount;
-        public bool marketBypass, marketInitialized;
+        public bool marketBypass, marketInitialized, marketMeeting;
         public float marketOpenedAt, impactTime;
         public Vector3 impactPoint;
     }
@@ -73,7 +73,7 @@ namespace Evac
                 if(l.leg==0)return l.route<0?"表通り／軒下":l.route==0?"表通り":"青果店の軒下";
                 if(l.leg==2)return "バス乗車口";
                 if(l.route==0 || l.marketStep>=2)return "バス停前";
-                if(l.marketStep==0)return MarketDoorClear?"市場横戸の手前":"露店脇の迂回口";
+                if(l.marketStep==0)return MarketDoorClear || l.marketMeeting?"市場横戸の手前":"露店脇の迂回口";
                 return l.marketBypass?"迂回路の出口":"市場横戸の先";
             }
             if(l.leg==0)return c==0?"北連絡口":"待合室";
@@ -87,6 +87,7 @@ namespace Evac
             if(c==1 && l.leg==1 && l.route==1 && l.carrier<0 && Find(l.people[1]) is Unit hurt && hurt.active && hurt.wounded)
                 return hurt.name+"は階段で担架か手当てが必要";
             if(l.medic>=0)return "救護担当が負傷者のもとへ移動中";
+            if(l.marketMeeting && !l.open)return "横戸で待ち合わせ中";
             if(l.operatorId>=0)return "係員が操作盤へ移動中";
             if(l.leg==1 && !l.held && !ColumnPassable(c))return l.route==0?"冠水または停電。排水と昇降機を確認":"防火扉が閉鎖中。係員を操作盤へ";
             if(!MarketColumn && l.leg==1 && l.route==0 && !l.held){
@@ -135,7 +136,7 @@ namespace Evac
         Vector3 MemberDestination(int c,Unit p){
             var l=Line(c);var a=Brain(p);
             if(MarketColumn && l.route==1 && p.id==l.people[1]){
-                if(l.leg==0)return MarketQueue+Vector3.left*.95f;
+                if(l.leg==0 || WaitingAtMarketQueue(l))return MarketQueue+Vector3.left*.95f;
                 if(l.leg==1 && l.marketStep==0)return MarketGoal(l)+Vector3.forward*.92f;
             }
             if(!MarketColumn && l.leg==1){if(a.columnLifted)return ColumnShelter(c,0);if(a.columnStairs)return ColumnShelter(c,1);}
@@ -197,11 +198,11 @@ namespace Evac
             foreach(var id in l.people){var u=Find(id);if(u.active && FlatSq(u.pos,l.refuge)>25)return false;}
             return true;
         }
-        Unit ChooseColumnCrew(int c,int squad,int a,bool useControlled=true){
+        Unit ChooseColumnCrew(int c,int squad,int a,bool useControlled=true,int excluding=-1){
             if(useControlled && Controlled!=null)return Controlled;
             Unit best=null;float score=float.PositiveInfinity;
             foreach(var s in soldiers){
-                if((a==7 && Line(c).carrier==s.id) || !s.active || s.squad!=squad || Brain(s).cargo || Brain(s).escort>=0)continue;
+                if(s.id==excluding || (a==7 && Line(c).carrier==s.id) || !s.active || s.squad!=squad || Brain(s).cargo || Brain(s).escort>=0)continue;
                 bool used=false;foreach(var l in state.lines)if((l!=Line(c) && l.lead==s.id) || l.operatorId==s.id || l.medic==s.id || l.pickup==s.id || (l.carrier==s.id && (l!=Line(c) || a==4 || a==6)))used=true;
                 if(used || (a==4 && Line(c).lead==s.id && !Line(c).held))continue;
                 float d=FlatSq(s.pos,ColumnActionPoint(c,a));
@@ -230,6 +231,7 @@ namespace Evac
         public bool CommandColumn(int c,int a,int squad){
             if(!CanCommandColumn(c,a,squad))return false;
             var l=Line(c);
+            if(l.marketMeeting && (a==0 || a==2 || a==5)){l.marketMeeting=false;l.operatorId=-1;}
             if(a==2){l.held=true;l.lead=-1;l.joined=false;}
             else if(a==5){
                 foreach(var id in l.people){var u=Find(id);if(!u.active)continue;u.active=false;Brain(u).columnOutcome=2;l.sheltered++;}
@@ -308,7 +310,7 @@ namespace Evac
                 }
                 if(l.lead!=u.id || l.held)continue;
                 var brain=Brain(u);
-                if(!MarketWaiting(u.id) && !MarketPassingImpact(l) && !ColumnHandsBusy(u) && brain.fireDelay==0 && u.reload<=0 && u.ammo>0){var threat=NearestThreat(u.pos,16);if(threat!=null)HitShot(u,threat,(threat.pos-u.pos).normalized,true);}
+                if((!MarketWaiting(u.id) || WaitingAtMarketQueue(l)) && !MarketPassingImpact(l) && !ColumnHandsBusy(u) && brain.fireDelay==0 && u.reload<=0 && u.ammo>0){var threat=NearestThreat(u.pos,16);if(threat!=null)HitShot(u,threat,(threat.pos-u.pos).normalized,true);}
                 if(u.ammo==0)StartReload(u);
                 if(!MarketColumn && l.leg==1 && l.route==1){
                     foreach(int id in l.people){
@@ -406,7 +408,7 @@ namespace Evac
                 var goal=ColumnDestination(c);
                 foreach(var id in l.people){var u=Find(id);if(!u.active)continue;live=true;if(FlatSq(u.pos,MemberDestination(c,u))>(MarketColumn?.44f:7) || (!MarketColumn && l.leg==1 && l.route==0 && !Brain(u).columnLifted && !Brain(u).columnStairs))all=false;}
                 if(!live){FinishColumn(l);continue;}
-                if(l.held || !all || !l.joined)continue;
+                if(l.held || !all || !l.joined || WaitingAtMarketQueue(l))continue;
                 if(MarketColumn && AdvanceMarketStop(l))continue;
                 l.refuge=goal;l.leg++;
                 if(l.leg>=3){

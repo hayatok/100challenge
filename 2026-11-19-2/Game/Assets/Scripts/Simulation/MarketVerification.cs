@@ -12,6 +12,51 @@ namespace Evac
         }
         void VerifyMarketPassage(StringBuilder report){
             for(int style=0;style<3;style++)VerifyMarketRun(style,report);
+            VerifyMarketMeeting(report);
+        }
+        void VerifyMarketMeeting(StringBuilder report){
+            for(int scenario=0;scenario<4;scenario++){
+                StartMission(0,Difficulty.Standard);Chapter.phase=2;Tick(.1f);
+                var l=MarketLine;
+                bool named=scenario==1;
+                if(named)Verify(CommandColumn(0,1,0),"Normal awning dispatch before choosing named opener");
+                int originalLead=l.lead;
+                int id=named?MarketGateCrew(0):MeetAtMarketGate(0);
+                if(named)Verify(WaitForMarketOpener(id) && l.lead==originalLead,"Named opener reserves existing escort");
+                Verify(id>=0 && id!=l.lead && ColumnOperatorId(0)==id && Possess(id),"Possess the independent gate operator");
+                for(int i=0;i<180;i++)Tick(.1f);
+                Verify(MarketMeeting && !l.open && l.leg==1 && l.marketStep==0 && MarketWaiting(l.lead) &&
+                    MarketWaiting(l.people[0]) && MarketWaiting(l.people[1]) && ColumnStatus(0)=="横戸で待ち合わせ中",
+                    "Both residents waited for 18 seconds of live operator time; roster shows the rendezvous");
+                int guide=l.lead;
+                Verify(Save() && Load(),"Restore waiting group");
+                l=MarketLine;
+                Verify(MarketMeeting && l.lead==guide && l.operatorId==id && Controlled?.id==id,"Restore named assignment and local control");
+                if(scenario==1)CancelMarketMeeting();
+                if(scenario==2)Release();
+                if(scenario==3){Damage(Find(id),1000,Vector3.zero);Release();}
+                var crossings=new float[2];
+                for(int i=0;i<700 && !l.finished && Result==SimResult.Active;i++){
+                    if(scenario==0 && !l.open){
+                        WalkMarketPlayer(ColumnControlPoint(0));
+                        if(CanCommandColumn(0,4,0))Verify(CommandColumn(0,4,0),"Physically unlock after looking around");
+                    }
+                    var before=new[]{Find(l.people[0]).pos,Find(l.people[1]).pos};Tick(.1f);
+                    for(int j=0;j<2;j++){
+                        var p=Find(l.people[j]).pos;
+                        Verify(FlatSq(before[j],p)<.18f,"Continuous resident movement after waiting");
+                        if(before[j].z> -4.6f && p.z<= -4.6f)crossings[j]=p.x;
+                    }
+                    if(l.marketBypass && l.marketStep>=1 && !l.open)
+                        Verify(!CanWaitForMarketOpener(id) && !CanMeetAtMarketGate(0),"No rendezvous after bypass commitment");
+                }
+                bool useGate=scenario==0 || scenario==2;
+                Verify(l.arrived==2 && !MarketMeeting && l.open==useGate &&
+                    System.Array.TrueForAll(crossings,x=>useGate?x> -8 && x< -6:x< -12),
+                    "Delayed rendezvous scenario "+scenario+" arrivals "+l.arrived+" gate "+l.open+" crossings "+string.Join(",",crossings));
+                report.AppendLine("Market rendezvous after 18s, "+new[]{"manual opener","cancel","AI takes over","operator lost"}[scenario]+
+                    " boarded="+l.arrived+" crossing x="+string.Join(",",crossings));
+            }
         }
         void VerifyMarketRun(int style,StringBuilder report){
             StartMission(0,Difficulty.Standard);Chapter.phase=2;Tick(.1f);

@@ -5,9 +5,10 @@ mergeInto(LibraryManager.library,{
         audit.duty={sector:sector,expected:expected,unchanged:!!unchanged};
         return location.search.indexOf('duty-failure=1')>=0?1:0;
     },
-    InspectMarket: function(leader,pawn,x,z,lift,boarded,finished) {
+    InspectMarket: function(leader,pawn,x,z,lift,boarded,finished,meeting,waiting,clock) {
         var audit=window.evacInspection||(window.evacInspection={buttons:{}});
-        audit.market={leader:leader,pawn:pawn,x:x,z:z,lift:lift,boarded:boarded,finished:!!finished};
+        audit.market={leader:leader,pawn:pawn,x:x,z:z,lift:lift,boarded:boarded,finished:!!finished,
+            meeting:!!meeting,waiting:!!waiting,clock:clock};
     },
     InspectClick: function(label) {
         var audit=window.evacInspection||(window.evacInspection={buttons:{}});
