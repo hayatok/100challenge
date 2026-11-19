@@ -77,8 +77,40 @@
     }
     await button(/^作戦を選ぶ/);await wait('Briefing',()=>audit().state.phase==='Briefing');
     await button(/^出動する/);await wait('Command',()=>audit().state.phase==='Playing');
+    const articles=()=>Object.keys(audit().buttons);
+    async function capture(name) {
+        if(params.get('capture')==='series'){
+            await pause(200);
+            window.evacCapture=name;
+            await wait('Capture '+name,()=>window.evacCapture!==name,20000);
+            return false;
+        }
+        if(params.get('capture')!==name)return false;
+        await pause(250);
+        log.textContent='CAPTURE '+name+' '+frame.width+'×'+frame.height;
+        return true;
+    }
+    if(await capture('command'))return;
+    await button(/^現場方針を決める$/);
+    await wait('Two distinct opening responses',()=>articles().includes('店先と停留所の名簿を照合') && articles().includes('店主を案内役に迎える'));
+    if(await capture('book'))return;
+    await button(/^店主を案内役に迎える$/);
+    await button(/を現場へ$/);
+    await wait('Chapter assignment returned to the map',()=>articles().includes('作戦手帳') && !articles().includes('市街捜索'));
+    await button(/^作戦手帳$/);await button(/^市街捜索$/);
+    await wait('Witness locations',()=>articles().includes('青果の荷受け台') && articles().includes('商店会の案内板'));
+    if(await capture('search'))return;
+    await button(/^捜索先$/);
+    await wait('Possible rooms',()=>articles().includes('製氷室') && articles().includes('案内室'));
+    await button(/^同行・救護$/);
+    await wait('Rescue destinations',()=>articles().includes('前方救護所'));
+    await button(/^閉じる$/);
     if(!Object.keys(audit().buttons).some(k=>k.includes('を直接操作')))await button(/^名簿/);
     await button(/を直接操作$/);await wait('Direct',()=>audit().state.mode==='FPS');
+    if(await capture('direct'))return;
+    await button(/^作戦手帳$/);
+    await wait('Field book is usable in first person',()=>articles().includes('市街捜索'));
+    await button(/^閉じる$/);
     const start={...audit().state};
     finger('touchstart',1,.13,.78);await pause(100);finger('touchmove',1,.17,.63);
     finger('touchstart',2,.64,.49);await pause(90);finger('touchmove',2,.72,.50);
@@ -93,10 +125,11 @@
     await button(/^装填$/);
     await wait('Reload above '+after.ammo+' rounds',()=>audit().state.ammo>after.ammo,8000);
     await button(/^指揮に戻る/);await wait('Return',()=>audit().state.mode==='RTS');
+    await button(/^作戦手帳$/);
     await button(/^現場からの要請/);await button(/^引き受ける/);await button(/を現場へ$/);
     await button(/^一時停止/);await wait('Pause',()=>audit().state.phase==='Paused');
     log.textContent='PASS '+frame.width+'×'+frame.height+' | Three simultaneous DOM touch contacts in Unity. '+
         'Movement '+walked.toFixed(2)+' m, yaw '+(after.yaw-start.yaw).toFixed(1)+'°, ammunition '+start.ammo+' → '+after.ammo+
-        '. Reload, RTS return, optional dispatch and pause passed.'+(custom?' Rebinding, reset and repositioned fire control passed.':'');
+        '. Chapter response, search evidence and escort tabs, FPS field book, reload, RTS return, optional dispatch and pause passed.'+(custom?' Rebinding, reset and repositioned fire control passed.':'');
 })().catch(error => {document.querySelector('#results').textContent='FAIL '+error.message;});
 </script></html>

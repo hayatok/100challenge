@@ -27,7 +27,7 @@ namespace Evac
         float recoil, hitTime, hurtTime, pitch, lastOwnHealth, sightNoise, simCarry;
         Vector3 mapCenter;
         float zoom = 23;
-        bool forceTouch;
+        bool forceTouch, lastFieldOverlay;
         public string Phase {get; private set;} = "Title";
         public string Mode => sim.Controlled == null ? "RTS" : "FPS";
         public int MissionIndex => missionIndex;
@@ -152,7 +152,7 @@ namespace Evac
         }
         void UpdateCursor()
         {
-            bool lockIt = Phase=="Playing" && sim.Controlled!=null && !TouchUI;
+            bool lockIt = Phase=="Playing" && sim.Controlled!=null && !TouchUI && (ui==null || !ui.FieldOverlay);
 #if UNITY_WEBGL && !UNITY_EDITOR
             BrowserWantsLook(lockIt?1:0);
 #else
@@ -209,6 +209,9 @@ namespace Evac
             SelectedSquad=roster.Count>0?roster[SelectedSoldier].squad:0;
             orderIndex=(int)sim.OrderFor(SelectedSquad);
             world.Build(missionIndex);
+            fx.ResetField();
+            choosingBeacon=false;seenBeacon=sim.BeaconSerial;beaconGlint=0;
+            ReleaseAim();
             mapCenter=Vector3.Lerp(sim.Mission.assembly, sim.Mission.exit,.5f);
             zoom=TouchUI?25:22;
             mapYaw=-19;
@@ -238,7 +241,7 @@ namespace Evac
         public void Possess(int i)
         {
             if(Phase!="Playing"||!RosterAlive(i)||!sim.Possess(roster[i].id)) return;
-            SelectSoldier(i);pitch=0;recoil=0;ReleaseAim();lastOwnHealth=Health01;
+            SelectSoldier(i);pitch=0;recoil=0;choosingBeacon=false;ReleaseAim();lastOwnHealth=Health01;
             transitionTime=Time.unscaledTime;
             Change("Playing");FrameCamera(0,true); sound.Signal("radio");
         }
@@ -273,10 +276,15 @@ namespace Evac
         {
             var u=sim.Controlled; if(u==null || Phase!="Playing") return;
             int shots=u.shots; int ammo=u.ammo;
-            sim.Shoot(Quaternion.Euler(pitch-(ReducedMotion?0:recoil*1.1f),u.yaw,0)*Vector3.forward);
+            Vector3 direction=Quaternion.Euler(pitch-(ReducedMotion?0:cameraKick),u.yaw,0)*Vector3.forward;
+            sim.Shoot(direction);
             if(u.shots!=shots||u.ammo<ammo)
             {
-                recoil=1;sound.Signal("fire");fx.Flash(eye.transform,ReducedMotion);
+                recoil=1;
+                kickVelocity+=aimBlend>.7f?12:20;
+                sound.Signal("fire");fx.Flash(eye.transform,ReducedMotion);
+                if(!sim.LastShotHit && sim.SurfaceContact(u.pos+Vector3.up*1.52f,direction,out var impact,out bool road))
+                    fx.Surface(impact,direction,road,ReducedMotion);
                 if(sim.LastShotHit) hitTime=.16f;
             }
         }
@@ -304,6 +312,9 @@ namespace Evac
             ReportControls();
 #endif
             if(ControlPreferences.CapturingKey)return;
+            if(lastFieldOverlay!=ui.FieldOverlay){lastFieldOverlay=ui.FieldOverlay;ClearTouches();UpdateCursor();}
+            if(Phase=="Playing" && Input.GetKeyDown(KeyCode.F2)) {ui.SearchHotkey();UpdateCursor();ClearTouches();return;}
+            if(Phase=="Playing" && Input.GetKeyDown(KeyCode.Escape) && ui.CloseFieldOverlay()){UpdateCursor();ClearTouches();return;}
             if(Input.GetKeyDown(KeyCode.F12))CaptureFrame();
             if(Input.GetKeyDown(KeyCode.Escape) && ui.TryBackFromSettings())return;
             if(Input.GetKeyDown(KeyCode.Escape)) {if(Phase=="Paused")Resume();else if(Phase=="Playing")Pause();else if(Phase=="Briefing")Home();return;}
@@ -318,7 +329,8 @@ namespace Evac
                 return;
             }
             var was=sim.Controlled;
-            HandleInput(dt);
+            if (!ui.FieldOverlay) HandleInput(dt);
+            else ClearTouches();
             if (Phase!="Playing") return;
             simCarry+=dt;
             while(simCarry>=1f/30f) {sim.Tick(1f/30f);simCarry-=1f/30f;}
@@ -328,6 +340,10 @@ namespace Evac
             if(sim.Sector!=lastSector)
             {lastSector=sim.Sector;UpdateObjectiveSigns();sound.Signal("radio");Receive("section_pa","指令","次の避難場所を地図に表示します。",true);}
             recoil=Mathf.MoveTowards(recoil,0,dt*6);
+            // Exact critically damped return, stable at either desktop or touch frame rates.
+            float spring=17, decay=Mathf.Exp(-spring*dt), impulse=kickVelocity+spring*cameraKick;
+            cameraKick=(cameraKick+impulse*dt)*decay;
+            kickVelocity=(kickVelocity-spring*impulse*dt)*decay;
             hitTime-=dt;hurtTime-=dt;
             if(sim.Controlled!=null && Health01<lastOwnHealth-.001f){hurtTime=.43f;sound.Signal("impact");}
             lastOwnHealth=Health01;
@@ -353,7 +369,10 @@ namespace Evac
             bool alarmOn=sim.AlarmActiveRemaining>0;
             world.SetAlarm(sim.AlarmPoint,missionIndex/2,alarmOn);
             sound.SetFieldAlarm(sim.AlarmPoint,missionIndex/2,alarmOn);
-            world.SetFieldState(sim.Site,sim.Construction,Saved,sim.PowerMask,sim.Water,sim.PassageOpen);
+            world.SetFieldState(sim.Site,sim.Construction,HasFleet?sim.FleetVehicleLoad(0):Saved,sim.PowerMask,sim.Water,sim.PassageOpen);
+            if(HasFleet && departureTime<=0) world.DrawFleet(sim,dt);
+            UpdateLamp(dt);
+            UpdateIncidents();
             world.SetObjective("追加要請",sim.RequestPoint,6,sim.HasRequestPoint);
             world.SetRequestProp(sim.RequestPropType,sim.RequestPropPosition);
             foreach(var u in sim.Units)
@@ -362,7 +381,11 @@ namespace Evac
                 int kind=u.kind==UnitKind.Soldier?0:u.kind==UnitKind.Infected?1:2;
                 bool acted=u.windup>0||u.reload>0||u.escortId>=0||u.carryingCargo;
                 bool fired=lastShots.TryGetValue(u.id,out int oldShots)&&oldShots!=u.shots;
-                if(fired && u!=sim.Controlled && Vector3.Distance(eye.transform.position,u.pos)<52) sound.At("distant",u.pos);
+                if(fired && u!=sim.Controlled && Vector3.Distance(eye.transform.position,u.pos)<70)
+                {
+                    sound.At("distant",u.pos);
+                    fx.SquadFlash(u.pos,u.yaw,ReducedMotion);
+                }
                 lastShots[u.id]=u.shots;
                 if(lastHealth.TryGetValue(u.id,out float prev)&&prev>u.hp && kind==1)
                 {
@@ -379,13 +402,13 @@ namespace Evac
                 actualSpeed=Mathf.Lerp(previousSpeed,actualSpeed,1-Mathf.Exp(-dt*12));
                 walkSpeed[u.id]=actualSpeed;
                 lastPositions[u.id]=u.pos;
-                world.DrawActor(u.id,kind,visual,u.pos,u.yaw,actualSpeed,
+                world.DrawActor(u.id,kind,visual,u.pos+Vector3.up*sim.VaultLift(u),u.yaw,actualSpeed,
                     Mathf.Clamp01(u.hp/Mathf.Max(1,u.maxHp)),acted||fired||u.stagger>0||activity==2,u==sim.Controlled,dt,activity,u.lastHitDirection);
             }
             world.EndFrame();
             var pawn=sim.Controlled;
-            world.DrawFirstPerson(pawn!=null,pawn!=null&&pawn.moving?1:0,recoil,
-                pawn==null?0:Mathf.Clamp01(pawn.reload/1.55f),Time.time,pawn==null?0:pawn.escortId>=0?1:pawn.carryingCargo?3:0,aimBlend);
+            world.DrawFirstPerson(pawn!=null,ReducedMotion?0:stepWeight,recoil,
+                pawn==null?0:Mathf.Clamp01(pawn.reload/1.55f),stride/8f,pawn==null?0:pawn.escortId>=0?1:pawn.carryingCargo?3:0,aimBlend);
         }
     }
 }

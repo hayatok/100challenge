@@ -28,7 +28,7 @@ namespace Evac
                     Submit(()=>{G.DispatchRequest();requestOpen=false;});
             }
             else Text(R(x,top+188,width,34),GameSession.RequestLabel(G.RequestStatus),20,Green,true);
-            if(Button(R(x,top+291,width,42),"指揮に戻る",dark:true))requestOpen=false;
+            if(Button(R(x,top+291,width,42),G.Mode=="FPS"?"現場に戻る":"指揮に戻る",dark:true))requestOpen=false;
         }
         void DrawRequestRecords()
         {

@@ -58,6 +58,12 @@ namespace Evac
         {
             if(radio && clips.TryGetValue(key,out var c)) radio.PlayOneShot(c,key=="board"?.38f:.72f);
         }
+        public void Footfall(bool right,float speed,bool annex,int region)
+        {
+            string pair = region==2 ? "tile" : annex ? "grit" : "road";
+            if(clips.TryGetValue(pair+(right?"R":"L"),out var sample))
+                radio.PlayOneShot(sample,Mathf.Lerp(.28f,.70f,Mathf.Clamp01(speed/5.3f)));
+        }
         public float Say(string key,bool urgent=false)
         {
             if((voice.isPlaying&&!urgent)||!clips.TryGetValue(key,out var clip))return 0;

@@ -56,7 +56,7 @@ namespace Evac
             if ((NeedsRepair && state.sectionRepair<1) || (Rail && !state.repaired))
             {
                 if (!Walk(u, Route.works, 3.3f, dt)) return;
-                PerformRepair(dt * (state.built && state.site == 2 ? .075f : .036f));
+                PerformRepair(dt * WorkLight(u.pos) * (state.built && state.site == 2 ? .075f : .036f));
                 return;
             }
             if (state.site != 0 && !state.built)
@@ -83,6 +83,7 @@ namespace Evac
                 var patient = Find(a.escort);
                 if (patient == null || !Active(patient)) { a.escort = -1; return; }
                 var memory = Brain(patient);
+                if(FieldPickup(patient,memory))memory.route=1;
                 Vector3 next = memory.route < 1 ? memory.personalGate : Door(patient);
                 if (Walk(u, next, 2.7f, dt) && memory.route == 0 && AllowCrossing(memory))
                     memory.route = 1;
@@ -153,17 +154,20 @@ namespace Evac
         Vector3 Door(Unit c)
         {
             // Adjacent doors serve independent queues while sharing the same vehicle.
+            if(FleetEnabled)return BusStop(PreferredBus(c));
             return Route.exit + new Vector3(0,0,(c.id % 3 - 1) * 1.8f);
         }
 
         void Civilian(Unit c, ActorMemory m, float dt)
         {
+            if(ChapterPhase==1)return;
             if (m.escort >= 0)
             {
                 var helper = Find(m.escort);
                 if (helper == null || !Active(helper)) { Unlink(c); return; }
                 c.pos = geometry.Move(helper.pos,helper.pos + Quaternion.Euler(0, helper.yaw, 0) * new Vector3(.48f,0,.58f));
                 c.yaw = helper.yaw;
+                if(FieldPickup(c,m))m.route=1;
                 if (m.route == 0 && FlatSq(c.pos, m.personalGate) < 9f && AllowCrossing(m)) m.route = 1;
                 if (m.route == 1 && state.exitClock >= 1 && FlatSq(c.pos, Door(c)) < 6f) Board(c);
                 return;
@@ -178,6 +182,7 @@ namespace Evac
                 }
             }
             if (!m.discovered || m.injured) return;
+            if(FieldPickup(c,m))m.route=1;
             var next = m.route == 0 ? m.personalGate : Door(c);
             if (!Walk(c, next, 2.25f + (c.id % 6) * .1f, dt)) return;
             if (m.route == 0)

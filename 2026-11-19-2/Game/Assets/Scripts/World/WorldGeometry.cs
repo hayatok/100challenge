@@ -4,9 +4,9 @@ using UnityEngine;
 namespace Evac
 {
     /// <summary>The walkable street and the solid footprints shared by both perspectives.</summary>
-    public sealed class WorldGeometry
+    public sealed partial class WorldGeometry
     {
-        const float HalfWidth = 15.4f, HalfLength = 33.5f, Radius = .30f, CornerGap = .055f;
+        const float HalfWidth = 15.4f, HalfLength = 90.5f, Radius = .30f, CornerGap = .055f;
         readonly List<Solid> solids = new List<Solid>();
         readonly List<Vector3> corners = new List<Vector3>();
         readonly float[,] paths;
@@ -25,7 +25,7 @@ namespace Evac
 
         public WorldGeometry(int missionIndex) : this(missionIndex, RoutePlan.All[Mathf.Clamp(missionIndex,0,RoutePlan.All.Length-1)]) { }
 
-        internal WorldGeometry(int missionIndex, RoutePlan route)
+        internal WorldGeometry(int missionIndex, RoutePlan route,bool fleet=false,Rect[] parkedFleet=null)
         {
             int index = Mathf.Clamp(missionIndex, 0, RoutePlan.All.Length-1);
 
@@ -50,7 +50,7 @@ namespace Evac
                 Add(-8,20,.31f,2.6f,4.7f);
                 Add(-9.5f,21.26f,3,.16f,2.6f);
             }
-            else Add(bus.x,bus.z,3.1f,8.75f,2.9f);
+            else if (!fleet) Add(bus.x,bus.z,3.1f,8.75f,2.9f);
             Add(route.depot.x+1.85f,route.depot.z,2.24f,1.50f,1.6f);
             Vector3 lot = SitePosition(route.depot);
             Add(lot.x,lot.z,2.95f,2.24f,1.15f);
@@ -60,6 +60,11 @@ namespace Evac
             Add(cache.x,cache.z,2.19f,.86f,1.64f);
             foreach(float side in new[]{-1f,1f})
                 Add(route.gate.x+side*1.38f,route.gate.z,.3f,1.27f,1.3f);
+            foreach(float x in new[]{-12f,12f}) Add(x,index/2==2?34.5f:39f,.57f,2.50f,5.3f);
+            if(parkedFleet!=null)
+                foreach(var curb in parkedFleet)Add(curb.center.x,curb.center.y,curb.width,curb.height,2.8f);
+            foreach(var box in DistrictLandmarks.Solids(index))Add(box.x,box.z,box.width,box.depth,box.height);
+            foreach(var box in ApproachBlocks.Solids(index)) Add(box.x,box.z,box.width,box.depth,box.height);
             foreach(var solid in solids)
             {
                 var r=solid.walking;
@@ -135,6 +140,7 @@ namespace Evac
         {
             start=Clamp(start);
             var end=Bounds(desiredEnd);
+            if(CrossesShutter(start,end,out float enter))end=Vector3.Lerp(start,end,Mathf.Max(0,enter-.01f));
             if(Clear(start,end,true))return end;
             Vector3 x=new Vector3(end.x,0,start.z), z=new Vector3(start.x,0,end.z);
             bool moveX=Clear(start,x,true),moveZ=Clear(start,z,true);
@@ -155,6 +161,7 @@ namespace Evac
         {
             var goal=Clamp(destination);
             start=Clamp(start);
+            if(ShutterDetour(start,goal,out var side))return side;
             if(Clear(start,goal,true))return goal;
             int n=corners.Count;
             for(int i=0;i<n;i++)
@@ -180,6 +187,51 @@ namespace Evac
         }
 
         public bool LineClear(Vector3 start,Vector3 end) => Clear(start,end,false);
+
+        public static Vector3 VehicleClearance(Vector3 point,Vector3 door,int bus,float heading)
+        {
+            var rotation=Quaternion.Euler(0,heading,0);
+            Vector3 center=ApproachBlocks.BusCenter(door,bus,heading);
+            Vector3 local=Quaternion.Inverse(rotation)*(point-center);
+            float width=bus==0?1.77f:1.29f, length=bus==0?4.67f:2.94f;
+            if(Mathf.Abs(local.x)>=width || Mathf.Abs(local.z)>=length) return point;
+            if(width-Mathf.Abs(local.x)<length-Mathf.Abs(local.z)) local.x=(local.x>=0?1:-1)*width;
+            else local.z=(local.z>=0?1:-1)*length;
+            return center+rotation*local;
+        }
+
+        public bool VaultEnd(Vector3 start,Vector3 direction,out Vector3 end,out float height)
+        {
+            end=start;height=0;
+            direction.y=0;
+            if(direction.sqrMagnitude<.16f) return false;
+            direction.Normalize();
+            const float reach=3.6f;
+            Vector3 delta=direction*reach;
+            float nearest=1;
+            foreach(var solid in solids)
+            {
+                var r=solid.physical;
+                float enter=0,exit=1;
+                if(!Slice(start.x,delta.x,r.xMin,r.xMax,ref enter,ref exit) ||
+                   !Slice(start.z,delta.z,r.yMin,r.yMax,ref enter,ref exit) || enter>=nearest)continue;
+                nearest=enter;
+                height=solid.height;
+                end=start+direction*(exit*reach+Radius+.19f);
+            }
+            if(nearest*reach>1.0f || height<.31f || height>1.32f ||
+               Vector3.Distance(start,end)>reach || (end-Clamp(end)).sqrMagnitude>.001f) return false;
+            // Sample the whole swept arc so a second, taller object blocks the landing.
+            Vector3 previous=start+Vector3.up*.28f;
+            for(int i=1;i<=8;i++)
+            {
+                float t=i/8f;
+                Vector3 next=Vector3.Lerp(start,end,t)+Vector3.up*(.28f+4*t*(1-t)*(height+.4f));
+                if(!LineClear(previous,next)) return false;
+                previous=next;
+            }
+            return true;
+        }
 
         bool Clear(Vector3 start,Vector3 end,bool walking)
         {

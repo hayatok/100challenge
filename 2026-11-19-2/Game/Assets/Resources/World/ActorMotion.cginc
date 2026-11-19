@@ -126,11 +126,24 @@ float4(-0.035000,0.041000,-0.017453,0.017453),
 float4(-0.045000,0.033000,-0.052360,0.052360),
 float4(-0.060000,0.014000,-0.104720,0.087266),
 float4(-0.072000,-0.008000,-0.104720,0.104720)};
+float4 actorCurve(float4 previous,float4 start,float4 end,float4 next,float alpha)
+{
+    float4 tangentStart=(end-previous)*.5;
+    float4 tangentEnd=(next-start)*.5;
+    float t2=alpha*alpha;
+    float t3=t2*alpha;
+    float4 value=(2*t3-3*t2+1)*start+(t3-2*t2+alpha)*tangentStart
+                +(-2*t3+3*t2)*end+(t3-t2)*tangentEnd;
+    return clamp(value,min(start,end),max(start,end));
+}
 
-// Each instance samples identical pose channels for geometry and shading normals.
-#define EVAC_KEY(tab) lerp(tab[key],tab[key+1],alpha)
+// Keep the wrap at contact continuous while limiting interpolation to the
+// authored extrema. A lifted foot never dips because adjacent keys overshoot.
+#define EVAC_KEY(tab) actorCurve(tab[prev],tab[key],tab[key+1],tab[next],alpha)
 float4 actorKeys(int key,float alpha,float side,float upper,float run,float limp)
 {
+    int prev=key==0?11:key-1;
+    int next=key>=10?key-10:key+2;
     float4 walk,fast,hurt;
     if(upper>.5){
         walk=EVAC_KEY(WalkBody); fast=EVAC_KEY(RunBody); hurt=EVAC_KEY(LimpBody);
@@ -159,74 +172,176 @@ float3 actorRoll(float3 p,float x,float y,float angle)
     return p;
 }
 
+float3 actorYaw(float3 p,float x,float angle)
+{
+    float s,c; sincos(angle,s,c);
+    p.x-=x;
+    p.xz=float2(c*p.x+s*p.z,-s*p.x+c*p.z);
+    p.x+=x;
+    return p;
+}
+
 float3 actorMotion(float3 p,float joint,float4 a,float4 f)
 {
     float cycle=frac(a.x*.159154943)*12;
     int key=min((int)cycle,11);
     float alpha=frac(cycle);
-    float side=fmod(joint,2)>.5?-1:1;
+    bool equipment=joint==9;
+    float3 rest=p;
+    float side=equipment?1:fmod(joint,2)>.5?-1:1;
     float fall=saturate(f.w);
     float live=1-smoothstep(.05,.68,fall);
     float moving=smoothstep(.01,.38,a.y)*live;
     float run=smoothstep(.58,.96,a.y);
     float limp=f.x==3?.68:0;
     float4 body=actorKeys(key,alpha,side,1,run,limp)*moving;
-    float4 limb=actorKeys(key,alpha,side,0,run,limp)*moving;
+    bool usesLimb=(joint>=1 && joint<=8) || equipment || joint==11 || joint==12;
+    float4 limb=0;
+    if(usesLimb)limb=actorKeys(key,alpha,side,0,run,limp)*moving;
     float wind=f.x==2?a.z*live:0;
-    float tuck=smoothstep(0,.62,fall);
+    float tuck=smoothstep(.09,.62,fall);
+    float settle=smoothstep(.65,1,fall);
     float hit=saturate(a.w)*live;
+    float breath=sin(a.x)*(.005+.007*run)*live;
+    float usingRifle=f.y==0 || f.y==4?1:0;
+    float aim=usingRifle*(f.y==4?saturate(.35+.65*a.z):a.z*.67);
+    float escort=f.y==1?1:0;
+    float working=f.y==2?1:0;
+    float cargo=f.y==3?1:0;
     bool shoe=joint==11 || joint==12;
     bool leg=(joint>=1 && joint<=4) || shoe;
-    bool arm=joint>=5 && joint<=8;
+    bool arm=(joint>=5 && joint<=8) || equipment;
     if(leg){
-        float knee=limb.y+tuck*(side<0?.38:1.03);
-        float hip=limb.x-tuck*(side<0?.19:.67);
-        if(shoe)p=actorPitch(p,.125,0,limb.z);
-        if(joint>=3)p=actorPitch(p,.49,0,knee);
+        float knee=limb.y+tuck*(side<0?.40:1.06)-settle*(side<0?.18:.29);
+        float hip=limb.x-tuck*(side<0?.22:.69)+settle*(side<0?.11:.23);
+        float kneeblend=shoe?1:1-smoothstep(.420,.606,p.y);
+        if(shoe)p=actorPitch(p,.125,0,limb.z+settle*.13*side);
+        p=actorPitch(p,.49,0,knee*kneeblend);
         p=actorPitch(p,.87,0,hip);
-        if(fall>0)p=actorRoll(p,side*.101,.87,side*tuck*(side<0?.12:.26));
+        p=actorRoll(p,side*.101,.87,side*tuck*(side<0?.12:.26));
     }else if(arm){
-        float upper=limb.w, elbow=-.10-.43*run*moving;
+        float elbowBlend=equipment?1:1-smoothstep(1.104,1.226,p.y);
+        float shoulderBlend=equipment?1:1-smoothstep(1.39,1.462,p.y);
+        float upper=limb.w, elbow=-.11-.55*run*moving;
+        float idle=live*(1-moving);
+        float yaw=idle*(side<0?.032:-.013);
+        float roll=side*(.039+idle*(side<0?.035:.006));
         if(f.x==1){
-            // Rifle support arm and trigger arm take different elbow angles.
-            upper=lerp(upper,side<0?-.56:-.28,.70);
-            elbow=side<0?-.93:-1.24;
-            if(f.y==4){upper-=.18;elbow-=.15;}
-            if(f.y==1){upper=side<0?-1.05:-.29;elbow=side<0?-.41:-.72;}
-            if(f.y==2){upper=-.61+limb.w*.45;elbow=-.96;}
-            if(f.y==3){upper=-.56;elbow=-1.02;}
+            float recoil=aim*pow(saturate(a.z),2);
+            upper=lerp(upper,(side<0?-.48:-.25)+limb.w*.16,.86);
+            elbow=side<0?-.96:-1.17;
+            yaw=side<0?.72:-.22;
+            upper-=aim*.24+recoil*.085;
+            elbow-=aim*.09;
+            if(escort>.5){
+                // The casualty walks to the soldier's right and just ahead.
+                upper=side>0?-.93:-.17+limb.w*.44;
+                elbow=side>0?-.39:-.53;
+                yaw=side>0?.28:0;
+                roll=side>0?.22:-.10;
+            }
+            if(working>.5){
+                upper=-.52+sin(a.x)*.15*side;
+                elbow=-.76-sin(a.x)*.17*side;
+                yaw=-.22*side;
+            }
+            if(cargo>.5){
+                upper=-.50+limb.w*.11;
+                elbow=-.92;
+                yaw=-.21*side;
+            }
         }else if(f.x==2){
-            upper=upper*.72+(side<0?-.50:-.32)-wind*.55;
-            elbow=(side<0?-.34:-.52)-wind*.28;
-        }else if(side<0){
-            upper=upper*.61-.31;
-            elbow=-.57;
+            float reach=saturate(wind*(side<0?1.22:1));
+            upper=upper*.71+(side<0?-.44:-.26)-reach*.63-hit*.25;
+            elbow=(side<0?-.29:-.45)-reach*.35;
+            yaw=-side*(.13+reach*.14);
+            roll=side*(.09+hit*.17);
+        }else{
+            upper=upper*.74-(side<0?.30:.07);
+            elbow=side<0?-.51:-.25;
+            if(escort>.5){
+                upper=side<0?.70+limb.w*.12:-.27+limb.w*.41;
+                elbow=side<0?-.31:-.61;
+                yaw=side<0?.49:-.18;
+                roll=side<0?-.39:.09;
+            }
         }
-        upper=lerp(upper,side<0?-.58:.36,tuck);
-        elbow=lerp(elbow,side<0?-.86:-.32,tuck);
-        if(joint>=7)p=actorPitch(p,1.15,.014,elbow);
-        p=actorPitch(p,1.41,0,upper);
-        if(fall>0)p=actorRoll(p,side*.18,1.41,side*tuck*(side<0?.47:.23));
+        upper=lerp(upper,side<0?-.63:.38,tuck)+settle*(side<0?.19:-.13);
+        elbow=lerp(elbow,side<0?-.91:-.38,tuck)+settle*.14;
+        yaw*=live;
+        upper+=idle*(side<0?.018:-.045);
+        float3 posed=actorPitch(p,1.15,.014,elbow*elbowBlend);
+        posed=actorPitch(posed,1.41,0,upper);
+        posed=actorYaw(posed,side*.18,yaw);
+        posed=actorRoll(posed,side*.18,1.41,roll+side*tuck*(side<0?.49:.31));
+        p=lerp(p,posed,shoulderBlend);
     }
-    if(joint==9){
-        if(f.y>0 && f.y<4)p=float3(.12,1.1,0);
-        else {p.y+=.085+(f.y==4?.075:0);p.z+=.065;}
+    if(equipment && usingRifle<.5){
+        p=actorPitch(rest,.925,.079,.11);
+        p+=float3(.045,.39,-.323);
+        p=actorRoll(p,.225,1.315,-.56);
     }
-    if(joint==10 && f.y!=3)p=float3(0,1.1,0);
+    if(joint==10){
+        if(cargo<.5)p=float3(0,1.1,0);
+        else p.y+=breath+body.w*.04;
+    }
     if(!leg){
         float spine=smoothstep(.85,1.32,p.y);
-        float upper=arm || joint==9 || joint==10?1:smoothstep(.83,1.06,p.y);
-        float head=smoothstep(1.46,1.55,p.y);
-        float lean=f.x==2?.20:f.x==1?.038:.052;
-        lean+=f.y==2?.23:f.y==1?.12:0;
-        p=actorPitch(p,1.47,0,(body.w*.68-wind*.12+tuck*.19)*head);
-        p=actorPitch(p,.87,0,(lean+wind*.21-hit*.26+run*moving*.12+tuck*.16)*upper);
-        float sn,cs; sincos(body.z*spine + hit*.16*upper,sn,cs);
-        p.xz=float2(cs*p.x+sn*p.z,-sn*p.x+cs*p.z);
-        p.x+=f.x==2?.043*spine:0;
+        float upper=arm || joint==10?1:smoothstep(.83,1.06,p.y);
+        float head=joint==13?smoothstep(1.49,1.57,p.y):0;
+        float lean=f.x==2?.20:f.x==1?.044:.054;
+        lean+=working*.22+escort*.11+cargo*.075;
+        if(joint==13)
+        {
+            float jaw=smoothstep(1.57,1.63,p.y)*(1-smoothstep(1.635,1.665,p.y));
+            float muzzle=smoothstep(.046,.088,p.z);
+            p.y-=jaw*muzzle*(wind*.017+hit*.008);
+            p=actorPitch(p,1.49,0,(body.w*.65-wind*.19+tuck*.24+breath)*head);
+            p=actorRoll(p,0,1.49,((f.x==2?.045:0)+hit*.10+settle*.15)*head);
+        }
+        p=actorPitch(p,.87,0,(lean+wind*.21-hit*.25+run*moving*.13+tuck*.16+breath)*upper);
+        p=actorYaw(p,0,body.z*spine+hit*.16*upper);
+        float drift=(f.x==2?.025:-.015)*(1-moving)*live;
+        p=actorRoll(p,0,.87,(drift+(f.x==3?.14*escort:0))*upper);
+        p.x+=f.x==2?.030*spine:0;
+        p.y+=breath*spine;
     }
     p.y+=body.x;
-    // The pelvis transfers weight above a planted foot while its sole stays fixed.
+    // Pelvis shift tapers to zero at the sole on the stance leg.
     p.x+=body.y*(leg?smoothstep(.12,.86,p.y):1);
+    return p;
+}
+
+float3 actorViewModel(float3 p,float joint,float4 a,float4 f)
+{
+    bool support=joint==11;
+    bool holding=joint==12 || support;
+    if(f.y==0 && a.x>0)
+    {
+        float t=1-saturate(a.x);
+        float reach=smoothstep(.06,.27,t)*(1-smoothstep(.70,.96,t));
+        float lower=smoothstep(.20,.43,t)*(1-smoothstep(.58,.79,t));
+        float seat=smoothstep(.56,.69,t)*(1-smoothstep(.74,.90,t));
+        if(support)
+        {
+            float wrist=smoothstep(.02,.47,p.z);
+            p=actorYaw(p,-.32,reach*.13);
+            p=actorPitch(p,-.393,-.008,reach*.10);
+            p+=wrist*float3(.022*reach,-.068*lower+.019*seat,-.147*reach);
+        }
+        if(joint==14)
+        {
+            p=actorRoll(p,.122,-.147,-lower*.19);
+            p+=float3(-.027*lower,-.118*lower,-.028*lower);
+        }
+    }
+    if(f.y==1 && holding)
+    {
+        float settle=(sin(a.z*5.4)+.32*sin(a.z*10.8))*a.w;
+        p.y+=settle*(support?.010:.014)*smoothstep(.02,.41,p.z);
+        p.z+=settle*.009*smoothstep(.06,.43,p.z);
+    }
+    if(f.y==3 && (holding || joint==10))
+        p.y+=(sin(a.z*7.2)*.009)*a.w*(holding?smoothstep(.05,.36,p.z):1);
     return p;
 }

@@ -51,7 +51,7 @@ namespace Evac
         public float VehicleHealth => state.vehicle;
         public Vector3 VehiclePosition => Route.exit + Vector3.forward * (2 + (1 - state.exitClock) * 10f);
         public bool HasSave => EvacStorage.Exists("suspend");
-        public bool CanDepart => IsReady && Result==SimResult.Active && Sector==SectorCount-1 && IsSectorCleared() && state.exitClock>=1;
+        public bool CanDepart => IsReady && Result==SimResult.Active && (IsDuty || ChapterPhase==4) && Sector==SectorCount-1 && IsSectorCleared() && state.exitClock>=1 && (!FleetEnabled || (!FleetDecisionPending && FleetDelivered>=Mission.quota));
         public int CampaignRescued => campaign.bestTotal;
         public int CampaignInjured => Sum(campaign.injured);
         public int CampaignStock => Sum(campaign.freight);
@@ -67,6 +67,9 @@ namespace Evac
                 if (Result==SimResult.Victory) return state.index==7 ? "最後の輸送が完了" : "輸送完了";
                 if (CanDepart) return "出発可能。残る住民を待つか、出発を指示";
                 if(IsDuty)return DutyObjective();
+                if(ChapterField)return ChapterTitle+"　"+ChapterInstruction;
+                if(FleetDecisionPending)return FleetReport;
+                if(Boarded>=SectorGoal && DistrictOutcome(Sector)==0)return SectorName+"　"+DistrictWorkLabel(Sector);
                 string prefix=SectorName+"　";
                 if (NeedsCargo && SectorTrips < RequiredTrips) return prefix+"資材を集積所へ　"+SectorTrips+"/"+RequiredTrips;
                 if (NeedsScreen && !state.screened) return prefix+"警備班を合流点に配置";
@@ -113,7 +116,10 @@ namespace Evac
             }
             state.depotRounds=144+state.stock*6+state.volunteers*18;
             state.medPacks=3+state.volunteers;
+            InitChapter(false);
+            InitDistricts();
             SetRoute();
+            InitFleet();
             indices.Clear(); soldiers.Clear(); threats.Clear();AlarmAttracted=0;
             int squadCount=training?1:3;
             string[] names={"佐藤","岡田","藤井","森","青木","松田","井上","高橋","安田"};
@@ -142,7 +148,13 @@ namespace Evac
                 }
             }
             OpenSector(true);
-            if(n>0) SpawnWave(2);
+            BringForwardContact();
+            if(!duty && n>0 && campaign.complete[n-1] && campaign.chapterReturns?.Length==8)
+            {
+                int benefit=campaign.chapterReturns[n-1];
+                if(benefit>=1 && benefit<=Benefits.Length)ApplyChapterBenefit((ChapterBenefit)(benefit-1));
+            }
+            if(duty && n>0)SpawnWave(2);
             state.exitClock = NeedsCargo || NeedsRepair ? 0f : 1f;
             IsReady=true;
             SoundNotice(Mission.title);
@@ -176,8 +188,12 @@ namespace Evac
             var ids=new HashSet<int>();
             for(int i=0;i<m.units.Count;i++)
                 if(m.units[i]==null || m.actors[i]==null || m.units[i].id!=m.actors[i].id || !ids.Add(m.units[i].id)) return false;
-            foreach(var s in m.squads) if(s==null) return false;
-            return true;
+            int sectors=m.duty ? DutyPlan.All[m.index/2].stages.Length : SectorDef.Operations[m.index].Length;
+            foreach(var s in m.squads)
+                if(s==null || s.districtTask<0 || s.districtTask>sectors)return false;
+            if(m.districtOutcome!=null)
+                foreach(int outcome in m.districtOutcome)if(outcome<0 || outcome>2)return false;
+            return ValidFleet(m) && ValidChapter(m.chapter);
         }
         bool Restore(string slot)
         {
@@ -189,36 +205,44 @@ namespace Evac
             {
                 state.requestState=(int)RequestState.Offered;state.requestActor=-1;state.requestCarrier=-1;
             }
-            SetRoute();indices.Clear();soldiers.Clear();threats.Clear();AlarmAttracted=0;
+            bool legacyChapter=!IsDuty && (Chapter==null || Chapter.phase==0);
+            InitChapter(true);
+            InitDistricts(true);
+            SetRoute();InitFleet();indices.Clear();soldiers.Clear();threats.Clear();AlarmAttracted=0;
             for(int i=0;i<state.units.Count;i++)
             {
                 var u=state.units[i]; indices.Add(u.id,i);
                 if(IsSoldier(u)) soldiers.Add(u);
                 if(u.kind==UnitKind.Infected){threats.Add(u);if(u.active && u.distracted)AlarmAttracted++;}
             }
+            if(legacyChapter && Sector==SectorCount-1 && IsSectorCleared() && state.exitClock>=1)Chapter.phase=4;
             IsReady=true; SoundNotice("作戦記録を復元");
             return true;
         }
 
-        public void Order(int squad,SquadOrder order,Vector3 destination)
+        public bool Order(int squad,SquadOrder order,Vector3 destination)
         {
-            if(!IsReady || Result!=SimResult.Active || squad<0 || squad>=3) return;
+            if(!IsReady || Result!=SimResult.Active || squad<0 || squad>=3) return false;
+            CancelChapterDispatch(squad);
+            CancelSearchDispatch(squad);
             if(Find(AlarmActorId)?.squad==squad)state.alarmDispatch=0;
             if(DutyAlternativeBridge && order==SquadOrder.Engineer)
                 state.dutyBridge=FlatSq(destination,ActiveWorks)<FlatSq(destination,ActiveCache);
-            var group=state.squads[squad];group.order=(int)order;group.destination=Ground(destination);group.assigned=true;group.sector=Sector;
+            var group=state.squads[squad];group.districtTask=0;group.order=(int)order;group.destination=Ground(destination);group.assigned=true;group.sector=Sector;
             group.requestDuty=HasRequestPoint && order==RequestOrder && FlatSq(group.destination,RequestPoint)<=12.25f;
             foreach(var s in soldiers) if(s.squad==squad) Brain(s).route=0;
             SoundNotice(new[]{"警備班","誘導班","整備班"}[squad]+"、指示を受信");
+            return true;
         }
         public SquadOrder OrderFor(int squad) => (SquadOrder)state.squads[Mathf.Clamp(squad,0,2)].order;
         public Vector3 DestinationFor(int squad) => state.squads[Mathf.Clamp(squad,0,2)].destination;
         public bool Possess(int id)
         {
             var u=Find(id);if(!IsReady || Result!=SimResult.Active || u==null || !IsSoldier(u) || !u.active) return false;
+            if(Controlled!=u)ReturnChapterCarrierToAI(Controlled);
             Brain(u).hasPath=false;state.controlled=id;SoundNotice(u.name+"を直接操作");return true;
         }
-        public void Release() { if(Controlled!=null) {Brain(Controlled).hasPath=false;state.controlled=-1;SoundNotice("現場から指揮へ復帰");} }
+        public void Release() { if(Controlled!=null) {ReturnChapterCarrierToAI(Controlled);Brain(Controlled).hasPath=false;state.controlled=-1;SoundNotice("現場から指揮へ復帰");} }
         public bool SetPower(PowerCircuit circuit,bool on)
         {
             if(!IsReady || Result!=SimResult.Active || !Rail || (int)circuit<0 || (int)circuit>2) return false;
@@ -250,13 +274,25 @@ namespace Evac
                 if(s.hp<80)campaign.injured[n]++;
                 campaign.roster.Add(new ReturnedSoldier {operation=n,name=s.name,hp=s.hp,returned=s.active});
             }
+            if(FleetEnabled)
+            {
+                state.fleet.delivered=Boarded;
+                foreach(var bus in state.fleet.vehicles)bus.load=0;
+            }
+            if(campaign.chapterReturns?.Length!=8)campaign.chapterReturns=new int[8];
+            campaign.chapterReturns[n]=Chapter.earned;
+            if(campaign.chapterContacts?.Length!=16)campaign.chapterContacts=new string[16];
+            campaign.chapterContacts[n*2]=Chapter.frontContact;
+            campaign.chapterContacts[n*2+1]=Chapter.retreatContact;
             RecordRequest();
+            RecordSearch();
             campaign.bestTotal=Sum(campaign.best);EvacStorage.Write("campaign",campaign);
             SoundNotice("輸送車が出発");Save();return true;
         }
 
         void Board(Unit c)
         {
+            if(FleetEnabled && !EnterBus(c))return;
             var a=Brain(c);
             if(a.sector==Sector){state.sectionBoarded++;if(a.injured && a.escort>=0)state.sectionAssists++;}
             Unlink(c);c.active=false;c.boarded=true;c.moving=false;state.boarded++;

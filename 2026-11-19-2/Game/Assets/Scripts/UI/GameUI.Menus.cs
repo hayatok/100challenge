@@ -27,6 +27,7 @@ namespace Evac
             float width = Mathf.Clamp(w * .44f, 390, 530);
             Fill(R(0, 0, width, h), new Color(.055f, .075f, .075f, .96f));
             Fill(R(width - 6, 0, 6, h), Rail);
+            Text(R(32, h - 34, width - 64, 18), "v" + Application.version, 13, Mist);
             Fill(R(32, 48, 52, 4), Amber);
             Text(R(32, 62, width - 64, 26), "災害対策本部　非常輸送", 17, Amber, true);
             Text(R(27, 98, width - 48, 86), "避難指令", 60, Cream, true);
@@ -355,7 +356,7 @@ namespace Evac
             RecordLine(x, box.y + 208, width, "避難中に失った住民", $"{G.Dead}人");
             RecordLine(x, box.y + 252, width, "搬入した資材", $"{G.StockDelivered}");
             RecordLine(x, box.y + 296, width, "作戦時間", Clock(G.Elapsed));
-            Text(R(x,box.y+341,width,28),"追加要請　"+GameSession.RequestLabel(G.RequestStatus),16,Dim);
+            Text(R(x,box.y+341,width,28),"追加要請　"+GameSession.RequestLabel(G.RequestStatus)+"　　"+G.SearchResultSummary,16,Dim);
 
             float y = box.yMax - 72;
             float side = width * .29f;

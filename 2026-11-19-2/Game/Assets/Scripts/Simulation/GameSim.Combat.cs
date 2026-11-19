@@ -16,7 +16,10 @@ namespace Evac
         }
         void Advance(float dt)
         {
-            state.clock+=dt; state.waveIn-=dt;
+            state.clock+=dt;
+            if(ChapterPhase!=1)state.waveIn-=dt;
+            TickBeacon(dt);
+            if(Chapter!=null && Chapter.arrivalWave){Chapter.arrivalWave=false;SpawnWave(2);}
             if(state.waveIn<=0)
             {
                 state.waveCount++;
@@ -27,6 +30,11 @@ namespace Evac
             AlarmAttracted=0;
             PrepareRequestActor();
             UpdateInfrastructure(dt);
+            UpdateDistrictPost(dt);
+            TickFleet(dt);
+            RefreshFleetBodies();
+            if(!IsDuty)StepSearch(dt);
+            StepDistrictIncident(dt);
             ScreenArea(dt);
             CheckDutySite();
             foreach(var u in state.units)
@@ -42,6 +50,7 @@ namespace Evac
                 }
                 if(IsSoldier(u))
                 {
+                    if(UpdateTraversal(u,dt))continue;
                     bool dodging=u.dodgeTime>0;
                     UpdateDodge(u,a,dt);
                     if(u.reload>0)
@@ -53,12 +62,19 @@ namespace Evac
                 }
                 else if(IsCivilian(u))
                 {
-                    if(a.auxiliary)RequestPatient(u);else Civilian(u,a,dt);
+                    if(RideDistrictCart(u)){}
+                    else if(IsChapterLiaison(u))StepChapterLiaison(u,dt);
+                    else if(IsChapterResident(u))MoveChapterResident(u,dt);
+                    else if(IsSearchResident(u))FollowSearch(u,dt);
+                    else if(a.auxiliary)RequestPatient(u);else Civilian(u,a,dt);
                 }
                 else Infected(u,a,dt);
-                u.escortId=a.escort;u.carryingCargo=a.cargo;
+                u.escortId=IsSoldier(u) && ChapterHandsBusy(u) && ChapterResident!=null ? ChapterResident.id : a.escort;
+                u.carryingCargo=a.cargo || (IsSoldier(u) && ChapterHandsBusy(u) && ChapterResident==null);
             }
+            if(Result!=SimResult.Active)return;
             HandleSector();
+            BeginChapterRetreat();
             bool alive=false;
             foreach(var s in soldiers) if(s.active){alive=true;break;}
             if(!alive || state.dutyFailed || state.vehicle<=0 || Route.population-state.losses<Route.quota || Remaining<=0)
@@ -72,7 +88,7 @@ namespace Evac
                 state.departureAnnounced=true;
                 SoundNotice("出発条件を満たしました。出発できます");
             }
-            if(!state.checkpoint && Boarded>=Mathf.CeilToInt(Route.quota*.5f))
+            if((IsDuty || ChapterPhase==2) && !state.checkpoint && Boarded>=Mathf.CeilToInt(Route.quota*.5f))
             {
                 state.checkpoint=true;EvacStorage.Write(CheckpointSlot,state);
             }
@@ -82,14 +98,19 @@ namespace Evac
 
         bool Walk(Unit u,Vector3 destination,float speed,float dt)
         {
-            Vector3 goal=Ground(destination);
+            var walkMap=WalkingMap;
+            Vector3 goal=walkMap.Clamp(destination);
             if((goal-u.pos).sqrMagnitude<.28f) return true;
-            Vector3 delta=PathPoint(u,goal)-u.pos;
+            var waypoint=PathPoint(u,goal);
+            Vector3 delta=waypoint-u.pos;
             if(delta.sqrMagnitude<.000001f)return false;
             float slowdown=IsSoldier(u) && u.hp<40?.72f:1f;
             float distance=Mathf.Min(delta.magnitude,speed*slowdown*dt);
-            u.pos=geometry.Move(u.pos,u.pos+delta.normalized*distance);
-            u.yaw=Mathf.Atan2(delta.x,delta.z)*Mathf.Rad2Deg;u.moving=true;
+            var previous=u.pos;
+            var next=walkMap.Move(previous,previous+delta.normalized*distance);
+            u.pos=FleetEnabled?MoveAroundFleet(u,next):next;
+            u.moving=FlatSq(previous,u.pos)>.000001f;
+            if(u.moving)u.yaw=Mathf.Atan2(delta.x,delta.z)*Mathf.Rad2Deg;
             return (goal-u.pos).sqrMagnitude<.28f;
         }
 
@@ -98,7 +119,7 @@ namespace Evac
             var a=Brain(u);
             if(!a.hasPath || FlatSq(goal,a.pathGoal)>.25f || FlatSq(u.pos,a.waypoint)<.003f)
             {
-                a.pathGoal=goal;a.waypoint=geometry.Waypoint(u.pos,goal);a.hasPath=true;
+                a.pathGoal=goal;a.waypoint=WalkingMap.Waypoint(u.pos,goal);a.hasPath=true;
             }
             return a.waypoint;
         }
@@ -106,27 +127,36 @@ namespace Evac
         void Soldier(Unit u,ActorMemory a,float dt)
         {
             var group=state.squads[u.squad];var order=(SquadOrder)group.order;
+            if(DeployingBeacon(u,dt))return;
             if(TravelToAlarm(u,dt))return;
             if(WorkRequest(u,a,dt))return;
             if(a.escort>=0) {Guide(u,a,dt);return;}
             if(a.cargo) {Engineer(u,a,dt);return;}
-            if(!group.assigned || (order==SquadOrder.Engineer && !SectorDispatched(u.squad)))
+            if(ChapterDuty(u,dt))return;
+            if(TravelSearch(u,dt))return;
+            bool districtTask=DistrictAssignment(u.squad)>=0;
+            if(!districtTask && (!group.assigned || (order==SquadOrder.Engineer && !SectorDispatched(u.squad))))
             {
                 if(state.index==0) return;
                 if(order!=SquadOrder.Guard) return;
             }
-            if(order==SquadOrder.Supply)
+            if(!districtTask && order==SquadOrder.Supply)
             {
-                if(Walk(u,Route.depot,3.6f,dt)) Supply(u,dt);
+                if(SupplyAtPost(u.squad))
+                {
+                    if(Walk(u,ChapterPostPosition,3.6f,dt))TakeChapterSupply(u);
+                }
+                else if(Walk(u,Route.depot,3.6f,dt))Supply(u,dt);
                 return;
             }
             if(a.fireDelay==0 && u.reload<=0 && u.ammo>0)
             {
                 float radius=order==SquadOrder.Guard?(state.index==6 && RequestStatus==RequestState.Completed?28:21):14;
-                var target=NearestThreat(u.pos,radius);
+                var target=(order==SquadOrder.Guard ? PriorityContact(u,radius) : null) ?? NearestThreat(u.pos,radius);
                 if(target!=null) HitShot(u,target,(target.pos-u.pos).normalized,true);
             }
             if(u.ammo==0) StartReload(u);
+            if(districtTask && DistrictWork(u,dt))return;
             if(group.assigned && a.route==0 && order!=SquadOrder.Move && order!=SquadOrder.Guard)
             {
                 if(!Walk(u,group.destination,3.65f,dt)) return;
@@ -190,10 +220,12 @@ namespace Evac
                 a.target=target==null?-1:target.id;
                 a.lostTime=.55f+state.Draw()*.35f;
             }
-            bool diverted=DivertedByAlarm(e,a,target);
+            bool bell=DivertedByAlarm(e,a,target);
+            bool lamp=!bell && BeaconLures(e,target);
+            bool diverted=bell || lamp;
             e.distracted=diverted;
-            if(diverted)AlarmAttracted++;
-            Vector3 goal=diverted?AlarmApproach(e):target==null?Route.exit:target.pos;
+            if(bell)AlarmAttracted++;
+            Vector3 goal=bell?AlarmApproach(e):lamp?BeaconPoint:target==null?(FleetEnabled?FleetVehiclePosition(0):Route.exit):target.pos;
             float range=target==null?2.9f:1.45f;
             if(e.windup>0)
             {
@@ -273,6 +305,7 @@ namespace Evac
             if(IsSoldier(u))u.wounded=u.hp<80;
             if(IsCivilian(u) && u.hp>0 && u.hp<52) {u.wounded=true;Brain(u).injured=true;}
             if(u.hp>0)return;
+            DropChapterLoad(u);
             if(u.id==AlarmActorId)state.alarmDispatch=0;
             Unlink(u);u.active=false;u.moving=false;u.windup=0;
             if(Brain(u).requestCargo)
@@ -283,7 +316,10 @@ namespace Evac
             if(u.kind==UnitKind.Infected)state.kills++;
             else if(IsCivilian(u))
             {
-                if(Brain(u).auxiliary)
+                if(IsChapterLiaison(u)){Chapter.liaisonLost=true;SoundNotice(u.name+"が補給に戻れません");}
+                else if(IsChapterResident(u))ChapterRescueFailed();
+                else if(IsSearchResident(u))LoseSearchResident(u);
+                else if(Brain(u).auxiliary)
                 {
                     state.requestState=(int)RequestState.Unfinished;
                     SoundNotice("追加要請の救助を続けられません");
@@ -317,29 +353,29 @@ namespace Evac
 
         bool StartReload(Unit u)
         {
-            if(u==null || u.reload>0 || u.ammo>=18 || u.reserve<=0 || Brain(u).escort>=0 || Brain(u).cargo)return false;
+            if(u==null || ChapterHandsBusy(u) || u.vaultDuration>0 || u.reload>0 || u.ammo>=18 || u.reserve<=0 || Brain(u).escort>=0 || Brain(u).cargo)return false;
             u.reload=1.55f;return true;
         }
         public bool Reload() => Result==SimResult.Active && StartReload(Controlled);
         public void Move(Vector3 worldDirection,float yaw,float dt)
         {
             Unit u=Controlled;
-            if(u==null || Result!=SimResult.Active)return;
+            if(u==null || u.vaultDuration>0 || Result!=SimResult.Active)return;
             var a=Brain(u);
             if(u.dodgeTime>0){u.yaw=yaw;return;}
             worldDirection.y=0;worldDirection=Vector3.ClampMagnitude(worldDirection,1);
-            float speed=a.escort>=0?2.7f:a.cargo?3f:5.3f;
+            float speed=a.escort>=0 || ChapterHandsBusy(u)?2.7f:a.cargo?3f:5.3f;
             if(u.hp<40)speed*=.72f;
-            u.pos=geometry.Move(u.pos,u.pos+worldDirection*speed*Mathf.Clamp(dt,0,.25f));
+            u.pos=AvoidFleetBodies(geometry.Move(u.pos,u.pos+worldDirection*speed*Mathf.Clamp(dt,0,.25f)));
             u.yaw=yaw;u.moving=worldDirection.sqrMagnitude>.001f;
         }
         public bool Dodge(Vector3 worldDirection)
         {
             var u=Controlled;
-            if(u==null || Result!=SimResult.Active || u.dodgeTime>0 || u.hp<40)return false;
+            if(u==null || u.vaultDuration>0 || Result!=SimResult.Active || u.dodgeTime>0 || u.hp<40)return false;
             var a=Brain(u);
             float cost=u.wounded?.68f:.56f;
-            if(a.escort>=0 || a.cargo || u.stamina<cost || a.stun>0)return false;
+            if(a.escort>=0 || a.cargo || ChapterHandsBusy(u) || u.stamina<cost || a.stun>0)return false;
             worldDirection.y=0;
             if(worldDirection.sqrMagnitude<.01f)
                 worldDirection=Quaternion.Euler(0,u.yaw+90,0)*Vector3.forward;
@@ -363,7 +399,7 @@ namespace Evac
         public bool Shoot(Vector3 aimDirection)
         {
             var s=Controlled;
-            if(s==null || s.dodgeTime>0 || Result!=SimResult.Active || s.reload>0 || s.ammo<=0 || Brain(s).escort>=0 || Brain(s).cargo || Brain(s).fireDelay>0)return false;
+            if(s==null || ChapterHandsBusy(s) || s.vaultDuration>0 || s.dodgeTime>0 || Result!=SimResult.Active || s.reload>0 || s.ammo<=0 || Brain(s).escort>=0 || Brain(s).cargo || Brain(s).fireDelay>0)return false;
             LastShotHit=false;
             Vector3 aim=aimDirection.normalized;
             if(aim.sqrMagnitude<.9f)return false;

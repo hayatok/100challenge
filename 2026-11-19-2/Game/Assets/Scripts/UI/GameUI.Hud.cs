@@ -27,11 +27,11 @@ namespace Evac
                 $"{district}　{G.MissionIndex + 1:00}号作戦";
             Text(R(26, 17, mission.width - 24, 22), banner, 14, Mist);
             Text(R(26, 38, mission.width - 24, G.TouchUI ? 41 : 28),
-                FieldName, G.TouchUI ? 27 : 22, Cream, true);
+                ChapterTask ? Field.ChapterTitle : FieldName, G.TouchUI ? 27 : 22, Cream, true);
             if (G.SectorCount > 0)
             {
-                string sector = $"{G.SectorNumber}/{G.SectorCount}　{G.SectorName}";
-                if (G.SectorGoal > 0) sector += $"　目標 {G.SectorGoal}人";
+                string sector = ChapterTask ? (Field.ChapterPhase==1?"前哨":"撤収")+"　"+(Field.ChapterChoice<0?"方針を選択":Field.ChapterOptionTitle(Field.ChapterChoice)) : $"{G.SectorNumber}/{G.SectorCount}　{G.SectorName}";
+                if (!ChapterTask && G.SectorGoal > 0) sector += $"　目標 {G.SectorGoal}人";
                 Text(R(26, mission.yMax - 23, mission.width - 24, 19), sector, 14, Amber, true);
             }
 
@@ -75,11 +75,10 @@ namespace Evac
 
         void DrawCommand()
         {
-            if (requestOpen && !G.IsDuty) { DrawRequest(); return; }
-            if (fieldPanel) { DrawFacilities(); return; }
             DrawBoard();
-            if (!G.IsDuty && Button(R(w-164,BoardHeight+18,150,G.TouchUI?48:35),"現場からの要請",dark:true))
-                requestOpen=true;
+            DrawFieldAccess(false);
+            if(G.PickingLamp)
+                Text(R(w*.40f,h*.64f,w*.2f,33),"設置する場所を選択",18,Amber,true,TextAnchor.MiddleCenter);
             float rosterWidth = Mathf.Min(w * .32f, G.TouchUI ? 340 : 326);
             float fieldWidth = Mathf.Min(w * .35f, G.TouchUI ? 376 : 346);
             Rect roster = R(14, h - 224, rosterWidth, 210);
@@ -298,7 +297,8 @@ namespace Evac
 
         void DrawDirect()
         {
-            DrawBoard();
+            DrawDirectStrip();
+            if(G.TouchUI && Button(R(w*.39f,h-73,145,59),G.LampName+"　"+G.LampCost,enabled:G.LampAvailable,dark:true))Submit(G.UseLamp);
             if (G.TouchUI)
                 DrawTouchDirect();
             else
@@ -318,7 +318,7 @@ namespace Evac
             Bar(R(x + 68, identity.y + 51, width - 68, 4), G.Stamina01, Amber);
             Text(R(x, identity.y + 62, width, 19), "残弾　/　予備弾", 13, Mist);
             Text(R(x, identity.y + 78, width, 32), $"{G.Ammo:00}  /  {G.Reserve:00}", 27, Amber, true);
-            Text(R(x, identity.y + 111, width, 19), $"{Key(ControlAction.Reload)}  装填　　{Key(ControlAction.SwitchView)}  指揮", 14, Mist);
+            Text(R(x, identity.y + 111, width, 19), $"{Key(ControlAction.Reload)} 装填　F3 灯　{Key(ControlAction.SwitchView)} 指揮", 14, Mist);
 
             if (!string.IsNullOrEmpty(G.ContextAction))
             {
@@ -332,8 +332,8 @@ namespace Evac
                 Rect info = R(14, BoardHeight + 20, 387, 114);
                 Panel(info, Case, Edge);
                 Text(R(26, info.y + 3, 363, 24), $"{MovementKeys} 移動　Shift 走る　左ボタン 射撃", 15, Cream);
-                Text(R(26, info.y + 27, 363, 24), $"{Key(ControlAction.Dodge)} 緊急回避　右ボタン 照準", 15, Cream);
-                Text(R(26, info.y + 54, 363, 24), "照準先を指示", 15, Amber, true);
+                Text(R(26, info.y + 27, 363, 24), $"{Key(ControlAction.Dodge)} 回避／低い柵を越える　右ボタン 照準", 15, Cream);
+                Text(R(26, info.y + 54, 363, 24), "F2 作戦手帳　F3 班装備　数字で照準先を指示", 15, Amber, true);
                 string commandKeys = "";
                 for (int i = 0; i < 3; i++)
                     if (HasSquad(i)) commandKeys += $"{i + 1} {G.SquadName(i)}　";
@@ -343,29 +343,30 @@ namespace Evac
 
         void DrawTouchDirect()
         {
-            Rect identity = R(14, 109, 230, 84);
+            Rect identity = R(14, 76, 208, 64);
             Instrument(identity);
-            Text(R(26, 112, 206, 19), "隊員識別票", 15, Mist);
-            Text(R(26, 131, 206, 26), G.SoldierName, 24, Cream, true);
-            Text(R(26, 159, 99, 20), $"体力 {G.Health01:0%}", 14, Cream);
-            Text(R(133, 159, 99, 20), "スタミナ", 14, Mist);
-            Bar(R(26, 182, 99, 4), G.Health01, G.Health01 < .3f ? Rail : Green);
-            Bar(R(133, 182, 99, 4), G.Stamina01, Amber);
-            DrawAmmo(R(w - 204, 106, 190, 78));
-            Text(R(14, 194, 268, 26), "照準先を指示", 16, Cream, true);
-            DrawSquads(R(14, 218, 264, 56), atAim: true);
+            Text(R(25,79,185,23),G.SoldierName+"　"+G.Health01.ToString("0%"),18,Cream,true);
+            Bar(R(25,105,184,5),G.Health01,G.Health01<.3f?Rail:Green);
+            Text(R(25,113,69,22),"スタミナ",14,Mist);
+            Bar(R(91,121,118,4),G.Stamina01,Amber);
+            Rect ammo=R(w-191,76,177,53);
+            Instrument(ammo);
+            Text(R(ammo.x+9,ammo.y+3,158,17),"残弾 ／ 予備弾",13,Mist);
+            Text(R(ammo.x+9,ammo.y+19,158,31),G.Ammo.ToString("00")+" ／ "+G.Reserve.ToString("00"),22,Amber,true);
+            if(Button(R(14,147,142,48),"班に無線指示",selected:directRadioOpen,dark:true))directRadioOpen=!directRadioOpen;
+            if(directRadioOpen)DrawSquads(R(14,201,264,52),atAim:true);
             float actionY = h - 73;
             float actionX = w - 170;
             if (!string.IsNullOrEmpty(G.ContextAction) && Button(R(actionX - 166, actionY, 158, 59), G.ContextAction, true))
                 Submit(G.TryAction);
             if (Button(R(actionX, actionY, 156, 59), "指揮に戻る", dark: true)) Submit(G.CommandMode);
-            if (Button(R(w - 295, 193, 87, 55), "照準", selected:G.Aiming, dark:true))
+            if (Button(R(w - 295, 139, 87, 51), "照準", selected:G.Aiming, dark:true))
                 Submit(G.ToggleTouchAim);
-            if (Button(R(w - 202, 193, 92, 55), "緊急回避", dark: true))
+            if (Button(R(w - 202, 139, 92, 51), "緊急回避", dark: true))
                 Submit(G.DodgeTouch);
-            if (Button(R(w - 104, 193, 90, 55), G.Reserve > 0 ? "装填" : "予備弾なし", enabled: G.Reserve > 0, dark: true))
+            if (Button(R(w - 104, 139, 90, 51), G.Reserve > 0 ? "装填" : "予備弾なし", enabled: G.Reserve > 0, dark: true))
                 Submit(G.Reload);
-            DrawRadio(256, 187, w - 472, "", G.Radio, true);
+            if(GuideVisible) DrawRadio(236,125,w-459,"",G.Radio,false);
             if (G.IsDuty) DrawRadio(246, h - 14, w - 588, G.Objective, "", false);
         }
 

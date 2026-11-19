@@ -67,6 +67,10 @@ namespace Evac
                 VerifyDodge(report);
                 VerifyRush(report);
                 VerifyAlarm(report);
+                new GameSim().FleetAndDistrictChecks(report);
+                new GameSim().VerifyChapterStages(report);
+                new GameSim().VerifyLateResponses(report);
+                new GameSim().VerifyFieldTools(report);
                 DutyVerification.Run(report);
                 VerifyCrowd(report);
                 return report.ToString();
@@ -76,6 +80,26 @@ namespace Evac
                 EvacStorage.TestDirectory=previous;
                 if(Directory.Exists(folder))Directory.Delete(folder,true);
             }
+        }
+
+        static void RunChapterDuty(GameSim game,int choice)
+        {
+            int phase=game.ChapterPhase;
+            Check(game.ChooseChapterOption(choice) && game.DispatchChapter(0),"Choose chapter response and dispatch");
+            for(int i=0;i<3600 && game.ChapterPhase==phase && game.Result==SimResult.Active;i++)game.Tick(.1f);
+            Check(game.Result==SimResult.Active && game.ChapterPhase!=phase,"Chapter field shift failed: "+game.Mission.title+" / "+game.ChapterInstruction+" / "+game.FleetDiagnostics());
+        }
+
+        static void FirstPersonChapter(GameSim game)
+        {
+            int phase=game.ChapterPhase;
+            Check(game.ChooseChapterOption(0),"Choose field action");
+            for(int i=0;i<6 && game.ChapterPhase==phase;i++)
+            {
+                WalkTo(game,game.ChapterPoint());
+                Check(game.Interact(),"Manual chapter interaction");
+            }
+            Check(game.ChapterPhase!=phase,"Manual chapter completed");
         }
 
         static void RunCampaign(Difficulty difficulty,StringBuilder report)
@@ -90,11 +114,16 @@ namespace Evac
                         {
                             Check(game.Units.First(u=>u.name=="岡田").hp==51,"Named injury carried forward");
                             Check(game.Units.First(u=>u.name=="佐藤").hp==100,"Different soldier remained healthy");
+                            string contact=game.ReturnedChapterContact(0,true);
+                            Check(contact=="連絡員の今井" && game.ChapterLiaisonLine.Contains(contact) &&
+                                game.Units.Any(u=>u.active && u.name==contact),"Saved resident returned in person for the next chapter");
                         }
+                        RunChapterDuty(game,index%2);
                         VerifyRequest(ref game,index);
                     }
                     else if(difficulty==Difficulty.Hard && index==0) Check(game.DeclineRequest() && !game.AcceptRequest(),"Request decline");
                     else if(difficulty==Difficulty.Hard && index==6) Check(game.AcceptRequest(),"Optional request left pending");
+                    if(difficulty!=Difficulty.Standard)RunChapterDuty(game,index%2);
                     game.Order(0,index==0?SquadOrder.Guide:SquadOrder.Guard,index==0?mission.assembly:mission.gate+Vector3.forward*5);
                     if(index>0)
                     {
@@ -120,13 +149,25 @@ namespace Evac
                             game.Order(index==0?0:1,SquadOrder.Guide,game.ActiveAssembly);
                             if(index>0)game.Order(2,SquadOrder.Engineer,game.ActiveWorks);
                         }
+                        if(game.ChapterPhase==3)RunChapterDuty(game,(index+1)%2);
+                        if(game.FleetDecisionPending)
+                            Check(game.ResolveFleetBlock((index%2==0 || index==7) && game.Stock>=game.FleetRepairCost),"Choose a viable replacement route");
+                        if(game.DistrictOutcome(game.Sector)==0 && game.DistrictAssignment(0)<0 &&
+                            (index>0 || game.Boarded>=game.SectorGoal))
+                            game.DispatchDistrict(0,game.Sector,(index+game.Sector)%2==0);
                         game.Tick(.1f);
                         // Enter the same simulation, spend an actual round, then save and resume mid-reload.
                         if(index==1 && step==5)
                         {
-                            var s=game.Units.First(x=>x.kind==UnitKind.Soldier);
+                            var s=game.Units.First(x=>x.kind==UnitKind.Soldier && x.active && x.escortId<0 && !x.carryingCargo && x.ammo>0);
                             Check(game.Possess(s.id),"Possession");
-                            Check(game.Shoot(Vector3.back) && game.Reload(),"FPS firing and reload");
+                            bool shot=false;
+                            for(int attempt=0;attempt<24 && !shot;attempt++)
+                            {
+                                shot=game.Shoot(Vector3.back);
+                                if(!shot)game.Tick(.1f);
+                            }
+                            Check(shot && game.Reload(),"FPS firing and reload");
                             game.Tick(.1f);
                             int ammo=s.ammo;float reload=s.reload;int who=s.id;
                             Check(game.Save(),"Suspend");
@@ -146,7 +187,7 @@ namespace Evac
                             Check(game.Depart(),"Departure");break;
                         }
                     }
-                    Check(game.Result==SimResult.Victory,"Mission "+(index+1)+" failed: "+game.Objective+" sector="+game.Sector+" boarded="+game.Boarded+" delivered="+game.Delivered+" fails="+game.Lost+" passage="+game.PassageOpen);
+                    Check(game.Result==SimResult.Victory,difficulty+" mission "+(index+1)+" failed: "+game.Objective+" sector="+game.Sector+" boarded="+game.Boarded+" delivered="+game.Delivered+" fails="+game.Lost+" passage="+game.PassageOpen+" elapsed="+game.Elapsed+" vehicle="+game.VehicleHealth+" district="+game.DistrictProgress(game.Sector)+" assigned="+game.DistrictAssignment(0)+" pos="+game.Units[0].pos+game.FleetDiagnostics());
                     Check(game.Units.Count(c=>c.boarded)==game.Boarded,"Vehicle count mismatch");
                     Check(game.CampaignRescued==rescuedAtStart+game.Boarded && game.IsComplete(index),"Campaign transfer");
                     report.AppendLine("Mission "+(index+1)+" "+game.Boarded+"/"+mission.population+", "+game.Elapsed.ToString("0.0")+"s, supplies "+game.Stock+", kills "+game.Kills);
@@ -328,6 +369,7 @@ namespace Evac
         static void VerifyDefense(StringBuilder report)
         {
             var game=new GameSim();game.StartMission(2,Difficulty.Hard);
+            RunChapterDuty(game,0);game.Tick(.1f);
             var s=game.Units.First(x=>x.kind==UnitKind.Soldier);
             Check(game.Possess(s.id),"Defense entry");
             WalkTo(game,game.ActiveGate);
@@ -347,12 +389,15 @@ namespace Evac
             game.Order(0,SquadOrder.Move,game.Mission.depot);
             var soldier=game.Units.First(x=>x.kind==UnitKind.Soldier);
             Check(game.Possess(soldier.id),"FPS-only entry");
+            FirstPersonChapter(game);
             int deployed=-1;bool carried=false;
             for(int step=0;step<2300 && !game.CanDepart;step++)
             {
+                if(game.ChapterPhase==3){FirstPersonChapter(game);continue;}
                 if(deployed!=game.Sector)
                 {
-                    deployed=game.Sector;WalkTo(game,game.ActiveAssembly);
+                    deployed=game.Sector;
+                    WalkTo(game,game.ActiveAssembly);
                     var casualty=game.Units.FirstOrDefault(x=>x.kind==UnitKind.Civilian && x.active && x.wounded);
                     if(casualty!=null)
                     {
@@ -363,10 +408,16 @@ namespace Evac
                         Check(casualty.boarded,"Carried civilian boarded");
                         carried=true;
                     }
+                    WalkTo(game,game.DistrictPosition(deployed));
+                    string action=game.InteractionHint;
+                    Check(game.Interact() && game.DistrictProgress(deployed)==.5f,"FPS starts district work: "+deployed+" "+action+" "+game.Controlled.pos);
+                    WalkTo(game,game.DistrictPosition(deployed));
+                    Check(game.Interact() && game.DistrictOutcome(deployed)==2,"FPS secured district rendezvous");
                 }
                 game.Tick(.1f);
             }
-            Check(carried && game.Depart(),"FPS-only departure");            report.AppendLine("FPS-only mission 1: all three sectors, shoulder carry, route crossing and departure passed; squad remained at depot.");
+            Check(carried && game.Depart(),"FPS-only departure: phase "+game.ChapterPhase+" boarded "+game.Boarded+" carried "+carried+" "+game.Objective);
+            report.AppendLine("FPS-only mission 1: all three sectors, shoulder carry, route crossing and departure passed; squad remained at depot.");
         }
         static void WalkTo(GameSim game,Vector3 destination)
         {

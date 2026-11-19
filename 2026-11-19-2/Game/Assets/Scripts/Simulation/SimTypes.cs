@@ -18,6 +18,8 @@ namespace Evac
         public UnitKind kind;
         public Vector3 pos, lastSeen, lastHitDirection;
         public float stamina=1f, dodgeTime;
+        public float vaultTime,vaultDuration,vaultApex;
+        public Vector3 vaultFrom,vaultTo;
         public float yaw,hp,maxHp,reload,windup,stagger,lastSeenAt = -1000;
         public bool distracted;
         public bool active = true,wounded,boarded,carryingCargo,moving,visible;

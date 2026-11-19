@@ -1,12 +1,16 @@
 """Bake the evacuation districts and articulated figures with Blender's mesh API.
 Run blender -b -P streets.py from any directory. Coordinates below are game x, height, z.
 """
-import bpy, math, random, struct
+import bpy, math, random, struct, sys
 from pathlib import Path
 from mathutils import Vector
 from math import sin, cos, pi
 
-OUT = Path(__file__).resolve().parents[1] / "Game/Assets/Resources/World"
+SOURCE = Path(__file__).resolve().parent
+sys.path.insert(0,str(SOURCE))
+from characters.viewmodel import glove
+
+OUT = SOURCE.parent / "Game/Assets/Resources/World"
 OUT.mkdir(exist_ok=True, parents=True)
 ASPH="454e50"; BLACK="263236"; INK="1b282c"; GRAY="657477"; STEEL="9aa5a0"
 CREAM="ddd4b7"; YELLOW="e4af39"; RED="ad4a3c"; TEAL="367572"; GLASS="30505a"
@@ -72,14 +76,47 @@ def shade(c,f):
 def stripes(x,z,along=1):
     for i in range(6):box(x+i*.68-1.7,.031,z,.34,.016,along*2.8,CREAM)
 def wheel(x,y,z):
-    rod((x-.13,y,z),(x+.13,y,z),.48,INK,n=12)
-    rod((x-.141,y,z),(x+.141,y,z),.21,GRAY,n=10)
+    for s in (-1,1):
+        loops=[]
+        for radius,thickness in ((.45,.12),(.48,.085),(.48,0)):
+            loops.append([(x+s*thickness,y+radius*cos(j*pi/10),z+radius*sin(j*pi/10)) for j in range(20)])
+        for ring,next_ring in zip(loops,loops[1:]):
+            for j in range(20):g.poly([ring[j],ring[j-1],next_ring[j-1],next_ring[j]],INK)
+        g.poly(loops[0],"313733")
+        g.poly([(x+s*.125,y+.24*cos(j*pi/8),z+.24*sin(j*pi/8)) for j in range(16)],"85908b")
+        g.poly([(x+s*.127,y+.12*cos(j*pi/8),z+.12*sin(j*pi/8)) for j in range(16)],"525b59")
+        for j in range(6):
+            yy=y+.176*cos(j*pi/3);zz=z+.176*sin(j*pi/3)
+            g.poly([(x+s*.129,yy+.029*cos(k*pi/3),zz+.029*sin(k*pi/3)) for k in range(6)],INK)
+
+def coach_shell(x,z,length,train):
+    # Continuous shoulders and an inset roof edge give the body a formed-metal profile.
+    # The chamfered end caps leave clearance around the lamps and windshields.
+    profile=[(-1.30,.75),(-1.45,.88),(-1.47,1.23),(-1.47,2.49),(-1.43,2.66),
+             (-1.28,2.79),(-1.05,2.84),(1.05,2.84),(1.28,2.79),(1.43,2.66),
+             (1.47,2.49),(1.47,1.23),(1.45,.88),(1.30,.75)]
+    loops=[]
+    for zz,width in ((-length/2,.93),(-length/2+.23,1),(length/2-.23,1),(length/2,.93)):
+        loops.append([(x+px*width,py,z+zz) for px,py in profile])
+    paint="c9c9b4" if train else "abbeb4"
+    for a,b in zip(loops,loops[1:]):
+        for j in range(len(a)):
+            g.poly([a[j-1],a[j],b[j],b[j-1]],STEEL if j in (6,7,8) else paint)
+    g.poly(loops[0],paint);g.poly(loops[-1],paint)
+    for side in (-1,1):
+        box(x+side*1.478,1.39,z,.035,.18,length-.47,RED if train else TEAL)
+        box(x+side*1.466,.96,z,.039,.055,length-.43,GRAY)
+        box(x,1.39,z+side*(length/2+.006),2.75,.18,.024,RED if train else TEAL)
+        box(x,.87,z+side*(length/2+.05),2.52,.13,.14,"606b69")
+        for ex in (-1,1):
+            xx=x+ex*.98
+            rod((xx-.20,1.80,z+side*(length/2+.055)),(xx+.20,2.10,z+side*(length/2+.056)),.022,INK)
+            rod((xx-.05,1.91,z+side*(length/2+.058)),(xx+.32,2.17,z+side*(length/2+.058)),.018,BLACK)
+
 def vehicle(x,z,train=False):
     length=13 if train else 8.7
     box(x,.68,z,2.64,.54,length-.35,BLACK)
-    box(x,1.76,z,2.94,1.86,length,"c9c9b4" if train else "aabcb1")
-    box(x,1.39,z,2.98,.23,length+.02,RED if train else TEAL)
-    box(x,2.76,z,2.92,.2,length-.09,STEEL)
+    coach_shell(x,z,length,train)
     if train:
         for s in (-1,1):
             box(x+s*1.30,2.869,z,.28,.045,length-.12,RED)
@@ -91,6 +128,10 @@ def vehicle(x,z,train=False):
             zz=z-length/2+.88+j*1.52
             box(x+s*1.479,2.13,zz,.04,.74,1.24,GLASS)
             box(x+s*1.506,2.42,zz,.012,.029,1.2,STEEL)
+            if not train:
+                box(x+s*1.505,1.91,zz,.018,.11,1.19,"626e65")
+                box(x+s*1.507,2.13,zz,.021,.72,.046,GRAY)
+                box(x+s*1.505,2.438,zz,.02,.047,1.18,"a5af9d")
             if train:
                 box(x+s*1.508,2.12,zz,.016,.64,1.14,"887e61")
                 box(x+s*1.519,1.90,zz,.013,.18,1.14,"665f4d")
@@ -184,7 +225,18 @@ def market():
                 g.poly([(face,3.59,zz),(aw-s*.58,3.25,zz),(aw-s*.58,3.25,zz+.69),(face,3.59,zz+.69)],accent if k%2 else CREAM)
                 box(aw-s*.58,3.18,zz+.345,.06,.16,.69,accent if k%2 else CREAM)
             for k in range(4):box(face-s*.385,3.98,z-2.1+k*1.38,.04,.22,.86,CREAM)
-            if j%2==0: boards(face-s*.6,z+3.4,s,j)
+            if j%2==0:
+                boards(face-s*.6,z+3.4,s,j)
+                # Half-landings, Juliet balconies and rain leaders above the shop awning.
+                y=h-2.23
+                box(face-s*.47,y,z,.95,.16,3.91,shade(wall,.72))
+                for end in (-1.88,1.88):
+                    rod((face,y+.98,z+end),(face-s*.92,y+.98,z+end),.039,STEEL)
+                for k in range(9):
+                    zz=z-1.88+k*.47
+                    box(face-s*.91,y+.48,zz,.06,.96,.055,GRAY)
+                box(face-s*.91,y+.97,z,.072,.077,3.85,STEEL)
+            rod((face-s*.19,.20,z-3.96),(face-s*.19,h+.06,z-3.96),.087,"756f60",n=7)
         for z in (-29,-8,13,32):lamp(s*16.9,z,s)
     for z in (-28,25):
         for s in (-1,1):
@@ -220,6 +272,17 @@ def warehouse():
             box(x,9,z,8.8,.55,17.4,GRAY);roof_detail(x,9.3,z+2)
             for dz in [-7.5,7.5]:box(x-s*4.16,2.6,z+dz,.4,5.2,.34,YELLOW)
         for z in [-21,7,33]:lamp(s*16.7,z,s)
+    # Pair of linked dust collectors. The steel legs and tapered hoppers read in silhouette.
+    for z in (-13,-7):
+        x=25.6
+        for dx in (-1.25,1.25):
+            for dz in (-1.25,1.25):
+                rod((x+dx,.06,z+dz),(x+dx,4.12,z+dz),.14,GRAY,n=6)
+        rings(x,z,[(2.9,.43,.43,0),(4.2,1.95,1.95,0),(12.7,1.95,1.95,0),(13.45,.36,.36,0)],"a6aea7",n=20)
+        for y in (4.24,7.10,9.96,12.7):
+            rings(x,z,[(y,1.99,1.99,0),(y+.10,1.99,1.99,0)],"778681",n=20)
+        rod((x,13.5,z),(x,14.36,z),.26,"73817c",n=10)
+    rod((25.6,14.36,-13),(25.6,14.36,-7),.26,"73817c",n=10)
     for j in range(4):container(-17.4,-26+j*14,[TEAL,RUST,NAVY,GRAY][j])
     for z in range(-28,34,6):
         box(8,.035,z,.19,.02,3,YELLOW);box(-8,.035,z,.19,.02,3,YELLOW)
@@ -295,7 +358,7 @@ def pavement(d):
             width=random.uniform(6,12)
             skyline(x,z,width,9,h,j)
         for j in range(6):
-            x=-33+j*13;z=s*51;h=random.uniform(7,16)
+            x=-33+j*13;z=s*102;h=random.uniform(7,16)
             skyline(x,z,9,7,h,j+3)
 
 def skyline(x,z,w,d,h,j):
@@ -413,25 +476,27 @@ def alloy(x,y,start,end,w,h,bevel,col):
     a=[(x+u,y+v,start) for u,v in shape];b=[(x+u,y+v,end) for u,v in shape]
     g.poly(a,col,13*16);g.poly(b,col,13*16)
     for j in range(8):g.poly([a[j],b[j],b[j-1],a[j-1]],col,13*16)
+def sleeves(elbow,wrist):
+    tapered(elbow,wrist,[(0,.087,.082),(.19,.084,.080),(.37,.077,.072),(.43,.079,.075),
+                        (.55,.071,.067),(.67,.066,.060),(.72,.069,.064),(.84,.057,.055),
+                        (.94,.050,.047),(1,.043,.041)],"445149",18)
+    tapered(elbow,wrist,[(.86,.055,.052),(.92,.057,.052),(.98,.046,.044)],
+            "38453e",18)
+    tapered(elbow,wrist,[(.918,.0572,.0525),(.925,.056,.052)],"596354",18)
+
+
 def hands():
-    for s in (-1,1):
-        g.held_joint=11 if s<0 else 12
-        x=.139 if s>0 else .045;z=.314 if s>0 else .536
-        p=(s*.32,-.39,-.008);q=(x,-.166,z)
-        tapered(p,q,[(0,.098,.094),(.19,.094,.090),(.43,.078,.075),(.51,.083,.079),
-                     (.76,.064,.061),(.81,.069,.068),(.95,.056,.053),(1,.052,.05)],"46514a",14)
-        tapered(p,q,[(.87,.063,.058),(.91,.065,.060),(.95,.059,.056)],"303c37",14)
-        tapered(p,q,[(.56,.081,.077),(.58,.079,.075)],"71785c",14)
-        end=(x-.016*s,-.116,z+.06)
-        tapered(q,end,[(0,.052,.051),(.25,.056,.05),(.7,.051,.046),(1,.044,.037)],"3a403a",12)
-        for j in range(4):
-            xx=x+(j-1.5)*.018
-            finger=(xx,-.105,z+.06); tip=(xx-.016*s,-.088,z+.089-j*.005)
-            rod(finger,tip,.011,"81745f",n=8)
-            rod(tip,(tip[0]-.012*s,tip[1]-.011,tip[2]+.011),.010,"393d35",n=8)
-        rod((x-.042*s,-.122,z+.025),(x-.079*s,-.105,z+.073),.017,"5e6051",n=9)
+    for side in (-1,1):
+        g.held_joint=11 if side<0 else 12
+        wrist=(.154,-.207,.271) if side>0 else (.051,-.183,.496)
+        sleeves((side*.32,-.393,-.008),wrist)
+        if side>0:
+            glove(g,wrist,(-.18,.32,.93),(-1,.02,0),True,19)
+        else:
+            glove(g,wrist,(.60,.13,.79),(.11,.99,-.09),False,17)
     g.held_joint=0
     alloy(.122,-.118,.16,.36,.047,.042,.018,"363c39")
+    alloy(.122,-.185,.264,.318,.034,.078,.009,"414841")
     alloy(.122,-.109,.295,.544,.047,.055,.010,"4a514b")
     alloy(.122,-.107,.49,.674,.039,.039,.011,"505a52")
     for j in range(7):
@@ -474,7 +539,38 @@ def hands():
     rod((.154,-.012,.413),(.170,-.012,.413),.013,"4d5850",n=12)
     rod((.168,-.012,.413),(.173,-.012,.413),.014,"758073",n=12)
 
+# Recreate the first-person assets without touching any district meshes.
 g=Batch();hands();g.bake("hands")
+for cargo in (False,True):
+    g=Batch()
+    for s in (-1,1):
+        g.held_joint=11 if s<0 else 12
+        # Reach to the upper arm on the casualty's near side. The other hand steadies the forearm.
+        x=s*.236 if cargo else (.208 if s>0 else -.062)
+        z=.354 if cargo else (.405 if s>0 else .26)
+        y=-.149 if cargo else (-.073 if s>0 else -.219)
+        elbow=(s*.34,-.39,.01)
+        wrist=(x,y,z)
+        sleeves(elbow,wrist)
+        if cargo:
+            glove(g,wrist,(-s*.17,.20,.96),(-s*.93,.33,.14),s>0,19)
+        elif s>0:
+            glove(g,wrist,(-.32,.47,.81),(-.79,-.38,.08),True,13)
+        else:
+            glove(g,wrist,(.34,.50,.77),(.35,.90,-.1),False,9)
+    if cargo:
+        g.held_joint=10
+        box(0,-.17,.48,.38,.28,.24,"b18d60")
+        for x in (-.12,.12):box(x,-.168,.48,.027,.29,.25,"626956")
+        for side in (-1,1):
+            for z in (.405,.512):
+                box(side*.201,-.101,z,.04,.027,.026,"5b5541")
+            rod((side*.220,-.101,.405),(side*.220,-.101,.512),.013,"4f5040",n=10)
+        box(0,-.171,.352,.12,.07,.012,CREAM)
+    g.bake("handsCargo" if cargo else "handsHelping")
+
+if "--viewmodels-only" in sys.argv:
+    sys.exit(0)
 
 g=Batch();vehicle(0,0);g.bake("bus")
 g=Batch();vehicle(0,0,True);g.bake("train")
@@ -700,9 +796,9 @@ def ranges(z,base,col):
         a=h(x);b=h(x+11)
         g.poly([(x,-1,z),(x+11,-1,z),(x+11,b,z),(x,a,z)],shade(col,.98+.026*sin(i*2.64)))
 def alley_details(d):
-    ranges(71,10,"899b8c");ranges(83,16,"94a39a")
+    ranges(119,10,"899b8c");ranges(131,16,"94a39a")
     for j in range(7):
-        x=-29+j*10;z=46+(j%3)*.8
+        x=-29+j*10;z=96+(j%3)*.8
         if j in (1,4):
             for k in range(3):
                 y=2.3+k*2.4
@@ -764,17 +860,71 @@ def platform_detail():
         # Service recesses and wall-mounted station posters face the central hall.
         box(-16.72,1.65,z,.2,2.68,1.54,NAVY)
         panel(-16.60,z,1.7,1.37,2.31,0,1,11,(.431,.255,.478,.63))
+    for z in (-18,7,27):
+        rod((-17,3.59,z),(-14.04,3.59,z),.086,TEAL)
+        rod((-14.04,3.59,z),(-14.04,3.18,z),.053,GRAY)
+        public_clock(-14.04,2.77,z,.45)
     for z in (-16,1,18):
         for j in range(4):
             box(-15.1,1.62,z+j*.45,.18,3.24,.12,TEAL)
         box(-15.1,3.15,z+.65,.22,.25,1.59,TEAL)
+def ridge_monitor(z):
+    # Raised glazed lantern above the central concourse.
+    for side in (-1,1):
+        x=side*3.6
+        g.poly([(x,5.58,z-3.94),(x,5.58,z+3.94),(x,6.79,z+3.94),(x,6.79,z-3.94)],"c2d3cd",9*16)
+        g.poly([(x,6.79,z-3.94),(x,6.79,z+3.94),(0,7.17,z+3.94),(0,7.17,z-3.94)],"b1c0b6",9*16)
+        for y in (5.61,6.15,6.78):box(x,y,z,.13,.084,7.95,"536e66")
+        for dz in (-3.90,-1.96,0,1.96,3.90):
+            box(x,6.18,z+dz,.16,1.20,.09,TEAL)
+            rod((x,6.77,z+dz),(0,7.16,z+dz),.061,GRAY,n=4)
+        rod((x,5.58,z),(0,6.91,z),.084,TEAL,n=4)
+
+def public_clock(x,y,z,r):
+    rod((x,y,z-.12),(x,y,z+.12),r*1.09,"354a47",n=32)
+    for side in (-1,1):
+        zz=z+side*.129
+        g.poly([(x+sin(k*pi/16)*r,y+cos(k*pi/16)*r,zz) for k in range(32)],"e4debe")
+        for j in range(12):
+            a=j*pi/6
+            rod((x+sin(a)*r*.77,y+cos(a)*r*.77,zz+side*.009),
+                (x+sin(a)*r*.92,y+cos(a)*r*.92,zz+side*.009),r*(.036 if j%3==0 else .023),INK,n=4)
+        for a,length in ((-.94,.53),(1.17,.76)):
+            rod((x,y,zz+side*.02),(x+side*sin(a)*r*length,y+cos(a)*r*length,zz+side*.02),r*.04,INK,n=5)
+
+def quay_crane(x,z):
+    # Rail-mounted portal crane on the far wharf.
+    box(x,.13,z,5.30,.48,7.80,"797e74")
+    for dz in (-3.3,3.3):
+        for dx in (-2.1,2.1):rod((x+dx,-.35,z+dz),(x+dx,.28,z+dz),.23,CONC,n=8)
+    for dz in (-2,2):
+        for dx in (-1.45,1.45):
+            rod((x+dx,.08,z+dz),(x+dx*.72,4.8,z+dz*.63),.19,RUST,n=6)
+        rod((x-1.45,.40,z+dz),(x+1.04,4.7,z+dz*.63),.082,RUST,n=5)
+    box(x,4.82,z,3.02,.50,3.51,RUST)
+    box(x-.37,5.83,z-1.03,2.44,1.71,1.40,"78867e")
+    box(x+.86,5.98,z-1.03,.035,.87,1.11,GLASS)
+    for dx in (-.49,.49):
+        for j in range(7):
+            a=(x+dx+j*.71,5.08+j*.85,z+j*.67)
+            b=(a[0]+.71,a[1]+.85,a[2]+.67)
+            up=(a[0],a[1]+.75,a[2])
+            rod(a,b,.083,RUST,n=5)
+            rod(up,(b[0],b[1]+.75,b[2]),.083,"ad7755",n=5)
+            rod(up,b,.057,RUST,n=4)
+    rod((x+4.97,11.02,z+4.69),(x+4.97,6.12,z+4.69),.029,BLACK,n=5)
+    box(x+4.97,6.09,z+4.69,.90,.27,.46,YELLOW)
+
 def station_roof():
     # This ceiling is an FPS cutaway. Tactical view retains the platforms, lamps and traffic lanes.
     for z in range(-36,37,8):
+        ridge_monitor(z)
         for x in (-12,-4,4,12):
-            box(x,5.64,z,7.82,.17,7.93,["5c6965","64716a"][(z//8+x//8)%2])
+            slab_width=7.82 if abs(x)==12 else 4.36
+            slab_x=x if abs(x)==12 else (5.78 if x>0 else -5.78)
+            box(slab_x,5.64,z,slab_width,.17,7.93,["5c6965","64716a"][(z//8+x//8)%2])
             for offset in (-2.65,-.91,.91,2.65):
-                box(x+offset,5.48,z,.105,.15,7.96,"455651")
+                if abs(x+offset)>3.6:box(x+offset,5.48,z,.105,.15,7.96,"455651")
         box(0,5.28,z,32.2,.34,.22,TEAL)
         box(0,5.02,z,32.4,.11,.52,"536a61")
         for xx in (-13,-5.2,2.7,10.5):
@@ -832,7 +982,9 @@ for d,fn in enumerate((market,warehouse,station,yard)):
     alley_details(d);road_furniture(d)
     if d==0: market_details()
     if d==2: tracks(15.02,False)
-    if d==3: tracks(18,True);riverside()
+    if d==3:
+        tracks(18,True);riverside()
+        for crane_z in (-18,23):quay_crane(-34,crane_z)
     if d==2: stationprops();platform_detail()
     bake_street_light(d);g.bake("district"+str(d))
 for prop in ("depot","cache","works","tent","workshop","passenger","threat"):
@@ -855,32 +1007,7 @@ for z in (-1.03,1.03):
     for j in range(6):box(-1.08+j*.42,.61,z,.18,.124,.07,BLACK)
 g.bake("foundation")
 
-for cargo in (False,True):
-    g=Batch()
-    for s in (-1,1):
-        # Reach to the upper arm on the casualty's near side. The other hand steadies the forearm.
-        x=s*.205 if cargo else (.208 if s>0 else -.062)
-        z=.38 if cargo else (.405 if s>0 else .26)
-        y=-.16 if cargo else (-.073 if s>0 else -.219)
-        elbow=(s*.34,-.39,.01);wrist=(x,y,z)
-        tapered(elbow,wrist,[(0,.099,.093),(.16,.096,.091),(.44,.083,.076),(.52,.085,.079),
-                            (.73,.069,.067),(.81,.072,.068),(.91,.058,.057),(1,.053,.050)],"46534a",15)
-        tapered(elbow,wrist,[(.82,.071,.066),(.90,.065,.061),(.94,.060,.058)],"34433c",14)
-        palm=(x-.012*s,y+.048,z+.060)
-        tapered(wrist,palm,[(0,.049,.044),(.32,.054,.046),(.66,.053,.043),(1,.043,.035)],"353d37",12)
-        for finger in range(4):
-            xx=x+s*(finger-1.5)*.020
-            knuckle=(xx,y+.042,z+.064)
-            mid=(xx-.004*s,y+.069,z+.102-(finger%3)*.005)
-            tip=(xx-.013*s,y+.066,z+.124-abs(1-finger)*.005)
-            rod(knuckle,mid,.012,"9b8269",n=9)
-            rod(mid,tip,.0105,"a88b70",n=9)
-        rod((x-.036*s,y+.01,z+.031),(x-.072*s,y+.05,z+.072),.016,"7f705d",n=10)
-    if cargo:
-        box(0,-.17,.48,.38,.28,.24,"b18d60")
-        for x in (-.12,.12):box(x,-.168,.48,.027,.29,.25,"626956")
-        box(0,-.171,.352,.12,.07,.012,CREAM)
-    g.bake("handsCargo" if cargo else "handsHelping")
+
 
 
 
