@@ -64,6 +64,7 @@ namespace Evac
 
     public partial class GameSim
     {
+        RoutePlan[] districtPlans;
         RoutePlan activePlan;
         MissionDef activeMission;
         RoutePlan BasePlan => RoutePlan.All[state.index];
@@ -104,12 +105,16 @@ namespace Evac
         }
         void SetRoute()
         {
+            districtPlans=null;
             activePlan=MakeRoute(Sector);
-            geometry=new WorldGeometry(state.index,activePlan);
+            geometry=new WorldGeometry(state.index,activePlan,FleetEnabled);
             alarmSite=Ground(AlarmSites[AlarmDistrict]);
             for(int i=0;i<state.units.Count;i++)
             {
-                state.units[i].pos=geometry.Clamp(state.units[i].pos);
+                var unit=state.units[i];
+                bool crossing=unit.vaultDuration>0 && unit.vaultDuration<=.7f && unit.vaultTime>=0 && unit.vaultTime<unit.vaultDuration &&
+                    (unit.vaultFrom-unit.vaultTo).sqrMagnitude<=3.61f*3.61f && (geometry.Clamp(unit.vaultTo)-unit.vaultTo).sqrMagnitude<.001f;
+                if(!crossing){unit.vaultDuration=0;unit.pos=geometry.Clamp(unit.pos);}
                 state.actors[i].hasPath=false;
             }
             activeMission=new MissionDef(state.index,activePlan);
@@ -131,10 +136,17 @@ namespace Evac
                 float z=(i/5-1)*1.2f+state.Draw()*.4f;
                 int number=Route.population*Sector/SectorCount+i+1;
                 string name=IsDuty?DutyStage.people[i]:"住民 "+number;
-                var c=Spawn(UnitKind.Civilian,Route.assembly+new Vector3(x,0,z),name,-1);
-                var a=Brain(c);a.sector=Sector;a.injured=i<injuredCount;c.wounded=a.injured;
+                bool inShelter=!IsDuty && state.index>0 && i>=count-Mathf.Max(1,count/5);
+                var shelter=inShelter ? ApproachBlocks.FieldStation(state.index,Sector) : Route.assembly;
+                var c=Spawn(UnitKind.Civilian,shelter+new Vector3(x,0,z),name,-1);
+                var a=Brain(c);a.sector=Sector;a.fieldShelter=inShelter;
+                // A late evacuation can put one of its patients at the satellite stop.
+                bool remotePatient=FleetEnabled && state.index>=6 && injuredCount>=2;
+                a.injured=i<injuredCount-(remotePatient?1:0) || (remotePatient && i==count-1);c.wounded=a.injured;
                 a.personalGate=Route.gate+new Vector3((i%5-2)*.43f,0,(i%3-1)*.25f);
             }
+            ApplyDistrictRoute();
+            UseChapterSupplies();
             if(!initial)
             {
                 state.waveCount++;SpawnWave(1+(int)Level+state.index/3);
@@ -145,7 +157,7 @@ namespace Evac
         }
         bool HandleSector()
         {
-            if(IsSectorCleared() && Sector+1<SectorCount)
+            if((IsDuty || ChapterPhase==2) && IsSectorCleared() && Sector+1<SectorCount)
             {
                 state.sector++;OpenSector(false);return true;
             }
@@ -154,8 +166,14 @@ namespace Evac
         bool IsSectorCleared()
         {
             if(IsDuty)return DutyStageDone();
-            return Boarded>=SectorGoal && state.sectionBoarded>0 &&
-                (SectorData.work!=FieldWork.Triage || state.sectionAssists>0);
+            if(DistrictOutcome(Sector)==0)return false;
+            if(Boarded>=SectorGoal && state.sectionBoarded>0 && (!NeedsTriage || state.sectionAssists>0))return true;
+            // A dead local group cannot fill its original share. Later districts
+            // can make up the difference, but the final vehicle quota still applies.
+            if(state.losses==0 || (Sector==SectorCount-1 && Boarded<Mission.quota))return false;
+            foreach(var c in state.units)
+                if(c.active && IsCivilian(c) && !Brain(c).auxiliary && Brain(c).sector==Sector)return false;
+            return true;
         }
         bool NeedsScreen => SectorData.work==FieldWork.Screen;
         bool NeedsTriage => SectorData.work==FieldWork.Triage;

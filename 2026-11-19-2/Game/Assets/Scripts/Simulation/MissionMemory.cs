@@ -10,7 +10,7 @@ namespace Evac
         public int alarmHeard;
         public int sector; public Vector3 personalGate, waypoint, pathGoal; public bool hasPath;
         public int id, escort = -1, target = -1, route, variant;
-        public bool injured, cargo, discovered, preparingCharge, auxiliary, requestCargo;
+        public bool fieldShelter, injured, cargo, discovered, preparingCharge, auxiliary, requestCargo;
         public Vector3 dodgeVelocity, chargeHeading;
         public float exhausted,chargeTime;
         public float fireDelay, attackClock, stun, supplyClock, aidClock, lostTime;
@@ -20,6 +20,7 @@ namespace Evac
     [Serializable]
     internal class SquadMemory
     {
+        public int districtTask; public bool districtTransport;
         public int order, sector;
         public Vector3 destination;
         public bool assigned, requestDuty;
@@ -41,6 +42,9 @@ namespace Evac
         public int[] best = new int[8], latest = new int[8], facilities = new int[8], freight = new int[8], injured = new int[8], returned = new int[8];
         public bool[] complete = new bool[8];
         public int[] requests = new int[8];
+        public int[] searchReturns = new int[8];
+        public int[] chapterReturns = new int[8];
+        public string[] chapterContacts = new string[16];
         public List<ReturnedSoldier> roster = new List<ReturnedSoldier>();
         public bool Valid() => version == 1 && unlocked >= 0 && unlocked < 8 && best?.Length == 8 &&
             latest?.Length == 8 && facilities?.Length == 8 && freight?.Length == 8 && injured?.Length == 8 && returned?.Length == 8 && complete?.Length == 8;
@@ -49,6 +53,9 @@ namespace Evac
     [Serializable]
     internal class MissionMemory
     {
+        public DistrictIncidentState[] incidents;
+        public ChapterMemory chapter;
+        public RescueBeacon beacon;
         public int requestState=(int)RequestState.Offered,requestStep,requestActor=-1,requestCarrier=-1;
         public float requestWork;public bool departureAnnounced,requestDropped;
         public Vector3 requestDropPosition;
@@ -57,6 +64,9 @@ namespace Evac
         public string dutyFailure;
         public int alarmDispatch,alarmSerial;
         public float alarmUntil,alarmReadyAt;
+        public SearchMemory search;
+        public EvacuationFleet fleet;
+        public int[] districtOutcome, districtCourier; public bool[] registerCollected;
         public int volunteers, depotRounds, medPacks;
         public int sector, sectionBoarded, sectionDelivered, sectionAssists; public float sectionRepair,security; public bool screened;
         public int version = 2, index, difficulty, result, controlled = -1, nextId, boarded, losses, kills, crates, delivered;

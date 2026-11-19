@@ -9,10 +9,18 @@ namespace Evac
         int tapUnit=-1, pinSquad;
         float lastTap, pinAt=-20, stride, stepAt, travelSpeed, dodgeRoll,mapYaw,transitionTime=-10;
         bool mouseMap, mapDragged, focusAim, touchAim;
-        float aimBlend;
+        float aimBlend, runBlend, stepWeight, turnBank, kickVelocity, cameraKick;
+        Vector2 footDrive;
         public bool Aiming => focusAim;
         public void ToggleTouchAim() => touchAim=!touchAim;
-        void ReleaseAim(){touchAim=false;focusAim=false;aimBlend=0;}
+        void ReleaseAim()
+        {
+            touchAim=focusAim=false;
+            aimBlend=runBlend=travelSpeed=stepWeight=dodgeRoll=turnBank=cameraKick=kickVelocity=0;
+            footDrive=Vector2.zero;
+            stride=0;
+            stepAt=1.5f;
+        }
         Vector3 pinPoint;
         GUIStyle worldText;
         static Vector2 FireCenter => Screen.safeArea.min + Vector2.Scale(ControlPreferences.FirePosition,Screen.safeArea.size);
@@ -31,6 +39,7 @@ namespace Evac
         void ShowOrderPin(Vector3 p){pinPoint=p;pinAt=Time.time;pinSquad=SelectedSquad;}
         void HandleInput(float dt)
         {
+            if(Input.GetKeyDown(KeyCode.F3))UseLamp();
             if(ControlPreferences.Pressed(ControlAction.SwitchView))
             {
                 if(sim.Controlled==null) Possess(SelectedSoldier); else CommandMode();
@@ -46,7 +55,7 @@ namespace Evac
             Vector2 walk=ControlPreferences.Movement();
             Vector2 look=Vector2.zero;
             var soldier=sim.Controlled;
-            bool canAim=soldier.reload<=0 && soldier.dodgeTime<=0 && !soldier.carryingCargo && soldier.escortId<0;
+            bool canAim=soldier.reload<=0 && soldier.dodgeTime<=0 && soldier.vaultDuration<=0 && !soldier.carryingCargo && soldier.escortId<0;
             focusAim=canAim && (TouchUI?touchAim:HasMouseLook && Input.GetMouseButton(1));
             aimBlend=Mathf.MoveTowards(aimBlend,focusAim?1:0,dt*(focusAim?6.2f:8f));
             if(TouchUI)
@@ -63,13 +72,23 @@ namespace Evac
             var heading=Quaternion.Euler(0,yaw,0);
             var step=Vector2.ClampMagnitude(walk,1);
             if(ControlPreferences.Pressed(ControlAction.Dodge)) Dodge(step);
-            bool rushing=Input.GetKey(KeyCode.LeftShift)||(TouchUI&&step.magnitude>.93f);
-            float pace=rushing?1:focusAim?.42f:.74f;
+            bool rushing=!focusAim && step.y>.48f && (Input.GetKey(KeyCode.LeftShift)||(TouchUI&&step.magnitude>.93f));
+            runBlend=Mathf.MoveTowards(runBlend,rushing?1:0,dt*(rushing?4.5f:8));
+            float pace=focusAim?.42f:Mathf.Lerp(.74f,1,runBlend);
+            Vector2 desired=step*pace;
+            footDrive=Vector2.MoveTowards(footDrive,desired,dt*(desired.sqrMagnitude<footDrive.sqrMagnitude?13:8));
+            turnBank=Mathf.Lerp(turnBank,Mathf.Clamp(-look.x*.24f-footDrive.x*.7f,-1.5f,1.5f),1-Mathf.Exp(-dt*12));
             Vector3 prev=sim.Controlled.pos;
-            sim.Move(heading*new Vector3(step.x,0,step.y)*pace,yaw,dt);
+            sim.Move(heading*new Vector3(footDrive.x,0,footDrive.y),yaw,dt);
             travelSpeed=(sim.Controlled.pos-prev).magnitude/Mathf.Max(.001f,dt);
             stride+=travelSpeed*dt*2.55f;
-            if(stride>stepAt){sound.Signal(stride%6.28f<3.14f?"step1":"step2");stepAt=stride+3.14f;}
+            stepWeight=Mathf.MoveTowards(stepWeight,Mathf.Clamp01(travelSpeed/4.7f),dt*8);
+            if(stride>stepAt)
+            {
+                bool right=(Mathf.FloorToInt(stepAt/Mathf.PI)&1)!=0;
+                sound.Footfall(right,travelSpeed,Mathf.Abs(soldier.pos.z)>48,missionIndex/2);
+                stepAt+=Mathf.PI;
+            }
             if((!TouchUI && HasMouseLook && Input.GetMouseButton(0))||fireFinger>=0) FireOnce();
         }
         public void Dodge(Vector2 direction)
@@ -77,6 +96,12 @@ namespace Evac
             if(Phase!="Playing"||sim.Controlled==null)return;
             if(direction.sqrMagnitude<.1f)direction=Vector2.left;
             var delta=Quaternion.Euler(0,sim.Controlled.yaw,0)*new Vector3(direction.x,0,direction.y);
+            if(direction.y>.35f && sim.TryVault(delta))
+            {
+                footDrive=Vector2.zero;
+                sound.Signal("step2");
+                return;
+            }
             if(sim.Dodge(delta)){dodgeRoll=direction.x<0?4:-4;sound.Signal("step2");}
         }
         public void DodgeTouch() => Dodge(touchWalk);
@@ -111,7 +136,13 @@ namespace Evac
             foreach(var soldier in roster) if(soldier.squad==squad&&soldier.active){staffed=true;break;}
             if(!staffed)return;
             var ray=eye.ViewportPointToRay(new Vector3(.5f,.5f,0));
-            float distance=new Plane(Vector3.up,Vector3.zero).Raycast(ray,out float t)?Mathf.Min(t,22):16;
+            var subject=sim.SightContact(ray.origin,ray.direction);
+            if(subject!=null && sim.RadioOrder(squad,subject))
+            {
+                sound.Signal("dispatch");
+                return;
+            }
+            float distance=new Plane(Vector3.up,Vector3.zero).Raycast(ray,out float t)?Mathf.Min(t,42):24;
             Vector3 p=ray.GetPoint(distance);p.y=0;
             sim.Order(squad,sim.OrderFor(squad),p);
             sound.Signal("dispatch");
@@ -155,7 +186,8 @@ namespace Evac
                 if(mouseMap && Input.GetMouseButton(0))DragMap(pos);
                 if(Input.GetMouseButtonUp(0)&&mouseMap){mouseMap=false;if(!mapDragged&&!ui.BlocksPointer(pos))PointAt(pos,false);}
             }
-            mapCenter.x=Mathf.Clamp(mapCenter.x,-22,22);mapCenter.z=Mathf.Clamp(mapCenter.z,-32,32);
+            mapCenter.x=Mathf.Clamp(mapCenter.x,-22,22);
+            mapCenter.z=Mathf.Clamp(mapCenter.z,-ApproachBlocks.StreetEnd,ApproachBlocks.StreetEnd);
         }
         void BeginMap(Vector2 p){pointerStart=previousPointer=p;mapDragged=false;}
         void DragMap(Vector2 p)
@@ -172,6 +204,11 @@ namespace Evac
         }
         void PointAt(Vector2 screen,bool groundOnly)
         {
+            if(choosingBeacon)
+            {
+                if(MapGround(screen,out var site))TargetLamp(site);
+                return;
+            }
             if(!groundOnly)
             {
                 int nearest=-1; float best=Mathf.Max(18,Screen.height*(TouchUI?.045f:.027f));
@@ -190,7 +227,7 @@ namespace Evac
                 }
             }
             if(MapGround(screen,out var ground))
-                IssueOrder(new Vector3(Mathf.Clamp(ground.x,-22,22),0,Mathf.Clamp(ground.z,-33,33)));
+                IssueOrder(new Vector3(Mathf.Clamp(ground.x,-22,22),0,Mathf.Clamp(ground.z,-ApproachBlocks.StreetEnd,ApproachBlocks.StreetEnd)));
         }
         void FrameCamera(float dt,bool snap)
         {
@@ -199,12 +236,12 @@ namespace Evac
             if(direct)
             {
                 var u=sim.Controlled;
-                float bob=ReducedMotion?0:Mathf.Min(1,travelSpeed*.25f)*.028f*(1-aimBlend*.78f);
+                float bob=ReducedMotion?0:stepWeight*.026f*(1-aimBlend*.82f);
                 dodgeRoll=Mathf.MoveTowards(dodgeRoll,0,dt*13);
-                var r=Quaternion.Euler(pitch-(ReducedMotion?0:recoil*1.1f),u.yaw,ReducedMotion?0:dodgeRoll);
-                var p=u.pos+Vector3.up*(1.52f+Mathf.Sin(2*stride)*bob);
+                var r=Quaternion.Euler(pitch-(ReducedMotion?0:cameraKick),u.yaw,ReducedMotion?0:dodgeRoll+turnBank);
+                var p=u.pos+Vector3.up*(1.52f+sim.VaultLift(u)+Mathf.Sin(2*stride)*bob)+r*Vector3.right*(Mathf.Cos(stride)*bob*.55f);
                 eye.transform.SetPositionAndRotation(p,r);
-                eye.fieldOfView=Mathf.Lerp(72,53,Mathf.SmoothStep(0,1,aimBlend));
+                eye.fieldOfView=Mathf.Lerp(72+(ReducedMotion?0:runBlend*3.5f),53,Mathf.SmoothStep(0,1,aimBlend));
             }
             else
             {
@@ -222,8 +259,14 @@ namespace Evac
         }
         void OnGUI()
         {
-            if(Phase!="Playing" || Event.current.type!=EventType.Repaint)return;
+            if(Phase!="Playing" || ui==null || ui.FieldOverlay || Event.current.type!=EventType.Repaint)return;
+            bool chapterOnSite=sim.ChapterPhase==1 || sim.ChapterPhase==3;
             if(worldText==null)worldText=new GUIStyle(GUI.skin.label){font=Resources.Load<Font>("UI/NotoSansJP"),alignment=TextAnchor.MiddleCenter};
+            DrawFieldContacts();
+            DrawSearchMarkers();
+            DrawFleetMarkers();
+            BeaconTag();
+            ChapterMarker();
             float transition=Mathf.Clamp01(1-(Time.unscaledTime-transitionTime)/.22f);
             if(transition>0&&!ReducedMotion)Box(0,0,Screen.width,Screen.height,new Color(.06f,.09f,.08f,transition*.3f));
             if(sim.Controlled!=null)
@@ -257,7 +300,7 @@ namespace Evac
                     sim.OrderFor(pawn.squad)==SquadOrder.Engineer?"作業地点":"集合場所";
                 Vector3 tag=next+Vector3.up*1.85f;
                 float distance=Vector3.Distance(pawn.pos,next);
-                if(distance>3)WorldTag(tag,hint+" "+Mathf.RoundToInt(distance)+"m",new Color(1,.84f,.50f),false);
+                if(!chapterOnSite && distance>3)WorldTag(tag,hint+" "+Mathf.RoundToInt(distance)+"m",new Color(1,.84f,.50f),false);
                 if(TouchUI)
                 {
                     float r=ThumbRadius;
@@ -271,11 +314,14 @@ namespace Evac
             {
                 var m=sim.Mission;
                 Color route=sim.PassageOpen?new Color(.45f,.92f,.77f,.62f):new Color(.99f,.70f,.27f,.7f);
-                RouteSegment(m.assembly,m.gate,route);RouteSegment(m.gate,m.exit,route);
+                if(!chapterOnSite)
+                {
+                    RouteSegment(m.assembly,m.gate,route);RouteSegment(m.gate,m.exit,route);
                 WorldTag(m.assembly+Vector3.up*.60f,"集合",new Color(.61f,.92f,.72f),false);
                 WorldTag(m.exit+Vector3.up*1.6f,"乗車口",new Color(.98f,.8f,.5f),false);
                 if(sim.CargoRequired||sim.RepairRequired)WorldTag(sim.EngineerDestination+Vector3.up*1.1f,"作業",new Color(.61f,.83f,.98f),false);
-                if(sim.HasRequestPoint)WorldTag(sim.RequestPoint+Vector3.up*1.5f,"要請",new Color(.97f,.72f,.43f),false);
+                }
+                if(sim.HasRequestPoint && !chapterOnSite)WorldTag(sim.RequestPoint+Vector3.up*1.5f,"要請",new Color(.97f,.72f,.43f),false);
                 if(sim.AlarmActorId>=0 || sim.AlarmActiveRemaining>0)
                     WorldTag(sim.AlarmPoint+Vector3.up*2.1f,sim.AlarmName,new Color(1,.8f,.4f),true);
                 if(Current!=null && Current.active)WorldTag(Current.pos+Vector3.up*2,Current.name,new Color(1,.8f,.42f),true);

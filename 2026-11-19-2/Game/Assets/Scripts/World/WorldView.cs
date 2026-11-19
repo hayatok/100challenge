@@ -7,7 +7,7 @@ using UnityEngine.Rendering;
 namespace Evac
 {
     /// <summary>Meshes baked in Blender share a palette and one instanced surface shader.</summary>
-    public sealed class WorldView : MonoBehaviour
+    public sealed partial class WorldView : MonoBehaviour
     {
         sealed class CrowdBatch
         {
@@ -44,7 +44,9 @@ namespace Evac
         Texture2D bakedLight;
         Vector3 transportOrigin;
         int region, builtSite, submissionFrame = -1;
-        bool writingActors;
+        bool writingActors, overviewCrowd;
+        Vector3 crowdCameraPosition;
+        float nearActorDistanceSquared;
         GameObject siteModel, flood, gate, supply, generator, crates, foundation, requestProp;
         GameObject alarmFixture;
         MeshFilter alarmLens;
@@ -65,6 +67,7 @@ namespace Evac
                 shadowMaterial = new Material(Resources.Load<Shader>("World/StreetShadow")) { enableInstancing = true };
                 waterMaterial = new Material(Resources.Load<Shader>("World/PlatformWater"));
                 skyMaterial = new Material(Resources.Load<Shader>("World/CoastalSky"));
+                skyMaterial.SetTexture("_Plate", Resources.Load<Texture2D>("World/CoastalPlate"));
                 surface.SetTexture("_SurfaceScan",Resources.Load<Texture2D>("World/SurfaceScan"));
                 surface.SetTexture("_FieldFaces",Resources.Load<Texture2D>("World/FieldFaces"));
                 surface.SetTexture("_Materials",Resources.Load<Texture2D>("World/MossMaterials"));
@@ -155,6 +158,8 @@ namespace Evac
                     signalLamps[i]=lamp.GetComponent<MeshFilter>();
                 }
             }
+            BuildApproachBlocks(route);
+            BuildLandmarks(region);
         }
 
         GameObject Place(string asset, Vector3 position)
@@ -206,6 +211,7 @@ namespace Evac
         public void SetFieldState(int site, float construction, int boarded, int powerMask, float water, bool passageOpen)
         {
             if (!district) return;
+            TickLandmarks(Mathf.Min(Time.deltaTime,.1f));
             if(region==3) { waterClock += Mathf.Min(Time.deltaTime,.1f); surface.SetFloat("_WetTime",waterClock); }
             if (site != builtSite)
             {
@@ -278,7 +284,8 @@ namespace Evac
             else m.fall = 0;
             m.health = hp01;
             m.stride = Mathf.MoveTowards(m.stride, Mathf.Clamp01(speed / 3.6f), dt * 6);
-            m.action = Mathf.MoveTowards(m.action, acting ? 1 : 0, dt * 5);
+            m.action = kind == 0 && activity == 4 ? 1 :
+                Mathf.MoveTowards(m.action, acting ? 1 : 0, dt * (kind == 0 ? 7 : 5));
             if (hp01>0)
             {
                 float stepLength=Mathf.Lerp(.98f,1.95f,Mathf.SmoothStep(0,1,Mathf.InverseLerp(.58f,.96f,m.stride)));
@@ -288,10 +295,11 @@ namespace Evac
             motions[id] = m;
             if (possessed) return;
 
-            int key = kind * 4 + variant;
+            bool far = overviewCrowd || (position-crowdCameraPosition).sqrMagnitude > nearActorDistanceSquared;
+            int key = kind * 4 + variant + (far ? 16 : 0);
             if (!batches.TryGetValue(key, out var batch))
             {
-                batch = new CrowdBatch { mesh = GetMesh("actor" + kind + "_" + variant) };
+                batch = new CrowdBatch { mesh = GetMesh((far ? "actorFar" : "actor") + kind + "_" + variant) };
                 batches.Add(key, batch);
             }
             float stature = .92f + ((id & 31) % 8) * .022f;
@@ -329,6 +337,10 @@ namespace Evac
         {
             if (writingActors) return;
             writingActors = true;
+            overviewCrowd = playerCamera && playerCamera.orthographic && playerCamera.orthographicSize >= 9f;
+            crowdCameraPosition = playerCamera ? playerCamera.transform.position : Vector3.zero;
+            nearActorDistanceSquared = !playerCamera || playerCamera.orthographic ? float.PositiveInfinity :
+                (Application.isMobilePlatform ? 81f : 169f);
             foreach (var batch in batches.Values)
             {
                 batch.transforms.Clear();
@@ -386,6 +398,8 @@ namespace Evac
             if (!equipment) return;
             if (!playerCamera) playerCamera = Camera.main;
             visible &= playerCamera != null;
+            ShowApproachRoofs(visible);
+            ShowLandmarkRoofs(visible);
             if (stationRoof && stationRoof.activeSelf!=visible) stationRoof.SetActive(visible);
             if (equipment.activeSelf != visible) equipment.SetActive(visible);
             if (!visible) return;
@@ -399,17 +413,18 @@ namespace Evac
             if (rig.parent != playerCamera.transform) rig.SetParent(playerCamera.transform, false);
             float bob = Mathf.Clamp01(motion);
             float dip = Mathf.Sin(Mathf.Clamp01(reload01) * Mathf.PI);
-            equipmentState.SetVector(Pose,new Vector4(reload01,recoil,0,0));
+            equipmentState.SetVector(Pose,new Vector4(reload01,recoil,time,bob));
+            equipmentState.SetVector(Form,new Vector4(4,pose,0,0));
             equipmentRenderer.SetPropertyBlock(equipmentState);
             float aim = pose == 0 && reload01 <= 0 ? Mathf.SmoothStep(0,1,Mathf.Clamp01(aim01)) : 0;
-            var hip = new Vector3(.065f + .012f*Mathf.Sin(time*8)*bob,
-                -.094f + .012f*Mathf.Abs(Mathf.Sin(time*8))*bob - dip*.075f, .145f - recoil*.045f);
+            var hip = new Vector3(.065f + .012f*Mathf.Sin(time*8)*bob - dip*.043f,
+                -.094f + .012f*Mathf.Abs(Mathf.Sin(time*8))*bob + dip*.050f, .145f - recoil*.045f + dip*.023f);
             // The aperture center lies at (.122,-.007) in the Blender equipment mesh.
             // Align its axis with the view and bring the frame closer as the arms rise.
             var sight = new Vector3(-.122f,.007f,-.072f-recoil*.019f);
             float arc = 4*aim*(1-aim);
             rig.localPosition = Vector3.Lerp(hip,sight,aim) + new Vector3(0,-.019f, .018f)*arc;
-            var hipAngles = new Vector3(-recoil*9 + dip*13,-3,dip*25);
+            var hipAngles = new Vector3(-recoil*9 - dip*4,-3+dip*20,dip*28);
             var sightAngles = new Vector3(-recoil*1.65f,0,0);
             rig.localRotation = Quaternion.Euler(Vector3.Lerp(hipAngles,sightAngles,aim) + Vector3.forward*(arc*2.8f));
         }
@@ -569,7 +584,9 @@ namespace Evac
             if(equipment) ReleaseOwned(equipment);
             foreach (var mesh in meshes.Values) ReleaseOwned(mesh);
             if(shadow) ReleaseOwned(shadow);
+            ReleaseIncidentResources();
             if(bakedLight) ReleaseOwned(bakedLight);
+            if(sunOcclusion) ReleaseOwned(sunOcclusion);
             if(surface) ReleaseOwned(surface);
             if(shadowMaterial) ReleaseOwned(shadowMaterial);
             if(skyMaterial) ReleaseOwned(skyMaterial);

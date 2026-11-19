@@ -52,6 +52,9 @@ namespace Evac
             using var mix=new FilmAudio(Path.Combine(inspectionFolder,"mix.wav"));
             if(!mix.Recording){Debug.LogError("Windows audio renderer could not start");Application.Quit(2);yield break;}
             sim.StartMission(4,Difficulty.Standard);
+            sim.ChooseChapterOption(0);sim.DispatchChapter(0);
+            for(int step=0;step<1800 && sim.ChapterPhase==1 && sim.Result==SimResult.Active;step++)sim.Tick(.1f);
+            if(sim.ChapterPhase!=2){Debug.LogError("Unable to reach the evacuation phase for capture");Application.Quit(2);yield break;}
             EnterField();
             int chosen=0;
             for(int n=0;n<roster.Count;n++)if(roster[n].squad==0 && RosterAlive(n)){chosen=n;break;}
@@ -188,8 +191,25 @@ namespace Evac
             for(int m=0;m<8;m++)
             {
                 Brief(m);Deploy();
+                yield return null;
+                yield return new WaitForEndOfFrame();
                 if(Phase!="Playing" || MissionIndex!=m) throw new Exception("Mission not playable: "+m);
                 if(m==0||m==4)yield return Picture(m==0?"market-command":"station-command");
+                if(m==1)
+                {
+                    ui.SearchHotkey();yield return Picture("operation-book");ui.CloseFieldOverlay();
+                    ChooseResponse(1);SelectSquad(0);AssignResponse(false);SelectSquad(1);AssignResponse(true);
+                    if(!sim.ChapterNeedsSupport || sim.ChapterAssigned(1)!=1 || (mapCenter-sim.ChapterPoint(true)).sqrMagnitude>.01f)
+                        throw new Exception("Supporting team did not receive its own signal location");
+                    ui.SearchHotkey();yield return Picture("signal-support-map");ui.CloseFieldOverlay();
+                    ui.InspectDispatchPanel();yield return Picture("district-desk");ui.CloseFieldOverlay();
+                    InspectDistrict(sim.Sector); FrameCamera(0,true);
+                    yield return Picture("northern-approach");
+                }
+                if(m==2)
+                {
+                    ui.InspectFleetPanel();yield return Picture("fleet-desk");ui.CloseFieldOverlay();
+                }
                 if(m==0||m==4)
                 {
                     int pick=m==0?0:Mathf.Min(3,RosterCount-1);
@@ -215,6 +235,17 @@ namespace Evac
                 int sector=-1;
                 for(int i=0;i<11000&&sim.Result==SimResult.Active&&!sim.CanDepart;i++)
                 {
+                    if(sim.ChapterPhase==1 || sim.ChapterPhase==3)
+                    {
+                        if(sim.ChapterChoice<0)
+                        {
+                            sim.ChooseChapterOption((m+sim.ChapterPhase)%2);
+                            sim.DispatchChapter(0);
+                            if(sim.ChapterNeedsSupport && m>0)sim.DispatchChapter(1,true);
+                        }
+                        sim.Tick(.1f);
+                        continue;
+                    }
                     if(sector!=sim.Sector)
                     {
                         sector=sim.Sector;
@@ -222,10 +253,15 @@ namespace Evac
                         sim.Order(m==0?0:1,SquadOrder.Guide,sim.ActiveAssembly);
                         if(m>0)sim.Order(2,SquadOrder.Engineer,sim.EngineerDestination);
                     }
+                    if(sim.FleetDecisionPending)sim.ResolveFleetBlock(false);
+                    if(sim.DistrictOutcome(sim.Sector)==0 && sim.DistrictAssignment(0)<0 && (m>0 || sim.Boarded>=sim.SectorGoal))
+                        sim.DispatchDistrict(0,sim.Sector,(m+sim.Sector)%2==0);
                     sim.Tick(.1f);
                 }
                 if(!sim.CanDepart)throw new Exception("Departure unavailable: "+sim.Mission.title+" "+sim.Objective);
-                Depart();yield return new WaitForSecondsRealtime(3.35f);
+                Depart();
+                float until=Time.realtimeSinceStartup+24;
+                while(Phase=="Playing" && Time.realtimeSinceStartup<until)yield return null;
                 if(Phase!="Debrief"||!Won)throw new Exception("Missing debrief "+m);
                 if(m==0)yield return Picture("debrief");
                 DebriefNext();

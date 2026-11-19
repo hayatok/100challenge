@@ -84,7 +84,7 @@ namespace Evac
 
         public bool BlocksPointer(Vector2 screenBottomLeft)
         {
-            if (G.Phase != "Playing" || fieldPanel || requestOpen) return true;
+            if (G.Phase != "Playing" || FieldOverlay) return true;
             if (scale <= 0f) return false;
             Vector2 point = ToLogical(screenBottomLeft);
             foreach (Rect rect in pointerBlocks)
@@ -109,7 +109,7 @@ namespace Evac
             if (Event.current.type == EventType.Repaint) pointerBlocks.Clear();
             if (lastPhase != G.Phase)
             {
-                requestOpen = requestLog = false;
+                bookOpen = requestOpen = requestLog = fieldDispatchOpen = fleetOpen = searchDeskOpen = false;
                 dutyMenuOpen = false;
                 settingsOpen = creditsOpen = dispatchOpen = fieldPanel = orderPickerOpen = false;
                 continueFailed = false;
@@ -127,18 +127,18 @@ namespace Evac
 
             if (G.Phase == "Playing" && lastMode != G.Mode)
             {
-                requestOpen = false;
+                bookOpen = requestOpen = fieldDispatchOpen = fleetOpen = searchDeskOpen = false;
                 fieldPanel = orderPickerOpen = false;
                 lastMode = G.Mode;
                 if (lastMode == "FPS" && !directGuideSeen)
                 {
                     directGuideSeen = true;
-                    guideUntil = Time.unscaledTime + 9;
+                    guideUntil = Time.unscaledTime + 4.5f;
                 }
                 if (lastMode == "RTS" && !commandGuideSeen)
                 {
                     commandGuideSeen = true;
-                    guideUntil = Time.unscaledTime + 10;
+                    guideUntil = Time.unscaledTime + 5;
                 }
             }
 
@@ -158,7 +158,13 @@ namespace Evac
                 case "Title": DrawTitle(); break;
                 case "Briefing": DrawBriefing(); break;
                 case "Playing":
-                    if (G.Mode == "FPS") DrawDirect();
+                    if (bookOpen && !G.IsDuty) DrawBook();
+                    else if (searchDeskOpen && !G.IsDuty) DrawSearchDesk();
+                    else if (fieldDispatchOpen && !G.IsDuty) FieldDesk();
+                    else if (fleetOpen && G.HasFleet) FleetDesk();
+                    else if (requestOpen && !G.IsDuty) DrawRequest();
+                    else if (fieldPanel) DrawFacilities();
+                    else if (G.Mode == "FPS") DrawDirect();
                     else DrawCommand();
                     break;
                 case "Paused": DrawPause(); break;
