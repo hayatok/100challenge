@@ -133,6 +133,94 @@
         log.textContent='PASS '+frame.width+'×'+frame.height+' | Inspector prepared operation 06. Tapped both resident manifests, dispatched PA and bypass crews, led the assisted column, held and resumed it, and called for first aid.';
         return;
     }
+    if(params.has('market-timing')){
+        await button(/^現場方針を決める$/);
+        await button(/^店先と停留所の名簿を照合$/);
+        await button(/を現場へ$/);
+        await wait('Market escort ready',()=>articles().includes('避難隊列'),90000);
+        await button(/^避難隊列$/);await button(/^警備班$/);await button(/^軒下から誘導$/);
+        if(articles().includes('地図で隊列を見る'))await button(/^地図で隊列を見る$/);
+        else await button(/^閉じる$/);
+        // InspectState writes once in GameSession.Update. Timestamp those writes in the test browser.
+        const data=audit(),measure={RTS:[],FPS:[]};
+        let current=data.state,mode='',last=0;
+        Object.defineProperty(data,'state',{configurable:true,get(){return current},set(value){
+            current=value;
+            if(value.phase!=='Playing'||value.mode!==mode)return;
+            const t=performance.now();if(last)measure[mode].push(t-last);last=t;
+        }});
+        mode='RTS';await pause(12000);mode='';last=0;
+        if(!articles().some(k=>k.includes('を直接操作')))await button(/^名簿/);
+        await button(/を直接操作$/);await wait('Officer on foot',()=>data.state.mode==='FPS');
+        await pause(800);mode='FPS';await pause(12000);mode='';
+        const report=Object.entries(measure).map(([name,list])=>{
+            if(list.length<20)throw Error('Too few observed Unity frames');
+            list.sort((a,b)=>a-b);return name+' '+list.length+' frames, p95 '+list[Math.ceil(list.length*.95)-1].toFixed(1)+' ms';
+        }).join(' | ');
+        log.textContent='PASS '+frame.width+'×'+frame.height+' | '+report;return;
+    }
+    if(params.has('market-map')){
+        await button(/^現場方針を決める$/);
+        await button(/^店先と停留所の名簿を照合$/);
+        await button(/を現場へ$/);
+        await wait('Shopkeepers waiting',()=>articles().includes('避難隊列'),90000);
+        await button(/^避難隊列$/);
+        await wait('Live market map',()=>articles().includes('店主の名簿'));
+        if(await capture('market-map'))return;
+        await button(/^軒下から誘導$/);
+        await wait('Guide assigned',()=>articles().some(k=>/^先導　.+に入る$/.test(k)));
+        if(params.has('map-only')){
+            await button(/^横戸を開ける$/);
+            if(await capture('market-orders'))return;
+            log.textContent='PASS '+frame.width+'×'+frame.height+' | Compared both routes and sent separate guide and gate operator from map.';return;
+        }
+        const leader=audit().market.leader;
+        await button(/で横戸へ$/);
+        await wait('Independent second soldier',()=>audit().state.mode==='FPS' && audit().market.pawn!==leader && audit().market.pawn>=0);
+        // Look toward the marked shutter using the ordinary right-thumb gesture.
+        async function faceDoor() {
+            for(let i=0;i<12;i++){
+                const s=audit().state;
+                const heading=Math.atan2(-7-s.x,-4.6-s.z)*180/Math.PI;
+                const turn=((heading-s.yaw+540)%360)-180;
+                if(Math.abs(turn)<8)break;
+                const dx=Math.max(-.20,Math.min(.20,turn/110*frame.height/frame.width));
+                finger('touchstart',4,.58,.54);
+                await wait('Look contact',()=>audit().state.fingers>0);
+                const start=audit().frame;
+                finger('touchmove',4,.58+dx,.54);
+                await wait('Look response',()=>audit().frame>=start+2);
+                finger('touchend',4,.58+dx,.54);
+                await wait('Lift look finger',()=>audit().state.fingers===0);
+            }
+        }
+        await faceDoor();
+        // Drive the ordinary mobile stick along the real navigation corners. This probe only reads the simulation.
+        finger('touchstart',3,.13,.77);
+        await wait('Thumb on stick',()=>audit().state.fingers>0);
+        const until=performance.now()+50000;
+        while(!articles().some(k=>k==='横戸を開ける') && performance.now()<until){
+            const s=audit().state,m=audit().market, dx=m.x-s.x,dz=m.z-s.z;
+            if (Math.hypot(dx,dz)<.14) break;
+            const yaw=s.yaw*Math.PI/180, length=Math.max(.12,Math.hypot(dx,dz));
+            const right=(dx*Math.cos(yaw)-dz*Math.sin(yaw))/length;
+            const forward=(dx*Math.sin(yaw)+dz*Math.cos(yaw))/length;
+            finger('touchmove',3,.13+right*.106*frame.height/frame.width,.77-forward*.106);
+            await pause(65);
+        }
+        finger('touchend',3,.13,.77);
+        await wait('Lift steering finger',()=>audit().state.fingers===0);
+        await faceDoor();
+        await wait('Opener physically reached side gate',()=>articles().includes('横戸を開ける'));
+        await button(/^横戸を開ける$/);
+        await wait('Gate lifted to full clearance',()=>audit().market.lift>=.999);
+        if(await capture('gate-fps'))return;
+        await button(/^指揮に戻る$/);
+        await wait('Returned to same market operation',()=>audit().state.mode==='RTS');
+        await wait('Shopkeepers boarded',()=>audit().market.boarded===2,55000);
+        log.textContent='PASS '+frame.width+'×'+frame.height+' | Sent guide, took a different soldier, walked to the gate by touch, lifted it, returned to command, and both shopkeepers boarded.';
+        return;
+    }
     if(params.has('column')){
         await button(/^現場方針を決める$/);
         await button(/^店先と停留所の名簿を照合$/);
@@ -140,8 +228,9 @@
         await wait('Column reported after the prologue',()=>articles().includes('避難隊列'),90000);
         await button(/^避難隊列$/);
         await wait('Market options',()=>articles().includes('軒下から誘導') && articles().includes('表通りで誘導'));
+        await button(/^店主の名簿$/);
         if(params.has('local-guide')){
-            await button(/^地図で隊列を見る$/);
+            await button(/^地図で隊列を見る$/);await button(/^閉じる$/);
             if(!articles().includes('次の命令を選ぶ'))await button(/^班への命令$/);
             await button(/^次の命令を選ぶ$/);await button(/^警戒$/);
             for(let i=0;i<2 && articles().includes('畳む');i++)await button(/^畳む$/);
@@ -168,6 +257,7 @@
         await button(/^同行を再開$/);
         await button(/^横戸を開ける$/);
         await button(/^地図で隊列を見る$/);
+        await button(/^閉じる$/);
         await wait('Located column on map',()=>!articles().includes('閉じる'));
         if(!articles().some(k=>k.includes('を直接操作')))await button(/^名簿/);
         await button(/を直接操作$/);

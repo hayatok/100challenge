@@ -54,9 +54,10 @@ namespace Evac
         void BuildRefuges(int route)
         {
             columnSignal=null;columnWater=null;stretcher=null;stretcherArms=null;lastColumnOpen=false;
+            BuildMarketPassage(route);
             RefugeFurniture.Visit(route,(asset,p)=>
             {
-                var item=Place(asset,p);
+                var item=Place(asset=="columnMarketCanopy"?"marketProduceCanopy":asset,p);
                 if(!asset.EndsWith("Control",StringComparison.Ordinal))return;
                 var lamp=MakeObject("Control pilot light",GetMesh("signalOff"),item.transform);
                 lamp.transform.localPosition=new Vector3(.22f,1.83f,0);
@@ -104,6 +105,7 @@ namespace Evac
 
         internal void DrawColumnShelters(GameSim field,int mission)
         {
+            DrawMarketPassage(field);
             if(columnSignal)
             {
                 bool open=field.ColumnsActive && field.ColumnControlOpen(mission==5?1:0);

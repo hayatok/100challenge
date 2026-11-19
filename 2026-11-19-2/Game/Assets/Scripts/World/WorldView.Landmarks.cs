@@ -23,7 +23,7 @@ namespace Evac
             }
             int region = missionIndex / 2;
             foreach (var part in measured)
-                if (part.region == region)
+                if (part.region == region && !(missionIndex == 0 && part.x == -8.9f && part.z == -4.9f))
                     yield return new ApproachBlocks.Footprint {
                         x=part.x, z=part.z, width=part.width, depth=part.depth, height=part.height
                     };
@@ -36,10 +36,13 @@ namespace Evac
         Transform landmarkGantry;
         float gantryClock;
 
-        void BuildLandmarks(int region)
+        void BuildLandmarks(int mission)
         {
+            int region = mission / 2;
             string name = "landmark" + region;
             MakeObject("Central district landmark", GetMesh(name), district.transform);
+            if (mission == 1)
+                MakeObject("Produce stall", GetMesh("landmark0Stall"), district.transform);
             landmarkGantry = null;
             landmarkRoofs[0] = landmarkRoofs[1] = null;
             if (region == 0 || region == 3)

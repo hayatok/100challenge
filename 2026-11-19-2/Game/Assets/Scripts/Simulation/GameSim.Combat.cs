@@ -37,6 +37,7 @@ namespace Evac
             StepDistrictIncident(dt);
             PrepareWing(dt);
             PrepareColumns();
+            TickMarket();
             ScreenArea(dt);
             CheckDutySite();
             foreach(var u in state.units)
@@ -253,7 +254,7 @@ namespace Evac
                 {
                     if(a.preparingCharge)
                     {
-                        a.preparingCharge=false;a.chargeTime=.45f;return;
+                        a.preparingCharge=false;a.chargeTime=e.id==MarketAttackerId?.65f:.45f;return;
                     }
                     if(FlatSq(goal,e.pos)<(range+.35f)*(range+.35f))
                     {
@@ -304,7 +305,9 @@ namespace Evac
         {
             float step=Mathf.Min(dt,a.chargeTime);
             var previous=e.pos;
-            e.pos=geometry.Move(previous,previous+a.chargeHeading*(12f*step));
+            var intended=previous+a.chargeHeading*(12f*step);
+            e.pos=geometry.Move(previous,intended);
+            if(RegisterMarketImpact(e,a,previous,intended))return;
             e.moving=true;a.chargeTime=Mathf.Max(0,a.chargeTime-dt);
             var target=Find(a.target);
             if(target!=null && target.active && FlatSq(e.pos,target.pos)<1.1f*1.1f)
@@ -369,7 +372,7 @@ namespace Evac
             float damage=automated?32:47;
             if(automated && shooter.hp<50) damage*=.84f;
             Damage(target,damage,direction);
-            var a=Brain(target); a.stun=target.variant==2?.15f:.33f;
+            var a=Brain(target); a.stun=Mathf.Max(a.stun,target.variant==2?.15f:.33f);
             a.impulse=new Vector3(direction.x,0,direction.z).normalized*(target.variant==2?1.7f:3.4f);
             target.stagger=a.stun;target.windup=0;a.chargeTime=0;a.preparingCharge=false;
         }

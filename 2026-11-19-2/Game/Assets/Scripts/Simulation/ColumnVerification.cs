@@ -79,6 +79,7 @@ namespace Evac
 
         internal void VerifyColumns(StringBuilder report)
         {
+            VerifyMarketPassage(report);
             VerifyRemoteColumnAccess();
             StartMission(0,Difficulty.Story);Chapter.phase=2;Tick(.1f);
             Verify(ColumnCount==1 && ColumnMemberCount(0)==2 && !ColumnsComplete,"Market roster");

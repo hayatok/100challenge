@@ -112,6 +112,18 @@ float3 actorPatient(float3 p,float joint,float time)
 float3 actorMotion(float3 p,float joint,float4 a,float4 f,float4 left,float4 right,float4 aid)
 {
     if(f.y==5)return actorPatient(p,joint,a.z);
+    // Market poses share the companion slot but never enter the support solve.
+    bool market=aid.w>1.5;
+    float3 cast=market?aid.xyz:0;
+    if(market)aid=0;
+    float hold=f.x==1?smoothstep(0,1,cast.x):0;
+    float signal=f.x==1?cast.y:0;
+    float thread=f.x==3?cast.y:0;
+    float wait=f.x==3?cast.x:0;
+    float coil=f.x==2?cast.x:0;
+    float sprint=f.x==2?cast.y:0;
+    float recover=f.x==2?smoothstep(0,.70,cast.z):0;
+    float rebound=f.x==2?smoothstep(.81,1,cast.z):0;
     float cycle=frac(a.x*.159154943)*12;
     int key=min((int)cycle,11);
     float alpha=frac(cycle);
@@ -120,10 +132,13 @@ float3 actorMotion(float3 p,float joint,float4 a,float4 f,float4 left,float4 rig
     float side=equipment?1:fmod(joint,2)>.5?-1:1;
     float fall=saturate(f.w);
     float live=1-smoothstep(.05,.68,fall);
+    hold*=live; signal*=live; thread*=live; wait*=live;
+    coil*=live; sprint*=live; recover*=live; rebound*=live;
     float moving=smoothstep(.01,.38,a.y)*live;
     float run=smoothstep(.58,.96,a.y);
     float limp=frac(f.z)*4;
     float4 body=actorKeys(key,alpha,side,1,run,limp)*moving;
+    body.x-=coil*.031+recover*.046;
     bool usesLimb=(joint>=1 && joint<=8) || equipment || joint==11 || joint==12;
     float4 limb=0;
     if(usesLimb)limb=actorKeys(key,alpha,side,0,run,limp)*moving;
@@ -143,12 +158,19 @@ float3 actorMotion(float3 p,float joint,float4 a,float4 f,float4 left,float4 rig
     float lean=f.x==2?.20:f.x==1?.044:.054;
     lean+=working*.22+escort*.11+cargo*.075+limp*.056;
     float torso=lean+wind*.21-hit*.25+run*moving*.13+tuck*.16+breath;
+    torso+=coil*-.41+sprint*.40+recover*.27-rebound*.58+abs(thread)*.08+wait*.075;
     float drift=(f.x==2?.025:-.015)*(1-moving)*live;
     float assistRoll=f.x==3?.14*escort:0;
     assistRoll=lerp(assistRoll,-sign(aid.w)*(f.x==3?.17:.076),abs(aid.w)*live);
+    assistRoll+=thread*.12+recover*.23-rebound*.31;
+    float lookBack=hold*cast.z;
+    float turn=lookBack*.54+thread*.86-coil*.23+recover*.26;
     if(leg){
         float knee=limb.y+tuck*(side<0?.40:1.06)-settle*(side<0?.18:.29);
         float hip=limb.x-tuck*(side<0?.22:.69)+settle*(side<0?.11:.23);
+        float crouch=saturate(coil+recover);
+        knee=lerp(knee,side<0?.68:.49,crouch);
+        hip=lerp(hip,side<0?-.42:-.13,crouch);
         float kneeblend=shoe?1:1-smoothstep(.420,.606,p.y);
         float flags=floor(f.z);
         bool fixedFoot=side<0?fmod(flags,2)>.5:flags>1.5;
@@ -162,7 +184,7 @@ float3 actorMotion(float3 p,float joint,float4 a,float4 f,float4 left,float4 rig
             held=actorRoll(held,side*.109,.87,support.w);
             p=actorPitch(p,.125,0,support.z)+held-anchor;
         }else{
-            if(shoe)p=actorPitch(p,.125,0,limb.z+settle*.13*side);
+            if(shoe)p=actorPitch(p,.125,0,lerp(limb.z+settle*.13*side,-.08-hip-knee,crouch));
             p=actorPitch(p,.49,0,(fixedFoot?support.y:knee)*kneeblend);
             p=actorPitch(p,.87,0,fixedFoot?support.x:hip);
             p=actorRoll(p,fixedFoot?side*.109:side*.101,.87,
@@ -205,6 +227,9 @@ float3 actorMotion(float3 p,float joint,float4 a,float4 f,float4 left,float4 rig
             elbow=(side<0?-.29:-.45)-reach*.35;
             yaw=-side*(.13+reach*.14);
             roll=side*(.09+hit*.17);
+            upper+=coil*(side<0?.87:.61)-sprint*(side<0?.65:1.05)+recover*.51-rebound*1.19;
+            elbow-=coil*.43+sprint*.35+rebound*.50;
+            roll+=side*(coil*.24+recover*.30+rebound*.41);
         }else{
             upper=upper*.74-(side<0?.30:.07);
             elbow=side<0?-.51:-.25;
@@ -214,6 +239,17 @@ float3 actorMotion(float3 p,float joint,float4 a,float4 f,float4 left,float4 rig
                 yaw=side<0?.49:-.18;
                 roll=side<0?-.39:.09;
             }
+            upper-=wait*.17+abs(thread)*(side*thread>0?.43:.07);
+            elbow-=wait*.23+abs(thread)*.30;
+            roll-=side*abs(thread)*.22;
+        }
+        if(f.x==1 && side<0 && !equipment)
+        {
+            // Left palm rises beside the face, then sweeps toward the path.
+            upper=lerp(upper,-1.23,signal);
+            elbow=lerp(elbow,-.45,signal);
+            yaw=lerp(yaw,-.51,signal);
+            roll=lerp(roll,-.38,signal);
         }
         upper=lerp(upper,side<0?-.63:.38,tuck)+settle*(side<0?.19:-.13);
         elbow=lerp(elbow,side<0?-.91:-.38,tuck)+settle*.14;
@@ -223,6 +259,8 @@ float3 actorMotion(float3 p,float joint,float4 a,float4 f,float4 left,float4 rig
         posed=actorPitch(posed,1.41,0,upper);
         posed=actorYaw(posed,side*.18,yaw);
         posed=actorRoll(posed,side*.18,1.41,roll+side*tuck*(side<0?.49:.31));
+        if(hold>0 && side<0 && !equipment)
+            posed=lerp(posed,actorReach(p,float3(-.398,1.677,-.196),side,0,elbowBlend),hold);
         if(!equipment && side*aid.w>.01 && escort>.5){
             float3 target=aid.xyz-float3(body.y,body.x+breath,0);
             target=actorRoll(target,0,.87,-(drift+assistRoll));
@@ -252,9 +290,17 @@ float3 actorMotion(float3 p,float joint,float4 a,float4 f,float4 left,float4 rig
             p.y-=jaw*muzzle*(wind*.017+hit*.008);
             p=actorPitch(p,1.49,0,(body.w*.65-wind*.19+tuck*.24+breath)*head);
             p=actorRoll(p,0,1.49,((f.x==2?.045:0)+hit*.10+settle*.15)*head);
+            p=actorYaw(p,0,(lookBack*1.37-thread*.54+wait*cast.z*.22-coil*.24+rebound*.41)*head);
+        }
+        if(joint==14){
+            // A single waist tie lets the lower apron follow the advancing leg.
+            float drape=1-smoothstep(.70,1.027,p.y);
+            float swing=actorKeys(key,alpha,p.x<0?-1:1,0,run,limp).x*moving;
+            p=actorPitch(p,.998,0,min(0,swing)*drape*.66);
+            p.z+=drape*.030*moving;
         }
         p=actorPitch(p,.87,0,torso*upper);
-        p=actorYaw(p,0,body.z*spine+hit*.16*upper);
+        p=actorYaw(p,0,(body.z+turn)*spine+hit*.16*upper);
         p=actorRoll(p,0,.87,(drift+assistRoll)*upper);
         p.x+=f.x==2?.030*spine:0;
         p.y+=breath*spine;

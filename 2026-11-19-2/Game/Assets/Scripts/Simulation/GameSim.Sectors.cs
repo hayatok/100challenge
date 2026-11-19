@@ -107,7 +107,7 @@ namespace Evac
         {
             districtPlans=null;
             activePlan=MakeRoute(Sector);
-            geometry=new WorldGeometry(state.index,activePlan,FleetEnabled);
+            geometry=new WorldGeometry(state.index,activePlan,FleetEnabled,marketOpen:MarketDoorClear);
             geometry.SetWingDoors(WingDoorMask);
             alarmSite=Ground(AlarmSites[AlarmDistrict]);
             for(int i=0;i<state.units.Count;i++)

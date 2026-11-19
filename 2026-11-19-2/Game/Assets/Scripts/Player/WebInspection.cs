@@ -9,6 +9,7 @@ namespace Evac
         [DllImport("__Internal")] static extern void InspectState(string phase,string mode,int ammo,float x,float z,float yaw,int fingers);
         [DllImport("__Internal")] static extern int InspectDutyFailure(int sector,int expected,int unchanged);
         [DllImport("__Internal")] static extern int InspectFloodColumns();
+        [DllImport("__Internal")] static extern void InspectMarket(int leader,int pawn,float towardX,float towardZ,float lift,int boarded,int finished);
         bool preparedFlood,preparedFailure;
         int expectedSector=-1;
         string normalRecord, normalCheckpoint;
@@ -26,6 +27,13 @@ namespace Evac
             Unit u=sim.Controlled;
             var pos=u?.pos??Vector3.zero;
             InspectState(Phase,Mode,Ammo,pos.x,pos.z,u?.yaw??0,FieldTouches.Count);
+            if (!IsDuty && missionIndex==0 && sim.ColumnsActive)
+            {
+                var corner = u==null ? Vector3.zero : sim.ColumnNavigationStep(pos, sim.ColumnControlPoint(0));
+                int boarded=0;
+                for(int i=0;i<sim.ColumnMemberCount(0);i++) if(sim.ColumnMemberOutcome(0,i)==1)boarded++;
+                InspectMarket(sim.ColumnLeaderId(0),u?.id??-1,corner.x,corner.z,sim.MarketGateLift,boarded,sim.ColumnsComplete?1:0);
+            }
             if(!IsDuty)return;
             bool intact=preparedFailure && normalRecord==PlayerPrefs.GetString("evac-suspend") &&
                 normalCheckpoint==PlayerPrefs.GetString("evac-checkpoint");
