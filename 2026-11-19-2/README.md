@@ -6,7 +6,7 @@
 
 ブラウザではインストールせずに遊べます。[ブラウザ版「避難指令」を起動](https://hayatok.github.io/100challenge/2026-11-19-2/)
 
-Windows版は[0.5の配布ページ](https://github.com/hayatok/100challenge/releases/tag/release-evac-20261119-preview5)から入手できます。「Assets」の `EvacuationControl-Windows-x64.zip` を展開し、`EvacuationControl.exe` を起動してください。Web版は横持ちのスマホとPC向けです。リポジトリから遊ぶ場合は、このフォルダで次のコマンドを実行して、表示されたアドレスを開きます。Python 3が必要です。
+Windows版は[0.5.1の配布ページ](https://github.com/hayatok/100challenge/releases/tag/release-evac-20261119-preview5-1)から入手できます。「Assets」の `EvacuationControl-Windows-x64.zip` を展開し、`EvacuationControl.exe` を起動してください。Web版は横持ちのスマホとPC向けです。リポジトリから遊ぶ場合は、このフォルダで次のコマンドを実行して、表示されたアドレスを開きます。Python 3が必要です。
 
 ```sh
 python scripts/play.py
@@ -30,7 +30,9 @@ python scripts/play.py
 
 ![横持ちの朝市で店主と経路を確認する指揮画面](docs/screens/market-route-map.jpg)
 
-自分で近道を開けるなら「軒下から誘導」を指示し、もう一人の隊員の「○○で横戸へ」を押します。緑の横戸を見ながら操作盤に近づくと「横戸を開ける」が出ます。店のシャッターに沿って立つと、腰前掛けの中野と青い上着の谷口が通り抜けるところを見届けられます。指揮を続けたいときは、地図の「横戸を開ける」で解錠係を派遣してください。
+自分で二人を迎えるなら「横戸で待ち合わせ」を押してください。班に付添を任せ、その場で解錠係の目線に入れます。二人は横戸の手前で待っています。緑の横戸に近づき、操作盤に顔を向けて「横戸を開ける」を押してください。腰前掛けの中野と青い上着の谷口が、一人ずつ通り抜けます。
+
+指揮のまま進めるなら「軒下から誘導」で付添を出し、地図の「横戸を開ける」で解錠係を派遣できます。横戸が閉じたまま分岐に着くと、二人は露店脇を回ります。「横戸で待ち合わせ」を選んだ後も、指揮に戻って「待ち合わせを解く」を押すと、二人は動き出します。
 
 ![朝市の横戸を開け、店主を迎える一人称画面](docs/screens/market-door-direct.jpg)
 

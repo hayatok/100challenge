@@ -66,27 +66,52 @@ namespace Evac
                 assigned == null ? "横戸　閉鎖中" : assigned.name + "が横戸へ移動中";
             Text(R(col, y, cw, 23), gate, 17, opened ? AwningInk : Cream, true);
             y += 26;
+            bool fresh = Field.ColumnRoute(0) < 0;
             if (!opened)
             {
-                float half = (cw - 4) * .5f;
-                if (Button(R(col, y, half, 46), "横戸を開ける", dark:true,
-                    enabled:Field.CanCommandColumn(0, 4, G.SelectedSquad)))
-                    Submit(() => G.ColumnAction(0, 4));
-                if (Button(R(col + half + 4, y, half, 46), prospective != null ? prospective.name + "で横戸へ" : "担当不在",
-                    dark:true, enabled:prospective != null))
-                    Submit(() => { CloseFieldOverlay(); G.PossessMarketOpener(prospective.id); });
-                y += 51;
+                if (fresh)
+                {
+                    if (Button(R(col, y, cw, 49), "横戸で待ち合わせ", primary:true,
+                        enabled:Field.CanMeetAtMarketGate(G.SelectedSquad)))
+                        Submit(() => { CloseFieldOverlay(); G.MeetAtMarketGate(); });
+                }
+                else
+                {
+                    DrawMarketGateOrders(col, y, cw, prospective);
+                }
+                y += 54;
             }
 
             bool held = Field.ColumnHeld(0);
-            Text(R(col, y, cw, 24), Field.ColumnStatus(0), 15, Mist);
+            Text(R(col, y, cw, 24), fresh && !opened ? "付添を班に任せ、自分で横戸を開ける" : Field.ColumnStatus(0), 15, Mist);
             y += 27;
             float split = (cw - 4) * .53f;
-            if (leader != null) ColumnStaff(R(col, y, split, 44), leader, "先導");
-            else Text(R(col, y, split, 44), "先導役は未配置", 15, Mist);
-            DrawColumnAction(0, held ? 3 : 2, R(col + split + 4, y, cw - split - 4, 44));
+            if (fresh && !opened) DrawMarketGateOrders(col, y, cw, prospective);
+            else
+            {
+                if (leader != null) ColumnStaff(R(col, y, split, 44), leader, "先導");
+                else Text(R(col, y, split, 44), "先導役は未配置", 15, Mist);
+                DrawColumnAction(0, held ? 3 : 2, R(col + split + 4, y, cw - split - 4, 44));
+            }
             if (Button(R(col, sheet.yMax - 52, cw, 43), "店主の名簿", dark:true))
                 marketLedger = true;
+        }
+
+        void DrawMarketGateOrders(float x, float y, float width, Unit opener)
+        {
+            float half = (width - 4) * .5f;
+            if (Field.MarketMeeting)
+            {
+                if (Button(R(x, y, half, 44), "待ち合わせを解く", dark:true))
+                    Submit(Field.CancelMarketMeeting);
+            }
+            else if (Button(R(x, y, half, 44), "横戸を開ける", dark:true,
+                enabled:Field.CanCommandColumn(0, 4, G.SelectedSquad)))
+                Submit(() => G.ColumnAction(0, 4));
+
+            if (Button(R(x + half + 4, y, half, 44), opener == null ? "担当不在" : opener.name + "で横戸へ",
+                dark:true, enabled:opener != null))
+                Submit(() => { CloseFieldOverlay(); G.PossessMarketOpener(opener.id); });
         }
 
         Vector2 MarketMapPoint(Vector3 world) => ToLogical(G.MarketScreenPoint(world));
@@ -106,6 +131,8 @@ namespace Evac
                     Vector2 b = MarketMapPoint(path[i] + Vector3.up * .16f);
                     if (!InMarketView(area, a) || !InMarketView(area, b)) continue;
                     DrawMarketLine(a, b, ink, route == 1);
+                    if (route == 1 && Field.MarketMeeting && Field.MarketGateLift < .82f &&
+                        (path[i] - Field.MarketMeetingPoint).sqrMagnitude < .02f) break;
                 }
             }
             // Seen attackers use the same visibility as the regular command map.
@@ -144,6 +171,8 @@ namespace Evac
                     if (bPerson?.active == true) MapCaption(area,bPerson.pos,"谷口",Paper,0,-28);
                 }
             }
+            if (Field.MarketMeeting && Field.MarketGateLift < .82f)
+                MapCaption(area, Field.MarketMeetingPoint, "待ち合わせ", AwningInk, -60, -24);
             MarketRole(area, Field.ColumnLeaderId(0), "先導", 48);
             MarketRole(area, Field.ColumnOperatorId(0), "解錠", -48);
         }

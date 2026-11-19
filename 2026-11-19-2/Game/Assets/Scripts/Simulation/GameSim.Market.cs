@@ -24,6 +24,46 @@ namespace Evac
             if(assigned!=null && assigned.active)return assigned.id;
             return ChooseColumnCrew(0,squad,4,false)?.id??-1;
         }
+        public Vector3 MarketMeetingPoint => MarketQueue;
+        public bool MarketMeeting=>MarketLine?.marketMeeting==true;
+        bool BeforeMarketBranch(EvacuationLine l)=>l!=null && ColumnsActive && !l.finished && !l.open &&
+            (l.leg==0 || l.leg==1 && l.marketStep==0);
+        bool WaitingAtMarketQueue(EvacuationLine l)=>l.marketMeeting && !MarketDoorClear && l.leg==1 && l.marketStep==0;
+        public bool CanWaitForMarketOpener(int id){
+            var l=MarketLine;
+            if(!BeforeMarketBranch(l) || l.route!=1 || l.held || l.lead==id || Find(l.lead)?.active!=true)return false;
+            var opener=Find(id);
+            if(opener==null || !opener.active || !IsSoldier(opener))return false;
+            if(l.operatorId>=0)return l.operatorId==id;
+            return !Brain(opener).cargo && Brain(opener).escort<0 && l.medic!=id;
+        }
+        public bool WaitForMarketOpener(int id){
+            if(!CanWaitForMarketOpener(id))return false;
+            var l=MarketLine;l.marketMeeting=true;l.operatorId=id;Save();
+            return true;
+        }
+        Unit MeetingCrew(int squad,out Unit guide){
+            var l=MarketLine;guide=null;
+            if(!BeforeMarketBranch(l) || Controlled!=null || squad<0 || squad>2)return null;
+            guide=Find(l.lead);
+            if(guide==null || !guide.active)guide=ChooseColumnCrew(0,squad,1,false);
+            if(guide==null)return null;
+            var assigned=Find(l.operatorId);
+            if(assigned!=null && assigned.active)return assigned.id==guide.id?null:assigned;
+            return ChooseColumnCrew(0,squad,4,false,guide.id);
+        }
+        public bool CanMeetAtMarketGate(int squad)=>MeetingCrew(squad,out _)!=null;
+        public int MeetAtMarketGate(int squad){
+            var opener=MeetingCrew(squad,out var guide);if(opener==null)return -1;
+            var l=MarketLine;
+            if(l.lead!=guide.id || l.held)l.joined=FlatSq(guide.pos,ColumnPosition(0))<16;
+            l.route=1;l.lead=guide.id;l.held=false;
+            return WaitForMarketOpener(opener.id)?opener.id:-1;
+        }
+        public void CancelMarketMeeting(){
+            if(!MarketMeeting)return;
+            var l=MarketLine;l.marketMeeting=false;l.operatorId=-1;Save();
+        }
         public float MarketGateLift{
             get{var l=MarketLine;return l==null || !l.open?0:l.marketOpenedAt==0?1:Mathf.Clamp01((Elapsed-l.marketOpenedAt)/.85f);}
         }
@@ -41,6 +81,10 @@ namespace Evac
             if(l==null || id<0 || l.finished || l.route<0)return false;
             bool rider=System.Array.IndexOf(l.people,id)>=0;
             if(!rider && id!=l.lead)return false;
+            if(WaitingAtMarketQueue(l)){
+                var u=Find(id);var goal=rider?MemberDestination(0,u):MarketQueue;
+                if(u!=null && FlatSq(u.pos,goal)<.44f)return true;
+            }
             if(l.held || (l.route==1 && l.leg==1 && l.marketStep==0 && MarketAttackPending))return true;
             if(!rider || !MarketAtDoor(l) || id==l.marketFirst)return false;
             var first=Find(l.marketFirst);
@@ -57,7 +101,7 @@ namespace Evac
             if(route!=1 || step>=2)return Mark(3,-12);
             return Mark(bypass?-13:-7,step==0?-3.65f:-5.85f);
         }
-        Vector3 MarketGoal(EvacuationLine l)=>MarketStop(l.route,l.leg,l.marketStep,
+        Vector3 MarketGoal(EvacuationLine l)=>WaitingAtMarketQueue(l)?MarketQueue:MarketStop(l.route,l.leg,l.marketStep,
             l.marketStep==0?!MarketDoorClear:l.marketBypass);
         bool AdvanceMarketStop(EvacuationLine l){
             if(l.leg!=1 || l.route!=1 || l.marketStep>=2)return false;
@@ -97,12 +141,15 @@ namespace Evac
                     l.marketStep=2;
                 }
             }
+            if(l.marketMeeting && (l.finished || MarketDoorClear || !l.open && Find(l.operatorId)?.active!=true))
+                l.marketMeeting=false;
             if(marketMapOpen!=MarketDoorClear){
                 marketMapOpen=MarketDoorClear;
                 geometry=new WorldGeometry(state.index,Route,marketOpen:marketMapOpen);
                 foreach(var a in state.actors)a.hasPath=false;
             }
             if(!ColumnsActive || l.finished || l.held || l.leg!=1 || l.marketStep!=0 || l.marketEnemy!=0)return;
+            if(WaitingAtMarketQueue(l))return;
             var target=Find(l.lead);if(target==null || !target.active)return;
             if(l.route==1 && Controlled!=null && FlatSq(Controlled.pos,MarketQueue)<4)target=Controlled;
             // The attacker emerges from the side alley in view of the waiting column.
