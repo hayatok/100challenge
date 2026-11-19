@@ -18,7 +18,8 @@ namespace Evac
             int index=Array.IndexOf(args,"-film");
             filmRequested=index>=0;
             if(!filmRequested){index=Array.IndexOf(args,"-column-film");columnFilmRequested=index>=0;}
-            if(!filmRequested && !columnFilmRequested)index=Array.IndexOf(args,"-campaign-inspection");
+            if(index<0){index=Array.IndexOf(args,"-market-film");marketFilmRequested=index>=0;}
+            if(index<0)index=Array.IndexOf(args,"-campaign-inspection");
             if(index<0 || index+1>=args.Length)return;
             inspectionFolder=Path.GetFullPath(args[index+1]);
             Directory.CreateDirectory(inspectionFolder);
@@ -29,6 +30,7 @@ namespace Evac
         void Start()
         {
             if(inspectionFolder==null)return;
+            if(marketFilmRequested){StartCoroutine(MarketFilm());return;}
             if(columnFilmRequested){StartCoroutine(ColumnFilm());return;}
             if(filmRequested){StartCoroutine(Film());return;}
             var args=Environment.GetCommandLineArgs();

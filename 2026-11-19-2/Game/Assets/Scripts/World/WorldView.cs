@@ -29,6 +29,7 @@ namespace Evac
             public Vector3 fallDirection, contactRoot;
             public ActorGait.Foot left, right;
             public bool tracking;
+            public MarketCastPose.Transition market;
         }
 
         readonly Dictionary<int, Motion> motions = new Dictionary<int, Motion>();
@@ -170,7 +171,7 @@ namespace Evac
                 }
             }
             BuildApproachBlocks(route);
-            BuildLandmarks(region);
+            BuildLandmarks(route);
             BuildRoomWing(region);
             BuildRefuges(route);
         }
@@ -284,12 +285,13 @@ namespace Evac
 
         public void DrawActor(int id, int kind, int variant, Vector3 position, float yaw,
                               float speed, float hp01, bool acting, bool possessed, float dt, int activity = 0,
-                              Vector3 hitDirection = default, Vector3? companionPosition = null, float companionYaw = 0)
+                              Vector3 hitDirection = default, Vector3? companionPosition = null, float companionYaw = 0,
+                              MarketCastPose market = default)
         {
             if (!district) return;
             BeginActors();
             kind = Mathf.Clamp(kind, 0, 2);
-            variant = (variant & int.MaxValue) % (kind == 0 ? 3 : 4);
+            variant = (variant & int.MaxValue) % (kind == 0 ? 4 : kind == 2 ? 6 : 4);
             if (!motions.TryGetValue(id, out var m))
                 m = new Motion { phase = (id & 255) * 2.391f, health = hp01, fall = hp01<=0 ? 1 : 0 };
             m.impact = Mathf.Max(Mathf.MoveTowards(m.impact, 0, dt * 3.2f), Mathf.Clamp01((m.health - hp01) * 8));
@@ -314,6 +316,7 @@ namespace Evac
                 else if(speed<.105f)angularSpeed=0;
                 m.phase = Mathf.Repeat(m.phase + dt*angularSpeed, Mathf.PI*2);
             }
+            Vector4 marketPose=market.Blend(kind,dt,ref m.market);
             if (possessed)
             {
                 m.tracking=false;
@@ -321,10 +324,10 @@ namespace Evac
                 return;
             }
 
-            int key = kind * 4 + variant + (far ? 16 : 0);
+            int key = kind * 8 + variant + (far ? 32 : 0);
             CrowdBatch batch;
             while (batches.TryGetValue(key,out batch) && batch.transforms.Count>=CrowdBatchLimit)
-                key+=32;
+                key+=64;
             if (batch==null)
             {
                 batch = new CrowdBatch { mesh = GetMesh((far ? "actorFar" : "actor") + kind + "_" + variant) };
@@ -352,7 +355,8 @@ namespace Evac
                 ActorGait.Smooth(.24f,.66f,1-hp01)*(kind==1?.66f:1);
             int planted=0;
             Vector4 left=default,right=default,aid=default;
-            bool tracking=!far && hp01>0 && position.y<.09f && dt>0;
+            bool encounterStance=kind==1 && marketPose.w>1.5f && (marketPose.x>0 || marketPose.z>0);
+            bool tracking=!far && hp01>0 && position.y<.09f && dt>0 && !encounterStance;
             if(tracking)
             {
                 if(!m.tracking || (position-m.contactRoot).sqrMagnitude>.8f)
@@ -365,6 +369,7 @@ namespace Evac
             }
             if(!far && hp01>0 && activity==1 && companionPosition.HasValue)
                 aid=SupportAnchor(position,rotation,scale,kind,companionPosition.Value,companionYaw);
+            if(activity==0 || activity==4)aid=marketPose;
             m.contactRoot=position;
             m.tracking=tracking;
             motions[id]=m;

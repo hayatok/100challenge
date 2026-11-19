@@ -117,7 +117,7 @@ class Building(Mesh):
 
 
 def arcade():
-    ground,roof,glass=Building(0),Building(0),Building(0)
+    ground,roof,glass,side_stall=(Building(0) for _ in range(4))
     b=ground.box
     profile=[(-17,5.34),(-13.6,6.45),(-10.2,7.47),(-6.8,8.16),(-3.4,8.64),
              (0,8.81),(3.4,8.64),(6.8,8.16),(10.2,7.47),(13.6,6.45),(17,5.34)]
@@ -171,6 +171,9 @@ def arcade():
         (6.7,.4,1,"b48048","朝市",("b17445","9b6847","ccab6d")),
         (10.6,10,1,"58766c","商店会",("8e6947","b98a51","767750"))]
     for x,z,side,accent,label,fruit_colors in locations:
+        # The opening mission replaces this stall with the produce shop passage.
+        stall=side_stall if x==-8.9 else ground
+        b=stall.box
         ground.footprint(x,z,2.44,3.08,2.52)
         for dx in (-.86,.86):
             for dz in (-1.26,1.26):
@@ -183,21 +186,22 @@ def arcade():
             hue=accent if i%2==0 else IVORY
             front=x-side*1.10
             back=x+side*.98
-            ground.face([(front,2.14,zz),(back,2.53,zz),(back,2.53,zz+.377),
+            stall.face([(front,2.14,zz),(back,2.53,zz),(back,2.53,zz+.377),
                          (front,2.14,zz+.377)],hue)
             b(front,2.09,zz+.188,.077,.133,.376,hue)
         for i,(dz,color) in enumerate(zip((-.81,0,.81),fruit_colors)):
             xx=x-side*.28
-            ground.packed_crate(xx,.90,z+dz,.78,.69,"997357")
+            stall.packed_crate(xx,.90,z+dz,.78,.69,"997357")
             for j in range(14):
                 dx=(j%4-1.5)*.143+rng.uniform(-.023,.023)
                 zz=(j//4-1.5)*.139+rng.uniform(-.025,.025)
                 r=rng.uniform(.059,.085)
-                ground.fruit(xx+dx,1.114+rng.uniform(0,.039),z+dz+zz,r,color)
-        ground.board(label,x,1.87,z-1.30,1.45,.35,.244,-1,accent)
-        ground.packed_crate(x+side*.76,.028,z-.94,.54,.63,TIMBER)
-        ground.packed_crate(x+side*.76,.028,z+.86,.54,.63,"665d43")
+                stall.fruit(xx+dx,1.114+rng.uniform(0,.039),z+dz+zz,r,color)
+        stall.board(label,x,1.87,z-1.30,1.45,.35,.244,-1,accent)
+        stall.packed_crate(x+side*.76,.028,z-.94,.54,.63,TIMBER)
+        stall.packed_crate(x+side*.76,.028,z+.86,.54,.63,"665d43")
 
+    b=ground.box
     for x,z,face in ((-7.7,8.7,-1),(12.4,-14.0,-1)):
         ground.footprint(x,z,3.31,1.62,2.44)
         for side in (-1,1):
@@ -216,7 +220,7 @@ def arcade():
             b(x+dx,1.029,z+dz,.21,.018,.30,IVORY)
         ground.board("避難受付",x,2.20,z-.76,3.29,.53,.34,face,RED)
         ground.lens(x,2.29,z-.24,1.15,.15)
-    return ground,roof,glass
+    return ground,roof,glass,side_stall
 
 
 def freight():
@@ -393,14 +397,14 @@ def terminal():
 
 
 if __name__=="__main__":
-    market,arc,panes=arcade()
+    market,arc,panes,side_stall=arcade()
     warehouse,lift=freight()
     station=station_hall()
     terminal,shelters=terminal()
     ground=(market,warehouse,station,terminal)
     for region,asset in enumerate(ground):
         asset.write(f"landmark{region}")
-    for name,asset in (("landmark0Roof",arc),("landmark0Glazing",panes),
+    for name,asset in (("landmark0Roof",arc),("landmark0Glazing",panes),("landmark0Stall",side_stall),
                        ("landmark1Gantry",lift),("landmark3Roof",shelters)):
         asset.write(name)
     solids=[box for scene in ground for box in scene.footprints]

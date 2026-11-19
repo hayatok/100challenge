@@ -2,6 +2,7 @@
 import gzip
 import math
 import struct
+import sys
 from pathlib import Path
 
 import bpy
@@ -157,16 +158,92 @@ class Figure:
         print(name,len(self.tris)//3,"triangles")
 
 
+def market_apron(g):
+    # Cut a folded half apron around the hips, with an open back and one patch pocket.
+    rings=((1.046,.186,.152),(1.002,.195,.160),(.918,.215,.174),
+           (.829,.213,.190),(.750,.203,.208),(.708,.197,.211))
+    count=16 if g.detail else 8
+    vertices=[]
+    for row,(y,w,d) in enumerate(rings):
+        t=row/(len(rings)-1)
+        for i in range(count+1):
+            a=-.20+(math.pi+.40)*i/count
+            fold=(math.sin(a*7+.4)+.37*math.sin(a*12))*t
+            vertices.append((math.cos(a)*w,y+.018*t*math.cos(3*a)+.006*fold,
+                             math.sin(a)*d-.004+.010*fold))
+    stride=count+1
+    faces=[(j,j+1,j+stride+1,j+stride)
+           for k in range(len(rings)-1) for j in range(k*stride,k*stride+count)]
+    g.surface(vertices,faces,lambda tri: "b6a27e" if all(i>=4*stride for i in tri.vertices)
+              else "c2ae88",bone=14)
+    g.loft([(0,1.015,-.008,.181,.140),(0,1.045,-.007,.178,.139)],
+           "d0bb95",count=20)
+    g.bead((-.028,1.029,-.156),(.043,.026,.027),"bead87")
+    for sign in (-1,1):
+        g.ribbon([(-.03,1.034,-.166),(-.029+sign*.055,.997,-.176),
+                  (-.03+sign*.069,.954-sign*.015,-.171)],.012,"cbb38c")
+    g.pocket(-.075,.900,.161,.057,.060,.018,"a99470","bda783",14)
+
+
+def market_florist_coat(g):
+    # Broad turnover collar and split back yoke on a quilt-free work coat.
+    for s in (-1,1):
+        collar=[(s*.057,1.497,.040),(s*.094,1.473,.084),(s*.121,1.432,.085),
+                (s*.066,1.378,.131),(s*.018,1.430,.119),(s*.027,1.484,.064)]
+        thickness=[(x,y-.006,z-.007) for x,y,z in collar]
+        g.surface(collar+thickness,[(0,1,2,3,4,5)]+
+                  [(i,(i+1)%6,(i+1)%6+6,i+6) for i in range(6)],"41625c")
+        g.pocket(s*.089,1.037,.124,.064,.070,.014,"60817a","7c9a89")
+        g.ribbon([(s*.132,1.405,-.110),(s*.121,1.368,-.135),
+                  (s*.080,1.321,-.156),(s*.013,1.309,-.163)],.010,"83a498")
+        g.ribbon([(s*.145,.983,-.123),(s*.147,.925,-.140),
+                  (s*.137,.852,-.164),(s*.132,.825,-.170)],.007,"547a6f")
+    g.ribbon([(0,1.37,-.163),(0,1.254,-.164),(0,1.072,-.142),
+              (0,.955,-.164),(-.012,.865,-.187)],.007,"3f605b")
+
+
+def market_lead_kit(g):
+    # Radio, webbing shoulder guard and wraparound cloth marker.
+    g.loft([(.171,1.347,-.012,.107,.127),(.176,1.389,-.014,.114,.136),
+            (.174,1.434,-.014,.109,.123),(.163,1.460,-.011,.090,.105),
+            (.144,1.478,-.007,.063,.073)],"545449",count=18,ripple=.032)
+    g.loft([(.174,1.432,-.015,.111,.125),(.169,1.455,-.013,.096,.112),
+            (.158,1.473,-.011,.079,.091)],"b3844d",count=18)
+    pack=[(.140,1.244,-.181,.046,.042),(.141,1.270,-.190,.059,.057),
+          (.148,1.379,-.184,.057,.064),(.154,1.406,-.172,.049,.049)]
+    g.loft(pack,"363a35",count=14)
+    g.loft([(.170,1.392,-.190,.014,.014),(.172,1.426,-.186,.012,.012),
+            (.184,1.565,-.200,.005,.005),(.191,1.662,-.231,.003,.003)],
+           "333832",count=10)
+    g.ribbon([(.107,1.405,-.204),(.095,1.447,-.126),(.085,1.476,-.031),
+              (.090,1.453,.063),(.104,1.389,.126),(.109,1.270,.158)],
+             .016,"9a916f")
+    g.pocket(.152,1.310,-.243,.029,.052,-.010,"5f5e52","747164")
+    for i in range(3 if g.detail else 0):
+        g.bead((.151,1.296+i*.014,-.256),(.021,.0028,.004),"353a33")
+
+
 def make(kind,var,detail,head,hand):
     g=Figure(detail)
     soldier=kind==0; ill=kind==1
+    lead=soldier and var==3
+    grocer=kind==2 and var==4
+    florist=kind==2 and var==5
+    if lead: var=0
+    if grocer: var=0
+    if florist: var=3
     coat=(["4c594b","385650","626253"] if soldier else
           ["635059","6b7676","777059","536478"] if ill else
           ["b88a65","5c7988","a86456","718262"])[var]
+    if lead: coat="485249"
+    if grocer: coat="8e4c41"
+    if florist: coat="668a80"
     trouser=["353d43","454541","414a52","51453e"][var]
     skin=(["c2997e","b48a6e","bb9276"] if soldier else
           ["827666","716c68","806e60","7d6f64"] if ill else ["bc947d","b99982","bc947d","ba977f"])[var]
     dark="3a403e"; trim="747e72" if soldier else "7e776a"
+    if grocer: trim="532e2a"
+    if florist: trim="3f645a"
     hair=["302e2b","292a29","686763","393633"][var]
     if ill and var==1: hair="282627"
     panel=([0,1,0] if soldier else [3,4,5,3] if ill else [0,2,1,2])[var]
@@ -243,9 +320,11 @@ def make(kind,var,detail,head,hand):
     g.surface(cap,capfaces,hair,bone=13,uv=hair_uv)
     width=1 if soldier else ((.97,.90,1.10,.98) if ill else (1.025,.91,.97,1.04))[var]
     hem=.91 if soldier else ((.94,.825,.90,.84) if ill else (.91,.83,.948,.86))[var]
+    if florist: hem=.810
     waist=1.015 if hem<.94 else 1.026
     hip_width=.204 if soldier or var==0 else .211 if var in (1,3) else .193
-    torso=[(hem,hip_width,.148,-.002),((hem+waist)*.5,.198,.144,-.009),(waist,.174,.133,-.008),
+    torso=[(hem,.243 if florist else hip_width,.178 if florist else .148,-.002),
+           ((hem+waist)*.5,.223 if florist else .198,.163 if florist else .144,-.009),(waist,.174,.133,-.008),
            (1.055,.164,.125,-.01),(1.12,.153,.112,-.008),(1.23,.185,.139,-.012),
            (1.335,.203,.145,-.01),(1.402,.212,.124,-.012),(1.449,.16,.096,-.007),
            (1.49,.081,.073,.001)]
@@ -312,13 +391,20 @@ def make(kind,var,detail,head,hand):
         transformed=[]
         for p in hand[0]:
             q=rot@((p-origin)*.096)
-            if soldier:
+            if soldier and not (lead and s<0):
                 # Pull the distal finger tips into the palm for the carrying pose.
                 curl=max(0,-q.y-.025)
                 q.z+=curl*.54
                 q.y+=curl*.36
             transformed.append((wrist+s*q.x,.965+q.y,.067+q.z))
         g.surface(transformed,hand[1] if s>0 else [tuple(reversed(f)) for f in hand[1]],handcolor,arm,material=6 if soldier else 7)
+        if lead or grocer or florist:
+            g.loft([(wrist,cuff+.002,.060,.040,.043),(wrist,cuff+.010,.058,.045,.049),
+                    (wrist+s*.004,cuff+.024,.056,.045,.049),(wrist+s*.008,cuff+.035,.053,.043,.047)],
+                   trim,arm,count=16,ripple=.045)
+            if g.detail:
+                g.bead((wrist+s*.032,cuff+.026,.086),(.008,.006,.004),
+                       "a6a28c" if florist else "74675a",arm)
         if soldier:
             g.pocket(s*.098,1.183,.132,.070,.070,.039,"525e4d","626d56")
             g.bead((s*.181,.76,.006),(.045,.095,.080),"4a534c",thigh)
@@ -327,7 +413,7 @@ def make(kind,var,detail,head,hand):
             g.loft([(s*.117,1.16,.106,.017,.008),(s*.132,1.34,.101,.021,.018),
                     (s*.120,1.454,-.006,.022,.067)],"61524b",count=8)
         # The collar and front seams follow the taper of the upper chest.
-        if not soldier:
+        if not soldier and not florist:
             g.surface([(s*.067,1.478,.060),(s*.127,1.431,.076),(s*.096,1.389,.111),
                        (s*.027,1.439,.095)],[(0,1,2,3)],trim)
             g.pocket(s*.098,1.309,.122,.041,.042,.012,coat,trim)
@@ -369,7 +455,7 @@ def make(kind,var,detail,head,hand):
                       [(0,1,6,7),(1,2,5,6),(2,3,4,5)],"59473a",10)
     elif var==1 or (var==3 and ill):
         g.bead((0,1.245,-.125),(.148,.205,.087),"66564c")
-    elif var==3:
+    elif var==3 and not florist:
         g.pocket(.146,1.04,.118,.064,.071,.035,"6e5846","8a7159")
         g.ribbon([(.148,1.09,.163),(.074,1.21,.145),(-.017,1.33,.142),
                   (-.105,1.44,.090),(-.106,1.46,-.013)],.012,"796350")
@@ -380,6 +466,9 @@ def make(kind,var,detail,head,hand):
         seam=[(0,y,z+d*1.045) for y,w,d,z in torso]
         verts=[(x+dx,y,z) for x,y,z in seam for dx in (-.004,.004)]
         g.surface(verts,[(j,j+1,j+3,j+2) for j in range(0,len(verts)-2,2)],trim)
+    if grocer: market_apron(g)
+    if florist: market_florist_coat(g)
+    if lead: market_lead_kit(g)
     if ill:
         def front(x,y,lift):
             j=next(k for k in range(len(torso)-1) if torso[k+1][0]>=y)
@@ -425,9 +514,12 @@ def bake():
                      2350 if detail else 640,source)
         hand=reduced("hand",lambda p:p.x>3.55 and (p-wrist).dot(V((.30,-.52,.80)))>-.17,
                      510 if detail else 130,source)
-        for kind in range(3):
-            for var in range(3 if kind==0 else 4):
-                make(kind,var,detail,head,hand).pack(f"{prefix}{kind}_{var}")
+        variants=((0,3),(2,4),(2,5))
+        if "--market-only" not in sys.argv:
+            variants=tuple((kind,var) for kind in range(3)
+                           for var in range(3 if kind==0 else 4))+variants
+        for kind,var in variants:
+            make(kind,var,detail,head,hand).pack(f"{prefix}{kind}_{var}")
 
 
 if __name__=="__main__":

@@ -25,7 +25,7 @@ namespace Evac
 
         public WorldGeometry(int missionIndex) : this(missionIndex, RoutePlan.All[Mathf.Clamp(missionIndex,0,RoutePlan.All.Length-1)]) { }
 
-        internal WorldGeometry(int missionIndex, RoutePlan route,bool fleet=false,Rect[] parkedFleet=null)
+        internal WorldGeometry(int missionIndex, RoutePlan route,bool fleet=false,Rect[] parkedFleet=null,bool marketOpen=false)
         {
             int index = Mathf.Clamp(missionIndex, 0, RoutePlan.All.Length-1);
 
@@ -67,6 +67,10 @@ namespace Evac
             foreach(var box in DistrictLandmarks.Solids(index))Add(box.x,box.z,box.width,box.depth,box.height);
             foreach(var box in ApproachBlocks.Solids(index)) Add(box.x,box.z,box.width,box.depth,box.height);
             AddRefugeFurniture(index);
+            if(index==0){
+                Add(MarketPassage.Shutter.x,MarketPassage.Shutter.z,3.95f,.22f,MarketPassage.GateHeight);
+                if(!marketOpen)Add(MarketPassage.Gate.x,MarketPassage.Gate.z,2.1f,.22f,MarketPassage.GateHeight);
+            }
             foreach(var solid in solids)
             {
                 var r=solid.walking;

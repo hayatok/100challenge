@@ -13,10 +13,17 @@ namespace Evac
             CloseFieldOverlay();
             lastColumn=Mathf.Clamp(column,0,Field.ColumnCount-1);
             columnDesk=bookOpen=true;
+            marketLedger=false;
+            marketFrameSize=Vector2.zero;
         }
 
         void DrawColumnDesk()
         {
+            if(G.MissionIndex==0 && G.Mode=="RTS" && Field.ColumnsActive && !Field.ColumnsComplete && !marketLedger)
+            {
+                DrawMarketMap();
+                return;
+            }
             ModalBackdrop();
             Rect sheet=Dialog(794,466);
             float x=sheet.x+18,y=sheet.y,width=sheet.width-36;
@@ -25,6 +32,11 @@ namespace Evac
             if(Button(R(x+width-382,y+7,154,40),G.Mode=="FPS"?"隊列の位置を確認":"地図で隊列を見る",dark:true))
                 Submit(()=>
                 {
+                    if(G.MissionIndex==0 && G.Mode=="RTS" && Field.ColumnsActive && !Field.ColumnsComplete)
+                    {
+                        marketLedger=false;marketFrameSize=Vector2.zero;
+                        return;
+                    }
                     if(G.TouchUI && G.Mode=="RTS")rosterFolded=ordersFolded=true;
                     G.LocateColumn(c);
                     columnDesk=bookOpen=false;

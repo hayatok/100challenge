@@ -79,6 +79,7 @@ namespace Evac
             get
             {
                 if(PushedColumn>=0)return "担架の引き継ぎ";
+                if(CanOpenLocalMarketGate)return "横戸を開ける";
                 if(sim.CanTakeWingFreight)return sim.WingFreightLabel+"を運ぶ";
                 if(sim.CanRejoinWingResident)return sim.WingResidentName+"に付き添う";
                 if(AtWingDesk>=0)return "現場の対応を選ぶ";
@@ -226,6 +227,7 @@ namespace Evac
             fx.ResetField();
             choosingBeacon=false;seenBeacon=sim.BeaconSerial;beaconGlint=0;
             wingReported=sim.WingActive;wingPin=-1;followedColumn=-1;
+            marketGatePawn=-1;marketPaths=null;
             ReleaseAim();
             mapCenter=Vector3.Lerp(sim.Mission.assembly, sim.Mission.exit,.5f);
             zoom=TouchUI?25:22;
@@ -291,6 +293,7 @@ namespace Evac
             FinishTransferForInput();
             int pushed=PushedColumn;
             if(pushed>=0){ui.OpenColumn(pushed);return;}
+            if(CanOpenLocalMarketGate && ColumnAction(0,4))return;
             if(sim.CanTakeWingFreight && sim.WingTakeCart()){sound.Signal("action");return;}
             if(sim.CanRejoinWingResident && sim.WingRejoin()){sound.Signal("action");return;}
             int station=AtWingDesk;
@@ -422,6 +425,11 @@ namespace Evac
             }
             bool pushing=bearer!=null && bearer==sim.Controlled && InBodyView(bearer);
             world.DrawStretcher(carried,stretcherYaw,pushing);
+            bool marketCast=sim.Mission.index==0 && !sim.IsDuty && sim.ColumnCount>0;
+            int grocer=marketCast?sim.ColumnMemberId(0,0):-1;
+            int florist=marketCast?sim.ColumnMemberId(0,1):-1;
+            int marketGuide=marketCast?sim.ColumnLeaderId(0):-1;
+            int marketAttacker=marketCast?sim.MarketAttackerId:-1;
             foreach(var u in sim.Units)
             {
                 if(u.boarded || (u.kind==UnitKind.Infected && !u.visible && sim.Controlled==null))continue;
@@ -456,8 +464,31 @@ namespace Evac
                 lastPositions[u.id]=u.pos;
                 var partner=AssistedPartner(u);
                 if(partner!=null && kind==0)activity=1;
+                MarketCastPose cast=default;
+                if(u.id==marketGuide)
+                {
+                    visual=3;
+                    var follower=sim.Find(grocer);
+                    if(follower==null || !follower.active)follower=sim.Find(florist);
+                    Vector3 side=Quaternion.Euler(0,u.yaw,0)*Vector3.right;
+                    float glance=follower!=null && Vector3.Dot(follower.pos-u.pos,side)>0?1:-1;
+                    cast=MarketCastPose.Guide(sim.MarketWaiting(u.id),glance);
+                }
+                else if(u.id==grocer || u.id==florist)
+                {
+                    visual=u.id==grocer?4:5;
+                    cast=MarketCastPose.Shopkeeper(sim.MarketWaiting(u.id),sim.MarketCrossing(u.id),
+                        u.id==grocer?1:-1);
+                }
+                else if(u.id==marketAttacker)
+                {
+                    float anticipation=u.windup>0?Mathf.Lerp(.24f,1,Mathf.InverseLerp(.92f,0,u.windup)):0;
+                    float recovery=sim.MarketImpactCount>0?Mathf.Clamp01(1-sim.MarketImpactAge/4.5f):0;
+                    cast=MarketCastPose.Infected(anticipation,sim.MarketCharging,recovery);
+                }
                 world.DrawActor(u.id,kind,visual,u.pos+Vector3.up*sim.VaultLift(u),u.yaw,actualSpeed,
-                    Mathf.Clamp01(u.hp/Mathf.Max(1,u.maxHp)),acted||fired||u.stagger>0||activity==2,InBodyView(u),dt,activity,u.lastHitDirection,partner?.pos,partner?.yaw??0);
+                    Mathf.Clamp01(u.hp/Mathf.Max(1,u.maxHp)),acted||fired||u.stagger>0||activity==2,InBodyView(u),dt,
+                    activity,u.lastHitDirection,partner?.pos,partner?.yaw??0,cast);
             }
             world.EndFrame();
             var pawn=sim.Controlled;

@@ -5,6 +5,10 @@ mergeInto(LibraryManager.library,{
         audit.duty={sector:sector,expected:expected,unchanged:!!unchanged};
         return location.search.indexOf('duty-failure=1')>=0?1:0;
     },
+    InspectMarket: function(leader,pawn,x,z,lift,boarded,finished) {
+        var audit=window.evacInspection||(window.evacInspection={buttons:{}});
+        audit.market={leader:leader,pawn:pawn,x:x,z:z,lift:lift,boarded:boarded,finished:!!finished};
+    },
     InspectClick: function(label) {
         var audit=window.evacInspection||(window.evacInspection={buttons:{}});
         if(!audit.clicks)audit.clicks=[];

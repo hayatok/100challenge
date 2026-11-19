@@ -306,7 +306,8 @@ namespace Evac
                     sim.OrderFor(pawn.squad)==SquadOrder.Engineer?"作業地点":"集合場所";
                 Vector3 tag=next+Vector3.up*1.85f;
                 float distance=Vector3.Distance(pawn.pos,next);
-                if(handsFree && !chapterOnSite && distance>3)WorldTag(tag,hint+" "+Mathf.RoundToInt(distance)+"m",new Color(1,.84f,.50f),false);
+                if(HeadingForMarketGate)DrawMarketGateBearing();
+                else if(handsFree && !chapterOnSite && distance>3)WorldTag(tag,hint+" "+Mathf.RoundToInt(distance)+"m",new Color(1,.84f,.50f),false);
                 if(TouchUI)
                 {
                     float r=ThumbRadius;
