@@ -90,6 +90,59 @@
         log.textContent='CAPTURE '+name+' '+frame.width+'×'+frame.height;
         return true;
     }
+    if(params.has('wing')){
+        await button(/^現場方針を決める$/);
+        await button(/^店先と停留所の名簿を照合$/);
+        await button(/を現場へ$/);
+        await wait('First market incident',()=>articles().includes('青果店前に班を派遣'),90000);
+        if(!articles().includes('任務地点へ'))await button(/^班への命令$/);
+        await button(/^任務地点へ$/);
+        await wait('First rescue order accepted',()=>audit().clicks.includes('任務地点へ'));
+        await button(/^青果店前に班を派遣$/);
+        await button(/^警備班を派遣$/);
+        await wait('Wing unlocked in second sector',()=>articles().includes('館内の救助を指揮'),90000);
+        await button(/^館内の救助を指揮$/);
+        await wait('Clinic map',()=>articles().includes('配電室') && articles().includes('地域診療所'));
+        if(await capture('floor-plan'))return;
+        await button(/^配電室$/);
+        await button(/^病棟の電源を戻す$/);
+        await wait('Squad dispatched',()=>!articles().includes('地域診療所'));
+        if(!articles().some(k=>k.includes('を直接操作')))await button(/^名簿/);
+        await button(/を直接操作$/);
+        await wait('Inhabit wing squad',()=>audit().state.mode==='FPS');
+        await button(/^作戦手帳$/);
+        await button(/^館内見取図$/);
+        await wait('Map from direct view',()=>articles().includes('案内を表示して戻る'));
+        if(await capture('floor-plan-fps'))return;
+        await button(/^案内を表示して戻る$/);
+        log.textContent='PASS '+frame.width+'×'+frame.height+' | Opened clinic through the second market district, selected power room, dispatched squad, possessed soldier and opened floor map on foot.';
+        return;
+    }
+    if(params.has('waypoints')){
+        if(!articles().includes('次の命令を選ぶ'))await button(/^班への命令$/);
+        await button(/^次の命令を選ぶ$/);
+        await button(/^経路を描く$/);
+        async function tapGround(x,y){
+            finger('touchstart',7,x,y);
+            await wait('Map contact',()=>audit().state.fingers>0);
+            finger('touchend',7,x,y);
+            await wait('Map release',()=>audit().state.fingers===0);
+        }
+        await tapGround(.44,.43);
+        await tapGround(.58,.50);
+        await button(/^1点戻す$/);
+        await tapGround(.56,.55);
+        await button(/^終点で/);
+        if(await capture('waypoints'))return;
+        await button(/^経路を送信$/);
+        await wait('Dispatch closed editor',()=>articles().includes('次の命令を選ぶ'));
+        await button(/^次の命令を選ぶ$/);await button(/^経路を描く$/);
+        await wait('Squad is following route',()=>articles().includes('経路を解除して待機'));
+        await button(/^経路を解除して待機$/);
+        await wait('Squad halted',()=>articles().includes('次の命令を選ぶ'));
+        log.textContent='PASS '+frame.width+'×'+frame.height+' | Plotted two map stops, undid and replaced a stop, changed final order, dispatched and halted the squad.';
+        return;
+    }
     if(await capture('command'))return;
     await button(/^現場方針を決める$/);
     await wait('Two distinct opening responses',()=>articles().includes('店先と停留所の名簿を照合') && articles().includes('店主を案内役に迎える'));

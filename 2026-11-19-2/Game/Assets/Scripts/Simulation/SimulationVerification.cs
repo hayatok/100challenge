@@ -71,6 +71,8 @@ namespace Evac
                 new GameSim().VerifyChapterStages(report);
                 new GameSim().VerifyLateResponses(report);
                 new GameSim().VerifyFieldTools(report);
+                new GameSim().VerifyWing(report);
+                report.AppendLine(GameSim.VerifyWaypointOrders());
                 DutyVerification.Run(report);
                 VerifyCrowd(report);
                 return report.ToString();
@@ -87,7 +89,7 @@ namespace Evac
             int phase=game.ChapterPhase;
             Check(game.ChooseChapterOption(choice) && game.DispatchChapter(0),"Choose chapter response and dispatch");
             for(int i=0;i<3600 && game.ChapterPhase==phase && game.Result==SimResult.Active;i++)game.Tick(.1f);
-            Check(game.Result==SimResult.Active && game.ChapterPhase!=phase,"Chapter field shift failed: "+game.Mission.title+" / "+game.ChapterInstruction+" / "+game.FleetDiagnostics());
+            Check(game.Result==SimResult.Active && game.ChapterPhase!=phase,"Chapter field shift failed: "+game.Mission.title+" / "+game.ChapterInstruction+" / "+game.Result+" vehicle "+game.VehicleHealth+" remaining "+game.Remaining+" / "+game.FleetDiagnostics());
         }
 
         static void FirstPersonChapter(GameSim game)
@@ -155,6 +157,7 @@ namespace Evac
                         if(game.DistrictOutcome(game.Sector)==0 && game.DistrictAssignment(0)<0 &&
                             (index>0 || game.Boarded>=game.SectorGoal))
                             game.DispatchDistrict(0,game.Sector,(index+game.Sector)%2==0);
+                        game.DriveWingInspection();
                         game.Tick(.1f);
                         // Enter the same simulation, spend an actual round, then save and resume mid-reload.
                         if(index==1 && step==5)
@@ -394,6 +397,9 @@ namespace Evac
             for(int step=0;step<2300 && !game.CanDepart;step++)
             {
                 if(game.ChapterPhase==3){FirstPersonChapter(game);continue;}
+                if(game.WingActive && !game.WingComplete && game.Sector==game.SectorCount-1 && game.DistrictOutcome(game.Sector)!=0){
+                    game.ManualWingTrip(0,1);game.ManualWingTrip(2,0);game.ManualWingTrip(4,0);
+                }
                 if(deployed!=game.Sector)
                 {
                     deployed=game.Sector;

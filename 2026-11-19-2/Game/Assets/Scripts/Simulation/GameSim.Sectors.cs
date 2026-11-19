@@ -108,6 +108,7 @@ namespace Evac
             districtPlans=null;
             activePlan=MakeRoute(Sector);
             geometry=new WorldGeometry(state.index,activePlan,FleetEnabled);
+            geometry.SetWingDoors(WingDoorMask);
             alarmSite=Ground(AlarmSites[AlarmDistrict]);
             for(int i=0;i<state.units.Count;i++)
             {
@@ -166,6 +167,7 @@ namespace Evac
         bool IsSectorCleared()
         {
             if(IsDuty)return DutyStageDone();
+            if(WingActive && Sector==SectorCount-1 && !WingComplete)return false;
             if(DistrictOutcome(Sector)==0)return false;
             if(Boarded>=SectorGoal && state.sectionBoarded>0 && (!NeedsTriage || state.sectionAssists>0))return true;
             // A dead local group cannot fill its original share. Later districts

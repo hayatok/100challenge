@@ -21,7 +21,7 @@ SubShader {
  UNITY_DEFINE_INSTANCED_PROP(float4,_Pose)
  UNITY_DEFINE_INSTANCED_PROP(float4,_Form)
  UNITY_INSTANCING_BUFFER_END(Agents)
- float _Evening, _WetTime, _Station;
+ float _Evening, _WetTime, _Station, _WorldDistrict;
  float4 _FieldSignal, _FieldSignalTint;
  sampler2D _SunOccluder;
  float _SunPacked;
@@ -62,6 +62,37 @@ SubShader {
      float2 value=tex2D(_SunOccluder,uv).rg;
      float depth=lerp(value.r,dot(value,float2(256.0/257.0,1.0/257.0)),_SunPacked)*64;
      return smoothstep(depth-.16,depth+.015,receiver);
+ }
+ float nearestOfThree(float z,float a,float b,float c){
+     float first=abs(z-a)<abs(z-b)?a:b;
+     return abs(z-first)<abs(z-c)?first:c;
+ }
+ float3 practicalHead(float2 p){
+     float side=p.x<0?-1:1;
+     if(abs(p.y)>38){
+         float row=nearestOfThree(abs(p.y),47,73,89)*sign(p.y);
+         return float3(side*15.5,5.07,row);
+     }
+     if(_WorldDistrict<.5){
+         float row=clamp(round(p.y/6.2)*6.2,-31,31);
+         float3 arcade=float3(side*12.15,5.48,row);
+         float3 signLight=float3(0,5.06,nearestOfThree(p.y,-23,6.8,28));
+         return dot(arcade.xz-p,arcade.xz-p)<dot(signLight.xz-p,signLight.xz-p)?arcade:signLight;
+     }
+     if(_WorldDistrict<1.5){
+         float3 pole=float3(side*15.1,5.59,nearestOfThree(p.y,-21,7,33));
+         float3 dock=float3(clamp(round(p.x/5.8)*5.8,-5.8,5.8),6.19,-4.4);
+         return dot(pole.xz-p,pole.xz-p)<dot(dock.xz-p,dock.xz-p)?pole:dock;
+     }
+     if(_WorldDistrict<2.5){
+         float x=p.x<-9.1?-13:p.x<-1.3?-5.2:p.x<6.6?2.7:10.5;
+         float row=clamp(round((p.y+36)/8)*8-36,-36,36);
+         return float3(x,4.49,row);
+     }
+     float3 yard=float3(side*15.2,5.59,nearestOfThree(p.y,-28,-4,20));
+     float index=clamp(round((p.y+15.7)/2.45),0,3);
+     float3 shelter=float3(side*10.31,4.38,-15.7+index*2.45);
+     return dot(yard.xz-p,yard.xz-p)<dot(shelter.xz-p,shelter.xz-p)?yard:shelter;
  }
  fixed4 frag(F i):SV_Target {
      float3 n=normalize(cross(ddy(i.world),ddx(i.world)));
@@ -226,7 +257,8 @@ SubShader {
      }
      float warmLamp=saturate((i.color.r-.82)*8)*saturate((i.color.g-.72)*7)*saturate((i.color.r-i.color.b-.12)*9);
      float2 solarUV=(i.world.xz+float2(.48,.36)*i.world.y/.88)/float2(80,224)+.5;
-     if(all(solarUV>0) && all(solarUV<1)){
+     float night=smoothstep(.12,.91,_Evening);
+     if(night<.97 && all(solarUV>0) && all(solarUV<1)){
          float h=i.world.y+.075+.09*(1-abs(n.y));
          float2 stepUV=float2(1.0/896,1.0/1792);
          float lit=sunshine(solarUV+stepUV*float2(-.57,-.24),h);
@@ -238,10 +270,44 @@ SubShader {
          lit+=sunshine(solarUV+stepUV*float2(.63,-.67),h);
          lit*=.25;
          #endif
-         float shade=(1-lit)*lerp(.85,.54,_Evening)*(1-.65*warmLamp);
+         float shade=(1-lit)*.85*(1-.50*night)*(1-.65*warmLamp);
          c*=lerp(float3(1,1,1),float3(.60,.69,.79),shade);
      }
-     c=lerp(c,c*float3(.89,.91,.96)+warmLamp*float3(.13,.095,.03),_Evening);
+     if(night>.001){
+         float3 lamp=practicalHead(i.world.xz);
+         float3 delta=lamp-i.world;
+         float spread=dot(delta.xz,delta.xz);
+         float diffuse=saturate(dot(n,delta)*rsqrt(max(.15,dot(delta,delta))));
+         float pool=exp2(-spread*.019)*(.39+.61*diffuse)*step(-.13,delta.y);
+         float people=step(.5,i.type.x)*(1-step(3.5,i.type.x));
+         float3 ambient=lerp(float3(.38,.50,.72),float3(.62,.73,.88),people);
+         if(i.type.x==4)ambient=lerp(ambient,float3(.65,.73,.86),.9);
+         float3 tint=_WorldDistrict>1.5&&_WorldDistrict<2.5?float3(.79,.88,.92):float3(1,.79,.53);
+         float3 scene=c*ambient + pool*tint*(c*.49+.103);
+         bool belowRoof=i.world.y<.19 && n.y>.74;
+         if(i.type.x<.5 && belowRoof){
+             float3 mirrored=reflect(-view,n);
+             float rayHeight=max(.075,mirrored.y);
+             float2 probe=i.world.xz+mirrored.xz*((lamp.y-i.world.y)/rayHeight);
+             float3 reflectionLamp=practicalHead(probe);
+             float rayDistance=(reflectionLamp.y-i.world.y)/rayHeight;
+             float2 ghost=(i.world.xz+mirrored.xz*rayDistance-reflectionLamp.xz)*float2(.92,.51);
+             float streak=exp2(-dot(ghost,ghost)*.69)*smoothstep(.01,.16,mirrored.y);
+             float2 road=i.world.xz;
+             float wetField=.50+.18*sin(road.x*.61+sin(road.y*.41))
+                                 +.18*sin(road.y*.71-road.x*.37)+.08*sin(road.x*2.19+road.y);
+             float damp=smoothstep(.35,.72,wetField);
+             scene+=tint*streak*(.076+.37*damp);
+             scene+=tint*pool*damp*(.024+.042*pow(1-saturate(dot(view,n)),3));
+         }
+         if(i.print.z>=9.5 && i.print.z<=11.5){
+             float warmTexture=saturate((c.r-c.b)*3.1)*smoothstep(.22,.59,c.r);
+             scene+=warmTexture*(c*.63+float3(.18,.093,.030));
+         }
+         float fixture=max(step(14.5,i.print.z),warmLamp*smoothstep(2.7,5.1,i.world.y));
+         scene=lerp(scene,float3(1,.86,.61),fixture*.91);
+         c=lerp(c,scene,night);
+     }
      if(_FieldSignal.w>0){
         float3 lightVector=_FieldSignal.xyz-i.world;
         float lens=dot(lightVector,lightVector);
@@ -251,7 +317,7 @@ SubShader {
      }
      if(i.type.x!=4){
         float fog=smoothstep(28,115,distance(i.world,_WorldSpaceCameraPos))*.52;
-        c=lerp(c,float3(.59,.65,.64),fog);
+        c=lerp(c,lerp(float3(.59,.65,.64),float3(.23,.31,.43),night),fog);
      }
      return fixed4(c,1);
  }

@@ -84,6 +84,7 @@ namespace Evac
                 fleetWalkMap=new WorldGeometry(state.index,Route,true,obstacles.ToArray());
                 fleetWalkMaps[key]=fleetWalkMap;
             }
+            fleetWalkMap.SetWingDoors(WingDoorMask);
             foreach(var person in state.units)Brain(person).hasPath=false;
         }
 

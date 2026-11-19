@@ -74,7 +74,7 @@ namespace Evac
         public string Objective => sim.IsReady ? sim.Objective : "";
         public string Radio => Time.time<voiceUntil ? voiceLine : sim.IsReady ? sim.Notice : "";
         public string RadioSpeaker => Time.time<voiceUntil ? speaker : "現場";
-        public string ContextAction => sim.InteractionHint ?? "";
+        public string ContextAction => sim.CanTakeWingFreight?sim.WingFreightLabel+"を運ぶ":sim.CanRejoinWingResident?sim.WingResidentName+"に付き添う":AtWingDesk>=0?"現場の対応を選ぶ":sim.InteractionHint ?? "";
         public string SoldierName => Current?.name ?? "";
         public string MissionName(int i) => GameSim.Missions[i].title;
         public string MissionBrief(int i) => GameSim.Missions[i].briefing;
@@ -200,6 +200,7 @@ namespace Evac
 
         void EnterField()
         {
+            EndWaypointEdit();
             missionIndex=sim.Mission.index;
             difficulty=(int)sim.Level;
             roster.Clear();
@@ -208,9 +209,11 @@ namespace Evac
             SelectedSoldier=sim.Controlled!=null ? Mathf.Max(0,roster.IndexOf(sim.Controlled)):0;
             SelectedSquad=roster.Count>0?roster[SelectedSoldier].squad:0;
             orderIndex=(int)sim.OrderFor(SelectedSquad);
+            EndViewTransfer();
             world.Build(missionIndex);
             fx.ResetField();
             choosingBeacon=false;seenBeacon=sim.BeaconSerial;beaconGlint=0;
+            wingReported=sim.WingActive;wingPin=-1;
             ReleaseAim();
             mapCenter=Vector3.Lerp(sim.Mission.assembly, sim.Mission.exit,.5f);
             zoom=TouchUI?25:22;
@@ -235,21 +238,22 @@ namespace Evac
         public void SelectSoldier(int i)
         {
             if(!RosterAlive(i)) return;
+            if(SelectedSquad!=roster[i].squad)EndWaypointEdit();
             SelectedSoldier=i;SelectedSquad=roster[i].squad;
             orderIndex=(int)sim.OrderFor(SelectedSquad);sound.Signal("dial");
         }
         public void Possess(int i)
         {
             if(Phase!="Playing"||!RosterAlive(i)||!sim.Possess(roster[i].id)) return;
+            EndWaypointEdit();
             SelectSoldier(i);pitch=0;recoil=0;choosingBeacon=false;ReleaseAim();lastOwnHealth=Health01;
-            transitionTime=Time.unscaledTime;
+            BeginViewTransfer(sim.Controlled,true);
             Change("Playing");FrameCamera(0,true); sound.Signal("radio");
         }
         public void CommandMode()
         {
-            if(sim.Controlled!=null) mapCenter=sim.Controlled.pos;
+            if(sim.Controlled!=null){mapCenter=sim.Controlled.pos;BeginViewTransfer(sim.Controlled,false);}
             sim.Release(); recoil=0;ReleaseAim();Change("Playing");FrameCamera(0,true);sound.Signal("radio");
-            transitionTime=Time.unscaledTime;
         }
         public void CycleOrder() {orderIndex=(orderIndex+1)%Orders.Length;sound.Signal("dial");}
         public void SelectOrder(int order) {orderIndex=Mathf.Clamp(order,0,Orders.Length-1);sound.Signal("dial");}
@@ -270,11 +274,20 @@ namespace Evac
         public void ToggleCircuit(int i) {if(i>=0&&i<CircuitCount && sim.SetPower((PowerCircuit)i,!CircuitOn(i)))sound.Signal("relay");}
         public void BuildClinic() {if(sim.Build(Facility.Clinic))sound.Signal("relay");}
         public void BuildWorkshop() {if(sim.Build(Facility.Workshop))sound.Signal("relay");}
-        public void TryAction() {if(sim.Interact())sound.Signal("action");}
+        public void TryAction()
+        {
+            FinishTransferForInput();
+            if(sim.CanTakeWingFreight && sim.WingTakeCart()){sound.Signal("action");return;}
+            if(sim.CanRejoinWingResident && sim.WingRejoin()){sound.Signal("action");return;}
+            int station=AtWingDesk;
+            if(station>=0){ui.OpenWing(station);return;}
+            if(sim.Interact())sound.Signal("action");
+        }
         public void Reload() {if(sim.Reload())sound.Signal("reload");}
         public void FireOnce()
         {
             var u=sim.Controlled; if(u==null || Phase!="Playing") return;
+            FinishTransferForInput();
             int shots=u.shots; int ammo=u.ammo;
             Vector3 direction=Quaternion.Euler(pitch-(ReducedMotion?0:cameraKick),u.yaw,0)*Vector3.forward;
             sim.Shoot(direction);
@@ -373,6 +386,7 @@ namespace Evac
             if(HasFleet && departureTime<=0) world.DrawFleet(sim,dt);
             UpdateLamp(dt);
             UpdateIncidents();
+            UpdateWingField(dt);
             world.SetObjective("追加要請",sim.RequestPoint,6,sim.HasRequestPoint);
             world.SetRequestProp(sim.RequestPropType,sim.RequestPropPosition);
             foreach(var u in sim.Units)
@@ -403,11 +417,11 @@ namespace Evac
                 walkSpeed[u.id]=actualSpeed;
                 lastPositions[u.id]=u.pos;
                 world.DrawActor(u.id,kind,visual,u.pos+Vector3.up*sim.VaultLift(u),u.yaw,actualSpeed,
-                    Mathf.Clamp01(u.hp/Mathf.Max(1,u.maxHp)),acted||fired||u.stagger>0||activity==2,u==sim.Controlled,dt,activity,u.lastHitDirection);
+                    Mathf.Clamp01(u.hp/Mathf.Max(1,u.maxHp)),acted||fired||u.stagger>0||activity==2,InBodyView(u),dt,activity,u.lastHitDirection);
             }
             world.EndFrame();
             var pawn=sim.Controlled;
-            world.DrawFirstPerson(pawn!=null,ReducedMotion?0:stepWeight,recoil,
+            world.DrawFirstPerson(pawn!=null && InBodyView(pawn),ReducedMotion?0:stepWeight,recoil,
                 pawn==null?0:Mathf.Clamp01(pawn.reload/1.55f),stride/8f,pawn==null?0:pawn.escortId>=0?1:pawn.carryingCargo?3:0,aimBlend);
         }
     }

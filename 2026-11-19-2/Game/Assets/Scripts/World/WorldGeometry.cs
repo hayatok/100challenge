@@ -29,6 +29,7 @@ namespace Evac
         {
             int index = Mathf.Clamp(missionIndex, 0, RoutePlan.All.Length-1);
 
+            InitRoomWing(index);
             var bus = VehicleOrigin(route.exit);
             Vector2[][] furniture = {
                 new[] { new Vector2(-7.8f,-24),new Vector2(8.2f,22) },
@@ -106,6 +107,7 @@ namespace Evac
         public Vector3 Clamp(Vector3 point)
         {
             point = Bounds(point);
+            if(point.z>=91)return ClampWing(point);
             for (int pass=0;pass<4;pass++)
             {
                 bool changed=false;
@@ -127,7 +129,7 @@ namespace Evac
         }
 
         static Vector3 Bounds(Vector3 p) => new Vector3(Mathf.Clamp(p.x,-HalfWidth,HalfWidth),0,
-            Mathf.Clamp(p.z,-HalfLength,HalfLength));
+            Mathf.Clamp(p.z,-HalfLength,151));
 
         static void TestEdge(ref Vector3 candidate,ref float closest,Vector3 start,Vector3 next)
         {
@@ -161,6 +163,12 @@ namespace Evac
         {
             var goal=Clamp(destination);
             start=Clamp(start);
+            if(start.z>=91 || goal.z>=91)
+            {
+                var seam=new Vector3(0,0,91);
+                if(start.z>=91)return WingWaypoint(start,goal.z>=91?goal:seam-Vector3.forward*.5f);
+                goal=seam;
+            }
             if(ShutterDetour(start,goal,out var side))return side;
             if(Clear(start,goal,true))return goal;
             int n=corners.Count;
@@ -235,6 +243,7 @@ namespace Evac
 
         bool Clear(Vector3 start,Vector3 end,bool walking)
         {
+            if(Mathf.Max(start.z,end.z)>91 && !WingClear(start,end,walking))return false;
             float dx=end.x-start.x,dz=end.z-start.z;
             foreach(var solid in solids)
             {

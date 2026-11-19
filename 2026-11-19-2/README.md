@@ -6,7 +6,7 @@
 
 ブラウザではインストールせずに遊べます。[ブラウザ版「避難指令」を起動](https://hayatok.github.io/100challenge/2026-11-19-2/)
 
-Windows版の `EvacuationControl-Windows-x64.zip` は[0.2の配布ページ](https://github.com/hayatok/100challenge/releases/tag/release-evac-20261119-preview2)の「Assets」に掲載予定です。ダウンロード後にZIPを展開し、`EvacuationControl.exe` を起動してください。Web版は横持ちのスマホとPC向けです。リポジトリから遊ぶ場合は、このフォルダで次のコマンドを実行して、表示されたアドレスを開きます。Python 3が必要です。
+Windows版の `EvacuationControl-Windows-x64.zip` は[0.3の配布ページ](https://github.com/hayatok/100challenge/releases/tag/release-evac-20261119-preview3)の「Assets」から入手できます。ダウンロード後にZIPを展開し、`EvacuationControl.exe` を起動してください。Web版は横持ちのスマホとPC向けです。リポジトリから遊ぶ場合は、このフォルダで次のコマンドを実行して、表示されたアドレスを開きます。Python 3が必要です。
 
 ```sh
 python scripts/play.py
@@ -23,6 +23,16 @@ python scripts/play.py
 ![商店街で班と避難先を選ぶ横持ち画面](docs/screens/market-command-touch.jpg)
 
 ![商店街で隊員を直接操作する横持ち画面](docs/screens/market-direct-touch.jpg)
+
+## 館内で住民を救助する
+
+避難が第2区画に入ると「館内の救助を指揮」が開きます。最初の診療棟では、夜間受付で身元を確認し、配電室で病棟に給電してください。酸素ボンベを観察病室に届けると、看護師の黒田を連れ出せます。一人を館内に送り、同じ班の残りの隊員に屋外の誘導を続けさせることもできます。作戦手帳の「館内見取図」には、室名、開いた扉、隊員、住民の位置が出ます。
+
+![診療棟の配電室へ派遣するスマホ横持ちの見取図](docs/screens/clinic-floor-plan-touch.jpg)
+
+班に複数の場所を回らせるときは、指揮画面の「次の命令を選ぶ」から「経路を描く」を開きます。地図上で2〜4地点と終点での仕事を選んで送信してください。途中で隊員の目線に入ると、僚員が次に向かう地点を一人称でも追えます。
+
+![商店街で班に経由地点を指定した横持ち画面](docs/screens/squad-route-touch.jpg)
 
 ## 操作
 
@@ -85,7 +95,7 @@ Unity 6000.3.28f1で `Game` を開き、`Assets/Scenes/Dispatch.unity` から再
 
 Blenderで地区、車両、人物、腕と装備を制作し、人物の歩行をキーフレームから焼き込みました。原画と環境・顔のテクスチャはComfyUIのMoss-imageを使用しています。人物の基礎メッシュはMakeHumanのCC0素材です。日本語の無線はHTS Voice “Mei”で合成し、帯域を絞って無線機の音色を作りました。音声モデルはMMDAgent Project TeamによるCC BY 3.0、書体はNoto Sans JPでSIL OFL 1.1です。[人物の原典と権利表記](art-source/characters/README.md)・[音声・書体のライセンス](Game/Assets/StreamingAssets/Licenses/)
 
-0.2の標準難度で全8作戦と全8件の任意要請を自動操作したところ、作戦内の経過時間は合計33分05.3秒でした。初見での所要時間は未計測です。企画目標の4〜6時間に達したという試遊結果はありません。
+0.3の標準難度で全8作戦と全8件の任意要請を自動操作したところ、作戦内の経過時間は合計34分02.5秒でした。初見での所要時間は未計測です。企画目標の4〜6時間に達したという試遊結果はありません。
 
 - [企画とMoss-imageの画面案](docs/game-plan.md)
 - [実プレイの検証記録](docs/verification.md)

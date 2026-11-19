@@ -358,7 +358,7 @@ def pavement(d):
             width=random.uniform(6,12)
             skyline(x,z,width,9,h,j)
         for j in range(6):
-            x=-33+j*13;z=s*102;h=random.uniform(7,16)
+            x=-33+j*13;z=162 if s>0 else -102;h=random.uniform(7,16)
             skyline(x,z,9,7,h,j+3)
 
 def skyline(x,z,w,d,h,j):
@@ -796,9 +796,9 @@ def ranges(z,base,col):
         a=h(x);b=h(x+11)
         g.poly([(x,-1,z),(x+11,-1,z),(x+11,b,z),(x,a,z)],shade(col,.98+.026*sin(i*2.64)))
 def alley_details(d):
-    ranges(119,10,"899b8c");ranges(131,16,"94a39a")
+    ranges(181,10,"899b8c");ranges(197,16,"94a39a")
     for j in range(7):
-        x=-29+j*10;z=96+(j%3)*.8
+        x=-29+j*10;z=165+(j%3)*.8
         if j in (1,4):
             for k in range(3):
                 y=2.3+k*2.4
