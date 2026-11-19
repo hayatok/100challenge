@@ -10,6 +10,11 @@ mergeInto(LibraryManager.library,{
         audit.market={leader:leader,pawn:pawn,x:x,z:z,lift:lift,boarded:boarded,finished:!!finished,
             meeting:!!meeting,waiting:!!waiting,clock:clock};
     },
+    InspectQuest: function(phase,choice,agent,x,z,wing,stage,nextX,nextZ,manual) {
+        var audit=window.evacInspection||(window.evacInspection={buttons:{}});
+        audit.quest={phase:phase,choice:choice,agent:agent,x:x,z:z,wing:!!wing,
+            stage:stage,nextX:nextX,nextZ:nextZ,manual:!!manual};
+    },
     InspectHud: function(action,count,banner,mode,frame) {
         var audit=window.evacInspection||(window.evacInspection={buttons:{}});
         audit.hud={action:UTF8ToString(action),count:UTF8ToString(count),banner:UTF8ToString(banner),mode:UTF8ToString(mode),frame:frame};

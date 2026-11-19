@@ -17,28 +17,31 @@ namespace Evac
         static string MovementKeys => Key(ControlAction.Forward)+Key(ControlAction.StrafeLeft)+Key(ControlAction.Backward)+Key(ControlAction.StrafeRight);
         const float BoardHeight = 84;
 
-        bool DrawBoard()
+        void DrawBoard()
         {
             float height = BoardHeight;
             const float top = 12, gap = 6, pauseWidth = 82, bookWidth = 118, statusWidth = 249;
             float pauseX = w - 14 - pauseWidth;
             float bookX = pauseX - bookWidth - gap;
             float statusX = (G.IsDuty ? pauseX : bookX) - statusWidth - gap;
-            float missionWidth = Mathf.Min(statusX - 24, G.TouchUI ? 371 : 432);
+            float missionWidth = Mathf.Min(statusX - 24, 432);
             Rect mission = R(14, top, missionWidth, height);
             Instrument(mission);
             Fill(R(mission.x, mission.y, 4, mission.height), Rail);
 
             string section = ChapterTask ? Field.ChapterTitle : G.SectorCount > 0 ? G.SectorName : FieldName;
-            G.TryFieldNavigation(out string action, out string destination, out _, out bool marketTask);
+            bool hasDestination = G.TryFieldNavigation(out string action, out string destination, out _);
+            if (G.Mode != "FPS") CommandSituation(section, hasDestination, ref action, ref destination);
+            else if (!hasDestination && G.IsDuty) action = G.Objective;
             if (string.IsNullOrEmpty(action)) action = section;
             if (destination == action) destination = "";
             string task = string.IsNullOrEmpty(destination) ? action : action + "　／　" + destination;
-            string banner = string.IsNullOrEmpty(G.SoldierName) ? G.DistrictName(G.MissionIndex) :
+            string banner = string.IsNullOrEmpty(G.SoldierName) || ChapterTask && G.Mode != "FPS" ? G.DistrictName(G.MissionIndex) :
                 G.SoldierName + "　／　" + G.DistrictName(G.MissionIndex);
             if (G.IsDuty) banner += $"　救援当直 {G.DutyIndex + 1:00}号";
             string location = FieldLocation(section);
-            if (task != location) banner += "　" + location;
+            string phase = ChapterTask ? (Field.ChapterPhase == 1 ? "前哨" : "撤収") : location;
+            if (task != phase) banner += "　" + phase;
             float textWidth = mission.width - 24;
             Text(R(26, top + 3, textWidth, 25), banner,
                 FieldLineSize(banner, textWidth, G.LargeText ? 17 : 14, false), Mist);
@@ -52,6 +55,10 @@ namespace Evac
                     FieldLineSize(action, textWidth, G.LargeText ? 20 : 18, true), Cream, true);
                 Text(R(taskLine.x, taskLine.y + lineHeight, textWidth, lineHeight), destination,
                     FieldLineSize(destination, textWidth, G.LargeText ? 18 : 16, false), Mist);
+            }
+            else if (TextStyle(taskSize, true, TextAnchor.MiddleLeft).CalcSize(measurement).x > textWidth)
+            {
+                Paragraph(taskLine, task, G.LargeText ? 19 : 16, Cream);
             }
             else
             {
@@ -92,7 +99,56 @@ namespace Evac
 #if UNITY_WEBGL && EVAC_WEB_TEST && !UNITY_EDITOR
             ReportFieldHud(task, count, banner);
 #endif
-            return marketTask;
+        }
+
+        void CommandSituation(string section, bool hasDestination, ref string action, ref string destination)
+        {
+            if (ChapterTask)
+            {
+                action = section;
+                destination = "";
+                if (Field.ChapterChoice < 0) return;
+                destination = Field.ChapterOptionTitle(Field.ChapterChoice);
+                return;
+            }
+
+            if (G.CanDepart)
+            {
+                action = "出発準備完了";
+                destination = "";
+                return;
+            }
+            if (G.FleetBlocked)
+            {
+                action = "本線は通行止め";
+                destination = "";
+                return;
+            }
+            if (hasDestination) return;
+            if (!G.IsDuty && Field.ColumnsActive && !Field.ColumnsComplete)
+            {
+                int column = ActiveColumn();
+                action = Field.ColumnTitle(column);
+                destination = Field.ColumnStatus(column);
+                return;
+            }
+            if (!G.IsDuty && G.FieldOutcome(G.CurrentDistrict) == 0)
+            {
+                int assigned = AssignedDistrictSquad();
+                if (assigned >= 0)
+                {
+                    action = G.SquadName(assigned) + "が対応中";
+                    destination = G.FieldDistrict(G.CurrentDistrict);
+                    return;
+                }
+                action = G.FieldTask(G.CurrentDistrict);
+                destination = "";
+                return;
+            }
+            string objective = G.Objective;
+            string prefix = section + "　";
+            action = objective.StartsWith(prefix, System.StringComparison.Ordinal) ? objective.Substring(prefix.Length) : objective;
+            destination = "";
         }
 
         int FieldLineSize(string line, float width, int size, bool bold)
@@ -121,39 +177,92 @@ namespace Evac
             Fill(R(box.xMax - 8, box.yMax - 7, 3, 3), Edge);
         }
 
+        int ActiveColumn()
+        {
+            if (lastColumn >= 0 && lastColumn < Field.ColumnCount && !Field.ColumnFinished(lastColumn)) return lastColumn;
+            for (int column = 0; column < Field.ColumnCount; column++)
+                if (!Field.ColumnFinished(column)) return column;
+            return 0;
+        }
+
+        int AssignedDistrictSquad()
+        {
+            for (int squad = 0; squad < 3; squad++)
+                if (G.SquadPosting(squad) == G.CurrentDistrict) return squad;
+            return -1;
+        }
+
+        void DrawTransportAction()
+        {
+            if (G.CanDepart)
+                DrawTransportPin(Field.ActiveExit, "出発を指示", G.Depart);
+            else if (G.FleetBlocked)
+                DrawTransportPin(Field.FleetBlockPoint, "本線の通行障害", () => fleetOpen = true);
+            else if (!G.IsDuty && Field.ColumnsActive && !Field.ColumnsComplete)
+            {
+                int column = ActiveColumn();
+                bool liftBlocked = G.CircuitCount > 0 && !Field.ColumnHeld(column) &&
+                    Field.ColumnRoute(column) == 0 && !Field.ColumnRouteClear(column);
+                if (liftBlocked)
+                    DrawTransportPin(Field.ColumnDestination(column), "排水・昇降機を確認", () => fieldPanel = true);
+                else
+                    DrawTransportPin(Field.ColumnPosition(column), "避難隊列", () => OpenColumn(column));
+            }
+            else if (!G.IsDuty && G.FieldOutcome(G.CurrentDistrict) == 0 && AssignedDistrictSquad() < 0)
+                DrawTransportPin(Field.DistrictPosition(G.CurrentDistrict),
+                    G.FieldDistrict(G.CurrentDistrict) + "に班を派遣", OpenDispatch);
+            else if (!G.IsDuty && Field.WingActive && !Field.WingComplete && G.CurrentDistrict == G.SectorCount - 1)
+                DrawTransportPin(Field.WingPosition(0), "館内の救助を指揮", () => OpenWing());
+        }
+
+        void DrawTransportPin(Vector3 world, string label, System.Action activate)
+        {
+            Vector2 point = QuestScreen(world + Vector3.up * 1.45f);
+            float width = Mathf.Min(302, Mathf.Max(136, label.Length * (G.LargeText ? 19 : 17) + 24));
+            Rect box = QuestBox(point, width, G.TouchUI ? 58 : 45);
+            Vector2 destination = QuestVisiblePoint(point);
+            Vector2 end = new Vector2(Mathf.Clamp(destination.x, box.xMin + 8, box.xMax - 8),
+                destination.y < box.center.y ? box.y : box.yMax);
+            DrawMarketLine(end, destination, Amber, false);
+            Outline(R(destination.x - 8, destination.y - 8, 16, 16), Amber, 3);
+            if (Button(box, label, primary: true)) Submit(activate);
+        }
+
         void DrawCommand()
         {
-            DrawFieldAccess(DrawBoard());
-            if(G.PickingLamp)
-                Text(R(w*.40f,h*.64f,w*.2f,33),"設置する場所を選択",18,Amber,true,TextAnchor.MiddleCenter);
-            float rosterWidth = Mathf.Min(w * .32f, G.TouchUI ? 340 : 326);
-            float fieldWidth = Mathf.Min(w * .35f, G.TouchUI ? 376 : 346);
-            Rect roster = R(14, h - 224, rosterWidth, 210);
-            Rect orders = R(w - fieldWidth - 14, h - 242, fieldWidth, 228);
-
-            if (!G.TouchUI || !rosterFolded) DrawRoster(roster);
-            if (!G.TouchUI || !ordersFolded) DrawOrders(orders);
-            if (G.TouchUI)
+            DrawBoard();
+            CommandPanel active = G.EditingWaypoints ? CommandPanel.Orders : commandPanel;
+            if (active == CommandPanel.None && !G.PickingLamp)
             {
-                if (rosterFolded)
-                {
-                    if (Button(R(roster.x, h - 74, roster.width, 60), $"名簿　{G.SquadName(G.SelectedSquad)}", dark: true))
-                        rosterFolded = false;
-                }
-                else if (Button(R(roster.xMax + 5, roster.y, 60, 56), "畳む", dark: true))
-                    rosterFolded = true;
+                DrawQuestMap();
+                if (!ChapterTask) DrawTransportAction();
+            }
+            if (G.PickingLamp)
+                Text(R(14, BoardHeight + 20, w - 28, 34), "設置する場所を選択", 19, Amber, true, TextAnchor.MiddleCenter);
 
-                if (ordersFolded)
-                {
-                    if (Button(R(orders.x, h - 74, orders.width, 60), "班への命令", dark: true))
-                        ordersFolded = false;
-                }
-                else if (Button(R(orders.x - 65, orders.y, 60, 56), "畳む", dark: true))
-                    ordersFolded = true;
+            float buttonHeight = G.TouchUI ? 59 : 46;
+            float bottom = h - 14 - buttonHeight;
+            float rosterWidth = Mathf.Min(w * .45f, 356);
+            float ordersWidth = Mathf.Min(w * .45f, 376);
+            if (active == CommandPanel.Roster)
+                DrawRoster(R(14, bottom - 220, rosterWidth, 210));
+            else if (active == CommandPanel.Orders)
+                DrawOrders(R(w - ordersWidth - 14, bottom - 238, ordersWidth, 228));
+            else if (active == CommandPanel.Radio)
+            {
+                float width = Mathf.Min(w - 28, 520);
+                DrawRadio((w - width) / 2, bottom - 10, width, "", G.Radio, true, BoardHeight + 20);
             }
 
-            DrawCommandRadio(roster, orders);
-
+            if (Button(R(14, bottom, 168, buttonHeight), "名簿　" + G.SquadName(G.SelectedSquad),
+                selected: active == CommandPanel.Roster, dark: true))
+                SetCommandPanel(CommandPanel.Roster);
+            if (Button(R((w - 92) / 2, bottom, 92, buttonHeight), "無線",
+                selected: active == CommandPanel.Radio, dark: true))
+                SetCommandPanel(CommandPanel.Radio);
+            if (Button(R(w - 158, bottom, 144, buttonHeight), "班への命令",
+                selected: active == CommandPanel.Orders, dark: true))
+                SetCommandPanel(CommandPanel.Orders);
             if (GuideVisible)
             {
                 string mapControls = G.TouchUI ? "タップで地点を指示　ドラッグで地図移動" :
@@ -164,24 +273,12 @@ namespace Evac
             }
         }
 
-        void DrawCommandRadio(Rect roster, Rect orders)
+        void SetCommandPanel(CommandPanel panel)
         {
-            float left = roster.xMax + 12;
-            float right = orders.x - 12;
-            float bottom = h - 14;
-            if (G.TouchUI)
-            {
-                bottom = h - 84;
-                left = rosterFolded ? 14 : roster.xMax + 76;
-                right = ordersFolded ? w - 14 : orders.x - 76;
-                if (!rosterFolded && !ordersFolded)
-                {
-                    left = 14;
-                    right = w - 14;
-                    bottom = Mathf.Min(roster.y, orders.y) - 10;
-                }
-            }
-            DrawRadio(left, bottom, right - left, G.Objective, G.Radio, true);
+            var active = G.EditingWaypoints ? CommandPanel.Orders : commandPanel;
+            if (active == CommandPanel.Orders && G.EditingWaypoints) Submit(G.EndWaypointEdit);
+            commandPanel = active == panel ? CommandPanel.None : panel;
+            orderPickerOpen = false;
         }
 
         void DrawRoster(Rect box)
@@ -212,7 +309,7 @@ namespace Evac
             bool ready = selected >= 0 && selected < G.RosterCount &&
                 G.RosterSquad(selected) == G.SelectedSquad && G.RosterAlive(selected);
             string possess = ready ? G.RosterName(selected) + "を直接操作" : "隊員を選ぶ";
-            if (Button(R(x, box.y + 141, width, 57), possess, true, ready))
+            if (Button(R(x, box.y + 141, width, 57), possess, enabled: ready, dark: true))
                 Submit(() => G.Possess(selected));
         }
 
@@ -259,18 +356,12 @@ namespace Evac
             Text(R(x, box.y + 5, width, 25), $"{G.SquadName(G.SelectedSquad)}への指示", 16, Mist, true);
             string activeOrder = G.SquadOrderName(G.SelectedSquad);
             Text(R(x, box.y + 31, width, 25), $"実行中 {activeOrder}    次の命令 {G.CurrentOrder}", BodySize, Amber, true);
-            if (Button(R(x, box.y + 66, half, 48), "任務地点へ", true)) Submit(G.OrderAtObjective);
+            if (Button(R(x, box.y + 66, half, 48), "任務地点へ", dark: true)) Submit(G.OrderAtObjective);
             if (Button(R(x + half + 6, box.y + 66, half, 48), "補給へ", dark: true)) Submit(G.OrderAtSupply);
             if (Button(R(x, box.y + 119, half, 48), "次の命令を選ぶ", dark: true))
                 orderPickerOpen = true;
             if (Button(R(x + half + 6, box.y + 119, half, 48), "設備・資材", dark: true))
                 fieldPanel = true;
-            string departure = G.CanDepart ? "出発を指示" : G.Saved < G.Needed ?
-                $"必要な乗車人数　{G.Saved} / {G.Needed}人" : "出発には作戦目標の達成が必要";
-            if (G.IsDuty && !G.CanDepart && (G.SectorGoal == 0 || G.Saved >= G.Needed))
-                departure = "現場の作業を続ける";
-            if (Button(R(x, box.y + 172, width, 46), departure, G.CanDepart, G.CanDepart, dark: !G.CanDepart))
-                Submit(G.Depart);
         }
 
         void DrawOrderPicker(Rect box, float x, float width, float half)
@@ -347,13 +438,13 @@ namespace Evac
         void DrawDirect()
         {
             DrawBoard();
+            DrawQuestDirect();
             int pushed=G.PushedColumn;
             if(pushed>=0)
             {
                 DrawStretcherControls(pushed);
                 return;
             }
-            if(G.TouchUI && Button(R(w*.39f,h-73,145,59),G.LampName+"　"+G.LampCost,enabled:G.LampAvailable,dark:true))Submit(G.UseLamp);
             if (G.TouchUI)
                 DrawTouchDirect();
             else
@@ -384,7 +475,9 @@ namespace Evac
 
         void DrawDesktopDirect()
         {
-            DrawRadio(14, h - 14, Mathf.Min(w * .41f, 510), G.Objective, G.Radio, false);
+            if (Button(R(14, h - 56, 96, 42), "無線", selected: directRadioOpen, dark: true))
+                directRadioOpen = !directRadioOpen;
+            if (directRadioOpen) DrawRadio(14, h - 63, Mathf.Min(w * .38f, 440), "", G.Radio, true, BoardHeight + 20);
             Rect identity = R(w - 245, h - 149, 231, 135);
             Instrument(identity);
             float x = identity.x + 12, width = identity.width - 24;
@@ -399,9 +492,11 @@ namespace Evac
 
             if (!string.IsNullOrEmpty(G.ContextAction))
             {
-                Rect prompt = R((w - 250) / 2, h * .61f, 250, 42);
+                Rect prompt = R((w - 346) / 2, h * .61f, 346, 45);
                 Panel(prompt, Case, Edge);
-                Text(prompt, $"{Key(ControlAction.FieldAction)}　{G.ContextAction}", 19, Cream, true, TextAnchor.MiddleCenter);
+                string label = $"{Key(ControlAction.FieldAction)}　{G.ContextAction}";
+                Text(prompt, label, FieldLineSize(label, prompt.width - 12, G.LargeText ? 22 : 19, true),
+                    Cream, true, TextAnchor.MiddleCenter);
             }
 
             if (GuideVisible)
@@ -431,12 +526,26 @@ namespace Evac
             Instrument(ammo);
             Text(R(ammo.x+9,ammo.y+3,158,17),"残弾 ／ 予備弾",13,Mist);
             Text(R(ammo.x+9,ammo.y+19,158,31),G.Ammo.ToString("00")+" ／ "+G.Reserve.ToString("00"),22,Amber,true);
-            if(Button(R(14,equipmentY+71,142,48),"班に無線指示",selected:directRadioOpen,dark:true))directRadioOpen=!directRadioOpen;
-            if(directRadioOpen)DrawSquads(R(14,equipmentY+125,264,52),atAim:true);
+            if (Button(R(14, equipmentY + 71, 142, 48), "装備・無線", selected: directRadioOpen, dark: true))
+                directRadioOpen = !directRadioOpen;
+            if (directRadioOpen)
+            {
+                Rect tools = R(14, equipmentY + 125, 278, 125);
+                Instrument(tools);
+                Text(R(tools.x + 8, tools.y + 4, tools.width - 16, 23), "照準先に班を派遣", 16, Mist);
+                DrawSquads(R(tools.x + 7, tools.y + 30, tools.width - 14, 44), atAim: true);
+                if (Button(R(tools.x + 7, tools.y + 79, tools.width - 14, 40), G.LampName + "　" + G.LampCost,
+                    enabled: G.LampAvailable, dark: true))
+                    Submit(G.UseLamp);
+            }
             float actionY = h - 73;
             float actionX = w - 170;
-            if (!string.IsNullOrEmpty(G.ContextAction) && Button(R(actionX - 166, actionY, 158, 59), G.ContextAction, true))
-                Submit(G.TryAction);
+            if (!string.IsNullOrEmpty(G.ContextAction))
+            {
+                float width = Mathf.Clamp(G.ContextAction.Length * (G.LargeText ? 19 : 17) + 16, 158, 304);
+                if (Button(R(actionX - width - 8, actionY, width, 59), G.ContextAction, true))
+                    Submit(G.TryAction);
+            }
             if (Button(R(actionX, actionY, 156, 59), "指揮に戻る", dark: true)) Submit(G.CommandMode);
             FireBlock fireBlock = Field.FieldFireBlock;
             bool canAim = fireBlock is FireBlock.None or FireBlock.Cooldown or FireBlock.Empty or FireBlock.NoReserve;
@@ -448,7 +557,6 @@ namespace Evac
             if (Button(R(w - 104, equipmentY + 63, 90, 51), reloadLabel, enabled: Field.CanReloadField, dark: true))
                 Submit(G.Reload);
             if (GuideVisible) DrawRadio(236, equipmentY + 45, w - 546, "", G.Radio, false, equipmentY);
-            if (G.IsDuty) DrawRadio(246, h - 14, w - 588, G.Objective, "", false);
         }
 
         void DrawAmmo(Rect box)

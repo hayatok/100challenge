@@ -68,14 +68,13 @@ def canopy():
     )):
         x = (i - 1) * .91
         g.packed_crate(x, .74, 1.15, .79, .53, "a27a4b")
+        g.box(x,.904,1.15,.72,.045,.46,"ab996c")
         for row in range(3):
             for column in range(5):
                 px = x + (column - 2) * .131 + rng.uniform(-.015, .015)
                 pz = 1.13 + (row - 1) * .128 + rng.uniform(-.016, .016)
-                h = 1.01 + rng.uniform(-.028, .024)
-                g.fruit(px, h, pz, radius * rng.uniform(.86, 1.14), rng.choice(fruit_colors))
-                if i == 2:
-                    g.fruit(px + .03, h + .045, pz, .049, rng.choice(fruit_colors[1:]))
+                size = radius * rng.uniform(.86, 1.14)
+                g.fruit(px,.926+size*(.66 if i==1 else .79),pz,size,rng.choice(fruit_colors))
         g.box(x, .815, 1.425, .61, .14, .029, "d6c9a7")
         g.letter(name, x, .815, 1.355, 1, .067, INK)
     g.lens(0, 2.376, .12, 1.26, .11)

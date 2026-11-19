@@ -16,40 +16,6 @@ namespace Evac
             CloseFieldOverlay();
             bookOpen=show;
         }
-        string ImmediateLabel(out bool districtDispatch)
-        {
-            districtDispatch = false;
-            if(ChapterTask)return Field.ChapterChoice<0?"現場方針を決める":Field.ChapterTitle;
-            if(G.FleetBlocked)return "本線の通行障害";
-            if(Field.WingActive && !Field.WingComplete)return "館内の救助を指揮";
-            if(!G.IsDuty && !G.HasPosting(G.CurrentDistrict) && G.FieldOutcome(G.CurrentDistrict)==0)
-            {
-                districtDispatch = true;
-                return G.FieldDistrict(G.CurrentDistrict)+"に班を派遣";
-            }
-            return G.CanDepart?"出発を指示":"作戦手帳";
-        }
-        void Immediate()
-        {
-            columnDesk=false;
-            if(ChapterTask){bookOpen=true;return;}
-            if(G.FleetBlocked){fleetOpen=true;return;}
-            if(Field.WingActive && !Field.WingComplete){OpenWing();return;}
-            if(!G.IsDuty && !G.HasPosting(G.CurrentDistrict) && G.FieldOutcome(G.CurrentDistrict)==0){OpenDispatch();return;}
-            if(G.CanDepart)Submit(G.Depart);else bookOpen=true;
-        }
-        void DrawFieldAccess(bool marketTask)
-        {
-            if (G.IsDuty) return;
-            float height = G.TouchUI ? 45 : 36;
-            string next = ImmediateLabel(out bool districtDispatch);
-            bool shiftPriority = marketTask && districtDispatch;
-            float x = w - 204, y = BoardHeight + 18;
-            if (Field.ColumnsActive && !Field.ColumnsComplete && Button(R(x - 140, y, 134, height), "避難隊列",
-                primary: marketTask, dark: true))
-                OpenColumn(lastColumn);
-            if (next != "作戦手帳" && Button(R(x, y, 190, height), next, primary: !shiftPriority, dark: shiftPriority)) Immediate();
-        }
         void DrawBook()
         {
             ModalBackdrop();

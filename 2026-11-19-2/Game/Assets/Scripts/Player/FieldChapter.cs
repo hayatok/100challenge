@@ -15,6 +15,38 @@ namespace Evac
             ShowOrderPin(mapCenter);
             sound.Signal("dispatch");
         }
+        internal int QuestSquad
+        {
+            get
+            {
+                int fallback = -1;
+                foreach (Unit soldier in roster)
+                {
+                    if (!soldier.active) continue;
+                    if (soldier.squad == SelectedSquad) return SelectedSquad;
+                    if (fallback < 0) fallback = soldier.squad;
+                }
+                return fallback;
+            }
+        }
+
+        internal void SendQuestTeam(int branch)
+        {
+            int squad = QuestSquad;
+            if (squad < 0 || (sim.ChapterChoice != branch && !sim.ChooseChapterOption(branch))) return;
+            if (!sim.DispatchChapter(squad)) return;
+            // A lone signal operator needs a partner from another squad if one is available.
+            if (sim.ChapterNeedsSupport && roster.FindAll(u => u.active && u.squad == squad).Count == 1)
+            {
+                Unit partner = roster.Find(u => u.active && u.squad != squad);
+                if (partner != null) sim.DispatchChapter(partner.squad, true);
+            }
+            mapCenter = sim.ChapterPoint();
+            ShowOrderPin(mapCenter);
+            sound.Signal("dispatch");
+            sim.Save();
+        }
+
         public void AssignPostSupply()
         {
             if(!sim.DispatchChapterSupply(SelectedSquad))return;
@@ -27,14 +59,6 @@ namespace Evac
             if(sim.IsDuty)return;
             if(sim.HasChapterPost && sim.ChapterPhase==2 && (sim.Controlled==null || Vector3.Distance(sim.Controlled.pos,sim.ChapterPostPosition)<17))
                 WorldTag(sim.ChapterPostPosition+Vector3.up*1.8f,sim.ChapterPostLabel+"　"+sim.ChapterPostStock+"箱",new Color(.63f,.86f,.8f),false);
-            if(sim.ChapterPhase!=1 && sim.ChapterPhase!=3)return;
-            if(sim.ChapterChoice<0)return;
-            bool helper=sim.ChapterAssigned(SelectedSquad)==1;
-            var goal=sim.ChapterPoint(helper);
-            string label=sim.ChapterInstruction;
-            if(sim.Controlled!=null)
-                label=sim.ChapterOptionTitle(sim.ChapterChoice)+"　"+Mathf.RoundToInt(Vector3.Distance(goal,sim.Controlled.pos))+"m";
-            WorldTag(goal+Vector3.up*1.7f,label,new Color(1,.80f,.49f),true);
         }
     }
 }

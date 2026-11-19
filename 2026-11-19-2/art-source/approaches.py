@@ -72,6 +72,15 @@ class Mesh:
         mesh.from_pydata(self.verts,[],self.faces)
         mesh.update()
         mesh.calc_loop_triangles()
+        # Tag 8 is round display stock. Preserve a continuous highlight across
+        # its authored contours; adjacent shelves keep their own hard normals.
+        rounded = {}
+        for poly in mesh.polygons:
+            if self.styles[poly.index][1] != 8:
+                continue
+            for index in poly.vertices:
+                key = tuple(round(v,5) for v in mesh.vertices[index].co)
+                rounded[key] = rounded.get(key, Vector((0,0,0))) + poly.normal
         with (OUT/(name+".bytes")).open("wb") as stream:
             stream.write(struct.pack("<I",len(mesh.loop_triangles)*3))
             for tri in mesh.loop_triangles:
@@ -79,6 +88,8 @@ class Mesh:
                 n=tri.normal
                 for index in tri.vertices:
                     v=mesh.vertices[index].co
+                    if tag==8:
+                        n=rounded[tuple(round(vv,5) for vv in v)].normalized()
                     uv=(0,0) if uvs is None else uvs[index-start]
                     stream.write(struct.pack("<3f3b3BB2H",v.x,v.z,v.y,round(n.x*126),round(n.z*126),round(n.y*126),
                                              *rgb,tag*16,round(uv[0]*65535),round(uv[1]*65535)))

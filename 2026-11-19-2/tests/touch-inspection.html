@@ -98,6 +98,94 @@
         log.textContent='CAPTURE '+name+' '+frame.width+'×'+frame.height;
         return true;
     }
+    const openingSite=/^開場前の朝市\s+現場を見る$/;
+    const survey=/^店先と停留所の名簿を照合$/;
+    const escort=/^店主を案内役に迎える$/;
+    const mapTools=()=>articles().includes('無線') && articles().includes('班への命令') &&
+        articles().some(label=>/^名簿/.test(label));
+    async function sendOpening(choice=survey) {
+        await button(openingSite);
+        await wait('Two distinct opening responses',()=>articles().some(k=>survey.test(k)) && articles().some(k=>escort.test(k)));
+        await button(choice);
+        return await wait('Assigned visible squad',()=>audit().quest?.phase===1 && audit().quest.agent>=0 && audit().quest);
+    }
+    if(params.has('quest-direct')){
+        const escorts=params.get('quest-direct')==='escort';
+        const choice=escorts?escort:survey;
+        await button(/^名簿/);
+        await button(/を直接操作$/);
+        await wait('On foot before a response is chosen',()=>audit().state.mode==='FPS' && audit().quest?.choice===-1);
+        await button(/^現場を見る$/);
+        await wait('Two personal responses',()=>articles().some(k=>survey.test(k)) && articles().some(k=>escort.test(k)));
+        if(await capture('quest-direct-choices'))return;
+        await button(choice);
+        const firstDestination=escorts?'青果店の吉田':'青果店の店先';
+        await wait('First destination shown to the controlled soldier',()=>audit().quest.manual && audit().quest.agent===-1 &&
+            audit().bearing?.frame>=audit().frame-4 && audit().bearing.destination===firstDestination);
+        if(await capture('quest-direct-bearing'))return;
+
+        // Read the next walkable corner, but send every move through the normal left stick.
+        finger('touchstart',3,.13,.77);
+        await wait('Thumb on stick',()=>audit().state.fingers>0);
+        const deadline=performance.now()+35000;
+        while(!articles().some(k=>choice.test(k)) && performance.now()<deadline){
+            const s=audit().state,q=audit().quest;
+            const dx=q.nextX-s.x,dz=q.nextZ-s.z,length=Math.max(.12,Math.hypot(dx,dz));
+            const yaw=s.yaw*Math.PI/180;
+            const right=(dx*Math.cos(yaw)-dz*Math.sin(yaw))/length;
+            const forward=(dx*Math.sin(yaw)+dz*Math.cos(yaw))/length;
+            finger('touchmove',3,.13+right*.106*frame.height/frame.width,.77-forward*.106);
+            await pause(65);
+        }
+        finger('touchend',3,.13,.77);
+        await wait('Lift steering finger',()=>audit().state.fingers===0);
+        await wait('The response action is reachable on foot',()=>articles().some(k=>choice.test(k)));
+        if(await capture('quest-direct-interact'))return;
+        await button(choice);
+        const nextDestination=escorts?'バス停そばの合流地点':'バス停';
+        await wait('Bearing names the second destination',()=>audit().quest.stage===1 && audit().quest.manual &&
+            audit().bearing?.frame>=audit().frame-4 && audit().bearing.destination===nextDestination);
+        if(await capture('quest-direct-next'))return;
+        await button(/^指揮に戻る$/);
+        await wait('Progress preserved on command map',()=>audit().state.mode==='RTS' && audit().quest.stage===1 && mapTools());
+        log.textContent='PASS '+frame.width+'×'+frame.height+' | Took a response in first person, followed its bearing from '+firstDestination+
+            ' to the local action, saw the bearing switch to '+nextDestination+' and returned to command with progress preserved.';
+        return;
+    }
+    if(params.has('quest-flow')){
+        await wait('Collapsed command toolbar',mapTools);
+        if(articles().some(k=>/任務地点へ|を直接操作$|現場方針を決める|出発を指示/.test(k)))
+            throw new Error('Advanced controls or competing primary actions are open on entry');
+        if(await capture('quest-map'))return;
+        await button(openingSite);
+        await wait('Both site responses',()=>articles().some(k=>survey.test(k)) && articles().some(k=>escort.test(k)));
+        if(await capture('quest-choices'))return;
+        await button(escort);
+        const assigned=await wait('Escort assigned by choice',()=>audit().quest?.phase===1 &&
+            audit().quest.choice===1 && audit().quest.agent>=0 && audit().quest);
+        await wait('Assigned squad walked on the map',()=>{
+            const q=audit().quest;
+            return q.agent===assigned.agent && Math.hypot(q.x-assigned.x,q.z-assigned.z)>2;
+        });
+        if(articles().some(k=>openingSite.test(k) || /を派遣$|任務地点へ|を直接操作$/.test(k)))
+            throw new Error('A second dispatch or possession competes with the marching squad');
+        if(await capture('quest-dispatched'))return;
+        await wait('Transport reached through on-site work',()=>audit().quest.phase===2 && articles().includes('避難隊列'),90000);
+        if(await capture('quest-transport'))return;
+        await button(/^避難隊列$/);
+        await wait('Market route choices',()=>articles().includes('軒下から誘導') && articles().includes('表通りで誘導'));
+        await button(/^横戸で待ち合わせ$/);
+        const direct=await wait('Possessed assigned gate opener',()=>audit().state.mode==='FPS' &&
+            audit().market?.meeting && audit().market.pawn>=0 && audit().market);
+        await wait('Gate destination visible on foot',()=>audit().hud?.mode==='FPS' && /横戸/.test(audit().hud.action));
+        if(await capture('quest-direct'))return;
+        await button(/^指揮に戻る$/);
+        await wait('Same assignment after returning to the folded command map',()=>audit().state.mode==='RTS' &&
+            audit().market.leader===direct.leader && articles().includes('避難隊列') && mapTools());
+        if(await capture('quest-return'))return;
+        log.textContent='PASS '+frame.width+'×'+frame.height+' | Opened the incident pin, chose the escort and watched its squad walk. Continued through the transport pin, took the gate opener and returned to the same assignment.';
+        return;
+    }
     if(params.has('flood-columns')){
         await wait('Flooded rail inspection fixture',()=>articles().includes('避難隊列'),90000);
         if(await capture('flood-map'))return;
@@ -141,7 +229,6 @@
         if(params.has('stretcher')){await button(/^警備班$/);await button(/^担架を引き受ける$/);}
         await button(/^地図で隊列を見る$/);
         await wait('Back on station floor',()=>!articles().includes('閉じる'));
-        for(let i=0;i<2 && articles().includes('畳む');i++)await button(/^畳む$/);
         if(await capture('flood-dispatched'))return;
         log.textContent='PASS '+frame.width+'×'+frame.height+' | Inspector prepared operation 06. Tapped both resident manifests, dispatched PA and bypass crews, led the assisted column, held and resumed it, and called for first aid.';
         return;
@@ -172,9 +259,7 @@
         return;
     }
     if(params.has('market-timing')){
-        await button(/^現場方針を決める$/);
-        await button(/^店先と停留所の名簿を照合$/);
-        await button(/を現場へ$/);
+        await sendOpening();
         await wait('Market escort ready',()=>articles().includes('避難隊列'),90000);
         await button(/^避難隊列$/);await button(/^警備班$/);await button(/^軒下から誘導$/);
         if(articles().includes('地図で隊列を見る'))await button(/^地図で隊列を見る$/);
@@ -209,10 +294,8 @@
             progress.push(mode+' '+current.action+' ['+current.count+']');
             return current;
         }
-        if(navigation)await readTask('RTS',label=>/方針|対応/.test(label));
-        await button(/^現場方針を決める$/);
-        await button(/^店先と停留所の名簿を照合$/);
-        await button(/を現場へ$/);
+        if(navigation)await readTask('RTS',label=>/開場前の朝市/.test(label));
+        await sendOpening();
         await wait('Shopkeepers waiting',()=>articles().includes('避難隊列'),90000);
         await button(/^避難隊列$/);
         await wait('Live market map',()=>articles().includes('店主の名簿'));
@@ -326,9 +409,7 @@
         return;
     }
     if(params.has('column')){
-        await button(/^現場方針を決める$/);
-        await button(/^店先と停留所の名簿を照合$/);
-        await button(/を現場へ$/);
+        await sendOpening();
         await wait('Column reported after the prologue',()=>articles().includes('避難隊列'),90000);
         await button(/^避難隊列$/);
         await wait('Market options',()=>articles().includes('軒下から誘導') && articles().includes('表通りで誘導'));
@@ -337,7 +418,7 @@
             await button(/^地図で隊列を見る$/);await button(/^閉じる$/);
             if(!articles().includes('次の命令を選ぶ'))await button(/^班への命令$/);
             await button(/^次の命令を選ぶ$/);await button(/^警戒$/);
-            for(let i=0;i<2 && articles().includes('畳む');i++)await button(/^畳む$/);
+            await button(/^班への命令$/);
             await pause(800);
             finger('touchstart',7,.5,.5);await wait('Map contact',()=>audit().state.fingers>0);
             finger('touchend',7,.5,.5);await wait('Map release',()=>audit().state.fingers===0);
@@ -375,17 +456,18 @@
         return;
     }
     if(params.has('wing')){
-        await button(/^現場方針を決める$/);
-        await button(/^店先と停留所の名簿を照合$/);
-        await button(/を現場へ$/);
-        await wait('First market incident',()=>articles().includes('青果店前に班を派遣'),90000);
+        await sendOpening();
+        await wait('First market incident cleared',()=>audit().quest.phase===2,90000);
         if(!articles().includes('任務地点へ'))await button(/^班への命令$/);
         await button(/^任務地点へ$/);
         await wait('First rescue order accepted',()=>audit().clicks.includes('任務地点へ'));
-        await button(/^青果店前に班を派遣$/);
+        await button(/^作戦手帳$/);
+        await button(/^地区派遣$/);
         await button(/^警備班を派遣$/);
-        await wait('Wing unlocked in second sector',()=>articles().includes('館内の救助を指揮'),90000);
-        await button(/^館内の救助を指揮$/);
+        await wait('District dispatch closes',()=>mapTools());
+        await wait('Wing unlocked in second sector',()=>audit().quest?.wing,90000);
+        await button(/^作戦手帳$/);
+        await button(/^館内見取図$/);
         await wait('Clinic map',()=>articles().includes('配電室') && articles().includes('地域診療所'));
         if(await capture('floor-plan'))return;
         await button(/^配電室$/);
@@ -428,12 +510,11 @@
         return;
     }
     if(await capture('command'))return;
-    await button(/^現場方針を決める$/);
-    await wait('Two distinct opening responses',()=>articles().includes('店先と停留所の名簿を照合') && articles().includes('店主を案内役に迎える'));
+    await button(openingSite);
+    await wait('Two distinct opening responses',()=>articles().some(k=>survey.test(k)) && articles().some(k=>escort.test(k)));
     if(await capture('book'))return;
-    await button(/^店主を案内役に迎える$/);
-    await button(/を現場へ$/);
-    await wait('Chapter assignment returned to the map',()=>articles().includes('作戦手帳') && !articles().includes('市街捜索'));
+    await button(escort);
+    await wait('Chapter assignment completed on the map',()=>audit().quest?.phase===2 && mapTools(),90000);
     await button(/^作戦手帳$/);await button(/^市街捜索$/);
     await wait('Witness locations',()=>articles().includes('青果の荷受け台') && articles().includes('商店会の案内板'));
     if(await capture('search'))return;
