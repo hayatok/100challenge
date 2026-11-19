@@ -17,6 +17,7 @@ namespace Evac
         SettingsPage settingsPage;
         ControlAction? captureAction;
         string bindingStatus;
+        bool briefingList;
 
         void DrawTitle()
         {
@@ -36,7 +37,7 @@ namespace Evac
             if (G.CanContinue && Button(R(32, 255, width - 64, 52), "つづきから", true))
                 Submit(ContinueMission);
             if (Button(R(32, G.CanContinue ? 313 : 270, width - 64, 52), "作戦を選ぶ", !G.CanContinue))
-                Submit(() => G.Brief(Mathf.Clamp(G.Unlocked, 0, MissionCount - 1)));
+                Submit(() => { briefingList = false; G.Brief(Mathf.Clamp(G.Unlocked, 0, MissionCount - 1)); });
 
             bool hasEnding = G.IsMissionComplete(MissionCount - 1);
             float dutyWidth = hasEnding && !continueFailed ? (width - 72) / 2 : width - 64;
@@ -70,24 +71,28 @@ namespace Evac
         void DrawBriefing()
         {
             Photo(desk, new Color(0, 0, 0, .35f));
-            float leftWidth = Mathf.Clamp(w * .34f, 290, 436);
-            float paperX = w * .49f;
-            Rect paper = R(paperX, 29, w - paperX - 24, h - 56);
-            Panel(R(24, 29, leftWidth, 442), Case, Edge);
-            Text(R(38, 36, leftWidth - 28, 41), "作戦一覧", 24, Cream, true);
-
-            for (int index = 0; index < MissionCount; index++)
+            float leftWidth = Mathf.Min(w * .48f, 548);
+            Rect chart = R(24, 29, leftWidth, h - 56);
+            Rect paper = R(chart.xMax + 12, chart.y, w - chart.xMax - 36, chart.height);
+            Instrument(chart);
+            if (briefingList)
             {
-                int mission = index;
-                float rowY = 84 + index * 40;
-                string status = mission > G.Unlocked ? "未解禁" : G.IsMissionComplete(mission) ? "完了" : "";
-                string label = $"{mission + 1:00} {G.MissionName(mission)}";
-                if (status.Length > 0) label += "  " + status;
-                if (Button(R(38, rowY, leftWidth - 28, 37), label,
-                    enabled: mission <= G.Unlocked, selected: mission == G.MissionIndex, dark: true))
-                    Submit(() => G.Brief(mission));
+                float step = Mathf.Min(56, (chart.height - 114) / MissionCount);
+                Text(R(40, 37, leftWidth - 32, 38), "作戦一覧", 24, Cream, true);
+                for (int index = 0; index < MissionCount; index++)
+                {
+                    int mission = index;
+                    string status = mission > G.Unlocked ? "　未解禁" : G.IsMissionComplete(mission) ? "　完了" : "";
+                    if (Button(R(38, 79 + index * step, leftWidth - 28, step - 3),
+                        $"{mission + 1:00} {G.MissionName(mission)}{status}", enabled: mission <= G.Unlocked,
+                        selected: mission == G.MissionIndex, dark: true))
+                        Submit(() => { G.Brief(mission); briefingList = false; });
+                }
             }
-            if (Button(R(38, 413, 124, 46), "タイトルへ", dark: true)) Submit(G.Home);
+            else DrawBriefingMap(chart);
+            if (Button(R(38, chart.yMax - 58, 126, 46), "タイトルへ", dark: true)) Submit(G.Home);
+            if (Button(R(chart.xMax - 152, chart.yMax - 58, 138, 46),
+                briefingList ? "地図に戻る" : "作戦一覧", dark: true)) briefingList = !briefingList;
 
             Panel(paper, Paper, Ink);
             Fill(R(paper.x, paper.y, paper.width, 7), Rail);
@@ -95,11 +100,13 @@ namespace Evac
             Text(R(paper.x + 20, 77, paper.width - 40, 43), G.MissionName(G.MissionIndex), 33, Ink, true);
             Text(R(paper.x + 20, 122, paper.width - 40, 24), G.DistrictName(G.MissionIndex), 18, Ink);
             Fill(R(paper.x + 20, 154, paper.width - 40, 1), Dim);
-            Paragraph(R(paper.x + 20, 166, paper.width - 40, 112), G.MissionBrief(G.MissionIndex),
-                G.LargeText ? 20 : 17, Ink);
+            Text(R(paper.x + 20, 166, paper.width - 40, 25), "避難目標", 16, Dim, true);
+            Text(R(paper.x + 20, 190, paper.width - 40, 44), $"住民{G.Needed}人を乗車させる", 28, Ink, true);
+            Paragraph(R(paper.x + 20, 239, paper.width - 40, 55), G.MissionBrief(G.MissionIndex),
+                G.LargeText ? 19 : 17, Ink);
             int best = G.Best(G.MissionIndex);
             if (G.IsMissionComplete(G.MissionIndex))
-                Text(R(paper.x + 20, 285, paper.width - 40, 24), $"最多救出　{best}人", 17, Ink, true);
+                Text(R(paper.x + 20, 296, paper.width - 40, 24), $"最多救出　{best}人", 17, Ink, true);
 
             float actionY = paper.yMax - 70;
             Text(R(paper.x + 20, actionY - 75, paper.width - 40, 24), "難度", 15, Dim, true);
@@ -112,6 +119,41 @@ namespace Evac
                     Submit(() => G.SetDifficulty(choice));
             }
             if (Button(R(paper.x + 20, actionY, paper.width - 40, 53), "出動する", true)) Submit(G.Deploy);
+        }
+
+        void DrawBriefingMap(Rect chart)
+        {
+            var plan = RoutePlan.All[G.MissionIndex];
+            var incident = ChapterCatalog.For(G.MissionIndex).forward;
+            Vector3 origin = incident.options[0].source;
+            var map = R(chart.x + 14, chart.y + 50, chart.width - 28, chart.height - 162);
+            Text(R(map.x, chart.y + 7, map.width, 34), plan.district + "　避難地図", 23, Cream, true);
+            if (!operationMaps) operationMaps = Resources.Load<Texture2D>("UI/OperationMaps");
+            // Fit the dispatch area at the atlas's original map scale.
+            float aspect = map.width / map.height;
+            float spanZ = Mathf.Max(49, Mathf.Abs(origin.z - plan.exit.z) + 26);
+            float spanX = Mathf.Clamp(spanZ * aspect, 52, 86);
+            spanZ = Mathf.Min(186, Mathf.Max(spanZ, spanX / aspect));
+            Vector2 mid = new Vector2(Mathf.Clamp((origin.x + plan.exit.x) * .5f, -43 + spanX / 2, 43 - spanX / 2),
+                Mathf.Clamp((origin.z + plan.exit.z) * .5f, -93 + spanZ / 2, 93 - spanZ / 2));
+            Rect uv = R((G.MissionIndex / 2 + (mid.x - spanX / 2 + 43) / 86) * .25f,
+                (mid.y - spanZ / 2 + 93) / 186, spanX / 344, spanZ / 186);
+            if (operationMaps) GUI.DrawTextureWithTexCoords(map, operationMaps, uv);
+            Outline(map, Edge);
+            Vector2 Plot(Vector3 p) => new Vector2(map.center.x + (p.x - mid.x) * map.width / spanX,
+                map.center.y - (p.z - mid.y) * map.height / spanZ);
+            var call = Plot(origin);
+            var exit = Plot(plan.exit);
+            Rect alert = R(call.x - 13, call.y - 13, 26, 26);
+            Fill(alert, Rail);
+            Outline(alert, Amber, 2);
+            Text(alert, "!", 21, Cream, true, TextAnchor.MiddleCenter);
+            Rect stop = R(exit.x - 9, exit.y - 9, 18, 18);
+            Fill(stop, Case);
+            Outline(stop, Green, 3);
+            Fill(R(map.x, map.yMax + 9, 5, 23), Rail);
+            Text(R(map.x + 12, map.yMax + 5, map.width * .64f, 31), incident.title, 17, Cream, true);
+            Text(R(map.x + map.width * .65f, map.yMax + 5, map.width * .35f, 31), "□ 乗車口", 17, Green, true, TextAnchor.MiddleRight);
         }
 
         void DrawPause()

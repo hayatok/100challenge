@@ -237,9 +237,57 @@ float3 actorPatient(float3 p,float joint,float time)
     return p;
 }
 
+// Settled pose in bind space. After the root has rolled through 90 degrees,
+// the local depth axis is vertical, with the sign set by the impact direction.
+float3 actorResting(float3 rest,float joint,float kind,float activity,float4 landing,float4 floors)
+{
+    float up=landing.x, handed=landing.y;
+    float side=fmod(joint,2)>.5?-1:1;
+    bool leg=(joint>=1 && joint<=4) || joint==11 || joint==12;
+    bool arm=(joint>=5 && joint<=9);
+    float3 p=rest;
+    float thickness=.139;
+    if(leg){
+        float knee=smoothstep(.22,.46,rest.y)*(1-smoothstep(.53,.82,rest.y));
+        float bent=side==handed?1:.18;
+        p=actorRoll(p,side*.101,.87,side*(.12+.19*bent));
+        p=actorRoll(p,side*.23,.49,-side*.56*bent*(1-smoothstep(.42,.56,rest.y)));
+        thickness=lerp(.082,.125,smoothstep(.12,.83,rest.y))+knee*.065*bent;
+        if(joint==11 || joint==12){
+            p=actorYaw(p,side*.16,side*(.33+.23*bent));
+            thickness=up>0?.088:.171;
+        }
+    }else if(arm){
+        float elbow=1-smoothstep(1.105,1.22,rest.y);
+        p=actorRoll(p,side*.234,1.16,side*(side==handed?.68:.25)*elbow);
+        p=actorRoll(p,side*.18,1.41,side*(side==handed?.66:.35));
+        thickness=lerp(.055,.127,smoothstep(.98,1.42,rest.y));
+        p.z-=lerp(.063,0,smoothstep(.96,1.4,rest.y));
+        if(joint==9){
+            p=actorRoll(p,.18,1.10,.31);
+            thickness=.075;
+        }
+    }else if(joint==13){
+        p=actorYaw(p,0,handed*(up>0?.39:.86)*smoothstep(1.48,1.58,p.y));
+        p.z-=(kind==2?.189:.015)*smoothstep(1.47,1.61,p.y);
+        thickness=up>0?.104:.139;
+    }else{
+        if(joint==10 && activity!=3)return float3(0,.98,up*.12);
+        p.z-=(kind==2?.114:0)*smoothstep(1.10,1.47,p.y);
+        thickness=lerp(.132,.151,smoothstep(.97,1.32,p.y))-(kind==2?.014:0);
+    }
+    float along=clamp(p.y/.60,0,3);
+    float ground=along<1?lerp(floors.x,floors.y,along):
+                 along<2?lerp(floors.y,floors.z,along-1):lerp(floors.z,floors.w,smoothstep(1.39,1.68,p.y));
+    // Cloth, boots and packs compress only where they contact the support.
+    p.z=up*(ground+max(.003,up*p.z+thickness));
+    return p;
+}
+
 float3 actorMotion(float3 p,float joint,float4 a,float4 f,float4 left,float4 right,float4 aid)
 {
     if(f.y==5)return actorPatient(p,joint,a.z);
+    if(f.w>=1)return actorResting(p,joint,f.x,f.y,left,right);
     // Market poses share the companion slot but never enter the support solve.
     bool market=aid.w>1.5;
     float3 cast=market?aid.xyz:0;
@@ -275,6 +323,7 @@ float3 actorMotion(float3 p,float joint,float4 a,float4 f,float4 left,float4 rig
     float settle=smoothstep(.65,1,fall);
     float hit=saturate(a.w)*live;
     float breath=sin(a.x)*(.005+.007*run)*live;
+    float staggerStep=f.x==2?sin(a.x+.75)*moving:0;
     float usingRifle=f.y==0 || f.y==4?1:0;
     float aim=usingRifle*(f.y==4?saturate(.35+.65*a.z):a.z*.67);
     float escort=f.y==1?1:0;
@@ -285,9 +334,11 @@ float3 actorMotion(float3 p,float joint,float4 a,float4 f,float4 left,float4 rig
     bool arm=(joint>=5 && joint<=8) || equipment;
     float lean=f.x==2?.20:f.x==1?.044:.054;
     lean+=working*.22+escort*.11+cargo*.075+limp*.056;
-    float torso=lean+wind*.21-hit*.25+run*moving*.13+tuck*.16+breath;
+    float torso=staggerStep*.085+lean+wind*.21-hit*.25+run*moving*.13+tuck*.16+breath;
     torso+=coil*-.41+sprint*.40+recover*.27-rebound*.58+abs(thread)*.08+wait*.075;
     float drift=(f.x==2?.025:-.015)*(1-moving)*live;
+    // The upper body counters the loaded hip while the stance foot stays planted.
+    float weightShift=body.y*(f.x==2?-2.5:f.x==1?-1.1:-1.65)+staggerStep*.054;
     float assistRoll=f.x==3?.14*escort:0;
     assistRoll=lerp(assistRoll,-sign(aid.w)*(f.x==3?.17:.076),abs(aid.w)*live);
     assistRoll+=thread*.12+recover*.23-rebound*.31;
@@ -351,7 +402,7 @@ float3 actorMotion(float3 p,float joint,float4 a,float4 f,float4 left,float4 rig
             }
         }else if(f.x==2){
             float reach=saturate(wind*(side<0?1.22:1));
-            upper=upper*.71+(side<0?-.44:-.26)-reach*.63-hit*.25;
+            upper=upper*.71+(side<0?-.54:-.13)-reach*.63-hit*.25+staggerStep*side*.24;
             elbow=(side<0?-.29:-.45)-reach*.35;
             yaw=-side*(.13+reach*.14);
             roll=side*(.09+hit*.17);
@@ -429,13 +480,15 @@ float3 actorMotion(float3 p,float joint,float4 a,float4 f,float4 left,float4 rig
         }
         p=actorPitch(p,.87,0,torso*upper);
         p=actorYaw(p,0,(body.z+turn)*spine+hit*.16*upper);
-        p=actorRoll(p,0,.87,(drift+assistRoll)*upper);
+        p=actorRoll(p,0,.87,(drift+assistRoll+weightShift)*upper);
         p.x+=f.x==2?.030*spine:0;
         p.y+=breath*spine;
+        if(joint==13)p=actorYaw(p,0,(-body.z*.55+staggerStep*.12)*head);
     }
     p.y+=body.x;
     // Pelvis shift tapers to zero at the sole on the stance leg.
     p.x+=body.y*(leg?smoothstep(.12,.86,p.y):1);
+    if(fall>.28)p=lerp(p,actorResting(rest,joint,f.x,f.y,left,right),smoothstep(.28,1,fall));
     return p;
 }
 

@@ -257,8 +257,12 @@ def make(kind,var,detail,head,hand):
         jaw_width=([1.07,.97,1.02,.92] if not ill else [.92,.86,1.12,.94])[var]
         mouth=max(0,1-abs(y-6.72)/.31)*max(0,1-abs(x)/.52)
         neck=max(0,min(1,(6.24-y)/.46))
-        return V((x*.104*(1+(jaw_width-1)*jaw),
-                  1.50+(y-5.78)*.103-mouth*(.007 if ill else 0)+asym*jaw-neck*.027,
+        cheek=math.exp(-((y-7.02)/.25)**2)*min(1,abs(x)/.49)
+        temple=math.exp(-((y-7.42)/.35)**2)*min(1,abs(x)/.59)
+        cheek_width=(-.12 if ill else .04 if soldier else .015)*cheek
+        chin=mouth*(.012 if ill and var!=2 else .002)
+        return V((x*.104*(1+(jaw_width-1)*jaw+cheek_width+(.034 if soldier else -.025)*temple),
+                  1.50+(y-5.78)*.103-chin+asym*jaw-neck*.027,
                   (z-.38)*.105+(.027 if ill else .006)+brow*.004))
     hverts=[headcoord(p) for p in head[0]]
     def head_uv(p,tri):
@@ -299,6 +303,10 @@ def make(kind,var,detail,head,hand):
             front=math.sin(a)
             edge=-.34+.64*front+.25*max(0,front)**2+.05*math.sin(3*a+var)
             edge-=.22*math.exp(-((front-.26)/.14)**2)
+            if ill:
+                edge+=.16*max(0,front)*abs(math.cos(a))-.10*math.cos(a+var)
+            elif not soldier:
+                edge-=.12*math.cos(a-.42)*max(0,front)
             elevation=edge+(1.569-edge)*t
             ray=V((math.cos(a)*math.cos(elevation),math.sin(elevation),front*math.cos(elevation)))
             hit,normal,_,_=skull.ray_cast(origin,ray)
@@ -329,6 +337,43 @@ def make(kind,var,detail,head,hand):
            (1.335,.203,.145,-.01),(1.402,.212,.124,-.012),(1.449,.16,.096,-.007),
            (1.49,.081,.073,.001)]
     g.loft([(0,y,z,w*width,d) for y,w,d,z in torso],coat,count=20,ripple=.035)
+    # Garment fronts follow the actual chest sections, including their waist taper.
+    def cloth_front(x,y,stand=0):
+        j=next((k for k in range(len(torso)-1) if torso[k+1][0]>=y),len(torso)-2)
+        y0,w0,d0,z0=torso[j]; y1,w1,d1,z1=torso[j+1]
+        t=max(0,min(1,(y-y0)/(y1-y0)))
+        w=(w0+(w1-w0)*t)*width
+        return (x,y,z0+(z1-z0)*t+(d0+(d1-d0)*t)*math.sqrt(max(0,1-(x/w)**2))+stand)
+    if ill:
+        # A worn worker's jacket hangs open over an undershirt. Unequal lapels,
+        # a lower left hem and exposed lining read even when the cast is backlit.
+        lining=["8d8175","aaa395","8d8172","80929a"][var]
+        shirt=[(-.102,1.419),(-.057,1.457),(.065,1.452),(.109,1.409),
+               (.074,1.287),(.044,1.161),(.028,1.049),(-.036,1.056),(-.062,1.228)]
+        g.surface([cloth_front(x,y,.011) for x,y in shirt],[tuple(range(len(shirt)))],lining)
+        for sign in (-1,1):
+            rows=[(hem+(.042 if sign>0 else -.049),.036,.194),(1.047,.036,.168),
+                  (1.195,.052,.160),(1.303,.074,.175),(1.409,.104,.172),(1.454,.060,.104)]
+            points=[]
+            for y,inner,outer in rows:
+                for u in (0,.45,1):
+                    x=sign*(inner+(outer-inner)*u)
+                    point=cloth_front(x,y,.009+.014*(1-u))
+                    points.append(point)
+            g.surface(points,[(i,i+1,i+4,i+3) for i in range(15) if i%3!=2],coat)
+            lapel=[(.059,1.459),(.142,1.409),(.112,1.351),(.125,1.336),(.052,1.202)]
+            g.surface([cloth_front(sign*x,y,.029) for x,y in lapel],[(0,1,2,3,4)],trim)
+        # Rolled, frayed hem on the trailing side creates a broken rather than tubular outline.
+        sgn=1 if var%2 else -1
+        g.surface([(sgn*.058,hem+.044,.151),(sgn*.181,hem+.031,.105),
+                   (sgn*.199,hem-.073,.105),(sgn*.155,hem-.045,.135),
+                   (sgn*.129,hem-.115,.145),(sgn*.099,hem-.058,.153)],
+                  [(0,1,2,3),(0,3,4,5)],coat)
+    if not ill and not soldier and not florist and var==0:
+        g.loft([(0,1.418,.006,.139,.106),(0,1.469,.008,.117,.099),
+                (0,1.513,.006,.079,.077)],"697a73",count=16,ripple=.07)
+        g.ribbon([(-.059,1.474,.099),(-.075,1.402,.129),(-.076,1.309,.155),
+                  (-.099,1.226,.133)],.028,"66766e")
     neckline="574a40" if var==2 and not soldier else coat
     g.loft([(0,1.444,-.005,.107,.091),(0,1.470,0,.086,.078),
             (0,1.489,.001,.075,.067),(0,1.501,.002,.074,.065)],
@@ -406,6 +451,13 @@ def make(kind,var,detail,head,hand):
                 g.bead((wrist+s*.032,cuff+.026,.086),(.008,.006,.004),
                        "a6a28c" if florist else "74675a",arm)
         if soldier:
+            # Shoulder panels sit on the articulated sleeve and bridge onto the vest.
+            g.loft([(shoulder+s*.025,1.319,-.011,.069,.078),
+                    (shoulder+s*.023,1.339,-.011,.081,.087),
+                    (shoulder+s*.012,1.397,-.012,.083,.082),
+                    (shoulder-s*.018,1.438,-.007,.064,.068),
+                    (shoulder-s*.045,1.453,-.006,.039,.044)],"62705d",arm,count=16)
+            g.pocket(s*.194,1.353,.063,.031,.021,.012,["aa7855","76a09a","cbad63"][var],trim,arm)
             g.pocket(s*.098,1.183,.132,.070,.070,.039,"525e4d","626d56")
             g.bead((s*.181,.76,.006),(.045,.095,.080),"4a534c",thigh)
             g.bead((knee,.479,.065),(.058,.056,.023),"525b51",thigh)
@@ -418,6 +470,17 @@ def make(kind,var,detail,head,hand):
                        (s*.027,1.439,.095)],[(0,1,2,3)],trim)
             g.pocket(s*.098,1.309,.122,.041,.042,.012,coat,trim)
     if soldier:
+        # Shallow front brim, raised brow mount and fabric rear skirt give the
+        # helmet distinct front, side and back profiles rather than one round ring.
+        rim=[(-.125,1.708,.011),(-.106,1.710,.081),(-.067,1.717,.142),
+             (0,1.718,.153),(.067,1.717,.142),(.106,1.710,.081),(.125,1.708,.011)]
+        g.surface(rim+[(x*.94,y+.012,z-.018) for x,y,z in rim],
+                  [(i,i+1,i+8,i+7) for i in range(6)],"69715a",13)
+        for side in (-1,1):
+            g.loft([(side*.103,1.594,-.032,.019,.041),
+                    (side*.113,1.616,-.029,.025,.049),(side*.119,1.666,-.035,.026,.052),
+                    (side*.109,1.704,-.039,.021,.046)],"444c40",13,count=12)
+        g.pocket(0,1.735,.128,.029,.021,.012,"414b41","777e67",13)
         g.loft([(0,1.03,-.003,.181,.148),(0,1.12,-.006,.201,.161),
                 (0,1.33,-.003,.218,.156),(0,1.402,0,.165,.137)],"49564c",count=16)
         g.loft([(0,1.691,-.008,.123,.122),(0,1.711,-.008,.138,.141),
@@ -462,7 +525,7 @@ def make(kind,var,detail,head,hand):
     else:
         for y in (1.115,1.185,1.255,1.325):
             g.bead((.005,y,.130),(.008,.008,.006),"584e46")
-    if not soldier:
+    if not soldier and not ill:
         seam=[(0,y,z+d*1.045) for y,w,d,z in torso]
         verts=[(x+dx,y,z) for x,y,z in seam for dx in (-.004,.004)]
         g.surface(verts,[(j,j+1,j+3,j+2) for j in range(0,len(verts)-2,2)],trim)
@@ -498,9 +561,16 @@ def make(kind,var,detail,head,hand):
             p.x*=1.08
             p.y=1.49+(height-1.49)*1.055
         if ill:
+            # Scapulae protract around the ribcage. One shoulder hangs lower
+            # than the other, carrying its sleeve, hand and jacket panel with it.
+            shoulder_band=math.exp(-((height-1.38)/.19)**2)
+            handed=1 if var in (0,2) else -1
+            side=max(-1,min(1,p.x/.155))*handed
+            p.y+=shoulder_band*(.016-.039*side)
+            p.z+=shoulder_band*(.027+.028*side)
             lean=max(0,height-1.08)
-            p.z+=lean*.19
-            p.x+=lean*(.10 if var%2 else -.09)
+            p.z+=lean*(.29 if var!=2 else .24)
+            p.x+=lean*(.12 if var%2 else -.15)
             p.y-=lean*.065
     return g
 

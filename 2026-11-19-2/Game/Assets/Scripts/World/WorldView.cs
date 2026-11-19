@@ -28,7 +28,9 @@ namespace Evac
             public float phase, health, impact, stride, action, fall;
             public Vector3 fallDirection, contactRoot;
             public ActorGait.Foot left, right;
-            public bool tracking;
+            public bool tracking, hasLanding;
+            public Vector4 floorProfile;
+            public float landingHeight, shadowHeight;
             public MarketCastPose.Transition market;
         }
 
@@ -65,6 +67,8 @@ namespace Evac
         bool alarmOn;
         int requestType, displayedPower = -1, displayedPassengers = -1;
         readonly List<GameObject> passengers = new List<GameObject>();
+        // Bench centers in art-source/city_bus.py, offset toward the front of each seat back.
+        static readonly float[] busPassengerRows = { -1.00f, .20f, 1.40f, 2.60f, 3.69f };
         Vector3 constructionSpot;
 
         public void Build(int missionIndex)
@@ -174,6 +178,7 @@ namespace Evac
             BuildLandmarks(route);
             BuildRoomWing(region);
             BuildRefuges(route);
+            IndexActorFloor();
         }
 
         GameObject Place(string asset, Vector3 position)
@@ -248,24 +253,30 @@ namespace Evac
                 flood.SetActive(level > .025f);
                 flood.transform.localScale = new Vector3(1.4f + level*4.1f,1,1.5f + level*5.8f);
             }
-            int seats = region == 2 ? 64 : 20;
+            int seats = region == 2 ? 64 : busPassengerRows.Length * 4;
             int count = Mathf.Clamp(boarded, 0, seats);
             if (count == displayedPassengers) return;
             displayedPassengers = count;
             while (passengers.Count < count)
             {
                 int n = passengers.Count;
-                bool train = region == 2;
-                int windows = train ? 8 : 5;
-                int slot = (n / 2) % windows;
-                int car = train ? (n / (windows * 2)) : 0;
                 float side = n % 2 == 0 ? -1 : 1;
-                float length = train ? 13 : 8.7f;
-                float z = -length*.5f + .88f + slot*1.52f + car*13.5f;
-                if (!train) z += n >= 10 ? .29f : -.24f;
                 var rider = MakeObject("Evacuee", GetMesh("passenger"), transport.transform);
-                rider.transform.localPosition = new Vector3(side*1.503f,1.77f,z);
-                rider.transform.localScale = new Vector3(.19f,1,1);
+                if (region == 2)
+                {
+                    int slot = n / 2 % 8;
+                    int car = n / 16;
+                    float z = -6.5f + .88f + slot*1.52f + car*13.5f;
+                    rider.transform.localPosition = new Vector3(side*1.503f,1.77f,z);
+                    rider.transform.localScale = new Vector3(.19f,1,1);
+                }
+                else
+                {
+                    // Alternate sides, then fill the second seat on each bench.
+                    float seatX = n % 4 < 2 ? 1.15f : .76f;
+                    rider.transform.localPosition = new Vector3(side*seatX,1.30f,busPassengerRows[n/4]);
+                    rider.transform.localScale = new Vector3(.9f,1,1);
+                }
                 passengers.Add(rider);
             }
             for (int i = 0; i < passengers.Count; i++)
@@ -302,7 +313,7 @@ namespace Evac
                 if (m.fallDirection.sqrMagnitude<.01f) m.fallDirection = Quaternion.Euler(0,yaw,0)*Vector3.back;
                 m.fall = Mathf.MoveTowards(m.fall,1,dt/.57f);
             }
-            else m.fall = 0;
+            else {m.fall=0;m.hasLanding=false;}
             m.health = hp01;
             m.stride = Mathf.MoveTowards(m.stride, Mathf.Clamp01(speed / 3.6f), dt * 6);
             m.action = kind == 0 && activity == 4 ? 1 :
@@ -313,7 +324,7 @@ namespace Evac
                 float stepLength=Mathf.Lerp(.98f,1.95f,Mathf.SmoothStep(0,1,Mathf.InverseLerp(.58f,.96f,m.stride)));
                 float angularSpeed=2*Mathf.PI*Mathf.Max(0,speed)/stepLength;
                 if(far)angularSpeed=Mathf.Max(.8f,angularSpeed);
-                else if(speed<.105f)angularSpeed=0;
+                else if(speed<.105f)angularSpeed=1.12f;
                 m.phase = Mathf.Repeat(m.phase + dt*angularSpeed, Mathf.PI*2);
             }
             Vector4 marketPose=market.Blend(kind,dt,ref m.market);
@@ -345,6 +356,9 @@ namespace Evac
             else if (kind == 1 && variant == 1) { girth *= .89f; stature *= .96f; }
             var rotation = Quaternion.Euler(0, yaw, 0);
             bool onStretcher=activity==5;
+            float lift=position.y;
+            float surfaceHeight=onStretcher?0:m.hasLanding?m.landingHeight:ActorFloor(position);
+            position.y+=surfaceHeight;
             if(onStretcher)
             {
                 position+=Vector3.up*(.76f+.146f*girth)+rotation*Vector3.forward*(.87f*stature+.052f);
@@ -353,16 +367,20 @@ namespace Evac
             if (hp01 <= 0)
             {
                 float angle=FallAngle(m.fall);
-                position.y += .18f*Mathf.Sin(angle*Mathf.Deg2Rad);
+                float settleFacing=Mathf.SmoothStep(0,1,Mathf.InverseLerp(.16f,.84f,m.fall));
+                float faceUp=Vector3.Dot(rotation*Vector3.forward,m.fallDirection)<=0?1:-1;
+                rotation=Quaternion.Slerp(rotation,Quaternion.LookRotation(-faceUp*m.fallDirection),settleFacing);
+                position.y=Mathf.Lerp(position.y,surfaceHeight,settleFacing);
                 rotation = Quaternion.AngleAxis(angle,Vector3.Cross(Vector3.up,m.fallDirection)) * rotation;
             }
             var scale = new Vector3(girth,stature,girth);
             float limp=kind==2 && activity==1 ? 1 :
                 ActorGait.Smooth(.24f,.66f,1-hp01)*(kind==1?.66f:1);
+            if(kind==1)limp=Mathf.Max(limp,variant==1?.20f:variant==2?.31f:.52f);
             int planted=0;
             Vector4 left=default,right=default,aid=default;
             bool encounterStance=kind==1 && marketPose.w>1.5f && (marketPose.x>0 || marketPose.z>0);
-            bool tracking=!far && hp01>0 && position.y<.09f && dt>0 && !encounterStance;
+            bool tracking=!far && hp01>0 && lift<.09f && dt>0 && !encounterStance;
             if(tracking)
             {
                 if(!m.tracking || (position-m.contactRoot).sqrMagnitude>.8f)
@@ -373,8 +391,33 @@ namespace Evac
                 if(ActorGait.Solve(m.phase,m.stride,limp,0,position,rotation,scale,dt,ref m.left,out left))planted|=1;
                 if(ActorGait.Solve(m.phase,m.stride,limp,1,position,rotation,scale,dt,ref m.right,out right))planted|=2;
             }
+            if(hp01<=0)
+            {
+                // Both foot-plant slots are free once the actor falls.
+                float faceUp=Vector3.Dot(Quaternion.Euler(0,yaw,0)*Vector3.forward,m.fallDirection)<=0?1:-1;
+                left=new Vector4(faceUp,(id&1)==0?1:-1,0,0);
+                if(!m.hasLanding)
+                {
+                    Vector3 span=m.fallDirection*stature;
+                    m.landingHeight=surfaceHeight;
+                    m.shadowHeight=ActorFloor(position+span*.78f);
+                    Vector3 across=Vector3.Cross(Vector3.up,m.fallDirection)*girth;
+                    // The infected neck and skull lean to one side of the jacket.
+                    // Probe under the skull so a narrow centre stripe cannot prop it up.
+                    float headSide=kind==1?(variant%2==0?-.11f:.09f):0;
+                    Vector3 head=position+span*1.70f-across*(faceUp*headSide);
+                    m.floorProfile=(new Vector4(
+                        BodySupport(position+span*.10f,span*.12f,across*.21f),
+                        BodySupport(position+span*.60f,span*.23f,across*.18f),
+                        BodySupport(position+span*1.20f,span*.28f,across*.21f),
+                        ActorFloor(head))
+                        -Vector4.one*surfaceHeight)/girth;
+                    m.hasLanding=true;
+                }
+                right=m.floorProfile;
+            }
             if(!far && hp01>0 && activity==1 && companionPosition.HasValue)
-                aid=SupportAnchor(position,rotation,scale,kind,companionPosition.Value,companionYaw);
+                aid=SupportAnchor(position,rotation,scale,kind,companionPosition.Value+Vector3.up*ActorFloor(companionPosition.Value),companionYaw);
             if(activity==0 || activity==4)aid=marketPose;
             m.contactRoot=position;
             m.tracking=tracking;
@@ -388,7 +431,8 @@ namespace Evac
             if(onStretcher)return;
             float grounded = Mathf.SmoothStep(0,1,Mathf.InverseLerp(.21f,.85f,m.fall));
             Vector3 offset = Vector3.Lerp(new Vector3(.26f,0,.19f),m.fallDirection*(.78f*stature),grounded);
-            Vector3 shadowPosition = new Vector3(position.x+offset.x,.062f,position.z+offset.z);
+            Vector3 shadowPosition = position+offset;
+            shadowPosition.y=(grounded>=1?m.shadowHeight:ActorFloor(shadowPosition))+.014f;
             float directionAngle = Mathf.Atan2(m.fallDirection.x,m.fallDirection.z)*Mathf.Rad2Deg;
             shadows.Add(Matrix4x4.TRS(shadowPosition,Quaternion.Euler(0,Mathf.LerpAngle(54,directionAngle,grounded),0),
                 new Vector3(girth*Mathf.Lerp(.47f,.40f,grounded),1,Mathf.Lerp(.98f,stature,grounded))));
@@ -413,12 +457,12 @@ namespace Evac
         }
 
         static readonly float[] FallTimes = { 0,.18f,.4f,.64f,.79f,.9f,1 };
-        static readonly float[] FallAngles = { 0,7,31,71,89,83,84 };
+        static readonly float[] FallAngles = { 0,9,37,74,88,86,90 };
         static float FallAngle(float t)
         {
             for(int i=1;i<FallTimes.Length;i++)
                 if(t<=FallTimes[i]) return Mathf.SmoothStep(FallAngles[i-1],FallAngles[i],Mathf.InverseLerp(FallTimes[i-1],FallTimes[i],t));
-            return 84;
+            return 90;
         }
 
         void BeginActors()
@@ -627,6 +671,7 @@ namespace Evac
                 result.SetUVs(0,joints,0,vertexCount);
                 result.SetUVs(1,artwork,0,vertexCount);
                 result.triangles = indices;
+                RememberActorFloor(name,vertices);
                 result.UploadMeshData(true);
             }
             Resources.UnloadAsset(data);

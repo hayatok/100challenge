@@ -126,8 +126,7 @@ namespace Evac
     {
         internal void FoldMarketFilmPanels()
         {
-            rosterFolded=true;
-            ordersFolded=true;
+            commandPanel = CommandPanel.None;
         }
     }
 }

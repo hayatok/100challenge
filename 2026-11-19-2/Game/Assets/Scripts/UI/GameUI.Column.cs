@@ -37,7 +37,7 @@ namespace Evac
                         marketLedger=false;marketFrameSize=Vector2.zero;
                         return;
                     }
-                    if(G.TouchUI && G.Mode=="RTS")rosterFolded=ordersFolded=true;
+                    if (G.Mode == "RTS") commandPanel = CommandPanel.None;
                     G.LocateColumn(c);
                     columnDesk=bookOpen=false;
                 });

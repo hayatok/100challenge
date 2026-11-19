@@ -33,13 +33,62 @@ namespace Evac
             Verify(medic.hp>31 && ChapterPostStock<3,"A real supply crate treated a squad at the recorded site");
             Verify(LoadCheckpoint() && ChapterPhase==2 && ChapterPostStock==3,"Checkpoint restores start of evacuation");
 
+            StartMission(1,Difficulty.Story);
+            Verify(ChooseChapterOption(1) && DispatchChapter(0) && DispatchChapter(1,true),
+                "Assign both signal stations");
+            var sourceCrew=soldiers.Find(s=>s.squad==0);
+            var endCrew=soldiers.Find(s=>s.squad==1);
+            var source=ChapterPoint();
+            var end=ChapterPoint(true);
+            foreach(var s in soldiers) s.pos=Vector3.zero;
+            sourceCrew.pos=source+Vector3.right*2.6f;
+            Verify(QuestSignalStationReached(sourceCrew) && !QuestSignalReady &&
+                QuestAgent?.squad==1 && QuestTarget(QuestAgent)==end,
+                "Source is within interaction radius; marker follows the crew heading to the other station");
+            sourceCrew.pos=Vector3.zero;
+            endCrew.pos=end;
+            Verify(!QuestSignalReady && QuestAgent?.squad==0 && QuestTarget(QuestAgent)==source,
+                "If the other station fills first, marker switches back to the source");
+            sourceCrew.pos=source;
+            Verify(QuestSignalReady && UseChapterStation(sourceCrew,.1f) && ChapterPhase==2,
+                "Both physical stations must be occupied for the two-crew relay");
+
             // Select an uncommon outcome: the chief operator is the sole remaining
             // active soldier when the two-station chapter switches to a portable set.
             StartMission(1,Difficulty.Story);
             foreach(var s in soldiers)if(s!=soldiers[0])s.active=false;
             Verify(ChooseChapterOption(1) && DispatchChapter(0),"Emergency single-person relay");
+            sourceCrew=soldiers[0];
+            sourceCrew.pos=ChapterPoint();
+            end=ChapterPoint(true);
+            Verify(QuestAgent==sourceCrew && !QuestSignalReady && !QuestSignalPortable &&
+                UseChapterStation(sourceCrew,.1f) && QuestSignalPortable && !QuestSignalReady &&
+                QuestTarget(QuestAgent)==end,
+                "Portable relay retargets the lone operator to the other station before arrival");
             for(int i=0;i<1600 && ChapterPhase==1;i++)Tick(.1f);
             Verify(ChapterPhase==2 && HasChapterPost,"Single survivor can finish both signal stations");
+
+            StartMission(0,Difficulty.Story);
+            var scout=soldiers[0];
+            Verify(Possess(scout.id) && CanTakeQuestDirectly && ChooseChapterOption(0) && TakeQuestDirectly() &&
+                !CanTakeQuestDirectly && QuestAgent==null && FieldNavigation(scout).point==ChapterPoint(),
+                "Unaffiliated first-person scout chooses and owns the physical survey");
+            scout.pos=ChapterPoint();
+            Verify(Interact() && Chapter.stage==1 && FieldNavigation(scout).point==ChapterPoint(),
+                "Nearby interaction advances the solo scout to the next location");
+            Release();
+            Verify(DispatchChapter(0) && Possess(soldiers[1].id) && !CanTakeQuestDirectly,
+                "A player entering elsewhere cannot claim a response already assigned to a squad");
+
+            StartMission(0,Difficulty.Story);
+            scout=soldiers[0];
+            Verify(Possess(scout.id) && ChooseChapterOption(1) && TakeQuestDirectly() &&
+                FieldNavigation(scout).destination==ChapterResident.name && FieldNavigation(scout).point==ChapterResident.pos,
+                "Escort bearing initially names the shopkeeper and targets the person");
+            scout.pos=ChapterResident.pos;
+            Verify(Interact() && FieldNavigation(scout).destination=="バス停そばの合流地点" &&
+                FieldNavigation(scout).point==ChapterPoint(),
+                "After meeting the shopkeeper, bearing names and targets the rendezvous");
 
             StartMission(3,Difficulty.Story);
             Verify(ChooseChapterOption(0),"Prepare alternate failure");
@@ -61,6 +110,7 @@ namespace Evac
                             "Both early chapter options must resolve: "+objective.title);
                     }
             report.AppendLine("All sixteen market/warehouse chapter responses reached their selected field outcome.");
+            report.AppendLine("Signal markers follow the unoccupied station in either arrival order and retarget the portable relay.");
             report.AppendLine("Chapter phases: named rescue, handoff, occupied hands, suspended carry, physical aid post, lone operator, casualty and phase checkpoint passed.");
         }
     }

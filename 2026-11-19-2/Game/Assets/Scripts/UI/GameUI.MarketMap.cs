@@ -44,6 +44,8 @@ namespace Evac
             y += 24;
             DrawSquads(R(col, y, cw, 44));
             y += 51;
+            Text(R(col, y, cw, 23), Field.ColumnRoute(0) < 0 ? "避難経路を選ぶ" : "避難経路", 17, Cream, true);
+            y += 24;
             for (int route = 0; route < 2; route++)
             {
                 int command = route;
@@ -53,6 +55,7 @@ namespace Evac
                     enabled:Field.CanCommandColumn(0, route, G.SelectedSquad), dark:true))
                     Submit(() => G.ColumnAction(0, command));
                 Color ink = route == 0 ? StreetInk : AwningInk;
+                if (Field.ColumnRoute(0) < 0) Outline(button, ink, 2);
                 Fill(R(col + 7, y + 12, 4, route == 0 ? 20 : 8), ink);
                 if (route == 1) Fill(R(col + 7, y + 24, 4, 8), ink);
                 y += 50;
@@ -71,7 +74,7 @@ namespace Evac
             {
                 if (fresh)
                 {
-                    if (Button(R(col, y, cw, 49), "横戸で待ち合わせ", primary:true,
+                    if (Button(R(col, y, cw, 49), "横戸で待ち合わせ", dark:true,
                         enabled:Field.CanMeetAtMarketGate(G.SelectedSquad)))
                         Submit(() => { CloseFieldOverlay(); G.MeetAtMarketGate(); });
                 }

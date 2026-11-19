@@ -60,13 +60,13 @@ namespace Evac
             if (ChapterField && ChapterChoice >= 0)
             {
                 int posting = ChapterAssigned(u.squad);
-                if (ChapterRunner == u || posting >= 0 && (ChapterRunner == null || ChapterNeedsSupport))
+                bool manual = u == Controlled && Chapter.manual == u.id + 1;
+                if (ChapterRunner == u || (posting >= 0 || manual) &&
+                    (ChapterRunner == null || ChapterNeedsSupport))
                 {
-                    bool support = posting == 1;
-                    if (posting == 0 && ChapterNeedsSupport && !Chapter.portableSignal &&
-                        System.Array.IndexOf(Chapter.posting, 2) < 0)
-                        support = soldiers.Find(member => member.active && member.squad == u.squad) != u;
-                    return (ChapterInstruction, ChapterOptionTitle(ChapterChoice), ChapterPoint(support));
+                    bool support = !manual && posting >= 0 && ChapterSupport(u, posting);
+                    var (action, destination) = ChapterNavigationLabel(support);
+                    return (action, destination, ChapterPoint(support));
                 }
             }
             if (WingActive && !WingComplete)
@@ -142,6 +142,37 @@ namespace Evac
                     if (target != null) return ("住民を迎えに行く", target.name, target.pos);
                     return ("住民を待つ", "通過地点", ActiveGate);
                 default: return ("移動", "指示地点", group.destination);
+            }
+        }
+
+        (string action, string destination) ChapterNavigationLabel(bool support)
+        {
+            if (Chapter.dropped) return ("荷物を受け取る", "荷物の場所");
+            if (ChapterNeedsSupport)
+            {
+                if (Chapter.portableSignal) return ("携帯中継器を運ぶ", "反対側の合図地点");
+                return ("合図を送る", support ? "反対側の合図地点" : "最初の合図地点");
+            }
+            if (Chapter.stage == 0)
+            {
+                if (ChapterResident is Unit resident)
+                    return (ChapterJob.method == ChapterMethod.Triage ? "負傷者に近づく" : "合流する", resident.name);
+                if (ChapterJob.method == ChapterMethod.Survey)
+                    return ("名簿を確認", state.index == 0 && ChapterPhase == 1 ? "青果店の店先" : "最初の記録地点");
+                return ("受け取りに向かう", ChapterJob.method == ChapterMethod.Repair ? "部品の受取場所" : "荷物の受取場所");
+            }
+            switch (ChapterJob.method)
+            {
+                case ChapterMethod.Survey:
+                    return ("記録を照合", state.index == 0 && ChapterPhase == 1 ? "バス停" : "照合先");
+                case ChapterMethod.Escort:
+                    return ("同行する", state.index == 0 && ChapterPhase == 1 ? "バス停そばの合流地点" : "同行先");
+                case ChapterMethod.Triage:
+                    return ("負傷者を搬送", "受け入れ先");
+                case ChapterMethod.Repair:
+                    return (ChapterInstruction, "修理現場");
+                default:
+                    return ("荷物を届ける", "受け渡し場所");
             }
         }
 

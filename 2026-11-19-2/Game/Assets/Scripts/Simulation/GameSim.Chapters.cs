@@ -6,7 +6,7 @@ namespace Evac
     [Serializable]
     internal sealed class ChapterMemory
     {
-        public int phase, pick, stage, resident, actor, runner, earned, passageKits, toolKits;
+        public int phase, pick, stage, resident, actor, runner, manual, earned, passageKits, toolKits;
         public int[] posting=new int[3];
         public bool dropped, portableSignal,arrivalWave;
         public string frontContact,retreatContact;
@@ -26,6 +26,103 @@ namespace Evac
         ChapterBeat CurrentBeat => ChapterPhase==1 ? ChapterCatalog.For(state.index).forward : ChapterCatalog.For(state.index).retreat;
         ChapterOption ChapterJob => ChapterField && ChapterChoice>=0 ? CurrentBeat.options[ChapterChoice] : null;
         public string ChapterTitle => ChapterField ? CurrentBeat.title : "";
+        internal ChapterMemory QuestMemory => Chapter;
+        internal float QuestWork => Chapter?.work ?? 0;
+        internal string QuestDestination
+        {
+            get
+            {
+                if (Chapter.dropped) return "荷物まで";
+                if (Chapter.stage == 0) return "現場まで";
+                switch (ChapterJob.method)
+                {
+                    case ChapterMethod.Escort: return "同行先まで";
+                    case ChapterMethod.Triage: return "搬送先まで";
+                    case ChapterMethod.Survey: return "照合先まで";
+                    case ChapterMethod.Repair: return "修理先まで";
+                    default: return "届け先まで";
+                }
+            }
+        }
+
+        internal Vector3 QuestIncidentPosition => Ground(CurrentBeat.options[0].source);
+        const float SignalReachSquared = 8;
+
+        bool SignalStationFilled(bool support)
+        {
+            var job = ChapterJob;
+            var point = Ground(support ? job.destination : job.source);
+            foreach (Unit soldier in soldiers)
+                if (soldier.active && FlatSq(soldier.pos, point) < SignalReachSquared) return true;
+            return false;
+        }
+
+        internal bool QuestSignalPortable => ChapterNeedsSupport && Chapter.portableSignal;
+        internal bool QuestSignalReady => ChapterNeedsSupport && SignalStationFilled(true) &&
+            (QuestSignalPortable || SignalStationFilled(false));
+        internal bool QuestSignalStationReached(Unit soldier) =>
+            FlatSq(soldier.pos, QuestTarget(soldier)) < SignalReachSquared;
+        internal bool CanTakeQuestDirectly => ChapterField && Controlled != null &&
+            ChapterRunner == null && QuestAgent == null && Chapter.manual != Controlled.id + 1;
+
+        internal bool TakeQuestDirectly()
+        {
+            if (ChapterJob == null || !CanTakeQuestDirectly) return false;
+            if (ChapterNeedsSupport)
+            {
+                var partner = soldiers.Find(u => u.active && u != Controlled);
+                if (partner != null) DispatchChapter(partner.squad, true);
+            }
+            Chapter.manual = Controlled.id + 1;
+            Save();
+            return true;
+        }
+
+        // A staffed signal station should not hide the crew still travelling to the opposite station.
+        internal Unit QuestAgent
+        {
+            get
+            {
+                if (ChapterJob == null) return null;
+                Unit carrier = ChapterRunner;
+                if (carrier != null && carrier.active && ChapterAssigned(carrier.squad) >= 0) return carrier;
+                Unit nearest = null;
+                float best = float.PositiveInfinity;
+                bool preferOpenStation = ChapterNeedsSupport && !QuestSignalPortable;
+                bool sourceFilled = preferOpenStation && SignalStationFilled(false);
+                bool endFilled = preferOpenStation && SignalStationFilled(true);
+                bool bestStationFilled = true;
+                foreach (Unit soldier in soldiers)
+                {
+                    int posting = ChapterAssigned(soldier.squad);
+                    if (!soldier.active || posting < 0) continue;
+                    bool support = ChapterSupport(soldier, posting);
+                    bool stationFilled = support ? endFilled : sourceFilled;
+                    float distance = FlatSq(soldier.pos, ChapterPoint(support));
+                    if ((!stationFilled && bestStationFilled) || (stationFilled == bestStationFilled && distance < best))
+                    {
+                        nearest = soldier;
+                        best = distance;
+                        bestStationFilled = stationFilled;
+                    }
+                }
+                return nearest;
+            }
+        }
+
+        internal Vector3 QuestTarget(Unit soldier)
+        {
+            return ChapterPoint(soldier != null && ChapterSupport(soldier, ChapterAssigned(soldier.squad)));
+        }
+
+        bool ChapterSupport(Unit soldier, int posting)
+        {
+            if (Chapter.manual == soldier.id + 1) return false;
+            if (posting == 1) return true;
+            if (!ChapterNeedsSupport || Chapter.portableSignal || Array.IndexOf(Chapter.posting, 2) >= 0) return false;
+            return soldiers.Find(member => member.active && member.squad == soldier.squad) != soldier;
+        }
+
         public bool ChapterNeedsSupport => ChapterJob!=null && ChapterJob.method==ChapterMethod.Signal;
         public string ChapterIncident => ChapterField ? CurrentBeat.incident : "";
         static readonly string[] Benefits={"医療品3箱","備蓄3箱","協力者2人と医療品1箱","合流点の開放","荷役・修理の支援","車の耐久25と備蓄1箱","予備弾薬72発","排水を支援。地上では通路確保"};
@@ -82,7 +179,8 @@ namespace Evac
 
         void ReturnChapterCarrierToAI(Unit pawn)
         {
-            if(pawn!=null && ChapterField && ChapterRunner==pawn && ChapterAssigned(pawn.squad)<0)
+            if(pawn!=null && ChapterField && ChapterAssigned(pawn.squad)<0 &&
+                (ChapterRunner==pawn || ChapterNeedsSupport && Chapter.manual==pawn.id+1))
                 Chapter.posting[pawn.squad]=1;
         }
 
@@ -147,7 +245,7 @@ namespace Evac
         {
             if(!IsReady || Result!=SimResult.Active || !ChapterField || i<0 || i>=2 || ChapterChoice==i)return false;
             var previous=ChapterResident;if(previous!=null){previous.active=false;previous.moving=false;}
-            Chapter.pick=i+1;Chapter.stage=0;Chapter.runner=0;Chapter.resident=0;Chapter.work=0;Chapter.dropped=false;Chapter.portableSignal=false;
+            Chapter.pick=i+1;Chapter.stage=0;Chapter.runner=0;Chapter.manual=0;Chapter.resident=0;Chapter.work=0;Chapter.dropped=false;Chapter.portableSignal=false;
             Array.Clear(Chapter.posting,0,3);
             var job=ChapterJob;
             if(job.method==ChapterMethod.Triage || job.method==ChapterMethod.Escort)
@@ -196,6 +294,7 @@ namespace Evac
             if(Wing!=null)Wing.jobs[squad]=0;
             ClearWaypoints(squad);
             CancelSearchDispatch(squad);state.squads[squad].districtTask=0;
+            Chapter.manual=0;
             Chapter.posting[squad]=support?2:1;
             SoundNotice(job.title+"へ派遣");return true;
         }
@@ -203,7 +302,7 @@ namespace Evac
         bool AtChapter(Unit u)
         {
             var job=ChapterJob;if(job==null)return false;
-            if(job.method==ChapterMethod.Signal && FlatSq(u.pos,Ground(job.destination))<8)return true;
+            if(job.method==ChapterMethod.Signal && FlatSq(u.pos,Ground(job.destination))<SignalReachSquared)return true;
             return FlatSq(u.pos,ChapterPoint())<8;
         }
 
@@ -217,13 +316,13 @@ namespace Evac
             var job=ChapterJob;if(job==null)return false;
             if(job.method==ChapterMethod.Signal)
             {
-                bool nearSource=FlatSq(u.pos,Ground(job.source))<8;
+                bool nearSource=FlatSq(u.pos,Ground(job.source))<SignalReachSquared;
                 if(nearSource && ActiveChapterCrew()==1){Chapter.portableSignal=true;return true;}
-                bool nearEnd=FlatSq(u.pos,Ground(job.destination))<8;
+                bool nearEnd=FlatSq(u.pos,Ground(job.destination))<SignalReachSquared;
                 if(!nearEnd && !nearSource)return false;
                 Vector3 opposite=Ground(nearEnd?job.source:job.destination);
                 foreach(var other in soldiers)
-                    if(other!=u && other.active && FlatSq(other.pos,opposite)<8){FinishChapterBeat();return true;}
+                    if(other!=u && other.active && FlatSq(other.pos,opposite)<SignalReachSquared){FinishChapterBeat();return true;}
                 if(nearEnd && Chapter.portableSignal){FinishChapterBeat();return true;}
                 return true;
             }
@@ -249,16 +348,7 @@ namespace Evac
         {
             var job=ChapterJob;int posting=ChapterAssigned(u.squad);
             if(job==null || posting<0)return false;
-            bool support=posting==1;
-            if(job.method==ChapterMethod.Signal && !support && !Chapter.portableSignal)
-            {
-                bool secondTeam=false;foreach(int order in Chapter.posting)if(order==2)secondTeam=true;
-                if(!secondTeam)
-                {
-                    var lead=soldiers.Find(s=>s.active && s.squad==u.squad);
-                    support=lead!=u;
-                }
-            }
+            bool support=ChapterSupport(u,posting);
             if(Chapter.runner!=0 && ChapterRunner!=u && job.method!=ChapterMethod.Signal)
                 return false;
             if(!ChapterHandsBusy(u))
@@ -343,7 +433,7 @@ namespace Evac
                 if(next==2)Chapter.frontContact=resident.name;else Chapter.retreatContact=resident.name;
                 resident.active=false;resident.moving=false;
             }
-            Chapter.earned=(int)job.benefit+1;Chapter.resident=0;Chapter.runner=0;Chapter.pick=0;Chapter.phase=next;
+            Chapter.earned=(int)job.benefit+1;Chapter.resident=0;Chapter.runner=0;Chapter.manual=0;Chapter.pick=0;Chapter.phase=next;
             Array.Clear(Chapter.posting,0,3);
             ApplyChapterBenefit(job.benefit);
             if(next==2)
@@ -361,7 +451,7 @@ namespace Evac
         {
             if(ChapterPhase!=2 || Sector!=SectorCount-1 || !IsSectorCleared() || state.exitClock<1 ||
                 (FleetEnabled && (FleetDecisionPending || FleetDelivered<Mission.quota)))return;
-            Chapter.phase=3;Chapter.pick=0;Chapter.runner=0;Chapter.resident=0;Chapter.dropped=false;
+            Chapter.phase=3;Chapter.pick=0;Chapter.runner=0;Chapter.manual=0;Chapter.resident=0;Chapter.dropped=false;
             state.deadline=Elapsed+(Level==Difficulty.Hard?270:360);
             SoundNotice(ChapterTitle+"　"+ChapterIncident);
             EvacStorage.Write(CheckpointSlot,state);Save();

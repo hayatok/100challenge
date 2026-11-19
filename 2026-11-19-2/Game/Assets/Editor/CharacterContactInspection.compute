@@ -1,0 +1,16 @@
+#pragma kernel Measure
+#include "../Resources/World/ActorMotion.cginc"
+StructuredBuffer<float4> bindVertices;
+RWStructuredBuffer<float3> deformed;
+float4 pose, form, leftFoot, rightFoot, aid;
+float4x4 actorToWorld;
+int vertexCount;
+
+[numthreads(64,1,1)]
+void Measure(uint3 id : SV_DispatchThreadID)
+{
+    if(id.x >= (uint)vertexCount)return;
+    float4 v=bindVertices[id.x];
+    float3 p=actorMotion(v.xyz,v.w,pose,form,leftFoot,rightFoot,aid);
+    deformed[id.x]=mul(actorToWorld,float4(p,1)).xyz;
+}

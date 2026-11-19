@@ -45,14 +45,25 @@ SubShader {
      float4 left=UNITY_ACCESS_INSTANCED_PROP(Agents,_PlantLeft);
      float4 right=UNITY_ACCESS_INSTANCED_PROP(Agents,_PlantRight);
      float4 aid=UNITY_ACCESS_INSTANCED_PROP(Agents,_AidPosition);
-     float3 p=deform(v.pos.xyz,v.joint.x,a,f,left,right,aid);
+     float3 p=v.pos.xyz;
+     float3 moved=p;
+     bool animated=f.x>0 && f.x<=4;
+     if(animated){
+        // Reuse the deformation code for the position and the normal sample.
+        // Unrolling duplicates the actor program and delays WebGL shader linking.
+        [loop] for(int sampleIndex=0;sampleIndex<2;sampleIndex++){
+           float3 source=sampleIndex==0?v.pos.xyz:v.pos.xyz+v.normal*.01;
+           float3 deformed=deform(source,v.joint.x,a,f,left,right,aid);
+           if(sampleIndex==0)p=deformed;
+           else moved=deformed;
+        }
+     }
      F o; o.pos=UnityObjectToClipPos(float4(p,1));
      o.world=mul(unity_ObjectToWorld,float4(p,1)).xyz;
      o.normal=float3(0,0,0);
-     if(f.x>0 && f.x<=4){
-        float3 moved=deform(v.pos.xyz+v.normal*.01,v.joint.x,a,f,left,right,aid)-p;
-        o.normal=mul((float3x3)unity_ObjectToWorld,moved);
-     }
+     if(f.x<.5 && v.joint.y>7.5 && v.joint.y<8.5)
+        o.normal=UnityObjectToWorldNormal(v.normal);
+     if(animated)o.normal=mul((float3x3)unity_ObjectToWorld,moved-p);
      o.local=p;o.rest=v.pos.xyz;o.print=float3(v.panel,v.joint.y);o.color=v.col;o.type=float2(f.x,f.z);return o;
  }
  float hash(float2 a){return frac(sin(dot(a,float2(19.13,37.73)))*1257.324);}
@@ -109,11 +120,39 @@ SubShader {
      float sun=saturate(dot(n,normalize(float3(-.48,.88,-.36))));
      float hemi=.60+.13*n.y;
      float3 c=i.color.rgb*(hemi+float3(.53,.47,.35)*sun);
+     bool vehicleEnamel=i.type.x<.5 && i.print.z>4.5 && i.print.z<5.5;
+     bool vehicleRubber=i.type.x<.5 && i.print.z>5.5 && i.print.z<6.5;
      if(i.print.z>11.5 && i.print.z<12.5){
          c=tex2D(_FieldFaces,i.print.xy).rgb*(.68+.32*sun);
      }else if(i.print.z>=9.5 && i.print.z<=11.5){
          float3 art=i.print.z<10.5?tex2D(_ShopFronts,i.print.xy).rgb:tex2D(_DepotFronts,i.print.xy).rgb;
          c=art*(.86+.14*sun);
+         if(i.print.z<10.5 && _WorldDistrict<.5 && abs(i.world.x)>20 && i.world.y<3.13){
+             // Diffuse, indirect light at the back of the recessed arcade cases.
+             float bounce=smoothstep(.24,2.85,i.world.y);
+             c*=lerp(float3(.48,.51,.50),float3(.78,.73,.63),bounce);
+         }
+     }else if(i.type.x<.5 && i.print.z>7.5 && i.print.z<8.5){
+        // Produce skins and coloured bottles catch the broad arcade skylight.
+        float3 reflected=reflect(-view,n);
+        float rim=pow(1-saturate(dot(n,view)),3);
+        float band=pow(saturate(dot(reflected,normalize(float3(-.36,.82,.32)))),18);
+        c=i.color.rgb*(float3(.60,.63,.65)+float3(.44,.38,.29)*sun);
+        c+=float3(.65,.79,.83)*(rim*.085+band*.18);
+     }else if(vehicleEnamel){
+        float3 reflected=reflect(-view,n);
+        float sky=smoothstep(-.26,.39,reflected.y);
+        float grazing=1-saturate(dot(n,view));
+        float fresnel=grazing*grazing*grazing;
+        float band=reflected.y+.04;
+        float horizon=exp2(-21*band*band);
+        float3 environment=lerp(float3(.15,.21,.21),float3(.51,.70,.82),sky);
+        c=i.color.rgb*(float3(.66,.69,.70)+float3(.41,.36,.28)*sun);
+        c=lerp(c,environment,.05+.24*fresnel);
+        c+=float3(.63,.76,.77)*horizon*(.033+.096*fresnel);
+     }else if(vehicleRubber){
+        float facing=saturate(dot(n,view));
+        c=i.color.rgb*(.65+.22*sun)+float3(.14,.18,.18)*(.024+.13*(1-facing)*(1-facing));
      }else if(i.type.x<.5){
         float3 absN=abs(n);float2 uv=absN.y>.7?i.world.xz:(absN.x>absN.z?i.world.zy:i.world.xy);
         bool floorSurface=i.world.y<.17 && absN.y>.74;
@@ -131,7 +170,8 @@ SubShader {
         float surfaceId=floorSurface?(_Station>.5?1:0):metal?2:1;
         float3 sampled=scan(surfaceId,uv*(floorSurface?.49:.56));
         float3 mean=surfaceId==0?float3(.19,.18,.17):surfaceId==2?float3(.45,.44,.43):float3(.69,.66,.61);
-        if(!glass)c*=lerp(1,clamp(sampled/mean,.53,1.55),floorSurface?.65:.55);
+        float proximity=1-smoothstep(4,26,distance(_WorldSpaceCameraPos.xyz,i.world));
+        if(!glass)c*=lerp(1,clamp(sampled/mean,.68,1.35),(floorSurface?.44:.33)*(.46+.54*proximity));
         // Recover the surface gradient from the photographed material in screen space.
         // The projected basis keeps the bump strength stable across UV seams and camera distance.
         float3 dx=ddx(i.world), dy=ddy(i.world);
@@ -139,7 +179,7 @@ SubShader {
         float det=dot(dx,tx);
         float height=dot(sampled,float3(.24,.61,.15));
         float3 grad=(tx*ddx(height)+ty*ddy(height))*sign(det)/max(abs(det),.000001);
-        float3 bumped=normalize(n-grad*(floorSurface?.052:metal?.026:.046));
+        float3 bumped=normalize(n-clamp(grad,-7,7)*(floorSurface?.032:metal?.016:.032)*(.36+.64*proximity));
         float3 key=normalize(float3(-.48,.88,-.36));
         c*=1+(dot(bumped,key)-dot(n,key))*.62;
         float rough=metal?.36:.79;
@@ -174,6 +214,35 @@ SubShader {
         float exponent=lerp(96,5,rough*rough);
         c+=pow(nh,exponent)*(.018+.16*(1-rough))*float3(1,.89,.72);
         if(i.world.y>.08)c*=lerp(.80,1,saturate(i.world.y*.70));
+     }else if(i.type.x>3.5){
+        // Interpolated instance IDs can land fractionally above or below four.
+        // Hand geometry carries explicit finishes; hues remain consistent in every held pose.
+        float finish=i.print.z;
+        float3 orient=abs(cross(ddx(i.rest),ddy(i.rest)));
+        float2 uv=orient.y>max(orient.x,orient.z)?i.rest.xz:orient.x>orient.z?i.rest.zy:i.rest.xy;
+        float3 key=normalize(float3(-.48,.88,-.36));
+        float nh=saturate(dot(n,normalize(key+view)));
+        float rim=pow(1-saturate(dot(n,view)),3);
+        if(finish>1.5 && finish<3.5){
+            float weave=scan(3,uv*2.2).g;
+            float leather=step(2.5,finish);
+            c*=lerp(.96,1.05,saturate((weave-.18)*3));
+            c+=float3(.81,.79,.69)*(rim*.045+pow(nh,lerp(6,16,leather))*lerp(.021,.058,leather));
+        }else if(finish>3.5){
+            float bare=saturate(finish-4);
+            float3 ray=reflect(-view,n);
+            float sky=smoothstep(-.31,.64,ray.y);
+            float strip=abs(dot(ray,normalize(float3(.36,.90,-.24)))-.56);
+            float shoulder=exp2(-strip*strip*lerp(50,340,bare));
+            float brushing=scan(2,uv*float2(1.6,7.4)).g;
+            float grain=saturate((brushing-.21)*2);
+            c*=lerp(.95,1.035,grain);
+            c+=float3(.61,.73,.80)*(rim*(.041+.092*bare)+sky*(.018+.046*bare));
+            c+=float3(.84,.89,.90)*shoulder*(.032+.15*bare)*(.70+.30*grain);
+            c+=float3(1,.92,.77)*pow(nh,lerp(27,62,bare))*(.11+.23*bare);
+        }else{
+            c+=float3(.69,.77,.76)*(rim*.037+pow(nh,10)*.028);
+        }
      }else{
         float3 q=i.rest,orient=abs(cross(ddx(q),ddy(q)));
         float2 tex=orient.y>max(orient.z,orient.x)?q.xz:orient.x>orient.z?q.zy:q.xy;
@@ -181,14 +250,14 @@ SubShader {
         if(i.type.x<4 && i.print.z>5.5 && i.print.z<7.5)
             skin=step(6.5,i.print.z);
         float dark=saturate((.32-i.color.g)*9);
-        float tile=i.type.x==4?(dark>.45?12:6):(skin>.5?14:dark>.65?6:5);
+        float tile=skin>.5?14:dark>.65?6:5;
         #ifdef EVAC_MOBILE
         float3 detail=.5;
         #else
-        float3 detail=study(tile,tex*(i.type.x==4?8.3:4.8));
+        float3 detail=study(tile,tex*4.8);
         #endif
         c*=1+(detail-.5)*.26;
-        float3 cloth=scan(3,tex*(i.type.x==4?2.6:1.4));
+        float3 cloth=scan(3,tex*1.4);
         #ifdef EVAC_MOBILE
         float3 metalStudy=.46;
         #else
@@ -200,7 +269,7 @@ SubShader {
         c+=pow(saturate(dot(reflect(-normalize(float3(-.48,.88,-.36)),n),view)),18)*(.027+dark*.09);
         if(i.type.x<4)c*=.91+.09*saturate(i.local.y);
      }
-     if(_Station>.5 && i.type.x!=4){
+     if(_Station>.5 && i.type.x<3.5){
          float2 p=i.world.xz;
          float under=(1-smoothstep(15,19,abs(p.x)))*(1-smoothstep(38,42,abs(p.y)));
          float track=abs(frac((p.x+13)/7.9+.5)-.5)*7.9;
@@ -256,17 +325,20 @@ SubShader {
          c=c*float3(.45,.51,.59)+sky*float3(.031,.042,.060)+fresnel*float3(.07,.095,.12);
          c+=strip*(.05+grain*.20);
      }
-     if(i.type.x!=4){
+     if(i.type.x<3.5){
          float baked=tex2D(_StreetLight,(i.world.xz+float2(24,40))/float2(48,80)).r;
          float influence=i.type.x==0?saturate((.54-i.world.y)*2.2):.55;
          float insideBake=1-smoothstep(38,40,abs(i.world.z));
          c*=lerp(1,baked,influence*.78*insideBake);
      }
      float warmLamp=saturate((i.color.r-.82)*8)*saturate((i.color.g-.72)*7)*saturate((i.color.r-i.color.b-.12)*9);
-     float2 solarUV=(i.world.xz+float2(.48,.36)*i.world.y/.88)/float2(80,224)+.5;
+     // The building-shadow bake has street-scale texels. Sample the operator's light
+     // as a whole so a single texel boundary cannot slice through a near-camera glove.
+     float3 receiver=i.type.x>3.5?_WorldSpaceCameraPos.xyz-float3(0,.15,0):i.world;
+     float2 solarUV=(receiver.xz+float2(.48,.36)*receiver.y/.88)/float2(80,224)+.5;
      float night=smoothstep(.12,.91,_Evening);
      if(night<.97 && all(solarUV>0) && all(solarUV<1)){
-         float h=i.world.y+.075+.09*(1-abs(n.y));
+         float h=receiver.y+.075+(i.type.x>3.5?0:.09*(1-abs(n.y)));
          float2 stepUV=float2(1.0/896,1.0/1792);
          float lit=sunshine(solarUV+stepUV*float2(-.57,-.24),h);
          lit+=sunshine(solarUV+stepUV*float2(.48,.53),h);
@@ -277,7 +349,7 @@ SubShader {
          lit+=sunshine(solarUV+stepUV*float2(.63,-.67),h);
          lit*=.25;
          #endif
-         float shade=(1-lit)*.85*(1-.50*night)*(1-.65*warmLamp);
+         float shade=(1-lit)*(vehicleEnamel?.48:.85)*(1-.50*night)*(1-.65*warmLamp);
          c*=lerp(float3(1,1,1),float3(.60,.69,.79),shade);
      }
      if(night>.001){
@@ -288,7 +360,7 @@ SubShader {
          float pool=exp2(-spread*.019)*(.39+.61*diffuse)*step(-.13,delta.y);
          float people=step(.5,i.type.x)*(1-step(3.5,i.type.x));
          float3 ambient=lerp(float3(.38,.50,.72),float3(.62,.73,.88),people);
-         if(i.type.x==4)ambient=lerp(ambient,float3(.65,.73,.86),.9);
+         if(i.type.x>3.5)ambient=lerp(ambient,float3(.65,.73,.86),.9);
          float3 tint=_WorldDistrict>1.5&&_WorldDistrict<2.5?float3(.79,.88,.92):float3(1,.79,.53);
          float3 scene=c*ambient + pool*tint*(c*.49+.103);
          bool belowRoof=i.world.y<.19 && n.y>.74;
@@ -322,7 +394,7 @@ SubShader {
         float diffuse=saturate(dot(n,lightVector*rsqrt(max(.02,lens))));
         c+=_FieldSignalTint.rgb*(_FieldSignal.w*reach*reach/(1+.32*lens))*(.16+diffuse*.74);
      }
-     if(i.type.x!=4){
+     if(i.type.x<3.5){
         float fog=smoothstep(28,115,distance(i.world,_WorldSpaceCameraPos))*.52;
         c=lerp(c,lerp(float3(.59,.65,.64),float3(.23,.31,.43),night),fog);
      }

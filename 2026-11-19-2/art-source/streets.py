@@ -8,7 +8,7 @@ from math import sin, cos, pi
 
 SOURCE = Path(__file__).resolve().parent
 sys.path.insert(0,str(SOURCE))
-from characters.viewmodel import glove
+from city_bus import city_bus
 
 OUT = SOURCE.parent / "Game/Assets/Resources/World"
 OUT.mkdir(exist_ok=True, parents=True)
@@ -32,8 +32,11 @@ class Batch:
         mesh.update()
         mesh.calc_loop_triangles()
         smooth={}
-        if name.startswith("hands"):
+        hand_mesh=name.startswith("hands")
+        if hand_mesh or name=="district0":
             for face in mesh.polygons:
+                if not hand_mesh and self.styles[face.index][1]//16!=8:
+                    continue
                 for idx in face.vertices:
                     key=tuple(round(v,4) for v in mesh.vertices[idx].co)
                     smooth.setdefault(key,[]).append(face.normal.copy())
@@ -44,7 +47,7 @@ class Batch:
                 rgb=bytes.fromhex(c)
                 for i in tri.vertices:
                     v=mesh.vertices[i].co
-                    if smooth:
+                    if hand_mesh or b//16==8:
                         nearby=smooth[tuple(round(val,4) for val in v)]
                         n=sum((nn for nn in nearby if nn.dot(tri.normal)>.73),Vector((0,0,0))).normalized()
                     f.write(struct.pack("<3f3b3BB2H",v.x,v.z,v.y,
@@ -75,19 +78,21 @@ def shade(c,f):
 
 def stripes(x,z,along=1):
     for i in range(6):box(x+i*.68-1.7,.031,z,.34,.016,along*2.8,CREAM)
-def wheel(x,y,z):
+def wheel(x,y,z,segments=20,tire=0):
+    hub=5*16 if tire else 0
     for s in (-1,1):
         loops=[]
         for radius,thickness in ((.45,.12),(.48,.085),(.48,0)):
-            loops.append([(x+s*thickness,y+radius*cos(j*pi/10),z+radius*sin(j*pi/10)) for j in range(20)])
+            loops.append([(x+s*thickness,y+radius*cos(j*2*pi/segments),z+radius*sin(j*2*pi/segments)) for j in range(segments)])
         for ring,next_ring in zip(loops,loops[1:]):
-            for j in range(20):g.poly([ring[j],ring[j-1],next_ring[j-1],next_ring[j]],INK)
-        g.poly(loops[0],"313733")
-        g.poly([(x+s*.125,y+.24*cos(j*pi/8),z+.24*sin(j*pi/8)) for j in range(16)],"85908b")
-        g.poly([(x+s*.127,y+.12*cos(j*pi/8),z+.12*sin(j*pi/8)) for j in range(16)],"525b59")
+            for j in range(segments):g.poly([ring[j],ring[j-1],next_ring[j-1],next_ring[j]],INK,tire)
+        g.poly(loops[0],"313733",tire)
+        hub_segments=segments//2 if tire else 16
+        g.poly([(x+s*.125,y+.24*cos(j*2*pi/hub_segments),z+.24*sin(j*2*pi/hub_segments)) for j in range(hub_segments)],"85908b",hub)
+        g.poly([(x+s*.127,y+.12*cos(j*2*pi/hub_segments),z+.12*sin(j*2*pi/hub_segments)) for j in range(hub_segments)],"525b59",hub)
         for j in range(6):
             yy=y+.176*cos(j*pi/3);zz=z+.176*sin(j*pi/3)
-            g.poly([(x+s*.129,yy+.029*cos(k*pi/3),zz+.029*sin(k*pi/3)) for k in range(6)],INK)
+            g.poly([(x+s*.129,yy+.029*cos(k*pi/3),zz+.029*sin(k*pi/3)) for k in range(6)],INK,hub)
 
 def coach_shell(x,z,length,train):
     # Continuous shoulders and an inset roof edge give the body a formed-metal profile.
@@ -114,6 +119,9 @@ def coach_shell(x,z,length,train):
             rod((xx-.05,1.91,z+side*(length/2+.058)),(xx+.32,2.17,z+side*(length/2+.058)),.018,BLACK)
 
 def vehicle(x,z,train=False):
+    if not train:
+        city_bus(g,x,z,box,rod,wheel)
+        return
     length=13 if train else 8.7
     box(x,.68,z,2.64,.54,length-.35,BLACK)
     coach_shell(x,z,length,train)
@@ -187,36 +195,124 @@ def roof_detail(x,h,z):
     box(x,h+.35,z,1.4,.7,2.1,STEEL)
     for j in range(5):box(x,h+.72,z-.72+j*.32,1.05,.028,.075,GRAY)
 
+def diner_counter(face,side,z,kitchen):
+    def item(depth,y,across,thickness,height,width,color):
+        box(face+side*depth,y,z+across,thickness,height,width,color)
+    def turned(depth,across,levels,color,n=18):
+        rings(face+side*depth,z+across,[(y,r,r,0) for y,r in levels],color,b=128,n=n)
+
+    # The front edge, service top and back bench are visible at different depths.
+    item(.35,.57,0,.78,.90,2.27,"785942")
+    item(.34,1.045,0,.96,.065,2.31,"b99671")
+    item(-.145,1.030,0,.022,.075,2.32,"605041")
+    for across in (-.81,0,.81):
+        item(-.052,.60,across,.035,.71,.67,"806249")
+    item(.96,1.15,0,.58,.09,2.23,"96a29a")
+    item(.91,2.09,0,.42,.045,2.19,"75675a")
+    item(.69,2.061,0,.026,.031,2.18,"bfaf96")
+    item(.37,2.80,0,.65,.077,1.84,"52483d")
+    item(.32,2.75,0,.27,.03,1.59,"ffdfaf")
+
+    if kitchen:
+        for across,r in ((-.61,.22),(.47,.145)):
+            turned(.82,across,[(1.20,r*.75),(1.24,r),(1.40+r*.35,r),(1.43+r*.35,r*1.04)],"767f77")
+            turned(.82,across,[(1.43+r*.35,r*1.07),(1.45+r*.35,r),(1.49+r*.35,r*.32)],"b0b7ab")
+            turned(.82,across,[(1.49+r*.35,.048),(1.53+r*.35,.041)],"40382d",10)
+            for direction in (-1,1):
+                item(.82,1.36,across+direction*(r+.035),.08,.032,.095,"413e35")
+        item(.12,1.095,-.53,.35,.04,.52,"a77e50")
+        for i in range(4):
+            turned(.08,.54,[(1.08+i*.026,.105),(1.104+i*.026,.144)],"d1c8b1")
+        for i in range(3):
+            turned(.87,-.72+i*.27,[(2.115,.060),(2.14,.076),(2.29+i*.025,.076),(2.31+i*.025,.061)],("b78c67","a64736","7f8c78")[i],12)
+    else:
+        for j,across in enumerate((-.61,.31)):
+            item(.20,1.091,across,.48,.027,.59,"593b35")
+            turned(.20,across,[(1.105,.064),(1.127,.070),(1.141,.10),(1.222,.16),(1.234,.158)],"bdba9f" if j else "aabcc1")
+            turned(.20,across,[(1.228,.153),(1.232,.152)],"9a643b")
+            turned(.18,across-.057,[(1.232,.050),(1.247,.049)],"d3a88a",12)
+            turned(.18,across-.057,[(1.247,.022),(1.249,.019)],"dfa039",10)
+            for i in range(4):
+                turned(.23+.013*cos(i*2.4),across+.065+.028*sin(i*2.4),[(1.232,.012),(1.245,.010)],"6b8045",7)
+            for offset in (-.013,.013):
+                rod((face+side*.03,1.112,z+across+.211+offset),(face+side*.40,1.118,z+across+.226+offset),.006,"bd9767",n=5)
+        for i in range(6):
+            bottom=2.113+.044*(i%3)
+            turned(.89,-.40+i//3*.77,[(bottom,.089),(bottom+.052,.125),(bottom+.062,.126)],"aaa998" if i//3 else "bad0c9")
+
+def market_window(face,side,z,style,kitchen):
+    # The window extends behind the shop line. The illustrated back wall can be
+    # seen between the shelf stock and through the gaps in the entrance curtain.
+    def item(depth,y,across,thickness,height,width,color):
+        box(face+side*depth,y,z+across,thickness,height,width,color)
+    timber=("826242","866a55","6e847c","7c6a58")[style]
+    item(.55,.18,0,1.63,.22,2.53,"665e4e")
+    item(.58,2.97,0,1.71,.14,2.56,"544f42")
+    for off in (-1.21,1.21):
+        item(.63,1.56,off,1.72,2.72,.10,"706b5c")
+        item(-.24,1.57,off,.14,2.83,.14,timber)
+    if style==2:
+        item(.97,1.48,0,.10,2.51,2.23,"474843")
+        for k in (-1,0,1):
+            left=k*.71-.336
+            for span in range(7):
+                a,b=span/7,(span+1)/7
+                def curtain(t,top):
+                    x=face+side*(.03+.079*cos(t*pi*3.2)+(.028 if top else 0))
+                    y=2.75 if top else 1.69+.09*cos(t*pi*1.5+k)
+                    return x,y,z+left+t*.67
+                g.poly([curtain(a,1),curtain(b,1),curtain(b,0),curtain(a,0)],("465d59","526964","49615c")[k+1])
+        return
+    if style==1:
+        diner_counter(face,side,z,kitchen)
+        return
+    stock=("c8ae86","927253","b7a487")
+    for tier,y in enumerate((.54,1.14,1.78)):
+        depth=(.26,.46,.74)[tier]
+        item(depth+.12,y,0,.54,.082,2.18,timber)
+        item(depth-.16,y-.037,0,.043,.13,2.23,"4b4b3c")
+        item(depth-.187,y+.022,0,.023,.021,2.22,"bdad87")
+        for col in range(5):
+            if (col+tier+round(abs(z)))%9==0:continue
+            zz=z+(col-2)*.397+.047*sin(5*col+tier)
+            xx=face+side*(depth+.045*sin(col*2))
+            base=y+.046
+            if style==0:
+                for row in range(2 if tier<2 else 1):
+                    color=(("ba4336","c55739"),("dc9336","dda747"),("567746","719054"))[tier][(col+row)%2]
+                    size=(.080,.077,.115)[tier]*(1+.08*cos(col+z))
+                    px=xx+side*(-.07+.17*row)
+                    pz=zz+.057*sin(col*3.1+row*2.4)
+                    for points,tint,rounded in produce(px,base+size*(.66 if tier==1 else .82),pz,size,color):
+                        g.poly(points,tint,128 if rounded else 0)
+            else:
+                box(xx,base+.12,zz,.24,.24,.30,stock[(col+tier)%3])
+                box(xx-side*.123,base+.11,zz,.012,.076,.19,"cabb9c")
+        item(depth-.20,y,.75,.026,.094,.26,"e4d5a9")
+    item(.03,2.73,0,.32,.095,1.52,INK)
+    item(.021,2.68,0,.21,.025,1.35,"f3dfad")
+
 def market():
     for s in (-1,1):
         for j in range(9):
             z=-35+j*8.8; h=[6,8.4,5.5,7.2][(j+(s+1))%4];x=s*22.6
             wall=["b59e83","889997","a69887","b4ae95","89989c"][j%5]
-            box(x,h*.5,z,6.4,h,8.4,wall)
+            box(x,(h+3.17)*.5,z,6.4,h-3.17,8.4,wall)
+            box(x+s*.80,1.59,z,4.8,3.18,8.4,wall)
+            for end in (-4.13,4.13):
+                box(x,1.58,z+end,6.4,3.17,.14,wall)
             box(x,h+.1,z,6.65,.22,8.65,shade(wall,.8))
             roof_detail(x,h,z+1.1)
             for zz in (-2.75,-1.35,.05,1.45,2.85):
                 box(x-s*3.21,h-1.42,z+zz,.06,1.48,1.09,GLASS)
                 box(x-s*3.27,h-2.15,z+zz,.15,.10,1.21,STEEL)
             face=x-s*3.23;accent=[TEAL,RED,"c49c60","788879","768897"][j%5]
-            for k in range(3):
-                zz=z-2.52+k*2.52
-                box(face,1.47,zz,.075,2.85,2.38,GLASS if j%3 else GRAY)
-                if j%3==0:
-                    for t in range(9):box(face-s*.06,.28+t*.27,zz,.039,.038,2.3,STEEL)
-                else:
-                    box(face-s*.06,1.45,zz,.05,2.75,.052,STEEL)
-                    box(face-s*.07,.55,zz,.04,.79,2.28,shade(wall,.72))
             box(face-s*.17,3.94,z,.37,.79,8.12,accent)
             for bay in range(3):
                 zz=z-2.61+bay*2.61
                 style=(j+(1 if s>0 else 2)+(1 if bay==2 else 0))%4
-                if bay==0:
-                    panel(face-s*.14,zz,1.63,2.53,2.95,0,-s,10,(style*.25+.012,.081,style*.25+.187,.755))
-                elif bay==1:
-                    panel(face-s*.14,zz,1.63,2.53,2.95,0,-s,10,(style*.25+.062,.072,(style+1)*.25-.011,.75))
-                else:
-                    panel(face-s*.14,zz,1.63,2.53,2.95,0,-s,10,(style*.25+.009,.080,(style+1)*.25-.008,.77))
+                panel(face+s*1.44,zz,1.63,2.53,2.88,0,-s,10,(style*.25+.013,.081,(style+1)*.25-.012,.755))
+                market_window(face,s,zz,style,kitchen=bay%2==0)
                 for side in (-1,1):box(face-s*.181,1.65,zz+side*1.27,.15,3.04,.085,shade(wall,.68))
                 box(face-s*.24,.13,zz,.48,.22,2.54,GRAY)
             aw=face-s*.82
@@ -402,8 +498,9 @@ def market_details():
                     for dz in (-.73,.73):box(xx-s*.57,.4,zz+dz,.07,.71,.085,"715c49")
                     for n in range(9):
                         rx=xx+random.uniform(-.3,.3);rz=zz+random.uniform(-.62,.62)
-                        rings(rx,rz,[(.75,.064,.067,0),(.82,.105,.10,0),(.89,.065,.064,0)],
-                              ["bc7741","b29c52","687443","9f5546"][(j+n)%4],n=6)
+                        color=["b94c38","d59a3f","687443","a24537"][(j+n)%4]
+                        for points,tint,rounded in produce(rx,.822,rz,.093,color):
+                            g.poly(points,tint,128 if rounded else 0)
             else:
                 xx=s*17.91
                 box(xx,.89,z,1.01,1.78,.72,"a65249")
@@ -477,13 +574,49 @@ def alloy(x,y,start,end,w,h,bevel,col):
     g.poly(a,col,13*16);g.poly(b,col,13*16)
     for j in range(8):g.poly([a[j],b[j],b[j-1],a[j-1]],col,13*16)
 def sleeves(elbow,wrist):
-    tapered(elbow,wrist,[(0,.087,.082),(.19,.084,.080),(.37,.077,.072),(.43,.079,.075),
-                        (.55,.071,.067),(.67,.066,.060),(.72,.069,.064),(.84,.057,.055),
-                        (.94,.050,.047),(1,.043,.041)],"445149",18)
-    tapered(elbow,wrist,[(.86,.055,.052),(.92,.057,.052),(.98,.046,.044)],
-            "38453e",18)
-    tapered(elbow,wrist,[(.918,.0572,.0525),(.925,.056,.052)],"596354",18)
+    start=Vector(elbow); end=Vector(wrist); axis=(end-start).normalized()
+    side=axis.cross(Vector((0,1,0))).normalized(); up=axis.cross(side)
+    # Eased, oblique folds bunch toward the hook-and-loop cuff.
+    rings=[]
+    levels=[(0,.088),(.20,.084),(.31,.076),(.36,.084),(.42,.075),
+            (.54,.073),(.60,.078),(.65,.067),(.72,.062),(.77,.069),
+            (.82,.059),(.88,.055),(.95,.046),(1,.041)]
+    for i,(t,r) in enumerate(levels):
+        loop=[]
+        for j in range(18):
+            angle=2*pi*j/18
+            drift=(sin(angle+.8*i)*.017 if 1<i<len(levels)-2 else 0)
+            radius=r*(1+.035*sin(3*angle+.58*i))
+            loop.append(start+(end-start)*(t+drift)+radius*(side*cos(angle)+up*.94*sin(angle)))
+        rings.append(loop)
+    for i,(a,b) in enumerate(zip(rings,rings[1:])):
+        for j in range(18):
+            # Two inset panels meet at a standing seam along the sleeve.
+            shade="405761" if 2<=j<=8 else "334852"
+            g.poly([a[j-1],a[j],b[j],b[j-1]],shade,2*16)
+        rod(a[3],b[3],.0018,"61737a",b=2*16,n=5)
+        rod(a[12],b[12],.0016,"61737a",b=2*16,n=5)
+    tapered(elbow,wrist,[(.72,.067,.064),(.75,.071,.067),(.776,.070,.066)],"d19c46",18,2*16)
+    tapered(elbow,wrist,[(.748,.0716,.0676),(.758,.0716,.0676)],"e0d4a3",18,2*16)
+    tapered(elbow,wrist,[(.862,.058,.055),(.88,.061,.057),(.94,.055,.052),(.982,.048,.046)],
+            "293b40",18,16)
+    tapered(elbow,wrist,[(.881,.0615,.0577),(.890,.0613,.0576)],"78908a",18,2*16)
 
+
+def held_shell(center_x,levels,color,edge,material=4):
+    loops=[]
+    for z,y,w,h in levels:
+        # Rounded shoulders and small corner radii carry continuous reflections as the camera moves.
+        contour=[(-.55,-1),(-.80,-.97),(-.94,-.84),(-.997,-.59),(-1,-.27),
+                 (-.998,.29),(-.97,.52),(-.89,.69),(-.77,.82),(-.62,.91),
+                 (-.43,.967),(-.24,.991),(0,1),(.24,.991),(.43,.967),
+                 (.62,.91),(.77,.82),(.89,.69),(.97,.52),(.998,.29),
+                 (1,-.27),(.997,-.59),(.94,-.84),(.80,-.97),(.55,-1)]
+        loops.append([(center_x+w*a,y+h*b,z) for a,b in contour])
+    g.poly(loops[0],edge,material*16);g.poly(loops[-1][::-1],edge,material*16)
+    for left,right in zip(loops,loops[1:]):
+        for j in range(len(left)):
+            g.poly([left[j-1],left[j],right[j],right[j-1]],color,material*16)
 
 def hands():
     for side in (-1,1):
@@ -495,36 +628,63 @@ def hands():
         else:
             glove(g,wrist,(.60,.13,.79),(.11,.99,-.09),False,17)
     g.held_joint=0
-    alloy(.122,-.118,.16,.36,.047,.042,.018,"363c39")
-    alloy(.122,-.185,.264,.318,.034,.078,.009,"414841")
-    alloy(.122,-.109,.295,.544,.047,.055,.010,"4a514b")
-    alloy(.122,-.107,.49,.674,.039,.039,.011,"505a52")
-    for j in range(7):
-        alloy(.122,-.065,.35+j*.035,.36+j*.035,.039,.010,.004,"313936")
-    for s in (-1,1):
-        for j in range(4):
-            box(.122+s*.042,-.097,.516+j*.038,.005,.016,.021,"2d3533")
-        for z in (.34,.46):
-            rod((.122+s*.047,-.114,z),(.122+s*.052,-.114,z),.0078,STEEL,n=8)
-    for j in range(4):
-        rod((.08,-.128,.23+j*.025),(.155,-.128,.23+j*.025),.005,"555e52",n=6)
-    alloy(.122,-.112,.664,.738,.024,.025,.008,BLACK)
-    rod((.122,-.111,.73),(.122,-.111,.793),.017,"515851",n=12)
-    rod((.122,-.111,.773),(.122,-.111,.805),.020,"363d37",n=12)
-    g.held_joint=14
-    box(.122,-.196,.383,.059,.12,.061,"333b39")
-    for jj in range(4):box(.122,-.16-jj*.023,.383,.062,.006,.065,BLACK)
-    g.held_joint=0
+    # Field-service housing: a curved painted back, separate elastomer boot and inset warm panels.
+    held_shell(.122,[(.128,-.128,.052,.046),(.137,-.127,.056,.049),
+                     (.146,-.126,.057,.050),(.151,-.125,.056,.049),
+                     (.154,-.125,.054,.047),(.157,-.124,.056,.049),
+                     (.165,-.124,.056,.049),(.170,-.123,.053,.046),
+                     (.173,-.122,.055,.048),(.180,-.122,.054,.047),
+                     (.193,-.12,.048,.044)],"303b40","465152",1)
+    held_shell(.122,[(.173,-.122,.050,.043),(.218,-.113,.052,.047),
+                     (.255,-.109,.050,.044),(.291,-.106,.047,.041),
+                     (.345,-.105,.044,.037)],"5c6c70","707e7c",5)
+    # An inlaid rescue-service badge follows the sweeping top of the painted housing.
+    # This broad surface stays in view as the field worker raises the equipment.
+    badge=[(.184,-.0765,.010),(.197,-.0716,.019),(.218,-.0649,.022),
+           (.259,-.0635,.019),(.279,-.0635,.011)]
+    def badge_face(levels,tint):
+        for (za,ya,wa),(zb,yb,wb) in zip(levels,levels[1:]):
+            g.poly([(.122-wa,ya,za),(.122+wa,ya,za),(.122+wb,yb,zb),(.122-wb,yb,zb)],tint,4*16)
+    badge_face(badge,"40565c")
+    badge_face([(z,y+.0008,width*.87) for z,y,width in badge],"617778")
+    def enamel(x,z):
+        za,ya,_=badge[2];zb,yb,_=badge[3]
+        return (.122+x,ya+(yb-ya)*(z-za)/(zb-za)+.0014,z)
+    # Broken-chevron mark matches the enamel field identification on the sides.
+    for dz in (0,.012):
+        g.poly([enamel(x,.226+z+dz) for x,z in
+                ((-.013,0),(0,.006),(.013,0),(.013,.004),(0,.011),(-.013,.004))],"ddbc77",4*16)
+    held_shell(.122,[(.283,-.110,.045,.049),(.322,-.105,.050,.053),
+                     (.448,-.107,.048,.050),(.508,-.109,.042,.044)],
+               "46585d","647674")
+    held_shell(.122,[(.49,-.108,.042,.040),(.529,-.107,.045,.042),
+                     (.605,-.102,.040,.037),(.663,-.107,.033,.030)],
+               "8c694d","ab8a65")
+    held_shell(.122,[(.657,-.11,.032,.028),(.686,-.11,.036,.031),
+                     (.72,-.111,.027,.026),(.736,-.111,.024,.023)],"43545c","949f9c",5)
+    rod((.122,-.111,.73),(.122,-.111,.793),.017,"71838a",b=5*16,n=14)
+    rod((.122,-.111,.773),(.122,-.111,.805),.020,"3c515b",b=5*16,n=14)
+    held_shell(.122,[(.258,-.181,.030,.067),(.274,-.184,.035,.077),
+                     (.299,-.180,.036,.075),(.319,-.173,.031,.065)],
+               "3a4849","646b62",1)
     for side in (-1,1):
-        xx=.122+side*.048
-        for j in range(5):
-            z=.204+j*.021
-            g.poly([(xx,-.129,z),(xx,-.113,z+.015),(xx,-.102,z+.010),(xx,-.118,z-.004)],"646c62")
-        box(.122+side*.048,-.112,.392,.006,.025,.079,"758277")
-        for j in range(3):box(.122+side*.052,-.111,.367+j*.019,.005,.009,.009,"c3baa0")
-    alloy(.122,-.113,.128,.177,.052,.047,.021,"545e55")
-    for delta in (-.022,.022):
-        rod((.122+delta,-.153,.185),(.122+delta,-.153,.246),.004,STEEL)
+        xx=.122+side*.0485
+        # Inset enamel nameplate, raised surround and a small dispatch chevron.
+        box(xx,-.107,.394,.004,.034,.103,"293b42",4*16)
+        box(xx+side*.002,-.106,.393,.004,.025,.093,"b6925e",4*16)
+        for j in range(3):
+            z=.362+j*.014
+            g.poly([(xx+side*.0043,-.116,z),(xx+side*.0043,-.097,z+.008),
+                    (xx+side*.0043,-.097,z+.015),(xx+side*.0043,-.116,z+.007)],"f0ddad",4*16)
+    for z in (.542,.57,.598):
+        held_shell(.122,[(z,-.105,.043,.04),(z+.006,-.105,.043,.040),
+                         (z+.01,-.105,.042,.039)],"674e3b","9b744f",1)
+    g.held_joint=14
+    held_shell(.122,[(.349,-.193,.026,.055),(.36,-.194,.033,.063),
+                     (.40,-.190,.033,.063),(.417,-.187,.027,.056)],"46555b","7d8986",4)
+    for j in range(3):
+        box(.122,-.171-j*.023,.383,.066,.005,.066,"27383e",16)
+    g.held_joint=0
     # A thin chamfered optic housing leaves the sight picture open.
     center=(.122,-.007); outer=[(-.030,-.030),(-.035,-.019),(-.034,.012),(-.020,.028),
                                 (.019,.028),(.034,.012),(.035,-.019),(.030,-.030)]
@@ -540,6 +700,12 @@ def hands():
     rod((.168,-.012,.413),(.173,-.012,.413),.014,"758073",n=12)
 
 # Recreate the first-person assets without touching any district meshes.
+if "--bus-only" in sys.argv:
+    g=Batch();vehicle(0,0);g.bake("bus")
+    sys.exit(0)
+
+from characters.viewmodel import glove
+from produce import produce
 g=Batch();hands();g.bake("hands")
 for cargo in (False,True):
     g=Batch()
@@ -978,6 +1144,7 @@ def bake_street_light(district):
             light[iy*width+ix]=round(255*visibility)
     (OUT/("light%d.bytes"%district)).write_bytes(light)
 for d,fn in enumerate((market,warehouse,station,yard)):
+    if "--market-and-hands" in sys.argv and d!=0:continue
     random.seed(181+d);g=Batch();pavement(d);fn();streetsigns(d)
     alley_details(d);road_furniture(d)
     if d==0: market_details()
@@ -987,6 +1154,8 @@ for d,fn in enumerate((market,warehouse,station,yard)):
         for crane_z in (-18,23):quay_crane(-34,crane_z)
     if d==2: stationprops();platform_detail()
     bake_street_light(d);g.bake("district"+str(d))
+if "--market-and-hands" in sys.argv:
+    sys.exit(0)
 for prop in ("depot","cache","works","tent","workshop","passenger","threat"):
     g=Batch(); facilities(prop);g.bake(prop)
 

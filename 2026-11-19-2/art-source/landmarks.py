@@ -11,6 +11,7 @@ from mathutils import Vector
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 from approaches import FONT, OUT, Mesh
+from produce import produce
 
 STEEL = "365453"
 TEAL = "39706b"
@@ -80,17 +81,8 @@ class Building(Mesh):
                    (x+width*.46,y-.048,z+depth*.43),(x-width*.46,y-.048,z+depth*.43)],GOLD,tag=15)
 
     def fruit(self,x,y,z,radius,color):
-        points=[]
-        for j in range(3):
-            v=(j-.99)*.76
-            rr=math.sqrt(1-v*v)*radius
-            points.append([(x+rr*math.cos(k*math.tau/6),y+v*radius,
-                            z+rr*math.sin(k*math.tau/6)) for k in range(6)])
-        self.face(points[2],color)
-        for first,second in zip(points,points[1:]):
-            for k in range(6):
-                j=(k+1)%6
-                self.face([first[k],first[j],second[j],second[k]],color)
+        for vertices,tint,smooth in produce(x,y,z,radius,color):
+            self.face(vertices,tint,tag=8 if smooth else 0)
 
     def packed_crate(self,x,y,z,width,depth,accent):
         b=self.box
@@ -192,11 +184,12 @@ def arcade():
         for i,(dz,color) in enumerate(zip((-.81,0,.81),fruit_colors)):
             xx=x-side*.28
             stall.packed_crate(xx,.90,z+dz,.78,.69,"997357")
+            b(xx,1.025,z+dz,.71,.042,.62,"a29165")
             for j in range(14):
                 dx=(j%4-1.5)*.143+rng.uniform(-.023,.023)
                 zz=(j//4-1.5)*.139+rng.uniform(-.025,.025)
                 r=rng.uniform(.059,.085)
-                stall.fruit(xx+dx,1.114+rng.uniform(0,.039),z+dz+zz,r,color)
+                stall.fruit(xx+dx,1.046+r*.76,z+dz+zz,r,color)
         stall.board(label,x,1.87,z-1.30,1.45,.35,.244,-1,accent)
         stall.packed_crate(x+side*.76,.028,z-.94,.54,.63,TIMBER)
         stall.packed_crate(x+side*.76,.028,z+.86,.54,.63,"665d43")

@@ -29,7 +29,8 @@ namespace Evac
         float w, h, scale;
         Rect safeArea;
         bool settingsOpen, creditsOpen, dispatchOpen, fieldPanel, orderPickerOpen, continueFailed;
-        bool rosterFolded, ordersFolded, commandGuideSeen, directGuideSeen;
+        enum CommandPanel { None, Roster, Orders, Radio }
+        CommandPanel commandPanel;
         float guideUntil;
         Action queuedCommand;
         string lastPhase, lastMode;
@@ -123,11 +124,11 @@ namespace Evac
                 columnDesk = wingOpen = bookOpen = requestOpen = requestLog = fieldDispatchOpen = fleetOpen = searchDeskOpen = false;
                 dutyMenuOpen = false;
                 settingsOpen = creditsOpen = dispatchOpen = fieldPanel = orderPickerOpen = false;
+                commandPanel = CommandPanel.None;
+                directRadioOpen = false;
                 continueFailed = false;
                 if (G.Phase == "Title" || G.Phase == "Briefing")
                 {
-                    rosterFolded = ordersFolded = G.TouchUI;
-                    commandGuideSeen = directGuideSeen = false;
                     guideUntil = 0;
                     lastMode = null;
                 }
@@ -140,17 +141,11 @@ namespace Evac
             {
                 columnDesk = wingOpen = bookOpen = requestOpen = fieldDispatchOpen = fleetOpen = searchDeskOpen = false;
                 fieldPanel = orderPickerOpen = false;
+                commandPanel = CommandPanel.None;
+                directRadioOpen = false;
+                questChoices = false;
+                guideUntil = 0;
                 lastMode = G.Mode;
-                if (lastMode == "FPS" && !directGuideSeen)
-                {
-                    directGuideSeen = true;
-                    guideUntil = Time.unscaledTime + 4.5f;
-                }
-                if (lastMode == "RTS" && !commandGuideSeen)
-                {
-                    commandGuideSeen = true;
-                    guideUntil = Time.unscaledTime + 5;
-                }
             }
 
             controlIndex = 0;

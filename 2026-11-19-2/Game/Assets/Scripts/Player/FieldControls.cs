@@ -284,7 +284,7 @@ namespace Evac
             bool chapterOnSite=sim.ChapterPhase==1 || sim.ChapterPhase==3;
             if(worldText==null)worldText=new GUIStyle(GUI.skin.label){font=Resources.Load<Font>("UI/NotoSansJP"),alignment=TextAnchor.MiddleCenter};
             navigationLabel=default;
-            if(!blendingView)DrawFieldNavigation();
+            if(!blendingView && (sim.Controlled!=null || !chapterOnSite))DrawFieldNavigation();
             DrawFieldContacts();
             DrawSearchMarkers();
             DrawFleetMarkers();

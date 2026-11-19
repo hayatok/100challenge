@@ -15,6 +15,8 @@ namespace Evac
         }
         [DllImport("__Internal")] static extern int InspectDutyFailure(int sector,int expected,int unchanged);
         [DllImport("__Internal")] static extern int InspectFloodColumns();
+        [DllImport("__Internal")] static extern void InspectQuest(int phase,int choice,int agent,float x,float z,int wing,
+            int stage,float nextX,float nextZ,int manual);
         [DllImport("__Internal")] static extern void InspectMarket(int leader,int pawn,float towardX,float towardZ,float lift,int boarded,int finished,int meeting,int waiting,float clock);
         bool preparedFlood,preparedFailure;
         int expectedSector=-1;
@@ -33,6 +35,17 @@ namespace Evac
             Unit u=sim.Controlled;
             var pos=u?.pos??Vector3.zero;
             InspectState(Phase,Mode,Ammo,pos.x,pos.z,u?.yaw??0,FieldTouches.Count);
+            if(Phase=="Playing" && !IsDuty)
+            {
+                var agent=sim.QuestAgent;
+                var quest=sim.QuestMemory;
+                Vector3 next=Vector3.zero;
+                if(u!=null && (sim.ChapterPhase==1 || sim.ChapterPhase==3) && quest?.manual==u.id+1 &&
+                    TryFieldNavigation(out _,out _,out Vector3 target))
+                    next=sim.RouteWaypoint(u.pos,target);
+                InspectQuest(sim.ChapterPhase,sim.ChapterChoice,agent?.id??-1,agent?.pos.x??0,agent?.pos.z??0,
+                    sim.WingActive?1:0,quest?.stage??0,next.x,next.z,u!=null && quest?.manual==u.id+1?1:0);
+            }
             if (!IsDuty && missionIndex==0 && sim.ColumnsActive)
             {
                 var corner = u==null ? Vector3.zero : sim.ColumnNavigationStep(pos, sim.ColumnControlPoint(0));
