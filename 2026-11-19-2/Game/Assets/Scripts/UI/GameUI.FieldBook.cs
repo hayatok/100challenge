@@ -12,6 +12,7 @@ namespace Evac
         {
             if(G.IsDuty)return;
             bool show=!bookOpen;
+            columnDesk=false;
             CloseFieldOverlay();
             bookOpen=show;
         }
@@ -25,6 +26,7 @@ namespace Evac
         }
         void Immediate()
         {
+            columnDesk=false;
             if(ChapterTask){bookOpen=true;return;}
             if(G.FleetBlocked){fleetOpen=true;return;}
             if(Field.WingActive && !Field.WingComplete){OpenWing();return;}
@@ -42,6 +44,7 @@ namespace Evac
             float height=G.TouchUI?45:36;
             string next=ImmediateLabel();
             float x=w-328, y=BoardHeight+18;
+            if(Field.ColumnsActive && !Field.ColumnsComplete && Button(R(x-140,y,134,height),"避難隊列",dark:true))OpenColumn(lastColumn);
             if(next!="作戦手帳" && Button(R(x,y,190,height),next,primary:true))Immediate();
             if(Button(R(w-132,y,118,height),"作戦手帳",dark:true))ToggleBook();
         }
@@ -52,6 +55,7 @@ namespace Evac
             float x=panel.x+20,y=panel.y,width=panel.width-40;
             string section=Field.ChapterPhase==1?"前哨":Field.ChapterPhase==3?"撤収":"避難輸送";
             Text(R(x,y+9,width-120,33),G.DistrictName(G.MissionIndex)+"　／　"+section,20,Amber,true);
+            if(Field.ColumnCount>0 && (Field.ColumnsActive || Field.ColumnsComplete) && Button(R(x+width-224,y+7,123,37),"避難隊列",dark:true))OpenColumn(lastColumn);
             if(Button(R(x+width-94,y+7,94,37),"閉じる",dark:true)){bookOpen=false;return;}
             Text(R(x,y+47,width,40),ChapterTask?Field.ChapterTitle:FieldName,29,Cream,true);
             Paragraph(R(x,y+90,width,51),ChapterTask?Field.ChapterIncident:G.Objective,BodySize,Mist);

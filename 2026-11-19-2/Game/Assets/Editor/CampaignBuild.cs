@@ -21,7 +21,7 @@ namespace Evac.Editor
             EditorBuildSettings.scenes=new[]{new EditorBuildSettingsScene(Scene,true)};
             PlayerSettings.companyName="100challenge";
             PlayerSettings.productName="避難指令";
-            PlayerSettings.bundleVersion="0.3.0";
+            PlayerSettings.bundleVersion="0.4.0";
             var icon=AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/WebGLTemplates/Dispatch/train-512.png");
             if(icon!=null)PlayerSettings.SetIcons(UnityEditor.Build.NamedBuildTarget.Unknown,new[]{icon},IconKind.Application);
             PlayerSettings.defaultScreenWidth=1280; PlayerSettings.defaultScreenHeight=720;
@@ -67,6 +67,15 @@ namespace Evac.Editor
                 extraScriptingDefines=inspection ? new[]{platform==BuildTarget.WebGL?"EVAC_WEB_TEST":"EVAC_INSPECTION"} : Array.Empty<string>(),
                 options=BuildOptions.CompressWithLz4});
             if(result.summary.result!=BuildResult.Succeeded)throw new Exception("Build failed: "+result.summary.result+" with "+result.summary.totalErrors+" errors");
+            var graphics=platform==BuildTarget.WebGL?UnityEditor.Rendering.ShaderCompilerPlatform.GLES3x:
+                UnityEditor.Rendering.ShaderCompilerPlatform.D3D;
+            foreach(string id in AssetDatabase.FindAssets("t:Shader",new[]{"Assets/Resources/World"}))
+            {
+                var shader=AssetDatabase.LoadAssetAtPath<Shader>(AssetDatabase.GUIDToAssetPath(id));
+                foreach(var message in ShaderUtil.GetShaderMessages(shader,graphics))
+                    if(message.severity==UnityEditor.Rendering.ShaderCompilerMessageSeverity.Error)
+                        throw new Exception($"{shader.name} ({graphics}) {message.file}:{message.line} {message.message}");
+            }
             Debug.Log($"CAMPAIGN BUILD OK {platform} {result.summary.totalSize} bytes");
         }
     }

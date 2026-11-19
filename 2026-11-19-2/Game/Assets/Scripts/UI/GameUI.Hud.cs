@@ -300,11 +300,39 @@ namespace Evac
         void DrawDirect()
         {
             DrawDirectStrip();
+            int pushed=G.PushedColumn;
+            if(pushed>=0)
+            {
+                DrawStretcherControls(pushed);
+                return;
+            }
             if(G.TouchUI && Button(R(w*.39f,h-73,145,59),G.LampName+"　"+G.LampCost,enabled:G.LampAvailable,dark:true))Submit(G.UseLamp);
             if (G.TouchUI)
                 DrawTouchDirect();
             else
                 DrawDesktopDirect();
+        }
+
+        void DrawStretcherControls(int column)
+        {
+            Unit person=Field.Find(Field.ColumnCarriedId(column));
+            if(person==null)return;
+            float width=G.TouchUI?271:242;
+            float panelHeight=G.TouchUI?84:91;
+            var panel=R(w-width-14,G.TouchUI?79:h-232,width,panelHeight);
+            Instrument(panel);
+            Fill(R(panel.x,panel.y,4,panel.height),Green);
+            float x=panel.x+11;
+            Text(R(x,panel.y+3,width-20,22),"担架搬送　／　"+G.SoldierName,15,Mist,true);
+            Text(R(x,panel.y+23,width-20,28),person.name,21,Cream,true);
+            string stop=Field.ColumnNextStop(column);
+            var pawn=Field.Controlled;
+            int distance=Mathf.RoundToInt(Vector3.Distance(pawn.pos,Field.ColumnDestination(column)));
+            Text(R(x,panel.y+51,width-20,29),stop+"　"+distance+" m",17,Amber,true);
+            float y=h-69;
+            if(Button(R(w-width-14,y-51,width,46),"担架の引き継ぎ",primary:true))
+                Submit(()=>OpenColumn(column));
+            if(Button(R(w-width-14,y,width,50),"指揮に戻る",dark:true))Submit(G.CommandMode);
         }
 
         void DrawDesktopDirect()

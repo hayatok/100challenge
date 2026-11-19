@@ -15,7 +15,7 @@ namespace Evac
         {
             var u=Controlled;
             if(u==null || Result!=SimResult.Active || u.reload>0 || u.dodgeTime>0 || u.vaultDuration>0 ||
-                ChapterHandsBusy(u) || u.escortId>=0 || u.carryingCargo || u.stamina<.32f || u.hp<40 || Brain(u).stun>0) return false;
+                ColumnHandsBusy(u) || ChapterHandsBusy(u) || u.escortId>=0 || u.carryingCargo || u.stamina<.32f || u.hp<40 || Brain(u).stun>0) return false;
             if(!geometry.VaultEnd(u.pos,direction,out Vector3 end,out float obstacle)) return false;
             u.vaultFrom=u.pos;u.vaultTo=end;u.vaultTime=0;
             u.vaultDuration=Mathf.Clamp(.36f+Vector3.Distance(u.pos,end)*.075f,.38f,.69f);

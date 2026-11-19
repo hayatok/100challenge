@@ -167,6 +167,7 @@ namespace Evac
         bool IsSectorCleared()
         {
             if(IsDuty)return DutyStageDone();
+            if(ColumnsActive && Sector==SectorCount-1 && !ColumnsComplete)return false;
             if(WingActive && Sector==SectorCount-1 && !WingComplete)return false;
             if(DistrictOutcome(Sector)==0)return false;
             if(Boarded>=SectorGoal && state.sectionBoarded>0 && (!NeedsTriage || state.sectionAssists>0))return true;

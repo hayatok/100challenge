@@ -6,7 +6,7 @@
 
 ブラウザではインストールせずに遊べます。[ブラウザ版「避難指令」を起動](https://hayatok.github.io/100challenge/2026-11-19-2/)
 
-Windows版の `EvacuationControl-Windows-x64.zip` は[0.3の配布ページ](https://github.com/hayatok/100challenge/releases/tag/release-evac-20261119-preview3)の「Assets」から入手できます。ダウンロード後にZIPを展開し、`EvacuationControl.exe` を起動してください。Web版は横持ちのスマホとPC向けです。リポジトリから遊ぶ場合は、このフォルダで次のコマンドを実行して、表示されたアドレスを開きます。Python 3が必要です。
+Windows版の `EvacuationControl-Windows-x64.zip` は[0.4の配布ページ](https://github.com/hayatok/100challenge/releases/tag/release-evac-20261119-preview4)の「Assets」から入手できます。ダウンロード後にZIPを展開し、`EvacuationControl.exe` を起動してください。Web版は横持ちのスマホとPC向けです。リポジトリから遊ぶ場合は、このフォルダで次のコマンドを実行して、表示されたアドレスを開きます。Python 3が必要です。
 
 ```sh
 python scripts/play.py
@@ -23,6 +23,14 @@ python scripts/play.py
 ![商店街で班と避難先を選ぶ横持ち画面](docs/screens/market-command-touch.jpg)
 
 ![商店街で隊員を直接操作する横持ち画面](docs/screens/market-direct-touch.jpg)
+
+## 避難列を送り出す
+
+最初の商店街で前哨を終えると、青果店前に残った店主たちを誘導できます。「避難隊列」から先導する班と経路を選んでください。大通りは乗車口までの近道です。店先の軒下を回るなら、一人を先に市場の横戸へ送れます。手帳の名簿では、実際に乗った人と待避所に残った人を見分けられます。先導役の名前を押すと、その兵士に直接入れます。
+
+第6作戦「冠水した地下連絡路」では、北改札の歩行列と救護室の介助列を受け持ちます。昇降機を使うには排水と電源が必要です。保守通路を使うときは、担当者を先に防火扉へ送ってください。足を痛めた牧野を担架に乗せたら、その隊員に入って押せます。隊員が向きを変えると前輪も回ります。狭い所では、壁から前輪を離して曲がってください。
+
+![冠水した駅で搬送中の一人称画面](docs/screens/stretcher-direct.jpg)
 
 ## 館内で住民を救助する
 
@@ -95,7 +103,7 @@ Unity 6000.3.28f1で `Game` を開き、`Assets/Scenes/Dispatch.unity` から再
 
 Blenderで地区、車両、人物、腕と装備を制作し、人物の歩行をキーフレームから焼き込みました。原画と環境・顔のテクスチャはComfyUIのMoss-imageを使用しています。人物の基礎メッシュはMakeHumanのCC0素材です。日本語の無線はHTS Voice “Mei”で合成し、帯域を絞って無線機の音色を作りました。音声モデルはMMDAgent Project TeamによるCC BY 3.0、書体はNoto Sans JPでSIL OFL 1.1です。[人物の原典と権利表記](art-source/characters/README.md)・[音声・書体のライセンス](Game/Assets/StreamingAssets/Licenses/)
 
-0.3の標準難度で全8作戦と全8件の任意要請を自動操作したところ、作戦内の経過時間は合計34分02.5秒でした。初見での所要時間は未計測です。企画目標の4〜6時間に達したという試遊結果はありません。
+0.4の標準難度で全8作戦と全8件の任意要請を自動操作したところ、作戦内の経過時間は合計33分52.0秒でした。初見での所要時間は未計測です。企画目標の4〜6時間に達したという試遊結果はありません。
 
 - [企画とMoss-imageの画面案](docs/game-plan.md)
 - [実プレイの検証記録](docs/verification.md)

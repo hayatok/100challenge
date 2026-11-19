@@ -8,11 +8,21 @@ namespace Evac
     {
         [DllImport("__Internal")] static extern void InspectState(string phase,string mode,int ammo,float x,float z,float yaw,int fingers);
         [DllImport("__Internal")] static extern int InspectDutyFailure(int sector,int expected,int unchanged);
-        bool preparedFailure;
+        [DllImport("__Internal")] static extern int InspectFloodColumns();
+        bool preparedFlood,preparedFailure;
         int expectedSector=-1;
         string normalRecord, normalCheckpoint;
         void ReportControls()
         {
+            if(!preparedFlood && Phase=="Title" && InspectFloodColumns()!=0)
+            {
+                preparedFlood=true;
+                sim.StartMission(5,Difficulty.Standard);
+                sim.ChooseChapterOption(0);sim.DispatchChapter(0);
+                if(sim.ChapterNeedsSupport)sim.DispatchChapter(1,true);
+                for(int i=0;i<4000 && sim.ChapterPhase==1 && sim.Result==SimResult.Active;i++)sim.Tick(.1f);
+                EnterField();
+            }
             Unit u=sim.Controlled;
             var pos=u?.pos??Vector3.zero;
             InspectState(Phase,Mode,Ammo,pos.x,pos.z,u?.yaw??0,FieldTouches.Count);

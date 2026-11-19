@@ -11,7 +11,7 @@ namespace Evac
             if(u==null || u.vaultDuration>0 || u.dodgeTime>0 || Result!=SimResult.Active)return ActionKind.None;
             var a=Brain(u);
             if(a.escort<0 && !a.cargo && AtChapter(u))return ActionKind.ChapterStation;
-            if(ChapterHandsBusy(u))return ActionKind.None;
+            if(ColumnHandsBusy(u) || ChapterHandsBusy(u))return ActionKind.None;
             if(a.escort>=0)return ActionKind.Release;
             if(RequestInteraction(u))return ActionKind.Optional;
             if(a.requestCargo)return ActionKind.None;
@@ -19,7 +19,7 @@ namespace Evac
             float shortest=2.9f*2.9f;
             foreach(var c in state.units)
             {
-                if(c==u || c.boarded || c.kind==UnitKind.Infected || IsWingAide(c) || WingPassenger(c) || WingResident(c) || IsSearchResident(c) || IsChapterResident(c) || IsChapterLiaison(c))continue;
+                if(c==u || c.boarded || c.kind==UnitKind.Infected || Brain(c).column>0 || IsWingAide(c) || WingPassenger(c) || WingResident(c) || IsSearchResident(c) || IsChapterResident(c) || IsChapterLiaison(c))continue;
                 bool patient=IsSoldier(c)?!c.active && u.medkits>0:c.active && Brain(c).escort<0 && Brain(c).injured;
                 if(!patient)continue;
                 float d=FlatSq(c.pos,u.pos);

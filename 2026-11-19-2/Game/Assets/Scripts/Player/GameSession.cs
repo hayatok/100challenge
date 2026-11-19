@@ -74,7 +74,19 @@ namespace Evac
         public string Objective => sim.IsReady ? sim.Objective : "";
         public string Radio => Time.time<voiceUntil ? voiceLine : sim.IsReady ? sim.Notice : "";
         public string RadioSpeaker => Time.time<voiceUntil ? speaker : "現場";
-        public string ContextAction => sim.CanTakeWingFreight?sim.WingFreightLabel+"を運ぶ":sim.CanRejoinWingResident?sim.WingResidentName+"に付き添う":AtWingDesk>=0?"現場の対応を選ぶ":sim.InteractionHint ?? "";
+        public string ContextAction
+        {
+            get
+            {
+                if(PushedColumn>=0)return "担架の引き継ぎ";
+                if(sim.CanTakeWingFreight)return sim.WingFreightLabel+"を運ぶ";
+                if(sim.CanRejoinWingResident)return sim.WingResidentName+"に付き添う";
+                if(AtWingDesk>=0)return "現場の対応を選ぶ";
+                string regular=sim.InteractionHint;
+                if(!string.IsNullOrEmpty(regular))return regular;
+                return NearbyColumn()>=0?"避難列に声をかける":"";
+            }
+        }
         public string SoldierName => Current?.name ?? "";
         public string MissionName(int i) => GameSim.Missions[i].title;
         public string MissionBrief(int i) => GameSim.Missions[i].briefing;
@@ -213,7 +225,7 @@ namespace Evac
             world.Build(missionIndex);
             fx.ResetField();
             choosingBeacon=false;seenBeacon=sim.BeaconSerial;beaconGlint=0;
-            wingReported=sim.WingActive;wingPin=-1;
+            wingReported=sim.WingActive;wingPin=-1;followedColumn=-1;
             ReleaseAim();
             mapCenter=Vector3.Lerp(sim.Mission.assembly, sim.Mission.exit,.5f);
             zoom=TouchUI?25:22;
@@ -277,11 +289,15 @@ namespace Evac
         public void TryAction()
         {
             FinishTransferForInput();
+            int pushed=PushedColumn;
+            if(pushed>=0){ui.OpenColumn(pushed);return;}
             if(sim.CanTakeWingFreight && sim.WingTakeCart()){sound.Signal("action");return;}
             if(sim.CanRejoinWingResident && sim.WingRejoin()){sound.Signal("action");return;}
             int station=AtWingDesk;
             if(station>=0){ui.OpenWing(station);return;}
-            if(sim.Interact())sound.Signal("action");
+            if(!string.IsNullOrEmpty(sim.InteractionHint) && sim.Interact()){sound.Signal("action");return;}
+            int column=NearbyColumn();
+            if(column>=0)ui.OpenColumn(column);
         }
         public void Reload() {if(sim.Reload())sound.Signal("reload");}
         public void FireOnce()
@@ -387,11 +403,33 @@ namespace Evac
             UpdateLamp(dt);
             UpdateIncidents();
             UpdateWingField(dt);
+            world.DrawColumnShelters(sim,missionIndex);
             world.SetObjective("追加要請",sim.RequestPoint,6,sim.HasRequestPoint);
             world.SetRequestProp(sim.RequestPropType,sim.RequestPropPosition);
+            Unit carried=null,bearer=null;
+            float stretcherYaw=0;
+            if(sim.ColumnsActive)
+            {
+                for(int c=0;c<sim.ColumnCount && carried==null;c++)
+                {
+                    if(sim.ColumnCarriedId(c)<0)continue;
+                    carried=sim.Find(sim.ColumnCarriedId(c));
+                    bearer=sim.Find(sim.ColumnCarrierId(c));
+                    if(carried==null || bearer==null || !carried.active || !bearer.active)
+                    {carried=null;bearer=null;continue;}
+                    stretcherYaw=sim.ColumnStretcherYaw(c);
+                }
+            }
+            bool pushing=bearer!=null && bearer==sim.Controlled && InBodyView(bearer);
+            world.DrawStretcher(carried,stretcherYaw,pushing);
             foreach(var u in sim.Units)
             {
                 if(u.boarded || (u.kind==UnitKind.Infected && !u.visible && sim.Controlled==null))continue;
+                if(u==carried)
+                {
+                    world.DrawStretcherPatient(u.id,u.id%4,u.pos,stretcherYaw);
+                    continue;
+                }
                 int kind=u.kind==UnitKind.Soldier?0:u.kind==UnitKind.Infected?1:2;
                 bool acted=u.windup>0||u.reload>0||u.escortId>=0||u.carryingCargo;
                 bool fired=lastShots.TryGetValue(u.id,out int oldShots)&&oldShots!=u.shots;
@@ -416,13 +454,15 @@ namespace Evac
                 actualSpeed=Mathf.Lerp(previousSpeed,actualSpeed,1-Mathf.Exp(-dt*12));
                 walkSpeed[u.id]=actualSpeed;
                 lastPositions[u.id]=u.pos;
+                var partner=AssistedPartner(u);
+                if(partner!=null && kind==0)activity=1;
                 world.DrawActor(u.id,kind,visual,u.pos+Vector3.up*sim.VaultLift(u),u.yaw,actualSpeed,
-                    Mathf.Clamp01(u.hp/Mathf.Max(1,u.maxHp)),acted||fired||u.stagger>0||activity==2,InBodyView(u),dt,activity,u.lastHitDirection);
+                    Mathf.Clamp01(u.hp/Mathf.Max(1,u.maxHp)),acted||fired||u.stagger>0||activity==2,InBodyView(u),dt,activity,u.lastHitDirection,partner?.pos,partner?.yaw??0);
             }
             world.EndFrame();
             var pawn=sim.Controlled;
             world.DrawFirstPerson(pawn!=null && InBodyView(pawn),ReducedMotion?0:stepWeight,recoil,
-                pawn==null?0:Mathf.Clamp01(pawn.reload/1.55f),stride/8f,pawn==null?0:pawn.escortId>=0?1:pawn.carryingCargo?3:0,aimBlend);
+                pawn==null?0:Mathf.Clamp01(pawn.reload/1.55f),stride/8f,pawn==null?0:pawn.escortId>=0?1:pawn.carryingCargo?3:0,aimBlend,pushing);
         }
     }
 }

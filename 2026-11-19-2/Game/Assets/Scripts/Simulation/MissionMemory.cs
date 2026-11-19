@@ -7,10 +7,10 @@ namespace Evac
     [Serializable]
     internal class ActorMemory
     {
-        public int alarmHeard, waypointIndex;
+        public int alarmHeard,column,columnOutcome, waypointIndex;
         public int sector; public Vector3 personalGate, waypoint, pathGoal; public bool hasPath;
         public int id, escort = -1, target = -1, route, variant;
-        public bool fieldShelter, injured, cargo, discovered, preparingCharge, auxiliary, requestCargo;
+        public bool columnLifted,columnStairs,fieldShelter, injured, cargo, discovered, preparingCharge, auxiliary, requestCargo;
         public Vector3 dodgeVelocity, chargeHeading;
         public float exhausted,chargeTime;
         public float fireDelay, attackClock, stun, supplyClock, aidClock, lostTime;
@@ -44,6 +44,7 @@ namespace Evac
         public bool[] complete = new bool[8];
         public int[] requests = new int[8];
         public int[] searchReturns = new int[8];
+        public int[] columnArrivals=new int[8],columnSheltered=new int[8];
         public int[] wingReturns=new int[8];
         public int[] chapterReturns = new int[8];
         public string[] chapterContacts = new string[16];
@@ -55,6 +56,7 @@ namespace Evac
     [Serializable]
     internal class MissionMemory
     {
+        public int columnVersion; public EvacuationLine[] lines;
         public int wingRevision,wingAide,wingService,wingUses;
         public WingMemory wing;
         public DistrictIncidentState[] incidents;

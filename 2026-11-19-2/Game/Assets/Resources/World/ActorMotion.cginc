@@ -181,8 +181,65 @@ float3 actorYaw(float3 p,float x,float angle)
     return p;
 }
 
-float3 actorMotion(float3 p,float joint,float4 a,float4 f)
+float3 actorAlign(float3 p,float3 from,float3 to)
 {
+    float3 axis=cross(from,to);
+    return p+cross(axis,p)+cross(axis,cross(axis,p))/max(.055,1+dot(from,to));
+}
+
+float3 actorReach(float3 p,float3 target,float side,float civilian,float elbowBlend)
+{
+    float3 shoulder=float3(side*.181,1.411,0);
+    float3 elbow=float3(side*lerp(.239,.230,civilian),1.150,.004);
+    float3 wrist=float3(side*lerp(.180,.211,civilian),.937,.082);
+    float3 upperBind=elbow-shoulder;
+    float3 lowerBind=wrist-elbow;
+    float upperLength=length(upperBind),lowerLength=length(lowerBind);
+    float3 delta=target-shoulder;
+    float span=length(delta);
+    float3 reachAxis=delta/max(.0001,span);
+    float3 pole=float3(side*.46,-1,.19);
+    float3 bend=normalize(pole-reachAxis*dot(pole,reachAxis)+float3(0,0,.001));
+    span=clamp(span,abs(upperLength-lowerLength)+.03,upperLength+lowerLength-.002);
+    float along=(upperLength*upperLength-lowerLength*lowerLength+span*span)/(2*span);
+    float high=sqrt(max(0,upperLength*upperLength-along*along));
+    float3 joint=shoulder+reachAxis*along+bend*high;
+    float3 endpoint=shoulder+reachAxis*span;
+    float3 upper=shoulder+actorAlign(p-shoulder,upperBind/upperLength,(joint-shoulder)/upperLength);
+    float3 lower=joint+actorAlign(p-elbow,lowerBind/lowerLength,(endpoint-joint)/lowerLength);
+    return lerp(upper,lower,elbowBlend);
+}
+
+float3 actorPatient(float3 p,float joint,float time)
+{
+    float side=fmod(joint,2)>.5?-1:1;
+    bool shoe=joint==11 || joint==12;
+    if((joint>=1 && joint<=4) || shoe){
+        float hip=side<0?-.23:-.16;
+        float knee=side<0?.47:.34;
+        if(shoe)p=actorPitch(p,.125,0,-hip-knee+.10);
+        p=actorPitch(p,.49,0,knee*(shoe?1:1-smoothstep(.42,.60,p.y)));
+        p=actorPitch(p,.87,0,hip);
+        p=actorRoll(p,side*.109,.87,side*.032);
+    }else if(joint>=5 && joint<=8){
+        float distal=1-smoothstep(1.105,1.226,p.y);
+        float root=1-smoothstep(1.383,1.455,p.y);
+        float3 folded=actorPitch(p,1.15,.014,(side>0?-.24:-.061)*distal);
+        folded=actorPitch(folded,1.41,0,side>0?-.065:-.027);
+        folded=actorRoll(folded,side*.18,1.41,-side*(side>0?.50:.09));
+        p=lerp(p,folded,root);
+    }else if(joint==13){
+        float neck=smoothstep(1.49,1.65,p.y);
+        p=actorYaw(p,0,neck*.12);
+        p.z-=neck*.031;
+    }
+    p.z+=sin(time*2.19)*.0035*smoothstep(.92,1.21,p.y)*(1-smoothstep(1.40,1.51,p.y));
+    return p;
+}
+
+float3 actorMotion(float3 p,float joint,float4 a,float4 f,float4 left,float4 right,float4 aid)
+{
+    if(f.y==5)return actorPatient(p,joint,a.z);
     float cycle=frac(a.x*.159154943)*12;
     int key=min((int)cycle,11);
     float alpha=frac(cycle);
@@ -193,7 +250,7 @@ float3 actorMotion(float3 p,float joint,float4 a,float4 f)
     float live=1-smoothstep(.05,.68,fall);
     float moving=smoothstep(.01,.38,a.y)*live;
     float run=smoothstep(.58,.96,a.y);
-    float limp=f.x==3?.68:0;
+    float limp=frac(f.z)*4;
     float4 body=actorKeys(key,alpha,side,1,run,limp)*moving;
     bool usesLimb=(joint>=1 && joint<=8) || equipment || joint==11 || joint==12;
     float4 limb=0;
@@ -211,14 +268,34 @@ float3 actorMotion(float3 p,float joint,float4 a,float4 f)
     bool shoe=joint==11 || joint==12;
     bool leg=(joint>=1 && joint<=4) || shoe;
     bool arm=(joint>=5 && joint<=8) || equipment;
+    float lean=f.x==2?.20:f.x==1?.044:.054;
+    lean+=working*.22+escort*.11+cargo*.075+limp*.056;
+    float torso=lean+wind*.21-hit*.25+run*moving*.13+tuck*.16+breath;
+    float drift=(f.x==2?.025:-.015)*(1-moving)*live;
+    float assistRoll=f.x==3?.14*escort:0;
+    assistRoll=lerp(assistRoll,-sign(aid.w)*(f.x==3?.17:.076),abs(aid.w)*live);
     if(leg){
         float knee=limb.y+tuck*(side<0?.40:1.06)-settle*(side<0?.18:.29);
         float hip=limb.x-tuck*(side<0?.22:.69)+settle*(side<0?.11:.23);
         float kneeblend=shoe?1:1-smoothstep(.420,.606,p.y);
-        if(shoe)p=actorPitch(p,.125,0,limb.z+settle*.13*side);
-        p=actorPitch(p,.49,0,knee*kneeblend);
-        p=actorPitch(p,.87,0,hip);
-        p=actorRoll(p,side*.101,.87,side*tuck*(side<0?.12:.26));
+        float flags=floor(f.z);
+        bool fixedFoot=side<0?fmod(flags,2)>.5:flags>1.5;
+        float4 support=side<0?left:right;
+        if(fixedFoot && shoe){
+            // Keep the toe/heel roll from the clip while the ankle follows the
+            // planted chain. The support leg can lean sideways without tipping the sole.
+            float3 anchor=float3(side*.109,.125,0);
+            float3 held=actorPitch(anchor,.49,0,support.y);
+            held=actorPitch(held,.87,0,support.x);
+            held=actorRoll(held,side*.109,.87,support.w);
+            p=actorPitch(p,.125,0,support.z)+held-anchor;
+        }else{
+            if(shoe)p=actorPitch(p,.125,0,limb.z+settle*.13*side);
+            p=actorPitch(p,.49,0,(fixedFoot?support.y:knee)*kneeblend);
+            p=actorPitch(p,.87,0,fixedFoot?support.x:hip);
+            p=actorRoll(p,fixedFoot?side*.109:side*.101,.87,
+                        fixedFoot?support.w:side*tuck*(side<0?.12:.26));
+        }
     }else if(arm){
         float elbowBlend=equipment?1:1-smoothstep(1.104,1.226,p.y);
         float shoulderBlend=equipment?1:1-smoothstep(1.39,1.462,p.y);
@@ -274,6 +351,13 @@ float3 actorMotion(float3 p,float joint,float4 a,float4 f)
         posed=actorPitch(posed,1.41,0,upper);
         posed=actorYaw(posed,side*.18,yaw);
         posed=actorRoll(posed,side*.18,1.41,roll+side*tuck*(side<0?.49:.31));
+        if(!equipment && side*aid.w>.01 && escort>.5){
+            float3 target=aid.xyz-float3(body.y,body.x+breath,0);
+            target=actorRoll(target,0,.87,-(drift+assistRoll));
+            target=actorYaw(target,0,-(body.z+hit*.16));
+            target=actorPitch(target,.87,0,-torso);
+            posed=lerp(posed,actorReach(p,target,side,f.x==3?1:0,elbowBlend),abs(aid.w)*live);
+        }
         p=lerp(p,posed,shoulderBlend);
     }
     if(equipment && usingRifle<.5){
@@ -289,8 +373,6 @@ float3 actorMotion(float3 p,float joint,float4 a,float4 f)
         float spine=smoothstep(.85,1.32,p.y);
         float upper=arm || joint==10?1:smoothstep(.83,1.06,p.y);
         float head=joint==13?smoothstep(1.49,1.57,p.y):0;
-        float lean=f.x==2?.20:f.x==1?.044:.054;
-        lean+=working*.22+escort*.11+cargo*.075;
         if(joint==13)
         {
             float jaw=smoothstep(1.57,1.63,p.y)*(1-smoothstep(1.635,1.665,p.y));
@@ -299,10 +381,9 @@ float3 actorMotion(float3 p,float joint,float4 a,float4 f)
             p=actorPitch(p,1.49,0,(body.w*.65-wind*.19+tuck*.24+breath)*head);
             p=actorRoll(p,0,1.49,((f.x==2?.045:0)+hit*.10+settle*.15)*head);
         }
-        p=actorPitch(p,.87,0,(lean+wind*.21-hit*.25+run*moving*.13+tuck*.16+breath)*upper);
+        p=actorPitch(p,.87,0,torso*upper);
         p=actorYaw(p,0,body.z*spine+hit*.16*upper);
-        float drift=(f.x==2?.025:-.015)*(1-moving)*live;
-        p=actorRoll(p,0,.87,(drift+(f.x==3?.14*escort:0))*upper);
+        p=actorRoll(p,0,.87,(drift+assistRoll)*upper);
         p.x+=f.x==2?.030*spine:0;
         p.y+=breath*spine;
     }

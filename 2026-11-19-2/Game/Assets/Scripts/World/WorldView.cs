@@ -9,19 +9,26 @@ namespace Evac
     /// <summary>Meshes baked in Blender share a palette and one instanced surface shader.</summary>
     public sealed partial class WorldView : MonoBehaviour
     {
+        const int CrowdBatchLimit = 100;
+
         sealed class CrowdBatch
         {
             public Mesh mesh;
             public readonly List<Matrix4x4> transforms = new List<Matrix4x4>(160);
             public readonly List<Vector4> poses = new List<Vector4>(160);
             public readonly List<Vector4> forms = new List<Vector4>(160);
+            public readonly List<Vector4> left = new List<Vector4>(CrowdBatchLimit);
+            public readonly List<Vector4> right = new List<Vector4>(CrowdBatchLimit);
+            public readonly List<Vector4> aid = new List<Vector4>(CrowdBatchLimit);
             public readonly MaterialPropertyBlock properties = new MaterialPropertyBlock();
         }
 
         struct Motion
         {
             public float phase, health, impact, stride, action, fall;
-            public Vector3 fallDirection;
+            public Vector3 fallDirection, contactRoot;
+            public ActorGait.Foot left, right;
+            public bool tracking;
         }
 
         readonly Dictionary<int, Motion> motions = new Dictionary<int, Motion>();
@@ -31,6 +38,9 @@ namespace Evac
         readonly Dictionary<int, Transform> markers = new Dictionary<int, Transform>();
         static readonly int Pose = Shader.PropertyToID("_Pose");
         static readonly int Form = Shader.PropertyToID("_Form");
+        static readonly int PlantLeft = Shader.PropertyToID("_PlantLeft");
+        static readonly int PlantRight = Shader.PropertyToID("_PlantRight");
+        static readonly int AidPosition = Shader.PropertyToID("_AidPosition");
         Material surface, shadowMaterial, skyMaterial, waterMaterial;
         readonly MeshFilter[] signalLamps = new MeshFilter[3];
         float waterClock;
@@ -162,6 +172,7 @@ namespace Evac
             BuildApproachBlocks(route);
             BuildLandmarks(region);
             BuildRoomWing(region);
+            BuildRefuges(route);
         }
 
         GameObject Place(string asset, Vector3 position)
@@ -266,8 +277,14 @@ namespace Evac
                 transport.transform.localPosition = transportOrigin + Vector3.back * (42 * progress * progress);
         }
 
+        public void DrawStretcherPatient(int id,int variant,Vector3 patientPosition,float carrierYaw)
+        {
+            DrawActor(id,2,variant,patientPosition,carrierYaw,0,.59f,false,false,0,5);
+        }
+
         public void DrawActor(int id, int kind, int variant, Vector3 position, float yaw,
-                              float speed, float hp01, bool acting, bool possessed, float dt, int activity = 0, Vector3 hitDirection = default)
+                              float speed, float hp01, bool acting, bool possessed, float dt, int activity = 0,
+                              Vector3 hitDirection = default, Vector3? companionPosition = null, float companionYaw = 0)
         {
             if (!district) return;
             BeginActors();
@@ -288,18 +305,27 @@ namespace Evac
             m.stride = Mathf.MoveTowards(m.stride, Mathf.Clamp01(speed / 3.6f), dt * 6);
             m.action = kind == 0 && activity == 4 ? 1 :
                 Mathf.MoveTowards(m.action, acting ? 1 : 0, dt * (kind == 0 ? 7 : 5));
+            bool far = overviewCrowd || (position-crowdCameraPosition).sqrMagnitude > nearActorDistanceSquared;
             if (hp01>0)
             {
                 float stepLength=Mathf.Lerp(.98f,1.95f,Mathf.SmoothStep(0,1,Mathf.InverseLerp(.58f,.96f,m.stride)));
-                float angularSpeed=Mathf.Max(.8f,2*Mathf.PI*Mathf.Max(0,speed)/stepLength);
+                float angularSpeed=2*Mathf.PI*Mathf.Max(0,speed)/stepLength;
+                if(far)angularSpeed=Mathf.Max(.8f,angularSpeed);
+                else if(speed<.105f)angularSpeed=0;
                 m.phase = Mathf.Repeat(m.phase + dt*angularSpeed, Mathf.PI*2);
             }
-            motions[id] = m;
-            if (possessed) return;
+            if (possessed)
+            {
+                m.tracking=false;
+                motions[id]=m;
+                return;
+            }
 
-            bool far = overviewCrowd || (position-crowdCameraPosition).sqrMagnitude > nearActorDistanceSquared;
             int key = kind * 4 + variant + (far ? 16 : 0);
-            if (!batches.TryGetValue(key, out var batch))
+            CrowdBatch batch;
+            while (batches.TryGetValue(key,out batch) && batch.transforms.Count>=CrowdBatchLimit)
+                key+=32;
+            if (batch==null)
             {
                 batch = new CrowdBatch { mesh = GetMesh((far ? "actorFar" : "actor") + kind + "_" + variant) };
                 batches.Add(key, batch);
@@ -309,21 +335,70 @@ namespace Evac
             if (kind == 1 && variant == 2) { girth *= 1.24f; stature *= 1.09f; }
             else if (kind == 1 && variant == 1) { girth *= .89f; stature *= .96f; }
             var rotation = Quaternion.Euler(0, yaw, 0);
+            bool onStretcher=activity==5;
+            if(onStretcher)
+            {
+                position+=Vector3.up*(.76f+.146f*girth)+rotation*Vector3.forward*(.87f*stature+.052f);
+                rotation*=Quaternion.Euler(-90,0,0);
+            }
             if (hp01 <= 0)
             {
                 float angle=FallAngle(m.fall);
                 position.y += .18f*Mathf.Sin(angle*Mathf.Deg2Rad);
                 rotation = Quaternion.AngleAxis(angle,Vector3.Cross(Vector3.up,m.fallDirection)) * rotation;
             }
-            batch.transforms.Add(Matrix4x4.TRS(position, rotation, new Vector3(girth,stature,girth)));
-            batch.poses.Add(new Vector4(m.phase, m.stride, m.action, m.impact));
-            batch.forms.Add(new Vector4(kind + 1, activity, region, m.fall));
+            var scale = new Vector3(girth,stature,girth);
+            float limp=kind==2 && activity==1 ? 1 :
+                ActorGait.Smooth(.24f,.66f,1-hp01)*(kind==1?.66f:1);
+            int planted=0;
+            Vector4 left=default,right=default,aid=default;
+            bool tracking=!far && hp01>0 && position.y<.09f && dt>0;
+            if(tracking)
+            {
+                if(!m.tracking || (position-m.contactRoot).sqrMagnitude>.8f)
+                {
+                    m.left=default;
+                    m.right=default;
+                }
+                if(ActorGait.Solve(m.phase,m.stride,limp,0,position,rotation,scale,dt,ref m.left,out left))planted|=1;
+                if(ActorGait.Solve(m.phase,m.stride,limp,1,position,rotation,scale,dt,ref m.right,out right))planted|=2;
+            }
+            if(!far && hp01>0 && activity==1 && companionPosition.HasValue)
+                aid=SupportAnchor(position,rotation,scale,kind,companionPosition.Value,companionYaw);
+            m.contactRoot=position;
+            m.tracking=tracking;
+            motions[id]=m;
+            batch.transforms.Add(Matrix4x4.TRS(position, rotation, scale));
+            batch.poses.Add(new Vector4(m.phase, m.stride, onStretcher?Time.time:m.action, m.impact));
+            batch.forms.Add(new Vector4(kind + 1, activity, planted+limp*.25f, m.fall));
+            batch.left.Add(left);
+            batch.right.Add(right);
+            batch.aid.Add(aid);
+            if(onStretcher)return;
             float grounded = Mathf.SmoothStep(0,1,Mathf.InverseLerp(.21f,.85f,m.fall));
             Vector3 offset = Vector3.Lerp(new Vector3(.26f,0,.19f),m.fallDirection*(.78f*stature),grounded);
             Vector3 shadowPosition = new Vector3(position.x+offset.x,.062f,position.z+offset.z);
             float directionAngle = Mathf.Atan2(m.fallDirection.x,m.fallDirection.z)*Mathf.Rad2Deg;
             shadows.Add(Matrix4x4.TRS(shadowPosition,Quaternion.Euler(0,Mathf.LerpAngle(54,directionAngle,grounded),0),
                 new Vector3(girth*Mathf.Lerp(.47f,.40f,grounded),1,Mathf.Lerp(.98f,stature,grounded))));
+        }
+
+        static Vector4 SupportAnchor(Vector3 position,Quaternion rotation,Vector3 scale,int kind,
+                                     Vector3 other,float otherYaw)
+        {
+            Vector3 gap=other-position;
+            gap.y=0;
+            float distance=gap.magnitude;
+            float weight=(1-ActorGait.Smooth(.79f,1.14f,distance))*ActorGait.Smooth(.10f,.26f,distance);
+            if(weight<=.001f)return Vector4.zero;
+            Quaternion otherFacing=Quaternion.Euler(0,otherYaw,0);
+            Vector3 shoulderSide=otherFacing*Vector3.right;
+            float inward=Vector3.Dot(-gap,shoulderSide)<0?-1:1;
+            Vector3 shoulder=other+shoulderSide*(.173f*inward)+
+                otherFacing*Vector3.forward*.024f+Vector3.up*(kind==0?1.36f:1.40f);
+            Vector3 anchor=Quaternion.Inverse(rotation)*(shoulder-position);
+            float arm=anchor.x<0?-1:1;
+            return new Vector4(anchor.x/scale.x,anchor.y/scale.y,anchor.z/scale.z,arm*weight);
         }
 
         static readonly float[] FallTimes = { 0,.18f,.4f,.64f,.79f,.9f,1 };
@@ -348,6 +423,9 @@ namespace Evac
                 batch.transforms.Clear();
                 batch.poses.Clear();
                 batch.forms.Clear();
+                batch.left.Clear();
+                batch.right.Clear();
+                batch.aid.Clear();
             }
             shadows.Clear();
         }
@@ -377,6 +455,9 @@ namespace Evac
                     batch.properties.Clear();
                     batch.properties.SetVectorArray(Pose, batch.poses);
                     batch.properties.SetVectorArray(Form, batch.forms);
+                    batch.properties.SetVectorArray(PlantLeft, batch.left);
+                    batch.properties.SetVectorArray(PlantRight, batch.right);
+                    batch.properties.SetVectorArray(AidPosition, batch.aid);
                     Graphics.DrawMeshInstanced(batch.mesh, 0, surface, batch.transforms, batch.properties,
                         ShadowCastingMode.Off, false);
                 }
@@ -387,6 +468,9 @@ namespace Evac
                         batch.properties.Clear();
                         batch.properties.SetVector(Pose, batch.poses[i]);
                         batch.properties.SetVector(Form, batch.forms[i]);
+                        batch.properties.SetVector(PlantLeft, batch.left[i]);
+                        batch.properties.SetVector(PlantRight, batch.right[i]);
+                        batch.properties.SetVector(AidPosition, batch.aid[i]);
                         Graphics.DrawMesh(batch.mesh, batch.transforms[i], surface, 0, null, 0, batch.properties);
                     }
                 }
@@ -395,7 +479,7 @@ namespace Evac
                 Graphics.DrawMeshInstanced(shadow, 0, shadowMaterial, shadows, null, ShadowCastingMode.Off, false);
         }
 
-        public void DrawFirstPerson(bool visible,float motion,float recoil,float reload01,float time,int activity = 0,float aim01 = 0)
+        public void DrawFirstPerson(bool visible,float motion,float recoil,float reload01,float time,int activity = 0,float aim01 = 0,bool handsOnStretcher = false)
         {
             if (!equipment) return;
             if (!playerCamera) playerCamera = Camera.main;
@@ -404,8 +488,9 @@ namespace Evac
             ShowLandmarkRoofs(visible);
             ShowRoomWingRoof(visible);
             if (stationRoof && stationRoof.activeSelf!=visible) stationRoof.SetActive(visible);
-            if (equipment.activeSelf != visible) equipment.SetActive(visible);
-            if (!visible) return;
+            bool showEquipment=visible && !handsOnStretcher;
+            if (equipment.activeSelf!=showEquipment) equipment.SetActive(showEquipment);
+            if (!showEquipment)return;
             int pose = activity >= 1 && activity <= 3 ? activity : 0;
             if (pose != handActivity)
             {
@@ -593,6 +678,7 @@ namespace Evac
             if(surface) ReleaseOwned(surface);
             if(shadowMaterial) ReleaseOwned(shadowMaterial);
             if(skyMaterial) ReleaseOwned(skyMaterial);
+            ReleaseRefugeAssets();
             if(roomWingMaterial) ReleaseOwned(roomWingMaterial);
             if(roomLight) ReleaseOwned(roomLight);
             if(waterMaterial) ReleaseOwned(waterMaterial);

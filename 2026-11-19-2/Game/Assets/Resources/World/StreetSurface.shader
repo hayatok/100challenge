@@ -15,11 +15,15 @@ SubShader {
  #pragma fragment frag
  #pragma target 3.0
  #pragma multi_compile_instancing
+ #pragma instancing_options forcemaxcount:100
  #pragma multi_compile_local __ EVAC_MOBILE
  #include "UnityCG.cginc"
  UNITY_INSTANCING_BUFFER_START(Agents)
  UNITY_DEFINE_INSTANCED_PROP(float4,_Pose)
  UNITY_DEFINE_INSTANCED_PROP(float4,_Form)
+ UNITY_DEFINE_INSTANCED_PROP(float4,_PlantLeft)
+ UNITY_DEFINE_INSTANCED_PROP(float4,_PlantRight)
+ UNITY_DEFINE_INSTANCED_PROP(float4,_AidPosition)
  UNITY_INSTANCING_BUFFER_END(Agents)
  float _Evening, _WetTime, _Station, _WorldDistrict;
  float4 _FieldSignal, _FieldSignalTint;
@@ -29,8 +33,8 @@ SubShader {
  struct V { float4 pos:POSITION; fixed4 col:COLOR; float2 joint:TEXCOORD0; float2 panel:TEXCOORD1; float3 normal:NORMAL; UNITY_VERTEX_INPUT_INSTANCE_ID };
  struct F { float4 pos:SV_POSITION; float4 color:COLOR; float3 world:TEXCOORD0; float3 local:TEXCOORD1; float2 type:TEXCOORD2; float3 rest:TEXCOORD3; float3 print:TEXCOORD4; float3 normal:TEXCOORD5; };
  #include "ActorMotion.cginc"
- float3 deform(float3 p,float joint,float4 a,float4 f){
-     if(f.x>0 && f.x<4)p=actorMotion(p,joint,a,f);
+ float3 deform(float3 p,float joint,float4 a,float4 f,float4 left,float4 right,float4 aid){
+     if(f.x>0 && f.x<4)p=actorMotion(p,joint,a,f,left,right,aid);
      if(f.x==4)p=actorViewModel(p,joint,a,f);
      return p;
  }
@@ -38,12 +42,15 @@ SubShader {
      UNITY_SETUP_INSTANCE_ID(v);
      float4 a=UNITY_ACCESS_INSTANCED_PROP(Agents,_Pose);
      float4 f=UNITY_ACCESS_INSTANCED_PROP(Agents,_Form);
-     float3 p=deform(v.pos.xyz,v.joint.x,a,f);
+     float4 left=UNITY_ACCESS_INSTANCED_PROP(Agents,_PlantLeft);
+     float4 right=UNITY_ACCESS_INSTANCED_PROP(Agents,_PlantRight);
+     float4 aid=UNITY_ACCESS_INSTANCED_PROP(Agents,_AidPosition);
+     float3 p=deform(v.pos.xyz,v.joint.x,a,f,left,right,aid);
      F o; o.pos=UnityObjectToClipPos(float4(p,1));
      o.world=mul(unity_ObjectToWorld,float4(p,1)).xyz;
      o.normal=float3(0,0,0);
      if(f.x>0 && f.x<=4){
-        float3 moved=deform(v.pos.xyz+v.normal*.01,v.joint.x,a,f)-p;
+        float3 moved=deform(v.pos.xyz+v.normal*.01,v.joint.x,a,f,left,right,aid)-p;
         o.normal=mul((float3x3)unity_ObjectToWorld,moved);
      }
      o.local=p;o.rest=v.pos.xyz;o.print=float3(v.panel,v.joint.y);o.color=v.col;o.type=float2(f.x,f.z);return o;
