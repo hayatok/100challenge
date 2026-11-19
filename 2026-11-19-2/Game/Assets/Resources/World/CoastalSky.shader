@@ -49,8 +49,9 @@ Shader "Evac/CoastalSky" {
      float3 rgb=lerp(plate,float3(.60,.65,.65),lower);
      float eveningGlow=saturate(dot(ray,normalize(float3(-.62,.11,-.62))));
      float dusk=pow(eveningGlow,4.)*(1-smoothstep(.04,.54,ray.y));
-     float3 night=rgb*float3(.69,.72,.79)+dusk*float3(.135,.069,.023);
-     return fixed4(lerp(rgb,night,_Evening),1);
+     float3 night=rgb*float3(.37,.49,.73)+float3(.018,.032,.045)
+                  +dusk*float3(.185,.069,.018);
+     return fixed4(lerp(rgb,night,smoothstep(.12,.91,_Evening)),1);
  }
  ENDCG
  }

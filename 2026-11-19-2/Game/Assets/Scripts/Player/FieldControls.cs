@@ -7,7 +7,7 @@ namespace Evac
         Vector2 touchWalk, touchLook, touchOrigin, pointerStart, previousPointer;
         int moveFinger=-1,lookFinger=-1,fireFinger=-1,mapFinger=-1;
         int tapUnit=-1, pinSquad;
-        float lastTap, pinAt=-20, stride, stepAt, travelSpeed, dodgeRoll,mapYaw,transitionTime=-10;
+        float lastTap, pinAt=-20, stride, stepAt, travelSpeed, dodgeRoll,mapYaw;
         bool mouseMap, mapDragged, focusAim, touchAim;
         float aimBlend, runBlend, stepWeight, turnBank, kickVelocity, cameraKick;
         Vector2 footDrive;
@@ -135,6 +135,7 @@ namespace Evac
             bool staffed=false;
             foreach(var soldier in roster) if(soldier.squad==squad&&soldier.active){staffed=true;break;}
             if(!staffed)return;
+            FinishTransferForInput();
             var ray=eye.ViewportPointToRay(new Vector3(.5f,.5f,0));
             var subject=sim.SightContact(ray.origin,ray.direction);
             if(subject!=null && sim.RadioOrder(squad,subject))
@@ -187,7 +188,7 @@ namespace Evac
                 if(Input.GetMouseButtonUp(0)&&mouseMap){mouseMap=false;if(!mapDragged&&!ui.BlocksPointer(pos))PointAt(pos,false);}
             }
             mapCenter.x=Mathf.Clamp(mapCenter.x,-22,22);
-            mapCenter.z=Mathf.Clamp(mapCenter.z,-ApproachBlocks.StreetEnd,ApproachBlocks.StreetEnd);
+            mapCenter.z=Mathf.Clamp(mapCenter.z,-ApproachBlocks.StreetEnd,151f);
         }
         void BeginMap(Vector2 p){pointerStart=previousPointer=p;mapDragged=false;}
         void DragMap(Vector2 p)
@@ -204,6 +205,7 @@ namespace Evac
         }
         void PointAt(Vector2 screen,bool groundOnly)
         {
+            if(TryPlotWaypoint(screen))return;
             if(choosingBeacon)
             {
                 if(MapGround(screen,out var site))TargetLamp(site);
@@ -227,7 +229,7 @@ namespace Evac
                 }
             }
             if(MapGround(screen,out var ground))
-                IssueOrder(new Vector3(Mathf.Clamp(ground.x,-22,22),0,Mathf.Clamp(ground.z,-ApproachBlocks.StreetEnd,ApproachBlocks.StreetEnd)));
+                IssueOrder(new Vector3(Mathf.Clamp(ground.x,-22,22),0,Mathf.Clamp(ground.z,-ApproachBlocks.StreetEnd,151f)));
         }
         void FrameCamera(float dt,bool snap)
         {
@@ -247,10 +249,11 @@ namespace Evac
             {
                 var r=Quaternion.Euler(51,mapYaw,0);
                 var dest=mapCenter-r*Vector3.forward*49;
-                float a=snap || ReducedMotion ? 1:1-Mathf.Exp(-dt*15);
+                float a=snap || ReducedMotion || blendingView ? 1:1-Mathf.Exp(-dt*15);
                 eye.transform.SetPositionAndRotation(Vector3.Lerp(eye.transform.position,dest,a),r);
                 eye.orthographicSize=Mathf.Lerp(eye.orthographicSize,zoom,a);
             }
+            BlendView(dt,direct);
         }
         void LateUpdate()
         {
@@ -267,8 +270,9 @@ namespace Evac
             DrawFleetMarkers();
             BeaconTag();
             ChapterMarker();
-            float transition=Mathf.Clamp01(1-(Time.unscaledTime-transitionTime)/.22f);
-            if(transition>0&&!ReducedMotion)Box(0,0,Screen.width,Screen.height,new Color(.06f,.09f,.08f,transition*.3f));
+            WingMarker();
+            WaypointMarkers();
+            if(blendingView)return;
             if(sim.Controlled!=null)
             {
                 float cx=Screen.width*.5f,cy=Screen.height*.5f;

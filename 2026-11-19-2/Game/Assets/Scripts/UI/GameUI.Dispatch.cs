@@ -6,11 +6,11 @@ namespace Evac
     {
         bool fieldDispatchOpen;
         int dispatchSector;
-        internal bool FieldOverlay => bookOpen || fieldPanel || requestOpen || fieldDispatchOpen || fleetOpen || searchDeskOpen;
+        internal bool FieldOverlay => wingOpen || bookOpen || fieldPanel || requestOpen || fieldDispatchOpen || fleetOpen || searchDeskOpen;
         internal bool CloseFieldOverlay()
         {
             if(!FieldOverlay) return false;
-            bookOpen=fieldPanel=requestOpen=fieldDispatchOpen=fleetOpen=searchDeskOpen=false;
+            wingOpen=bookOpen=fieldPanel=requestOpen=fieldDispatchOpen=fleetOpen=searchDeskOpen=false;
             return true;
         }
         internal void SearchHotkey()

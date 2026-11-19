@@ -13,6 +13,16 @@ namespace Evac
             Instrument(identity);
             Fill(R(14,12,4,hgt),Rail);
             string objective=ChapterTask?Field.ChapterTitle:G.SectorName;
+            var actor=Field.Controlled;
+            if(Field.WingActive && actor!=null && actor.pos.z>=93 && Mathf.Abs(actor.pos.x)<14.5f)
+            {
+                objective=Field.WingTitle;
+                if(Mathf.Abs(actor.pos.x)>3.5f)
+                {
+                    int row=actor.pos.z<110?0:actor.pos.z<130?1:2;
+                    objective=Field.WingRoomName(row*2+(actor.pos.x<0?0:1));
+                }
+            }
             Text(R(25,14,left-22,20),G.DistrictName(G.MissionIndex)+"　"+G.SquadName(G.SelectedSquad),14,Mist,true);
             Text(R(25,32,left-22,hgt-20),objective,20,Cream,true);
             float pauseW=G.TouchUI?81:76, bookW=G.TouchUI?111:123;

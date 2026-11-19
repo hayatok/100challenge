@@ -55,6 +55,8 @@ namespace Evac
         public bool DispatchDistrict(int squad,int sector,bool transport)
         {
             if(!CanDispatchDistrict(squad,sector) || (DistrictOutcome(sector)==2 && transport))return false;
+            if(Wing!=null)Wing.jobs[squad]=0;
+            ClearWaypoints(squad);
             CancelChapterDispatch(squad);
             CancelSearchDispatch(squad);
             foreach(var other in state.squads)

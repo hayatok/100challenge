@@ -35,92 +35,97 @@ namespace Evac
                 StartCoroutine(MeasureField(Mathf.Clamp(benchmarkMinutes,1,60)));
             else StartCoroutine(Inspect());
         }
+        bool PrepareClinicFilm(out int selected)
+        {
+            selected=-1;
+            sim.StartMission(1,Difficulty.Story);
+            if(!sim.ChooseChapterOption(0) || !sim.DispatchChapter(0))return false;
+            for(int i=0;i<2000 && sim.ChapterPhase==1;i++)sim.Tick(.1f);
+            if(sim.ChapterPhase!=2)return false;
+            sim.Order(0,SquadOrder.Guard,sim.ActiveGate);
+            sim.Order(1,SquadOrder.Guide,sim.ActiveAssembly);
+            sim.Order(2,SquadOrder.Engineer,sim.ActiveWorks);
+            if(!sim.DispatchDistrict(0,0,false))return false;
+            for(int i=0;i<3500 && !sim.WingActive && sim.Result==SimResult.Active;i++)sim.Tick(.1f);
+            if(!sim.WingActive || !sim.DispatchWing(0,0,0) || !sim.DispatchWing(2,1,0))return false;
+            for(int i=0;i<1800 && (!sim.WingStationDone(0) || !sim.WingStationDone(1));i++)sim.Tick(.1f);
+            if(!sim.DispatchWing(2,2,0))return false;
+            for(int i=0;i<900 && !sim.WingStationDone(2);i++){
+                sim.Tick(.08f);
+                float gap=Vector3.Distance(sim.WingFreightPosition,sim.WingPosition(2));
+                if(gap<10 && gap>4 && sim.WingHasFreight)break;
+            }
+            if(!sim.WingHasFreight || sim.WingStationDone(2))return false;
+            EnterField();
+            float nearest=float.PositiveInfinity;
+            for(int i=0;i<roster.Count;i++){
+                var u=roster[i];
+                if(!u.active || u.squad!=2)continue;
+                float distance=(u.pos-sim.WingFreightPosition).sqrMagnitude;
+                if(distance<nearest){nearest=distance;selected=i;}
+            }
+            if(selected<0 || nearest>16)return false;
+            // Hold this forward crew while the command shot establishes the ward.
+            sim.Order(2,SquadOrder.Move,roster[selected].pos);
+            SelectSoldier(selected);LocateWing(2);FrameCamera(0,true);
+            return true;
+        }
+
         IEnumerator Film()
         {
             const int fps=24, width=960, height=540;
             string frames=Path.Combine(inspectionFolder,"frames");
             if(Directory.Exists(frames) && Directory.GetFileSystemEntries(frames).Length>0)
-            {
-                Debug.LogError("Film requires an empty frames directory: "+frames);
-                Application.Quit(2);yield break;
-            }
+            {Debug.LogError("Film requires an empty frames directory");Application.Quit(2);yield break;}
             Directory.CreateDirectory(frames);
             Screen.SetResolution(width,height,FullScreenMode.Windowed);
             for(int n=0;n<120 && (Screen.width!=width || Screen.height!=height);n++)yield return null;
-            if(Screen.width!=width || Screen.height!=height){Debug.LogError("Film resolution unavailable");Application.Quit(2);yield break;}
+            if(Screen.width!=width || Screen.height!=height || !PrepareClinicFilm(out int chosen))
+            {Debug.LogError("Unable to reach the clinic with its assigned equipment");Application.Quit(2);yield break;}
             Time.captureFramerate=fps;
             using var mix=new FilmAudio(Path.Combine(inspectionFolder,"mix.wav"));
-            if(!mix.Recording){Debug.LogError("Windows audio renderer could not start");Application.Quit(2);yield break;}
-            sim.StartMission(4,Difficulty.Standard);
-            sim.ChooseChapterOption(0);sim.DispatchChapter(0);
-            for(int step=0;step<1800 && sim.ChapterPhase==1 && sim.Result==SimResult.Active;step++)sim.Tick(.1f);
-            if(sim.ChapterPhase!=2){Debug.LogError("Unable to reach the evacuation phase for capture");Application.Quit(2);yield break;}
-            EnterField();
-            int chosen=0;
-            for(int n=0;n<roster.Count;n++)if(roster[n].squad==0 && RosterAlive(n)){chosen=n;break;}
-            int shotsBefore=roster[chosen].shots;
-            Vector3 startPosition=default;
-            float distance=0;
-            var waitForPicture=new WaitForEndOfFrame();
-            for(int frame=0;frame<15*fps;frame++)
-            {
+            if(!mix.Recording){Debug.LogError("No recording device for the game mix");Application.Quit(2);yield break;}
+            var medic=roster[chosen];
+            var patient=sim.Find(sim.WingResidentId);
+            Vector3 firstPatient=patient.pos,firstMedic=medic.pos,firstOxygen=sim.WingFreightPosition;
+            int rescuedFrame=-1;float distance=0;
+            var frameEnd=new WaitForEndOfFrame();
+            for(int frame=0;frame<15*fps;frame++){
                 yield return null;
-                if(Phase!="Playing"){Debug.LogError("Film lost field simulation");Application.Quit(2);yield break;}
-                if(frame==18){SelectSquad(1);SelectOrder((int)SquadOrder.Guide);IssueOrder(sim.ActiveAssembly);}
-                if(frame==48){SelectSquad(0);SelectOrder((int)SquadOrder.Guard);IssueOrder(sim.ActiveGate);}
-                if(frame==3*fps){SelectSoldier(chosen);Possess(chosen);startPosition=roster[chosen].pos;}
-                if(frame>=3*fps && frame<12*fps)
-                {
-                    Unit pawn=sim.Controlled;
-                    if(pawn==null){Debug.LogError("Film lost selected soldier");Application.Quit(2);yield break;}
-                    Vector3 target=sim.ActiveAssembly;
-                    if(frame>=5*fps)
-                    {
-                        float closest=float.PositiveInfinity;
-                        foreach(var other in sim.Units)
-                        {
-                            if(!other.active||other.kind!=UnitKind.Infected)continue;
-                            float d=(other.pos-pawn.pos).sqrMagnitude;
-                            if(d<closest){closest=d;target=other.pos;}
-                        }
-                    }
-                    Vector3 delta=target-pawn.pos;
-                    float yaw=Mathf.MoveTowardsAngle(pawn.yaw,Mathf.Atan2(delta.x,delta.z)*Mathf.Rad2Deg,105f/fps);
-                    float speed=frame<8*fps?.72f:0;
-                    Vector3 before=pawn.pos;
-                    sim.Move(Quaternion.Euler(0,yaw,0)*Vector3.forward*speed,yaw,1f/fps);
-                    travelSpeed=(pawn.pos-before).magnitude*fps;
-                    distance+=travelSpeed/fps;
-                    stride+=travelSpeed*2.55f/fps;
-                    if(frame>=7*fps && frame<10*fps && frame%8==0)FireOnce();
-                    if(frame==10*fps)Reload();
+                if(Phase!="Playing"){Debug.LogError("Lost the live operation");Application.Quit(2);yield break;}
+                if(frame==8){SelectSoldier(chosen);LocateWing(2);sound.Signal("dispatch");}
+                if(frame==42){Possess(chosen);if(sim.CanTakeWingFreight)sim.WingTakeCart();}
+                if(frame>=42 && frame<308){
+                    if(sim.Controlled!=medic){Debug.LogError("Lost assigned field specialist");Application.Quit(2);yield break;}
+                    Vector3 goal=sim.WingPosition(rescuedFrame<0?2:4);
+                    Vector3 waypoint=sim.RouteWaypoint(medic.pos,goal);
+                    Vector3 heading=waypoint-medic.pos;
+                    bool lookAtPatient=rescuedFrame>=0 && (frame-rescuedFrame<32 || frame>267);
+                    Vector3 view=lookAtPatient?patient.pos-medic.pos:heading;
+                    float yaw=view.sqrMagnitude>.01f?Mathf.MoveTowardsAngle(medic.yaw,Mathf.Atan2(view.x,view.z)*Mathf.Rad2Deg,155f/fps):medic.yaw;
+                    Vector3 before=medic.pos;
+                    Vector3 walk=lookAtPatient?Vector3.zero:Vector3.ClampMagnitude(heading*(fps/5.3f),.76f);
+                    sim.Move(walk,yaw,1f/fps);
+                    travelSpeed=(medic.pos-before).magnitude*fps;distance+=travelSpeed/fps;stride+=travelSpeed*2.55f/fps;
+                    if(rescuedFrame<0 && HandleWing(2,0))rescuedFrame=frame;
                     FrameCamera(1f/fps,false);
                 }
-                if(frame==12*fps){CommandMode();SelectSquad(2);SelectOrder((int)SquadOrder.Engineer);IssueOrder(sim.EngineerDestination);}
-                yield return waitForPicture;
-                if(!mix.WriteFrame()){Debug.LogError("No game audio frame available");Application.Quit(2);yield break;}
+                if(frame==308){CommandMode();LocateWing(4);SelectSquad(2);HandleWing(4,0);}
+                yield return frameEnd;
+                if(!mix.WriteFrame()){Debug.LogError("No game audio frame");Application.Quit(2);yield break;}
                 var image=ScreenCapture.CaptureScreenshotAsTexture();
-                if(frame%fps==0)
-                {
-                    bool visible=false;
-                    for(int y=1;y<5;y++)
-                        for(int x=1;x<5;x++)
-                            visible|=image.GetPixel(x*width/5,y*height/5).maxColorComponent>.06f;
-                    if(!visible)
-                    {
-                        Debug.LogError("Film received a black frame. Start the Windows player in a visible window.");
-                        Destroy(image);Application.Quit(2);yield break;
-                    }
-                }
+                bool visible=false;
+                for(int y=1;y<5;y++)for(int x=1;x<5;x++)visible|=image.GetPixel(x*width/5,y*height/5).maxColorComponent>.06f;
+                if(!visible){Destroy(image);Debug.LogError("Black film frame "+frame);Application.Quit(2);yield break;}
                 File.WriteAllBytes(Path.Combine(frames,frame.ToString("D4")+".jpg"),image.EncodeToJPG(91));
                 Destroy(image);
             }
-            int fired=roster[chosen].shots-shotsBefore;
-            if(fired<1 || distance<1 || sim.Controlled!=null){Debug.LogError("Film did not complete gameplay actions");Application.Quit(2);yield break;}
-            if(mix.Peak<.001f || Math.Abs(mix.Seconds-15)>.045)
-            {Debug.LogError($"Invalid game mix: {mix.Seconds:F3} s, peak {mix.Peak:F4}");Application.Quit(2);yield break;}
-            File.WriteAllText(Path.Combine(inspectionFolder,"film.txt"),
-                $"Mission {MissionIndex}; soldier {roster[chosen].id}; shots {fired}; walked {distance:F2} m; displacement {(roster[chosen].pos-startPosition).magnitude:F2} m; final mode {Mode}; 360 frames at 24 fps; {width}x{height}; mix {mix.Seconds:F3} s, peak {mix.Peak:F4}.");
+            float followed=Vector3.Distance(firstPatient,patient.pos);
+            string detail=$"Mission {MissionIndex}; {sim.WingTitle}; soldier {medic.name} #{medic.id}; RTS→FPS frame 42, FPS→RTS frame 308; walked {distance:F2} m; net {Vector3.Distance(medic.pos,firstMedic):F2} m; oxygen moved {Vector3.Distance(firstOxygen,sim.WingFreightPosition):F2} m; {patient.name} assisted at frame {rescuedFrame}, moved {followed:F2} m; end {Mode}; 360 frames, 24 fps, {width}x{height}; mix {mix.Seconds:F3} s peak {mix.Peak:F4}.";
+            File.WriteAllText(Path.Combine(inspectionFolder,"film.txt"),detail);
+            if(rescuedFrame<0 || distance<9 || followed<2 || sim.Controlled!=null || mix.Peak<.001f || Math.Abs(mix.Seconds-15)>.045){
+                Debug.LogError("Film outcome incomplete: "+detail);Application.Quit(2);yield break;
+            }
             Application.Quit(0);
         }
         IEnumerator MeasureField(int minutes)
@@ -195,6 +200,16 @@ namespace Evac
                 yield return new WaitForEndOfFrame();
                 if(Phase!="Playing" || MissionIndex!=m) throw new Exception("Mission not playable: "+m);
                 if(m==0||m==4)yield return Picture(m==0?"market-command":"station-command");
+                if(m==3 || m==7)
+                {
+                    Possess(0);
+                    var pawn=sim.Controlled;
+                    var toward=sim.ActiveAssembly-pawn.pos;
+                    sim.Move(Vector3.zero,Mathf.Atan2(toward.x,toward.z)*Mathf.Rad2Deg,0);
+                    yield return new WaitForSecondsRealtime(.72f);
+                    yield return Picture(m==3?"freight-night":"depot-night");
+                    CommandMode();
+                }
                 if(m==1)
                 {
                     ui.SearchHotkey();yield return Picture("operation-book");ui.CloseFieldOverlay();
@@ -233,7 +248,8 @@ namespace Evac
                     Resume();CommandMode();
                 }
                 int sector=-1;
-                for(int i=0;i<11000&&sim.Result==SimResult.Active&&!sim.CanDepart;i++)
+                bool drewWing=false, enteredWing=false;
+                for(int i=0;i<14000&&sim.Result==SimResult.Active&&!sim.CanDepart;i++)
                 {
                     if(sim.ChapterPhase==1 || sim.ChapterPhase==3)
                     {
@@ -253,12 +269,38 @@ namespace Evac
                         sim.Order(m==0?0:1,SquadOrder.Guide,sim.ActiveAssembly);
                         if(m>0)sim.Order(2,SquadOrder.Engineer,sim.EngineerDestination);
                     }
+                    sim.DriveWingInspection();
+                    if(sim.WingActive && m%2==0)
+                    {
+                        if(!drewWing)
+                        {
+                            drewWing=true;LocateWing(0);FrameCamera(0,true);
+                            yield return new WaitForEndOfFrame();
+                            ui.OpenWing(0);yield return Picture("wing-"+m+"-plan");
+                            if(!ui.FieldOverlay)throw new Exception("Building floor plan did not stay open: "+m);
+                            ui.CloseFieldOverlay();
+                        }
+                        if(!enteredWing && !sim.WingComplete)
+                        {
+                            int pick=roster.FindIndex(s=>s.active && Mathf.Abs(s.pos.x)>5 && s.pos.z>=116 && s.pos.z<124);
+                            if(pick>=0)
+                            {
+                                enteredWing=true;Possess(pick);
+                                sim.Move(Vector3.zero,roster[pick].pos.x<0?-77:77,0);
+                                yield return new WaitForSecondsRealtime(.68f);
+                                yield return Picture("wing-"+m+"-direct");
+                                CommandMode();yield return new WaitForSecondsRealtime(.65f);
+                                yield return Picture("wing-"+m+"-command");
+                            }
+                        }
+                    }
                     if(sim.FleetDecisionPending)sim.ResolveFleetBlock(false);
                     if(sim.DistrictOutcome(sim.Sector)==0 && sim.DistrictAssignment(0)<0 && (m>0 || sim.Boarded>=sim.SectorGoal))
                         sim.DispatchDistrict(0,sim.Sector,(m+sim.Sector)%2==0);
                     sim.Tick(.1f);
                 }
-                if(!sim.CanDepart)throw new Exception("Departure unavailable: "+sim.Mission.title+" "+sim.Objective);
+                if(!sim.CanDepart)throw new Exception("Departure unavailable: "+sim.Mission.title+" "+sim.Objective+" "+sim.WingStatus);
+                if(m%2==0 && (!drewWing || !enteredWing))throw new Exception("Unverified building entry: "+m);
                 Depart();
                 float until=Time.realtimeSinceStartup+24;
                 while(Phase=="Playing" && Time.realtimeSinceStartup<until)yield return null;

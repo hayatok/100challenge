@@ -19,7 +19,7 @@ namespace Evac
             float shortest=2.9f*2.9f;
             foreach(var c in state.units)
             {
-                if(c==u || c.boarded || c.kind==UnitKind.Infected || IsSearchResident(c) || IsChapterResident(c) || IsChapterLiaison(c))continue;
+                if(c==u || c.boarded || c.kind==UnitKind.Infected || IsWingAide(c) || WingPassenger(c) || WingResident(c) || IsSearchResident(c) || IsChapterResident(c) || IsChapterLiaison(c))continue;
                 bool patient=IsSoldier(c)?!c.active && u.medkits>0:c.active && Brain(c).escort<0 && Brain(c).injured;
                 if(!patient)continue;
                 float d=FlatSq(c.pos,u.pos);

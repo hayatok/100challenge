@@ -19,6 +19,7 @@ namespace Evac
         {
             if(ChapterTask)return Field.ChapterChoice<0?"現場方針を決める":Field.ChapterTitle;
             if(G.FleetBlocked)return "本線の通行障害";
+            if(Field.WingActive && !Field.WingComplete)return "館内の救助を指揮";
             if(!G.IsDuty && !G.HasPosting(G.CurrentDistrict) && G.FieldOutcome(G.CurrentDistrict)==0) return G.FieldDistrict(G.CurrentDistrict)+"に班を派遣";
             return G.CanDepart?"出発を指示":"作戦手帳";
         }
@@ -26,6 +27,7 @@ namespace Evac
         {
             if(ChapterTask){bookOpen=true;return;}
             if(G.FleetBlocked){fleetOpen=true;return;}
+            if(Field.WingActive && !Field.WingComplete){OpenWing();return;}
             if(!G.IsDuty && !G.HasPosting(G.CurrentDistrict) && G.FieldOutcome(G.CurrentDistrict)==0){OpenDispatch();return;}
             if(G.CanDepart)Submit(G.Depart);else bookOpen=true;
         }
@@ -59,12 +61,14 @@ namespace Evac
             if(ChapterTask) ChapterOrders(content,y+144,cw);
             else BookOrders(content,y+144,cw);
             Fill(R(x,y+390,width,1),Edge);
-            int count=G.HasFleet?4:3;
+            bool showWing=Field.WingActive || Field.WingComplete;
+            int count=(G.HasFleet?4:3)+(showWing?1:0);
             float tile=(width-(count-1)*6)/count;
             if(Button(R(x,y+401,tile,49),"地区派遣",dark:true)){bookOpen=false;OpenDispatch();}
             if(Button(R(x+tile+6,y+401,tile,49),"市街捜索",dark:true)){bookOpen=false;searchDeskOpen=true;}
             int slot=2;
             if(G.HasFleet && Button(R(x+slot++*(tile+6),y+401,tile,49),"車列の運行",primary:G.FleetBlocked,dark:true)){bookOpen=false;fleetOpen=true;}
+            if(showWing && Button(R(x+slot++*(tile+6),y+401,tile,49),"館内見取図",dark:true))OpenWing();
             if(Button(R(x+slot*(tile+6),y+401,tile,49),"現場からの要請",dark:true)){bookOpen=false;requestOpen=true;}
         }
         void ChapterOrders(float x,float y,float width)
@@ -128,11 +132,14 @@ namespace Evac
             Vector2 Plot(Vector3 p)=>new Vector2(plan.center.x+p.x*plan.width/86,plan.center.y-p.z*plan.height/186);
             Vector2 stop=Plot(Field.ActiveExit);
             Outline(R(stop.x-4,stop.y-2,8,4),Mist);
-            Text(R(map.x+8,map.y+2,map.width-16,24),"北街区",14,Mist,true,TextAnchor.MiddleCenter);
+            int inside=0;
+            foreach(var unit in Field.Units)
+                if(unit.active && !unit.boarded && unit.kind==UnitKind.Soldier && unit.pos.z>92)inside++;
+            Text(R(map.x+4,map.y+2,map.width-8,24),inside>0?"北　館内に"+inside+"人":"北街区",14,Mist,true,TextAnchor.MiddleCenter);
             Text(R(map.x+8,map.yMax-24,map.width-16,22),"南街区",14,Mist,true,TextAnchor.MiddleCenter);
             foreach(var unit in Field.Units)
             {
-                if(!unit.active || unit.boarded || (unit.kind!=UnitKind.Soldier && !unit.visible))continue;
+                if(!unit.active || unit.boarded || Mathf.Abs(unit.pos.z)>92 || (unit.kind!=UnitKind.Soldier && !unit.visible))continue;
                 var p=Plot(unit.pos);
                 var color=unit.kind==UnitKind.Soldier?Green:unit.kind==UnitKind.Infected?Rail:Mist;
                 bool selected=unit==Field.Controlled || (unit.kind==UnitKind.Soldier && unit.squad==G.SelectedSquad);

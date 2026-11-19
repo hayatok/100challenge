@@ -202,6 +202,7 @@ namespace Evac
         {
             Instrument(box);
             float x = box.x + 10, width = box.width - 20, half = (width - 6) / 2;
+            if (G.EditingWaypoints) { DrawWaypointEditor(box,x,width,half); return; }
             if (orderPickerOpen)
             {
                 DrawOrderPicker(box, x, width, half);
@@ -227,8 +228,9 @@ namespace Evac
 
         void DrawOrderPicker(Rect box, float x, float width, float half)
         {
-            Text(R(x, box.y + 5, width, 25), "次の命令を選ぶ", 18, Cream, true);
-            Text(R(x, box.y + 29, width, 23), "地図で地点を指定すると発令します", 15, Mist);
+            if(Button(R(x+half+6,box.y+4,half,48), "経路を描く", dark:true)) { orderPickerOpen=false; Submit(G.BeginWaypointEdit); }
+            Text(R(x, box.y + 5, half, 25), "次の命令を選ぶ", 18, Cream, true);
+            Text(R(x, box.y + 29, width, 23), "地図で地点を指定", 15, Mist);
             for (int i = 0; i < FieldOrders.Length; i++)
             {
                 int order = i;

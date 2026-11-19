@@ -97,6 +97,7 @@ namespace Evac
             surface.SetTexture("_StreetLight", bakedLight);
             district = MakeObject("District scenery", GetMesh("district" + region), transform);
             surface.SetFloat("_Station",region == 2 ? 1 : 0);
+            surface.SetFloat("_WorldDistrict",region);
             stationRoof = region==2 ? MakeObject("Station roof",GetMesh("stationRoof"),district.transform):null;
             if (stationRoof) stationRoof.SetActive(false);
             var exit = RoutePlan.All[route].exit;
@@ -160,6 +161,7 @@ namespace Evac
             }
             BuildApproachBlocks(route);
             BuildLandmarks(region);
+            BuildRoomWing(region);
         }
 
         GameObject Place(string asset, Vector3 position)
@@ -400,6 +402,7 @@ namespace Evac
             visible &= playerCamera != null;
             ShowApproachRoofs(visible);
             ShowLandmarkRoofs(visible);
+            ShowRoomWingRoof(visible);
             if (stationRoof && stationRoof.activeSelf!=visible) stationRoof.SetActive(visible);
             if (equipment.activeSelf != visible) equipment.SetActive(visible);
             if (!visible) return;
@@ -590,6 +593,8 @@ namespace Evac
             if(surface) ReleaseOwned(surface);
             if(shadowMaterial) ReleaseOwned(shadowMaterial);
             if(skyMaterial) ReleaseOwned(skyMaterial);
+            if(roomWingMaterial) ReleaseOwned(roomWingMaterial);
+            if(roomLight) ReleaseOwned(roomLight);
             if(waterMaterial) ReleaseOwned(waterMaterial);
         }
     }

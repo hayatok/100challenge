@@ -193,6 +193,8 @@ namespace Evac
             var job=ChapterJob;
             if(!IsReady || Result!=SimResult.Active || job==null || squad<0 || squad>=3 ||
                 (support && job.method!=ChapterMethod.Signal) || !soldiers.Exists(u=>u.active && u.squad==squad))return false;
+            if(Wing!=null)Wing.jobs[squad]=0;
+            ClearWaypoints(squad);
             CancelSearchDispatch(squad);state.squads[squad].districtTask=0;
             Chapter.posting[squad]=support?2:1;
             SoundNotice(job.title+"へ派遣");return true;

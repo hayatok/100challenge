@@ -35,6 +35,7 @@ namespace Evac
             RefreshFleetBodies();
             if(!IsDuty)StepSearch(dt);
             StepDistrictIncident(dt);
+            PrepareWing(dt);
             ScreenArea(dt);
             CheckDutySite();
             foreach(var u in state.units)
@@ -58,11 +59,15 @@ namespace Evac
                         u.reload=Mathf.Max(0,u.reload-dt);
                         if(u.reload==0) {int take=Mathf.Min(18-u.ammo,u.reserve);u.ammo+=take;u.reserve-=take;}
                     }
+                    if(u==Controlled)PassManualWaypoint(u,a);
                     if(u!=Controlled && a.stun==0 && !dodging) Soldier(u,a,dt);
                 }
                 else if(IsCivilian(u))
                 {
-                    if(RideDistrictCart(u)){}
+                    if(IsWingAide(u))ServeWingAide(u,dt);
+                    else if(WingPassenger(u))RouteWingPassenger(u,dt);
+                    else if(WingResident(u))FollowWing(u,dt);
+                    else if(RideDistrictCart(u)){}
                     else if(IsChapterLiaison(u))StepChapterLiaison(u,dt);
                     else if(IsChapterResident(u))MoveChapterResident(u,dt);
                     else if(IsSearchResident(u))FollowSearch(u,dt);
@@ -127,8 +132,10 @@ namespace Evac
         void Soldier(Unit u,ActorMemory a,float dt)
         {
             var group=state.squads[u.squad];var order=(SquadOrder)group.order;
+            if(TravelWing(u,dt))return;
             if(DeployingBeacon(u,dt))return;
             if(TravelToAlarm(u,dt))return;
+            if(FollowWaypoints(u,a,dt))return;
             if(WorkRequest(u,a,dt))return;
             if(a.escort>=0) {Guide(u,a,dt);return;}
             if(a.cargo) {Engineer(u,a,dt);return;}
@@ -149,13 +156,7 @@ namespace Evac
                 else if(Walk(u,Route.depot,3.6f,dt))Supply(u,dt);
                 return;
             }
-            if(a.fireDelay==0 && u.reload<=0 && u.ammo>0)
-            {
-                float radius=order==SquadOrder.Guard?(state.index==6 && RequestStatus==RequestState.Completed?28:21):14;
-                var target=(order==SquadOrder.Guard ? PriorityContact(u,radius) : null) ?? NearestThreat(u.pos,radius);
-                if(target!=null) HitShot(u,target,(target.pos-u.pos).normalized,true);
-            }
-            if(u.ammo==0) StartReload(u);
+            DefendWhileMoving(u,a,order);
             if(districtTask && DistrictWork(u,dt))return;
             if(group.assigned && a.route==0 && order!=SquadOrder.Move && order!=SquadOrder.Guard)
             {
@@ -165,6 +166,17 @@ namespace Evac
             if(order==SquadOrder.Guide) Guide(u,a,dt);
             else if(order==SquadOrder.Engineer) Engineer(u,a,dt);
             else Walk(u,group.destination+new Vector3((u.id%3-1)*1.15f,0,(u.id%2)*.65f),3.6f,dt);
+        }
+
+        void DefendWhileMoving(Unit u,ActorMemory a,SquadOrder order)
+        {
+            if(a.fireDelay==0 && u.reload<=0 && u.ammo>0)
+            {
+                float radius=order==SquadOrder.Guard?(state.index==6 && RequestStatus==RequestState.Completed?28:21):14;
+                var target=(order==SquadOrder.Guard ? PriorityContact(u,radius) : null) ?? NearestThreat(u.pos,radius);
+                if(target!=null) HitShot(u,target,(target.pos-u.pos).normalized,true);
+            }
+            if(u.ammo==0) StartReload(u);
         }
 
         void SpawnWave(int count)
@@ -222,10 +234,12 @@ namespace Evac
             }
             bool bell=DivertedByAlarm(e,a,target);
             bool lamp=!bell && BeaconLures(e,target);
-            bool diverted=bell || lamp;
+            bool broadcast=!bell && !lamp && WingActive && WingRegion==2 && WingDone(1) && (Wing.alternateMask&2)==0 &&
+                Wing.crowdArrived<2 && e.pos.z>92 && (target==null || FlatSq(target.pos,e.pos)>9);
+            bool diverted=bell || lamp || broadcast;
             e.distracted=diverted;
             if(bell)AlarmAttracted++;
-            Vector3 goal=bell?AlarmApproach(e):lamp?BeaconPoint:target==null?(FleetEnabled?FleetVehiclePosition(0):Route.exit):target.pos;
+            Vector3 goal=bell?AlarmApproach(e):lamp?BeaconPoint:broadcast?WingPosition(0):target==null?(FleetEnabled?FleetVehiclePosition(0):Route.exit):target.pos;
             float range=target==null?2.9f:1.45f;
             if(e.windup>0)
             {
@@ -316,7 +330,10 @@ namespace Evac
             if(u.kind==UnitKind.Infected)state.kills++;
             else if(IsCivilian(u))
             {
-                if(IsChapterLiaison(u)){Chapter.liaisonLost=true;SoundNotice(u.name+"が補給に戻れません");}
+                if(IsWingAide(u)){SoundNotice(u.name+"が補給所で倒れました");}
+                else if(WingPassenger(u)){SoundNotice(u.name+"を失いました");}
+                else if(WingResident(u)){Wing.lost=true;SoundNotice(u.name+"を失いました");}
+                else if(IsChapterLiaison(u)){Chapter.liaisonLost=true;SoundNotice(u.name+"が補給に戻れません");}
                 else if(IsChapterResident(u))ChapterRescueFailed();
                 else if(IsSearchResident(u))LoseSearchResident(u);
                 else if(Brain(u).auxiliary)

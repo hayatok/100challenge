@@ -27,7 +27,7 @@ namespace Evac
             float width = Mathf.Clamp(w * .44f, 390, 530);
             Fill(R(0, 0, width, h), new Color(.055f, .075f, .075f, .96f));
             Fill(R(width - 6, 0, 6, h), Rail);
-            Text(R(32, h - 34, width - 64, 18), "v" + Application.version, 13, Mist);
+            Text(R(width-138,37,106,26), "v" + Application.version, 15, Mist, true, TextAnchor.MiddleRight);
             Fill(R(32, 48, 52, 4), Amber);
             Text(R(32, 62, width - 64, 26), "災害対策本部　非常輸送", 17, Amber, true);
             Text(R(27, 98, width - 48, 86), "避難指令", 60, Cream, true);
