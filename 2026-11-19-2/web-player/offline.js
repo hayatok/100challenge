@@ -1,7 +1,7 @@
 const prefix = 'evacuation-control-' + new URL(self.registration.scope).pathname + '-';
-const version = prefix + 'a7f8b9e888dc91caee16809d8f4426b0.data.unityweb-e67e49d0f1ee2ad9af596f318d2a072e.wasm.unityweb';
-const assets = ['index.html','game.webmanifest','train-192.png','train-512.png','Build/2a8d9fff000201cd6e4c05273a531e56.loader.js', 'Build/a7f8b9e888dc91caee16809d8f4426b0.data.unityweb',
-    'Build/e67e49d0f1ee2ad9af596f318d2a072e.wasm.unityweb', 'Build/c22b649ee4e5394913cb8b6fc05758ec.framework.js.unityweb'];
+const version = prefix + 'dc6deff925d2a0568d2cfbfb6455ac81.data.unityweb-2aa70095e04a7dc967ce96067a063d13.wasm.unityweb';
+const assets = ['index.html','game.webmanifest','train-192.png','train-512.png','Build/c7af467149c18981c6c6c7de8db16e3f.loader.js', 'Build/dc6deff925d2a0568d2cfbfb6455ac81.data.unityweb',
+    'Build/2aa70095e04a7dc967ce96067a063d13.wasm.unityweb', 'Build/4b0bffc1bfdb664dbfa1847cc3c79f90.framework.js.unityweb'];
 self.addEventListener('install', event => {
     event.waitUntil(caches.open(version).then(cache => cache.addAll(assets)));
 });
