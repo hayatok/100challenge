@@ -232,6 +232,7 @@ namespace Evac
         {
             if(!IsReady || Result!=SimResult.Active || squad<0 || squad>=3) return false;
             ClearWaypoints(squad);
+            ClearMarketNavigation(squad);
             CancelChapterDispatch(squad);
             CancelSearchDispatch(squad);
             if(Wing!=null)Wing.jobs[squad]=0;

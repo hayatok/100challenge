@@ -13,6 +13,18 @@ namespace Evac
         void VerifyMarketPassage(StringBuilder report){
             for(int style=0;style<3;style++)VerifyMarketRun(style,report);
             VerifyMarketMeeting(report);
+            StartMission(0,Difficulty.Standard);Chapter.phase=2;Tick(.1f);
+            int id=MarketGateCrew(0);
+            Verify(Possess(id),"Direct nomination before selecting a market route");
+            AssignMarketOpener(id);
+            Release();
+            Verify(Save() && Load(),"Resume the named operator in command view");
+            for(int i=0;i<180;i++)Tick(.1f);
+            var named=Find(id);
+            Verify(!MarketLine.open && MarketLine.operatorId<0 && FieldNavigation(named).point==MarketPassage.Gate,
+                "Direct nomination alone persists without dispatching the AI");
+            Verify(Order(named.squad,SquadOrder.Move,ActiveDepot) && FieldNavigation(named).point==DestinationFor(named.squad),
+                "A replacement command clears the nominated gate destination");
         }
         void VerifyMarketMeeting(StringBuilder report){
             for(int scenario=0;scenario<4;scenario++){
@@ -36,12 +48,27 @@ namespace Evac
                 if(scenario==2)Release();
                 if(scenario==3){Damage(Find(id),1000,Vector3.zero);Release();}
                 var crossings=new float[2];
+                bool checkedOpen=false, checkedBus=false;
                 for(int i=0;i<700 && !l.finished && Result==SimResult.Active;i++){
                     if(scenario==0 && !l.open){
                         WalkMarketPlayer(ColumnControlPoint(0));
                         if(CanCommandColumn(0,4,0))Verify(CommandColumn(0,4,0),"Physically unlock after looking around");
                     }
                     var before=new[]{Find(l.people[0]).pos,Find(l.people[1]).pos};Tick(.1f);
+                    if(l.open && !checkedOpen){
+                        var nav=FieldNavigation(Find(id));
+                        Verify(nav.point==MarketPassage.Gate && nav.action.Contains("通過"),
+                            "The actual operator guides the crossing immediately after unlocking");
+                        if(scenario==0){
+                            Release();
+                            Verify(FieldNavigation(Find(id)).point==nav.point && Save() && Load(),
+                                "Same navigation in command view and across suspension");
+                            l=MarketLine;
+                            Verify(Possess(id) && FieldNavigation(Controlled).action==nav.action,
+                                "The saved operator keeps the crossing guidance after re-entry");
+                        }
+                        checkedOpen=true;
+                    }
                     for(int j=0;j<2;j++){
                         var p=Find(l.people[j]).pos;
                         Verify(FlatSq(before[j],p)<.18f,"Continuous resident movement after waiting");
@@ -49,11 +76,22 @@ namespace Evac
                     }
                     if(l.marketBypass && l.marketStep>=1 && !l.open)
                         Verify(!CanWaitForMarketOpener(id) && !CanMeetAtMarketGate(0),"No rendezvous after bypass commitment");
+                    if(l.open && !l.finished && crossings[0]!=0 && crossings[1]!=0){
+                        Verify(FieldNavigation(Find(id)).point==ActiveExit,"Both residents crossed before directing the operator to the bus");
+                        checkedBus=true;
+                    }
                 }
                 bool useGate=scenario==0 || scenario==2;
                 Verify(l.arrived==2 && !MarketMeeting && l.open==useGate &&
                     System.Array.TrueForAll(crossings,x=>useGate?x> -8 && x< -6:x< -12),
                     "Delayed rendezvous scenario "+scenario+" arrivals "+l.arrived+" gate "+l.open+" crossings "+string.Join(",",crossings));
+                if(useGate){
+                    var opener=Find(id);
+                    Verify(checkedOpen && checkedBus && FieldNavigation(opener).action==ColumnStatus(0) &&
+                        !FieldNavigation(opener).point.HasValue,"Market results have no obsolete direction marker");
+                    Verify(Order(opener.squad,SquadOrder.Move,ActiveDepot) && FieldNavigation(opener).point==DestinationFor(opener.squad),
+                        "The next order replaces the market result");
+                }
                 report.AppendLine("Market rendezvous after 18s, "+new[]{"manual opener","cancel","AI takes over","operator lost"}[scenario]+
                     " boarded="+l.arrived+" crossing x="+string.Join(",",crossings));
             }

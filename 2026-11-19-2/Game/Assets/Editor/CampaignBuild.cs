@@ -21,7 +21,7 @@ namespace Evac.Editor
             EditorBuildSettings.scenes=new[]{new EditorBuildSettingsScene(Scene,true)};
             PlayerSettings.companyName="100challenge";
             PlayerSettings.productName="避難指令";
-            PlayerSettings.bundleVersion="0.5.1";
+            PlayerSettings.bundleVersion="0.5.2";
             var icon=AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/WebGLTemplates/Dispatch/train-512.png");
             if(icon!=null)PlayerSettings.SetIcons(UnityEditor.Build.NamedBuildTarget.Unknown,new[]{icon},IconKind.Application);
             PlayerSettings.defaultScreenWidth=1280; PlayerSettings.defaultScreenHeight=720;

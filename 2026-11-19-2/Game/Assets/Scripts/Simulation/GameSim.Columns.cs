@@ -12,7 +12,8 @@ namespace Evac
         public float stretcherYaw;
         public int marketStep, marketFirst, marketEnemy, impactCount;
         public bool marketBypass, marketInitialized, marketMeeting;
-        public float marketOpenedAt, impactTime;
+        public int marketOpener, marketManualOpener, marketLastGuide; // Unit ID + 1. Older saves have no recorded operator.
+        public float marketOpenedAt, marketFinishedAt, impactTime;
         public Vector3 impactPoint;
     }
 
@@ -238,10 +239,11 @@ namespace Evac
                 FinishColumn(l);
             }else{
                 var worker=ChooseColumnCrew(c,squad,a);
+                if(MarketColumn && (a==4 || l.marketManualOpener==worker.id+1))l.marketManualOpener=0;
                 if(a==7){if(Controlled!=null)TransferStretcher(c,worker);else l.pickup=worker.id;}
                 else if(a==6){if(Controlled!=null)TreatColumn(c);else l.medic=worker.id;}
                 else if(a==4){
-                    if(Controlled!=null)OpenColumnControl(c);else l.operatorId=worker.id;
+                    if(Controlled!=null)OpenColumnControl(c,worker);else l.operatorId=worker.id;
                 }else{
                     if(a<=1){if(MarketColumn && a!=l.route)l.marketStep=0;l.route=a;}
                     bool announced=!MarketColumn && c==0 && l.open;
@@ -269,13 +271,14 @@ namespace Evac
             state.medPacks--;patient.wounded=false;Brain(patient).injured=false;patient.hp=patient.maxHp;
             SoundNotice(patient.name+"の手当てを完了");
         }
-        void OpenColumnControl(int c){
+        void OpenColumnControl(int c,Unit worker){
             var l=Line(c);l.open=true;l.operatorId=-1;
-            if(MarketColumn)l.marketOpenedAt=Elapsed;
+            if(MarketColumn){l.marketOpenedAt=Elapsed;l.marketOpener=worker.id+1;}
             if(!MarketColumn && c==0 && !l.held){l.lead=-1;l.joined=true;}
             SoundNotice(ColumnActionLabel(c,4)+"　完了");
         }
         void FinishColumn(EvacuationLine l){
+            if(MarketColumn){l.marketLastGuide=l.lead+1;l.marketFinishedAt=Elapsed;l.marketManualOpener=0;}
             l.finished=true;l.held=true;l.lead=-1;l.operatorId=-1;l.carrier=-1;l.carried=-1;l.pickup=-1;l.medic=-1;
             if(l.arrived>0){state.volunteers++;state.depotRounds+=l.arrived*6;}
             EvacStorage.Write(CheckpointSlot,state);Save();
@@ -305,7 +308,7 @@ namespace Evac
                 }
                 if(l.medic==u.id){var p=ColumnPatient(c);if(p==null)l.medic=-1;else if(ReachColumnTask(u,p.pos,dt))TreatColumn(c);return true;}
                 if(l.operatorId==u.id){
-                    if(ReachColumnTask(u,ColumnControlPoint(c),dt))OpenColumnControl(c);
+                    if(ReachColumnTask(u,ColumnControlPoint(c),dt))OpenColumnControl(c,u);
                     return true;
                 }
                 if(l.lead!=u.id || l.held)continue;

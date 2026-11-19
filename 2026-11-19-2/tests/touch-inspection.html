@@ -38,6 +38,12 @@
     await wait('Unity',()=>audit()?.state?.phase===(params.has('flood-columns')?'Playing':'Title'),90000);
     canvas=win.document.querySelector('canvas');
     log.textContent='Loaded '+frame.width+'×'+frame.height+'.';
+    if(params.has('large-text')){
+        await button(/^設定$/);
+        await button(/^文字サイズ　標準$/);
+        await wait('Large text selected',()=>Object.keys(audit().buttons).includes('文字サイズ　大'));
+        await button(/^戻る$/);
+    }
     const custom=params.has('custom');
     if (custom) {
         await button(/^設定$/);
@@ -111,7 +117,14 @@
             await button(/^担架の引き継ぎ$/);
             await button(/^担架を下ろす$/);
             await button(/^閉じる$/);
-            await wait('Released patient and restored controls',()=>articles().includes('照準') && articles().includes('装填'));
+            await wait('Released patient and regained weapon controls',()=>articles().includes('照準'));
+            const full=audit().state.ammo;
+            finger('touchstart',6,.86,.72);
+            await wait('Able to fire after putting down the patient',()=>audit().state.ammo<full);
+            finger('touchend',6,.86,.72);
+            await wait('Touch released and reload available',()=>audit().state.fingers===0 && articles().includes('装填'));
+            await button(/^装填$/);
+            await wait('Magazine restored',()=>audit().state.ammo===full);
             if(await capture('bearer-released'))return;
             await button(/^指揮に戻る$/);
             log.textContent='PASS '+frame.width+'×'+frame.height+' | Squad walked to the patient. Possessed the named bearer, saw the physical carrying HUD, put down the stretcher and returned to command.';
@@ -131,6 +144,31 @@
         for(let i=0;i<2 && articles().includes('畳む');i++)await button(/^畳む$/);
         if(await capture('flood-dispatched'))return;
         log.textContent='PASS '+frame.width+'×'+frame.height+' | Inspector prepared operation 06. Tapped both resident manifests, dispatched PA and bypass crews, led the assisted column, held and resumed it, and called for first aid.';
+        return;
+    }
+    if(params.has('reload-pad')){
+        if(!articles().some(k=>/を直接操作$/.test(k)))await button(/^名簿/);
+        await button(/を直接操作$/);
+        await wait('First person with a loaded magazine',()=>audit().state.mode==='FPS' && audit().state.ammo>0);
+        const capacity=audit().state.ammo;
+        const trigger=[.86,.72];
+        finger('touchstart',5,...trigger);
+        await wait('Magazine empty',()=>audit().state.ammo===0,16000);
+        await pause(900);
+        if(audit().state.ammo!==0)throw new Error('Holding fire started a reload');
+        finger('touchend',5,...trigger);
+        await wait('Trigger released',()=>audit().state.fingers===0);
+        if(await capture('empty-magazine'))return;
+        finger('touchstart',5,...trigger);
+        await wait('Fresh trigger press reloaded the magazine',()=>audit().state.ammo===capacity,8000);
+        await pause(650);
+        if(audit().state.ammo!==capacity)throw new Error('Reload contact fired after loading');
+        finger('touchend',5,...trigger);
+        await wait('Reload contact released',()=>audit().state.fingers===0);
+        finger('touchstart',5,...trigger);
+        await wait('New press fires normally',()=>audit().state.ammo<capacity);
+        finger('touchend',5,...trigger);
+        log.textContent='PASS '+frame.width+'×'+frame.height+' | Fired '+capacity+' rounds, reloaded with a new tap on the same pad, held without firing, and fired on the next tap.';
         return;
     }
     if(params.has('market-timing')){
@@ -160,6 +198,18 @@
         log.textContent='PASS '+frame.width+'×'+frame.height+' | '+report;return;
     }
     if(params.has('market-map')){
+        const navigation=params.has('navigation');
+        const progress=[];
+        const hud=(mode)=>audit().hud?.mode===mode ? audit().hud : null;
+        async function readTask(mode,condition) {
+            const current=await wait('Visible '+mode+' HUD',()=>{
+                const row=hud(mode);
+                return row && condition(row.action) && /[\/／]\s*0?5(?:\D|$)/.test(row.count) && row;
+            });
+            progress.push(mode+' '+current.action+' ['+current.count+']');
+            return current;
+        }
+        if(navigation)await readTask('RTS',label=>/方針|対応/.test(label));
         await button(/^現場方針を決める$/);
         await button(/^店先と停留所の名簿を照合$/);
         await button(/を現場へ$/);
@@ -196,6 +246,18 @@
         }
         if(!meeting)await button(/で横戸へ$/);
         await wait('Independent second soldier',()=>audit().state.mode==='FPS' && audit().market.pawn!==leader && audit().market.pawn>=0);
+        if(navigation){
+            const pawn=audit().market.pawn;
+            const before=await readTask('FPS',label=>/横戸/.test(label));
+            await button(/^指揮に戻る$/);
+            const command=await readTask('RTS',label=>label===before.action);
+            if(!before.banner || command.banner!==before.banner)throw new Error('Selected soldier or location changed on return to command');
+            if(!articles().some(k=>/を直接操作$/.test(k)))await button(/^名簿/);
+            await button(/を直接操作$/);
+            await wait('Same soldier retook the job',()=>audit().state.mode==='FPS' && audit().market.pawn===pawn);
+            await readTask('FPS',label=>label===before.action);
+            if(await capture('navigation-opener'))return;
+        }
         if(meeting){
             const begin=audit().market.clock;
             await wait('Residents waiting after eighteen seconds',()=>{
@@ -203,10 +265,10 @@
             },70000);
         }
         // Look toward the marked shutter using the ordinary right-thumb gesture.
-        async function faceDoor() {
+        async function faceDoor(offset=0) {
             for(let i=0;i<12;i++){
                 const s=audit().state;
-                const heading=Math.atan2(-7-s.x,-4.6-s.z)*180/Math.PI;
+                const heading=Math.atan2(-7-s.x,-4.6-s.z)*180/Math.PI+offset;
                 const turn=((heading-s.yaw+540)%360)-180;
                 if(Math.abs(turn)<8)break;
                 const dx=Math.max(-.20,Math.min(.20,turn/110*frame.height/frame.width));
@@ -218,6 +280,14 @@
                 finger('touchend',4,.58+dx,.54);
                 await wait('Lift look finger',()=>audit().state.fingers===0);
             }
+        }
+        if(navigation){
+            await faceDoor(180);
+            await wait('Destination still visible behind soldier',()=>{
+                const b=audit().bearing;
+                return b?.offscreen && /横戸/.test(b.destination) && b.frame>=audit().frame-3;
+            });
+            if(await capture('navigation-bearing'))return;
         }
         await faceDoor();
         // Drive the ordinary mobile stick along the real navigation corners. This probe only reads the simulation.
@@ -239,10 +309,19 @@
         await wait('Opener physically reached side gate',()=>articles().includes('横戸を開ける'));
         await button(/^横戸を開ける$/);
         await wait('Gate lifted to full clearance',()=>audit().market.lift>=.999);
+        if(navigation)await readTask('FPS',label=>/中野|谷口|店主/.test(label));
         if(await capture('gate-fps'))return;
         await button(/^指揮に戻る$/);
         await wait('Returned to same market operation',()=>audit().state.mode==='RTS');
+        if(navigation){
+            await readTask('RTS',label=>/中野|谷口|店主/.test(label));
+            if(await capture('navigation-command'))return;
+        }
         await wait('Shopkeepers boarded',()=>audit().market.boarded===2,55000);
+        if(navigation){
+            log.textContent='PASS '+frame.width+'×'+frame.height+' | '+progress.join(' → ')+'. Both residents boarded.';
+            return;
+        }
         log.textContent='PASS '+frame.width+'×'+frame.height+' | '+(meeting?'Guide and both residents waited for a deliberate opener for 18 simulation seconds. ':'')+'Sent guide, took a different soldier, walked to the gate by touch, lifted it, returned to command, and both shopkeepers boarded.';
         return;
     }

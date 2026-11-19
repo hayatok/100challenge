@@ -48,7 +48,7 @@ namespace Evac
         public int Ammo => Current?.ammo ?? 0;
         public float Stamina01 => Current?.stamina ?? 1;
         public int Reserve => Current?.reserve ?? 0;
-        Unit Current => sim.Controlled ?? (SelectedSoldier < roster.Count ? roster[SelectedSoldier] : null);
+        internal Unit Current => sim.Controlled ?? (SelectedSoldier < roster.Count ? roster[SelectedSoldier] : null);
         public float Health01 => Current == null ? 0 : Mathf.Clamp01(Current.hp / Mathf.Max(1,Current.maxHp));
         public float Progress01 => Mathf.Clamp01((float)Saved / Mathf.Max(1,Needed));
         public float Elapsed => sim.Elapsed;
@@ -227,7 +227,7 @@ namespace Evac
             fx.ResetField();
             choosingBeacon=false;seenBeacon=sim.BeaconSerial;beaconGlint=0;
             wingReported=sim.WingActive;wingPin=-1;followedColumn=-1;
-            marketGatePawn=-1;marketPaths=null;
+            marketPaths=null;
             ReleaseAim();
             mapCenter=Vector3.Lerp(sim.Mission.assembly, sim.Mission.exit,.5f);
             zoom=TouchUI?25:22;

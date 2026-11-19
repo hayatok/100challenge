@@ -36,44 +36,58 @@ namespace Evac
             state.stock+=3;state.delivered++;state.depotRounds+=24;state.medPacks++;
         }
 
-        void Engineer(Unit u, ActorMemory a, float dt)
+        enum EngineerTask { WaitForCargo, Collect, Deliver, Repair, Build, Return }
+
+        EngineerTask EngineerTarget(ActorMemory actor, out Vector3 point)
         {
-            if (a.cargo)
-            {
-                if (Walk(u, Route.depot, 2.8f, dt))
-                {
-                    a.cargo = false;
-                    DeliverCrate();
-                    SoundNotice(CargoLabel+"が集積所に到着");
-                }
-                return;
-            }
+            if (actor.cargo) { point = Route.depot; return EngineerTask.Deliver; }
             if (NeedsCargo && SectorTrips < RequiredTrips)
             {
-                if (state.crates > 0 && Walk(u, Route.cache, 3.5f, dt)) { state.crates--; a.cargo = true; }
-                return;
+                point = Route.cache;
+                return state.crates > 0 ? EngineerTask.Collect : EngineerTask.WaitForCargo;
             }
             if ((NeedsRepair && state.sectionRepair<1) || (Rail && !state.repaired))
             {
-                if (!Walk(u, Route.works, 3.3f, dt)) return;
-                PerformRepair(dt * WorkLight(u.pos) * (state.built && state.site == 2 ? .075f : .036f));
-                return;
+                point = Route.works;
+                return EngineerTask.Repair;
             }
-            if (state.site != 0 && !state.built)
+            if (state.site != 0 && !state.built) { point = Route.depot; return EngineerTask.Build; }
+            if (state.crates > 0) { point = Route.cache; return EngineerTask.Collect; }
+            point = Route.depot;
+            return EngineerTask.Return;
+        }
+
+        void Engineer(Unit u, ActorMemory a, float dt)
+        {
+            switch (EngineerTarget(a, out var point))
             {
-                if (Walk(u, Route.depot, 3.2f, dt))
-                {
+                case EngineerTask.Collect:
+                    float speed = NeedsCargo && SectorTrips < RequiredTrips ? 3.5f : 3.3f;
+                    if (Walk(u, point, speed, dt)) { state.crates--; a.cargo = true; }
+                    return;
+                case EngineerTask.Deliver:
+                    if (!Walk(u, point, 2.8f, dt)) return;
+                    a.cargo = false;
+                    DeliverCrate();
+                    SoundNotice(CargoLabel+"が集積所に到着");
+                    return;
+                case EngineerTask.Repair:
+                    if (Walk(u, point, 3.3f, dt))
+                        PerformRepair(dt * WorkLight(u.pos) * (state.built && state.site == 2 ? .075f : .036f));
+                    return;
+                case EngineerTask.Build:
+                    if (!Walk(u, point, 3.2f, dt)) return;
                     state.construction += dt * .09f;
                     if (state.construction >= 1)
                     {
                         state.built = true; state.construction = 1;
                         SoundNotice(state.site == 1 ? "救護所を開設" : "修理場が稼働");
                     }
-                }
-                return;
+                    return;
+                case EngineerTask.Return:
+                    Walk(u, point, 3.3f, dt);
+                    return;
             }
-            if (state.crates > 0 && Walk(u, Route.cache, 3.3f, dt)) { state.crates--; a.cargo = true; }
-            else if (state.crates == 0) Walk(u, Route.depot, 3.3f, dt);
         }
 
         void Guide(Unit u, ActorMemory a, float dt)
@@ -89,18 +103,7 @@ namespace Evac
                     memory.route = 1;
                 return;
             }
-            Unit match = null;
-            float closest = float.MaxValue;
-            foreach (Unit c in state.units)
-            {
-                if (!IsCivilian(c) || !Active(c)) continue;
-                var m = Brain(c);
-                if (m.auxiliary || m.escort >= 0 || (m.discovered && !m.injured)) continue;
-                if (!m.discovered && !SectorDispatched(u.squad)) continue;
-                if (!m.discovered && FlatSq(state.squads[u.squad].destination,c.pos)>144 && FlatSq(u.pos,c.pos)>49) continue;
-                float d = FlatSq(u.pos,c.pos);
-                if (d < closest) { closest = d; match = c; }
-            }
+            var match = GuideTarget(u, out float closest);
             if (match == null)
             {
                 Walk(u, Route.gate, 3.4f, dt);
@@ -113,6 +116,23 @@ namespace Evac
                 m.discovered = true;
                 if (m.injured) Link(u, match);
             }
+        }
+
+        Unit GuideTarget(Unit u, out float closest)
+        {
+            Unit match = null;
+            closest = float.MaxValue;
+            foreach (Unit c in state.units)
+            {
+                if (!IsCivilian(c) || !Active(c)) continue;
+                var m = Brain(c);
+                if (m.auxiliary || m.escort >= 0 || (m.discovered && !m.injured)) continue;
+                if (!m.discovered && !SectorDispatched(u.squad)) continue;
+                if (!m.discovered && FlatSq(state.squads[u.squad].destination,c.pos)>144 && FlatSq(u.pos,c.pos)>49) continue;
+                float d = FlatSq(u.pos,c.pos);
+                if (d < closest) { closest = d; match = c; }
+            }
+            return match;
         }
 
         void Link(Unit u, Unit civilian)
