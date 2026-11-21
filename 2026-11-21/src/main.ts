@@ -9,6 +9,7 @@ const element = <T extends HTMLElement>(id: string) => document.getElementById(i
 const board = element('board');
 const launcher = element<HTMLButtonElement>('launcher');
 const railHint = element('rail-hint');
+const pinGuide = element('pin-guide');
 const effects = element('board-effects');
 const stage = element('stage');
 const remaining = element('remaining');
@@ -17,7 +18,11 @@ const goal = element('goal');
 const combo = element('combo');
 const meter = element<HTMLProgressElement>('score-meter');
 const status = element('status');
+const bootPanel = element('boot-panel');
+const bootTitle = element('boot-title');
+const bootDetail = element('boot-detail');
 const shootPanel = element('shoot-panel');
+const activeUpgrade = element('active-upgrade');
 const upgradePanel = element('upgrade-panel');
 const resultPanel = element('result-panel');
 const resultTitle = element('result-title');
@@ -30,10 +35,11 @@ let soundEnabled = true;
 const seedParameter = new URLSearchParams(location.search).get('seed');
 const launchSeed = seedParameter && /^\d{1,10}$/.test(seedParameter) ? Number(seedParameter) : FIRST_BOARD_SEED;
 
-function setStatus(message: string, tone: 'neutral' | 'success' | 'error' = 'neutral') {
-  status.textContent = message;
-  status.hidden = message.length === 0;
-  status.dataset.tone = tone;
+function showUnavailable(title: string, detail: string) {
+  bootTitle.textContent = title;
+  bootDetail.textContent = detail;
+  bootPanel.hidden = false;
+  bootTitle.focus({ preventScroll: true });
 }
 
 function start() {
@@ -42,7 +48,7 @@ function start() {
     view = new BoardView(board, motionPreference.matches);
   } catch (error) {
     console.error('Could not create the pinboard renderer.', error);
-    setStatus('盤面を表示できませんでした。WebGL 2 が使えるブラウザで開き直してください。', 'error');
+    showUnavailable('盤面を表示できません', 'WebGL 2 が使えるブラウザで開き直してください。');
     soundButton.disabled = true;
     return;
   }
@@ -54,9 +60,17 @@ function start() {
   let timeBank = 0;
   let drawAvailable = true;
   let metGoal = false;
+  let statusTimeout = 0;
   const feedback = new BoardFeedback(board, effects, motionPreference.matches);
   element('refill-hits').textContent = String(REFILL_CHAIN);
   element('refill-rule').hidden = false;
+
+  function setStatus(message: string, tone: 'neutral' | 'success' = 'neutral', duration = 1800) {
+    window.clearTimeout(statusTimeout);
+    status.textContent = message;
+    status.dataset.tone = tone;
+    if (duration > 0 && message) statusTimeout = window.setTimeout(() => { status.textContent = ''; }, duration);
+  }
 
   function updateScore() {
     stage.textContent = String(run.stage);
@@ -73,24 +87,23 @@ function start() {
 
   function updatePanels() {
     const finished = run.phase === 'clear' || run.phase === 'failed';
-    shootPanel.hidden = finished || run.phase === 'upgrade';
-    upgradePanel.hidden = run.phase !== 'upgrade';
-    resultPanel.hidden = !finished;
-    launcher.disabled = !drawAvailable || shootPanel.hidden;
+    const canPlay = drawAvailable && !finished && run.phase !== 'upgrade';
+    shootPanel.hidden = !canPlay;
+    upgradePanel.hidden = !drawAvailable || run.phase !== 'upgrade';
+    resultPanel.hidden = !drawAvailable || !finished;
+    launcher.disabled = !canPlay;
     updateLauncher();
 
-    const active = element('active-upgrade');
-    active.hidden = run.upgrade === null;
-    active.textContent = run.upgrade === 'split' ? '強化中 · 青ピンで3球に分裂' : '強化中 · 黄ピンから2球追加';
-    element('split-rule').textContent = run.upgrade === 'split' ? 'その場で3球に分裂' : 'その場で2球に分裂';
-    element('bonus-rule').textContent = run.upgrade === 'bonus' ? 'レールの左右から各1球追加' : 'レールの左・中央・右のいずれかから1球追加';
+    activeUpgrade.hidden = !canPlay || run.upgrade === null;
+    activeUpgrade.textContent = run.upgrade === 'split' ? '＝ 青ピンで3球に分裂' : '＋ 黄ピンから2球追加';
 
     if (finished) {
       const clear = run.phase === 'clear';
+      resultPanel.dataset.outcome = clear ? 'clear' : 'failed';
       resultTitle.textContent = clear ? '2面クリア' : `第${run.stage}面で終了`;
       element('result-description').textContent = clear
-        ? '同じ配置でもう一方の強化を試せます。'
-        : `ノルマまであと ${run.goal - run.stageScore} 点でした。`;
+        ? ''
+        : `ノルマまであと ${run.goal - run.stageScore} 点`;
       element('total-score').textContent = String(run.totalScore);
       element('max-chain').textContent = String(run.bestChain);
     }
@@ -98,7 +111,8 @@ function start() {
 
   function updateLauncher() {
     launcher.setAttribute('aria-disabled', String(!run.canDrop || !drawAvailable));
-    railHint.hidden = !run.canDrop || run.shotsUsed > 0;
+    railHint.hidden = launcher.disabled || !run.canDrop || run.shotsUsed > 0;
+    pinGuide.hidden = railHint.hidden || run.stage !== 1;
   }
 
   function showBoard() {
@@ -106,6 +120,7 @@ function start() {
     lastTime = undefined;
     metGoal = false;
     feedback.reset();
+    setStatus('');
     view.reset(run.pins, run.stage);
     updateScore();
     updatePanels();
@@ -129,43 +144,35 @@ function start() {
     sound.launch();
     updateScore();
     updatePanels();
-    const action = run.canDrop ? `あと ${run.remaining} 球、すぐ放せます。` : `手持ち0球。${REFILL_CHAIN}連鎖で1球補充。`;
-    setStatus(metGoal ? `ノルマ達成。${action}` : action, metGoal ? 'success' : 'neutral');
+    if (!run.canDrop) setStatus(`${REFILL_CHAIN}連鎖で ＋1球`, 'neutral', 0);
   }
 
   function applyUpgrade(upgrade: Upgrade) {
     if (!drawAvailable || !run.chooseUpgrade(upgrade)) return;
     sound.activate();
     showBoard();
-    setStatus(`第2面。${run.goal} 点を目指します。`);
-    launcher.focus();
+    launcher.focus({ preventScroll: true });
   }
 
   function restart(seed: number) {
     if (!drawAvailable || (run.phase !== 'clear' && run.phase !== 'failed')) return;
     sound.activate();
-    const sameBoard = run.seed === seed;
     run = new PinboardRun(seed);
     aimX = DEFAULT_DROP_X;
     showBoard();
-    setStatus(sameBoard ? '前回と同じ配置で始めます。' : '新しい配置で始めます。');
-    launcher.focus();
+    launcher.focus({ preventScroll: true });
   }
 
   function onPhaseChange(before: Phase) {
     if (before === run.phase) return;
     updatePanels();
-    if (run.phase === 'ready') {
-      setStatus(run.stageScore >= run.goal
-        ? `ノルマ達成。残り ${run.remaining} 球で得点を伸ばせます。`
-        : `この面の最高は ${run.chain} 連鎖。ノルマまであと ${run.goal - run.stageScore} 点。`, run.stageScore >= run.goal ? 'success' : 'neutral');
-    } else if (run.phase === 'upgrade') {
-      setStatus('第1面クリア。強化を選んでください。', 'success');
-      upgradeSplit.focus();
+    if (run.phase === 'upgrade') {
+      setStatus('');
+      upgradeSplit.focus({ preventScroll: true });
     } else if (run.phase === 'clear' || run.phase === 'failed') {
       if (run.phase === 'failed') sound.fail();
-      setStatus(run.phase === 'clear' ? '両方のノルマを達成しました。' : '同じ配置で玉を放す位置を変えて試せます。', run.phase === 'clear' ? 'success' : 'error');
-      resultTitle.focus();
+      setStatus('');
+      resultTitle.focus({ preventScroll: true });
     }
   }
 
@@ -253,18 +260,24 @@ function start() {
     releasePointer();
     feedback.reset();
     updatePanels();
-    setStatus('画面の描画を一時停止しました。戻らない場合は再読み込みしてください。', 'error');
+    setStatus('');
+    showUnavailable('描画を一時停止', '画面が戻らない場合は、再読み込みしてください。');
   });
   canvas?.addEventListener('webglcontextrestored', () => {
+    const restoreFocus = document.activeElement === bootTitle;
     drawAvailable = true;
     lastTime = undefined;
     timeBank = 0;
+    bootPanel.hidden = true;
     updatePanels();
-    setStatus('画面の描画を再開しました。');
+    if (restoreFocus) {
+      const control = run.phase === 'upgrade' ? upgradeSplit : launcher.disabled ? resultTitle : launcher;
+      control.focus({ preventScroll: true });
+    }
   });
 
   showBoard();
-  setStatus('');
+  bootPanel.hidden = true;
   view.animate((now) => {
     if (!drawAvailable || document.hidden) return;
     const delta = Math.min((now - (lastTime ?? now)) / 1000, 0.05);
@@ -286,14 +299,14 @@ function start() {
           updateLauncher();
           if (!run.hasPins) {
             releasePointer();
-            setStatus('ピンをすべて倒しました。盤面の玉が落ちきるまで待ちます。', 'success');
+            setStatus('全ピン撃破　落下が終わるまで待機', 'success', 0);
           }
         }
         if (!metGoal && run.stageScore >= run.goal) {
           metGoal = true;
           feedback.goal();
           sound.clear();
-          if (run.hasPins) setStatus('ノルマを達成しました。', 'success');
+          if (run.hasPins) setStatus('ノルマ達成', 'success');
         }
         timeBank -= STEP;
       }
@@ -303,7 +316,7 @@ function start() {
     if (refills > 0) {
       feedback.refill(refills, remaining);
       sound.refill();
-      if (run.canDrop) setStatus(`手持ちが${refills}球増えました。続けて放せます。`, 'success');
+      if (run.canDrop) setStatus(`手持ち ＋${refills}球`, 'success');
     }
     onPhaseChange(phaseBefore);
     view.draw(run.balls, run.canDrop ? aimX : null, delta);
