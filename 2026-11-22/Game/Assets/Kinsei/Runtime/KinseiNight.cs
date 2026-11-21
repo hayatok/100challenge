@@ -108,7 +108,7 @@ public sealed partial class KinseiSession
             var offset=new Vector3(index%2==0?-1.75f:1.75f,0,-1.7f-(index/2)*1.05f);
             at=player.Position+offset;
             if(player.Position.z < -14.1f) {
-                float shopFront=Mathf.Clamp(Mathf.Round(player.Position.x/16f)*16f,-16f,16f);
+                float shopFront=AboveStreet?KinseiWorld.LiftX(railStop):Mathf.Clamp(Mathf.Round(player.Position.x/16f)*16f,-16f,16f);
                 at=new Vector3(shopFront+(index%2==0?-1:1)*(1.6f+index/2*.78f),0,-13.1f+index/2*.3f);
             }
             if(player.Position.x< -9f && player.Position.z> -8.7f)
@@ -218,6 +218,7 @@ public sealed partial class KinseiSession
     {
         if(command)return "";
         if(finale)return FinaleVerb();
+        string rail=RailVerb();if(AboveStreet || rail.Length>0)return rail;
         if(CanPullBackstage)return BackstageVerb;
         if(phase==Phase.Arrival && StreetContact(out int shop,out string words))
             return StreetVerb(shop,words);
@@ -236,6 +237,8 @@ public sealed partial class KinseiSession
     {
         if(finale){FinaleInteract();return;}
         string verb=Interaction();
+        if(verb.Length>0 && verb==RailVerb()){UseRail(verb);return;}
+        if(AboveStreet)return;
         if(verb==BackstageVerb){BeginBackstagePull();return;}
         if(phase==Phase.Arrival && StreetContact(out int shop,out string words)){VisitShop(shop,words);return;}
         if(verb=="金星の売上伝票を預かる"){ClaimHouse();return;}

@@ -90,6 +90,7 @@ public sealed partial class KinseiSession
             motor.stepOffset=.3f; motor.skinWidth=.035f;
             fallVelocity=0;
         }
+        if(railPlace==RailPlace.Lift){Motion(player,"idle");return;}
         float turn=(Input.GetKey(KeyCode.RightArrow)?1:0)-(Input.GetKey(KeyCode.LeftArrow)?1:0);
         angle+=turn*102*dt;
         if(Input.GetMouseButton(1)) {
@@ -103,9 +104,10 @@ public sealed partial class KinseiSession
         if(motor.isGrounded) fallVelocity=-2f;
         fallVelocity=Mathf.Max(-16,fallVelocity-21*dt);
         Vector3 proposed=player.Position+move*rate*dt;
-        proposed=StageActive?StageStep(player.Position,proposed,boss.Position):StreetBounds(proposed);
+        proposed=StageActive?StageStep(player.Position,proposed,boss.Position):RailBounds(player.Position,proposed);
         var step=proposed-player.Position;
         motor.Move(new Vector3(step.x,fallVelocity*dt,step.z));
+        CheckBoarding();
         if(move.sqrMagnitude>.1f) player.root.rotation=Quaternion.RotateTowards(player.root.rotation,Quaternion.LookRotation(move),dt*540);
         moveBlend=Mathf.MoveTowards(moveBlend,move.magnitude*rate,dt*12);
         if(moveBlend>1 && motor.isGrounded && clock>=nextStep) {
@@ -113,7 +115,7 @@ public sealed partial class KinseiSession
         }
         bool fighting=phase==Phase.Floor || phase==Phase.Chase || StageActive;
         if(clock>attackUntil) Motion(player,moveBlend>.18f?(rate>3?"run":"walk"):(fighting?"guard":"idle"),moveBlend);
-        if(finale){if(Input.GetKeyDown(KeyCode.E))Interact();return;}
+        if(finale || AboveStreet){if(Input.GetKeyDown(KeyCode.E))Interact();return;}
         if(Input.GetKeyDown(KeyCode.Q)) CycleTarget();
         if(Input.GetKeyDown(KeyCode.E)) Interact();
         if((Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Space)) && !OverHUD())

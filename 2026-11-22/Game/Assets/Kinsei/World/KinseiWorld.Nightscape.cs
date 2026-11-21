@@ -40,6 +40,8 @@ public sealed partial class KinseiWorld
             home.SetColor("_EmissionColor", new Color(.63f, .57f, .49f));
         }
 
+        BuildStreetEnds(lime,zinc,sash,home,distant);
+
         var walls = new NightGeometry();
         var metal = new NightGeometry();
         var frames = new NightGeometry();
@@ -232,6 +234,13 @@ public sealed partial class KinseiWorld
         {
             const float inset=8f/1536f;
             Face(p,halfRight,halfUp,new Rect((tile%2)*.5f+inset,(1-tile/2)*.5f+inset,.5f-2*inset,.5f-2*inset));
+        }
+
+        public void Gable(Vector3 centre,int end,float depth,float rise)
+        {
+            Vector3 a=centre+Vector3.forward*(end*depth*.5f), b=centre-Vector3.forward*(end*depth*.5f);
+            Vector3 peak=centre+Vector3.up*rise;
+            Quad(a,b,peak,peak,Vector3.right*end,new Rect(0,0,1,1));
         }
 
         public void Block(Vector3 p,Vector3 size)

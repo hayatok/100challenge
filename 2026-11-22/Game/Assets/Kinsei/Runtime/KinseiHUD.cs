@@ -164,7 +164,7 @@ public sealed partial class KinseiSession
         Block(new Rect(151,17,1,39),rule);
         Letter(new Rect(171,4,490,23),"今夜の目的",13,brass);
         Letter(new Rect(171,25,hudW-493,42),Objective(),21,cream,true);
-        if(phase!=Phase.Mirror && !StageActive && !OnAir && Plate(new Rect(hudW-286,14,193,45),command?"現場に戻る　 Tab":"指揮に切替　 Tab")) ToggleCommand();
+        if(!AboveStreet && phase!=Phase.Mirror && !StageActive && !OnAir && Plate(new Rect(hudW-286,14,193,45),command?"現場に戻る　 Tab":"指揮に切替　 Tab")) ToggleCommand();
         if(Plate(new Rect(hudW-81,14,59,45),"幕間"))TogglePause();
         float bottom=command?hudH-CommandPanelHeight:hudH-66;
         if(bannerUntil>clock && banner.Length>0) {
@@ -189,6 +189,7 @@ public sealed partial class KinseiSession
                     AtBackstagePost(BackstageRunner)?"楽屋口　引戸の取手に近づいて E":"楽屋口　組員が通し札を取りに向かっている";
             var counter=shopView==ShopView.None?NearbyCounter():shopView;
             if(counter!=ShopView.None)hints=shopView==ShopView.None?"C　"+ShopViewLabel(counter)+"を見る　　Tab　組員を指揮":ShopViewLabel(counter)+"　　C　元の視点へ　　Tab　組員を指揮";
+            string railHint=RailHint();if(railHint.Length>0)hints=railHint;
             Letter(new Rect(185,bottom+6,hudW-207,50),hints,17,cream);
             string interact=Interaction();
             if(interact.Length>0 && shopView==ShopView.None){

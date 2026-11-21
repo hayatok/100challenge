@@ -177,6 +177,7 @@ public sealed partial class KinseiSession : MonoBehaviour
         boxOffice.SetCollected(false);
         boxOffice.SetTicketPress(0);
         ResetStreets();
+        ResetRailRide();
         ResetBackstage();
         club.PutAwayMaster();
         club.SetExchangePicture(null);
@@ -218,11 +219,12 @@ public sealed partial class KinseiSession : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.Escape)) { TogglePause(); return; }
         if(paused) return;
         if(Input.GetKeyDown(KeyCode.Tab)) ToggleCommand();
-        if(!command && !OnAir)ShopViewInput();
+        if(!command && !OnAir && !AboveStreet)ShopViewInput();
         dt=Mathf.Min(dt,.09f);
         clock+=dt; phaseAge+=dt;
         fpsSmooth=Mathf.Lerp(fpsSmooth,1f/Mathf.Max(Time.unscaledDeltaTime,.001f),.06f);
         if(measure && phaseAge>.2f && profile.Count<108000) profile.Add(Time.unscaledDeltaTime*1000);
+        AdvanceRail(dt);
         if(command) CommandInput(); else if(shopView==ShopView.None)PlayerInput(dt); else Motion(player,"idle");
         neighbours.Tick(clock);neighbours.LookAtNeighbours();club.TickShops(dt,player.Position);
         club.SetProgrammeLevel(sound.ReadProgrammeLevel(dt));
@@ -268,6 +270,7 @@ public sealed partial class KinseiSession : MonoBehaviour
 
     void ToggleCommand()
     {
+        if(AboveStreet){Say("通りへ降りると指揮に戻れる");return;}
         if(pullingBackstage || phase==Phase.Mirror || StageActive || OnAir) return;
         shopView=ShopView.None;
         command=!command; club.SetTactical(command); snapCamera=true; lockedTarget=-1;
@@ -300,6 +303,17 @@ public sealed partial class KinseiSession : MonoBehaviour
             cam.orthographic=false;cam.fieldOfView=returnShot?39:40;
             eye=returnShot?new Vector3(.99f,4.59f,6.86f):new Vector3(-3.06f,1.57f,-2.18f);
             focus=returnShot?new Vector3(.22f,4.21f,7.70f):new Vector3(-3.05f,1.29f,-.12f);
+        } else if(railPlace==RailPlace.Coach || railPlace==RailPlace.Lift) {
+            // Keep the camera inside the saloon instead of putting the roof between lens and rider.
+            cam.orthographic=false;cam.fieldOfView=67;
+            Vector3 look=Quaternion.Euler(Mathf.Clamp(tilt,-20,29),angle,0)*Vector3.forward;
+            var pivot=player.Position+Vector3.up*1.55f;
+            var right=Quaternion.Euler(0,angle,0)*Vector3.right;
+            var wanted=railPlace==RailPlace.Coach?pivot+right*.27f-look*.82f:pivot+right*.3f-look*1.15f;
+            var delta=wanted-pivot;
+            if(Physics.SphereCast(pivot,.10f,delta.normalized,out var hit,delta.magnitude,~0,QueryTriggerInteraction.Ignore))
+                wanted=pivot+delta.normalized*Mathf.Max(.025f,hit.distance-.055f);
+            eye=wanted;focus=pivot+look*6;
         } else if(shopView!=ShopView.None) {
             cam.orthographic=false;cam.fieldOfView=shopView==ShopView.Wardrobe?63:shopView==ShopView.Records?52:42;
             FrameCounter(out eye,out focus);

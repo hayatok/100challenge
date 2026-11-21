@@ -4,7 +4,30 @@ using UnityEngine;
 public sealed partial class KinseiWorld
 {
     Transform train;
+    public const float RailHeight=6.90f, RailZ=-23.75f;
+    public const float StationDwell=8.5f, RailTrip=11f;
     float trainClock;
+    readonly Transform[] railDoors=new Transform[4], lifts=new Transform[2];
+    readonly float[] liftGoals=new float[2];
+    float doorTravel;
+    public Transform Train => train;
+    public Transform Lift(int station)=>lifts[station];
+    public static float LiftX(int station)=>station==0?-8:8;
+    public static float StopX(int station)=>station==0?-18:18;
+    public static string StopName(int station)=>station==0?"宵待西口":"送像所前";
+    public int RailStation => trainClock<StationDwell+RailTrip?0:1;
+    float LegTime => trainClock%(StationDwell+RailTrip);
+    public bool Stopped => LegTime<StationDwell;
+    public int SecondsToBoard(int station)
+    {
+        if(station==RailStation && Docked)return 0;
+        float start=station*(StationDwell+RailTrip)+.76f;
+        return Mathf.CeilToInt(Mathf.Repeat(start-trainClock,2*(StationDwell+RailTrip)));
+    }
+    public bool Docked => LegTime<StationDwell && doorTravel>.97f;
+    public int RailSeconds => Mathf.CeilToInt(LegTime<StationDwell?StationDwell-LegTime:StationDwell+RailTrip-LegTime);
+    public bool AtLiftHeight(int station,float height)=>Mathf.Abs(lifts[station].position.y-height)<.005f;
+    public void CallLift(int station,bool up)=>liftGoals[station]=up?RailHeight:0;
 
     void BuildRailway()
     {
@@ -49,19 +72,9 @@ public sealed partial class KinseiWorld
         var parts=new List<Renderer>();
         for(int car=0;car<2;car++) {
             float x=(car-.5f)*8.7f;
-            CarPart(parts,"Pressed aluminium coach",new Vector3(x,1.32f,0),new Vector3(8.45f,2.16f,2.26f),ivory);
-            CarPart(parts,"Arched roof",new Vector3(x,2.36f,0),new Vector3(8.56f,.42f,2.35f),strut);
-            for(int side=-1;side<=1;side+=2) {
-                CarPart(parts,"Waist stripe",new Vector3(x,.84f,side*1.14f),new Vector3(8.32f,.16f,.055f),coachRed);
-                for(int w=0;w<9;w++) {
-                    float wx=x-3.66f+.915f*w;
-                    CarPart(parts,"Gasket",new Vector3(wx,1.60f,side*1.143f),new Vector3(.78f,.82f,.045f),dark);
-                    CarPart(parts,"Side glaze",new Vector3(wx,1.60f,side*1.169f),new Vector3(.70f,.69f,.026f),w%4==car?glass:saloon);
-                }
-            }
-            CarPart(parts,"Driving window",new Vector3(x+4.17f,1.62f,.05f),new Vector3(.18f,.78f,1.61f),blueGlass);
-            for(int side=-1;side<=1;side+=2)CarPart(parts,"Headlight",new Vector3(x+4.24f,1.03f,side*.75f),new Vector3(.10f,.23f,.23f),saloon);
+            BuildPassengerCar(parts,car,x,ivory,coachRed,strut,saloon);
         }
+        for(int station=0;station<2;station++)BuildStation(station,strut,ivory,concrete);
         var surfaces=new Dictionary<Material,List<CombineInstance>>();
         foreach(var part in parts) {
             if(!surfaces.TryGetValue(part.sharedMaterial,out var meshes)){meshes=new List<CombineInstance>();surfaces.Add(part.sharedMaterial,meshes);}
@@ -73,7 +86,7 @@ public sealed partial class KinseiWorld
             mesh.CombineMeshes(group.Value.ToArray());
             Surface(mesh.name,mesh,group.Key,train,false);
         }
-        train.localPosition=new Vector3(-13.5f,6.62f,track);
+        ResetRail();
     }
 
     void CarPart(List<Renderer> parts,string label,Vector3 at,Vector3 scale,Material finish)
@@ -83,9 +96,28 @@ public sealed partial class KinseiWorld
         go.transform.localPosition=at;go.transform.localScale=scale;
         parts.Add(go.GetComponent<Renderer>());
     }
-    void AdvanceTrain(float dt)
+    public void ResetRail()
     {
-        trainClock+=dt;
-        train.localPosition=new Vector3(Mathf.Repeat(trainClock*3.8f+36.5f,100)-50,6.62f,-23.75f);
+        trainClock=.8f;
+        for(int i=0;i<2;i++){liftGoals[i]=0;lifts[i].localPosition=new Vector3(LiftX(i),0,-19.48f);}
+        TickRail(0,false);
+    }
+
+    public void TickRail(float dt,bool inDoorway)
+    {
+        float leg=LegTime;
+        if(!(inDoorway && leg>=StationDwell-1.05f && leg<StationDwell))
+            trainClock=Mathf.Repeat(trainClock+dt,2*(StationDwell+RailTrip));
+        leg=LegTime;
+        float progress=Mathf.SmoothStep(0,1,Mathf.InverseLerp(StationDwell,StationDwell+RailTrip,leg));
+        train.localPosition=new Vector3(Mathf.Lerp(StopX(RailStation),StopX(1-RailStation),progress),6.62f,RailZ);
+        doorTravel=Mathf.Clamp01(Mathf.Min(leg/.76f,(StationDwell-leg)/.76f));
+        for(int i=0;i<railDoors.Length;i++){
+            float x=(i/2-.5f)*8.7f+(i%2==0?-1:1)*(.44f+.87f*doorTravel);
+            railDoors[i].localPosition=new Vector3(x,0,1.13f);
+        }
+        for(int i=0;i<lifts.Length;i++){
+            var at=lifts[i].localPosition;at.y=Mathf.MoveTowards(at.y,liftGoals[i],dt*1.85f);lifts[i].localPosition=at;
+        }
     }
 }

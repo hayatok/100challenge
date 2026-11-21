@@ -21,11 +21,13 @@ def main():
     parser.add_argument("--port", type=int, default=8196)
     parser.add_argument("--work", type=Path, required=True)
     parser.add_argument("--graph", type=Path, default=HERE.parent/"nightscape"/"graph.json")
+    parser.add_argument("--plates", type=Path, default=HERE/"plates.json")
+    parser.add_argument("--prefix", default="kinsei-backstage")
     args = parser.parse_args()
     args.work.mkdir(exist_ok=True, parents=True)
     graph = json.loads(args.graph.read_text(encoding="utf8"))
     host = f"http://127.0.0.1:{args.port}"
-    for plate in json.loads((HERE/"plates.json").read_text(encoding="utf8")):
+    for plate in json.loads(args.plates.read_text(encoding="utf8")):
         name = plate["key"]
         record_path = args.work/(name+".json")
         file = args.work/(name+".png")
@@ -38,8 +40,8 @@ def main():
         nodes["5"]["text"] = "watermark, stock photo logos, typographic mistakes, digital illustration, plastic doll, oversharpened"
         nodes["6"].update(width=plate["width"], height=plate["height"])
         nodes["7"]["seed"] = plate["seed"]
-        nodes["9"]["filename_prefix"] = "kinsei-backstage/"+name
-        pid = api(host+"/prompt", {"prompt":drawing,"client_id":"kinsei-backstage"})["prompt_id"]
+        nodes["9"]["filename_prefix"] = args.prefix+"/"+name
+        pid = api(host+"/prompt", {"prompt":drawing,"client_id":args.prefix})["prompt_id"]
         while True:
             entry = api(host+"/history/"+pid).get(pid)
             if entry:

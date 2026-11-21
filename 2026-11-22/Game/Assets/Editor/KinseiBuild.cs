@@ -37,7 +37,7 @@ public static class KinseiBuild
         EditorBuildSettings.scenes = new[] { new EditorBuildSettingsScene(ScenePath, true) };
         PlayerSettings.companyName = "Yoimachi";
         PlayerSettings.productName = "金星の一夜";
-        PlayerSettings.bundleVersion = "0.8.0";
+        PlayerSettings.bundleVersion = "0.9.0";
         PlayerSettings.defaultScreenWidth = 1600;
         PlayerSettings.defaultScreenHeight = 900;
         PlayerSettings.fullScreenMode = FullScreenMode.Windowed;
