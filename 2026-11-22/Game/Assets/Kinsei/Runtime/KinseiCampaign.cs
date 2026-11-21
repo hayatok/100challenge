@@ -8,6 +8,7 @@ public sealed partial class KinseiSession
     KinseiLedger ledger = KinseiLedger.Blank();
     int receipts;
     string pendingEnding;
+    string settlementMessage;
     string CampaignError { get; set; } = "";
     bool HouseClaimed { get { return receipts != 0; } }
     string CampaignSummary
@@ -17,6 +18,7 @@ public sealed partial class KinseiSession
             string ties = ledger.kajiPromise ? "辰と梶の約束" : "";
             if (ledger.stagePromise) ties += (ties.Length > 0 ? "・" : "") + "金星座長の約束";
             if (ties.Length == 0) ties = "まだ約束はない";
+            if(ledger.cooperativeEnding || ledger.exclusiveEnding) ties+="\n終幕　"+(ledger.cooperativeEnding?"四十店共同　":"")+(ledger.exclusiveEnding?"金星専属":"");
             return $"出撃 {ledger.nights} 回　帰還 {ledger.completed} 回　累計売上 {ledger.earnings:N0} 円\n{ties}";
         }
     }
@@ -56,12 +58,15 @@ public sealed partial class KinseiSession
         Debug.LogWarning("KINSEI 台帳 " + e.Message);
     }
 
-    bool BeginCampaign()
+    bool BeginCampaign(bool finalNight)
     {
         if (pendingEnding != null && !BookReturn()) return false;
         try
         {
-            ledger = ledgerStore.Change(data => data.nights = checked(data.nights + 1));
+            ledger = ledgerStore.Change(data => {
+                if(finalNight && !(data.kajiPromise && data.stagePromise))throw new InvalidDataException("最終夜の約束が不足しています");
+                data.nights = checked(data.nights + 1);
+            });
             receipts = 0;
             CampaignError = ledgerStore.Recovered ? "予備の帳面から復元しました" : "";
             return true;
@@ -134,14 +139,29 @@ public sealed partial class KinseiSession
             receipts = 0;
             return loss;
         }
-        if (id != "accord" && id != "pursuit") return "";
-        int amount = receipts;
+        bool final = id == "cooperative" || id == "exclusive";
+        if (!final && id != "accord" && id != "pursuit") return "";
         pendingEnding = id;
-        if (!BookReturn()) return "帰還の記帳を保留中。再出撃時にもう一度記帳します。";
+        return TrySettleReturn();
+    }
+
+    string TrySettleReturn()
+    {
+        string id = pendingEnding;
+        int amount = receipts;
+        if (!BookReturn()) return "この帰還をまだ記帳できていません。";
         receipts = 0;
         if (CampaignError.Length > 0) return CampaignError;
+        if(id=="cooperative" || id=="exclusive")return id=="cooperative"?"帳面に四十店共同の興行を記録した。":"帳面に金星専属の興行を記録した。";
         string tie = id == "accord" ? "辰と梶が次の興行に二千円分の客席を約束した。" : "金星の座長が次の興行に四千円分の前売りを約束した。";
         return $"帰還売上 {amount:N0} 円。{tie}";
+    }
+
+    void RetrySettlement()
+    {
+        if(pendingEnding==null)return;
+        settlementMessage=TrySettleReturn();
+        Mark(pendingEnding==null?"ledger-retry-finished":"ledger-retry-pending");
     }
 }
 

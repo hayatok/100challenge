@@ -26,11 +26,17 @@ v0.2から金星の伝票は帰還時に精算する。初日の売上は12,000�
 
 v0.3から、金星に入る前に向かいの通りを歩ける。西からロータス、針音堂、共同送像所が並ぶ。真壁が針音堂の盤を送像所に届けると、兄貴分は一曲分の八秒を待つ。間にロータスを訪ねて常連のリクエストも聞けば、梶の四人がさらに十四秒待つ。店主は用事で戸を閉めるため、留守なら通りで呼び止めるか、帰りを待つ。近くの人にはEで話す。
 
+## 最終夜を遊ぶ
+
+v0.4では、梶と金星座長の両方から約束を取ると、タイトルと帰還画面に「最終夜　四十軒の朝」が現れる。Fで最終夜を始める。Enterを選べば通常の出撃に戻れる。以前の版で獲得した約束も使える。
+
+真壁が針音堂で原盤を受け取ったら、Tabで指揮に入り、組員を一人選んでEで送像所に向かわせる。組員が回線をつなぐと、真壁は共同送像所の卓で原盤をかけるか、金星の帳場で座長に原盤を渡せる。共同放送を選んだら指揮でロータスの客席に、専属興行を選んだら金星の帳場に組員を送る。最初の放送を終えると帳面に結末が残る。同じ帳面で最終夜をもう一度遊び、もう一方を選べる。
+
 ## ソースからビルド
 
 Unity 6000.3.28f1・Windows Standalone。PowerShell でこのフォルダの `./Build-Windows.ps1` を実行する。プレイヤーは `Builds/Windows/`、Editor のログは `Builds/editor.log` に出力する。画面解像度は標準の `-screen-width`、`-screen-height`、`-screen-fullscreen 0` で指定できる。計測用に `-kinsei-metrics` を付けると、決着時に描画間隔の中央値と95パーセンタイルがプレイヤーログに記録される。
 
 ## 美術と制作資料
 
-[金星の美術資料16点](art-source/atelier/README.md)、[三店舗の絵コンテと原画16点](art-source/district/README.md)、[GPT Imageの原画](art-source/GPT-Image.md)、[ComfyUIの実行記録](art-source/moss/README.md)、[人物素材](Game/Assets/Kinsei/Cast/README.md)、[建築の表面](art-source/Surfaces.md)、[制作条件と各版の範囲](docs/PRODUCTION.md)。
+[生成した美術資料の目録](art-source/README.md)、[金星の印刷物・衣装と人物設定](art-source/atelier/README.md)、[三店舗の絵コンテと原画](art-source/district/README.md)、[レコード・酒瓶・送像所の印刷物](art-source/printworks/README.md)、[澄子と村瀬の立体造形](art-source/residents/README.md)、[歩行・走行に使った動作と接地](art-source/mocap/README.md)、[建築の表面](art-source/Surfaces.md)、[制作条件と各版の範囲](docs/PRODUCTION.md)。
 

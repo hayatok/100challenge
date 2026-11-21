@@ -61,8 +61,8 @@ public sealed partial class KinseiSession
     void SalonCover()
     {
         bool title=phase==Phase.Title;
-        Texture cover=!title && outcome=="accord" && morningCover?morningCover:keyArt;
-        if(!title && outcome=="pursuit" && ledgerCover)cover=ledgerCover;
+        Texture cover=!title && (outcome=="accord" || outcome=="cooperative") && morningCover?morningCover:keyArt;
+        if(!title && (outcome=="pursuit" || outcome=="exclusive") && ledgerCover)cover=ledgerCover;
         if(cover!=null) GUI.DrawTexture(new Rect(0,0,hudW,hudH),cover,ScaleMode.ScaleAndCrop);
         GUI.DrawTexture(new Rect(0,0,hudW*.75f,hudH),hudFade);
         float x=hudW*.056f, w=Mathf.Min(525,hudW*.44f), y=hudH*.31f;
@@ -71,12 +71,17 @@ public sealed partial class KinseiSession
         Letter(new Rect(x,y-32,w,30),title?"キャバレー金星　開演":"キャバレー金星　終幕",18,gold);
         Letter(new Rect(x-4,y,w+18,100),title?"金星の一夜":endingTitle,title?77:Mathf.Min(57,Mathf.FloorToInt(w/Mathf.Max(1,endingTitle.Length))),cream,true);
         Block(new Rect(x,y+105,w,1),rule);
-        Letter(new Rect(x,y+115,w,114),title?"真壁は六人の仲間と金星へ戻る。入口の帳場に今夜の売上伝票がある。":endingText,18,cream,true,TextAnchor.UpperLeft,true);
-        if(CampaignError.Length>0)Letter(new Rect(x,hudH-221,w,95),CampaignError,16,gold,false,TextAnchor.UpperLeft,true);
+        Letter(new Rect(x,y+115,w,114),title?"真壁は六人の仲間と金星へ戻る。入口の帳場に今夜の売上伝票がある。":endingText+"\n"+settlementMessage,18,cream,true,TextAnchor.UpperLeft,true);
+        if(pendingEnding!=null) Letter(new Rect(x,hudH-221,w,99),"保存先の空き容量や使用状況を確認し、Rで記帳してください。今終了すると、この帰還の売上と結末の記録を失います。",16,gold,false,TextAnchor.UpperLeft,true);
+        else if(CampaignError.Length>0)Letter(new Rect(x,hudH-221,w,95),CampaignError,16,gold,false,TextAnchor.UpperLeft,true);
         else Letter(new Rect(x,hudH-212,w,84),CampaignSummary,16,gold,false,TextAnchor.UpperLeft,true);
         if(Plate(new Rect(x,hudH-113,246,52),title?"幕を開ける　　↵":"もう一度、金星へ　　↵",true)) StartNight();
         if(!title && Plate(new Rect(x+260,hudH-113,135,52),"表題に戻る")) ReturnToTitle();
-        Letter(new Rect(x,hudH-55,w,29),"ENTER　開始",13,cream);
+        if(pendingEnding!=null) {
+            if(Plate(new Rect(x,hudH-54,300,43),"帰還の記帳をやり直す　R")) RetrySettlement();
+        } else if(FinaleUnlocked) {
+            if(Plate(new Rect(x,hudH-54,300,43),"最終夜　四十軒の朝　F")) StartFinale();
+        } else Letter(new Rect(x,hudH-55,w,29),"ENTER　開始",13,cream);
     }
     void ReturnToTitle()
     {
@@ -112,7 +117,7 @@ public sealed partial class KinseiSession
         if(PauseButton(2,new Rect(l,y+230,w,44),"FPS 表示　　"+(showFps?"入":"切"))) {
             showFps=!showFps; PlayerPrefs.SetInt("KinseiFps",showFps?1:0); PlayerPrefs.Save();
         }
-        if(PauseButton(3,new Rect(l,y+296,w,44),"初めから遊ぶ")) {TogglePause();StartNight();}
+        if(PauseButton(3,new Rect(l,y+296,w,44),"初めから遊ぶ")) {TogglePause();OpenNight(finale);}
         if(PauseButton(4,new Rect(l,y+346,w,44),"表題に戻る")) ReturnToTitle();
         if(PauseButton(5,new Rect(l,y+396,w,44),"ゲームを終了")) Application.Quit();
         if(showFps) Letter(new Rect(l,y+448,w,29),Mathf.RoundToInt(fpsSmooth)+" FPS（中断直前）",14,gold);
@@ -120,6 +125,7 @@ public sealed partial class KinseiSession
 
     string Objective()
     {
+        if(finale)return FinaleObjective();
         switch(phase) {
             case Phase.Arrival:return "金星へ入る。向かいの三店には先に寄れる";
             case Phase.Floor:return held?"梶の連れは待機中。弟と用心棒を制圧せよ":"弟と用心棒を制圧せよ。辰は二階の梶の席へ";
@@ -134,6 +140,7 @@ public sealed partial class KinseiSession
         if(p.hp<=0)return "行動不能";
         switch(p.duty) {
             case Duty.Go:return "移動"; case Duty.Guard:return "持ち場";
+            case Duty.FinalePost:return finaleStep==FinaleStep.Choose?"交換卓":"興行の持ち場";
             case Duty.BoxOffice:return "帳場へ";
             case Duty.Rest:return "休息"; case Duty.Attend:return held?"交渉中":"梶の席へ";
             default:return "随行";
@@ -151,7 +158,7 @@ public sealed partial class KinseiSession
         Block(new Rect(151,17,1,39),rule);
         Letter(new Rect(171,4,490,23),"今夜の目的",13,brass);
         Letter(new Rect(171,25,hudW-493,42),Objective(),21,cream,true);
-        if(phase!=Phase.Mirror && Plate(new Rect(hudW-286,14,193,45),command?"現場に戻る　 Tab":"指揮に切替　 Tab")) ToggleCommand();
+        if(phase!=Phase.Mirror && !OnAir && Plate(new Rect(hudW-286,14,193,45),command?"現場に戻る　 Tab":"指揮に切替　 Tab")) ToggleCommand();
         if(Plate(new Rect(hudW-81,14,59,45),"幕間"))TogglePause();
         float bottom=command?hudH-154:hudH-66;
         if(bannerUntil>clock && banner.Length>0) {
@@ -165,7 +172,7 @@ public sealed partial class KinseiSession
             Block(new Rect(0,bottom,hudW,66),ink);
             Letter(new Rect(pad,bottom+4,165,38),"真壁　"+Mathf.CeilToInt(player.hp),24,cream,true);
             Meter(new Rect(pad,bottom+47,134,4),player.hp,player.hp<28?red:gold);
-            string hints=phase==Phase.Arrival?"WASD　移動　　E　話す　　通りの西から ロータス・針音堂・送像所":
+            string hints=OnAir?"共同送像所　生中継":finale?"WASD　移動　　E　調べる・渡す　　Tab　組員を指揮":phase==Phase.Arrival?"WASD　移動　　E　話す　　通りの西から ロータス・針音堂・送像所":
                 phase==Phase.Mirror?"卓間中継　接続中":
                 "WASD　移動　　右ドラッグ　視点　　左クリック・Space　射撃　　Q　注視　　F　打撃";
             Letter(new Rect(185,bottom+6,hudW-207,50),hints,17,cream);
@@ -182,7 +189,7 @@ public sealed partial class KinseiSession
         if(showFps) Letter(new Rect(pad,78,90,28),Mathf.RoundToInt(fpsSmooth)+" FPS",14,cream);
         if(phase==Phase.Arrival || command) {
             Rect ledgerPlate=new Rect(pad,showFps?112:86,510,29);
-            Block(ledgerPlate,ink);Letter(new Rect(ledgerPlate.x+9,ledgerPlate.y,ledgerPlate.width-12,29),NightSummary,14,gold);
+            Block(ledgerPlate,ink);Letter(new Rect(ledgerPlate.x+9,ledgerPlate.y,ledgerPlate.width-12,29),finale?"最終夜　四十軒の朝":NightSummary,14,gold);
         }
         if(!reducedMotion && hitFlash>clock) Block(new Rect(0,74,hudW,4),red);
         if(!command && (phase==Phase.Floor || phase==Phase.Chase)){
@@ -214,16 +221,16 @@ public sealed partial class KinseiSession
         }
         float y=top+90,bw=Mathf.Min(142,(hudW-420)/5);
         Letter(new Rect(left,y,191,44),crew[chosen].name+" に指示",22,gold,true);
-        if(Plate(new Rect(189,y,bw,44),"梶の席へ　E"))Assign(Duty.Attend);
+        if(Plate(new Rect(189,y,bw,44),finale?FinaleOrderLabel:"梶の席へ　E"))Assign(Duty.Attend);
         if(Plate(new Rect(195+bw,y,bw,44),"随行　F"))Assign(Duty.Follow);
         if(Plate(new Rect(201+bw*2,y,bw,44),"持ち場　G"))Assign(Duty.Guard);
         if(Plate(new Rect(207+bw*3,y,bw,44),"休息　R"))Assign(Duty.Rest);
-        if(Plate(new Rect(213+bw*4,y,bw,44),"伝票　T"))Assign(Duty.BoxOffice);
+        if(!finale && Plate(new Rect(213+bw*4,y,bw,44),"伝票　T"))Assign(Duty.BoxOffice);
         Letter(new Rect(222+bw*5,y,hudW-244-bw*5,44),"右クリック 地点指定　／　ホイール 拡縮",13,cream,false,TextAnchor.MiddleRight);
     }
     void WorldMarks()
     {
-        if(Event.current.type!=EventType.Repaint || cam==null || phase==Phase.Mirror)return;
+        if(Event.current.type!=EventType.Repaint || cam==null || phase==Phase.Mirror || OnAir)return;
         drawnLabels.Clear();
         foreach(var p in everyone) {
             if(p.retired || (p.hp<=0 && !(p==brother && phase==Phase.Choice)))continue;

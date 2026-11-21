@@ -141,7 +141,6 @@ public sealed partial class KinseiWorld
     {
         var amberGlass=Mat("Amber bottle glass","#743A1B",.29f,.86f);
         var greenGlass=Mat("Bottle green","#294F41",.31f,.91f);
-        var paper=Mat("Bottle label","#B9A078",0,.22f);
         for(int bay=0;bay<3;bay++)
         {
             float x=-.94f+bay*1.85f;
@@ -161,7 +160,7 @@ public sealed partial class KinseiWorld
                     Part("Bottle shoulder",PrimitiveType.Sphere,p+Vector3.up*h,new Vector3(.112f,.086f,.112f),bottle);
                     Cylinder("Long bottle neck",p+Vector3.up*(h+.067f),.022f,.089f,bottle);
                     Cylinder("Sealed cork",p+Vector3.up*(h+.11f),.025f,.025f,brass);
-                    Cylinder("Paper bottle label",p+Vector3.up*h*.54f,.058f,h*.39f,paper);
+                    BottleLabel(p+Vector3.up*h*.54f,(bay+row+i)%4,h*.47f);
                 }
             }
             Box("Walnut cupboard pair",new Vector3(x,.43f,7.99f),new Vector3(1.74f,.77f,.40f),wood,true);

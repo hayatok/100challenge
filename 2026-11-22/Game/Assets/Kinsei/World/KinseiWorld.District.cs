@@ -82,16 +82,25 @@ public sealed partial class KinseiWorld
         fixedRenderers.Remove(part.GetComponent<Renderer>());
     }
 
-    void ShopPrint(Transform room,string resource,Vector3 at,float width,float height,float pitch=0)
+    Material exchangeScreen;
+    Texture exchangeStandby;
+
+    public void SetExchangePicture(Texture picture)
+    {
+        if(exchangeScreen)exchangeScreen.mainTexture=picture?picture:exchangeStandby;
+    }
+
+    Material ShopPrint(Transform room,string resource,Vector3 at,float width,float height,float pitch=0)
     {
         var tex=Resources.Load<Texture2D>(resource);
-        if(!tex)return;
+        if(!tex)return null;
         var ink=new Material(Shader.Find("Standard")){mainTexture=tex};
         ink.SetFloat("_Glossiness",.22f);
         var frame=new GameObject(resource).transform;
         frame.SetParent(room,false);frame.localPosition=at;frame.localRotation=Quaternion.Euler(pitch,180,0);
         Box("Printed matter backing",Vector3.zero,new Vector3(width+.022f,height+.022f,.022f),brass,false,frame);
         Part("Printed face",PrimitiveType.Quad,new Vector3(0,0,-.013f),new Vector3(width,height,1),ink,false,frame);
+        return ink;
     }
 
     void DressCafe(Transform room,Material enamel)
@@ -114,6 +123,7 @@ public sealed partial class KinseiWorld
 
     void DressRecordShop(Transform room,Material rubber)
     {
+        DressRecordWall(room);
         ShopPrint(room,"KinseiDistrictArt/needle-sleeve",new Vector3(-2.6f,1.79f,.12f),.90f,.90f);
         ShopPrint(room,"KinseiDistrictArt/needle-return",new Vector3(.05f,1.144f,-4.08f),.32f,.16f,90);
         for(int i=0;i<2;i++)
@@ -130,14 +140,25 @@ public sealed partial class KinseiWorld
         for(int s=-1;s<=1;s+=2)
         {
             Box("Browser record bin",new Vector3(s*3.64f,.59f,-3.1f),new Vector3(1.15f,.95f,1.6f),wood,true,room);
-            for(int i=0;i<13;i++)Box("Used record sleeve",new Vector3(s*3.64f,1.13f,-3.76f+i*.106f),new Vector3(.68f,.47f,.038f),i%3==0?cream:(i%3==1?plum:glass),false,room).transform.localRotation=Quaternion.Euler(-9,0,0);
+            for(int column=0;column<2;column++)for(int i=0;i<11;i++){
+                Vector3 at=new Vector3(s*3.64f+(column-.5f)*.40f,1.14f,-3.75f+i*.12f);
+                var cover=Box("Used record sleeve",at,new Vector3(.315f,.315f,.010f),cream,false,room).transform;
+                cover.localRotation=Quaternion.Euler(-9,0,0);
+                PrintedFace(room,"Rental LP",sleevePrints[(i+column*3+(s+1))%8],at+cover.localRotation*Vector3.forward*.006f,
+                    new Vector2(.314f,.314f),cover.localRotation*Quaternion.Euler(0,180,0));
+            }
         }
     }
 
     void DressExchange(Transform room,Material enamel,Material rubber)
     {
-        ShopPrint(room,"KinseiDistrictArt/relay-test",new Vector3(-1.12f,1.56f,-4.16f),.70f,.525f);
+        DressExchangePrints(room);
+        exchangeScreen=ShopPrint(room,"KinseiDistrictArt/relay-test",new Vector3(-1.12f,1.56f,-4.16f),.70f,.525f);
+        if(exchangeScreen)exchangeStandby=exchangeScreen.mainTexture;
         Box("Bench receiver",new Vector3(-1.12f,1.56f,-4.40f),new Vector3(.85f,.68f,.44f),enamel,false,room);
+        Cushion("Exchange transcription deck",new Vector3(-1.95f,1.196f,-4.22f),new Vector3(.44f,.11f,.41f),wood,room);
+        Cylinder("Exchange platter",new Vector3(-1.95f,1.253f,-4.22f),.158f,.014f,rubber,false,room);
+        Rail(new Vector3(-1.77f,1.29f,-4.38f),new Vector3(-1.89f,1.28f,-4.24f),.008f,brass,room);
         ShopPrint(room,"KinseiDistrictArt/relay-card",new Vector3(.56f,1.145f,-4.11f),.35f,.219f,90);
         for(int s=-1;s<=1;s+=2)
         {
@@ -165,6 +186,7 @@ public sealed partial class KinseiWorld
     {
         if(!shopDoors[0])return;
         AdvanceTrain(dt);
+        if(masterDisc && masterDisc.activeSelf)masterDisc.transform.Rotate(0,dt*200f,0,Space.Self);
         for(int i=0;i<shopDoors.Length;i++)
         {
             var door=shopDoors[i];

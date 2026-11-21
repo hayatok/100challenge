@@ -78,7 +78,7 @@ public sealed partial class KinseiSession
 
     void PlayerInput(float dt)
     {
-        if(phase==Phase.Mirror) return;
+        if(phase==Phase.Mirror || OnAir) return;
         if(motor==null || motor.gameObject!=player.root.gameObject) {
             motor=player.root.gameObject.AddComponent<CharacterController>();
             motor.center=Vector3.up*.9f; motor.height=1.8f; motor.radius=.28f;
@@ -108,6 +108,7 @@ public sealed partial class KinseiSession
         }
         bool fighting=phase==Phase.Floor || phase==Phase.Chase;
         if(clock>attackUntil) Motion(player,moveBlend>.18f?(rate>3?"run":"walk"):(fighting?"guard":"idle"),moveBlend);
+        if(finale){if(Input.GetKeyDown(KeyCode.E))Interact();return;}
         if(Input.GetKeyDown(KeyCode.Q)) CycleTarget();
         if(Input.GetKeyDown(KeyCode.E)) Interact();
         if((Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Space)) && !OverHUD())
@@ -220,6 +221,8 @@ public sealed partial class KinseiSession
     void Assign(Duty duty,Vector3 destination=default)
     {
         var p=crew[chosen]; if(p.hp<=0){Say(p.name+"は動けない");return;}
+        if(finale && duty==Duty.Attend){OrderFinale();return;}
+        if(finale && duty==Duty.BoxOffice)return;
         if(duty==Duty.BoxOffice && (HouseClaimed || (phase!=Phase.Arrival && phase!=Phase.Floor && phase!=Phase.Choice))){
             Say(HouseClaimed?"今夜の伝票は預かった":"今は帳場に寄れない");return;
         }

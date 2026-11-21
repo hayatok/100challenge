@@ -14,6 +14,22 @@ public sealed class KinseiSound : MonoBehaviour
     readonly Dictionary<string, int> variant = new();
     bool paused, unfocused, dialogue;
     float duckUntil;
+    readonly float[] meterSamples = new float[128];
+    float nextMeterSample, meterTarget, meterReading;
+
+    public float ReadProgrammeLevel(float dt)
+    {
+        if (Time.unscaledTime >= nextMeterSample) {
+            nextMeterSample = Time.unscaledTime + .05f;
+            music.GetOutputData(meterSamples, 0);
+            float sum = 0;
+            foreach (float sample in meterSamples) sum += sample * sample;
+            float decibels = 10f * Mathf.Log10(Mathf.Max(1e-8f, sum / meterSamples.Length));
+            meterTarget = Mathf.InverseLerp(-58f, -17f, decibels);
+        }
+        meterReading = Mathf.MoveTowards(meterReading, meterTarget, dt * (meterTarget > meterReading ? 5f : 2f));
+        return meterReading;
+    }
 
     void Awake()
     {

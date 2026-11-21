@@ -212,7 +212,7 @@ public sealed class KinseiDistrictPeople : MonoBehaviour
         var cloth=Fabric(Names[id]+" working clothes",uniforms[id],true);
         var apron=Fabric("Brick linen",new Color(.53f,.17f,.10f),true);
         var bone=Fabric("Pearl and cotton",new Color(.80f,.75f,.62f));
-        var hair=Fabric("Hair",id==0?new Color(.43f,.42f,.39f):new Color(.11f,.078f,.069f));
+        
         var skin=actor.GetComponentInChildren<KinseiWardrobeBinding>();
         if(skin)
         {
@@ -254,21 +254,7 @@ public sealed class KinseiDistrictPeople : MonoBehaviour
         if(id==1)
         {
             for(int j=0;j<9;j++)Prop(spine,"Striped jersey",PrimitiveType.Cube,new Vector3(0,.165f+j*.022f,.129f-j*.002f),new Vector3(.115f-j*.006f,.010f,.009f),bone);
-            CurlHair(r.head,hair);
-        }
-        if(id==0||id==2)
-        {
-            // Face remains open. Flared rear panels end at jaw height on the bob.
-            for(int j=0;j<13;j++)
-            {
-                float a=Mathf.Lerp(.80f,Mathf.PI*2-.80f,j/12f);
-                float length=id==0?.162f:.109f;
-                var lockPart=Prop(r.head,"Combed nape",PrimitiveType.Sphere,new Vector3(Mathf.Sin(a)*.078f,id==0?.109f:.14f,Mathf.Cos(a)*.068f),
-                    new Vector3(.048f,length,.049f),hair);
-                lockPart.localRotation=Quaternion.Euler(-Mathf.Cos(a)*15,0,Mathf.Sin(a)*12);
-            }
-            Prop(r.head,"Crown",PrimitiveType.Sphere,new Vector3(0,.173f,-.005f),new Vector3(.176f,.126f,.166f),hair);
-            if(id==2)Prop(r.head,"Pinned knot",PrimitiveType.Sphere,new Vector3(0,.125f,-.096f),new Vector3(.098f,.09f,.078f),hair);
+            CurlHair(r.head,Fabric("Hair",new Color(.11f,.078f,.069f)));
         }
         if(id==2 || id==5)
         {
@@ -287,10 +273,23 @@ public sealed class KinseiDistrictPeople : MonoBehaviour
         }
         if(id==0 || id==2)
         {
-            // A polished spoon and an insulated adjustment tool follow the working hand.
-            r.carried=Prop(r.wrist,id==0?"Long coffee spoon":"Trimmer",PrimitiveType.Cylinder,new Vector3(0,-.108f,.065f),
-                new Vector3(.011f,.089f,.011f),id==0?bone:cloth);
-            r.carried.localRotation=Quaternion.Euler(61,0,0);
+            var steel=Fabric("Brushed stainless steel",new Color(.63f,.65f,.66f));
+            steel.SetFloat("_Metallic",.85f);steel.SetFloat("_Glossiness",.55f);
+            var grip=new Vector3(0,-.108f,.065f);
+            var angle=Quaternion.Euler(61,0,0);
+            var axis=angle*Vector3.up;
+            if(id==0)
+            {
+                r.carried=Prop(r.wrist,"Coffee spoon handle",PrimitiveType.Cylinder,grip,new Vector3(.006f,.083f,.006f),steel);
+                r.carried.localRotation=angle;
+                Prop(r.wrist,"Oval spoon bowl",PrimitiveType.Sphere,grip-axis*.099f,new Vector3(.026f,.043f,.006f),steel).localRotation=angle;
+            }
+            else
+            {
+                r.carried=Prop(r.wrist,"Insulated trimmer grip",PrimitiveType.Capsule,grip,new Vector3(.018f,.036f,.018f),cloth);
+                r.carried.localRotation=angle;
+                Prop(r.wrist,"Trimmer shaft",PrimitiveType.Cylinder,grip-axis*.061f,new Vector3(.0045f,.030f,.0045f),steel).localRotation=angle;
+            }
         }
     }
     void CurlHair(Transform head,Material hair)

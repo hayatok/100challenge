@@ -13,6 +13,8 @@ public sealed class KinseiLedger
     public long earnings;
     public bool kajiPromise;
     public bool stagePromise;
+    public bool cooperativeEnding;
+    public bool exclusiveEnding;
     public string seal;
 
     public static KinseiLedger Blank()
@@ -26,6 +28,7 @@ public sealed class KinseiLedger
             completed >= 0 && completed <= lastSettledNight && lastSettledNight <= nights &&
             (completed != 0 || lastSettledNight == 0) && earnings >= 0 &&
             earnings <= (long)completed * 18000 &&
+            (!(cooperativeEnding || exclusiveEnding) || (kajiPromise && stagePromise && completed >= 3)) &&
             (completed == 0 ? (!kajiPromise && !stagePromise) : (kajiPromise || stagePromise));
     }
 
@@ -35,13 +38,17 @@ public sealed class KinseiLedger
     public void Settle(string ending, int receipts)
     {
         if (nights <= lastSettledNight) throw new InvalidDataException("今夜の売上は記帳済みです");
-        if (ending != "accord" && ending != "pursuit") throw new ArgumentException("不明な決着");
+        bool final = ending == "cooperative" || ending == "exclusive";
+        if (final && (!kajiPromise || !stagePromise || receipts != 0)) throw new InvalidDataException("最終夜の記録が合いません");
+        if (!final && ending != "accord" && ending != "pursuit") throw new ArgumentException("不明な決着");
         if (receipts != 0 && receipts != Receipts) throw new ArgumentException("伝票の金額が合いません");
         completed = checked(completed + 1);
         lastSettledNight = nights;
         earnings = checked(earnings + receipts);
         if (ending == "accord") kajiPromise = true;
-        else stagePromise = true;
+        else if (ending == "pursuit") stagePromise = true;
+        else if (ending == "cooperative") cooperativeEnding = true;
+        else exclusiveEnding = true;
     }
 }
 

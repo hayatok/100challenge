@@ -21,6 +21,8 @@ public sealed class KinseiActor : MonoBehaviour
     bool hasAttentionTarget;
     SkinnedMeshRenderer leftHandRenderer, rightHandRenderer, faceRenderer;
     readonly Transform[] eyes = new Transform[2];
+    readonly KinseiMotionStudy motion = new KinseiMotionStudy();
+    public Transform LeftWrist => lh;
     Vector3 localEyeCenter = new Vector3(0,.105f,.075f);
     public Vector3 EyePosition => head.TransformPoint(localEyeCenter);
     Transform mirrorReceiver;
@@ -274,7 +276,7 @@ public sealed class KinseiActor : MonoBehaviour
         float gripLeft=.32f, gripRight=.44f;
         head.localRotation=Quaternion.Euler(Mathf.Sin(t*1.1f)*1.5f,Mathf.Sin(t*.45f)*3+turnSpeed*.65f,0);
 
-        if(locomotion)
+        if(locomotion && !motion.Pose(run,phase,dt,turnSpeed,body,chest,la,ra,le,re))
         {
             float a=run?36:23;
             body.localPosition+=V(swing*.014f,(run?-.106f:-.073f)+Mathf.Abs(swing)*(run?.045f:.025f),0);
@@ -424,6 +426,8 @@ public sealed class KinseiActor : MonoBehaviour
             j.localPosition=Vector3.Lerp(lastPositions[j],j.localPosition,blend);
             j.localRotation=Quaternion.Slerp(lastRotations[j],j.localRotation,blend);
         }
+        if(locomotion)motion.Feet(transform,stride,turnSpeed,ll,lk,leftShoe,rl,rk,rightShoe,SolveLimb);
+        else motion.Reset();
         if(state=="mirror" && mirrorReceiver)
         {
             float contact=Ease(.06f,.32f,action);
@@ -579,7 +583,10 @@ public sealed class KinseiActor : MonoBehaviour
         bool young=brother || roleName=="tatsu" || (!boss && !makabe && !kaji && variant%3==1);
         bool elder=boss || kaji;
         string shape=elder?"Elder":young?"Young":"Adult";
-        var faceResource=FindPart("Head"+shape);
+        string resident=roleName=="resident" && variant==0?"Sumiko":roleName=="resident" && variant==4?"Murase":null;
+        string folder=resident!=null?"KinseiResidents/":"KinseiCast/";
+        if(resident!=null)shape=resident;
+        var faceResource=FindPart("Head"+shape,folder);
         if(faceResource==null)
         {
             BuildFallbackFace(boss,kaji);
@@ -591,7 +598,7 @@ public sealed class KinseiActor : MonoBehaviour
         realisticSkin.name="CC0 human skin";
         realisticSkin.color=boss?new Color(.79f,.77f,.76f):kaji?new Color(.82f,.81f,.82f)
             :makabe?new Color(.73f,.71f,.72f):new Color(.82f,.80f,.81f);
-        realisticSkin.mainTexture=elder
+        realisticSkin.mainTexture=resident!=null?Resources.Load<Texture2D>(folder+"Skin"+resident):elder
             ? Resources.Load<Texture2D>("KinseiCast/SkinElderNeutral") ?? Resources.Load<Texture2D>("KinseiCast/SkinElder")
             : Resources.Load<Texture2D>("KinseiCast/SkinYoungStyled") ?? Resources.Load<Texture2D>("KinseiCast/SkinYoung");
         realisticSkin.SetTexture("_BumpMap",Resources.Load<Texture2D>("KinseiCast/SkinNormal"));
@@ -603,8 +610,8 @@ public sealed class KinseiActor : MonoBehaviour
         Mesh face=faceResource.sharedMesh;
         bool reflectZ=-face.bounds.min.z>face.bounds.max.z;
         detailJaw=Joint("Deforming mandible",head,V(0,elder?.035f:.046f,-.033f));
-        float lipLine=elder?.015f:young?.030f:.025f;
-        Vector3 socketCenter=elder?ElderEye:young?YoungEye:AdultEye;
+        float lipLine=resident!=null?.035f:elder?.015f:young?.030f:.025f;
+        Vector3 socketCenter=resident!=null?V(.0280f,.1106f,.0824f):elder?ElderEye:young?YoungEye:AdultEye;
         localEyeCenter=V(0,socketCenter.y,socketCenter.z+.010f);
         faceRenderer=ImportSkin(faceResource,head,chest,V(1,1,reflectZ?-1:1),Vector3.zero,detailJaw,lipLine,socketCenter.y);
         foreach(var wrist in new[]{lh,rh})
@@ -628,10 +635,11 @@ public sealed class KinseiActor : MonoBehaviour
         }
 
         string style=brother?"Brother":shape;
-        var cap=FindPart("Hair"+style);
+        var cap=FindPart("Hair"+style,folder);
         if(cap!=null)
         {
-            hair.mainTexture=Resources.Load<Texture2D>("KinseiCast/Hair"+style+"Grain");
+            if(resident!=null)hair.color=resident=="Sumiko"?new Color(.82f,.80f,.78f):new Color(.56f,.51f,.49f);
+            hair.mainTexture=Resources.Load<Texture2D>(folder+"Hair"+style+"Grain");
             if(hair.mainTexture)
             {
                 hair.SetOverrideTag("RenderType","TransparentCutout");
@@ -704,9 +712,9 @@ public sealed class KinseiActor : MonoBehaviour
         return mesh;
     }
 
-    static MeshFilter FindPart(string name)
+    static MeshFilter FindPart(string name,string folder="KinseiCast/")
     {
-        GameObject model=Resources.Load<GameObject>("KinseiCast/"+name);
+        GameObject model=Resources.Load<GameObject>(folder+name);
         if(model==null) return null;
         MeshFilter filter=model.GetComponentInChildren<MeshFilter>(true);
         return filter && filter.sharedMesh && filter.sharedMesh.isReadable?filter:null;

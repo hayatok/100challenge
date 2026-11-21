@@ -200,6 +200,7 @@ public sealed partial class KinseiSession
     string Interaction()
     {
         if(command)return "";
+        if(finale)return FinaleVerb();
         if(phase==Phase.Arrival && StreetContact(out int shop,out string words))
             return StreetVerb(shop,words);
         if(!HouseClaimed && (phase==Phase.Arrival || phase==Phase.Floor || phase==Phase.Choice)
@@ -213,6 +214,7 @@ public sealed partial class KinseiSession
     }
     void Interact()
     {
+        if(finale){FinaleInteract();return;}
         string verb=Interaction();
         if(phase==Phase.Arrival && StreetContact(out int shop,out string words)){VisitShop(shop,words);return;}
         if(verb=="金星の売上伝票を預かる"){ClaimHouse();return;}

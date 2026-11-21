@@ -5,7 +5,7 @@ using UnityEngine;
 public sealed partial class KinseiSession : MonoBehaviour
 {
     enum Phase { Title, Arrival, Floor, Choice, Chase, Mirror, Release, Result }
-    enum Duty { Follow, Go, Attend, Guard, Rest, BoxOffice }
+    enum Duty { Follow, Go, Attend, Guard, Rest, BoxOffice, FinalePost }
     sealed class Person
     {
         public string name, role, pose = "idle";
@@ -161,11 +161,16 @@ public sealed partial class KinseiSession : MonoBehaviour
         ApplyCampaignCrew();
     }
 
-    void StartNight()
+    void StartNight() => OpenNight(false);
+
+    void OpenNight(bool finalNight)
     {
-        if(!BeginCampaign())return;
+        if(!BeginCampaign(finalNight))return;
+        finale=finalNight;
         boxOffice.SetCollected(false);
         ResetStreets();
+        club.PutAwayMaster();
+        club.SetExchangePicture(null);
         foreach(var p in everyone) Destroy(p.root.gameObject);
         everyone.Clear(); crew.Clear(); guards.Clear(); upstairs.Clear(); Populate();
         phase=Phase.Arrival; phaseAge=clock=shootDelay=hitFlash=relayProgress=talkProgress=lastHit=flashTime=0;
@@ -177,7 +182,8 @@ public sealed partial class KinseiSession : MonoBehaviour
         SetCamera(0);
         Say("真壁「辰、行こか。今夜で金星を取り戻す」",4f);
         sound.Cue("door");
-        Mark("start");
+        if(finale)SetUpFinale();
+        Mark(finale?"start-finale":"start");
     }
 
     void Say(string words,float seconds=3.4f) { banner=words; bannerUntil=clock+seconds; }
@@ -193,7 +199,9 @@ public sealed partial class KinseiSession : MonoBehaviour
             ScreenCapture.CaptureScreenshot(path); Debug.Log("KINSEI_PHOTO "+path);
         }
         if(phase==Phase.Title || phase==Phase.Result) {
-            if(Input.GetKeyDown(KeyCode.Return)) StartNight();
+            if(pendingEnding!=null && Input.GetKeyDown(KeyCode.R)) RetrySettlement();
+            else if(Input.GetKeyDown(KeyCode.Return)) StartNight();
+            else if(Input.GetKeyDown(KeyCode.F)) StartFinale();
             if(phase==Phase.Title && Input.GetKeyDown(KeyCode.Escape)) Application.Quit();
             return;
         }
@@ -206,7 +214,9 @@ public sealed partial class KinseiSession : MonoBehaviour
         if(measure && phaseAge>.2f && profile.Count<108000) profile.Add(Time.unscaledDeltaTime*1000);
         if(command) CommandInput(); else PlayerInput(dt);
         neighbours.Tick(clock);neighbours.LookAtNeighbours();club.TickShops(dt,player.Position);
-        Simulate(dt);
+        club.SetProgrammeLevel(sound.ReadProgrammeLevel(dt));
+        if(phase==Phase.Result)return;
+        if(finale)SimulateFinale(dt); else Simulate(dt);
         sound.SetDialogue(clock<bannerUntil);
         foreach(var p in everyone)
         {
@@ -234,7 +244,7 @@ public sealed partial class KinseiSession : MonoBehaviour
 
     void ToggleCommand()
     {
-        if(phase==Phase.Mirror) return;
+        if(phase==Phase.Mirror || OnAir) return;
         command=!command; club.SetTactical(command); snapCamera=true; lockedTarget=-1;
         if(command && (player.Position.z< -13.9f || Mathf.Abs(player.Position.x)>8.8f))
             mapOffset=new Vector2(player.Position.x,player.Position.z-1.55f);
@@ -247,6 +257,15 @@ public sealed partial class KinseiSession : MonoBehaviour
         if(phase==Phase.Title || phase==Phase.Result) {
             cam.orthographic=false; cam.fieldOfView=49;
             eye=new Vector3(6.3f,2.3f,-5.6f); focus=new Vector3(-2.5f,1.6f,3.5f);
+        } else if(OnAir) {
+            cam.orthographic=false;cam.fieldOfView=40;
+            if(finaleStep==FinaleStep.Cooperative) {
+                eye=new Vector3(15.66f,1.68f,-16.93f);
+                focus=new Vector3(14.88f,1.49f,-18.13f);
+            } else {
+                eye=KinseiBoxOffice.Counter+new Vector3(-1.56f,1.55f,-1.7f);
+                focus=Vector3.Lerp(operatorOnDuty.actor.EyePosition,stageDirector.actor.EyePosition,.5f)-Vector3.up*.16f;
+            }
         } else if(phase==Phase.Mirror) {
             bool returnShot=phaseAge>=2.2f;
             if(returnShot!=terraceShot){terraceShot=returnShot;snapCamera=true;}
@@ -275,7 +294,7 @@ public sealed partial class KinseiSession : MonoBehaviour
     void End(string id,string title,string body)
     {
         if(phase==Phase.Result)return;
-        outcome=id; endingTitle=title; endingText=body+"\n"+FinishCampaign(id); phase=Phase.Result; command=false;
+        outcome=id; endingTitle=title; endingText=body; settlementMessage=FinishCampaign(id); phase=Phase.Result; command=false;
         relayCam.enabled=false; sound.Cue(id=="loss"?"loss":"result"); Mark("ending-"+id);
         if(measure && profile.Count>0) {
             profile.Sort();

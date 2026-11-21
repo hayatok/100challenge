@@ -21,6 +21,7 @@ public static class KinseiBuild
         KeepMaterial("KinseiSurface","Standard");
         KeepMaterial("KinseiSign","Unlit/Texture");
         KeepMaterial("KinseiGlow","Standard","_EMISSION");
+        KeepMaterial("KinseiCutPaper","Standard","_ALPHATEST_ON");
         KeepMaterial("KinseiRelief","Standard","_NORMALMAP");
         KeepMaterial("KinseiSkin","Standard (Specular setup)","_NORMALMAP","_SPECGLOSSMAP");
         foreach(string guid in AssetDatabase.FindAssets("t:Texture2D",new[]{"Assets/Resources/KinseiSurfaces"}))
@@ -36,7 +37,7 @@ public static class KinseiBuild
         EditorBuildSettings.scenes = new[] { new EditorBuildSettingsScene(ScenePath, true) };
         PlayerSettings.companyName = "Yoimachi";
         PlayerSettings.productName = "金星の一夜";
-        PlayerSettings.bundleVersion = "0.3.0";
+        PlayerSettings.bundleVersion = "0.4.0";
         PlayerSettings.defaultScreenWidth = 1600;
         PlayerSettings.defaultScreenHeight = 900;
         PlayerSettings.fullScreenMode = FullScreenMode.Windowed;
