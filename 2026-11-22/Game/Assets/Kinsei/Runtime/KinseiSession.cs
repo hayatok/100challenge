@@ -4,7 +4,7 @@ using UnityEngine;
 
 public sealed partial class KinseiSession : MonoBehaviour
 {
-    enum Phase { Title, Arrival, Floor, Choice, Chase, Showdown, Mirror, Release, Result }
+    enum Phase { Title, Arrival, Floor, Choice, Chase, Showdown, Mirror, Release, Result, Dawn }
     enum Duty { Follow, Go, Attend, Guard, Rest, BoxOffice, FinalePost, StageWitness, Backstage }
     sealed class Person
     {
@@ -170,6 +170,16 @@ public sealed partial class KinseiSession : MonoBehaviour
     void OpenNight(bool finalNight)
     {
         if(!BeginCampaign(finalNight))return;
+        PrepareVisit(finalNight,0);
+        Say("真壁「辰、行こか。今夜で金星を取り戻す」",4f);
+        sound.Cue("door");
+        if(finale)SetUpFinale();
+        Mark(finale?"start-finale":"start");
+    }
+
+    void PrepareVisit(bool finalNight,int morning)
+    {
+        ClearDawn();
         ClearStageWitness();
         finale=finalNight;
         shopView=ShopView.None;
@@ -182,19 +192,19 @@ public sealed partial class KinseiSession : MonoBehaviour
         club.PutAwayMaster();
         club.SetExchangePicture(null);
         foreach(var p in everyone) Destroy(p.root.gameObject);
-        everyone.Clear(); crew.Clear(); guards.Clear(); upstairs.Clear(); Populate();
-        phase=Phase.Arrival; phaseAge=clock=shootDelay=hitFlash=relayProgress=talkProgress=lastHit=flashTime=0;
+        everyone.Clear(); crew.Clear(); guards.Clear(); upstairs.Clear();
+        operatorOnDuty=stageDirector=null;boss=brother=elder=null;
+        firstPictureAt=-1;
+        if(morning==0)Populate();
+        else player=Make("真壁","makabe",new Vector3(0,0,-10.65f),0);
+        phase=morning==0?Phase.Arrival:Phase.Dawn; phaseAge=clock=shootDelay=hitFlash=relayProgress=talkProgress=lastHit=flashTime=0;
         ResetSquads();
-        entranceTime=0; escapeTime=34; bossHp=100; chosen=0; shots=0; lockedTarget=-1;
+        entranceTime=0; escapeTime=morning==0?34:0; bossHp=100; chosen=0; shots=0; lockedTarget=-1;
         command=held=accord=escorted=paused=terraceShot=false; angle=0; tilt=9; snapCamera=true;
         club.SetTactical(false); sound.SetPaused(false); attackUntil=0; moveBlend=0; nextStep=0;
         profile.Clear(); relayCam.enabled=false; club.SetMirror(0,null);club.SetAshtray(0);
         mapOffset=Vector2.zero;chartSize=12.8f;
         SetCamera(0);
-        Say("真壁「辰、行こか。今夜で金星を取り戻す」",4f);
-        sound.Cue("door");
-        if(finale)SetUpFinale();
-        Mark(finale?"start-finale":"start");
     }
 
     void Say(string words,float seconds=3.4f) { banner=words; bannerUntil=clock+seconds; }
@@ -213,6 +223,8 @@ public sealed partial class KinseiSession : MonoBehaviour
             if(pendingEnding!=null && Input.GetKeyDown(KeyCode.R)) RetrySettlement();
             else if(Input.GetKeyDown(KeyCode.Return)) StartNight();
             else if(Input.GetKeyDown(KeyCode.F)) StartFinale();
+            else if(Input.GetKeyDown(KeyCode.Alpha1))OpenDawn(1);
+            else if(Input.GetKeyDown(KeyCode.Alpha2))OpenDawn(2);
             if(phase==Phase.Title && Input.GetKeyDown(KeyCode.Escape)) Application.Quit();
             return;
         }
@@ -229,7 +241,8 @@ public sealed partial class KinseiSession : MonoBehaviour
         neighbours.Tick(clock);neighbours.LookAtNeighbours();club.TickShops(dt,player.Position);
         club.SetProgrammeLevel(sound.ReadProgrammeLevel(dt));
         if(phase==Phase.Result)return;
-        if(finale)SimulateFinale(dt); else Simulate(dt);
+        if(InDawn)TickDawn(dt);
+        else if(finale)SimulateFinale(dt); else Simulate(dt);
         sound.SetDialogue(clock<bannerUntil);
         float songSeconds=sound.MusicSeconds;
         club.PlayKeys(songSeconds,!showInterrupted,out var bassKey,out var melodyKey);
@@ -270,6 +283,7 @@ public sealed partial class KinseiSession : MonoBehaviour
 
     void ToggleCommand()
     {
+        if(InDawn)return;
         if(AboveStreet){Say("通りへ降りると指揮に戻れる");return;}
         if(pullingBackstage || phase==Phase.Mirror || StageActive || OnAir) return;
         shopView=ShopView.None;
@@ -343,7 +357,7 @@ public sealed partial class KinseiSession : MonoBehaviour
 
     void End(string id,string title,string body)
     {
-        if(phase==Phase.Result)return;
+        if(phase==Phase.Result || InDawn)return;
         ClearStageWitness();
         outcome=id; endingTitle=title; endingText=body; settlementMessage=FinishCampaign(id=="showdown"?"pursuit":id); phase=Phase.Result; command=false;
         SetPerformance(true);

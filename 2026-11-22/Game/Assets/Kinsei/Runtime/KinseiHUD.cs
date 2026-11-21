@@ -55,6 +55,7 @@ public sealed partial class KinseiSession
         GUI.matrix=Matrix4x4.Scale(new Vector3(scale,scale,1));
         if(phase==Phase.Title || phase==Phase.Result) SalonCover();
         else if(paused) Intermission();
+        else if(InDawn)DrawDawnHUD();
         else if(player!=null) LiveHUD();
         GUI.matrix=old;
     }
@@ -82,10 +83,12 @@ public sealed partial class KinseiSession
         } else if(FinaleUnlocked) {
             if(Plate(new Rect(x,hudH-54,300,43),"最終夜　四十軒の朝　F")) StartFinale();
         } else Letter(new Rect(x,hudH-55,w,29),"ENTER　開始",13,cream);
+        DrawDawnDepartures();
     }
     void ReturnToTitle()
     {
         if(paused) TogglePause();
+        ClearDawn();
         ClearStageWitness();
         relayCam.enabled=false; phase=Phase.Title; command=false; SetCamera(0);
     }
@@ -111,14 +114,14 @@ public sealed partial class KinseiSession
         float l=x+32,w=width-64;
         Letter(new Rect(l,y+16,w,30),"キャバレー金星",15,gold);
         Letter(new Rect(l,y+44,w,67),"幕　間",46,cream,true);
-        if(PauseButton(0,new Rect(l,y+120,w,48),"舞台へ戻る　　Esc",true)) TogglePause();
+        if(PauseButton(0,new Rect(l,y+120,w,48),InDawn?"町歩きに戻る　　Esc":"舞台へ戻る　　Esc",true)) TogglePause();
         if(PauseButton(1,new Rect(l,y+180,w,44),"揺れ・点滅を抑える　　"+(reducedMotion?"入":"切"))) {
             reducedMotion=!reducedMotion; PlayerPrefs.SetInt("ReducedMotion",reducedMotion?1:0); PlayerPrefs.Save();
         }
         if(PauseButton(2,new Rect(l,y+230,w,44),"FPS 表示　　"+(showFps?"入":"切"))) {
             showFps=!showFps; PlayerPrefs.SetInt("KinseiFps",showFps?1:0); PlayerPrefs.Save();
         }
-        if(PauseButton(3,new Rect(l,y+296,w,44),"初めから遊ぶ")) {TogglePause();OpenNight(finale);}
+        if(PauseButton(3,new Rect(l,y+296,w,44),InDawn?"この朝を初めから歩く":"初めから遊ぶ")) {TogglePause();if(InDawn)OpenDawn(dawnBranch);else OpenNight(finale);}
         if(PauseButton(4,new Rect(l,y+346,w,44),"表題に戻る")) ReturnToTitle();
         if(PauseButton(5,new Rect(l,y+396,w,44),"ゲームを終了")) Application.Quit();
         if(showFps) Letter(new Rect(l,y+448,w,29),Mathf.RoundToInt(fpsSmooth)+" FPS（中断直前）",14,gold);

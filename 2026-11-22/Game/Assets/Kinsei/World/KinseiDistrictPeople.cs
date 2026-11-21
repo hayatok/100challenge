@@ -89,9 +89,20 @@ public sealed class KinseiDistrictPeople : MonoBehaviour
         return path.ToArray();
     }
 
+    int dawnSchedule;
+    public void SetDawnSchedule(int branch)
+    {
+        branch=Mathf.Clamp(branch,0,2);
+        if(branch==dawnSchedule)return;
+        dawnSchedule=branch;
+        float clock=float.IsNaN(lastTime)?0:lastTime;
+        lastTime=float.NaN;
+        Tick(clock);
+    }
+
     public void ResetNight()
     {
-        lastTime=float.NaN;
+        dawnSchedule=0;lastTime=float.NaN;
         if(!district)return;
         for(int i=0;i<3;i++){open[i]=true;district.SetDistrictOpen(i,true);}
         Tick(0);
@@ -108,6 +119,7 @@ public sealed class KinseiDistrictPeople : MonoBehaviour
         {
             var person=locals[i];
             float phase=Mathf.Repeat(Mathf.Max(0,elapsedSeconds)+person.offset,person.duration);
+            if(dawnSchedule!=0 && i<3)phase=0;
             int step=0;
             var stop=person.day[0];
             var next=person.day[1];

@@ -250,7 +250,7 @@ public sealed partial class KinseiWorld : MonoBehaviour
         if(signFont){t.font=signFont;go.GetComponent<MeshRenderer>().sharedMaterial=signInk;}
     }
     void RefreshTypeface(Font font) { if(font==signFont && signInk)signInk.mainTexture=font.material.mainTexture; }
-    void OnDestroy() {Font.textureRebuilt-=RefreshTypeface;if(signInk)Destroy(signInk);if(terraceImage){terraceImage.Release();Destroy(terraceImage);}nightAssets?.Release();ReleaseMarquee();}
+    void OnDestroy() {LeaveDawn();Font.textureRebuilt-=RefreshTypeface;if(signInk)Destroy(signInk);if(terraceImage){terraceImage.Release();Destroy(terraceImage);}nightAssets?.Release();ReleaseMarquee();}
     void Mirror()
     {
         Table(new Vector3(-3,0,0),.55f);

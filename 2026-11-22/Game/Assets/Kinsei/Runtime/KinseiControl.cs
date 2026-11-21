@@ -115,7 +115,7 @@ public sealed partial class KinseiSession
         }
         bool fighting=phase==Phase.Floor || phase==Phase.Chase || StageActive;
         if(clock>attackUntil) Motion(player,moveBlend>.18f?(rate>3?"run":"walk"):(fighting?"guard":"idle"),moveBlend);
-        if(finale || AboveStreet){if(Input.GetKeyDown(KeyCode.E))Interact();return;}
+        if(InDawn || finale || AboveStreet){if(Input.GetKeyDown(KeyCode.E))Interact();return;}
         if(Input.GetKeyDown(KeyCode.Q)) CycleTarget();
         if(Input.GetKeyDown(KeyCode.E)) Interact();
         if((Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Space)) && !OverHUD())

@@ -7,7 +7,7 @@ public sealed partial class KinseiSession
 
     ShopView NearbyCounter()
     {
-        if(command || phase!=Phase.Arrival || OnAir || player==null)return ShopView.None;
+        if(command || (phase!=Phase.Arrival && !InDawn) || OnAir || player==null)return ShopView.None;
         Vector3 at=player.Position;
         if(!finale && at.x> -12 && at.x< -10.18f && Mathf.Abs(at.z+2.43f)<1.25f && at.y<.5f)return ShopView.Wardrobe;
         if(at.x>3.5f && at.x<7.6f && at.z> -12.1f && at.z< -8.60f)return ShopView.Marquee;

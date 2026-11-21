@@ -7,7 +7,7 @@ public sealed partial class KinseiSession
     int railStop,railCar;
     bool liftGoingUp;
     bool AboveStreet =>railPlace!=RailPlace.Street;
-    bool RailAvailable =>!finale && phase==Phase.Arrival;
+    bool RailAvailable =>!finale && (phase==Phase.Arrival || InDawn);
     const float LiftZ=-19.48f,DoorZ=-22.62f;
 
     void ResetRailRide()
@@ -66,7 +66,7 @@ public sealed partial class KinseiSession
             player.root.SetParent(transform,true);
             railPlace=liftGoingUp?RailPlace.Platform:RailPlace.Street;
             fallVelocity=0;snapCamera=true;
-            Say(liftGoingUp?"ホームに到着。停車中の開いた戸から乗れます":"通りに到着。Tabで組員を指揮できます",3);
+            Say(liftGoingUp?"ホームに到着。停車中の開いた戸から乗れます":InDawn?"通りに到着。三店を歩いて訪ねられます":"通りに到着。Tabで組員を指揮できます",3);
         }
         if(AboveStreet)Physics.SyncTransforms();
     }

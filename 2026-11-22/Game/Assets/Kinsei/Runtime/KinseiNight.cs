@@ -219,6 +219,7 @@ public sealed partial class KinseiSession
         if(command)return "";
         if(finale)return FinaleVerb();
         string rail=RailVerb();if(AboveStreet || rail.Length>0)return rail;
+        if(InDawn)return DawnVerb();
         if(CanPullBackstage)return BackstageVerb;
         if(phase==Phase.Arrival && StreetContact(out int shop,out string words))
             return StreetVerb(shop,words);
@@ -239,6 +240,7 @@ public sealed partial class KinseiSession
         string verb=Interaction();
         if(verb.Length>0 && verb==RailVerb()){UseRail(verb);return;}
         if(AboveStreet)return;
+        if(InDawn){DawnInteract();return;}
         if(verb==BackstageVerb){BeginBackstagePull();return;}
         if(phase==Phase.Arrival && StreetContact(out int shop,out string words)){VisitShop(shop,words);return;}
         if(verb=="金星の売上伝票を預かる"){ClaimHouse();return;}

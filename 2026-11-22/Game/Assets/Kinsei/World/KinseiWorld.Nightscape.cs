@@ -22,6 +22,7 @@ public sealed partial class KinseiWorld
         if (airImage && airShader)
         {
             var sky = owner.Keep(new Material(airShader) { name = "宵待町・雲底", mainTexture = airImage });
+            dawnSky=sky;
             CreateEveningSurround(owner, sky);
         }
 
@@ -32,6 +33,7 @@ public sealed partial class KinseiWorld
         var sash = owner.Keep(Mat("古い木製建具", "#392F29", .1f, .34f));
         var distant = owner.Keep(Mat("遠い屋上の青灰", "#48505B", .06f, .25f));
         var home = owner.Keep(Mat("室内から透ける型板ガラス", "#BAA991", .05f, .31f));
+        dawnHome=home;
         if (glassImage)
         {
             home.mainTexture = glassImage;

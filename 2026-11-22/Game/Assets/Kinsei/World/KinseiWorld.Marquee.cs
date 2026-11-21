@@ -32,6 +32,7 @@ public sealed partial class KinseiWorld
 
     public void UpdateMarquee(bool performing,bool visible,float time)
     {
+        if(dawnBranch!=0)return;
         if(!performing){if(marqueeGlass.mainTexture!=standby)marqueeGlass.mainTexture=standby;return;}
         if(!visible || time<nextMarqueeFrame || SystemInfo.graphicsDeviceType==UnityEngine.Rendering.GraphicsDeviceType.Null)return;
         stageCamera.Render();marqueeGlass.mainTexture=marqueePicture;
