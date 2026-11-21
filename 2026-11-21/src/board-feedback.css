@@ -35,3 +35,27 @@
 @media (prefers-reduced-motion: reduce) {
   .extra-ball-pop, .confetti-piece, .goal-pop { display: none; animation: none; }
 }
+
+/* Keep the refill notice next to the stock count, clear of the board and rail. */
+.scores dd .refill-pop {
+  display: inline-block;
+  vertical-align: middle;
+  margin-left: 3px;
+  padding: 1px 2px;
+  border: 1px solid #bce7b8;
+  border-radius: 3px;
+  color: #e4ffdd;
+  background: #203c30;
+  font: 800 clamp(10px, 1.05vw, 15px)/1.1 var(--numbers);
+  letter-spacing: 0;
+  animation: stock-refill-notice .96s ease-out both;
+}
+.stock-refill-active { display: inline-block; transform-origin: center; }
+@keyframes stock-refill-notice {
+  from { opacity: 0; transform: translateY(2px) scale(.93); }
+  12%, 78% { opacity: 1; transform: none; }
+  to { opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .scores dd .refill-pop { display: none; animation: none; }
+}

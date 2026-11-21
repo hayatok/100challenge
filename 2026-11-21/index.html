@@ -18,13 +18,13 @@
         <section class="playfield" aria-label="ゲーム盤と得点">
           <dl class="scores">
             <div><dt>ステージ</dt><dd><span id="stage">1</span><small> / 2</small></dd></div>
-            <div><dt>残り球</dt><dd><span id="remaining">3</span><small> / 3</small></dd></div>
+            <div><dt>手持ち</dt><dd><span id="remaining">3</span></dd></div>
             <div class="score-goal"><dt>得点 / ノルマ</dt><dd><span id="score">0</span><small> / <span id="goal">85</span></small></dd></div>
             <div class="combo"><dt>最高連鎖</dt><dd id="combo">0</dd></div>
           </dl>
           <progress id="score-meter" value="0" max="85" aria-label="ノルマまでの得点"></progress>
           <div id="board" class="board">
-            <button id="launcher" class="launcher" type="button" aria-label="盤面から玉を放つ" aria-describedby="aim-help keyboard-help" disabled>
+            <button id="launcher" class="launcher" type="button" aria-label="盤面から玉を放つ" aria-describedby="aim-help refill-rule keyboard-help" disabled>
               <span id="rail-hint" aria-hidden="true">左右に滑らせて放す</span>
             </button>
             <div id="board-effects" class="board-effects" aria-hidden="true"></div>
@@ -36,6 +36,7 @@
             <section id="shoot-panel">
               <h2>レールから玉を放す</h2>
               <p id="aim-help" class="muted">レールで玉を滑らせて放すか、狙った位置をクリック・タップ。残り球があれば続けて落とせます。</p>
+              <p id="refill-rule" class="refill-rule" hidden>一投で<span id="refill-hits"></span>連鎖するごとに手持ち＋1球</p>
               <p id="keyboard-help" class="key-guide muted"><kbd>←</kbd> <kbd>→</kbd> で狙う <span><kbd>Space</kbd> で放す</span></p>
             </section>
 

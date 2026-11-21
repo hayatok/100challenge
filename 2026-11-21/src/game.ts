@@ -5,6 +5,7 @@ export const DROP_Y = 44;
 export const PIN_RADIUS = 12;
 export const BALL_RADIUS = 8;
 export const BALLS_PER_STAGE = 3;
+export const REFILL_CHAIN = 6;
 export const FIRST_BOARD_SEED = 20261323;
 export const DEFAULT_DROP_X = 431;
 export const STEP = 1 / 120;
@@ -22,7 +23,7 @@ export type Phase = 'ready' | 'dropping' | 'upgrade' | 'clear' | 'failed';
 export type Stage = 1 | 2;
 export type Pin = { id: number; x: number; y: number; kind: PinKind; alive: boolean };
 export type Ball = { id: number; x: number; y: number; vx: number; vy: number; age: number; origin: 'drop' | 'split' | 'bonus'; shotId: number };
-export type Impact = { pin: Pin; chain: number; points: number; addedBalls: number; shotId: number };
+export type Impact = { pin: Pin; chain: number; points: number; addedBalls: number; shotId: number; earnedBall: boolean };
 
 type Spawn = Omit<Ball, 'id' | 'age'> & { delay: number };
 type PinRow = { y: number; x: readonly number[]; split?: readonly number[]; bonus?: readonly number[] };
@@ -76,7 +77,6 @@ export class PinboardRun {
   stage: Stage = 1;
   phase: Phase = 'ready';
   upgrade: Upgrade | null = null;
-  shotsUsed = 0;
   stageScore = 0;
   totalScore = 0;
   bestChain = 0;
@@ -84,6 +84,7 @@ export class PinboardRun {
   balls: Ball[] = [];
 
   private random: () => number;
+  private reserve = BALLS_PER_STAGE;
   private shotChains: number[] = [];
   private pending: Spawn[] = [];
   private nextId = 0;
@@ -96,13 +97,17 @@ export class PinboardRun {
   }
 
   get goal() { return GOALS[this.stage - 1]; }
-  get remaining() { return BALLS_PER_STAGE - this.shotsUsed; }
+  get remaining() { return this.reserve; }
+  get shotsUsed() { return this.shotChains.length; }
   get chain() { return Math.max(0, ...this.shotChains); }
-  get canDrop() { return this.remaining > 0 && (this.phase === 'ready' || this.phase === 'dropping'); }
+  get hasPins() { return this.pins.some((pin) => pin.alive); }
+  get canDrop() {
+    return this.remaining > 0 && (this.phase === 'ready' || this.phase === 'dropping') && this.hasPins;
+  }
 
   drop(x: number) {
     if (!this.canDrop || !Number.isFinite(x)) return false;
-    this.shotsUsed++;
+    this.reserve--;
     this.shotChains.push(0);
     this.settleTime = 0;
     this.phase = 'dropping';
@@ -115,7 +120,7 @@ export class PinboardRun {
     this.upgrade = upgrade;
     this.stage = 2;
     this.phase = 'ready';
-    this.shotsUsed = 0;
+    this.reserve = BALLS_PER_STAGE;
     this.stageScore = 0;
     this.shotChains = [];
     this.pins = buildBoard(this.seed, this.stage);
@@ -172,6 +177,8 @@ export class PinboardRun {
     pin.alive = false;
     const shotId = ball.shotId;
     const chain = ++this.shotChains[shotId - 1];
+    const earnedBall = chain % REFILL_CHAIN === 0;
+    if (earnedBall) this.reserve++;
     this.stageScore += chain;
     this.totalScore += chain;
     this.bestChain = Math.max(this.bestChain, chain);
@@ -198,11 +205,11 @@ export class PinboardRun {
         this.pending.push({ delay: 0.19, x, y: DROP_Y, vx: 0, vy: 55, origin: 'bonus', shotId });
       }
     }
-    impacts.push({ pin, chain, points: chain, addedBalls, shotId });
+    impacts.push({ pin, chain, points: chain, addedBalls, shotId, earnedBall });
   }
 
   private finishDropSequence() {
-    if (this.remaining > 0) this.phase = 'ready';
+    if (this.canDrop) this.phase = 'ready';
     else if (this.stageScore < this.goal) this.phase = 'failed';
     else this.phase = this.stage === 1 ? 'upgrade' : 'clear';
   }

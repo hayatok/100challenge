@@ -162,6 +162,7 @@ h2 {
 .control-content, .rulebook { padding: clamp(14px, 1.7vw, 22px); }
 .muted { color: var(--ui-muted); font-size: 13px; }
 h2 + p { margin-top: 6px; }
+.refill-rule { color: var(--ui-success); font-size: 13px; font-weight: 800; margin-top: 9px; }
 .quiet-button, .primary-button, .upgrade-button {
   min-height: 44px;
   border: 2px solid var(--ui-ink);

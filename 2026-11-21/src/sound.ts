@@ -86,6 +86,15 @@ export class GameSound {
     }
   }
 
+  refill(): void {
+    // A low double pickup with a bright fifth; shorter than the stage-clear fanfare.
+    this.play([
+      { hz: 261.63, endHz: 523.25, seconds: 0.075, volume: 0.13, wave: 'triangle' },
+      { hz: 523.25, seconds: 0.095, volume: 0.14, wave: 'triangle', delay: 0.085 },
+      { hz: 783.99, seconds: 0.15, volume: 0.10, delay: 0.15 },
+    ]);
+  }
+
   clear(): void {
     this.play([
       { hz: 392, seconds: 0.18, volume: 0.15, wave: 'triangle' },

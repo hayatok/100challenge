@@ -1,7 +1,7 @@
 import './style.css';
 import { BoardFeedback } from './board-feedback.ts';
 import { BoardView } from './board-view.ts';
-import { BOARD_WIDTH, clampDropX, DEFAULT_DROP_X, FIRST_BOARD_SEED, PinboardRun, STEP } from './game.ts';
+import { BOARD_WIDTH, clampDropX, DEFAULT_DROP_X, FIRST_BOARD_SEED, PinboardRun, REFILL_CHAIN, STEP } from './game.ts';
 import type { Phase, Upgrade } from './game.ts';
 import { GameSound } from './sound.ts';
 
@@ -55,6 +55,8 @@ function start() {
   let drawAvailable = true;
   let metGoal = false;
   const feedback = new BoardFeedback(board, effects, motionPreference.matches);
+  element('refill-hits').textContent = String(REFILL_CHAIN);
+  element('refill-rule').hidden = false;
 
   function updateScore() {
     stage.textContent = String(run.stage);
@@ -75,8 +77,7 @@ function start() {
     upgradePanel.hidden = run.phase !== 'upgrade';
     resultPanel.hidden = !finished;
     launcher.disabled = !drawAvailable || shootPanel.hidden;
-    launcher.setAttribute('aria-disabled', String(!run.canDrop || !drawAvailable));
-    railHint.hidden = !run.canDrop || run.shotsUsed > 0;
+    updateLauncher();
 
     const active = element('active-upgrade');
     active.hidden = run.upgrade === null;
@@ -93,6 +94,11 @@ function start() {
       element('total-score').textContent = String(run.totalScore);
       element('max-chain').textContent = String(run.bestChain);
     }
+  }
+
+  function updateLauncher() {
+    launcher.setAttribute('aria-disabled', String(!run.canDrop || !drawAvailable));
+    railHint.hidden = !run.canDrop || run.shotsUsed > 0;
   }
 
   function showBoard() {
@@ -123,7 +129,7 @@ function start() {
     sound.launch();
     updateScore();
     updatePanels();
-    const action = run.canDrop ? `あと ${run.remaining} 球、すぐ放せます。` : '盤面の玉が落ちきると結果が出ます。';
+    const action = run.canDrop ? `あと ${run.remaining} 球、すぐ放せます。` : `手持ち0球。${REFILL_CHAIN}連鎖で1球補充。`;
     setStatus(metGoal ? `ノルマ達成。${action}` : action, metGoal ? 'success' : 'neutral');
   }
 
@@ -264,6 +270,7 @@ function start() {
     const delta = Math.min((now - (lastTime ?? now)) / 1000, 0.05);
     lastTime = now;
     const phaseBefore = run.phase;
+    let refills = 0;
     if (run.phase === 'dropping') {
       timeBank += delta;
       while (timeBank >= STEP && run.phase === 'dropping') {
@@ -272,18 +279,31 @@ function start() {
           view.hit(impact);
           feedback.hit(impact);
           sound.hit(impact.pin.kind, impact.chain);
+          if (impact.earnedBall) refills++;
         }
-        if (impacts.length) updateScore();
+        if (impacts.length) {
+          updateScore();
+          updateLauncher();
+          if (!run.hasPins) {
+            releasePointer();
+            setStatus('ピンをすべて倒しました。盤面の玉が落ちきるまで待ちます。', 'success');
+          }
+        }
         if (!metGoal && run.stageScore >= run.goal) {
           metGoal = true;
           feedback.goal();
           sound.clear();
-          setStatus('ノルマを達成しました。', 'success');
+          if (run.hasPins) setStatus('ノルマを達成しました。', 'success');
         }
         timeBank -= STEP;
       }
     } else {
       timeBank = 0;
+    }
+    if (refills > 0) {
+      feedback.refill(refills, remaining);
+      sound.refill();
+      if (run.canDrop) setStatus(`手持ちが${refills}球増えました。続けて放せます。`, 'success');
     }
     onPhaseChange(phaseBefore);
     view.draw(run.balls, run.canDrop ? aimX : null, delta);

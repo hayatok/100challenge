@@ -6,6 +6,8 @@ export class BoardFeedback {
   private reducedMotion: boolean;
   private shake: Animation | null = null;
   private shakeStrength = 0;
+  private counterPulse: Animation | null = null;
+  private refillCounter: HTMLElement | null = null;
   private readonly expiry = new Map<HTMLElement, ReturnType<typeof setTimeout>>();
 
   constructor(private readonly board: HTMLElement, private readonly layer: HTMLElement, reducedMotion: boolean) {
@@ -48,6 +50,31 @@ export class BoardFeedback {
     }
   }
 
+  refill(count: number, counter: HTMLElement): void {
+    if (this.reducedMotion) return;
+    const previous = counter.nextElementSibling;
+    if (previous instanceof HTMLElement && previous.matches('.refill-pop')) this.remove(previous);
+    const notice = document.createElement('small');
+    notice.className = 'refill-pop';
+    notice.textContent = `＋${count}`;
+    notice.setAttribute('aria-hidden', 'true');
+    counter.after(notice);
+    this.expiry.set(notice, setTimeout(() => this.remove(notice), 1000));
+
+    this.clearCounterPulse();
+    this.refillCounter = counter;
+    counter.classList.add('stock-refill-active');
+    const pulse = counter.animate([
+      { transform: 'scale(1)', color: '#fff2d7', textShadow: '0 0 0 transparent' },
+      { transform: 'scale(1.28)', color: '#d6ffd1', textShadow: '0 0 10px #bce7b8' },
+      { transform: 'scale(1)', color: '#fff2d7', textShadow: '0 0 0 transparent' },
+    ], { duration: 480, easing: 'ease-out' });
+    this.counterPulse = pulse;
+    pulse.onfinish = () => {
+      if (this.counterPulse === pulse) this.clearCounterPulse();
+    };
+  }
+
   goal(): void {
     if (this.reducedMotion) return;
     this.shakeBoard(5, 300);
@@ -60,6 +87,7 @@ export class BoardFeedback {
   }
 
   reset(): void {
+    this.clearCounterPulse();
     this.shake?.cancel();
     this.shake = null;
     this.shakeStrength = 0;
@@ -73,6 +101,13 @@ export class BoardFeedback {
   setReducedMotion(value: boolean): void {
     this.reducedMotion = value;
     if (value) this.reset();
+  }
+
+  private clearCounterPulse(): void {
+    this.counterPulse?.cancel();
+    this.counterPulse = null;
+    this.refillCounter?.classList.remove('stock-refill-active');
+    this.refillCounter = null;
   }
 
   private remove(node: HTMLElement): void {

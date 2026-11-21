@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { FIRST_BOARD_SEED, MAX_DROP_X, MIN_DROP_X, PinboardRun, STEP } from '../src/game.ts';
+import { FIRST_BOARD_SEED, MAX_DROP_X, MIN_DROP_X, PinboardRun, REFILL_CHAIN, STEP } from '../src/game.ts';
 import type { Impact, Upgrade } from '../src/game.ts';
 
 function dropFrom(run: PinboardRun, x: number) {
@@ -11,6 +11,11 @@ function dropFrom(run: PinboardRun, x: number) {
   }
   assert.notEqual(run.phase, 'dropping', 'the original and any extra balls settle');
   return impacts;
+}
+
+function spendUnusedBallStock(run: PinboardRun) {
+  const unused = run.remaining;
+  for (let i = 0; i < unused && run.canDrop; i++) dropFrom(run, MIN_DROP_X);
 }
 
 test('three immediate drops overlap and each group of balls scores its own chain', () => {
@@ -30,7 +35,7 @@ test('three immediate drops overlap and each group of balls scores its own chain
       if (origin !== 'drop') addedBalls.set(id, { origin, shotId });
     }
   }
-  assert.equal(run.phase, 'upgrade');
+  assert.equal(run.phase, 'ready');
   assert.equal(run.balls.length, 0);
   for (const shotId of [1, 2, 3]) {
     const shotHits = hits.filter((hit) => hit.shotId === shotId);
@@ -46,15 +51,47 @@ test('three immediate drops overlap and each group of balls scores its own chain
   assert.equal(new Set(hits.map(({ pin }) => pin.id)).size, hits.length);
   assert.equal(run.stageScore, hits.reduce((sum, hit) => sum + hit.points, 0));
   assert.equal(run.chain, Math.max(...hits.map(({ chain }) => chain)));
+  assert.equal(run.remaining, hits.filter(({ earnedBall }) => earnedBall).length);
+  spendUnusedBallStock(run);
+  assert.equal(run.phase, 'upgrade');
   assert.ok(run.chooseUpgrade('split'));
   assert.equal(run.remaining, 3);
   assert.equal(run.chain, 0);
   assert.equal(run.canDrop, true);
 });
 
+test('a chain unlocks the fourth drop before the first three balls finish', () => {
+  const run = new PinboardRun(FIRST_BOARD_SEED);
+  for (const x of [431, 158, 522]) assert.ok(run.drop(x));
+  assert.equal(run.remaining, 0);
+  assert.equal(run.drop(431), false);
+  let refill: Impact | undefined;
+  for (let tick = 0; tick < 1200 && !refill; tick++) {
+    refill = run.step(STEP).find(({ earnedBall }) => earnedBall);
+  }
+  assert.ok(refill);
+  assert.equal(refill.chain, REFILL_CHAIN);
+  assert.equal(run.remaining, 1);
+  assert.equal(run.phase, 'dropping');
+  assert.ok(run.balls.some(({ shotId }) => shotId < 4));
+  assert.ok(run.drop(431));
+  assert.equal(run.remaining, 0);
+  assert.ok(run.balls.some(({ shotId }) => shotId === 4));
+});
+
+test('an empty board resolves even if two unused balls remain', () => {
+  const run = new PinboardRun(FIRST_BOARD_SEED);
+  run.pins = [{ id: 0, x: 431, y: 100, kind: 'normal', alive: true }];
+  dropFrom(run, 431);
+  assert.equal(run.remaining, 2);
+  assert.equal(run.canDrop, false);
+  assert.equal(run.phase, 'failed');
+});
+
 function reachUpgrade() {
   const run = new PinboardRun(FIRST_BOARD_SEED);
   for (const x of [249, 522, 340]) dropFrom(run, x);
+  spendUnusedBallStock(run);
   assert.equal(run.phase, 'upgrade');
   return run;
 }
@@ -68,7 +105,9 @@ test('a chain scores once per pin and all extra balls belong to the same shot', 
   assert.deepEqual(impacts.map(({ points }) => points), impacts.map((_, index) => index + 1));
   assert.equal(new Set(impacts.map(({ pin }) => pin.id)).size, impacts.length);
   assert.equal(run.stageScore, impacts.reduce((sum, hit) => sum + hit.points, 0));
-  assert.equal(run.remaining, 2);
+  const refillHits = impacts.filter(({ earnedBall }) => earnedBall).map(({ chain }) => chain);
+  assert.deepEqual(refillHits, [6, 12]);
+  assert.equal(run.remaining, 4);
 });
 
 test('failure uses all three shots and retrying the seed reproduces the board', () => {
@@ -97,6 +136,7 @@ test('the two upgrades clear the same second board with different opening shots'
     assert.equal(run.stageScore, 0);
     assert.deepEqual(run.pins, board.pins);
     for (const x of routes[upgrade]) dropFrom(run, x);
+    spendUnusedBallStock(run);
     assert.equal(run.phase, 'clear');
     assert.equal(run.remaining, 0);
   }
