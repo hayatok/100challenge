@@ -1,0 +1,142 @@
+{
+  "kinsei-waltz": {
+    "seconds": 37.895,
+    "channels": 2,
+    "peak": 0.72,
+    "rms_db": -18.67,
+    "sha256": "342d8ebdf43d606c2bbdeeace60d3659700a1c532ccef8a6c7ae5f17155112b7"
+  },
+  "room": {
+    "seconds": 12.0,
+    "channels": 1,
+    "peak": 0.34,
+    "rms_db": -21.53,
+    "sha256": "088bf344891135671f703f5dd80a348f35db39e58075b8f164a63d16b94c9ed4"
+  },
+  "shot0": {
+    "seconds": 0.45,
+    "channels": 1,
+    "peak": 0.78,
+    "rms_db": -23.61,
+    "sha256": "36fad56e2f7b435da979373007eb3e28380e4e414d343f0ccd5055269243d777"
+  },
+  "distant0": {
+    "seconds": 0.45,
+    "channels": 1,
+    "peak": 0.52,
+    "rms_db": -23.88,
+    "sha256": "2930e28d0855f28969b5c64a9abb843c9c6764f0738751fcde6ddcd18e67e018"
+  },
+  "step0": {
+    "seconds": 0.22,
+    "channels": 1,
+    "peak": 0.55,
+    "rms_db": -21.7,
+    "sha256": "d8e2ec710619a957cd15a5b29be63714056f2019f856f3ee9d646eac523e1895"
+  },
+  "strike0": {
+    "seconds": 0.3,
+    "channels": 1,
+    "peak": 0.7,
+    "rms_db": -21.59,
+    "sha256": "b9d6f402194e0ad4269d04237bf1eb09b8414b55ce9468b987d1de0cf0425aec"
+  },
+  "shot1": {
+    "seconds": 0.45,
+    "channels": 1,
+    "peak": 0.78,
+    "rms_db": -24.38,
+    "sha256": "e7ca1c8f734a40fb7e8363d10ac13cd2ab24869c57be4f5aed505f9cede8b793"
+  },
+  "distant1": {
+    "seconds": 0.45,
+    "channels": 1,
+    "peak": 0.52,
+    "rms_db": -24.67,
+    "sha256": "bd629c7d803486abe8f436405586073a1ff63fe8fe86266dc3bdf94edde97814"
+  },
+  "step1": {
+    "seconds": 0.22,
+    "channels": 1,
+    "peak": 0.55,
+    "rms_db": -22.26,
+    "sha256": "71aa3d499531d0cb0a0ea7271e2f74268b3e606514f6150034fecb6273a7ede1"
+  },
+  "strike1": {
+    "seconds": 0.3,
+    "channels": 1,
+    "peak": 0.7,
+    "rms_db": -22.03,
+    "sha256": "2cbecb06bc978608b3f319d5f3b84a7fe085866e5f76db1f543de5b5fb2e557d"
+  },
+  "shot2": {
+    "seconds": 0.45,
+    "channels": 1,
+    "peak": 0.78,
+    "rms_db": -24.24,
+    "sha256": "ada8fcc310e3ca587cb8de6f657fa0913d39d81912d047c437c02582e292e609"
+  },
+  "distant2": {
+    "seconds": 0.45,
+    "channels": 1,
+    "peak": 0.52,
+    "rms_db": -24.67,
+    "sha256": "c1e9da5afc75469a4adf44a8a75b24e02b6180ef0bef2afe33d5525db5ab98ba"
+  },
+  "step2": {
+    "seconds": 0.22,
+    "channels": 1,
+    "peak": 0.55,
+    "rms_db": -23.46,
+    "sha256": "08cf8c54c10adce81831b3ebc80713dfaf591a1d104902abd6f5bf1a210ba826"
+  },
+  "strike2": {
+    "seconds": 0.3,
+    "channels": 1,
+    "peak": 0.7,
+    "rms_db": -21.41,
+    "sha256": "fc8d369dd3db4bc89dd145bfe0ad7677a18feeea2921539cb9a73f1d35f66979"
+  },
+  "dial": {
+    "seconds": 2.8,
+    "channels": 2,
+    "peak": 0.65,
+    "rms_db": -20.7,
+    "sha256": "5f50d60a270f2d5a205c0242a24df1dde7d477bd2322941668636f4acb85880e"
+  },
+  "choice": {
+    "seconds": 2.8,
+    "channels": 2,
+    "peak": 0.65,
+    "rms_db": -20.07,
+    "sha256": "badb61a656486271382af576f86a46ce9f0c5a9a1c00f540ab4b55e9e2a94c28"
+  },
+  "result": {
+    "seconds": 2.8,
+    "channels": 2,
+    "peak": 0.65,
+    "rms_db": -19.53,
+    "sha256": "fd0c36928334b4ce11a94edae571e50307572f090a1948e2073832e9c9805b43"
+  },
+  "accord": {
+    "seconds": 2.8,
+    "channels": 2,
+    "peak": 0.65,
+    "rms_db": -19.73,
+    "sha256": "59b996357ae74b163d87d5567a56e7b084b00a49fc9bd78b73f6b233c3c340b6"
+  },
+  "loss": {
+    "seconds": 2.8,
+    "channels": 2,
+    "peak": 0.65,
+    "rms_db": -19.5,
+    "sha256": "665253357c78f5bc46672d93257c53a9830380c78b50b8af4e9f34432bdb4bb8"
+  },
+  "door": {
+    "seconds": 0.85,
+    "channels": 1,
+    "peak": 0.7,
+    "rms_db": -20.87,
+    "sha256": "e12bb362953fd222f20d377462d8ae2fdc8e4486e92268c60635f2f98f5dc6ab"
+  }
+}

@@ -1,0 +1,17 @@
+KINSEI_CHOICE down=False escort=False held=False escaped=False -> Choice
+KINSEI_CHOICE down=False escort=False held=False escaped=True -> Result
+KINSEI_CHOICE down=False escort=False held=True escaped=False -> Choice
+KINSEI_CHOICE down=False escort=False held=True escaped=True -> Choice
+KINSEI_CHOICE down=False escort=True held=False escaped=False -> Choice
+KINSEI_CHOICE down=False escort=True held=False escaped=True -> Choice
+KINSEI_CHOICE down=False escort=True held=True escaped=False -> Choice
+KINSEI_CHOICE down=False escort=True held=True escaped=True -> Choice
+KINSEI_CHOICE down=True escort=False held=False escaped=False -> Choice
+KINSEI_CHOICE down=True escort=False held=False escaped=True -> Result
+KINSEI_CHOICE down=True escort=False held=True escaped=False -> Choice
+KINSEI_CHOICE down=True escort=False held=True escaped=True -> Result
+KINSEI_CHOICE down=True escort=True held=False escaped=False -> Choice
+KINSEI_CHOICE down=True escort=True held=False escaped=True -> Result
+KINSEI_CHOICE down=True escort=True held=True escaped=False -> Choice
+KINSEI_CHOICE down=True escort=True held=True escaped=True -> Result
+KINSEI_CHOICE_PASS 16/16

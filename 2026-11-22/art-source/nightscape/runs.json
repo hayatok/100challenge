@@ -1,0 +1,74 @@
+{
+  "generation": [
+    {
+      "name": "kitchen",
+      "seed": 2026112290,
+      "pixels": [
+        768,
+        768
+      ],
+      "prompt_id": "0d974dc2-49ee-4822-9961-34e074ef0d5d",
+      "seconds": 21.165,
+      "sha256": "6cd765e597d9863896fd49985f0463f90459636bc3ac52938d084cfb6d0d4337"
+    },
+    {
+      "name": "desk",
+      "seed": 2026112291,
+      "pixels": [
+        768,
+        768
+      ],
+      "prompt_id": "3858a85b-8feb-4010-920d-1d3c18c11631",
+      "seconds": 16.389,
+      "sha256": "71b58f73d3916ac4cbf17a3f54243d11b4e8d81d442dacb4eca9a767f1bda3ab"
+    },
+    {
+      "name": "linen",
+      "seed": 2026112292,
+      "pixels": [
+        768,
+        768
+      ],
+      "prompt_id": "19087822-55c3-43bc-83c3-e39548e327f6",
+      "seconds": 12.333,
+      "sha256": "0fabd1c0f68c24a77d5b1aa67fa02fb56839a05638693ef42489284b59f7eeff"
+    },
+    {
+      "name": "plant",
+      "seed": 2026112293,
+      "pixels": [
+        768,
+        768
+      ],
+      "prompt_id": "9f780e5d-9957-4687-859e-fc190f2a3add",
+      "seconds": 17.975,
+      "sha256": "0d350009e2e4f8ba37f37d9a2a239e8636b74eec125f2ddce672da3968a55bdc"
+    },
+    {
+      "name": "air",
+      "seed": 2026112294,
+      "pixels": [
+        1536,
+        768
+      ],
+      "prompt_id": "27774f98-69ac-4ec8-93b0-b4763940ac9b",
+      "seconds": 24.052,
+      "sha256": "4188451be69f4da434a598533db24e3cb36f5e3fba01895f1ffaad8ece1bda16"
+    },
+    {
+      "name": "air-proof",
+      "seed": 2026112295,
+      "pixels": [
+        1536,
+        768
+      ],
+      "prompt_id": "7e3f454d-43c9-46b1-a875-8d42c307c98f",
+      "seconds": 28.517,
+      "sha256": "78a00bf5a8f7341c7c1ed4d993157dc1e514c1c298c3790d3bcc29536ca0aad7"
+    }
+  ],
+  "textures": {
+    "UpperGlass": "7fbaabb2c1b80816fdb35ec79f551534461f143dd5a82fe3086e9407d716cc71",
+    "EveningAir": "f360a3142fb20dd077a1b9b05ca0abfca05bd8dcc00a934462f2b20401497d48"
+  }
+}

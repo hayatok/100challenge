@@ -1,0 +1,210 @@
+[
+  {
+    "name": "camellia",
+    "seed": 1973112400,
+    "generated_pixels": [
+      1024,
+      768
+    ],
+    "prompt_id": "e10cba57-b990-47dc-978c-e8b1bc049e6e",
+    "seconds": 18.738,
+    "source_sha256": "059203b4deaabe1b42ac1679e967e7f07a5c67f6eed9a191a140eef89e35de36",
+    "file": "Game/Assets/Resources/KinseiAtelier/camellia.png",
+    "sha256": "059203b4deaabe1b42ac1679e967e7f07a5c67f6eed9a191a140eef89e35de36"
+  },
+  {
+    "name": "broadcast",
+    "seed": 1973112401,
+    "generated_pixels": [
+      768,
+      1024
+    ],
+    "prompt_id": "62aba8dd-25f6-4d4d-bfc5-3556917d37d6",
+    "seconds": 13.744,
+    "source_sha256": "9f5d3a5ae05bc792ca57a0c9e779823be484f5727f4a6b8796361c03220547c2",
+    "file": "Game/Assets/Resources/KinseiAtelier/broadcast.png",
+    "sha256": "10dd8027222ad7e098a960633e313e417feb4d03d13b2c2a6711182633fb5758"
+  },
+  {
+    "name": "chanteuse",
+    "seed": 1973112402,
+    "generated_pixels": [
+      768,
+      1024
+    ],
+    "prompt_id": "57421983-1acf-47cc-8e54-1b1cedbf2dad",
+    "seconds": 13.7,
+    "source_sha256": "399b32f40c2fb33e6be4f9574357e7ea618f3fdb42a28e8bfb1c5ce161b4c01e",
+    "file": "Game/Assets/Resources/KinseiAtelier/chanteuse.png",
+    "sha256": "399b32f40c2fb33e6be4f9574357e7ea618f3fdb42a28e8bfb1c5ce161b4c01e"
+  },
+  {
+    "name": "lotus-sign",
+    "seed": 1973112403,
+    "generated_pixels": [
+      1024,
+      640
+    ],
+    "prompt_id": "5a16c6b2-4f7e-4a23-8a27-7ce81e696034",
+    "seconds": 12.373,
+    "source_sha256": "9ef7fb2d263282bba5e257acd0b76b848acef66f98d0d706fcfb413c08cf1f47",
+    "file": "Game/Assets/Resources/KinseiAtelier/lotus-sign.png",
+    "sha256": "19017bf0621b2e0fe4f672548f6fdebe2a009d8b3817130f7c4ebf11d295dc5a"
+  },
+  {
+    "name": "makabe",
+    "seed": 1973112404,
+    "generated_pixels": [
+      1216,
+      832
+    ],
+    "prompt_id": "e9c3ff9b-42d1-4a7e-8c83-8b08103e6be8",
+    "seconds": 18.388,
+    "source_sha256": "fb3d9cca2a29a54ef7dd7905ebcb93cb3770c7baa0489663b4737e7c9f4fe093",
+    "file": "art-source/atelier/plates/makabe.jpg",
+    "sha256": "2997886548ae85a9603738f2357d1bfbb58ba2930aaad213c478be8047256153"
+  },
+  {
+    "name": "tatsu",
+    "seed": 1973112405,
+    "generated_pixels": [
+      1216,
+      832
+    ],
+    "prompt_id": "a7ad6fb2-19b3-4558-8a2b-96d5bf3722f4",
+    "seconds": 26.874,
+    "source_sha256": "2f72e2313a63104381370e0b8557eb89a0dc5187a85d946ef7bee85df516c373",
+    "file": "art-source/atelier/plates/tatsu.jpg",
+    "sha256": "c54c94f15569620e6046a1b2fff1ebed7a1c23990a693e7e9cb28443fbadba66"
+  },
+  {
+    "name": "kaji",
+    "seed": 1973112406,
+    "generated_pixels": [
+      1216,
+      832
+    ],
+    "prompt_id": "a091143f-d1b1-4117-8501-6d2ceb423fe6",
+    "seconds": 29.74,
+    "source_sha256": "fdb6adb25b765ff8bea8c114493eb2818a8693765b04622466bb5ef120f37fb8",
+    "file": "art-source/atelier/plates/kaji.jpg",
+    "sha256": "0956e47f39f9ec92f0a54e731e7907a62ac0e036db09adc147ce6385a43f0c1a"
+  },
+  {
+    "name": "otouto",
+    "seed": 1973112407,
+    "generated_pixels": [
+      1216,
+      832
+    ],
+    "prompt_id": "dda9b42f-d7ec-4d1e-8920-a71e50054cd5",
+    "seconds": 21.242,
+    "source_sha256": "5fd6054b6f292fab29a2442fbfe80e8c31e6aae939a0f4c8d8125115c750ea1c",
+    "file": "art-source/atelier/plates/otouto.jpg",
+    "sha256": "852bc14d738934391646de17e5a536e3c173e574b72708fa0d27ab3146e3d4b7"
+  },
+  {
+    "name": "relay",
+    "seed": 1973112408,
+    "generated_pixels": [
+      1216,
+      832
+    ],
+    "prompt_id": "e0bd8413-bd66-4b71-aa0a-c01afe3904a5",
+    "seconds": 33.61,
+    "source_sha256": "7f87691e77899da66a600955cd2eb1174bd6c38f9dc5786354b261e723d9742a",
+    "file": "art-source/atelier/plates/relay.jpg",
+    "sha256": "71d9c62fca2d69c129f83d32e47041a74ba3cc4c5b4b5cf3ccd947df030d041e"
+  },
+  {
+    "name": "assistance",
+    "seed": 1973112409,
+    "generated_pixels": [
+      1216,
+      832
+    ],
+    "prompt_id": "d6cd4011-e761-4206-b411-3c2a92655d94",
+    "seconds": 18.889,
+    "source_sha256": "660e194950b19495f37eeafb04c6fef2256d850efec5922a627ca3a20cb6d4ea",
+    "file": "art-source/atelier/plates/assistance.jpg",
+    "sha256": "d3ad82d50a62b62edf69ead53f5185f15120fee5f2493838d1d999c4d0d1c457"
+  },
+  {
+    "name": "facade",
+    "seed": 1973112410,
+    "generated_pixels": [
+      1216,
+      832
+    ],
+    "prompt_id": "b9dca9fc-fd83-45fc-9eb0-238cdd467de7",
+    "seconds": 18.046,
+    "source_sha256": "34f2d7478a91413fbe743c2121b57ac9679768b0e24a2a94d3e279d6ce617f46",
+    "file": "art-source/atelier/plates/facade.jpg",
+    "sha256": "f8eda8154f33aa4b1ce6342bd9431ed6aba66238be490206411e161979416217"
+  },
+  {
+    "name": "daylight",
+    "seed": 1973112411,
+    "generated_pixels": [
+      1216,
+      832
+    ],
+    "prompt_id": "198ff035-8a76-44b4-99ce-c9dd78103ab5",
+    "seconds": 17.52,
+    "source_sha256": "b1cae398362f1f8888b1008a90b992fc21483faaa35218d889cfd7dad86b306b",
+    "file": "art-source/atelier/plates/daylight.jpg",
+    "sha256": "7031fe22bf36f61627163471c452f2d62e5fad9f442d20b62e776236dabac691"
+  },
+  {
+    "name": "evening",
+    "seed": 1973112412,
+    "generated_pixels": [
+      1216,
+      832
+    ],
+    "prompt_id": "9821bde2-abf9-47ff-afd0-ec6fb29908c1",
+    "seconds": 23.583,
+    "source_sha256": "e7584e87a8247e10bc793016e1abaedfa481ec7a46a6ad4275b9a67ff72f204e",
+    "file": "art-source/atelier/plates/evening.jpg",
+    "sha256": "24c9f60fc1b6865c06a2b1ed7c42980771dd36346a45744612a3a9f61dd66986"
+  },
+  {
+    "name": "swatches",
+    "seed": 1973112413,
+    "generated_pixels": [
+      1216,
+      832
+    ],
+    "prompt_id": "fb694d55-6ca2-48cb-a229-d0e189da3720",
+    "seconds": 30.307,
+    "source_sha256": "26025b0f20258bd5eff0d6bfb6ba5dcaeacf684c1a218ce5c94078c93e1f5cb2",
+    "file": "art-source/atelier/plates/swatches.jpg",
+    "sha256": "bc0ddec4769b45b1aa455fe5553c831da6d475e15620e63b32824b0a442a094d"
+  },
+  {
+    "name": "elder",
+    "seed": 1973112414,
+    "generated_pixels": [
+      1216,
+      832
+    ],
+    "prompt_id": "33db13bc-9fce-4f9e-95d5-c418438c4e9e",
+    "seconds": 17.718,
+    "source_sha256": "8d813fc553883c6891c1fcfadb2d4cd1286188924bdbb3d1c126752bcb695925",
+    "file": "art-source/atelier/plates/elder.jpg",
+    "sha256": "65a54cc1f6d53c684d0c2cd9dcacd627eb886b0e4332a9844e93f9fa9b03753e"
+  },
+  {
+    "name": "table-read",
+    "seed": 1973112415,
+    "generated_pixels": [
+      1216,
+      832
+    ],
+    "prompt_id": "ccecd233-6ddb-4716-8ce1-7581a92aa524",
+    "seconds": 17.534,
+    "source_sha256": "6319fbc37b6eafc9f79c247a5d07bc5f64ca668afd2c530b6fa492bb46c79e09",
+    "file": "art-source/atelier/plates/table-read.jpg",
+    "sha256": "5a981a3149a7448f3ce88e324c5952ce4c9b8b30214bb0b712747dcd25bb07cb"
+  }
+]
