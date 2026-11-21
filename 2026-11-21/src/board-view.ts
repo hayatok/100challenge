@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import {
   BALL_RADIUS, BOARD_HEIGHT, BOARD_WIDTH, BONUS_OUTLETS, DROP_Y, MAX_DROP_X, MIN_DROP_X, PIN_RADIUS,
-  type Ball, type Impact, type Pin,
+  type Ball, type Impact, type Kicker, type Pin,
 } from './game.ts';
 
 const PIN_KINDS = ['normal', 'split', 'bonus'] as const;
@@ -14,7 +14,7 @@ const REFILL_PULSE_SECONDS = 0.48;
 const IMPACT_DURATION = 0.26;
 const IMPACT_POOL = 8;
 
-function makeSurface(): THREE.CanvasTexture | null {
+function makeSurface(stage: number): THREE.CanvasTexture | null {
   const canvas = document.createElement('canvas');
   canvas.width = BOARD_WIDTH * 2;
   canvas.height = BOARD_HEIGHT * 2;
@@ -23,9 +23,9 @@ function makeSurface(): THREE.CanvasTexture | null {
   ctx.scale(2, 2);
 
   const field = ctx.createRadialGradient(245, 128, 24, 344, 290, 450);
-  field.addColorStop(0, '#25443f');
-  field.addColorStop(0.56, '#193631');
-  field.addColorStop(1, '#0c201f');
+  field.addColorStop(0, stage === 1 ? '#25443f' : '#263a55');
+  field.addColorStop(0.56, stage === 1 ? '#193631' : '#202b43');
+  field.addColorStop(1, stage === 1 ? '#0c201f' : '#111725');
   ctx.fillStyle = field;
   ctx.fillRect(0, 0, BOARD_WIDTH, BOARD_HEIGHT);
 
@@ -126,6 +126,62 @@ function metal(color: number, roughness: number, metalness: number) {
   return new THREE.MeshStandardMaterial({ color, roughness, metalness });
 }
 
+function kickerMaterial(direction: Kicker['direction']) {
+  const canvas = document.createElement('canvas');
+  canvas.width = 256;
+  canvas.height = 64;
+  const ctx = canvas.getContext('2d');
+  if (!ctx) return new THREE.MeshBasicMaterial({ color: 0xca543c });
+  ctx.scale(2, 2);
+  ctx.fillStyle = '#061710b8';
+  ctx.beginPath();
+  ctx.roundRect(0, 4, 128, 28, 9);
+  ctx.fill();
+
+  const housing = ctx.createLinearGradient(0, 0, 0, 29);
+  housing.addColorStop(0, '#ffe1a0');
+  housing.addColorStop(0.13, '#cb925a');
+  housing.addColorStop(0.51, '#522a24');
+  housing.addColorStop(1, '#1f241b');
+  ctx.fillStyle = housing;
+  ctx.beginPath();
+  ctx.roundRect(0, 0, 128, 28, 8);
+  ctx.fill();
+
+  const face = ctx.createLinearGradient(0, 3, 0, 23);
+  face.addColorStop(0, '#d75d42');
+  face.addColorStop(1, '#753226');
+  ctx.fillStyle = face;
+  ctx.beginPath();
+  ctx.roundRect(7, 4, 114, 19, 5);
+  ctx.fill();
+  for (const x of [9, 119]) {
+    ctx.fillStyle = '#241c14';
+    ctx.beginPath();
+    ctx.arc(x, 14, 2.7, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = '#e0ad74';
+    ctx.fillRect(x - 1.25, 13.25, 2.5, 1);
+  }
+
+  ctx.translate(64, 14);
+  ctx.scale(direction, 1);
+  ctx.strokeStyle = '#fff1b4';
+  ctx.lineWidth = 3;
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+  for (const x of [-23, -9, 5, 19]) {
+    ctx.beginPath();
+    ctx.moveTo(x - 3, -5);
+    ctx.lineTo(x + 2, 0);
+    ctx.lineTo(x - 3, 5);
+    ctx.stroke();
+  }
+  const map = new THREE.CanvasTexture(canvas);
+  map.colorSpace = THREE.SRGBColorSpace;
+  return new THREE.MeshBasicMaterial({ map, transparent: true, depthWrite: false });
+}
+
 interface PinInstance {
   mesh: THREE.InstancedMesh;
   index: number;
@@ -150,6 +206,8 @@ export class BoardView {
   private readonly camera = new THREE.OrthographicCamera(0, BOARD_WIDTH, 0, -BOARD_HEIGHT, 1, 180);
   private readonly pinMeshes: THREE.InstancedMesh[] = [];
   private readonly pinInstances = new Map<number, PinInstance[]>();
+  private readonly surfaces = [makeSurface(1), makeSurface(2)];
+  private readonly floorMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff });
   private readonly marker = new THREE.Group();
   private readonly markerMetal = new THREE.MeshBasicMaterial({ color: 0xf1bd7e });
   private readonly markerInk = new THREE.MeshBasicMaterial({ color: 0xf1bd7e, transparent: true, opacity: 0.62 });
@@ -160,6 +218,9 @@ export class BoardView {
   );
   private readonly rails = new THREE.Group();
   private readonly railLight = new THREE.MeshBasicMaterial({ color: 0xffc787, transparent: true, opacity: 0.44 });
+  private readonly kickerDeck = new THREE.Group();
+  private readonly kickerFace = new THREE.PlaneGeometry(1, 25);
+  private readonly kickerFaces = { 1: kickerMaterial(1), '-1': kickerMaterial(-1) };
   private readonly pinSocket = turnedProfile([[0, 0], [PIN_RADIUS + 3, 0], [PIN_RADIUS + 3, 1], [PIN_RADIUS + 1.5, 2], [0, 2]]);
   private readonly pinCap = turnedProfile([[0, 1.6], [PIN_RADIUS, 1.6], [PIN_RADIUS, 4], [PIN_RADIUS - 1.1, 6.3], [PIN_RADIUS - 3.1, 7.5], [0, 7.5]]);
   private readonly socketMaterial = metal(0x39554a, 0.62, 0.32);
@@ -200,11 +261,7 @@ export class BoardView {
     container.appendChild(this.renderer.domElement);
     this.camera.position.z = 100;
 
-    const surface = makeSurface();
-    const floor = new THREE.Mesh(
-      new THREE.PlaneGeometry(BOARD_WIDTH, BOARD_HEIGHT),
-      new THREE.MeshBasicMaterial({ color: surface ? 0xffffff : 0x193631, map: surface }),
-    );
+    const floor = new THREE.Mesh(new THREE.PlaneGeometry(BOARD_WIDTH, BOARD_HEIGHT), this.floorMaterial);
     floor.position.set(BOARD_WIDTH / 2, -BOARD_HEIGHT / 2, -2);
     this.scene.add(floor, new THREE.HemisphereLight(0xf2fff4, 0x77839a, 1.14));
     const key = new THREE.DirectionalLight(0xffe4bc, 2.8);
@@ -247,7 +304,7 @@ export class BoardView {
       highlight.position.set(x, -BOARD_HEIGHT / 2 - 19, -0.5);
       this.rails.add(highlight);
     }
-    this.scene.add(this.rails);
+    this.scene.add(this.rails, this.kickerDeck);
 
     const impactGeometry = new THREE.RingGeometry(PIN_RADIUS, PIN_RADIUS + 2.3, 28);
     for (let i = 0; i < IMPACT_POOL; i++) {
@@ -270,13 +327,24 @@ export class BoardView {
     this.renderer.domElement.addEventListener('webglcontextrestored', () => { this.dirty = true; });
   }
 
-  reset(pins: readonly Pin[], stage: number): void {
+  reset(pins: readonly Pin[], stage: number, kickers: readonly Kicker[]): void {
     for (const mesh of this.pinMeshes) {
       mesh.removeFromParent();
       mesh.dispose();
     }
     this.pinMeshes.length = 0;
     this.pinInstances.clear();
+    this.floorMaterial.map = this.surfaces[stage - 1];
+    this.floorMaterial.color.setHex(this.floorMaterial.map ? 0xffffff : 0x193631);
+    this.floorMaterial.needsUpdate = true;
+
+    this.kickerDeck.clear();
+    for (const kicker of kickers) {
+      const plate = new THREE.Mesh(this.kickerFace, this.kickerFaces[kicker.direction]);
+      plate.position.set(kicker.x, -kicker.y - 12.5, 2);
+      plate.scale.x = kicker.width;
+      this.kickerDeck.add(plate);
+    }
 
     const sockets = this.makePinMesh(this.pinSocket, this.socketMaterial, pins.length);
     pins.forEach((pin, i) => sockets.setMatrixAt(i, this.transform.makeTranslation(pin.x + 0.8, -pin.y - 1.4, 0)));
@@ -471,7 +539,7 @@ export class BoardView {
       const speed = Math.hypot(ball.vx, ball.vy);
       trail.visible = !this.reducedMotion && speed > 160 && ball.age > 0.033;
       if (trail.visible) {
-        const length = Math.min(18, speed * 0.026);
+        const length = Math.min(27, speed * 0.026 + Math.abs(ball.vx) * 0.035);
         trail.position.set(-ball.vx * length / speed, ball.vy * length / speed, 1);
         trail.rotation.z = Math.atan2(-ball.vy, ball.vx);
         trail.scale.set(length, 2.25, 1);

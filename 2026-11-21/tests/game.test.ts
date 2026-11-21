@@ -20,7 +20,7 @@ function spendUnusedBallStock(run: PinboardRun) {
 
 test('three immediate drops overlap and each group of balls scores its own chain', () => {
   const run = new PinboardRun(FIRST_BOARD_SEED);
-  for (const x of [431, 158, 522]) assert.ok(run.drop(x));
+  for (const x of [520, 250, 340]) assert.ok(run.drop(x));
   assert.deepEqual(run.balls.map(({ shotId, origin }) => [shotId, origin]), [[1, 'drop'], [2, 'drop'], [3, 'drop']]);
   assert.equal(run.remaining, 0);
   assert.equal(run.canDrop, false);
@@ -62,7 +62,7 @@ test('three immediate drops overlap and each group of balls scores its own chain
 
 test('a chain unlocks the fourth drop before the first three balls finish', () => {
   const run = new PinboardRun(FIRST_BOARD_SEED);
-  for (const x of [431, 158, 522]) assert.ok(run.drop(x));
+  for (const x of [520, 250, 340]) assert.ok(run.drop(x));
   assert.equal(run.remaining, 0);
   assert.equal(run.drop(431), false);
   let refill: Impact | undefined;
@@ -90,7 +90,7 @@ test('an empty board resolves even if two unused balls remain', () => {
 
 function reachUpgrade() {
   const run = new PinboardRun(FIRST_BOARD_SEED);
-  for (const x of [249, 522, 340]) dropFrom(run, x);
+  for (const x of [520, 250, 340]) dropFrom(run, x);
   spendUnusedBallStock(run);
   assert.equal(run.phase, 'upgrade');
   return run;
@@ -106,14 +106,14 @@ test('a chain scores once per pin and all extra balls belong to the same shot', 
   assert.equal(new Set(impacts.map(({ pin }) => pin.id)).size, impacts.length);
   assert.equal(run.stageScore, impacts.reduce((sum, hit) => sum + hit.points, 0));
   const refillHits = impacts.filter(({ earnedBall }) => earnedBall).map(({ chain }) => chain);
-  assert.deepEqual(refillHits, [6, 12]);
-  assert.equal(run.remaining, 4);
+  assert.deepEqual(refillHits, Array.from({ length: Math.floor(impacts.length / REFILL_CHAIN) }, (_, i) => (i + 1) * REFILL_CHAIN));
+  assert.equal(run.remaining, 2 + refillHits.length);
 });
 
 test('failure uses all three shots and retrying the seed reproduces the board', () => {
   const run = new PinboardRun(FIRST_BOARD_SEED);
   const opening = structuredClone(run.pins);
-  for (const x of [67, 67, 67]) dropFrom(run, x);
+  for (const x of [MIN_DROP_X, MIN_DROP_X, MIN_DROP_X]) dropFrom(run, x);
   assert.equal(run.phase, 'failed');
   assert.equal(run.remaining, 0);
   assert.equal(run.chooseUpgrade('split'), false);
@@ -123,7 +123,7 @@ test('failure uses all three shots and retrying the seed reproduces the board', 
 });
 
 test('the two upgrades clear the same second board with different opening shots', () => {
-  const routes: Record<Upgrade, readonly number[]> = { split: [522, 158, 249], bonus: [158, 340, 522] };
+  const routes: Record<Upgrade, readonly number[]> = { split: [80, 380, 520], bonus: [340, 520, 570] };
   const board = reachUpgrade();
   assert.ok(board.chooseUpgrade('split'));
   for (const upgrade of ['split', 'bonus'] as const) {
@@ -149,8 +149,29 @@ test('the same two targets rank differently after the upgrade', () => {
     dropFrom(run, x);
     return run.stageScore;
   }
-  assert.ok(openingScore('split', 522) > openingScore('split', 158));
-  assert.ok(openingScore('bonus', 158) > openingScore('bonus', 522));
+  assert.ok(openingScore('split', 440) > openingScore('split', 520));
+  assert.ok(openingScore('bonus', 520) > openingScore('bonus', 440));
+});
+
+test('the second board asks for a new approach after its opening kick', () => {
+  for (const upgrade of ['split', 'bonus'] as const) {
+    const run = reachUpgrade();
+    assert.ok(run.chooseUpgrade(upgrade));
+    let kicked = false;
+    assert.ok(run.drop(run.openingAim));
+    for (let tick = 0; tick < 2400 && run.phase === 'dropping'; tick++) {
+      run.step(STEP, (kicker) => { kicked ||= kicker === run.kickers[1]; });
+    }
+    assert.ok(kicked);
+    assert.ok(run.stageScore < run.goal);
+    dropFrom(run, upgrade === 'split' ? 440 : 520);
+    assert.ok(run.stageScore >= run.goal);
+
+    const repeat = reachUpgrade();
+    assert.ok(repeat.chooseUpgrade(upgrade));
+    for (let i = 0; i < 3; i++) dropFrom(repeat, repeat.openingAim);
+    assert.equal(repeat.phase, 'failed');
+  }
 });
 
 test('the launch uses the chosen rail position without snapping and clamps to the walls', () => {
@@ -163,5 +184,48 @@ test('the launch uses the chosen rail position without snapping and clamps to th
     const edge = new PinboardRun(FIRST_BOARD_SEED);
     assert.ok(edge.drop(input));
     assert.equal(edge.balls[0].x, expected);
+  }
+});
+
+
+test('a copper kicker sweeps descending contact into a real directional route without scoring', () => {
+  for (const direction of [-1, 1] as const) {
+    const run = new PinboardRun(FIRST_BOARD_SEED);
+    run.pins = [{ id: 0, x: 340 + direction * 200, y: 190, kind: 'normal', alive: true }];
+    run.kickers = [{ x: 340, y: 145, width: 110, direction }];
+    run.drop(340);
+    let kicks = 0;
+    let hit = false;
+    for (let tick = 0; tick < 800 && run.phase === 'dropping'; tick++) {
+      const impacts = run.step(STEP, (kicker, x) => {
+        kicks++;
+        assert.equal(x, 340);
+        assert.equal(run.balls[0].shotId, 1);
+        assert.equal(run.balls[0].origin, 'drop');
+        assert.equal(Math.sign(run.balls[0].vx), kicker.direction);
+        assert.equal(run.stageScore, 0);
+        assert.equal(run.remaining, 2);
+      });
+      hit ||= impacts.length > 0;
+    }
+    assert.equal(kicks, 1, 'the ball leaves the plate rather than repeatedly triggering it');
+    assert.ok(hit, 'the kicked ball reaches a pin 200 units to its launch side');
+    // The launch changes the ball's spatial route, without creating a ball or score event.
+    assert.equal(run.shotsUsed, 1);
+    assert.equal(run.remaining, 2);
+  }
+});
+
+test('kickers share seeded board mirroring and ignore rising or out-of-width balls', () => {
+  const run = new PinboardRun(FIRST_BOARD_SEED);
+  assert.deepEqual(run.kickers, new PinboardRun(FIRST_BOARD_SEED).kickers);
+  assert.deepEqual(run.kickers, [{ x: 520, y: 145, width: 110, direction: -1 }]);
+  for (const [x, y, vy] of [[340, 140, -100], [410, 120, 400]]) {
+    run.phase = 'dropping';
+    run.kickers = [{ x: 340, y: 145, width: 110, direction: 1 }];
+    run.balls = [{ id: 0, x, y, vx: 0, vy, age: 0, origin: 'drop', shotId: 1 }];
+    let kicks = 0;
+    run.step(0.05, () => kicks++);
+    assert.equal(kicks, 0);
   }
 });

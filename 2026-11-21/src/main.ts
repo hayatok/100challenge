@@ -1,8 +1,8 @@
 import './style.css';
 import { BoardFeedback } from './board-feedback.ts';
 import { BoardView } from './board-view.ts';
-import { BOARD_WIDTH, clampDropX, DEFAULT_DROP_X, FIRST_BOARD_SEED, PinboardRun, REFILL_CHAIN, STEP } from './game.ts';
-import type { Phase, Upgrade } from './game.ts';
+import { BOARD_WIDTH, clampDropX, FIRST_BOARD_SEED, PinboardRun, REFILL_CHAIN, STEP } from './game.ts';
+import type { Kicker, Phase, Upgrade } from './game.ts';
 import { GameSound } from './sound.ts';
 
 const element = <T extends HTMLElement>(id: string) => document.getElementById(id) as T;
@@ -54,7 +54,7 @@ function start() {
   }
 
   let run = new PinboardRun(launchSeed);
-  let aimX = DEFAULT_DROP_X;
+  let aimX = run.openingAim;
   let capturedPointer: number | null = null;
   let lastTime: number | undefined;
   let timeBank = 0;
@@ -62,6 +62,10 @@ function start() {
   let metGoal = false;
   let statusTimeout = 0;
   const feedback = new BoardFeedback(board, effects, motionPreference.matches);
+  const onKick = (kicker: Kicker, x: number) => {
+    feedback.kick(kicker, x);
+    sound.kick();
+  };
   element('refill-hits').textContent = String(REFILL_CHAIN);
   element('refill-rule').hidden = false;
 
@@ -113,7 +117,7 @@ function start() {
   function updateLauncher() {
     launcher.setAttribute('aria-disabled', String(!run.canDrop || !drawAvailable));
     railHint.hidden = launcher.disabled || !run.canDrop || run.shotsUsed > 0;
-    pinGuide.hidden = railHint.hidden || run.stage !== 1;
+    pinGuide.hidden = railHint.hidden;
   }
 
   function canAim() {
@@ -124,9 +128,10 @@ function start() {
     timeBank = 0;
     lastTime = undefined;
     metGoal = false;
+    aimX = run.openingAim;
     feedback.reset();
     setStatus('');
-    view.reset(run.pins, run.stage);
+    view.reset(run.pins, run.stage, run.kickers);
     updateScore();
     updatePanels();
   }
@@ -163,7 +168,6 @@ function start() {
     if (!drawAvailable || (run.phase !== 'clear' && run.phase !== 'failed')) return;
     sound.activate();
     run = new PinboardRun(seed);
-    aimX = DEFAULT_DROP_X;
     showBoard();
     launcher.focus({ preventScroll: true });
   }
@@ -295,7 +299,7 @@ function start() {
     if (run.phase === 'dropping') {
       timeBank += delta;
       while (timeBank >= STEP && run.phase === 'dropping') {
-        const impacts = run.step(STEP);
+        const impacts = run.step(STEP, onKick);
         for (const impact of impacts) {
           view.hit(impact);
           feedback.hit(impact);

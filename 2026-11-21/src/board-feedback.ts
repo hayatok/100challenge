@@ -1,4 +1,4 @@
-import { BOARD_HEIGHT, BOARD_WIDTH, type Impact } from './game.ts';
+import { BALL_RADIUS, BOARD_HEIGHT, BOARD_WIDTH, type Impact, type Kicker } from './game.ts';
 import './board-feedback.css';
 
 /** Transient presentation only: never pauses or changes the simulation. */
@@ -41,13 +41,32 @@ export class BoardFeedback {
       this.layer.querySelectorAll<HTMLElement>('.chain-pop').forEach((node) => this.remove(node));
       const chain = document.createElement('span');
       chain.className = 'chain-pop';
+      if (impact.chain >= 10) chain.classList.add('major-chain');
       chain.textContent = `${impact.chain} 連鎖`;
       this.show(chain, 700);
     }
     if (impact.chain >= 10) {
-      this.shakeBoard(impact.chain >= 20 ? 4 : 3, 230);
+      this.shakeBoard(impact.chain >= 20 ? 6 : 4, 240);
       this.confetti(20);
     }
+  }
+
+  kick(kicker: Kicker, x: number): void {
+    if (this.reducedMotion) return;
+    const light = document.createElement('span');
+    light.className = 'kicker-light';
+    light.style.left = `${kicker.x / BOARD_WIDTH * 100}%`;
+    light.style.top = `${kicker.y / BOARD_HEIGHT * 100}%`;
+    light.style.width = `${kicker.width / BOARD_WIDTH * 100}%`;
+    this.show(light, 500);
+
+    const spark = document.createElement('span');
+    spark.className = 'kick-burst';
+    spark.style.left = `${x / BOARD_WIDTH * 100}%`;
+    spark.style.top = `${(kicker.y - BALL_RADIUS) / BOARD_HEIGHT * 100}%`;
+    spark.style.setProperty('--kick-direction', String(kicker.direction));
+    this.show(spark, 460);
+    this.shakeBoard(3, 140);
   }
 
   refill(count: number, counter: HTMLElement): void {

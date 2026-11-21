@@ -7,7 +7,6 @@ export const BALL_RADIUS = 8;
 export const BALLS_PER_STAGE = 3;
 export const REFILL_CHAIN = 6;
 export const FIRST_BOARD_SEED = 20261323;
-export const DEFAULT_DROP_X = 431;
 export const STEP = 1 / 120;
 
 const WALL = 21;
@@ -16,6 +15,8 @@ export const MAX_DROP_X = BOARD_WIDTH - MIN_DROP_X;
 const GOALS = [85, 155] as const;
 const GRAVITY = 640;
 const CONTACT_RADIUS = BALL_RADIUS + PIN_RADIUS;
+
+export type Kicker = { x: number; y: number; width: number; direction: 1 | -1 };
 
 export type PinKind = 'normal' | 'split' | 'bonus';
 export type Upgrade = 'split' | 'bonus';
@@ -28,26 +29,42 @@ export type Impact = { pin: Pin; chain: number; points: number; addedBalls: numb
 type Spawn = Omit<Ball, 'id' | 'age'> & { delay: number };
 type PinRow = { y: number; x: readonly number[]; split?: readonly number[]; bonus?: readonly number[] };
 
+// Deliberate islands leave open approaches and send kicked balls into deposits.
 const BOARDS: Record<Stage, readonly PinRow[]> = {
   1: [
-    { y: 108, x: [67, 158, 249, 340, 431, 522, 613], split: [2], bonus: [5] },
-    { y: 166, x: [110, 200, 289, 383, 469, 565], split: [1], bonus: [4] },
-    { y: 226, x: [62, 151, 241, 335, 426, 519, 620], split: [3, 6] },
-    { y: 286, x: [107, 198, 288, 380, 475, 564], bonus: [0, 3] },
-    { y: 349, x: [72, 157, 248, 342, 425, 520, 607], split: [2, 5] },
-    { y: 415, x: [113, 202, 293, 386, 472, 564], bonus: [4] },
-    { y: 469, x: [68, 157, 252, 338, 428, 526, 616] },
+    { y: 100, x: [365, 415, 555], split: [0], bonus: [2] },
+    { y: 185, x: [265, 310, 355, 530, 580], split: [1], bonus: [4] },
+    { y: 225, x: [290, 340, 390, 505, 555, 605], split: [0, 4], bonus: [2] },
+    { y: 280, x: [95, 140, 185, 360, 405, 450], split: [1, 3], bonus: [5] },
+    { y: 330, x: [70, 120, 170, 310, 360, 410, 555], bonus: [1, 5] },
+    { y: 390, x: [155, 200, 245, 460, 505, 550], split: [1, 4] },
+    { y: 455, x: [70, 115, 280, 325, 370, 535, 580, 625], bonus: [3] },
   ],
   2: [
-    { y: 99, x: [67, 158, 249, 340, 431, 522, 613], split: [1], bonus: [5] },
-    { y: 155, x: [100, 190, 275, 370, 460, 560], split: [0, 2], bonus: [4] },
-    { y: 213, x: [64, 145, 228, 320, 410, 509, 613], split: [2], bonus: [5, 6] },
-    { y: 272, x: [107, 188, 269, 363, 453, 555], split: [1], bonus: [4] },
-    { y: 332, x: [66, 148, 234, 321, 414, 507, 607], split: [0, 3], bonus: [6] },
-    { y: 394, x: [107, 188, 275, 364, 458, 555], split: [2], bonus: [5] },
-    { y: 463, x: [65, 152, 239, 329, 421, 517, 615] },
+    { y: 97, x: [285, 335, 385, 570, 620], split: [0, 2], bonus: [3] },
+    { y: 175, x: [235, 280, 325, 370, 595], split: [1], bonus: [3] },
+    { y: 225, x: [80, 125, 170, 260, 305, 350], bonus: [1], split: [4] },
+    { y: 300, x: [105, 150, 195, 400, 445, 490], split: [1, 3], bonus: [5] },
+    { y: 345, x: [75, 120, 165, 350, 395, 440, 485, 530], split: [3], bonus: [1, 6] },
+    { y: 410, x: [210, 255, 300, 345, 515, 560, 605], split: [1, 5], bonus: [3] },
+    { y: 465, x: [70, 115, 160, 300, 345, 390, 435, 590], bonus: [4] },
   ],
 };
+const KICKERS: Record<Stage, readonly Kicker[]> = {
+  1: [{ x: 160, y: 145, width: 110, direction: 1 }],
+  2: [{ x: 140, y: 140, width: 110, direction: 1 }, { x: 520, y: 260, width: 110, direction: -1 }],
+};
+// Stage 1 introduces the long kick. Stage 2 opens on the lower route so both approaches matter.
+const OPENING_AIM: Record<Stage, number> = { 1: 160, 2: 540 };
+
+function isMirrored(seed: number, stage: Stage) {
+  return randomSource(seed ^ Math.imul(stage, 0x9e3779b9))() < 0.5;
+}
+function buildKickers(seed: number, stage: Stage): Kicker[] {
+  return KICKERS[stage].map((kicker) => isMirrored(seed, stage)
+    ? { ...kicker, x: BOARD_WIDTH - kicker.x, direction: kicker.direction === 1 ? -1 : 1 }
+    : { ...kicker });
+}
 
 function randomSource(seed: number) {
   let state = seed >>> 0;
@@ -64,7 +81,7 @@ function buildBoard(seed: number, stage: Stage): Pin[] {
     const x = columnX + Math.round((random() - 0.5) * 18);
     const y = row.y + Math.round((random() - 0.5) * 10);
     const kind = row.split?.includes(columnIndex) ? 'split' : row.bonus?.includes(columnIndex) ? 'bonus' : 'normal';
-    return { id: rowIndex * 7 + columnIndex, x: mirrored ? BOARD_WIDTH - x : x, y, kind, alive: true };
+    return { id: rowIndex * 10 + columnIndex, x: mirrored ? BOARD_WIDTH - x : x, y, kind, alive: true };
   }));
 }
 
@@ -81,6 +98,7 @@ export class PinboardRun {
   totalScore = 0;
   bestChain = 0;
   pins: Pin[];
+  kickers: Kicker[];
   balls: Ball[] = [];
 
   private random: () => number;
@@ -93,10 +111,15 @@ export class PinboardRun {
   constructor(seed: number) {
     this.seed = seed >>> 0;
     this.pins = buildBoard(this.seed, this.stage);
+    this.kickers = buildKickers(this.seed, this.stage);
     this.random = randomSource(this.seed ^ 0xa5b729f1);
   }
 
   get goal() { return GOALS[this.stage - 1]; }
+  get openingAim() {
+    const x = OPENING_AIM[this.stage];
+    return isMirrored(this.seed, this.stage) ? BOARD_WIDTH - x : x;
+  }
   get remaining() { return this.reserve; }
   get shotsUsed() { return this.shotChains.length; }
   get chain() { return Math.max(0, ...this.shotChains); }
@@ -124,12 +147,13 @@ export class PinboardRun {
     this.stageScore = 0;
     this.shotChains = [];
     this.pins = buildBoard(this.seed, this.stage);
+    this.kickers = buildKickers(this.seed, this.stage);
     // Stage 2 starts from the same random sequence for either upgrade.
     this.random = randomSource(this.seed ^ 0xfb387dcc);
     return true;
   }
 
-  step(delta: number): Impact[] {
+  step(delta: number, onKick?: (kicker: Kicker, x: number) => void): Impact[] {
     if (this.phase !== 'dropping') return [];
     const impacts: Impact[] = [];
 
@@ -140,6 +164,8 @@ export class PinboardRun {
     this.pending = this.pending.filter((spawn) => spawn.delay > 0);
 
     for (const ball of this.balls) {
+      const previousX = ball.x;
+      const previousY = ball.y;
       ball.age += delta;
       ball.vy = Math.min(650, ball.vy + GRAVITY * delta);
       ball.x += ball.vx * delta;
@@ -147,6 +173,22 @@ export class PinboardRun {
       if (ball.x < MIN_DROP_X || ball.x > MAX_DROP_X) {
         ball.x = Math.max(MIN_DROP_X, Math.min(MAX_DROP_X, ball.x));
         ball.vx *= -0.8;
+      }
+
+      if (ball.vy > 0) {
+        for (const kicker of this.kickers) {
+          const contactY = kicker.y - BALL_RADIUS;
+          if (previousY >= contactY || ball.y < contactY) continue;
+          const fraction = (contactY - previousY) / (ball.y - previousY);
+          const contactX = previousX + (ball.x - previousX) * fraction;
+          if (Math.abs(contactX - kicker.x) > kicker.width / 2) continue;
+          ball.x = contactX;
+          ball.y = contactY;
+          ball.vx = kicker.direction * 340;
+          ball.vy = -95;
+          onKick?.(kicker, contactX);
+          break;
+        }
       }
 
       for (const pin of this.pins) {

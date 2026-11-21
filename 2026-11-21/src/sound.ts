@@ -65,6 +65,13 @@ export class GameSound {
     ]);
   }
 
+  kick(): void {
+    this.play([
+      { hz: 176, endHz: 73, seconds: 0.09, volume: 0.19, wave: 'triangle' },
+      { hz: 480, endHz: 910, seconds: 0.085, volume: 0.13, delay: 0.022, wave: 'triangle' },
+    ]);
+  }
+
   hit(kind: Pin['kind'], chain: number): void {
     const note = Math.min(Math.max(0, chain - 1), CHAIN_NOTES.length - 1);
     const hz = 329.63 * 2 ** (CHAIN_NOTES[note] / 12);
