@@ -44,10 +44,10 @@ public sealed partial class KinseiSession
             if(boss.hp<=0) {Motion(boss,"fall"); End("pursuit","金星を取り返す","兄貴分が舞台袖で膝をついた。翌朝、四十軒の帳面に金星の興行主として真壁の名が戻る。");return;}
             Opponent(boss,dt);
         } else if(phase==Phase.Mirror) {
-            relayProgress=Mathf.Min(1,phaseAge/3.2f); club.SetMirror(relayProgress,relayImage,elder.actor.EyePosition);
+            relayProgress=Mathf.Min(1,phaseAge/4.6f); club.SetMirror(relayProgress,relayImage,elder.actor.EyePosition);
             Motion(player,"mirror"); Face(player,new Vector3(-2.68f,0,.03f));
             Motion(brother,"brother-call");
-            if(phaseAge>=3.2f) {
+            if(phaseAge>=4.6f) {
                 accord=true;held=false; crew[0].duty=Duty.Follow;
                 Say("梶「帰るで。……辰さん、おおきに」",4f);
                 sound.Cue("accord"); Change(Phase.Release);

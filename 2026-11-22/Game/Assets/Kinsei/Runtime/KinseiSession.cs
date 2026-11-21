@@ -49,6 +49,7 @@ public sealed partial class KinseiSession : MonoBehaviour
     Vector2 mapOffset;
     float chartSize=12.8f;
     bool snapCamera = true;
+    bool terraceShot;
     readonly List<float> profile = new();
     bool measure;
     int screenWidth, screenHeight;
@@ -158,7 +159,7 @@ public sealed partial class KinseiSession : MonoBehaviour
         everyone.Clear(); crew.Clear(); guards.Clear(); upstairs.Clear(); Populate();
         phase=Phase.Arrival; phaseAge=clock=shootDelay=hitFlash=relayProgress=talkProgress=lastHit=flashTime=0;
         entranceTime=0; escapeTime=34; bossHp=100; chosen=0; shots=0; lockedTarget=-1;
-        command=held=accord=escorted=paused=false; angle=0; tilt=9; snapCamera=true;
+        command=held=accord=escorted=paused=terraceShot=false; angle=0; tilt=9; snapCamera=true;
         club.SetTactical(false); sound.SetPaused(false); attackUntil=0; moveBlend=0; nextStep=0;
         profile.Clear(); relayCam.enabled=false; club.SetMirror(0,null);club.SetAshtray(0);
         mapOffset=Vector2.zero;chartSize=12.8f;
@@ -233,9 +234,11 @@ public sealed partial class KinseiSession : MonoBehaviour
             cam.orthographic=false; cam.fieldOfView=49;
             eye=new Vector3(6.3f,2.3f,-5.6f); focus=new Vector3(-2.5f,1.6f,3.5f);
         } else if(phase==Phase.Mirror) {
-            cam.orthographic=false;cam.fieldOfView=40;
-            eye=new Vector3(-3.06f,1.57f,-2.18f);
-            focus=new Vector3(-3.05f,1.29f,-.12f);
+            bool returnShot=phaseAge>=2.2f;
+            if(returnShot!=terraceShot){terraceShot=returnShot;snapCamera=true;}
+            cam.orthographic=false;cam.fieldOfView=returnShot?39:40;
+            eye=returnShot?new Vector3(.99f,4.59f,6.86f):new Vector3(-3.06f,1.57f,-2.18f);
+            focus=returnShot?new Vector3(.22f,4.21f,7.70f):new Vector3(-3.05f,1.29f,-.12f);
         } else if(command) {
             cam.orthographic=true; cam.orthographicSize=Mathf.Max(chartSize,15f/cam.aspect);
             focus=new Vector3(mapOffset.x,0,1.55f+mapOffset.y);eye=focus+new Vector3(0,18,-11f);
