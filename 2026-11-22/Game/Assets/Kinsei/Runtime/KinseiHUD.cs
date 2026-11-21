@@ -4,17 +4,19 @@ public sealed partial class KinseiSession
 {
     Font hudSerif, hudSans;
     GUIStyle hudText;
-    Texture2D hudFade, morningCover;
+    Texture2D hudFade, morningCover, ledgerCover;
     bool showFps;
     int pauseSelection;
     float hudW, hudH;
     readonly Color ink = new(.065f,.040f,.049f,.94f);
     readonly Color brass = new(.79f,.61f,.36f);
     readonly Color rule = new(.76f,.60f,.38f,.48f);
+    readonly System.Collections.Generic.List<Rect> drawnLabels = new();
 
     void InitStyle()
     {
         morningCover=Resources.Load<Texture2D>("Art/lotus-dawn");
+        ledgerCover=Resources.Load<Texture2D>("Art/kinsei-ledger-dawn");
         hudSerif=Font.CreateDynamicFontFromOSFont(new[]{"Yu Mincho","MS PMincho","Noto Serif CJK JP","serif"},48);
         hudSans=Font.CreateDynamicFontFromOSFont(new[]{"Yu Gothic","Meiryo","MS Gothic","Noto Sans CJK JP","Arial"},24);
         hudFade=new Texture2D(128,1,TextureFormat.RGBA32,false);
@@ -60,15 +62,18 @@ public sealed partial class KinseiSession
     {
         bool title=phase==Phase.Title;
         Texture cover=!title && outcome=="accord" && morningCover?morningCover:keyArt;
+        if(!title && outcome=="pursuit" && ledgerCover)cover=ledgerCover;
         if(cover!=null) GUI.DrawTexture(new Rect(0,0,hudW,hudH),cover,ScaleMode.ScaleAndCrop);
         GUI.DrawTexture(new Rect(0,0,hudW*.75f,hudH),hudFade);
-        float x=hudW*.056f, w=Mathf.Min(500,hudW*.44f), y=hudH*.48f;
+        float x=hudW*.056f, w=Mathf.Min(525,hudW*.44f), y=hudH*.31f;
         Block(new Rect(x,37,37,2),gold);
         Letter(new Rect(x+49,22,450,32),"宵 待 町　／　大阪・昭和一〇一年",15,cream);
         Letter(new Rect(x,y-32,w,30),title?"キャバレー金星　開演":"キャバレー金星　終幕",18,gold);
         Letter(new Rect(x-4,y,w+18,100),title?"金星の一夜":endingTitle,title?77:Mathf.Min(57,Mathf.FloorToInt(w/Mathf.Max(1,endingTitle.Length))),cream,true);
         Block(new Rect(x,y+105,w,1),rule);
-        Letter(new Rect(x,y+120,w,74),title?"六人の仲間と、かつての店へ。":endingText,19,cream,true,TextAnchor.UpperLeft,true);
+        Letter(new Rect(x,y+115,w,114),title?"真壁は六人の仲間と金星へ戻る。入口の帳場に今夜の売上伝票がある。":endingText,18,cream,true,TextAnchor.UpperLeft,true);
+        if(CampaignError.Length>0)Letter(new Rect(x,hudH-221,w,95),CampaignError,16,gold,false,TextAnchor.UpperLeft,true);
+        else Letter(new Rect(x,hudH-212,w,84),CampaignSummary,16,gold,false,TextAnchor.UpperLeft,true);
         if(Plate(new Rect(x,hudH-113,246,52),title?"幕を開ける　　↵":"もう一度、金星へ　　↵",true)) StartNight();
         if(!title && Plate(new Rect(x+260,hudH-113,135,52),"表題に戻る")) ReturnToTitle();
         Letter(new Rect(x,hudH-55,w,29),"ENTER　開始",13,cream);
@@ -129,6 +134,7 @@ public sealed partial class KinseiSession
         if(p.hp<=0)return "行動不能";
         switch(p.duty) {
             case Duty.Go:return "移動"; case Duty.Guard:return "持ち場";
+            case Duty.BoxOffice:return "帳場へ";
             case Duty.Rest:return "休息"; case Duty.Attend:return held?"交渉中":"梶の席へ";
             default:return "随行";
         }
@@ -173,6 +179,10 @@ public sealed partial class KinseiSession
             Letter(timer,"逃走まで　"+Mathf.CeilToInt(escapeTime)+" 秒",16,gold,false,TextAnchor.MiddleCenter);
         }
         if(showFps) Letter(new Rect(pad,78,90,28),Mathf.RoundToInt(fpsSmooth)+" FPS",14,cream);
+        if(phase==Phase.Arrival || command) {
+            Rect ledgerPlate=new Rect(pad,showFps?112:86,510,29);
+            Block(ledgerPlate,ink);Letter(new Rect(ledgerPlate.x+9,ledgerPlate.y,ledgerPlate.width-12,29),NightSummary,14,gold);
+        }
         if(!reducedMotion && hitFlash>clock) Block(new Rect(0,74,hudW,4),red);
         if(!command && (phase==Phase.Floor || phase==Phase.Chase)){
             float cx=hudW*.5f,cy=hudH*.51f;
@@ -198,20 +208,22 @@ public sealed partial class KinseiSession
             Letter(new Rect(rect.x+9,rect.y+1,24,33),(i+1).ToString(),14,brass);
             Letter(new Rect(rect.x+34,rect.y,rect.width-40,36),p.name,23,tint,true);
             Letter(new Rect(rect.x+10,rect.y+35,rect.width-20,22),DutyName(p)+"　体力 "+Mathf.CeilToInt(p.hp),14,cream);
-            Meter(new Rect(rect.x+10,rect.y+61,rect.width-20,3),p.hp,active?gold:mint);
+            Meter(new Rect(rect.x+10,rect.y+61,rect.width-20,3),100*p.hp/p.maxHp,active?gold:mint);
             if(GUI.Button(rect,GUIContent.none,GUIStyle.none)) chosen=i;
         }
-        float y=top+90,bw=Mathf.Min(158,(hudW-400)/4);
+        float y=top+90,bw=Mathf.Min(142,(hudW-420)/5);
         Letter(new Rect(left,y,191,44),crew[chosen].name+" に指示",22,gold,true);
         if(Plate(new Rect(189,y,bw,44),"梶の席へ　E"))Assign(Duty.Attend);
         if(Plate(new Rect(195+bw,y,bw,44),"随行　F"))Assign(Duty.Follow);
         if(Plate(new Rect(201+bw*2,y,bw,44),"持ち場　G"))Assign(Duty.Guard);
         if(Plate(new Rect(207+bw*3,y,bw,44),"休息　R"))Assign(Duty.Rest);
-        Letter(new Rect(220+bw*4,y,hudW-242-bw*4,44),"右クリック 地点指定　／　WASD 地図　ホイール 拡縮",14,cream,false,TextAnchor.MiddleRight);
+        if(Plate(new Rect(213+bw*4,y,bw,44),"伝票　T"))Assign(Duty.BoxOffice);
+        Letter(new Rect(222+bw*5,y,hudW-244-bw*5,44),"右クリック 地点指定　／　ホイール 拡縮",13,cream,false,TextAnchor.MiddleRight);
     }
     void WorldMarks()
     {
         if(Event.current.type!=EventType.Repaint || cam==null || phase==Phase.Mirror)return;
+        drawnLabels.Clear();
         foreach(var p in everyone) {
             if(p.retired || (p.hp<=0 && !(p==brother && phase==Phase.Choice)))continue;
             int index=crew.IndexOf(p);
@@ -233,8 +245,18 @@ public sealed partial class KinseiSession
                 string name=p.name;
                 float width=Mathf.Max(45,name.Length*14+24);
                 Rect tag=new Rect(x-width/2,y-23,width,22);
+                bool displaced=false;
+                for(int row=0;row<drawnLabels.Count;row++) {
+                    bool overlap=false;
+                    foreach(var previous in drawnLabels)if(previous.Overlaps(tag)){overlap=true;break;}
+                    if(!overlap)break;
+                    tag.y-=25;displaced=true;
+                }
+                if(tag.y<78)continue;
+                drawnLabels.Add(tag);
+                if(displaced)Block(new Rect(x,tag.yMax+2,1,y-tag.yMax-3),tint);
                 Block(tag,ink);Letter(tag,name,13,tint,false,TextAnchor.MiddleCenter);
-                Meter(new Rect(tag.x,tag.yMax,width,2),p.hp,tint);
+                Meter(new Rect(tag.x,tag.yMax,width,2),100*p.hp/p.maxHp,tint);
             } else {
                 Rect mark=new Rect(x-9,y-10,18,18);Block(mark,ink);
                 Letter(mark,index>=0?(index+1).ToString():p==player?"主":"◆",13,tint,false,TextAnchor.MiddleCenter);

@@ -6,6 +6,7 @@ public sealed class KinseiFilm : MonoBehaviour
     Material material;
     void Awake()
     {
+        GetComponent<Camera>().depthTextureMode |= DepthTextureMode.Depth;
         var shader=Resources.Load<Shader>("KinseiFilm");
         if(shader!=null && shader.isSupported)material=new Material(shader);
     }

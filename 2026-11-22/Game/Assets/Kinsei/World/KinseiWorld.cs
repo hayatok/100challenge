@@ -293,19 +293,23 @@ public sealed partial class KinseiWorld : MonoBehaviour
         ashtray.position=new Vector3(-.62f,3.99f,Mathf.Lerp(7.22f,7.42f,Mathf.SmoothStep(0,1,progress)));
         return ashtray.position+Vector3.up*.025f;
     }
-    void LightAt(string name,Vector3 p,Color color,float power,float range)
-    {var go=new GameObject(name);go.transform.SetParent(transform,false);go.transform.localPosition=p;var l=go.AddComponent<Light>();l.type=LightType.Point;l.color=color;l.intensity=power;l.range=range;l.shadows=LightShadows.None;}
+    Light LightAt(string name,Vector3 p,Color color,float power,float range)
+    {var go=new GameObject(name);go.transform.SetParent(transform,false);go.transform.localPosition=p;var l=go.AddComponent<Light>();l.type=LightType.Point;l.color=color;l.intensity=power;l.range=range;l.shadows=LightShadows.None;return l;}
     void Lighting()
     {
         RenderSettings.ambientMode=AmbientMode.Trilight;RenderSettings.ambientSkyColor=new Color(.24f,.29f,.36f);RenderSettings.ambientEquatorColor=new Color(.21f,.17f,.21f);RenderSettings.ambientGroundColor=new Color(.11f,.07f,.06f);
         RenderSettings.fog=true;RenderSettings.fogMode=FogMode.ExponentialSquared;RenderSettings.fogColor=new Color(.045f,.055f,.075f);RenderSettings.fogDensity=.012f;
-        foreach(float z in new[]{-5f,-.5f,2.2f})
+        for(int j=0;j<3;j++)
         {
+            float z=-5+j*4.5f;
             Chandelier(z);
-            LightAt("Chandelier amber bounce",new Vector3(0,4.88f,z),new Color(1,.77f,.55f),1.65f,8.5f);
+            LightAt("Chandelier amber bounce",new Vector3(0,4.88f,z),new Color(1,.87f,.72f),.94f,8.1f);
         }
-        LightAt("Stage rose wash",new Vector3(-5,3.9f,3),new Color(1,.58f,.37f),1.95f,6.5f);
-        LightAt("Upper private booth",new Vector3(0,5.2f,7.4f),new Color(1,.78f,.49f),2.3f,7);
+        LightAt("Stage rose wash",new Vector3(-5,3.9f,3),new Color(1,.60f,.46f),1.32f,6.1f);
+        var booth=LightAt("Upper private booth",new Vector3(-1.85f,5.3f,6.1f),new Color(1,.84f,.68f),2.10f,6);
+        booth.type=LightType.Spot;booth.spotAngle=97;booth.transform.LookAt(new Vector3(.05f,3.96f,7.4f));
+        booth.shadows=LightShadows.Soft;booth.shadowStrength=.64f;booth.shadowNormalBias=.16f;booth.shadowBias=.035f;
+        LightAt("Terrace cool glass fill",new Vector3(2.65f,4.6f,7.95f),new Color(.55f,.73f,.91f),.59f,3.5f);
         LightAt("Street jade neon",new Vector3(5,3,-10),new Color(.18f,1,.8f),2.5f,9);
         LightAt("Entrance amber",new Vector3(0,3,-9),new Color(1,.68f,.35f),2.5f,8);
         // Low resolution realtime probe is rendered once after construction, not every frame.

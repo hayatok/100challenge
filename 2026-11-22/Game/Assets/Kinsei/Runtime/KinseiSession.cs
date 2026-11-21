@@ -5,7 +5,7 @@ using UnityEngine;
 public sealed partial class KinseiSession : MonoBehaviour
 {
     enum Phase { Title, Arrival, Floor, Choice, Chase, Mirror, Release, Result }
-    enum Duty { Follow, Go, Attend, Guard, Rest }
+    enum Duty { Follow, Go, Attend, Guard, Rest, BoxOffice }
     sealed class Person
     {
         public string name, role, pose = "idle";
@@ -13,7 +13,7 @@ public sealed partial class KinseiSession : MonoBehaviour
         public KinseiActor actor;
         public Duty duty;
         public Vector3 destination;
-        public float hp = 100, lastAction, speed, cooldown, flinchUntil;
+        public float hp = 100, maxHp=100, lastAction, speed, cooldown, flinchUntil;
         public Person watching;
         public Vector3 mark;
         public float signalEnds;
@@ -30,6 +30,7 @@ public sealed partial class KinseiSession : MonoBehaviour
     Person player, brother, elder, boss;
     Camera cam, relayCam;
     KinseiWorld club;
+    KinseiBoxOffice boxOffice;
     KinseiWalkways walkways;
     KinseiSound sound;
     KinseiActionLight actionLight;
@@ -63,6 +64,7 @@ public sealed partial class KinseiSession : MonoBehaviour
 
     void Awake()
     {
+        LoadCampaign();
         searchPath=new UnityEngine.AI.NavMeshPath();
         Application.targetFrameRate = 60;
         QualitySettings.vSyncCount = 0;
@@ -78,6 +80,8 @@ public sealed partial class KinseiSession : MonoBehaviour
         club = new GameObject("金星・本館").AddComponent<KinseiWorld>();
         club.Construct();
         club.gameObject.AddComponent<KinseiHouseProps>().Dress();
+        boxOffice=club.gameObject.AddComponent<KinseiBoxOffice>();
+        boxOffice.Build();
         walkways=club.gameObject.AddComponent<KinseiWalkways>();
         cam = new GameObject("プレイヤーカメラ").AddComponent<Camera>();
         cam.tag = "MainCamera";
@@ -140,10 +144,10 @@ public sealed partial class KinseiSession : MonoBehaviour
         player = Make("真壁","makabe",new Vector3(0,0,-10.65f),0);
         string[] names = {"辰","千代","源","新田","茂","ハル"};
         for(int i=0;i<names.Length;i++)
-            crew.Add(Make(names[i],i==0?"tatsu":"ally",new Vector3((i%3-1)*1.18f,0,-10-(i/3)*1.25f),i));
+            crew.Add(Make(CrewName(i,names[i]),i==0?"tatsu":"ally",CrewPosition(i,new Vector3((i%3-1)*1.18f,0,-10-(i/3)*1.25f)),i));
         brother=Make("梶の弟","brother",new Vector3(-.6f,0,1.4f),1);
-        guards.Add(Make("用心棒・紺谷","guard",new Vector3(-2,0,1.9f),0));
-        guards.Add(Make("用心棒・浦","guard",new Vector3(1.5f,0,2.7f),1));
+        guards.Add(Make("用心棒・紺谷","guard",GuardPosition(0,new Vector3(-2,0,1.9f)),0));
+        guards.Add(Make("用心棒・浦","guard",GuardPosition(1,new Vector3(1.5f,0,2.7f)),1));
         elder=Make("梶","kaji",new Vector3(1.14f,3.21f,7.4f),0);
         elder.root.rotation=Quaternion.Euler(0,-90,0);
         for(int i=0;i<4;i++)
@@ -151,10 +155,13 @@ public sealed partial class KinseiSession : MonoBehaviour
         boss=Make("兄貴分","boss",new Vector3(-4,.49f,3.4f),0);
         foreach(var p in guards) Face(p,player.Position);
         Face(brother, player.Position); Face(boss,player.Position);
+        ApplyCampaignCrew();
     }
 
     void StartNight()
     {
+        if(!BeginCampaign())return;
+        boxOffice.SetCollected(false);
         foreach(var p in everyone) Destroy(p.root.gameObject);
         everyone.Clear(); crew.Clear(); guards.Clear(); upstairs.Clear(); Populate();
         phase=Phase.Arrival; phaseAge=clock=shootDelay=hitFlash=relayProgress=talkProgress=lastHit=flashTime=0;
@@ -261,7 +268,7 @@ public sealed partial class KinseiSession : MonoBehaviour
     void End(string id,string title,string body)
     {
         if(phase==Phase.Result)return;
-        outcome=id; endingTitle=title; endingText=body; phase=Phase.Result; command=false;
+        outcome=id; endingTitle=title; endingText=body+"\n"+FinishCampaign(id); phase=Phase.Result; command=false;
         relayCam.enabled=false; sound.Cue(id=="loss"?"loss":"result"); Mark("ending-"+id);
         if(measure && profile.Count>0) {
             profile.Sort();

@@ -65,9 +65,12 @@ public sealed partial class KinseiSession
 
     void UpdateCrew(Person p,int index,float dt)
     {
-        if(p.hp<=0) {
-            if(index==0) {held=false;talkProgress=0;}
-            Motion(p,"fall");return;
+        if(p.hp<=0) {Motion(p,"fall");return;}
+        if(p.duty==Duty.BoxOffice) {
+            if(HouseClaimed)p.duty=Duty.Follow;
+            else if(Flat(p.Position,KinseiBoxOffice.Counter)>.80f || p.Position.y>.65f) {
+                MovePerson(p,KinseiBoxOffice.Counter,3.05f,dt);return;
+            } else {ClaimHouse();p.duty=Duty.Follow;return;}
         }
         if(p.duty==Duty.Attend && !accord) {
             if(Vector3.Distance(p.Position,table)>.19f) MovePerson(p,table,3.65f,dt);
@@ -89,7 +92,7 @@ public sealed partial class KinseiSession
             at.x=Mathf.Clamp(at.x,-7.4f,7.4f);at.z=Mathf.Clamp(at.z,-13,8.05f);
         }
         if(Vector3.Distance(p.Position,at)>.25f) {MovePerson(p,at,p.duty==Duty.Rest?3.6f:3.1f,dt);return;}
-        if(p.duty==Duty.Rest) {p.hp=Mathf.Min(100,p.hp+dt*3.2f); Motion(p,"idle");return;}
+        if(p.duty==Duty.Rest) {p.hp=Mathf.Min(p.maxHp,p.hp+dt*3.2f); Motion(p,"idle");return;}
         if(phase!=Phase.Floor && phase!=Phase.Chase) {Motion(p,"idle");return;}
         Targets();
         Person near=null;float range=p.duty==Duty.Guard?7.9f:4.8f;
@@ -134,7 +137,7 @@ public sealed partial class KinseiSession
         else Motion(elder,"sit");
         for(int i=0;i<upstairs.Count;i++) {
             var p=upstairs[i]; if(p.hp<=0){Motion(p,"fall");continue;}
-            if(!held && (phase==Phase.Floor || phase==Phase.Choice || phase==Phase.Chase) && clock-entranceTime>25+i) {
+            if(!held && (phase==Phase.Floor || phase==Phase.Choice || phase==Phase.Chase) && clock-entranceTime>(ledger.kajiPromise?32:25)+i) {
                 if(p.Position.y>.05f || p.Position.z>1.9f)
                     MovePerson(p,new Vector3((i-1.5f)*1.4f,0,.9f),2.25f,dt);
                 else Opponent(p,dt);
@@ -189,6 +192,8 @@ public sealed partial class KinseiSession
     string Interaction()
     {
         if(command)return "";
+        if(!HouseClaimed && (phase==Phase.Arrival || phase==Phase.Floor || phase==Phase.Choice)
+            && player.Position.y<.8f && Flat(player.Position,KinseiBoxOffice.Counter)<1.55f) return "金星の売上伝票を預かる";
         if(phase==Phase.Choice) {
             if(escorted && Flat(player.Position,witness)<1.6f && player.Position.y<1) return crew[0].hp<=0?"辰は動けない":held?"弟を中継鏡へ":"辰を二階の梶の席へ";
             if(!escorted && Flat(player.Position,brother.Position)<1.95f && player.Position.y<1) return "弟に肩を貸す";
@@ -198,8 +203,9 @@ public sealed partial class KinseiSession
     }
     void Interact()
     {
-        if(phase!=Phase.Choice)return;
         string verb=Interaction();
+        if(verb=="金星の売上伝票を預かる"){ClaimHouse();return;}
+        if(phase!=Phase.Choice)return;
         if(verb=="弟に肩を貸す") {
             escorted=true;Face(brother,player.Position); sound.Cue("dial");
             Say("弟「悪いな。あの卓の鏡まで頼む」");Mark("escort");

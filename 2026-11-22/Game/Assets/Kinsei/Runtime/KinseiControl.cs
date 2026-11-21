@@ -197,6 +197,7 @@ public sealed partial class KinseiSession
         if(Input.GetKeyDown(KeyCode.F)) Assign(Duty.Follow);
         if(Input.GetKeyDown(KeyCode.R)) Assign(Duty.Rest);
         if(Input.GetKeyDown(KeyCode.G)) Assign(Duty.Guard);
+        if(Input.GetKeyDown(KeyCode.T)) Assign(Duty.BoxOffice);
         if(Input.GetMouseButtonDown(0) && !OverHUD()) {
             Vector2 hit=Input.mousePosition; float nearest=Screen.height*.057f;
             for(int i=0;i<crew.Count;i++) {
@@ -219,6 +220,9 @@ public sealed partial class KinseiSession
     void Assign(Duty duty,Vector3 destination=default)
     {
         var p=crew[chosen]; if(p.hp<=0){Say(p.name+"は動けない");return;}
+        if(duty==Duty.BoxOffice && (HouseClaimed || (phase!=Phase.Arrival && phase!=Phase.Floor && phase!=Phase.Choice))){
+            Say(HouseClaimed?"今夜の伝票は預かった":"今は帳場に寄れない");return;
+        }
         if(duty==Duty.Go && walkways.Ready && !walkways.GetPath(p.Position,destination,searchPath)){
             Say("その地点には通路がつながっていない");return;
         }
@@ -228,7 +232,8 @@ public sealed partial class KinseiSession
             held=false;talkProgress=0; Say("辰が席を離れた。梶の連れが立つ");
         }
         p.duty=duty; p.destination=destination;
-        if(duty==Duty.Attend){p.destination=table;Say("辰「二階はわしに任せえ」");}
+        if(duty==Duty.BoxOffice){p.destination=KinseiBoxOffice.Counter;Say(p.name+"が入口の帳場へ向かう");}
+        else if(duty==Duty.Attend){p.destination=table;Say("辰「二階はわしに任せえ」");}
         else if(duty==Duty.Guard){p.destination=new Vector3(2.1f+(chosen%3)*.65f,0,-1.2f-(chosen/3)); Say(p.name+"をダンスホールへ回した");}
         else if(duty==Duty.Rest){p.destination=new Vector3((chosen%3-1)*1.0f,0,-9.6f-(chosen/3)); Say(p.name+"を表へ下げた");}
         else Say(p.name+(duty==Duty.Follow?"が真壁に合流する":"が指定位置へ向かう"));
