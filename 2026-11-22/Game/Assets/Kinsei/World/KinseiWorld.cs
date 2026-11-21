@@ -8,6 +8,7 @@ public sealed partial class KinseiWorld : MonoBehaviour
     Material boards, amberBoards, asphalt;
     Transform ashtray;
     Transform mirrorHinge;
+    public Transform MirrorReceiver => mirrorHinge;
     bool built;
     Font signFont;
     Material signInk;
@@ -42,7 +43,7 @@ public sealed partial class KinseiWorld : MonoBehaviour
             Font.textureRebuilt+=RefreshTypeface;
         }
         welt=Mat("Corded oxblood welting","#6E4440",.18f,.48f);
-        Shell(); Floor(); Stage(); Furniture(); Balcony(); Entry(); Mirror(); Lighting();
+        Shell(); Floor(); Stage(); Furniture(); Balcony(); Entry(); BuildDistrict(); Mirror(); Lighting();
         BatchArchitecture();
     }
     Material Mat(string name,string hex,float metal,float gloss,float emission=0)
@@ -224,11 +225,6 @@ public sealed partial class KinseiWorld : MonoBehaviour
         Text("キャバレー  金星",new Vector3(0,4.05f,-8.51f),.19f,glow,0);
         Box("Vertical neon sign",new Vector3(8.5f,4.8f,-8.6f),new Vector3(.8f,2.5f,.25f),dark);
         Text("K\nI\nN\nS\nE\nI",new Vector3(8.5f,4.8f,-8.77f),.29f,cyan,0);
-        for(int s=-1;s<=1;s+=2)
-        {
-            Text(s<0?"純喫茶\n夜 光":"ダンス\n金 星",new Vector3(s*10.8f,3.6f,-10),.42f,s<0?cyan:glow,0);
-            for(int i=0;i<4;i++)Rail(new Vector3(s*10.8f-.8f,2.1f+i*.22f,-10.05f),new Vector3(s*10.8f+.8f,2.1f+i*.22f,-10.05f),.018f,cyan);
-        }
         var wet=Mat("Rain polished pavement","#263C43",.65f,.96f);
         for(int i=0;i<24;i++){float x=-11+(i*7%23);float z=-10-(i%4)*.8f;var puddle=Cylinder("Rain puddle",new Vector3(x,-.018f,z),.28f+(i%3)*.19f,.006f,wet);puddle.transform.localScale=new Vector3(puddle.transform.localScale.x,.003f,puddle.transform.localScale.z*.37f);}
     }
@@ -299,9 +295,8 @@ public sealed partial class KinseiWorld : MonoBehaviour
     {
         RenderSettings.ambientMode=AmbientMode.Trilight;RenderSettings.ambientSkyColor=new Color(.24f,.29f,.36f);RenderSettings.ambientEquatorColor=new Color(.21f,.17f,.21f);RenderSettings.ambientGroundColor=new Color(.11f,.07f,.06f);
         RenderSettings.fog=true;RenderSettings.fogMode=FogMode.ExponentialSquared;RenderSettings.fogColor=new Color(.045f,.055f,.075f);RenderSettings.fogDensity=.012f;
-        for(int j=0;j<3;j++)
+        foreach(float z in new[]{-5f,-.5f,2.2f})
         {
-            float z=-5+j*4.5f;
             Chandelier(z);
             LightAt("Chandelier amber bounce",new Vector3(0,4.88f,z),new Color(1,.87f,.72f),.94f,8.1f);
         }

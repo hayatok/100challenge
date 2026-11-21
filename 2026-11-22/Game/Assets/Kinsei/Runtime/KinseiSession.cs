@@ -31,6 +31,7 @@ public sealed partial class KinseiSession : MonoBehaviour
     Camera cam, relayCam;
     KinseiWorld club;
     KinseiBoxOffice boxOffice;
+    KinseiDistrictPeople neighbours;
     KinseiWalkways walkways;
     KinseiSound sound;
     KinseiActionLight actionLight;
@@ -82,6 +83,8 @@ public sealed partial class KinseiSession : MonoBehaviour
         club.gameObject.AddComponent<KinseiHouseProps>().Dress();
         boxOffice=club.gameObject.AddComponent<KinseiBoxOffice>();
         boxOffice.Build();
+        neighbours=new GameObject("宵待町の店主と常連").AddComponent<KinseiDistrictPeople>();
+        neighbours.transform.SetParent(transform,false);neighbours.Initialize(club);
         walkways=club.gameObject.AddComponent<KinseiWalkways>();
         cam = new GameObject("プレイヤーカメラ").AddComponent<Camera>();
         cam.tag = "MainCamera";
@@ -162,6 +165,7 @@ public sealed partial class KinseiSession : MonoBehaviour
     {
         if(!BeginCampaign())return;
         boxOffice.SetCollected(false);
+        ResetStreets();
         foreach(var p in everyone) Destroy(p.root.gameObject);
         everyone.Clear(); crew.Clear(); guards.Clear(); upstairs.Clear(); Populate();
         phase=Phase.Arrival; phaseAge=clock=shootDelay=hitFlash=relayProgress=talkProgress=lastHit=flashTime=0;
@@ -201,6 +205,7 @@ public sealed partial class KinseiSession : MonoBehaviour
         fpsSmooth=Mathf.Lerp(fpsSmooth,1f/Mathf.Max(Time.unscaledDeltaTime,.001f),.06f);
         if(measure && phaseAge>.2f && profile.Count<108000) profile.Add(Time.unscaledDeltaTime*1000);
         if(command) CommandInput(); else PlayerInput(dt);
+        neighbours.Tick(clock);neighbours.LookAtNeighbours();club.TickShops(dt,player.Position);
         Simulate(dt);
         sound.SetDialogue(clock<bannerUntil);
         foreach(var p in everyone)
@@ -231,6 +236,8 @@ public sealed partial class KinseiSession : MonoBehaviour
     {
         if(phase==Phase.Mirror) return;
         command=!command; club.SetTactical(command); snapCamera=true; lockedTarget=-1;
+        if(command && (player.Position.z< -13.9f || Mathf.Abs(player.Position.x)>8.8f))
+            mapOffset=new Vector2(player.Position.x,player.Position.z-1.55f);
         sound.Cue("dial"); Mark(command?"RTS":"TPS"); SetCamera(0);
     }
 

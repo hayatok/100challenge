@@ -21,7 +21,13 @@ public sealed class KinseiActor : MonoBehaviour
     bool hasAttentionTarget;
     SkinnedMeshRenderer leftHandRenderer, rightHandRenderer, faceRenderer;
     readonly Transform[] eyes = new Transform[2];
-    public Vector3 EyePosition => head.TransformPoint(new Vector3(0,.105f,.075f));
+    Vector3 localEyeCenter = new Vector3(0,.105f,.075f);
+    public Vector3 EyePosition => head.TransformPoint(localEyeCenter);
+    Transform mirrorReceiver;
+    // Socket coordinates measured against the source head's lid aperture, in metres.
+    static readonly Vector3 AdultEye = new Vector3(.0286f,.0974f,.085f);
+    static readonly Vector3 YoungEye = new Vector3(.0300f,.1107f,.088f);
+    static readonly Vector3 ElderEye = new Vector3(.0286f,.0808f,.0795f);
     float blinkOffset;
     float leftGrip, rightGrip;
     float turnSpeed;
@@ -55,7 +61,7 @@ public sealed class KinseiActor : MonoBehaviour
         }
         shirt = Mat("Ivory shirt",new Color(.78f,.75f,.64f),.2f);
         tie = Mat("Burgundy silk",new Color(.24f,.045f,.045f),.38f);
-        hair = Mat("Swept hair",kaji || boss ? new Color(.19f,.17f,.155f) : new Color(.10f,.075f,.062f),.32f);
+        hair = Mat("Swept hair",kaji || boss ? new Color(.145f,.141f,.140f) : new Color(.100f,.089f,.084f),.17f);
         eye = Mat("Eyes",new Color(.67f,.64f,.56f),.45f); iris = Mat("Dark eyes",new Color(.025f,.018f,.013f),.3f);
         lip = Mat("Mouth and ear shadows",new Color(.29f,.13f,.105f),.18f);
         metal = Mat("Brass",new Color(.57f,.39f,.13f),.7f);
@@ -396,11 +402,20 @@ public sealed class KinseiActor : MonoBehaviour
         }
         if(state=="punch") { float p=Mathf.Sin(Mathf.Clamp01(stateTime/.45f)*Mathf.PI); ra.localRotation=Quaternion.Euler(-90*p,-25*p,10); re.localRotation=Quaternion.Euler(-80*(1-p),0,0); chest.localRotation=Quaternion.Euler(0,-22*p,0); }
         if(state=="fall") { float p=Mathf.SmoothStep(0,1,Mathf.Clamp01(stateTime/.8f)); body.localPosition=V(0,.96f-.79f*p,0); body.localRotation=Quaternion.Euler(-86*p,0,8*p); ll.localRotation=Quaternion.Euler(12*p,0,-12*p); rl.localRotation=Quaternion.Euler(-15*p,0,18*p); la.localRotation=Quaternion.Euler(-32*p,0,-55*p); ra.localRotation=Quaternion.Euler(25*p,0,48*p); }
-        if(state=="mirror") {
-            float p=Mathf.SmoothStep(0,1,Mathf.Clamp01(action)*2), turn=Mathf.SmoothStep(0,1,Mathf.Clamp01((action-.45f)*2));
-            body.localPosition+=V(0,-.47f*p,0); body.localRotation=Quaternion.Euler(0,turn*65,0);
-            ll.localRotation=Quaternion.Euler(-70*p,0,-7*p); lk.localRotation=Quaternion.Euler(115*p,0,0); rl.localRotation=Quaternion.Euler(5*p,0,7*p); rk.localRotation=Quaternion.Euler(122*p,0,0);
-            chest.localRotation=Quaternion.Euler(17*p,-turn*17,0); la.localRotation=Quaternion.Euler(-67*p,-12*p,-12*p); ra.localRotation=Quaternion.Euler(-72*p,13*p,14*p); le.localRotation=re.localRotation=Quaternion.Euler(-28*p,0,0); lh.localRotation=Quaternion.Euler(-20*p,0,-20*p); rh.localRotation=Quaternion.Euler(-20*p,0,20*p);
+        if(state=="mirror")
+        {
+            float work=Ease(.02f,.47f,action);
+            body.localPosition+=V(-.021f*work,-.132f*work,.035f*work);
+            body.localRotation=Quaternion.Euler(0,-8*work,3*work);
+            chest.localRotation=Quaternion.Euler(13*work,-4*work,1*work);
+            la.localRotation=Quaternion.Euler(-36*work,-8*work,-12*work);
+            ra.localRotation=Quaternion.Euler(-52*work,7*work,12*work);
+            le.localRotation=Quaternion.Euler(-30*work,0,0);
+            re.localRotation=Quaternion.Euler(-27*work,0,0);
+            PlantGuardFoot(ll,lk,leftShoe,-1,-1);
+            PlantGuardFoot(rl,rk,rightShoe,1,-1);
+            if(mirrorReceiver)
+                AimHead(mirrorReceiver.TransformPoint(V(.18f,.26f,-.13f)),.87f);
         }
         float damping=state=="flinch"?31:state=="fall"?20:locomotion?22:12;
         float blend=1-Mathf.Exp(-dt*damping);
@@ -409,13 +424,28 @@ public sealed class KinseiActor : MonoBehaviour
             j.localPosition=Vector3.Lerp(lastPositions[j],j.localPosition,blend);
             j.localRotation=Quaternion.Slerp(lastRotations[j],j.localRotation,blend);
         }
-        if(state=="mirror"&&hasMirrorContact)
+        if(state=="mirror" && mirrorReceiver)
         {
-            float weight=Ease(.14f,.41f,action);
+            float contact=Ease(.06f,.32f,action);
+            float turn=Ease(.25f,.91f,action);
+            Vector3 axis=mirrorReceiver.right;
+            Vector3 rim=Quaternion.AngleAxis(Mathf.Lerp(-22,18,turn),axis)*(-mirrorReceiver.forward);
+            Vector3 wheel=mirrorReceiver.TransformPoint(V(.4328f,.215f,.002f)) + rim*.076f;
+            Vector3 palmNormal=-axis*.9659f-rim*.2588f;
+            Vector3 tangent=Vector3.Cross(axis,rim);
+            Vector3 fingers=Vector3.ProjectOnPlane(tangent*.32f+rim*.68f,palmNormal).normalized;
+            Vector3 bezel=mirrorReceiver.TransformPoint(V(.139f,.09f,-.191f));
+            gripRight=Mathf.Lerp(.43f,.56f,contact);
+            gripLeft=.18f;
+            ReachPalm(ra,re,rh,wheel,palmNormal,fingers,contact,transform.right,V(0,-.07765f,.0215f));
+            ReachPalm(la,le,lh,bezel,mirrorReceiver.forward,mirrorReceiver.up,contact,-transform.right);
+        }
+        else if(state=="mirror" && hasMirrorContact)
+        {
+            float contact=Ease(.06f,.32f,action);
             gripLeft=.17f;gripRight=.17f;
-            Vector3 palmNormal=transform.forward;
-            ReachPalm(la,le,lh,mirrorContact-transform.right*.12f,palmNormal,Vector3.up,weight,-transform.right);
-            ReachPalm(ra,re,rh,mirrorContact+transform.right*.12f,palmNormal,Vector3.up,weight,transform.right);
+            ReachPalm(la,le,lh,mirrorContact-transform.right*.12f,transform.forward,Vector3.up,contact,-transform.right);
+            ReachPalm(ra,re,rh,mirrorContact+transform.right*.12f,transform.forward,Vector3.up,contact,transform.right);
         }
         if(state=="talk" && roleName=="tatsu" && hasConversationTargets)
         {
@@ -446,7 +476,7 @@ public sealed class KinseiActor : MonoBehaviour
             float closure=Mathf.Max(blink,squint);
             faceRenderer.SetBlendShapeWeight(0,closure*100);
             foreach(Transform eyeball in eyes)
-                eyeball.localScale=V(1,Mathf.Lerp(1,.14f,closure),1);
+                eyeball.localScale=V(1,Mathf.Lerp(1,.19f,closure),Mathf.Lerp(1,.82f,closure));
         }
     }
 
@@ -461,7 +491,7 @@ public sealed class KinseiActor : MonoBehaviour
 
     void AimHead(Vector3 worldPoint,float weight)
     {
-        Vector3 direction=chest.InverseTransformDirection(worldPoint-head.TransformPoint(V(0,.104f,.087f)));
+        Vector3 direction=chest.InverseTransformDirection(worldPoint-EyePosition);
         float yaw=Mathf.Atan2(direction.x,direction.z)*Mathf.Rad2Deg;
         float pitch=-Mathf.Atan2(direction.y,new Vector2(direction.x,direction.z).magnitude)*Mathf.Rad2Deg;
         head.localRotation=Quaternion.Slerp(head.localRotation,
@@ -483,7 +513,10 @@ public sealed class KinseiActor : MonoBehaviour
         ankle.rotation=transform.rotation*Quaternion.Euler(pitch,side*5+turnSpeed*.22f,0);
     }
 
-    /// <summary>World-space center of the target mirror frame.</summary>
+    /// <summary>The lower receiver hinge. Wheel and bezel contacts follow the moving case.</summary>
+    public void SetMirrorWheel(Transform receiverHinge) => mirrorReceiver=receiverHinge;
+
+    /// <summary>World-space frame midpoint for callers without the receiver hierarchy.</summary>
     public void SetMirrorTarget(Vector3 worldContact)
     {
         mirrorContact=worldContact;
@@ -508,8 +541,14 @@ public sealed class KinseiActor : MonoBehaviour
     void ReachPalm(Transform shoulder,Transform elbow,Transform wrist,Vector3 palm,Vector3 normal,
         Vector3 fingers,float weight,Vector3 elbowOut)
     {
+        ReachPalm(shoulder,elbow,wrist,palm,normal,fingers,weight,elbowOut,V(0,-.077f,.013f));
+    }
+
+    void ReachPalm(Transform shoulder,Transform elbow,Transform wrist,Vector3 palm,Vector3 normal,
+        Vector3 fingers,float weight,Vector3 elbowOut,Vector3 handContact)
+    {
         Quaternion orientation=Quaternion.LookRotation(normal,-fingers);
-        Vector3 contactOffset=orientation*V(0,-.077f,.013f);
+        Vector3 contactOffset=orientation*handContact;
         SolveLimb(shoulder,elbow,wrist,palm-contactOffset,-transform.up+elbowOut*.44f,weight);
         wrist.rotation=Quaternion.Slerp(wrist.rotation,orientation,weight);
     }
@@ -550,21 +589,24 @@ public sealed class KinseiActor : MonoBehaviour
         }
         realisticSkin=new Material(Shader.Find("Standard (Specular setup)"));
         realisticSkin.name="CC0 human skin";
-        realisticSkin.color=boss?new Color(.74f,.66f,.59f):kaji?new Color(.76f,.69f,.62f)
-            :makabe?new Color(.72f,.63f,.55f):new Color(.80f,.73f,.68f);
-        realisticSkin.mainTexture=Resources.Load<Texture2D>("KinseiCast/"+(elder?"SkinElder":"SkinYoung"));
+        realisticSkin.color=boss?new Color(.79f,.77f,.76f):kaji?new Color(.82f,.81f,.82f)
+            :makabe?new Color(.73f,.71f,.72f):new Color(.82f,.80f,.81f);
+        realisticSkin.mainTexture=elder
+            ? Resources.Load<Texture2D>("KinseiCast/SkinElderNeutral") ?? Resources.Load<Texture2D>("KinseiCast/SkinElder")
+            : Resources.Load<Texture2D>("KinseiCast/SkinYoungStyled") ?? Resources.Load<Texture2D>("KinseiCast/SkinYoung");
         realisticSkin.SetTexture("_BumpMap",Resources.Load<Texture2D>("KinseiCast/SkinNormal"));
-        realisticSkin.SetFloat("_BumpScale",.32f);
+        realisticSkin.SetFloat("_BumpScale",elder?.27f:.34f);
         realisticSkin.EnableKeyword("_NORMALMAP");
-        realisticSkin.SetTexture("_SpecGlossMap",Resources.Load<Texture2D>("KinseiCast/SkinSpecular"));
-        realisticSkin.EnableKeyword("_SPECGLOSSMAP");
-        realisticSkin.SetFloat("_GlossMapScale",.24f);
+        // A dielectric skin highlight. The source specular atlas encodes legacy strength near 0.5.
+        realisticSkin.SetColor("_SpecColor",new Color(.036f,.033f,.031f));
+        realisticSkin.SetFloat("_Glossiness",.29f);
         Mesh face=faceResource.sharedMesh;
         bool reflectZ=-face.bounds.min.z>face.bounds.max.z;
         detailJaw=Joint("Deforming mandible",head,V(0,elder?.035f:.046f,-.033f));
         float lipLine=elder?.015f:young?.030f:.025f;
-        float eyeLine=elder?.086f:young?.116f:.104f;
-        faceRenderer=ImportSkin(faceResource,head,chest,V(1,1,reflectZ?-1:1),Vector3.zero,detailJaw,lipLine,eyeLine);
+        Vector3 socketCenter=elder?ElderEye:young?YoungEye:AdultEye;
+        localEyeCenter=V(0,socketCenter.y,socketCenter.z+.010f);
+        faceRenderer=ImportSkin(faceResource,head,chest,V(1,1,reflectZ?-1:1),Vector3.zero,detailJaw,lipLine,socketCenter.y);
         foreach(var wrist in new[]{lh,rh})
         {
             bool left=wrist==lh;
@@ -590,6 +632,14 @@ public sealed class KinseiActor : MonoBehaviour
         if(cap!=null)
         {
             hair.mainTexture=Resources.Load<Texture2D>("KinseiCast/Hair"+style+"Grain");
+            if(hair.mainTexture)
+            {
+                hair.SetOverrideTag("RenderType","TransparentCutout");
+                hair.SetFloat("_Mode",1);
+                hair.SetFloat("_Cutoff",.48f);
+                hair.EnableKeyword("_ALPHATEST_ON");
+                hair.renderQueue=(int)UnityEngine.Rendering.RenderQueue.AlphaTest;
+            }
             var hairMesh=CopyPart(cap,V(1,1,reflectZ?-1:1),Vector3.zero);
             MeshObject("Fitted swept hair",head,hair,hairMesh);
         }
@@ -599,19 +649,17 @@ public sealed class KinseiActor : MonoBehaviour
                 R(.220f,.053f,.053f),R(.234f,.008f,.012f)},28);
         }
 
-        float z=elder?.084f:.088f;
+        eye.mainTexture=Resources.Load<Texture2D>("KinseiCast/EyeGlobe");
+        eye.color=new Color(.84f,.82f,.80f);
+        eye.SetFloat("_Glossiness",.41f);
         for(int side=-1;side<=1;side+=2)
         {
             Transform socket=new GameObject(side<0?"Left eye":"Right eye").transform;
             socket.SetParent(head,false);
-            socket.localPosition=V(side*.033f,eyeLine,z);
-            socket.localRotation=Quaternion.Euler(0,side*14,0);
+            socket.localPosition=V(side*socketCenter.x,socketCenter.y,socketCenter.z);
+            socket.localRotation=Quaternion.Euler(0,side*7,0);
             eyes[(side+1)/2]=socket;
-            Oval("Inset sclera",socket,eye,Vector3.zero,V(.020f,.012f,.014f));
-            Oval("Iris and pupil",socket,iris,V(side*.001f,0,.013f),V(.0059f,.0062f,.0016f));
-            Transform brow=Oval("Tapered brow",head,hair,V(side*.040f,eyeLine+.022f,elder?.089f:.097f),
-                V(.018f,elder?.003f:.0025f,.002f));
-            brow.localRotation=Quaternion.Euler(0,side*27,side*(elder?-7:-12));
+            MeshObject("Cornea and iris",socket,eye,EyeCap(elder?.0128f:.0136f));
         }
         if(boss)
         {
@@ -625,6 +673,35 @@ public sealed class KinseiActor : MonoBehaviour
             }
             extraMaterials.Add(whisker);
         }
+    }
+
+    static Mesh EyeCap(float depth)
+    {
+        const int rings=8, segments=32;
+        var vertices=new List<Vector3> {V(0,0,depth)};
+        var uv=new List<Vector2> {new Vector2(.5f,.5f)};
+        var triangles=new List<int>();
+        for(int ring=1;ring<=rings;ring++)
+        {
+            float radial=(float)ring/rings;
+            for(int i=0;i<segments;i++)
+            {
+                float theta=i*2*Mathf.PI/segments;
+                float x=Mathf.Cos(theta)*radial,y=Mathf.Sin(theta)*radial;
+                vertices.Add(V(x*.015f,y*.011f,depth*Mathf.Sqrt(1-radial*radial)));
+                uv.Add(new Vector2(.5f+x*.5f,.5f+y*.5f));
+                int a=1+(ring-1)*segments+i,b=1+(ring-1)*segments+(i+1)%segments;
+                if(ring==1)triangles.AddRange(new[]{0,a,b});
+                else triangles.AddRange(new[]{a-segments,a,b,b-segments,a-segments,b});
+            }
+        }
+        var mesh=new Mesh {name="Inset eye globe"};
+        mesh.SetVertices(vertices);
+        mesh.SetUVs(0,uv);
+        mesh.SetTriangles(triangles,0);
+        mesh.RecalculateNormals();
+        mesh.RecalculateBounds();
+        return mesh;
     }
 
     static MeshFilter FindPart(string name)
@@ -715,11 +792,12 @@ public sealed class KinseiActor : MonoBehaviour
         for(int i=0;i<vertices.Length;i++)
         {
             Vector3 point=vertices[i];
-            float across=1-Ease(.011f,.027f,Mathf.Abs(Mathf.Abs(point.x)-.033f));
-            float depth=Ease(.074f,.096f,point.z);
+            float across=1-Ease(.009f,.020f,Mathf.Abs(Mathf.Abs(point.x)-.029f));
+            float depth=Ease(.072f,.089f,point.z);
             float height=point.y-eyeLine;
-            float outline=1-Ease(.008f,.021f,Mathf.Abs(height));
-            delta[i]=V(0,-height*across*depth*outline*.92f,0);
+            float outline=1-Ease(.008f,.019f,Mathf.Abs(height));
+            float closing=height>0?.99f:.76f;
+            delta[i]=V(0,-height*across*depth*outline*closing,0);
         }
         face.AddBlendShapeFrame("Blink",100,delta,null,null);
     }

@@ -24,11 +24,13 @@ v0.2から金星の伝票は帰還時に精算する。初日の売上は12,000�
 
 二晩目には茂の代わりに鉄、三晩目にはハルの代わりに鈴が入り、用心棒の立つ側も変わる。鉄と鈴は体力135で始まる。辰を二階に専念させながら、助っ人に帳場かホールを任せられる。新しい晩が始まるたびにタイトルの出撃回数が進む。
 
+v0.3から、金星に入る前に向かいの通りを歩ける。西からロータス、針音堂、共同送像所が並ぶ。真壁が針音堂の盤を送像所に届けると、兄貴分は一曲分の八秒を待つ。間にロータスを訪ねて常連のリクエストも聞けば、梶の四人がさらに十四秒待つ。店主は用事で戸を閉めるため、留守なら通りで呼び止めるか、帰りを待つ。近くの人にはEで話す。
+
 ## ソースからビルド
 
 Unity 6000.3.28f1・Windows Standalone。PowerShell でこのフォルダの `./Build-Windows.ps1` を実行する。プレイヤーは `Builds/Windows/`、Editor のログは `Builds/editor.log` に出力する。画面解像度は標準の `-screen-width`、`-screen-height`、`-screen-fullscreen 0` で指定できる。計測用に `-kinsei-metrics` を付けると、決着時に描画間隔の中央値と95パーセンタイルがプレイヤーログに記録される。
 
 ## 美術と制作資料
 
-[16点の設定画と店内原画](art-source/atelier/README.md)、[GPT Imageの原画](art-source/GPT-Image.md)、[ComfyUIの実行記録](art-source/moss/README.md)、[人物素材](Game/Assets/Kinsei/Cast/README.md)、[建築の表面](art-source/Surfaces.md)、[制作条件と各版の範囲](docs/PRODUCTION.md)。
+[金星の美術資料16点](art-source/atelier/README.md)、[三店舗の絵コンテと原画16点](art-source/district/README.md)、[GPT Imageの原画](art-source/GPT-Image.md)、[ComfyUIの実行記録](art-source/moss/README.md)、[人物素材](Game/Assets/Kinsei/Cast/README.md)、[建築の表面](art-source/Surfaces.md)、[制作条件と各版の範囲](docs/PRODUCTION.md)。
 

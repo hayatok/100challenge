@@ -98,7 +98,7 @@ public sealed partial class KinseiSession
         if(motor.isGrounded) fallVelocity=-2f;
         fallVelocity=Mathf.Max(-16,fallVelocity-21*dt);
         Vector3 proposed=player.Position+move*rate*dt;
-        proposed.x=Mathf.Clamp(proposed.x,-8.62f,8.62f); proposed.z=Mathf.Clamp(proposed.z,-14f,8.55f);
+        proposed=StreetBounds(proposed);
         var step=proposed-player.Position;
         motor.Move(new Vector3(step.x,fallVelocity*dt,step.z));
         if(move.sqrMagnitude>.1f) player.root.rotation=Quaternion.RotateTowards(player.root.rotation,Quaternion.LookRotation(move),dt*540);
@@ -190,7 +190,7 @@ public sealed partial class KinseiSession
         Vector2 shift=new Vector2((Input.GetKey(KeyCode.D)?1:0)-(Input.GetKey(KeyCode.A)?1:0),
             (Input.GetKey(KeyCode.W)?1:0)-(Input.GetKey(KeyCode.S)?1:0));
         mapOffset+=shift.normalized*(7*Time.deltaTime);
-        mapOffset.x=Mathf.Clamp(mapOffset.x,-5f,5f);mapOffset.y=Mathf.Clamp(mapOffset.y,-5.5f,4.5f);
+        mapOffset.x=Mathf.Clamp(mapOffset.x,-19f,19f);mapOffset.y=Mathf.Clamp(mapOffset.y,-20.5f,4.5f);
         chartSize=Mathf.Clamp(chartSize-Input.mouseScrollDelta.y*.9f,6.7f,16.2f);
         for(int i=0;i<6;i++) if(Input.GetKeyDown((KeyCode)((int)KeyCode.Alpha1+i))) chosen=i;
         if(Input.GetKeyDown(KeyCode.E)) Assign(Duty.Attend);
@@ -211,7 +211,7 @@ public sealed partial class KinseiSession
                 Vector3 dest=ray.GetPoint(length);
                 if(Physics.Raycast(ray,out var floorHit,60) && floorHit.point.y>2.8f && floorHit.point.z>=5.8f)
                     dest=new Vector3(floorHit.point.x,3.2f,floorHit.point.z);
-                dest.x=Mathf.Clamp(dest.x,-7.3f,7.3f); dest.z=Mathf.Clamp(dest.z,-12.5f,8.25f);
+                dest=StreetBounds(dest);
                 Assign(Duty.Go,dest);
             }
         }

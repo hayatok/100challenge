@@ -121,7 +121,7 @@ public sealed partial class KinseiSession
     string Objective()
     {
         switch(phase) {
-            case Phase.Arrival:return "表通りから金星の正面入口へ";
+            case Phase.Arrival:return "金星へ入る。向かいの三店には先に寄れる";
             case Phase.Floor:return held?"梶の連れは待機中。弟と用心棒を制圧せよ":"弟と用心棒を制圧せよ。辰は二階の梶の席へ";
             case Phase.Choice:return escorted?"弟をホール左手の中継鏡へ連れて行く":escapeTime>0?"弟に肩を貸すか、舞台袖の兄貴分を追う":"弟に肩を貸し、二階の梶に顔を見せる";
             case Phase.Chase:return "舞台袖で兄貴分との決着をつける";
@@ -143,6 +143,7 @@ public sealed partial class KinseiSession
     {
         pauseSelection=0;
         WorldMarks();
+        DrawAddresses();
         float pad=22;
         Block(new Rect(0,0,hudW,74),ink);
         Block(new Rect(0,73,hudW,1),rule);
@@ -164,7 +165,7 @@ public sealed partial class KinseiSession
             Block(new Rect(0,bottom,hudW,66),ink);
             Letter(new Rect(pad,bottom+4,165,38),"真壁　"+Mathf.CeilToInt(player.hp),24,cream,true);
             Meter(new Rect(pad,bottom+47,134,4),player.hp,player.hp<28?red:gold);
-            string hints=phase==Phase.Arrival?"WASD　移動　　 Shift　走る　　 右ドラッグ・← →　視点":
+            string hints=phase==Phase.Arrival?"WASD　移動　　E　話す　　通りの西から ロータス・針音堂・送像所":
                 phase==Phase.Mirror?"卓間中継　接続中":
                 "WASD　移動　　右ドラッグ　視点　　左クリック・Space　射撃　　Q　注視　　F　打撃";
             Letter(new Rect(185,bottom+6,hudW-207,50),hints,17,cream);

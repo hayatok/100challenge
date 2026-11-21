@@ -9,7 +9,7 @@ public sealed partial class KinseiSession
 
     void Simulate(float dt)
     {
-        if(phase==Phase.Arrival && player.Position.z> -6.75f) {
+        if(phase==Phase.Arrival && player.Position.z> -6.75f && Mathf.Abs(player.Position.x)<8.5f) {
             Change(Phase.Floor); entranceTime=clock;
             Say("梶の連れが二階に四人。辰なら話をつけられる",4.1f); sound.Cue("door");
         }
@@ -60,12 +60,16 @@ public sealed partial class KinseiSession
                 End("accord","兄弟を帰した夜","梶は弟の肩を抱いて四人と店を出た。辰が真壁の隣に戻る。兄貴分との決着は持ち越した。");return;
             }
         }
+        OfferSupper();
         if(player.hp<=0) End("loss","金星からの撤退","真壁は動けなくなった。仲間は表通りまで真壁を運び、今夜の興行を手放した。");
     }
 
     void UpdateCrew(Person p,int index,float dt)
     {
-        if(p.hp<=0) {Motion(p,"fall");return;}
+        if(p.hp<=0) {
+            if(index==0){held=false;talkProgress=0;}
+            Motion(p,"fall");return;
+        }
         if(p.duty==Duty.BoxOffice) {
             if(HouseClaimed)p.duty=Duty.Follow;
             else if(Flat(p.Position,KinseiBoxOffice.Counter)>.80f || p.Position.y>.65f) {
@@ -88,8 +92,12 @@ public sealed partial class KinseiSession
             // A staggered grouping leaves the shoulder camera and the doorway open.
             var offset=new Vector3(index%2==0?-1.75f:1.75f,0,-1.7f-(index/2)*1.05f);
             at=player.Position+offset;
+            if(player.Position.z < -14.1f) {
+                float shopFront=Mathf.Clamp(Mathf.Round(player.Position.x/16f)*16f,-16f,16f);
+                at=new Vector3(shopFront+(index%2==0?-1:1)*(1.6f+index/2*.78f),0,-13.1f+index/2*.3f);
+            }
             if(player.Position.z< -6.3f && player.Position.z> -9)at.x=Mathf.Clamp(at.x,-.95f,.95f);
-            at.x=Mathf.Clamp(at.x,-7.4f,7.4f);at.z=Mathf.Clamp(at.z,-13,8.05f);
+            at=StreetBounds(at);
         }
         if(Vector3.Distance(p.Position,at)>.25f) {MovePerson(p,at,p.duty==Duty.Rest?3.6f:3.1f,dt);return;}
         if(p.duty==Duty.Rest) {p.hp=Mathf.Min(p.maxHp,p.hp+dt*3.2f); Motion(p,"idle");return;}
@@ -137,7 +145,7 @@ public sealed partial class KinseiSession
         else Motion(elder,"sit");
         for(int i=0;i<upstairs.Count;i++) {
             var p=upstairs[i]; if(p.hp<=0){Motion(p,"fall");continue;}
-            if(!held && (phase==Phase.Floor || phase==Phase.Choice || phase==Phase.Chase) && clock-entranceTime>(ledger.kajiPromise?32:25)+i) {
+            if(!held && (phase==Phase.Floor || phase==Phase.Choice || phase==Phase.Chase) && clock-entranceTime>(ledger.kajiPromise?32:25)+(playedRecord?14:0)+i) {
                 if(p.Position.y>.05f || p.Position.z>1.9f)
                     MovePerson(p,new Vector3((i-1.5f)*1.4f,0,.9f),2.25f,dt);
                 else Opponent(p,dt);
@@ -192,10 +200,12 @@ public sealed partial class KinseiSession
     string Interaction()
     {
         if(command)return "";
+        if(phase==Phase.Arrival && StreetContact(out int shop,out string words))
+            return StreetVerb(shop,words);
         if(!HouseClaimed && (phase==Phase.Arrival || phase==Phase.Floor || phase==Phase.Choice)
             && player.Position.y<.8f && Flat(player.Position,KinseiBoxOffice.Counter)<1.55f) return "金星の売上伝票を預かる";
         if(phase==Phase.Choice) {
-            if(escorted && Flat(player.Position,witness)<1.6f && player.Position.y<1) return crew[0].hp<=0?"辰は動けない":held?"弟を中継鏡へ":"辰を二階の梶の席へ";
+            if(escorted && Flat(player.Position,witness)<1.6f && player.Position.y<1) return held?"弟を中継鏡へ":"辰を二階の梶の席へ";
             if(!escorted && Flat(player.Position,brother.Position)<1.95f && player.Position.y<1) return "弟に肩を貸す";
             if(escapeTime>0 && Vector3.Distance(player.Position,boss.Position)<2.1f) return "兄貴分を追う";
         }
@@ -204,6 +214,7 @@ public sealed partial class KinseiSession
     void Interact()
     {
         string verb=Interaction();
+        if(phase==Phase.Arrival && StreetContact(out int shop,out string words)){VisitShop(shop,words);return;}
         if(verb=="金星の売上伝票を預かる"){ClaimHouse();return;}
         if(phase!=Phase.Choice)return;
         if(verb=="弟に肩を貸す") {
@@ -215,13 +226,12 @@ public sealed partial class KinseiSession
             if(motor!=null)motor.enabled=false;
             player.root.position=witness+new Vector3(.48f,0,.0f);
             if(motor!=null)motor.enabled=true;
-            player.actor.SetMirrorTarget(new Vector3(-2.64f,1.26f,-.04f));
+            player.actor.SetMirrorWheel(club.MirrorReceiver);
             brother.root.position=witness+new Vector3(-.88f,0,-.09f);
             Face(brother,new Vector3(-3.02f,1.41f,-.22f));
             angle=-14;tilt=8; snapCamera=true; relayCam.enabled=true;
             Change(Phase.Mirror); Say("弟「兄ちゃん……もうええ」",4.2f);sound.Cue("dial");
-        } else if(verb=="辰は動けない") Say("中継には辰が要る。兄貴分を追え");
-        else if(verb.Length>0) Say("指揮に切り替え、辰に梶との話を任せる");
+        } else if(verb.Length>0) Say("指揮に切り替え、辰に梶との話を任せる");
     }
 }
 

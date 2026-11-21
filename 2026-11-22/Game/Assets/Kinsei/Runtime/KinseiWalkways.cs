@@ -18,7 +18,7 @@ public sealed class KinseiWalkways : MonoBehaviour
         settings.agentRadius=.255f;settings.agentHeight=1.68f;settings.agentClimb=.30f;
         settings.agentSlope=44;settings.minRegionArea=.8f;
         settings.overrideVoxelSize=true;settings.voxelSize=.065f;
-        mesh=NavMeshBuilder.BuildNavMeshData(settings,sources,new Bounds(new Vector3(0,2,-2.7f),new Vector3(36,13,32)),Vector3.zero,Quaternion.identity);
+        mesh=NavMeshBuilder.BuildNavMeshData(settings,sources,new Bounds(new Vector3(0,2,-5.6f),new Vector3(46,13,34)),Vector3.zero,Quaternion.identity);
         if(mesh!=null)registration=NavMesh.AddNavMeshData(mesh);
     }
 
