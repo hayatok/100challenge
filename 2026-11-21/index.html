@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#ece7db">
+    <link rel="icon" href="data:,">
+    <title>ピンを連鎖で倒す</title>
+  </head>
+  <body>
+    <main class="game-shell">
+      <header class="game-header">
+        <h1>ピンを連鎖で倒す</h1>
+        <button id="sound-toggle" class="quiet-button" type="button" aria-pressed="true" aria-label="効果音">音あり</button>
+      </header>
+
+      <div class="game-layout">
+        <section class="playfield" aria-label="ゲーム盤と得点">
+          <dl class="scores">
+            <div><dt>ステージ</dt><dd><span id="stage">1</span><small> / 2</small></dd></div>
+            <div><dt>残り球</dt><dd><span id="remaining">3</span><small> / 3</small></dd></div>
+            <div class="score-goal"><dt>得点 / ノルマ</dt><dd><span id="score">0</span><small> / <span id="goal">85</span></small></dd></div>
+            <div class="combo"><dt>連鎖</dt><dd id="combo">0</dd></div>
+          </dl>
+          <progress id="score-meter" value="0" max="85" aria-label="ノルマまでの得点"></progress>
+          <div id="board" class="board" aria-hidden="true"></div>
+        </section>
+
+        <aside class="control-panel" aria-label="投入口と遊び方">
+          <div class="control-content">
+            <section id="shoot-panel">
+              <h2>どこから落とす？</h2>
+              <p id="aim-help" class="muted">投入口を選び、玉を落とします。</p>
+              <div id="lane-buttons" class="lane-buttons" role="group" aria-label="投入口">
+                <button type="button" data-lane="0" aria-label="投入口 1" aria-pressed="false">1</button>
+                <button type="button" data-lane="1" aria-label="投入口 2" aria-pressed="false">2</button>
+                <button type="button" data-lane="2" aria-label="投入口 3" aria-pressed="true">3</button>
+                <button type="button" data-lane="3" aria-label="投入口 4" aria-pressed="false">4</button>
+                <button type="button" data-lane="4" aria-label="投入口 5" aria-pressed="false">5</button>
+                <button type="button" data-lane="5" aria-label="投入口 6" aria-pressed="false">6</button>
+                <button type="button" data-lane="6" aria-label="投入口 7" aria-pressed="false">7</button>
+              </div>
+              <button id="drop" class="primary-button" type="button" disabled>玉を落とす</button>
+              <p class="key-guide muted"><kbd>←</kbd> <kbd>→</kbd> で投入口を選ぶ <span><kbd>Space</kbd> で落とす</span></p>
+            </section>
+
+            <section id="upgrade-panel" hidden>
+              <h2>次の面に持ち込む強化</h2>
+              <p class="muted">どちらか一つを選ぶと、第2面が始まります。</p>
+              <div class="upgrade-options">
+                <button type="button" id="upgrade-split" class="upgrade-button split">
+                  <span aria-hidden="true" class="pin-icon split-icon">＝</span>
+                  <span><strong>青ピンで3球に分裂</strong><small>青ピンの位置から左右に1球ずつ増える</small></span>
+                </button>
+                <button type="button" id="upgrade-bonus" class="upgrade-button bonus">
+                  <span aria-hidden="true" class="pin-icon bonus-icon">＋</span>
+                  <span><strong>黄ピンから2球追加</strong><small>左端と右端の投入口から各1球落ちる</small></span>
+                </button>
+              </div>
+            </section>
+
+            <section id="result-panel" hidden>
+              <h2 id="result-title" tabindex="-1"></h2>
+              <p id="result-description" class="muted"></p>
+              <dl class="run-summary">
+                <div><dt>合計得点</dt><dd id="total-score">0</dd></div>
+                <div><dt>最高連鎖</dt><dd id="max-chain">0</dd></div>
+              </dl>
+              <div class="result-actions">
+                <button id="retry" class="primary-button" type="button">同じ配置で再挑戦</button>
+                <button id="new-board" class="quiet-button" type="button">別の配置で遊ぶ</button>
+              </div>
+            </section>
+
+            <p id="status" class="status" role="status">盤面を準備しています。</p>
+          </div>
+
+          <div class="rulebook">
+            <p id="active-upgrade" class="active-upgrade" hidden></p>
+            <ul class="legend">
+              <li><span aria-hidden="true" class="pin-icon normal-icon">●</span><span>通常ピン <strong>倒すたびに加点</strong></span></li>
+              <li><span aria-hidden="true" class="pin-icon split-icon">＝</span><span>青ピン <strong id="split-rule">その場で2球に分裂</strong></span></li>
+              <li><span aria-hidden="true" class="pin-icon bonus-icon">＋</span><span>黄ピン <strong id="bonus-rule">上から追加の1球</strong></span></li>
+            </ul>
+            <p class="how-score muted">1球から続けて倒すと、1点、2点、3点…と加点が増えます。</p>
+          </div>
+        </aside>
+      </div>
+      <noscript><p>このゲームには JavaScript が必要です。</p></noscript>
+    </main>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
