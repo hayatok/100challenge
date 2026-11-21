@@ -4,7 +4,15 @@ public sealed class KinseiBoxOffice : MonoBehaviour
 {
     public static readonly Vector3 Counter = new Vector3(-2.05f, 0, -6.35f);
     GameObject receipt;
-    Transform ticketLever, firstTicket;
+    Transform ticketLever, firstTicket, counter;
+    public Transform PrintedTicket => firstTicket;
+    public void ReturnTicket()
+    {
+        firstTicket.SetParent(counter,false);
+        firstTicket.localRotation=Quaternion.identity;
+        firstTicket.localScale=Vector3.one;
+        SetTicketPress(0);
+    }
     public Vector3 LeverGrip => ticketLever.TransformPoint(new Vector3(.115f,-.018f,0));
     Material wood, brass, ivory, register;
 
@@ -16,7 +24,7 @@ public sealed class KinseiBoxOffice : MonoBehaviour
         brass.SetFloat("_Metallic",.7f);brass.SetFloat("_Glossiness",.56f);
         ivory=new Material(Shader.Find("Standard")){color=new Color(.83f,.78f,.64f)};
         register=new Material(Shader.Find("Standard")){color=new Color(.055f,.105f,.095f)};
-        var counter=new GameObject("金星の帳場").transform;
+        counter=new GameObject("金星の帳場").transform;
         counter.SetParent(transform,false);
         counter.localPosition=Counter+new Vector3(0,0,.72f);
         Piece(counter,"帳場の板壁",new Vector3(0,.48f,0),new Vector3(1.23f,.96f,.56f),wood,true);
@@ -69,6 +77,7 @@ public sealed class KinseiBoxOffice : MonoBehaviour
         float release=Mathf.SmoothStep(0,1,Mathf.InverseLerp(1.36f,1.82f,seconds));
         ticketLever.localRotation=Quaternion.Euler(0,0,24-50*(down-release));
         float feed=Mathf.SmoothStep(0,1,Mathf.InverseLerp(.84f,1.64f,seconds));
+        if(firstTicket.parent!=counter)return;
         firstTicket.gameObject.SetActive(feed>0);
         firstTicket.localPosition=new Vector3(.38f,1.09f,-.244f-.126f*feed);
     }

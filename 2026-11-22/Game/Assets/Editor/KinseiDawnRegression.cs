@@ -56,6 +56,69 @@ public static class KinseiDawnRegression
         }catch(Exception ex){Debug.LogException(ex);EditorApplication.Exit(1);}
     }
 
+    static void AnimateTicket(Transform paper,KinseiActor actor,bool pickup)
+    {
+        var people=(KinseiDistrictPeople)Field(game,"neighbours");
+        float clock=(float)Field(game,"clock");
+        Vector3 previous=paper.position;
+        var world=(KinseiWorld)Field(game,"club");
+        var clerkWrist=people.Owner(1).transform.Find("Pelvis/Spine/Right shoulder/Elbow/Wrist");
+        var hand=clerkWrist.Find("Anatomical hand").GetComponent<SkinnedMeshRenderer>();
+        var baked=new Mesh();
+        var sleeveExtension=hand.transform.Find("Wrist beneath cotton").GetComponent<SkinnedMeshRenderer>();
+        Require(sleeveExtension && sleeveExtension.bones[0]==clerkWrist && sleeveExtension.bones[2]==clerkWrist.parent,
+            "Clerk wrist skin does not continue from the hand into the sleeve");
+        float minimumDuringPull=float.PositiveInfinity,maximumContactError=0,releaseHeight=0;
+        var raw=hand.sharedMesh.vertices;
+        var wristBind=hand.sharedMesh.bindposes[0];
+        bool observedPull=false,observedLift=false;
+        for(int i=0;i<300 && (bool)Field(game,"ticketActing");i++){
+            clock+=1f/60;people.Tick(clock);
+            actor.Pose("idle",0,0);Call("TickDawn",1f/60);Call("PoseTicketHands");
+            // Delivery starts after relocating the player to the shop, so settle the carrying pose first.
+            if(i>0 && (bool)Field(game,"ticketAligned"))
+                Require(Vector3.Distance(previous,paper.position)<.06f,"Sheet jumped during the stroke");
+            float t=(float)Field(game,"ticketTime");
+            if(!pickup && t>=1.65f && t<=2.68f){
+                hand.BakeMesh(baked,true);
+                float padDistance=float.PositiveInfinity,nearestHeight=float.PositiveInfinity;
+                int vertexIndex=-1;
+                foreach(var vertex in baked.vertices){
+                    vertexIndex++;
+                    var point=hand.transform.position+hand.transform.rotation*vertex;
+                    var local=world.TicketTray.InverseTransformPoint(point);
+                    if(t>=1.90f && t<=2.50f){
+                        // All points are wrist-weighted by the anatomical cuff fitting. Check the
+                        // actual weighted model alongside Unity's CPU-baked positions.
+                        var physical=clerkWrist.TransformPoint(wristBind.MultiplyPoint3x4(raw[vertexIndex]));
+                        minimumDuringPull=Mathf.Min(minimumDuringPull,world.TicketTray.InverseTransformPoint(physical).y);
+                    }
+                    padDistance=Mathf.Min(padDistance,Vector3.Distance(point,world.TrayFingerRest));
+                    nearestHeight=Mathf.Min(nearestHeight,local.y);
+                    bool rearRim=Mathf.Abs(local.z+.135f)<=.007f && Mathf.Abs(local.x)<=.21f;
+                    if(rearRim && local.y<.0525f) throw new InvalidOperationException($"Fitted hand penetrated the brass rim t={t:F4} vertex={vertexIndex} local={local.ToString("F5")} wrist={clerkWrist.position.ToString("F4")}");
+                }
+                if(t>=1.90f && t<=2.50f){
+                    Require(padDistance<.006f && nearestHeight>=.0525f,$"No fingertip contact t={t:F4}, error={padDistance:F5}, lowest={nearestHeight:F5}");
+                    maximumContactError=Mathf.Max(maximumContactError,padDistance);
+                    observedPull=true;
+                }
+                if(t>=2.65f){
+                    Require(nearestHeight>.108f,"Clerk released the tray through the rim instead of lifting the fingers");
+                    releaseHeight=nearestHeight;observedLift=true;
+                }
+            }
+            previous=paper.position;
+        }
+        if(!pickup){
+            Require(minimumDuringPull>=.053f,$"Actual fingertip below rim during pull: {minimumDuringPull:F5}");
+            Debug.Log($"KINSEI_TRAY_CONTACT minY={minimumDuringPull:F5} rimY=0.05300 maxError={maximumContactError:F5} liftedY={releaseHeight:F5}");
+        }
+        UnityEngine.Object.DestroyImmediate(baked);
+        Require(pickup || (observedPull && observedLift),"Tray contact or lift was not observed");
+        Require(Step==(pickup?1:2),"Timed ticket gesture did not complete");
+    }
+
     static void Inspect()
     {
         Call("OpenDawn",1);Call("OpenDawn",2);
@@ -93,12 +156,31 @@ public static class KinseiDawnRegression
         phase.SetValue(game,Enum.Parse(phase.FieldType,"Result"));
         Call("OpenDawn",2);Require(Phase=="Dawn" && Step==0,"Result cover cannot open morning");
         for(int i=0;i<121;i++)Call("TickDawn",1f/60);
-        Action(KinseiBoxOffice.Counter,"一番券を受け取る");
+        var printer=(KinseiBoxOffice)Field(game,"boxOffice");
+        var world=(KinseiWorld)Field(game,"club");
+        Transform paper=printer.PrintedTicket,press=paper.parent;
+        var pawn=Field(game,"player");var actor=(KinseiActor)Field(pawn,"actor");
+        Call("PlayerInput",0f);
+        Action(new Vector3(-1.48f,0,-6.32f),"一番券を受け取る");
+        Require(Step==0 && paper.parent==press,"Ticket left press before fingers reached it");
+        Call("Interact"); // key repeat cannot skip the stroke
+        AnimateTicket(paper,actor,true);
+        Require(paper.parent==actor.LeftWrist,"Printed sheet was replaced at pickup");
         Require(Step==1 && (GameObject)Field(game,"dawnTicket")!=null,"No ticket is being carried");
-        Action((Vector3)Field(game,"NeedleDesk"),"一番券を渡す");
+        Stand((Vector3)Field(game,"NeedleDesk"));Call("Interact");
+        Require(!(bool)Field(game,"ticketActing"),"Handoff accepted from across the furniture");
+        Action(new Vector3(-2.65f,.065f,-18.56f),"一番券を渡す");
+        AnimateTicket(paper,actor,false);
+        Require(paper.parent==world.TicketTray && world.TicketTray.localPosition.z< -18.55f,"Clerk did not draw the original sheet and tray");
+        Require(Mathf.Abs(paper.localPosition.y-.0135f)<.001f,"Ticket did not rest on the tray");
         Require(Step==2 && (GameObject)Field(game,"dawnTicket")==null,"Ticket handoff failed");
-        Call("OpenDawn",2);Require(Step==0,"Replay retained work progress");
-        Call("ReturnToTitle");Call("OpenDawn",1);
+        Call("OpenDawn",2);Require(Step==0 && paper.parent==press && !paper.gameObject.activeSelf,"Replay retained work progress or lost the original sheet");
+        for(int i=0;i<121;i++)Call("TickDawn",1f/60);
+        Action(new Vector3(-1.48f,0,-6.32f),"一番券を受け取る");
+        Call("TogglePause");Require((bool)Field(game,"paused") && Step==0,"Pause skipped the pickup");
+        Call("TogglePause");Call("ReturnToTitle");
+        Require(!paper.gameObject.activeSelf && paper.parent==press && !(bool)Field(game,"ticketActing"),"Aborted pickup survived title return");
+        Call("OpenDawn",1);
         Require(Phase=="Dawn" && Step==0 && before==File.ReadAllText(FilePath),"Both unlocked mornings did not remain available");
         int nights=store.Load().nights;Call("ReturnToTitle");Call("StartNight");
         Require(Phase=="Arrival" && (int)Field(game,"dawnBranch")==0 && store.Load().nights==nights+1,"Normal start did not resume");

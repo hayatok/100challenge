@@ -7,7 +7,14 @@ public sealed partial class KinseiWorld
     Material dawnSky, dawnHome;
     Light dawnSun;
     Renderer[] dawnCards;
-    Renderer dawnTicket;
+    Transform ticketTray;
+    public Transform TicketTray => ticketTray;
+    // The rear rim is 14 mm wide, with its upper face 53 mm above the tray origin.
+    public Vector3 TrayFingerRest => ticketTray.TransformPoint(new Vector3(.10f,.0538f,-.135f));
+    public void DrawTicketTray(float pull)
+    {
+        ticketTray.localPosition=new Vector3(-2.10f,1.133f,-18.38f-.19f*pull);
+    }
     Material dawnRelayPaper, dawnOfficePaper;
     Texture dawnAir, dawnSignal, nightAirTex, nightExchangeTex, nightMarqueeTex;
     Color nightSky, nightEquator, nightGround, nightHaze, nightHomeEmission;
@@ -74,7 +81,7 @@ public sealed partial class KinseiWorld
         dawnCards[1].transform.parent.gameObject.SetActive(!joint);
         dawnCards[2].transform.parent.localPosition=joint?new Vector3(17.29f,1.389f,-18.32f):new Vector3(-1.94f,1.258f,-5.415f);
         dawnCards[2].transform.parent.localRotation=Quaternion.Euler(0,joint?0:180,0);
-        dawnTicket.gameObject.SetActive(!joint && delivered);
+        if(!delivered)DrawTicketTray(0);
         if(exchangeScreen)
         {
             bool live=joint && delivered;
@@ -142,20 +149,20 @@ public sealed partial class KinseiWorld
         for(int i=0;i<3;i++)
             linen.Block(new Vector3(-15.07f,1.125f+.009f*i,-18.46f+.012f*i),new Vector3(.31f-.011f*i,.010f,.19f));
         // Needle shop: divided brass cash tray and felt-lined receipt pigeonhole.
-        Vector3 till=new Vector3(.60f,1.133f,-18.42f);
+        ticketTray=new GameObject("針音堂の真鍮受け皿").transform;
+        ticketTray.SetParent(dawnRoot,false);
+        DrawTicketTray(0);
+        Vector3 till=Vector3.zero;
         metal.Block(till,new Vector3(.43f,.025f,.28f));
         for(int i=0;i<3;i++)metal.Block(till+new Vector3(-.20f+i*.20f,.028f,0),new Vector3(.014f,.05f,.28f));
         for(int i=0;i<2;i++)metal.Block(till+new Vector3(0,.028f,-.135f+i*.27f),new Vector3(.42f,.05f,.014f));
-        joinery.Upload(dawnRoot,wood,nightAssets);linen.Upload(dawnRoot,cream,nightAssets);metal.Upload(dawnRoot,brass,nightAssets);
+        joinery.Upload(dawnRoot,wood,nightAssets);linen.Upload(dawnRoot,cream,nightAssets);metal.Upload(ticketTray,brass,nightAssets);
 
         dawnCards=new Renderer[3];
         dawnCards[0]=DawnNotice("澄子の依頼札",new Vector3(-15.72f,1.372f,-18.52f),.48f,.286f);
-        dawnCards[1]=DawnNotice("針音堂の前売り窓口",new Vector3(.65f,1.459f,-18.59f),.65f,.39f);
+        dawnCards[1]=DawnNotice("針音堂の前売り窓口",new Vector3(-.78f,1.459f,-18.59f),.65f,.39f);
         dawnCards[2]=DawnNotice("番組または帳場の札",Vector3.zero,.51f,.306f);
-        dawnTicket=DawnQuad(dawnRoot,"窓口に届いた一番券",DawnInk("KinseiPrintworks/FirstTicket"));
-        dawnTicket.transform.localPosition=new Vector3(.70f,1.149f,-18.42f);
-        dawnTicket.transform.localRotation=Quaternion.Euler(90,-8,0);
-        dawnTicket.transform.localScale=new Vector3(.087f,.125f,1);
+
     }
 
     Material DawnInk(string resource)

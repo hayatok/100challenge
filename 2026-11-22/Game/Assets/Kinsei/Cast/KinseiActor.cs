@@ -44,7 +44,7 @@ public sealed partial class KinseiActor : MonoBehaviour
     public void Init(string role, int variant)
     {
         if (ready) return;
-        ready = true; roleName = role;
+        ready = true; roleName = role;ticketClerk=role=="resident" && variant==1;
         blinkOffset=.31f + Mathf.Repeat(variant*1.21f+role.Length*.67f,3.72f);
         bool boss = role == "boss", makabe = role == "makabe", kaji = role == "kaji";
         Color suit = boss ? new Color(.78f,.75f,.66f) : makabe ? new Color(.11f,.14f,.17f) : kaji ? new Color(.37f,.32f,.22f) : role == "tatsu" ? new Color(.48f,.105f,.07f) : role=="brother" ? new Color(.23f,.29f,.215f) : new Color(.13f + (variant%3)*.025f,.14f,.16f);
@@ -501,10 +501,14 @@ public sealed partial class KinseiActor : MonoBehaviour
         }
         leftGrip=Mathf.Lerp(leftGrip,gripLeft,blend);
         rightGrip=Mathf.Lerp(rightGrip,gripRight,blend);
-        if(leftHandRenderer)leftHandRenderer.SetBlendShapeWeight(0,leftGrip*100);
+        if(leftHandRenderer){
+            leftHandRenderer.SetBlendShapeWeight(0,leftGrip*100);
+            if(leftTicketShape>=0)leftHandRenderer.SetBlendShapeWeight(leftTicketShape,0);
+        }
         if(rightHandRenderer) {
             rightHandRenderer.SetBlendShapeWeight(0,rightGrip*100);
             if(rightHandRenderer.sharedMesh.blendShapeCount>1)rightHandRenderer.SetBlendShapeWeight(1,0);
+            if(rightTicketShape>=0)rightHandRenderer.SetBlendShapeWeight(rightTicketShape,0);
         }
         if(faceRenderer)
         {
@@ -587,6 +591,57 @@ public sealed partial class KinseiActor : MonoBehaviour
     public void ReachBackstageHandle(Vector3 handle,float blend)
     {
         ReachPalm(ra,re,rh,handle,transform.forward,Vector3.down,blend,transform.right);
+    }
+
+    bool ticketClerk;
+    int leftTicketShape=-1,rightTicketShape=-1;
+    Vector3 trayFingerPad;
+    Vector3[] trayPadCandidates;
+    // The relaxed fingers slope toward the tray; the palm and cuff stay behind and above the rim.
+    const float TrayTilt=24f;
+    public void DrawTrayWithFingers(Vector3 rest,float weight)
+    {
+        if(!rightHandRenderer)return;
+        float angle=TrayTilt*Mathf.Deg2Rad;
+        Vector3 fingers=transform.forward*Mathf.Cos(angle)-Vector3.up*Mathf.Sin(angle);
+        Vector3 palm=-Vector3.up*Mathf.Cos(angle)-transform.forward*Mathf.Sin(angle);
+        ReachPalm(ra,re,rh,rest,palm,fingers,weight,transform.right,trayFingerPad);
+        if(weight>=.999f){
+            // Under the clerk's nonuniform body scale, composed bone matrices shear slightly.
+            // Seat whichever pad is physically lowest in this pose, including at the end of the pull.
+            Vector3 aim=rest;
+            for(int pass=0;pass<4;pass++){
+                var matrix=rh.localToWorldMatrix;
+                Vector3 lowest=matrix.MultiplyPoint3x4(trayFingerPad);
+                foreach(var candidate in trayPadCandidates){
+                    var sample=matrix.MultiplyPoint3x4(candidate);
+                    if(sample.y<lowest.y)lowest=sample;
+                }
+                Vector3 error=rest-lowest;
+                if(error.sqrMagnitude<.00000004f)break;
+                aim+=error;
+                ReachPalm(ra,re,rh,aim,palm,fingers,1,transform.right,trayFingerPad);
+            }
+        }
+        for(int i=0;i<rightHandRenderer.sharedMesh.blendShapeCount;i++)
+            rightHandRenderer.SetBlendShapeWeight(i,rightHandRenderer.GetBlendShapeWeight(i)*(1-weight));
+    }
+
+    // Both wrists use the same palm convention after the cast import.
+    public static readonly Vector3 TicketPinch=new Vector3(-.016f,-.113f,.016f);
+    public void TouchTicket(Vector3 target,float weight,bool left)
+    {
+        Transform shoulder=left?la:ra,elbow=left?le:re,wrist=left?lh:rh;
+        Vector3 fingers=transform.forward;
+        ReachPalm(shoulder,elbow,wrist,target,Vector3.down,fingers,weight,
+            left?-transform.right:transform.right,left?TicketPinch:V(.016f,-.113f,.016f));
+        var hand=left?leftHandRenderer:rightHandRenderer;
+        if(hand){
+            hand.SetBlendShapeWeight(0,0);
+            if(!left && hand.sharedMesh.blendShapeCount>1)hand.SetBlendShapeWeight(1,0);
+            int index=left?leftTicketShape:rightTicketShape;
+            if(index>=0)hand.SetBlendShapeWeight(index,100*weight);
+        }
     }
 
     public void WorkAtCounter(bool coffee,float cycle,float blend)
@@ -823,6 +878,24 @@ public sealed partial class KinseiActor : MonoBehaviour
         if(!face) {
             AddFingerCurl(mesh);
             if(roleName=="resident" && parent==rh)AddToolGrip(mesh,thumbOpposition);
+            if(parent==lh && roleName=="makabe"){
+                leftTicketShape=mesh.blendShapeCount;AddTicketPinch(mesh,true);
+            }else if(parent==rh && ticketClerk){
+                rightTicketShape=mesh.blendShapeCount;AddTicketPinch(mesh,false);
+                // Measure the actual support point in the fitted hand, in the grasp's vertical direction.
+                float angle=TrayTilt*Mathf.Deg2Rad;
+                var vertical=new Vector3(0,Mathf.Sin(angle),-Mathf.Cos(angle));
+                float lowest=float.PositiveInfinity;
+                foreach(var vertex in mesh.vertices){
+                    float y=Vector3.Dot(vertex,vertical);
+                    if(y<lowest){lowest=y;trayFingerPad=vertex;}
+                }
+                var pads=new List<Vector3>();
+                foreach(var vertex in mesh.vertices)
+                    if(Vector3.Dot(vertex,vertical)<lowest+.012f)pads.Add(vertex);
+                trayPadCandidates=pads.ToArray();
+            }
+
         }
         var part=new GameObject(face?"Fitted head":"Anatomical hand").transform;
         part.SetParent(parent,false);
@@ -918,6 +991,31 @@ public sealed partial class KinseiActor : MonoBehaviour
             deltaNormals[i]=Vector3.Slerp(flex*normals[i],oppose*normals[i],thumb)-normals[i];
         }
         hand.AddBlendShapeFrame("Tool grasp",100,delta,deltaNormals,null);
+    }
+
+    static void AddTicketPinch(Mesh mesh,bool left)
+    {
+        var points=mesh.vertices;var delta=new Vector3[points.Length];
+        float side=left?-1:1;
+        var normals=mesh.normals;var normalDelta=new Vector3[points.Length];
+        Vector3 thumbBase=V(side*.030f,-.065f,-.002f),indexBase=V(side*.018f,-.078f,.004f);
+        Vector3 thumbTip=V(side*.042f,-.104f,-.010f),indexTip=V(side*.020f,-.150f,.009f);
+        Quaternion thumbTurn=Quaternion.FromToRotation(thumbTip-thumbBase,V(side*.016f,-.113f,.011f)-thumbBase);
+        Quaternion indexTurn=Quaternion.FromToRotation(indexTip-indexBase,V(side*.016f,-.113f,.021f)-indexBase);
+        for(int i=0;i<points.Length;i++){
+            var p=points[i];float x=p.x*side;
+            float thumb=Ease(.020f,.035f,x)*(1-Ease(-.004f,.006f,p.z))*Ease(.061f,.100f,-p.y);
+            float index=Ease(.002f,.011f,x)*(1-Ease(.028f,.037f,x))*Ease(.084f,.138f,-p.y);
+            // Preserve volume at the pads. Both pads roll about their own knuckle;
+            // distal joints also flex to shorten each finger's projected length.
+            var a=thumbBase+thumbTurn*(p-thumbBase);
+            var b=indexBase+indexTurn*(p-indexBase);
+            a+=V(side*.016f,-.113f,.011f)-(thumbBase+thumbTurn*(thumbTip-thumbBase));
+            b+=V(side*.016f,-.113f,.021f)-(indexBase+indexTurn*(indexTip-indexBase));
+            delta[i]=(a-p)*thumb+(b-p)*index*(1-thumb);
+            normalDelta[i]=(thumbTurn*normals[i]-normals[i])*thumb+(indexTurn*normals[i]-normals[i])*index*(1-thumb);
+        }
+        mesh.AddBlendShapeFrame("Ticket pinch",100,delta,normalDelta,null);
     }
 
     static void AddFingerCurl(Mesh hand)

@@ -58,9 +58,14 @@ public static class KinseiRailRegression
         try{Trip();Debug.Log("KINSEI_RAIL_PASS lift / two-car service / held threshold / ride / call / ground / retry");EditorApplication.Exit(0);}
         catch(Exception ex){Debug.LogException(ex);EditorApplication.Exit(1);}
     }
-    static void Trip()
+    static void CheckCoachLights(int expectedCar)
     {
-        Call("StartNight");house=(KinseiWorld)Field(game,"club");Call("PlayerInput",Dt);
+        var lights=(Light[])Field(house,"coachReadingLights");
+        for(int i=0;i<lights.Length;i++)
+            Require(lights[i] && lights[i].enabled==(i/2==expectedCar),"Incorrect coach lamp "+i);
+    }
+    static void BoardAtWest()
+    {
         motor=(CharacterController)Field(game,"motor");rider=motor.transform;
         // Place the fixture at the west lift. All subsequent distance is covered by the live controller or carrier.
         rider.position=new Vector3(-8,.05f,-19.48f);Physics.SyncTransforms();
@@ -76,6 +81,12 @@ public static class KinseiRailRegression
         Require(house.Docked && house.RailStation==0,"Train departed across occupied doorway");
         Walk(Vector3.back,.80f);
         Require(Place=="Coach" && rider.parent==house.Train,"Player did not enter actual second coach");
+        CheckCoachLights(1);
+    }
+    static void Trip()
+    {
+        Call("StartNight");house=(KinseiWorld)Field(game,"club");Call("PlayerInput",Dt);
+        BoardAtWest();
         Vector3 local=rider.localPosition;
         Until(()=>house.Train.position.x> -12,14,"Train did not leave west stop");
         var boundary=(Vector3)Call("RailBounds",rider.position,rider.position+Vector3.forward*5);
@@ -89,6 +100,7 @@ public static class KinseiRailRegression
         Until(()=>house.Docked && house.RailStation==1,30,"No second east stop");
         Require(Mathf.Abs(rider.position.x-22.35f)<.4f && Phase=="Arrival","Trip did not physically move 36 m");
         Walk(Vector3.forward,1.96f);Require(Place=="Platform" && rider.parent!=house.Train,"Could not step off");
+        CheckCoachLights(-1);
         Walk(Vector3.left,14.35f);Walk(Vector3.forward,1.5f);
         Require(((string)Call("Interaction")).Contains("呼ぶ"),"No upstairs lift call");Call("Interact");
         Until(()=>house.AtLiftHeight(1,KinseiWorld.RailHeight),5,"Empty east lift did not rise");
@@ -98,5 +110,8 @@ public static class KinseiRailRegression
         Walk(Vector3.forward,2.9f);Require(rider.position.y<.25f && rider.position.z> -17.35f,"Could not walk away on the east street");
         Call("ToggleCommand");Require((bool)Field(game,"command"),"Command unavailable after alighting");
         Call("StartNight");Require(Place=="Street" && house.AtLiftHeight(0,0) && house.AtLiftHeight(1,0) && house.RailStation==0,"Retry kept the previous trip");
+        Call("PlayerInput",Dt);BoardAtWest();Call("ReturnToTitle");
+        Require(Place=="Street" && Phase=="Title" && rider.parent!=house.Train,"Title kept the active ride");
+        CheckCoachLights(-1);
     }
 }

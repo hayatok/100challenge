@@ -56,6 +56,7 @@ public sealed partial class KinseiSession : MonoBehaviour
     bool snapCamera = true;
     bool terraceShot;
     readonly List<float> profile = new();
+    readonly List<float> coachFrames = new();
     bool measure;
     int screenWidth, screenHeight;
 
@@ -232,14 +233,18 @@ public sealed partial class KinseiSession : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.Escape)) { TogglePause(); return; }
         if(paused) return;
         if(Input.GetKeyDown(KeyCode.Tab)) ToggleCommand();
-        PortraitInput();
-        if(!command && !OnAir && !AboveStreet)ShopViewInput();
+        if(!ticketActing)PortraitInput();
+        if(!command && !OnAir && !AboveStreet && !ticketActing)ShopViewInput();
         dt=Mathf.Min(dt,.09f);
         clock+=dt; phaseAge+=dt;
         fpsSmooth=Mathf.Lerp(fpsSmooth,1f/Mathf.Max(Time.unscaledDeltaTime,.001f),.06f);
-        if(measure && phaseAge>.2f && profile.Count<108000) profile.Add(Time.unscaledDeltaTime*1000);
+        if(measure && phaseAge>.2f){
+            float elapsed=Time.unscaledDeltaTime*1000;
+            if(profile.Count<108000)profile.Add(elapsed);
+            if(railPlace==RailPlace.Coach && coachFrames.Count<108000)coachFrames.Add(elapsed);
+        }
         AdvanceRail(dt);
-        if(command) CommandInput(); else if(shopView==ShopView.None)PlayerInput(dt); else Motion(player,"idle");
+        if(ticketActing)Motion(player,"idle"); else if(command) CommandInput(); else if(shopView==ShopView.None)PlayerInput(dt); else Motion(player,"idle");
         neighbours.Tick(clock);neighbours.LookAtNeighbours();neighbours.PoseCounterLine(clock,player.actor.EyePosition);club.TickShops(dt,player.Position);
         club.SetProgrammeLevel(sound.ReadProgrammeLevel(dt));
         if(phase==Phase.Result)return;
@@ -258,6 +263,7 @@ public sealed partial class KinseiSession : MonoBehaviour
             p.actor.Pose(reacting?"flinch":p.pose,p.speed,action);
             ApplyBackstageHands(p);
         }
+        if(InDawn && dawnBranch==2)PoseTicketHands();
         SetCamera(dt);
     }
 
@@ -298,9 +304,21 @@ public sealed partial class KinseiSession : MonoBehaviour
     void SetCamera(float dt)
     {
         Vector3 eye, focus;
+        bool frameHands=InDawn && ticketActing && ticketAligned;
+        if(framingTicket!=frameHands){framingTicket=frameHands;snapCamera=true;}
         if(phase==Phase.Title || phase==Phase.Result) {
             cam.orthographic=false; cam.fieldOfView=49;
             eye=new Vector3(6.3f,2.3f,-5.6f); focus=new Vector3(-2.5f,1.6f,3.5f);
+        } else if(frameHands) {
+            cam.orthographic=false;
+            cam.fieldOfView=42;
+            if(dawnStep==0){
+                eye=new Vector3(-2.09f,1.53f,-6.45f);
+                focus=new Vector3(-1.67f,1.11f,-6.01f);
+            }else{
+                eye=new Vector3(-2.47f,1.71f,-17.78f);
+                focus=new Vector3(-2.17f,1.19f,-18.47f);
+            }
         } else if(OnAir) {
             cam.orthographic=false;cam.fieldOfView=40;
             if(finaleStep==FinaleStep.Cooperative) {
@@ -369,13 +387,14 @@ public sealed partial class KinseiSession : MonoBehaviour
         ReportFrames(id);
     }
 
-    void ReportFrames(string scene)
+    void ReportFrames(string scene) => WriteFrameReport(scene,profile);
+
+    void WriteFrameReport(string scene,List<float> samples)
     {
-        if(measure && profile.Count>0) {
-            profile.Sort();
-            Debug.Log($"KINSEI_FRAME n={profile.Count} median_ms={profile[profile.Count/2]:F2} p95_ms={profile[(int)(profile.Count*.95f)]:F2} size={Screen.width}x{Screen.height} gpu={SystemInfo.graphicsDeviceName} scene={scene}");
-            profile.Clear();
-        }
+        if(samples.Count==0)return;
+        samples.Sort();
+        Debug.Log($"KINSEI_FRAME n={samples.Count} median_ms={samples[samples.Count/2]:F2} p95_ms={samples[(int)(samples.Count*.95f)]:F2} size={Screen.width}x{Screen.height} gpu={SystemInfo.graphicsDeviceName} scene={scene}");
+        samples.Clear();
     }
 
     void OnApplicationFocus(bool focus)

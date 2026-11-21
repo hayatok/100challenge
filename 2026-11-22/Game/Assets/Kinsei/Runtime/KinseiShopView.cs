@@ -13,6 +13,7 @@ public sealed partial class KinseiSession
         if(at.x>3.5f && at.x<7.6f && at.z> -12.1f && at.z< -8.60f)return ShopView.Marquee;
         if(at.z> -16.25f || at.z< -19.8f || at.y> .85f)return ShopView.None;
         if(Mathf.Abs(at.x+16f)<2.35f)return ShopView.Coffee;
+        if(InDawn && dawnBranch==2 && at.x>=-2.95f && at.x<=-2.35f)return ShopView.Records;
         if(Mathf.Abs(at.x)<2.35f)return ShopView.Records;
         if(Mathf.Abs(at.x-16f)<2.35f)return at.x<15.8f?ShopView.Operator:ShopView.Meter;
         return ShopView.None;
@@ -49,8 +50,8 @@ public sealed partial class KinseiSession
                 eye=new Vector3(-16.08f,1.62f,-17.86f);focus=new Vector3(-17.06f,1.39f,-18.88f);break;
             case ShopView.Records:
                 if(InDawn && dawnBranch==2){
-                    eye=new Vector3(.52f,1.80f,-17.40f);
-                    focus=new Vector3(.64f,1.40f,-18.57f);
+                    eye=new Vector3(-1.62f,1.95f,-16.69f);
+                    focus=new Vector3(-1.47f,1.34f,-18.53f);
                     break;
                 }
                 eye=new Vector3(.10f,1.92f,-17.45f);focus=new Vector3(.10f,1.98f,-19.80f);break;

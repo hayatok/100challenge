@@ -88,7 +88,7 @@ public sealed partial class KinseiSession
     void ReturnToTitle()
     {
         if(paused) TogglePause();
-        ClearDawn();
+        if(InDawn)ClearDawn();else ResetRailRide();
         portraitOwner=null;neighbours.EndCounterLine(clock);
         ClearStageWitness();
         relayCam.enabled=false; phase=Phase.Title; command=false; SetCamera(0);

@@ -91,11 +91,13 @@ public sealed partial class KinseiDistrictPeople : MonoBehaviour
     }
 
     int dawnSchedule;
+    public bool ReceivingTicket {get;set;}
+    float clerkStep;
     public void SetDawnSchedule(int branch)
     {
         branch=Mathf.Clamp(branch,0,2);
         if(branch==dawnSchedule)return;
-        dawnSchedule=branch;
+        dawnSchedule=branch; ReceivingTicket=false;clerkStep=0;
         float clock=float.IsNaN(lastTime)?0:lastTime;
         lastTime=float.NaN;
         Tick(clock);
@@ -135,19 +137,24 @@ public sealed partial class KinseiDistrictPeople : MonoBehaviour
             }
             bool walking=phase>=stop.dwell && travel>.001f;
             var at=walking?Vector3.Lerp(stop.position,next.position,(phase-stop.dwell)/travel):stop.position;
+            if(i==1 && dawnSchedule==2){
+                float nextStep=Mathf.MoveTowards(clerkStep,ReceivingTicket?1:0,dt*1.35f);
+                walking=Mathf.Abs(nextStep-clerkStep)>.0001f;
+                clerkStep=nextStep;at.x-=.87f*clerkStep;
+            }
             at.y=at.z> -14f?0:.065f;
-            var facing=walking?(next.position-stop.position).normalized:stop.facing;
+            var facing=i==1 && dawnSchedule==2?stop.facing:walking?(next.position-stop.position).normalized:stop.facing;
             Transform root=person.actor.transform;
             root.position=at;
             var orientation=Quaternion.LookRotation(facing,Vector3.up);
             root.rotation=jump?orientation:Quaternion.RotateTowards(root.rotation,orientation,dt*235);
             person.walking=walking;
-            person.working=i<3 && !walking && step==0;
+            person.working=i<3 && (!walking || dawnSchedule==2 && i==1) && step==0;
             if(i<3 && open[i]!=person.working)
             {open[i]=person.working;district.SetDistrictOpen(i,open[i]);}
             person.actor.Pose(walking?"walk":"idle",walking?Pace:0);
             person.workBlend=jump?(person.working?1:0):Mathf.MoveTowards(person.workBlend,person.working?1:0,dt*3.5f);
-            if(i<3 && person.workBlend>0)Work(person,i,elapsedSeconds);
+            if(i<3 && person.workBlend>0 && !(i==1 && clerkStep>.001f))Work(person,i,elapsedSeconds);
         }
     }
     public void LookAtNeighbours()
@@ -266,6 +273,13 @@ public sealed partial class KinseiDistrictPeople : MonoBehaviour
                 new Vector4(sx,1.364f,.074f,.078f),new Vector4(sx,1.239f,.066f,.070f),
                 new Vector4(sx,1.087f,.054f,.06f),new Vector4(sx,.990f,.047f,.051f),
                 new Vector4(sx,woman?.928f:.848f,.041f,.044f)},cloth);
+            if(id==1 && side==1){
+                KinseiWristCuff.Fit(elbow.Find("Wrist"));
+                // Finish the .848 m jacket hem with a turned cotton cuff around the anatomical extension.
+                Seam(actor,new[]{elbow},new[]{0,0,0,0},new[]{
+                    new Vector4(sx,.855f,.040f,.043f),new Vector4(sx,.845f,.040f,.042f),
+                    new Vector4(sx,.838f,.037f,.039f),new Vector4(sx,.839f,.016f,.018f)},bone);
+            }
             if(woman) {
                 var wrist=elbow.Find("Wrist");
                 KinseiWristCuff.Fit(wrist);

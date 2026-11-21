@@ -13,7 +13,9 @@ public sealed partial class KinseiSession
     void ResetRailRide()
     {
         if(player!=null && player.root)player.root.SetParent(transform,true);
-        club.ResetRail();railPlace=RailPlace.Street;railStop=railCar=0;liftGoingUp=false;
+        club.ResetRail();club.LightOccupiedCoach(-1);
+        WriteFrameReport("occupied-coach",coachFrames);
+        railPlace=RailPlace.Street;railStop=railCar=0;liftGoingUp=false;
     }
 
     static bool NearLift(Vector3 at,int station)
@@ -108,9 +110,12 @@ public sealed partial class KinseiSession
         var at=player.Position;
         if(railPlace==RailPlace.Platform && railStop==club.RailStation && at.z<DoorZ && LinedUp(at,railStop,out railCar)){
             railPlace=RailPlace.Coach;player.root.SetParent(club.Train,true);snapCamera=true;
+            club.LightOccupiedCoach(railCar);
             Mark("rail-board-"+railStop+"-"+railCar);
         } else if(railPlace==RailPlace.Coach && at.z>DoorZ+.035f && LinedUp(at,club.RailStation,out _)){
             player.root.SetParent(transform,true);railStop=club.RailStation;railPlace=RailPlace.Platform;
+            club.LightOccupiedCoach(-1);
+            WriteFrameReport("occupied-coach",coachFrames);
             snapCamera=true;Mark("rail-alight-"+railStop);
         }
     }

@@ -5,7 +5,17 @@ public sealed partial class KinseiSession
     int dawnBranch,dawnStep;
     float dawnPrintTime;
     GameObject dawnTicket;
-    Material dawnTicketInk;
+    bool ticketActing, ticketAligned, ticketInTray, framingTicket;
+    float ticketTime, alignmentTime;
+    Vector3 printedCorner;
+    static readonly Vector3 TicketCorner=new Vector3(-.031f,.0015f,.012f);
+    static readonly Vector3 PressStand=new Vector3(-1.48f,0,-6.32f);
+    static readonly Vector3 TrayStand=new Vector3(-2.65f,0,-18.56f);
+    Vector3 TicketStand => dawnStep==0?PressStand:TrayStand;
+    Vector3 TicketFacing => dawnStep==0?Vector3.forward:Vector3.right;
+    Vector3 CarryPoint => player.root.TransformPoint(new Vector3(-.23f,1.13f,.25f));
+    Vector3 TrayPaper => club.TicketTray.TransformPoint(new Vector3(-.100f,.0135f,-.060f));
+    static float Stroke(float t,float start,float end)=>Mathf.SmoothStep(0,1,Mathf.InverseLerp(start,end,t));
     bool InDawn => phase==Phase.Dawn;
 
     bool DawnUnlocked(int branch) => pendingEnding==null && (branch==1?ledger.cooperativeEnding:
@@ -45,7 +55,8 @@ public sealed partial class KinseiSession
 
     void TickDawn(float dt)
     {
-        if(dawnBranch==2 && dawnStep==0){
+        if(ticketActing)AdvanceTicket(dt);
+        if(dawnBranch==2 && dawnStep==0 && !dawnTicket){
             dawnPrintTime=Mathf.Min(2,dawnPrintTime+dt);
             boxOffice.SetTicketPress(dawnPrintTime);
             if(dawnPrintTime>=1.82f)Motion(stageDirector,"idle");
@@ -57,25 +68,26 @@ public sealed partial class KinseiSession
         if(dawnBranch==1)return dawnStep==0?"ロータスで澄子の朝のリクエストを預かる":
             dawnStep==1?"共同送像所で「堺の朝」を放送する":"放送中の三店を歩いて訪ねる";
         return dawnStep==0?"金星の帳場で座長から一番券を受け取る":
-            dawnStep==1?"針音堂の窓口へ一番券を届ける":"針音堂の前売り窓口と金星の帳場を訪ねる";
+            dawnStep==1?"針音堂のカウンター左端で一番券を渡す":"針音堂の前売り窓口と金星の帳場を訪ねる";
     }
 
     // Each job has a real counter contact. Speaking elsewhere never advances the programme.
     string DawnJob()
     {
-        if(AboveStreet || dawnStep>=2)return "";
+        if(ticketActing || AboveStreet || dawnStep>=2)return "";
         if(dawnBranch==1){
             if(dawnStep==0 && AtFinaleDesk(LotusDesk))return "澄子から「堺の朝」のリクエストを預かる";
             if(dawnStep==1 && AtFinaleDesk(RelayDesk))return "送出卓から「堺の朝」をかける";
         } else {
-            if(dawnStep==0 && dawnPrintTime>=1.64f && AtFinaleDesk(KinseiBoxOffice.Counter))return "座長から一番券を受け取る";
-            if(dawnStep==1 && AtFinaleDesk(NeedleDesk))return "兵藤に一番券を渡す";
+            if(dawnStep==0 && dawnPrintTime>=1.82f && CanStartTicket())return "座長から一番券を受け取る";
+            if(dawnStep==1 && CanStartTicket())return "兵藤に一番券を渡す";
         }
         return "";
     }
 
     string DawnVerb()
     {
+        if(ticketActing)return "";
         string job=DawnJob();
         if(job.Length>0)return job;
         if(dawnBranch==2 && AtFinaleDesk(KinseiBoxOffice.Counter))return "座長と話す";
@@ -86,8 +98,14 @@ public sealed partial class KinseiSession
 
     void DawnInteract()
     {
+        if(ticketActing)return;
         string job=DawnJob();
         if(job.Length>0){
+            if(dawnBranch==2){
+                ticketActing=true;ticketAligned=false;ticketTime=alignmentTime=0;
+                neighbours.ReceivingTicket=dawnStep==1;
+                return;
+            }
             dawnStep++;
             if(dawnBranch==1){
                 SpeakAtCounter(dawnStep==1?0:2,dawnStep==1?"澄子「吹き手が待ってる。村瀬さんの卓から、うちの一番席にも頼むわ」":
@@ -96,17 +114,12 @@ public sealed partial class KinseiSession
                     sound.SetMorningRequest(true);
                     SetPerformance(true);
                 }
-            }else{
-                if(dawnStep==1){boxOffice.SetTicketPress(0);CarryDawnTicket();Motion(stageDirector,"idle");Face(stageDirector,player.Position);}
-                else ClearDawnTicket();
-                if(dawnStep==1)Say("座長「金星専属の一番券や。針音堂に窓口を頼んだで」",5);
-                else SpeakAtCounter(1,"兵藤「一番券、預かった。ほな前売りを始めよか」",5);
             }
             club.SetDawnProgramme(dawnBranch,dawnStep);
             sound.Cue("dial");Mark("dawn-work-"+dawnBranch+"-"+dawnStep);return;
         }
         if(dawnBranch==2 && AtFinaleDesk(KinseiBoxOffice.Counter)){
-            Say(dawnStep==0?"座長「今、刷ってるところや」":dawnStep==1?"座長「兵藤の窓口に渡してや」":"座長「針音堂で前売りが始まったそうや」");return;
+            Say(dawnStep==0?(dawnPrintTime<1.82f?"座長「今、刷ってるところや」":"座長「印字機の正面に回って、出てる端をつまんでや」"):dawnStep==1?"座長「兵藤の窓口に渡してや」":"座長「針音堂で前売りが始まったそうや」");return;
         }
         if(!StreetContact(out int shop,out string words))return;
         if(shop<0){Say(words);return;}
@@ -123,25 +136,105 @@ public sealed partial class KinseiSession
         "兵藤「金星の券を待っとる。持ってきたら窓口を開くで」","兵藤「今朝の一枚はここや。次のお客さん、どうぞ」",
         "村瀬「今日は金星の開場を預かる回線や」","村瀬「前売りの知らせ、町内に回ったで」"};
 
-    void CarryDawnTicket()
+    bool CanStartTicket()
     {
-        var paper=GameObject.CreatePrimitive(PrimitiveType.Cube);dawnTicket=paper;
-        paper.name="座長から預かった一番券";
-        var collider=paper.GetComponent<Collider>();collider.enabled=false;Destroy(collider);
-        paper.transform.SetParent(player.actor.LeftWrist,false);
-        paper.transform.localPosition=new Vector3(-.012f,-.118f,.042f);
-        paper.transform.localRotation=Quaternion.Euler(8,5,-15);
-        paper.transform.localScale=new Vector3(.14f,.068f,.003f);
-        dawnTicketInk=new Material(Shader.Find("Standard")){name="金星専属の一番券",color=new Color(.92f,.77f,.52f)};
-        var print=Resources.Load<Texture2D>("KinseiPrintworks/FirstTicket");
-        if(print){dawnTicketInk.mainTexture=print;dawnTicketInk.color=Color.white;}
-        paper.GetComponent<Renderer>().sharedMaterial=dawnTicketInk;
+        var p=player.Position;
+        var delta=p-TicketStand;delta.y=0;
+        return delta.sqrMagnitude<.65f*.65f &&
+            (dawnStep==0?p.z<=-6.22f:p.x<=-2.57f);
+    }
+
+    void AdvanceTicket(float dt)
+    {
+        if(!ticketAligned){
+            if(Input.GetKeyDown(KeyCode.S)){
+                ticketActing=false;neighbours.ReceivingTicket=false;return;
+            }
+            var delta=TicketStand-player.Position;delta.y=0;
+            if(delta.magnitude>.022f){
+                if(!motor || alignmentTime>1.4f){
+                    ticketActing=false;neighbours.ReceivingTicket=false;return;
+                }
+                motor.Move(Vector3.ClampMagnitude(delta,dt*1.45f));
+                Motion(player,"walk",1.3f);
+            }else Motion(player,"idle");
+            var orientation=Quaternion.LookRotation(TicketFacing);
+            player.root.rotation=Quaternion.RotateTowards(player.root.rotation,orientation,dt*340);
+            alignmentTime+=dt;
+            ticketAligned=delta.magnitude<=.022f && Quaternion.Angle(player.root.rotation,orientation)<1;
+            return;
+        }
+        ticketTime+=dt;
+    }
+
+    void PoseTicketHands()
+    {
+        if(!ticketActing || !ticketAligned){
+            if(dawnTicket)player.actor.TouchTicket(CarryPoint,1,true);
+            return;
+        }
+        var paper=boxOffice.PrintedTicket;
+        if(dawnStep==0){
+            Vector3 corner=paper.TransformPoint(TicketCorner);
+            Vector3 target=corner;
+            float blend=Stroke(ticketTime,0,.55f);
+            if(dawnTicket){
+                var edge=printedCorner;
+                var free=edge+Vector3.back*.15f+Vector3.up*.025f;
+                target=Vector3.Lerp(Vector3.Lerp(edge,free,Stroke(ticketTime,.55f,.94f)),CarryPoint,Stroke(ticketTime,.94f,1.46f));
+            }
+            player.actor.TouchTicket(target,blend,true);
+            if(ticketTime>=.55f && !dawnTicket){
+                if(Vector3.Distance(player.actor.LeftWrist.TransformPoint(KinseiActor.TicketPinch),corner)>.035f){
+                    ticketActing=false;return;
+                }
+                printedCorner=corner;dawnTicket=paper.gameObject;paper.SetParent(player.actor.LeftWrist,true);
+            }
+            if(ticketTime>=1.46f)FinishTicket(1);
+            return;
+        }
+        Vector3 released=TrayPaper+TicketCorner;
+        Vector3 above=released+Vector3.up*.105f;
+        Vector3 place=Vector3.Lerp(Vector3.Lerp(CarryPoint,above,Stroke(ticketTime,0,.70f)),released,Stroke(ticketTime,.70f,1.12f));
+        float release=Stroke(ticketTime,1.12f,1.49f);
+        player.actor.TouchTicket(place+Vector3.up*(.12f*release),1-Stroke(ticketTime,1.42f,1.85f),true);
+        if(!ticketInTray){
+            // Rotate about the pinched corner so the printed face stays upward as the paper settles.
+            Vector3 corner=paper.TransformPoint(TicketCorner);
+            paper.rotation=Quaternion.Slerp(paper.rotation,club.TicketTray.rotation,Stroke(ticketTime,0,.70f));
+            paper.position+=corner-paper.TransformPoint(TicketCorner);
+            if(ticketTime>=1.12f){
+                if(Vector3.Distance(paper.position,TrayPaper)>.040f){
+                    ticketActing=false;neighbours.ReceivingTicket=false;return;
+                }
+                paper.SetParent(club.TicketTray,true);ticketInTray=true;dawnTicket=null;
+            }
+        }
+        if(ticketInTray){
+            paper.localRotation=Quaternion.identity;
+            paper.localPosition=Vector3.Lerp(paper.localPosition,new Vector3(-.10f,.0135f,-.06f),Stroke(ticketTime,1.12f,1.32f));
+            club.DrawTicketTray(Stroke(ticketTime,1.89f,2.50f));
+            float lower=Stroke(ticketTime,1.65f,1.89f),lift=Stroke(ticketTime,2.50f,2.68f);
+            Vector3 hover=Vector3.up*.078f-Vector3.forward*.030f;
+            var pad=club.TrayFingerRest+hover*(1-lower+lift);
+            float reach=Stroke(ticketTime,1.30f,1.65f)*(1-Stroke(ticketTime,2.68f,2.85f));
+            neighbours.Owner(1).DrawTrayWithFingers(pad,reach);
+        }
+        if(ticketTime>=2.85f)FinishTicket(2);
+    }
+
+    void FinishTicket(int step)
+    {
+        ticketActing=false;dawnStep=step;neighbours.ReceivingTicket=false;
+        club.SetDawnProgramme(2,step);sound.Cue("dial");Mark("dawn-work-2-"+step);
+        if(step==1)Say("座長「金星専属の一番券や。針音堂に窓口を頼んだで」",5);
+        else SpeakAtCounter(1,"兵藤「一番券、預かった。ほな前売りを始めよか」",5);
     }
 
     void ClearDawnTicket()
     {
-        if(dawnTicket){dawnTicket.SetActive(false);Destroy(dawnTicket);dawnTicket=null;}
-        if(dawnTicketInk){Destroy(dawnTicketInk);dawnTicketInk=null;}
+        boxOffice.ReturnTicket();ticketActing=ticketAligned=ticketInTray=false;
+        dawnTicket=null;
     }
 
     void DrawDawnDepartures()
@@ -164,11 +257,12 @@ public sealed partial class KinseiSession
         if(Plate(new Rect(hudW-102,11,80,44),"幕間 Esc"))TogglePause();
         float bottom=hudH-62;
         Block(new Rect(0,bottom,hudW,62),ink);
-        string hints=RailHint();
+        string hints=ticketActing?(!ticketAligned?"仕事の位置につく　　S　やめる":
+            dawnStep==0?"印字口から一番券を抜き取る":"受け皿に置いて兵藤に渡す"):RailHint();
         if(hints.Length==0)hints=shopView==ShopView.None?"WASD　町を歩く　　E　話す・仕事をする　　Esc　幕間・表題へ":
             ShopViewLabel(shopView)+"　　C　元の視点へ";
-        if(shopView==ShopView.None && NearbyCounter()!=ShopView.None)hints+="　　C　"+ShopViewLabel(NearbyCounter())+"を見る";
-        if(PortraitHint.Length>0)hints="E　話す　　"+PortraitHint;
+        if(!ticketActing && shopView==ShopView.None && NearbyCounter()!=ShopView.None)hints+="　　C　"+ShopViewLabel(NearbyCounter())+"を見る";
+        if(!ticketActing && PortraitHint.Length>0)hints="E　話す　　"+PortraitHint;
         Letter(new Rect(22,bottom+6,hudW-44,48),hints,17,cream);
         string verb=Interaction();
         if(shopView==ShopView.None && !portraitOwner && verb.Length>0){

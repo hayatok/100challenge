@@ -5,6 +5,12 @@ public sealed partial class KinseiWorld
 {
     Material railSeat,routePrint,ticketPrint,railWindow;
     Material[] carriageAdverts;
+    readonly Light[] coachReadingLights=new Light[4];
+    public void LightOccupiedCoach(int car)
+    {
+        for(int i=0;i<coachReadingLights.Length;i++)
+            if(coachReadingLights[i])coachReadingLights[i].enabled=i/2==car;
+    }
     Material RailPrint(string key,Material baseMaterial)
     {
         var texture=Resources.Load<Texture2D>("KinseiRail/"+key);
@@ -81,6 +87,19 @@ public sealed partial class KinseiWorld
         lightObject.transform.localPosition=new Vector3(x,2.51f,.10f);
         var light=lightObject.AddComponent<Light>();light.type=LightType.Point;light.range=5.6f;
         light.color=new Color(1,.79f,.52f);light.intensity=1.45f;light.renderMode=LightRenderMode.ForceVertex;
+        for(int side=0;side<2;side++){
+            float sign=side==0?-1:1;
+            float u=1.32f*sign,z=.99f*sign;
+            Panel("窓上の蛍光灯の反射笠",u,2.29f,z,.77f,.14f,.13f,ivory);
+            Panel("乳白ガラスの横灯",u,2.27f,z-sign*.076f,.66f,.084f,.031f,lamp);
+            var socket=new GameObject("窓上の横灯").transform;
+            socket.SetParent(train,false);socket.localPosition=new Vector3(x+u,2.24f,z-sign*.145f);
+            var reading=socket.gameObject.AddComponent<Light>();
+            reading.type=LightType.Point;reading.range=4.6f;reading.intensity=2.2f;
+            reading.color=new Color(1,.89f,.76f);reading.renderMode=LightRenderMode.ForcePixel;
+            reading.shadows=LightShadows.None;reading.enabled=false;
+            coachReadingLights[car*2+side]=reading;
+        }
         Panel("Strap runner",0,2.58f,-.46f,7.7f,.05f,.05f,brass);
         var board=Part("Passenger route board",PrimitiveType.Quad,new Vector3(x+2.45f,2.46f,1.063f),new Vector3(1.08f,.23f,1),routePrint,false,train);
         Moving(board);
