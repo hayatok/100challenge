@@ -5,7 +5,7 @@ using UnityEngine;
 public sealed partial class KinseiSession : MonoBehaviour
 {
     enum Phase { Title, Arrival, Floor, Choice, Chase, Showdown, Mirror, Release, Result }
-    enum Duty { Follow, Go, Attend, Guard, Rest, BoxOffice, FinalePost, StageWitness }
+    enum Duty { Follow, Go, Attend, Guard, Rest, BoxOffice, FinalePost, StageWitness, Backstage }
     sealed class Person
     {
         public string name, role, pose = "idle";
@@ -177,6 +177,7 @@ public sealed partial class KinseiSession : MonoBehaviour
         boxOffice.SetCollected(false);
         boxOffice.SetTicketPress(0);
         ResetStreets();
+        ResetBackstage();
         club.PutAwayMaster();
         club.SetExchangePicture(null);
         foreach(var p in everyone) Destroy(p.root.gameObject);
@@ -237,6 +238,7 @@ public sealed partial class KinseiSession : MonoBehaviour
             float action=(p==player || p==brother || p==elder) && phase==Phase.Mirror?relayProgress:Mathf.Clamp01(1-(clock-p.lastAction)/.36f);
             bool reacting=p.flinchUntil>clock && p.hp>0 && p.pose!="talk";
             p.actor.Pose(reacting?"flinch":p.pose,p.speed,action);
+            ApplyBackstageHands(p);
         }
         SetCamera(dt);
     }
@@ -265,7 +267,7 @@ public sealed partial class KinseiSession : MonoBehaviour
 
     void ToggleCommand()
     {
-        if(phase==Phase.Mirror || StageActive || OnAir) return;
+        if(pullingBackstage || phase==Phase.Mirror || StageActive || OnAir) return;
         shopView=ShopView.None;
         command=!command; club.SetTactical(command); snapCamera=true; lockedTarget=-1;
         if(command && (player.Position.z< -13.9f || Mathf.Abs(player.Position.x)>8.8f))
@@ -298,7 +300,7 @@ public sealed partial class KinseiSession : MonoBehaviour
             eye=returnShot?new Vector3(.99f,4.59f,6.86f):new Vector3(-3.06f,1.57f,-2.18f);
             focus=returnShot?new Vector3(.22f,4.21f,7.70f):new Vector3(-3.05f,1.29f,-.12f);
         } else if(shopView!=ShopView.None) {
-            cam.orthographic=false;cam.fieldOfView=shopView==ShopView.Records?52:42;
+            cam.orthographic=false;cam.fieldOfView=shopView==ShopView.Wardrobe?63:shopView==ShopView.Records?52:42;
             FrameCounter(out eye,out focus);
         } else if(command) {
             cam.orthographic=true; cam.orthographicSize=Mathf.Max(chartSize,15f/cam.aspect);
@@ -308,6 +310,11 @@ public sealed partial class KinseiSession : MonoBehaviour
             Vector3 look=Quaternion.Euler(tilt,angle,0)*Vector3.forward;
             Vector3 right=Quaternion.Euler(0,angle,0)*Vector3.right;
             Vector3 shoulder=player.Position+Vector3.up*1.53f+right*.49f;
+            if(player.Position.x< -8.5f && player.Position.z> -8f) {
+                var pivot=player.Position+Vector3.up*1.53f;
+                if(Physics.SphereCast(pivot,.12f,right,out var shoulderHit,.49f,~0,QueryTriggerInteraction.Ignore))
+                    shoulder=pivot+right*Mathf.Max(0,shoulderHit.distance-.025f);
+            }
             eye=shoulder-look*2.55f; focus=shoulder+look*8;
             // Shorten the boom against the built environment; actors do not own camera colliders.
             Vector3 delta=eye-shoulder;

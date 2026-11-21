@@ -11,6 +11,9 @@ public sealed class KinseiWalkways : MonoBehaviour
 
     public void Rebuild(Transform house)
     {
+        if(registration.valid)registration.Remove();
+        if(mesh!=null)Destroy(mesh);
+        Physics.SyncTransforms();
         var sources=new List<NavMeshBuildSource>();
         NavMeshBuilder.CollectSources(house,~0,NavMeshCollectGeometry.PhysicsColliders,0,
             new List<NavMeshBuildMarkup>(),sources);

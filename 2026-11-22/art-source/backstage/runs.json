@@ -1,0 +1,58 @@
+[
+  {
+    "key": "door-leather",
+    "prompt_id": "5fed9449-8567-49c5-bbc2-1cb44ffb793f",
+    "file": "door-leather_00001_.png",
+    "sha256": "f129d086a395036058343b6c01c7ba9eee9f59b28dcd0f3b6c3fa55726d1c6c3",
+    "seconds": 24.554
+  },
+  {
+    "key": "hall-pass",
+    "prompt_id": "a48c880a-d7bc-478e-adef-41a172be7973",
+    "file": "hall-pass_00001_.png",
+    "sha256": "a4d7d94ceca398b2d57cd9d07b6142b7de51f08e43d388839f6ee4f3e2701633",
+    "seconds": 13.537
+  },
+  {
+    "key": "camellia-portrait",
+    "prompt_id": "f7825f53-399b-44e3-b38f-497124ea72ed",
+    "file": "camellia-portrait_00001_.png",
+    "sha256": "73f7e71e414871127bffb81a8e3d0326e036faeb5d01355e9f9871cbcb5ef59e",
+    "seconds": 13.315
+  },
+  {
+    "key": "wardrobe-card",
+    "prompt_id": "a08eb7b0-a5ce-4709-aad1-f33586b11e19",
+    "file": "wardrobe-card_00001_.png",
+    "sha256": "bfe1f3ef72b53142c42def1244373af923ac27d09134a87d5ec48978c14c7a5e",
+    "seconds": 13.282
+  },
+  {
+    "key": "alley-evening",
+    "prompt_id": "746c696b-2112-4bb8-b8ba-26e7970e26e7",
+    "file": "alley-evening_00001_.png",
+    "sha256": "2f8c2aab3aa10c45143dac1c6dd02f32e262dafcf47b35bb2fd046452f67978b",
+    "seconds": 17.726
+  },
+  {
+    "key": "door-hand",
+    "prompt_id": "4f604f7c-b8e2-4052-b318-13f9e1793229",
+    "file": "door-hand_00001_.png",
+    "sha256": "344648947a4a041524583e612c87385a352f56d712e3e725fbfddfe537e6d1a1",
+    "seconds": 17.832
+  },
+  {
+    "key": "greenroom",
+    "prompt_id": "fa086b6d-a950-4f7e-9f2e-ac94f107b3b6",
+    "file": "greenroom_00001_.png",
+    "sha256": "57b7ef99db6e6ddbb19e0cd535c0698c0dc85ff9901df32039b484f41950cdec",
+    "seconds": 17.657
+  },
+  {
+    "key": "door-open",
+    "prompt_id": "5bd52d0e-16ae-4d1d-a15c-d414c2ec8cf8",
+    "file": "door-open_00001_.png",
+    "sha256": "3904d9e01639cb1008d81bdaf3309357d52cf552828318310376a233c9a40b82",
+    "seconds": 17.925
+  }
+]

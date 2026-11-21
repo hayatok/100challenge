@@ -84,7 +84,7 @@ public sealed partial class KinseiWorld : MonoBehaviour
     void Shell()
     {
         Box("Club foundation",new Vector3(0,-.15f,.5f),new Vector3(18,.3f,17),dark,true);
-        Box("West wall",new Vector3(-9,3,.5f),new Vector3(.25f,6,17),wood,true);
+        BuildBackstage();
         Box("East wall",new Vector3(9,3,.5f),new Vector3(.25f,6,17),wood,true);
         Box("Rear wall",new Vector3(0,3,9),new Vector3(18,6,.25f),wood,true);
         Box("Ceiling",new Vector3(0,6.2f,.5f),new Vector3(18,.25f,17),dark);
@@ -93,11 +93,12 @@ public sealed partial class KinseiWorld : MonoBehaviour
             for(int i=0;i<9;i++)
             {
                 float z=-7+i*1.8f;
+                if(side<0 && z<2.75f && z+1.6f>.75f)continue;
                 Box("Fluted wall pilaster",new Vector3(side*8.77f,2.6f,z),new Vector3(.16f,5.2f,.10f),brass);
                 Box("Wall upholstered panel",new Vector3(side*8.8f,1.4f,z+.8f),new Vector3(.12f,2.4f,1.45f),plum);
             }
             Box("Continuous picture rail",new Vector3(side*8.69f,3.25f,.5f),new Vector3(.1f,.09f,17),brass);
-            Box("Skirting",new Vector3(side*8.69f,.13f,.5f),new Vector3(.1f,.26f,17),brass);
+            if(side>0)Box("Skirting",new Vector3(side*8.69f,.13f,.5f),new Vector3(.1f,.26f,17),brass);
         }
         for(float x=-7.5f;x<=7.5f;x+=3)
         {Box("Ceiling coffer",new Vector3(x,6,.5f),new Vector3(.12f,.15f,17),brass);}
@@ -135,9 +136,18 @@ public sealed partial class KinseiWorld : MonoBehaviour
         for(int side=-1;side<=1;side+=2)Rail(new Vector3(-5+side,3.25f,5.5f),new Vector3(-5+side,5.15f,5.5f),.014f,brass);
         Box("Stage lip moulding",new Vector3(-5,.48f,2.565f),new Vector3(6,.04f,.065f),brass);
         for(int side=-1;side<=1;side+=2)Box("Stage brass upright",new Vector3(-5+side*3.15f,2.5f,5.7f),new Vector3(.15f,5,.25f),brass);
-        Cylinder("Microphone foot",new Vector3(-5,.54f,3.4f),.2f,.06f,dark);
-        Rail(new Vector3(-5,.55f,3.4f),new Vector3(-5,1.95f,3.4f),.022f,brass);
-        var mic=Part("Ribbon microphone",PrimitiveType.Capsule,new Vector3(-5,2.04f,3.4f),new Vector3(.11f,.15f,.08f),brass);
+        var microphone=Instantiate(Resources.Load<GameObject>("KinseiMicrophone/KinseiRibbon"),transform,false);
+        microphone.name="金星のリボンマイク";
+        microphone.transform.localPosition=new Vector3(-5,.48f,3.4f);
+        Material plating=Resources.Load<Material>("KinseiMicrophone/RibbonMetal");
+        foreach(var part in microphone.GetComponentsInChildren<MeshRenderer>())
+        {
+            // The little audience-side enamel badge resolves the FBX importer's change of handedness.
+            if(part.name.StartsWith("14 ") && Vector3.Dot(part.bounds.center-microphone.transform.position,transform.forward)>0)
+                microphone.transform.Rotate(0,180,0,Space.World);
+            part.sharedMaterial=plating;
+            fixedRenderers.Add(part);
+        }
         for(int i=0;i<7;i++)Part("Stage footlight",PrimitiveType.Sphere,new Vector3(-7.6f+i*.86f,.54f,2.65f),new Vector3(.16f,.11f,.12f),glow);
     }
     void Sofa(Vector3 p,float yaw,float width=2.5f)

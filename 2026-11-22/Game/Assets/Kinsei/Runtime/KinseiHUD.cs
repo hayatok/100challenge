@@ -141,6 +141,7 @@ public sealed partial class KinseiSession
     {
         if(p.hp<=0)return "行動不能";
         switch(p.duty) {
+            case Duty.Backstage:return AtBackstagePost(p)?"札を渡す":"楽屋口へ";
             case Duty.Go:return "移動"; case Duty.Guard:return "持ち場";
             case Duty.FinalePost:return finaleStep==FinaleStep.Choose?"交換卓":"興行の持ち場";
             case Duty.BoxOffice:return "帳場へ";
@@ -154,6 +155,7 @@ public sealed partial class KinseiSession
         pauseSelection=0;
         WorldMarks();
         DrawAddresses();
+        DrawBackstageMark();
         DrawStageStatus();
         float pad=22;
         Block(new Rect(0,0,hudW,74),ink);
@@ -180,12 +182,18 @@ public sealed partial class KinseiSession
                 phase==Phase.Mirror?"卓間中継　接続中":
                 StageActive?"WASD　移動　　Q　注視　　隙ができたら F　打撃":
                 "WASD　移動　　右ドラッグ　視点　　左クリック・Space　射撃　　Q　注視　　F　打撃";
+            if(!finale && phase==Phase.Arrival && player.Position.x< -9.18f && player.Position.z> -6f)
+                hints=backstageTravel>=1?"舞台脇へ　引戸を通ってホールに入る":
+                    pullingBackstage?"真壁が引戸を開けている":
+                    BackstageRunner==null?"楽屋口　Tab で指揮に入り、組員に B で通し札を頼む":
+                    AtBackstagePost(BackstageRunner)?"楽屋口　引戸の取手に近づいて E":"楽屋口　組員が通し札を取りに向かっている";
             var counter=shopView==ShopView.None?NearbyCounter():shopView;
-            if(counter!=ShopView.None)hints=shopView==ShopView.None?"C　"+ShopViewLabel(counter)+"を見る　　E　話す・調べる　　Tab　組員を指揮":ShopViewLabel(counter)+"　　C　元の視点へ　　Tab　組員を指揮";
+            if(counter!=ShopView.None)hints=shopView==ShopView.None?"C　"+ShopViewLabel(counter)+"を見る　　Tab　組員を指揮":ShopViewLabel(counter)+"　　C　元の視点へ　　Tab　組員を指揮";
             Letter(new Rect(185,bottom+6,hudW-207,50),hints,17,cream);
             string interact=Interaction();
             if(interact.Length>0 && shopView==ShopView.None){
-                Rect prompt=new Rect(hudW*.5f-150,hudH*.60f,300,42);Block(prompt,ink);
+                float promptWidth=Mathf.Min(hudW-48,Mathf.Max(300,(interact.Length+3)*20+36));
+                Rect prompt=new Rect((hudW-promptWidth)*.5f,hudH*.60f,promptWidth,42);Block(prompt,ink);
                 Letter(prompt,"E　　"+interact,19,gold,false,TextAnchor.MiddleCenter);
             }
         }
@@ -236,6 +244,9 @@ public sealed partial class KinseiSession
         if(!finale && Plate(new Rect(213+bw*4,y,bw,44),"伝票　T"))Assign(Duty.BoxOffice);
         if(orders==6 && Plate(new Rect(219+bw*5,y,bw,44),crew[chosen]==stageWitness?"立会取消　V":"舞台立会　V"))
             Assign(Duty.StageWitness);
+        if(CanOrderBackstage && Plate(new Rect(hudW-215,y,191,44),
+            crew[chosen].duty==Duty.Backstage?"楽屋口を離れる　B":"楽屋口へ　B"))Assign(Duty.Backstage);
+        if(CanOrderBackstage)return;
         float mapHints=192+orders*(bw+6);
         Letter(new Rect(mapHints,y,hudW-22-mapHints,44),"右クリック 地点指定　／　ホイール 拡縮",13,cream,false,TextAnchor.MiddleRight);
     }

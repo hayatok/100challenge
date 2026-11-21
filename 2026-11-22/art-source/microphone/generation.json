@@ -1,0 +1,20 @@
+{
+  "tool": "OpenAI GPT Image, Codex Desktop built-in image generation",
+  "size": [
+    1536,
+    1024
+  ],
+  "source": "exec-a1d2f173-fb86-411a-ac18-538ea502f569.png",
+  "sha256": "29c872394f4c3d2cc754d9a580e8a87a3e5186e82bfa5d199a8efdfaba31eb71",
+  "prompt": "A high fidelity original archival museum product photograph, landscape 3:2. One complete compact late-1960s Japanese hotel cabaret ribbon microphone on a short demonstration stand, centered left two thirds of frame, in three-quarter front view. The microphone capsule itself is small: 11.8 centimeters high by 5.8 centimeters wide, slim rectangular with generously radiused corners, vertical nickel central spine and nine horizontal thin protective nickel grille ribs with visibly open black air gaps, fine dark woven acoustic gauze behind, worn rubbed nickel revealing warm pale brass at edges. Two chrome thumbscrews on a narrow U-shaped satin bronze yoke, anti-vibration rubber and internal suspended ribbon, threaded stem and black cloth-braided cable visible. On the right side of the frame place a separate flat small rectangular horizontal dark burgundy enamel manufacturer's badge, front-on facing camera, occupying a third of the image width, with double gold outline, tiny gold four-point star flanked by two gold lines and tiny aged brass rivets. Print only the Japanese characters 金星 below the star on this little badge, no English, no other lettering. This badge will be cropped as a game texture. Rest on dark green wool repair bench. Warm directional window reflection, fine realistic metal oxidation and machine marks, crisp fine detail across the entire microphone and the enamel badge, believable dimensional engineering. No people, no captions, no logos of real manufacturers. Photograph, not an illustration.",
+  "derivedTexture": {
+    "name": "RibbonFinish.png",
+    "sourceCrop": [
+      934,
+      349,
+      1463,
+      542
+    ],
+    "application": "31 by 9.4 mm audience-facing badge on the lower cover"
+  }
+}

@@ -33,6 +33,10 @@ public sealed partial class KinseiSession
         var here=p.Position;
         bool enteringSeat=p.duty==Duty.Attend && here.y>3 && Vector3.Distance(here,to)<1.18f;
         if(!enteringSeat && FollowWalkway(p,to,rate,dt))return;
+        // Only the baked walkway can carry an actor across the club's west wall.
+        if((here.x < -8.5f || to.x < -8.5f) && (here.z > -8f || to.z > -8f)) {
+            Motion(p,"idle"); return;
+        }
         Vector3 next=to;
         // Both levels join at the switchback on the east side of the hall.
         bool up=to.y>2, onStair=here.x>5.0f && here.x<7.05f && here.z>-.35f && here.z<5.96f;
@@ -79,7 +83,7 @@ public sealed partial class KinseiSession
 
     void PlayerInput(float dt)
     {
-        if(phase==Phase.Mirror || OnAir || (StageActive && (stageBeat==StageBeat.Settled || player.hp<=0))) return;
+        if(pullingBackstage || phase==Phase.Mirror || OnAir || (StageActive && (stageBeat==StageBeat.Settled || player.hp<=0))) return;
         if(motor==null || motor.gameObject!=player.root.gameObject) {
             motor=player.root.gameObject.AddComponent<CharacterController>();
             motor.center=Vector3.up*.9f; motor.height=1.8f; motor.radius=.28f;
@@ -201,6 +205,7 @@ public sealed partial class KinseiSession
         if(Input.GetKeyDown(KeyCode.R)) Assign(Duty.Rest);
         if(Input.GetKeyDown(KeyCode.G)) Assign(Duty.Guard);
         if(Input.GetKeyDown(KeyCode.T)) Assign(Duty.BoxOffice);
+        if(Input.GetKeyDown(KeyCode.B)) Assign(Duty.Backstage);
         if(Input.GetKeyDown(KeyCode.V)) Assign(Duty.StageWitness);
         if(Input.GetMouseButtonDown(0) && !OverHUD()) {
             Vector2 hit=Input.mousePosition; float nearest=Screen.height*.057f;
@@ -224,6 +229,17 @@ public sealed partial class KinseiSession
     void Assign(Duty duty,Vector3 destination=default)
     {
         var p=crew[chosen]; if(p.hp<=0){Say(p.name+"は動けない");return;}
+        if(duty==Duty.Backstage) {
+            if(!CanOrderBackstage)return;
+            if(p.duty==Duty.Backstage){duty=Duty.Follow;}
+            else {
+                if(!walkways.Ready || !walkways.GetPath(p.Position,BackstagePost,searchPath)){
+                    Say("楽屋口までの通路が見つからない");return;
+                }
+                ReleaseBackstagePost();
+                destination=BackstagePost;
+            }
+        }
         if(duty==Duty.StageWitness){OrderStageWitness(p);return;}
         if(finale && duty==Duty.Attend){OrderFinale();return;}
         if(finale && duty==Duty.BoxOffice)return;
@@ -240,7 +256,8 @@ public sealed partial class KinseiSession
         }
         if(p==stageWitness)ClearStageWitness();
         p.duty=duty; p.destination=destination;
-        if(duty==Duty.BoxOffice){p.destination=KinseiBoxOffice.Counter;Say(p.name+"が入口の帳場へ向かう");}
+        if(duty==Duty.Backstage)Say(p.name+"が楽屋口で通し札を預かる");
+        else if(duty==Duty.BoxOffice){p.destination=KinseiBoxOffice.Counter;Say(p.name+"が入口の帳場へ向かう");}
         else if(duty==Duty.Attend){p.destination=table;Say("辰「二階はわしに任せえ」");}
         else if(duty==Duty.Guard){p.destination=new Vector3(2.1f+(chosen%3)*.65f,0,-1.2f-(chosen/3)); Say(p.name+"をダンスホールへ回した");}
         else if(duty==Duty.Rest){p.destination=new Vector3((chosen%3-1)*1.0f,0,-9.6f-(chosen/3)); Say(p.name+"を表へ下げた");}

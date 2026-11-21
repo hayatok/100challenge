@@ -584,6 +584,11 @@ public sealed partial class KinseiActor : MonoBehaviour
         hasConversationTargets=true;
     }
 
+    public void ReachBackstageHandle(Vector3 handle,float blend)
+    {
+        ReachPalm(ra,re,rh,handle,transform.forward,Vector3.down,blend,transform.right);
+    }
+
     public void WorkAtCounter(bool coffee,float cycle,float blend)
     {
         Vector3 tip=KinseiDistrictPeople.ToolGrip-Vector3.right*(coffee?.099f:.091f);

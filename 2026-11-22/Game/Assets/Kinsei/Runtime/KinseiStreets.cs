@@ -14,6 +14,8 @@ public sealed partial class KinseiSession
     static Vector3 StreetBounds(Vector3 point)
     {
         point.z=Mathf.Clamp(point.z,-20.5f,8.55f);
+        if(point.x< -8.62f && point.x>=-12.3f && point.z>=-8.3f && point.z<=2.85f)
+            return point;
         float sideOver=Mathf.Abs(point.x)-8.62f;
         if(sideOver>0 && point.z> -8.07f && point.z+8.07f<sideOver)
             point.z=-8.07f;

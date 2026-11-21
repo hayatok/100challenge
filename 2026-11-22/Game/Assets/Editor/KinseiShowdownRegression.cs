@@ -37,11 +37,12 @@ public static class KinseiShowdownRegression
         SessionState.EraseBool(Pending);
         try
         {
+            CheckBackstage();
             CheckWitness();
             CheckNormalEndings();
             CheckStageWin();
             CheckStageLoss();
-            Debug.Log("KINSEI_SHOWDOWN_PASS witness / pursuit / accord / stage win / stage loss");
+            Debug.Log("KINSEI_SHOWDOWN_PASS backstage / witness / pursuit / accord / stage win / stage loss");
             EditorApplication.Exit(0);
         }
         catch (Exception ex)
@@ -91,6 +92,48 @@ public static class KinseiShowdownRegression
     }
 
     static object Witness => Read<object>(session, "stageWitness");
+
+    static void CheckBackstage()
+    {
+        Call("StartNight");
+        var start=new Vector3(-9.59f,.04f,1.30f);
+        var inside=new Vector3(-8.20f,.04f,1.30f);
+        var walkways=Read<KinseiWalkways>(session,"walkways");
+        var path=new UnityEngine.AI.NavMeshPath();
+        bool ShortCrossing()
+        {
+            if(!walkways.GetPath(start,inside,path))return false;
+            float distance=0;
+            var corners=path.corners;
+            for(int i=1;i<corners.Length;i++)distance+=Vector3.Distance(corners[i-1],corners[i]);
+            return distance<3;
+        }
+        Require(!ShortCrossing(),"Closed stage door is a navigation shortcut");
+        Root(Player).position=start;
+        Physics.SyncTransforms();
+        Call("PlayerInput",Dt);
+        var motor=Read<CharacterController>(session,"motor");
+        motor.Move(Vector3.right*1.6f);
+        Require(Root(Player).position.x< -9,"Closed leaf allowed the player through");
+        Require(Verb.Length==0,"No runner supplied a pass");
+        Order(1,"Backstage");
+        Order(2,"Backstage");
+        Require(Read<object>(Crew(1),"duty").ToString()=="Follow","Previous runner was not released");
+        Order(2,"Rest");
+        Require(Read<object>(Crew(2),"duty").ToString()=="Rest","Runner could not change assignment");
+        Order(3,"Backstage");
+        Await(()=>Verb=="通し札を受けて楽屋口を開ける",22,"Runner failed to walk to the slot");
+        Call("Interact");
+        Await(()=>Read<float>(session,"backstageTravel")>=1,3,"Stage door did not finish sliding");
+        Require(ShortCrossing(),"Opened doorway still blocks navigation");
+        Require(Phase=="Arrival","Opening the door started combat outside");
+        for(int i=0;i<32;i++){motor.Move(Vector3.right*.05f);Step();}
+        Require(Root(Player).position.x> -8.5f && Phase=="Floor","Walking through the open leaf did not start the floor");
+        for(int i=0;i<32;i++){motor.Move(Vector3.left*.05f);Step();}
+        Require(Root(Player).position.x< -9.2f && Phase=="Floor","Could not return to the passage");
+        Call("StartNight");
+        Require(Read<float>(session,"backstageTravel")==0 && !ShortCrossing(),"Retry left the passage open");
+    }
 
     static void CheckWitness()
     {

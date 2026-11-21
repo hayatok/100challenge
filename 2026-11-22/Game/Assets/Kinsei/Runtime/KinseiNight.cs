@@ -11,7 +11,11 @@ public sealed partial class KinseiSession
     void Simulate(float dt)
     {
         if(StageActive) { SimulateStage(dt); return; }
+        TickBackstage(dt);
         if(phase==Phase.Arrival && player.Position.z> -6.75f && Mathf.Abs(player.Position.x)<8.5f) {
+            bool fromWing=backstageTravel>=1 && player.Position.x< -7.5f;
+            ReleaseBackstagePost();
+            if(fromWing)Mark("backstage-entry");
             Change(Phase.Floor); entranceTime=clock;
             Say("梶の連れが二階に四人。辰なら話をつけられる",4.1f); sound.Cue("door");
         }
@@ -75,6 +79,11 @@ public sealed partial class KinseiSession
             if(index==0){held=false;talkProgress=0;}
             Motion(p,"fall");return;
         }
+        if(p.duty==Duty.Backstage) {
+            if(!AtBackstagePost(p))MovePerson(p,BackstagePost,3.1f,dt);
+            else {Face(p,club.PassSlot);Motion(p,"idle");}
+            return;
+        }
         if(p.duty==Duty.StageWitness)return;
         if(p.duty==Duty.BoxOffice) {
             if(HouseClaimed)p.duty=Duty.Follow;
@@ -102,7 +111,9 @@ public sealed partial class KinseiSession
                 float shopFront=Mathf.Clamp(Mathf.Round(player.Position.x/16f)*16f,-16f,16f);
                 at=new Vector3(shopFront+(index%2==0?-1:1)*(1.6f+index/2*.78f),0,-13.1f+index/2*.3f);
             }
-            if(player.Position.z< -6.3f && player.Position.z> -9)at.x=Mathf.Clamp(at.x,-.95f,.95f);
+            if(player.Position.x< -9f && player.Position.z> -8.7f)
+                at=new Vector3(-10.95f+(index%2)*.65f,0,Mathf.Max(-9f,player.Position.z-1.8f-index/2*.7f));
+            else if(player.Position.z< -6.3f && player.Position.z> -9)at.x=Mathf.Clamp(at.x,-.95f,.95f);
             at=StreetBounds(at);
         }
         if(Vector3.Distance(p.Position,at)>.25f) {MovePerson(p,at,p.duty==Duty.Rest?3.6f:3.1f,dt);return;}
@@ -207,6 +218,7 @@ public sealed partial class KinseiSession
     {
         if(command)return "";
         if(finale)return FinaleVerb();
+        if(CanPullBackstage)return BackstageVerb;
         if(phase==Phase.Arrival && StreetContact(out int shop,out string words))
             return StreetVerb(shop,words);
         if(!HouseClaimed && (phase==Phase.Arrival || phase==Phase.Floor || phase==Phase.Choice)
@@ -224,6 +236,7 @@ public sealed partial class KinseiSession
     {
         if(finale){FinaleInteract();return;}
         string verb=Interaction();
+        if(verb==BackstageVerb){BeginBackstagePull();return;}
         if(phase==Phase.Arrival && StreetContact(out int shop,out string words)){VisitShop(shop,words);return;}
         if(verb=="金星の売上伝票を預かる"){ClaimHouse();return;}
         if(verb==StageChallenge){BeginStageShowdown();return;}
