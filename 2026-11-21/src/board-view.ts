@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import {
-  BALL_RADIUS, BOARD_HEIGHT, BOARD_WIDTH, DROP_Y, LANES, PIN_RADIUS,
+  BALL_RADIUS, BOARD_HEIGHT, BOARD_WIDTH, BONUS_OUTLETS, DROP_Y, MAX_DROP_X, MIN_DROP_X, PIN_RADIUS,
   type Ball, type Impact, type Pin,
 } from './game.ts';
 
@@ -8,6 +8,8 @@ const PIN_KINDS = ['normal', 'split', 'bonus'] as const;
 const PIN_COLOR = { normal: 0xca8e63, split: 0x67cdee, bonus: 0xf3c365 };
 const IMPACT_COLOR = { normal: 0xf5bf8c, split: 0x90e6ff, bonus: 0xffd680 };
 const RAIL_WIDTH = 21;
+const DROP_TRACK_START = MIN_DROP_X - BALL_RADIUS;
+const DROP_TRACK_WIDTH = MAX_DROP_X - MIN_DROP_X + BALL_RADIUS * 2;
 const IMPACT_DURATION = 0.26;
 const IMPACT_POOL = 8;
 
@@ -49,20 +51,20 @@ function makeSurface(): THREE.CanvasTexture | null {
   ctx.fillStyle = '#748776';
   ctx.fillRect(RAIL_WIDTH, 71, BOARD_WIDTH - RAIL_WIDTH * 2, 1);
 
-  for (const x of LANES) {
-    ctx.beginPath();
-    ctx.arc(x, DROP_Y, 14, 0, Math.PI * 2);
-    ctx.fillStyle = '#091c1a';
-    ctx.fill();
-    ctx.lineWidth = 2;
-    ctx.strokeStyle = '#819483';
-    ctx.stroke();
-    ctx.beginPath();
-    ctx.arc(x, DROP_Y, 9, 0, Math.PI * 2);
-    ctx.fillStyle = '#172e27';
-    ctx.fill();
-    ctx.fillStyle = '#9a906b';
-    ctx.fillRect(x - 3, DROP_Y - 23, 6, 2);
+  const track = ctx.createLinearGradient(0, DROP_Y - 12, 0, DROP_Y + 12);
+  track.addColorStop(0, '#a1926b');
+  track.addColorStop(0.09, '#5b6250');
+  track.addColorStop(0.19, '#0b211d');
+  track.addColorStop(0.72, '#172b24');
+  track.addColorStop(0.90, '#3c4b3f');
+  track.addColorStop(1, '#7c7d5e');
+  ctx.fillStyle = track;
+  ctx.fillRect(DROP_TRACK_START, DROP_Y - 12, DROP_TRACK_WIDTH, 24);
+
+  for (const x of BONUS_OUTLETS) {
+    ctx.fillStyle = '#d1a658';
+    ctx.fillRect(x - 6, DROP_Y - 12, 12, 2);
+    ctx.fillRect(x - 1.5, DROP_Y - 10, 3, 4);
   }
 
   for (const direction of [1, -1]) {
@@ -168,7 +170,7 @@ export class BoardView {
   private readonly stageColor = new THREE.Color();
   private reducedMotion: boolean;
   private chainPulse = 0;
-  private lastLane: number | null = null;
+  private lastAimX: number | null = null;
   private lastBallCount = 0;
   private dirty = true;
 
@@ -192,13 +194,26 @@ export class BoardView {
     rim.position.set(180, -175, 115);
     this.scene.add(key, rim);
 
-    const ring = new THREE.Mesh(new THREE.RingGeometry(12.6, 16.3, 36), this.markerMetal);
-    ring.position.z = 0.4;
-    this.marker.add(ring, this.createBallSprite());
-    const dashGeometry = new THREE.PlaneGeometry(2.5, 5);
-    for (let i = 0; i < 4; i++) {
+    const arrow = new THREE.Shape();
+    arrow.moveTo(5, -5);
+    arrow.lineTo(2, -5);
+    arrow.lineTo(-3, 0);
+    arrow.lineTo(2, 5);
+    arrow.lineTo(5, 5);
+    arrow.lineTo(0, 0);
+    arrow.closePath();
+    const arrowGeometry = new THREE.ShapeGeometry(arrow);
+    for (const direction of [-1, 1]) {
+      const grip = new THREE.Mesh(arrowGeometry, this.markerMetal);
+      grip.rotation.z = direction === 1 ? Math.PI : 0;
+      grip.position.set(direction * 13, 0, 0.4);
+      this.marker.add(grip);
+    }
+    this.marker.add(this.createBallSprite());
+    const dashGeometry = new THREE.PlaneGeometry(2, 5);
+    for (let i = 0; i < 3; i++) {
       const dash = new THREE.Mesh(dashGeometry, this.markerInk);
-      dash.position.set(0, -21 - i * 9, 0);
+      dash.position.set(0, -18 - i * 9, 0);
       this.marker.add(dash);
     }
     this.marker.visible = false;
@@ -292,11 +307,11 @@ export class BoardView {
     if (chain >= 4) this.chainPulse = Math.max(this.chainPulse, Math.min(1, chain / 7));
   }
 
-  draw(balls: readonly Ball[], lane: number | null, delta: number): void {
-    if (lane !== this.lastLane) {
-      this.lastLane = lane;
-      this.marker.visible = lane !== null;
-      if (lane !== null) this.marker.position.set(LANES[lane], -DROP_Y, 0);
+  draw(balls: readonly Ball[], aimX: number | null, delta: number): void {
+    if (aimX !== this.lastAimX) {
+      this.lastAimX = aimX;
+      this.marker.visible = aimX !== null;
+      if (aimX !== null) this.marker.position.set(aimX, -DROP_Y, 0);
       this.dirty = true;
     }
 

@@ -1,16 +1,18 @@
 export const BOARD_WIDTH = 680;
 export const BOARD_HEIGHT = 520;
-export const LANES = [67, 158, 249, 340, 431, 522, 613] as const;
+export const BONUS_OUTLETS = [67, 340, 613] as const;
 export const DROP_Y = 44;
 export const PIN_RADIUS = 12;
 export const BALL_RADIUS = 8;
 export const BALLS_PER_STAGE = 3;
 export const FIRST_BOARD_SEED = 20261323;
+export const DEFAULT_DROP_X = 249;
 export const STEP = 1 / 120;
 
 const WALL = 21;
+export const MIN_DROP_X = WALL + BALL_RADIUS;
+export const MAX_DROP_X = BOARD_WIDTH - MIN_DROP_X;
 const GOALS = [85, 155] as const;
-const BONUS_LANES = [0, 3, 6] as const;
 const GRAVITY = 640;
 const CONTACT_RADIUS = BALL_RADIUS + PIN_RADIUS;
 
@@ -61,8 +63,12 @@ function buildBoard(seed: number, stage: Stage): Pin[] {
     const x = columnX + Math.round((random() - 0.5) * 18);
     const y = row.y + Math.round((random() - 0.5) * 10);
     const kind = row.split?.includes(columnIndex) ? 'split' : row.bonus?.includes(columnIndex) ? 'bonus' : 'normal';
-    return { id: rowIndex * LANES.length + columnIndex, x: mirrored ? BOARD_WIDTH - x : x, y, kind, alive: true };
+    return { id: rowIndex * 7 + columnIndex, x: mirrored ? BOARD_WIDTH - x : x, y, kind, alive: true };
   }));
+}
+
+export function clampDropX(x: number) {
+  return Math.round(Math.max(MIN_DROP_X, Math.min(MAX_DROP_X, x)));
 }
 
 export class PinboardRun {
@@ -92,14 +98,13 @@ export class PinboardRun {
   get goal() { return GOALS[this.stage - 1]; }
   get remaining() { return BALLS_PER_STAGE - this.shotsUsed; }
 
-  drop(lane: number) {
-    const x = LANES[lane];
-    if (this.phase !== 'ready' || this.remaining === 0 || x === undefined) return false;
+  drop(x: number) {
+    if (this.phase !== 'ready' || this.remaining === 0 || !Number.isFinite(x)) return false;
     this.shotsUsed++;
     this.chain = 0;
     this.settleTime = 0;
     this.phase = 'dropping';
-    this.addBall({ x, y: DROP_Y, vx: 0, vy: 45 });
+    this.addBall({ x: clampDropX(x), y: DROP_Y, vx: 0, vy: 45 });
     return true;
   }
 
@@ -132,8 +137,8 @@ export class PinboardRun {
       ball.vy = Math.min(650, ball.vy + GRAVITY * delta);
       ball.x += ball.vx * delta;
       ball.y += ball.vy * delta;
-      if (ball.x < WALL + BALL_RADIUS || ball.x > BOARD_WIDTH - WALL - BALL_RADIUS) {
-        ball.x = Math.max(WALL + BALL_RADIUS, Math.min(BOARD_WIDTH - WALL - BALL_RADIUS, ball.x));
+      if (ball.x < MIN_DROP_X || ball.x > MAX_DROP_X) {
+        ball.x = Math.max(MIN_DROP_X, Math.min(MAX_DROP_X, ball.x));
         ball.vx *= -0.8;
       }
 
@@ -183,9 +188,9 @@ export class PinboardRun {
       }
     }
     if (pin.kind === 'bonus') {
-      const outlets = this.upgrade === 'bonus' ? [0, 6] : [BONUS_LANES[Math.floor(this.random() * BONUS_LANES.length)]];
-      for (const outlet of outlets) {
-        this.pending.push({ delay: 0.19, x: LANES[outlet], y: DROP_Y, vx: 0, vy: 55 });
+      const outlets = this.upgrade === 'bonus' ? [BONUS_OUTLETS[0], BONUS_OUTLETS[2]] : [BONUS_OUTLETS[Math.floor(this.random() * BONUS_OUTLETS.length)]];
+      for (const x of outlets) {
+        this.pending.push({ delay: 0.19, x, y: DROP_Y, vx: 0, vy: 55 });
       }
     }
   }

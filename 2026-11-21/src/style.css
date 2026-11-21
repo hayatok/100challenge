@@ -87,8 +87,70 @@ h2 {
 #score-meter[data-met='true']::-webkit-progress-value { background: #98dba6; }
 #score-meter[data-met='true']::-moz-progress-bar { background: #98dba6; }
 
-.board { aspect-ratio: 680 / 520; position: relative; width: 100%; min-width: 0; cursor: crosshair; }
+.board { aspect-ratio: 680 / 520; position: relative; width: 100%; min-width: 0; overflow: hidden; }
 .board canvas { display: block; width: 100%; height: 100%; }
+.launcher {
+  position: absolute;
+  z-index: 2;
+  inset: 0 0 auto;
+  width: 100%;
+  height: 13.85%;
+  min-height: 44px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+}
+.launcher:focus-visible { outline: 3px solid #ffdc96; outline-offset: -4px; }
+.launcher[data-grabbed='true'] { cursor: grabbing; background: #ffe9b80b; }
+.launcher[aria-disabled='true'], .launcher:disabled { cursor: default; }
+#rail-hint {
+  position: absolute;
+  inset: 4px 0 auto;
+  color: #fff0cd;
+  text-shadow: 0 1px 4px #081614;
+  font-size: clamp(9px, 1.15vw, 12px);
+  font-weight: 750;
+  line-height: 1;
+  pointer-events: none;
+}
+
+.board-effects { position: absolute; z-index: 1; inset: 0; overflow: hidden; pointer-events: none; }
+.point-pop {
+  position: absolute;
+  color: #ffe2a9;
+  font: 800 clamp(11px, 1.7vw, 19px)/1 var(--numbers);
+  text-shadow: 0 1px 4px #071411, 0 1px 2px #071411;
+  animation: point-rise .44s ease-out both;
+}
+.point-pop[data-kind='split'] { color: #b5eeff; }
+.point-pop[data-kind='bonus'] { color: #ffd776; }
+.chain-pop {
+  position: absolute;
+  right: 4%;
+  bottom: 8%;
+  color: #fff0bb;
+  background: #142622ef;
+  border: 1px solid #d09444;
+  padding: 4px 9px;
+  border-radius: 4px;
+  font-size: clamp(13px, 2.1vw, 23px);
+  font-weight: 850;
+  font-variant-numeric: tabular-nums;
+  animation: chain-flash .64s ease-out both;
+}
+@keyframes point-rise {
+  from { transform: translate(-50%, -76%) scale(.82); }
+  25% { opacity: 1; transform: translate(-50%, -135%); }
+  to { opacity: 0; transform: translate(-50%, -225%); }
+}
+@keyframes chain-flash {
+  from { opacity: 0; transform: scale(.88); }
+  18%, 68% { opacity: 1; transform: scale(1); }
+  to { opacity: 0; }
+}
 
 .control-panel {
   border: 2px solid var(--board-frame);
@@ -100,7 +162,7 @@ h2 {
 .control-content, .rulebook { padding: clamp(14px, 1.7vw, 22px); }
 .muted { color: var(--ui-muted); font-size: 13px; }
 h2 + p { margin-top: 6px; }
-.quiet-button, .primary-button, .upgrade-button, .lane-buttons button {
+.quiet-button, .primary-button, .upgrade-button {
   min-height: 44px;
   border: 2px solid var(--ui-ink);
   border-radius: 5px;
@@ -110,16 +172,12 @@ h2 + p { margin-top: 6px; }
   font-weight: 750;
 }
 .quiet-button { padding: 8px 13px; white-space: nowrap; }
-.quiet-button:hover, .lane-buttons button:not(:disabled):hover { background: #f2e5cf; }
+.quiet-button:hover { background: #f2e5cf; }
 .primary-button { display: block; width: 100%; color: #fffaf1; background: var(--ui-accent); box-shadow: 0 3px 0 var(--ui-ink); }
 .primary-button:hover:not(:disabled) { background: #7f2814; }
 .primary-button:active:not(:disabled) { transform: translateY(2px); box-shadow: 0 1px 0 var(--ui-ink); }
 .primary-button:disabled { background: #ded4c4; color: #504738; box-shadow: none; border-color: #908271; }
 
-.lane-buttons { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px; margin: 15px 0 12px; }
-.lane-buttons button { padding: 0; font-family: var(--numbers); font-size: 15px; }
-.lane-buttons button[aria-pressed='true'] { background: #ffe0a0; border-color: #773418; box-shadow: inset 0 -4px #e8aa44; }
-.lane-buttons button:disabled { border-color: #aaa192; color: #655849; }
 .key-guide { margin-top: 12px; display: flex; flex-wrap: wrap; gap: 4px; align-items: center; }
 .key-guide span { margin-left: 4px; }
 kbd { font: 700 11px var(--numbers); padding: 1px 4px; background: #ede7db; border: 1px solid var(--ui-line); border-radius: 3px; }
@@ -158,7 +216,6 @@ kbd { font: 700 11px var(--numbers); padding: 1px 4px; background: #ede7db; bord
   .scores { padding: 9px 10px; gap: 8px; }
   .scores > div + div { padding-left: 8px; }
   .key-guide { display: none; }
-  .lane-buttons { margin-top: 10px; }
   .status { margin-top: 12px; }
 }
 

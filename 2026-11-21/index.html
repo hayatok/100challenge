@@ -23,25 +23,20 @@
             <div class="combo"><dt>連鎖</dt><dd id="combo">0</dd></div>
           </dl>
           <progress id="score-meter" value="0" max="85" aria-label="ノルマまでの得点"></progress>
-          <div id="board" class="board" aria-hidden="true"></div>
+          <div id="board" class="board">
+            <button id="launcher" class="launcher" type="button" aria-label="盤面から玉を放つ" aria-describedby="aim-help keyboard-help" disabled>
+              <span id="rail-hint" aria-hidden="true">左右に滑らせて放す</span>
+            </button>
+            <div id="board-effects" class="board-effects" aria-hidden="true"></div>
+          </div>
         </section>
 
-        <aside class="control-panel" aria-label="投入口と遊び方">
+        <aside class="control-panel" aria-label="遊び方と結果">
           <div class="control-content">
             <section id="shoot-panel">
-              <h2>どこから落とす？</h2>
-              <p id="aim-help" class="muted">投入口を選び、玉を落とします。</p>
-              <div id="lane-buttons" class="lane-buttons" role="group" aria-label="投入口">
-                <button type="button" data-lane="0" aria-label="投入口 1" aria-pressed="false">1</button>
-                <button type="button" data-lane="1" aria-label="投入口 2" aria-pressed="false">2</button>
-                <button type="button" data-lane="2" aria-label="投入口 3" aria-pressed="true">3</button>
-                <button type="button" data-lane="3" aria-label="投入口 4" aria-pressed="false">4</button>
-                <button type="button" data-lane="4" aria-label="投入口 5" aria-pressed="false">5</button>
-                <button type="button" data-lane="5" aria-label="投入口 6" aria-pressed="false">6</button>
-                <button type="button" data-lane="6" aria-label="投入口 7" aria-pressed="false">7</button>
-              </div>
-              <button id="drop" class="primary-button" type="button" disabled>玉を落とす</button>
-              <p class="key-guide muted"><kbd>←</kbd> <kbd>→</kbd> で投入口を選ぶ <span><kbd>Space</kbd> で落とす</span></p>
+              <h2>レールから玉を放す</h2>
+              <p id="aim-help" class="muted">盤面上のレールで玉を左右に滑らせ、狙った位置で放します。クリックやタップでも、その位置から落とせます。</p>
+              <p id="keyboard-help" class="key-guide muted"><kbd>←</kbd> <kbd>→</kbd> で狙う <span><kbd>Space</kbd> で放す</span></p>
             </section>
 
             <section id="upgrade-panel" hidden>
@@ -54,7 +49,7 @@
                 </button>
                 <button type="button" id="upgrade-bonus" class="upgrade-button bonus">
                   <span aria-hidden="true" class="pin-icon bonus-icon">＋</span>
-                  <span><strong>黄ピンから2球追加</strong><small>左端と右端の投入口から各1球落ちる</small></span>
+                  <span><strong>黄ピンから2球追加</strong><small>レールの左側と右側から各1球落ちる</small></span>
                 </button>
               </div>
             </section>

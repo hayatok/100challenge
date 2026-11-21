@@ -1,11 +1,11 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { FIRST_BOARD_SEED, LANES, PinboardRun, STEP } from '../src/game.ts';
+import { FIRST_BOARD_SEED, MAX_DROP_X, MIN_DROP_X, PinboardRun, STEP } from '../src/game.ts';
 import type { Impact, Upgrade } from '../src/game.ts';
 
-function dropFrom(run: PinboardRun, lane: number) {
-  assert.ok(run.drop(lane - 1));
-  assert.equal(run.drop(lane - 1), false, 'only one player shot may be active');
+function dropFrom(run: PinboardRun, x: number) {
+  assert.ok(run.drop(x));
+  assert.equal(run.drop(x), false, 'only one player shot may be active');
   const impacts: Impact[] = [];
   for (let tick = 0; tick < 2400 && run.phase === 'dropping'; tick++) {
     impacts.push(...run.step(STEP));
@@ -16,14 +16,14 @@ function dropFrom(run: PinboardRun, lane: number) {
 
 function reachUpgrade() {
   const run = new PinboardRun(FIRST_BOARD_SEED);
-  for (const lane of [3, 6, 4]) dropFrom(run, lane);
+  for (const x of [249, 522, 340]) dropFrom(run, x);
   assert.equal(run.phase, 'upgrade');
   return run;
 }
 
 test('a chain scores once per pin and all extra balls belong to the same shot', () => {
   const run = new PinboardRun(FIRST_BOARD_SEED);
-  const impacts = dropFrom(run, 5);
+  const impacts = dropFrom(run, 431);
   assert.ok(impacts.some(({ pin }) => pin.kind === 'split'));
   assert.ok(impacts.some(({ pin }) => pin.kind === 'bonus'));
   assert.ok(impacts.length > 2);
@@ -36,7 +36,7 @@ test('a chain scores once per pin and all extra balls belong to the same shot', 
 test('failure uses all three shots and retrying the seed reproduces the board', () => {
   const run = new PinboardRun(FIRST_BOARD_SEED);
   const opening = structuredClone(run.pins);
-  for (const lane of [1, 1, 1]) dropFrom(run, lane);
+  for (const x of [67, 67, 67]) dropFrom(run, x);
   assert.equal(run.phase, 'failed');
   assert.equal(run.remaining, 0);
   assert.equal(run.chooseUpgrade('split'), false);
@@ -46,7 +46,7 @@ test('failure uses all three shots and retrying the seed reproduces the board', 
 });
 
 test('the two upgrades clear the same second board with different opening shots', () => {
-  const routes: Record<Upgrade, readonly number[]> = { split: [6, 2, 3], bonus: [2, 4, 6] };
+  const routes: Record<Upgrade, readonly number[]> = { split: [522, 158, 249], bonus: [158, 340, 522] };
   const board = reachUpgrade();
   assert.ok(board.chooseUpgrade('split'));
   for (const upgrade of ['split', 'bonus'] as const) {
@@ -58,24 +58,32 @@ test('the two upgrades clear the same second board with different opening shots'
     assert.equal(run.remaining, 3);
     assert.equal(run.stageScore, 0);
     assert.deepEqual(run.pins, board.pins);
-    for (const lane of routes[upgrade]) dropFrom(run, lane);
+    for (const x of routes[upgrade]) dropFrom(run, x);
     assert.equal(run.phase, 'clear');
     assert.equal(run.remaining, 0);
   }
 });
 
-test('the two upgrades favor different opening lanes on the same board', () => {
-  function openingScore(upgrade: Upgrade, lane: number) {
+test('the same two targets rank differently after the upgrade', () => {
+  function openingScore(upgrade: Upgrade, x: number) {
     const run = reachUpgrade();
     assert.ok(run.chooseUpgrade(upgrade));
-    dropFrom(run, lane);
+    dropFrom(run, x);
     return run.stageScore;
   }
-  for (const [upgrade, preferredLane] of [['split', 6], ['bonus', 2]] as const) {
-    const preferred = openingScore(upgrade, preferredLane);
-    for (let lane = 1; lane <= LANES.length; lane++) {
-      if (lane === preferredLane) continue;
-      assert.ok(preferred > openingScore(upgrade, lane), `${upgrade} should favor lane ${preferredLane} over lane ${lane}`);
-    }
+  assert.ok(openingScore('split', 522) > openingScore('split', 158));
+  assert.ok(openingScore('bonus', 158) > openingScore('bonus', 522));
+});
+
+test('the launch uses the chosen rail position without snapping and clamps to the walls', () => {
+  const run = new PinboardRun(FIRST_BOARD_SEED);
+  assert.equal(run.drop(NaN), false);
+  assert.equal(run.remaining, 3);
+  assert.ok(run.drop(287));
+  assert.equal(run.balls[0].x, 287);
+  for (const [input, expected] of [[-20, MIN_DROP_X], [860, MAX_DROP_X]]) {
+    const edge = new PinboardRun(FIRST_BOARD_SEED);
+    assert.ok(edge.drop(input));
+    assert.equal(edge.balls[0].x, expected);
   }
 });
