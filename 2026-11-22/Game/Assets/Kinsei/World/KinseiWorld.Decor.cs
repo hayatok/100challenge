@@ -54,47 +54,6 @@ public sealed partial class KinseiWorld
         return item;
     }
 
-    Vector3 FanPoint(float u,float radial)
-    {
-        float theta=Mathf.Lerp(-81,81,u)*Mathf.Deg2Rad;
-        float lobe=Mathf.Sin((u*9%1)*Mathf.PI);
-        float radius=radial*(.90f+.10f*lobe);
-        return new Vector3(-5+Mathf.Sin(theta)*radius*2.83f,.71f+Mathf.Cos(theta)*radius*4.02f,5.76f-radial*.13f-lobe*radial*.065f);
-    }
-
-    void Scallop()
-    {
-        var lacquer=Mat("Gold peonies on carved lacquer","#F5D6AE",.22f,.43f);
-        lacquer.mainTexture=Resources.Load<Texture2D>("Art/house-print-atlas");
-        lacquer.mainTextureScale=new Vector2(.487f,.487f);lacquer.mainTextureOffset=new Vector2(.507f,.006f);
-        const int n=108;
-        var vertices=new Vector3[(n+1)*2];var uv=new Vector2[vertices.Length];var triangles=new int[n*6];
-        for(int i=0;i<=n;i++)
-        {
-            float u=i/(float)n;
-            for(int j=0;j<2;j++)
-            {
-                int k=2*i+j;vertices[k]=FanPoint(u,j==0?.009f:1f);
-                uv[k]=new Vector2((vertices[k].x+7.85f)/5.7f,(vertices[k].y-.66f)/4.15f);
-            }
-            if(i==n)continue;
-            int v=i*2,t=i*6;
-            triangles[t]=v;triangles[t+1]=v+1;triangles[t+2]=v+3;
-            triangles[t+3]=v;triangles[t+4]=v+3;triangles[t+5]=v+2;
-            var a=FanPoint(u,1);var b=FanPoint((i+1f)/n,1);
-            Rail(a+Vector3.back*.018f,b+Vector3.back*.018f,.025f,brass);
-            if(i%3==1)Part("Scallop edge pearl",PrimitiveType.Sphere,a+Vector3.back*.035f,Vector3.one*.058f,glow);
-        }
-        var panel=new Mesh{name="Pleated fan with nine scalloped crowns"};
-        panel.vertices=vertices;panel.uv=uv;panel.triangles=triangles;panel.RecalculateNormals();panel.RecalculateTangents();
-        Surface("Botanical lacquer stage shell",panel,lacquer,transform);
-        for(int i=0;i<=9;i++)
-        {
-            float u=i/9f;
-            Rail(FanPoint(u,.04f)+Vector3.back*.025f,FanPoint(u,1)+Vector3.back*.025f,.018f,brass);
-        }
-    }
-
     void StageBand()
     {
         ivoryKeys=Mat("Old ivory keytops","#D6CDB4",.04f,.50f);
@@ -225,7 +184,7 @@ public sealed partial class KinseiWorld
         {
             oxblood=Mat("Oxblood Bakelite","#602626",.15f,.76f);
             standby=Resources.Load<Texture2D>("Art/sakai-broadcast");
-            tubeGlass=ScreenGlass();
+            if(!tubeGlass)tubeGlass=ScreenGlass();
         }
         Cushion("Bakelite telephone body",new Vector3(0,.235f,.075f),new Vector3(.83f,.585f,.45f),oxblood,parent);
         Cushion("Pressed champagne bezel",new Vector3(-.065f,.248f,-.133f),new Vector3(.662f,.501f,.081f),brass,parent);

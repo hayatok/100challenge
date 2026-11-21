@@ -83,7 +83,7 @@ public sealed partial class KinseiSession
 
     void PlayerInput(float dt)
     {
-        if(pullingBackstage || phase==Phase.Mirror || OnAir || (StageActive && (stageBeat==StageBeat.Settled || player.hp<=0))) return;
+        if(pullingBackstage || phase==Phase.Mirror || OnAir || (StageActive && (stageBeat==StageBeat.Settled || StageSpeaking || player.hp<=0))) return;
         if(motor==null || motor.gameObject!=player.root.gameObject) {
             motor=player.root.gameObject.AddComponent<CharacterController>();
             motor.center=Vector3.up*.9f; motor.height=1.8f; motor.radius=.28f;
@@ -208,13 +208,17 @@ public sealed partial class KinseiSession
         if(Input.GetKeyDown(KeyCode.F2))RecallSquad(1);
         if(Input.GetKeyDown(KeyCode.F3))SaveSquad(0);
         if(Input.GetKeyDown(KeyCode.F4))SaveSquad(1);
-        if(Input.GetKeyDown(KeyCode.E)) Assign(Duty.Attend);
-        if(Input.GetKeyDown(KeyCode.F)) Assign(Duty.Follow);
-        if(Input.GetKeyDown(KeyCode.R)) Assign(Duty.Rest);
-        if(Input.GetKeyDown(KeyCode.G)) Assign(Duty.Guard);
-        if(Input.GetKeyDown(KeyCode.T)) Assign(Duty.BoxOffice);
-        if(Input.GetKeyDown(KeyCode.B)) Assign(Duty.Backstage);
-        if(Input.GetKeyDown(KeyCode.V)) Assign(Duty.StageWitness);
+        if(StageActive){
+            if(Input.GetKeyDown(KeyCode.E))OrderStageDesk();
+        }else{
+            if(Input.GetKeyDown(KeyCode.E)) Assign(Duty.Attend);
+            if(Input.GetKeyDown(KeyCode.F)) Assign(Duty.Follow);
+            if(Input.GetKeyDown(KeyCode.R)) Assign(Duty.Rest);
+            if(Input.GetKeyDown(KeyCode.G)) Assign(Duty.Guard);
+            if(Input.GetKeyDown(KeyCode.T)) Assign(Duty.BoxOffice);
+            if(Input.GetKeyDown(KeyCode.B)) Assign(Duty.Backstage);
+            if(Input.GetKeyDown(KeyCode.V)) Assign(Duty.StageWitness);
+        }
         if(Input.GetMouseButtonDown(0) && !OverHUD()) {
             Vector2 hit=Input.mousePosition; float nearest=Screen.height*.057f; int member=-1;
             for(int i=0;i<crew.Count;i++) {
@@ -223,7 +227,7 @@ public sealed partial class KinseiSession
             }
             if(member>=0)SelectMember(member,false);
         }
-        if(Input.GetMouseButtonDown(1) && !OverHUD()) {
+        if(!StageActive && Input.GetMouseButtonDown(1) && !OverHUD()) {
             var ray=cam.ScreenPointToRay(Input.mousePosition); var ground=new Plane(Vector3.up,0);
             if(ground.Raycast(ray,out float length)) {
                 Vector3 dest=ray.GetPoint(length);
@@ -237,6 +241,7 @@ public sealed partial class KinseiSession
 
     void AssignMember(int index,Duty duty,Vector3 destination,bool announce)
     {
+        if(StageActive){Say("舞台の指揮は実況卓のみ");return;}
         var p=crew[index]; if(p.hp<=0){Say(p.name+"は動けない");return;}
         if(duty==Duty.Backstage) {
             if(!CanOrderBackstage)return;

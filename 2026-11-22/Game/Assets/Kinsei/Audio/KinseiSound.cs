@@ -7,7 +7,7 @@ public sealed class KinseiSound : MonoBehaviour
     public static float MusicGain = .72f;
     public static float SfxGain = .8f;
     public static float AmbientGain = .3f;
-    AudioSource music, room;
+    AudioSource music, room, stageVoice;
     readonly AudioSource[] voices = new AudioSource[6];
     readonly Dictionary<string, AudioClip[]> clips = new();
     readonly Dictionary<string, float> lastCue = new();
@@ -45,6 +45,8 @@ public sealed class KinseiSound : MonoBehaviour
     {
         music = MakeSource("Cabaret waltz", 120);
         room = MakeSource("Room tone", 180);
+        stageVoice=MakeSource("金星の舞台中継",45);
+        stageVoice.clip=Resources.Load<AudioClip>("KinseiAudio/stage-testimony");
         for (int i=0; i<voices.Length; i++) voices[i] = MakeSource("Cue " + i, 100);
         foreach (string key in new[]{"door","dial","shot","distant","strike","choice","result","accord","loss","step"})
         {
@@ -77,6 +79,7 @@ public sealed class KinseiSound : MonoBehaviour
         float level=stageQuiet?0:Mathf.Clamp01(MusicGain)*.38f*duck;
         music.volume=Mathf.MoveTowards(music.volume,level,Time.unscaledDeltaTime*.7f);
         room.volume=Mathf.Clamp01(AmbientGain)*.16f;
+        stageVoice.volume=Mathf.Clamp01(SfxGain)*.92f;
     }
     // Optional dialogue integration; subtitles remain intelligible without requiring a spoken voice.
     public void SetDialogue(bool active) { dialogue=active; }
@@ -100,12 +103,19 @@ public sealed class KinseiSound : MonoBehaviour
         source.Play();
         if(!soft)duckUntil=now+(key=="accord"||key=="choice"||key=="result"||key=="loss"?2.2f:.7f);
     }
+    public void PlayStageTestimony()
+    {
+        if(!stageVoice.clip)return;
+        stageVoice.Play();
+        if(paused || unfocused)stageVoice.Pause();
+    }
+    public void StopStageTestimony() { if(stageVoice)stageVoice.Stop(); }
     public void SetPaused(bool value) { paused=value; ApplyPause(); }
     void OnApplicationFocus(bool focus) { unfocused=!focus; ApplyPause(); }
     void ApplyPause()
     {
         if(music==null)return;
-        PauseSource(music); PauseSource(room);
+        PauseSource(music); PauseSource(room); PauseSource(stageVoice);
         foreach(var voice in voices)PauseSource(voice);
     }
     void PauseSource(AudioSource source)
@@ -117,6 +127,7 @@ public sealed class KinseiSound : MonoBehaviour
         // Sources are children and destroyed with this component's owner/session.
         if(music!=null)Destroy(music.gameObject);
         if(room!=null)Destroy(room.gameObject);
+        if(stageVoice!=null)Destroy(stageVoice.gameObject);
         foreach(var voice in voices)if(voice!=null)Destroy(voice.gameObject);
     }
 }

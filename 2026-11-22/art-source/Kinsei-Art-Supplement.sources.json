@@ -229,5 +229,116 @@
       0.85
     ],
     "sha256": "97a7a4d055c47ffd38f6baac7f17e62266bb0b610bc33e76b7a937fb1f01b8c1"
+  },
+  {
+    "figure": "club-fan-overlook-study",
+    "file": "art-source/club-two-views/stage-overlook.png",
+    "caption": "GPT Image設定画　先に制作した客席からの俯瞰",
+    "crop": null,
+    "sha256": "ebd9a49926db2acb524e57dd36e43b48f7480c0372a53594bf9bb72c46e2c23f"
+  },
+  {
+    "figure": "club-fan-geometry",
+    "file": "art-source/stage-broadcast/geometry.jpg",
+    "caption": "CPU形状図　客席側10度／指揮視点58.6度",
+    "crop": null,
+    "sha256": "435f0d0ec6062740f3933cceea9f5e40c7cc82255d148140af7af81eb524b9b4"
+  },
+  {
+    "figure": "club-fan-overlook-live",
+    "file": "evidence/v13/desk-air.png",
+    "caption": "Windows実機 v1.3　指揮視点から見た舞台と見物位置",
+    "crop": null,
+    "sha256": "304626fc59349d0da09ebfa700daa99b3e6c8a4d7b66aa96cfa688d0f9a3257d",
+    "windows_zip_sha256": "dff59edd83b40bfc27ce51c1d9d223df9ef5aa6932a9750fc352bc1429202d04"
+  },
+  {
+    "figure": "club-fan-shoulder-study",
+    "file": "art-source/club-two-views/stage-shoulder.png",
+    "caption": "GPT Image設定画　二枚目の肩越し。左手前が真壁。",
+    "crop": null,
+    "sha256": "b0c679f67c58742487110346e15149a7fe93276f84a61b0c455e40ba54497233"
+  },
+  {
+    "figure": "club-desk-live",
+    "file": "evidence/v13/voice-end-air.png",
+    "caption": "Windows実機 v1.3・部分　卓の管面に映る兄貴分とマイク",
+    "crop": [
+      0.1,
+      0.18,
+      0.91,
+      0.84
+    ],
+    "sha256": "2c43ec9767c92385463603a4e0db179ce830e8fc42bd8e408b70276240384dd4",
+    "windows_zip_sha256": "dff59edd83b40bfc27ce51c1d9d223df9ef5aa6932a9750fc352bc1429202d04"
+  },
+  {
+    "figure": "club-fan-shoulder-live",
+    "file": "evidence/v13/mic-hint-air.png",
+    "caption": "Windows実機 v1.3　真壁の肩越しに見た舞台",
+    "crop": null,
+    "sha256": "94f2f03399cc8fa371b8388ce215201027c9bdf39a889e97074bd1e9b21db10d",
+    "windows_zip_sha256": "dff59edd83b40bfc27ce51c1d9d223df9ef5aa6932a9750fc352bc1429202d04"
+  },
+  {
+    "figure": "club-desk-post",
+    "file": "evidence/v13/mic-hint-air.png",
+    "caption": "同じ肩越し画面の部分　袖の見物人と実況卓に着いた係員",
+    "crop": [
+      0.67,
+      0.36,
+      0.998,
+      0.84
+    ],
+    "sha256": "94f2f03399cc8fa371b8388ce215201027c9bdf39a889e97074bd1e9b21db10d",
+    "windows_zip_sha256": "dff59edd83b40bfc27ce51c1d9d223df9ef5aa6932a9750fc352bc1429202d04"
+  },
+  {
+    "figure": "level-hand-study",
+    "file": "art-source/broadcast-listeners/desk-hand.png",
+    "caption": "GPT Image原画　管面の右に縦に並ぶつまみ。右手で下の一つを回す。",
+    "crop": null,
+    "sha256": "ebc1a73831253552b5cf72f29defafc89013c58385ad861cca69fd551ac8a7d2"
+  },
+  {
+    "figure": "level-hand-contact",
+    "file": "evidence/v13/rotation-dial.png",
+    "caption": "Windows実機 v1.3・部分　Cを押したまま見た源の左手と白い指掛け",
+    "crop": [
+      0.19,
+      0.2,
+      0.79,
+      0.73
+    ],
+    "sha256": "a309b3b6f7d6e675bba709775d446d8128de182d6c072425def5ddaa51d43301",
+    "windows_zip_sha256": "101235869c7ac3fb34280157968a6207cea12907b213e370de69bf39b04fa1ed"
+  },
+  {
+    "figure": "level-hand-released",
+    "file": "evidence/v13/release-dial.png",
+    "caption": "Windows実機 v1.3・同じ範囲　左手が離れ、指掛けの向きが見える。",
+    "crop": [
+      0.19,
+      0.2,
+      0.79,
+      0.73
+    ],
+    "sha256": "312d0d1373d7336b0bf71bca97b7bb8be1a5a6a6a52f66a3daf0b378061a5013",
+    "windows_zip_sha256": "101235869c7ac3fb34280157968a6207cea12907b213e370de69bf39b04fa1ed"
+  },
+  {
+    "figure": "lotus-listens-study",
+    "file": "Game/Assets/Resources/Art/lotus-listens.png",
+    "caption": "GPT Image原画・全体　カウンター越しの二人と、壁掛けの受像機",
+    "crop": null,
+    "sha256": "2fc9fd23fea59943c9547df36f87fbd54c01f2f39e80ca11b34bfecd36d16fa7"
+  },
+  {
+    "figure": "lotus-broadcast-result",
+    "file": "evidence/v13/result-dial.png",
+    "caption": "Windows実機 v1.3・全画面　町内中継の決着「金星から町内へ」",
+    "crop": null,
+    "sha256": "06454cf50ff14d03fce4474ea1e85f1fd69fc841b2866b54e5db0a1c63593bf0",
+    "windows_zip_sha256": "101235869c7ac3fb34280157968a6207cea12907b213e370de69bf39b04fa1ed"
   }
 ]

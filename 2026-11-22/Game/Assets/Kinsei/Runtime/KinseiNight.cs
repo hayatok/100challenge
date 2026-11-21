@@ -217,6 +217,7 @@ public sealed partial class KinseiSession
     string Interaction()
     {
         if(command)return "";
+        if(StageActive)return StageMicVerb();
         if(finale)return FinaleVerb();
         string rail=RailVerb();if(AboveStreet || rail.Length>0)return rail;
         if(InDawn)return DawnVerb();
@@ -236,6 +237,7 @@ public sealed partial class KinseiSession
     }
     void Interact()
     {
+        if(StageActive){if(!command && StageMicVerb().Length>0)BeginTestimony();return;}
         if(finale){FinaleInteract();return;}
         string verb=Interaction();
         if(verb.Length>0 && verb==RailVerb()){UseRail(verb);return;}

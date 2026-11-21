@@ -2,7 +2,7 @@ using UnityEngine;
 
 public sealed partial class KinseiSession
 {
-    enum StageBeat { Approach, Cue, Swing, Opening, Settled }
+    enum StageBeat { Approach, Cue, Swing, Opening, ToMicrophone, Testimony, Settled }
 
     const string StageChallenge = "舞台の勝負を受ける";
     const float StageFloor = .48f;
@@ -78,6 +78,7 @@ public sealed partial class KinseiSession
             stageWitness.duty = Duty.Follow;
             stageWitness.path = null;
         }
+        ClearStageDesk();
         stageWitness = null;
         stageWitnessAnnounced = false;
         if (stageLamp != null) stageLamp.enabled = false;
@@ -112,11 +113,11 @@ public sealed partial class KinseiSession
     void BeginStageShowdown()
     {
         if (StageInteraction() != StageChallenge) return;
+        stageReturned=false;
         Change(Phase.Showdown);
         MovePlayerToStage(new Vector3(-5.86f, StageFloor, 3.08f));
         boss.root.position = new Vector3(-4.32f, StageFloor, 4.01f);
         boss.hp = bossHp = boss.maxHp;
-        int apronIndex = 0;
         foreach (var person in everyone)
         {
             person.watching = null;
@@ -125,15 +126,9 @@ public sealed partial class KinseiSession
             if (person.hp <= 0 && person != brother) Motion(person, "fall");
             else if (person == elder) Motion(person, "sit");
             else Motion(person, person == brother && person.hp <= 0 ? "surrender" : "idle");
-            var at = person.Position;
-            if (at.y > .36f && at.y < .68f && at.x > -7.9f && at.x < -2.1f && at.z > 2.6f && at.z < 4.2f)
-            {
-                // Clear the front boards for the two participants.
-                person.root.position = new Vector3(-7.05f + (apronIndex % 5) * .96f, 0, 1.25f - (apronIndex / 5) * .73f);
-                apronIndex++;
-            }
-            if (person.Position.y < 1f) Face(person, StageCentre);
+            if (person==stageWitness) Face(person, StageCentre);
         }
+        BeginStageAudience();
         Face(player, boss.Position);
         Face(boss, player.Position);
         Vector3 direction = boss.Position - player.Position;
@@ -179,6 +174,9 @@ public sealed partial class KinseiSession
 
     void SimulateStage(float dt)
     {
+        TickStageDesk(dt);
+        TickStageAudience(dt);
+        if(StageSpeaking){TickTestimony(dt);return;}
         if (stageBeat == StageBeat.Settled)
         {
             if (clock < stageBeatEnds) return;
@@ -191,6 +189,7 @@ public sealed partial class KinseiSession
 
         if (player.hp <= 0 || boss.hp <= 0)
         {
+            if(command){command=false;club.SetTactical(false);snapCamera=true;}
             Act(player.hp <= 0 ? player : boss, "fall");
             StartStageBeat(StageBeat.Settled, .75f, StageRest, false);
             return;
@@ -253,7 +252,7 @@ public sealed partial class KinseiSession
 
     void StageAttack()
     {
-        if (clock < shootDelay || stageBeat == StageBeat.Settled || boss.hp <= 0 || player.hp <= 0) return;
+        if (StageSpeaking || command || clock < shootDelay || stageBeat == StageBeat.Settled || boss.hp <= 0 || player.hp <= 0) return;
         shootDelay = clock + .38f;
         attackUntil = clock + .36f;
         Act(player, "punch");
@@ -269,6 +268,11 @@ public sealed partial class KinseiSession
         boss.flinchUntil = clock + .23f;
         lastHit = clock + .19f;
         stageAnswered = true;
+        if(!stageReturned && boss.hp>0){
+            stageReturned=true;
+            Say("兄貴分「町のみんなにも、わしの口から話す」",2.8f);
+            Motion(boss,"talk");
+        }
         ShowStageLight(StageRest,.38f,false);
         sound.Cue("strike");
         Mark("stage-answer-" + Mathf.RoundToInt(bossHp));
@@ -331,6 +335,21 @@ public sealed partial class KinseiSession
     {
         if (StageActive)
         {
+            if(command){
+                var at=cam.WorldToViewportPoint(StageDeskCentre+Vector3.up*.46f);
+                if(at.z>0 && at.x>.1f && at.x<.9f && at.y>.30f && at.y<.8f){
+                    var mark=new Rect(at.x*hudW-53,(1-at.y)*hudH,106,27);
+                    Block(mark,ink);Letter(mark,"実況卓",16,StageDeskReady?mint:gold,true,TextAnchor.MiddleCenter);
+                }
+            }
+            if(!command && stageReturned && StageDeskReady && !StageSpeaking && stageBeat!=StageBeat.Settled && StageMicVerb().Length==0){
+                Vector3 stand=StageMicrophone+new Vector3(-SpeakerSide*.77f,.09f,-.14f);
+                var at=cam.WorldToViewportPoint(stand);
+                if(at.z>0 && at.x>.09f && at.x<.91f && at.y>.21f && at.y<.74f){
+                    Rect mark=new Rect(at.x*hudW-64,(1-at.y)*hudH,128,26);
+                    Block(mark,ink);Letter(mark,"マイクの脇",15,mint,false,TextAnchor.MiddleCenter);
+                }
+            }
             bool warning = stageBeat == StageBeat.Cue || stageBeat == StageBeat.Swing;
             var tint = warning ? StageAmber : stageBeat == StageBeat.Opening && !stageAnswered ? StageWhite : gold;
             Rect panel = new Rect(hudW - 356, 86, 334, 78);
@@ -344,6 +363,8 @@ public sealed partial class KinseiSession
                 StageBeat.Cue => "合図　舞台灯の輪から離れる",
                 StageBeat.Swing => "大振り　輪の外へ",
                 StageBeat.Opening => stageAnswered ? "打撃が届いた　次の合図を待つ" : "隙　近づいて F",
+                StageBeat.ToMicrophone => "兄貴分がマイクへ",
+                StageBeat.Testimony => "町内中継　放送中",
                 StageBeat.Settled => player.hp <= 0 ? "決着　真壁が倒れた" : "決着　兄貴分が倒れた",
                 _ => "構え　次の合図を待つ"
             };

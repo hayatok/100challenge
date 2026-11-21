@@ -46,3 +46,15 @@ Implementation guidance read: Unity `using-unity` / `craft-game-floors` / `game-
 ## 共同放送の朝のリクエスト曲
 
 「堺の朝」はト長調、3拍子、四分音符84の12小節。25.714秒のステレオループを朝の送出卓から再生する。曲中のピアノと金星の3D鍵盤は同じ MorningScore.json を読む。ベースと短い弱音器付きの管の応答を加えた。音源は夜の曲と共通の合成楽器で新しく演奏した。render_morning.py で原稿からWAVを再生成できる。ピーク0.66、RMS −17.80 dBFS、SHA-256は 364c7057889a120b8b6738b3b89bf0cbbda47c0be8350584accfa8b61bbd44e1。
+
+## 舞台から町へ流す兄貴分の声
+
+舞台の中継を選ぶと、兄貴分が「金星を取ったんは、わしや。幕を返す。」と話す。店名は「きんせい」と読ませた。48 kHzのステレオ音源は4.220秒。音声から取り出した各音の時刻を使い、毎秒60回、口の開きと唇の丸みを別々に記録した。「わしや」は1.97～2.53秒、「幕を返す」は2.94～3.74秒。ゲームはこれらの区間で、兄貴分が胸に手を寄せ、客席へ掌を開く。
+
+音源の制作には Open JTalk の HTS Voice NIT ATR503 M001 v1.05 と HTS engine API 1.10 を使った。ゲームの実行時には録音した音声を再生する。270～3,900 Hzの帯域成分を原音に加え、客席の反射を左右に27 msと42 ms遅らせた。音声と口形を同時に再生成するには、NumPy、SciPy、pyopenjtalk-plus 0.4.1.post10 と辞書を用意し、次を実行する。
+
+```powershell
+python render_testimony.py <hts_engine.exeのパス> <nitech_jp_atr503_m001.htsvoiceのパス>
+```
+
+元モデルのREADMEと学習音声のCOPYINGに沿った表記を配布物に同梱する。[Open JTalk](https://open-jtalk.sourceforge.net/)・[音声モデルの配布元](https://packages.debian.org/source/trixie/hts-voice-nitech-jp-atr503-m001)・[ゲームに含めるクレジット](../../Game/Assets/StreamingAssets/StageVoiceCredits.txt)。

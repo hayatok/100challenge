@@ -293,22 +293,35 @@ public sealed partial class KinseiSession : MonoBehaviour
     {
         if(InDawn)return;
         if(AboveStreet){Say("通りへ降りると指揮に戻れる");return;}
-        if(pullingBackstage || phase==Phase.Mirror || StageActive || OnAir) return;
+        if(pullingBackstage || phase==Phase.Mirror || (StageActive && (StageSpeaking || stageBeat==StageBeat.Settled || player.hp<=0)) || OnAir) return;
         shopView=ShopView.None;
         command=!command; club.SetTactical(command); snapCamera=true; lockedTarget=-1;
         if(command && (player.Position.z< -13.9f || Mathf.Abs(player.Position.x)>8.8f))
             mapOffset=new Vector2(player.Position.x,player.Position.z-1.55f);
+        if(StageActive && command){mapOffset=new Vector2(-3.5f,.45f);Motion(player,"guard");}
         sound.Cue("dial"); Mark(command?"RTS":"TPS"); SetCamera(0);
     }
+
+    bool framingStageDesk, inspectingStageLevel;
 
     void SetCamera(float dt)
     {
         Vector3 eye, focus;
         bool frameHands=InDawn && ticketActing && ticketAligned;
+        bool deskShot=StageActive && stageFeedLive && clock>=stageBeatEnds-1.1f;
+        bool seeLevel=StageActive && command && !StageSpeaking && stageDeskRunner!=null && Input.GetKey(KeyCode.C);
+        if(seeLevel!=inspectingStageLevel){inspectingStageLevel=seeLevel;snapCamera=true;}
+        if(deskShot!=framingStageDesk){framingStageDesk=deskShot;snapCamera=true;}
         if(framingTicket!=frameHands){framingTicket=frameHands;snapCamera=true;}
         if(phase==Phase.Title || phase==Phase.Result) {
             cam.orthographic=false; cam.fieldOfView=49;
             eye=new Vector3(6.3f,2.3f,-5.6f); focus=new Vector3(-2.5f,1.6f,3.5f);
+        } else if(StageActive && StageSpeaking) {
+            cam.orthographic=false;cam.fieldOfView=deskShot?38:44;
+            if(deskShot)club.ViewStageMonitor(out eye,out focus);else StageBroadcastShot(out eye,out focus);
+        } else if(seeLevel) {
+            cam.orthographic=false;cam.fieldOfView=43;
+            club.ViewStageFader(out eye,out focus);
         } else if(frameHands) {
             cam.orthographic=false;
             cam.fieldOfView=42;
@@ -380,7 +393,7 @@ public sealed partial class KinseiSession : MonoBehaviour
     {
         if(phase==Phase.Result || InDawn)return;
         ClearStageWitness();
-        outcome=id; endingTitle=title; endingText=body; settlementMessage=FinishCampaign(id=="showdown"?"pursuit":id); phase=Phase.Result; command=false;
+        outcome=id; endingTitle=title; endingText=body; settlementMessage=FinishCampaign(id=="showdown" || id=="stage-broadcast"?"pursuit":id); phase=Phase.Result; command=false;
         SetPerformance(true);
         relayCam.enabled=false; sound.Cue(id=="loss"?"loss":"result"); Mark("ending-"+id);
         ReportFrames(id);

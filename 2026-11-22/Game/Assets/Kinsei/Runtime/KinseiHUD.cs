@@ -4,7 +4,7 @@ public sealed partial class KinseiSession
 {
     Font hudSerif, hudSans;
     GUIStyle hudText;
-    Texture2D hudFade, morningCover, ledgerCover;
+    Texture2D hudFade, morningCover, ledgerCover, broadcastCover;
     bool showFps;
     int pauseSelection;
     float hudW, hudH;
@@ -17,6 +17,7 @@ public sealed partial class KinseiSession
     {
         morningCover=Resources.Load<Texture2D>("Art/lotus-dawn");
         ledgerCover=Resources.Load<Texture2D>("Art/kinsei-ledger-dawn");
+        broadcastCover=Resources.Load<Texture2D>("Art/lotus-listens");
         hudSerif=Font.CreateDynamicFontFromOSFont(new[]{"Yu Mincho","MS PMincho","Noto Serif CJK JP","serif"},48);
         hudSans=Font.CreateDynamicFontFromOSFont(new[]{"Yu Gothic","Meiryo","MS Gothic","Noto Sans CJK JP","Arial"},24);
         hudFade=new Texture2D(128,1,TextureFormat.RGBA32,false);
@@ -64,6 +65,7 @@ public sealed partial class KinseiSession
         bool title=phase==Phase.Title;
         Texture cover=!title && (outcome=="accord" || outcome=="cooperative") && morningCover?morningCover:keyArt;
         if(!title && (outcome=="pursuit" || outcome=="showdown" || outcome=="exclusive") && ledgerCover)cover=ledgerCover;
+        if(!title && outcome=="stage-broadcast" && broadcastCover)cover=broadcastCover;
         if(cover!=null) GUI.DrawTexture(new Rect(0,0,hudW,hudH),cover,ScaleMode.ScaleAndCrop);
         GUI.DrawTexture(new Rect(0,0,hudW*.75f,hudH),hudFade);
         float x=hudW*.056f, w=Mathf.Min(525,hudW*.44f), y=hudH*.31f;
@@ -136,7 +138,7 @@ public sealed partial class KinseiSession
             case Phase.Floor:return held?"梶の連れは待機中。弟と用心棒を制圧せよ":"弟と用心棒を制圧せよ。辰は二階の梶の席へ";
             case Phase.Choice:return escorted?"弟をホール左手の中継鏡へ連れて行く":escapeTime>0?"弟に肩を貸すか、舞台袖の兄貴分を追う":"弟に肩を貸し、二階の梶に顔を見せる";
             case Phase.Chase:return "舞台袖で兄貴分との決着をつける";
-            case Phase.Showdown:return "立会人の前で、兄貴分との勝負をつける";
+            case Phase.Showdown:return StageBroadcastObjective();
             case Phase.Mirror:return "卓間中継鏡で、梶に弟の顔を見せる";
             default:return "梶と弟が店を出るのを見届ける";
         }
@@ -144,6 +146,8 @@ public sealed partial class KinseiSession
     string DutyName(Person p)
     {
         if(p.hp<=0)return "行動不能";
+        if(StageActive && p==stageWitness)return "立会中";
+        if(StageActive && p==stageDeskRunner)return StageDeskReady?"実況卓・接続済":"実況卓へ";
         switch(p.duty) {
             case Duty.Backstage:return AtBackstagePost(p)?"札を渡す":"楽屋口へ";
             case Duty.Go:return "移動"; case Duty.Guard:return "持ち場";
@@ -157,9 +161,11 @@ public sealed partial class KinseiSession
     void LiveHUD()
     {
         pauseSelection=0;
-        WorldMarks();
-        DrawAddresses();
-        DrawBackstageMark();
+        if(!inspectingStageLevel){
+            WorldMarks();
+            DrawAddresses();
+            DrawBackstageMark();
+        }
         DrawStageStatus();
         float pad=22;
         Block(new Rect(0,0,hudW,74),ink);
@@ -168,7 +174,7 @@ public sealed partial class KinseiSession
         Block(new Rect(151,17,1,39),rule);
         Letter(new Rect(171,4,490,23),"今夜の目的",13,brass);
         Letter(new Rect(171,25,hudW-493,42),Objective(),21,cream,true);
-        if(!AboveStreet && phase!=Phase.Mirror && !StageActive && !OnAir && Plate(new Rect(hudW-286,14,193,45),command?"現場に戻る　 Tab":"指揮に切替　 Tab")) ToggleCommand();
+        if(!AboveStreet && phase!=Phase.Mirror && (!StageActive || (!StageSpeaking && stageBeat!=StageBeat.Settled)) && !OnAir && Plate(new Rect(hudW-286,14,193,45),command?"現場に戻る　 Tab":"指揮に切替　 Tab")) ToggleCommand();
         if(Plate(new Rect(hudW-81,14,59,45),"幕間"))TogglePause();
         float bottom=command?hudH-CommandPanelHeight:hudH-66;
         if(bannerUntil>clock && banner.Length>0) {
@@ -184,7 +190,7 @@ public sealed partial class KinseiSession
             Meter(new Rect(pad,bottom+47,134,4),player.hp,player.hp<28?red:gold);
             string hints=OnAir?"共同送像所　生中継":finale?"WASD　移動　　E　調べる・渡す　　Tab　組員を指揮":phase==Phase.Arrival?"WASD　移動　　E　話す　　通りの西から ロータス・針音堂・送像所":
                 phase==Phase.Mirror?"卓間中継　接続中":
-                StageActive?"WASD　移動　　Q　注視　　隙ができたら F　打撃":
+                StageActive?(StageSpeaking?"町内中継":"WASD　移動　　白い輪で F　返し　　Tab　実況係の指揮"):
                 "WASD　移動　　右ドラッグ　視点　　左クリック・Space　射撃　　Q　注視　　F　打撃";
             if(!finale && phase==Phase.Arrival && player.Position.x< -9.18f && player.Position.z> -6f)
                 hints=backstageTravel>=1?"舞台脇へ　引戸を通ってホールに入る":
@@ -208,7 +214,7 @@ public sealed partial class KinseiSession
             Letter(timer,"逃走まで　"+Mathf.CeilToInt(escapeTime)+" 秒",16,gold,false,TextAnchor.MiddleCenter);
         }
         if(showFps) Letter(new Rect(pad,78,90,28),Mathf.RoundToInt(fpsSmooth)+" FPS",14,cream);
-        if((phase==Phase.Arrival || command) && shopView==ShopView.None) {
+        if(!StageActive && (phase==Phase.Arrival || command) && shopView==ShopView.None) {
             Rect ledgerPlate=new Rect(pad,showFps?112:86,510,29);
             Block(ledgerPlate,ink);Letter(new Rect(ledgerPlate.x+9,ledgerPlate.y,ledgerPlate.width-12,29),finale?"最終夜　四十軒の朝":NightSummary,14,gold);
         }
@@ -242,12 +248,16 @@ public sealed partial class KinseiSession
             Meter(new Rect(rect.x+10,rect.y+61,rect.width-20,3),100*p.hp/p.maxHp,active?gold:mint);
             if(GUI.Button(rect,GUIContent.none,GUIStyle.none))SelectMember(i,Event.current.shift);
         }
-        DrawSquadOrders(top);
+        if(StageActive){
+            Letter(new Rect(22,top+81,hudW-44,29),stageDeskRunner==null?"立会人は舞台袖へ。別の組員を一人選んで実況卓に送る":"C を押している間は、実況卓の手元を見る",17,cream);
+            if(Plate(new Rect(22,top+118,236,48),stageDeskRunner!=null && IsMemberSelected(crew.IndexOf(stageDeskRunner))?"実況係を取り消す　E":"実況卓へ　E"))OrderStageDesk();
+            if(Plate(new Rect(273,top+118,218,48),"舞台に戻る　Tab"))ToggleCommand();
+        }else DrawSquadOrders(top);
 
     }
     void WorldMarks()
     {
-        if(Event.current.type!=EventType.Repaint || cam==null || phase==Phase.Mirror || StageActive || OnAir || shopView!=ShopView.None)return;
+        if(Event.current.type!=EventType.Repaint || cam==null || phase==Phase.Mirror || (StageActive && !command) || OnAir || shopView!=ShopView.None)return;
         drawnLabels.Clear();
         foreach(var p in everyone) {
             if(p.retired || (p.hp<=0 && !(p==brother && phase==Phase.Choice)))continue;

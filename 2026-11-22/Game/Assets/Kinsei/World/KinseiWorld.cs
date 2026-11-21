@@ -129,12 +129,8 @@ public sealed partial class KinseiWorld : MonoBehaviour
         Box("Stage brass apron",new Vector3(-5,.25f,2.59f),new Vector3(6,.4f,.05f),brass);
         VeneerBox("Stage first step",new Vector3(-5,.08f,2.1f),new Vector3(2.6f,.16f,.6f),wood,true);
         for(int i=0;i<31;i++)Cylinder("Gathered velvet curtain",new Vector3(-8+i*.2f,2.7f,6.05f),.15f,4.5f,velvet);
-        Box("Velvet proscenium",new Vector3(-5,5,5.9f),new Vector3(6.5f,.6f,.5f),velvet);
-        Scallop();
+        BuildStageSign();
         StageBand();
-        Cushion("Oval lacquer cartouche",new Vector3(-5,2.7f,5.41f),new Vector3(2.08f,.91f,.10f),dark,transform);
-        Text("金星",new Vector3(-5,2.7f,5.34f),.72f,glow,0);
-        for(int side=-1;side<=1;side+=2)Rail(new Vector3(-5+side,3.25f,5.5f),new Vector3(-5+side,5.15f,5.5f),.014f,brass);
         Box("Stage lip moulding",new Vector3(-5,.48f,2.565f),new Vector3(6,.04f,.065f),brass);
         for(int side=-1;side<=1;side+=2)Box("Stage brass upright",new Vector3(-5+side*3.15f,2.5f,5.7f),new Vector3(.15f,5,.25f),brass);
         var microphone=Instantiate(Resources.Load<GameObject>("KinseiMicrophone/KinseiRibbon"),transform,false);
@@ -149,7 +145,7 @@ public sealed partial class KinseiWorld : MonoBehaviour
             part.sharedMaterial=plating;
             fixedRenderers.Add(part);
         }
-        for(int i=0;i<7;i++)Part("Stage footlight",PrimitiveType.Sphere,new Vector3(-7.6f+i*.86f,.54f,2.65f),new Vector3(.16f,.11f,.12f),glow);
+        BuildBroadcastDesk();
     }
     void Sofa(Vector3 p,float yaw,float width=2.5f)
     {
@@ -251,7 +247,7 @@ public sealed partial class KinseiWorld : MonoBehaviour
         if(signFont){t.font=signFont;go.GetComponent<MeshRenderer>().sharedMaterial=signInk;}
     }
     void RefreshTypeface(Font font) { if(font==signFont && signInk)signInk.mainTexture=font.material.mainTexture; }
-    void OnDestroy() {LeaveDawn();Font.textureRebuilt-=RefreshTypeface;if(signInk)Destroy(signInk);if(terraceImage){terraceImage.Release();Destroy(terraceImage);}nightAssets?.Release();ReleaseMarquee();}
+    void OnDestroy() {LeaveDawn();Font.textureRebuilt-=RefreshTypeface;if(signInk)Destroy(signInk);if(terraceImage){terraceImage.Release();Destroy(terraceImage);}nightAssets?.Release();ReleaseMarquee();ReleaseStageSign();}
     void Mirror()
     {
         Table(new Vector3(-3,0,0),.55f);

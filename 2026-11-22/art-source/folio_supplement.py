@@ -1,4 +1,4 @@
-"""Make the six-page art supplement. Coordinates are PDF points, measured from top left."""
+"""Make the art supplement. Coordinates are PDF points, measured from top left."""
 from pathlib import Path
 from io import BytesIO
 import argparse,hashlib,json
@@ -24,7 +24,7 @@ def rule(y):c.setStrokeColor(HexColor('#B6A796'));c.line(32,H-y,928,H-y)
 def start(n,title,sub):
     c.setFillColor(HexColor(bg));c.rect(0,0,W,H,fill=1,stroke=0)
     txt(32,18,'金星の一夜　　宵待町 美術制作資料',12,'Min',red)
-    txt(765,19,'高架線と翌朝　／　補遺',12,'Goth',muted);rule(46)
+    txt(765,19,'舞台と町内中継　／　補遺' if n>=27 else '高架線と翌朝　／　補遺',12,'Goth',muted);rule(46)
     txt(32,58,title,30,'Min');txt(34,107,sub,13,'Goth',muted,890)
     c.bookmarkPage(str(n));c.addOutlineEntry(title,str(n))
 def end(n,foot):
@@ -92,4 +92,34 @@ fig('coach-study',A+'ticket-and-car/car-sidelight.png','GPT Image設定画　耳
 fig('coach-before',E+'v10/saloon-firstcar.png','Windows実機 v1.0・部分　左の窓を背にした横顔',511,141,417,174,(.18,.19,.72,.85))
 fig('coach-after',E+'v11/saloon-occupied.png','Windows実機 v1.1直前版・部分　横灯が拾う頬と耳前の毛筋',511,353,417,174,(.18,.19,.72,.85))
 end(26,'実機写真は同じ割合で切り出した。照明後は1.1最終版と車両コードが共通のb35ab7版で撮影。')
+start(27,'扇の九枚を、客席の奥から読む','俯瞰の原画で、扇は兄貴分の立つ舞台の目印だった。金文字の正面を36度起こし、指揮視点からも「金星」の二字を追えるようにした。')
+fig('club-fan-overlook-study',A+'club-two-views/stage-overlook.png','GPT Image設定画　先に制作した客席からの俯瞰',32,141,368,175)
+fig('club-fan-geometry',A+'stage-broadcast/geometry.jpg','CPU形状図　客席側10度／指揮視点58.6度',32,365,368,157)
+fig('club-fan-overlook-live',E+'v13/desk-air.png','Windows実機 v1.3　指揮視点から見た舞台と見物位置',420,146,508,303)
+txt(421,494,'扇縁には乳白球が27灯、舞台の框には15灯。',13,'Min')
+txt(421,519,'二列の灯で舞台奥と演者の足元を分ける。',13,'Min')
+end(27,'扇板、縁金、ガラス、文字の厚みを別々に造形した。CPU図は二方向の正投影、右はゲーム内のカメラによる撮影。')
+start(28,'肩の向こうの文字から、卓の管面へ','引きの原画を参照して、同じ舞台を真壁の肩越しに描いた。実機で卓をのぞくと、管面に兄貴分の白服とマイクが映る。')
+fig('club-fan-shoulder-study',A+'club-two-views/stage-shoulder.png','GPT Image設定画　二枚目の肩越し。左手前が真壁。',32,141,382,194)
+fig('club-desk-live',E+'v13/voice-end-air.png','Windows実機 v1.3・部分　卓の管面に映る兄貴分とマイク',32,376,382,153,(.10,.18,.91,.84))
+fig('club-fan-shoulder-live',E+'v13/mic-hint-air.png','Windows実機 v1.3　真壁の肩越しに見た舞台',435,142,493,216)
+fig('club-desk-post',E+'v13/mic-hint-air.png','同じ肩越し画面の部分　袖の見物人と実況卓に着いた係員',435,387,493,143,(.67,.36,.998,.84))
+end(28,'舞台の再設計に使用した原画は24頁と同じ二点。Windows版の撮影元ZIPのSHA-256は補遺の出典目録に収録。')
+for entry in used:
+    if entry['file'].startswith('evidence/v13/'):
+        entry['windows_zip_sha256']='dff59edd83b40bfc27ce51c1d9d223df9ef5aa6932a9750fc352bc1429202d04'
+start(29,'送出つまみに、指が掛かる','原画では係員が右手を使う。実機の卓では、係員から見て右に管面、左に横並びのつまみが二つあり、左手で白い指掛けを回す。')
+fig('level-hand-study',A+'broadcast-listeners/desk-hand.png','GPT Image原画　管面の右に縦に並ぶつまみ。右手で下の一つを回す。',32,149,448,337)
+fig('level-hand-contact',E+'v13/rotation-dial.png','Windows実機 v1.3・部分　Cを押したまま見た源の左手と白い指掛け',502,143,426,177,(.19,.20,.79,.73))
+fig('level-hand-released',E+'v13/release-dial.png','Windows実機 v1.3・同じ範囲　左手が離れ、指掛けの向きが見える。',502,354,426,177,(.19,.20,.79,.73))
+end(29,'右の上下は同じ接写位置・同じ切り出し。手の甲が指先の一部を隠すため、手を引いた後の白い指掛けも並べた。')
+start(30,'金星の声が届く、喫茶ロータス','カップに手を添えた店の人と、カウンターの常連が、右上の受像機へ顔を向ける。画面の中では兄貴分がマイクに向かっている。')
+fig('lotus-listens-study',G+'Art/lotus-listens.png','GPT Image原画・全体　カウンター越しの二人と、壁掛けの受像機',32,145,437,322)
+fig('lotus-broadcast-result',E+'v13/result-dial.png','Windows実機 v1.3・全画面　町内中継の決着「金星から町内へ」',488,145,440,322)
+txt(33,504,'手元のカップと上向きの横顔が、テレビへ目を導く。',12,'Min')
+txt(489,504,'左の暗部に結末と帳面を置き、右上の受像機を残した。',12,'Min')
+end(30,'結果画面の左下には次の一夜と表題へ戻る操作が並ぶ。原画と実機で、テレビの中の人物とカウンターの二人を見比べられる。')
+for entry in used:
+    if entry['figure'] in ('level-hand-contact','level-hand-released','lotus-broadcast-result'):
+        entry['windows_zip_sha256']='101235869c7ac3fb34280157968a6207cea12907b213e370de69bf39b04fa1ed'
 c.save();out.with_suffix('.sources.json').write_text(json.dumps(used,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')

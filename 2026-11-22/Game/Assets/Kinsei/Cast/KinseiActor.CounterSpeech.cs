@@ -4,14 +4,18 @@ public sealed partial class KinseiActor
 {
     int speechOpen=-1,speechRound=-1;
 
-    // Only the three shopkeepers use these shapes. The imported face is already cloned per actor.
+    // The imported mesh is already cloned per actor.
     public void PrepareCounterFace(int shop)
+    {
+        PrepareSpeechFace(shop==1?.03837f:shop==0?.0484f:.0483f);
+    }
+
+    void PrepareSpeechFace(float seam)
     {
         if(!faceRenderer || speechOpen>=0)return;
         var mesh=faceRenderer.sharedMesh;
         var points=mesh.vertices;
         var open=new Vector3[points.Length];var round=new Vector3[points.Length];
-        float seam=shop==1?.03837f:shop==0?.0484f:.0483f;
         for(int i=0;i<points.Length;i++){
             var p=points[i];
             LipOffsets(p,seam,out open[i],out round[i]);

@@ -40,9 +40,10 @@ public static class KinseiShowdownRegression
             CheckBackstage();
             CheckWitness();
             CheckNormalEndings();
+            CheckBroadcast();
             CheckStageWin();
             CheckStageLoss();
-            Debug.Log("KINSEI_SHOWDOWN_PASS backstage / witness / pursuit / accord / stage win / stage loss");
+            Debug.Log("KINSEI_SHOWDOWN_PASS backstage / witness / pursuit / accord / stage broadcast / stage win / stage loss");
             EditorApplication.Exit(0);
         }
         catch (Exception ex)
@@ -222,7 +223,57 @@ public static class KinseiShowdownRegression
         Require(Phase == "Showdown", "Stage E failed in the hall");
         Require(Read<object>(guard, "watching") == null, "A queued gunshot survived the declaration");
         Call("ToggleCommand");
-        Require(!Read<bool>(session, "command"), "The duel unexpectedly switched to orders");
+        Require(Read<bool>(session,"command"),"Stage command unavailable");
+        Call("ToggleCommand");
+    }
+
+    static void CheckBroadcast()
+    {
+        DeclareStage();
+        int returns=Read<KinseiLedger>(session,"ledger").completed;
+        Vector3 witness=Root(Crew(2)).position;
+        Call("ToggleCommand");
+        Call("SelectMember",2,false);Call("OrderStageDesk");
+        Require(Read<object>(session,"stageDeskRunner")==null,"The witness deserted the wing");
+        Call("SelectMember",1,false);Call("SelectMember",3,true);Call("OrderStageDesk");
+        Require(Read<object>(session,"stageDeskRunner")==null,"A group received a single desk");
+        Call("SelectMember",1,false);Call("OrderStageDesk");
+        Require(Read<object>(session,"stageDeskRunner")==Crew(1),"Runner could not take the desk");
+        Call("SelectMember",3,false);Call("OrderStageDesk");
+        Require(Read<object>(session,"stageDeskRunner")==Crew(3),"Desk could not be reassigned");
+        Call("OrderStageDesk");
+        Require(Read<object>(session,"stageDeskRunner")==null,"Desk could not be cancelled");
+        Call("SelectMember",1,false);Call("SelectMember",3,true);
+        Set(Crew(1),"hp",0f);
+        Call("OrderStageDesk");
+        Require(Read<object>(session,"stageDeskRunner")==Crew(3) && Read<int>(session,"chosen")==3 &&
+            Hp(Crew(1))==0,"A downed squad leader displaced the surviving operator");
+        var post=Read<Vector3>(session,"StageDeskPost");float initial=Vector3.Distance(Root(Crew(3)).position,post);
+        for(int i=0;i<30;i++)Step();
+        Require(Vector3.Distance(Root(Crew(3)).position,post)<initial-.12f,"Runner did not walk in RTS");
+        Call("ToggleCommand");
+        Require(Verb=="","Microphone accepted an unanswered challenge");
+        Await(()=>Beat=="Opening",8,"No exchange while the desk runner walked");
+        Root(Player).position=Root(Boss).position+Vector3.left*.98f;
+        Call("Attack",true,false);
+        Require(Read<bool>(session,"stageReturned"),"A valid return did not unlock testimony");
+        var mic=Read<Vector3>(session,"StageMicrophone");
+        Root(Player).position=mic+new Vector3(-.77f,0,-.14f);
+        Await(()=>Verb.Contains("マイク"),12,"The reachable microphone did not open");
+        Require(Vector3.Distance(Root(Crew(3)).position,post)<.28f && Hp(Crew(1))==0,
+            "Surviving squad member never reached the commentary desk");
+        Call("Interact");
+        Await(()=>Beat=="Testimony",4,"Boss did not reach the microphone");
+        Require(Vector3.Distance(Root(Player).position,Root(Boss).position)>.91f &&
+            Vector3.Distance(Root(Boss).position,mic)<.61f,"Bad microphone blocking");
+        Require(Vector3.Distance(witness,Root(Crew(2)).position)<.02f,"Witness abandoned the wing");
+        Require(Read<bool>(session,"stageFeedLive"),"No live testimony");
+        Call("TogglePause");Require(Read<bool>(session,"paused"),"Broadcast cannot pause");Call("TogglePause");
+        Await(()=>Phase=="Result",7,"Testimony never ended");
+        var saved=new KinseiLedgerStore(Environment.GetEnvironmentVariable("KINSEI_SAVE_DIRECTORY")).Load();
+        Require(Read<string>(session,"outcome")=="stage-broadcast" && saved.stagePromise &&
+            saved.completed==returns+1 && !Read<bool>(session,"stageFeedLive"),"Broadcast did not settle and reset");
+        Debug.Log("KINSEI_STAGE_BROADCAST_PASS desk walk reassignment / single operator / retort / real mic / saved promise");
     }
 
     static void CheckStageWin()
