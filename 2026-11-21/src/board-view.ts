@@ -10,6 +10,7 @@ const IMPACT_COLOR = { normal: 0xf5bf8c, split: 0x90e6ff, bonus: 0xffd680 };
 const RAIL_WIDTH = 21;
 const DROP_TRACK_START = MIN_DROP_X - BALL_RADIUS;
 const DROP_TRACK_WIDTH = MAX_DROP_X - MIN_DROP_X + BALL_RADIUS * 2;
+const REFILL_PULSE_SECONDS = 0.48;
 const IMPACT_DURATION = 0.26;
 const IMPACT_POOL = 8;
 
@@ -152,6 +153,11 @@ export class BoardView {
   private readonly marker = new THREE.Group();
   private readonly markerMetal = new THREE.MeshBasicMaterial({ color: 0xf1bd7e });
   private readonly markerInk = new THREE.MeshBasicMaterial({ color: 0xf1bd7e, transparent: true, opacity: 0.62 });
+  private readonly markerBall: BallSprite;
+  private readonly emptyMarker = new THREE.Mesh(
+    new THREE.RingGeometry(BALL_RADIUS - 1.7, BALL_RADIUS, 24),
+    this.markerMetal,
+  );
   private readonly rails = new THREE.Group();
   private readonly railLight = new THREE.MeshBasicMaterial({ color: 0xffc787, transparent: true, opacity: 0.44 });
   private readonly pinSocket = turnedProfile([[0, 0], [PIN_RADIUS + 3, 0], [PIN_RADIUS + 3, 1], [PIN_RADIUS + 1.5, 2], [0, 2]]);
@@ -182,6 +188,7 @@ export class BoardView {
   private readonly stageColor = new THREE.Color();
   private reducedMotion: boolean;
   private chainPulse = 0;
+  private refillPulse = 0;
   private lastAimX: number | null = null;
   private lastBallCount = 0;
   private dirty = true;
@@ -221,7 +228,10 @@ export class BoardView {
       grip.position.set(direction * 13, 0, 0.4);
       this.marker.add(grip);
     }
-    this.marker.add(this.createBallSprite().group);
+    this.markerBall = this.createBallSprite();
+    this.emptyMarker.position.z = 9.5;
+    this.emptyMarker.visible = false;
+    this.marker.add(this.markerBall.group, this.emptyMarker);
     const dashGeometry = new THREE.PlaneGeometry(2, 5);
     for (let i = 0; i < 3; i++) {
       const dash = new THREE.Mesh(dashGeometry, this.markerInk);
@@ -290,6 +300,7 @@ export class BoardView {
     this.railLight.color.copy(this.stageColor);
     this.railLight.opacity = 0.43;
     this.chainPulse = 0;
+    this.refillPulse = 0;
     for (const sprite of this.ballSprites) sprite.group.visible = false;
     this.lastBallCount = 0;
     for (const ring of this.impactRings) {
@@ -321,11 +332,31 @@ export class BoardView {
     if (chain >= 4) this.chainPulse = Math.max(this.chainPulse, Math.min(1, chain / 7));
   }
 
-  draw(balls: readonly Ball[], aimX: number | null, delta: number): void {
+  refillAim(): void {
+    if (!this.reducedMotion) this.refillPulse = REFILL_PULSE_SECONDS;
+  }
+
+  draw(balls: readonly Ball[], aimX: number | null, loaded: boolean, delta: number): void {
     if (aimX !== this.lastAimX) {
       this.lastAimX = aimX;
       this.marker.visible = aimX !== null;
       if (aimX !== null) this.marker.position.set(aimX, -DROP_Y, 0);
+      this.dirty = true;
+    }
+    if (this.markerBall.group.visible !== loaded) {
+      this.markerBall.group.visible = loaded;
+      this.emptyMarker.visible = !loaded;
+      this.markerInk.opacity = loaded ? 0.62 : 0.35;
+      this.dirty = true;
+    }
+    const glow = this.markerBall.glow;
+    if (this.refillPulse > 0 || glow.visible) {
+      this.refillPulse = aimX !== null && loaded ? Math.max(0, this.refillPulse - delta) : 0;
+      const strength = this.refillPulse / REFILL_PULSE_SECONDS;
+      glow.visible = strength > 0;
+      glow.material.color.setHex(0xc9ffc0);
+      glow.material.opacity = strength;
+      glow.scale.setScalar(1 + (1 - strength) * 1.2);
       this.dirty = true;
     }
 
@@ -370,6 +401,7 @@ export class BoardView {
       ring.age = IMPACT_DURATION;
     }
     this.chainPulse = 0;
+    this.refillPulse = 0;
     this.railLight.opacity = 0.43;
   }
 

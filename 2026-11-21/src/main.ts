@@ -88,6 +88,7 @@ function start() {
   function updatePanels() {
     const finished = run.phase === 'clear' || run.phase === 'failed';
     const canPlay = drawAvailable && !finished && run.phase !== 'upgrade';
+    if (!canPlay) releasePointer();
     shootPanel.hidden = !canPlay;
     upgradePanel.hidden = !drawAvailable || run.phase !== 'upgrade';
     resultPanel.hidden = !drawAvailable || !finished;
@@ -113,6 +114,10 @@ function start() {
     launcher.setAttribute('aria-disabled', String(!run.canDrop || !drawAvailable));
     railHint.hidden = launcher.disabled || !run.canDrop || run.shotsUsed > 0;
     pinGuide.hidden = railHint.hidden || run.stage !== 1;
+  }
+
+  function canAim() {
+    return !launcher.disabled && run.hasPins;
   }
 
   function showBoard() {
@@ -144,7 +149,7 @@ function start() {
     sound.launch();
     updateScore();
     updatePanels();
-    if (!run.canDrop) setStatus(`${REFILL_CHAIN}連鎖で ＋1球`, 'neutral', 0);
+    setStatus(run.canDrop ? '' : '補充待ち　先に狙えます', 'neutral', 0);
   }
 
   function applyUpgrade(upgrade: Upgrade) {
@@ -177,11 +182,11 @@ function start() {
   }
 
   launcher.addEventListener('pointermove', (event) => {
-    if (!run.canDrop || !drawAvailable) return;
+    if (!canAim()) return;
     if (capturedPointer === event.pointerId || (capturedPointer === null && event.pointerType === 'mouse')) aimAtPointer(event);
   });
   launcher.addEventListener('pointerdown', (event) => {
-    if (!run.canDrop || !drawAvailable || capturedPointer !== null || !event.isPrimary || event.button !== 0) return;
+    if (!canAim() || capturedPointer !== null || !event.isPrimary || event.button !== 0) return;
     capturedPointer = event.pointerId;
     launcher.setPointerCapture(event.pointerId);
     launcher.dataset.grabbed = 'true';
@@ -232,7 +237,7 @@ function start() {
     }
     // The rail's native activation must also pass the pointer and shot guards.
     if (onLauncher && launchKey) event.preventDefault();
-    if (!run.canDrop || !drawAvailable || capturedPointer !== null || event.altKey || event.ctrlKey || event.metaKey) return;
+    if (!canAim() || capturedPointer !== null || event.altKey || event.ctrlKey || event.metaKey) return;
     if (event.target instanceof HTMLButtonElement && !onLauncher) return;
     if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
       event.preventDefault();
@@ -251,13 +256,15 @@ function start() {
   document.addEventListener('visibilitychange', () => {
     lastTime = undefined;
     timeBank = 0;
-    if (document.hidden) feedback.reset();
+    if (document.hidden) {
+      releasePointer();
+      feedback.reset();
+    }
   });
   const canvas = board.querySelector('canvas');
   canvas?.addEventListener('webglcontextlost', (event) => {
     event.preventDefault();
     drawAvailable = false;
-    releasePointer();
     feedback.reset();
     updatePanels();
     setStatus('');
@@ -283,6 +290,7 @@ function start() {
     const delta = Math.min((now - (lastTime ?? now)) / 1000, 0.05);
     lastTime = now;
     const phaseBefore = run.phase;
+    const wasEmpty = run.remaining === 0;
     let refills = 0;
     if (run.phase === 'dropping') {
       timeBank += delta;
@@ -316,10 +324,13 @@ function start() {
     if (refills > 0) {
       feedback.refill(refills, remaining);
       sound.refill();
-      if (run.canDrop) setStatus(`手持ち ＋${refills}球`, 'success');
+      if (run.canDrop) {
+        if (wasEmpty) view.refillAim();
+        setStatus(wasEmpty ? `＋${refills}球　今すぐ投球` : `手持ち ＋${refills}球`, 'success');
+      }
     }
     onPhaseChange(phaseBefore);
-    view.draw(run.balls, run.canDrop ? aimX : null, delta);
+    view.draw(run.balls, canAim() ? aimX : null, run.remaining > 0, delta);
   });
 }
 
