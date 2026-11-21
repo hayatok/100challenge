@@ -299,9 +299,8 @@ public sealed partial class KinseiWorld : MonoBehaviour
     {
         RenderSettings.ambientMode=AmbientMode.Trilight;RenderSettings.ambientSkyColor=new Color(.24f,.29f,.36f);RenderSettings.ambientEquatorColor=new Color(.21f,.17f,.21f);RenderSettings.ambientGroundColor=new Color(.11f,.07f,.06f);
         RenderSettings.fog=true;RenderSettings.fogMode=FogMode.ExponentialSquared;RenderSettings.fogColor=new Color(.045f,.055f,.075f);RenderSettings.fogDensity=.012f;
-        for(int j=0;j<3;j++)
+        foreach(float z in new[]{-5f,-.5f,2.2f})
         {
-            float z=-5+j*4.5f;
             Chandelier(z);
             LightAt("Chandelier amber bounce",new Vector3(0,4.88f,z),new Color(1,.77f,.55f),1.65f,8.5f);
         }

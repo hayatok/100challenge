@@ -37,6 +37,9 @@ public sealed partial class KinseiSession
             if(escorted && Flat(brother.Position,player.Position)>.85f)
                 MovePerson(brother,player.Position,3.1f,dt);
             else Motion(brother,"surrender");
+            if(escapeTime<=0 && crew[0].hp<=0) {
+                End("loss","金星からの撤退","兄貴分は通用口を出た。辰が倒れ、梶との中継もかなわず、真壁は仲間を連れて引き揚げた。");return;
+            }
             if(escapeTime<=0 && !escorted && !held) {
                 End("loss","取り逃がした夜","兄貴分は金星を出た。梶の弟も席を立ち、店には真壁たちだけが残った。");return;
             }
@@ -62,7 +65,10 @@ public sealed partial class KinseiSession
 
     void UpdateCrew(Person p,int index,float dt)
     {
-        if(p.hp<=0) {Motion(p,"fall");return;}
+        if(p.hp<=0) {
+            if(index==0) {held=false;talkProgress=0;}
+            Motion(p,"fall");return;
+        }
         if(p.duty==Duty.Attend && !accord) {
             if(Vector3.Distance(p.Position,table)>.19f) MovePerson(p,table,3.65f,dt);
             else {
@@ -184,7 +190,7 @@ public sealed partial class KinseiSession
     {
         if(command)return "";
         if(phase==Phase.Choice) {
-            if(escorted && Flat(player.Position,witness)<1.6f && player.Position.y<1) return held?"弟を中継鏡へ":"辰を二階の梶の席へ";
+            if(escorted && Flat(player.Position,witness)<1.6f && player.Position.y<1) return crew[0].hp<=0?"辰は動けない":held?"弟を中継鏡へ":"辰を二階の梶の席へ";
             if(!escorted && Flat(player.Position,brother.Position)<1.95f && player.Position.y<1) return "弟に肩を貸す";
             if(escapeTime>0 && Vector3.Distance(player.Position,boss.Position)<2.1f) return "兄貴分を追う";
         }
@@ -208,7 +214,8 @@ public sealed partial class KinseiSession
             Face(brother,new Vector3(-3.02f,1.41f,-.22f));
             angle=-14;tilt=8; snapCamera=true; relayCam.enabled=true;
             Change(Phase.Mirror); Say("弟「兄ちゃん……もうええ」",4.2f);sound.Cue("dial");
-        } else if(verb.Length>0) Say("指揮に切り替え、辰に梶との話を任せる");
+        } else if(verb=="辰は動けない") Say("中継には辰が要る。兄貴分を追え");
+        else if(verb.Length>0) Say("指揮に切り替え、辰に梶との話を任せる");
     }
 }
 
