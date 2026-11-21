@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 // Routes use elapsed game seconds and metre-scale waypoints in the connected southern district.
-public sealed class KinseiDistrictPeople : MonoBehaviour
+public sealed partial class KinseiDistrictPeople : MonoBehaviour
 {
     public static readonly Vector3 ToolGrip=new Vector3(0,-.079f,.021f);
     sealed class Resident
@@ -44,6 +44,7 @@ public sealed class KinseiDistrictPeople : MonoBehaviour
             var resident=new Resident();locals[i]=resident;
             resident.actor=obj.AddComponent<KinseiActor>();
             resident.actor.Init("resident",new[]{0,1,4,2,7,3}[i]);
+            if(i<3)resident.actor.PrepareCounterFace(i);
             resident.day=i<3?OwnerRoute(i):GuestRoute(i-3);
             resident.offset=i<3?0:new[]{12,42,75}[i-3];
             for(int j=0;j<resident.day.Length;j++)
@@ -102,6 +103,7 @@ public sealed class KinseiDistrictPeople : MonoBehaviour
 
     public void ResetNight()
     {
+        ClearCounterLine();
         dawnSchedule=0;lastTime=float.NaN;
         if(!district)return;
         for(int i=0;i<3;i++){open[i]=true;district.SetDistrictOpen(i,true);}

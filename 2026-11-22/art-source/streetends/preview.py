@@ -5,6 +5,7 @@ import numpy as np
 from PIL import Image,ImageDraw,ImageFont
 p=Path(sys.argv[1]);out=Path(sys.argv[2])
 col={'stone':(140,126,108),'sheet':(112,125,127),'timber':(80,65,52),'window':(235,192,123),'road':(75,73,73),'roof':(82,91,98),'canal':(56,92,94)}
+col.update(fixture=(111,122,120),opal=(239,196,132),tube=(201,216,202),signal=(100,159,124))
 with p.open('rb') as f:
     meshes={}
     while k:=f.read(1):

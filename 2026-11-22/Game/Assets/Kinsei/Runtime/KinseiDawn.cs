@@ -33,9 +33,11 @@ public sealed partial class KinseiSession
     void ClearDawn()
     {
         if(dawnBranch==0)return;
+        ReportFrames(dawnBranch==1?"morning-cooperative":"morning-exclusive");
         ClearDawnTicket();
         ResetRailRide();
         neighbours.SetDawnSchedule(0);club.SetDawnProgramme(0,0);
+        sound.SetMorningRequest(false);
         SetPerformance(true);boxOffice.SetCollected(false);boxOffice.SetTicketPress(0);
         if(stageDirector!=null)stageDirector.root.gameObject.SetActive(false);
         shopView=ShopView.None;dawnBranch=dawnStep=0;
@@ -88,14 +90,17 @@ public sealed partial class KinseiSession
         if(job.Length>0){
             dawnStep++;
             if(dawnBranch==1){
-                Say(dawnStep==1?"澄子「吹き手が待ってる。村瀬さんの卓から、うちの一番席にも頼むわ」":
+                SpeakAtCounter(dawnStep==1?0:2,dawnStep==1?"澄子「吹き手が待ってる。村瀬さんの卓から、うちの一番席にも頼むわ」":
                     "村瀬「送出入った。ロータスまで聞こえてるで」",5);
-                if(dawnStep==2)SetPerformance(true);
+                if(dawnStep==2){
+                    sound.SetMorningRequest(true);
+                    SetPerformance(true);
+                }
             }else{
                 if(dawnStep==1){boxOffice.SetTicketPress(0);CarryDawnTicket();Motion(stageDirector,"idle");Face(stageDirector,player.Position);}
                 else ClearDawnTicket();
-                Say(dawnStep==1?"座長「金星専属の一番券や。針音堂に窓口を頼んだで」":
-                    "兵藤「一番券、預かった。ほな前売りを始めよか」",5);
+                if(dawnStep==1)Say("座長「金星専属の一番券や。針音堂に窓口を頼んだで」",5);
+                else SpeakAtCounter(1,"兵藤「一番券、預かった。ほな前売りを始めよか」",5);
             }
             club.SetDawnProgramme(dawnBranch,dawnStep);
             sound.Cue("dial");Mark("dawn-work-"+dawnBranch+"-"+dawnStep);return;
@@ -106,7 +111,7 @@ public sealed partial class KinseiSession
         if(!StreetContact(out int shop,out string words))return;
         if(shop<0){Say(words);return;}
         string[] lines=dawnBranch==1?JointMorningLines:ExclusiveMorningLines;
-        Say(lines[shop*2+(dawnStep==2?1:0)],4);
+        SpeakAtCounter(shop,lines[shop*2+(dawnStep==2?1:0)],4);
     }
 
     static readonly string[] JointMorningLines={
@@ -163,6 +168,7 @@ public sealed partial class KinseiSession
         if(hints.Length==0)hints=shopView==ShopView.None?"WASD　町を歩く　　E　話す・仕事をする　　Esc　幕間・表題へ":
             ShopViewLabel(shopView)+"　　C　元の視点へ";
         if(shopView==ShopView.None && NearbyCounter()!=ShopView.None)hints+="　　C　"+ShopViewLabel(NearbyCounter())+"を見る";
+        if(PortraitHint.Length>0)hints="E　話す　　"+PortraitHint;
         Letter(new Rect(22,bottom+6,hudW-44,48),hints,17,cream);
         string verb=Interaction();
         if(shopView==ShopView.None && verb.Length>0){

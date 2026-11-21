@@ -15,6 +15,13 @@ public sealed class KinseiSound : MonoBehaviour
     bool paused, unfocused, dialogue;
     bool stageQuiet;
     public float MusicSeconds => music && music.clip ? (float)music.timeSamples/music.clip.frequency : 0;
+    public void SetMorningRequest(bool onAir)
+    {
+        string resource=onAir ? "sakai-morning" : "kinsei-waltz";
+        if(music.clip && music.clip.name==resource)return;
+        StartLoop(music,resource);
+        if(paused || unfocused)music.Pause();
+    }
     public void QuietStage(bool quiet) { stageQuiet=quiet; }
     float duckUntil;
     readonly float[] meterSamples = new float[128];

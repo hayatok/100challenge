@@ -1,0 +1,38 @@
+{
+  "Sumiko": {
+    "vertices": 17169,
+    "triangles": 34224,
+    "upper_lower_separation_mm": 5.743,
+    "central_rim_gap_rest_mm": 1.583,
+    "central_rim_gap_open_mm": 7.483,
+    "lower_lip_down_mm": 4.479,
+    "upper_lip_up_mm": 1.264,
+    "largest_displacement_mm": 6.598,
+    "reversed_nondegenerate_triangles": 0,
+    "neck_or_eye_morph_mm": 0.0
+  },
+  "Hyodo": {
+    "vertices": 17169,
+    "triangles": 34224,
+    "upper_lower_separation_mm": 5.997,
+    "central_rim_gap_rest_mm": 1.242,
+    "central_rim_gap_open_mm": 7.125,
+    "lower_lip_down_mm": 4.733,
+    "upper_lip_up_mm": 1.264,
+    "largest_displacement_mm": 6.778,
+    "reversed_nondegenerate_triangles": 0,
+    "neck_or_eye_morph_mm": 0.0
+  },
+  "Murase": {
+    "vertices": 17169,
+    "triangles": 34224,
+    "upper_lower_separation_mm": 5.754,
+    "central_rim_gap_rest_mm": 1.563,
+    "central_rim_gap_open_mm": 7.463,
+    "lower_lip_down_mm": 4.487,
+    "upper_lip_up_mm": 1.267,
+    "largest_displacement_mm": 6.611,
+    "reversed_nondegenerate_triangles": 0,
+    "neck_or_eye_morph_mm": 0.0
+  }
+}

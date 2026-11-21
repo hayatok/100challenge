@@ -94,7 +94,7 @@ public sealed partial class KinseiSession
                 Face(stageDirector,player.Position);Motion(stageDirector,"idle");
                 Say("座長「一枚目は金星の専属盤や。帳場へ一人、切符を頼むわ」",5);break;
             case FinaleAction.Talk:
-                if(StreetContact(out _,out string words))Say(words);
+                if(StreetContact(out int shop,out string words))SpeakAtCounter(shop,words);
                 return;
             default:return;
         }

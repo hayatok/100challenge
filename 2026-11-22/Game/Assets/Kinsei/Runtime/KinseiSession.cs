@@ -180,6 +180,7 @@ public sealed partial class KinseiSession : MonoBehaviour
     void PrepareVisit(bool finalNight,int morning)
     {
         ClearDawn();
+        portraitOwner=null;
         ClearStageWitness();
         finale=finalNight;
         shopView=ShopView.None;
@@ -207,7 +208,7 @@ public sealed partial class KinseiSession : MonoBehaviour
         SetCamera(0);
     }
 
-    void Say(string words,float seconds=3.4f) { banner=words; bannerUntil=clock+seconds; }
+    void Say(string words,float seconds=3.4f) { neighbours.EndCounterLine(clock);banner=words; bannerUntil=clock+seconds; }
     void Mark(string label) { if(measure) Debug.Log($"KINSEI {label} t={clock:F2} phase={phase} pos={player.Position:F2}"); }
 
     void Update()
@@ -231,6 +232,7 @@ public sealed partial class KinseiSession : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.Escape)) { TogglePause(); return; }
         if(paused) return;
         if(Input.GetKeyDown(KeyCode.Tab)) ToggleCommand();
+        PortraitInput();
         if(!command && !OnAir && !AboveStreet)ShopViewInput();
         dt=Mathf.Min(dt,.09f);
         clock+=dt; phaseAge+=dt;
@@ -238,7 +240,7 @@ public sealed partial class KinseiSession : MonoBehaviour
         if(measure && phaseAge>.2f && profile.Count<108000) profile.Add(Time.unscaledDeltaTime*1000);
         AdvanceRail(dt);
         if(command) CommandInput(); else if(shopView==ShopView.None)PlayerInput(dt); else Motion(player,"idle");
-        neighbours.Tick(clock);neighbours.LookAtNeighbours();club.TickShops(dt,player.Position);
+        neighbours.Tick(clock);neighbours.LookAtNeighbours();neighbours.PoseCounterLine(clock,player.actor.EyePosition);club.TickShops(dt,player.Position);
         club.SetProgrammeLevel(sound.ReadProgrammeLevel(dt));
         if(phase==Phase.Result)return;
         if(InDawn)TickDawn(dt);
@@ -328,6 +330,8 @@ public sealed partial class KinseiSession : MonoBehaviour
             if(Physics.SphereCast(pivot,.10f,delta.normalized,out var hit,delta.magnitude,~0,QueryTriggerInteraction.Ignore))
                 wanted=pivot+delta.normalized*Mathf.Max(.025f,hit.distance-.055f);
             eye=wanted;focus=pivot+look*6;
+        } else if(portraitOwner && !command && shopView==ShopView.None) {
+            cam.orthographic=false;cam.fieldOfView=35;FrameConversation(out eye,out focus);
         } else if(shopView!=ShopView.None) {
             cam.orthographic=false;cam.fieldOfView=shopView==ShopView.Wardrobe?63:shopView==ShopView.Records?52:42;
             FrameCounter(out eye,out focus);
@@ -362,9 +366,15 @@ public sealed partial class KinseiSession : MonoBehaviour
         outcome=id; endingTitle=title; endingText=body; settlementMessage=FinishCampaign(id=="showdown"?"pursuit":id); phase=Phase.Result; command=false;
         SetPerformance(true);
         relayCam.enabled=false; sound.Cue(id=="loss"?"loss":"result"); Mark("ending-"+id);
+        ReportFrames(id);
+    }
+
+    void ReportFrames(string scene)
+    {
         if(measure && profile.Count>0) {
             profile.Sort();
-            Debug.Log($"KINSEI_FRAME n={profile.Count} median_ms={profile[profile.Count/2]:F2} p95_ms={profile[(int)(profile.Count*.95f)]:F2} size={Screen.width}x{Screen.height} gpu={SystemInfo.graphicsDeviceName}");
+            Debug.Log($"KINSEI_FRAME n={profile.Count} median_ms={profile[profile.Count/2]:F2} p95_ms={profile[(int)(profile.Count*.95f)]:F2} size={Screen.width}x{Screen.height} gpu={SystemInfo.graphicsDeviceName} scene={scene}");
+            profile.Clear();
         }
     }
 

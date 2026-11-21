@@ -42,3 +42,7 @@ Run `render.py` using `C:/comfy/ComfyUI/ComfyUI/.venv/Scripts/python.exe` (exist
 Numerical validation: 20 WAVs, 10.66 MB total; all finite, nonzero data; no sample reaches integer clipping; first/last samples are zero on every file. Music peak 0.72; action peaks at most 0.78. No Unity instance was launched for this subtask. Actual player playback, perceptual listening, cue balance through speakers/headphones, pause/focus behavior and performance remain integration checks for the parent task; numerical checks are not a claim of listening validation.
 
 Implementation guidance read: Unity `using-unity` / `craft-game-floors` / `game-audio` skill references, and Unity 6000.3 `AudioSource.Pause` and `AudioSource.PlayOneShot` reference pages. Existing repository audio contract takes precedence; headless shared gains were used instead of authoring a mixer through the Editor UI.
+
+## 共同放送の朝のリクエスト曲
+
+「堺の朝」はト長調、3拍子、四分音符84の12小節。25.714秒のステレオループを朝の送出卓から再生する。曲中のピアノと金星の3D鍵盤は同じ MorningScore.json を読む。ベースと短い弱音器付きの管の応答を加えた。音源は夜の曲と共通の合成楽器で新しく演奏した。render_morning.py で原稿からWAVを再生成できる。ピーク0.66、RMS −17.80 dBFS、SHA-256は 364c7057889a120b8b6738b3b89bf0cbbda47c0be8350584accfa8b61bbd44e1。

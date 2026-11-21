@@ -33,4 +33,10 @@ public sealed partial class KinseiWorld{
  void Text(string t,UnityEngine.Vector3 p,float s,UnityEngine.Material m,float r){}
  UnityEngine.Light LightAt(string n,UnityEngine.Vector3 p,UnityEngine.Color c,float intensity,float range)=>new UnityEngine.Light();
  public static void Dump(string path){ using(writer=new BinaryWriter(File.Create(path)))new KinseiWorld().BuildStreetEnds(new UnityEngine.Material("stone"),new UnityEngine.Material("sheet"),new UnityEngine.Material("timber"),new UnityEngine.Material("window"),new UnityEngine.Material("roof")); }
+ void BuildStreetFixtures(UnityEngine.Material water,UnityEngine.Material zinc){
+  var frame=new NightGeometry();var glass=new NightGeometry();var tube=new NightGeometry();var screen=new NightGeometry();
+  MakeStreetFixtures(frame,glass,tube,screen);
+  frame.Upload(null,new Material("fixture"),null);glass.Upload(null,new Material("opal"),null);
+  tube.Upload(null,new Material("tube"),null);screen.Upload(null,new Material("signal"),null);
+ }
  static BinaryWriter writer;

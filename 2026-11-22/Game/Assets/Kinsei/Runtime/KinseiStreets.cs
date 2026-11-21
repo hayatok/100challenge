@@ -45,23 +45,23 @@ public sealed partial class KinseiSession
     {
         if(shop==0 && !hasCoffeeTickets){
             hasCoffeeTickets=true;
-            Say("澄子「これで夜食を食べておいで」　真壁の体力が55を切ると一度だけ24回復。",5);
+            SpeakAtCounter(shop,"澄子「これで夜食を食べておいで」　真壁の体力が55を切ると一度だけ24回復。",5);
             Mark("lotus-tickets");
         } else if(shop==0 && hasRecord && !nominatedSeat) {
             nominatedSeat=true;
-            Say("澄子「最初の客席、うちにちょうだい。堺の吹き手が待ってる」",5);
+            SpeakAtCounter(shop,"澄子「最初の客席、うちにちょうだい。堺の吹き手が待ってる」",5);
             Mark("lotus-request");
         } else if(shop==1 && !hasRecord) {
             hasRecord=true;sound.Cue("door");
-            Say("兵藤「うちの試聴盤や。送像所へ頼めば、兄貴も最後の一曲は待つ」",5);
+            SpeakAtCounter(shop,"兵藤「うちの試聴盤や。送像所へ頼めば、兄貴も最後の一曲は待つ」",5);
             Mark("needle-record");
         } else if(shop==2 && hasRecord && !reservedLine) {
             reservedLine=true;escapeTime+=8;
             playedRecord=nominatedSeat;
-            Say(playedRecord?"村瀬「ロータスのリクエストやね。出番が来たら梶の席にも先につなぐ」":"村瀬「四十軒、音が来たで。金星にもう一曲、八秒ぶんお願いした」",5);
+            SpeakAtCounter(shop,playedRecord?"村瀬「ロータスのリクエストやね。出番が来たら梶の席にも先につなぐ」":"村瀬「四十軒、音が来たで。金星にもう一曲、八秒ぶんお願いした」",5);
             Mark("relay-record-"+(playedRecord?"requested":"broadcast"));
-        } else if(shop==2 && !hasRecord)Say("村瀬「針音堂で試聴盤を借りて。運んでくれたら、こっちから全店に送れる」",5);
-        else Say(words,4.3f);
+        } else if(shop==2 && !hasRecord)SpeakAtCounter(shop,"村瀬「針音堂で試聴盤を借りて。運んでくれたら、こっちから全店に送れる」",5);
+        else SpeakAtCounter(shop,words,4.3f);
         sound.Cue("dial");
     }
 

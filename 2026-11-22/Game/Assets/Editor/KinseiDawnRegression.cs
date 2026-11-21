@@ -74,6 +74,8 @@ public static class KinseiDawnRegression
         Action((Vector3)Field(game,"LotusDesk"),"リクエスト");
         Action((Vector3)Field(game,"RelayDesk"),"送出卓");
         Require(Step==2 && !(bool)Field(game,"showInterrupted"),"Programme did not start");
+        var music=(AudioSource)Field(Field(game,"sound"),"music");
+        Require(music.clip && music.clip.name=="sakai-morning","Request did not play its score");
         Call("TogglePause");Require((bool)Field(game,"paused"),"Morning cannot pause");Call("TogglePause");
         Call("ToggleCommand");Require(!(bool)Field(game,"command"),"Morning entered a combat command");
         Call("Attack",false,false);Call("End","loss","invalid","invalid");
@@ -84,6 +86,7 @@ public static class KinseiDawnRegression
         Require(Field(game,"railPlace").ToString()=="Platform","Morning lift did not carry player");
         Call("ReturnToTitle");
         Require(Phase=="Title" && Field(game,"railPlace").ToString()=="Street" && before==File.ReadAllText(FilePath),"Free exploration changed the ledger or kept the passenger");
+        Require(music.clip && music.clip.name=="kinsei-waltz","Night music did not return");
         store.Change(l=>{l.nights++;l.Settle("exclusive",0);});Call("LoadCampaign");
         before=File.ReadAllText(FilePath);
         var phase=typeof(KinseiSession).GetField("phase",Access);

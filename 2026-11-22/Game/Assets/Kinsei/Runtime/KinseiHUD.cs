@@ -89,6 +89,7 @@ public sealed partial class KinseiSession
     {
         if(paused) TogglePause();
         ClearDawn();
+        portraitOwner=null;neighbours.EndCounterLine(clock);
         ClearStageWitness();
         relayCam.enabled=false; phase=Phase.Title; command=false; SetCamera(0);
     }
@@ -193,6 +194,7 @@ public sealed partial class KinseiSession
             var counter=shopView==ShopView.None?NearbyCounter():shopView;
             if(counter!=ShopView.None)hints=shopView==ShopView.None?"C　"+ShopViewLabel(counter)+"を見る　　Tab　組員を指揮":ShopViewLabel(counter)+"　　C　元の視点へ　　Tab　組員を指揮";
             string railHint=RailHint();if(railHint.Length>0)hints=railHint;
+            if(PortraitHint.Length>0)hints="E　話す　　"+PortraitHint;
             Letter(new Rect(185,bottom+6,hudW-207,50),hints,17,cream);
             string interact=Interaction();
             if(interact.Length>0 && shopView==ShopView.None){

@@ -12,12 +12,13 @@ public sealed partial class KinseiWorld
     readonly Vector3[] keyRest=new Vector3[61];
     readonly float[] keyDepth=new float[61], strike=new float[61];
     static readonly int[] Naturals={0,2,4,5,7,9,11};
-    WaltzScore waltz;
+    WaltzScore waltz, morningScore;
 
     void FitKeyboard(Transform piano)
     {
         var score=Resources.Load<TextAsset>("KinseiAudio/StageScore");
         waltz=JsonUtility.FromJson<WaltzScore>(score.text);
+        morningScore=JsonUtility.FromJson<WaltzScore>(Resources.Load<TextAsset>("KinseiAudio/MorningScore").text);
         for(int i=0;i<36;i++) {
             float x=(i-17.5f)*.035f;
             int index=(i/7)*12+Naturals[i%7];
@@ -44,11 +45,12 @@ public sealed partial class KinseiWorld
     public void PlayKeys(float seconds,bool playing,out Vector3 left,out Vector3 right)
     {
         Array.Clear(strike,0,strike.Length);
-        float quarter=60f/waltz.bpm;
-        float beat=Mathf.Repeat(seconds/quarter,waltz.bars.Length*3);
+        var programme=dawnBranch==1 && dawnStep==2 ? morningScore : waltz;
+        float quarter=60f/programme.bpm;
+        float beat=Mathf.Repeat(seconds/quarter,programme.bars.Length*3);
         int barIndex=Mathf.FloorToInt(beat/3);
         float localBeat=beat-barIndex*3;
-        var bar=waltz.bars[barIndex];
+        var bar=programme.bars[barIndex];
         int melody=bar.melody[0].midi;
         for(int i=0;i<bar.melody.Length;i++) {
             var pitch=bar.melody[i];

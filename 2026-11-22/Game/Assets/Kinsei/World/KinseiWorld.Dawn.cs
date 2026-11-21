@@ -64,6 +64,7 @@ public sealed partial class KinseiWorld
             RenderSettings.ambientGroundColor=new Color(.25f,.23f,.21f);
             RenderSettings.fogColor=new Color(.71f,.69f,.66f);RenderSettings.fogDensity=.0095f;
             dawnRoot.gameObject.SetActive(true);
+            SetStreetFixtureDay(true);
         }
         dawnBranch=branch;dawnStep=step;
         bool joint=branch==1, delivered=step==2;
@@ -71,7 +72,7 @@ public sealed partial class KinseiWorld
         ShowDawnCard(1,joint?dawnRelayPaper:dawnOfficePaper,joint?(delivered?3:2):(delivered?2:1));
         ShowDawnCard(2,joint?dawnRelayPaper:dawnOfficePaper,joint?(delivered?3:2):0);
         dawnCards[1].transform.parent.gameObject.SetActive(!joint);
-        dawnCards[2].transform.parent.localPosition=joint?new Vector3(16.85f,1.389f,-18.16f):new Vector3(-1.94f,1.258f,-5.415f);
+        dawnCards[2].transform.parent.localPosition=joint?new Vector3(17.29f,1.389f,-18.32f):new Vector3(-1.94f,1.258f,-5.415f);
         dawnCards[2].transform.parent.localRotation=Quaternion.Euler(0,joint?0:180,0);
         dawnTicket.gameObject.SetActive(!joint && delivered);
         if(exchangeScreen)
@@ -95,6 +96,7 @@ public sealed partial class KinseiWorld
     {
         if(dawnBranch==0)return;
         dawnBranch=0;dawnStep=0;
+        SetStreetFixtureDay(false);
         if(dawnRoot)dawnRoot.gameObject.SetActive(false);
         RenderSettings.ambientSkyColor=nightSky;RenderSettings.ambientEquatorColor=nightEquator;
         RenderSettings.ambientGroundColor=nightGround;RenderSettings.fogColor=nightHaze;RenderSettings.fogDensity=nightDensity;

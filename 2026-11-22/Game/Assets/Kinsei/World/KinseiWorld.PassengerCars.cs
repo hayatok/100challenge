@@ -4,6 +4,7 @@ using UnityEngine;
 public sealed partial class KinseiWorld
 {
     Material railSeat,routePrint,ticketPrint,railWindow;
+    Material[] carriageAdverts;
     Material RailPrint(string key,Material baseMaterial)
     {
         var texture=Resources.Load<Texture2D>("KinseiRail/"+key);
@@ -21,6 +22,7 @@ public sealed partial class KinseiWorld
     {
         if(!railSeat){
             railSeat=RailPrint("Moquette",velvet);routePrint=RailPrint("RouteBoard",cream);ticketPrint=RailPrint("Ticket",cream);
+            carriageAdverts=PrintCells("CarAdvertisements",2,2);
             railWindow=new Material(Resources.Load<Shader>("KinseiRailGlass")){name="客室の薄い安全ガラス"};
         }
         void Panel(string name,float dx,float y,float z,float w,float h,float d,Material mat)
@@ -47,6 +49,12 @@ public sealed partial class KinseiWorld
             float dx=end*4.21f;
             Panel("Cab end",dx,.87f,0,.10f,1.16f,2.21f,ivory);
             Panel("End header",dx,2.45f,0,.105f,.72f,2.21f,ivory);
+            int advert=car*2+(end>0?1:0);
+            Panel("車内広告の亜鉛枠",dx-end*.061f,2.43f,0,.024f,.49f,1.22f,steel);
+            var placard=Part("妻壁の地元広告",PrimitiveType.Quad,
+                new Vector3(x+dx-end*.076f,2.43f,0),new Vector3(1.17f,.45f,1),carriageAdverts[advert],false,train);
+            placard.transform.localRotation=Quaternion.Euler(0,end*90,0);
+            Moving(placard);parts.Add(placard.GetComponent<Renderer>());
             CarCollider("Cab partition",new Vector3(x+dx,1.5f,0),new Vector3(.10f,2.6f,2.22f));
             Panel("Route indicator",dx+end*.065f,2.44f,0,.034f,.19f,.78f,lamp);
             Panel("Headlamp",dx+end*.065f,.99f,.78f,.05f,.19f,.21f,lamp);

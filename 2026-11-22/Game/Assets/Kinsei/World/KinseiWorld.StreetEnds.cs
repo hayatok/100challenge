@@ -203,6 +203,7 @@ public sealed partial class KinseiWorld
         e.timber.Upload(owner.Root,sash,owner); e.window.Upload(owner.Root,home,owner);
         e.road.Upload(owner.Root,asphalt,owner); e.roof.Upload(owner.Root,distant,owner);
         e.canal.Upload(owner.Root,water,owner);
+        BuildStreetFixtures(water,zinc);
         Text("電器修理",new Vector3(26.75f,3.26f,-14.085f),.34f,cream,180f);
         Text("仕立",new Vector3(-19.79f,2.22f,-7.01f),.21f,cream,0);
         Text("理髪",new Vector3(13.60f,2.22f,-7.04f),.21f,cream,0);

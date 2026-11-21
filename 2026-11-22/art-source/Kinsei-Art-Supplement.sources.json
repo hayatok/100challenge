@@ -1,0 +1,124 @@
+[
+  {
+    "figure": "rail-study",
+    "file": "art-source/railway/studies/car-at-night.jpg",
+    "caption": "MOSS設定画　夜の客室。吊革と窓の上端をそろえた。",
+    "crop": null,
+    "sha256": "d9e37cc6f2719e900431c028420f6848dc65ffacd44f1535348b0b92d8c20666"
+  },
+  {
+    "figure": "rail-inside",
+    "file": "evidence/v09/saloon-glass.png",
+    "caption": "Windows実機 v0.9　戸袋と座席に囲まれた乗降口",
+    "crop": null,
+    "sha256": "a2d168e2a65aed7c346dba3c5013c81f6e4faa2ea95470e56c32a4736703b04d"
+  },
+  {
+    "figure": "rail-window",
+    "file": "evidence/v09/window-glass.png",
+    "caption": "Windows実機 v0.9　走行中に車窓から見た住宅の窓灯",
+    "crop": null,
+    "sha256": "f239747d2a5e0fec14aa039ba7cc1d13d63ece315067db845365cf959180b404"
+  },
+  {
+    "figure": "ads",
+    "file": "Game/Assets/Resources/KinseiPrintworks/CarAdvertisements.png",
+    "caption": "MOSS図案・後組版　車内掲出用の完成原稿。各枠は1024 × 400ピクセル。",
+    "crop": null,
+    "sha256": "5b0e99f4de7cf1e8bbac85272acdac0fa582269c524b82e1a9ea83444f21cb4e"
+  },
+  {
+    "figure": "lotus-study",
+    "file": "art-source/dawnworld/lotus-request-morning.png",
+    "caption": "GPT Image設定画　澄子が客席へ依頼札を差し出す。",
+    "crop": null,
+    "sha256": "63a1999cb3df13718c133b852ddc9a3ed27c9de173d277ac378e1ec0d50d055c"
+  },
+  {
+    "figure": "lotus-work",
+    "file": "evidence/v010/coffee-joint.png",
+    "caption": "Windows実機 v0.10　サイフォンの前で手を動かす澄子",
+    "crop": null,
+    "sha256": "9f466fa5870b849325531c3f8f132d923b754d44766b31c91f871b00eac2ff8e"
+  },
+  {
+    "figure": "joint-signal",
+    "file": "evidence/v10rc1/live-card-dawnjoint.png",
+    "caption": "Windows実機 1.0候補　演奏中の番組札とVU計",
+    "crop": null,
+    "sha256": "110843ff393e94c34b9bb4158007a7f3fa3035ae5966406e0a3b1a00b47d001c"
+  },
+  {
+    "figure": "needle-study",
+    "file": "art-source/dawnworld/needle-first-ticket.png",
+    "caption": "GPT Image設定画　兵藤が一番券を真鍮皿に収める。",
+    "crop": null,
+    "sha256": "f68be16d2febb82355f69db8d32f945039b698d136ed6f046dca4c9cbd41dfe1"
+  },
+  {
+    "figure": "ticket-hand",
+    "file": "evidence/v010/give-exclusive.png",
+    "caption": "Windows実機 v0.10・部分　受け渡し直前の真壁の左手",
+    "crop": [
+      0.29,
+      0.46,
+      0.63,
+      0.88
+    ],
+    "sha256": "8bec1d02865cbb83e6929ebc1787c4c861a25ba530daa66f000be0e91e6e285f"
+  },
+  {
+    "figure": "needle-sale",
+    "file": "evidence/v10rc1/advance-ticket-dawnexclusive.png",
+    "caption": "Windows実機 1.0候補　前売り札と皿の一番券",
+    "crop": null,
+    "sha256": "adffe956561808351068e1f172ad58eec4b1de39eb1a988597ed54e46b1ddf49"
+  },
+  {
+    "figure": "lips",
+    "file": "art-source/resident-acting/source-lip-comparison.png",
+    "caption": "CPU形状図　上から澄子、兵藤、村瀬。各列は同じ顔の状態違い。",
+    "crop": null,
+    "sha256": "1245cceb6e5b94f240105eb69dc6bf393d290ec45e8887b41e7d492711d64bfa"
+  },
+  {
+    "figure": "acting-live",
+    "file": "evidence/v10rc1/owner-dawnjoint.png",
+    "caption": "Windows実機 1.0候補・部分　話しかけた澄子の表情",
+    "crop": [
+      0.21,
+      0.14,
+      0.77,
+      0.86
+    ],
+    "sha256": "add7f1a0f8dc93d6ca82b8567acc7951ff78fcb4484582e68f4b976a0bbb4541"
+  },
+  {
+    "figure": "canal-live",
+    "file": "evidence/v10rc1/bridge-nighttrain.png",
+    "caption": "Windows実機 1.0候補　石柱の灯が欄干と橋面を照らす。",
+    "crop": null,
+    "sha256": "9035d1ee1c44432ee2a311a4f924417431ce5bbc226749cf76290e3e6db1a2e0"
+  },
+  {
+    "figure": "repair-live",
+    "file": "evidence/v10rc1/repair-nighttrain.png",
+    "caption": "Windows実機 1.0候補　庇の直管と修理中の受像機",
+    "crop": null,
+    "sha256": "29370a8aa1b3608ad31877017ac54d3657915975cb48be2bd186e65690b56e19"
+  },
+  {
+    "figure": "canal-geometry",
+    "file": "evidence/v10rc1/bridge-dawnjoint.png",
+    "caption": "Windows実機 1.0候補　翌朝の欄干と石柱",
+    "crop": null,
+    "sha256": "6884cf1e1d31fa137a955a8ebddd3ee08cf6f96ed52d285c663b65741e8d4edd"
+  },
+  {
+    "figure": "repair-geometry",
+    "file": "evidence/v10rc1/repair-dawnjoint.png",
+    "caption": "Windows実機 1.0候補　翌朝の作業台",
+    "crop": null,
+    "sha256": "18be2982e0feab7c288d13d4af5e20d012034575a99c337feb9c1ed66de3b553"
+  }
+]

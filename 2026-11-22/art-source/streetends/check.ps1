@@ -13,6 +13,11 @@ foreach(var v in positions){writer.Write(v.x);writer.Write(v.y);writer.Write(v.z
 $stub=(Get-Content -Raw "$PSScriptRoot/stub.txt")
 $modelPath="$PSScriptRoot/../../Assets/Kinsei/World/KinseiWorld.StreetEnds.cs"
 if (!(Test-Path -LiteralPath $modelPath)){$modelPath="$Project/Game/Assets/Kinsei/World/KinseiWorld.StreetEnds.cs"}
+$fixturePath=Join-Path (Split-Path $modelPath) 'KinseiWorld.StreetLighting.cs'
+$fixtureSource=Get-Content -Raw $fixturePath
+$fixtureStart=$fixtureSource.IndexOf('    static void MakeStreetFixtures(')
+$fixtureEnd=$fixtureSource.IndexOf('    void BuildStreetFixtures(')
+$stub+=$fixtureSource.Substring($fixtureStart,$fixtureEnd-$fixtureStart)
 $model=(Get-Content -Raw $modelPath).Replace('using UnityEngine;','')
 Add-Type -TypeDefinition ("using UnityEngine;`n"+$stub+$window+$geometry+$upload+$model)
 [KinseiWorld]::Dump("$OutDir/geometry.bin")
