@@ -1,7 +1,8 @@
 import './style.css';
+import { BoardFeedback } from './board-feedback.ts';
 import { BoardView } from './board-view.ts';
-import { BOARD_HEIGHT, BOARD_WIDTH, clampDropX, DEFAULT_DROP_X, FIRST_BOARD_SEED, PinboardRun, STEP } from './game.ts';
-import type { Impact, Phase, Upgrade } from './game.ts';
+import { BOARD_WIDTH, clampDropX, DEFAULT_DROP_X, FIRST_BOARD_SEED, PinboardRun, STEP } from './game.ts';
+import type { Phase, Upgrade } from './game.ts';
 import { GameSound } from './sound.ts';
 
 const element = <T extends HTMLElement>(id: string) => document.getElementById(id) as T;
@@ -53,6 +54,7 @@ function start() {
   let timeBank = 0;
   let drawAvailable = true;
   let metGoal = false;
+  const feedback = new BoardFeedback(board, effects, motionPreference.matches);
 
   function updateScore() {
     stage.textContent = String(run.stage);
@@ -73,8 +75,8 @@ function start() {
     upgradePanel.hidden = run.phase !== 'upgrade';
     resultPanel.hidden = !finished;
     launcher.disabled = !drawAvailable || shootPanel.hidden;
-    launcher.setAttribute('aria-disabled', String(run.phase !== 'ready' || !drawAvailable));
-    railHint.hidden = run.phase !== 'ready' || run.shotsUsed > 0;
+    launcher.setAttribute('aria-disabled', String(!run.canDrop || !drawAvailable));
+    railHint.hidden = !run.canDrop || run.shotsUsed > 0;
 
     const active = element('active-upgrade');
     active.hidden = run.upgrade === null;
@@ -97,7 +99,7 @@ function start() {
     timeBank = 0;
     lastTime = undefined;
     metGoal = false;
-    effects.replaceChildren();
+    feedback.reset();
     view.reset(run.pins, run.stage);
     updateScore();
     updatePanels();
@@ -115,33 +117,14 @@ function start() {
     delete launcher.dataset.grabbed;
   }
 
-  function showImpact(impact: Impact) {
-    if (motionPreference.matches) return;
-    while (effects.childElementCount >= 12) effects.firstElementChild?.remove();
-    const points = document.createElement('span');
-    points.className = 'point-pop';
-    points.dataset.kind = impact.pin.kind;
-    points.style.left = `${impact.pin.x / BOARD_WIDTH * 100}%`;
-    points.style.top = `${impact.pin.y / BOARD_HEIGHT * 100}%`;
-    points.textContent = `+${impact.points}`;
-    points.addEventListener('animationend', () => points.remove(), { once: true });
-    effects.append(points);
-    if (impact.chain !== 5 && impact.chain !== 10 && impact.chain !== 20 && impact.chain !== 30) return;
-    effects.querySelector('.chain-pop')?.remove();
-    const chain = document.createElement('span');
-    chain.className = 'chain-pop';
-    chain.textContent = `${impact.chain} 連鎖`;
-    chain.addEventListener('animationend', () => chain.remove(), { once: true });
-    effects.append(chain);
-  }
-
   function shoot() {
     if (!drawAvailable || !run.drop(aimX)) return;
     sound.activate();
     sound.launch();
     updateScore();
     updatePanels();
-    setStatus(`${run.shotsUsed}球目が落下中。`);
+    const action = run.canDrop ? `あと ${run.remaining} 球、すぐ放せます。` : '盤面の玉が落ちきると結果が出ます。';
+    setStatus(metGoal ? `ノルマ達成。${action}` : action, metGoal ? 'success' : 'neutral');
   }
 
   function applyUpgrade(upgrade: Upgrade) {
@@ -169,7 +152,7 @@ function start() {
     if (run.phase === 'ready') {
       setStatus(run.stageScore >= run.goal
         ? `ノルマ達成。残り ${run.remaining} 球で得点を伸ばせます。`
-        : `この球は ${run.chain} 連鎖。ノルマまであと ${run.goal - run.stageScore} 点。`, run.stageScore >= run.goal ? 'success' : 'neutral');
+        : `この面の最高は ${run.chain} 連鎖。ノルマまであと ${run.goal - run.stageScore} 点。`, run.stageScore >= run.goal ? 'success' : 'neutral');
     } else if (run.phase === 'upgrade') {
       setStatus('第1面クリア。強化を選んでください。', 'success');
       upgradeSplit.focus();
@@ -181,11 +164,11 @@ function start() {
   }
 
   launcher.addEventListener('pointermove', (event) => {
-    if (run.phase !== 'ready' || !drawAvailable) return;
+    if (!run.canDrop || !drawAvailable) return;
     if (capturedPointer === event.pointerId || (capturedPointer === null && event.pointerType === 'mouse')) aimAtPointer(event);
   });
   launcher.addEventListener('pointerdown', (event) => {
-    if (run.phase !== 'ready' || !drawAvailable || capturedPointer !== null || !event.isPrimary || event.button !== 0) return;
+    if (!run.canDrop || !drawAvailable || capturedPointer !== null || !event.isPrimary || event.button !== 0) return;
     capturedPointer = event.pointerId;
     launcher.setPointerCapture(event.pointerId);
     launcher.dataset.grabbed = 'true';
@@ -236,7 +219,7 @@ function start() {
     }
     // The rail's native activation must also pass the pointer and shot guards.
     if (onLauncher && launchKey) event.preventDefault();
-    if (run.phase !== 'ready' || !drawAvailable || capturedPointer !== null || event.altKey || event.ctrlKey || event.metaKey) return;
+    if (!run.canDrop || !drawAvailable || capturedPointer !== null || event.altKey || event.ctrlKey || event.metaKey) return;
     if (event.target instanceof HTMLButtonElement && !onLauncher) return;
     if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
       event.preventDefault();
@@ -249,18 +232,20 @@ function start() {
 
   motionPreference.addEventListener('change', (event) => {
     view.setReducedMotion(event.matches);
-    if (event.matches) effects.replaceChildren();
+    feedback.setReducedMotion(event.matches);
   });
   window.addEventListener('blur', releasePointer);
   document.addEventListener('visibilitychange', () => {
     lastTime = undefined;
     timeBank = 0;
+    if (document.hidden) feedback.reset();
   });
   const canvas = board.querySelector('canvas');
   canvas?.addEventListener('webglcontextlost', (event) => {
     event.preventDefault();
     drawAvailable = false;
     releasePointer();
+    feedback.reset();
     updatePanels();
     setStatus('画面の描画を一時停止しました。戻らない場合は再読み込みしてください。', 'error');
   });
@@ -285,12 +270,13 @@ function start() {
         const impacts = run.step(STEP);
         for (const impact of impacts) {
           view.hit(impact);
-          showImpact(impact);
+          feedback.hit(impact);
           sound.hit(impact.pin.kind, impact.chain);
         }
         if (impacts.length) updateScore();
         if (!metGoal && run.stageScore >= run.goal) {
           metGoal = true;
+          feedback.goal();
           sound.clear();
           setStatus('ノルマを達成しました。', 'success');
         }
@@ -300,7 +286,7 @@ function start() {
       timeBank = 0;
     }
     onPhaseChange(phaseBefore);
-    view.draw(run.balls, run.phase === 'ready' ? aimX : null, delta);
+    view.draw(run.balls, run.canDrop ? aimX : null, delta);
   });
 }
 

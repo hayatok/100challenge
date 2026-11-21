@@ -5,7 +5,6 @@ import type { Impact, Upgrade } from '../src/game.ts';
 
 function dropFrom(run: PinboardRun, x: number) {
   assert.ok(run.drop(x));
-  assert.equal(run.drop(x), false, 'only one player shot may be active');
   const impacts: Impact[] = [];
   for (let tick = 0; tick < 2400 && run.phase === 'dropping'; tick++) {
     impacts.push(...run.step(STEP));
@@ -13,6 +12,45 @@ function dropFrom(run: PinboardRun, x: number) {
   assert.notEqual(run.phase, 'dropping', 'the original and any extra balls settle');
   return impacts;
 }
+
+test('three immediate drops overlap and each group of balls scores its own chain', () => {
+  const run = new PinboardRun(FIRST_BOARD_SEED);
+  for (const x of [431, 158, 522]) assert.ok(run.drop(x));
+  assert.deepEqual(run.balls.map(({ shotId, origin }) => [shotId, origin]), [[1, 'drop'], [2, 'drop'], [3, 'drop']]);
+  assert.equal(run.remaining, 0);
+  assert.equal(run.canDrop, false);
+  assert.equal(run.drop(340), false);
+  assert.equal(run.chooseUpgrade('split'), false, 'remaining ball motion must resolve before choosing an upgrade');
+
+  const hits: Impact[] = [];
+  const addedBalls = new Map<number, { shotId: number; origin: 'split' | 'bonus' }>();
+  for (let tick = 0; tick < 2400 && run.phase === 'dropping'; tick++) {
+    hits.push(...run.step(STEP));
+    for (const { id, origin, shotId } of run.balls) {
+      if (origin !== 'drop') addedBalls.set(id, { origin, shotId });
+    }
+  }
+  assert.equal(run.phase, 'upgrade');
+  assert.equal(run.balls.length, 0);
+  for (const shotId of [1, 2, 3]) {
+    const shotHits = hits.filter((hit) => hit.shotId === shotId);
+    assert.ok(shotHits.length > 0);
+    assert.deepEqual(shotHits.map(({ points }) => points), shotHits.map((_, index) => index + 1));
+    for (const origin of ['split', 'bonus']) {
+      const expected = shotHits.filter(({ pin }) => pin.kind === origin).reduce((sum, hit) => sum + hit.addedBalls, 0);
+      assert.equal([...addedBalls.values()].filter((ball) => ball.shotId === shotId && ball.origin === origin).length, expected);
+    }
+  }
+  assert.ok([...addedBalls.values()].some((ball) => ball.origin === 'split'));
+  assert.ok([...addedBalls.values()].some((ball) => ball.origin === 'bonus'));
+  assert.equal(new Set(hits.map(({ pin }) => pin.id)).size, hits.length);
+  assert.equal(run.stageScore, hits.reduce((sum, hit) => sum + hit.points, 0));
+  assert.equal(run.chain, Math.max(...hits.map(({ chain }) => chain)));
+  assert.ok(run.chooseUpgrade('split'));
+  assert.equal(run.remaining, 3);
+  assert.equal(run.chain, 0);
+  assert.equal(run.canDrop, true);
+});
 
 function reachUpgrade() {
   const run = new PinboardRun(FIRST_BOARD_SEED);

@@ -130,6 +130,13 @@ interface PinInstance {
   index: number;
 }
 
+interface BallSprite {
+  group: THREE.Group;
+  sphere: THREE.Mesh<THREE.SphereGeometry, THREE.MeshStandardMaterial>;
+  glow: THREE.Mesh<THREE.RingGeometry, THREE.MeshBasicMaterial>;
+  trail: THREE.Mesh<THREE.CircleGeometry, THREE.MeshBasicMaterial>;
+}
+
 interface ImpactRing {
   mesh: THREE.Mesh<THREE.RingGeometry, THREE.MeshBasicMaterial>;
   age: number;
@@ -158,12 +165,17 @@ export class BoardView {
   private readonly symbolGeometry = new THREE.BoxGeometry(11.9, 2.9, 0.8);
   private readonly symbolMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff });
   private readonly ballGeometry = new THREE.SphereGeometry(BALL_RADIUS, 20, 12);
-  private readonly ballMaterial = metal(0xfff0cf, 0.28, 0.16);
+  private readonly ballMaterials = {
+    drop: metal(0xfff0cf, 0.28, 0.16),
+    split: new THREE.MeshStandardMaterial({ color: 0x72dcff, emissive: 0x1276a5, emissiveIntensity: 0.55, roughness: 0.25, metalness: 0.16 }),
+    bonus: new THREE.MeshStandardMaterial({ color: 0xffd365, emissive: 0xa96810, emissiveIntensity: 0.55, roughness: 0.25, metalness: 0.16 }),
+  };
+  private readonly birthGeometry = new THREE.RingGeometry(BALL_RADIUS + 1.5, BALL_RADIUS + 4.5, 24);
   private readonly shadowGeometry = new THREE.CircleGeometry(BALL_RADIUS + 1, 22);
   private readonly shadowMaterial = new THREE.MeshBasicMaterial({ color: 0x061614, transparent: true, opacity: 0.68 });
   private readonly trailGeometry = new THREE.CircleGeometry(1, 16);
   private readonly trailMaterial = new THREE.MeshBasicMaterial({ color: 0xc7ead1, transparent: true, opacity: 0.34 });
-  private readonly ballSprites: THREE.Group[] = [];
+  private readonly ballSprites: BallSprite[] = [];
   private readonly impactRings: ImpactRing[] = [];
   private readonly transform = new THREE.Matrix4();
   private readonly hidden = new THREE.Matrix4().makeTranslation(-200, 200, 0);
@@ -209,7 +221,7 @@ export class BoardView {
       grip.position.set(direction * 13, 0, 0.4);
       this.marker.add(grip);
     }
-    this.marker.add(this.createBallSprite());
+    this.marker.add(this.createBallSprite().group);
     const dashGeometry = new THREE.PlaneGeometry(2, 5);
     for (let i = 0; i < 3; i++) {
       const dash = new THREE.Mesh(dashGeometry, this.markerInk);
@@ -278,6 +290,8 @@ export class BoardView {
     this.railLight.color.copy(this.stageColor);
     this.railLight.opacity = 0.43;
     this.chainPulse = 0;
+    for (const sprite of this.ballSprites) sprite.group.visible = false;
+    this.lastBallCount = 0;
     for (const ring of this.impactRings) {
       ring.mesh.visible = false;
       ring.age = IMPACT_DURATION;
@@ -386,14 +400,19 @@ export class BoardView {
     if (symbols.instanceColor) symbols.instanceColor.needsUpdate = true;
   }
 
-  private createBallSprite() {
-    const sprite = new THREE.Group();
+  private createBallSprite(): BallSprite {
+    const group = new THREE.Group();
     const shadow = new THREE.Mesh(this.shadowGeometry, this.shadowMaterial);
     shadow.position.set(2.8, -3.7, 0.3);
-    const sphere = new THREE.Mesh(this.ballGeometry, this.ballMaterial);
+    const sphere = new THREE.Mesh(this.ballGeometry, this.ballMaterials.drop);
     sphere.position.z = 9.5;
-    sprite.add(shadow, sphere);
-    return sprite;
+    const glow = new THREE.Mesh(this.birthGeometry, new THREE.MeshBasicMaterial({ transparent: true, depthWrite: false }));
+    glow.position.z = 9;
+    glow.visible = false;
+    const trail = new THREE.Mesh(this.trailGeometry, this.trailMaterial);
+    trail.visible = false;
+    group.add(shadow, sphere, glow, trail);
+    return { group, sphere, glow, trail };
   }
 
   private drawBalls(balls: readonly Ball[]) {
@@ -401,15 +420,22 @@ export class BoardView {
     balls.forEach((ball, i) => {
       if (i === this.ballSprites.length) {
         const sprite = this.createBallSprite();
-        const trail = new THREE.Mesh(this.trailGeometry, this.trailMaterial);
-        sprite.add(trail);
         this.ballSprites.push(sprite);
-        this.scene.add(sprite);
+        this.scene.add(sprite.group);
       }
       const sprite = this.ballSprites[i];
-      sprite.visible = true;
-      sprite.position.set(ball.x, -ball.y, 0);
-      const trail = sprite.children[2];
+      sprite.group.visible = true;
+      sprite.group.position.set(ball.x, -ball.y, 0);
+      sprite.sphere.material = this.ballMaterials[ball.origin];
+      // Birth rings surround the true ball position; physics and the sphere radius stay unchanged.
+      const birth = Math.max(0, 1 - ball.age / 0.55);
+      sprite.glow.visible = !this.reducedMotion && ball.origin !== 'drop' && birth > 0;
+      if (sprite.glow.visible) {
+        sprite.glow.material.color.setHex(ball.origin === 'split' ? 0x8be7ff : 0xffdb70);
+        sprite.glow.material.opacity = birth * 0.85;
+        sprite.glow.scale.setScalar(1 + (1 - birth) * 0.65);
+      }
+      const trail = sprite.trail;
       const speed = Math.hypot(ball.vx, ball.vy);
       trail.visible = !this.reducedMotion && speed > 160 && ball.age > 0.033;
       if (trail.visible) {
@@ -419,6 +445,6 @@ export class BoardView {
         trail.scale.set(length, 2.25, 1);
       }
     });
-    for (let i = balls.length; i < this.ballSprites.length; i++) this.ballSprites[i].visible = false;
+    for (let i = balls.length; i < this.ballSprites.length; i++) this.ballSprites[i].group.visible = false;
   }
 }

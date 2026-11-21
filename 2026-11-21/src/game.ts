@@ -6,7 +6,7 @@ export const PIN_RADIUS = 12;
 export const BALL_RADIUS = 8;
 export const BALLS_PER_STAGE = 3;
 export const FIRST_BOARD_SEED = 20261323;
-export const DEFAULT_DROP_X = 249;
+export const DEFAULT_DROP_X = 431;
 export const STEP = 1 / 120;
 
 const WALL = 21;
@@ -21,8 +21,8 @@ export type Upgrade = 'split' | 'bonus';
 export type Phase = 'ready' | 'dropping' | 'upgrade' | 'clear' | 'failed';
 export type Stage = 1 | 2;
 export type Pin = { id: number; x: number; y: number; kind: PinKind; alive: boolean };
-export type Ball = { id: number; x: number; y: number; vx: number; vy: number; age: number };
-export type Impact = { pin: Pin; chain: number; points: number };
+export type Ball = { id: number; x: number; y: number; vx: number; vy: number; age: number; origin: 'drop' | 'split' | 'bonus'; shotId: number };
+export type Impact = { pin: Pin; chain: number; points: number; addedBalls: number; shotId: number };
 
 type Spawn = Omit<Ball, 'id' | 'age'> & { delay: number };
 type PinRow = { y: number; x: readonly number[]; split?: readonly number[]; bonus?: readonly number[] };
@@ -79,12 +79,12 @@ export class PinboardRun {
   shotsUsed = 0;
   stageScore = 0;
   totalScore = 0;
-  chain = 0;
   bestChain = 0;
   pins: Pin[];
   balls: Ball[] = [];
 
   private random: () => number;
+  private shotChains: number[] = [];
   private pending: Spawn[] = [];
   private nextId = 0;
   private settleTime = 0;
@@ -97,14 +97,16 @@ export class PinboardRun {
 
   get goal() { return GOALS[this.stage - 1]; }
   get remaining() { return BALLS_PER_STAGE - this.shotsUsed; }
+  get chain() { return Math.max(0, ...this.shotChains); }
+  get canDrop() { return this.remaining > 0 && (this.phase === 'ready' || this.phase === 'dropping'); }
 
   drop(x: number) {
-    if (this.phase !== 'ready' || this.remaining === 0 || !Number.isFinite(x)) return false;
+    if (!this.canDrop || !Number.isFinite(x)) return false;
     this.shotsUsed++;
-    this.chain = 0;
+    this.shotChains.push(0);
     this.settleTime = 0;
     this.phase = 'dropping';
-    this.addBall({ x: clampDropX(x), y: DROP_Y, vx: 0, vy: 45 });
+    this.addBall({ x: clampDropX(x), y: DROP_Y, vx: 0, vy: 45, origin: 'drop', shotId: this.shotsUsed });
     return true;
   }
 
@@ -115,7 +117,7 @@ export class PinboardRun {
     this.phase = 'ready';
     this.shotsUsed = 0;
     this.stageScore = 0;
-    this.chain = 0;
+    this.shotChains = [];
     this.pins = buildBoard(this.seed, this.stage);
     // Stage 2 starts from the same random sequence for either upgrade.
     this.random = randomSource(this.seed ^ 0xfb387dcc);
@@ -156,23 +158,23 @@ export class PinboardRun {
     this.balls = this.balls.filter((ball) => ball.y < BOARD_HEIGHT + BALL_RADIUS && ball.age < 6);
     if (this.balls.length === 0 && this.pending.length === 0) {
       this.settleTime += delta;
-      if (this.settleTime >= 0.4) this.finishShot();
+      if (this.settleTime >= 0.4) this.finishDropSequence();
     }
     return impacts;
   }
 
   private addBall(ball: Omit<Ball, 'id' | 'age'>) {
-    const { x, y, vx, vy } = ball;
-    this.balls.push({ id: this.nextId++, x, y, vx, vy, age: 0 });
+    const { x, y, vx, vy, origin, shotId } = ball;
+    this.balls.push({ id: this.nextId++, x, y, vx, vy, origin, shotId, age: 0 });
   }
 
   private hit(ball: Ball, pin: Pin, dx: number, dy: number, distance: number, impacts: Impact[]) {
     pin.alive = false;
-    this.chain++;
-    this.stageScore += this.chain;
-    this.totalScore += this.chain;
-    this.bestChain = Math.max(this.bestChain, this.chain);
-    impacts.push({ pin, chain: this.chain, points: this.chain });
+    const shotId = ball.shotId;
+    const chain = ++this.shotChains[shotId - 1];
+    this.stageScore += chain;
+    this.totalScore += chain;
+    this.bestChain = Math.max(this.bestChain, chain);
 
     const nx = distance > 0 ? dx / distance : 0;
     const ny = distance > 0 ? dy / distance : -1;
@@ -181,21 +183,25 @@ export class PinboardRun {
     ball.vx = Math.max(-265, Math.min(265, ball.vx - bounce * nx + kick * 43));
     ball.vy = Math.max(-145, ball.vy - bounce * ny);
 
+    let addedBalls = 0;
     if (pin.kind === 'split') {
       const offsets = this.upgrade === 'split' ? [-1, 1] : [-kick];
+      addedBalls = offsets.length;
       for (const side of offsets) {
-        this.pending.push({ delay: 0.035, x: pin.x + side * 9, y: pin.y + 6, vx: side * 138, vy: 90 });
+        this.pending.push({ delay: 0.035, x: pin.x + side * 9, y: pin.y + 6, vx: side * 138, vy: 90, origin: 'split', shotId });
       }
     }
     if (pin.kind === 'bonus') {
       const outlets = this.upgrade === 'bonus' ? [BONUS_OUTLETS[0], BONUS_OUTLETS[2]] : [BONUS_OUTLETS[Math.floor(this.random() * BONUS_OUTLETS.length)]];
+      addedBalls = outlets.length;
       for (const x of outlets) {
-        this.pending.push({ delay: 0.19, x, y: DROP_Y, vx: 0, vy: 55 });
+        this.pending.push({ delay: 0.19, x, y: DROP_Y, vx: 0, vy: 55, origin: 'bonus', shotId });
       }
     }
+    impacts.push({ pin, chain, points: chain, addedBalls, shotId });
   }
 
-  private finishShot() {
+  private finishDropSequence() {
     if (this.remaining > 0) this.phase = 'ready';
     else if (this.stageScore < this.goal) this.phase = 'failed';
     else this.phase = this.stage === 1 ? 'upgrade' : 'clear';
