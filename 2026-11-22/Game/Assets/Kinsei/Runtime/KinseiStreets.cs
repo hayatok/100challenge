@@ -28,7 +28,7 @@ public sealed partial class KinseiSession
     {
         shop=-1;words="";
         if(player.Position.z> -9.7f || player.Position.y>1)return false;
-        return neighbours.TryInteract(player.Position,2.65f,out shop,out words);
+        return neighbours.TryInteract(player.Position,2.65f,out shop,out words,portraitOwner);
     }
 
     string StreetVerb(int shop,string words)

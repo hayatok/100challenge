@@ -33,6 +33,13 @@ public static class KinseiResidentSpeechRegression
             Assert(guestVerb.Contains("崎田"),"Expected the customer nearest the central seat: "+guestVerb);
             Call(game,"Interact");
             Assert(!people.SpeakingOwner,"A customer's line animated a shopkeeper");
+            var portrait=typeof(KinseiSession).GetField("portraitOwner",Access);
+            portrait.SetValue(game,people.Owner(0));
+            Assert(((string)Call(game,"Interaction")).Contains("澄子"),"Focused conversation switched to a bystander");
+            Call(game,"Interact");
+            Assert(people.SpeakingOwner==people.Owner(0),"Answer came from outside the portrait");
+            portrait.SetValue(game,null);
+            people.ResetNight();
             for(int shop=0;shop<3;shop++){
                 var actor=people.Owner(shop);
                 var other=people.Owner((shop+1)%3);

@@ -176,12 +176,12 @@ public sealed partial class KinseiDistrictPeople : MonoBehaviour
         }
     }
     // Call on the interact key. Shop -1 identifies a neighbour without a counter.
-    public bool TryInteract(Vector3 player,float radius,out int shop,out string line)
+    public bool TryInteract(Vector3 player,float radius,out int shop,out string line,KinseiActor focus=null)
     {
         shop=-1;line=null;int nearest=-1;float best=radius*radius;
         for(int i=0;i<locals.Length;i++)
         {
-            if(locals[i]==null)continue;
+            if(locals[i]==null || (focus && locals[i].actor!=focus))continue;
             var p=locals[i].actor.transform.position;
             float range=(p-player).sqrMagnitude;
             if(range>=best || Physics.Linecast(player+Vector3.up*1.4f,p+Vector3.up*1.4f,Physics.DefaultRaycastLayers,QueryTriggerInteraction.Ignore))continue;

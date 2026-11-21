@@ -38,5 +38,6 @@ public sealed partial class KinseiSession
         if(Physics.SphereCast(focus,.055f,delta.normalized,out var hit,delta.magnitude,~0,QueryTriggerInteraction.Ignore))
             eye=focus+delta.normalized*Mathf.Max(.10f,hit.distance-.035f);
     }
-    string PortraitHint => portraitOwner?"Z　元の視点へ":neighbours.SpeakingOwner?"Z　話す相手を見る":"";
+    string PortraitHint => shopView!=ShopView.None ? "" :
+        portraitOwner?"Z　元の視点へ":neighbours.SpeakingOwner?"Z　話す相手を見る":"";
 }

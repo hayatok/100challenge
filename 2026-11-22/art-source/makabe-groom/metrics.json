@@ -1,0 +1,22 @@
+{
+  "vertices": 9366,
+  "triangles": 18288,
+  "closed_locks": 110,
+  "nonmanifold_edges": 0,
+  "reversed_outer_faces": 0,
+  "hairline_clearance_mm": [
+    0.39999999999995595,
+    1.1116911804155694
+  ],
+  "minimum_sampled_scalp_clearance_mm": 0.115,
+  "minimum_tuft_embedding_mm": 0.832,
+  "underside_embedding_mm": 1.6,
+  "source_bounds_metres": [
+    -0.083252,
+    -0.040379,
+    -0.097654,
+    0.083252,
+    0.206758,
+    0.115733
+  ]
+}

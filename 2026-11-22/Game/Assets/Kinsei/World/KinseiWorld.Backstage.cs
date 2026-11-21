@@ -11,9 +11,9 @@ public sealed partial class KinseiWorld
     void BuildBackstage()
     {
         // The west wall runs from -8 to +9. Its opening is clear from .75 to 2.75.
-        Box("West wall south",new Vector3(-9,3,-3.625f),new Vector3(.25f,6,8.75f),wood,true);
-        Box("West wall north",new Vector3(-9,3,5.875f),new Vector3(.25f,6,6.25f),wood,true);
-        Box("West wall header",new Vector3(-9,4.17f,1.75f),new Vector3(.25f,3.66f,2),wood,true);
+        VeneerBox("West wall south",new Vector3(-9,3,-3.625f),new Vector3(.25f,6,8.75f),wood,true,upright:true);
+        VeneerBox("West wall north",new Vector3(-9,3,5.875f),new Vector3(.25f,6,6.25f),wood,true,upright:true);
+        VeneerBox("West wall header",new Vector3(-9,4.17f,1.75f),new Vector3(.25f,3.66f,2),wood,true,upright:true);
         Box("Passage paving",new Vector3(-10.6f,-.13f,-2.52f),new Vector3(3.2f,.24f,11.16f),asphalt,true);
         var plaster=Mat("西通路の洗い出し壁", "#A69A86",.03f,.30f);
         Finish(plaster,"beige_wall_002",new Vector2(5,1.4f),.62f);

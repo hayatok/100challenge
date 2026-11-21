@@ -197,7 +197,7 @@ public sealed partial class KinseiSession
             if(PortraitHint.Length>0)hints="E　話す　　"+PortraitHint;
             Letter(new Rect(185,bottom+6,hudW-207,50),hints,17,cream);
             string interact=Interaction();
-            if(interact.Length>0 && shopView==ShopView.None){
+            if(interact.Length>0 && shopView==ShopView.None && !portraitOwner){
                 float promptWidth=Mathf.Min(hudW-48,Mathf.Max(300,(interact.Length+3)*20+36));
                 Rect prompt=new Rect((hudW-promptWidth)*.5f,hudH*.60f,promptWidth,42);Block(prompt,ink);
                 Letter(prompt,"E　　"+interact,19,gold,false,TextAnchor.MiddleCenter);

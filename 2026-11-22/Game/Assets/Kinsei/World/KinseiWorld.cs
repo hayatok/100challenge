@@ -50,6 +50,7 @@ public sealed partial class KinseiWorld : MonoBehaviour
         BuildNightscape();
         BuildMarquee();
         BatchArchitecture();
+        ReleaseVeneerSources();
     }
     Material Mat(string name,string hex,float metal,float gloss,float emission=0)
     {
@@ -85,8 +86,8 @@ public sealed partial class KinseiWorld : MonoBehaviour
     {
         Box("Club foundation",new Vector3(0,-.15f,.5f),new Vector3(18,.3f,17),dark,true);
         BuildBackstage();
-        Box("East wall",new Vector3(9,3,.5f),new Vector3(.25f,6,17),wood,true);
-        Box("Rear wall",new Vector3(0,3,9),new Vector3(18,6,.25f),wood,true);
+        VeneerBox("East wall",new Vector3(9,3,.5f),new Vector3(.25f,6,17),wood,true,upright:true);
+        VeneerBox("Rear wall",new Vector3(0,3,9),new Vector3(18,6,.25f),wood,true,upright:true);
         Box("Ceiling",new Vector3(0,6.2f,.5f),new Vector3(18,.25f,17),dark);
         for(int side=-1;side<=1;side+=2)
         {
@@ -124,9 +125,9 @@ public sealed partial class KinseiWorld : MonoBehaviour
     }
     void Stage()
     {
-        Box("Raised cabaret stage",new Vector3(-5,.24f,4.4f),new Vector3(6,.48f,3.6f),wood,true);
+        VeneerBox("Raised cabaret stage",new Vector3(-5,.24f,4.4f),new Vector3(6,.48f,3.6f),wood,true);
         Box("Stage brass apron",new Vector3(-5,.25f,2.59f),new Vector3(6,.4f,.05f),brass);
-        Box("Stage first step",new Vector3(-5,.08f,2.1f),new Vector3(2.6f,.16f,.6f),wood,true);
+        VeneerBox("Stage first step",new Vector3(-5,.08f,2.1f),new Vector3(2.6f,.16f,.6f),wood,true);
         for(int i=0;i<31;i++)Cylinder("Gathered velvet curtain",new Vector3(-8+i*.2f,2.7f,6.05f),.15f,4.5f,velvet);
         Box("Velvet proscenium",new Vector3(-5,5,5.9f),new Vector3(6.5f,.6f,.5f),velvet);
         Scallop();
@@ -189,15 +190,15 @@ public sealed partial class KinseiWorld : MonoBehaviour
         for(int side=-1;side<=1;side+=2)for(int i=0;i<3;i++)
         {float z=-5.5f+i*2.7f;Sofa(new Vector3(side*7.4f,0,z),side*90);Table(new Vector3(side*6.3f,0,z));}
         // Service bar sits along the east wall, safely beyond the stair approach.
-        Box("Back bar",new Vector3(7.9f,.56f,7.5f),new Vector3(1.2f,1.12f,2.5f),wood,true);
+        VeneerBox("Back bar",new Vector3(7.9f,.56f,7.5f),new Vector3(1.2f,1.12f,2.5f),wood,true,upright:true);
         Box("Bar marble counter",new Vector3(7.9f,1.15f,7.5f),new Vector3(1.4f,.12f,2.7f),dark);
     }
     void Balcony()
     {
-        Box("Upper conversation terrace",new Vector3(0,3.05f,7.45f),new Vector3(18,.3f,3.1f),wood,true);
+        VeneerBox("Upper conversation terrace",new Vector3(0,3.05f,7.45f),new Vector3(18,.3f,3.1f),wood,true);
         // Sixteen risers with 20 cm height: directly traversable by the player's step controller.
         for(int i=0;i<16;i++)
-        {float h=(i+1)*.2f;Box("Right stair tread "+i,new Vector3(6,h*.5f,.15f+i*.36f),new Vector3(1.9f,h,.37f),wood,true);Box("Stair brass nosing",new Vector3(6,h+.008f,-.025f+i*.36f),new Vector3(1.9f,.018f,.025f),brass);}
+        {float h=(i+1)*.2f;VeneerBox("Right stair tread "+i,new Vector3(6,h*.5f,.15f+i*.36f),new Vector3(1.9f,h,.37f),wood,true);Box("Stair brass nosing",new Vector3(6,h+.008f,-.025f+i*.36f),new Vector3(1.9f,.018f,.025f),brass);}
         for(int side=-1;side<=1;side+=2)
         {float x=6+side*1.0f;Rail(new Vector3(x,1.05f,0),new Vector3(x,4.2f,5.8f),.035f,brass);for(int i=0;i<9;i++){float z=i*.7f;Rail(new Vector3(x,z/5.8f*3.2f,z),new Vector3(x,1.05f+z/5.8f*3.2f,z),.018f,brass);}}
         // Terrace rail leaves the 1.9m stair opening unobstructed.

@@ -697,8 +697,15 @@ public sealed partial class KinseiActor : MonoBehaviour
         }
 
         string style=brother?"Brother":shape;
-        var cap=FindPart("Hair"+style,folder);
-        if(cap!=null)
+        var groomShader=makabe?Resources.Load<Shader>("KinseiMakabe/CombedHair"):null;
+        var groom=groomShader && groomShader.isSupported?FindPart("MakabeGroom","KinseiMakabe/"):null;
+        var cap=groom?groom:FindPart("Hair"+style,folder);
+        if(groom)
+        {
+            hair.shader=groomShader;
+            MeshObject("真壁の七三・襟足ともみあげ",head,hair,CopyPart(groom,V(1,1,reflectZ?-1:1),Vector3.zero));
+        }
+        else if(cap!=null)
         {
             if(resident!=null)hair.color=resident=="Sumiko"?new Color(.82f,.80f,.78f):new Color(.56f,.51f,.49f);
             hair.mainTexture=Resources.Load<Texture2D>(folder+"Hair"+style+"Grain");

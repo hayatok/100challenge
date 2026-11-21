@@ -120,5 +120,43 @@
     "caption": "Windows実機 1.0候補　翌朝の作業台",
     "crop": null,
     "sha256": "18be2982e0feab7c288d13d4af5e20d012034575a99c337feb9c1ed66de3b553"
+  },
+  {
+    "figure": "groom-geometry",
+    "file": "art-source/makabe-groom/comparison.png",
+    "caption": "CPU形状図　上段が旧髪型、下段が新髪型。耳際・襟足・分け目の順。",
+    "crop": null,
+    "sha256": "139c4bdbfa9f059c319e71fbd3fa946d777687d47b08e792e483b5f64fa13f8a"
+  },
+  {
+    "figure": "groom-live",
+    "file": "evidence/v10/other-ads-firstcar.png",
+    "caption": "Windows実機 v1.0・部分　車内で見る右耳と襟足",
+    "crop": [
+      0.07,
+      0.21,
+      0.49,
+      0.84
+    ],
+    "sha256": "525efe9e93979c4adde200ecf514579963d75162cd906b1d4a4cca716b581f5a"
+  },
+  {
+    "figure": "wood-geometry",
+    "file": "art-source/cabinetry/comparison.jpg",
+    "caption": "CPU材質図　左が旧UV、右が新UV。上から客席奥壁・店の腰板・踏板。",
+    "crop": null,
+    "sha256": "1317417f942953bf1223cbe6fa4c3c0ee4ace0fdb903ba0313b62185580ca793"
+  },
+  {
+    "figure": "wood-live",
+    "file": "evidence/v10/west-lane-nighttrain.png",
+    "caption": "Windows実機 v1.0・部分　楽屋通路の縦目と継ぎ目",
+    "crop": [
+      0.45,
+      0.12,
+      0.99,
+      0.85
+    ],
+    "sha256": "a5fae6dd35553640bf2a0ee66c112e635c4a63219887331c288bbb0012359927"
   }
 ]

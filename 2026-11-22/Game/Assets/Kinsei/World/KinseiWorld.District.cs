@@ -38,8 +38,8 @@ public sealed partial class KinseiWorld
             for(int s=-1;s<=1;s+=2)
             {
                 // Alley entrance on either end leaves a second route out at closing.
-                Box("Side wall",new Vector3(s*4.6f,1.72f,-3.87f),new Vector3(.16f,3.44f,4.26f),wood,true,room);
-                Box("Side entry post",new Vector3(s*4.6f,1.72f,-.17f),new Vector3(.16f,3.44f,.34f),wood,true,room);
+                VeneerBox("Side wall",new Vector3(s*4.6f,1.72f,-3.87f),new Vector3(.16f,3.44f,4.26f),wood,true,room,upright:true);
+                VeneerBox("Side entry post",new Vector3(s*4.6f,1.72f,-.17f),new Vector3(.16f,3.44f,.34f),wood,true,room,upright:true);
                 Box("Side lintel",new Vector3(s*4.6f,2.95f,-1),new Vector3(.16f,.98f,1.55f),accent,true,room);
                 Box("Display stall",new Vector3(s*2.78f,.48f,0),new Vector3(3.64f,.96f,.19f),accent,true,room);
                 Box("Display sill",new Vector3(s*2.78f,1,0),new Vector3(3.69f,.09f,.33f),brass,false,room);
@@ -70,7 +70,7 @@ public sealed partial class KinseiWorld
             Moving(bulb);
             shopBulbs[shop]=bulb.GetComponent<Renderer>();
             Cylinder("Pressed metal shade",new Vector3(0,2.78f,-3.8f),.32f,.10f,accent,false,room);
-            Box("Counter plinth",new Vector3(0,.55f,-4.25f),new Vector3(4.45f,.98f,.78f),wood,true,room);
+            VeneerBox("Counter plinth",new Vector3(0,.55f,-4.25f),new Vector3(4.45f,.98f,.78f),wood,true,room,upright:true);
             Box("Counter worktop",new Vector3(0,1.07f,-4.25f),new Vector3(4.66f,.10f,.94f),accent,true,room);
             Box("Worn counter nosing",new Vector3(0,1.065f,-3.766f),new Vector3(4.57f,.037f,.03f),brass,false,room);
             if(shop==0) DressCafe(room,mint);
@@ -142,7 +142,7 @@ public sealed partial class KinseiWorld
         }
         for(int s=-1;s<=1;s+=2)
         {
-            Box("Browser record bin",new Vector3(s*3.64f,.59f,-3.1f),new Vector3(1.15f,.95f,1.6f),wood,true,room);
+            VeneerBox("Browser record bin",new Vector3(s*3.64f,.59f,-3.1f),new Vector3(1.15f,.95f,1.6f),wood,true,room,upright:true);
             for(int column=0;column<2;column++)for(int i=0;i<11;i++){
                 Vector3 at=new Vector3(s*3.64f+(column-.5f)*.40f,1.14f,-3.75f+i*.12f);
                 var cover=Box("Used record sleeve",at,new Vector3(.315f,.315f,.010f),cream,false,room).transform;

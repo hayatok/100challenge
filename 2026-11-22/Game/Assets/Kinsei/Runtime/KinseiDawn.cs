@@ -171,7 +171,7 @@ public sealed partial class KinseiSession
         if(PortraitHint.Length>0)hints="E　話す　　"+PortraitHint;
         Letter(new Rect(22,bottom+6,hudW-44,48),hints,17,cream);
         string verb=Interaction();
-        if(shopView==ShopView.None && verb.Length>0){
+        if(shopView==ShopView.None && !portraitOwner && verb.Length>0){
             var prompt=new Rect((hudW-540)/2,hudH*.60f,540,42);
             Block(prompt,ink);Letter(prompt,"E　"+verb,19,gold,false,TextAnchor.MiddleCenter);
         }
