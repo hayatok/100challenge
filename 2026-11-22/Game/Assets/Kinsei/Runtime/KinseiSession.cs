@@ -271,8 +271,8 @@ public sealed partial class KinseiSession : MonoBehaviour
                 focus=new Vector3(14.88f,1.49f,-18.13f);
             } else {
                 float reveal=Mathf.SmoothStep(0,1,Mathf.InverseLerp(1.63f,2.68f,clock-firstPictureAt));
-                if(reducedMotion)reveal=.67f;
-                eye=KinseiBoxOffice.Counter+Vector3.Lerp(new Vector3(.12f,1.71f,.98f),new Vector3(.54f,1.66f,.26f),reveal);
+                if(reducedMotion)reveal=1;
+                eye=KinseiBoxOffice.Counter+Vector3.Lerp(new Vector3(.12f,1.71f,.98f),new Vector3(.416f,1.66f,.23f),reveal);
                 focus=KinseiBoxOffice.Counter+Vector3.Lerp(new Vector3(.40f,1.12f,.49f),new Vector3(.38f,1.09f,.425f),reveal);
                 cam.fieldOfView=Mathf.Lerp(40,30,reveal);
             }

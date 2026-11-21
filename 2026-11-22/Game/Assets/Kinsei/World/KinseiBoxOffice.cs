@@ -48,7 +48,7 @@ public sealed class KinseiBoxOffice : MonoBehaviour
         var print=GameObject.CreatePrimitive(PrimitiveType.Quad);
         print.name="一番券の通し番号";print.transform.SetParent(firstTicket,false);
         print.transform.localPosition=new Vector3(0,.0013f,.062f);
-        print.transform.localRotation=Quaternion.Euler(90,180,0);print.transform.localScale=new Vector3(.086f,.123f,1);
+        print.transform.localRotation=Quaternion.Euler(90,0,0);print.transform.localScale=new Vector3(.086f,.123f,1);
         print.GetComponent<Renderer>().sharedMaterial=ink;
         var printCollider=print.GetComponent<Collider>();printCollider.enabled=false;Destroy(printCollider);
         SetTicketPress(0);

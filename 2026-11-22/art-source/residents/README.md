@@ -15,3 +15,9 @@
 2. Python、NumPy、Pillow で heads.py に順に base.obj、target のディレクトリ、Game/Assets/Kinsei/Cast/Source/human_parts.json、展開した skins ディレクトリ、出力ディレクトリ、作業用 heads.json を渡す。
 3. 既存の Game/Assets/Kinsei/Cast/build_human_parts.py の subdivision / OBJ export を heads.json に対して実行する。書き出し時の前方軸は Y、上方軸は Z。既存キャストのメートル単位と同じ。
 4. hair.py に出力ディレクトリを渡す。brows.py には同じ出力ディレクトリを2回渡す。スキンに眉を重ねるため、再実行時は手順2で肌を再生成する。
+
+## スプーンと調整具を持つ右手
+
+澄子のスプーンの軸は半径3 mm、村瀬の調整具の柄は半径9 mm。掌を共通の大きさに保ち、道具に合わせて親指を曲げる角度を変えた。メッシュで測った親指表面から軸の中心線までの最短距離は、それぞれ2.94 mmと9.29 mm。手と前腕を手首の裁断線40辺でつなぎ、肘から続く白い袖は端を内側に折り返した。
+
+同じスプーン、元の手メッシュ、照明で指の曲げ方を比較した。修正前に表裏が逆転した面は、指の対象9,264面のうち3,480面。修正後の同じ範囲では0面だった。[左が修正前、右が修正後の形状検査](finger-surface-comparison.jpg)。実際の作業では手首の角度と工具の位置が変わる。[Windows版での接触と作業の動き](../../evidence/v051/README.md)。

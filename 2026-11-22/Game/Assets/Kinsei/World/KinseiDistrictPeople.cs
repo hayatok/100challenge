@@ -4,6 +4,7 @@ using UnityEngine;
 // Routes use elapsed game seconds and metre-scale waypoints in the connected southern district.
 public sealed class KinseiDistrictPeople : MonoBehaviour
 {
+    public static readonly Vector3 ToolGrip=new Vector3(0,-.079f,.021f);
     sealed class Resident
     {
         public KinseiActor actor;
@@ -242,6 +243,7 @@ public sealed class KinseiDistrictPeople : MonoBehaviour
             new[]{new Vector4(0,.863f,.175f,.124f),new Vector4(0,.904f,.181f,.128f),new Vector4(0,1.012f,.157f,.111f),
             new Vector4(0,1.15f,.166f,.123f),new Vector4(0,1.30f,.188f,.132f),new Vector4(0,1.373f,.194f,.101f),
             new Vector4(0,1.442f,.066f,.061f)},cloth);
+        if(woman) Seam(actor,new[]{spine,r.head},new[]{0,0,1},new[]{new Vector4(0,1.419f,.095f,.076f),new Vector4(0,1.447f,.074f,.065f),new Vector4(0,1.475f,.064f,.060f)},cloth);
         foreach(int side in new[]{-1,1})
         {
             var shoulder=spine.Find(side<0?"Left shoulder":"Right shoulder");var elbow=shoulder.Find("Elbow");
@@ -249,8 +251,17 @@ public sealed class KinseiDistrictPeople : MonoBehaviour
             Seam(actor,new[]{shoulder,elbow},new[]{0,0,0,1,1,1}, new[]{new Vector4(sx,1.399f,.032f,.045f),
                 new Vector4(sx,1.364f,.074f,.078f),new Vector4(sx,1.239f,.066f,.070f),
                 new Vector4(sx,1.087f,.054f,.06f),new Vector4(sx,.990f,.047f,.051f),
-                new Vector4(sx,woman?.875f:.848f,.041f,.044f)},cloth);
-            if(woman) Seam(actor,new[]{elbow},new[]{0,0,0},new[]{new Vector4(sx,.889f,.046f,.048f),new Vector4(sx,.873f,.044f,.047f),new Vector4(sx,.836f,.036f,.040f)},bone);
+                new Vector4(sx,woman?.928f:.848f,.041f,.044f)},cloth);
+            if(woman) {
+                var wrist=elbow.Find("Wrist");
+                KinseiWristCuff.Fit(wrist);
+                // The rolled hem stays on the forearm. Its return turns inward below the skin.
+                Seam(actor,new[]{elbow},new[]{0,0,0,0,0,0,0},new[]{
+                    new Vector4(sx,.939f,.045f,.047f),new Vector4(sx,.935f,.047f,.049f),
+                    new Vector4(sx,.911f,.044f,.046f),new Vector4(sx,.880f,.037f,.040f),
+                    new Vector4(sx,.872f,.036f,.039f),new Vector4(sx,.869f,.032f,.035f),
+                    new Vector4(sx,.868f,.013f,.014f)},bone);
+            }
         }
         if(id==0)
         {
@@ -282,9 +293,9 @@ public sealed class KinseiDistrictPeople : MonoBehaviour
         {
             var steel=Fabric("Brushed stainless steel",new Color(.63f,.65f,.66f));
             steel.SetFloat("_Metallic",.85f);steel.SetFloat("_Glossiness",.55f);
-            var grip=new Vector3(0,-.108f,.065f);
-            var angle=Quaternion.Euler(61,0,0);
-            var axis=angle*Vector3.up;
+            var grip=ToolGrip;
+            var angle=Quaternion.FromToRotation(Vector3.up,Vector3.right);
+            var axis=Vector3.right;
             if(id==0)
             {
                 r.carried=Prop(r.wrist,"Coffee spoon handle",PrimitiveType.Cylinder,grip,new Vector3(.006f,.083f,.006f),steel);

@@ -484,7 +484,10 @@ public sealed class KinseiActor : MonoBehaviour
         leftGrip=Mathf.Lerp(leftGrip,gripLeft,blend);
         rightGrip=Mathf.Lerp(rightGrip,gripRight,blend);
         if(leftHandRenderer)leftHandRenderer.SetBlendShapeWeight(0,leftGrip*100);
-        if(rightHandRenderer)rightHandRenderer.SetBlendShapeWeight(0,rightGrip*100);
+        if(rightHandRenderer) {
+            rightHandRenderer.SetBlendShapeWeight(0,rightGrip*100);
+            if(rightHandRenderer.sharedMesh.blendShapeCount>1)rightHandRenderer.SetBlendShapeWeight(1,0);
+        }
         if(faceRenderer)
         {
             float blinkTime=Mathf.Repeat(poseClock+blinkOffset,4.11f+blinkOffset*.48f);
@@ -565,16 +568,16 @@ public sealed class KinseiActor : MonoBehaviour
 
     public void WorkAtCounter(bool coffee,float cycle,float blend)
     {
-        Vector3 grip=new Vector3(0,-.108f,.065f);
-        Vector3 toolAxis=Quaternion.Euler(61,0,0)*Vector3.up;
-        Vector3 tip=grip-toolAxis*(coffee?.099f:.091f);
+        Vector3 tip=KinseiDistrictPeople.ToolGrip-Vector3.right*(coffee?.099f:.091f);
         Vector3 target=coffee?KinseiWorld.CoffeeCupCentre+new Vector3(Mathf.Sin(cycle)*.020f,0,Mathf.Cos(cycle)*.020f):KinseiWorld.RadioTrimSocket;
-        Quaternion pose=Quaternion.LookRotation(Vector3.up,Vector3.back);
-        pose=Quaternion.FromToRotation(pose*toolAxis,Vector3.up)*pose;
+        Quaternion pose=Quaternion.LookRotation(Vector3.Cross(Vector3.up,-transform.forward),-transform.forward);
         float turn=coffee?Mathf.Sin(cycle)*9f:Mathf.Sin(cycle)*32f;
         pose=Quaternion.AngleAxis(turn,Vector3.up)*pose;
         ReachPalm(ra,re,rh,target,pose*Vector3.forward,-(pose*Vector3.up),blend,transform.right,tip);
-        if(rightHandRenderer)rightHandRenderer.SetBlendShapeWeight(0,coffee?57f:69f);
+        if(rightHandRenderer) {
+            rightHandRenderer.SetBlendShapeWeight(0,0);
+            rightHandRenderer.SetBlendShapeWeight(1,blend*100f);
+        }
     }
 
     void ReachPalm(Transform shoulder,Transform elbow,Transform wrist,Vector3 palm,Vector3 normal,
@@ -648,7 +651,7 @@ public sealed class KinseiActor : MonoBehaviour
         float lipLine=resident!=null?.035f:elder?.015f:young?.030f:.025f;
         Vector3 socketCenter=resident!=null?V(.0280f,.1106f,.0824f):elder?ElderEye:young?YoungEye:AdultEye;
         localEyeCenter=V(0,socketCenter.y,socketCenter.z+.010f);
-        faceRenderer=ImportSkin(faceResource,head,chest,V(1,1,reflectZ?-1:1),Vector3.zero,detailJaw,lipLine,socketCenter.y);
+        faceRenderer=ImportSkin(faceResource,head,chest,V(1,1,reflectZ?-1:1),Vector3.zero,detailJaw,lipLine,socketCenter.y,workCollar:roleName=="resident" && resident!=null);
         foreach(var wrist in new[]{lh,rh})
         {
             bool left=wrist==lh;
@@ -664,7 +667,7 @@ public sealed class KinseiActor : MonoBehaviour
                 if(position.y<-.186f)fingertipX+=position.x;
             bool reflectX=left?fingertipX<0:fingertipX>0;
             var anatomicallyAligned=ImportSkin(source,wrist,wrist.parent,V(reflectX?-.82f:.82f,.82f,reflectZ?-.82f:.82f),
-                V(0,.013f,0),handYaw:left?-73:73);
+                V(0,.013f,0),handYaw:left?-73:73,thumbOpposition:variant==0?87f:72f);
             if(left)leftHandRenderer=anatomicallyAligned;
             else rightHandRenderer=anatomicallyAligned;
         }
@@ -782,11 +785,14 @@ public sealed class KinseiActor : MonoBehaviour
     }
 
     SkinnedMeshRenderer ImportSkin(MeshFilter source,Transform parent,Transform anchor,Vector3 scale,
-        Vector3 offset,Transform mandible=null,float lipLine=0,float eyeLine=0,float handYaw=0)
+        Vector3 offset,Transform mandible=null,float lipLine=0,float eyeLine=0,float handYaw=0,bool workCollar=false,float thumbOpposition=72f)
     {
         bool face=mandible!=null;
         Mesh mesh=CopyPart(source,scale,offset,handYaw);
-        if(!face)AddFingerCurl(mesh);
+        if(!face) {
+            AddFingerCurl(mesh);
+            if(roleName=="resident" && parent==rh)AddToolGrip(mesh,thumbOpposition);
+        }
         var part=new GameObject(face?"Fitted head":"Anatomical hand").transform;
         part.SetParent(parent,false);
         var weights=new BoneWeight[mesh.vertexCount];
@@ -796,10 +802,10 @@ public sealed class KinseiActor : MonoBehaviour
             for(int i=0;i<vertices.Length;i++)
             {
                 Vector3 point=vertices[i];
-                float tuck=1-Ease(-.035f,-.016f,point.y);
+                float tuck=workCollar?1-Ease(-.023f,-.004f,point.y):1-Ease(-.035f,-.016f,point.y);
                 if(tuck<=0)continue;
                 Vector2 radial=new Vector2(point.x,point.z+.014f);
-                radial=Vector2.Lerp(radial,Vector2.ClampMagnitude(radial,.061f),tuck);
+                radial=Vector2.Lerp(radial,Vector2.ClampMagnitude(radial,workCollar?.044f:.061f),tuck);
                 vertices[i]=V(radial.x,point.y-.020f*tuck,radial.y-.014f);
             }
             mesh.vertices=vertices;
@@ -858,6 +864,29 @@ public sealed class KinseiActor : MonoBehaviour
             raised[i]=new Vector3(0,p.x<0?.0048f:.0035f,.0008f)*amount;
         }
         face.AddBlendShapeFrame("Inner brow lift",100,raised,null,null);
+    }
+
+    static void AddToolGrip(Mesh hand,float thumbOpposition)
+    {
+        var vertices=hand.vertices;var normals=hand.normals;
+        var delta=new Vector3[vertices.Length];var deltaNormals=new Vector3[vertices.Length];
+        for(int i=0;i<vertices.Length;i++) {
+            Vector3 p=vertices[i];float length=-.077f-p.y;
+            if(length<=0)continue;
+            // Wrap the whole finger cross-section. Carrying only the centreline folds the back
+            // of the fingertip through the palmar surface beyond the first quarter turn.
+            const float radius=.02175f,axisZ=.02975f;
+            float bend=length/radius;
+            float radial=axisZ-p.z;
+            Vector3 wrapped=V(p.x,-.077f-radial*Mathf.Sin(bend),axisZ-radial*Mathf.Cos(bend));
+            Quaternion flex=Quaternion.AngleAxis(-bend*Mathf.Rad2Deg,Vector3.right);
+            float thumb=Ease(.014f,.035f,p.x)*(1-Ease(-.006f,.005f,p.z));
+            Quaternion oppose=Quaternion.AngleAxis(-thumbOpposition*Ease(0,.025f,length),Vector3.right);
+            Vector3 pivot=V(.022f,-.077f,-.004f);
+            delta[i]=Vector3.Lerp(wrapped,pivot+oppose*(p-pivot),thumb)-p;
+            deltaNormals[i]=Vector3.Slerp(flex*normals[i],oppose*normals[i],thumb)-normals[i];
+        }
+        hand.AddBlendShapeFrame("Tool grasp",100,delta,deltaNormals,null);
     }
 
     static void AddFingerCurl(Mesh hand)
