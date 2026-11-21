@@ -9,7 +9,11 @@ public sealed partial class KinseiSession
     static readonly Vector3 RelayDesk = new Vector3(14.9f,0,-17.2f);
     static readonly Vector3 RelaySeat = new Vector3(17.1f,0,-17.2f);
     static readonly Vector3 LotusDesk = new Vector3(-16,0,-17.2f);
-    bool finale;
+    // The opening attendant welcomes guests from the west end of the counter.
+    static readonly Vector3 OpeningPost=KinseiBoxOffice.Counter+new Vector3(-1.25f,0,-.23f);
+    static readonly Vector3 PressViewCentre=KinseiBoxOffice.Counter+new Vector3(.27f,0,.64f);
+    const float PressClearRadius=1.38f;
+    bool finale,pressFromWest;
     float nextFinaleFrame;
     float firstPictureAt=-1;
     bool OnAir => finale && firstPictureAt>=0;
@@ -26,7 +30,7 @@ public sealed partial class KinseiSession
     void SetUpFinale()
     {
         finaleStep=FinaleStep.Collect;
-        firstPictureAt=-1;
+        firstPictureAt=-1;pressFromWest=false;
         nextFinaleFrame=0;
         operatorOnDuty=null;
         club.SetMasterOnDesk(new Vector3(-.88f,1.15f,-18.16f),false);
@@ -114,9 +118,50 @@ public sealed partial class KinseiSession
         operatorOnDuty=member;
         member.duty=Duty.FinalePost;
         member.destination=finaleStep==FinaleStep.Cooperative?LotusDesk:
-            finaleStep==FinaleStep.Exclusive?KinseiBoxOffice.Counter:RelaySeat;
+            finaleStep==FinaleStep.Exclusive?OpeningPost:RelaySeat;
         Say(member.name+"「任せてくれ」");
         sound.Cue("dial");Mark("finale-order-"+chosen+"-"+finaleStep);
+    }
+
+    static void PressShot(float reveal,bool west,out Vector3 eye,out Vector3 focus)
+    {
+        var first=west?new Vector3(-.32f,1.66f,.69f):new Vector3(.12f,1.71f,.98f);
+        var last=west?new Vector3(-.21f,1.53f,.17f):new Vector3(.416f,1.66f,.23f);
+        eye=KinseiBoxOffice.Counter+Vector3.Lerp(first,last,reveal);
+        focus=KinseiBoxOffice.Counter+Vector3.Lerp(new Vector3(.40f,1.12f,.49f),new Vector3(.38f,1.09f,.425f),reveal);
+    }
+
+    static float PressShotClearance(Vector3 viewer,bool west)
+    {
+        viewer.y=0;
+        float minimum=float.PositiveInfinity;
+        for(int i=0;i<=8;i++){
+            PressShot(i/8f,west,out var eye,out var focus);
+            eye.y=focus.y=0;
+            var ray=focus-eye;
+            float u=Mathf.Clamp01(Vector3.Dot(viewer-eye,ray)/ray.sqrMagnitude);
+            minimum=Mathf.Min(minimum,Vector3.Distance(viewer,eye+u*ray));
+        }
+        return minimum;
+    }
+
+    static bool NearPress(Vector3 at,float radius) => at.y<2f && Flat(at,PressViewCentre)<radius;
+
+    bool StandAsideForPress(Person member,int index,float dt)
+    {
+        if(member==operatorOnDuty || member.hp<=0)return false;
+        bool nearby=NearPress(member.Position,2.1f);
+        if(OnAir && nearby && !NearPress(member.Position,PressClearRadius)){
+            Face(member,stageDirector.Position);Motion(member,"idle");return true;
+        }
+        bool followsAudience=member.duty==Duty.Follow && NearPress(player.Position,4.8f);
+        if(!nearby && !followsAudience)return false;
+        if(!followsAudience && !NearPress(member.Position,PressClearRadius) &&
+            !NearPress(member.destination,PressClearRadius))return false;
+        var place=KinseiBoxOffice.Counter+new Vector3(-1.55f-(index%2)*.90f,0,1.94f-(index/2)*1.02f);
+        if(Flat(member.Position,place)>.20f)MovePerson(member,place,2.55f,dt);
+        else {Face(member,stageDirector.Position);Motion(member,"idle");}
+        return true;
     }
 
     void SimulateFinale(float dt)
@@ -129,7 +174,14 @@ public sealed partial class KinseiSession
             relayCam.Render();
             club.SetExchangePicture(relayImage);
         }
-        for(int i=0;i<crew.Count;i++)UpdateCrew(crew[i],i,dt);
+        bool opening=finaleStep==FinaleStep.Exclusive && operatorOnDuty!=null &&
+            operatorOnDuty.duty==Duty.FinalePost && operatorOnDuty.destination==OpeningPost;
+        bool pressClear=true;
+        for(int i=0;i<crew.Count;i++){
+            var member=crew[i];
+            if(!opening || !StandAsideForPress(member,i,dt))UpdateCrew(member,i,dt);
+            if(opening && member.hp>0 && NearPress(member.Position,PressClearRadius))pressClear=false;
+        }
         if(operatorOnDuty==null)return;
         if(operatorOnDuty.duty!=Duty.FinalePost){
             operatorOnDuty=null;
@@ -142,9 +194,14 @@ public sealed partial class KinseiSession
             Say(operatorOnDuty.name+"「送像所、つながった。真壁さん、どちらに盤を？」",5);
             sound.Cue("choice");
         } else if((finaleStep==FinaleStep.Cooperative && operatorOnDuty.destination==LotusDesk) ||
-                  (finaleStep==FinaleStep.Exclusive && operatorOnDuty.destination==KinseiBoxOffice.Counter)) {
+                  (finaleStep==FinaleStep.Exclusive && operatorOnDuty.destination==OpeningPost)) {
             bool cooperative=finaleStep==FinaleStep.Cooperative;
             if(!OnAir) {
+                if(!cooperative && !pressClear)return;
+                if(!cooperative){
+                    float clearance=PressShotClearance(player.Position,false);
+                    pressFromWest=clearance<.65f && PressShotClearance(player.Position,true)>clearance;
+                }
                 firstPictureAt=clock;command=false;club.SetTactical(false);snapCamera=true;
                 Face(operatorOnDuty,cooperative?new Vector3(-16,0,-19):stageDirector.Position);
                 sound.Cue("accord");

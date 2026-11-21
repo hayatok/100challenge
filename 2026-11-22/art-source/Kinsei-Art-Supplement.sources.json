@@ -158,5 +158,76 @@
       0.85
     ],
     "sha256": "a5fae6dd35553640bf2a0ee66c112e635c4a63219887331c288bbb0012359927"
+  },
+  {
+    "figure": "club-overlook",
+    "file": "art-source/club-two-views/stage-overlook.png",
+    "caption": "GPT Image設定画　指揮の引き。舞台右袖に立会人、右奥に二階桟敷。",
+    "crop": null,
+    "sha256": "ebd9a49926db2acb524e57dd36e43b48f7480c0372a53594bf9bb72c46e2c23f"
+  },
+  {
+    "figure": "club-shoulder",
+    "file": "art-source/club-two-views/stage-shoulder.png",
+    "caption": "GPT Image設定画　真壁の肩越し。兄貴分の左手と袖の立会人。",
+    "crop": null,
+    "sha256": "b0c679f67c58742487110346e15149a7fe93276f84a61b0c455e40ba54497233"
+  },
+  {
+    "figure": "press-study",
+    "file": "art-source/ticket-and-car/ticket-pickup.png",
+    "caption": "GPT Image設定画　親指と人差し指が紙の同じ角を挟む。",
+    "crop": null,
+    "sha256": "7cb1822e20e65649d8251519ef4cc52097ae312e0bdc25ad5ded6568a57e8206"
+  },
+  {
+    "figure": "press-cpu",
+    "file": "art-source/ticket-machine/press-inspection.png",
+    "caption": "CPU形状図　番号窓と出口。右は券を通した状態。",
+    "crop": null,
+    "sha256": "61d13912d1fd3a5b97bdf7a50a97308b34e78b947c0120968910abd6254aea47"
+  },
+  {
+    "figure": "press-issued",
+    "file": "evidence/v12/issued-ticket.png",
+    "caption": "Windows実機 v1.2初版・部分　排出口を通った一番券",
+    "crop": [
+      0.13,
+      0.14,
+      0.86,
+      0.86
+    ],
+    "sha256": "c60ff0d6ea34a5e2e18e227d21e050a96f60f32c0a56122bb99ce7906b8ea9a6"
+  },
+  {
+    "figure": "coach-study",
+    "file": "art-source/ticket-and-car/car-sidelight.png",
+    "caption": "GPT Image設定画　耳の縁、こめかみの櫛目、後頭部の影。",
+    "crop": null,
+    "sha256": "cc989b6c276dbb1d71385f757c5bc0d05c1787c54617fa3f0c0d96e87f766937"
+  },
+  {
+    "figure": "coach-before",
+    "file": "evidence/v10/saloon-firstcar.png",
+    "caption": "Windows実機 v1.0・部分　左の窓を背にした横顔",
+    "crop": [
+      0.18,
+      0.19,
+      0.72,
+      0.85
+    ],
+    "sha256": "f7ea61c0c94e7aafe4e8ebc264c83b11e962e72363e7bde7cb4fbb6b926ba875"
+  },
+  {
+    "figure": "coach-after",
+    "file": "evidence/v11/saloon-occupied.png",
+    "caption": "Windows実機 v1.1直前版・部分　横灯が拾う頬と耳前の毛筋",
+    "crop": [
+      0.18,
+      0.19,
+      0.72,
+      0.85
+    ],
+    "sha256": "97a7a4d055c47ffd38f6baac7f17e62266bb0b610bc33e76b7a937fb1f01b8c1"
   }
 ]

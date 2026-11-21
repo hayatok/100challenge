@@ -1,0 +1,82 @@
+Mono path[0] = 'C:/Users/hayat/AppData/Local/Temp/kinsei62-v12-update/Kinsei_Data/Managed'
+Mono config path = 'C:/Users/hayat/AppData/Local/Temp/kinsei62-v12-update/MonoBleedingEdge/etc'
+Input System module state changed to: Initialized.
+[Physics::Module] Initialized fallback backend.
+[Physics::Module] Id: 0xdecafbad
+Loading player data from C:/Users/hayat/AppData/Local/Temp/kinsei62-v12-update/Kinsei_Data/data.unity3d
+Initialize engine version: 6000.3.28f1 (8f082d2fe476)
+[Subsystems] Discovering subsystems at path C:/Users/hayat/AppData/Local/Temp/kinsei62-v12-update/Kinsei_Data/UnitySubsystems
+Forcing GfxDevice: Direct3D 11
+GfxDevice: creating device client; kGfxThreadingModeClientWorkerJobs
+Direct3D:
+    Version:  Direct3D 11.0 [level 11.1]
+    Renderer: NVIDIA GeForce RTX 4070 Ti (ID=0x2782)
+    Vendor:   NVIDIA
+    VRAM:     11996 MB
+    Driver:   32.0.16.1742
+Begin MonoManager ReloadAssembly
+- Loaded All Assemblies, in  5.271 seconds
+- Finished resetting the current domain, in  0.003 seconds
+[Physics::Module] Selected backend.
+[Physics::Module] Name: PhysX
+[Physics::Module] Id: 0xf2b8ea05
+[Physics::Module] SDK Version: 4.1.2
+[Physics::Module] Integration Version: 1.0.0
+[Physics::Module] Threading Mode: Multi-Threaded
+<RI> Initializing input.
+<RI> Input initialized.
+UnloadTime: 0.921400 ms
+KINSEI start-finale t=0.00 phase=Arrival pos=(0.00, 0.00, -10.65)
+KINSEI RTS t=2.94 phase=Arrival pos=(0.00, 0.00, -10.65)
+KINSEI TPS t=2.95 phase=Arrival pos=(0.00, 0.00, -10.65)
+KINSEI RTS t=3.51 phase=Arrival pos=(0.00, 0.00, -11.86)
+KINSEI TPS t=3.69 phase=Arrival pos=(0.00, 0.00, -11.86)
+KINSEI RTS t=3.89 phase=Arrival pos=(0.00, 0.00, -11.86)
+KINSEI TPS t=4.08 phase=Arrival pos=(0.00, 0.00, -11.86)
+KINSEI RTS t=4.26 phase=Arrival pos=(0.00, 0.00, -11.86)
+KINSEI TPS t=4.44 phase=Arrival pos=(0.00, 0.00, -11.86)
+KINSEI RTS t=6.01 phase=Arrival pos=(-0.03, 0.09, -17.12)
+KINSEI TPS t=6.19 phase=Arrival pos=(-0.03, 0.09, -17.12)
+KINSEI RTS t=6.37 phase=Arrival pos=(-0.03, 0.09, -17.12)
+KINSEI TPS t=6.55 phase=Arrival pos=(-0.03, 0.09, -17.12)
+KINSEI RTS t=7.25 phase=Arrival pos=(-1.32, 0.09, -17.18)
+KINSEI TPS t=7.44 phase=Arrival pos=(-1.32, 0.09, -17.18)
+KINSEI finale-Connect t=7.82 phase=Arrival pos=(-1.32, 0.09, -17.18)
+KINSEI RTS t=8.14 phase=Arrival pos=(-1.32, 0.09, -17.18)
+KINSEI finale-order-1-Connect t=8.53 phase=Arrival pos=(-1.32, 0.09, -17.18)
+KINSEI TPS t=8.90 phase=Arrival pos=(-1.32, 0.09, -17.18)
+KINSEI RTS t=9.08 phase=Arrival pos=(-1.32, 0.09, -17.18)
+KINSEI TPS t=9.27 phase=Arrival pos=(-1.32, 0.09, -17.18)
+KINSEI RTS t=9.87 phase=Arrival pos=(-0.02, 0.09, -17.19)
+KINSEI TPS t=10.06 phase=Arrival pos=(-0.02, 0.09, -17.19)
+KINSEI RTS t=10.24 phase=Arrival pos=(-0.02, 0.09, -17.19)
+KINSEI TPS t=10.42 phase=Arrival pos=(-0.02, 0.09, -17.19)
+KINSEI RTS t=11.97 phase=Arrival pos=(0.00, 0.00, -11.99)
+KINSEI TPS t=12.16 phase=Arrival pos=(0.00, 0.00, -11.99)
+KINSEI RTS t=12.34 phase=Arrival pos=(0.00, 0.00, -11.99)
+KINSEI TPS t=12.52 phase=Arrival pos=(0.00, 0.00, -11.99)
+KINSEI RTS t=13.16 phase=Arrival pos=(0.00, 0.00, -10.56)
+KINSEI TPS t=13.34 phase=Arrival pos=(0.00, 0.00, -10.56)
+KINSEI RTS t=13.54 phase=Arrival pos=(0.00, 0.00, -10.56)
+KINSEI TPS t=13.68 phase=Arrival pos=(0.00, 0.00, -10.56)
+KINSEI RTS t=14.98 phase=Arrival pos=(0.02, 0.03, -6.39)
+KINSEI TPS t=15.16 phase=Arrival pos=(0.02, 0.03, -6.39)
+KINSEI RTS t=15.35 phase=Arrival pos=(0.02, 0.03, -6.39)
+KINSEI TPS t=15.53 phase=Arrival pos=(0.02, 0.03, -6.39)
+KINSEI RTS t=16.20 phase=Arrival pos=(-1.55, 0.03, -6.38)
+KINSEI TPS t=16.38 phase=Arrival pos=(-1.55, 0.03, -6.38)
+KINSEI finale-Exclusive t=16.83 phase=Arrival pos=(-1.55, 0.03, -6.38)
+KINSEI RTS t=17.56 phase=Arrival pos=(-1.55, 0.03, -6.38)
+KINSEI TPS t=17.75 phase=Arrival pos=(-1.55, 0.03, -6.38)
+KINSEI RTS t=18.93 phase=Arrival pos=(0.03, 0.03, -4.54)
+KINSEI TPS t=19.11 phase=Arrival pos=(0.03, 0.03, -4.54)
+KINSEI RTS t=19.31 phase=Arrival pos=(0.03, 0.03, -4.54)
+KINSEI TPS t=19.50 phase=Arrival pos=(0.03, 0.03, -4.54)
+KINSEI RTS t=21.10 phase=Arrival pos=(-3.45, 0.03, -2.89)
+KINSEI TPS t=21.28 phase=Arrival pos=(-3.45, 0.03, -2.89)
+KINSEI RTS t=21.48 phase=Arrival pos=(-3.45, 0.03, -2.89)
+KINSEI finale-order-2-Exclusive t=21.86 phase=Arrival pos=(-3.45, 0.03, -2.89)
+KINSEI TPS t=22.30 phase=Arrival pos=(-3.45, 0.03, -2.89)
+KINSEI first-broadcast t=22.45 phase=Arrival pos=(-3.45, 0.03, -2.89)
+KINSEI ending-exclusive t=26.05 phase=Result pos=(-3.45, 0.03, -2.89)
+KINSEI_FRAME n=1528 median_ms=16.67 p95_ms=16.67 size=1280x720 gpu=NVIDIA GeForce RTX 4070 Ti scene=exclusive

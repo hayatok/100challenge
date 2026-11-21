@@ -43,7 +43,7 @@ public sealed class KinseiBoxOffice : MonoBehaviour
         receipt.GetComponent<Renderer>().sharedMaterial=paper;receipt.GetComponent<Collider>().enabled=false;
         Destroy(receipt.GetComponent<Collider>());
         Piece(counter,"紙留めのばね金具",new Vector3(.263f,1.034f,.13f),new Vector3(.16f,.016f,.035f),brass);
-        var press=Piece(counter,"入場券の手動印字機",new Vector3(.38f,1.07f,-.16f),new Vector3(.24f,.15f,.17f),register);
+        var press=KinseiTicketMachine.Install(counter,new Vector3(.38f,1.07f,-.16f),register);
         ticketLever=new GameObject("印字レバーの支点").transform;
         ticketLever.SetParent(counter,false);ticketLever.localPosition=press.localPosition+new Vector3(.107f,.079f,0);
         Piece(ticketLever,"印字レバー",new Vector3(.06f,-.009f,0),new Vector3(.12f,.022f,.026f),brass);
