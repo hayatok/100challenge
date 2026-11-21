@@ -5,10 +5,13 @@ public sealed partial class KinseiWorld
 {
     readonly Transform[] shopDoors = new Transform[3];
     readonly Light[] serviceLights = new Light[3];
+    Light benchLamp;
     readonly Renderer[] shopBulbs = new Renderer[3];
     readonly bool[] shopTrading = { true, true, true };
     readonly Transform[] rotatingDiscs = new Transform[2];
     static readonly string[] ShopNames = { "純喫茶 ロータス", "貸レコード 針音堂", "共同送像所" };
+    public static readonly Vector3 CoffeeCupCentre=new Vector3(-16.94f,1.176f,-18.63f);
+    public static readonly Vector3 RadioTrimSocket=new Vector3(15.08f,1.235f,-18.62f);
 
     void BuildDistrict()
     {
@@ -153,6 +156,24 @@ public sealed partial class KinseiWorld
     void DressExchange(Transform room,Material enamel,Material rubber)
     {
         DressExchangePrints(room);
+        Vector3 trim=room.InverseTransformPoint(RadioTrimSocket);
+        Cushion("送像卓の利得調整器",trim-Vector3.up*.064f,new Vector3(.18f,.12f,.16f),enamel,room);
+        Cylinder("調整穴の金具",trim-Vector3.up*.003f,.019f,.006f,brass,false,room);
+        Cylinder("調整ねじ",trim,.009f,.003f,rubber,false,room);
+        var lampFoot=new Vector3(-.60f,1.14f,-4.54f);
+        var lampElbow=lampFoot+new Vector3(.12f,.39f,-.06f);
+        var lampHead=lampElbow+new Vector3(-.19f,.23f,.03f);
+        Cylinder("調整灯の台",lampFoot,.085f,.022f,enamel,false,room);
+        Rail(lampFoot,lampElbow,.012f,brass,room);Rail(lampElbow,lampHead,.012f,brass,room);
+        var shade=Part("調整灯の琺瑯笠",PrimitiveType.Sphere,lampHead,new Vector3(.163f,.078f,.13f),enamel,false,room);
+        shade.transform.localRotation=Quaternion.Euler(0,0,-25);
+        var lit=Part("調整灯の乳白ガラス",PrimitiveType.Sphere,lampHead+new Vector3(-.014f,-.029f,0),new Vector3(.129f,.03f,.112f),glow,false,room);
+        lit.transform.localRotation=shade.transform.localRotation;
+        benchLamp=new GameObject("村瀬の仕事灯").AddComponent<Light>();
+        benchLamp.transform.SetParent(room,false);benchLamp.transform.localPosition=lampHead+new Vector3(-.03f,-.06f,0);
+        benchLamp.transform.LookAt(room.TransformPoint(trim+new Vector3(-.06f,.14f,-.15f)));
+        benchLamp.type=LightType.Spot;benchLamp.spotAngle=108;benchLamp.innerSpotAngle=62;benchLamp.range=1.80f;
+        benchLamp.color=new Color(1f,.93f,.80f);benchLamp.intensity=1.65f;benchLamp.shadows=LightShadows.None;
         exchangeScreen=ShopPrint(room,"KinseiDistrictArt/relay-test",new Vector3(-1.12f,1.56f,-4.16f),.70f,.525f);
         if(exchangeScreen)exchangeStandby=exchangeScreen.mainTexture;
         Box("Bench receiver",new Vector3(-1.12f,1.56f,-4.40f),new Vector3(.85f,.68f,.44f),enamel,false,room);
@@ -179,6 +200,7 @@ public sealed partial class KinseiWorld
         if(shop<0 || shop>=shopTrading.Length || !shopDoors[shop])return;
         shopTrading[shop]=open;
         serviceLights[shop].enabled=open;
+        if(shop==2 && benchLamp)benchLamp.enabled=open;
         shopBulbs[shop].sharedMaterial=open?glow:cream;
     }
 

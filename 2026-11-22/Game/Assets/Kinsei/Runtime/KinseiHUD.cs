@@ -163,7 +163,7 @@ public sealed partial class KinseiSession
         float bottom=command?hudH-154:hudH-66;
         if(bannerUntil>clock && banner.Length>0) {
             float width=Mathf.Min(hudW-80,Mathf.Max(300,banner.Length*19+42));
-            Rect box=new Rect((hudW-width)/2,bottom-55,width,39);
+            Rect box=new Rect((hudW-width)/2,shopView==ShopView.None?bottom-55:84,width,39);
             Block(box,ink); Block(new Rect(box.x,box.y,3,box.height),gold);
             Letter(box,banner,18,cream,false,TextAnchor.MiddleCenter);
         }
@@ -175,9 +175,11 @@ public sealed partial class KinseiSession
             string hints=OnAir?"共同送像所　生中継":finale?"WASD　移動　　E　調べる・渡す　　Tab　組員を指揮":phase==Phase.Arrival?"WASD　移動　　E　話す　　通りの西から ロータス・針音堂・送像所":
                 phase==Phase.Mirror?"卓間中継　接続中":
                 "WASD　移動　　右ドラッグ　視点　　左クリック・Space　射撃　　Q　注視　　F　打撃";
+            var counter=shopView==ShopView.None?NearbyCounter():shopView;
+            if(counter!=ShopView.None)hints=shopView==ShopView.None?"C　"+ShopViewLabel(counter)+"を見る　　E　話す・調べる　　Tab　組員を指揮":ShopViewLabel(counter)+"　　C　元の視点へ　　Tab　組員を指揮";
             Letter(new Rect(185,bottom+6,hudW-207,50),hints,17,cream);
             string interact=Interaction();
-            if(interact.Length>0){
+            if(interact.Length>0 && shopView==ShopView.None){
                 Rect prompt=new Rect(hudW*.5f-150,hudH*.60f,300,42);Block(prompt,ink);
                 Letter(prompt,"E　　"+interact,19,gold,false,TextAnchor.MiddleCenter);
             }
@@ -187,7 +189,7 @@ public sealed partial class KinseiSession
             Letter(timer,"逃走まで　"+Mathf.CeilToInt(escapeTime)+" 秒",16,gold,false,TextAnchor.MiddleCenter);
         }
         if(showFps) Letter(new Rect(pad,78,90,28),Mathf.RoundToInt(fpsSmooth)+" FPS",14,cream);
-        if(phase==Phase.Arrival || command) {
+        if((phase==Phase.Arrival || command) && shopView==ShopView.None) {
             Rect ledgerPlate=new Rect(pad,showFps?112:86,510,29);
             Block(ledgerPlate,ink);Letter(new Rect(ledgerPlate.x+9,ledgerPlate.y,ledgerPlate.width-12,29),finale?"最終夜　四十軒の朝":NightSummary,14,gold);
         }
@@ -230,7 +232,7 @@ public sealed partial class KinseiSession
     }
     void WorldMarks()
     {
-        if(Event.current.type!=EventType.Repaint || cam==null || phase==Phase.Mirror || OnAir)return;
+        if(Event.current.type!=EventType.Repaint || cam==null || phase==Phase.Mirror || OnAir || shopView!=ShopView.None)return;
         drawnLabels.Clear();
         foreach(var p in everyone) {
             if(p.retired || (p.hp<=0 && !(p==brother && phase==Phase.Choice)))continue;

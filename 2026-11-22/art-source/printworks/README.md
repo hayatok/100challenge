@@ -26,6 +26,8 @@
 
 酒名と銘柄絵はいずれも作品用。VU盤は前面へ可動の指針を重ねられるよう、目盛と盤面だけを収録。目盛は表示レベルの電圧比に応じて間隔を決めた。
 
+v0.5の専属興行では、座長が発券機から「開場第一号 0001」の切符を出す。昭和百年祭の保存切符とは別に、今夜の金星のために游明朝とGeorgiaで組んだ。赤一色の罫、切り離し線、通し番号を一枚の紙面に印刷した。[一番券](../../Game/Assets/Resources/KinseiPrintworks/FirstTicket.png)・[組版の再現](first_ticket.py)
+
 ## Unity のUV
 
 `KinseiPrintworks/Sleeves` は 4096 × 2048、`KinseiPrintworks/Bottles` は 2048 × 2048、`KinseiPrintworks/Station` は 2048 × 1024。各セルの四辺に8ピクセルの複製ガターを設けた。テクスチャのインポート上限は Sleeves を4096、他を2048とする。

@@ -35,7 +35,7 @@ public sealed partial class KinseiSession
             person.retired=true;
             person.root.gameObject.SetActive(false);
         }
-        stageDirector=Make("金星の座長","resident",KinseiBoxOffice.Counter+new Vector3(1.1f,0,.5f),4);
+        stageDirector=Make("金星の座長","resident",KinseiBoxOffice.Counter+new Vector3(.84f,0,.68f),3);
         Face(stageDirector,KinseiBoxOffice.Counter);
         Say("兵藤の書き置き「原盤は針音堂の左のターンテーブル。真壁さんに預けます」",6);
     }
@@ -89,9 +89,9 @@ public sealed partial class KinseiSession
                 finaleStep=FinaleStep.Cooperative;
                 Say("四十の回線が開いた。澄子「最初のお客さん、うちへ案内して」",5);break;
             case FinaleAction.Deliver:
-                club.SetMasterOnDesk(KinseiBoxOffice.Counter+new Vector3(.27f,1.049f,.56f),false);
+                club.SetMasterOnDesk(KinseiBoxOffice.Counter+new Vector3(.18f,1.049f,.88f),false);
                 finaleStep=FinaleStep.Exclusive;
-                Face(stageDirector,player.Position);Motion(stageDirector,"talk");
+                Face(stageDirector,player.Position);Motion(stageDirector,"idle");
                 Say("座長「一枚目は金星の専属盤や。帳場へ一人、切符を頼むわ」",5);break;
             case FinaleAction.Talk:
                 if(StreetContact(out _,out string words))Say(words);
@@ -152,6 +152,12 @@ public sealed partial class KinseiSession
                 Mark("first-broadcast");
             }
             Motion(operatorOnDuty,"idle");
+            if(!cooperative) {
+                boxOffice.SetTicketPress(clock-firstPictureAt);
+                Face(stageDirector,boxOffice.LeverGrip);
+                stageDirector.actor.SetAttentionTarget(boxOffice.LeverGrip);
+                Motion(stageDirector,"print-ticket");
+            }
             if(clock-firstPictureAt<3.6f)return;
             if(cooperative)End("cooperative","四十軒の朝","ロータスの一席から拍手が返る。店ごとに出し物を決め、金星は四十軒の共同舞台になった。");
             else End("exclusive","金星の朝","座長が最初の切符を切る。金星が演目を決め、四十軒は専属興行の客席として朝を迎えた。");

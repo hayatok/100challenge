@@ -192,12 +192,13 @@ public sealed class KinseiDistrictPeople : MonoBehaviour
         r.elbow.localRotation=Quaternion.Slerp(r.elbow.localRotation,Quaternion.Euler(-38+lift,0,4),blend);
         r.wrist.localRotation=Quaternion.Slerp(r.wrist.localRotation,Quaternion.Euler(18+beat*6,0,shop==2?beat*48:beat*14),blend);
         r.head.localRotation=Quaternion.Slerp(r.head.localRotation,Quaternion.Euler(13,7+Mathf.Sin(cycle*.5f)*5,1),blend*.8f);
+        if(shop==0 || shop==2)r.actor.WorkAtCounter(shop==0,cycle,blend);
     }
     Material Fabric(string name,Color color,bool grain=false)
     {
         var m=new Material(Shader.Find("Standard")){name=name,color=color};owned.Add(m);
         m.SetFloat("_Glossiness",.26f);
-        if(grain){m.SetTexture("_BumpMap",Resources.Load<Texture2D>("KinseiCast/WoolNormal"));m.SetFloat("_BumpScale",.27f);m.EnableKeyword("_NORMALMAP");}
+        if(grain){m.mainTexture=Resources.Load<Texture2D>("KinseiCast/Wool");m.mainTextureScale=new Vector2(2,2);m.SetTexture("_BumpMap",Resources.Load<Texture2D>("KinseiCast/WoolNormal"));m.SetFloat("_BumpScale",.27f);m.EnableKeyword("_NORMALMAP");}
         return m;
     }
     void Dress(Resident r,int id)
@@ -222,10 +223,16 @@ public sealed class KinseiDistrictPeople : MonoBehaviour
             {
                 var garment=fitted.GetComponent<SkinnedMeshRenderer>();
                 var mesh=Instantiate(garment.sharedMesh);owned.Add(mesh);
-                var v=mesh.vertices;var original=mesh.triangles;var pants=new List<int>();
+                var v=mesh.vertices;var weights=mesh.boneWeights;var original=mesh.triangles;var pants=new List<int>();
                 for(int k=0;k<original.Length;k+=3)
-                    if(Mathf.Max(v[original[k]].y,Mathf.Max(v[original[k+1]].y,v[original[k+2]].y))<.95f)
-                        pants.AddRange(new[]{original[k],original[k+1],original[k+2]});
+                {
+                    bool trousers=true;
+                    for(int j=0;j<3;j++) {
+                        int vertex=original[k+j];int boneIndex=weights[vertex].boneIndex0;
+                        if(v[vertex].y>=.95f || (boneIndex>=2 && boneIndex<=5)){trousers=false;break;}
+                    }
+                    if(trousers){pants.Add(original[k]);pants.Add(original[k+1]);pants.Add(original[k+2]);}
+                }
                 mesh.triangles=pants.ToArray();garment.sharedMesh=mesh;
             }
         }
@@ -242,8 +249,8 @@ public sealed class KinseiDistrictPeople : MonoBehaviour
             Seam(actor,new[]{shoulder,elbow},new[]{0,0,0,1,1,1}, new[]{new Vector4(sx,1.399f,.032f,.045f),
                 new Vector4(sx,1.364f,.074f,.078f),new Vector4(sx,1.239f,.066f,.070f),
                 new Vector4(sx,1.087f,.054f,.06f),new Vector4(sx,.990f,.047f,.051f),
-                new Vector4(sx,woman?.948f:.848f,.041f,.044f)},cloth);
-            if(woman) Seam(actor,new[]{elbow},new[]{0,0},new[]{new Vector4(sx,.962f,.05f,.052f),new Vector4(sx,.917f,.048f,.050f)},bone);
+                new Vector4(sx,woman?.875f:.848f,.041f,.044f)},cloth);
+            if(woman) Seam(actor,new[]{elbow},new[]{0,0,0},new[]{new Vector4(sx,.889f,.046f,.048f),new Vector4(sx,.873f,.044f,.047f),new Vector4(sx,.836f,.036f,.040f)},bone);
         }
         if(id==0)
         {

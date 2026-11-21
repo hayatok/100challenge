@@ -47,11 +47,13 @@ public sealed partial class KinseiSession
             if(boss.hp<=0) {Motion(boss,"fall"); End("pursuit","金星を取り返す","兄貴分が舞台袖で膝をついた。翌朝、四十軒の帳面に金星の興行主として真壁の名が戻る。");return;}
             Opponent(boss,dt);
         } else if(phase==Phase.Mirror) {
-            relayProgress=Mathf.Min(1,phaseAge/4.6f); club.SetMirror(relayProgress,relayImage,elder.actor.EyePosition);
+            relayProgress=Mathf.Min(1,phaseAge/4.6f); club.SetMirror(relayProgress,relayImage,elder.actor.EyePosition,brother.actor.EyePosition);
             Motion(player,"mirror"); Face(player,new Vector3(-2.68f,0,.03f));
             Motion(brother,"brother-call");
+            elder.actor.SetAttentionTarget(club.UpperScreenCentre);Motion(elder,"listen-call");
             if(phaseAge>=4.6f) {
                 accord=true;held=false; crew[0].duty=Duty.Follow;
+                club.SetMirror(1,null);
                 Say("梶「帰るで。……辰さん、おおきに」",4f);
                 sound.Cue("accord"); Change(Phase.Release);
             }
@@ -231,7 +233,7 @@ public sealed partial class KinseiSession
             player.actor.SetMirrorWheel(club.MirrorReceiver);
             brother.root.position=witness+new Vector3(-.88f,0,-.09f);
             Face(brother,new Vector3(-3.02f,1.41f,-.22f));
-            angle=-14;tilt=8; snapCamera=true; relayCam.enabled=true;
+            angle=-14;tilt=8; snapCamera=true; nextHallPicture=clock;
             Change(Phase.Mirror); Say("弟「兄ちゃん……もうええ」",4.2f);sound.Cue("dial");
         } else if(verb.Length>0) Say("指揮に切り替え、辰に梶との話を任せる");
     }

@@ -37,6 +37,10 @@ public sealed partial class KinseiWorld
         }
         var cup=TurnedProfile("Tapered cafe cup",new(.007f,.005f),new(.032f,.005f),new(.038f,.014f),new(.051f,.068f),new(.052f,.077f),new(.047f,.079f),new(.042f,.065f),new(.029f,.018f),new(.007f,.017f));
         var dish=TurnedProfile("Saucer with rolled edge",new(.001f,0),new(.044f,0),new(.079f,.006f),new(.086f,.013f),new(.079f,.014f),new(.041f,.006f),new(.001f,.006f));
+        var workCup=room.InverseTransformPoint(CoffeeCupCentre);
+        Surface("澄子の取り分け用カップ",cup,porcelain,room).transform.localPosition=workCup-Vector3.up*.050f;
+        Surface("仕事台の受皿",dish,porcelain,room).transform.localPosition=workCup-Vector3.up*.057f;
+        Cylinder("カップに注いだコーヒー",workCup+Vector3.up*.009f,.042f,.002f,blackCoffee,false,room);
         for(int i=0;i<11;i++){
             int tier=i/6;float x=.60f+(i%6)*.43f,y=1.76f+tier*.36f,z=-5.68f;
             var saucer=Surface("Stacked saucer",dish,porcelain,room);saucer.transform.localPosition=new Vector3(x,y,z);

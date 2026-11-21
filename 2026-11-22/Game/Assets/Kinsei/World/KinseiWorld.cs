@@ -8,6 +8,9 @@ public sealed partial class KinseiWorld : MonoBehaviour
     Material boards, amberBoards, asphalt;
     Transform ashtray;
     Transform mirrorHinge;
+    Transform upperReceiver;
+    Light hallTubeLight, boothTubeLight;
+    public Vector3 UpperScreenCentre => upperReceiver.TransformPoint(new Vector3(-.065f,.248f,-.203f));
     public Transform MirrorReceiver => mirrorHinge;
     bool built;
     Font signFont;
@@ -44,6 +47,7 @@ public sealed partial class KinseiWorld : MonoBehaviour
         }
         welt=Mat("Corded oxblood welting","#6E4440",.18f,.48f);
         Shell(); Floor(); Stage(); Furniture(); Balcony(); Entry(); BuildDistrict(); Mirror(); Lighting();
+        BuildNightscape();
         BatchArchitecture();
     }
     Material Mat(string name,string hex,float metal,float gloss,float emission=0)
@@ -235,7 +239,7 @@ public sealed partial class KinseiWorld : MonoBehaviour
         if(signFont){t.font=signFont;go.GetComponent<MeshRenderer>().sharedMaterial=signInk;}
     }
     void RefreshTypeface(Font font) { if(font==signFont && signInk)signInk.mainTexture=font.material.mainTexture; }
-    void OnDestroy() {Font.textureRebuilt-=RefreshTypeface;if(signInk)Destroy(signInk);if(terraceImage){terraceImage.Release();Destroy(terraceImage);}}
+    void OnDestroy() {Font.textureRebuilt-=RefreshTypeface;if(signInk)Destroy(signInk);if(terraceImage){terraceImage.Release();Destroy(terraceImage);}nightAssets?.Release();}
     void Mirror()
     {
         Table(new Vector3(-3,0,0),.55f);
@@ -243,15 +247,39 @@ public sealed partial class KinseiWorld : MonoBehaviour
         Cylinder("Mirror pedestal",new Vector3(-3,.95f,0),.035f,.34f,brass);
         terraceScreen=new Material(mirrorMat){name="Terrace receiver glass"};
         Receiver(mirrorHinge,mirrorMat);
+        hallTubeLight=TubeLight(mirrorHinge);
         var upper=new GameObject("梶の卓上受像機").transform;upper.SetParent(transform,false);
         upper.localPosition=new Vector3(.15f,4.02f,7.84f);upper.localRotation=Quaternion.Euler(0,-65,0);
         upper.localScale=Vector3.one*.82f;Receiver(upper,terraceScreen);
+        upperReceiver=upper;boothTubeLight=TubeLight(upper);
         SetMirror(0,null);
     }
-    public void SetMirror(float progress,Texture feed,Vector3? returnEyes=null)
+
+    Light TubeLight(Transform receiver)
+    {
+        var bulb=new GameObject("ブラウン管からの照り返し");
+        bulb.transform.SetParent(receiver,false);
+        bulb.transform.localPosition=new Vector3(-.065f,.285f,-.245f);
+        var spill=bulb.AddComponent<Light>();
+        spill.type=LightType.Spot;spill.spotAngle=112;spill.innerSpotAngle=73;
+        spill.color=new Color(.76f,.88f,1f);spill.range=2.5f;
+        spill.shadows=LightShadows.None;spill.renderMode=LightRenderMode.ForcePixel;
+        spill.enabled=false;return spill;
+    }
+
+    static void LightCaller(Light light,Vector3? eyes,float progress)
+    {
+        light.enabled=eyes.HasValue;
+        if(!eyes.HasValue)return;
+        light.transform.LookAt(eyes.Value);
+        light.intensity=Mathf.Lerp(.24f,1.22f,Mathf.SmoothStep(0,1,progress*5));
+    }
+
+    public void SetMirror(float progress,Texture feed,Vector3? returnEyes=null,Vector3? callerEyes=null)
     {
         if(!built)Construct();
         mirrorHinge.localRotation=Quaternion.Euler(Mathf.Lerp(5,-18,Mathf.Clamp01(progress)),Mathf.Lerp(0,18,Mathf.Clamp01(progress)),0);
+        LightCaller(hallTubeLight,callerEyes,progress);LightCaller(boothTubeLight,returnEyes,progress);
         if(feed && Time.unscaledTime>=nextTerraceFrame)
         {
             if(!terraceCamera) PrepareTerraceCamera();

@@ -307,7 +307,7 @@ public sealed class KinseiActor : MonoBehaviour
             PlantGuardFoot(rl,rk,rightShoe,1,lead);
             if(hasAttentionTarget)AimHead(attentionEyes,.78f);
         }
-        if(state=="sit"||state=="talk")
+        if(state=="sit"||state=="talk"||state=="listen-call")
         {
             bool tatsu=roleName=="tatsu";
             body.localPosition+=V(tatsu?.025f:-.021f,-.412f,tatsu?.023f:-.012f);
@@ -338,6 +338,16 @@ public sealed class KinseiActor : MonoBehaviour
                     head.localRotation*=Quaternion.Euler(nod*7,0,0);
                 }
             }
+        }
+        if(state=="listen-call")
+        {
+            float turn=Ease(.05f,.36f,action);
+            float nod=Ease(.34f,.48f,action)*(1-Ease(.48f,.69f,action));
+            if(hasAttentionTarget)AimHead(attentionEyes,turn);
+            chest.localRotation*=Quaternion.Euler(4*turn,-5*turn,0);
+            head.localRotation*=Quaternion.Euler(7*nod,-3*(1-turn),1.3f*turn);
+            le.localRotation*=Quaternion.Euler(-10*turn,0,0);
+            gripLeft=.54f-.23f*turn;gripRight=.48f-.16f*turn;
         }
         if(state=="surrender")
         {
@@ -465,6 +475,12 @@ public sealed class KinseiActor : MonoBehaviour
                 fingers,touch,chest.right);
             gripRight=Mathf.Lerp(gripRight,.22f,touch);
         }
+        if(state=="print-ticket" && hasAttentionTarget) {
+            float reach=Ease(0,.50f,stateTime)*(1-Ease(1.69f,2.24f,stateTime));
+            AimHead(attentionEyes,.80f*reach);
+            ReachPalm(ra,re,rh,attentionEyes,Vector3.down,transform.forward,reach,transform.right);
+            gripRight=Mathf.Lerp(.22f,.68f,reach);
+        }
         leftGrip=Mathf.Lerp(leftGrip,gripLeft,blend);
         rightGrip=Mathf.Lerp(rightGrip,gripRight,blend);
         if(leftHandRenderer)leftHandRenderer.SetBlendShapeWeight(0,leftGrip*100);
@@ -479,6 +495,11 @@ public sealed class KinseiActor : MonoBehaviour
             float squint=state=="aim" || state=="shoot"?.15f:0;
             float closure=Mathf.Max(blink,squint);
             faceRenderer.SetBlendShapeWeight(0,closure*100);
+            if(roleName=="kaji" || roleName=="brother") {
+                float lift=state=="listen-call"?Ease(.04f,.22f,action)*(1-Ease(.36f,.75f,action)):
+                    state=="brother-call"?.62f*Ease(.26f,.49f,action)*(1-Ease(.71f,.96f,action)):0;
+                faceRenderer.SetBlendShapeWeight(1,lift*100);
+            }
             foreach(Transform eyeball in eyes)
                 eyeball.localScale=V(1,Mathf.Lerp(1,.19f,closure),Mathf.Lerp(1,.82f,closure));
         }
@@ -540,6 +561,20 @@ public sealed class KinseiActor : MonoBehaviour
         conversationEyes=otherEyes;
         ashtray=worldAshtray;
         hasConversationTargets=true;
+    }
+
+    public void WorkAtCounter(bool coffee,float cycle,float blend)
+    {
+        Vector3 grip=new Vector3(0,-.108f,.065f);
+        Vector3 toolAxis=Quaternion.Euler(61,0,0)*Vector3.up;
+        Vector3 tip=grip-toolAxis*(coffee?.099f:.091f);
+        Vector3 target=coffee?KinseiWorld.CoffeeCupCentre+new Vector3(Mathf.Sin(cycle)*.020f,0,Mathf.Cos(cycle)*.020f):KinseiWorld.RadioTrimSocket;
+        Quaternion pose=Quaternion.LookRotation(Vector3.up,Vector3.back);
+        pose=Quaternion.FromToRotation(pose*toolAxis,Vector3.up)*pose;
+        float turn=coffee?Mathf.Sin(cycle)*9f:Mathf.Sin(cycle)*32f;
+        pose=Quaternion.AngleAxis(turn,Vector3.up)*pose;
+        ReachPalm(ra,re,rh,target,pose*Vector3.forward,-(pose*Vector3.up),blend,transform.right,tip);
+        if(rightHandRenderer)rightHandRenderer.SetBlendShapeWeight(0,coffee?57f:69f);
     }
 
     void ReachPalm(Transform shoulder,Transform elbow,Transform wrist,Vector3 palm,Vector3 normal,
@@ -771,6 +806,7 @@ public sealed class KinseiActor : MonoBehaviour
             mesh.RecalculateBounds();
             mesh.RecalculateTangents();
             AddBlink(mesh,vertices,eyeLine);
+            if(roleName=="kaji" || roleName=="brother")AddInnerBrowLift(mesh,vertices,eyeLine);
         }
         for(int i=0;i<weights.Length;i++)
         {
@@ -808,6 +844,20 @@ public sealed class KinseiActor : MonoBehaviour
             delta[i]=V(0,-height*across*depth*outline*closing,0);
         }
         face.AddBlendShapeFrame("Blink",100,delta,null,null);
+    }
+
+    static void AddInnerBrowLift(Mesh face,Vector3[] vertices,float eyeLine)
+    {
+        var raised=new Vector3[vertices.Length];
+        for(int i=0;i<vertices.Length;i++) {
+            Vector3 p=vertices[i];
+            float horizontal=1-Ease(.006f,.038f,Mathf.Abs(Mathf.Abs(p.x)-.020f));
+            float height=p.y-eyeLine;
+            float band=Ease(.005f,.021f,height)*(1-Ease(.029f,.053f,height));
+            float amount=horizontal*band*Ease(.053f,.080f,p.z);
+            raised[i]=new Vector3(0,p.x<0?.0048f:.0035f,.0008f)*amount;
+        }
+        face.AddBlendShapeFrame("Inner brow lift",100,raised,null,null);
     }
 
     static void AddFingerCurl(Mesh hand)

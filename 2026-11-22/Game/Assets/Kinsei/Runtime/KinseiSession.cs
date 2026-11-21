@@ -29,6 +29,7 @@ public sealed partial class KinseiSession : MonoBehaviour
     readonly List<Person> everyone = new();
     Person player, brother, elder, boss;
     Camera cam, relayCam;
+    float nextHallPicture;
     KinseiWorld club;
     KinseiBoxOffice boxOffice;
     KinseiDistrictPeople neighbours;
@@ -167,7 +168,9 @@ public sealed partial class KinseiSession : MonoBehaviour
     {
         if(!BeginCampaign(finalNight))return;
         finale=finalNight;
+        shopView=ShopView.None;
         boxOffice.SetCollected(false);
+        boxOffice.SetTicketPress(0);
         ResetStreets();
         club.PutAwayMaster();
         club.SetExchangePicture(null);
@@ -208,11 +211,12 @@ public sealed partial class KinseiSession : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.Escape)) { TogglePause(); return; }
         if(paused) return;
         if(Input.GetKeyDown(KeyCode.Tab)) ToggleCommand();
+        if(!command && !OnAir)ShopViewInput();
         dt=Mathf.Min(dt,.09f);
         clock+=dt; phaseAge+=dt;
         fpsSmooth=Mathf.Lerp(fpsSmooth,1f/Mathf.Max(Time.unscaledDeltaTime,.001f),.06f);
         if(measure && phaseAge>.2f && profile.Count<108000) profile.Add(Time.unscaledDeltaTime*1000);
-        if(command) CommandInput(); else PlayerInput(dt);
+        if(command) CommandInput(); else if(shopView==ShopView.None)PlayerInput(dt); else Motion(player,"idle");
         neighbours.Tick(clock);neighbours.LookAtNeighbours();club.TickShops(dt,player.Position);
         club.SetProgrammeLevel(sound.ReadProgrammeLevel(dt));
         if(phase==Phase.Result)return;
@@ -220,7 +224,7 @@ public sealed partial class KinseiSession : MonoBehaviour
         sound.SetDialogue(clock<bannerUntil);
         foreach(var p in everyone)
         {
-            float action=(p==player || p==brother) && phase==Phase.Mirror?relayProgress:Mathf.Clamp01(1-(clock-p.lastAction)/.36f);
+            float action=(p==player || p==brother || p==elder) && phase==Phase.Mirror?relayProgress:Mathf.Clamp01(1-(clock-p.lastAction)/.36f);
             bool reacting=p.flinchUntil>clock && p.hp>0 && p.pose!="talk";
             p.actor.Pose(reacting?"flinch":p.pose,p.speed,action);
         }
@@ -229,9 +233,11 @@ public sealed partial class KinseiSession : MonoBehaviour
 
     void LateUpdate()
     {
-        if(relayCam!=null && relayCam.enabled) {
+        if(phase==Phase.Mirror && !paused && clock>=nextHallPicture) {
             relayCam.transform.position=new Vector3(-3.02f,1.43f,-.23f);
             relayCam.transform.LookAt(brother.actor.EyePosition-Vector3.up*.048f);
+            relayCam.Render();
+            nextHallPicture=Mathf.Max(nextHallPicture+1001f/30000f,clock+.005f);
         }
     }
 
@@ -245,6 +251,7 @@ public sealed partial class KinseiSession : MonoBehaviour
     void ToggleCommand()
     {
         if(phase==Phase.Mirror || OnAir) return;
+        shopView=ShopView.None;
         command=!command; club.SetTactical(command); snapCamera=true; lockedTarget=-1;
         if(command && (player.Position.z< -13.9f || Mathf.Abs(player.Position.x)>8.8f))
             mapOffset=new Vector2(player.Position.x,player.Position.z-1.55f);
@@ -263,8 +270,11 @@ public sealed partial class KinseiSession : MonoBehaviour
                 eye=new Vector3(15.66f,1.68f,-16.93f);
                 focus=new Vector3(14.88f,1.49f,-18.13f);
             } else {
-                eye=KinseiBoxOffice.Counter+new Vector3(-1.56f,1.55f,-1.7f);
-                focus=Vector3.Lerp(operatorOnDuty.actor.EyePosition,stageDirector.actor.EyePosition,.5f)-Vector3.up*.16f;
+                float reveal=Mathf.SmoothStep(0,1,Mathf.InverseLerp(1.63f,2.68f,clock-firstPictureAt));
+                if(reducedMotion)reveal=.67f;
+                eye=KinseiBoxOffice.Counter+Vector3.Lerp(new Vector3(.12f,1.71f,.98f),new Vector3(.54f,1.66f,.26f),reveal);
+                focus=KinseiBoxOffice.Counter+Vector3.Lerp(new Vector3(.40f,1.12f,.49f),new Vector3(.38f,1.09f,.425f),reveal);
+                cam.fieldOfView=Mathf.Lerp(40,30,reveal);
             }
         } else if(phase==Phase.Mirror) {
             bool returnShot=phaseAge>=2.2f;
@@ -272,6 +282,9 @@ public sealed partial class KinseiSession : MonoBehaviour
             cam.orthographic=false;cam.fieldOfView=returnShot?39:40;
             eye=returnShot?new Vector3(.99f,4.59f,6.86f):new Vector3(-3.06f,1.57f,-2.18f);
             focus=returnShot?new Vector3(.22f,4.21f,7.70f):new Vector3(-3.05f,1.29f,-.12f);
+        } else if(shopView!=ShopView.None) {
+            cam.orthographic=false;cam.fieldOfView=shopView==ShopView.Records?52:42;
+            FrameCounter(out eye,out focus);
         } else if(command) {
             cam.orthographic=true; cam.orthographicSize=Mathf.Max(chartSize,15f/cam.aspect);
             focus=new Vector3(mapOffset.x,0,1.55f+mapOffset.y);eye=focus+new Vector3(0,18,-11f);

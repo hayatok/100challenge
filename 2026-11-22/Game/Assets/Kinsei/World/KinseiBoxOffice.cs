@@ -4,6 +4,8 @@ public sealed class KinseiBoxOffice : MonoBehaviour
 {
     public static readonly Vector3 Counter = new Vector3(-2.05f, 0, -6.35f);
     GameObject receipt;
+    Transform ticketLever, firstTicket;
+    public Vector3 LeverGrip => ticketLever.TransformPoint(new Vector3(.115f,-.018f,0));
     Material wood, brass, ivory, register;
 
     public void Build()
@@ -33,6 +35,23 @@ public sealed class KinseiBoxOffice : MonoBehaviour
         receipt.GetComponent<Renderer>().sharedMaterial=paper;receipt.GetComponent<Collider>().enabled=false;
         Destroy(receipt.GetComponent<Collider>());
         Piece(counter,"紙留めのばね金具",new Vector3(.263f,1.034f,.13f),new Vector3(.16f,.016f,.035f),brass);
+        var press=Piece(counter,"入場券の手動印字機",new Vector3(.38f,1.07f,-.16f),new Vector3(.24f,.15f,.17f),register);
+        ticketLever=new GameObject("印字レバーの支点").transform;
+        ticketLever.SetParent(counter,false);ticketLever.localPosition=press.localPosition+new Vector3(.107f,.079f,0);
+        Piece(ticketLever,"印字レバー",new Vector3(.06f,-.009f,0),new Vector3(.12f,.022f,.026f),brass);
+        Piece(ticketLever,"丸い握り",new Vector3(.115f,-.018f,0),new Vector3(.046f,.034f,.047f),register);
+        firstTicket=new GameObject("金星興行　一番券").transform;firstTicket.SetParent(counter,false);
+        firstTicket.localPosition=new Vector3(.38f,1.09f,-.244f);
+        Piece(firstTicket,"厚紙の入場券",new Vector3(0,0,.062f),new Vector3(.087f,.0018f,.125f),ivory);
+        var ink=new Material(Shader.Find("Standard")){mainTexture=Resources.Load<Texture2D>("KinseiPrintworks/FirstTicket")};
+        ink.SetFloat("_Glossiness",.18f);
+        var print=GameObject.CreatePrimitive(PrimitiveType.Quad);
+        print.name="一番券の通し番号";print.transform.SetParent(firstTicket,false);
+        print.transform.localPosition=new Vector3(0,.0013f,.062f);
+        print.transform.localRotation=Quaternion.Euler(90,180,0);print.transform.localScale=new Vector3(.086f,.123f,1);
+        print.GetComponent<Renderer>().sharedMaterial=ink;
+        var printCollider=print.GetComponent<Collider>();printCollider.enabled=false;Destroy(printCollider);
+        SetTicketPress(0);
     }
 
     Transform Piece(Transform parent,string label,Vector3 at,Vector3 size,Material material,bool solid=false)
@@ -44,4 +63,13 @@ public sealed class KinseiBoxOffice : MonoBehaviour
         return go.transform;
     }
     public void SetCollected(bool collected) { if(receipt)receipt.SetActive(!collected); }
+    public void SetTicketPress(float seconds)
+    {
+        float down=Mathf.SmoothStep(0,1,Mathf.InverseLerp(.55f,1.15f,seconds));
+        float release=Mathf.SmoothStep(0,1,Mathf.InverseLerp(1.36f,1.82f,seconds));
+        ticketLever.localRotation=Quaternion.Euler(0,0,24-50*(down-release));
+        float feed=Mathf.SmoothStep(0,1,Mathf.InverseLerp(.84f,1.64f,seconds));
+        firstTicket.gameObject.SetActive(feed>0);
+        firstTicket.localPosition=new Vector3(.38f,1.09f,-.244f-.126f*feed);
+    }
 }
