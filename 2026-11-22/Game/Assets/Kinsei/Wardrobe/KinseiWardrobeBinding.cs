@@ -35,9 +35,10 @@ public sealed class KinseiWardrobeBinding : MonoBehaviour
         string cut = role == "tatsu" ? "Double" : "Single";
         string palette = role == "tatsu" ? "Rust" : role == "boss" ? "Cream" :
             role == "kaji" ? "Olive" : role == "brother" ? "Sage" : "Navy";
-        TextAsset data = Resources.Load<TextAsset>(gown ? "KinseiStage/Camellia" : Folder + cut);
-        Texture2D color = Resources.Load<Texture2D>(gown ? "KinseiStage/CamelliaSatin" : role == "stage-pianist" ? "KinseiStage/DinnerJacket" : Folder + palette);
-        Texture2D normal = gown ? Resources.Load<Texture2D>("KinseiCast/WoolNormal") : Resources.Load<Texture2D>(Folder + cut + "Normal");
+        bool makabe=role=="makabe";
+        TextAsset data = Resources.Load<TextAsset>(makabe ? "KinseiMakabe/MakabeCut" : gown ? "KinseiStage/Camellia" : Folder + cut);
+        Texture2D color = Resources.Load<Texture2D>(makabe ? "KinseiMakabe/MakabeWool" : gown ? "KinseiStage/CamelliaSatin" : role == "stage-pianist" ? "KinseiStage/DinnerJacket" : Folder + palette);
+        Texture2D normal = makabe ? Resources.Load<Texture2D>("KinseiMakabe/MakabeWoolNormal") : gown ? Resources.Load<Texture2D>("KinseiCast/WoolNormal") : Resources.Load<Texture2D>(Folder + cut + "Normal");
         if (!data || !color || !normal) return;
         var binding = actor.AddComponent<KinseiWardrobeBinding>();
         var surface = new GameObject(gown ? "Camellia bias gown and hair comb" : "Tailored " + palette + " suit");
@@ -46,8 +47,10 @@ public sealed class KinseiWardrobeBinding : MonoBehaviour
         Matrix4x4 canonical = actor.transform.localToWorldMatrix * Matrix4x4.Scale(pelvis.localScale);
         var bind = new Matrix4x4[bones.Length];
         for (int i=0;i<bones.Length;i++) bind[i] = bones[i].worldToLocalMatrix * canonical;
-        binding.garment = ReadMesh(data,bind);
-        binding.fabric = new Material(Shader.Find("Standard")) {name=palette+" tailored wool",mainTexture=color};
+        binding.garment = ReadMesh(data,bind,makabe);
+        binding.fabric = makabe ? new Material(Resources.Load<Material>("KinseiMakabe/Worsted")) : new Material(Shader.Find("Standard"));
+        binding.fabric.name=palette+" tailored wool";
+        binding.fabric.mainTexture=color;
         binding.fabric.SetTexture("_BumpMap",normal);
         binding.fabric.SetFloat("_BumpScale",gown ? .16f : .65f);
         binding.fabric.SetFloat("_Glossiness",gown ? .52f : .22f);
@@ -59,6 +62,8 @@ public sealed class KinseiWardrobeBinding : MonoBehaviour
         renderer.rootBone = pelvis;
         renderer.quality = SkinQuality.Bone4;
         renderer.localBounds = new Bounds(new Vector3(0,-.14f,0),new Vector3(1.9f,2.15f,2f));
+
+        if(makabe)surface.AddComponent<KinseiMakabeDrape>().Fit(renderer,spine,left,right);
 
         var materials = new HashSet<string> {"Worsted wool","Jacket collar and lapels","Ivory shirt",
                                                "Burgundy silk","Seams and soles"};
@@ -72,7 +77,7 @@ public sealed class KinseiWardrobeBinding : MonoBehaviour
         }
     }
 
-    static Mesh ReadMesh(TextAsset source,Matrix4x4[] bind)
+    static Mesh ReadMesh(TextAsset source,Matrix4x4[] bind,bool makabe)
     {
         using var reader = new BinaryReader(new MemoryStream(source.bytes));
         int count=reader.ReadInt32(), indexCount=reader.ReadInt32();
@@ -93,6 +98,7 @@ public sealed class KinseiWardrobeBinding : MonoBehaviour
         for(int i=0;i<indexCount;i++) triangles[i]=reader.ReadUInt16();
         var mesh=new Mesh {name=source.name+" tailored suit",vertices=positions,normals=normals,
                            uv=uv,triangles=triangles,bindposes=bind,boneWeights=weights};
+        if(makabe)KinseiMakabeDrape.ReadFrames(mesh,reader);
         mesh.RecalculateTangents();
         mesh.RecalculateBounds();
         return mesh;

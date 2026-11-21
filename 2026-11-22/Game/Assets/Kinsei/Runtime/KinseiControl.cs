@@ -199,7 +199,13 @@ public sealed partial class KinseiSession
         mapOffset+=shift.normalized*(7*Time.deltaTime);
         mapOffset.x=Mathf.Clamp(mapOffset.x,-19f,19f);mapOffset.y=Mathf.Clamp(mapOffset.y,-20.5f,4.5f);
         chartSize=Mathf.Clamp(chartSize-Input.mouseScrollDelta.y*.9f,6.7f,16.2f);
-        for(int i=0;i<6;i++) if(Input.GetKeyDown((KeyCode)((int)KeyCode.Alpha1+i))) chosen=i;
+        bool extend=Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
+        for(int i=0;i<crew.Count;i++)
+            if(Input.GetKeyDown((KeyCode)((int)KeyCode.Alpha1+i)))SelectMember(i,extend);
+        if(Input.GetKeyDown(KeyCode.F1))RecallSquad(0);
+        if(Input.GetKeyDown(KeyCode.F2))RecallSquad(1);
+        if(Input.GetKeyDown(KeyCode.F3))SaveSquad(0);
+        if(Input.GetKeyDown(KeyCode.F4))SaveSquad(1);
         if(Input.GetKeyDown(KeyCode.E)) Assign(Duty.Attend);
         if(Input.GetKeyDown(KeyCode.F)) Assign(Duty.Follow);
         if(Input.GetKeyDown(KeyCode.R)) Assign(Duty.Rest);
@@ -208,11 +214,12 @@ public sealed partial class KinseiSession
         if(Input.GetKeyDown(KeyCode.B)) Assign(Duty.Backstage);
         if(Input.GetKeyDown(KeyCode.V)) Assign(Duty.StageWitness);
         if(Input.GetMouseButtonDown(0) && !OverHUD()) {
-            Vector2 hit=Input.mousePosition; float nearest=Screen.height*.057f;
+            Vector2 hit=Input.mousePosition; float nearest=Screen.height*.057f; int member=-1;
             for(int i=0;i<crew.Count;i++) {
                 var pt=cam.WorldToScreenPoint(crew[i].Position+Vector3.up);
-                float d=Vector2.Distance(hit,pt); if(pt.z>0 && d<nearest){chosen=i;nearest=d;}
+                float d=Vector2.Distance(hit,pt); if(pt.z>0 && d<nearest && crew[i].hp>0){member=i;nearest=d;}
             }
+            if(member>=0)SelectMember(member,false);
         }
         if(Input.GetMouseButtonDown(1) && !OverHUD()) {
             var ray=cam.ScreenPointToRay(Input.mousePosition); var ground=new Plane(Vector3.up,0);
@@ -226,9 +233,9 @@ public sealed partial class KinseiSession
         }
     }
 
-    void Assign(Duty duty,Vector3 destination=default)
+    void AssignMember(int index,Duty duty,Vector3 destination,bool announce)
     {
-        var p=crew[chosen]; if(p.hp<=0){Say(p.name+"は動けない");return;}
+        var p=crew[index]; if(p.hp<=0){Say(p.name+"は動けない");return;}
         if(duty==Duty.Backstage) {
             if(!CanOrderBackstage)return;
             if(p.duty==Duty.Backstage){duty=Duty.Follow;}
@@ -255,20 +262,25 @@ public sealed partial class KinseiSession
             held=false;talkProgress=0; Say("辰が席を離れた。梶の連れが立つ");
         }
         if(p==stageWitness)ClearStageWitness();
-        p.duty=duty; p.destination=destination;
+        if(duty==Duty.BoxOffice)
+            foreach(var colleague in crew)
+                if(colleague!=p && colleague.duty==Duty.BoxOffice)colleague.duty=Duty.Follow;
+        p.duty=duty; p.destination=destination;p.path=null;
         if(duty==Duty.Backstage)Say(p.name+"が楽屋口で通し札を預かる");
         else if(duty==Duty.BoxOffice){p.destination=KinseiBoxOffice.Counter;Say(p.name+"が入口の帳場へ向かう");}
         else if(duty==Duty.Attend){p.destination=table;Say("辰「二階はわしに任せえ」");}
-        else if(duty==Duty.Guard){p.destination=new Vector3(2.1f+(chosen%3)*.65f,0,-1.2f-(chosen/3)); Say(p.name+"をダンスホールへ回した");}
-        else if(duty==Duty.Rest){p.destination=new Vector3((chosen%3-1)*1.0f,0,-9.6f-(chosen/3)); Say(p.name+"を表へ下げた");}
-        else Say(p.name+(duty==Duty.Follow?"が真壁に合流する":"が指定位置へ向かう"));
-        sound.Cue("dial"); Mark("order-"+chosen+"-"+duty);
+        else if(duty==Duty.Guard){p.destination=new Vector3(2.1f+(index%3)*.65f,0,-1.2f-(index/3)); if(announce)Say(p.name+"をダンスホールへ回した");}
+        else if(duty==Duty.Rest){p.destination=new Vector3((index%3-1)*1.0f,0,-9.6f-(index/3)); if(announce)Say(p.name+"を表へ下げた");}
+        else if(announce)Say(p.name+(duty==Duty.Follow?"が真壁に合流する":"が指定位置へ向かう"));
+        if(announce)sound.Cue("dial");
+        Mark("order-"+index+"-"+duty);
     }
 
     bool OverHUD()
     {
         float y=1-Input.mousePosition.y/Screen.height;
-        return y<.12f || (command && y>.76f);
+        float scale=Mathf.Min(Screen.width/1100f,Screen.height/720f);
+        return y<.12f || (command && Input.mousePosition.y<=CommandPanelHeight*scale);
     }
 }
 

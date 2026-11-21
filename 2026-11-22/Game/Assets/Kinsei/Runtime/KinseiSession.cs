@@ -183,6 +183,7 @@ public sealed partial class KinseiSession : MonoBehaviour
         foreach(var p in everyone) Destroy(p.root.gameObject);
         everyone.Clear(); crew.Clear(); guards.Clear(); upstairs.Clear(); Populate();
         phase=Phase.Arrival; phaseAge=clock=shootDelay=hitFlash=relayProgress=talkProgress=lastHit=flashTime=0;
+        ResetSquads();
         entranceTime=0; escapeTime=34; bossHp=100; chosen=0; shots=0; lockedTarget=-1;
         command=held=accord=escorted=paused=terraceShot=false; angle=0; tilt=9; snapCamera=true;
         club.SetTactical(false); sound.SetPaused(false); attackUntil=0; moveBlend=0; nextStep=0;

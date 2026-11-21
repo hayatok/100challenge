@@ -166,7 +166,7 @@ public sealed partial class KinseiSession
         Letter(new Rect(171,25,hudW-493,42),Objective(),21,cream,true);
         if(phase!=Phase.Mirror && !StageActive && !OnAir && Plate(new Rect(hudW-286,14,193,45),command?"現場に戻る　 Tab":"指揮に切替　 Tab")) ToggleCommand();
         if(Plate(new Rect(hudW-81,14,59,45),"幕間"))TogglePause();
-        float bottom=command?hudH-154:hudH-66;
+        float bottom=command?hudH-CommandPanelHeight:hudH-66;
         if(bannerUntil>clock && banner.Length>0) {
             float width=Mathf.Min(hudW-80,Mathf.Max(300,banner.Length*19+42));
             Rect box=new Rect((hudW-width)/2,shopView==ShopView.None?bottom-55:84,width,39);
@@ -225,30 +225,19 @@ public sealed partial class KinseiSession
         float left=22,w=(hudW-44)/6;
         for(int i=0;i<crew.Count;i++) {
             var p=crew[i];Rect rect=new Rect(left+i*w,top+7,w-5,70);
-            bool active=i==chosen;
+            bool active=IsMemberSelected(i);
             if(active || rect.Contains(Event.current.mousePosition))Block(rect,new Color(.29f,.21f,.15f));
             var tint=active?gold:cream;
-            Letter(new Rect(rect.x+9,rect.y+1,24,33),(i+1).ToString(),14,brass);
-            Letter(new Rect(rect.x+34,rect.y,rect.width-40,36),p.name,23,tint,true);
+            Letter(new Rect(rect.x+9,rect.y+1,24,33),(i+1).ToString(),14,cream);
+            Letter(new Rect(rect.x+34,rect.y,rect.width-76,36),p.name,23,tint,true);
+            bool first=(squads[0] & (1<<i))!=0,second=(squads[1] & (1<<i))!=0;
+            if(first || second)Letter(new Rect(rect.xMax-52,rect.y+5,46,25),first?(second?"一・二":"一班"):"二班",15,cream,false,TextAnchor.MiddleRight);
             Letter(new Rect(rect.x+10,rect.y+35,rect.width-20,22),DutyName(p)+"　体力 "+Mathf.CeilToInt(p.hp),14,cream);
             Meter(new Rect(rect.x+10,rect.y+61,rect.width-20,3),100*p.hp/p.maxHp,active?gold:mint);
-            if(GUI.Button(rect,GUIContent.none,GUIStyle.none)) chosen=i;
+            if(GUI.Button(rect,GUIContent.none,GUIStyle.none))SelectMember(i,Event.current.shift);
         }
-        int orders=CanOrderStageWitness?6:5;
-        float y=top+90,bw=Mathf.Min(142,(hudW-429-orders*6)/orders);
-        Letter(new Rect(left,y,191,44),crew[chosen].name+" に指示",22,gold,true);
-        if(Plate(new Rect(189,y,bw,44),finale?FinaleOrderLabel:"梶の席へ　E"))Assign(Duty.Attend);
-        if(Plate(new Rect(195+bw,y,bw,44),"随行　F"))Assign(Duty.Follow);
-        if(Plate(new Rect(201+bw*2,y,bw,44),"持ち場　G"))Assign(Duty.Guard);
-        if(Plate(new Rect(207+bw*3,y,bw,44),"休息　R"))Assign(Duty.Rest);
-        if(!finale && Plate(new Rect(213+bw*4,y,bw,44),"伝票　T"))Assign(Duty.BoxOffice);
-        if(orders==6 && Plate(new Rect(219+bw*5,y,bw,44),crew[chosen]==stageWitness?"立会取消　V":"舞台立会　V"))
-            Assign(Duty.StageWitness);
-        if(CanOrderBackstage && Plate(new Rect(hudW-215,y,191,44),
-            crew[chosen].duty==Duty.Backstage?"楽屋口を離れる　B":"楽屋口へ　B"))Assign(Duty.Backstage);
-        if(CanOrderBackstage)return;
-        float mapHints=192+orders*(bw+6);
-        Letter(new Rect(mapHints,y,hudW-22-mapHints,44),"右クリック 地点指定　／　ホイール 拡縮",13,cream,false,TextAnchor.MiddleRight);
+        DrawSquadOrders(top);
+
     }
     void WorldMarks()
     {
@@ -265,7 +254,7 @@ public sealed partial class KinseiSession
             if(screen.z<=0 || screen.x<.04f || screen.x>.96f || screen.y<.25f || screen.y>.85f)continue;
             if(!command && Physics.Linecast(cam.transform.position,head,out var hit,~0,QueryTriggerInteraction.Ignore)
                 && hit.collider!=motor && !hit.transform.IsChildOf(p.root))continue;
-            bool chosenCrew=command && index==chosen;
+            bool chosenCrew=command && IsMemberSelected(index);
             bool inFocus=Mathf.Abs(screen.x-.5f)<.12f && Mathf.Abs(screen.y-.52f)<.21f;
             if(!command && upstairs.Contains(p) && !inFocus)continue;
             bool label=chosenCrew || (!command && (inFocus || p==brother || p==stageWitness || (p==boss && phase>=Phase.Choice) || (p==crew[0] && held)));
