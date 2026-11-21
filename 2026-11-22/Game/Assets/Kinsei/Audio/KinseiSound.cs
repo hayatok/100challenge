@@ -13,6 +13,9 @@ public sealed class KinseiSound : MonoBehaviour
     readonly Dictionary<string, float> lastCue = new();
     readonly Dictionary<string, int> variant = new();
     bool paused, unfocused, dialogue;
+    bool stageQuiet;
+    public float MusicSeconds => music && music.clip ? (float)music.timeSamples/music.clip.frequency : 0;
+    public void QuietStage(bool quiet) { stageQuiet=quiet; }
     float duckUntil;
     readonly float[] meterSamples = new float[128];
     float nextMeterSample, meterTarget, meterReading;
@@ -64,7 +67,8 @@ public sealed class KinseiSound : MonoBehaviour
     {
         if(music==null)return;
         float duck=dialogue ? .38f : Time.unscaledTime<duckUntil ? .48f : 1f;
-        music.volume=Mathf.MoveTowards(music.volume,Mathf.Clamp01(MusicGain)*.38f*duck,Time.unscaledDeltaTime*.7f);
+        float level=stageQuiet?0:Mathf.Clamp01(MusicGain)*.38f*duck;
+        music.volume=Mathf.MoveTowards(music.volume,level,Time.unscaledDeltaTime*.7f);
         room.volume=Mathf.Clamp01(AmbientGain)*.16f;
     }
     // Optional dialogue integration; subtitles remain intelligible without requiring a spoken voice.

@@ -43,16 +43,11 @@ def mix(dst,x,start,gain=1,pan=0,wrap=False):
         n=min(len(x),len(dst)-i)
         if n>0:dst[i:i+n]+=xx[:n]
 # Original 16-bar minor jazz waltz, A A' B turnaround, 76 quarter notes/minute.
-beat=60/76; duration=16*3*beat
+score=json.loads((OUT/'StageScore.json').read_text(encoding='utf-8'))
+beat=60/score['bpm']; duration=len(score['bars'])*3*beat
 music=np.zeros((round(duration*SR),2))
-chords=[[57,60,64,71],[54,57,60,64],[53,57,60,64],[52,56,59,62],
-        [57,60,64,67],[50,53,57,60],[55,59,62,65],[48,52,55,59],
-        [53,57,60,64],[54,57,60,64],[47,50,53,57],[52,56,59,62],
-        [57,60,64,71],[50,53,57,60],[52,56,59,62],[52,56,59,65]]
-melody={0:[(0,76,1.4),(1.75,72,.8)],1:[(.5,71,1.3)],2:[(.25,69,1),(1.6,67,.9)],3:[(1,68,1.2)],
-4:[(0,72,1),(1.3,76,1.2)],5:[(.5,74,1.4)],6:[(0,71,1.2),(1.6,69,.8)],7:[(.4,67,1.7)],
-8:[(0,69,1),(1.5,72,1.2)],9:[(.4,74,1.5)],10:[(0,77,1.2),(1.5,74,.9)],11:[(.4,71,1.6)],
-12:[(0,72,1.3),(1.7,71,.8)],13:[(.5,69,1.5)],14:[(.25,68,1.5)],15:[(.3,71,1.1),(1.8,68,.8)]}
+chords=[bar['chord'] for bar in score['bars']]
+melody=[[(n['beat'],n['midi'],n['beats']) for n in bar['melody']] for bar in score['bars']]
 for bar,c in enumerate(chords):
     at=bar*3*beat
     for b,m in [(0,c[0]-24),(1.9,c[0]-17)]:mix(music,note(m,1.2,'bass'),at+b*beat,.19,-.12,True)

@@ -4,6 +4,8 @@ All twenty WAV files under `Game/Assets/Resources/KinseiAudio` were rendered loc
 
 ## Score
 
+The audio renderer and the stage piano share [StageScore.json](../../Game/Assets/Resources/KinseiAudio/StageScore.json). The 16 bars specify the chord pitches and the melody's note-on times and durations. The Windows player reads the loop's current audio sample and moves the corresponding black and white keys. The stage performer uses the moving keytops as contact targets. Rendering all 20 WAV files from the shared score reproduced every previously released file byte-for-byte.
+
 `kinsei-waltz.wav`, working title **金星、閉店前**, is an original 16-bar slow minor jazz waltz, 3/4 at 76 quarter notes per minute, lasting 37.895 seconds. A-minor opening, F-sharp half-diminished colour, F-major seventh, E7 turnaround, D minor and G7/C-major colour give the room a restrained cabaret atmosphere. The melody and harmony are explicitly authored in the renderer rather than sampled from another composition.
 
 Additive decaying, slightly inharmonic piano; rounded plucked upright-style bass; filtered-noise brushes; low soft kick; four sparse muted-horn answers. Stereo placement and a short reflected-room network leave space in the centre for action. It is a stylized synthesized small ensemble, not an acoustic recording. The repeating arrangement has melody/voicing changes across the sixteen bars. Instrument tails and room reflections wrap into the next loop; 5 ms boundary fades prevent sample-edge clicks.

@@ -25,6 +25,7 @@ public sealed partial class KinseiSession
     }
     void Act(Person p,string kind)
     {
+        if(!showInterrupted && (kind=="shoot" || kind=="punch"))SetPerformance(false);
         p.lastAction=clock; Motion(p,kind);
     }
     void MovePerson(Person p,Vector3 to,float rate,float dt)
@@ -78,7 +79,7 @@ public sealed partial class KinseiSession
 
     void PlayerInput(float dt)
     {
-        if(phase==Phase.Mirror || OnAir) return;
+        if(phase==Phase.Mirror || OnAir || (StageActive && (stageBeat==StageBeat.Settled || player.hp<=0))) return;
         if(motor==null || motor.gameObject!=player.root.gameObject) {
             motor=player.root.gameObject.AddComponent<CharacterController>();
             motor.center=Vector3.up*.9f; motor.height=1.8f; motor.radius=.28f;
@@ -98,7 +99,7 @@ public sealed partial class KinseiSession
         if(motor.isGrounded) fallVelocity=-2f;
         fallVelocity=Mathf.Max(-16,fallVelocity-21*dt);
         Vector3 proposed=player.Position+move*rate*dt;
-        proposed=StreetBounds(proposed);
+        proposed=StageActive?StageStep(player.Position,proposed,boss.Position):StreetBounds(proposed);
         var step=proposed-player.Position;
         motor.Move(new Vector3(step.x,fallVelocity*dt,step.z));
         if(move.sqrMagnitude>.1f) player.root.rotation=Quaternion.RotateTowards(player.root.rotation,Quaternion.LookRotation(move),dt*540);
@@ -106,7 +107,7 @@ public sealed partial class KinseiSession
         if(moveBlend>1 && motor.isGrounded && clock>=nextStep) {
             sound.Cue("step"); nextStep=clock+(rate>3?.29f:.41f);
         }
-        bool fighting=phase==Phase.Floor || phase==Phase.Chase;
+        bool fighting=phase==Phase.Floor || phase==Phase.Chase || StageActive;
         if(clock>attackUntil) Motion(player,moveBlend>.18f?(rate>3?"run":"walk"):(fighting?"guard":"idle"),moveBlend);
         if(finale){if(Input.GetKeyDown(KeyCode.E))Interact();return;}
         if(Input.GetKeyDown(KeyCode.Q)) CycleTarget();
@@ -123,7 +124,7 @@ public sealed partial class KinseiSession
             foreach(var g in guards) if(g.hp>0) combatants.Add(g);
             if(brother.hp>0)combatants.Add(brother);
             if(!held && phaseAge>24) foreach(var g in upstairs) if(!g.retired && g.hp>0 && g.Position.y<1) combatants.Add(g);
-        } else if(phase==Phase.Chase) combatants.Add(boss);
+        } else if(phase==Phase.Chase || StageActive) combatants.Add(boss);
     }
     void CycleTarget()
     {
@@ -158,6 +159,7 @@ public sealed partial class KinseiSession
     }
     void Attack(bool melee,bool mouse)
     {
+        if(StageActive) { if(melee)StageAttack(); return; }
         if(clock<shootDelay || (phase!=Phase.Floor && phase!=Phase.Chase))return;
         var target=Pick(mouse,melee);
         shootDelay=clock+(melee?.48f:.30f); attackUntil=clock+.32f;
@@ -199,6 +201,7 @@ public sealed partial class KinseiSession
         if(Input.GetKeyDown(KeyCode.R)) Assign(Duty.Rest);
         if(Input.GetKeyDown(KeyCode.G)) Assign(Duty.Guard);
         if(Input.GetKeyDown(KeyCode.T)) Assign(Duty.BoxOffice);
+        if(Input.GetKeyDown(KeyCode.V)) Assign(Duty.StageWitness);
         if(Input.GetMouseButtonDown(0) && !OverHUD()) {
             Vector2 hit=Input.mousePosition; float nearest=Screen.height*.057f;
             for(int i=0;i<crew.Count;i++) {
@@ -221,6 +224,7 @@ public sealed partial class KinseiSession
     void Assign(Duty duty,Vector3 destination=default)
     {
         var p=crew[chosen]; if(p.hp<=0){Say(p.name+"は動けない");return;}
+        if(duty==Duty.StageWitness){OrderStageWitness(p);return;}
         if(finale && duty==Duty.Attend){OrderFinale();return;}
         if(finale && duty==Duty.BoxOffice)return;
         if(duty==Duty.BoxOffice && (HouseClaimed || (phase!=Phase.Arrival && phase!=Phase.Floor && phase!=Phase.Choice))){
@@ -234,6 +238,7 @@ public sealed partial class KinseiSession
         if(p==crew[0] && p.duty==Duty.Attend && duty!=Duty.Attend && !accord){
             held=false;talkProgress=0; Say("辰が席を離れた。梶の連れが立つ");
         }
+        if(p==stageWitness)ClearStageWitness();
         p.duty=duty; p.destination=destination;
         if(duty==Duty.BoxOffice){p.destination=KinseiBoxOffice.Counter;Say(p.name+"が入口の帳場へ向かう");}
         else if(duty==Duty.Attend){p.destination=table;Say("辰「二階はわしに任せえ」");}

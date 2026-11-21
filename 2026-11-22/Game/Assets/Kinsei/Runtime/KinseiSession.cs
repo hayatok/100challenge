@@ -4,8 +4,8 @@ using UnityEngine;
 
 public sealed partial class KinseiSession : MonoBehaviour
 {
-    enum Phase { Title, Arrival, Floor, Choice, Chase, Mirror, Release, Result }
-    enum Duty { Follow, Go, Attend, Guard, Rest, BoxOffice, FinalePost }
+    enum Phase { Title, Arrival, Floor, Choice, Chase, Showdown, Mirror, Release, Result }
+    enum Duty { Follow, Go, Attend, Guard, Rest, BoxOffice, FinalePost, StageWitness }
     sealed class Person
     {
         public string name, role, pose = "idle";
@@ -33,6 +33,8 @@ public sealed partial class KinseiSession : MonoBehaviour
     KinseiWorld club;
     KinseiBoxOffice boxOffice;
     KinseiDistrictPeople neighbours;
+    KinseiStageDuet performers;
+    bool showInterrupted;
     KinseiWalkways walkways;
     KinseiSound sound;
     KinseiActionLight actionLight;
@@ -86,6 +88,7 @@ public sealed partial class KinseiSession : MonoBehaviour
         boxOffice.Build();
         neighbours=new GameObject("宵待町の店主と常連").AddComponent<KinseiDistrictPeople>();
         neighbours.transform.SetParent(transform,false);neighbours.Initialize(club);
+        performers=KinseiStageDuet.Install(club.transform);
         walkways=club.gameObject.AddComponent<KinseiWalkways>();
         cam = new GameObject("プレイヤーカメラ").AddComponent<Camera>();
         cam.tag = "MainCamera";
@@ -156,7 +159,7 @@ public sealed partial class KinseiSession : MonoBehaviour
         elder.root.rotation=Quaternion.Euler(0,-90,0);
         for(int i=0;i<4;i++)
             upstairs.Add(Make("梶の連れ "+(i+1),"guard",new Vector3((i<2?-2.4f:2.4f)+(i%2)*.65f,3.2f,7.1f+(i%2)*.55f),i+2));
-        boss=Make("兄貴分","boss",new Vector3(-4,.49f,3.4f),0);
+        boss=Make("兄貴分","boss",new Vector3(-6.62f,.49f,3.72f),0);
         foreach(var p in guards) Face(p,player.Position);
         Face(brother, player.Position); Face(boss,player.Position);
         ApplyCampaignCrew();
@@ -167,8 +170,10 @@ public sealed partial class KinseiSession : MonoBehaviour
     void OpenNight(bool finalNight)
     {
         if(!BeginCampaign(finalNight))return;
+        ClearStageWitness();
         finale=finalNight;
         shopView=ShopView.None;
+        SetPerformance(true);
         boxOffice.SetCollected(false);
         boxOffice.SetTicketPress(0);
         ResetStreets();
@@ -222,6 +227,11 @@ public sealed partial class KinseiSession : MonoBehaviour
         if(phase==Phase.Result)return;
         if(finale)SimulateFinale(dt); else Simulate(dt);
         sound.SetDialogue(clock<bannerUntil);
+        float songSeconds=sound.MusicSeconds;
+        club.PlayKeys(songSeconds,!showInterrupted,out var bassKey,out var melodyKey);
+        performers.Tick(dt,songSeconds,bassKey,melodyKey);
+        bool streetView=!command && phase==Phase.Arrival && player.Position.z< -8.3f && player.Position.z> -14.2f && Mathf.Abs(player.Position.x-5.5f)<6.5f;
+        club.UpdateMarquee(!showInterrupted,streetView,Time.unscaledTime);
         foreach(var p in everyone)
         {
             float action=(p==player || p==brother || p==elder) && phase==Phase.Mirror?relayProgress:Mathf.Clamp01(1-(clock-p.lastAction)/.36f);
@@ -231,9 +241,14 @@ public sealed partial class KinseiSession : MonoBehaviour
         SetCamera(dt);
     }
 
+    void SetPerformance(bool playing)
+    {
+        showInterrupted=!playing;sound.QuietStage(!playing);performers.SetPerforming(playing);
+    }
+
     void LateUpdate()
     {
-        if(phase==Phase.Mirror && !paused && clock>=nextHallPicture) {
+        if(phase==Phase.Mirror && !paused && clock>=nextHallPicture && SystemInfo.graphicsDeviceType!=UnityEngine.Rendering.GraphicsDeviceType.Null) {
             relayCam.transform.position=new Vector3(-3.02f,1.43f,-.23f);
             relayCam.transform.LookAt(brother.actor.EyePosition-Vector3.up*.048f);
             relayCam.Render();
@@ -250,7 +265,7 @@ public sealed partial class KinseiSession : MonoBehaviour
 
     void ToggleCommand()
     {
-        if(phase==Phase.Mirror || OnAir) return;
+        if(phase==Phase.Mirror || StageActive || OnAir) return;
         shopView=ShopView.None;
         command=!command; club.SetTactical(command); snapCamera=true; lockedTarget=-1;
         if(command && (player.Position.z< -13.9f || Mathf.Abs(player.Position.x)>8.8f))
@@ -307,7 +322,9 @@ public sealed partial class KinseiSession : MonoBehaviour
     void End(string id,string title,string body)
     {
         if(phase==Phase.Result)return;
-        outcome=id; endingTitle=title; endingText=body; settlementMessage=FinishCampaign(id); phase=Phase.Result; command=false;
+        ClearStageWitness();
+        outcome=id; endingTitle=title; endingText=body; settlementMessage=FinishCampaign(id=="showdown"?"pursuit":id); phase=Phase.Result; command=false;
+        SetPerformance(true);
         relayCam.enabled=false; sound.Cue(id=="loss"?"loss":"result"); Mark("ending-"+id);
         if(measure && profile.Count>0) {
             profile.Sort();
@@ -319,6 +336,10 @@ public sealed partial class KinseiSession : MonoBehaviour
     {
         if(!focus && !paused && phase!=Phase.Title && phase!=Phase.Result) TogglePause();
     }
-    void OnDestroy() { if(relayImage!=null) { relayImage.Release(); Destroy(relayImage); } }
+    void OnDestroy()
+    {
+        if(relayImage!=null) { relayImage.Release(); Destroy(relayImage); }
+        if(stageRingMaterial!=null) Destroy(stageRingMaterial);
+    }
 }
 

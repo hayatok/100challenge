@@ -1,0 +1,21 @@
+{
+  "bpm": 76,
+  "bars": [
+    {"chord": [57, 60, 64, 71], "melody": [{"beat": 0, "midi": 76, "beats": 1.4}, {"beat": 1.75, "midi": 72, "beats": 0.8}]},
+    {"chord": [54, 57, 60, 64], "melody": [{"beat": 0.5, "midi": 71, "beats": 1.3}]},
+    {"chord": [53, 57, 60, 64], "melody": [{"beat": 0.25, "midi": 69, "beats": 1}, {"beat": 1.6, "midi": 67, "beats": 0.9}]},
+    {"chord": [52, 56, 59, 62], "melody": [{"beat": 1, "midi": 68, "beats": 1.2}]},
+    {"chord": [57, 60, 64, 67], "melody": [{"beat": 0, "midi": 72, "beats": 1}, {"beat": 1.3, "midi": 76, "beats": 1.2}]},
+    {"chord": [50, 53, 57, 60], "melody": [{"beat": 0.5, "midi": 74, "beats": 1.4}]},
+    {"chord": [55, 59, 62, 65], "melody": [{"beat": 0, "midi": 71, "beats": 1.2}, {"beat": 1.6, "midi": 69, "beats": 0.8}]},
+    {"chord": [48, 52, 55, 59], "melody": [{"beat": 0.4, "midi": 67, "beats": 1.7}]},
+    {"chord": [53, 57, 60, 64], "melody": [{"beat": 0, "midi": 69, "beats": 1}, {"beat": 1.5, "midi": 72, "beats": 1.2}]},
+    {"chord": [54, 57, 60, 64], "melody": [{"beat": 0.4, "midi": 74, "beats": 1.5}]},
+    {"chord": [47, 50, 53, 57], "melody": [{"beat": 0, "midi": 77, "beats": 1.2}, {"beat": 1.5, "midi": 74, "beats": 0.9}]},
+    {"chord": [52, 56, 59, 62], "melody": [{"beat": 0.4, "midi": 71, "beats": 1.6}]},
+    {"chord": [57, 60, 64, 71], "melody": [{"beat": 0, "midi": 72, "beats": 1.3}, {"beat": 1.7, "midi": 71, "beats": 0.8}]},
+    {"chord": [50, 53, 57, 60], "melody": [{"beat": 0.5, "midi": 69, "beats": 1.5}]},
+    {"chord": [52, 56, 59, 62], "melody": [{"beat": 0.25, "midi": 68, "beats": 1.5}]},
+    {"chord": [52, 56, 59, 65], "melody": [{"beat": 0.3, "midi": 71, "beats": 1.1}, {"beat": 1.8, "midi": 68, "beats": 0.8}]}
+  ]
+}

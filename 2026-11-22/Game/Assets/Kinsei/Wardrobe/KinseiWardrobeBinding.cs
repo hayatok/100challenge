@@ -29,15 +29,18 @@ public sealed class KinseiWardrobeBinding : MonoBehaviour
                            leftHip,leftHip.Find("Knee"),rightHip,rightHip.Find("Knee")};
         foreach (Transform bone in bones) if (!bone) return;
 
+        bool gown = role == "stage-singer";
+        if (gown) System.Array.Resize(ref bones,11);
+        if (gown) bones[10]=spine.Find("Head");
         string cut = role == "tatsu" ? "Double" : "Single";
         string palette = role == "tatsu" ? "Rust" : role == "boss" ? "Cream" :
             role == "kaji" ? "Olive" : role == "brother" ? "Sage" : "Navy";
-        TextAsset data = Resources.Load<TextAsset>(Folder + cut);
-        Texture2D color = Resources.Load<Texture2D>(Folder + palette);
-        Texture2D normal = Resources.Load<Texture2D>(Folder + cut + "Normal");
+        TextAsset data = Resources.Load<TextAsset>(gown ? "KinseiStage/Camellia" : Folder + cut);
+        Texture2D color = Resources.Load<Texture2D>(gown ? "KinseiStage/CamelliaSatin" : role == "stage-pianist" ? "KinseiStage/DinnerJacket" : Folder + palette);
+        Texture2D normal = gown ? Resources.Load<Texture2D>("KinseiCast/WoolNormal") : Resources.Load<Texture2D>(Folder + cut + "Normal");
         if (!data || !color || !normal) return;
         var binding = actor.AddComponent<KinseiWardrobeBinding>();
-        var surface = new GameObject("Tailored " + palette + " suit");
+        var surface = new GameObject(gown ? "Camellia bias gown and hair comb" : "Tailored " + palette + " suit");
         surface.transform.SetParent(actor.transform,false);
         // The mesh is in canonical actor coordinates. Retain role-specific pelvis width in rest and motion.
         Matrix4x4 canonical = actor.transform.localToWorldMatrix * Matrix4x4.Scale(pelvis.localScale);
@@ -46,8 +49,8 @@ public sealed class KinseiWardrobeBinding : MonoBehaviour
         binding.garment = ReadMesh(data,bind);
         binding.fabric = new Material(Shader.Find("Standard")) {name=palette+" tailored wool",mainTexture=color};
         binding.fabric.SetTexture("_BumpMap",normal);
-        binding.fabric.SetFloat("_BumpScale",.65f);
-        binding.fabric.SetFloat("_Glossiness",.22f);
+        binding.fabric.SetFloat("_BumpScale",gown ? .16f : .65f);
+        binding.fabric.SetFloat("_Glossiness",gown ? .52f : .22f);
         binding.fabric.EnableKeyword("_NORMALMAP");
         var renderer = surface.AddComponent<SkinnedMeshRenderer>();
         renderer.sharedMesh = binding.garment;
@@ -101,3 +104,4 @@ public sealed class KinseiWardrobeBinding : MonoBehaviour
         if(fabric) Destroy(fabric);
     }
 }
+

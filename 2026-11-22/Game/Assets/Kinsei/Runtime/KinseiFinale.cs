@@ -121,7 +121,7 @@ public sealed partial class KinseiSession
 
     void SimulateFinale(float dt)
     {
-        if((finaleStep==FinaleStep.Cooperative || finaleStep==FinaleStep.Exclusive) && clock>=nextFinaleFrame) {
+        if((finaleStep==FinaleStep.Cooperative || finaleStep==FinaleStep.Exclusive) && clock>=nextFinaleFrame && SystemInfo.graphicsDeviceType!=UnityEngine.Rendering.GraphicsDeviceType.Null) {
             nextFinaleFrame=clock+.12f;
             Vector3 target=finaleStep==FinaleStep.Cooperative?LotusDesk:stageDirector.Position;
             relayCam.transform.position=target+new Vector3(2f,1.72f,1.8f);

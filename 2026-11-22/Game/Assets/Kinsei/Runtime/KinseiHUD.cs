@@ -62,7 +62,7 @@ public sealed partial class KinseiSession
     {
         bool title=phase==Phase.Title;
         Texture cover=!title && (outcome=="accord" || outcome=="cooperative") && morningCover?morningCover:keyArt;
-        if(!title && (outcome=="pursuit" || outcome=="exclusive") && ledgerCover)cover=ledgerCover;
+        if(!title && (outcome=="pursuit" || outcome=="showdown" || outcome=="exclusive") && ledgerCover)cover=ledgerCover;
         if(cover!=null) GUI.DrawTexture(new Rect(0,0,hudW,hudH),cover,ScaleMode.ScaleAndCrop);
         GUI.DrawTexture(new Rect(0,0,hudW*.75f,hudH),hudFade);
         float x=hudW*.056f, w=Mathf.Min(525,hudW*.44f), y=hudH*.31f;
@@ -86,6 +86,7 @@ public sealed partial class KinseiSession
     void ReturnToTitle()
     {
         if(paused) TogglePause();
+        ClearStageWitness();
         relayCam.enabled=false; phase=Phase.Title; command=false; SetCamera(0);
     }
     bool PauseButton(int index,Rect rect,string label,bool primary=false)
@@ -131,6 +132,7 @@ public sealed partial class KinseiSession
             case Phase.Floor:return held?"梶の連れは待機中。弟と用心棒を制圧せよ":"弟と用心棒を制圧せよ。辰は二階の梶の席へ";
             case Phase.Choice:return escorted?"弟をホール左手の中継鏡へ連れて行く":escapeTime>0?"弟に肩を貸すか、舞台袖の兄貴分を追う":"弟に肩を貸し、二階の梶に顔を見せる";
             case Phase.Chase:return "舞台袖で兄貴分との決着をつける";
+            case Phase.Showdown:return "立会人の前で、兄貴分との勝負をつける";
             case Phase.Mirror:return "卓間中継鏡で、梶に弟の顔を見せる";
             default:return "梶と弟が店を出るのを見届ける";
         }
@@ -142,6 +144,7 @@ public sealed partial class KinseiSession
             case Duty.Go:return "移動"; case Duty.Guard:return "持ち場";
             case Duty.FinalePost:return finaleStep==FinaleStep.Choose?"交換卓":"興行の持ち場";
             case Duty.BoxOffice:return "帳場へ";
+            case Duty.StageWitness:return StageWitnessReady?"立会中":"舞台袖へ";
             case Duty.Rest:return "休息"; case Duty.Attend:return held?"交渉中":"梶の席へ";
             default:return "随行";
         }
@@ -151,6 +154,7 @@ public sealed partial class KinseiSession
         pauseSelection=0;
         WorldMarks();
         DrawAddresses();
+        DrawStageStatus();
         float pad=22;
         Block(new Rect(0,0,hudW,74),ink);
         Block(new Rect(0,73,hudW,1),rule);
@@ -158,7 +162,7 @@ public sealed partial class KinseiSession
         Block(new Rect(151,17,1,39),rule);
         Letter(new Rect(171,4,490,23),"今夜の目的",13,brass);
         Letter(new Rect(171,25,hudW-493,42),Objective(),21,cream,true);
-        if(phase!=Phase.Mirror && !OnAir && Plate(new Rect(hudW-286,14,193,45),command?"現場に戻る　 Tab":"指揮に切替　 Tab")) ToggleCommand();
+        if(phase!=Phase.Mirror && !StageActive && !OnAir && Plate(new Rect(hudW-286,14,193,45),command?"現場に戻る　 Tab":"指揮に切替　 Tab")) ToggleCommand();
         if(Plate(new Rect(hudW-81,14,59,45),"幕間"))TogglePause();
         float bottom=command?hudH-154:hudH-66;
         if(bannerUntil>clock && banner.Length>0) {
@@ -174,6 +178,7 @@ public sealed partial class KinseiSession
             Meter(new Rect(pad,bottom+47,134,4),player.hp,player.hp<28?red:gold);
             string hints=OnAir?"共同送像所　生中継":finale?"WASD　移動　　E　調べる・渡す　　Tab　組員を指揮":phase==Phase.Arrival?"WASD　移動　　E　話す　　通りの西から ロータス・針音堂・送像所":
                 phase==Phase.Mirror?"卓間中継　接続中":
+                StageActive?"WASD　移動　　Q　注視　　隙ができたら F　打撃":
                 "WASD　移動　　右ドラッグ　視点　　左クリック・Space　射撃　　Q　注視　　F　打撃";
             var counter=shopView==ShopView.None?NearbyCounter():shopView;
             if(counter!=ShopView.None)hints=shopView==ShopView.None?"C　"+ShopViewLabel(counter)+"を見る　　E　話す・調べる　　Tab　組員を指揮":ShopViewLabel(counter)+"　　C　元の視点へ　　Tab　組員を指揮";
@@ -221,24 +226,28 @@ public sealed partial class KinseiSession
             Meter(new Rect(rect.x+10,rect.y+61,rect.width-20,3),100*p.hp/p.maxHp,active?gold:mint);
             if(GUI.Button(rect,GUIContent.none,GUIStyle.none)) chosen=i;
         }
-        float y=top+90,bw=Mathf.Min(142,(hudW-420)/5);
+        int orders=CanOrderStageWitness?6:5;
+        float y=top+90,bw=Mathf.Min(142,(hudW-429-orders*6)/orders);
         Letter(new Rect(left,y,191,44),crew[chosen].name+" に指示",22,gold,true);
         if(Plate(new Rect(189,y,bw,44),finale?FinaleOrderLabel:"梶の席へ　E"))Assign(Duty.Attend);
         if(Plate(new Rect(195+bw,y,bw,44),"随行　F"))Assign(Duty.Follow);
         if(Plate(new Rect(201+bw*2,y,bw,44),"持ち場　G"))Assign(Duty.Guard);
         if(Plate(new Rect(207+bw*3,y,bw,44),"休息　R"))Assign(Duty.Rest);
         if(!finale && Plate(new Rect(213+bw*4,y,bw,44),"伝票　T"))Assign(Duty.BoxOffice);
-        Letter(new Rect(222+bw*5,y,hudW-244-bw*5,44),"右クリック 地点指定　／　ホイール 拡縮",13,cream,false,TextAnchor.MiddleRight);
+        if(orders==6 && Plate(new Rect(219+bw*5,y,bw,44),crew[chosen]==stageWitness?"立会取消　V":"舞台立会　V"))
+            Assign(Duty.StageWitness);
+        float mapHints=192+orders*(bw+6);
+        Letter(new Rect(mapHints,y,hudW-22-mapHints,44),"右クリック 地点指定　／　ホイール 拡縮",13,cream,false,TextAnchor.MiddleRight);
     }
     void WorldMarks()
     {
-        if(Event.current.type!=EventType.Repaint || cam==null || phase==Phase.Mirror || OnAir || shopView!=ShopView.None)return;
+        if(Event.current.type!=EventType.Repaint || cam==null || phase==Phase.Mirror || StageActive || OnAir || shopView!=ShopView.None)return;
         drawnLabels.Clear();
         foreach(var p in everyone) {
             if(p.retired || (p.hp<=0 && !(p==brother && phase==Phase.Choice)))continue;
             int index=crew.IndexOf(p);
             bool ally=index>=0 || p==player;
-            if(!command && (p==player || (ally && p!=crew[0])))continue;
+            if(!command && (p==player || (ally && p!=crew[0] && p!=stageWitness)))continue;
             if(!command && (p.Position-player.Position).sqrMagnitude>16*16)continue;
             Vector3 head=p.Position+Vector3.up*1.96f;
             var screen=cam.WorldToViewportPoint(head);
@@ -248,7 +257,7 @@ public sealed partial class KinseiSession
             bool chosenCrew=command && index==chosen;
             bool inFocus=Mathf.Abs(screen.x-.5f)<.12f && Mathf.Abs(screen.y-.52f)<.21f;
             if(!command && upstairs.Contains(p) && !inFocus)continue;
-            bool label=chosenCrew || (!command && (inFocus || p==brother || (p==boss && phase>=Phase.Choice) || (p==crew[0] && held)));
+            bool label=chosenCrew || (!command && (inFocus || p==brother || p==stageWitness || (p==boss && phase>=Phase.Choice) || (p==crew[0] && held)));
             Color tint=ally?mint:(p==elder || (p==brother && phase==Phase.Choice) || (p==boss && phase!=Phase.Chase))?gold:red;
             float x=screen.x*hudW,y=(1-screen.y)*hudH;
             if(label) {

@@ -48,6 +48,7 @@ public sealed partial class KinseiWorld : MonoBehaviour
         welt=Mat("Corded oxblood welting","#6E4440",.18f,.48f);
         Shell(); Floor(); Stage(); Furniture(); Balcony(); Entry(); BuildDistrict(); Mirror(); Lighting();
         BuildNightscape();
+        BuildMarquee();
         BatchArchitecture();
     }
     Material Mat(string name,string hex,float metal,float gloss,float emission=0)
@@ -239,7 +240,7 @@ public sealed partial class KinseiWorld : MonoBehaviour
         if(signFont){t.font=signFont;go.GetComponent<MeshRenderer>().sharedMaterial=signInk;}
     }
     void RefreshTypeface(Font font) { if(font==signFont && signInk)signInk.mainTexture=font.material.mainTexture; }
-    void OnDestroy() {Font.textureRebuilt-=RefreshTypeface;if(signInk)Destroy(signInk);if(terraceImage){terraceImage.Release();Destroy(terraceImage);}nightAssets?.Release();}
+    void OnDestroy() {Font.textureRebuilt-=RefreshTypeface;if(signInk)Destroy(signInk);if(terraceImage){terraceImage.Release();Destroy(terraceImage);}nightAssets?.Release();ReleaseMarquee();}
     void Mirror()
     {
         Table(new Vector3(-3,0,0),.55f);
@@ -280,7 +281,7 @@ public sealed partial class KinseiWorld : MonoBehaviour
         if(!built)Construct();
         mirrorHinge.localRotation=Quaternion.Euler(Mathf.Lerp(5,-18,Mathf.Clamp01(progress)),Mathf.Lerp(0,18,Mathf.Clamp01(progress)),0);
         LightCaller(hallTubeLight,callerEyes,progress);LightCaller(boothTubeLight,returnEyes,progress);
-        if(feed && Time.unscaledTime>=nextTerraceFrame)
+        if(feed && SystemInfo.graphicsDeviceType!=GraphicsDeviceType.Null && Time.unscaledTime>=nextTerraceFrame)
         {
             if(!terraceCamera) PrepareTerraceCamera();
             if(returnEyes.HasValue)terraceCamera.transform.LookAt(returnEyes.Value-Vector3.up*.045f);

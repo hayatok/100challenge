@@ -126,12 +126,7 @@ public sealed partial class KinseiWorld
         Cushion("Piano top lid",new Vector3(0,1.19f,.045f),new Vector3(1.46f,.065f,.54f),dark,piano);
         Box("Recessed front panel",new Vector3(0,.94f,-.202f),new Vector3(1.21f,.35f,.035f),dark,false,piano);
         Box("Keyboard rail",new Vector3(0,.69f,-.29f),new Vector3(1.42f,.12f,.29f),wood,false,piano);
-        for(int i=0;i<36;i++)
-        {
-            float x=(i-17.5f)*.035f;
-            Box("Ivory piano key",new Vector3(x,.765f,-.326f),new Vector3(.033f,.028f,.198f),ivoryKeys,false,piano);
-            if(i%7!=2 && i%7!=6 && i<35)Box("Raised ebony sharp",new Vector3(x+.0175f,.791f,-.286f),new Vector3(.020f,.040f,.116f),dark,false,piano);
-        }
+        FitKeyboard(piano);
         for(int side=-1;side<=1;side+=2)Rail(new Vector3(side*.63f,.04f,-.35f),new Vector3(side*.63f,.68f,-.35f),.035f,wood,piano);
         Box("Piano bench stretcher",new Vector3(0,.18f,-.71f),new Vector3(.48f,.34f,.23f),wood,false,piano);
         Cushion("Pianist leather bench",new Vector3(0,.39f,-.71f),new Vector3(.69f,.13f,.31f),plum,piano);

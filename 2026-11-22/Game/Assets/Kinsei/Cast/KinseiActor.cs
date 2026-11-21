@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>Original tailored cast. Feet at origin, forward +Z; caller owns root motion.</summary>
-public sealed class KinseiActor : MonoBehaviour
+public sealed partial class KinseiActor : MonoBehaviour
 {
     Transform body, chest, head, la, ra, le, re, lh, rh, ll, rl, lk, rk;
     Transform jaw, detailJaw;
@@ -412,6 +412,24 @@ public sealed class KinseiActor : MonoBehaviour
             gripLeft=.68f;gripRight=.97f;
             if(hasAttentionTarget)AimHead(attentionEyes,.87f);
         }
+        if(state=="showdown-cue")
+        {
+            float raise=Ease(0,.32f,stateTime);
+            chest.localRotation=Quaternion.Euler(-12*raise,38*raise,14*raise);
+            la.localRotation=Quaternion.Euler(-112*raise,0,-42*raise);
+            ra.localRotation=Quaternion.Euler(-137*raise,0,46*raise);
+            le.localRotation=Quaternion.Euler(-21*raise,0,0);
+            re.localRotation=Quaternion.Euler(-35*raise,0,0);
+            PlantGuardFoot(ll,lk,leftShoe,-1,1);
+            PlantGuardFoot(rl,rk,rightShoe,1,1);
+        }
+        if(state=="showdown-open")
+        {
+            chest.localRotation=Quaternion.Euler(21,11,7);
+            head.localRotation=Quaternion.Euler(13,-7,0);
+            ra.localRotation=Quaternion.Euler(-17,0,15);
+            la.localRotation=Quaternion.Euler(-24,0,-16);
+        }
         if(state=="punch") { float p=Mathf.Sin(Mathf.Clamp01(stateTime/.45f)*Mathf.PI); ra.localRotation=Quaternion.Euler(-90*p,-25*p,10); re.localRotation=Quaternion.Euler(-80*(1-p),0,0); chest.localRotation=Quaternion.Euler(0,-22*p,0); }
         if(state=="fall") { float p=Mathf.SmoothStep(0,1,Mathf.Clamp01(stateTime/.8f)); body.localPosition=V(0,.96f-.79f*p,0); body.localRotation=Quaternion.Euler(-86*p,0,8*p); ll.localRotation=Quaternion.Euler(12*p,0,-12*p); rl.localRotation=Quaternion.Euler(-15*p,0,18*p); la.localRotation=Quaternion.Euler(-32*p,0,-55*p); ra.localRotation=Quaternion.Euler(25*p,0,48*p); }
         if(state=="mirror")
@@ -622,7 +640,8 @@ public sealed class KinseiActor : MonoBehaviour
         bool elder=boss || kaji;
         string shape=elder?"Elder":young?"Young":"Adult";
         string resident=roleName=="resident" && variant==0?"Sumiko":roleName=="resident" && variant==4?"Murase":null;
-        string folder=resident!=null?"KinseiResidents/":"KinseiCast/";
+        if(roleName=="stage-singer")resident="Singer";
+        string folder=roleName=="stage-singer"?"KinseiStage/":resident!=null?"KinseiResidents/":"KinseiCast/";
         if(resident!=null)shape=resident;
         var faceResource=FindPart("Head"+shape,folder);
         if(faceResource==null)

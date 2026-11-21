@@ -5,10 +5,12 @@ public sealed partial class KinseiSession
     void Change(Phase next)
     {
         phase=next; phaseAge=0; lockedTarget=-1; Mark("phase-"+next);
+        if(next==Phase.Showdown)SetPerformance(false);
     }
 
     void Simulate(float dt)
     {
+        if(StageActive) { SimulateStage(dt); return; }
         if(phase==Phase.Arrival && player.Position.z> -6.75f && Mathf.Abs(player.Position.x)<8.5f) {
             Change(Phase.Floor); entranceTime=clock;
             Say("梶の連れが二階に四人。辰なら話をつけられる",4.1f); sound.Cue("door");
@@ -62,6 +64,7 @@ public sealed partial class KinseiSession
                 End("accord","兄弟を帰した夜","梶は弟の肩を抱いて四人と店を出た。辰が真壁の隣に戻る。兄貴分との決着は持ち越した。");return;
             }
         }
+        UpdateStageWitness(dt);
         OfferSupper();
         if(player.hp<=0) End("loss","金星からの撤退","真壁は動けなくなった。仲間は表通りまで真壁を運び、今夜の興行を手放した。");
     }
@@ -72,6 +75,7 @@ public sealed partial class KinseiSession
             if(index==0){held=false;talkProgress=0;}
             Motion(p,"fall");return;
         }
+        if(p.duty==Duty.StageWitness)return;
         if(p.duty==Duty.BoxOffice) {
             if(HouseClaimed)p.duty=Duty.Follow;
             else if(Flat(p.Position,KinseiBoxOffice.Counter)>.80f || p.Position.y>.65f) {
@@ -207,6 +211,8 @@ public sealed partial class KinseiSession
             return StreetVerb(shop,words);
         if(!HouseClaimed && (phase==Phase.Arrival || phase==Phase.Floor || phase==Phase.Choice)
             && player.Position.y<.8f && Flat(player.Position,KinseiBoxOffice.Counter)<1.55f) return "金星の売上伝票を預かる";
+        string stageVerb=StageInteraction();
+        if(stageVerb.Length>0)return stageVerb;
         if(phase==Phase.Choice) {
             if(escorted && Flat(player.Position,witness)<1.6f && player.Position.y<1) return held?"弟を中継鏡へ":"辰を二階の梶の席へ";
             if(!escorted && Flat(player.Position,brother.Position)<1.95f && player.Position.y<1) return "弟に肩を貸す";
@@ -220,6 +226,7 @@ public sealed partial class KinseiSession
         string verb=Interaction();
         if(phase==Phase.Arrival && StreetContact(out int shop,out string words)){VisitShop(shop,words);return;}
         if(verb=="金星の売上伝票を預かる"){ClaimHouse();return;}
+        if(verb==StageChallenge){BeginStageShowdown();return;}
         if(phase!=Phase.Choice)return;
         if(verb=="弟に肩を貸す") {
             escorted=true;Face(brother,player.Position); sound.Cue("dial");
