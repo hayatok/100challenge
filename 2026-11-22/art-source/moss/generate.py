@@ -1,0 +1,21 @@
+"""Submit the project's reproducible MOSS-Image poster graph to local ComfyUI."""
+import json, pathlib, urllib.request
+
+ROOT = pathlib.Path(__file__).resolve().parent
+PROMPT = '''Screenprinted Japanese cabaret advertising poster from 1973, flat square artwork filling the entire image, beautifully art directed with warm vermilion red, deep oxblood black and aged ivory paper. A dramatic large black silhouette of a Japanese jazz trumpeter in a tailored dinner jacket occupies the right two thirds, half-length portrait in profile, trumpet lifted to his lips and pointing toward the upper left. His instrument catches tiny ivory highlights. Behind his head is a bold ivory and vermilion starburst sun, curved concentric graphic circles, elegant mid-century Japanese commercial illustration. At the upper left the very large thick brush-lettered Japanese headline reads "金星" in warm ivory ink. Beneath it a small clearly readable line says "CABARET KINSEI" in narrow spaced capitals. At the lower left, three understated cream lines read "EVENING SHOW", "1973", "JAZZ & DANCE". The composition has strong confident negative space, a thick ivory margin and a narrow black printed border. Real old lithographic paper, fine irregular ink grain, faded worn corners, subtle misregistration, tiny creases and patina. The artwork feels like an authentic sophisticated Showa era club poster pinned inside a dim Japanese cabaret. Front-on flat scan, no frame, no room, no lighting effects, no photographic mockup.'''
+graph = {
+ '1': {'class_type':'UNETLoader','inputs':{'unet_name':'moss_image_sft_int8_convrot.safetensors','weight_dtype':'default'}},
+ '2': {'class_type':'CLIPLoader','inputs':{'clip_name':'qwen3.5_9b_w4a8_gptq.safetensors','type':'moss_image','device':'default'}},
+ '3': {'class_type':'VAELoader','inputs':{'vae_name':'flux2-vae_small.safetensors'}},
+ '4': {'class_type':'CLIPTextEncode','inputs':{'clip':['2',0],'text':PROMPT}},
+ '5': {'class_type':'CLIPTextEncode','inputs':{'clip':['2',0],'text':'nsfw, worst quality, bad anatomy, watermark, jpeg artifact, photograph, frame, modern digital gradients'}},
+ '6': {'class_type':'EmptyFlux2LatentImage','inputs':{'width':1024,'height':1024,'batch_size':1}},
+ '7': {'class_type':'KSampler','inputs':{'model':['1',0],'positive':['4',0],'negative':['5',0],'latent_image':['6',0],'seed':19731122,'steps':30,'cfg':2.5,'sampler_name':'er_sde','scheduler':'simple','denoise':1}},
+ '8': {'class_type':'VAEDecode','inputs':{'samples':['7',0],'vae':['3',0]}},
+ '9': {'class_type':'SaveImage','inputs':{'images':['8',0],'filename_prefix':'kinsei/kinsei-poster'}}
+}
+(ROOT/'poster-api.json').write_text(json.dumps(graph,ensure_ascii=False,indent=2),encoding='utf-8')
+req = urllib.request.Request('http://127.0.0.1:8188/prompt',data=json.dumps({'prompt':graph,'client_id':'kinsei-art'}).encode(),headers={'Content-Type':'application/json'})
+response = json.loads(urllib.request.urlopen(req).read())
+(ROOT/'submission.json').write_text(json.dumps(response,indent=2),encoding='utf-8')
+print(response)

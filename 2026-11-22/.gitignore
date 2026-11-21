@@ -1,0 +1,12 @@
+Game/[Ll]ibrary/
+Game/[Tt]emp/
+Game/[Oo]bj/
+Game/[Ll]ogs/
+Game/UserSettings/
+Game/Builds/
+Game/*.sln
+Game/*.csproj
+Game/.vs/
+Builds/
+evidence/raw/
+
