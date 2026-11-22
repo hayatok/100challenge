@@ -263,7 +263,7 @@ public sealed partial class KinseiActor : MonoBehaviour
         previousWorldRotation=transform.rotation;
         hasWorldPosition=true;
         bool run=state=="run";
-        bool locomotion=state=="walk" || run;
+        bool locomotion=state=="walk" || run || (state=="aim" && speed>.18f);
         float stride=run?1.59f:Mathf.Lerp(.72f,1.32f,Mathf.InverseLerp(.5f,2.55f,speed));
         if(locomotion)
             phase=Mathf.Repeat(phase+(distance<.45f?distance:0)/stride+Mathf.Abs(yawDelta)*.00045f,1);

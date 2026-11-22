@@ -75,6 +75,7 @@ public sealed partial class KinseiSession : MonoBehaviour
     void Awake()
     {
         LoadCampaign();
+        LoadShoulderSettings();
         searchPath=new UnityEngine.AI.NavMeshPath();
         Application.targetFrameRate = 60;
         QualitySettings.vSyncCount = 0;
@@ -230,6 +231,7 @@ public sealed partial class KinseiSession : MonoBehaviour
 
     void Update()
     {
+        RefreshShoulderCursor();
         float dt=Time.deltaTime;
         if(Input.GetKeyDown(KeyCode.F12)) {
             string dir=System.IO.Path.Combine(Application.persistentDataPath,"Photos");
@@ -252,6 +254,7 @@ public sealed partial class KinseiSession : MonoBehaviour
         HallPortraitInput();
         if(!ticketActing)PortraitInput();
         if(!command && !OnAir && !AboveStreet && !ticketActing)ShopViewInput();
+        RefreshShoulderCursor();
         dt=Mathf.Min(dt,.09f);
         clock+=dt; phaseAge+=dt;
         fpsSmooth=Mathf.Lerp(fpsSmooth,1f/Mathf.Max(Time.unscaledDeltaTime,.001f),.06f);
@@ -330,7 +333,9 @@ public sealed partial class KinseiSession : MonoBehaviour
 
     void TogglePause()
     {
+        CancelMapSelection();
         paused=!paused; sound.SetPaused(paused);
+        ResetShoulderInput();
         if(paused) {beforePause=phase; Mark("pause");}
         else {phase=beforePause; snapCamera=true; Mark("resume");}
     }
@@ -341,10 +346,8 @@ public sealed partial class KinseiSession : MonoBehaviour
         if(AboveStreet){Say("通りへ降りると指揮に戻れる");return;}
         if(pullingBackstage || phase==Phase.Mirror || (StageActive && (StageSpeaking || stageBeat==StageBeat.Settled || player.hp<=0)) || OnAir) return;
         shopView=ShopView.None;
-        command=!command; club.SetTactical(command); snapCamera=true; lockedTarget=null;
-        if(command && (player.Position.z< -13.9f || Mathf.Abs(player.Position.x)>8.8f))
-            mapOffset=new Vector2(player.Position.x,player.Position.z-1.55f);
-        if(StageActive && command){mapOffset=new Vector2(-3.5f,.45f);Motion(player,"guard");}
+        command=!command; ResetShoulderInput(); club.SetTactical(command); snapCamera=true; lockedTarget=null;
+        FrameMapOrders();
         sound.Cue("dial"); Mark(command?"RTS":"TPS"); SetCamera(0);
     }
 
@@ -436,7 +439,7 @@ public sealed partial class KinseiSession : MonoBehaviour
             float centreZ=HallFrontsVisible?-1.05f:1.55f;
             focus=new Vector3(mapOffset.x,0,centreZ+mapOffset.y);eye=focus+new Vector3(0,18,-11f);
         } else {
-            cam.orthographic=false; cam.fieldOfView=57;
+            cam.orthographic=false; cam.fieldOfView=ShoulderAiming?43:57;
             Vector3 look=Quaternion.Euler(tilt,angle,0)*Vector3.forward;
             Vector3 right=Quaternion.Euler(0,angle,0)*Vector3.right;
             Vector3 shoulder=player.Position+Vector3.up*1.53f+right*.49f;
@@ -445,7 +448,7 @@ public sealed partial class KinseiSession : MonoBehaviour
                 if(Physics.SphereCast(pivot,.12f,right,out var shoulderHit,.49f,~0,QueryTriggerInteraction.Ignore))
                     shoulder=pivot+right*Mathf.Max(0,shoulderHit.distance-.025f);
             }
-            eye=shoulder-look*2.55f; focus=shoulder+look*8;
+            eye=shoulder-look*(ShoulderAiming?1.45f:2.55f); focus=shoulder+look*8;
             // Shorten the boom against the built environment; actors do not own camera colliders.
             Vector3 delta=eye-shoulder;
             if(Physics.SphereCast(shoulder,.12f,delta.normalized,out var hit,delta.magnitude,~0,QueryTriggerInteraction.Ignore))
@@ -491,10 +494,13 @@ public sealed partial class KinseiSession : MonoBehaviour
 
     void OnApplicationFocus(bool focus)
     {
+        if(!focus)CancelMapSelection();
+        ResetShoulderInput();
         if(!focus && !paused && phase!=Phase.Title && phase!=Phase.Result) TogglePause();
     }
     void OnDestroy()
     {
+        Cursor.lockState=CursorLockMode.None; Cursor.visible=true;
         Camera.onPreCull-=ClearPortraitForeground;
         Camera.onPostRender-=RestorePortraitForeground;
         RestorePortraitForeground(cam);

@@ -95,14 +95,11 @@ public sealed partial class KinseiSession
         if(railPlace==RailPlace.Lift){Motion(player,"idle");return;}
         float turn=(Input.GetKey(KeyCode.RightArrow)?1:0)-(Input.GetKey(KeyCode.LeftArrow)?1:0);
         angle+=turn*102*dt;
-        if(Input.GetMouseButton(1)) {
-            angle+=Input.GetAxisRaw("Mouse X")*3.1f;
-            tilt=Mathf.Clamp(tilt-Input.GetAxisRaw("Mouse Y")*2f,-32,43);
-        }
+        ApplyShoulderLook();
         Vector3 move=new Vector3((Input.GetKey(KeyCode.D)?1:0)-(Input.GetKey(KeyCode.A)?1:0),0,
             (Input.GetKey(KeyCode.W)||Input.GetKey(KeyCode.UpArrow)?1:0)-(Input.GetKey(KeyCode.S)||Input.GetKey(KeyCode.DownArrow)?1:0));
         move=Quaternion.Euler(0,angle,0)*move.normalized;
-        float rate=Input.GetKey(KeyCode.LeftShift)?4.1f:2.55f;
+        float rate=ShoulderAiming?1.6f:Input.GetKey(KeyCode.LeftShift)?4.1f:2.55f;
         if(motor.isGrounded) fallVelocity=-2f;
         fallVelocity=Mathf.Max(-16,fallVelocity-21*dt);
         Vector3 proposed=player.Position+move*rate*dt;
@@ -110,17 +107,19 @@ public sealed partial class KinseiSession
         var step=proposed-player.Position;
         motor.Move(new Vector3(step.x,fallVelocity*dt,step.z));
         CheckBoarding();
-        if(move.sqrMagnitude>.1f) player.root.rotation=Quaternion.RotateTowards(player.root.rotation,Quaternion.LookRotation(move),dt*540);
+        if(ShoulderAiming)player.root.rotation=Quaternion.RotateTowards(player.root.rotation,Quaternion.Euler(0,angle,0),dt*540);
+        else if(move.sqrMagnitude>.1f) player.root.rotation=Quaternion.RotateTowards(player.root.rotation,Quaternion.LookRotation(move),dt*540);
         moveBlend=Mathf.MoveTowards(moveBlend,move.magnitude*rate,dt*12);
         if(moveBlend>1 && motor.isGrounded && clock>=nextStep) {
             sound.Cue("step"); nextStep=clock+(rate>3?.29f:.41f);
         }
         bool fighting=phase==Phase.Floor || phase==Phase.Chase || StageActive;
-        if(clock>attackUntil) Motion(player,moveBlend>.18f?(rate>3?"run":"walk"):(fighting?"guard":"idle"),moveBlend);
+        if(ShoulderAiming)player.actor.SetAttentionTarget(cam.ScreenPointToRay(ShoulderScreenPoint).GetPoint(14));
+        if(clock>attackUntil) Motion(player,ShoulderAiming?"aim":moveBlend>.18f?(rate>3?"run":"walk"):(fighting?"guard":"idle"),moveBlend);
         if(InDawn || finale || AboveStreet){if(Input.GetKeyDown(KeyCode.E))Interact();return;}
         if(Input.GetKeyDown(KeyCode.Q)) CycleTarget();
         if(Input.GetKeyDown(KeyCode.E)) Interact();
-        if((Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Space)) && !OverHUD())
+        if(ShoulderInputReady && (Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Space)) && (Cursor.lockState==CursorLockMode.Locked || !OverHUD()))
             Attack(false,Input.GetMouseButtonDown(0));
         if(Input.GetKeyDown(KeyCode.F)) Attack(true,false);
     }
@@ -141,13 +140,17 @@ public sealed partial class KinseiSession
         lockedTarget=combatants[(combatants.IndexOf(lockedTarget)+1)%combatants.Count];
         var p=lockedTarget; Vector3 d=p.Position-player.Position;
         angle=Mathf.Atan2(d.x,d.z)*Mathf.Rad2Deg;
-        tilt=6; Face(player,p.Position);
+        tilt=6;
+        if(!legacyMouseControls && ShoulderView && !StageActive)
+            AlignShoulderTarget(p.Position+Vector3.up*1.15f);
+        Face(player,p.Position);
         player.actor.SetAttentionTarget(p.Position+Vector3.up*1.56f);
         Say("注視　"+p.name,1.1f);
     }
     Person Pick(bool mouse,bool melee)
     {
         Targets();
+        if(!melee && (!legacyMouseControls && mouse || ShoulderAiming))return PickShoulderTarget();
         if(combatants.Count==0)return null;
         Person best=null; float score=float.MaxValue;
         Vector2 cursor=mouse?(Vector2)Input.mousePosition:new Vector2(Screen.width*.5f,Screen.height*.49f);
@@ -171,14 +174,15 @@ public sealed partial class KinseiSession
         if(melee && westDuel && WestAvailable){ReplyWest();return;}
         if(StageActive) { if(melee)StageAttack(); return; }
         if(clock<shootDelay || (phase!=Phase.Floor && phase!=Phase.Chase))return;
+        bool precise=!melee && ((!legacyMouseControls && mouse) || ShoulderAiming);
         var target=Pick(mouse,melee);
         shootDelay=clock+(melee?.48f:.30f); attackUntil=clock+.32f;
         Act(player,melee?"punch":"shoot"); shots++;
         sound.Cue(melee?"strike":"shot");
         if(!melee) {
             flashTime=clock+.07f;
-            Vector3 towards=target!=null?target.Position+Vector3.up*1.22f:
-                cam.ScreenPointToRay(mouse?Input.mousePosition:new Vector3(Screen.width*.5f,Screen.height*.49f)).GetPoint(14);
+            Vector3 towards=precise?shoulderHitPoint:target!=null?target.Position+Vector3.up*1.22f:
+                cam.ScreenPointToRay(mouse && !ShoulderAiming?Input.mousePosition:ShoulderScreenPoint).GetPoint(14);
             Trace(player,towards,false);
         }
         if(target==null)return;
@@ -232,18 +236,7 @@ public sealed partial class KinseiSession
             if(Input.GetKeyDown(KeyCode.B)) Assign(Duty.Backstage);
             if(Input.GetKeyDown(KeyCode.V)) Assign(Duty.StageWitness);
         }
-        if(HallFrontsVisible && (Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1)) && !OverHUD()){
-            int front=HallPinAt(Input.mousePosition);
-            if(front>=0){AssignHallFront(front);return;}
-        }
-        if(Input.GetMouseButtonDown(0) && !OverHUD()) {
-            Vector2 hit=Input.mousePosition; float nearest=Screen.height*.057f; int member=-1;
-            for(int i=0;i<crew.Count;i++) {
-                var pt=cam.WorldToScreenPoint(crew[i].Position+Vector3.up);
-                float d=Vector2.Distance(hit,pt); if(pt.z>0 && d<nearest && crew[i].hp>0){member=i;nearest=d;}
-            }
-            if(member>=0)SelectMember(member,false);
-        }
+        if(MapOrderInput())return;
         if(!StageActive && Input.GetMouseButtonDown(1) && !OverHUD()) {
             var opponent=GuardAtScreen(Input.mousePosition);
             if(opponent!=null){DesignateGuard(opponent);return;}

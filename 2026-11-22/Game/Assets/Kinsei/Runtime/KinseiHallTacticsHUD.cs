@@ -41,7 +41,7 @@ public sealed partial class KinseiSession
     {
         if(command) DrawHallRoutes();
         WorldMarks();
-        if(command){DrawHallMapPin(0);DrawHallMapPin(1);}
+        if(command){DrawHallMapPin(0);DrawHallMapPin(1);DrawMapOrders();}
         float w=hudW;
         Block(new Rect(0,0,w,60),HallInk);
         Block(new Rect(0,59,w,1),rule);
@@ -56,16 +56,17 @@ public sealed partial class KinseiSession
             if(HallRelayCrew()==null)objective="中継卓に組員を送り直す";
             else objective=phase==Phase.Choice?"中継卓へ行き、組員に合図する":"弟が中継卓へ向かう。残る用心棒を退かせる";
         }
-        Letter(new Rect(153,10,w-426,40),objective,20,HallIvory,true);
+        bool orderMessage=command && bannerUntil>clock && banner.Length>0;
+        Letter(new Rect(153,5,w-426,50),orderMessage?banner:objective,orderMessage?16:20,HallIvory,true,TextAnchor.MiddleLeft,true);
         if(Plate(new Rect(w-256,6,174,45),command?"現場へ　 Tab":"組員を指揮　 Tab"))ToggleCommand();
         if(Plate(new Rect(w-73,6,61,45),"幕間"))TogglePause();
 
         float top=hudH-(command?HallCommandHeight:43);
         if(command) HallOrders(top);
         else HallFieldHUD(top);
-        float messageY=command?top-39:70;
-        if(bannerUntil>clock && banner.Length>0){
-            float width=Mathf.Min(w-(command?54:408),Mathf.Max(290,banner.Length*17+32));
+        float messageY=70;
+        if(!command && bannerUntil>clock && banner.Length>0){
+            float width=Mathf.Min(w-408,Mathf.Max(290,banner.Length*17+32));
             Rect box=new Rect((w-width)*.5f,messageY,width,32);
             Block(box,HallInk);Block(new Rect(box.x,box.y,3,box.height),brass);
             Letter(box,banner,16,HallIvory,false,TextAnchor.MiddleCenter);
@@ -109,7 +110,7 @@ public sealed partial class KinseiSession
         float left=16, y=top+57;
         string who=count==1?crew[FirstMember(SelectedMembers)].name:count+"人";
         Letter(new Rect(left,y,141,37),count>0?who+"に指示":"組員を選ぶ",18,gold,true);
-        Letter(new Rect(left,y+36,150,32),"Shift で複数選択",12,HallIvory);
+        Letter(new Rect(left,y+36,150,32),"ドラッグで複数選択",12,HallIvory);
         float cardW=(hudW-385)*.5f;
         for(int slot=0;slot<2;slot++){
             Rect card=new Rect(171+(1-slot)*(cardW+9),y,cardW,73);
@@ -181,9 +182,7 @@ public sealed partial class KinseiSession
         Block(new Rect(0,top,hudW,43),HallInk);
         Letter(new Rect(17,top,123,33),"真壁　"+Mathf.CeilToInt(player.hp),18,HallIvory,true);
         Meter(new Rect(17,top+34,109,3),player.hp,player.hp<28?red:gold);
-        string controls=phase==Phase.Floor && guards.Exists(HasGuardOrder)
-            ?"Q　注視切替　　左クリック・Space　指名中の相手に合わせて撃つ"
-            :"左クリック・Space　射撃　　 F　打撃　　 Q　注視　　 Tab　指揮";
+        string controls=phase==Phase.Floor?CombatHint:"WASD　移動　　"+LookHint+"　　Tab　指揮";
         Letter(new Rect(156,top,hudW-170,40),GuardViewHint(controls),15,HallIvory);
         if(yieldingPortrait!=null)return;
         string verb=Interaction();
@@ -193,10 +192,7 @@ public sealed partial class KinseiSession
             Block(prompt,HallInk);Letter(prompt,"E　"+verb,18,gold,false,TextAnchor.MiddleCenter);
         }
         if(phase==Phase.Floor){
-            float cx=hudW*.5f,cy=hudH*.51f;
-            Color aim=lastHit>clock?red:HallIvory;
-            Block(new Rect(cx-9,cy,6,2),aim);Block(new Rect(cx+4,cy,6,2),aim);
-            Block(new Rect(cx,cy-8,2,5),aim);Block(new Rect(cx,cy+4,2,5),aim);
+            DrawSight(lastHit>clock?red:HallIvory);
         }
     }
 

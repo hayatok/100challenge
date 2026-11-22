@@ -9,6 +9,8 @@ public sealed partial class KinseiSession
 
     void ResetSquads()
     {
+        mapOpened=false;
+        CancelMapSelection();
         hallOtherOrders=false;lastHallMember=-1;
         chosen=0;extraMembers=0;
         squads[0]=squads[1]=0;
@@ -150,8 +152,8 @@ public sealed partial class KinseiSession
         if(CanOrderStageWitness)OrderButton(Duty.StageWitness,count==1 && crew[FirstMember(mask)]==stageWitness?"立会取消　V":"舞台立会　V");
         if(CanOrderBackstage)OrderButton(Duty.Backstage,count==1 && crew[FirstMember(mask)].duty==Duty.Backstage?"札口取消　B":"楽屋口　B");
         y=top+136;
-        Letter(new Rect(left,y-2,445,25),"Shift＋数字・顔札　組員を追加／解除",16,cream);
-        Letter(new Rect(left,y+20,445,25),phase==Phase.Floor?"右クリック　用心棒を指名／地面へ移動":count>1?"右クリックで移動　　個別の仕事は一人を選択":"右クリックで移動　　ホイールで拡縮",15,cream);
+        Letter(new Rect(left,y-2,445,25),"左ドラッグで組員を囲む → 地図の札　／　Shiftで追加",14,cream);
+        Letter(new Rect(left,y+20,445,25),"右クリック 地面へ移動　／　Home 真壁へ　／　ホイール 拡縮",13,cream);
         float groupWidth=Mathf.Min(168,(hudW-492)/4);
         x=hudW-left-groupWidth*4;
         for(int slot=0;slot<2;slot++){

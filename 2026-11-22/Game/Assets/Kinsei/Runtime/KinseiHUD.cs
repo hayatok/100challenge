@@ -110,30 +110,81 @@ public sealed partial class KinseiSession
         if(index==pauseSelection) Block(new Rect(rect.x-7,rect.y,3,rect.height),gold);
         return Plate(rect,label,primary) || keyboard;
     }
+    string LookHint => legacyMouseControls ? "右ドラッグ　視点" : "マウス　視点";
+    string CombatHint => legacyMouseControls
+        ? "右ドラッグ　視点　　左クリック・Space　射撃　　Q　注視　　F　打撃"
+        : "右長押し　構える　　左クリック　射撃　　Q　注視　　Space　注視射撃　　F　打撃";
+
+    void SensitivityRow(int index,Rect row,string label,ref float value,bool available)
+    {
+        var e=Event.current;
+        int step=0;
+        if(available && pauseSelection==index && e.type==EventType.KeyDown) {
+            if(e.keyCode==KeyCode.LeftArrow)step=-1;
+            if(e.keyCode==KeyCode.RightArrow)step=1;
+            if(step!=0)e.Use();
+        }
+        if(index==pauseSelection)Block(new Rect(row.x-7,row.y,3,row.height),gold);
+        Letter(new Rect(row.x+12,row.y,row.width-180,row.height),label,17,available?cream:brass);
+        if(!available){
+            Letter(new Rect(row.xMax-178,row.y,166,row.height),"自由視点で使用",15,brass,false,TextAnchor.MiddleRight);
+            return;
+        }
+        if(Plate(new Rect(row.xMax-162,row.y,44,row.height),"−"))step=-1;
+        Letter(new Rect(row.xMax-118,row.y,74,row.height),Mathf.RoundToInt(value*100)+"％",17,cream,false,TextAnchor.MiddleCenter);
+        if(Plate(new Rect(row.xMax-44,row.y,44,row.height),"＋"))step=1;
+        if(step!=0){value=Mathf.Clamp(Mathf.Round((value+step*.05f)*100)/100,.2f,2f);SaveShoulderSettings();}
+    }
+
     void Intermission()
     {
         var e=Event.current;
+        const int rows=9;
         if(e.type==EventType.KeyDown && (e.keyCode==KeyCode.UpArrow || e.keyCode==KeyCode.DownArrow)) {
-            pauseSelection=(pauseSelection+(e.keyCode==KeyCode.UpArrow?5:1))%6;
+            int direction=e.keyCode==KeyCode.UpArrow?-1:1;
+            pauseSelection=(pauseSelection+rows+direction)%rows;
+            if(legacyMouseControls && pauseSelection==3)pauseSelection+=direction;
             e.Use();
         }
         Block(new Rect(0,0,hudW,hudH),new Color(.035f,.018f,.031f,.72f));
-        float width=464,x=(hudW-width)/2,y=(hudH-494)/2;
-        Block(new Rect(x,y,width,494),ink); Block(new Rect(x,y,width,2),brass);
+        float width=492,height=618,x=(hudW-width)/2,y=(hudH-height)/2;
+        Block(new Rect(x,y,width,height),ink);Block(new Rect(x,y,width,2),brass);
         float l=x+32,w=width-64;
-        Letter(new Rect(l,y+16,w,30),"キャバレー金星",15,gold);
-        Letter(new Rect(l,y+44,w,67),"幕　間",46,cream,true);
-        if(PauseButton(0,new Rect(l,y+120,w,48),InDawn?"町歩きに戻る　　Esc":"舞台へ戻る　　Esc",true)) TogglePause();
-        if(PauseButton(1,new Rect(l,y+180,w,44),"揺れ・点滅を抑える　　"+(reducedMotion?"入":"切"))) {
+        Rect Row(int index)=>new Rect(l,y+87+index*53,w,44);
+        Letter(new Rect(l,y+12,w,27),"キャバレー金星",15,gold);
+        Letter(new Rect(l,y+33,w,49),"幕　間",36,cream,true);
+        if(PauseButton(0,Row(0),InDawn?"町歩きに戻る　　Esc":"舞台へ戻る　　Esc",true))TogglePause();
+        if(PauseButton(1,Row(1),"視点操作　　"+(legacyMouseControls?"右ドラッグ":"自由視点"))){
+            legacyMouseControls=!legacyMouseControls;SaveShoulderSettings();
+        }
+        SensitivityRow(2,Row(2),"見回す速さ",ref lookSensitivity,true);
+        SensitivityRow(3,Row(3),"構えたときの速さ",ref aimSensitivity,!legacyMouseControls);
+        if(PauseButton(4,Row(4),"揺れ・点滅を抑える　　"+(reducedMotion?"入":"切"))) {
             reducedMotion=!reducedMotion; PlayerPrefs.SetInt("ReducedMotion",reducedMotion?1:0); PlayerPrefs.Save();
         }
-        if(PauseButton(2,new Rect(l,y+230,w,44),"FPS 表示　　"+(showFps?"入":"切"))) {
+        if(PauseButton(5,Row(5),"FPS 表示　　"+(showFps?"入":"切"))) {
             showFps=!showFps; PlayerPrefs.SetInt("KinseiFps",showFps?1:0); PlayerPrefs.Save();
         }
-        if(PauseButton(3,new Rect(l,y+296,w,44),InDawn?"この朝を初めから歩く":"初めから遊ぶ")) {TogglePause();if(InDawn)OpenDawn(dawnBranch);else OpenNight(finale);}
-        if(PauseButton(4,new Rect(l,y+346,w,44),"表題に戻る")) ReturnToTitle();
-        if(PauseButton(5,new Rect(l,y+396,w,44),"ゲームを終了")) Application.Quit();
-        if(showFps) Letter(new Rect(l,y+448,w,29),Mathf.RoundToInt(fpsSmooth)+" FPS（中断直前）",14,gold);
+        if(PauseButton(6,Row(6),InDawn?"この朝を初めから歩く":"初めから遊ぶ")) {TogglePause();if(InDawn)OpenDawn(dawnBranch);else OpenNight(finale);}
+        if(PauseButton(7,Row(7),"表題に戻る"))ReturnToTitle();
+        if(PauseButton(8,Row(8),"ゲームを終了"))Application.Quit();
+        Letter(new Rect(l,y+568,w,32),"↑↓　項目　　 ←→　速さ　　 Enter　決定"+(showFps?"　　 "+Mathf.RoundToInt(fpsSmooth)+" FPS":""),14,gold);
+    }
+
+    void DrawSight(Color tint)
+    {
+        if(Event.current.type!=EventType.Repaint)return;
+        bool target=ShoulderSightHasTarget;
+        float cx=hudW*.5f,cy=hudH*.51f;
+        float gap=ShoulderAiming?3:6;
+        Color outline=new Color(.08f,.055f,.04f,.88f);
+        void Tick(Rect rect) {
+            Block(new Rect(rect.x-1,rect.y-1,rect.width+2,rect.height+2),outline);
+            Block(rect,tint);
+        }
+        Tick(new Rect(cx-gap-5,cy-1,5,2));Tick(new Rect(cx+gap,cy-1,5,2));
+        Tick(new Rect(cx-1,cy-gap-5,2,5));Tick(new Rect(cx-1,cy+gap,2,5));
+        if(target)Tick(new Rect(cx-1.5f,cy-1.5f,3,3));
     }
 
     string Objective()
@@ -177,6 +228,7 @@ public sealed partial class KinseiSession
             WorldMarks();
             DrawAddresses();
             DrawBackstageMark();
+            if(command)DrawMapOrders();
         }
         DrawStageStatus();
         float pad=22;
@@ -184,12 +236,13 @@ public sealed partial class KinseiSession
         Block(new Rect(0,73,hudW,1),rule);
         Letter(new Rect(pad,4,150,65),"金　星",35,gold,true);
         Block(new Rect(151,17,1,39),rule);
-        Letter(new Rect(171,4,490,23),"今夜の目的",13,brass);
-        Letter(new Rect(171,25,hudW-493,42),Objective(),21,cream,true);
+        bool orderMessage=command && bannerUntil>clock && banner.Length>0;
+        Letter(new Rect(171,4,490,23),orderMessage?"現場の声":"今夜の目的",13,brass);
+        Letter(new Rect(171,25,hudW-493,42),orderMessage?banner:Objective(),orderMessage?17:21,cream,true,TextAnchor.MiddleLeft,true);
         if(!AboveStreet && phase!=Phase.Mirror && (!StageActive || (!StageSpeaking && stageBeat!=StageBeat.Settled)) && !OnAir && Plate(new Rect(hudW-286,14,193,45),command?"現場に戻る　 Tab":"指揮に切替　 Tab")) ToggleCommand();
         if(Plate(new Rect(hudW-81,14,59,45),"幕間"))TogglePause();
         float bottom=command?hudH-CommandPanelHeight:hudH-66;
-        if(bannerUntil>clock && banner.Length>0) {
+        if(!command && bannerUntil>clock && banner.Length>0) {
             float width=Mathf.Min(hudW-80,Mathf.Max(300,banner.Length*19+42));
             Rect box=new Rect((hudW-width)/2,shopView==ShopView.None?bottom-55:84,width,39);
             Block(box,ink); Block(new Rect(box.x,box.y,3,box.height),gold);
@@ -200,22 +253,22 @@ public sealed partial class KinseiSession
             Block(new Rect(0,bottom,hudW,66),ink);
             Letter(new Rect(pad,bottom+4,165,38),"真壁　"+Mathf.CeilToInt(player.hp),24,cream,true);
             Meter(new Rect(pad,bottom+47,134,4),player.hp,player.hp<28?red:gold);
-            string hints=OnAir?"共同送像所　生中継":finale?"WASD　移動　　E　調べる・渡す　　Tab　組員を指揮":phase==Phase.Arrival?"WASD　移動　　E　話す　　通りの西から ロータス・針音堂・送像所":
+            string hints=OnAir?"共同送像所　生中継":finale?"WASD　移動　　E　調べる・渡す　　Tab　組員を指揮":phase==Phase.Arrival?"WASD　移動　　"+LookHint+"　　E　話す　　Tab　指揮　　Esc　幕間":
                 phase==Phase.Mirror?"卓間中継　接続中":
                 StageActive?(StageSpeaking?"町内中継":"WASD　移動　　白い輪で F　返し　　Tab　実況係の指揮"):
-                "WASD　移動　　右ドラッグ　視点　　左クリック・Space　射撃　　Q　注視　　F　打撃";
+                CombatHint;
             if(!finale && phase==Phase.Arrival && player.Position.x< -9.18f && player.Position.z> -6f)
                 hints=backstageTravel>=1?"舞台脇へ　引戸を通ってホールに入る":
                     pullingBackstage?"真壁が引戸を開けている":
                     BackstageRunner==null?"楽屋口　Tab で指揮に入り、組員に B で通し札を頼む":
                     AtBackstagePost(BackstageRunner)?"楽屋口　引戸の取手に近づいて E":"楽屋口　組員が通し札を取りに向かっている";
             if(phase==Phase.Floor && guards.Exists(HasGuardOrder))
-                hints="Q　注視切替　　左クリック・Space　指名中の相手に合わせて撃つ";
+                hints=CombatHint;
             var counter=shopView==ShopView.None?NearbyCounter():shopView;
             if(counter!=ShopView.None)hints=shopView==ShopView.None?"C　"+ShopViewLabel(counter)+"を見る　　Tab　組員を指揮":ShopViewLabel(counter)+"　　C　元の視点へ　　Tab　組員を指揮";
             string railHint=RailHint();if(railHint.Length>0)hints=railHint;
             if(WestNearby && westSeo!=null)hints=westDuel?"WASD　かわす　　F　返す　　Tab　組員を指揮":
-                "WASD　移動　　右ドラッグ　視点　　Tab　組員を指揮";
+                "WASD　移動　　"+LookHint+"　　Tab　組員を指揮";
             if(PortraitHint.Length>0)hints="E　話す　　"+PortraitHint;
             Letter(new Rect(185,bottom+6,hudW-207,50),GuardViewHint(hints),17,cream);
             string interact=Interaction();
@@ -236,10 +289,7 @@ public sealed partial class KinseiSession
         }
         if(!reducedMotion && hitFlash>clock) Block(new Rect(0,74,hudW,4),red);
         if(!command && (phase==Phase.Floor || phase==Phase.Chase)){
-            float cx=hudW*.5f,cy=hudH*.51f;
-            var c=lastHit>clock?red:cream;
-            Block(new Rect(cx-9,cy,6,2),c);Block(new Rect(cx+4,cy,6,2),c);
-            Block(new Rect(cx,cy-8,2,5),c);Block(new Rect(cx,cy+4,2,5),c);
+            DrawSight(lastHit>clock?red:cream);
         }
     }
     string GuardViewHint(string fallback)

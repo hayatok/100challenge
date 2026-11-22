@@ -27,6 +27,12 @@
 
 照明は蜂蜜色の舞台灯、葡萄色の客席、外の冷たい看板光の三系統。文字は店の屋号に明朝、操作と進捗には日本語ゴシック、強調枠は古い真鍮。体力、選択中の組員、行動と結果は文字でも表示する。環境の細部が読めるようHUDは外縁に置く。店の外から入る、辰が梶と座る、弟が中継鏡に映る三場面を実機で比較する。参照は [Rockstar公式 GTA VI](https://www.rockstargames.com/VI) の「Trailer 2」の会話、クラブ、複数人物の場面。RTX 4070 Ti・1920×1080を初期計測条件とし、60 fps（16.7 ms）を目標とする。完成時には測定値と不足を記録する。
 
+## 地図の指揮と肩越しの操作
+
+『Age of Empires II: Definitive Edition』では、左ドラッグで複数のユニットを選び、対象を右クリックして移動や攻撃を指示する。金星では地図上の組員を囲んで班を選び、人物や持ち場に結び付いた札から仕事を頼める。帳場の伝票や舞台立会は一人に任せ、通用口や中継卓には班を送る。従来の指示キーも使える。[Age of Empires 公式操作ガイド](https://www.ageofempires.com/learn-to-play/control-resources-aoe2/)
+
+『Grand Theft Auto V』の見回しと照準を別々に調整できる点を参考にした。金星では真壁の通常の肩越し視点でマウスを使い、ホールでは右ボタンで構え、画面中央の照準で相手を狙う。指揮地図や幕間に切り替えると、同じマウスで組員や設定を選べる。[Rockstar Games のカメラ設定解説](https://www.rockstargames.com/newswire/article/25o2411812oa29/rockstar-game-tips-playing-with-perspective-in-gtav)
+
 ## ホールのUIと視認性で参照した作品
 
 - 任天堂『ピクミン3』の「Go Here!」では、プレイヤーが地図上に行き先を指定できる。金星では、選んだ組員が床に表示された経路をたどり、プレイヤーはその移動中に真壁に戻って反対側へ行ける。[任天堂公式説明書「Apps Mode Screen」](https://csassets.nintendo.com/noaext/image/private/t_KA_PDF/manual-WiiU-Pikmin_3?_a=DATC1RAAZAA0)
