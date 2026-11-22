@@ -1,0 +1,106 @@
+Mono path[0] = 'C:/Users/hayat/AppData/Local/Temp/kinsei62-v14-hall1/Kinsei_Data/Managed'
+Mono config path = 'C:/Users/hayat/AppData/Local/Temp/kinsei62-v14-hall1/MonoBleedingEdge/etc'
+Input System module state changed to: Initialized.
+[Physics::Module] Initialized fallback backend.
+[Physics::Module] Id: 0xdecafbad
+Loading player data from C:/Users/hayat/AppData/Local/Temp/kinsei62-v14-hall1/Kinsei_Data/data.unity3d
+Initialize engine version: 6000.3.28f1 (8f082d2fe476)
+[Subsystems] Discovering subsystems at path C:/Users/hayat/AppData/Local/Temp/kinsei62-v14-hall1/Kinsei_Data/UnitySubsystems
+[D3D12 Device Filter] Vendor Name: NVIDIA
+[D3D12 Device Filter] Device Name: NVIDIA GeForce RTX 4070 Ti
+[D3D12 Device Filter] Driver Version: 32.0.16.1742
+[D3D12 Device Filter] Feature Level: 12.2
+[D3D12 Device Filter] Graphics Memory: 11996 MB
+[D3D12 Device Filter] Processor Count: 16
+[D3D12 Device Filter] Device Type: Discrete
+GfxDevice: creating device client; kGfxThreadingModeSplitJobs
+d3d12: failed to query info queue interface (0x80004002).
+Direct3D:
+    Version:         Direct3D 12 [level 12.2]
+    Renderer:        NVIDIA GeForce RTX 4070 Ti (ID=0x2782)
+    Vendor:          NVIDIA
+    VRAM:            11996 MB
+    App VRAM Budget: 11228 MB
+    Driver:          32.0.16.1742
+Begin MonoManager ReloadAssembly
+- Loaded All Assemblies, in  4.695 seconds
+- Finished resetting the current domain, in  0.003 seconds
+[Physics::Module] Selected backend.
+[Physics::Module] Name: PhysX
+[Physics::Module] Id: 0xf2b8ea05
+[Physics::Module] SDK Version: 4.1.2
+[Physics::Module] Integration Version: 1.0.0
+[Physics::Module] Threading Mode: Multi-Threaded
+<RI> Initializing input.
+<RI> Input initialized.
+UnloadTime: 0.894100 ms
+KINSEI start t=0.00 phase=Arrival pos=(0.00, 0.00, -10.65)
+KINSEI RTS t=1.33 phase=Arrival pos=(0.00, 0.00, -10.65)
+KINSEI order-0-Attend t=1.43 phase=Arrival pos=(0.00, 0.00, -10.65)
+KINSEI order-1-BoxOffice t=1.65 phase=Arrival pos=(0.00, 0.00, -10.65)
+KINSEI order-2-Guard t=2.06 phase=Arrival pos=(0.00, 0.00, -10.65)
+KINSEI TPS t=3.04 phase=Arrival pos=(0.00, 0.00, -10.65)
+KINSEI house-claimed-12000 t=3.66 phase=Arrival pos=(0.00, 0.00, -9.62)
+KINSEI phase-Floor t=4.79 phase=Floor pos=(0.00, 0.03, -6.73)
+KINSEI RTS t=8.43 phase=Floor pos=(0.00, 0.03, -1.68)
+KINSEI kaji-held t=9.47 phase=Floor pos=(0.00, 0.03, -1.68)
+KINSEI pause t=10.01 phase=Floor pos=(0.00, 0.03, -1.68)
+KINSEI resume t=10.01 phase=Floor pos=(0.00, 0.03, -1.68)
+KINSEI floor-order-紺谷-4 t=10.29 phase=Floor pos=(0.00, 0.03, -1.68)
+KINSEI TPS t=11.11 phase=Floor pos=(0.00, 0.03, -1.68)
+KINSEI floor-named-hit-2-紺谷 t=11.55 phase=Floor pos=(0.00, 0.03, -1.68)
+KINSEI floor-yield-紺谷 t=11.65 phase=Floor pos=(0.00, 0.03, -1.68)
+KINSEI RTS t=14.14 phase=Floor pos=(-0.96, 0.03, 0.41)
+KINSEI pause t=15.69 phase=Floor pos=(-0.96, 0.03, 0.41)
+KINSEI resume t=15.69 phase=Floor pos=(-0.96, 0.03, 0.41)
+KINSEI floor-order-浦-4 t=15.98 phase=Floor pos=(-0.96, 0.03, 0.41)
+KINSEI TPS t=16.19 phase=Floor pos=(-0.96, 0.03, 0.41)
+KINSEI floor-named-hit-2-浦 t=16.55 phase=Floor pos=(-0.96, 0.03, 0.41)
+KINSEI floor-yield-浦 t=16.60 phase=Floor pos=(-0.96, 0.03, 0.41)
+KINSEI hit-brother-38 t=17.52 phase=Floor pos=(-0.96, 0.03, 0.41)
+KINSEI hit-brother-1 t=17.93 phase=Floor pos=(-0.96, 0.03, 0.41)
+KINSEI hit-brother-0 t=18.38 phase=Floor pos=(-0.96, 0.03, 0.41)
+KINSEI phase-Choice t=18.38 phase=Choice pos=(-0.96, 0.03, 0.41)
+KINSEI pause t=20.93 phase=Choice pos=(-0.96, 0.03, 0.41)
+KINSEI resume t=20.93 phase=Choice pos=(-0.96, 0.03, 0.41)
+KINSEI RTS t=21.11 phase=Choice pos=(-0.96, 0.03, 0.41)
+KINSEI TPS t=21.33 phase=Choice pos=(-0.96, 0.03, 0.41)
+KINSEI RTS t=22.00 phase=Choice pos=(-1.45, 0.03, -0.43)
+KINSEI TPS t=22.19 phase=Choice pos=(-1.45, 0.03, -0.43)
+KINSEI RTS t=22.40 phase=Choice pos=(-1.45, 0.03, -0.43)
+KINSEI TPS t=22.58 phase=Choice pos=(-1.45, 0.03, -0.43)
+KINSEI RTS t=23.64 phase=Choice pos=(-2.25, 0.03, 1.43)
+KINSEI TPS t=23.84 phase=Choice pos=(-2.25, 0.03, 1.43)
+KINSEI RTS t=24.40 phase=Choice pos=(-2.82, 0.03, 1.28)
+KINSEI TPS t=24.58 phase=Choice pos=(-2.82, 0.03, 1.28)
+KINSEI RTS t=25.51 phase=Choice pos=(-2.82, 0.03, 1.28)
+KINSEI TPS t=25.70 phase=Choice pos=(-2.82, 0.03, 1.28)
+KINSEI RTS t=27.67 phase=Choice pos=(-1.10, 0.03, 3.45)
+KINSEI TPS t=27.86 phase=Choice pos=(-1.10, 0.03, 3.45)
+KINSEI RTS t=29.11 phase=Choice pos=(1.92, 0.03, 1.53)
+KINSEI TPS t=29.31 phase=Choice pos=(1.92, 0.03, 1.53)
+KINSEI RTS t=30.36 phase=Choice pos=(1.92, 0.03, 1.53)
+KINSEI TPS t=30.57 phase=Choice pos=(1.92, 0.03, 1.53)
+KINSEI RTS t=31.66 phase=Choice pos=(-0.06, 0.03, 0.71)
+KINSEI TPS t=31.85 phase=Choice pos=(-0.06, 0.03, 0.71)
+KINSEI escort t=32.08 phase=Choice pos=(-0.06, 0.03, 0.71)
+KINSEI RTS t=32.45 phase=Choice pos=(-0.06, 0.03, 0.71)
+KINSEI TPS t=32.64 phase=Choice pos=(-0.06, 0.03, 0.71)
+KINSEI RTS t=34.06 phase=Choice pos=(-3.18, 0.03, 0.84)
+KINSEI TPS t=34.26 phase=Choice pos=(-3.18, 0.03, 0.84)
+KINSEI RTS t=34.75 phase=Choice pos=(-3.13, 0.03, 0.84)
+KINSEI TPS t=34.94 phase=Choice pos=(-3.13, 0.03, 0.84)
+KINSEI RTS t=35.46 phase=Choice pos=(-3.06, 0.03, 0.85)
+KINSEI TPS t=35.65 phase=Choice pos=(-3.06, 0.03, 0.85)
+KINSEI RTS t=36.12 phase=Choice pos=(-3.08, 0.03, 0.84)
+KINSEI TPS t=36.32 phase=Choice pos=(-3.08, 0.03, 0.84)
+KINSEI RTS t=36.53 phase=Choice pos=(-3.08, 0.03, 0.84)
+KINSEI TPS t=36.73 phase=Choice pos=(-3.08, 0.03, 0.84)
+KINSEI RTS t=37.88 phase=Choice pos=(-2.78, 0.03, -1.28)
+KINSEI TPS t=38.07 phase=Choice pos=(-2.78, 0.03, -1.28)
+KINSEI RTS t=38.57 phase=Choice pos=(-3.07, 0.03, -1.51)
+KINSEI TPS t=38.75 phase=Choice pos=(-3.07, 0.03, -1.51)
+KINSEI phase-Mirror t=38.98 phase=Mirror pos=(-2.52, 0.00, -0.60)
+KINSEI phase-Release t=43.59 phase=Release pos=(-2.52, 0.00, -0.60)
+KINSEI ending-accord t=51.31 phase=Result pos=(-2.46, 0.03, -0.68)
+KINSEI_FRAME n=2955 median_ms=16.67 p95_ms=18.04 size=1920x1080 gpu=NVIDIA GeForce RTX 4070 Ti scene=accord

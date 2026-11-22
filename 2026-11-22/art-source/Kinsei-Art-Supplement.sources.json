@@ -340,5 +340,120 @@
     "crop": null,
     "sha256": "06454cf50ff14d03fce4474ea1e85f1fd69fc841b2866b54e5db0a1c63593bf0",
     "windows_zip_sha256": "101235869c7ac3fb34280157968a6207cea12907b213e370de69bf39b04fa1ed"
+  },
+  {
+    "figure": "hall-wardrobe-study",
+    "file": "art-source/hall-regulars/wardrobe.png",
+    "caption": "GPT Image 衣装原画　左に紺谷、右に浦。",
+    "crop": null,
+    "sha256": "ba98ab0e96d7ebabc296006f3423cbf06541e7ae5375d6da3cab5baf5ca7e6ec",
+    "source_kind": "GPT Image concept",
+    "prompt_file": "art-source/hall-regulars/prompt.txt"
+  },
+  {
+    "figure": "hall-wardrobe-model",
+    "file": "art-source/hall-regulars/tailoring-offline.png",
+    "caption": "衣装モデルのオフライン描画　同じ二着を並べた。",
+    "crop": null,
+    "sha256": "c82a3ed8a6e18ec3b50ef8ed61b0d6fcc7ba474467f086d8a3577c1a517e421b",
+    "source_kind": "Offline rendering of model geometry"
+  },
+  {
+    "figure": "hall-yield-study",
+    "file": "art-source/hall-regulars/kontani-movement.png",
+    "caption": "GPT Image 動作原画　紺谷が右足を踏み出し、左膝をつくまで。",
+    "crop": null,
+    "sha256": "c39a269873d2cce617069adfaad9d8b7ce6e4cd738a5ab55bd2a2165d6e87f6f",
+    "source_kind": "GPT Image concept",
+    "prompt_file": "art-source/hall-regulars/movement-prompt.txt"
+  },
+  {
+    "figure": "hall-cuffs-study",
+    "file": "art-source/hall-regulars/ura-cuffs.png",
+    "caption": "GPT Image 接写原画　浦が上げた掌と、膝に置く手の袖口。",
+    "crop": null,
+    "sha256": "3df4a3d27532a01f3cce24fc6f6aff5f61a0bba1eb2d3bd4442771b459955c74",
+    "source_kind": "GPT Image concept",
+    "prompt_file": "art-source/hall-regulars/cuffs-prompt.txt"
+  },
+  {
+    "figure": "hall-enamel-a",
+    "file": "art-source/broadcast-console/originals/enamel-a.png",
+    "caption": "MOSS原画　前板の塗り欠け",
+    "crop": null,
+    "sha256": "557d6932ca421e2bb2a904e360863d2ae60a50f16f0d1ee80b81bbbcc9b466de",
+    "source_kind": "MOSS-Image material study",
+    "prompt_id": "922c0e9f-8624-4e1e-b592-88a0d4c9d4ef",
+    "seed": 140331501
+  },
+  {
+    "figure": "hall-enamel-b",
+    "file": "art-source/broadcast-console/originals/enamel-b.png",
+    "caption": "MOSS原画　上蓋と左右の返し",
+    "crop": null,
+    "sha256": "5e7556c29b46ed3f68ed7570b78ac65924d6c6d56ee67c5ad6f3ee8b05d20f42",
+    "source_kind": "MOSS-Image material study",
+    "prompt_id": "ef3122a1-c3d2-49ea-96bc-424a253f2336",
+    "seed": 140331502
+  },
+  {
+    "figure": "hall-brass-a",
+    "file": "art-source/broadcast-console/originals/brass-a.png",
+    "caption": "MOSS原画　つまみの正面",
+    "crop": null,
+    "sha256": "a0a387b9535ae46ea027e53f4b2dc4f4073982a8a80be5681295f88c50ffc344",
+    "source_kind": "MOSS-Image material study",
+    "prompt_id": "a90af17b-1b5b-4ba5-a891-575749fd6a31",
+    "seed": 140331503
+  },
+  {
+    "figure": "hall-brass-b",
+    "file": "art-source/broadcast-console/originals/brass-b.png",
+    "caption": "MOSS原画　つまみの周面",
+    "crop": null,
+    "sha256": "3b83bc7fa2a6885345a7e714e43ae36395c759d974ee19e621eb11b2304a1dc0",
+    "source_kind": "MOSS-Image material study",
+    "prompt_id": "265a5458-5445-48c9-bfcf-bd161e80707d",
+    "seed": 140331504
+  },
+  {
+    "figure": "hall-console-model",
+    "file": "art-source/broadcast-console/console-geometry.jpg",
+    "caption": "実装メッシュのCPU描画　操作側と管面側。指掛けと管面の縁を、それぞれの角度から見る。",
+    "crop": null,
+    "sha256": "0931018b861336dfa186e0bab2483bfdea7175fa32f71c05c0d63e091a331766",
+    "source_kind": "Offline rendering of model geometry"
+  },
+  {
+    "figure": "hall-kontani-live",
+    "file": "evidence/v14/kontani-view-published.png",
+    "caption": "Windows実機 v1.4・Z視点　眼鏡の紺谷が左の掌を上げる。",
+    "crop": null,
+    "sha256": "b3915be78a395c028f320136ee884d03752e6223aef06dc1d4c7390ef5fede11",
+    "source_kind": "Windows Player capture",
+    "windows_zip_sha256": "b0c1e4f5898e12341041d8da682a8ad4a5a36bffde2129734320023eb1759eaf"
+  },
+  {
+    "figure": "hall-ura-live",
+    "file": "evidence/v14/ura-view-published.png",
+    "caption": "Windows実機 v1.4・Z視点　桑色の上着で片膝をつく浦。",
+    "crop": null,
+    "sha256": "187ccea0bc2a60b46161b5ef5d8c8428de01e05e9f21824c0b41c17053773fc8",
+    "source_kind": "Windows Player capture",
+    "windows_zip_sha256": "b0c1e4f5898e12341041d8da682a8ad4a5a36bffde2129734320023eb1759eaf"
+  },
+  {
+    "figure": "hall-console-live",
+    "file": "evidence/v14/rotation-pubdesk.png",
+    "caption": "Windows実機 v1.4・C視点の部分　琺瑯の前板と源の左手",
+    "crop": [
+      0.19,
+      0.2,
+      0.79,
+      0.73
+    ],
+    "sha256": "4d960b3ab0bd2aebf168fc1935ae9172a17179a3b8934e65cbb42ccf08730c78",
+    "source_kind": "Windows Player capture",
+    "windows_zip_sha256": "b0c1e4f5898e12341041d8da682a8ad4a5a36bffde2129734320023eb1759eaf"
   }
 ]

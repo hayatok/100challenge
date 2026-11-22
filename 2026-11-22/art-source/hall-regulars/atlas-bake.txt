@@ -1,0 +1,1 @@
+Existing Single garment: 9795 vertices; 16250 triangles. Widened original lapel vertices: 433. Output atlases: 2048 x 2048. Pattern pitch 16 mm; gold band 3 mm plus 1.1 mm fine line.

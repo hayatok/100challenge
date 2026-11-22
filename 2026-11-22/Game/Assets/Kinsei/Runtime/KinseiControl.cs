@@ -127,16 +127,17 @@ public sealed partial class KinseiSession
     {
         combatants.Clear();
         if(phase==Phase.Floor) {
-            foreach(var g in guards) if(g.hp>0) combatants.Add(g);
+            foreach(var g in guards) if(g.hp>0 && !g.floorYielded) combatants.Add(g);
             if(brother.hp>0)combatants.Add(brother);
             if(!held && phaseAge>24) foreach(var g in upstairs) if(!g.retired && g.hp>0 && g.Position.y<1) combatants.Add(g);
         } else if(phase==Phase.Chase || StageActive) combatants.Add(boss);
+        if(lockedTarget!=null && !combatants.Contains(lockedTarget))lockedTarget=null;
     }
     void CycleTarget()
     {
         Targets(); if(combatants.Count==0)return;
-        lockedTarget=(lockedTarget+1)%combatants.Count;
-        var p=combatants[lockedTarget]; Vector3 d=p.Position-player.Position;
+        lockedTarget=combatants[(combatants.IndexOf(lockedTarget)+1)%combatants.Count];
+        var p=lockedTarget; Vector3 d=p.Position-player.Position;
         angle=Mathf.Atan2(d.x,d.z)*Mathf.Rad2Deg;
         tilt=6; Face(player,p.Position);
         player.actor.SetAttentionTarget(p.Position+Vector3.up*1.56f);
@@ -158,7 +159,7 @@ public sealed partial class KinseiSession
             if(pt.z<.1f)continue;
             float pixel=Vector2.Distance(pt,cursor);
             float tolerance=melee?Screen.height*.5f:mouse?Mathf.Max(26,Screen.height/Mathf.Max(5,distance)*.8f):Screen.height*.29f;
-            if(!mouse && lockedTarget>=0 && lockedTarget<combatants.Count && combatants[lockedTarget]==p)pixel=0;
+            if(!mouse && lockedTarget==p)return p;
             if(pixel<tolerance && pixel<score){score=pixel;best=p;}
         }
         return best;
@@ -180,8 +181,14 @@ public sealed partial class KinseiSession
         if(target==null)return;
         Face(player,target.Position);
         player.actor.SetAttentionTarget(target.Position+Vector3.up*1.56f);
+        if(IsHallGuard(target)){
+            target.lastPlayerHit=clock;
+            if(TryFloorYield(target)){lastHit=clock+.19f;return;}
+            target.watching=null;target.cooldown=Mathf.Max(target.cooldown,clock+FloorFlinchTime);
+        }
         target.hp=Mathf.Max(0,target.hp-(melee?48:32));
-        target.flinchUntil=clock+.23f;
+        if(target.hp<=0)ReleaseGuard(target);
+        target.flinchUntil=clock+(IsHallGuard(target)?FloorFlinchTime:.23f);
         lastHit=clock+.19f;
         if(target==boss)bossHp=target.hp;
         if(target.hp<=0 && target!=brother) Act(target,"fall");
@@ -228,6 +235,8 @@ public sealed partial class KinseiSession
             if(member>=0)SelectMember(member,false);
         }
         if(!StageActive && Input.GetMouseButtonDown(1) && !OverHUD()) {
+            var opponent=GuardAtScreen(Input.mousePosition);
+            if(opponent!=null){DesignateGuard(opponent);return;}
             var ray=cam.ScreenPointToRay(Input.mousePosition); var ground=new Plane(Vector3.up,0);
             if(ground.Raycast(ray,out float length)) {
                 Vector3 dest=ray.GetPoint(length);
@@ -254,7 +263,7 @@ public sealed partial class KinseiSession
                 destination=BackstagePost;
             }
         }
-        if(duty==Duty.StageWitness){OrderStageWitness(p);return;}
+        if(duty==Duty.StageWitness){OrderStageWitness(p);if(p.duty==Duty.StageWitness)ForgetGuard(p);return;}
         if(finale && duty==Duty.Attend){OrderFinale();return;}
         if(finale && duty==Duty.BoxOffice)return;
         if(duty==Duty.BoxOffice && (HouseClaimed || (phase!=Phase.Arrival && phase!=Phase.Floor && phase!=Phase.Choice))){
@@ -272,6 +281,7 @@ public sealed partial class KinseiSession
         if(duty==Duty.BoxOffice)
             foreach(var colleague in crew)
                 if(colleague!=p && colleague.duty==Duty.BoxOffice)colleague.duty=Duty.Follow;
+        ForgetGuard(p);
         p.duty=duty; p.destination=destination;p.path=null;
         if(duty==Duty.Backstage)Say(p.name+"が楽屋口で通し札を預かる");
         else if(duty==Duty.BoxOffice){p.destination=KinseiBoxOffice.Counter;Say(p.name+"が入口の帳場へ向かう");}

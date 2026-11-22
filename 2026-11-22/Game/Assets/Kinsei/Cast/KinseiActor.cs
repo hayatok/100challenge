@@ -122,9 +122,11 @@ public sealed partial class KinseiActor : MonoBehaviour
         if(boss) body.localScale=V(1.10f,1,1.10f);
         if(role=="brother") transform.localScale*=.988f;
         UpgradeSkin(boss,makabe,kaji,variant);
+        ApplyHallWardrobe(role,variant);
         BuildSidearm();
         MergeSurfaces(transform);
         KinseiWardrobeBinding.Dress(gameObject, role, variant);
+        DressHallTailoring(role,variant);
     }
     Transform Arm(int side,out Transform elbow,out Transform hand)
     {
@@ -237,7 +239,8 @@ public sealed partial class KinseiActor : MonoBehaviour
         if(!ready) Init("guard",0);
         if(previous!=state)
         {
-            if(previous=="stage-testimony")ReleaseCounterLine();
+            if(state=="floor-yield")BeginHallYield();
+            if(previous=="stage-testimony" || previous=="floor-yield")ReleaseCounterLine();
             glanceAfterYield=roleName=="brother" && previous=="surrender" && state=="idle";
             if((state=="walk"||state=="run")&&previous!="walk"&&previous!="run")phase=0;
             previous=state;
@@ -291,6 +294,7 @@ public sealed partial class KinseiActor : MonoBehaviour
             PlantFoot(rl,rk,rightShoe,1,Mathf.Repeat(phase+.5f,1),stride,run);
         }
         if(state=="stage-testimony")PoseTestimonyBody(stateTime);
+        if(state=="floor-yield")PoseHallYieldBody(stateTime);
         PoseStageAudienceBody(state,stateTime);
         if(state=="guard")
         {
@@ -503,6 +507,7 @@ public sealed partial class KinseiActor : MonoBehaviour
             gripRight=Mathf.Lerp(.22f,.68f,reach);
         }
         if(state=="stage-testimony")PoseTestimonyHands(stateTime,out gripLeft,out gripRight);
+        if(state=="floor-yield")PoseHallYieldLimbs(stateTime,out gripLeft,out gripRight);
         leftGrip=Mathf.Lerp(leftGrip,gripLeft,blend);
         rightGrip=Mathf.Lerp(rightGrip,gripRight,blend);
         if(leftHandRenderer){
@@ -533,6 +538,7 @@ public sealed partial class KinseiActor : MonoBehaviour
             foreach(Transform eyeball in eyes)
                 eyeball.localScale=V(1,Mathf.Lerp(1,.19f,closure),Mathf.Lerp(1,.82f,closure));
             if(state=="stage-testimony")PoseTestimonyFace(stateTime);
+            if(state=="floor-yield")PoseHallYieldFace(stateTime);
         }
     }
 
@@ -738,6 +744,11 @@ public sealed partial class KinseiActor : MonoBehaviour
         localEyeCenter=V(0,socketCenter.y,socketCenter.z+.010f);
         faceRenderer=ImportSkin(faceResource,head,chest,V(1,1,reflectZ?-1:1),Vector3.zero,detailJaw,lipLine,socketCenter.y,workCollar:roleName=="resident" && resident!=null);
         if(boss)PrepareSpeechFace(.0078475f); // HeadElder central lip edges at 8.367 and 7.328 mm.
+        if(roleName=="guard" && (variant==0 || variant==1)){
+            PrepareSpeechFace(young?.038435f:.02503f);
+            var track=Resources.Load<TextAsset>("KinseiAudio/"+(variant==0?"kontani-yield-mouth":"ura-yield-mouth"));
+            hallMouth=track?track.bytes:null;
+        }
         foreach(var wrist in new[]{lh,rh})
         {
             bool left=wrist==lh;

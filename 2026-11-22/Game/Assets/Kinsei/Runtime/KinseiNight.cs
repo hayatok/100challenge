@@ -4,7 +4,9 @@ public sealed partial class KinseiSession
 {
     void Change(Phase next)
     {
-        phase=next; phaseAge=0; lockedTarget=-1; Mark("phase-"+next);
+        if(phase==Phase.Floor && next!=phase)ClearFloorAssignments();
+        if(next==Phase.Mirror || next==Phase.Showdown || next==Phase.Chase)sound.StopFloorYields();
+        phase=next; phaseAge=0; lockedTarget=null; Mark("phase-"+next);
         if(next==Phase.Showdown)SetPerformance(false);
     }
 
@@ -26,7 +28,7 @@ public sealed partial class KinseiSession
             foreach(var p in guards) Opponent(p,dt);
             if(brother.hp>0) Opponent(brother,dt);
             else Motion(brother,"surrender");
-            bool cleared=brother.hp<=0 && guards.TrueForAll(g=>g.hp<=0);
+            bool cleared=brother.hp<=0 && guards.TrueForAll(g=>g.hp<=0 || g.floorYielded);
             if(cleared) {
                 Change(Phase.Choice); Motion(brother,"surrender"); sound.Cue("choice");
                 Say("弟「もうええ……兄ちゃんに、顔だけ見せてくれ」",4.6f);
@@ -76,9 +78,11 @@ public sealed partial class KinseiSession
     void UpdateCrew(Person p,int index,float dt)
     {
         if(p.hp<=0) {
+            ForgetGuard(p);
             if(index==0){held=false;talkProgress=0;}
             Motion(p,"fall");return;
         }
+        if(p.duty==Duty.Designated && UpdateDesignated(p,index,dt))return;
         if(p.duty==Duty.Backstage) {
             if(!AtBackstagePost(p))MovePerson(p,BackstagePost,3.1f,dt);
             else {Face(p,club.PassSlot);Motion(p,"idle");}
@@ -126,15 +130,7 @@ public sealed partial class KinseiSession
             if(d<range && ClearBetween(p,target)){range=d;near=target;}
         }
         if(near!=null) {
-            Face(p,near.Position);
-            p.actor.SetAttentionTarget(near.Position+Vector3.up*1.56f);
-            if(clock>=p.cooldown) {
-                p.cooldown=clock+1.5f+index*.13f;
-                near.hp=Mathf.Max(0,near.hp-(p.duty==Duty.Guard?11:5));
-                if(near==boss)bossHp=near.hp;
-                if(near.hp<=0 && near!=brother)Act(near,"fall");
-                Act(p,"shoot"); Trace(p,near.Position+Vector3.up*1.15f,false); sound.Cue("distant");
-            } else if(clock-p.lastAction>.28f)Motion(p,"guard");
+            FireCrewAt(p,index,near);
         } else Motion(p,"guard");
     }
 
@@ -175,6 +171,8 @@ public sealed partial class KinseiSession
     void Opponent(Person p,float dt)
     {
         if(p.hp<=0) {Motion(p,"fall");return;}
+        if(p.floorYielded){Motion(p,"floor-yield");return;}
+        if(IsHallGuard(p) && p.flinchUntil>clock){Motion(p,"flinch");return;}
         Person target=player;
         float distance=Vector3.Distance(p.Position,player.Position);
         foreach(var friend in crew) {

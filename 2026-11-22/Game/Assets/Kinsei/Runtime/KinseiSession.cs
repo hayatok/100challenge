@@ -5,16 +5,19 @@ using UnityEngine;
 public sealed partial class KinseiSession : MonoBehaviour
 {
     enum Phase { Title, Arrival, Floor, Choice, Chase, Showdown, Mirror, Release, Result, Dawn }
-    enum Duty { Follow, Go, Attend, Guard, Rest, BoxOffice, FinalePost, StageWitness, Backstage }
+    enum Duty { Follow, Go, Attend, Guard, Rest, BoxOffice, FinalePost, StageWitness, Backstage, Designated }
     sealed class Person
     {
         public string name, role, pose = "idle";
         public Transform root;
         public KinseiActor actor;
+        public Renderer[] portraitRenderers;
         public Duty duty;
         public Vector3 destination;
         public float hp = 100, maxHp=100, lastAction, speed, cooldown, flinchUntil;
-        public Person watching;
+        public Person watching,assignedGuard;
+        public bool floorYielded;
+        public float lastNamedHit=float.NegativeInfinity,lastPlayerHit=float.NegativeInfinity;
         public Vector3 mark;
         public float signalEnds;
         public Vector3[] path;
@@ -45,7 +48,8 @@ public sealed partial class KinseiSession : MonoBehaviour
     Phase phase = Phase.Title;
     Phase beforePause;
     bool paused, command, held, accord, escorted, reducedMotion;
-    int chosen, lockedTarget = -1, shots;
+    int chosen, shots;
+    Person lockedTarget;
     float clock, phaseAge, angle, tilt = 12, shootDelay, hitFlash, flashTime, escapeTime, bossHp;
     float talkProgress, relayProgress, bannerUntil, lastHit, entranceTime, fpsSmooth = 60;
     string banner = "", endingTitle = "", endingText = "", outcome = "";
@@ -93,6 +97,8 @@ public sealed partial class KinseiSession : MonoBehaviour
         walkways=club.gameObject.AddComponent<KinseiWalkways>();
         cam = new GameObject("プレイヤーカメラ").AddComponent<Camera>();
         cam.tag = "MainCamera";
+        Camera.onPreCull+=ClearPortraitForeground;
+        Camera.onPostRender+=RestorePortraitForeground;
         cam.allowHDR = true;
         cam.nearClipPlane = .08f;
         cam.farClipPlane = 110;
@@ -180,8 +186,9 @@ public sealed partial class KinseiSession : MonoBehaviour
 
     void PrepareVisit(bool finalNight,int morning)
     {
+        sound.StopFloorYields();
         ClearDawn();
-        portraitOwner=null;
+        portraitOwner=null;yieldingPortrait=null;
         ClearStageWitness();
         finale=finalNight;
         shopView=ShopView.None;
@@ -201,7 +208,7 @@ public sealed partial class KinseiSession : MonoBehaviour
         else player=Make("真壁","makabe",new Vector3(0,0,-10.65f),0);
         phase=morning==0?Phase.Arrival:Phase.Dawn; phaseAge=clock=shootDelay=hitFlash=relayProgress=talkProgress=lastHit=flashTime=0;
         ResetSquads();
-        entranceTime=0; escapeTime=morning==0?34:0; bossHp=100; chosen=0; shots=0; lockedTarget=-1;
+        entranceTime=0; escapeTime=morning==0?34:0; bossHp=100; chosen=0; shots=0; lockedTarget=null;
         command=held=accord=escorted=paused=terraceShot=false; angle=0; tilt=9; snapCamera=true;
         club.SetTactical(false); sound.SetPaused(false); attackUntil=0; moveBlend=0; nextStep=0;
         profile.Clear(); relayCam.enabled=false; club.SetMirror(0,null);club.SetAshtray(0);
@@ -233,6 +240,7 @@ public sealed partial class KinseiSession : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.Escape)) { TogglePause(); return; }
         if(paused) return;
         if(Input.GetKeyDown(KeyCode.Tab)) ToggleCommand();
+        HallPortraitInput();
         if(!ticketActing)PortraitInput();
         if(!command && !OnAir && !AboveStreet && !ticketActing)ShopViewInput();
         dt=Mathf.Min(dt,.09f);
@@ -260,7 +268,7 @@ public sealed partial class KinseiSession : MonoBehaviour
         {
             float action=(p==player || p==brother || p==elder) && phase==Phase.Mirror?relayProgress:Mathf.Clamp01(1-(clock-p.lastAction)/.36f);
             bool reacting=p.flinchUntil>clock && p.hp>0 && p.pose!="talk";
-            p.actor.Pose(reacting?"flinch":p.pose,p.speed,action);
+            p.actor.Pose(p.floorYielded?"floor-yield":reacting?"flinch":p.pose,p.speed,action);
             ApplyBackstageHands(p);
         }
         if(InDawn && dawnBranch==2)PoseTicketHands();
@@ -295,7 +303,7 @@ public sealed partial class KinseiSession : MonoBehaviour
         if(AboveStreet){Say("通りへ降りると指揮に戻れる");return;}
         if(pullingBackstage || phase==Phase.Mirror || (StageActive && (StageSpeaking || stageBeat==StageBeat.Settled || player.hp<=0)) || OnAir) return;
         shopView=ShopView.None;
-        command=!command; club.SetTactical(command); snapCamera=true; lockedTarget=-1;
+        command=!command; club.SetTactical(command); snapCamera=true; lockedTarget=null;
         if(command && (player.Position.z< -13.9f || Mathf.Abs(player.Position.x)>8.8f))
             mapOffset=new Vector2(player.Position.x,player.Position.z-1.55f);
         if(StageActive && command){mapOffset=new Vector2(-3.5f,.45f);Motion(player,"guard");}
@@ -360,6 +368,8 @@ public sealed partial class KinseiSession : MonoBehaviour
             if(Physics.SphereCast(pivot,.10f,delta.normalized,out var hit,delta.magnitude,~0,QueryTriggerInteraction.Ignore))
                 wanted=pivot+delta.normalized*Mathf.Max(.025f,hit.distance-.055f);
             eye=wanted;focus=pivot+look*6;
+        } else if(yieldingPortrait!=null && !command && (phase==Phase.Floor || phase==Phase.Choice || phase==Phase.Chase)) {
+            cam.orthographic=false;cam.fieldOfView=49;FrameYieldingGuard(out eye,out focus);
         } else if(portraitOwner && !command && shopView==ShopView.None) {
             cam.orthographic=false;cam.fieldOfView=35;FrameConversation(out eye,out focus);
         } else if(shopView!=ShopView.None) {
@@ -393,6 +403,8 @@ public sealed partial class KinseiSession : MonoBehaviour
     {
         if(phase==Phase.Result || InDawn)return;
         ClearStageWitness();
+        ClearFloorAssignments();sound.StopFloorYields();
+        floorGuardReport=FloorGuardReport();
         outcome=id; endingTitle=title; endingText=body; settlementMessage=FinishCampaign(id=="showdown" || id=="stage-broadcast"?"pursuit":id); phase=Phase.Result; command=false;
         SetPerformance(true);
         relayCam.enabled=false; sound.Cue(id=="loss"?"loss":"result"); Mark("ending-"+id);
@@ -415,6 +427,9 @@ public sealed partial class KinseiSession : MonoBehaviour
     }
     void OnDestroy()
     {
+        Camera.onPreCull-=ClearPortraitForeground;
+        Camera.onPostRender-=RestorePortraitForeground;
+        RestorePortraitForeground(cam);
         if(relayImage!=null) { relayImage.Release(); Destroy(relayImage); }
         if(stageRingMaterial!=null) Destroy(stageRingMaterial);
     }

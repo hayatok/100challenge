@@ -8,6 +8,7 @@ public sealed class KinseiSound : MonoBehaviour
     public static float SfxGain = .8f;
     public static float AmbientGain = .3f;
     AudioSource music, room, stageVoice;
+    readonly AudioSource[] floorSpeakers=new AudioSource[2];
     readonly AudioSource[] voices = new AudioSource[6];
     readonly Dictionary<string, AudioClip[]> clips = new();
     readonly Dictionary<string, float> lastCue = new();
@@ -47,6 +48,12 @@ public sealed class KinseiSound : MonoBehaviour
         room = MakeSource("Room tone", 180);
         stageVoice=MakeSource("金星の舞台中継",45);
         stageVoice.clip=Resources.Load<AudioClip>("KinseiAudio/stage-testimony");
+        for(int i=0;i<floorSpeakers.Length;i++){
+            var voice=MakeSource(i==0?"紺谷":"浦",48);
+            voice.clip=Resources.Load<AudioClip>("KinseiAudio/"+(i==0?"kontani-yield":"ura-yield"));
+            voice.spatialBlend=.44f;voice.minDistance=5;voice.maxDistance=30;voice.dopplerLevel=0;
+            floorSpeakers[i]=voice;
+        }
         for (int i=0; i<voices.Length; i++) voices[i] = MakeSource("Cue " + i, 100);
         foreach (string key in new[]{"door","dial","shot","distant","strike","choice","result","accord","loss","step"})
         {
@@ -80,6 +87,7 @@ public sealed class KinseiSound : MonoBehaviour
         music.volume=Mathf.MoveTowards(music.volume,level,Time.unscaledDeltaTime*.7f);
         room.volume=Mathf.Clamp01(AmbientGain)*.16f;
         stageVoice.volume=Mathf.Clamp01(SfxGain)*.92f;
+        foreach(var voice in floorSpeakers)voice.volume=Mathf.Clamp01(SfxGain)*.94f;
     }
     // Optional dialogue integration; subtitles remain intelligible without requiring a spoken voice.
     public void SetDialogue(bool active) { dialogue=active; }
@@ -110,12 +118,24 @@ public sealed class KinseiSound : MonoBehaviour
         if(paused || unfocused)stageVoice.Pause();
     }
     public void StopStageTestimony() { if(stageVoice)stageVoice.Stop(); }
+    public void PlayFloorYield(int person,Vector3 position)
+    {
+        if(person<0 || person>=floorSpeakers.Length)return;
+        var voice=floorSpeakers[person];
+        if(!voice.clip)return;
+        voice.transform.position=position+Vector3.up*1.18f;
+        voice.Play();
+        if(paused || unfocused)voice.Pause();
+        duckUntil=Mathf.Max(duckUntil,Time.unscaledTime+voice.clip.length);
+    }
+    public void StopFloorYields(){foreach(var voice in floorSpeakers)if(voice)voice.Stop();}
     public void SetPaused(bool value) { paused=value; ApplyPause(); }
     void OnApplicationFocus(bool focus) { unfocused=!focus; ApplyPause(); }
     void ApplyPause()
     {
         if(music==null)return;
         PauseSource(music); PauseSource(room); PauseSource(stageVoice);
+        foreach(var voice in floorSpeakers)PauseSource(voice);
         foreach(var voice in voices)PauseSource(voice);
     }
     void PauseSource(AudioSource source)
@@ -128,6 +148,7 @@ public sealed class KinseiSound : MonoBehaviour
         if(music!=null)Destroy(music.gameObject);
         if(room!=null)Destroy(room.gameObject);
         if(stageVoice!=null)Destroy(stageVoice.gameObject);
+        foreach(var voice in floorSpeakers)if(voice)Destroy(voice.gameObject);
         foreach(var voice in voices)if(voice!=null)Destroy(voice.gameObject);
     }
 }

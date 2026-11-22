@@ -15,7 +15,7 @@ public sealed partial class KinseiSession
     bool CanWatchStage(Person p)
     {
         var at=p.Position;
-        return p!=stageWitness && p!=stageDeskRunner && !p.retired && p.hp>0 &&
+        return p!=stageWitness && p!=stageDeskRunner && !p.retired && !p.floorYielded && p.hp>0 &&
             (p==brother || crew.Contains(p) || guards.Contains(p) || upstairs.Contains(p)) &&
             p.duty!=Duty.Attend && p.duty!=Duty.BoxOffice && p.duty!=Duty.Backstage &&
             at.x> -8.5f && at.x<8.6f && at.z> -7.5f && at.z<6 && at.y<.68f;

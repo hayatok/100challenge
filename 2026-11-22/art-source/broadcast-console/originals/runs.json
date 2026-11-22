@@ -1,0 +1,86 @@
+[
+  {
+    "name": "enamel-a",
+    "seed": 140331501,
+    "prompt_id": "922c0e9f-8624-4e1e-b592-88a0d4c9d4ef",
+    "width": 1024,
+    "height": 512,
+    "bytes": 787643,
+    "sha256": "557d6932ca421e2bb2a904e360863d2ae60a50f16f0d1ee80b81bbbcc9b466de",
+    "positive": "Orthographic front-on conservation materials photograph. The entire image is ONE flat material surface in sharp focus filling every pixel, full bleed to all four edges. Cross-polarised diffuse softbox illumination, evenly lit, no directional shadow, no reflected scenery. Extremely restrained colour and believable fine-scale physical texture. A 180 by 90 mm crop of nearly black brown-black vitreous stove enamel on a maintained Showa-era Osaka broadcast console. Vast calm uninterrupted black center, with minute fired-peel texture just visible. At the bottom of the crop only, an irregular very narrow edge of compressed wear, three tiny exposed graphite grey nicks separated by stretches of unbroken black; coat deep black everywhere else. Cropped while still on the material, no surrounding tabletop, no picture-frame outline. Quiet, clean professional equipment still in service.",
+    "negative": "words, lettering, logo, watermark, brand, human, hands, numbers, labels, controls, actual machine, tabletop, screw heads, holes, frame, bevel illumination, hard cast shadows, white background, directional gradient, high gloss hotspot, baked reflections, vignette, rust bloom, torn paint all over, embossed logo, dramatic studio light",
+    "server": {
+      "filename": "enamel-a_00001_.png",
+      "subfolder": "",
+      "type": "output",
+      "metadata": {
+        "kind": "image",
+        "width": 1024,
+        "height": 512
+      }
+    }
+  },
+  {
+    "name": "enamel-b",
+    "seed": 140331502,
+    "prompt_id": "ef3122a1-c3d2-49ea-96bc-424a253f2336",
+    "width": 1024,
+    "height": 512,
+    "bytes": 1014486,
+    "sha256": "5e7556c29b46ed3f68ed7570b78ac65924d6c6d56ee67c5ad6f3ee8b05d20f42",
+    "positive": "Orthographic front-on conservation materials photograph. The entire image is ONE flat material surface in sharp focus filling every pixel, full bleed to all four edges. Cross-polarised diffuse softbox illumination, evenly lit, no directional shadow, no reflected scenery. Extremely restrained colour and believable fine-scale physical texture. A 160 by 80 mm sample of black satin baked enamel from the left return on a 1960s radio console. Neutral ink-black coating, restrained blue-black in depressions, subtle stipple, black covers over 96 percent. Delicate contact wear localized only to the top-left edge segment, tiny dark gunmetal pinpricks and two short closely spaced shallow tangential hairlines. The rest is deep near-uniform charcoal black. Full bleed continuous panel field. No hardware visible.",
+    "negative": "words, lettering, logo, watermark, brand, human, hands, numbers, labels, controls, actual machine, tabletop, screw heads, holes, frame, bevel illumination, hard cast shadows, white background, directional gradient, high gloss hotspot, baked reflections, vignette, rust bloom, torn paint all over, embossed logo, dramatic studio light",
+    "server": {
+      "filename": "enamel-b_00001_.png",
+      "subfolder": "",
+      "type": "output",
+      "metadata": {
+        "kind": "image",
+        "width": 1024,
+        "height": 512
+      }
+    }
+  },
+  {
+    "name": "brass-a",
+    "seed": 140331503,
+    "prompt_id": "a90af17b-1b5b-4ba5-a891-575749fd6a31",
+    "width": 1024,
+    "height": 1024,
+    "bytes": 2249446,
+    "sha256": "a0a387b9535ae46ea027e53f4b2dc4f4073982a8a80be5681295f88c50ffc344",
+    "positive": "Orthographic front-on conservation materials photograph. The entire image is ONE flat material surface in sharp focus filling every pixel, full bleed to all four edges. Cross-polarised diffuse softbox illumination, evenly lit, no directional shadow, no reflected scenery. Extremely restrained colour and believable fine-scale physical texture. Orthographic square scan of the solid front surface of a lathe-turned 46 mm aged brass rotary control. Precise circular tool grooves concentric at the exact centre of the square. Crop fully INSIDE the metal: metal continues to every corner. Sand gold and muted tawny brass. Soft dark patina remains in the shallow circular grooves. A short crescent in the lower right outer annulus has gently brighter, smoother high spots from repeated fingertip use, not a literal finger or fingerprint. Inner disc is understated. No knob sides, rim silhouette, bevel shadow or centre screw.",
+    "negative": "words, lettering, logo, watermark, brand, human, hands, numbers, labels, controls, actual machine, tabletop, screw heads, holes, frame, bevel illumination, hard cast shadows, white background, directional gradient, high gloss hotspot, baked reflections, vignette, rust bloom, torn paint all over, embossed logo, dramatic studio light",
+    "server": {
+      "filename": "brass-a_00001_.png",
+      "subfolder": "",
+      "type": "output",
+      "metadata": {
+        "kind": "image",
+        "width": 1024,
+        "height": 1024
+      }
+    }
+  },
+  {
+    "name": "brass-b",
+    "seed": 140331504,
+    "prompt_id": "265a5458-5445-48c9-bfcf-bd161e80707d",
+    "width": 1024,
+    "height": 1024,
+    "bytes": 1837102,
+    "sha256": "3b83bc7fa2a6885345a7e714e43ae36395c759d974ee19e621eb11b2304a1dc0",
+    "positive": "Orthographic front-on conservation materials photograph. The entire image is ONE flat material surface in sharp focus filling every pixel, full bleed to all four edges. Cross-polarised diffuse softbox illumination, evenly lit, no directional shadow, no reflected scenery. Extremely restrained colour and believable fine-scale physical texture. Unwrapped peripheral grip band of a worn golden brass level knob on a 1960s broadcasting console, flat orthographic metal sample. Imagine the curved surface spread out like a map: vertical is the narrow height of the band, horizontal goes around its circumference. Fine lathe tool lines running horizontally, no knurling diamonds. The broad lower third is subtly cleaner honey brass with fine horizontal hairlines smoothed by operator fingers, while the upper band keeps tobacco-brown patina and unbroken finer turning grooves. Ends blend naturally. Texture edge to edge, calm, low contrast, no visible object outline.",
+    "negative": "words, lettering, logo, watermark, brand, human, hands, numbers, labels, controls, actual machine, tabletop, screw heads, holes, frame, bevel illumination, hard cast shadows, white background, directional gradient, high gloss hotspot, baked reflections, vignette, rust bloom, torn paint all over, embossed logo, dramatic studio light",
+    "server": {
+      "filename": "brass-b_00001_.png",
+      "subfolder": "",
+      "type": "output",
+      "metadata": {
+        "kind": "image",
+        "width": 1024,
+        "height": 1024
+      }
+    }
+  }
+]

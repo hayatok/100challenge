@@ -85,11 +85,14 @@ public sealed partial class KinseiSession
         } else if(FinaleUnlocked) {
             if(Plate(new Rect(x,hudH-54,300,43),"最終夜　四十軒の朝　F")) StartFinale();
         } else Letter(new Rect(x,hudH-55,w,29),"ENTER　開始",13,cream);
+        if(!title && floorGuardReport.Length>0)
+            Letter(new Rect(x,y-61,w,27),floorGuardReport,17,mint,true);
         DrawDawnDepartures();
     }
     void ReturnToTitle()
     {
         if(paused) TogglePause();
+        ClearFloorAssignments();sound.StopFloorYields();
         if(InDawn)ClearDawn();else ResetRailRide();
         portraitOwner=null;neighbours.EndCounterLine(clock);
         ClearStageWitness();
@@ -146,6 +149,7 @@ public sealed partial class KinseiSession
     string DutyName(Person p)
     {
         if(p.hp<=0)return "行動不能";
+        if(p.duty==Duty.Designated && p.assignedGuard!=null)return GuardName(p.assignedGuard)+"を担当";
         if(StageActive && p==stageWitness)return "立会中";
         if(StageActive && p==stageDeskRunner)return StageDeskReady?"実況卓・接続済":"実況卓へ";
         switch(p.duty) {
@@ -197,13 +201,17 @@ public sealed partial class KinseiSession
                     pullingBackstage?"真壁が引戸を開けている":
                     BackstageRunner==null?"楽屋口　Tab で指揮に入り、組員に B で通し札を頼む":
                     AtBackstagePost(BackstageRunner)?"楽屋口　引戸の取手に近づいて E":"楽屋口　組員が通し札を取りに向かっている";
+            if(phase==Phase.Floor && guards.Exists(HasGuardOrder))
+                hints="Q　注視切替　　左クリック・Space　指名中の相手に合わせて撃つ";
             var counter=shopView==ShopView.None?NearbyCounter():shopView;
             if(counter!=ShopView.None)hints=shopView==ShopView.None?"C　"+ShopViewLabel(counter)+"を見る　　Tab　組員を指揮":ShopViewLabel(counter)+"　　C　元の視点へ　　Tab　組員を指揮";
             string railHint=RailHint();if(railHint.Length>0)hints=railHint;
             if(PortraitHint.Length>0)hints="E　話す　　"+PortraitHint;
+            if(yieldingPortrait!=null)hints=GuardName(yieldingPortrait)+"　　Z を離して真壁に戻る";
+            else if(NearbyYieldingGuard() is Person nearbyGuard)hints="Z 長押し　"+GuardName(nearbyGuard)+"を見る　　Tab　組員を指揮";
             Letter(new Rect(185,bottom+6,hudW-207,50),hints,17,cream);
             string interact=Interaction();
-            if(interact.Length>0 && shopView==ShopView.None && !portraitOwner){
+            if(interact.Length>0 && shopView==ShopView.None && !portraitOwner && yieldingPortrait==null){
                 float promptWidth=Mathf.Min(hudW-48,Mathf.Max(300,(interact.Length+3)*20+36));
                 Rect prompt=new Rect((hudW-promptWidth)*.5f,hudH*.60f,promptWidth,42);Block(prompt,ink);
                 Letter(prompt,"E　　"+interact,19,gold,false,TextAnchor.MiddleCenter);
@@ -259,6 +267,7 @@ public sealed partial class KinseiSession
     {
         if(Event.current.type!=EventType.Repaint || cam==null || phase==Phase.Mirror || (StageActive && !command) || OnAir || shopView!=ShopView.None)return;
         drawnLabels.Clear();
+        guardTags[0]=guardTags[1]=default;
         foreach(var p in everyone) {
             if(p.retired || (p.hp<=0 && !(p==brother && phase==Phase.Choice)))continue;
             int index=crew.IndexOf(p);
@@ -273,11 +282,17 @@ public sealed partial class KinseiSession
             bool chosenCrew=command && IsMemberSelected(index);
             bool inFocus=Mathf.Abs(screen.x-.5f)<.12f && Mathf.Abs(screen.y-.52f)<.21f;
             if(!command && upstairs.Contains(p) && !inFocus)continue;
-            bool label=chosenCrew || (!command && (inFocus || p==brother || p==stageWitness || (p==boss && phase>=Phase.Choice) || (p==crew[0] && held)));
+            bool named=IsHallGuard(p) && HasGuardOrder(p);
+            bool label=(IsHallGuard(p) && (command || named || p.floorYielded)) || chosenCrew || (!command && (inFocus || p==brother || p==stageWitness || (p==boss && phase>=Phase.Choice) || (p==crew[0] && held)));
             Color tint=ally?mint:(p==elder || (p==brother && phase==Phase.Choice) || (p==boss && phase!=Phase.Chase))?gold:red;
             float x=screen.x*hudW,y=(1-screen.y)*hudH;
             if(label) {
                 string name=p.name;
+                if(IsHallGuard(p)){
+                    if(p.floorYielded)name=GuardName(p)+"　降参";
+                    else if(named)name=GuardName(p)+(p.flinchUntil>clock?"　ひるみ":"　指名中");
+                    else if(command)name=GuardName(p);
+                }
                 float width=Mathf.Max(45,name.Length*14+24);
                 Rect tag=new Rect(x-width/2,y-23,width,22);
                 bool displaced=false;
@@ -289,6 +304,7 @@ public sealed partial class KinseiSession
                 }
                 if(tag.y<78)continue;
                 drawnLabels.Add(tag);
+                if(command && IsHallGuard(p))guardTags[guards.IndexOf(p)]=tag;
                 if(displaced)Block(new Rect(x,tag.yMax+2,1,y-tag.yMax-3),tint);
                 Block(tag,ink);Letter(tag,name,13,tint,false,TextAnchor.MiddleCenter);
                 Meter(new Rect(tag.x,tag.yMax,width,2),100*p.hp/p.maxHp,tint);

@@ -24,7 +24,7 @@ def rule(y):c.setStrokeColor(HexColor('#B6A796'));c.line(32,H-y,928,H-y)
 def start(n,title,sub):
     c.setFillColor(HexColor(bg));c.rect(0,0,W,H,fill=1,stroke=0)
     txt(32,18,'金星の一夜　　宵待町 美術制作資料',12,'Min',red)
-    txt(765,19,'舞台と町内中継　／　補遺' if n>=27 else '高架線と翌朝　／　補遺',12,'Goth',muted);rule(46)
+    txt(765,19,'ホールと実況卓　／　補遺' if n>=31 else '舞台と町内中継　／　補遺' if n>=27 else '高架線と翌朝　／　補遺',12,'Goth',muted);rule(46)
     txt(32,58,title,30,'Min');txt(34,107,sub,13,'Goth',muted,890)
     c.bookmarkPage(str(n));c.addOutlineEntry(title,str(n))
 def end(n,foot):
@@ -122,4 +122,43 @@ end(30,'結果画面の左下には次の一夜と表題へ戻る操作が並ぶ
 for entry in used:
     if entry['figure'] in ('level-hand-contact','level-hand-released','lotus-broadcast-result'):
         entry['windows_zip_sha256']='101235869c7ac3fb34280157968a6207cea12907b213e370de69bf39b04fa1ed'
+start(31,'紺谷と浦、立ち姿から片膝へ','紺谷は細い縞の紺背広に眼鏡、浦は桑色の上着にチーフ。まず立ち姿で二人を描き分け、紺谷の降参を三コマに起こした。')
+fig('hall-wardrobe-study',A+'hall-regulars/wardrobe.png','GPT Image 衣装原画　左に紺谷、右に浦。',32,139,435,231)
+fig('hall-wardrobe-model',A+'hall-regulars/tailoring-offline.png','衣装モデルのオフライン描画　同じ二着を並べた。',504,139,424,231)
+fig('hall-yield-study',A+'hall-regulars/kontani-movement.png','GPT Image 動作原画　紺谷が右足を踏み出し、左膝をつくまで。',32,400,505,152)
+fig('hall-cuffs-study',A+'hall-regulars/ura-cuffs.png','GPT Image 接写原画　浦が上げた掌と、膝に置く手の袖口。',558,400,370,152)
+end(31,'右上は書き出した衣装データをBlenderで描画したもの。頭部・眼鏡・手と、舞台の照明は実機の頁に収録した。')
+
+start(32,'実況卓の黒と金を、四つの面に分ける','黒い琺瑯の前板と上蓋には別の原画を使った。つまみの正面は同心円の旋削痕、周面は指が擦った横帯で区別する。')
+fig('hall-enamel-a',A+'broadcast-console/originals/enamel-a.png','MOSS原画　前板の塗り欠け',32,144,211,110)
+fig('hall-enamel-b',A+'broadcast-console/originals/enamel-b.png','MOSS原画　上蓋と左右の返し',258,144,211,110)
+fig('hall-brass-a',A+'broadcast-console/originals/brass-a.png','MOSS原画　つまみの正面',491,144,211,110)
+fig('hall-brass-b',A+'broadcast-console/originals/brass-b.png','MOSS原画　つまみの周面',717,144,211,110)
+fig('hall-console-model',A+'broadcast-console/console-geometry.jpg','実装メッシュのCPU描画　操作側と管面側。指掛けと管面の縁を、それぞれの角度から見る。',32,302,896,238)
+end(32,'筐体は幅560 × 高さ160 × 奥行190 mm。つまみの直径は46 mm。周面36本の溝は形状で刻み、指掛けと軸が68度回る。')
+
+start(33,'客席の二人と、送出卓の左手','客席中央でZを押し、降参した二人を順に見た。舞台袖ではCを押し、実況卓についた源が左手で送出つまみを回す様子を撮った。')
+fig('hall-kontani-live',E+'v14/kontani-view-published.png','Windows実機 v1.4・Z視点　眼鏡の紺谷が左の掌を上げる。',32,144,436,220)
+fig('hall-ura-live',E+'v14/ura-view-published.png','Windows実機 v1.4・Z視点　桑色の上着で片膝をつく浦。',492,144,436,220)
+fig('hall-console-live',E+'v14/rotation-pubdesk.png','Windows実機 v1.4・C視点の部分　琺瑯の前板と源の左手',32,399,531,149,(.19,.2,.79,.73))
+txt(589,421,'つまみを回す',19,'Min')
+txt(589,459,'Cを保持すると、源の左手が白い指掛けに届く。',12,'Goth',ink,345)
+txt(589,485,'左のつまみには、明るい縦溝が並ぶ。',12,'Goth',ink,345)
+end(33,'上段はホール、下段は舞台袖の実況卓。図版ごとの撮影元ZIPと、切り出す前の画像のSHA-256は出典目録に収録した。')
+console_runs={record['name']:record for record in json.loads((root/A/'broadcast-console/originals/runs.json').read_text(encoding='utf-8'))}
+for entry in used:
+    tag=entry['figure']
+    if tag in ('hall-wardrobe-study','hall-yield-study'):
+        entry['source_kind']='GPT Image concept'
+        entry['prompt_file']=A+'hall-regulars/'+('prompt.txt' if tag=='hall-wardrobe-study' else 'movement-prompt.txt')
+    elif tag=='hall-cuffs-study':
+        entry.update(source_kind='GPT Image concept',prompt_file=A+'hall-regulars/cuffs-prompt.txt')
+    elif tag in ('hall-enamel-a','hall-enamel-b','hall-brass-a','hall-brass-b'):
+        record=console_runs[tag.removeprefix('hall-')]
+        assert entry['sha256']==record['sha256'],tag
+        entry.update(source_kind='MOSS-Image material study',prompt_id=record['prompt_id'],seed=record['seed'])
+    elif tag in ('hall-wardrobe-model','hall-console-model'):
+        entry['source_kind']='Offline rendering of model geometry'
+    elif tag in ('hall-kontani-live','hall-ura-live','hall-console-live'):
+        entry.update(source_kind='Windows Player capture',windows_zip_sha256='b0c1e4f5898e12341041d8da682a8ad4a5a36bffde2129734320023eb1759eaf')
 c.save();out.with_suffix('.sources.json').write_text(json.dumps(used,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')

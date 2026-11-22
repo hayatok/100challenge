@@ -58,3 +58,7 @@ python render_testimony.py <hts_engine.exeのパス> <nitech_jp_atr503_m001.htsv
 ```
 
 元モデルのREADMEと学習音声のCOPYINGに沿った表記を配布物に同梱する。[Open JTalk](https://open-jtalk.sourceforge.net/)・[音声モデルの配布元](https://packages.debian.org/source/trixie/hts-voice-nitech-jp-atr503-m001)・[ゲームに含めるクレジット](../../Game/Assets/StreamingAssets/StageVoiceCredits.txt)。
+
+## ホールで用心棒が手を引く声
+
+紺谷の「わかった。もう降りる。」は2.265秒、浦の「待ってくれ。わしは降りる。」は2.425秒。兄貴分と同じモデルを使用し、紺谷は音高を2半音下げてゆっくりめに、浦は1.2半音上げて少し早口にした。今回は48 kHzのモノラルを用い、ゲームで各人の立つ位置から鳴らす。二人には別々の音源と60 Hzの口形を用意した。前節と同じ環境で `python render_floor.py <hts_engine.exeのパス> <音声モデルのパス>` を実行すると再生成できる。
