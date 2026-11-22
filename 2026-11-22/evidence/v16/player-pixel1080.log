@@ -1,0 +1,182 @@
+Mono path[0] = 'C:/Users/hayat/AppData/Local/Temp/kinsei62-v16-pixel/Kinsei_Data/Managed'
+Mono config path = 'C:/Users/hayat/AppData/Local/Temp/kinsei62-v16-pixel/MonoBleedingEdge/etc'
+Input System module state changed to: Initialized.
+[Physics::Module] Initialized fallback backend.
+[Physics::Module] Id: 0xdecafbad
+Loading player data from C:/Users/hayat/AppData/Local/Temp/kinsei62-v16-pixel/Kinsei_Data/data.unity3d
+Initialize engine version: 6000.3.28f1 (8f082d2fe476)
+[Subsystems] Discovering subsystems at path C:/Users/hayat/AppData/Local/Temp/kinsei62-v16-pixel/Kinsei_Data/UnitySubsystems
+[D3D12 Device Filter] Vendor Name: NVIDIA
+[D3D12 Device Filter] Device Name: NVIDIA GeForce RTX 4070 Ti
+[D3D12 Device Filter] Driver Version: 32.0.16.1742
+[D3D12 Device Filter] Feature Level: 12.2
+[D3D12 Device Filter] Graphics Memory: 11996 MB
+[D3D12 Device Filter] Processor Count: 16
+[D3D12 Device Filter] Device Type: Discrete
+GfxDevice: creating device client; kGfxThreadingModeSplitJobs
+d3d12: failed to query info queue interface (0x80004002).
+Direct3D:
+    Version:         Direct3D 12 [level 12.2]
+    Renderer:        NVIDIA GeForce RTX 4070 Ti (ID=0x2782)
+    Vendor:          NVIDIA
+    VRAM:            11996 MB
+    App VRAM Budget: 11228 MB
+    Driver:          32.0.16.1742
+Begin MonoManager ReloadAssembly
+- Loaded All Assemblies, in  0.140 seconds
+- Finished resetting the current domain, in  0.002 seconds
+[Physics::Module] Selected backend.
+[Physics::Module] Name: PhysX
+[Physics::Module] Id: 0xf2b8ea05
+[Physics::Module] SDK Version: 4.1.2
+[Physics::Module] Integration Version: 1.0.0
+[Physics::Module] Threading Mode: Multi-Threaded
+<RI> Initializing input.
+<RI> Input initialized.
+UnloadTime: 0.530100 ms
+KINSEI start t=0.00 phase=Arrival pos=(0.00, 0.00, -10.65)
+KINSEI_WATER_CONTACT t=0.146 seat=2 foot=left x=0.218 z=-10.286
+KINSEI RTS t=0.29 phase=Arrival pos=(0.00, 0.00, -10.65)
+KINSEI TPS t=0.34 phase=Arrival pos=(0.00, 0.00, -10.65)
+KINSEI RTS t=0.88 phase=Arrival pos=(-0.37, 0.00, -11.69)
+KINSEI TPS t=1.07 phase=Arrival pos=(-0.37, 0.00, -11.69)
+KINSEI RTS t=2.06 phase=Arrival pos=(-0.37, 0.00, -11.69)
+KINSEI TPS t=2.24 phase=Arrival pos=(-0.37, 0.00, -11.69)
+KINSEI RTS t=3.76 phase=Arrival pos=(4.27, 0.00, -11.54)
+KINSEI TPS t=3.94 phase=Arrival pos=(4.27, 0.00, -11.54)
+KINSEI RTS t=5.34 phase=Arrival pos=(4.27, 0.00, -11.54)
+KINSEI TPS t=5.51 phase=Arrival pos=(4.27, 0.00, -11.54)
+KINSEI_WATER_CONTACT t=6.220 seat=0 foot=left x=5.451 z=-11.022
+KINSEI_WATER_CONTACT t=6.389 seat=0 foot=right x=5.603 z=-10.296
+KINSEI RTS t=6.72 phase=Arrival pos=(5.51, 0.00, -9.42)
+KINSEI TPS t=6.91 phase=Arrival pos=(5.51, 0.00, -9.42)
+KINSEI shop-view-Marquee t=7.13 phase=Arrival pos=(5.51, 0.00, -9.42)
+KINSEI shop-view-None t=8.08 phase=Arrival pos=(5.51, 0.00, -9.42)
+KINSEI RTS t=8.26 phase=Arrival pos=(5.51, 0.00, -9.42)
+KINSEI TPS t=8.44 phase=Arrival pos=(5.51, 0.00, -9.42)
+KINSEI RTS t=9.41 phase=Arrival pos=(4.42, 0.00, -10.72)
+KINSEI TPS t=9.59 phase=Arrival pos=(4.42, 0.00, -10.72)
+KINSEI_WATER_CONTACT t=9.913 seat=0 foot=left x=4.982 z=-10.721
+KINSEI_WATER_CONTACT t=10.169 seat=0 foot=right x=5.667 z=-10.810
+KINSEI_WATER_CONTACT t=10.721 seat=0 foot=left x=5.116 z=-10.844
+KINSEI_WATER_CONTACT t=10.974 seat=0 foot=left x=4.245 z=-10.811
+KINSEI_WATER_CONTACT t=11.283 seat=0 foot=left x=4.876 z=-10.724
+KINSEI_WATER_CONTACT t=11.283 seat=0 foot=right x=5.214 z=-10.515
+KINSEI_WATER_CONTACT t=11.518 seat=0 foot=left x=5.838 z=-10.630
+KINSEI_WATER_CONTACT t=11.809 seat=0 foot=left x=5.562 z=-10.651
+KINSEI_WATER_CONTACT t=11.840 seat=0 foot=right x=5.759 z=-10.531
+KINSEI_WATER_CONTACT t=12.079 seat=0 foot=left x=4.702 z=-10.817
+KINSEI_WATER_CONTACT t=12.079 seat=0 foot=right x=5.057 z=-10.609
+KINSEI RTS t=12.38 phase=Arrival pos=(4.45, 0.00, -10.72)
+KINSEI TPS t=12.56 phase=Arrival pos=(4.45, 0.00, -10.72)
+KINSEI_WATER_CONTACT t=12.963 seat=0 foot=right x=5.396 z=-10.672
+KINSEI_WATER_CONTACT t=13.394 seat=2 foot=left x=8.091 z=-12.333
+KINSEI_WATER_CONTACT t=14.382 seat=0 foot=left x=9.499 z=-12.116
+KINSEI RTS t=14.60 phase=Arrival pos=(9.41, 0.00, -12.53)
+KINSEI TPS t=14.79 phase=Arrival pos=(9.41, 0.00, -12.53)
+KINSEI RTS t=14.99 phase=Arrival pos=(9.41, 0.00, -12.53)
+KINSEI TPS t=15.16 phase=Arrival pos=(9.41, 0.00, -12.53)
+KINSEI RTS t=15.37 phase=Arrival pos=(9.41, 0.00, -12.53)
+KINSEI TPS t=15.55 phase=Arrival pos=(9.41, 0.00, -12.53)
+KINSEI_WATER_CONTACT t=15.961 seat=0 foot=right x=8.491 z=-12.434
+KINSEI RTS t=17.39 phase=Arrival pos=(4.11, 0.00, -11.94)
+KINSEI TPS t=17.59 phase=Arrival pos=(4.11, 0.00, -11.94)
+KINSEI RTS t=18.66 phase=Arrival pos=(4.11, 0.00, -11.94)
+KINSEI order-0-Go t=19.23 phase=Arrival pos=(4.11, 0.00, -11.94)
+KINSEI order-1-Go t=19.23 phase=Arrival pos=(4.11, 0.00, -11.94)
+KINSEI TPS t=19.31 phase=Arrival pos=(4.11, 0.00, -11.94)
+KINSEI RTS t=21.40 phase=Arrival pos=(4.11, 0.00, -11.94)
+KINSEI order-0-Go t=21.61 phase=Arrival pos=(4.11, 0.00, -11.94)
+KINSEI order-1-Go t=21.61 phase=Arrival pos=(4.11, 0.00, -11.94)
+KINSEI TPS t=21.70 phase=Arrival pos=(4.11, 0.00, -11.94)
+KINSEI_WATER_CONTACT t=21.865 seat=1 foot=right x=4.647 z=-10.960
+KINSEI_WATER_CONTACT t=22.122 seat=1 foot=left x=5.411 z=-10.708
+KINSEI RTS t=23.76 phase=Arrival pos=(4.11, 0.00, -11.94)
+KINSEI order-0-Go t=23.96 phase=Arrival pos=(4.11, 0.00, -11.94)
+KINSEI order-1-Go t=23.96 phase=Arrival pos=(4.11, 0.00, -11.94)
+KINSEI TPS t=24.04 phase=Arrival pos=(4.11, 0.00, -11.94)
+KINSEI_WATER_CONTACT t=24.199 seat=1 foot=right x=4.929 z=-10.625
+KINSEI RTS t=26.18 phase=Arrival pos=(4.11, 0.00, -11.94)
+KINSEI order-0-Go t=26.39 phase=Arrival pos=(4.11, 0.00, -11.94)
+KINSEI order-1-Go t=26.39 phase=Arrival pos=(4.11, 0.00, -11.94)
+KINSEI TPS t=26.46 phase=Arrival pos=(4.11, 0.00, -11.94)
+KINSEI RTS t=28.54 phase=Arrival pos=(4.11, 0.00, -11.94)
+KINSEI order-0-Go t=28.76 phase=Arrival pos=(4.11, 0.00, -11.94)
+KINSEI order-1-Go t=28.76 phase=Arrival pos=(4.11, 0.00, -11.94)
+KINSEI TPS t=28.85 phase=Arrival pos=(4.11, 0.00, -11.94)
+KINSEI RTS t=31.00 phase=Arrival pos=(4.11, 0.00, -11.94)
+KINSEI TPS t=31.20 phase=Arrival pos=(4.11, 0.00, -11.94)
+KINSEI RTS t=32.36 phase=Arrival pos=(4.11, 0.00, -11.94)
+KINSEI TPS t=32.54 phase=Arrival pos=(4.11, 0.00, -11.94)
+KINSEI_WATER_CONTACT t=34.157 seat=0 foot=right x=0.085 z=-10.397
+KINSEI RTS t=34.43 phase=Arrival pos=(0.00, 0.00, -9.76)
+KINSEI TPS t=34.61 phase=Arrival pos=(0.00, 0.00, -9.76)
+KINSEI RTS t=34.81 phase=Arrival pos=(0.00, 0.00, -9.76)
+KINSEI order-0-Attend t=35.20 phase=Arrival pos=(0.00, 0.00, -9.76)
+KINSEI order-2-Guard t=35.56 phase=Arrival pos=(0.00, 0.00, -9.76)
+KINSEI TPS t=35.73 phase=Arrival pos=(0.00, 0.00, -9.76)
+KINSEI RTS t=35.92 phase=Arrival pos=(0.00, 0.00, -9.76)
+KINSEI_WATER_CONTACT t=36.073 seat=3 foot=left x=-1.078 z=-11.093
+KINSEI TPS t=36.11 phase=Arrival pos=(0.00, 0.00, -9.76)
+KINSEI_WATER_CONTACT t=36.327 seat=3 foot=right x=-0.590 z=-10.429
+KINSEI phase-Floor t=37.06 phase=Floor pos=(0.02, 0.03, -6.69)
+KINSEI RTS t=37.20 phase=Floor pos=(0.02, 0.03, -6.69)
+KINSEI_WATER_CONTACT t=37.358 seat=5 foot=left x=-1.042 z=-10.804
+KINSEI TPS t=37.37 phase=Floor pos=(0.02, 0.03, -6.69)
+KINSEI RTS t=37.57 phase=Floor pos=(0.02, 0.03, -6.69)
+KINSEI order-1-Go t=37.96 phase=Floor pos=(0.02, 0.03, -6.69)
+KINSEI TPS t=38.41 phase=Floor pos=(0.02, 0.03, -6.69)
+KINSEI RTS t=38.61 phase=Floor pos=(0.02, 0.03, -6.69)
+KINSEI TPS t=38.79 phase=Floor pos=(0.02, 0.03, -6.69)
+KINSEI RTS t=39.56 phase=Floor pos=(0.03, 0.03, -4.70)
+KINSEI TPS t=39.74 phase=Floor pos=(0.03, 0.03, -4.70)
+KINSEI RTS t=39.92 phase=Floor pos=(0.03, 0.03, -4.70)
+KINSEI TPS t=40.11 phase=Floor pos=(0.03, 0.03, -4.70)
+KINSEI RTS t=41.14 phase=Floor pos=(0.04, 0.03, -1.63)
+KINSEI TPS t=41.32 phase=Floor pos=(0.04, 0.03, -1.63)
+KINSEI hit-guard-68 t=41.71 phase=Floor pos=(0.04, 0.03, -1.63)
+KINSEI hit-guard-36 t=42.13 phase=Floor pos=(0.04, 0.03, -1.63)
+KINSEI hit-guard-4 t=42.54 phase=Floor pos=(0.04, 0.03, -1.63)
+KINSEI hit-guard-0 t=42.96 phase=Floor pos=(0.04, 0.03, -1.63)
+KINSEI kaji-held t=42.99 phase=Floor pos=(0.04, 0.03, -1.63)
+KINSEI hit-guard-35 t=43.57 phase=Floor pos=(0.04, 0.03, -1.63)
+KINSEI hit-guard-3 t=43.99 phase=Floor pos=(0.04, 0.03, -1.63)
+KINSEI hit-guard-0 t=44.41 phase=Floor pos=(0.04, 0.03, -1.63)
+KINSEI hit-brother-57 t=45.42 phase=Floor pos=(0.04, 0.03, -1.63)
+KINSEI hit-brother-25 t=45.84 phase=Floor pos=(0.04, 0.03, -1.63)
+KINSEI hit-brother-0 t=46.26 phase=Floor pos=(0.04, 0.03, -1.63)
+KINSEI phase-Choice t=46.26 phase=Choice pos=(0.04, 0.03, -1.63)
+KINSEI RTS t=47.08 phase=Choice pos=(0.04, 0.03, -1.63)
+KINSEI TPS t=47.25 phase=Choice pos=(0.04, 0.03, -1.63)
+KINSEI RTS t=47.83 phase=Choice pos=(0.24, 0.03, -2.37)
+KINSEI TPS t=48.01 phase=Choice pos=(0.24, 0.03, -2.37)
+KINSEI RTS t=48.21 phase=Choice pos=(0.24, 0.03, -2.37)
+KINSEI TPS t=48.40 phase=Choice pos=(0.24, 0.03, -2.37)
+KINSEI RTS t=49.65 phase=Choice pos=(-0.01, 0.03, 0.75)
+KINSEI TPS t=49.83 phase=Choice pos=(-0.01, 0.03, 0.75)
+KINSEI escort t=50.03 phase=Choice pos=(-0.01, 0.03, 0.75)
+KINSEI RTS t=50.23 phase=Choice pos=(-0.01, 0.03, 0.75)
+KINSEI TPS t=50.39 phase=Choice pos=(-0.01, 0.03, 0.75)
+KINSEI RTS t=51.64 phase=Choice pos=(-2.39, 0.03, 0.58)
+KINSEI TPS t=51.83 phase=Choice pos=(-2.39, 0.03, 0.58)
+KINSEI RTS t=52.39 phase=Choice pos=(-2.80, 0.03, 0.94)
+KINSEI TPS t=52.58 phase=Choice pos=(-2.80, 0.03, 0.94)
+KINSEI RTS t=53.11 phase=Choice pos=(-3.19, 0.03, 0.84)
+KINSEI TPS t=53.30 phase=Choice pos=(-3.19, 0.03, 0.84)
+KINSEI RTS t=53.65 phase=Choice pos=(-3.18, 0.03, 0.84)
+KINSEI TPS t=53.83 phase=Choice pos=(-3.18, 0.03, 0.84)
+KINSEI RTS t=54.03 phase=Choice pos=(-3.18, 0.03, 0.84)
+KINSEI TPS t=54.21 phase=Choice pos=(-3.18, 0.03, 0.84)
+KINSEI RTS t=55.25 phase=Choice pos=(-3.51, 0.03, -1.31)
+KINSEI TPS t=55.43 phase=Choice pos=(-3.51, 0.03, -1.31)
+KINSEI RTS t=55.93 phase=Choice pos=(-3.13, 0.03, -1.42)
+KINSEI TPS t=56.11 phase=Choice pos=(-3.13, 0.03, -1.42)
+KINSEI phase-Mirror t=56.33 phase=Mirror pos=(-2.52, 0.00, -0.60)
+KINSEI phase-Release t=60.94 phase=Release pos=(-2.52, 0.00, -0.60)
+KINSEI ending-accord t=68.66 phase=Result pos=(-2.46, 0.03, -0.68)
+KINSEI_FRAME n=3877 median_ms=16.67 p95_ms=22.17 size=1920x1080 gpu=NVIDIA GeForce RTX 4070 Ti scene=accord
+[Physics::Module] Cleanup current backend.
+[Physics::Module] Id: 0xf2b8ea05
+Input System module state changed to: ShutdownInProgress.
+Input System polling thread exited.
+Input System module state changed to: Shutdown.

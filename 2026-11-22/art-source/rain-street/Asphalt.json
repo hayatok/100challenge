@@ -1,0 +1,144 @@
+{
+  "prompt_id": "4a8b0256-7ca2-4643-b6ea-886437398a0a",
+  "sha256": "e89de7c7fffd80386882e89925fd9dd266fc6524ae80423cb58727293394e4a8",
+  "seed": 1602101,
+  "source": {
+    "filename": "rain-asphalt_00001_.png",
+    "subfolder": "kinsei",
+    "type": "output",
+    "metadata": {
+      "kind": "image",
+      "width": 1024,
+      "height": 1024
+    }
+  },
+  "execution": {
+    "status_str": "success",
+    "completed": true,
+    "messages": [
+      [
+        "execution_start",
+        {
+          "prompt_id": "4a8b0256-7ca2-4643-b6ea-886437398a0a",
+          "timestamp": 1795307686103
+        }
+      ],
+      [
+        "execution_cached",
+        {
+          "nodes": [],
+          "prompt_id": "4a8b0256-7ca2-4643-b6ea-886437398a0a",
+          "timestamp": 1795307686105
+        }
+      ],
+      [
+        "execution_success",
+        {
+          "prompt_id": "4a8b0256-7ca2-4643-b6ea-886437398a0a",
+          "timestamp": 1795307708569
+        }
+      ]
+    ]
+  },
+  "graph": {
+    "1": {
+      "class_type": "UNETLoader",
+      "inputs": {
+        "unet_name": "moss_image_sft_int8_convrot.safetensors",
+        "weight_dtype": "default"
+      }
+    },
+    "2": {
+      "class_type": "CLIPLoader",
+      "inputs": {
+        "clip_name": "qwen3.5_9b_w4a8_gptq.safetensors",
+        "type": "moss_image",
+        "device": "default"
+      }
+    },
+    "3": {
+      "class_type": "VAELoader",
+      "inputs": {
+        "vae_name": "flux2-vae_small.safetensors"
+      }
+    },
+    "4": {
+      "class_type": "CLIPTextEncode",
+      "inputs": {
+        "clip": [
+          "2",
+          0
+        ],
+        "text": "Single flat top-down material scan, 1:1 square full bleed, eye perpendicular to the surface, neutral diffuse illumination without cast shadows. A 26-centimetre portion of well-used mid-grey Japanese neighborhood hot mix asphalt with tightly bound basalt grit, tiny pale 3-6 mm fragments in a dark warm charcoal binder, little pits and gently abraded pebble tops. Extremely realistic mineral surface, subtle close variation, low contrast. Dry evenly illuminated albedo scan. No isolated loose stones or gravel pile."
+      }
+    },
+    "5": {
+      "class_type": "CLIPTextEncode",
+      "inputs": {
+        "clip": [
+          "2",
+          0
+        ],
+        "text": "objects, signs, handwriting, border, oblique perspective, horizon, reflection of buildings, grate, people, leaves, poster, painted lines, watermark"
+      }
+    },
+    "6": {
+      "class_type": "EmptyFlux2LatentImage",
+      "inputs": {
+        "width": 1024,
+        "height": 1024,
+        "batch_size": 1
+      }
+    },
+    "7": {
+      "class_type": "KSampler",
+      "inputs": {
+        "model": [
+          "1",
+          0
+        ],
+        "positive": [
+          "4",
+          0
+        ],
+        "negative": [
+          "5",
+          0
+        ],
+        "latent_image": [
+          "6",
+          0
+        ],
+        "seed": 1602101,
+        "steps": 30,
+        "cfg": 2.5,
+        "sampler_name": "er_sde",
+        "scheduler": "simple",
+        "denoise": 1
+      }
+    },
+    "8": {
+      "class_type": "VAEDecode",
+      "inputs": {
+        "samples": [
+          "7",
+          0
+        ],
+        "vae": [
+          "3",
+          0
+        ]
+      }
+    },
+    "9": {
+      "class_type": "SaveImage",
+      "inputs": {
+        "images": [
+          "8",
+          0
+        ],
+        "filename_prefix": "kinsei/rain-asphalt"
+      }
+    }
+  }
+}

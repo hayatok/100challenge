@@ -58,7 +58,7 @@ public sealed partial class KinseiSession
             case ShopView.Operator:
                 eye=new Vector3(16.07f,1.58f,-18.64f);focus=new Vector3(14.98f,1.39f,-18.88f);break;
             case ShopView.Marquee:
-                eye=new Vector3(5.46f,2.0f,-10.60f);focus=new Vector3(5.5f,2.08f,-8.83f);break;
+                eye=new Vector3(5.24f,2.23f,-10.84f);focus=new Vector3(5.5f,1.94f,-8.83f);break;
             case ShopView.Wardrobe:
                 eye=new Vector3(-10.16f,1.48f,-2.48f);focus=new Vector3(-9.21f,1.50f,-2.43f);break;
             default:

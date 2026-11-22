@@ -223,7 +223,7 @@ public sealed partial class KinseiWorld : MonoBehaviour
             for(int i=0;i<8;i++)Box("Facade vertical brass fin",new Vector3(s*(2.2f+i*.83f),2.65f,-8.27f),new Vector3(.05f,5.2f,.16f),brass);
             Box("Window lacquer frame",new Vector3(s*5.5f,2.2f,-8.3f),new Vector3(3.8f,2.8f,.12f),dark);
             Box("Opaque smoked display glass",new Vector3(s*5.5f,2.2f,-8.38f),new Vector3(3.45f,2.45f,.04f),glass);
-            Box("Street curb",new Vector3(s*7.5f,.09f,-10),new Vector3(3,.18f,3.8f),cream,true);
+            Box("Street curb",new Vector3(s*7.5f,.09f,-10),new Vector3(3,.18f,3.8f),dark,true);
         }
         Box("Entrance lintel",new Vector3(0,4.5f,-8.15f),new Vector3(4.2f,.6f,.65f),brass);
         Box("Canopy",new Vector3(0,3.85f,-9),new Vector3(5.6f,.18f,2.4f),dark);
@@ -238,8 +238,6 @@ public sealed partial class KinseiWorld : MonoBehaviour
         Text("キャバレー  金星",new Vector3(0,4.05f,-8.51f),.19f,glow,0);
         Box("Vertical neon sign",new Vector3(8.5f,4.8f,-8.6f),new Vector3(.8f,2.5f,.25f),dark);
         Text("K\nI\nN\nS\nE\nI",new Vector3(8.5f,4.8f,-8.77f),.29f,cyan,0);
-        var wet=Mat("Rain polished pavement","#263C43",.65f,.96f);
-        for(int i=0;i<24;i++){float x=-11+(i*7%23);float z=-10-(i%4)*.8f;var puddle=Cylinder("Rain puddle",new Vector3(x,-.018f,z),.28f+(i%3)*.19f,.006f,wet);puddle.transform.localScale=new Vector3(puddle.transform.localScale.x,.003f,puddle.transform.localScale.z*.37f);}
     }
     void Text(string text,Vector3 p,float size,Material mat,float yaw)
     {

@@ -24,7 +24,7 @@ def rule(y):c.setStrokeColor(HexColor('#B6A796'));c.line(32,H-y,928,H-y)
 def start(n,title,sub):
     c.setFillColor(HexColor(bg));c.rect(0,0,W,H,fill=1,stroke=0)
     txt(32,18,'金星の一夜　　宵待町 美術制作資料',12,'Min',red)
-    txt(765,19,'運河橋と西の湯　／　補遺' if n>=34 else 'ホールと実況卓　／　補遺' if n>=31 else '舞台と町内中継　／　補遺' if n>=27 else '高架線と翌朝　／　補遺',12,'Goth',muted);rule(46)
+    txt(765,19,'雨上がりの通り　／　補遺' if n>=37 else '運河橋と西の湯　／　補遺' if n>=34 else 'ホールと実況卓　／　補遺' if n>=31 else '舞台と町内中継　／　補遺' if n>=27 else '高架線と翌朝　／　補遺',12,'Goth',muted);rule(46)
     txt(32,58,title,30,'Min');txt(34,107,sub,13,'Goth',muted,890)
     c.bookmarkPage(str(n));c.addOutlineEntry(title,str(n))
 def end(n,foot):
@@ -195,5 +195,45 @@ for entry in used:
         entry.update(source_kind='MOSS-Image material master',prompt_id=record['prompt_id'],seed=record['seed'])
     elif tag.startswith('west-') and tag.endswith('-live'):
         entry.update(source_kind='Windows Player capture',windows_zip_sha256='f03c934064a9c03af6827df845f6e6f617ca05dd1bf4e3ea4ac3c6dd5a1d68db')
+
+start(37,'庇の灯から、街頭テレビの逆像へ','靴の高さから見た原画では、庇の灯が濡れた舗装に伸びる。実機の金星前では、テレビ下部の明るい縁と選局器が水面に逆さに映る。')
+fig('rain-shoes-study',A+'rain-street/street-at-shoe-level.png','GPT Image 照明原画　靴、さざ波、庇の電球。',32,144,455,310)
+fig('rain-reflection-live',E+'v16/water-pixel1080.png','Windows実機 v1.6　足元の水に映る受像機の下縁。',515,144,413,310)
+txt(33,495,'庇の黄、受像機の緑',18,'Min')
+txt(33,527,'右の画面では、歩道の手前で水面の明かりが途切れる。',12,'Goth',ink,650)
+end(37,'左は雨上がりの路面のための原画。右はゲーム内のカメラで撮影した通り。')
+
+start(38,'骨材の山と、水の寄るくぼみ','路面を三つに分けて作った。骨材の粒、先に乾く高い部分、水面に残る細い波。')
+for key,caption,x in [('Asphalt','舗装の骨材',32),('Basin','水のくぼみ',193),('Ripple','細かなさざ波',354)]:
+    fig('rain-moss-'+key,A+'rain-street/'+key+'.png','MOSS 素材原画　'+caption,x,153,145,145)
+fig('rain-people-live',E+'v16/second3-pixel1080.png','Windows実機 v1.6・部分　脚の逆像が選局器の手前に重なる。',522,145,406,327,(850/1920,570/1080,1350/1920,850/1080))
+txt(33,363,'路面を読む三枚',18,'Min')
+txt(33,402,'幅26センチ分の骨材が、水際を小さく割る。',12,'Goth',ink,464)
+txt(33,428,'細かな波は、幅12センチ分の水面から起こした。',12,'Goth',ink,464)
+end(38,'三枚の表面原本は各1024角。右の水面には赤茶のズボンが二筋映る。靴先だけの像はこの切り出しでは読み分けにくい。')
+
+start(39,'街頭の受像機に、金星の舞台が映る','筐体を包む象牙色の琺瑯と、保護桟の奥の濃茶の織布。原画のある晩の光景から、受像機の前に立ったときに見える面を拾う。')
+fig('rain-receiver-study',A+'rain-street/street-receiver.png','GPT Image 受像機原画　放送に見入る二人。',32,143,449,230)
+fig('rain-receiver-live',E+'v16/dial-pixel1080.png','Windows実機 v1.6・C視点　管面と、その下の選局器・保護桟。',508,143,420,230)
+for key,caption,x in [('Enamel','焼付琺瑯',32),('Grille','スピーカーの織布',255)]:
+    fig('rain-moss-'+key,A+'rain-street/'+key+'.png','MOSS 素材原画　'+caption,x,407,206,132)
+txt(508,423,'管面の下',18,'Min')
+txt(508,462,'二つの丸いつまみの右に、横向きの保護桟が並ぶ。',12,'Goth',ink,415)
+txt(508,492,'その右端にチャンネルの「3」が灯る。',12,'Goth',ink,415)
+end(39,'左下は筐体と切替器のケースに使った塗膜、右隣はスピーカーを覆う布。')
+
+
+
+for entry in used:
+    tag=entry['figure']
+    if tag in ('rain-shoes-study','rain-receiver-study'):
+        prompt='street-prompt.txt' if tag=='rain-shoes-study' else 'receiver-prompt.txt'
+        entry.update(source_kind='GPT Image concept',prompt_file=A+'rain-street/'+prompt)
+    elif tag.startswith('rain-moss-'):
+        record=json.loads((root/entry['file']).with_suffix('.json').read_text(encoding='utf-8'))
+        assert record['sha256']==entry['sha256'],tag
+        entry.update(source_kind='MOSS-Image material master',prompt_id=record['prompt_id'],seed=record['seed'])
+    elif tag.startswith('rain-') and tag.endswith('-live'):
+        entry.update(source_kind='Windows Player capture',windows_zip_sha256='4e6a1eef3a0d9ce8eabceb23a4e2cd774f3d5da32096dbe7a16499214167aba9')
 
 c.save();out.with_suffix('.sources.json').write_text(json.dumps(used,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')

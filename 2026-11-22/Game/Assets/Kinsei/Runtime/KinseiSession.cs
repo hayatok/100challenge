@@ -32,6 +32,7 @@ public sealed partial class KinseiSession : MonoBehaviour
     readonly List<Person> everyone = new();
     Person player, brother, elder, boss;
     Camera cam, relayCam;
+    KinseiRainStreet rainStreet;
     float nextHallPicture;
     KinseiWorld club;
     KinseiBoxOffice boxOffice;
@@ -97,6 +98,7 @@ public sealed partial class KinseiSession : MonoBehaviour
         walkways=club.gameObject.AddComponent<KinseiWalkways>();
         cam = new GameObject("プレイヤーカメラ").AddComponent<Camera>();
         cam.tag = "MainCamera";
+        rainStreet=cam.gameObject.AddComponent<KinseiRainStreet>();
         Camera.onPreCull+=ClearPortraitForeground;
         Camera.onPostRender+=RestorePortraitForeground;
         cam.allowHDR = true;
@@ -187,6 +189,7 @@ public sealed partial class KinseiSession : MonoBehaviour
     void PrepareVisit(bool finalNight,int morning)
     {
         sound.ListenAtBath(false,Vector3.zero);
+        rainStreet.ResetContacts();
         sound.StopFloorYields();
         ClearDawn();
         portraitOwner=null;yieldingPortrait=null;
@@ -289,12 +292,36 @@ public sealed partial class KinseiSession : MonoBehaviour
 
     void LateUpdate()
     {
+        if(rainStreet) {
+            bool liveNight=player!=null && phase!=Phase.Title && phase!=Phase.Result && !InDawn;
+            if(liveNight) {
+                if(!paused) {
+                    TrackStreetWalker(0,player);
+                    for(int i=0;i<crew.Count && i+1<KinseiRainStreet.WalkerCount;i++)
+                        TrackStreetWalker(i+1,crew[i]);
+                }
+                bool viewOfStreet=command || shopView==ShopView.None || shopView==ShopView.Marquee;
+                if(viewOfStreet) {
+                    bool behindWalls=!command && (player.Position.z>= -8.4f || player.Position.z<= -15.8f || AboveStreet);
+                    rainStreet.Draw(cam,clock,command,paused,behindWalls);
+                }
+            } else if(streetContactsActive)rainStreet.ResetContacts();
+            streetContactsActive=liveNight;
+        }
         if(phase==Phase.Mirror && !paused && clock>=nextHallPicture && SystemInfo.graphicsDeviceType!=UnityEngine.Rendering.GraphicsDeviceType.Null) {
             relayCam.transform.position=new Vector3(-3.02f,1.43f,-.23f);
             relayCam.transform.LookAt(brother.actor.EyePosition-Vector3.up*.048f);
             relayCam.Render();
             nextHallPicture=Mathf.Max(nextHallPicture+1001f/30000f,clock+.005f);
         }
+    }
+
+    bool streetContactsActive;
+    void TrackStreetWalker(int seat,Person person)
+    {
+        bool walking=person.hp>0 && !person.retired && !person.floorYielded && person.flinchUntil<=clock &&
+            (person.pose=="walk" || person.pose=="run");
+        rainStreet.Track(seat,person.actor,walking,clock,measure);
     }
 
     void TogglePause()
@@ -397,7 +424,8 @@ public sealed partial class KinseiSession : MonoBehaviour
         } else if(portraitOwner && !command && shopView==ShopView.None) {
             cam.orthographic=false;cam.fieldOfView=35;FrameConversation(out eye,out focus);
         } else if(shopView!=ShopView.None) {
-            cam.orthographic=false;cam.fieldOfView=shopView==ShopView.Wardrobe?63:shopView==ShopView.Records?52:42;
+            cam.orthographic=false;
+            cam.fieldOfView=shopView switch { ShopView.Wardrobe=>63, ShopView.Marquee=>61, ShopView.Records=>52, _=>42 };
             FrameCounter(out eye,out focus);
         } else if(command) {
             cam.orthographic=true; cam.orthographicSize=Mathf.Max(chartSize,15f/cam.aspect);

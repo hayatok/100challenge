@@ -592,5 +592,105 @@
     "sha256": "3d69ff3f13aede1799f6e3e97b9fb42b42b0a12ac63a7a04b7bcab1884f4d79c",
     "source_kind": "Windows Player capture",
     "windows_zip_sha256": "f03c934064a9c03af6827df845f6e6f617ca05dd1bf4e3ea4ac3c6dd5a1d68db"
+  },
+  {
+    "figure": "rain-shoes-study",
+    "file": "art-source/rain-street/street-at-shoe-level.png",
+    "caption": "GPT Image 照明原画　靴、さざ波、庇の電球。",
+    "crop": null,
+    "sha256": "b5f04a02152d6cb08d03ef4f217edc2feca3a6090abb4e2f204a2a93ad75b553",
+    "source_kind": "GPT Image concept",
+    "prompt_file": "art-source/rain-street/street-prompt.txt"
+  },
+  {
+    "figure": "rain-reflection-live",
+    "file": "evidence/v16/water-pixel1080.png",
+    "caption": "Windows実機 v1.6　足元の水に映る受像機の下縁。",
+    "crop": null,
+    "sha256": "3452968f0324311c0337750254fadefa99d56913fe3c1e1932685cbdae0d2f42",
+    "source_kind": "Windows Player capture",
+    "windows_zip_sha256": "4e6a1eef3a0d9ce8eabceb23a4e2cd774f3d5da32096dbe7a16499214167aba9"
+  },
+  {
+    "figure": "rain-moss-Asphalt",
+    "file": "art-source/rain-street/Asphalt.png",
+    "caption": "MOSS 素材原画　舗装の骨材",
+    "crop": null,
+    "sha256": "e89de7c7fffd80386882e89925fd9dd266fc6524ae80423cb58727293394e4a8",
+    "source_kind": "MOSS-Image material master",
+    "prompt_id": "4a8b0256-7ca2-4643-b6ea-886437398a0a",
+    "seed": 1602101
+  },
+  {
+    "figure": "rain-moss-Basin",
+    "file": "art-source/rain-street/Basin.png",
+    "caption": "MOSS 素材原画　水のくぼみ",
+    "crop": null,
+    "sha256": "b33140ebc3a56d2e53a048150285ed7a03d333f4de947a824bc285c5b97cce64",
+    "source_kind": "MOSS-Image material master",
+    "prompt_id": "b9168830-1f70-4c25-a9f0-dc6dafc8d1ef",
+    "seed": 1602102
+  },
+  {
+    "figure": "rain-moss-Ripple",
+    "file": "art-source/rain-street/Ripple.png",
+    "caption": "MOSS 素材原画　細かなさざ波",
+    "crop": null,
+    "sha256": "7f99317bb31657c46451f0fcf38b803048556974fec12447ef5f480b306aa3d0",
+    "source_kind": "MOSS-Image material master",
+    "prompt_id": "89857cc1-835b-48c4-9f1f-5c33fe1f79df",
+    "seed": 1602103
+  },
+  {
+    "figure": "rain-people-live",
+    "file": "evidence/v16/second3-pixel1080.png",
+    "caption": "Windows実機 v1.6・部分　脚の逆像が選局器の手前に重なる。",
+    "crop": [
+      0.4427083333333333,
+      0.5277777777777778,
+      0.703125,
+      0.7870370370370371
+    ],
+    "sha256": "49e5972ef276a10e408bbb212b8c24adb3dc5da146ce5bb67b0c0167b015cb5e",
+    "source_kind": "Windows Player capture",
+    "windows_zip_sha256": "4e6a1eef3a0d9ce8eabceb23a4e2cd774f3d5da32096dbe7a16499214167aba9"
+  },
+  {
+    "figure": "rain-receiver-study",
+    "file": "art-source/rain-street/street-receiver.png",
+    "caption": "GPT Image 受像機原画　放送に見入る二人。",
+    "crop": null,
+    "sha256": "68b41d9c100254652273c03d2db6a2330d34d4bc642618f07a9d6f23ab6b46e9",
+    "source_kind": "GPT Image concept",
+    "prompt_file": "art-source/rain-street/receiver-prompt.txt"
+  },
+  {
+    "figure": "rain-receiver-live",
+    "file": "evidence/v16/dial-pixel1080.png",
+    "caption": "Windows実機 v1.6・C視点　管面と、その下の選局器・保護桟。",
+    "crop": null,
+    "sha256": "8f15b3567502defd574c40d0966b0d149409d4f77b1a79f116e23a0ff1f2603e",
+    "source_kind": "Windows Player capture",
+    "windows_zip_sha256": "4e6a1eef3a0d9ce8eabceb23a4e2cd774f3d5da32096dbe7a16499214167aba9"
+  },
+  {
+    "figure": "rain-moss-Enamel",
+    "file": "art-source/rain-street/Enamel.png",
+    "caption": "MOSS 素材原画　焼付琺瑯",
+    "crop": null,
+    "sha256": "d8b6adbb4b83b709b12d1862ad595a116f0dd2594e8de2949682b72e90e0d176",
+    "source_kind": "MOSS-Image material master",
+    "prompt_id": "7c4bf9a3-8f5a-43b4-8637-3b1347954c7f",
+    "seed": 1602104
+  },
+  {
+    "figure": "rain-moss-Grille",
+    "file": "art-source/rain-street/Grille.png",
+    "caption": "MOSS 素材原画　スピーカーの織布",
+    "crop": null,
+    "sha256": "073d1837f191ca5bebf6e18c54fbdc31fab96941fca95ea05546c01465e82890",
+    "source_kind": "MOSS-Image material master",
+    "prompt_id": "b8bc4837-0ef6-46a8-b890-5c6c11fa0399",
+    "seed": 1602105
   }
 ]

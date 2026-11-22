@@ -22,6 +22,7 @@ public sealed partial class KinseiActor : MonoBehaviour
     SkinnedMeshRenderer leftHandRenderer, rightHandRenderer, faceRenderer;
     readonly Transform[] eyes = new Transform[2];
     readonly KinseiMotionStudy motion = new KinseiMotionStudy();
+    public Transform StreetShoe(bool left) => left ? leftShoe : rightShoe;
     public Transform LeftWrist => lh;
     Vector3 localEyeCenter = new Vector3(0,.105f,.075f);
     public Vector3 EyePosition => head.TransformPoint(localEyeCenter);
