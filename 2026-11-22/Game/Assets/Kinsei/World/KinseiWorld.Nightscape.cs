@@ -245,12 +245,15 @@ public sealed partial class KinseiWorld
             Quad(a,b,peak,peak,Vector3.right*end,new Rect(0,0,1,1));
         }
 
-        public void Block(Vector3 p,Vector3 size)
+        public void Block(Vector3 p,Vector3 size,float metresPerRepeat=0)
         {
             Vector3 x=Vector3.right*(size.x*.5f),y=Vector3.up*(size.y*.5f),z=Vector3.forward*(size.z*.5f);
             var r=new Rect(0,0,1,1);
+            if(metresPerRepeat>0)r.size=new Vector2(size.x,size.y)/metresPerRepeat;
             Face(p+z,x,y,r);Face(p-z,-x,y,r);
+            if(metresPerRepeat>0)r.size=new Vector2(size.z,size.y)/metresPerRepeat;
             Face(p+x,-z,y,r);Face(p-x,z,y,r);
+            if(metresPerRepeat>0)r.size=new Vector2(size.x,size.z)/metresPerRepeat;
             Face(p+y,x,-z,r);Face(p-y,x,z,r);
         }
 

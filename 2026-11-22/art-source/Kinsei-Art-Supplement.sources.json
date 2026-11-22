@@ -455,5 +455,142 @@
     "sha256": "4d960b3ab0bd2aebf168fc1935ae9172a17179a3b8934e65cbb42ccf08730c78",
     "source_kind": "Windows Player capture",
     "windows_zip_sha256": "b0c1e4f5898e12341041d8da682a8ad4a5a36bffde2129734320023eb1759eaf"
+  },
+  {
+    "figure": "west-front-study",
+    "file": "art-source/west-bath/bath-frontage.png",
+    "caption": "GPT Image 全景原画　暖簾の下に二人の湯客。二階にも明かりがともる。",
+    "crop": null,
+    "sha256": "2ee80ee0283ef339f967ca163277bc025a2e9e4facbaced9e8b0d1fa6fae6bde",
+    "source_kind": "GPT Image concept",
+    "prompt_file": "art-source/west-bath/frontage-prompt.txt"
+  },
+  {
+    "figure": "west-bridge-live",
+    "file": "evidence/v15/bridge-west15.png",
+    "caption": "Windows実機 v1.5　親柱の間から西岸の浴場を見る。",
+    "crop": null,
+    "sha256": "152638b3df1ce6621ac08c2bf4861cb84184652827d21c06e5da40fb100548d5",
+    "source_kind": "Windows Player capture",
+    "windows_zip_sha256": "f03c934064a9c03af6827df845f6e6f617ca05dd1bf4e3ea4ac3c6dd5a1d68db"
+  },
+  {
+    "figure": "west-front-live",
+    "file": "evidence/v15/bath-front-west15.png",
+    "caption": "Windows実機 v1.5　外壁の受像機、暖簾、牛乳箱。",
+    "crop": null,
+    "sha256": "96362558fe5ab5dd13e78d780588020c547b709f05862f2a3146fb41c1bbc37a",
+    "source_kind": "Windows Player capture",
+    "windows_zip_sha256": "f03c934064a9c03af6827df845f6e6f617ca05dd1bf4e3ea4ac3c6dd5a1d68db"
+  },
+  {
+    "figure": "west-moss-Tile",
+    "file": "art-source/west-bath/materials/Tile.png",
+    "caption": "MOSS 素材原画　青緑の釉薬",
+    "crop": null,
+    "sha256": "ab6a1819831c69386dae8f2afdd7424a267b66a7ecd684b49c4ca70f8cb69c8c",
+    "source_kind": "MOSS-Image material master",
+    "prompt_id": "feb02561-3736-4921-aeef-a0e54f1a5302",
+    "seed": 1502701
+  },
+  {
+    "figure": "west-moss-Terrazzo",
+    "file": "art-source/west-bath/materials/Terrazzo.png",
+    "caption": "MOSS 素材原画　洗い出し石の骨材",
+    "crop": null,
+    "sha256": "38c76ded0bab07f8cf487beeb4697aca5623e6e897409c63d55a9caee3110918",
+    "source_kind": "MOSS-Image material master",
+    "prompt_id": "f9f5855c-f9dc-419b-8836-745fde13290c",
+    "seed": 1502702
+  },
+  {
+    "figure": "west-moss-Noren",
+    "file": "art-source/west-bath/materials/Noren.png",
+    "caption": "MOSS 素材原画　葡萄色の木綿",
+    "crop": null,
+    "sha256": "fc57173378aae4d6aa1f75540e10b14761c46385d6370e32b26b7c49b39bdb14",
+    "source_kind": "MOSS-Image material master",
+    "prompt_id": "0e969830-aba9-4ac9-a45c-3f3f874f5921",
+    "seed": 1502703
+  },
+  {
+    "figure": "west-moss-Mat",
+    "file": "art-source/west-bath/materials/Mat.png",
+    "caption": "MOSS 素材原画　ゴムの畝",
+    "crop": null,
+    "sha256": "99c56c661b93c45c4288e4fd85d6a05a06f76804bb1d3031acd7cd3d961260d0",
+    "source_kind": "MOSS-Image material master",
+    "prompt_id": "64bcf77e-e294-4c11-9368-894041073750",
+    "seed": 1502704
+  },
+  {
+    "figure": "west-moss-Glass",
+    "file": "art-source/west-bath/materials/Glass.png",
+    "caption": "MOSS 素材原画　型板ガラス",
+    "crop": null,
+    "sha256": "c6c5b80e9ea39d4ece07bb0bc4c5fb2fe8c8048184afebc9ebd8c55fc5cc1ac0",
+    "source_kind": "MOSS-Image material master",
+    "prompt_id": "10f3266a-a7e6-47cd-b52e-00ba33b8bf06",
+    "seed": 1502705
+  },
+  {
+    "figure": "west-curtain-live",
+    "file": "evidence/v15/curtains-west15.png",
+    "caption": "Windows実機 v1.5・部分　壁の目地と、三枚の布にまたがる「ゆ」。",
+    "crop": [
+      0.05,
+      0.14,
+      0.95,
+      0.86
+    ],
+    "sha256": "9279349427320052ab66bdbef4b7ec53a4bed486d71d73665fda9aadf573f03d",
+    "source_kind": "Windows Player capture",
+    "windows_zip_sha256": "f03c934064a9c03af6827df845f6e6f617ca05dd1bf4e3ea4ac3c6dd5a1d68db"
+  },
+  {
+    "figure": "west-lobby-live",
+    "file": "evidence/v15/lobby-west15.png",
+    "caption": "Windows実機 v1.5　戸の型板ガラスと、靴を収めた番号付きの下足箱。",
+    "crop": null,
+    "sha256": "f7e10f5746e3177f8996c985f48128722d0c1e382d82f09ac2f8c6234f5c7550",
+    "source_kind": "Windows Player capture",
+    "windows_zip_sha256": "f03c934064a9c03af6827df845f6e6f617ca05dd1bf4e3ea4ac3c6dd5a1d68db"
+  },
+  {
+    "figure": "west-cast-study",
+    "file": "art-source/west-bath/residents-and-seo.png",
+    "caption": "GPT Image 衣装原画　左から文子、喜一、瀬尾。",
+    "crop": null,
+    "sha256": "bcbd58b9b23430770a95707107b7689cc070b2679452db8922169e52e28d646c",
+    "source_kind": "GPT Image concept",
+    "prompt_file": "art-source/west-bath/cast-prompt.txt"
+  },
+  {
+    "figure": "west-guests-live",
+    "file": "evidence/v15/cast-side-west15.png",
+    "caption": "Windows実機 v1.5・部分　喜一の洗面器と文子の籐籠。",
+    "crop": [
+      0.27,
+      0.13,
+      0.89,
+      0.92
+    ],
+    "sha256": "5c6e7d8c2daccd9e89041e38f931d2c7e8ecc4da3b51db2c7afcdb69cd3c3bb6",
+    "source_kind": "Windows Player capture",
+    "windows_zip_sha256": "f03c934064a9c03af6827df845f6e6f617ca05dd1bf4e3ea4ac3c6dd5a1d68db"
+  },
+  {
+    "figure": "west-crossing-live",
+    "file": "evidence/v15/bridge-walk-b-title15.png",
+    "caption": "Windows実機 v1.5・部分　橋を渡る二人。瀬尾は奥の西岸に残る。",
+    "crop": [
+      0,
+      0.11,
+      0.74,
+      0.94
+    ],
+    "sha256": "3d69ff3f13aede1799f6e3e97b9fb42b42b0a12ac63a7a04b7bcab1884f4d79c",
+    "source_kind": "Windows Player capture",
+    "windows_zip_sha256": "f03c934064a9c03af6827df845f6e6f617ca05dd1bf4e3ea4ac3c6dd5a1d68db"
   }
 ]

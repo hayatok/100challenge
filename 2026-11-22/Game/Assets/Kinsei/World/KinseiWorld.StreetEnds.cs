@@ -2,12 +2,12 @@ using UnityEngine;
 
 public sealed partial class KinseiWorld
 {
-    // These addresses are outside the playable street. Their floors have no collision.
+    // The western bridge and bath have matching walkable surfaces in BuildWestBath.
     sealed class StreetEnd
     {
         public readonly NightGeometry stone = new NightGeometry(), sheet = new NightGeometry(),
             timber = new NightGeometry(), window = new NightGeometry(), road = new NightGeometry(),
-            roof = new NightGeometry(), canal = new NightGeometry();
+            roof = new NightGeometry(), canal = new NightGeometry(), terrazzo = new NightGeometry();
 
         public void Block(NightGeometry g,float x,float y,float z,float w,float h,float d)
         { g.Block(new Vector3(x,y,z),new Vector3(w,h,d)); }
@@ -35,14 +35,21 @@ public sealed partial class KinseiWorld
             Pipe(sheet,x+w/2-.12f,y,z+d/2,x+w/2-.12f,.16f,z+d/2,.052f);
         }
 
-        public void House(float x,float z,float w,float d,int floors,int face,int variation)
+        public void House(float x,float z,float w,float d,int floors,int face,int variation,bool bath=false)
         {
             float h=2.8f*floors, front=z+d*.5f*face;
-            Block(stone,x,h/2,z,w,h,d);
+            if(bath)
+            {
+                // Preserve the original upper house over the recessed ground-floor vestibule.
+                Block(stone,x,(h+2.8f)/2,z,w,h-2.8f,d);
+                Block(stone,x,1.4f,z-1.16f,w,2.8f,d-2.32f);
+            }
+            else Block(stone,x,h/2,z,w,h,d);
             Roof(x,h+.06f,z,w+.58f,d+.68f,.65f+.16f*(variation%3));
             int bays=Mathf.Max(2,(int)(w/2.65f));
             for(int level=0;level<floors;level++)
             {
+                if(bath && level==0)continue;
                 float y=1.42f+level*2.8f;
                 for(int b=0;b<bays;b++)
                 {
@@ -84,17 +91,16 @@ public sealed partial class KinseiWorld
             Block(road,-30.85f,-.048f,-10.2f,6.18f,.074f,5.48f);
             foreach(float z in new[]{-12.93f,-7.47f})
             {
-                Block(stone,-30.85f,.065f,z,6.2f,.15f,.31f);
+                terrazzo.Block(new Vector3(-30.85f,.065f,z),new Vector3(6.2f,.15f,.31f),.20f);
                 for(int j=0;j<7;j++)
                 {
                     float x=-33.77f+j*.975f;
-                    Block(stone,x,.56f,z,.19f,.98f,.25f);
+                    terrazzo.Block(new Vector3(x,.56f,z),new Vector3(.19f,.98f,.25f),.20f);
                     Block(sheet,x,1.055f,z,.25f,.072f,.31f);
                 }
                 for(int j=0;j<3;j++)Pipe(sheet,-33.80f,.30f+j*.33f,z,-27.89f,.30f+j*.33f,z,.045f);
             }
             House(-25.1f,-3.6f,4.1f,4.2f,2,-1,0);
-            House(-39.2f,-17.15f,8.7f,5.3f,3,1,2);
             House(-41.4f,-3.3f,12.8f,6.1f,3,-1,1);
             House(-55.4f,-10.8f,8.1f,8.3f,4,1,3);
             // Laundry rails on the maisonette's recessed side, visible above the bridge.
@@ -107,8 +113,10 @@ public sealed partial class KinseiWorld
             }
             // Fire stair at the west tenement's east end, backed by an external landing.
             for(int i=0;i<16;i++)
-                Block(sheet,-34.63f,.16f+i*.17f,-19.4f+i*.24f,.96f,.10f,.27f);
-            Pipe(sheet,-34.18f,.98f,-19.4f,-34.18f,3.53f,-15.8f,.034f);
+                Block(sheet,-34.27f,.16f+i*.17f,-19.4f+i*.24f,.96f,.10f,.27f);
+            foreach(float side in new[]{-34.70f,-33.84f})
+                Pipe(sheet,side,.105f,-19.48f,side,2.655f,-15.88f,.039f);
+            Pipe(sheet,-33.82f,.98f,-19.4f,-33.82f,3.53f,-15.8f,.034f);
         }
 
         public void East()
@@ -198,11 +206,21 @@ public sealed partial class KinseiWorld
         foreach(int side in new[]{-1,1})
             e.Block(e.road,side*42f,-1.86f,-9.1f,40.25f,.40f,46f);
         var owner=nightAssets;
+        // In command view the residents and vestibule stay visible beneath the upper apartments.
+        var bathHouse=new StreetEnd();
+        bathHouse.House(-39.2f,-17.15f,8.7f,5.3f,3,1,2,true);
+        var upperBath=new GameObject("浴場の上階・指揮時断面").transform;
+        upperBath.SetParent(owner.Root,false);overhead.Add(upperBath.gameObject);
+        bathHouse.stone.Upload(upperBath,lime,owner);bathHouse.sheet.Upload(upperBath,zinc,owner);
+        bathHouse.timber.Upload(upperBath,sash,owner);bathHouse.window.Upload(upperBath,home,owner);
+        bathHouse.roof.Upload(upperBath,distant,owner);
         var water=owner.Keep(Mat("運河・青緑の水面","#395458",.42f,.81f));
         e.stone.Upload(owner.Root,lime,owner); e.sheet.Upload(owner.Root,zinc,owner);
         e.timber.Upload(owner.Root,sash,owner); e.window.Upload(owner.Root,home,owner);
         e.road.Upload(owner.Root,asphalt,owner); e.roof.Upload(owner.Root,distant,owner);
         e.canal.Upload(owner.Root,water,owner);
+        bathStone=BathFinish("橋と上がり框の洗出し","Terrazzo","#C2B8A5",.10f,.48f);
+        e.terrazzo.Upload(owner.Root,bathStone,owner);
         BuildStreetFixtures(water,zinc);
         Text("電器修理",new Vector3(26.75f,3.26f,-14.085f),.34f,cream,180f);
         Text("仕立",new Vector3(-19.79f,2.22f,-7.01f),.21f,cream,0);

@@ -1,0 +1,43 @@
+{
+  "prompt_id": "64bcf77e-e294-4c11-9368-894041073750",
+  "seed": 1502704,
+  "positive": "Straight-on cross-polarized material scan, uniform diffuse illumination. This is a texture for a game mesh, every pixel is the same surface, edge to edge, no object outline, no scene or cast shadow. Straight-down full-bleed macro scan of very dark grey-brown vulcanized rubber at an Osaka bathhouse threshold. Many narrow parallel fine traction ribs running vertically from top to bottom of the entire scan, no edge, one dull patch of sanded and flattened rib crests in the middle third where sandals turn each evening. Quiet small dry grit in a few grooves, no footprints, no lettering, no solid wet puddle.",
+  "negative": "text, inscription, picture frame, border, scene, ruler, label, hands, logo, hard reflection of scenery, horizon line, lens distortion, perspective, watermark",
+  "source": {
+    "filename": "west-mat_00001_.png",
+    "subfolder": "kinsei",
+    "type": "output"
+  },
+  "sha256": "99c56c661b93c45c4288e4fd85d6a05a06f76804bb1d3031acd7cd3d961260d0",
+  "status": "success",
+  "execution": [
+    [
+      "execution_start",
+      {
+        "prompt_id": "64bcf77e-e294-4c11-9368-894041073750",
+        "timestamp": 1795305850934
+      }
+    ],
+    [
+      "execution_cached",
+      {
+        "nodes": [
+          "1",
+          "2",
+          "3",
+          "5",
+          "6"
+        ],
+        "prompt_id": "64bcf77e-e294-4c11-9368-894041073750",
+        "timestamp": 1795305850936
+      }
+    ],
+    [
+      "execution_success",
+      {
+        "prompt_id": "64bcf77e-e294-4c11-9368-894041073750",
+        "timestamp": 1795305869648
+      }
+    ]
+  ]
+}

@@ -207,6 +207,7 @@ public sealed partial class KinseiWorld
     public void TickShops(float dt,Vector3 audience)
     {
         TickDawnTube(dt);
+        TickBathCurtain(dt,audience);
         if(!shopDoors[0])return;
         if(masterDisc && masterDisc.activeSelf)masterDisc.transform.Rotate(0,dt*200f,0,Space.Self);
         for(int i=0;i<shopDoors.Length;i++)

@@ -186,6 +186,7 @@ public sealed partial class KinseiSession : MonoBehaviour
 
     void PrepareVisit(bool finalNight,int morning)
     {
+        sound.ListenAtBath(false,Vector3.zero);
         sound.StopFloorYields();
         ClearDawn();
         portraitOwner=null;yieldingPortrait=null;
@@ -195,6 +196,7 @@ public sealed partial class KinseiSession : MonoBehaviour
         SetPerformance(true);
         boxOffice.SetCollected(false);
         boxOffice.SetTicketPress(0);
+        ResetWestDispute();
         ResetStreets();
         ResetRailRide();
         ResetBackstage();
@@ -262,8 +264,13 @@ public sealed partial class KinseiSession : MonoBehaviour
         float songSeconds=sound.MusicSeconds;
         club.PlayKeys(songSeconds,!showInterrupted,out var bassKey,out var melodyKey);
         performers.Tick(dt,songSeconds,bassKey,melodyKey);
-        bool streetView=!command && phase==Phase.Arrival && player.Position.z< -8.3f && player.Position.z> -14.2f && Mathf.Abs(player.Position.x-5.5f)<6.5f;
+        var bathInMap=command?cam.WorldToViewportPoint(KinseiWorld.BathSpeakerPosition):Vector3.back;
+        bool mapShowsBath=bathInMap.z>0 && bathInMap.x>=0 && bathInMap.x<=1 && bathInMap.y>=0 && bathInMap.y<=1;
+        bool streetView=phase==Phase.Arrival && (mapShowsBath || !command &&
+            ((player.Position.z< -8.3f && player.Position.z> -14.2f && Mathf.Abs(player.Position.x-5.5f)<6.5f) ||
+                KinseiWorld.WestBathInView(player.Position)));
         club.UpdateMarquee(!showInterrupted,streetView,Time.unscaledTime);
+        sound.ListenAtBath(!command && phase==Phase.Arrival && !finale && !AboveStreet,player.Position);
         foreach(var p in everyone)
         {
             float action=(p==player || p==brother || p==elder) && phase==Phase.Mirror?relayProgress:Mathf.Clamp01(1-(clock-p.lastAction)/.36f);
@@ -310,11 +317,16 @@ public sealed partial class KinseiSession : MonoBehaviour
         sound.Cue("dial"); Mark(command?"RTS":"TPS"); SetCamera(0);
     }
 
-    bool framingStageDesk, inspectingStageLevel;
+    bool framingStageDesk, inspectingStageLevel, insideBathCurtain;
 
     void SetCamera(float dt)
     {
         Vector3 eye, focus;
+        bool bathDoor=player!=null && !command && !AboveStreet && (phase==Phase.Arrival || InDawn) &&
+            player.Position.x> -43.8f && player.Position.x< -34.6f && player.Position.z>= -14.68f && player.Position.z< -11.2f;
+        bool inVestibule=player!=null && !command && !AboveStreet && (phase==Phase.Arrival || InDawn) &&
+            player.Position.x> -43.20f && player.Position.x< -35.20f && player.Position.z< -14.68f;
+        if(inVestibule!=insideBathCurtain){insideBathCurtain=inVestibule;snapCamera=true;}
         bool frameHands=InDawn && ticketActing && ticketAligned;
         bool deskShot=StageActive && stageFeedLive && clock>=stageBeatEnds-1.1f;
         bool seeLevel=StageActive && command && !StageSpeaking && stageDeskRunner!=null && Input.GetKey(KeyCode.C);
@@ -357,6 +369,18 @@ public sealed partial class KinseiSession : MonoBehaviour
             cam.orthographic=false;cam.fieldOfView=returnShot?39:40;
             eye=returnShot?new Vector3(.99f,4.59f,6.86f):new Vector3(-3.06f,1.57f,-2.18f);
             focus=returnShot?new Vector3(.22f,4.21f,7.70f):new Vector3(-3.05f,1.29f,-.12f);
+        } else if(insideBathCurtain){
+            cam.orthographic=false;cam.fieldOfView=70;
+            Quaternion yaw=Quaternion.Euler(0,angle,0);
+            Vector3 look=Quaternion.Euler(tilt,angle,0)*Vector3.forward;
+            var pivot=player.Position+Vector3.up*1.52f;
+            eye=pivot+yaw*new Vector3(.34f,.035f,-.76f);
+            eye.x=Mathf.Clamp(eye.x,-43.0f,-35.36f);
+            eye.z=Mathf.Clamp(eye.z,-16.47f,-14.77f);
+            var boom=eye-pivot;
+            if(Physics.SphereCast(pivot,.08f,boom.normalized,out var obstruction,boom.magnitude,~0,QueryTriggerInteraction.Ignore) && obstruction.collider!=motor)
+                eye=pivot+boom.normalized*Mathf.Max(.08f,obstruction.distance-.075f);
+            focus=eye+look*3;
         } else if(railPlace==RailPlace.Coach || railPlace==RailPlace.Lift) {
             // Keep the camera inside the saloon instead of putting the roof between lens and rider.
             cam.orthographic=false;cam.fieldOfView=67;
@@ -383,7 +407,7 @@ public sealed partial class KinseiSession : MonoBehaviour
             Vector3 look=Quaternion.Euler(tilt,angle,0)*Vector3.forward;
             Vector3 right=Quaternion.Euler(0,angle,0)*Vector3.right;
             Vector3 shoulder=player.Position+Vector3.up*1.53f+right*.49f;
-            if(player.Position.x< -8.5f && player.Position.z> -8f) {
+            if(bathDoor || player.Position.x< -8.5f && player.Position.z> -8f) {
                 var pivot=player.Position+Vector3.up*1.53f;
                 if(Physics.SphereCast(pivot,.12f,right,out var shoulderHit,.49f,~0,QueryTriggerInteraction.Ignore))
                     shoulder=pivot+right*Mathf.Max(0,shoulderHit.distance-.025f);
@@ -396,12 +420,22 @@ public sealed partial class KinseiSession : MonoBehaviour
         }
         if(snapCamera || dt<=0) {cam.transform.position=eye; viewVelocity=Vector3.zero;}
         else cam.transform.position=Vector3.SmoothDamp(cam.transform.position,eye,ref viewVelocity,.085f,80f,dt);
+        if(bathDoor) {
+            // Rotation can sweep the damped camera through the projecting CRT between two clear positions.
+            var pivot=player.Position+Vector3.up*1.53f;
+            var boom=cam.transform.position-pivot;
+            if(Physics.SphereCast(pivot,.12f,boom.normalized,out var face,boom.magnitude,~0,QueryTriggerInteraction.Ignore) && face.collider!=motor) {
+                cam.transform.position=pivot+boom.normalized*Mathf.Max(.02f,face.distance-.045f);
+                viewVelocity=Vector3.zero;
+            }
+        }
         cam.transform.LookAt(focus); snapCamera=false;
     }
 
     void End(string id,string title,string body)
     {
         if(phase==Phase.Result || InDawn)return;
+        sound.ListenAtBath(false,Vector3.zero);
         ClearStageWitness();
         ClearFloorAssignments();sound.StopFloorYields();
         floorGuardReport=FloorGuardReport();

@@ -121,12 +121,13 @@ public sealed partial class KinseiActor : MonoBehaviour
         ll=Leg(-1,out lk,out leftShoe); rl=Leg(1,out rk,out rightShoe);
         if(boss) body.localScale=V(1.10f,1,1.10f);
         if(role=="brother") transform.localScale*=.988f;
-        UpgradeSkin(boss,makabe,kaji,variant);
+        UpgradeWestSkin(boss,makabe,kaji,variant);
         ApplyHallWardrobe(role,variant);
         BuildSidearm();
         MergeSurfaces(transform);
         KinseiWardrobeBinding.Dress(gameObject, role, variant);
         DressHallTailoring(role,variant);
+        DressWestBath(role,variant);
     }
     Transform Arm(int side,out Transform elbow,out Transform hand)
     {
@@ -540,6 +541,7 @@ public sealed partial class KinseiActor : MonoBehaviour
             if(state=="stage-testimony")PoseTestimonyFace(stateTime);
             if(state=="floor-yield")PoseHallYieldFace(stateTime);
         }
+        PoseWestBath(state,speed);
     }
 
     void PlantGuardFoot(Transform hip,Transform knee,Transform ankle,int side,int lead)

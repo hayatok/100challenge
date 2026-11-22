@@ -1,0 +1,17 @@
+{
+  "Fumiko": {
+    "vertices": 9795,
+    "triangles": 12174,
+    "removed_island_vertices": 2504
+  },
+  "Kiichi": {
+    "vertices": 9795,
+    "triangles": 12174,
+    "removed_island_vertices": 2504
+  },
+  "Seo": {
+    "vertices": 6021,
+    "triangles": 9066,
+    "removed_island_vertices": 528
+  }
+}

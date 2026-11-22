@@ -166,6 +166,7 @@ public sealed partial class KinseiSession
     }
     void Attack(bool melee,bool mouse)
     {
+        if(melee && westDuel && WestAvailable){ReplyWest();return;}
         if(StageActive) { if(melee)StageAttack(); return; }
         if(clock<shootDelay || (phase!=Phase.Floor && phase!=Phase.Chase))return;
         var target=Pick(mouse,melee);
@@ -206,7 +207,7 @@ public sealed partial class KinseiSession
         Vector2 shift=new Vector2((Input.GetKey(KeyCode.D)?1:0)-(Input.GetKey(KeyCode.A)?1:0),
             (Input.GetKey(KeyCode.W)?1:0)-(Input.GetKey(KeyCode.S)?1:0));
         mapOffset+=shift.normalized*(7*Time.deltaTime);
-        mapOffset.x=Mathf.Clamp(mapOffset.x,-19f,19f);mapOffset.y=Mathf.Clamp(mapOffset.y,-20.5f,4.5f);
+        mapOffset.x=Mathf.Clamp(mapOffset.x,-43f,19f);mapOffset.y=Mathf.Clamp(mapOffset.y,-20.5f,4.5f);
         chartSize=Mathf.Clamp(chartSize-Input.mouseScrollDelta.y*.9f,6.7f,16.2f);
         bool extend=Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
         for(int i=0;i<crew.Count;i++)
@@ -281,6 +282,7 @@ public sealed partial class KinseiSession
         if(duty==Duty.BoxOffice)
             foreach(var colleague in crew)
                 if(colleague!=p && colleague.duty==Duty.BoxOffice)colleague.duty=Duty.Follow;
+        ReleaseWestEscort(p);
         ForgetGuard(p);
         p.duty=duty; p.destination=destination;p.path=null;
         if(duty==Duty.Backstage)Say(p.name+"が楽屋口で通し札を預かる");

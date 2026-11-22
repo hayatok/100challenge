@@ -8,6 +8,9 @@ public sealed class KinseiSound : MonoBehaviour
     public static float SfxGain = .8f;
     public static float AmbientGain = .3f;
     AudioSource music, room, stageVoice;
+    AudioHighPassFilter bathHighPass;
+    AudioLowPassFilter bathLowPass;
+    float bathListening;
     readonly AudioSource[] floorSpeakers=new AudioSource[2];
     readonly AudioSource[] voices = new AudioSource[6];
     readonly Dictionary<string, AudioClip[]> clips = new();
@@ -24,6 +27,11 @@ public sealed class KinseiSound : MonoBehaviour
         if(paused || unfocused)music.Pause();
     }
     public void QuietStage(bool quiet) { stageQuiet=quiet; }
+    public void ListenAtBath(bool onStreet,Vector3 listener)
+    {
+        float distance=onStreet?Vector3.Distance(listener,KinseiWorld.BathSpeakerPosition):12f;
+        bathListening=1-Mathf.SmoothStep(0,1,Mathf.InverseLerp(3.2f,11.5f,distance));
+    }
     float duckUntil;
     readonly float[] meterSamples = new float[128];
     float nextMeterSample, meterTarget, meterReading;
@@ -45,6 +53,10 @@ public sealed class KinseiSound : MonoBehaviour
     void Awake()
     {
         music = MakeSource("Cabaret waltz", 120);
+        music.transform.position=KinseiWorld.BathSpeakerPosition;
+        music.dopplerLevel=0;music.minDistance=4;music.maxDistance=18;music.rolloffMode=AudioRolloffMode.Linear;
+        bathHighPass=music.gameObject.AddComponent<AudioHighPassFilter>();bathHighPass.highpassResonanceQ=1;
+        bathLowPass=music.gameObject.AddComponent<AudioLowPassFilter>();bathLowPass.lowpassResonanceQ=1;
         room = MakeSource("Room tone", 180);
         stageVoice=MakeSource("金星の舞台中継",45);
         stageVoice.clip=Resources.Load<AudioClip>("KinseiAudio/stage-testimony");
@@ -82,6 +94,14 @@ public sealed class KinseiSound : MonoBehaviour
     void ApplyLevels()
     {
         if(music==null)return;
+        // The same sample clock drives the keys, the screen and the speaker at the bath entrance.
+        float speaker=Mathf.MoveTowards(music.spatialBlend,bathListening,Time.unscaledDeltaTime*3);
+        music.spatialBlend=speaker;
+        bathHighPass.enabled=bathLowPass.enabled=speaker>.002f;
+        if(bathLowPass.enabled){
+            bathHighPass.cutoffFrequency=Mathf.Lerp(10,215,speaker);
+            bathLowPass.cutoffFrequency=21000*Mathf.Pow(3400f/21000f,speaker);
+        }
         float duck=dialogue ? .38f : Time.unscaledTime<duckUntil ? .48f : 1f;
         float level=stageQuiet?0:Mathf.Clamp01(MusicGain)*.38f*duck;
         music.volume=Mathf.MoveTowards(music.volume,level,Time.unscaledDeltaTime*.7f);

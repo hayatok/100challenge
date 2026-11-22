@@ -62,6 +62,7 @@ public sealed partial class KinseiWorld
 
     void SetStreetFixtureDay(bool day)
     {
+        SetBathDay(day);
         if(!pierDiffuser)return;
         foreach(var lamp in streetPracticalLights)if(lamp)lamp.enabled=!day;
         pierDiffuser.SetColor("_EmissionColor",day?Color.black:new Color(.90f,.63f,.31f));

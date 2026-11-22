@@ -1,0 +1,43 @@
+{
+  "prompt_id": "0e969830-aba9-4ac9-a45c-3f3f874f5921",
+  "seed": 1502703,
+  "positive": "Straight-on cross-polarized material scan, uniform diffuse illumination. This is a texture for a game mesh, every pixel is the same surface, edge to edge, no object outline, no scene or cast shadow. An eight-centimetre square macro scan cut from the undisturbed middle of a Japanese bathhouse noren, deep aubergine purple, plain-weave indigo-red dyed medium weight cotton. Horizontal weft and vertical warp threads cross evenly, thread-level muted variation and a few pale slubs. Flat textile laid on scanner, no lettering, no seams, no folds, no gesture of lighting. Purple rather than bright pink.",
+  "negative": "text, inscription, picture frame, border, scene, ruler, label, hands, logo, hard reflection of scenery, horizon line, lens distortion, perspective, watermark",
+  "source": {
+    "filename": "west-noren_00001_.png",
+    "subfolder": "kinsei",
+    "type": "output"
+  },
+  "sha256": "fc57173378aae4d6aa1f75540e10b14761c46385d6370e32b26b7c49b39bdb14",
+  "status": "success",
+  "execution": [
+    [
+      "execution_start",
+      {
+        "prompt_id": "0e969830-aba9-4ac9-a45c-3f3f874f5921",
+        "timestamp": 1795305830740
+      }
+    ],
+    [
+      "execution_cached",
+      {
+        "nodes": [
+          "1",
+          "2",
+          "3",
+          "5",
+          "6"
+        ],
+        "prompt_id": "0e969830-aba9-4ac9-a45c-3f3f874f5921",
+        "timestamp": 1795305830741
+      }
+    ],
+    [
+      "execution_success",
+      {
+        "prompt_id": "0e969830-aba9-4ac9-a45c-3f3f874f5921",
+        "timestamp": 1795305848982
+      }
+    ]
+  ]
+}

@@ -24,7 +24,7 @@ def rule(y):c.setStrokeColor(HexColor('#B6A796'));c.line(32,H-y,928,H-y)
 def start(n,title,sub):
     c.setFillColor(HexColor(bg));c.rect(0,0,W,H,fill=1,stroke=0)
     txt(32,18,'金星の一夜　　宵待町 美術制作資料',12,'Min',red)
-    txt(765,19,'ホールと実況卓　／　補遺' if n>=31 else '舞台と町内中継　／　補遺' if n>=27 else '高架線と翌朝　／　補遺',12,'Goth',muted);rule(46)
+    txt(765,19,'運河橋と西の湯　／　補遺' if n>=34 else 'ホールと実況卓　／　補遺' if n>=31 else '舞台と町内中継　／　補遺' if n>=27 else '高架線と翌朝　／　補遺',12,'Goth',muted);rule(46)
     txt(32,58,title,30,'Min');txt(34,107,sub,13,'Goth',muted,890)
     c.bookmarkPage(str(n));c.addOutlineEntry(title,str(n))
 def end(n,foot):
@@ -161,4 +161,39 @@ for entry in used:
         entry['source_kind']='Offline rendering of model geometry'
     elif tag in ('hall-kontani-live','hall-ura-live','hall-console-live'):
         entry.update(source_kind='Windows Player capture',windows_zip_sha256='b0c1e4f5898e12341041d8da682a8ad4a5a36bffde2129734320023eb1759eaf')
+start(34,'運河橋を渡って、西の湯へ','橋の先に葡萄色の暖簾と青緑の袖壁が見える。原画では入口の右にあった受像機が、実機では左の壁に収まり、金星の舞台を映す。')
+fig('west-front-study',A+'west-bath/bath-frontage.png','GPT Image 全景原画　暖簾の下に二人の湯客。二階にも明かりがともる。',32,164,487,274)
+fig('west-bridge-live',E+'v15/bridge-west15.png','Windows実機 v1.5　親柱の間から西岸の浴場を見る。',541,139,387,180)
+fig('west-front-live',E+'v15/bath-front-west15.png','Windows実機 v1.5　外壁の受像機、暖簾、牛乳箱。',541,361,387,180)
+txt(33,490,'湯客を迎える入口',19,'Min')
+txt(33,525,'親柱に残る淡い石の色と、暖簾の白い「ゆ」を両方の画面で追える。',12,'Goth',ink,496)
+end(34,'左は舞台美術を決めるための原画。右は西橋の歩行経路と、実際に立ち寄れる銭湯の正面。')
+
+start(35,'玄関の釉薬、橋の骨材、暖簾の織り','玄関の焼き物、橋の石、暖簾の布、足元のゴム。さらに脱衣場への戸四枚と番台窓には、葉脈のような筋が流れる型板ガラスを使った。')
+for key,caption,x in [('Tile','青緑の釉薬',32),('Terrazzo','洗い出し石の骨材',214),('Noren','葡萄色の木綿',396),('Mat','ゴムの畝',578),('Glass','型板ガラス',760)]:
+    fig('west-moss-'+key,A+'west-bath/materials/'+key+'.png','MOSS 素材原画　'+caption,x,144,168,151)
+fig('west-curtain-live',E+'v15/curtains-west15.png','Windows実機 v1.5・部分　壁の目地と、三枚の布にまたがる「ゆ」。',32,337,438,204,(.05,.14,.95,.86))
+fig('west-lobby-live',E+'v15/lobby-west15.png','Windows実機 v1.5　戸の型板ガラスと、靴を収めた番号付きの下足箱。',491,337,437,204)
+end(35,'原画はそれぞれ1024角。実装用の色画像は原本の両端40ピクセルをなじませ、反復したときの境目を抑えた。')
+
+start(36,'湯籠を提げる文子と、洗面器を持つ喜一','文子は深緑のカーディガンに籐籠、喜一は茶の作業着に薄青の洗面器。西岸で二人を引き留める瀬尾には、オリーブがかった背広を着せた。')
+fig('west-cast-study',A+'west-bath/residents-and-seo.png','GPT Image 衣装原画　左から文子、喜一、瀬尾。',32,152,491,286)
+fig('west-guests-live',E+'v15/cast-side-west15.png','Windows実機 v1.5・部分　喜一の洗面器と文子の籐籠。',540,142,388,195,(.27,.13,.89,.92))
+fig('west-crossing-live',E+'v15/bridge-walk-b-title15.png','Windows実機 v1.5・部分　橋を渡る二人。瀬尾は奥の西岸に残る。',540,372,388,177,(0,.11,.74,.94))
+txt(33,491,'手と持ち物',18,'Min')
+txt(33,523,'文子の右手から籠が下がり、喜一の左手が洗面器の縁を支える。',12,'Goth',ink,505)
+end(36,'衣装は三人の体に合わせて仕立てたスキンメッシュ。籠にはタオルと石鹸箱、洗面器には折ったタオルを入れた。')
+
+for entry in used:
+    tag=entry['figure']
+    if tag in ('west-front-study','west-cast-study'):
+        prompt='frontage-prompt.txt' if tag=='west-front-study' else 'cast-prompt.txt'
+        entry.update(source_kind='GPT Image concept',prompt_file=A+'west-bath/'+prompt)
+    elif tag.startswith('west-moss-'):
+        record=json.loads((root/entry['file']).with_suffix('.json').read_text(encoding='utf-8'))
+        assert entry['sha256']==record['sha256'],tag
+        entry.update(source_kind='MOSS-Image material master',prompt_id=record['prompt_id'],seed=record['seed'])
+    elif tag.startswith('west-') and tag.endswith('-live'):
+        entry.update(source_kind='Windows Player capture',windows_zip_sha256='f03c934064a9c03af6827df845f6e6f617ca05dd1bf4e3ea4ac3c6dd5a1d68db')
+
 c.save();out.with_suffix('.sources.json').write_text(json.dumps(used,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')

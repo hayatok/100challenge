@@ -77,6 +77,7 @@ public sealed partial class KinseiSession
 
     void Assign(Duty duty,Vector3 destination=default)
     {
+        if(command && duty==Duty.Attend && WestCanOrder){OrderWestEscorts();return;}
         int members=SelectedMembers;
         int count=CountMembers(members);
         if(count==0){Say("動ける組員を選んでください");return;}
@@ -132,7 +133,7 @@ public sealed partial class KinseiSession
         void OrderButton(Duty duty,string caption)
         {
             Rect rect=new Rect(x,y,width,44);x+=width+6;
-            if(count>1 && !GroupOrder(duty)){
+            if(count>1 && !GroupOrder(duty) && !(WestCanOrder && duty==Duty.Attend && count==2)){
                 Letter(rect,caption,16,new Color(.88f,.85f,.80f),false,TextAnchor.MiddleCenter);
                 Block(new Rect(rect.x,rect.yMax-1,rect.width,1),rule);
                 if(GUI.Button(rect,GUIContent.none,GUIStyle.none))Assign(duty);
@@ -143,7 +144,7 @@ public sealed partial class KinseiSession
         OrderButton(Duty.Follow,"随行　F");
         OrderButton(Duty.Guard,"持ち場　G");
         OrderButton(Duty.Rest,"休息　R");
-        OrderButton(Duty.Attend,finale?FinaleOrderLabel:"梶の席へ　E");
+        OrderButton(Duty.Attend,WestCanOrder?WestOrderLabel:finale?FinaleOrderLabel:"梶の席へ　E");
         if(!finale)OrderButton(Duty.BoxOffice,"伝票　T");
         if(CanOrderStageWitness)OrderButton(Duty.StageWitness,count==1 && crew[FirstMember(mask)]==stageWitness?"立会取消　V":"舞台立会　V");
         if(CanOrderBackstage)OrderButton(Duty.Backstage,count==1 && crew[FirstMember(mask)].duty==Duty.Backstage?"札口取消　B":"楽屋口　B");

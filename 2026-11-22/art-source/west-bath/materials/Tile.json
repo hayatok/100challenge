@@ -1,0 +1,37 @@
+{
+  "prompt_id": "feb02561-3736-4921-aeef-a0e54f1a5302",
+  "seed": 1502701,
+  "positive": "Straight-on cross-polarized material scan, uniform diffuse illumination. This is a texture for a game mesh, every pixel is the same surface, edge to edge, no object outline, no scene or cast shadow. A tightly cropped patch of one single sea-green glazed ceramic tile from a well-kept 1969 Osaka public bath entrance. Inside the tile surface only. Soft cool jade green with a little celadon mottling and faint darker green pooling, tiny irregular hairline crazing in the fired glaze which only becomes visible from close up. No grout, no other tiles, no sharp highlights, no cracks through the body. The quality of fired hand-dipped glaze.",
+  "negative": "text, inscription, picture frame, border, scene, ruler, label, hands, logo, hard reflection of scenery, horizon line, lens distortion, perspective, watermark",
+  "source": {
+    "filename": "west-tile_00001_.png",
+    "subfolder": "kinsei",
+    "type": "output"
+  },
+  "sha256": "ab6a1819831c69386dae8f2afdd7424a267b66a7ecd684b49c4ca70f8cb69c8c",
+  "status": "success",
+  "execution": [
+    [
+      "execution_start",
+      {
+        "prompt_id": "feb02561-3736-4921-aeef-a0e54f1a5302",
+        "timestamp": 1795305784409
+      }
+    ],
+    [
+      "execution_cached",
+      {
+        "nodes": [],
+        "prompt_id": "feb02561-3736-4921-aeef-a0e54f1a5302",
+        "timestamp": 1795305784411
+      }
+    ],
+    [
+      "execution_success",
+      {
+        "prompt_id": "feb02561-3736-4921-aeef-a0e54f1a5302",
+        "timestamp": 1795305809141
+      }
+    ]
+  ]
+}

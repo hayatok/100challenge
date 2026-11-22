@@ -13,6 +13,7 @@ public sealed partial class KinseiSession
 
     static Vector3 StreetBounds(Vector3 point)
     {
+        if(point.x< -21.6f)return KinseiWorld.WestStreetBounds(point);
         point.z=Mathf.Clamp(point.z,-20.5f,8.55f);
         if(point.x< -8.62f && point.x>=-12.3f && point.z>=-8.3f && point.z<=2.85f)
             return point;

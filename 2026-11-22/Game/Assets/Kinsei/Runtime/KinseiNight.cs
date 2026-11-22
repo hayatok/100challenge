@@ -4,6 +4,7 @@ public sealed partial class KinseiSession
 {
     void Change(Phase next)
     {
+        if(phase==Phase.Arrival && next!=phase)CloseWestDispute();
         if(phase==Phase.Floor && next!=phase)ClearFloorAssignments();
         if(next==Phase.Mirror || next==Phase.Showdown || next==Phase.Chase)sound.StopFloorYields();
         phase=next; phaseAge=0; lockedTarget=null; Mark("phase-"+next);
@@ -13,13 +14,14 @@ public sealed partial class KinseiSession
     void Simulate(float dt)
     {
         if(StageActive) { SimulateStage(dt); return; }
+        TickWestDispute(dt);
         TickBackstage(dt);
         if(phase==Phase.Arrival && player.Position.z> -6.75f && Mathf.Abs(player.Position.x)<8.5f) {
             bool fromWing=backstageTravel>=1 && player.Position.x< -7.5f;
             ReleaseBackstagePost();
             if(fromWing)Mark("backstage-entry");
             Change(Phase.Floor); entranceTime=clock;
-            Say("梶の連れが二階に四人。辰なら話をつけられる",4.1f); sound.Cue("door");
+            Say(westRelieved!=null?"浜口は席に残った。二階の加勢は三人や":"梶の連れが二階に四人。辰なら話をつけられる",4.1f); sound.Cue("door");
         }
         // The same cast advances under both cameras.
         for(int i=0;i<crew.Count;i++) UpdateCrew(crew[i],i,dt);
@@ -67,7 +69,7 @@ public sealed partial class KinseiSession
             }
         } else if(phase==Phase.Release) {
             if(elder.Position.z< -8.85f && brother.Position.z< -8.5f) {
-                End("accord","兄弟を帰した夜","梶は弟の肩を抱いて四人と店を出た。辰が真壁の隣に戻る。兄貴分との決着は持ち越した。");return;
+                End("accord","兄弟を帰した夜",westRelieved!=null?"浜口は席に残り、梶は弟の肩を抱いて三人と店を出た。辰が真壁の隣に戻る。":"梶は弟の肩を抱いて四人と店を出た。辰が真壁の隣に戻る。兄貴分との決着は持ち越した。");return;
             }
         }
         UpdateStageWitness(dt);
@@ -82,6 +84,7 @@ public sealed partial class KinseiSession
             if(index==0){held=false;talkProgress=0;}
             Motion(p,"fall");return;
         }
+        if(WestEscortIndex(p)>=0)return;
         if(p.duty==Duty.Designated && UpdateDesignated(p,index,dt))return;
         if(p.duty==Duty.Backstage) {
             if(!AtBackstagePost(p))MovePerson(p,BackstagePost,3.1f,dt);
@@ -102,7 +105,7 @@ public sealed partial class KinseiSession
                 Vector3 ash=club.SetAshtray(Mathf.InverseLerp(.65f,1.65f,talkProgress));
                 p.actor.SetConversationTargets(elder.Position+Vector3.up*1.18f,ash);
                 elder.actor.SetConversationTargets(p.Position+Vector3.up*1.18f,ash);
-                if(!held && talkProgress>.55f) {held=true;Say("梶「弟の顔、ここに映してくれたら四人とも引かす」",5);Mark("kaji-held");}
+                if(!held && talkProgress>.55f) {held=true;Say(westRelieved!=null?"梶「浜口はもう引いた。弟の顔を見たら残りの三人も引かす」":"梶「弟の顔、ここに映してくれたら四人とも引かす」",5);Mark("kaji-held");}
             }
             return;
         }
@@ -111,13 +114,18 @@ public sealed partial class KinseiSession
             // A staggered grouping leaves the shoulder camera and the doorway open.
             var offset=new Vector3(index%2==0?-1.75f:1.75f,0,-1.7f-(index/2)*1.05f);
             at=player.Position+offset;
-            if(player.Position.z < -14.1f) {
+            if(!AboveStreet && player.Position.x< -21.6f){
+                // On a narrow bridge the group follows along the deck. Leave the bath's doorway to its customers.
+                at=player.Position.x< -34
+                    ?new Vector3(-34.65f-index/2*1.10f,0,-8.25f-index%2*1.08f)
+                    :player.Position+new Vector3(1.75f+index/2*1.08f,0,index%2==0?.79f:-.79f);
+            }else if(player.Position.z < -14.1f) {
                 float shopFront=AboveStreet?KinseiWorld.LiftX(railStop):Mathf.Clamp(Mathf.Round(player.Position.x/16f)*16f,-16f,16f);
                 at=new Vector3(shopFront+(index%2==0?-1:1)*(1.6f+index/2*.78f),0,-13.1f+index/2*.3f);
             }
-            if(player.Position.x< -9f && player.Position.z> -8.7f)
+            if(player.Position.x>=-21.6f && player.Position.x< -9f && player.Position.z> -8.7f)
                 at=new Vector3(-10.95f+(index%2)*.65f,0,Mathf.Max(-9f,player.Position.z-1.8f-index/2*.7f));
-            else if(player.Position.z< -6.3f && player.Position.z> -9)at.x=Mathf.Clamp(at.x,-.95f,.95f);
+            else if(player.Position.x>=-21.6f && player.Position.z< -6.3f && player.Position.z> -9)at.x=Mathf.Clamp(at.x,-.95f,.95f);
             at=StreetBounds(at);
         }
         if(Vector3.Distance(p.Position,at)>.25f) {MovePerson(p,at,p.duty==Duty.Rest?3.6f:3.1f,dt);return;}
@@ -157,7 +165,7 @@ public sealed partial class KinseiSession
         if(held) {Face(elder,crew[0].Position); Motion(elder,"talk");}
         else Motion(elder,"sit");
         for(int i=0;i<upstairs.Count;i++) {
-            var p=upstairs[i]; if(p.hp<=0){Motion(p,"fall");continue;}
+            var p=upstairs[i]; if(p==westRelieved){Motion(p,"sit");continue;} if(p.hp<=0){Motion(p,"fall");continue;}
             if(!held && (phase==Phase.Floor || phase==Phase.Choice || phase==Phase.Chase) && clock-entranceTime>(ledger.kajiPromise?32:25)+(playedRecord?14:0)+i) {
                 if(p.Position.y>.05f || p.Position.z>1.9f)
                     MovePerson(p,new Vector3((i-1.5f)*1.4f,0,.9f),2.25f,dt);
@@ -219,6 +227,7 @@ public sealed partial class KinseiSession
         if(finale)return FinaleVerb();
         string rail=RailVerb();if(AboveStreet || rail.Length>0)return rail;
         if(InDawn)return DawnVerb();
+        if(WestCanChallenge)return WestChallenge;
         if(CanPullBackstage)return BackstageVerb;
         if(phase==Phase.Arrival && StreetContact(out int shop,out string words))
             return StreetVerb(shop,words);
@@ -241,6 +250,7 @@ public sealed partial class KinseiSession
         if(verb.Length>0 && verb==RailVerb()){UseRail(verb);return;}
         if(AboveStreet)return;
         if(InDawn){DawnInteract();return;}
+        if(verb==WestChallenge){StartWestChallenge();return;}
         if(verb==BackstageVerb){BeginBackstagePull();return;}
         if(phase==Phase.Arrival && StreetContact(out int shop,out string words)){VisitShop(shop,words);return;}
         if(verb=="金星の売上伝票を預かる"){ClaimHouse();return;}

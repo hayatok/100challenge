@@ -92,6 +92,8 @@ public sealed partial class KinseiSession
     void ReturnToTitle()
     {
         if(paused) TogglePause();
+        sound.ListenAtBath(false,Vector3.zero);
+        CloseWestDispute();
         ClearFloorAssignments();sound.StopFloorYields();
         if(InDawn)ClearDawn();else ResetRailRide();
         portraitOwner=null;neighbours.EndCounterLine(clock);
@@ -135,9 +137,10 @@ public sealed partial class KinseiSession
 
     string Objective()
     {
+        if(WestNearby && westSeo!=null)return WestObjective();
         if(finale)return FinaleObjective();
         switch(phase) {
-            case Phase.Arrival:return "金星へ入る。向かいの三店には先に寄れる";
+            case Phase.Arrival:return "金星へ入る。向かいの三店や西の運河橋にも寄れる";
             case Phase.Floor:return held?"梶の連れは待機中。弟と用心棒を制圧せよ":"弟と用心棒を制圧せよ。辰は二階の梶の席へ";
             case Phase.Choice:return escorted?"弟をホール左手の中継鏡へ連れて行く":escapeTime>0?"弟に肩を貸すか、舞台袖の兄貴分を追う":"弟に肩を貸し、二階の梶に顔を見せる";
             case Phase.Chase:return "舞台袖で兄貴分との決着をつける";
@@ -148,6 +151,7 @@ public sealed partial class KinseiSession
     }
     string DutyName(Person p)
     {
+        int guest=WestEscortIndex(p);if(guest>=0)return guest==0?"文子の迎え":"喜一の迎え";
         if(p.hp<=0)return "行動不能";
         if(p.duty==Duty.Designated && p.assignedGuard!=null)return GuardName(p.assignedGuard)+"を担当";
         if(StageActive && p==stageWitness)return "立会中";
@@ -206,6 +210,8 @@ public sealed partial class KinseiSession
             var counter=shopView==ShopView.None?NearbyCounter():shopView;
             if(counter!=ShopView.None)hints=shopView==ShopView.None?"C　"+ShopViewLabel(counter)+"を見る　　Tab　組員を指揮":ShopViewLabel(counter)+"　　C　元の視点へ　　Tab　組員を指揮";
             string railHint=RailHint();if(railHint.Length>0)hints=railHint;
+            if(WestNearby && westSeo!=null)hints=westDuel?"WASD　かわす　　F　返す　　Tab　組員を指揮":
+                "WASD　移動　　右ドラッグ　視点　　Tab　組員を指揮";
             if(PortraitHint.Length>0)hints="E　話す　　"+PortraitHint;
             if(yieldingPortrait!=null)hints=GuardName(yieldingPortrait)+"　　Z を離して真壁に戻る";
             else if(NearbyYieldingGuard() is Person nearbyGuard)hints="Z 長押し　"+GuardName(nearbyGuard)+"を見る　　Tab　組員を指揮";
@@ -283,11 +289,13 @@ public sealed partial class KinseiSession
             bool inFocus=Mathf.Abs(screen.x-.5f)<.12f && Mathf.Abs(screen.y-.52f)<.21f;
             if(!command && upstairs.Contains(p) && !inFocus)continue;
             bool named=IsHallGuard(p) && HasGuardOrder(p);
-            bool label=(IsHallGuard(p) && (command || named || p.floorYielded)) || chosenCrew || (!command && (inFocus || p==brother || p==stageWitness || (p==boss && phase>=Phase.Choice) || (p==crew[0] && held)));
-            Color tint=ally?mint:(p==elder || (p==brother && phase==Phase.Choice) || (p==boss && phase!=Phase.Chase))?gold:red;
+            bool westContact=p==westSeo || p==westGuests[0] || p==westGuests[1];
+            bool label=(command && WestNearby && westContact) || (IsHallGuard(p) && (command || named || p.floorYielded)) || chosenCrew || (!command && (inFocus || p==brother || p==stageWitness || (p==boss && phase>=Phase.Choice) || (p==crew[0] && held)));
+            Color tint=ally || p==westGuests[0] || p==westGuests[1]?mint:(p==elder || (p==brother && phase==Phase.Choice) || (p==boss && phase!=Phase.Chase))?gold:red;
             float x=screen.x*hudW,y=(1-screen.y)*hudH;
             if(label) {
                 string name=p.name;
+                if(command && westContact)name=p==westSeo?"瀬尾":p==westGuests[0]?"文子":"喜一";
                 if(IsHallGuard(p)){
                     if(p.floorYielded)name=GuardName(p)+"　降参";
                     else if(named)name=GuardName(p)+(p.flinchUntil>clock?"　ひるみ":"　指名中");

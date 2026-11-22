@@ -49,6 +49,7 @@ public sealed partial class KinseiWorld : MonoBehaviour
         Shell(); Floor(); Stage(); Furniture(); Balcony(); Entry(); BuildDistrict(); Mirror(); Lighting();
         BuildNightscape();
         BuildMarquee();
+        BuildWestBath();
         BatchArchitecture();
         ReleaseVeneerSources();
     }
@@ -247,7 +248,7 @@ public sealed partial class KinseiWorld : MonoBehaviour
         if(signFont){t.font=signFont;go.GetComponent<MeshRenderer>().sharedMaterial=signInk;}
     }
     void RefreshTypeface(Font font) { if(font==signFont && signInk)signInk.mainTexture=font.material.mainTexture; }
-    void OnDestroy() {LeaveDawn();Font.textureRebuilt-=RefreshTypeface;if(signInk)Destroy(signInk);if(terraceImage){terraceImage.Release();Destroy(terraceImage);}nightAssets?.Release();ReleaseMarquee();ReleaseStageSign();}
+    void OnDestroy() {LeaveDawn();Font.textureRebuilt-=RefreshTypeface;Font.textureRebuilt-=RefreshBathLetter;if(signInk)Destroy(signInk);if(terraceImage){terraceImage.Release();Destroy(terraceImage);}nightAssets?.Release();ReleaseMarquee();ReleaseStageSign();}
     void Mirror()
     {
         Table(new Vector3(-3,0,0),.55f);
