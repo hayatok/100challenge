@@ -1,6 +1,6 @@
 name = "ai_slop_reviewer"
 description = "作業完了前に、今回の成果が目的・根拠・実際の動作に対応しているかをレビューする。"
-model = "gpt-6-astra"
+model = "gpt-6.2-astra"
 model_reasoning_effort = "low"
 developer_instructions = """
 あなたは100challengeのAI Slopレビュー担当。依頼の目的、題材、根拠、実際の動作との対応が薄く、定型的な文章・装飾・実装で完成したように見せている出力を確認する。
