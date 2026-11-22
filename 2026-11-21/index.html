@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#171b18">
+    <link rel="icon" href="data:,">
+    <title>ピンを連鎖で倒す</title>
+  </head>
+  <body>
+    <main class="game-shell">
+      <h1 class="visually-hidden">ピンを連鎖で倒す</h1>
+      <section class="playfield" aria-label="ピンボード筐体">
+        <dl class="scores">
+          <div><dt>面</dt><dd><span id="stage">1</span><small> / 2</small></dd></div>
+          <div><dt>手持ち</dt><dd><span id="remaining">3</span><small> 球</small></dd></div>
+          <div class="score-goal"><dt>得点 / ノルマ</dt><dd><span id="score">0</span><small> / <span id="goal">85</span></small></dd></div>
+          <div class="combo"><dt>最高連鎖</dt><dd id="combo">0</dd></div>
+        </dl>
+        <progress id="score-meter" value="0" max="85" aria-label="ノルマまでの得点"></progress>
+        <div id="board" class="board">
+          <button id="launcher" class="launcher" type="button" aria-label="盤面から玉を放つ" aria-describedby="aim-help refill-rule keyboard-help" disabled>
+            <span id="rail-hint" aria-hidden="true"><span class="pointer-hint">← 左右に滑らせて放す →</span><span class="keyboard-hint">← → で狙う　Space で放す</span></span>
+          </button>
+          <div id="board-effects" class="board-effects" aria-hidden="true"></div>
+          <p id="status" class="status" role="status"></p>
+          <section id="boot-panel" class="phase-screen boot-screen" aria-labelledby="boot-title">
+            <div class="phase-plate"><h2 id="boot-title" tabindex="-1">盤面を準備中</h2><p id="boot-detail">まもなく玉を放せます。</p></div>
+          </section>
+          <section id="upgrade-panel" class="phase-screen" aria-labelledby="upgrade-title" hidden>
+            <div class="phase-plate">
+              <p class="phase-kicker">第1面クリア</p>
+              <h2 id="upgrade-title">第2面の強化を選ぶ</h2>
+              <div class="upgrade-options">
+                <button type="button" id="upgrade-split" class="upgrade-button split">
+                  <span aria-hidden="true" class="pin-icon split-icon">＝</span>
+                  <span><strong>青ピンで3球に分裂</strong><small>当たった場所から<br>左右にも1球ずつ</small></span>
+                </button>
+                <button type="button" id="upgrade-bonus" class="upgrade-button bonus">
+                  <span aria-hidden="true" class="pin-icon bonus-icon">＋</span>
+                  <span><strong>黄ピンから2球追加</strong><small>レールの左と右から<br>1球ずつ落ちる</small></span>
+                </button>
+              </div>
+            </div>
+          </section>
+          <section id="result-panel" class="phase-screen" aria-labelledby="result-title" hidden>
+            <div class="phase-plate result-plate">
+              <h2 id="result-title" tabindex="-1"></h2>
+              <p id="result-description" class="muted"></p>
+              <dl class="run-summary">
+                <div><dt>合計得点</dt><dd id="total-score">0</dd></div>
+                <div><dt>最高連鎖</dt><dd id="max-chain">0</dd></div>
+              </dl>
+              <div class="result-actions">
+                <button id="retry" class="primary-button" type="button">同じ配置で再挑戦</button>
+                <button id="new-board" class="quiet-button" type="button">別の配置で遊ぶ</button>
+              </div>
+            </div>
+          </section>
+        </div>
+        <footer class="cabinet-apron">
+          <div class="machine-readout">
+            <section id="shoot-panel" aria-label="投球の案内">
+              <p id="aim-help" class="visually-hidden">レールを左右に動かして放すか、狙った位置をクリック・タップ。赤いキッカーに当たると矢印の向きに飛びます。補充待ちも狙えます。</p>
+              <p id="refill-rule" class="refill-rule" hidden>一投で<span id="refill-hits"></span>連鎖ごとに ＋1球</p>
+              <p id="keyboard-help" class="visually-hidden">左右キーで狙い、Spaceで放す。</p>
+              <p id="pin-guide" class="pin-guide" hidden><span>＝ 分裂</span><span>＋ 追加球</span><span>≫ 横へキック</span></p>
+            </section>
+            <p id="active-upgrade" class="active-upgrade" hidden></p>
+          </div>
+          <button id="sound-toggle" class="quiet-button sound-toggle" type="button" aria-pressed="true" aria-label="効果音">音あり</button>
+        </footer>
+      </section>
+      <noscript><p class="noscript-message">このゲームには JavaScript が必要です。ブラウザの設定で有効にしてください。</p></noscript>
+    </main>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

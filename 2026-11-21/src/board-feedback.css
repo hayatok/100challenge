@@ -1,0 +1,131 @@
+/* The effects layer stays below the rail button and never receives pointer input. */
+.extra-ball-pop {
+  position: absolute;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  border: 1px solid #d5b56e;
+  border-radius: 4px;
+  padding: 3px 6px;
+  background: #172d2bf0;
+  color: #ffdc81;
+  font: 850 clamp(12px, 1.8vw, 19px)/1.2 system-ui, sans-serif;
+  text-shadow: 0 1px 2px #071411;
+  animation: extra-ball-rise .68s ease-out both;
+}
+.extra-ball-pop[data-kind='split'] { color: #a5edff; border-color: #67cdee; }
+.goal-pop { color: #d6ffd1; border-color: #a3db94; animation-duration: .9s; }
+.chain-pop.major-chain {
+  color: #ffdfa0;
+  background: #1b2215f0;
+  border-color: #ffd47c;
+  box-shadow: 0 0 15px #ffb55566;
+  font-size: clamp(16px, 3.1vw, 37px);
+  transform-origin: bottom right;
+  animation: major-chain .66s ease-out both;
+}
+.kicker-light {
+  position: absolute;
+  height: 4.8%;
+  border: 1px solid #fff3bc;
+  border-radius: clamp(3px, 1vw, 9px);
+  box-shadow: 0 0 12px 2px #ff943c, inset 0 0 8px #ffad5b;
+  background: #ffe6a04a;
+  transform: translateX(-50%);
+  animation: plate-light .48s ease-out both;
+}
+.kick-burst {
+  position: absolute;
+  width: clamp(40px, 11%, 108px);
+  height: 0;
+  transform: scaleX(var(--kick-direction));
+  transform-origin: left center;
+}
+.kick-burst::before, .kick-burst::after {
+  content: '';
+  position: absolute;
+}
+.kick-burst::before {
+  left: 2px;
+  top: -4px;
+  width: 100%;
+  height: 21px;
+  clip-path: polygon(0 21%, 47% 31%, 100% 49%, 39% 61%, 0 46%);
+  background: linear-gradient(90deg, #fff4bc, #ffcf73 24%, #ff8957 66%, #ff895700);
+  transform: rotate(-14deg);
+  transform-origin: left center;
+  animation: kick-streak .43s ease-out both;
+}
+.kick-burst::after {
+  inset: -14px auto auto -14px;
+  width: 28px;
+  height: 28px;
+  border: 2px solid #ffe3a4;
+  border-radius: 50%;
+  box-shadow: 0 0 15px #ffb254, inset 0 0 7px #ffb254;
+  animation: kick-ring .36s ease-out both;
+}
+.confetti-piece {
+  position: absolute;
+  width: 5px;
+  height: 9px;
+  border-radius: 1px;
+  pointer-events: none;
+  animation: cracker-burst .8s ease-out both;
+}
+@keyframes extra-ball-rise {
+  from { opacity: 0; transform: translate(-50%, 4px) scale(.85); }
+  15%, 65% { opacity: 1; transform: translate(-50%, 0) scale(1); }
+  to { opacity: 0; transform: translate(-50%, -14px); }
+}
+@keyframes cracker-burst {
+  from { opacity: 1; transform: translate(0, 0) rotate(0); }
+  38% { opacity: 1; transform: translate(var(--burst-x), var(--burst-y)) rotate(var(--spin)); }
+  to { opacity: 0; transform: translate(var(--burst-x), var(--fall-y)) rotate(var(--spin)); }
+}
+@keyframes kick-streak {
+  from { opacity: 1; transform: rotate(-14deg) scaleX(.35); }
+  45% { opacity: .9; transform: rotate(-14deg) scaleX(1); }
+  to { opacity: 0; transform: rotate(-14deg) translateX(12px) scaleX(1.15); }
+}
+@keyframes plate-light {
+  from { opacity: 1; }
+  32% { opacity: .85; }
+  to { opacity: 0; }
+}
+@keyframes kick-ring {
+  from { opacity: 1; transform: scale(.55); }
+  to { opacity: 0; transform: scale(1.65); }
+}
+@keyframes major-chain {
+  from { opacity: 1; transform: scale(.76); }
+  21% { transform: scale(1.12); }
+  38%, 70% { opacity: 1; transform: scale(1); }
+  to { opacity: 0; transform: scale(.96); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .extra-ball-pop, .confetti-piece, .goal-pop, .major-chain, .kick-burst, .kicker-light { display: none; animation: none; }
+}
+
+/* Keep the refill notice next to the stock count, clear of the board and rail. */
+.scores dd .refill-pop {
+  display: inline-block;
+  vertical-align: middle;
+  margin-left: 3px;
+  padding: 1px 2px;
+  border: 1px solid #bce7b8;
+  border-radius: 3px;
+  color: #e4ffdd;
+  background: #203c30;
+  font: 800 clamp(10px, 1.05vw, 15px)/1.1 var(--numbers);
+  letter-spacing: 0;
+  animation: stock-refill-notice .96s ease-out both;
+}
+.stock-refill-active { display: inline-block; transform-origin: center; }
+@keyframes stock-refill-notice {
+  from { opacity: 0; transform: translateY(2px) scale(.93); }
+  12%, 78% { opacity: 1; transform: none; }
+  to { opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .scores dd .refill-pop { display: none; animation: none; }
+}
