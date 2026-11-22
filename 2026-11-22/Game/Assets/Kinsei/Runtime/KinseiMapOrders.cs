@@ -8,15 +8,15 @@ public sealed partial class KinseiSession
         public Vector3 spot;
         public Rect tag;
         public string caption;
+        public string place;
         public Duty duty;
         public bool desk;
         public bool disabled;
     }
     readonly List<MapOrder> mapOrders = new();
     readonly List<Rect> mapOrderExclusions = new();
-    // Choose clear label positions when the map opens. Passing crew should not move a button under the pointer.
-    readonly List<Vector3> mapOpeningHeads = new();
     bool mapOpened;
+    int previousMapArea;
     bool mapSelecting,mapSelectionMoved,mapSelectionExtend;
     Vector2 mapSelectionStart,mapSelectionEnd;
     int mapSelectionBase;
@@ -29,11 +29,12 @@ public sealed partial class KinseiSession
     {
         int mask=0;Rect area=MapSelectionRect;
         float scale=Mathf.Min(Screen.width/1100f,Screen.height/720f);
-        float bottom=(HallFrontsVisible?HallCommandHeight:CommandPanelHeight)*scale;
+        float w=Screen.width/scale,h=Screen.height/scale;
         for(int i=0;i<crew.Count;i++){
             var p=crew[i];if(p.hp<=0 || p.retired)continue;
-            var at=cam.WorldToScreenPoint(p.Position+Vector3.up);
-            if(at.z>0 && at.x>=0 && at.x<=Screen.width && at.y>bottom && at.y<Screen.height-82*scale && area.Contains(at))mask|=1<<i;
+            if(!TacticalPoint(p.Position+Vector3.up*.25f,w,h,out var gui) || CommandDeskHits(gui,w,h))continue;
+            Vector2 pixels=new Vector2(gui.x*scale,Screen.height-gui.y*scale);
+            if(area.Contains(pixels))mask|=1<<i;
         }
         return mask;
     }
@@ -48,13 +49,9 @@ public sealed partial class KinseiSession
         if(Input.GetMouseButtonUp(0)){
             if(mapSelectionMoved)SetSelection(MapSelectionMembers() | (mapSelectionExtend?LivingMembers(mapSelectionBase):0));
             else if(!OverHUD()){
-                float nearest=Screen.height*.057f;int member=-1;
-                for(int i=0;i<crew.Count;i++){
-                    if(crew[i].hp<=0 || crew[i].retired)continue;
-                    var at=cam.WorldToScreenPoint(crew[i].Position+Vector3.up);
-                    float distance=Vector2.Distance(mapSelectionEnd,at);
-                    if(at.z>0 && distance<nearest){nearest=distance;member=i;}
-                }
+                float scale=Mathf.Min(Screen.width/1100f,Screen.height/720f);
+                var mouse=new Vector2(mapSelectionEnd.x,Screen.height-mapSelectionEnd.y)/scale;
+                int member=TacticalCrewAt(mouse,Screen.width/scale,Screen.height/scale);
                 if(member>=0)SelectMember(member,mapSelectionExtend);
             }
             CancelMapSelection();return true;
@@ -67,18 +64,21 @@ public sealed partial class KinseiSession
     {
         CancelMapSelection();
         mapOrders.Clear();
-        mapOpeningHeads.Clear();
         if(!command)return;
-        foreach(var person in everyone){
-            if(!person.retired && person.hp>0 && (person==player || crew.Contains(person) || IsHallGuard(person)))
-                mapOpeningHeads.Add(person.Position+Vector3.up*1.6f);
-        }
         if(StageActive){mapOffset=new Vector2(-3.5f,.45f);Motion(player,"guard");return;}
-        if(mapOpened)return;
-        mapOpened=true;
+        int area=HallFrontsVisible?1:WestNearby?2:finale?3:0;
+        if(mapOpened && previousMapArea==area)return;
+        mapOpened=true;previousMapArea=area;
+        if(HallFrontsVisible){
+            // A player coming in from the street should see both dispatch sites,
+            // even after inspecting the distant shops on the previous map.
+            chartSize=11f;
+            mapOffset=new Vector2(-.6f,-1.65f);
+            return;
+        }
         // Put the entrance above the crew panel while retaining the stage in view.
         bool atClub=!finale && player.Position.x>=-12 && player.Position.x<=9 && player.Position.z>=-14;
-        float focusZ=atClub?-5.5f:player.Position.z;
+        float focusZ=atClub?-8f:player.Position.z;
         float focusX=atClub?-2:player.Position.x;
         mapOffset=new Vector2(Mathf.Clamp(focusX,-43,19),Mathf.Clamp(focusZ-(HallFrontsVisible?-1.05f:1.55f),-20.5f,4.5f));
         if(atClub)chartSize=12.8f;
@@ -88,21 +88,17 @@ public sealed partial class KinseiSession
     {
         mapOrders.Clear();
         if(!command || cam==null || OnAir || (StageActive && StageSpeaking) || shopView!=ShopView.None)return;
-        float bottom=h-(HallFrontsVisible?HallCommandHeight:CommandPanelHeight)-8;
+        float bottom=h-CommandDockHeight-8;
         int mask=SelectedMembers,count=CountMembers(mask);
         Person selected=count==1?crew[FirstMember(mask)]:null;
         mapOrderExclusions.Clear();
-        if(!HallFrontsVisible){
-            if(!StageActive)mapOrderExclusions.Add(new Rect(22,showFps?112:86,510,29));
-            if(showFps)mapOrderExclusions.Add(new Rect(22,78,90,28));
-            if(phase==Phase.Choice && escapeTime>0)mapOrderExclusions.Add(new Rect(w-182,85,160,34));
-        }
         if(HallFrontsVisible)for(int slot=0;slot<2;slot++)
-            if(!HallFrontReady(1-slot) && HallMapTag(slot,w,h,out var hall,out _))mapOrderExclusions.Add(hall);
-        foreach(var position in mapOpeningHeads){
-            var head=cam.WorldToViewportPoint(position);
-            if(head.z>0 && head.x>=0 && head.x<=1 && head.y>=0 && head.y<=1)
-                mapOrderExclusions.Add(new Rect(head.x*w-35,(1-head.y)*h-28,70,55));
+            if(!HallFrontReady(1-slot) && HallMapTag(slot,w,h,out var site,out _))mapOrderExclusions.Add(site);
+        // Reserve the actual projected crew markers, rebuilt after every pan/zoom.
+        foreach(var person in everyone){
+            if(person.retired || person.hp<=0)continue;
+            if(TacticalPoint(person.Position+Vector3.up*.25f,w,h,out var marker))
+                mapOrderExclusions.Add(new Rect(marker.x-21,marker.y-21,42,42));
         }
         void Add(Vector3 spot,string caption,Duty duty,bool desk=false,bool disabled=false)
         {
@@ -113,40 +109,30 @@ public sealed partial class KinseiSession
             if(desk && selected!=null && (selected==stageWitness || selected.duty==Duty.Attend || selected.duty==Duty.Backstage || selected.duty==Duty.BoxOffice)){
                 caption="実況卓：別の組員を選ぶ";disabled=true;
             }
-            var pt=cam.WorldToViewportPoint(spot+Vector3.up*.4f);
-            Vector2 at=new(pt.x*w,(1-pt.y)*h);
-            // A floor point may sit behind the crew panel while its task label
-            // still belongs above that panel (notably the rest point at the door).
-            if(pt.z<=0 || at.x<12 || at.x>w-12 || at.y<86 || at.y>h-8)return;
-            float width=Mathf.Max(100,caption.Length*14+20);
-            Rect tag=new(Mathf.Clamp(at.x-width*.5f,8,w-width-8),at.y+16,width,34);
-            bool Fits(Rect candidate)
-            {
-                if(candidate.x<8 || candidate.xMax>w-8 || candidate.y<82 || candidate.yMax>bottom)return false;
-                foreach(var previous in mapOrders)if(previous.tag.Overlaps(candidate))return false;
-                foreach(var exclusion in mapOrderExclusions)if(exclusion.Overlaps(candidate))return false;
-                return true;
+            if(!TacticalPoint(spot+Vector3.up*.2f,w,h,out var at))return;
+            string place=desk?"実況卓":duty==Duty.Follow?"真壁":duty==Duty.Rest?"休息所":
+                duty==Duty.BoxOffice?"帳場":duty==Duty.StageWitness?"舞台袖":duty==Duty.Backstage?"楽屋口":
+                finale?(finaleStep==FinaleStep.Connect?"送像所":finaleStep==FinaleStep.Cooperative?"客席":"開場口"):
+                WestCanOrder?"浴場前":"梶の席";
+            // Compact destinations stay next to their real floor point. Never scatter
+            // a long instruction across the map to find an unrelated empty area.
+            Rect tag=new Rect(at.x-29,at.y-22,58,54);
+            float best=float.PositiveInfinity;Rect chosen=tag;
+            // Try nearby rows as well as columns. Captions must stay clear of the
+            // mission panel and minimap as the camera moves around the district.
+            for(int row=-1;row<=1;row++)for(int col=-3;col<=3;col++){
+                float dx=col*32,dy=row*56;
+                var candidate=new Rect(Mathf.Clamp(tag.x+dx,6,w-64),Mathf.Clamp(tag.y+dy,60,bottom-54),58,54);
+                float score=Vector2.Distance(candidate.center,tag.center);
+                if(CommandDeskCovers(candidate,w,h))score+=10000;
+                foreach(var previous in mapOrders)if(previous.tag.Overlaps(candidate))score+=1000;
+                foreach(var exclusion in mapOrderExclusions)if(exclusion.Overlaps(candidate))score+=500;
+                if(score<best){best=score;chosen=candidate;}
             }
-            void Place(Rect candidate) => mapOrders.Add(new MapOrder{spot=spot,tag=candidate,caption=caption,duty=duty,desk=desk,disabled=disabled});
-            // Use the full label width when stepping sideways. Fixed small offsets
-            // cannot escape a neighbouring label or the crew clustered at the door.
-            for(int row=0;row<63;row++){
-                int column=row%9, band=row/9;
-                float dx=-width*.5f+(column==0?0:(column%2==1?-1:1)*((column+1)/2))*(width+8);
-                float dy=band==0?16:(band%2==1?-1:1)*((band+1)/2)*39;
-                tag=new Rect(Mathf.Clamp(at.x+dx,8,w-width-8),at.y+dy,width,34);
-                if(Fits(tag)){Place(tag);return;}
-            }
-            // A visible task remains available when its immediate neighbourhood
-            // is crowded: find the closest free slot in the rest of the map.
-            float distance=float.PositiveInfinity;Rect fallback=default;
-            for(float y=82;y+34<=bottom;y+=38)for(float x=8;x+width<=w-8;x+=width+8){
-                var candidate=new Rect(x,y,width,34);
-                float candidateDistance=(candidate.center-at).sqrMagnitude;
-                if(candidateDistance<distance && Fits(candidate)){distance=candidateDistance;fallback=candidate;}
-            }
-            if(!float.IsPositiveInfinity(distance))Place(fallback);
+            if(CommandDeskCovers(chosen,w,h))return;
+            mapOrders.Add(new MapOrder{spot=spot,tag=chosen,caption=caption,place=place,duty=duty,desk=desk,disabled=disabled});
         }
+
         if(StageActive){
             if(stageBeat!=StageBeat.Settled)Add(StageDeskPost,selected!=null && selected==stageDeskRunner?"実況の担当を外す":"実況卓を任せる",Duty.Go,true);
             return;
@@ -170,17 +156,21 @@ public sealed partial class KinseiSession
 
     bool MapOrderInput()
     {
+        if(inspectingStageLevel){CancelMapSelection();return false;}
         if(UpdateMapSelection())return true;
-        if(Input.GetKeyDown(KeyCode.Home)){
-            float centreZ=HallFrontsVisible?-1.05f:1.55f;
-            mapOffset=new Vector2(Mathf.Clamp(player.Position.x,-43,19),Mathf.Clamp(player.Position.z-centreZ,-20.5f,4.5f));
-        }
+        if(Input.GetKeyDown(KeyCode.Home))FocusCommandAt(player.Position);
         bool left=Input.GetMouseButtonDown(0),right=Input.GetMouseButtonDown(1);
         if((!left && !right) || OverHUD())return false;
         float scale=Mathf.Min(Screen.width/1100f,Screen.height/720f);
         Vector2 mouse=new Vector2(Input.mousePosition.x,Screen.height-Input.mousePosition.y)/scale;
-        if(HallFrontsVisible){int front=HallPinAt(Input.mousePosition);if(front>=0){AssignHallFront(front);return true;}}
-        for(int i=0;i<mapOrders.Count;i++){
+        // People are painted above destinations. Honour their visible marker
+        // before nearby task hit areas, with the same projection after a pan.
+        Person guard=TacticalGuardAt(mouse,Screen.width/scale,Screen.height/scale,true);
+        if(right && !StageActive && guard!=null){DesignateGuard(guard);return true;}
+        if(left && TacticalCrewAt(mouse,Screen.width/scale,Screen.height/scale,true)>=0){
+            BeginMapSelection();return true;
+        }
+        for(int i=mapOrders.Count-1;i>=0;i--){
             var visible=mapOrders[i];
             if(!visible.tag.Contains(mouse))continue;
             // Use the displayed hit area, but check the job against the current selection and phase.
@@ -194,19 +184,21 @@ public sealed partial class KinseiSession
             }
             return true;
         }
+        if(HallFrontsVisible){int front=HallPinAt(Input.mousePosition);if(front>=0){AssignHallFront(front);return true;}}
+        TacticalGuardAt(mouse,Screen.width/scale,Screen.height/scale);
         if(right && !StageActive && GuardAtScreen(Input.mousePosition)!=null)return false;
-        if(right && !StageActive){
-            var pt=cam.WorldToScreenPoint(player.Position+Vector3.up);
-            if(pt.z>0 && Vector2.Distance(Input.mousePosition,pt)<Screen.height*.04f){Assign(Duty.Follow);return true;}
-        }
-        if(left){
-            mapSelecting=true;mapSelectionMoved=false;
-            mapSelectionStart=mapSelectionEnd=Input.mousePosition;
-            mapSelectionExtend=Input.GetKey(KeyCode.LeftShift)||Input.GetKey(KeyCode.RightShift);
-            mapSelectionBase=SelectedMembers;
-            return true;
-        }
+        if(right && !StageActive && TacticalPoint(player.Position+Vector3.up*.25f,Screen.width/scale,Screen.height/scale,out var playerAt)
+            && TacticalPersonHit(playerAt).Contains(mouse)){Assign(Duty.Follow);return true;}
+        if(left){BeginMapSelection();return true;}
         return false;
+    }
+
+    void BeginMapSelection()
+    {
+        mapSelecting=true;mapSelectionMoved=false;
+        mapSelectionStart=mapSelectionEnd=Input.mousePosition;
+        mapSelectionExtend=Input.GetKey(KeyCode.LeftShift)||Input.GetKey(KeyCode.RightShift);
+        mapSelectionBase=SelectedMembers;
     }
 
     void DrawMapOrders()
@@ -214,16 +206,24 @@ public sealed partial class KinseiSession
         if(!command || Event.current.type!=EventType.Repaint)return;
         BuildMapOrders(hudW,hudH);
         foreach(var order in mapOrders){
-            var pt=cam.WorldToViewportPoint(order.spot+Vector3.up*.4f);
+            var pt=cam.WorldToViewportPoint(order.spot+Vector3.up*.2f);
             Vector2 at=new(pt.x*hudW,(1-pt.y)*hudH);
-            bool hover=!order.disabled && order.tag.Contains(Event.current.mousePosition);
+            bool hover=order.tag.Contains(Event.current.mousePosition);
             Color tint=order.disabled?brass:mint;
-            HallStroke(at,order.tag.center,tint,1);
-            Block(new Rect(at.x-3,at.y-3,6,6),tint);
-            Block(order.tag,hover?new Color(.18f,.27f,.26f,.98f):ink);
-            Block(new Rect(order.tag.x,order.tag.yMax-2,order.tag.width,2),tint);
-            Letter(order.tag,order.caption,14,order.disabled?brass:cream,false,TextAnchor.MiddleCenter);
+            if(Vector2.Distance(at,order.tag.center)>34)HallStroke(at,order.tag.center,new Color(tint.r,tint.g,tint.b,.48f),1);
+            Rect icon=new Rect(order.tag.center.x-16,order.tag.y,32,32);
+            Block(icon,hover?new Color(.18f,.32f,.30f,.98f):ink);
+            TacticalBorder(icon,tint,hover?2:1);
+            TacticalOrderIcon(icon,order.duty,order.desk,tint);
+            Rect label=new Rect(order.tag.x-4,order.tag.y+33,order.tag.width+8,19);
+            Block(label,ink);Letter(label,order.place,12,cream,false,TextAnchor.MiddleCenter);
+            if(hover){
+                float width=Mathf.Min(380,Mathf.Max(150,order.caption.Length*13+22));
+                Rect tip=new Rect(Mathf.Clamp(order.tag.center.x-width*.5f,8,hudW-width-8),Mathf.Clamp(order.tag.y-31,60,hudH-CommandDockHeight-30),width,26);
+                Block(tip,ink);TacticalBorder(tip,tint,1);Letter(tip,order.caption,13,cream,false,TextAnchor.MiddleCenter);
+            }
         }
+
         if(mapSelecting && mapSelectionMoved){
             float scale=Mathf.Min(Screen.width/1100f,Screen.height/720f);
             Rect pixels=MapSelectionRect;
@@ -233,11 +233,11 @@ public sealed partial class KinseiSession
             Block(new Rect(box.x,box.y,1,box.height),mint);Block(new Rect(box.xMax-1,box.y,1,box.height),mint);
             int preview=MapSelectionMembers();
             for(int i=0;i<crew.Count;i++)if((preview&(1<<i))!=0){
-                var at=cam.WorldToScreenPoint(crew[i].Position+Vector3.up);
+                var at=cam.WorldToScreenPoint(crew[i].Position+Vector3.up*.25f);
                 Rect mark=new(at.x/scale-12,(Screen.height-at.y)/scale-12,24,24);
                 Block(mark,ink);Letter(mark,(i+1).ToString(),16,mint,true,TextAnchor.MiddleCenter);
             }
-            Rect caption=new(Mathf.Clamp(box.x,8,hudW-145),Mathf.Clamp(box.y-27,82,hudH-CommandPanelHeight-30),137,25);
+            Rect caption=new(Mathf.Clamp(box.x,8,hudW-145),Mathf.Clamp(box.y-27,82,hudH-CommandDockHeight-30),137,25);
             Block(caption,ink);Letter(caption,CountMembers(preview)+"人を選択"+(mapSelectionExtend?"・追加":""),13,mint,false,TextAnchor.MiddleCenter);
         }
     }

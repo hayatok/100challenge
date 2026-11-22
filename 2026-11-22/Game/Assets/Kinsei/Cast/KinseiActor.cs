@@ -35,7 +35,8 @@ public sealed partial class KinseiActor : MonoBehaviour
     static readonly Vector3 ElderEye = new Vector3(.0286f,.0808f,.0795f);
     float blinkOffset;
     float leftGrip, rightGrip;
-    float turnSpeed;
+    float turnSpeed, gaitRunWeight;
+    Vector3 gaitDirection=Vector3.forward, previousGaitVelocity, balanceLean;
     Quaternion previousWorldRotation;
     bool hasMirrorContact, hasWorldPosition;
     string roleName;
@@ -247,7 +248,7 @@ public sealed partial class KinseiActor : MonoBehaviour
             if(state=="floor-yield")BeginHallYield();
             if(previous=="stage-testimony" || previous=="floor-yield")ReleaseCounterLine();
             glanceAfterYield=roleName=="brother" && previous=="surrender" && state=="idle";
-            if((state=="walk"||state=="run")&&previous!="walk"&&previous!="run")phase=0;
+            if((state=="walk"||state=="run")&&previous!="walk"&&previous!="run"&&previous!="aim")phase=0;
             previous=state;
             stateTime=0;
         }
@@ -263,10 +264,24 @@ public sealed partial class KinseiActor : MonoBehaviour
         previousWorldRotation=transform.rotation;
         hasWorldPosition=true;
         bool run=state=="run";
-        bool locomotion=state=="walk" || run || (state=="aim" && speed>.18f);
-        float stride=run?1.59f:Mathf.Lerp(.72f,1.32f,Mathf.InverseLerp(.5f,2.55f,speed));
-        if(locomotion)
-            phase=Mathf.Repeat(phase+(distance<.45f?distance:0)/stride+Mathf.Abs(yawDelta)*.00045f,1);
+        bool travelState=state=="walk" || run || state=="aim";
+        bool validTravel=dt>0 && distance<.45f;
+        Vector3 velocity=validTravel?displacement/dt:Vector3.zero;
+        float measuredSpeed=velocity.magnitude;
+        bool locomotion=travelState && measuredSpeed>.08f;
+        gaitRunWeight=Mathf.MoveTowards(gaitRunWeight,run?1:0,dt*5);
+        float stride=Mathf.Lerp(Mathf.Lerp(.72f,1.32f,Mathf.InverseLerp(.5f,2.55f,measuredSpeed)),1.59f,gaitRunWeight);
+        if(locomotion) {
+            // Keep foot travel in the body's frame, including strafing and reversing while aiming.
+            gaitDirection=transform.InverseTransformDirection(velocity.normalized);
+            phase=Mathf.Repeat(phase+distance/stride,1);
+        }
+        Vector3 acceleration=validTravel && dt>0 && dt<.1f?(velocity-previousGaitVelocity)/dt:Vector3.zero;
+        previousGaitVelocity=velocity;
+        Vector3 localAcceleration=transform.InverseTransformDirection(acceleration);
+        Vector3 leanTarget=travelState || state=="idle" || state=="guard" || state=="hall-guard"
+            ?new Vector3(Mathf.Clamp(localAcceleration.z*.32f,-5,5),0,Mathf.Clamp(-localAcceleration.x*.27f,-4,4)):Vector3.zero;
+        balanceLean=Vector3.Lerp(balanceLean,leanTarget,1-Mathf.Exp(-dt*11));
         float t=poseClock, swing=Mathf.Sin(phase*2*Mathf.PI);
         foreach(var j in joints)
         {
@@ -462,6 +477,7 @@ public sealed partial class KinseiActor : MonoBehaviour
             if(mirrorReceiver)
                 AimHead(mirrorReceiver.TransformPoint(V(.18f,.26f,-.13f)),.87f);
         }
+        body.localRotation*=Quaternion.Euler(balanceLean);
         float damping=state=="flinch"?31:state=="fall"?20:locomotion?22:12;
         float blend=1-Mathf.Exp(-dt*damping);
         foreach(var j in joints)
@@ -469,7 +485,7 @@ public sealed partial class KinseiActor : MonoBehaviour
             j.localPosition=Vector3.Lerp(lastPositions[j],j.localPosition,blend);
             j.localRotation=Quaternion.Slerp(lastRotations[j],j.localRotation,blend);
         }
-        if(locomotion)motion.Feet(transform,stride,turnSpeed,ll,lk,leftShoe,rl,rk,rightShoe,SolveLimb);
+        if(locomotion)motion.Feet(transform,stride,turnSpeed,gaitDirection,ll,lk,leftShoe,rl,rk,rightShoe,SolveLimb);
         else motion.Reset();
         if(state=="mirror" && mirrorReceiver)
         {
@@ -611,7 +627,10 @@ public sealed partial class KinseiActor : MonoBehaviour
         float lift=grounded?0:Mathf.Sin(p*Mathf.PI)*(run?.133f:.087f);
         float pitch=grounded?Mathf.Lerp(0,19,Ease(.73f,1,p)):Mathf.Lerp(19,-8,Ease(0,.75f,p))+8*Ease(.79f,1,p);
         float height=.074f+lift+(grounded?.032f*Ease(.73f,1,p):.032f*(1-Ease(0,.24f,p)));
-        Vector3 target=transform.TransformPoint(V(side*(.091f+Mathf.Abs(turnSpeed)*.0009f),height,ahead+.013f));
+        Vector3 travel=V(gaitDirection.x*.65f,0,gaitDirection.z)*ahead;
+        pitch*=gaitDirection.z;
+        float across=side*Mathf.Max(.045f,side*(side*(.091f+Mathf.Abs(turnSpeed)*.0009f)+travel.x));
+        Vector3 target=transform.TransformPoint(V(across,height,travel.z+.013f));
         SolveLimb(hip,knee,ankle,target,transform.forward,1);
         ankle.rotation=transform.rotation*Quaternion.Euler(pitch,side*5+turnSpeed*.22f,0);
     }
@@ -750,10 +769,13 @@ public sealed partial class KinseiActor : MonoBehaviour
     {
         bool brother=roleName=="brother";
         bool young=brother || roleName=="tatsu" || (!boss && !makabe && !kaji && variant%3==1);
-        bool elder=boss || kaji;
+        bool crew=roleName=="tatsu" || roleName=="ally";
+        bool elder=boss || kaji || (roleName=="ally" && variant==2);
+        if(crew)young=roleName=="tatsu";
         string shape=elder?"Elder":young?"Young":"Adult";
         string resident=roleName=="resident" && variant==0?"Sumiko":roleName=="resident" && variant==4?"Murase":null;
         if(roleName=="stage-singer")resident="Singer";
+        if(roleName=="ally")resident=variant==1 || variant==5?"Sumiko":variant==3?"Murase":null;
         string folder=roleName=="stage-singer"?"KinseiStage/":resident!=null?"KinseiResidents/":"KinseiCast/";
         if(resident!=null)shape=resident;
         var faceResource=FindPart("Head"+shape,folder);
@@ -822,6 +844,12 @@ public sealed partial class KinseiActor : MonoBehaviour
         else if(cap!=null)
         {
             if(resident!=null)hair.color=resident=="Sumiko"?new Color(.82f,.80f,.78f):new Color(.56f,.51f,.49f);
+            if(roleName=="ally") {
+                if(variant==1)hair.color=new Color(.10f,.075f,.065f);
+                else if(variant==2)hair.color=new Color(.67f,.65f,.60f);
+                else if(variant==3)hair.color=new Color(.29f,.28f,.26f);
+                else if(variant==5)hair.color=new Color(.84f,.82f,.77f);
+            }
             hair.mainTexture=Resources.Load<Texture2D>(folder+"Hair"+style+"Grain");
             if(hair.mainTexture)
             {
@@ -852,7 +880,8 @@ public sealed partial class KinseiActor : MonoBehaviour
             eyes[(side+1)/2]=socket;
             MeshObject("Cornea and iris",socket,eye,EyeCap(elder?.0128f:.0136f));
         }
-        if(boss)
+        if(roleName=="ally" && variant==3)BuildKontaniSpectacles();
+        if(boss || (roleName=="ally" && variant==2))
         {
             var whisker=Mat("Whisker shadow",new Color(.09f,.06f,.045f),.1f);
             // The boss wears two swept sections between nose and upper lip.

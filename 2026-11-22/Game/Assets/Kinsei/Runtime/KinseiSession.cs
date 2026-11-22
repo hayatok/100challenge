@@ -437,7 +437,7 @@ public sealed partial class KinseiSession : MonoBehaviour
         } else if(command) {
             cam.orthographic=true; cam.orthographicSize=Mathf.Max(chartSize,15f/cam.aspect);
             float centreZ=HallFrontsVisible?-1.05f:1.55f;
-            focus=new Vector3(mapOffset.x,0,centreZ+mapOffset.y);eye=focus+new Vector3(0,18,-11f);
+            focus=new Vector3(mapOffset.x,0,centreZ+mapOffset.y);eye=focus+CommandBoom;
         } else {
             cam.orthographic=false; cam.fieldOfView=ShoulderAiming?43:57;
             Vector3 look=Quaternion.Euler(tilt,angle,0)*Vector3.forward;
@@ -506,6 +506,7 @@ public sealed partial class KinseiSession : MonoBehaviour
         RestorePortraitForeground(cam);
         if(relayImage!=null) { relayImage.Release(); Destroy(relayImage); }
         if(stageRingMaterial!=null) Destroy(stageRingMaterial);
+        if(districtWalkable) Destroy(districtWalkable);
     }
 }
 

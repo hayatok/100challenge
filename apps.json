@@ -299,5 +299,16 @@
     "category": "RTS・FPS",
     "thumbnail": "cover.jpg",
     "accent": "#B73529"
+  },
+  {
+    "id": "2026-11-22",
+    "date": "2026-11-22",
+    "sequence": 1,
+    "name": "金星の一夜",
+    "description": "失敗作・開発終了。大阪のキャバレー金星で若頭の真壁を動かし、六人の組員を指揮するWindowsゲーム。",
+    "category": "RTS・TPS",
+    "thumbnail": "cover.webp",
+    "accent": "#846539",
+    "type": "desktop"
   }
 ]

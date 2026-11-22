@@ -1,0 +1,9 @@
+{
+  "name": "kinsei-archive",
+  "version": "1.9.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "check:site": "node --test scripts/site.test.mjs"
+  }
+}

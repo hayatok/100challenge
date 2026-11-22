@@ -33,6 +33,12 @@
 
 『Grand Theft Auto V』の見回しと照準を別々に調整できる点を参考にした。金星では真壁の通常の肩越し視点でマウスを使い、ホールでは右ボタンで構え、画面中央の照準で相手を狙う。指揮地図や幕間に切り替えると、同じマウスで組員や設定を選べる。[Rockstar Games のカメラ設定解説](https://www.rockstargames.com/newswire/article/25o2411812oa29/rockstar-game-tips-playing-with-perspective-in-gtav)
 
+## 指揮卓と小地図（v1.9）
+
+左下の顔札で六人から選び、右側の命令か地図上の現場を押す。琥珀は選択中、青緑は味方、赤のひし形は敵を表す。任務名を短くし、指したときに詳しい動作を表示する。小地図は実際のナビゲーションメッシュから通れる床を描き、視野と真壁の位置を重ねる。『Company of Heroes 3』の部隊ポートレートとグループ内選択も参考にした。[開発チームによる選択操作の解説](https://steamcommunity.com/app/1677280/discussions/7/574931717228382705/)
+
+顔札は本編の六人を同じカメラと照明で撮影した。既存の頭部、髪、眼鏡と生地を使い、顔札と現場で同じ服の組員を追える。再撮影には Unity Editor のバッチ実行で `KinseiCrewPortraitBake.Run` を指定する。
+
 ## ホールのUIと視認性で参照した作品
 
 - 任天堂『ピクミン3』の「Go Here!」では、プレイヤーが地図上に行き先を指定できる。金星では、選んだ組員が床に表示された経路をたどり、プレイヤーはその移動中に真壁に戻って反対側へ行ける。[任天堂公式説明書「Apps Mode Screen」](https://csassets.nintendo.com/noaext/image/private/t_KA_PDF/manual-WiiU-Pikmin_3?_a=DATC1RAAZAA0)

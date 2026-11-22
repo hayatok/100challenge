@@ -35,6 +35,8 @@ public sealed class KinseiWardrobeBinding : MonoBehaviour
         string cut = role == "tatsu" ? "Double" : "Single";
         string palette = role == "tatsu" ? "Rust" : role == "boss" ? "Cream" :
             role == "kaji" ? "Olive" : role == "brother" ? "Sage" : "Navy";
+        // The same six identities are read in the field and in the command-desk portraits.
+        if(role=="ally")palette=variant==1?"Sage":variant==2?"Olive":variant==3?"Navy":variant==4?"Rust":variant==5?"Cream":"Navy";
         bool makabe=role=="makabe";
         TextAsset data = Resources.Load<TextAsset>(makabe ? "KinseiMakabe/MakabeCut" : gown ? "KinseiStage/Camellia" : Folder + cut);
         Texture2D color = Resources.Load<Texture2D>(makabe ? "KinseiMakabe/MakabeWool" : gown ? "KinseiStage/CamelliaSatin" : role == "stage-pianist" ? "KinseiStage/DinnerJacket" : Folder + palette);
