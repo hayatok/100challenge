@@ -257,7 +257,7 @@ public sealed class KinseiRainStreet : MonoBehaviour
         }
         water.SetTexture("_Reflection",picture);water.SetVector("_ReflectionUV",reflectionUV);
         water.SetVectorArray("_Steps",steps);water.SetFloat("_Clock",time);
-        water.SetFloat("_Strength",tactical?.48f:.90f);
+        water.SetFloat("_Strength",tactical?.06f:.90f);
         Graphics.DrawMesh(mesh,Matrix4x4.identity,water,0,eye,0,null,ShadowCastingMode.Off,false,null,LightProbeUsage.Off);
         if(!tactical)splash?.Draw(eye,frustum,picture,reflectionUV,steps,time,Surface);
     }

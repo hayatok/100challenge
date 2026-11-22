@@ -10,6 +10,7 @@ public sealed partial class KinseiWorld : MonoBehaviour
     Transform mirrorHinge;
     Transform upperReceiver;
     Light hallTubeLight, boothTubeLight;
+    Light tacticalFill;
     public Vector3 UpperScreenCentre => upperReceiver.TransformPoint(new Vector3(-.065f,.248f,-.203f));
     public Transform MirrorReceiver => mirrorHinge;
     bool built;
@@ -301,14 +302,31 @@ public sealed partial class KinseiWorld : MonoBehaviour
         var groups=new System.Collections.Generic.Dictionary<Material,System.Collections.Generic.List<CombineInstance>>();
         foreach(var renderer in fixedRenderers)
         {
-            if(!renderer || overhead.Contains(renderer.gameObject))continue;
+            if(!renderer)continue;
+            // A canopy's meshes can be children of its cutaway root. Baking them
+            // into the permanent batch defeats SetTactical even when that root hides.
+            bool cutaway=false;
+            for(Transform ancestor=renderer.transform;ancestor!=null && ancestor!=transform;ancestor=ancestor.parent)
+                if(overhead.Contains(ancestor.gameObject)){cutaway=true;break;}
+            if(cutaway)continue;
             var filter=renderer.GetComponent<MeshFilter>();if(!filter || !filter.sharedMesh)continue;
             Material material=renderer.sharedMaterial;if(!groups.ContainsKey(material))groups[material]=new System.Collections.Generic.List<CombineInstance>();
             groups[material].Add(new CombineInstance{mesh=filter.sharedMesh,transform=transform.worldToLocalMatrix*filter.transform.localToWorldMatrix});renderer.enabled=false;
         }
         foreach(var group in groups){var go=new GameObject("Batched architecture / "+group.Key.name);go.transform.SetParent(transform,false);var mesh=new Mesh{indexFormat=IndexFormat.UInt32};mesh.CombineMeshes(group.Value.ToArray(),true,true);go.AddComponent<MeshFilter>().sharedMesh=mesh;go.AddComponent<MeshRenderer>().sharedMaterial=group.Key;}
     }
-    public void SetTactical(bool enabled) { foreach(var o in overhead) if(o) o.SetActive(!enabled); }
+    public void SetTactical(bool enabled)
+    {
+        foreach(var o in overhead)if(o)o.SetActive(!enabled);
+        if(enabled && !tacticalFill){
+            var go=new GameObject("Command map / shadowless floor fill");go.transform.SetParent(transform,false);
+            go.transform.localRotation=Quaternion.Euler(72,-25,0);
+            tacticalFill=go.AddComponent<Light>();tacticalFill.type=LightType.Directional;
+            tacticalFill.color=new Color(.82f,.90f,1f);tacticalFill.intensity=.72f;
+            tacticalFill.shadows=LightShadows.None;
+        }
+        if(tacticalFill)tacticalFill.enabled=enabled;
+    }
     void AshtrayPart(Vector3 at,float radius,float height,Material material)
     {
         var piece=GameObject.CreatePrimitive(PrimitiveType.Cylinder);

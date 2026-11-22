@@ -60,21 +60,21 @@ public sealed class KinseiMotionStudy
     public delegate void LimbSolver(Transform hip, Transform knee, Transform ankle,
         Vector3 target, Vector3 pole, float weight);
 
-    public void Feet(Transform root, float stride, float turn, Transform leftHip, Transform leftKnee,
+    public void Feet(Transform root, float stride, float turn, Vector3 direction, Transform leftHip, Transform leftKnee,
         Transform leftAnkle, Transform rightHip, Transform rightKnee, Transform rightAnkle, LimbSolver solve)
     {
         if (!available) return;
-        Foot(root,stride,turn,0,leftHip,leftKnee,leftAnkle,solve);
-        Foot(root,stride,turn,1,rightHip,rightKnee,rightAnkle,solve);
+        Foot(root,stride,turn,direction,0,leftHip,leftKnee,leftAnkle,solve);
+        Foot(root,stride,turn,direction,1,rightHip,rightKnee,rightAnkle,solve);
     }
 
-    void Foot(Transform root, float stride, float turn, int index, Transform hip, Transform knee,
+    void Foot(Transform root, float stride, float turn, Vector3 direction, int index, Transform hip, Transform knee,
         Transform ankle, LimbSolver solve)
     {
         int channel = index == 0 ? 9 : 14;
         int side = index == 0 ? -1 : 1;
         float step = Mathf.Repeat(phase + index*.5f,1);
-        float pitch = Mathf.Clamp(sample[channel+2],-28,65);
+        float pitch = Mathf.Clamp(sample[channel+2],-28,65)*direction.z;
         Quaternion rotation = Quaternion.Euler(pitch, side*5+turn*.22f,0);
         // Lowest point on the rig's ellipsoidal sole, in the ankle's rotated parent frame.
         float radians = pitch*Mathf.Deg2Rad;
@@ -83,8 +83,11 @@ public sealed class KinseiMotionStudy
         Vector3 sole = rotation * new Vector3(0,-.052f-.017f*.017f*cos/radius,
             .056f+.124f*.124f*sin/radius);
         float floorHeight = -sole.y;
-        Vector3 target = root.TransformPoint(new Vector3(side*(.091f+Mathf.Abs(turn)*.0009f),
-            Mathf.Max(floorHeight,.069f+sample[channel+1]), sample[channel]*stride+.013f));
+        Vector3 travel = new Vector3(direction.x*.65f,0,direction.z)*(sample[channel]*stride);
+        // A lateral step opens/closes the stance without crossing the shoes.
+        float across = side*Mathf.Max(.045f,side*(side*(.091f+Mathf.Abs(turn)*.0009f)+travel.x));
+        Vector3 target = root.TransformPoint(new Vector3(across,
+            Mathf.Max(floorHeight,.069f+sample[channel+1]), travel.z+.013f));
         float start = Mathf.Lerp(.115f,.12f,runWeight), end = Mathf.Lerp(.45f,.26f,runWeight);
         bool stance = step >= start && step < end;
         if (stance)

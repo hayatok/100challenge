@@ -48,7 +48,7 @@ public static class KinseiSquadRegression
         SessionState.EraseBool(Pending);
         try {
             ExerciseOrders();
-            Debug.Log("KINSEI_SQUADS_PASS selection / two destinations / single-person jobs / casualties / retry");
+            Debug.Log("KINSEI_SQUADS_PASS selection / minimap occlusion / two destinations / single-person jobs / casualties / retry");
             EditorApplication.Exit(0);
         } catch(Exception ex){Debug.LogException(ex);EditorApplication.Exit(1);}
     }
@@ -57,6 +57,7 @@ public static class KinseiSquadRegression
     {
         Call("StartNight");
         Call("ToggleCommand");
+        CheckMinimapSelection();
         Select(0);Select(1,true);Select(2,true);Select(2,true);
         Require(Selection==3,"Shift must add and remove seats independently");
         Call("SaveSquad",0);
@@ -101,5 +102,26 @@ public static class KinseiSquadRegression
             "Recalling a squad with no survivors sent the other squad to the new destination");
         Call("StartNight");
         Require(Selection==1 && ((int[])Read(game,"squads"))[0]==0 && ((int[])Read(game,"squads"))[1]==0,"New night kept previous groups");
+    }
+
+    static void CheckMinimapSelection()
+    {
+        var cam=(Camera)Read(game,"cam");
+        float scale=Mathf.Min(Screen.width/1100f,Screen.height/720f);
+        Rect minimap=(Rect)Call("DistrictMapRect",Screen.width/scale,Screen.height/scale);
+        Vector2 edge=new Vector2(minimap.xMax*scale,Screen.height-minimap.center.y*scale);
+        Vector2 margin=new Vector2(30,12)*scale;
+        Write(game,"mapSelectionStart",edge+margin);
+        Write(game,"mapSelectionEnd",edge-margin);
+        var ground=new Plane(Vector3.up,Vector3.up*.25f);
+        Vector3[] original={Position(0),Position(1)};
+        for(int i=0;i<2;i++){
+            var ray=cam.ScreenPointToRay(edge+Vector2.right*(i==0?-18:18)*scale);
+            Require(ground.Raycast(ray,out float distance),"Test camera missed the selection plane");
+            ((Transform)Read(Member(i),"root")).position=ray.GetPoint(distance)-Vector3.up*.25f;
+        }
+        int mask=(int)Call("MapSelectionMembers");
+        for(int i=0;i<2;i++)((Transform)Read(Member(i),"root")).position=original[i];
+        Require((mask&3)==2,"Dragging across the minimap edge selected an obscured crew member or missed a visible one");
     }
 }

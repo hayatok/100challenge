@@ -2,7 +2,6 @@ using UnityEngine;
 
 public sealed partial class KinseiSession
 {
-    const float CommandPanelHeight=193f;
     int extraMembers;
     readonly int[] squads=new int[2];
     readonly Vector3[] groupDestinations=new Vector3[6];
@@ -123,47 +122,6 @@ public sealed partial class KinseiSession
             if(!found)return false;
         }
         return true;
-    }
-
-    void DrawSquadOrders(float top)
-    {
-        int mask=SelectedMembers,count=CountMembers(mask);
-        float left=22,y=top+83;
-        string label=count==0?"組員を選択":count==1?crew[FirstMember(mask)].name+" に指示":count+"人に指示";
-        Letter(new Rect(left,y,152,44),label,21,gold,true);
-        int buttons=3+(finale?1:2)+(CanOrderStageWitness?1:0)+(CanOrderBackstage?1:0);
-        float x=178,width=Mathf.Min(153,(hudW-x-left-(buttons-1)*6)/buttons);
-        void OrderButton(Duty duty,string caption)
-        {
-            Rect rect=new Rect(x,y,width,44);x+=width+6;
-            if(count>1 && !GroupOrder(duty) && !(WestCanOrder && duty==Duty.Attend && count==2)){
-                Letter(rect,caption,16,new Color(.88f,.85f,.80f),false,TextAnchor.MiddleCenter);
-                Block(new Rect(rect.x,rect.yMax-1,rect.width,1),rule);
-                if(GUI.Button(rect,GUIContent.none,GUIStyle.none))Assign(duty);
-                return;
-            }
-            if(Plate(rect,caption))Assign(duty);
-        }
-        OrderButton(Duty.Follow,"随行　F");
-        OrderButton(Duty.Guard,"持ち場　G");
-        OrderButton(Duty.Rest,"休息　R");
-        OrderButton(Duty.Attend,WestCanOrder?WestOrderLabel:finale?FinaleOrderLabel:"梶の席へ　E");
-        if(!finale)OrderButton(Duty.BoxOffice,"伝票　T");
-        if(CanOrderStageWitness)OrderButton(Duty.StageWitness,count==1 && crew[FirstMember(mask)]==stageWitness?"立会取消　V":"舞台立会　V");
-        if(CanOrderBackstage)OrderButton(Duty.Backstage,count==1 && crew[FirstMember(mask)].duty==Duty.Backstage?"札口取消　B":"楽屋口　B");
-        y=top+136;
-        Letter(new Rect(left,y-2,445,25),"左ドラッグで組員を囲む → 地図の札　／　Shiftで追加",14,cream);
-        Letter(new Rect(left,y+20,445,25),"右クリック 地面へ移動　／　Home 真壁へ　／　ホイール 拡縮",13,cream);
-        float groupWidth=Mathf.Min(168,(hudW-492)/4);
-        x=hudW-left-groupWidth*4;
-        for(int slot=0;slot<2;slot++){
-            string name=SquadLabel(slot);
-            string recall=name+" "+CountMembers(LivingMembers(squads[slot]))+"人　F"+(slot+1);
-            if(Plate(new Rect(x,y,groupWidth-5,44),recall))RecallSquad(slot);
-            x+=groupWidth;
-            if(Plate(new Rect(x,y,groupWidth-5,44),name+"登録　F"+(slot+3)))SaveSquad(slot);
-            x+=groupWidth;
-        }
     }
 
     static int FirstMember(int mask)

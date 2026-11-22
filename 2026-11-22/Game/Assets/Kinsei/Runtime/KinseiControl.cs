@@ -105,17 +105,21 @@ public sealed partial class KinseiSession
         Vector3 proposed=player.Position+move*rate*dt;
         proposed=StageActive?StageStep(player.Position,proposed,boss.Position):RailBounds(player.Position,proposed);
         var step=proposed-player.Position;
+        Vector3 beforeMove=player.Position;
         motor.Move(new Vector3(step.x,fallVelocity*dt,step.z));
+        Vector3 travelled=player.Position-beforeMove; travelled.y=0;
+        float actualSpeed=dt>0?Mathf.Min(rate,travelled.magnitude/dt):0;
         CheckBoarding();
         if(ShoulderAiming)player.root.rotation=Quaternion.RotateTowards(player.root.rotation,Quaternion.Euler(0,angle,0),dt*540);
         else if(move.sqrMagnitude>.1f) player.root.rotation=Quaternion.RotateTowards(player.root.rotation,Quaternion.LookRotation(move),dt*540);
-        moveBlend=Mathf.MoveTowards(moveBlend,move.magnitude*rate,dt*12);
-        if(moveBlend>1 && motor.isGrounded && clock>=nextStep) {
-            sound.Cue("step"); nextStep=clock+(rate>3?.29f:.41f);
+        // Input release stops the controller immediately; only the visual pose settles.
+        moveBlend=actualSpeed;
+        if(actualSpeed>1 && motor.isGrounded && clock>=nextStep) {
+            sound.Cue("step"); nextStep=clock+(actualSpeed>3?.29f:.41f);
         }
         bool fighting=phase==Phase.Floor || phase==Phase.Chase || StageActive;
         if(ShoulderAiming)player.actor.SetAttentionTarget(cam.ScreenPointToRay(ShoulderScreenPoint).GetPoint(14));
-        if(clock>attackUntil) Motion(player,ShoulderAiming?"aim":moveBlend>.18f?(rate>3?"run":"walk"):(fighting?"guard":"idle"),moveBlend);
+        if(clock>attackUntil) Motion(player,ShoulderAiming?"aim":moveBlend>.18f?(actualSpeed>3?"run":"walk"):(fighting?"guard":"idle"),moveBlend);
         if(InDawn || finale || AboveStreet){if(Input.GetKeyDown(KeyCode.E))Interact();return;}
         if(Input.GetKeyDown(KeyCode.Q)) CycleTarget();
         if(Input.GetKeyDown(KeyCode.E)) Interact();
@@ -208,11 +212,27 @@ public sealed partial class KinseiSession
         actionLight.Shot(hand,to,enemy,reducedMotion);
     }
 
+    static readonly Vector3 CommandBoom=new Vector3(4.6f,18,-11f);
+    static readonly Vector2 ChartUp=new Vector2(-CommandBoom.x,-CommandBoom.z).normalized;
+    static readonly Vector2 ChartRight=new Vector2(ChartUp.y,-ChartUp.x);
+
+    void FocusCommandAt(Vector3 spot)
+    {
+        // Centre the target in the map area above the command dock.
+        float scale=Mathf.Min(Screen.width/1100f,Screen.height/720f);
+        float pitchFactor=CommandBoom.y/CommandBoom.magnitude;
+        float offset=cam.orthographicSize*CommandDockHeight*scale/(Screen.height*pitchFactor);
+        Vector2 centre=new Vector2(spot.x,spot.z)-ChartUp*offset;
+        float centreZ=HallFrontsVisible?-1.05f:1.55f;
+        mapOffset=new Vector2(Mathf.Clamp(centre.x,-43,19),Mathf.Clamp(centre.y-centreZ,-20.5f,4.5f));
+        snapCamera=true;
+    }
+
     void CommandInput()
     {
         Vector2 shift=new Vector2((Input.GetKey(KeyCode.D)?1:0)-(Input.GetKey(KeyCode.A)?1:0),
             (Input.GetKey(KeyCode.W)?1:0)-(Input.GetKey(KeyCode.S)?1:0));
-        mapOffset+=shift.normalized*(7*Time.deltaTime);
+        mapOffset+=(ChartRight*shift.x+ChartUp*shift.y).normalized*(7*Time.deltaTime);
         mapOffset.x=Mathf.Clamp(mapOffset.x,-43f,19f);mapOffset.y=Mathf.Clamp(mapOffset.y,-20.5f,4.5f);
         chartSize=Mathf.Clamp(chartSize-Input.mouseScrollDelta.y*.9f,6.7f,16.2f);
         bool extend=Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
@@ -227,7 +247,7 @@ public sealed partial class KinseiSession
         }else{
             if(HallFrontsVisible && Input.GetKeyDown(KeyCode.Z))AssignHallFront(1);
             if(HallFrontsVisible && Input.GetKeyDown(KeyCode.X))AssignHallFront(0);
-            if(HallFrontsVisible && Input.GetKeyDown(KeyCode.H))hallOtherOrders=!hallOtherOrders;
+            if(Input.GetKeyDown(KeyCode.H))hallOtherOrders=!hallOtherOrders;
             if(Input.GetKeyDown(KeyCode.E)) Assign(Duty.Attend);
             if(Input.GetKeyDown(KeyCode.F)) Assign(Duty.Follow);
             if(Input.GetKeyDown(KeyCode.R)) Assign(Duty.Rest);
@@ -299,11 +319,10 @@ public sealed partial class KinseiSession
 
     bool OverHUD()
     {
-        float y=1-Input.mousePosition.y/Screen.height;
         float scale=Mathf.Min(Screen.width/1100f,Screen.height/720f);
-        if(HallFrontsVisible)return Input.mousePosition.y>=Screen.height-61*scale ||
-            Input.mousePosition.y<=(command?HallCommandHeight:43)*scale;
-        return y<.12f || (command && Input.mousePosition.y<=CommandPanelHeight*scale);
+        if(scale<=0)return true;
+        Vector2 point=new Vector2(Input.mousePosition.x,Screen.height-Input.mousePosition.y)/scale;
+        return command?CommandDeskHits(point,Screen.width/scale,Screen.height/scale):FieldHeaderHits(point,Screen.width/scale);
     }
 }
 
