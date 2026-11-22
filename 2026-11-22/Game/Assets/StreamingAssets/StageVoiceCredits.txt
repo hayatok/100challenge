@@ -1,0 +1,12 @@
+金星の一夜　舞台とホールの声
+
+兄貴分の台詞「金星を取ったんは、わしや。幕を返す。」は、本作の脚本を音声合成して収録しました。
+ホールの紺谷と浦が手を引く台詞にも、同じ音声モデルを使い、二人の話す速度と音高を個別に調整しました。
+使用音声モデル　HTS Voice "NIT ATR503 M001" v1.05, released by HTS Working Group.
+Copyright (c) 2003–2012 Nagoya Institute of Technology, Department of Computer Science.
+Copyright (c) 2003–2008 Tokyo Institute of Technology, Interdisciplinary Graduate School of Science and Engineering.
+学習音声データベース　The Nitech Japanese Speech Database "NIT ATR503 M001", released by HTS Working Group.
+Copyright (c) 2003–2012 Nagoya Institute of Technology, Department of Computer Science.
+Source: https://open-jtalk.sourceforge.net/
+License: Creative Commons Attribution 3.0 Unported — https://creativecommons.org/licenses/by/3.0/
+本作では発話速度と音高を調整し、中継スピーカーの帯域とホールの反射音を加えています。

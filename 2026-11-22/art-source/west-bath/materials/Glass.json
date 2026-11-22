@@ -1,0 +1,37 @@
+{
+  "prompt_id": "10f3266a-a7e6-47cd-b52e-00ba33b8bf06",
+  "seed": 1502705,
+  "positive": "Straight-on cross-polarized material scan, uniform diffuse illumination. This is a texture for a game mesh, every pixel is the same surface, edge to edge, no object outline, no scene or cast shadow. A 12-centimetre square scan filling the frame with a single sheet of old Japanese cast privacy glass, the tiny three-dimensional irregular seed and flowing fern pattern embossed in the glass seen by softly transmitted neutral grey light. Nearly colorless, delicate diffuse medium-grey relief on a pale smoky grey field, tightly packed minute ridges and flutes, restrained range. Face-on perpendicular, no room or view or objects visible through it, no window border, no metal wires, printed decoration or cracks.",
+  "negative": "text, inscription, picture frame, border, scene, ruler, label, hands, logo, hard reflection of scenery, horizon line, lens distortion, perspective, watermark",
+  "source": {
+    "filename": "west-glass_00001_.png",
+    "subfolder": "kinsei",
+    "type": "output"
+  },
+  "sha256": "c6c5b80e9ea39d4ece07bb0bc4c5fb2fe8c8048184afebc9ebd8c55fc5cc1ac0",
+  "status": "success",
+  "execution": [
+    [
+      "execution_start",
+      {
+        "prompt_id": "10f3266a-a7e6-47cd-b52e-00ba33b8bf06",
+        "timestamp": 1795307079690
+      }
+    ],
+    [
+      "execution_cached",
+      {
+        "nodes": [],
+        "prompt_id": "10f3266a-a7e6-47cd-b52e-00ba33b8bf06",
+        "timestamp": 1795307079692
+      }
+    ],
+    [
+      "execution_success",
+      {
+        "prompt_id": "10f3266a-a7e6-47cd-b52e-00ba33b8bf06",
+        "timestamp": 1795307102210
+      }
+    ]
+  ]
+}

@@ -1,0 +1,37 @@
+[
+  {
+    "key": "route-board",
+    "prompt_id": "73e39671-b068-47e6-93e2-affee61c0bd9",
+    "file": "route-board_00001_.png",
+    "sha256": "5bfdf38a8af1826a3255851230ca1208e5e46e3c0a0dc1b3d6454b86e7dd374f",
+    "seconds": 16.365
+  },
+  {
+    "key": "moquette",
+    "prompt_id": "bc211ba7-b5e8-44fd-9f27-7f55416b543f",
+    "file": "moquette_00001_.png",
+    "sha256": "4d616a636f606e4d8e31637eec0bfe7fed8702be06febf8a9c8eec0e8eaf122f",
+    "seconds": 17.947
+  },
+  {
+    "key": "fare-ticket",
+    "prompt_id": "a543ab52-585e-4dfc-b44a-8a35436c1cc2",
+    "file": "fare-ticket_00001_.png",
+    "sha256": "79a3062e1d69c40762606630b0dc7fe475bb2ad098c1d789142866a933df07a8",
+    "seconds": 9.598
+  },
+  {
+    "key": "car-at-night",
+    "prompt_id": "eeb4c2f5-f6c1-450d-a607-ffebdf0c88a8",
+    "file": "car-at-night_00001_.png",
+    "sha256": "281e490a698e5806443985d6b1dc0a897aa0810ba6078fc9cd58e928784e0310",
+    "seconds": 17.362
+  },
+  {
+    "key": "lift-arrival",
+    "prompt_id": "ab8eb113-55c1-4d96-ae2b-4a1d583bf36a",
+    "file": "lift-arrival_00001_.png",
+    "sha256": "fe4f2200721631fec3ae19caf0e554e2619e4788ec954384bfcf6ef47114699c",
+    "seconds": 17.29
+  }
+]

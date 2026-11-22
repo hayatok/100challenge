@@ -1,0 +1,168 @@
+{
+  "8eefd78c-e273-4cc2-9b36-b3ee0bcb62ee": {
+    "prompt": [
+      0,
+      "8eefd78c-e273-4cc2-9b36-b3ee0bcb62ee",
+      {
+        "1": {
+          "class_type": "UNETLoader",
+          "inputs": {
+            "unet_name": "moss_image_sft_int8_convrot.safetensors",
+            "weight_dtype": "default"
+          }
+        },
+        "2": {
+          "class_type": "CLIPLoader",
+          "inputs": {
+            "clip_name": "qwen3.5_9b_w4a8_gptq.safetensors",
+            "type": "moss_image",
+            "device": "default"
+          }
+        },
+        "3": {
+          "class_type": "VAELoader",
+          "inputs": {
+            "vae_name": "flux2-vae_small.safetensors"
+          }
+        },
+        "4": {
+          "class_type": "CLIPTextEncode",
+          "inputs": {
+            "clip": [
+              "2",
+              0
+            ],
+            "text": "Orthographic straight-on studio material scan of luxurious dark oxblood burgundy red button-tufted vinyl leather upholstery from a 1973 Japanese cabaret banquette. A continuous repeating diamond quilting pattern fills the entire square image edge to edge, with deep softly folded diamond seams and small matching leather covered buttons at every intersection, regular evenly spaced tufting. Eight large diamond tufts visible across the width. Rich tactile glossy vintage vinyl grain, delicate tiny pores, softened wear on raised rounded cushions, dark wine shadows inside seams, subdued warm ivory highlights on the bulging leather. Deep red maroon tones with realistic variation and finely detailed surface texture. Perfectly flat frontal orthographic view, no perspective, no furniture silhouette, no surrounding room, no border, no text, no objects. Seamless tileable surface repeating across every edge, even neutral diffuse studio illumination from the front, natural physically plausible material, restrained photographic contrast, beautifully preserved vintage upholstery."
+          }
+        },
+        "5": {
+          "class_type": "CLIPTextEncode",
+          "inputs": {
+            "clip": [
+              "2",
+              0
+            ],
+            "text": "text, watermark, frame, room, furniture edges, perspective, uneven lighting, white background, ornament, worst quality, jpeg artifact"
+          }
+        },
+        "6": {
+          "class_type": "EmptyFlux2LatentImage",
+          "inputs": {
+            "width": 1024,
+            "height": 1024,
+            "batch_size": 1
+          }
+        },
+        "7": {
+          "class_type": "KSampler",
+          "inputs": {
+            "model": [
+              "1",
+              0
+            ],
+            "positive": [
+              "4",
+              0
+            ],
+            "negative": [
+              "5",
+              0
+            ],
+            "latent_image": [
+              "6",
+              0
+            ],
+            "seed": 19731123,
+            "steps": 30,
+            "cfg": 2.5,
+            "sampler_name": "er_sde",
+            "scheduler": "simple",
+            "denoise": 1.0
+          }
+        },
+        "8": {
+          "class_type": "VAEDecode",
+          "inputs": {
+            "samples": [
+              "7",
+              0
+            ],
+            "vae": [
+              "3",
+              0
+            ]
+          }
+        },
+        "9": {
+          "class_type": "SaveImage",
+          "inputs": {
+            "images": [
+              "8",
+              0
+            ],
+            "filename_prefix": "kinsei/kinsei-oxblood-vinyl"
+          }
+        }
+      },
+      {
+        "client_id": "kinsei-art",
+        "create_time": 1795287009163
+      },
+      [
+        "9"
+      ]
+    ],
+    "outputs": {
+      "9": {
+        "images": [
+          {
+            "filename": "kinsei-oxblood-vinyl_00001_.png",
+            "subfolder": "kinsei",
+            "type": "output",
+            "metadata": {
+              "kind": "image",
+              "width": 1024,
+              "height": 1024
+            }
+          }
+        ]
+      }
+    },
+    "status": {
+      "status_str": "success",
+      "completed": true,
+      "messages": [
+        [
+          "execution_start",
+          {
+            "prompt_id": "8eefd78c-e273-4cc2-9b36-b3ee0bcb62ee",
+            "timestamp": 1795287009165
+          }
+        ],
+        [
+          "execution_cached",
+          {
+            "nodes": [],
+            "prompt_id": "8eefd78c-e273-4cc2-9b36-b3ee0bcb62ee",
+            "timestamp": 1795287009167
+          }
+        ],
+        [
+          "execution_success",
+          {
+            "prompt_id": "8eefd78c-e273-4cc2-9b36-b3ee0bcb62ee",
+            "timestamp": 1795287032132
+          }
+        ]
+      ]
+    },
+    "meta": {
+      "9": {
+        "node_id": "9",
+        "display_node": "9",
+        "parent_node": null,
+        "real_node_id": "9"
+      }
+    }
+  }
+}

@@ -1,0 +1,56 @@
+Mono path[0] = 'C:/Users/hayat/AppData/Local/Temp/kinsei62-v09-glass/Kinsei_Data/Managed'
+Mono config path = 'C:/Users/hayat/AppData/Local/Temp/kinsei62-v09-glass/MonoBleedingEdge/etc'
+Input System module state changed to: Initialized.
+[Physics::Module] Initialized fallback backend.
+[Physics::Module] Id: 0xdecafbad
+Loading player data from C:/Users/hayat/AppData/Local/Temp/kinsei62-v09-glass/Kinsei_Data/data.unity3d
+Initialize engine version: 6000.3.28f1 (8f082d2fe476)
+[Subsystems] Discovering subsystems at path C:/Users/hayat/AppData/Local/Temp/kinsei62-v09-glass/Kinsei_Data/UnitySubsystems
+[D3D12 Device Filter] Vendor Name: NVIDIA
+[D3D12 Device Filter] Device Name: NVIDIA GeForce RTX 4070 Ti
+[D3D12 Device Filter] Driver Version: 32.0.16.1742
+[D3D12 Device Filter] Feature Level: 12.2
+[D3D12 Device Filter] Graphics Memory: 11996 MB
+[D3D12 Device Filter] Processor Count: 16
+[D3D12 Device Filter] Device Type: Discrete
+GfxDevice: creating device client; kGfxThreadingModeSplitJobs
+d3d12: failed to query info queue interface (0x80004002).
+Direct3D:
+    Version:         Direct3D 12 [level 12.2]
+    Renderer:        NVIDIA GeForce RTX 4070 Ti (ID=0x2782)
+    Vendor:          NVIDIA
+    VRAM:            11996 MB
+    App VRAM Budget: 11228 MB
+    Driver:          32.0.16.1742
+Begin MonoManager ReloadAssembly
+- Loaded All Assemblies, in  0.193 seconds
+- Finished resetting the current domain, in  0.002 seconds
+[Physics::Module] Selected backend.
+[Physics::Module] Name: PhysX
+[Physics::Module] Id: 0xf2b8ea05
+[Physics::Module] SDK Version: 4.1.2
+[Physics::Module] Integration Version: 1.0.0
+[Physics::Module] Threading Mode: Multi-Threaded
+<RI> Initializing input.
+<RI> Input initialized.
+UnloadTime: 0.680200 ms
+KINSEI start t=0.00 phase=Arrival pos=(0.00, 0.00, -10.65)
+KINSEI RTS t=0.79 phase=Arrival pos=(0.00, 0.00, -10.65)
+KINSEI order-0-Follow t=4.24 phase=Arrival pos=(0.00, 0.00, -10.65)
+KINSEI order-1-Follow t=4.24 phase=Arrival pos=(0.00, 0.00, -10.65)
+KINSEI TPS t=4.40 phase=Arrival pos=(0.00, 0.00, -10.65)
+KINSEI RTS t=4.60 phase=Arrival pos=(0.00, 0.00, -10.65)
+KINSEI TPS t=4.79 phase=Arrival pos=(0.00, 0.00, -10.65)
+KINSEI RTS t=7.24 phase=Arrival pos=(-8.00, 0.21, -10.10)
+KINSEI TPS t=7.42 phase=Arrival pos=(-8.00, 0.21, -10.10)
+KINSEI RTS t=7.62 phase=Arrival pos=(-8.00, 0.21, -10.10)
+KINSEI TPS t=7.80 phase=Arrival pos=(-8.00, 0.21, -10.10)
+KINSEI RTS t=10.38 phase=Arrival pos=(-8.00, 0.03, -19.48)
+KINSEI TPS t=10.55 phase=Arrival pos=(-8.00, 0.03, -19.48)
+KINSEI rail-lift-up t=10.77 phase=Arrival pos=(-8.00, 0.03, -19.48)
+KINSEI rail-board-0-1 t=39.16 phase=Arrival pos=(-13.57, 6.94, -22.64)
+KINSEI rail-alight-1 t=58.68 phase=Arrival pos=(22.43, 6.93, -22.54)
+KINSEI rail-lift-down t=72.13 phase=Arrival pos=(8.11, 6.93, -18.86)
+KINSEI RTS t=76.71 phase=Arrival pos=(8.11, 0.03, -18.86)
+KINSEI order-0-Follow t=78.39 phase=Arrival pos=(8.11, 0.03, -18.86)
+KINSEI order-1-Follow t=78.39 phase=Arrival pos=(8.11, 0.03, -18.86)

@@ -1,0 +1,60 @@
+direct-orders
+KINSEI start t=0.00 phase=Arrival pos=(0.00, 0.00, -10.65)
+KINSEI RTS t=0.77 phase=Arrival pos=(0.00, 0.00, -10.65)
+KINSEI order-1-Rest t=2.11 phase=Arrival pos=(0.00, 0.00, -10.65)
+KINSEI order-1-BoxOffice t=2.49 phase=Arrival pos=(0.00, 0.00, -10.65)
+KINSEI order-1-Follow t=2.89 phase=Arrival pos=(0.00, 0.00, -10.65)
+KINSEI order-1-StageWitness t=3.29 phase=Arrival pos=(0.00, 0.00, -10.65)
+
+box
+KINSEI start t=0.00 phase=Arrival pos=(0.00, 0.00, -10.65)
+KINSEI RTS t=0.71 phase=Arrival pos=(0.00, 0.00, -10.65)
+KINSEI order-0-Rest t=3.24 phase=Arrival pos=(0.00, 0.00, -10.65)
+KINSEI order-1-Rest t=3.24 phase=Arrival pos=(0.00, 0.00, -10.65)
+KINSEI order-2-Rest t=3.24 phase=Arrival pos=(0.00, 0.00, -10.65)
+KINSEI order-3-Rest t=3.24 phase=Arrival pos=(0.00, 0.00, -10.65)
+KINSEI order-4-Rest t=3.24 phase=Arrival pos=(0.00, 0.00, -10.65)
+KINSEI order-5-Rest t=3.24 phase=Arrival pos=(0.00, 0.00, -10.65)
+KINSEI order-0-Follow t=4.23 phase=Arrival pos=(0.00, 0.00, -10.65)
+KINSEI order-1-Follow t=4.23 phase=Arrival pos=(0.00, 0.00, -10.65)
+KINSEI order-2-Follow t=4.23 phase=Arrival pos=(0.00, 0.00, -10.65)
+KINSEI order-3-Follow t=4.23 phase=Arrival pos=(0.00, 0.00, -10.65)
+KINSEI order-4-Follow t=4.23 phase=Arrival pos=(0.00, 0.00, -10.65)
+KINSEI order-5-Follow t=4.23 phase=Arrival pos=(0.00, 0.00, -10.65)
+KINSEI TPS t=4.82 phase=Arrival pos=(0.00, 0.00, -10.65)
+KINSEI RTS t=5.16 phase=Arrival pos=(0.00, 0.00, -10.65)
+KINSEI TPS t=5.66 phase=Arrival pos=(0.00, 0.00, -10.65)
+KINSEI phase-Floor t=7.41 phase=Floor pos=(0.00, 0.03, -6.75)
+KINSEI RTS t=8.18 phase=Floor pos=(0.00, 0.03, -5.16)
+KINSEI hall-dispatch-1-4 t=8.63 phase=Floor pos=(0.00, 0.03, -5.16)
+
+aim
+KINSEI start t=0.00 phase=Arrival pos=(0.00, 0.00, -10.65)
+KINSEI phase-Floor t=3.00 phase=Floor pos=(0.00, 0.03, -6.71)
+KINSEI hit-guard-68 t=5.58 phase=Floor pos=(0.00, 0.03, -4.30)
+KINSEI RTS t=6.11 phase=Floor pos=(0.00, 0.03, -4.30)
+KINSEI TPS t=6.13 phase=Floor pos=(0.00, 0.03, -4.30)
+KINSEI hit-guard-36 t=6.66 phase=Floor pos=(0.00, 0.03, -4.30)
+KINSEI pause t=6.86 phase=Floor pos=(0.00, 0.03, -4.30)
+
+options
+KINSEI start t=0.00 phase=Arrival pos=(0.00, 0.00, -10.65)
+KINSEI pause t=0.76 phase=Arrival pos=(0.00, 0.00, -10.65)
+KINSEI resume t=0.76 phase=Arrival pos=(0.00, 0.00, -10.65)
+KINSEI phase-Floor t=2.91 phase=Floor pos=(0.00, 0.03, -6.74)
+KINSEI hit-guard-68 t=4.06 phase=Floor pos=(0.00, 0.03, -4.82)
+KINSEI pause t=4.26 phase=Floor pos=(0.00, 0.03, -4.82)
+
+options-reload
+KINSEI start t=0.00 phase=Arrival pos=(0.00, 0.00, -10.65)
+KINSEI pause t=0.72 phase=Arrival pos=(0.00, 0.00, -10.65)
+KINSEI resume t=0.72 phase=Arrival pos=(0.00, 0.00, -10.65)
+KINSEI phase-Floor t=2.77 phase=Floor pos=(0.00, 0.03, -6.74)
+KINSEI pause t=3.81 phase=Floor pos=(0.00, 0.03, -5.07)
+KINSEI resume t=3.81 phase=Floor pos=(0.00, 0.03, -5.07)
+
+large
+KINSEI start t=0.00 phase=Arrival pos=(0.00, 0.00, -10.65)
+KINSEI RTS t=0.74 phase=Arrival pos=(0.00, 0.00, -10.65)
+KINSEI pause t=1.68 phase=Arrival pos=(0.00, 0.00, -10.65)
+

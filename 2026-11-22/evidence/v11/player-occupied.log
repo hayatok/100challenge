@@ -1,0 +1,60 @@
+Mono path[0] = 'C:/Users/hayat/AppData/Local/Temp/kinsei62-v11-release/Kinsei_Data/Managed'
+Mono config path = 'C:/Users/hayat/AppData/Local/Temp/kinsei62-v11-release/MonoBleedingEdge/etc'
+Input System module state changed to: Initialized.
+[Physics::Module] Initialized fallback backend.
+[Physics::Module] Id: 0xdecafbad
+Loading player data from C:/Users/hayat/AppData/Local/Temp/kinsei62-v11-release/Kinsei_Data/data.unity3d
+Initialize engine version: 6000.3.28f1 (8f082d2fe476)
+[Subsystems] Discovering subsystems at path C:/Users/hayat/AppData/Local/Temp/kinsei62-v11-release/Kinsei_Data/UnitySubsystems
+[D3D12 Device Filter] Vendor Name: NVIDIA
+[D3D12 Device Filter] Device Name: NVIDIA GeForce RTX 4070 Ti
+[D3D12 Device Filter] Driver Version: 32.0.16.1742
+[D3D12 Device Filter] Feature Level: 12.2
+[D3D12 Device Filter] Graphics Memory: 11996 MB
+[D3D12 Device Filter] Processor Count: 16
+[D3D12 Device Filter] Device Type: Discrete
+GfxDevice: creating device client; kGfxThreadingModeSplitJobs
+d3d12: failed to query info queue interface (0x80004002).
+Direct3D:
+    Version:         Direct3D 12 [level 12.2]
+    Renderer:        NVIDIA GeForce RTX 4070 Ti (ID=0x2782)
+    Vendor:          NVIDIA
+    VRAM:            11996 MB
+    App VRAM Budget: 11228 MB
+    Driver:          32.0.16.1742
+Begin MonoManager ReloadAssembly
+- Loaded All Assemblies, in  0.161 seconds
+- Finished resetting the current domain, in  0.003 seconds
+[Physics::Module] Selected backend.
+[Physics::Module] Name: PhysX
+[Physics::Module] Id: 0xf2b8ea05
+[Physics::Module] SDK Version: 4.1.2
+[Physics::Module] Integration Version: 1.0.0
+[Physics::Module] Threading Mode: Multi-Threaded
+<RI> Initializing input.
+<RI> Input initialized.
+UnloadTime: 0.804800 ms
+KINSEI start t=0.00 phase=Arrival pos=(0.00, 0.00, -10.65)
+KINSEI pause t=0.81 phase=Arrival pos=(0.00, 0.00, -10.65)
+KINSEI resume t=0.81 phase=Arrival pos=(0.00, 0.00, -10.65)
+KINSEI pause t=3.26 phase=Arrival pos=(-8.06, 0.21, -10.10)
+KINSEI resume t=3.26 phase=Arrival pos=(-8.06, 0.21, -10.10)
+KINSEI pause t=3.43 phase=Arrival pos=(-8.06, 0.21, -10.10)
+KINSEI resume t=3.43 phase=Arrival pos=(-8.06, 0.21, -10.10)
+KINSEI pause t=6.08 phase=Arrival pos=(-7.99, 0.03, -19.48)
+KINSEI resume t=6.08 phase=Arrival pos=(-7.99, 0.03, -19.48)
+KINSEI rail-lift-up t=6.92 phase=Arrival pos=(-7.99, 0.03, -19.48)
+KINSEI pause t=12.12 phase=Arrival pos=(-7.99, 6.93, -19.48)
+KINSEI resume t=12.12 phase=Arrival pos=(-7.99, 6.93, -19.48)
+KINSEI pause t=12.91 phase=Arrival pos=(-7.99, 6.94, -21.53)
+KINSEI resume t=12.91 phase=Arrival pos=(-7.99, 6.94, -21.53)
+KINSEI pause t=13.11 phase=Arrival pos=(-7.99, 6.94, -21.53)
+KINSEI resume t=13.11 phase=Arrival pos=(-7.99, 6.94, -21.53)
+KINSEI pause t=16.89 phase=Arrival pos=(-22.35, 6.94, -21.53)
+KINSEI resume t=16.89 phase=Arrival pos=(-22.35, 6.94, -21.53)
+KINSEI pause t=18.02 phase=Arrival pos=(-22.35, 6.93, -21.53)
+KINSEI resume t=18.02 phase=Arrival pos=(-22.35, 6.93, -21.53)
+KINSEI rail-board-0-0 t=39.08 phase=Arrival pos=(-22.35, 6.93, -22.64)
+KINSEI pause t=54.75 phase=Arrival pos=(7.27, 6.93, -23.66)
+KINSEI resume t=54.75 phase=Arrival pos=(7.27, 6.93, -23.66)
+KINSEI_FRAME n=938 median_ms=16.67 p95_ms=16.81 size=1920x1080 gpu=NVIDIA GeForce RTX 4070 Ti scene=occupied-coach

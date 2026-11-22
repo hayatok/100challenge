@@ -1,0 +1,91 @@
+Mono path[0] = 'C:/Users/hayat/AppData/Local/Temp/kinsei62-v06-player/Kinsei_Data/Managed'
+Mono config path = 'C:/Users/hayat/AppData/Local/Temp/kinsei62-v06-player/MonoBleedingEdge/etc'
+Input System module state changed to: Initialized.
+[Physics::Module] Initialized fallback backend.
+[Physics::Module] Id: 0xdecafbad
+Loading player data from C:/Users/hayat/AppData/Local/Temp/kinsei62-v06-player/Kinsei_Data/data.unity3d
+Initialize engine version: 6000.3.28f1 (8f082d2fe476)
+[Subsystems] Discovering subsystems at path C:/Users/hayat/AppData/Local/Temp/kinsei62-v06-player/Kinsei_Data/UnitySubsystems
+[D3D12 Device Filter] Vendor Name: NVIDIA
+[D3D12 Device Filter] Device Name: NVIDIA GeForce RTX 4070 Ti
+[D3D12 Device Filter] Driver Version: 32.0.16.1742
+[D3D12 Device Filter] Feature Level: 12.2
+[D3D12 Device Filter] Graphics Memory: 11996 MB
+[D3D12 Device Filter] Processor Count: 16
+[D3D12 Device Filter] Device Type: Discrete
+GfxDevice: creating device client; kGfxThreadingModeSplitJobs
+d3d12: failed to query info queue interface (0x80004002).
+Direct3D:
+    Version:         Direct3D 12 [level 12.2]
+    Renderer:        NVIDIA GeForce RTX 4070 Ti (ID=0x2782)
+    Vendor:          NVIDIA
+    VRAM:            11996 MB
+    App VRAM Budget: 11228 MB
+    Driver:          32.0.16.1742
+Begin MonoManager ReloadAssembly
+- Loaded All Assemblies, in  4.266 seconds
+- Finished resetting the current domain, in  0.003 seconds
+[Physics::Module] Selected backend.
+[Physics::Module] Name: PhysX
+[Physics::Module] Id: 0xf2b8ea05
+[Physics::Module] SDK Version: 4.1.2
+[Physics::Module] Integration Version: 1.0.0
+[Physics::Module] Threading Mode: Multi-Threaded
+<RI> Initializing input.
+<RI> Input initialized.
+UnloadTime: 0.935600 ms
+KINSEI start t=0.00 phase=Arrival pos=(0.00, 0.00, -10.65)
+KINSEI RTS t=0.68 phase=Arrival pos=(0.00, 0.00, -10.65)
+KINSEI order-1-StageWitness t=0.79 phase=Arrival pos=(0.00, 0.00, -10.65)
+KINSEI stage-witness-cancel t=0.83 phase=Arrival pos=(0.00, 0.00, -10.65)
+KINSEI order-2-StageWitness t=1.22 phase=Arrival pos=(0.00, 0.00, -10.65)
+KINSEI order-1-StageWitness t=1.59 phase=Arrival pos=(0.00, 0.00, -10.65)
+KINSEI TPS t=2.37 phase=Arrival pos=(0.00, 0.00, -10.65)
+KINSEI RTS t=2.59 phase=Arrival pos=(0.00, 0.00, -10.65)
+KINSEI TPS t=2.77 phase=Arrival pos=(0.00, 0.00, -10.65)
+KINSEI RTS t=4.64 phase=Arrival pos=(5.54, 0.00, -9.97)
+KINSEI TPS t=4.82 phase=Arrival pos=(5.54, 0.00, -9.97)
+KINSEI shop-view-Marquee t=5.01 phase=Arrival pos=(5.54, 0.00, -9.97)
+KINSEI stage-witness-ready t=6.09 phase=Arrival pos=(5.54, 0.00, -9.97)
+KINSEI shop-view-None t=9.72 phase=Arrival pos=(5.54, 0.00, -9.97)
+KINSEI shop-view-Marquee t=10.62 phase=Arrival pos=(5.54, 0.00, -9.97)
+KINSEI RTS t=11.06 phase=Arrival pos=(5.54, 0.00, -9.97)
+KINSEI TPS t=12.14 phase=Arrival pos=(5.54, 0.00, -9.97)
+KINSEI RTS t=12.34 phase=Arrival pos=(5.54, 0.00, -9.97)
+KINSEI TPS t=12.53 phase=Arrival pos=(5.54, 0.00, -9.97)
+KINSEI RTS t=14.34 phase=Arrival pos=(0.01, 0.00, -10.38)
+KINSEI TPS t=14.53 phase=Arrival pos=(0.01, 0.00, -10.38)
+KINSEI RTS t=14.73 phase=Arrival pos=(0.01, 0.00, -10.38)
+KINSEI TPS t=14.91 phase=Arrival pos=(0.01, 0.00, -10.38)
+KINSEI phase-Floor t=16.01 phase=Floor pos=(0.01, 0.03, -6.69)
+KINSEI RTS t=16.25 phase=Floor pos=(0.01, 0.03, -6.11)
+KINSEI TPS t=16.44 phase=Floor pos=(0.01, 0.03, -6.11)
+KINSEI RTS t=16.67 phase=Floor pos=(0.01, 0.03, -6.11)
+KINSEI TPS t=16.86 phase=Floor pos=(0.01, 0.03, -6.11)
+KINSEI RTS t=18.62 phase=Floor pos=(-3.70, 0.03, -4.28)
+KINSEI TPS t=18.79 phase=Floor pos=(-3.70, 0.03, -4.28)
+KINSEI RTS t=19.00 phase=Floor pos=(-3.70, 0.03, -4.28)
+KINSEI TPS t=19.19 phase=Floor pos=(-3.70, 0.03, -4.28)
+KINSEI RTS t=21.24 phase=Floor pos=(-4.86, 0.03, 1.39)
+KINSEI TPS t=21.40 phase=Floor pos=(-4.86, 0.03, 1.39)
+KINSEI phase-Showdown t=22.00 phase=Showdown pos=(-4.86, 0.03, 1.39)
+KINSEI stage-Approach t=22.00 phase=Showdown pos=(-5.86, 0.48, 3.08)
+KINSEI stage-Cue t=24.11 phase=Showdown pos=(-5.86, 0.51, 3.08)
+KINSEI stage-Swing t=25.17 phase=Showdown pos=(-4.71, 0.51, 3.77)
+KINSEI stage-Opening t=25.52 phase=Showdown pos=(-4.71, 0.51, 3.77)
+KINSEI stage-answer-66 t=25.55 phase=Showdown pos=(-4.71, 0.51, 3.77)
+KINSEI stage-Approach t=27.02 phase=Showdown pos=(-4.71, 0.51, 3.77)
+KINSEI stage-Cue t=27.35 phase=Showdown pos=(-4.71, 0.51, 3.77)
+KINSEI stage-Swing t=28.40 phase=Showdown pos=(-4.71, 0.51, 3.77)
+KINSEI stage-hit t=28.75 phase=Showdown pos=(-4.71, 0.51, 3.77)
+KINSEI stage-Opening t=28.75 phase=Showdown pos=(-4.71, 0.51, 3.77)
+KINSEI stage-answer-32 t=28.82 phase=Showdown pos=(-4.71, 0.51, 3.77)
+KINSEI stage-Approach t=30.25 phase=Showdown pos=(-4.71, 0.51, 3.77)
+KINSEI stage-Cue t=30.59 phase=Showdown pos=(-4.71, 0.51, 3.77)
+KINSEI stage-Swing t=31.64 phase=Showdown pos=(-4.71, 0.51, 3.77)
+KINSEI stage-hit t=31.99 phase=Showdown pos=(-4.71, 0.51, 3.77)
+KINSEI stage-Opening t=31.99 phase=Showdown pos=(-4.71, 0.51, 3.77)
+KINSEI stage-answer-0 t=32.02 phase=Showdown pos=(-4.71, 0.51, 3.77)
+KINSEI stage-Settled t=32.02 phase=Showdown pos=(-4.71, 0.51, 3.77)
+KINSEI ending-showdown t=32.77 phase=Result pos=(-4.71, 0.51, 3.77)
+KINSEI_FRAME n=1913 median_ms=16.67 p95_ms=16.84 size=1920x1080 gpu=NVIDIA GeForce RTX 4070 Ti

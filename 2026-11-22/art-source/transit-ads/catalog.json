@@ -1,0 +1,78 @@
+{
+  "model": "MOSS-Image",
+  "atlas_sha256": "5b0e99f4de7cf1e8bbac85272acdac0fa582269c524b82e1a9ea83444f21cb4e",
+  "plates": [
+    {
+      "key": "needle",
+      "prompt_id": "fd3e3f9a-c78f-4a24-b4e9-abe75ad9d710",
+      "file": "needle_00001_.png",
+      "sha256": "f99eb94b019a13722a8f9076b12c3f7668b192751ee803cc2597148aeea13b00",
+      "seconds": 15.045,
+      "accepted": true,
+      "merchant": "針音堂",
+      "head": "レコード針",
+      "deck": "交換針、あります。",
+      "sub": "針先の相談はカウンターへ。",
+      "uv": [
+        0.0,
+        0.5,
+        0.5,
+        0.5
+      ]
+    },
+    {
+      "key": "phone",
+      "prompt_id": "29d7332c-4f77-4689-bf37-c8c4d53c55b0",
+      "file": "phone_00001_.png",
+      "sha256": "299154d1863eb101e3e4e2ca1312415bb7fb64b7f2427512064238d7399d86ae",
+      "seconds": 10.197,
+      "accepted": true,
+      "merchant": "共同送像所",
+      "head": "テレビ電話",
+      "deck": "顔を見て、話そう。",
+      "sub": "遠くの家族と、町の送像所で。",
+      "uv": [
+        0.5,
+        0.5,
+        0.5,
+        0.5
+      ]
+    },
+    {
+      "key": "lotus",
+      "prompt_id": "d314c13b-f8a3-49d0-a304-15841d8ed1e8",
+      "file": "lotus_00001_.png",
+      "sha256": "8c045e6d9b0d29664ae05514402bf2ffb29f30dd6c2e9edb299b806e16c68cb1",
+      "seconds": 9.856,
+      "accepted": true,
+      "merchant": "純喫茶 ロータス",
+      "head": "朝の珈琲",
+      "deck": "一杯ずつ、サイフォンで。",
+      "sub": "開店の香りを、いつもの席で。",
+      "uv": [
+        0.0,
+        0.0,
+        0.5,
+        0.5
+      ]
+    },
+    {
+      "key": "trumpet",
+      "prompt_id": "9e03207d-2956-4894-9e4e-c52600e4fe82",
+      "file": "trumpet_00001_.png",
+      "sha256": "3f832f33ad9655b629ca44ded4d78cee345f97e2e269454f5bacecd90e0c782a",
+      "seconds": 9.434,
+      "accepted": true,
+      "merchant": "キャバレー 金星",
+      "head": "公開録音",
+      "deck": "遠来の吹き手",
+      "sub": "出演のご案内は金星の帳場へ。",
+      "uv": [
+        0.5,
+        0.0,
+        0.5,
+        0.5
+      ]
+    }
+  ]
+}

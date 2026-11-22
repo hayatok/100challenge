@@ -1,0 +1,150 @@
+{
+  "prompt_id": "ed8e83d3-01e0-4987-8280-721028f7bfa5",
+  "sha256": "7dfccc31bd5833892674b13b6a4ee85e7948f7ab6647141eb8503ca115f4d507",
+  "seed": 1702203,
+  "source": {
+    "filename": "frontage-brass_00001_.png",
+    "subfolder": "kinsei",
+    "type": "output",
+    "metadata": {
+      "kind": "image",
+      "width": 1024,
+      "height": 1024
+    }
+  },
+  "execution": {
+    "status_str": "success",
+    "completed": true,
+    "messages": [
+      [
+        "execution_start",
+        {
+          "prompt_id": "ed8e83d3-01e0-4987-8280-721028f7bfa5",
+          "timestamp": 1795310713688
+        }
+      ],
+      [
+        "execution_cached",
+        {
+          "nodes": [
+            "1",
+            "2",
+            "3",
+            "5",
+            "6"
+          ],
+          "prompt_id": "ed8e83d3-01e0-4987-8280-721028f7bfa5",
+          "timestamp": 1795310713689
+        }
+      ],
+      [
+        "execution_success",
+        {
+          "prompt_id": "ed8e83d3-01e0-4987-8280-721028f7bfa5",
+          "timestamp": 1795310731836
+        }
+      ]
+    ]
+  },
+  "graph": {
+    "1": {
+      "class_type": "UNETLoader",
+      "inputs": {
+        "unet_name": "moss_image_sft_int8_convrot.safetensors",
+        "weight_dtype": "default"
+      }
+    },
+    "2": {
+      "class_type": "CLIPLoader",
+      "inputs": {
+        "clip_name": "qwen3.5_9b_w4a8_gptq.safetensors",
+        "type": "moss_image",
+        "device": "default"
+      }
+    },
+    "3": {
+      "class_type": "VAELoader",
+      "inputs": {
+        "vae_name": "flux2-vae_small.safetensors"
+      }
+    },
+    "4": {
+      "class_type": "CLIPTextEncode",
+      "inputs": {
+        "clip": [
+          "2",
+          0
+        ],
+        "text": "Single flat top-down material scan, 1:1 square full bleed, eye perpendicular to the surface, neutral diffuse illumination without cast shadows. A 24-centimetre square of flat satin aged brass, a cut sheet intended for a narrow architectural trim at an Osaka theatre. Subdued ochre bronze, uniform soft horizontal brushing so fine that texture is subtle and continuous. Gentle faded patches from hand polishing and sporadic very fine hairline marks. Well-maintained metal photographed under cross-polarised neutral white dome lighting, uniform restrained albedo and no directional glare."
+      }
+    },
+    "5": {
+      "class_type": "CLIPTextEncode",
+      "inputs": {
+        "clip": [
+          "2",
+          0
+        ],
+        "text": "objects, signage, labels, text, watermark, border, seams, joints, bevels, trims, perspective, reflected scene, cast shadow, relief lighting, prominent damage, flaking paint, border patina, damp spots, vignette"
+      }
+    },
+    "6": {
+      "class_type": "EmptyFlux2LatentImage",
+      "inputs": {
+        "width": 1024,
+        "height": 1024,
+        "batch_size": 1
+      }
+    },
+    "7": {
+      "class_type": "KSampler",
+      "inputs": {
+        "model": [
+          "1",
+          0
+        ],
+        "positive": [
+          "4",
+          0
+        ],
+        "negative": [
+          "5",
+          0
+        ],
+        "latent_image": [
+          "6",
+          0
+        ],
+        "seed": 1702203,
+        "steps": 30,
+        "cfg": 2.5,
+        "sampler_name": "er_sde",
+        "scheduler": "simple",
+        "denoise": 1
+      }
+    },
+    "8": {
+      "class_type": "VAEDecode",
+      "inputs": {
+        "samples": [
+          "7",
+          0
+        ],
+        "vae": [
+          "3",
+          0
+        ]
+      }
+    },
+    "9": {
+      "class_type": "SaveImage",
+      "inputs": {
+        "images": [
+          "8",
+          0
+        ],
+        "filename_prefix": "kinsei/frontage-brass"
+      }
+    }
+  }
+}

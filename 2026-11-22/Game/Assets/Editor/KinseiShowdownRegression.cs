@@ -1,0 +1,334 @@
+using System;
+using System.Collections;
+using System.IO;
+using System.Reflection;
+using UnityEditor;
+using UnityEngine;
+
+[InitializeOnLoad]
+public static class KinseiShowdownRegression
+{
+    const string Pending = "KinseiShowdownRegression.pending";
+    const BindingFlags Fields = BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public;
+    const float Dt = 1f / 60f;
+    static KinseiSession session;
+
+    static KinseiShowdownRegression()
+    {
+        if (SessionState.GetBool(Pending, false)) EditorApplication.update += WhenPlaying;
+    }
+
+    public static void Run()
+    {
+        string directory = Path.Combine(Path.GetTempPath(), "KinseiShowdownRegression-" + Guid.NewGuid().ToString("N"));
+        Environment.SetEnvironmentVariable("KINSEI_SAVE_DIRECTORY", directory);
+        SessionState.SetBool(Pending, true);
+        EditorApplication.update -= WhenPlaying;
+        EditorApplication.update += WhenPlaying;
+        EditorApplication.EnterPlaymode();
+    }
+
+    static void WhenPlaying()
+    {
+        if (!EditorApplication.isPlaying) return;
+        session = UnityEngine.Object.FindFirstObjectByType<KinseiSession>();
+        if (session == null || !Read<KinseiWalkways>(session, "walkways").Ready) return;
+        EditorApplication.update -= WhenPlaying;
+        SessionState.EraseBool(Pending);
+        try
+        {
+            CheckBackstage();
+            CheckWitness();
+            CheckNormalEndings();
+            CheckBroadcast();
+            CheckStageWin();
+            CheckStageLoss();
+            Debug.Log("KINSEI_SHOWDOWN_PASS backstage / witness / pursuit / accord / stage broadcast / stage win / stage loss");
+            EditorApplication.Exit(0);
+        }
+        catch (Exception ex)
+        {
+            Debug.LogException(ex);
+            EditorApplication.Exit(1);
+        }
+    }
+
+    static FieldInfo Field(object target, string name) => target.GetType().GetField(name, Fields);
+    static T Read<T>(object target, string name) => (T)Field(target, name).GetValue(target);
+    static void Set(object target, string name, object value) => Field(target, name).SetValue(target, value);
+    static object Call(string name, params object[] args) => typeof(KinseiSession).GetMethod(name, Fields).Invoke(session, args);
+    static object Player => Read<object>(session, "player");
+    static object Boss => Read<object>(session, "boss");
+    static object Crew(int index) => Read<IList>(session, "crew")[index];
+    static Vector3 Steps => Read<Vector3>(session, "StageSteps");
+    static Vector3 Wing => Read<Vector3>(session, "StageWing");
+    static Transform Root(object person) => Read<Transform>(person, "root");
+    static float Hp(object person) => Read<float>(person, "hp");
+    static string Phase => Read<object>(session, "phase").ToString();
+    static string Beat => Read<object>(session, "stageBeat").ToString();
+    static string Verb => (string)Call("Interaction");
+
+    static void Require(bool condition, string message)
+    {
+        if (!condition) throw new InvalidOperationException(message + " (phase " + Phase + ", beat " + Beat + ")");
+    }
+
+    static void Step()
+    {
+        Set(session, "clock", Read<float>(session, "clock") + Dt);
+        Set(session, "phaseAge", Read<float>(session, "phaseAge") + Dt);
+        Call("Simulate", Dt);
+    }
+
+    static void Await(Func<bool> ready, int seconds, string message)
+    {
+        for (int i = 0; i < 60 * seconds && !ready(); i++) Step();
+        Require(ready(), message);
+    }
+
+    static void Order(int index, string name)
+    {
+        Set(session, "chosen", index);
+        Call("Assign", Enum.Parse(Field(Crew(index), "duty").FieldType, name), Vector3.zero);
+    }
+
+    static object Witness => Read<object>(session, "stageWitness");
+
+    static void CheckBackstage()
+    {
+        Call("StartNight");
+        var start=new Vector3(-9.59f,.04f,1.30f);
+        var inside=new Vector3(-8.20f,.04f,1.30f);
+        var walkways=Read<KinseiWalkways>(session,"walkways");
+        var path=new UnityEngine.AI.NavMeshPath();
+        bool ShortCrossing()
+        {
+            if(!walkways.GetPath(start,inside,path))return false;
+            float distance=0;
+            var corners=path.corners;
+            for(int i=1;i<corners.Length;i++)distance+=Vector3.Distance(corners[i-1],corners[i]);
+            return distance<3;
+        }
+        Require(!ShortCrossing(),"Closed stage door is a navigation shortcut");
+        Root(Player).position=start;
+        Physics.SyncTransforms();
+        Call("PlayerInput",Dt);
+        var motor=Read<CharacterController>(session,"motor");
+        motor.Move(Vector3.right*1.6f);
+        Require(Root(Player).position.x< -9,"Closed leaf allowed the player through");
+        Require(Verb.Length==0,"No runner supplied a pass");
+        Order(1,"Backstage");
+        Order(2,"Backstage");
+        Require(Read<object>(Crew(1),"duty").ToString()=="Follow","Previous runner was not released");
+        Order(2,"Rest");
+        Require(Read<object>(Crew(2),"duty").ToString()=="Rest","Runner could not change assignment");
+        Order(3,"Backstage");
+        Await(()=>Verb=="通し札を受けて楽屋口を開ける",22,"Runner failed to walk to the slot");
+        Call("Interact");
+        Await(()=>Read<float>(session,"backstageTravel")>=1,3,"Stage door did not finish sliding");
+        Require(ShortCrossing(),"Opened doorway still blocks navigation");
+        Require(Phase=="Arrival","Opening the door started combat outside");
+        for(int i=0;i<32;i++){motor.Move(Vector3.right*.05f);Step();}
+        Require(Root(Player).position.x> -8.5f && Phase=="Floor","Walking through the open leaf did not start the floor");
+        for(int i=0;i<32;i++){motor.Move(Vector3.left*.05f);Step();}
+        Require(Root(Player).position.x< -9.2f && Phase=="Floor","Could not return to the passage");
+        Call("StartNight");
+        Require(Read<float>(session,"backstageTravel")==0 && !ShortCrossing(),"Retry left the passage open");
+    }
+
+    static void CheckWitness()
+    {
+        Call("StartNight");
+        Call("ToggleCommand");
+        Order(1, "StageWitness");
+        Require(Phase == "Arrival" && Witness == Crew(1), "Street assignment failed");
+        Order(2, "StageWitness");
+        Require(Witness == Crew(2) && Read<object>(Crew(1), "duty").ToString() == "Follow", "Replacement left the old witness at their post");
+        Order(2, "Attend");
+        Require(Witness == Crew(2), "Rejected reassignment removed witness");
+        Call("ToggleCommand");
+        Await(() => (bool)typeof(KinseiSession).GetProperty("StageWitnessReady", Fields).GetValue(session), 12, "Witness did not reach the wing by walking");
+        Root(Player).position = Steps + Vector3.up * 3.2f;
+        Require(Verb.Length == 0, "Upstairs mistakenly offers the challenge");
+        Root(Player).position = Steps;
+        Require(Verb == "舞台の勝負を受ける", "Waiting witness did not unlock the prompt");
+        Set(Crew(2), "hp", 0f);
+        Call("Interact");
+        Require(Phase == "Arrival", "Incapacitated witness started the showdown");
+        Step();
+        Require(Witness == null && Phase == "Floor", "Witness invalidation blocked the ordinary floor");
+        Order(1, "StageWitness");
+        Order(1, "Guard");
+        Require(Witness == null && Read<object>(Crew(1), "duty").ToString() == "Guard", "New valid duty failed to release the witness");
+        Debug.Log("KINSEI_SHOWDOWN witness path, replacement, rejected and accepted reassignment, incapacitation");
+    }
+
+    static void HallCleared()
+    {
+        Call("StartNight");
+        Root(Player).position = new Vector3(0, 0, -3.1f);
+        Step();
+        Set(Read<object>(session, "brother"), "hp", 0f);
+        foreach (object guard in Read<IList>(session, "guards")) Set(guard, "hp", 0f);
+        Step();
+        Require(Phase == "Choice", "Ordinary fight no longer reaches Choice");
+    }
+
+    static void CheckNormalEndings()
+    {
+        HallCleared();
+        Root(Crew(1)).position = Wing;
+        Order(1, "StageWitness");
+        Order(1, "StageWitness");
+        Require(Witness == null, "Same-person V did not cancel the appointment");
+        Root(Player).position = Root(Boss).position + Vector3.left;
+        Require(Verb == "兄貴分を追う", "Pursuit unavailable after cancellation");
+        Call("Interact");
+        Require(Phase == "Chase", "Pursuit interaction no longer transitions");
+        Set(Boss, "hp", 0f);
+        Step();
+        Require(Read<string>(session, "outcome") == "pursuit", "Ordinary pursuit no longer settles");
+
+        HallCleared();
+        Root(Crew(1)).position = Wing;
+        Order(1, "StageWitness");
+        object brother = Read<object>(session, "brother");
+        Root(Player).position = Root(brother).position;
+        Require(Verb == "弟に肩を貸す", "Ready witness displaced the escort interaction");
+        Call("Interact");
+        Require(Read<bool>(session, "escorted"), "Escort unavailable with an unused witness");
+        Root(Crew(0)).position = Read<Vector3>(session, "table");
+        Order(0, "Attend");
+        Await(() => Read<bool>(session, "held"), 2, "Tatsu could not negotiate beside the witness order");
+        Root(Player).position = Read<Vector3>(session, "witness");
+        Call("Interact");
+        Await(() => Phase == "Release", 6, "Escort could not reach the mirror and release");
+        Root(Read<object>(session, "elder")).position = new Vector3(-.45f, 0, -11f);
+        Root(brother).position = new Vector3(.2f, 0, -10.84f);
+        Step();
+        Require(Read<string>(session, "outcome") == "accord", "Ordinary accord no longer settles");
+        Debug.Log("KINSEI_SHOWDOWN pursuit after V cancellation / accord with unused witness");
+    }
+
+    static void DeclareStage()
+    {
+        Call("StartNight");
+        Root(Player).position = Steps;
+        Step();
+        Root(Crew(2)).position = Wing;
+        Order(2, "StageWitness");
+        object guard = Read<IList>(session, "guards")[0];
+        Set(guard, "watching", Player);
+        Call("Interact");
+        Require(Phase == "Showdown", "Stage E failed in the hall");
+        Require(Read<object>(guard, "watching") == null, "A queued gunshot survived the declaration");
+        Call("ToggleCommand");
+        Require(Read<bool>(session,"command"),"Stage command unavailable");
+        Call("ToggleCommand");
+    }
+
+    static void CheckBroadcast()
+    {
+        DeclareStage();
+        int returns=Read<KinseiLedger>(session,"ledger").completed;
+        Vector3 witness=Root(Crew(2)).position;
+        Call("ToggleCommand");
+        Call("SelectMember",2,false);Call("OrderStageDesk");
+        Require(Read<object>(session,"stageDeskRunner")==null,"The witness deserted the wing");
+        Call("SelectMember",1,false);Call("SelectMember",3,true);Call("OrderStageDesk");
+        Require(Read<object>(session,"stageDeskRunner")==null,"A group received a single desk");
+        Call("SelectMember",1,false);Call("OrderStageDesk");
+        Require(Read<object>(session,"stageDeskRunner")==Crew(1),"Runner could not take the desk");
+        Call("SelectMember",3,false);Call("OrderStageDesk");
+        Require(Read<object>(session,"stageDeskRunner")==Crew(3),"Desk could not be reassigned");
+        Call("OrderStageDesk");
+        Require(Read<object>(session,"stageDeskRunner")==null,"Desk could not be cancelled");
+        Call("SelectMember",1,false);Call("SelectMember",3,true);
+        Set(Crew(1),"hp",0f);
+        Call("OrderStageDesk");
+        Require(Read<object>(session,"stageDeskRunner")==Crew(3) && Read<int>(session,"chosen")==3 &&
+            Hp(Crew(1))==0,"A downed squad leader displaced the surviving operator");
+        var post=Read<Vector3>(session,"StageDeskPost");float initial=Vector3.Distance(Root(Crew(3)).position,post);
+        for(int i=0;i<30;i++)Step();
+        Require(Vector3.Distance(Root(Crew(3)).position,post)<initial-.12f,"Runner did not walk in RTS");
+        Call("ToggleCommand");
+        Require(Verb=="","Microphone accepted an unanswered challenge");
+        Await(()=>Beat=="Opening",8,"No exchange while the desk runner walked");
+        Root(Player).position=Root(Boss).position+Vector3.left*.98f;
+        Call("Attack",true,false);
+        Require(Read<bool>(session,"stageReturned"),"A valid return did not unlock testimony");
+        var mic=Read<Vector3>(session,"StageMicrophone");
+        Root(Player).position=mic+new Vector3(-.77f,0,-.14f);
+        Await(()=>Verb.Contains("マイク"),12,"The reachable microphone did not open");
+        Require(Vector3.Distance(Root(Crew(3)).position,post)<.28f && Hp(Crew(1))==0,
+            "Surviving squad member never reached the commentary desk");
+        Call("Interact");
+        Await(()=>Beat=="Testimony",4,"Boss did not reach the microphone");
+        Require(Vector3.Distance(Root(Player).position,Root(Boss).position)>.91f &&
+            Vector3.Distance(Root(Boss).position,mic)<.61f,"Bad microphone blocking");
+        Require(Vector3.Distance(witness,Root(Crew(2)).position)<.02f,"Witness abandoned the wing");
+        Require(Read<bool>(session,"stageFeedLive"),"No live testimony");
+        Call("TogglePause");Require(Read<bool>(session,"paused"),"Broadcast cannot pause");Call("TogglePause");
+        Await(()=>Phase=="Result",7,"Testimony never ended");
+        var saved=new KinseiLedgerStore(Environment.GetEnvironmentVariable("KINSEI_SAVE_DIRECTORY")).Load();
+        Require(Read<string>(session,"outcome")=="stage-broadcast" && saved.stagePromise &&
+            saved.completed==returns+1 && !Read<bool>(session,"stageFeedLive"),"Broadcast did not settle and reset");
+        Debug.Log("KINSEI_STAGE_BROADCAST_PASS desk walk reassignment / single operator / retort / real mic / saved promise");
+    }
+
+    static void CheckStageWin()
+    {
+        DeclareStage();
+        Set(session, "reducedMotion", true);
+        float playerHp = Hp(Player);
+        Root(Boss).position = new Vector3(-8.9f, -1f, 5f);
+        Step();
+        Require(Mathf.Abs(Root(Boss).position.y - .48f) < .005f && Root(Boss).position.z <= 4.11f,
+            "Boss recovery left a combatant outside the boards");
+        for (int i = 0; i < 3; i++)
+        {
+            Await(() => Beat == "Cue", 6, "No warning");
+            Require(Read<LineRenderer>(session, "stageRing").enabled, "Reduced motion hid the warning ring");
+            float bossHp = Hp(Boss);
+            Call("Attack", false, false);
+            Call("Attack", true, false);
+            Require(Hp(Boss) == bossHp, "Weapon or early F broke the scripted opening");
+            Vector3 mark = Read<Vector3>(session, "stageMark");
+            Root(Player).position = mark + Vector3.right * (mark.x < -5f ? 1.05f : -1.05f);
+            Await(() => Beat == "Opening", 3, "No opening after the swing");
+            var ring = Read<LineRenderer>(session, "stageRing");
+            Require(ring.enabled && ring.startColor.g > .88f && ring.startColor.b > .7f,
+                "The opening must show the white floor ring even with reduced motion");
+            Require(Hp(Player) == playerHp, "Standing outside the marked area caused damage");
+            var opponent = Root(Boss).position;
+            Root(Player).position = opponent + Vector3.right * (opponent.x < -5f ? .98f : -.98f);
+            Call("Attack", true, false);
+            Require(Hp(Boss) == Mathf.Max(0, bossHp - 34), "F at the opening did not count");
+            Require(!ring.enabled, "The white ring still invites another hit after the counter");
+            if (i == 2) break;
+            for (int frame = 0; frame < 27; frame++) Step();
+            Call("Attack", true, false);
+            Require(Hp(Boss) == bossHp - 34, "One opening counted twice");
+        }
+        Await(() => Phase == "Result", 2, "Stage victory did not reach an ending");
+        Require(Read<string>(session, "outcome") == "showdown" && Read<KinseiLedger>(session, "ledger").stagePromise,
+            "Stage victory did not get its own outcome and the existing promise");
+        Debug.Log("KINSEI_SHOWDOWN clamped floor / warning and dodge / three openings / stage promise");
+    }
+
+    static void CheckStageLoss()
+    {
+        DeclareStage();
+        int returned = Read<KinseiLedger>(session, "ledger").completed;
+        Call("ClaimHouse");
+        Set(Player, "hp", 8f);
+        Await(() => Beat == "Opening", 8, "No stationary hit");
+        Require(Vector3.Distance(Root(Player).position, Root(Boss).position) >= .919f,
+            "The two torsos overlap after a stationary hit");
+        Await(() => Phase == "Result", 9, "Stationary player never lost after the warning");
+        Require(Hp(Player) == 0 && Read<string>(session, "outcome") == "loss" &&
+            Read<int>(session, "receipts") == 0 && Read<KinseiLedger>(session, "ledger").completed == returned,
+            "Stage defeat booked the wrong ledger outcome");
+        Debug.Log("KINSEI_SHOWDOWN stationary defeat / lost receipts");
+    }
+}

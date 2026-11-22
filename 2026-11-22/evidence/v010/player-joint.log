@@ -1,0 +1,135 @@
+Mono path[0] = 'C:/Users/hayat/AppData/Local/Temp/kinsei62-v010-player/Kinsei_Data/Managed'
+Mono config path = 'C:/Users/hayat/AppData/Local/Temp/kinsei62-v010-player/MonoBleedingEdge/etc'
+Input System module state changed to: Initialized.
+[Physics::Module] Initialized fallback backend.
+[Physics::Module] Id: 0xdecafbad
+Loading player data from C:/Users/hayat/AppData/Local/Temp/kinsei62-v010-player/Kinsei_Data/data.unity3d
+Initialize engine version: 6000.3.28f1 (8f082d2fe476)
+[Subsystems] Discovering subsystems at path C:/Users/hayat/AppData/Local/Temp/kinsei62-v010-player/Kinsei_Data/UnitySubsystems
+[D3D12 Device Filter] Vendor Name: NVIDIA
+[D3D12 Device Filter] Device Name: NVIDIA GeForce RTX 4070 Ti
+[D3D12 Device Filter] Driver Version: 32.0.16.1742
+[D3D12 Device Filter] Feature Level: 12.2
+[D3D12 Device Filter] Graphics Memory: 11996 MB
+[D3D12 Device Filter] Processor Count: 16
+[D3D12 Device Filter] Device Type: Discrete
+GfxDevice: creating device client; kGfxThreadingModeSplitJobs
+d3d12: failed to query info queue interface (0x80004002).
+Direct3D:
+    Version:         Direct3D 12 [level 12.2]
+    Renderer:        NVIDIA GeForce RTX 4070 Ti (ID=0x2782)
+    Vendor:          NVIDIA
+    VRAM:            11996 MB
+    App VRAM Budget: 11228 MB
+    Driver:          32.0.16.1742
+Begin MonoManager ReloadAssembly
+- Loaded All Assemblies, in  4.087 seconds
+- Finished resetting the current domain, in  0.003 seconds
+[Physics::Module] Selected backend.
+[Physics::Module] Name: PhysX
+[Physics::Module] Id: 0xf2b8ea05
+[Physics::Module] SDK Version: 4.1.2
+[Physics::Module] Integration Version: 1.0.0
+[Physics::Module] Threading Mode: Multi-Threaded
+<RI> Initializing input.
+<RI> Input initialized.
+UnloadTime: 0.657100 ms
+KINSEI dawn-enter-1 t=0.00 phase=Dawn pos=(0.00, 0.00, -10.65)
+KINSEI pause t=0.65 phase=Dawn pos=(0.00, 0.00, -10.65)
+KINSEI resume t=0.65 phase=Dawn pos=(0.00, 0.00, -10.65)
+KINSEI pause t=4.93 phase=Dawn pos=(-16.06, 0.00, -10.45)
+KINSEI resume t=4.93 phase=Dawn pos=(-16.06, 0.00, -10.45)
+KINSEI pause t=5.12 phase=Dawn pos=(-16.06, 0.00, -10.45)
+KINSEI resume t=5.12 phase=Dawn pos=(-16.06, 0.00, -10.45)
+KINSEI pause t=7.03 phase=Dawn pos=(-16.06, 0.09, -17.28)
+KINSEI resume t=7.03 phase=Dawn pos=(-16.06, 0.09, -17.28)
+KINSEI shop-view-Coffee t=7.22 phase=Dawn pos=(-16.06, 0.09, -17.28)
+KINSEI shop-view-None t=8.13 phase=Dawn pos=(-16.06, 0.09, -17.28)
+KINSEI dawn-work-1-1 t=8.33 phase=Dawn pos=(-16.06, 0.09, -17.28)
+KINSEI pause t=8.67 phase=Dawn pos=(-16.06, 0.09, -17.28)
+KINSEI resume t=8.67 phase=Dawn pos=(-16.06, 0.09, -17.28)
+KINSEI pause t=8.86 phase=Dawn pos=(-16.06, 0.09, -17.28)
+KINSEI resume t=8.86 phase=Dawn pos=(-16.06, 0.09, -17.28)
+KINSEI pause t=10.77 phase=Dawn pos=(-16.06, 0.00, -10.51)
+KINSEI resume t=10.77 phase=Dawn pos=(-16.06, 0.00, -10.51)
+KINSEI pause t=10.96 phase=Dawn pos=(-16.06, 0.00, -10.51)
+KINSEI resume t=10.96 phase=Dawn pos=(-16.06, 0.00, -10.51)
+KINSEI pause t=19.04 phase=Dawn pos=(15.99, 0.00, -10.51)
+KINSEI resume t=19.04 phase=Dawn pos=(15.99, 0.00, -10.51)
+KINSEI pause t=19.23 phase=Dawn pos=(15.99, 0.00, -10.51)
+KINSEI resume t=19.23 phase=Dawn pos=(15.99, 0.00, -10.51)
+KINSEI pause t=21.13 phase=Dawn pos=(15.99, 0.09, -17.28)
+KINSEI resume t=21.13 phase=Dawn pos=(15.99, 0.09, -17.28)
+KINSEI pause t=21.29 phase=Dawn pos=(15.99, 0.09, -17.28)
+KINSEI resume t=21.29 phase=Dawn pos=(15.99, 0.09, -17.28)
+KINSEI pause t=21.91 phase=Dawn pos=(14.90, 0.09, -17.21)
+KINSEI resume t=21.91 phase=Dawn pos=(14.90, 0.09, -17.21)
+KINSEI dawn-work-1-2 t=22.09 phase=Dawn pos=(14.90, 0.09, -17.21)
+KINSEI shop-view-Operator t=22.49 phase=Dawn pos=(14.90, 0.09, -17.21)
+KINSEI shop-view-None t=23.44 phase=Dawn pos=(14.90, 0.09, -17.21)
+KINSEI pause t=23.64 phase=Dawn pos=(14.90, 0.09, -17.21)
+KINSEI resume t=23.64 phase=Dawn pos=(14.90, 0.09, -17.21)
+KINSEI pause t=24.15 phase=Dawn pos=(15.99, 0.09, -17.21)
+KINSEI resume t=24.15 phase=Dawn pos=(15.99, 0.09, -17.21)
+KINSEI pause t=24.34 phase=Dawn pos=(15.99, 0.09, -17.21)
+KINSEI resume t=24.34 phase=Dawn pos=(15.99, 0.09, -17.21)
+KINSEI pause t=24.50 phase=Dawn pos=(15.99, 0.09, -17.21)
+KINSEI resume t=24.50 phase=Dawn pos=(15.99, 0.09, -17.21)
+KINSEI pause t=26.40 phase=Dawn pos=(15.99, 0.00, -10.51)
+KINSEI resume t=26.40 phase=Dawn pos=(15.99, 0.00, -10.51)
+KINSEI pause t=26.57 phase=Dawn pos=(15.99, 0.00, -10.51)
+KINSEI resume t=26.57 phase=Dawn pos=(15.99, 0.00, -10.51)
+KINSEI pause t=29.54 phase=Dawn pos=(5.47, 0.00, -10.24)
+KINSEI resume t=29.54 phase=Dawn pos=(5.47, 0.00, -10.24)
+KINSEI shop-view-Marquee t=29.70 phase=Dawn pos=(5.47, 0.00, -10.24)
+KINSEI shop-view-None t=30.57 phase=Dawn pos=(5.47, 0.00, -10.24)
+KINSEI pause t=30.75 phase=Dawn pos=(5.47, 0.00, -10.24)
+KINSEI resume t=30.75 phase=Dawn pos=(5.47, 0.00, -10.24)
+KINSEI pause t=31.74 phase=Dawn pos=(8.00, 0.21, -10.10)
+KINSEI resume t=31.74 phase=Dawn pos=(8.00, 0.21, -10.10)
+KINSEI pause t=31.92 phase=Dawn pos=(8.00, 0.21, -10.10)
+KINSEI resume t=31.92 phase=Dawn pos=(8.00, 0.21, -10.10)
+KINSEI pause t=34.47 phase=Dawn pos=(8.00, 0.03, -19.53)
+KINSEI resume t=34.47 phase=Dawn pos=(8.00, 0.03, -19.53)
+KINSEI rail-lift-up t=34.67 phase=Dawn pos=(8.00, 0.03, -19.53)
+KINSEI rail-lift-down t=39.56 phase=Dawn pos=(8.00, 6.93, -19.53)
+KINSEI pause t=44.22 phase=Dawn pos=(8.00, 0.03, -19.53)
+KINSEI resume t=44.22 phase=Dawn pos=(8.00, 0.03, -19.53)
+KINSEI start t=0.00 phase=Arrival pos=(0.00, 0.00, -10.65)
+KINSEI RTS t=0.00 phase=Arrival pos=(0.00, 0.00, -10.65)
+KINSEI TPS t=0.09 phase=Arrival pos=(0.00, 0.00, -10.65)
+KINSEI pause t=0.27 phase=Arrival pos=(0.00, 0.00, -10.65)
+KINSEI resume t=0.27 phase=Arrival pos=(0.00, 0.00, -10.65)
+KINSEI phase-Floor t=1.44 phase=Floor pos=(0.00, 0.03, -6.68)
+KINSEI pause t=2.70 phase=Floor pos=(0.00, 0.03, -1.94)
+KINSEI resume t=2.70 phase=Floor pos=(0.00, 0.03, -1.94)
+KINSEI pause t=2.88 phase=Floor pos=(0.00, 0.03, -1.94)
+KINSEI resume t=2.88 phase=Floor pos=(0.00, 0.03, -1.94)
+KINSEI pause t=5.23 phase=Floor pos=(-4.92, 0.03, 1.34)
+KINSEI resume t=5.23 phase=Floor pos=(-4.92, 0.03, 1.34)
+KINSEI RTS t=36.70 phase=Floor pos=(-4.92, 0.03, 1.34)
+KINSEI order-2-StageWitness t=37.57 phase=Floor pos=(-4.92, 0.03, 1.34)
+KINSEI TPS t=37.74 phase=Floor pos=(-4.92, 0.03, 1.34)
+KINSEI stage-witness-ready t=39.44 phase=Floor pos=(-4.92, 0.03, 1.34)
+KINSEI phase-Showdown t=39.49 phase=Showdown pos=(-4.92, 0.03, 1.34)
+KINSEI stage-Approach t=39.49 phase=Showdown pos=(-5.86, 0.48, 3.08)
+KINSEI stage-Cue t=41.59 phase=Showdown pos=(-5.86, 0.51, 3.08)
+KINSEI stage-Swing t=42.65 phase=Showdown pos=(-5.86, 0.51, 3.08)
+KINSEI stage-hit t=43.00 phase=Showdown pos=(-5.86, 0.51, 3.08)
+KINSEI stage-Opening t=43.00 phase=Showdown pos=(-5.86, 0.51, 3.08)
+KINSEI stage-answer-66 t=43.05 phase=Showdown pos=(-5.86, 0.51, 3.08)
+KINSEI stage-Approach t=44.50 phase=Showdown pos=(-5.86, 0.51, 3.08)
+KINSEI stage-Cue t=44.83 phase=Showdown pos=(-5.86, 0.51, 3.08)
+KINSEI stage-Swing t=45.88 phase=Showdown pos=(-5.86, 0.51, 3.08)
+KINSEI stage-hit t=46.23 phase=Showdown pos=(-5.86, 0.51, 3.08)
+KINSEI stage-Opening t=46.23 phase=Showdown pos=(-5.86, 0.51, 3.08)
+KINSEI stage-answer-32 t=46.28 phase=Showdown pos=(-5.86, 0.51, 3.08)
+KINSEI stage-Approach t=47.73 phase=Showdown pos=(-5.86, 0.51, 3.08)
+KINSEI stage-Cue t=48.07 phase=Showdown pos=(-5.86, 0.51, 3.08)
+KINSEI stage-Swing t=49.12 phase=Showdown pos=(-5.86, 0.51, 3.08)
+KINSEI stage-hit t=49.47 phase=Showdown pos=(-5.86, 0.51, 3.08)
+KINSEI stage-Opening t=49.47 phase=Showdown pos=(-5.86, 0.51, 3.08)
+KINSEI stage-answer-0 t=49.53 phase=Showdown pos=(-5.86, 0.51, 3.08)
+KINSEI stage-Settled t=49.53 phase=Showdown pos=(-5.86, 0.51, 3.08)
+KINSEI ending-showdown t=50.28 phase=Result pos=(-5.86, 0.51, 3.08)
+KINSEI_FRAME n=2979 median_ms=16.67 p95_ms=16.68 size=1280x720 gpu=NVIDIA GeForce RTX 4070 Ti

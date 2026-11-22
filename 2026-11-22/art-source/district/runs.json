@@ -1,0 +1,210 @@
+[
+  {
+    "name": "lotus-float",
+    "seed": 2026112230,
+    "generated_pixels": [
+      768,
+      1024
+    ],
+    "prompt_id": "f661f98d-46ac-4cf8-a7ce-ba571f919052",
+    "seconds": 34.901,
+    "source_sha256": "b26d866c5f58182a36512076ce5e774574f09519c16dda6f3bde5928e25a04b8",
+    "file": "Game/Assets/Resources/KinseiDistrictArt/lotus-float.png",
+    "sha256": "9274fe7f03dc01aa4dd7a12b8d5130ff00dd25c7a3023d74b15d137c4151081c"
+  },
+  {
+    "name": "lotus-voucher",
+    "seed": 2026112231,
+    "generated_pixels": [
+      1024,
+      512
+    ],
+    "prompt_id": "5a7fa967-ebbe-450c-80f0-e4b616287fc5",
+    "seconds": 18.485,
+    "source_sha256": "fa9c2602a9fc62837b5e11391fb2f0e334732d8e3f8618b28122c2ec11db3bd9",
+    "file": "Game/Assets/Resources/KinseiDistrictArt/lotus-voucher.png",
+    "sha256": "fa9c2602a9fc62837b5e11391fb2f0e334732d8e3f8618b28122c2ec11db3bd9"
+  },
+  {
+    "name": "needle-sleeve",
+    "seed": 2026112232,
+    "generated_pixels": [
+      960,
+      960
+    ],
+    "prompt_id": "8468f470-83f9-4001-ba14-6d93c3d69240",
+    "seconds": 15.979,
+    "source_sha256": "5b5dd8962c1f54f32a287a01c6552a57c6636496a0b03d6b87c7c847c7fdfc08",
+    "file": "Game/Assets/Resources/KinseiDistrictArt/needle-sleeve.png",
+    "sha256": "5b5dd8962c1f54f32a287a01c6552a57c6636496a0b03d6b87c7c847c7fdfc08"
+  },
+  {
+    "name": "needle-return",
+    "seed": 2026112233,
+    "generated_pixels": [
+      1024,
+      512
+    ],
+    "prompt_id": "a5ff2a65-5ce4-4f1c-8c1d-f88fa9b4f517",
+    "seconds": 17.328,
+    "source_sha256": "2ff346e98b19855dd1b669d111475e9c22509d872251166af060029c66066bf1",
+    "file": "Game/Assets/Resources/KinseiDistrictArt/needle-return.png",
+    "sha256": "2ff346e98b19855dd1b669d111475e9c22509d872251166af060029c66066bf1"
+  },
+  {
+    "name": "relay-test",
+    "seed": 2026112234,
+    "generated_pixels": [
+      1024,
+      768
+    ],
+    "prompt_id": "4470128f-df8b-48ee-8272-832da412c52f",
+    "seconds": 26.094,
+    "source_sha256": "d56cb491549e2ca91c5f97ff7fe00d37465e0c526293210b31e4b14380f909d8",
+    "file": "Game/Assets/Resources/KinseiDistrictArt/relay-test.png",
+    "sha256": "d56cb491549e2ca91c5f97ff7fe00d37465e0c526293210b31e4b14380f909d8"
+  },
+  {
+    "name": "relay-card",
+    "seed": 2026112235,
+    "generated_pixels": [
+      1024,
+      640
+    ],
+    "prompt_id": "f71b3d17-5ba6-4997-8c2a-a4af01ba943f",
+    "seconds": 24.299,
+    "source_sha256": "6d8537d30c77a415faa1816413263d30a66271de7ab6234fae07836057dd15e2",
+    "file": "Game/Assets/Resources/KinseiDistrictArt/relay-card.png",
+    "sha256": "6d8537d30c77a415faa1816413263d30a66271de7ab6234fae07836057dd15e2"
+  },
+  {
+    "name": "lotus-open",
+    "seed": 2026112236,
+    "generated_pixels": [
+      1216,
+      832
+    ],
+    "prompt_id": "75305453-17b9-4fff-a160-87780d0aa114",
+    "seconds": 17.861,
+    "source_sha256": "d4b9ceb6a214e990653b00e01c3df609bac1eee94c5c28ba89d132b690b4cb58",
+    "file": "art-source/district/plates/lotus-open.jpg",
+    "sha256": "3f31b1bebf00f9338364e24aefc97ba5be4e51ee85a23707e74ea5aa422bb534"
+  },
+  {
+    "name": "lotus-close",
+    "seed": 2026112237,
+    "generated_pixels": [
+      1216,
+      832
+    ],
+    "prompt_id": "8d018e0d-969a-4390-8865-01149b507c40",
+    "seconds": 29.671,
+    "source_sha256": "800032d8635e5f03f12ca3a4ffc09bf53bd2bf3f6cd3631925af8ae6d0ac40e8",
+    "file": "art-source/district/plates/lotus-close.jpg",
+    "sha256": "7b8a73e57bef25df37ff09d4492e76fcdd92cefd5adba9490dfa0bf551c45836"
+  },
+  {
+    "name": "needle-open",
+    "seed": 2026112238,
+    "generated_pixels": [
+      1216,
+      832
+    ],
+    "prompt_id": "976c60dc-2930-48b3-a5ca-be6e5ba7e1db",
+    "seconds": 23.553,
+    "source_sha256": "cc3d0228a20afed862ca29fb55d5d32d6469c740ef2952340b673f916094efcb",
+    "file": "art-source/district/plates/needle-open.jpg",
+    "sha256": "5d76b9a18f4dbca6cab4329de9c4245c6b051c930e9a243c04b64f2b7f21e958"
+  },
+  {
+    "name": "needle-close",
+    "seed": 2026112239,
+    "generated_pixels": [
+      1216,
+      832
+    ],
+    "prompt_id": "5ea5226f-3d2a-45e0-ad96-dc842f3d5208",
+    "seconds": 28.984,
+    "source_sha256": "0b0adcb5d3f81226ecd3bedeb6b110ceff3c1ab2883f328ce57919a46b93e9f3",
+    "file": "art-source/district/plates/needle-close.jpg",
+    "sha256": "cc87a05223b791f162974ed5e52f3fdbf262237a2d243582be680cb8ba9fc86a"
+  },
+  {
+    "name": "relay-open",
+    "seed": 2026112240,
+    "generated_pixels": [
+      1216,
+      832
+    ],
+    "prompt_id": "5964adeb-5705-4bc3-b128-f1a6443d56ac",
+    "seconds": 41.599,
+    "source_sha256": "30b64e8e89605bf3b8e4c9467a5b085765b771775e5dfbb2c2bf185791994eae",
+    "file": "art-source/district/plates/relay-open.jpg",
+    "sha256": "6f0eedc0960026603a0926e10d4b42699ff48171f9e96924b4813d2f1528328d"
+  },
+  {
+    "name": "relay-close",
+    "seed": 2026112241,
+    "generated_pixels": [
+      1216,
+      832
+    ],
+    "prompt_id": "0c35fc7a-3671-47a6-80b2-cfd14ad39ebe",
+    "seconds": 28.25,
+    "source_sha256": "6a70539ee8bbb2547b3b432073feb1a5a4aaff0fbbae1b424412c6bcf1ddb31c",
+    "file": "art-source/district/plates/relay-close.jpg",
+    "sha256": "332af343695b99602bb68a97c7beaa0006ee884654c1cb2047c36923dd670f66"
+  },
+  {
+    "name": "contact-wear",
+    "seed": 2026112242,
+    "generated_pixels": [
+      1216,
+      832
+    ],
+    "prompt_id": "e1e4126d-dba0-48a4-8f86-426985d355bf",
+    "seconds": 31.177,
+    "source_sha256": "660c2abd6d056b55ed34f47c636f772b00de6e2c73d4e96ed2d2cc0fe9e5ed8d",
+    "file": "art-source/district/plates/contact-wear.jpg",
+    "sha256": "1bf883f99240c0a564035a2d7724aa9ac44227561f2503749b084d8761b168a0"
+  },
+  {
+    "name": "greenroom",
+    "seed": 2026112243,
+    "generated_pixels": [
+      1216,
+      832
+    ],
+    "prompt_id": "e1aec53d-e2a8-4c5f-86c6-d0224c2efefd",
+    "seconds": 18.281,
+    "source_sha256": "16d1ef41d326ab1d53a03b6a15df64c6d55a4ef79aa1935d35dcfef0f2b5d691",
+    "file": "art-source/district/plates/greenroom.jpg",
+    "sha256": "0c9d575c0801d5ab9b0388fccf6cedb6a16cef59e0fd92a76a30d8c042227666"
+  },
+  {
+    "name": "patch-room",
+    "seed": 2026112244,
+    "generated_pixels": [
+      1216,
+      832
+    ],
+    "prompt_id": "9f0a4796-a0d8-4531-9a09-8d3509d05580",
+    "seconds": 17.756,
+    "source_sha256": "a7e7f75a27826feec072f86ae681b60b35009d47df034c233f4f2db24ce43af4",
+    "file": "art-source/district/plates/patch-room.jpg",
+    "sha256": "1b7fd049be99477b1dddd913942efd786d3628bc126ae0216a511dcd8bed7647"
+  },
+  {
+    "name": "lane-round",
+    "seed": 2026112245,
+    "generated_pixels": [
+      1216,
+      832
+    ],
+    "prompt_id": "669f3026-4398-41bb-8871-3a2625e3e053",
+    "seconds": 17.533,
+    "source_sha256": "beb90444c5573924642a43d7f3308ffc4c3edb8bf6ca3be19ccde8d647f2af4d",
+    "file": "art-source/district/plates/lane-round.jpg",
+    "sha256": "eb94de4eae6d7f0dc8ef8c33c79d9cd3a8bdd47c634e7e89ad790730cb94e273"
+  }
+]

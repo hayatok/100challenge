@@ -1,0 +1,90 @@
+Mono path[0] = 'C:/Users/hayat/AppData/Local/Temp/kinsei62-v17-cface/Kinsei_Data/Managed'
+Mono config path = 'C:/Users/hayat/AppData/Local/Temp/kinsei62-v17-cface/MonoBleedingEdge/etc'
+Input System module state changed to: Initialized.
+[Physics::Module] Initialized fallback backend.
+[Physics::Module] Id: 0xdecafbad
+Loading player data from C:/Users/hayat/AppData/Local/Temp/kinsei62-v17-cface/Kinsei_Data/data.unity3d
+Initialize engine version: 6000.3.28f1 (8f082d2fe476)
+[Subsystems] Discovering subsystems at path C:/Users/hayat/AppData/Local/Temp/kinsei62-v17-cface/Kinsei_Data/UnitySubsystems
+[D3D12 Device Filter] Vendor Name: NVIDIA
+[D3D12 Device Filter] Device Name: NVIDIA GeForce RTX 4070 Ti
+[D3D12 Device Filter] Driver Version: 32.0.16.1742
+[D3D12 Device Filter] Feature Level: 12.2
+[D3D12 Device Filter] Graphics Memory: 11996 MB
+[D3D12 Device Filter] Processor Count: 16
+[D3D12 Device Filter] Device Type: Discrete
+GfxDevice: creating device client; kGfxThreadingModeSplitJobs
+d3d12: failed to query info queue interface (0x80004002).
+Direct3D:
+    Version:         Direct3D 12 [level 12.2]
+    Renderer:        NVIDIA GeForce RTX 4070 Ti (ID=0x2782)
+    Vendor:          NVIDIA
+    VRAM:            11996 MB
+    App VRAM Budget: 11228 MB
+    Driver:          32.0.16.1742
+Begin MonoManager ReloadAssembly
+- Loaded All Assemblies, in  0.137 seconds
+- Finished resetting the current domain, in  0.003 seconds
+[Physics::Module] Selected backend.
+[Physics::Module] Name: PhysX
+[Physics::Module] Id: 0xf2b8ea05
+[Physics::Module] SDK Version: 4.1.2
+[Physics::Module] Integration Version: 1.0.0
+[Physics::Module] Threading Mode: Multi-Threaded
+<RI> Initializing input.
+<RI> Input initialized.
+UnloadTime: 0.499400 ms
+KINSEI start t=0.00 phase=Arrival pos=(0.00, 0.00, -10.65)
+KINSEI RTS t=0.49 phase=Arrival pos=(0.00, 0.00, -10.65)
+KINSEI TPS t=0.50 phase=Arrival pos=(0.00, 0.00, -10.65)
+KINSEI RTS t=1.14 phase=Arrival pos=(0.00, 0.00, -12.93)
+KINSEI TPS t=1.34 phase=Arrival pos=(0.00, 0.00, -12.93)
+KINSEI RTS t=1.80 phase=Arrival pos=(0.00, 0.00, -12.93)
+KINSEI TPS t=2.01 phase=Arrival pos=(0.00, 0.00, -12.93)
+KINSEI_WATER_CONTACT t=2.793 seat=0 foot=right x=0.089 z=-10.425
+KINSEI RTS t=2.89 phase=Arrival pos=(0.00, 0.00, -10.53)
+KINSEI TPS t=3.07 phase=Arrival pos=(0.00, 0.00, -10.53)
+KINSEI RTS t=3.28 phase=Arrival pos=(0.00, 0.00, -10.53)
+KINSEI TPS t=3.46 phase=Arrival pos=(0.00, 0.00, -10.53)
+KINSEI phase-Floor t=4.59 phase=Floor pos=(0.00, 0.03, -6.70)
+KINSEI RTS t=4.73 phase=Floor pos=(0.00, 0.03, -6.70)
+KINSEI TPS t=4.88 phase=Floor pos=(0.00, 0.03, -6.70)
+KINSEI_WATER_CONTACT t=4.953 seat=5 foot=right x=-0.864 z=-10.706
+KINSEI RTS t=5.25 phase=Floor pos=(0.00, 0.03, -6.29)
+KINSEI TPS t=5.44 phase=Floor pos=(0.00, 0.03, -6.29)
+KINSEI RTS t=5.64 phase=Floor pos=(0.00, 0.03, -6.29)
+KINSEI hall-dispatch-0-6 t=7.09 phase=Floor pos=(0.00, 0.03, -6.29)
+KINSEI hall-dispatch-1-8 t=7.71 phase=Floor pos=(0.00, 0.03, -6.29)
+KINSEI TPS t=9.12 phase=Floor pos=(0.00, 0.03, -6.29)
+KINSEI RTS t=9.31 phase=Floor pos=(0.00, 0.03, -6.29)
+KINSEI TPS t=9.50 phase=Floor pos=(0.00, 0.03, -6.29)
+KINSEI RTS t=10.48 phase=Floor pos=(0.00, 0.03, -3.42)
+KINSEI TPS t=10.65 phase=Floor pos=(0.00, 0.03, -3.42)
+KINSEI RTS t=10.85 phase=Floor pos=(0.00, 0.03, -3.42)
+KINSEI TPS t=11.03 phase=Floor pos=(0.00, 0.03, -3.42)
+KINSEI RTS t=12.86 phase=Floor pos=(2.60, 0.03, 0.00)
+KINSEI TPS t=13.04 phase=Floor pos=(2.60, 0.03, 0.00)
+KINSEI RTS t=13.23 phase=Floor pos=(2.60, 0.03, 0.00)
+KINSEI TPS t=13.41 phase=Floor pos=(2.60, 0.03, 0.00)
+KINSEI RTS t=14.54 phase=Floor pos=(3.49, 0.03, 2.32)
+KINSEI TPS t=14.73 phase=Floor pos=(3.49, 0.03, 2.32)
+KINSEI hall-secured-0 t=14.89 phase=Floor pos=(3.49, 0.03, 2.32)
+KINSEI hit-guard-53 t=15.40 phase=Floor pos=(3.49, 0.03, 2.32)
+KINSEI hit-guard-21 t=15.82 phase=Floor pos=(3.49, 0.03, 2.32)
+KINSEI hit-guard-0 t=16.25 phase=Floor pos=(3.49, 0.03, 2.32)
+KINSEI hit-brother-58 t=16.67 phase=Floor pos=(3.49, 0.03, 2.32)
+KINSEI hit-guard-33 t=17.50 phase=Floor pos=(3.49, 0.03, 2.32)
+KINSEI hit-guard-0 t=17.94 phase=Floor pos=(3.49, 0.03, 2.32)
+KINSEI hit-brother-26 t=18.35 phase=Floor pos=(3.49, 0.03, 2.32)
+KINSEI hit-brother-0 t=18.78 phase=Floor pos=(3.49, 0.03, 2.32)
+KINSEI phase-Choice t=18.78 phase=Choice pos=(3.49, 0.03, 2.32)
+KINSEI RTS t=22.84 phase=Choice pos=(3.49, 0.03, 2.32)
+KINSEI order-1-Follow t=23.40 phase=Choice pos=(3.49, 0.03, 2.32)
+KINSEI order-2-Follow t=23.40 phase=Choice pos=(3.49, 0.03, 2.32)
+KINSEI TPS t=23.57 phase=Choice pos=(3.49, 0.03, 2.32)
+KINSEI pause t=24.48 phase=Choice pos=(3.49, 0.03, 2.32)
+[Physics::Module] Cleanup current backend.
+[Physics::Module] Id: 0xf2b8ea05
+Input System module state changed to: ShutdownInProgress.
+Input System polling thread exited.
+Input System module state changed to: Shutdown.

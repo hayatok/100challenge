@@ -1,0 +1,78 @@
+Mono path[0] = 'C:/Users/hayat/AppData/Local/Temp/kinsei62-reverse-player/Kinsei_Data/Managed'
+Mono config path = 'C:/Users/hayat/AppData/Local/Temp/kinsei62-reverse-player/MonoBleedingEdge/etc'
+Input System module state changed to: Initialized.
+[Physics::Module] Initialized fallback backend.
+[Physics::Module] Id: 0xdecafbad
+Loading player data from C:/Users/hayat/AppData/Local/Temp/kinsei62-reverse-player/Kinsei_Data/data.unity3d
+Initialize engine version: 6000.3.28f1 (8f082d2fe476)
+[Subsystems] Discovering subsystems at path C:/Users/hayat/AppData/Local/Temp/kinsei62-reverse-player/Kinsei_Data/UnitySubsystems
+[D3D12 Device Filter] Vendor Name: NVIDIA
+[D3D12 Device Filter] Device Name: NVIDIA GeForce RTX 4070 Ti
+[D3D12 Device Filter] Driver Version: 32.0.16.1742
+[D3D12 Device Filter] Feature Level: 12.2
+[D3D12 Device Filter] Graphics Memory: 11996 MB
+[D3D12 Device Filter] Processor Count: 16
+[D3D12 Device Filter] Device Type: Discrete
+GfxDevice: creating device client; kGfxThreadingModeSplitJobs
+d3d12: failed to query info queue interface (0x80004002).
+Direct3D:
+    Version:         Direct3D 12 [level 12.2]
+    Renderer:        NVIDIA GeForce RTX 4070 Ti (ID=0x2782)
+    Vendor:          NVIDIA
+    VRAM:            11996 MB
+    App VRAM Budget: 11010 MB
+    Driver:          32.0.16.1742
+Begin MonoManager ReloadAssembly
+- Loaded All Assemblies, in  4.558 seconds
+- Finished resetting the current domain, in  0.003 seconds
+[Physics::Module] Selected backend.
+[Physics::Module] Name: PhysX
+[Physics::Module] Id: 0xf2b8ea05
+[Physics::Module] SDK Version: 4.1.2
+[Physics::Module] Integration Version: 1.0.0
+[Physics::Module] Threading Mode: Multi-Threaded
+<RI> Initializing input.
+<RI> Input initialized.
+UnloadTime: 0.586400 ms
+KINSEI start t=0.00 phase=Arrival pos=(0.00, 0.00, -10.65)
+KINSEI RTS t=1.04 phase=Arrival pos=(0.00, 0.00, -10.65)
+KINSEI order-0-Attend t=1.15 phase=Arrival pos=(0.00, 0.00, -10.65)
+KINSEI TPS t=1.38 phase=Arrival pos=(0.00, 0.00, -10.65)
+KINSEI phase-Floor t=3.10 phase=Floor pos=(0.00, 0.03, -6.74)
+KINSEI hit-guard-68 t=5.55 phase=Floor pos=(0.00, 0.03, -1.66)
+KINSEI hit-guard-36 t=5.97 phase=Floor pos=(0.00, 0.03, -1.66)
+KINSEI hit-guard-4 t=6.39 phase=Floor pos=(0.00, 0.03, -1.66)
+KINSEI hit-guard-0 t=6.80 phase=Floor pos=(0.00, 0.03, -1.66)
+KINSEI hit-brother-68 t=7.40 phase=Floor pos=(0.00, 0.03, -1.66)
+KINSEI hit-brother-36 t=7.82 phase=Floor pos=(0.00, 0.03, -1.66)
+KINSEI hit-brother-4 t=8.23 phase=Floor pos=(0.00, 0.03, -1.66)
+KINSEI hit-brother-0 t=8.65 phase=Floor pos=(0.00, 0.03, -1.66)
+KINSEI kaji-held t=9.17 phase=Floor pos=(0.00, 0.03, -1.66)
+KINSEI hit-guard-68 t=9.26 phase=Floor pos=(0.00, 0.03, -1.66)
+KINSEI hit-guard-36 t=9.68 phase=Floor pos=(0.00, 0.03, -1.66)
+KINSEI hit-guard-4 t=10.09 phase=Floor pos=(0.00, 0.03, -1.66)
+KINSEI hit-guard-0 t=10.51 phase=Floor pos=(0.00, 0.03, -1.66)
+KINSEI phase-Choice t=10.51 phase=Choice pos=(0.00, 0.03, -1.66)
+KINSEI RTS t=11.09 phase=Choice pos=(0.00, 0.03, -1.66)
+KINSEI TPS t=11.47 phase=Choice pos=(0.00, 0.03, -1.66)
+KINSEI escort t=12.67 phase=Choice pos=(0.83, 0.03, 0.52)
+KINSEI phase-Mirror t=15.04 phase=Mirror pos=(-2.52, 0.00, -0.60)
+KINSEI_PHOTO C:/Users/hayat/AppData/LocalLow/Yoimachi/金星の一夜\Photos\20261122-042310-634.png
+KINSEI phase-Release t=19.66 phase=Release pos=(-2.52, 0.00, -0.60)
+KINSEI ending-accord t=27.38 phase=Result pos=(-2.46, 0.03, -0.68)
+KINSEI_FRAME n=1573 median_ms=16.67 p95_ms=16.67 size=1280x720 gpu=NVIDIA GeForce RTX 4070 Ti
+KINSEI start t=0.00 phase=Arrival pos=(0.00, 0.00, -10.65)
+KINSEI_PHOTO C:/Users/hayat/AppData/LocalLow/Yoimachi/金星の一夜\Photos\20261122-042342-126.png
+KINSEI RTS t=2.21 phase=Arrival pos=(0.00, 0.00, -13.71)
+KINSEI order-0-Attend t=2.59 phase=Arrival pos=(0.00, 0.00, -13.71)
+KINSEI TPS t=2.76 phase=Arrival pos=(0.00, 0.00, -13.71)
+KINSEI phase-Floor t=5.68 phase=Floor pos=(0.00, 0.03, -6.74)
+KINSEI kaji-held t=10.86 phase=Floor pos=(5.52, 0.23, 0.03)
+KINSEI_PHOTO C:/Users/hayat/AppData/LocalLow/Yoimachi/金星の一夜\Photos\20261122-042356-016.png
+KINSEI RTS t=16.10 phase=Floor pos=(0.31, 3.24, 6.01)
+KINSEI_PHOTO C:/Users/hayat/AppData/LocalLow/Yoimachi/金星の一夜\Photos\20261122-042357-117.png
+KINSEI pause t=17.72 phase=Floor pos=(0.31, 3.24, 6.01)
+KINSEI_PHOTO C:/Users/hayat/AppData/LocalLow/Yoimachi/金星の一夜\Photos\20261122-042401-911.png
+KINSEI_PHOTO C:/Users/hayat/AppData/LocalLow/Yoimachi/金星の一夜\Photos\20261122-042402-465.png
+KINSEI_PHOTO C:/Users/hayat/AppData/LocalLow/Yoimachi/金星の一夜\Photos\20261122-042403-203.png
+KINSEI resume t=17.72 phase=Floor pos=(0.31, 3.24, 6.01)

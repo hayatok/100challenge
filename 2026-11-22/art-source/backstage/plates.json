@@ -1,0 +1,66 @@
+[
+  {
+    "key": "door-leather",
+    "resource": "DoorLeather",
+    "width": 1024,
+    "height": 1024,
+    "seed": 1970112240,
+    "prompt": "Straight perpendicular product scanner photograph of ONE continuous field of old oxblood red pressed vinyl leather from an Osaka theatre acoustic door. Extremely close, dense subtly uneven fine leather grain only, softly mottled iron-red across the entire square, with thousands of tiny maroon pores and broader areas polished a little lighter by the shoulders of hundreds of musicians. Flat diffuse cross-polarized illumination from all directions, very low tonal contrast, matte. Edge to edge uninterrupted material. No object, trim, screw, quilting, stitching, folds or words. Intended for a tileable real-time PBR albedo map."
+  },
+  {
+    "key": "hall-pass",
+    "resource": "Pass",
+    "width": 1024,
+    "height": 768,
+    "seed": 1970112241,
+    "prompt": "A flat, directly scanned small green Japanese jazz cabaret backstage pass from 1971, one single card filling the entire landscape canvas edge to edge. Deep bottle-green stiff fibrous card with worn corners, a narrow pale-gold inset double border and tiny gold five-pointed star on the far left within two fine concentric arcs. Old spot lithography in cream and muted ochre, subtle faded edges. Right two thirds reserved empty for the stage manager to print a real name. No letters, words, numbers, emblem initials, photograph, people, table or background. Completely orthographic old paper print, no drop shadow."
+  },
+  {
+    "key": "camellia-portrait",
+    "resource": "Portrait",
+    "width": 768,
+    "height": 1024,
+    "seed": 1970112242,
+    "prompt": "Full-bleed vertical archival professional Japanese cabaret publicity photograph. Original fictional Japanese woman vocalist about 38, 1970s Osaka, warm olive skin, softly defined mature cheeks, black hair swept into an elegant scalloped updo with ONE deep red camellia hair comb behind her left ear, pearl drop earrings. She wears a high-neck burgundy satin evening gown with two slender cords of gold embroidery curving asymmetrically along her collar and shoulder. Chest-up portrait turning gently towards a small brushed-chrome ribbon microphone just at the lower left edge. Amber practical footlights from the front, out-of-focus honey-coloured shell lights and midnight plum velvet behind. Analog colour print with quiet film grain, faintly faded cream highlights and dense wine shadows. Authentic photo taken for a cabaret manager, not a fashion editorial. No text, no collage, no frame."
+  },
+  {
+    "key": "wardrobe-card",
+    "resource": "WardrobeCard",
+    "width": 1024,
+    "height": 768,
+    "seed": 1970112243,
+    "prompt": "Front-on full bleed scan of a 1972 costume department wardrobe card from a small Osaka cabaret. Cream uncoated fibrous ledger card, a faded aubergine double-line border, a small engraved camellia sprig top left. At upper right an actual tiny rough swatch of burgundy satin fabric secured with two real old brass staples, small darkened staple marks. Rest of card mostly blank with four faint thin horizontal grey ruled lines, lower edge thumb darkened. Neutral light, absolutely straight on, no perspective, no handwriting, no words, no characters, no numbers. Entire image is the single card without any table or margins around it."
+  },
+  {
+    "key": "alley-evening",
+    "resource": null,
+    "width": 1216,
+    "height": 832,
+    "seed": 1970112244,
+    "prompt": "Cinematic location scouting photograph at night, camera at human eye height in a short covered Osaka back passage beside a cabaret, built in 1971 and still used in its alternate-history year 2026. Oxblood padded acoustic sliding door on the left, brass pull at adult hip height, narrow frosted-glass transom casting a warm bar of stage light on the dark green glazed tile floor. A faded oval star enamel sign, paper tickets hung from a hook, hand-painted repair marks, rain collected only near the lane mouth, a potted palm in an oil tin. Deep in frame ordinary occupied upstairs windows and the flank of an elevated train only. Workaday, intimately scaled; warm tungsten and slate reflected sky. No dystopia, neon canyon, flying vehicles, giant lettering, dramatic fog, weapons or readable text."
+  },
+  {
+    "key": "door-hand",
+    "resource": null,
+    "width": 1216,
+    "height": 832,
+    "seed": 1970112245,
+    "prompt": "Cinematic continuity close-up for an original Japanese period crime drama. A Japanese man about 35 in dark charcoal herringbone civilian suit pushes with his left palm on a broad vertical brass crescent grip on an old padded cabaret sliding door in Osaka. His body leans gently with the door's lateral weight, thumb rests on the broad front, fingertips wrap around the inner edge. Burgundy vinyl, a dull-polished crescent at hand height, worn running rail, narrow line of warm light from the music hall on slate floor. Frame from elbow to door edge, humanly plausible fingers. Quiet everyday action and tactile real materials, no weapon, no text."
+  },
+  {
+    "key": "greenroom",
+    "resource": null,
+    "width": 1216,
+    "height": 832,
+    "seed": 1970112246,
+    "prompt": "Human eye-level architectural photograph, musician's little green room of a 1971 Osaka jazz cabaret that still serves the neighbourhood in alternate-history 2026. Antique local two-way CRT in walnut box on the dressing table shows a tiny distant ordinary shop counter. A garment rail with one wine-red gown, ivory pianist's jacket and dry-cleaning paper, a dark camellia comb, a single pearl earring on a saucer, green backstage passes hanging near the door, tea with an unwound cable beside its cup. Honey mirror bulbs light used powdercloth and comb, ambient slate daylight. Off-axis quiet framing, authentic lived-in materials, no people, brand names, legible text, holograms or cyberpunk."
+  },
+  {
+    "key": "door-open",
+    "resource": null,
+    "width": 1216,
+    "height": 832,
+    "seed": 1970112247,
+    "prompt": "Alternate-history Japanese social realist film still, Osaka entertainers' back entrance in 2026, three-quarter view at eye height from inside the shallow green-tiled passage. Through a half-open wine-coloured padded sliding acoustic door is the warm amber backstage edge of a small working cabaret, red curtain lining, a chrome upright piano caster and stacked wooden instrument cases. Cool wet lane vanishing to the right, an adult stage assistant in olive work jacket clips a small green laminated pass into a desk slot. Age of objects visible through polished edges and scuffed paint. Plausible intimate architectural scale, no weapons, no tactical diagrams, no holograms, no text."
+  }
+]

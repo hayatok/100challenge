@@ -1,0 +1,38 @@
+Unity 6000.3.28f1 / Play Mode, -nographics / 60 Hz
+左手の変形後の頂点と指掛けの実箱を測定。負の box-sdf-mm は食い込み。p=0は新田、p=1は交代後の千代。
+原ログのSHA-256 3ca128f71c569247bdc8ad16e14cad448f583f9e9fb6ade47e6f3c4da6145cc0
+
+PROOF actor=新田 raw distal thumb/index vertices=207/292
+PROOF p=0 age=0.0000 E=False angle=25.00 point=(-1.9057, 1.0058, 0.8475) near-mm=282.69/255.76 side-mm=18.07/-20.10 box-sdf-mm=273.82/246.42 thumb=(-1.7479, 0.9129, 0.6321) index=(-1.7565, 0.8851, 0.6784)
+PROOF p=0 age=0.1166 E=False angle=25.00 point=(-1.9057, 1.0058, 0.8475) near-mm=232.38/210.68 side-mm=-24.31/-58.07 box-sdf-mm=222.58/200.26 thumb=(-1.7856, 0.8709, 0.7012) index=(-1.7901, 0.8606, 0.7477)
+PROOF p=0 age=0.2167 E=False angle=25.00 point=(-1.9057, 1.0058, 0.8475) near-mm=39.65/10.29 side-mm=0.82/3.31 box-sdf-mm=32.16/4.69 thumb=(-1.8794, 0.9976, 0.8189) index=(-1.9004, 1.0129, 0.8422)
+PROOF p=0 age=0.3166 E=False angle=25.00 point=(-1.9057, 1.0058, 0.8475) near-mm=20.97/5.85 side-mm=-5.92/3.40 box-sdf-mm=10.56/-2.18 thumb=(-1.8956, 0.9900, 0.8381) index=(-1.9077, 1.0030, 0.8427)
+PROOF p=0 age=0.4167 E=False angle=25.00 point=(-1.9057, 1.0058, 0.8475) near-mm=7.82/2.31 side-mm=-5.13/1.93 box-sdf-mm=-0.79/-3.63 thumb=(-1.9012, 0.9994, 0.8473) index=(-1.9068, 1.0055, 0.8454)
+PROOF p=0 age=0.5166 E=False angle=25.00 point=(-1.9057, 1.0058, 0.8475) near-mm=3.99/0.90 side-mm=-3.94/0.65 box-sdf-mm=-0.57/-3.27 thumb=(-1.9030, 1.0039, 0.8497) index=(-1.9056, 1.0063, 0.8467)
+PROOF p=0 age=0.6166 E=False angle=25.00 point=(-1.9057, 1.0058, 0.8475) near-mm=3.96/1.03 side-mm=-3.94/0.59 box-sdf-mm=-0.56/-3.33 thumb=(-1.9031, 1.0041, 0.8499) index=(-1.9054, 1.0065, 0.8468)
+PROOF p=0 age=0.7166 E=False angle=22.43 point=(-1.9060, 1.0060, 0.8471) near-mm=3.96/1.03 side-mm=-3.94/0.59 box-sdf-mm=-0.56/-3.33 thumb=(-1.9034, 1.0045, 0.8496) index=(-1.9057, 1.0067, 0.8464)
+PROOF p=0 age=0.8167 E=False angle=10.96 point=(-1.9074, 1.0066, 0.8453) near-mm=3.96/1.03 side-mm=-3.94/0.59 box-sdf-mm=-0.56/-3.33 thumb=(-1.9049, 1.0058, 0.8482) index=(-1.9072, 1.0072, 0.8445)
+PROOF p=0 age=0.9167 E=False angle=-5.73 point=(-1.9093, 1.0068, 0.8423) near-mm=3.96/1.03 side-mm=-3.94/0.59 box-sdf-mm=-0.56/-3.33 thumb=(-1.9070, 1.0071, 0.8455) index=(-1.9091, 1.0072, 0.8415)
+PROOF p=0 age=1.0167 E=False angle=-23.21 point=(-1.9110, 1.0059, 0.8392) near-mm=3.96/1.03 side-mm=-3.94/0.59 box-sdf-mm=-0.56/-3.33 thumb=(-1.9091, 1.0073, 0.8424) index=(-1.9107, 1.0062, 0.8383)
+PROOF p=0 age=1.1166 E=False angle=-37.10 point=(-1.9120, 1.0045, 0.8369) near-mm=3.96/1.03 side-mm=-3.94/0.59 box-sdf-mm=-0.56/-3.33 thumb=(-1.9105, 1.0067, 0.8398) index=(-1.9116, 1.0046, 0.8359)
+PROOF p=0 age=1.2166 E=False angle=-42.99 point=(-1.9123, 1.0038, 0.8359) near-mm=3.96/1.03 side-mm=-3.94/0.59 box-sdf-mm=-0.56/-3.33 thumb=(-1.9110, 1.0063, 0.8387) index=(-1.9119, 1.0038, 0.8350)
+PROOF p=0 age=1.3167 E=True angle=-43.00 point=(-1.9123, 1.0038, 0.8359) near-mm=3.96/1.03 side-mm=-3.94/0.59 box-sdf-mm=-0.56/-3.33 thumb=(-1.9110, 1.0063, 0.8387) index=(-1.9119, 1.0038, 0.8350)
+PROOF summary pass=0 E first=1.2333s grip n=43 maximum-gap-mm=0.00/0.00 deepest-mm=-0.56/-3.33
+PROOF replacement: old pose idle, angle=25 E=
+PROOF actor=千代 raw distal thumb/index vertices=207/292
+PROOF released old hand pinch weight=0
+PROOF p=1 age=0.0000 E=False angle=25.00 point=(-1.9057, 1.0058, 0.8475) near-mm=315.96/317.56 side-mm=-52.58/-94.35 box-sdf-mm=306.20/307.23 thumb=(-1.7124, 0.8395, 0.6608) index=(-1.7122, 0.8022, 0.6992)
+PROOF p=1 age=0.1000 E=False angle=25.00 point=(-1.9057, 1.0058, 0.8475) near-mm=299.26/289.94 side-mm=-46.63/-83.46 box-sdf-mm=289.25/279.50 thumb=(-1.7464, 0.8231, 0.6720) index=(-1.7447, 0.8054, 0.7133)
+PROOF p=1 age=0.2000 E=False angle=25.00 point=(-1.9057, 1.0058, 0.8475) near-mm=56.03/16.52 side-mm=-2.66/-5.13 box-sdf-mm=47.12/7.90 thumb=(-1.8729, 0.9814, 0.8091) index=(-1.8933, 0.9981, 0.8397)
+PROOF p=1 age=0.3000 E=False angle=25.00 point=(-1.9057, 1.0058, 0.8475) near-mm=26.21/8.27 side-mm=-5.41/4.44 box-sdf-mm=16.06/-1.12 thumb=(-1.8933, 0.9871, 0.8338) index=(-1.9081, 1.0016, 0.8408)
+PROOF p=1 age=0.4000 E=False angle=25.00 point=(-1.9057, 1.0058, 0.8475) near-mm=10.12/3.37 side-mm=-5.22/2.60 box-sdf-mm=-0.02/-3.23 thumb=(-1.9006, 0.9973, 0.8456) index=(-1.9072, 1.0050, 0.8445)
+PROOF p=1 age=0.5000 E=False angle=25.00 point=(-1.9057, 1.0058, 0.8475) near-mm=4.14/0.84 side-mm=-3.95/0.73 box-sdf-mm=-0.56/-3.21 thumb=(-1.9029, 1.0034, 0.8494) index=(-1.9059, 1.0059, 0.8467)
+PROOF p=1 age=0.6000 E=False angle=25.00 point=(-1.9057, 1.0058, 0.8475) near-mm=3.96/1.03 side-mm=-3.94/0.59 box-sdf-mm=-0.56/-3.33 thumb=(-1.9031, 1.0041, 0.8499) index=(-1.9054, 1.0065, 0.8468)
+PROOF p=1 age=0.7000 E=False angle=23.52 point=(-1.9059, 1.0059, 0.8472) near-mm=3.96/1.03 side-mm=-3.94/0.59 box-sdf-mm=-0.56/-3.33 thumb=(-1.9033, 1.0043, 0.8498) index=(-1.9056, 1.0066, 0.8465)
+PROOF p=1 age=0.8000 E=False angle=13.35 point=(-1.9071, 1.0065, 0.8457) near-mm=3.96/1.03 side-mm=-3.94/0.59 box-sdf-mm=-0.56/-3.33 thumb=(-1.9045, 1.0056, 0.8485) index=(-1.9069, 1.0072, 0.8449)
+PROOF p=1 age=0.9000 E=False angle=-2.77 point=(-1.9090, 1.0068, 0.8429) near-mm=3.96/1.03 side-mm=-3.94/0.59 box-sdf-mm=-0.56/-3.33 thumb=(-1.9066, 1.0069, 0.8460) index=(-1.9088, 1.0073, 0.8420)
+PROOF p=1 age=1.0000 E=False angle=-20.43 point=(-1.9108, 1.0061, 0.8397) near-mm=3.96/1.03 side-mm=-3.94/0.59 box-sdf-mm=-0.56/-3.33 thumb=(-1.9088, 1.0074, 0.8429) index=(-1.9105, 1.0064, 0.8388)
+PROOF p=1 age=1.1000 E=False angle=-35.23 point=(-1.9119, 1.0048, 0.8372) near-mm=3.96/1.03 side-mm=-3.94/0.59 box-sdf-mm=-0.56/-3.33 thumb=(-1.9103, 1.0069, 0.8402) index=(-1.9115, 1.0049, 0.8362)
+PROOF p=1 age=1.2000 E=False angle=-42.75 point=(-1.9122, 1.0038, 0.8360) near-mm=3.96/1.03 side-mm=-3.94/0.59 box-sdf-mm=-0.56/-3.33 thumb=(-1.9110, 1.0063, 0.8388) index=(-1.9119, 1.0039, 0.8350)
+PROOF p=1 age=1.3000 E=True angle=-43.00 point=(-1.9123, 1.0038, 0.8359) near-mm=3.96/1.03 side-mm=-3.94/0.59 box-sdf-mm=-0.56/-3.33 thumb=(-1.9110, 1.0063, 0.8387) index=(-1.9119, 1.0038, 0.8350)
+PROOF summary pass=1 E first=1.2333s grip n=43 maximum-gap-mm=0.00/0.00 deepest-mm=-0.56/-3.33

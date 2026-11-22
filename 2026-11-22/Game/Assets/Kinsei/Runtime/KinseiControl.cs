@@ -1,0 +1,328 @@
+using System.Collections.Generic;
+using UnityEngine;
+
+public sealed partial class KinseiSession
+{
+    CharacterController motor;
+    float fallVelocity, moveBlend, attackUntil, nextStep;
+    Vector3 lastAim;
+    readonly List<Person> combatants = new();
+    UnityEngine.AI.NavMeshPath searchPath;
+    readonly Color gold = new(.98f,.77f,.40f);
+    readonly Color cream = new(1,.95f,.84f);
+    readonly Color red = new(.97f,.36f,.29f);
+    readonly Color mint = new(.43f,.88f,.81f);
+
+    static float Flat(Vector3 a,Vector3 b) => Vector2.Distance(new Vector2(a.x,a.z),new Vector2(b.x,b.z));
+    void Face(Person p,Vector3 target)
+    {
+        var dir=target-p.Position; dir.y=0;
+        if(dir.sqrMagnitude>.001f) p.root.rotation=Quaternion.LookRotation(dir);
+    }
+    void Motion(Person p,string pose,float speed=0)
+    {
+        // Ordinary hall gunplay has an armed low ready; stage/west duels retain the unarmed guard.
+        if(pose=="guard" && !finale && !westDuel && (phase==Phase.Floor || phase==Phase.Chase))pose="hall-guard";
+        p.pose=pose; p.speed=speed;
+    }
+    void Act(Person p,string kind)
+    {
+        if(!showInterrupted && (kind=="shoot" || kind=="punch"))SetPerformance(false);
+        p.lastAction=clock; Motion(p,kind);
+    }
+    void MovePerson(Person p,Vector3 to,float rate,float dt)
+    {
+        var here=p.Position;
+        bool enteringSeat=p.duty==Duty.Attend && here.y>3 && Vector3.Distance(here,to)<1.18f;
+        if(!enteringSeat && FollowWalkway(p,to,rate,dt))return;
+        // Only the baked walkway can carry an actor across the club's west wall.
+        if((here.x < -8.5f || to.x < -8.5f) && (here.z > -8f || to.z > -8f)) {
+            Motion(p,"idle"); return;
+        }
+        Vector3 next=to;
+        // Both levels join at the switchback on the east side of the hall.
+        bool up=to.y>2, onStair=here.x>5.0f && here.x<7.05f && here.z>-.35f && here.z<5.96f;
+        if(up && here.y<3.12f) {
+            if(onStair || Flat(here,new Vector3(6,0,-.22f))<.24f) next=new Vector3(6,3.2f,6.08f);
+            else next=new Vector3(6,0,-.2f);
+        } else if(!up && here.y>.10f) {
+            if(onStair || Flat(here,new Vector3(6,3.2f,6.02f))<.22f) next=new Vector3(6,0,-.42f);
+            else next=new Vector3(6,3.2f,6.02f);
+        }
+        if(here.z< -8.3f && next.z> -7.65f) next=new Vector3(Mathf.Clamp(to.x,-.95f,.95f),0,-7.5f);
+        var along=next-here; along.y=0;
+        float dist=along.magnitude;
+        if(dist<.07f) { Motion(p,"idle"); return; }
+        Vector3 pos=here+along.normalized*Mathf.Min(dist,rate*dt);
+        if(pos.x>5 && pos.x<7.05f && pos.z>=-.16f && pos.z<=5.95f)
+            pos.y=Mathf.Lerp(0,3.2f,Mathf.InverseLerp(-.16f,5.75f,pos.z));
+        else if(pos.z>=5.8f && (up || here.y>3)) pos.y=3.2f;
+        else pos.y=here.y>2.9f && next.y>3?3.2f:0;
+        p.root.position=pos;
+        p.root.rotation=Quaternion.RotateTowards(p.root.rotation,Quaternion.LookRotation(along),dt*390);
+        Motion(p,rate>2.8f?"run":"walk",rate);
+    }
+
+    bool FollowWalkway(Person p,Vector3 goal,float rate,float dt)
+    {
+        if(walkways==null || !walkways.Ready)return false;
+        if(p.path==null || clock>=p.repathAt || (p.routeGoal-goal).sqrMagnitude>1.1f) {
+            p.routeGoal=goal;p.repathAt=clock+.68f;
+            p.path=walkways.GetPath(p.Position,goal,searchPath)?searchPath.corners:System.Array.Empty<Vector3>();
+            p.corner=1;
+        }
+        while(p.corner<p.path.Length && Vector3.Distance(p.Position,p.path[p.corner])<.14f)p.corner++;
+        if(p.corner>=p.path.Length)return false;
+        var next=p.path[p.corner];
+        var direction=next-p.Position;direction.y=0;
+        var at=Vector3.MoveTowards(p.Position,next,rate*dt);
+        if(walkways.Project(at,out var floor) && Mathf.Abs(floor.y-at.y)<.42f)at.y=floor.y;
+        p.root.position=at;
+        if(direction.sqrMagnitude>.0001f)p.root.rotation=Quaternion.RotateTowards(p.root.rotation,Quaternion.LookRotation(direction),dt*390);
+        Motion(p,rate>2.8f?"run":"walk",rate);
+        return true;
+    }
+
+    void PlayerInput(float dt)
+    {
+        if(pullingBackstage || phase==Phase.Mirror || OnAir || (StageActive && (stageBeat==StageBeat.Settled || StageSpeaking || player.hp<=0))) return;
+        if(motor==null || motor.gameObject!=player.root.gameObject) {
+            motor=player.root.gameObject.AddComponent<CharacterController>();
+            motor.center=Vector3.up*.9f; motor.height=1.8f; motor.radius=.28f;
+            motor.stepOffset=.3f; motor.skinWidth=.035f;
+            fallVelocity=0;
+        }
+        if(railPlace==RailPlace.Lift){Motion(player,"idle");return;}
+        float turn=(Input.GetKey(KeyCode.RightArrow)?1:0)-(Input.GetKey(KeyCode.LeftArrow)?1:0);
+        angle+=turn*102*dt;
+        ApplyShoulderLook();
+        Vector3 move=new Vector3((Input.GetKey(KeyCode.D)?1:0)-(Input.GetKey(KeyCode.A)?1:0),0,
+            (Input.GetKey(KeyCode.W)||Input.GetKey(KeyCode.UpArrow)?1:0)-(Input.GetKey(KeyCode.S)||Input.GetKey(KeyCode.DownArrow)?1:0));
+        move=Quaternion.Euler(0,angle,0)*move.normalized;
+        float rate=ShoulderAiming?1.6f:Input.GetKey(KeyCode.LeftShift)?4.1f:2.55f;
+        if(motor.isGrounded) fallVelocity=-2f;
+        fallVelocity=Mathf.Max(-16,fallVelocity-21*dt);
+        Vector3 proposed=player.Position+move*rate*dt;
+        proposed=StageActive?StageStep(player.Position,proposed,boss.Position):RailBounds(player.Position,proposed);
+        var step=proposed-player.Position;
+        Vector3 beforeMove=player.Position;
+        motor.Move(new Vector3(step.x,fallVelocity*dt,step.z));
+        Vector3 travelled=player.Position-beforeMove; travelled.y=0;
+        float actualSpeed=dt>0?Mathf.Min(rate,travelled.magnitude/dt):0;
+        CheckBoarding();
+        if(ShoulderAiming)player.root.rotation=Quaternion.RotateTowards(player.root.rotation,Quaternion.Euler(0,angle,0),dt*540);
+        else if(move.sqrMagnitude>.1f) player.root.rotation=Quaternion.RotateTowards(player.root.rotation,Quaternion.LookRotation(move),dt*540);
+        // Input release stops the controller immediately; only the visual pose settles.
+        moveBlend=actualSpeed;
+        if(actualSpeed>1 && motor.isGrounded && clock>=nextStep) {
+            sound.Cue("step"); nextStep=clock+(actualSpeed>3?.29f:.41f);
+        }
+        bool fighting=phase==Phase.Floor || phase==Phase.Chase || StageActive;
+        if(ShoulderAiming)player.actor.SetAttentionTarget(cam.ScreenPointToRay(ShoulderScreenPoint).GetPoint(14));
+        if(clock>attackUntil) Motion(player,ShoulderAiming?"aim":moveBlend>.18f?(actualSpeed>3?"run":"walk"):(fighting?"guard":"idle"),moveBlend);
+        if(InDawn || finale || AboveStreet){if(Input.GetKeyDown(KeyCode.E))Interact();return;}
+        if(Input.GetKeyDown(KeyCode.Q)) CycleTarget();
+        if(Input.GetKeyDown(KeyCode.E)) Interact();
+        if(ShoulderInputReady && (Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Space)) && (Cursor.lockState==CursorLockMode.Locked || !OverHUD()))
+            Attack(false,Input.GetMouseButtonDown(0));
+        if(Input.GetKeyDown(KeyCode.F)) Attack(true,false);
+    }
+
+    void Targets()
+    {
+        combatants.Clear();
+        if(phase==Phase.Floor) {
+            foreach(var g in guards) if(g.hp>0 && !g.floorYielded) combatants.Add(g);
+            if(brother.hp>0)combatants.Add(brother);
+            if(!held && phaseAge>24) foreach(var g in upstairs) if(!g.retired && g.hp>0 && g.Position.y<1) combatants.Add(g);
+        } else if(phase==Phase.Chase || StageActive) combatants.Add(boss);
+        if(lockedTarget!=null && !combatants.Contains(lockedTarget))lockedTarget=null;
+    }
+    void CycleTarget()
+    {
+        Targets(); if(combatants.Count==0)return;
+        lockedTarget=combatants[(combatants.IndexOf(lockedTarget)+1)%combatants.Count];
+        var p=lockedTarget; Vector3 d=p.Position-player.Position;
+        angle=Mathf.Atan2(d.x,d.z)*Mathf.Rad2Deg;
+        tilt=6;
+        if(!legacyMouseControls && ShoulderView && !StageActive)
+            AlignShoulderTarget(p.Position+Vector3.up*1.15f);
+        Face(player,p.Position);
+        player.actor.SetAttentionTarget(p.Position+Vector3.up*1.56f);
+        Say("注視　"+p.name,1.1f);
+    }
+    Person Pick(bool mouse,bool melee)
+    {
+        Targets();
+        if(!melee && (!legacyMouseControls && mouse || ShoulderAiming))return PickShoulderTarget();
+        if(combatants.Count==0)return null;
+        Person best=null; float score=float.MaxValue;
+        Vector2 cursor=mouse?(Vector2)Input.mousePosition:new Vector2(Screen.width*.5f,Screen.height*.49f);
+        foreach(var p in combatants)
+        {
+            var from=player.Position+Vector3.up*1.38f; var center=p.Position+Vector3.up*1.15f;
+            float distance=Vector3.Distance(from,center);
+            if(distance>(melee?2.0f:13.5f))continue;
+            if(Physics.Linecast(from,center,out var hit,~0,QueryTriggerInteraction.Ignore) && hit.collider!=motor)continue;
+            var pt=cam.WorldToScreenPoint(center);
+            if(pt.z<.1f)continue;
+            float pixel=Vector2.Distance(pt,cursor);
+            float tolerance=melee?Screen.height*.5f:mouse?Mathf.Max(26,Screen.height/Mathf.Max(5,distance)*.8f):Screen.height*.29f;
+            if(!mouse && lockedTarget==p)return p;
+            if(pixel<tolerance && pixel<score){score=pixel;best=p;}
+        }
+        return best;
+    }
+    void Attack(bool melee,bool mouse)
+    {
+        if(melee && westDuel && WestAvailable){ReplyWest();return;}
+        if(StageActive) { if(melee)StageAttack(); return; }
+        if(clock<shootDelay || (phase!=Phase.Floor && phase!=Phase.Chase))return;
+        bool precise=!melee && ((!legacyMouseControls && mouse) || ShoulderAiming);
+        var target=Pick(mouse,melee);
+        shootDelay=clock+(melee?.48f:.30f); attackUntil=clock+.32f;
+        Act(player,melee?"punch":"shoot"); shots++;
+        sound.Cue(melee?"strike":"shot");
+        if(!melee) {
+            flashTime=clock+.07f;
+            Vector3 towards=precise?shoulderHitPoint:target!=null?target.Position+Vector3.up*1.22f:
+                cam.ScreenPointToRay(mouse && !ShoulderAiming?Input.mousePosition:ShoulderScreenPoint).GetPoint(14);
+            Trace(player,towards,false);
+        }
+        if(target==null)return;
+        Face(player,target.Position);
+        player.actor.SetAttentionTarget(target.Position+Vector3.up*1.56f);
+        if(IsHallGuard(target)){
+            target.lastPlayerHit=clock;
+            if(TryFloorYield(target)){lastHit=clock+.19f;return;}
+            target.watching=null;target.cooldown=Mathf.Max(target.cooldown,clock+FloorFlinchTime);
+        }
+        target.hp=Mathf.Max(0,target.hp-(melee?48:32));
+        if(target.hp<=0)ReleaseGuard(target);
+        target.flinchUntil=clock+(IsHallGuard(target)?FloorFlinchTime:.23f);
+        lastHit=clock+.19f;
+        if(target==boss)bossHp=target.hp;
+        if(target.hp<=0 && target!=brother) Act(target,"fall");
+        Mark("hit-"+target.role+"-"+Mathf.RoundToInt(target.hp));
+    }
+
+    void Trace(Person from,Vector3 to,bool enemy)
+    {
+        var hand=from.Position+Vector3.up*1.31f+from.root.right*.16f+from.root.forward*.43f;
+        actionLight.Shot(hand,to,enemy,reducedMotion);
+    }
+
+    static readonly Vector3 CommandBoom=new Vector3(4.6f,18,-11f);
+    static readonly Vector2 ChartUp=new Vector2(-CommandBoom.x,-CommandBoom.z).normalized;
+    static readonly Vector2 ChartRight=new Vector2(ChartUp.y,-ChartUp.x);
+
+    void FocusCommandAt(Vector3 spot)
+    {
+        // Centre the target in the map area above the command dock.
+        float scale=Mathf.Min(Screen.width/1100f,Screen.height/720f);
+        float pitchFactor=CommandBoom.y/CommandBoom.magnitude;
+        float offset=cam.orthographicSize*CommandDockHeight*scale/(Screen.height*pitchFactor);
+        Vector2 centre=new Vector2(spot.x,spot.z)-ChartUp*offset;
+        float centreZ=HallFrontsVisible?-1.05f:1.55f;
+        mapOffset=new Vector2(Mathf.Clamp(centre.x,-43,19),Mathf.Clamp(centre.y-centreZ,-20.5f,4.5f));
+        snapCamera=true;
+    }
+
+    void CommandInput()
+    {
+        Vector2 shift=new Vector2((Input.GetKey(KeyCode.D)?1:0)-(Input.GetKey(KeyCode.A)?1:0),
+            (Input.GetKey(KeyCode.W)?1:0)-(Input.GetKey(KeyCode.S)?1:0));
+        mapOffset+=(ChartRight*shift.x+ChartUp*shift.y).normalized*(7*Time.deltaTime);
+        mapOffset.x=Mathf.Clamp(mapOffset.x,-43f,19f);mapOffset.y=Mathf.Clamp(mapOffset.y,-20.5f,4.5f);
+        chartSize=Mathf.Clamp(chartSize-Input.mouseScrollDelta.y*.9f,6.7f,16.2f);
+        bool extend=Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
+        for(int i=0;i<crew.Count;i++)
+            if(Input.GetKeyDown((KeyCode)((int)KeyCode.Alpha1+i)))SelectMember(i,extend);
+        if(Input.GetKeyDown(KeyCode.F1))RecallSquad(0);
+        if(Input.GetKeyDown(KeyCode.F2))RecallSquad(1);
+        if(Input.GetKeyDown(KeyCode.F3))SaveSquad(0);
+        if(Input.GetKeyDown(KeyCode.F4))SaveSquad(1);
+        if(StageActive){
+            if(Input.GetKeyDown(KeyCode.E))OrderStageDesk();
+        }else{
+            if(HallFrontsVisible && Input.GetKeyDown(KeyCode.Z))AssignHallFront(1);
+            if(HallFrontsVisible && Input.GetKeyDown(KeyCode.X))AssignHallFront(0);
+            if(Input.GetKeyDown(KeyCode.H))hallOtherOrders=!hallOtherOrders;
+            if(Input.GetKeyDown(KeyCode.E)) Assign(Duty.Attend);
+            if(Input.GetKeyDown(KeyCode.F)) Assign(Duty.Follow);
+            if(Input.GetKeyDown(KeyCode.R)) Assign(Duty.Rest);
+            if(Input.GetKeyDown(KeyCode.G)) Assign(Duty.Guard);
+            if(Input.GetKeyDown(KeyCode.T)) Assign(Duty.BoxOffice);
+            if(Input.GetKeyDown(KeyCode.B)) Assign(Duty.Backstage);
+            if(Input.GetKeyDown(KeyCode.V)) Assign(Duty.StageWitness);
+        }
+        if(MapOrderInput())return;
+        if(!StageActive && Input.GetMouseButtonDown(1) && !OverHUD()) {
+            var opponent=GuardAtScreen(Input.mousePosition);
+            if(opponent!=null){DesignateGuard(opponent);return;}
+            var ray=cam.ScreenPointToRay(Input.mousePosition); var ground=new Plane(Vector3.up,0);
+            if(ground.Raycast(ray,out float length)) {
+                Vector3 dest=ray.GetPoint(length);
+                if(Physics.Raycast(ray,out var floorHit,60) && floorHit.point.y>2.8f && floorHit.point.z>=5.8f)
+                    dest=new Vector3(floorHit.point.x,3.2f,floorHit.point.z);
+                dest=StreetBounds(dest);
+                Assign(Duty.Go,dest);
+            }
+        }
+    }
+
+    void AssignMember(int index,Duty duty,Vector3 destination,bool announce)
+    {
+        if(StageActive){Say("舞台の指揮は実況卓のみ");return;}
+        var p=crew[index]; if(p.hp<=0){Say(p.name+"は動けない");return;}
+        if(duty==Duty.Backstage) {
+            if(!CanOrderBackstage)return;
+            if(p.duty==Duty.Backstage){duty=Duty.Follow;}
+            else {
+                if(!walkways.Ready || !walkways.GetPath(p.Position,BackstagePost,searchPath)){
+                    Say("楽屋口までの通路が見つからない");return;
+                }
+                ReleaseBackstagePost();
+                destination=BackstagePost;
+            }
+        }
+        if(duty==Duty.StageWitness){OrderStageWitness(p);if(p.duty==Duty.StageWitness)ForgetGuard(p);return;}
+        if(finale && duty==Duty.Attend){OrderFinale();return;}
+        if(finale && duty==Duty.BoxOffice)return;
+        if(duty==Duty.BoxOffice && (HouseClaimed || (phase!=Phase.Arrival && phase!=Phase.Floor && phase!=Phase.Choice))){
+            Say(HouseClaimed?"今夜の伝票は預かった":"今は帳場に寄れない");return;
+        }
+        if(duty==Duty.Go && walkways.Ready && !walkways.GetPath(p.Position,destination,searchPath)){
+            Say("その地点には通路がつながっていない");return;
+        }
+        if(duty==Duty.Attend && p!=crew[0]){Say(p.name+"「梶さんに話が通るんは辰さんや」");return;}
+        if(duty==Duty.Attend && accord){Say("梶との話はついた");return;}
+        if(p==crew[0] && p.duty==Duty.Attend && duty!=Duty.Attend && !accord){
+            held=false;talkProgress=0; Say("辰が席を離れた。梶の連れが立つ");
+        }
+        if(p==stageWitness)ClearStageWitness();
+        if(duty==Duty.BoxOffice)
+            foreach(var colleague in crew)
+                if(colleague!=p && colleague.duty==Duty.BoxOffice)colleague.duty=Duty.Follow;
+        ReleaseWestEscort(p);
+        ForgetGuard(p);
+        p.duty=duty; p.destination=destination;p.path=null;
+        if(duty==Duty.Backstage)Say(p.name+"が楽屋口で通し札を預かる");
+        else if(duty==Duty.BoxOffice){p.destination=KinseiBoxOffice.Counter;Say(p.name+"が入口の帳場へ向かう");}
+        else if(duty==Duty.Attend){p.destination=table;Say("辰「二階はわしに任せえ」");}
+        else if(duty==Duty.Guard){p.destination=new Vector3(2.1f+(index%3)*.65f,0,-1.2f-(index/3)); if(announce)Say(p.name+"をダンスホールへ回した");}
+        else if(duty==Duty.Rest){p.destination=new Vector3((index%3-1)*1.0f,0,-9.6f-(index/3)); if(announce)Say(p.name+"を表へ下げた");}
+        else if(announce)Say(p.name+(duty==Duty.Follow?"が真壁に合流する":"が指定位置へ向かう"));
+        if(announce)sound.Cue("dial");
+        Mark("order-"+index+"-"+duty);
+    }
+
+    bool OverHUD()
+    {
+        float scale=Mathf.Min(Screen.width/1100f,Screen.height/720f);
+        if(scale<=0)return true;
+        Vector2 point=new Vector2(Input.mousePosition.x,Screen.height-Input.mousePosition.y)/scale;
+        return command?CommandDeskHits(point,Screen.width/scale,Screen.height/scale):FieldHeaderHits(point,Screen.width/scale);
+    }
+}
+

@@ -1,0 +1,696 @@
+[
+  {
+    "figure": "rail-study",
+    "file": "art-source/railway/studies/car-at-night.jpg",
+    "caption": "MOSS設定画　夜の客室。吊革と窓の上端をそろえた。",
+    "crop": null,
+    "sha256": "d9e37cc6f2719e900431c028420f6848dc65ffacd44f1535348b0b92d8c20666"
+  },
+  {
+    "figure": "rail-inside",
+    "file": "evidence/v09/saloon-glass.png",
+    "caption": "Windows実機 v0.9　戸袋と座席に囲まれた乗降口",
+    "crop": null,
+    "sha256": "a2d168e2a65aed7c346dba3c5013c81f6e4faa2ea95470e56c32a4736703b04d"
+  },
+  {
+    "figure": "rail-window",
+    "file": "evidence/v09/window-glass.png",
+    "caption": "Windows実機 v0.9　走行中に車窓から見た住宅の窓灯",
+    "crop": null,
+    "sha256": "f239747d2a5e0fec14aa039ba7cc1d13d63ece315067db845365cf959180b404"
+  },
+  {
+    "figure": "ads",
+    "file": "Game/Assets/Resources/KinseiPrintworks/CarAdvertisements.png",
+    "caption": "MOSS図案・後組版　車内掲出用の完成原稿。各枠は1024 × 400ピクセル。",
+    "crop": null,
+    "sha256": "5b0e99f4de7cf1e8bbac85272acdac0fa582269c524b82e1a9ea83444f21cb4e"
+  },
+  {
+    "figure": "lotus-study",
+    "file": "art-source/dawnworld/lotus-request-morning.png",
+    "caption": "GPT Image設定画　澄子が客席へ依頼札を差し出す。",
+    "crop": null,
+    "sha256": "63a1999cb3df13718c133b852ddc9a3ed27c9de173d277ac378e1ec0d50d055c"
+  },
+  {
+    "figure": "lotus-work",
+    "file": "evidence/v010/coffee-joint.png",
+    "caption": "Windows実機 v0.10　サイフォンの前で手を動かす澄子",
+    "crop": null,
+    "sha256": "9f466fa5870b849325531c3f8f132d923b754d44766b31c91f871b00eac2ff8e"
+  },
+  {
+    "figure": "joint-signal",
+    "file": "evidence/v10rc1/live-card-dawnjoint.png",
+    "caption": "Windows実機 1.0候補　演奏中の番組札とVU計",
+    "crop": null,
+    "sha256": "110843ff393e94c34b9bb4158007a7f3fa3035ae5966406e0a3b1a00b47d001c"
+  },
+  {
+    "figure": "needle-study",
+    "file": "art-source/dawnworld/needle-first-ticket.png",
+    "caption": "GPT Image設定画　兵藤が一番券を真鍮皿に収める。",
+    "crop": null,
+    "sha256": "f68be16d2febb82355f69db8d32f945039b698d136ed6f046dca4c9cbd41dfe1"
+  },
+  {
+    "figure": "ticket-hand",
+    "file": "evidence/v010/give-exclusive.png",
+    "caption": "Windows実機 v0.10・部分　受け渡し直前の真壁の左手",
+    "crop": [
+      0.29,
+      0.46,
+      0.63,
+      0.88
+    ],
+    "sha256": "8bec1d02865cbb83e6929ebc1787c4c861a25ba530daa66f000be0e91e6e285f"
+  },
+  {
+    "figure": "needle-sale",
+    "file": "evidence/v10rc1/advance-ticket-dawnexclusive.png",
+    "caption": "Windows実機 1.0候補　前売り札と皿の一番券",
+    "crop": null,
+    "sha256": "adffe956561808351068e1f172ad58eec4b1de39eb1a988597ed54e46b1ddf49"
+  },
+  {
+    "figure": "lips",
+    "file": "art-source/resident-acting/source-lip-comparison.png",
+    "caption": "CPU形状図　上から澄子、兵藤、村瀬。各列は同じ顔の状態違い。",
+    "crop": null,
+    "sha256": "1245cceb6e5b94f240105eb69dc6bf393d290ec45e8887b41e7d492711d64bfa"
+  },
+  {
+    "figure": "acting-live",
+    "file": "evidence/v10rc1/owner-dawnjoint.png",
+    "caption": "Windows実機 1.0候補・部分　話しかけた澄子の表情",
+    "crop": [
+      0.21,
+      0.14,
+      0.77,
+      0.86
+    ],
+    "sha256": "add7f1a0f8dc93d6ca82b8567acc7951ff78fcb4484582e68f4b976a0bbb4541"
+  },
+  {
+    "figure": "canal-live",
+    "file": "evidence/v10rc1/bridge-nighttrain.png",
+    "caption": "Windows実機 1.0候補　石柱の灯が欄干と橋面を照らす。",
+    "crop": null,
+    "sha256": "9035d1ee1c44432ee2a311a4f924417431ce5bbc226749cf76290e3e6db1a2e0"
+  },
+  {
+    "figure": "repair-live",
+    "file": "evidence/v10rc1/repair-nighttrain.png",
+    "caption": "Windows実機 1.0候補　庇の直管と修理中の受像機",
+    "crop": null,
+    "sha256": "29370a8aa1b3608ad31877017ac54d3657915975cb48be2bd186e65690b56e19"
+  },
+  {
+    "figure": "canal-geometry",
+    "file": "evidence/v10rc1/bridge-dawnjoint.png",
+    "caption": "Windows実機 1.0候補　翌朝の欄干と石柱",
+    "crop": null,
+    "sha256": "6884cf1e1d31fa137a955a8ebddd3ee08cf6f96ed52d285c663b65741e8d4edd"
+  },
+  {
+    "figure": "repair-geometry",
+    "file": "evidence/v10rc1/repair-dawnjoint.png",
+    "caption": "Windows実機 1.0候補　翌朝の作業台",
+    "crop": null,
+    "sha256": "18be2982e0feab7c288d13d4af5e20d012034575a99c337feb9c1ed66de3b553"
+  },
+  {
+    "figure": "groom-geometry",
+    "file": "art-source/makabe-groom/comparison.png",
+    "caption": "CPU形状図　上段が旧髪型、下段が新髪型。耳際・襟足・分け目の順。",
+    "crop": null,
+    "sha256": "139c4bdbfa9f059c319e71fbd3fa946d777687d47b08e792e483b5f64fa13f8a"
+  },
+  {
+    "figure": "groom-live",
+    "file": "evidence/v10/other-ads-firstcar.png",
+    "caption": "Windows実機 v1.0・部分　車内で見る右耳と襟足",
+    "crop": [
+      0.07,
+      0.21,
+      0.49,
+      0.84
+    ],
+    "sha256": "525efe9e93979c4adde200ecf514579963d75162cd906b1d4a4cca716b581f5a"
+  },
+  {
+    "figure": "wood-geometry",
+    "file": "art-source/cabinetry/comparison.jpg",
+    "caption": "CPU材質図　左が旧UV、右が新UV。上から客席奥壁・店の腰板・踏板。",
+    "crop": null,
+    "sha256": "1317417f942953bf1223cbe6fa4c3c0ee4ace0fdb903ba0313b62185580ca793"
+  },
+  {
+    "figure": "wood-live",
+    "file": "evidence/v10/west-lane-nighttrain.png",
+    "caption": "Windows実機 v1.0・部分　楽屋通路の縦目と継ぎ目",
+    "crop": [
+      0.45,
+      0.12,
+      0.99,
+      0.85
+    ],
+    "sha256": "a5fae6dd35553640bf2a0ee66c112e635c4a63219887331c288bbb0012359927"
+  },
+  {
+    "figure": "club-overlook",
+    "file": "art-source/club-two-views/stage-overlook.png",
+    "caption": "GPT Image設定画　指揮の引き。舞台右袖に立会人、右奥に二階桟敷。",
+    "crop": null,
+    "sha256": "ebd9a49926db2acb524e57dd36e43b48f7480c0372a53594bf9bb72c46e2c23f"
+  },
+  {
+    "figure": "club-shoulder",
+    "file": "art-source/club-two-views/stage-shoulder.png",
+    "caption": "GPT Image設定画　真壁の肩越し。兄貴分の左手と袖の立会人。",
+    "crop": null,
+    "sha256": "b0c679f67c58742487110346e15149a7fe93276f84a61b0c455e40ba54497233"
+  },
+  {
+    "figure": "press-study",
+    "file": "art-source/ticket-and-car/ticket-pickup.png",
+    "caption": "GPT Image設定画　親指と人差し指が紙の同じ角を挟む。",
+    "crop": null,
+    "sha256": "7cb1822e20e65649d8251519ef4cc52097ae312e0bdc25ad5ded6568a57e8206"
+  },
+  {
+    "figure": "press-cpu",
+    "file": "art-source/ticket-machine/press-inspection.png",
+    "caption": "CPU形状図　番号窓と出口。右は券を通した状態。",
+    "crop": null,
+    "sha256": "61d13912d1fd3a5b97bdf7a50a97308b34e78b947c0120968910abd6254aea47"
+  },
+  {
+    "figure": "press-issued",
+    "file": "evidence/v12/issued-ticket.png",
+    "caption": "Windows実機 v1.2初版・部分　排出口を通った一番券",
+    "crop": [
+      0.13,
+      0.14,
+      0.86,
+      0.86
+    ],
+    "sha256": "c60ff0d6ea34a5e2e18e227d21e050a96f60f32c0a56122bb99ce7906b8ea9a6"
+  },
+  {
+    "figure": "coach-study",
+    "file": "art-source/ticket-and-car/car-sidelight.png",
+    "caption": "GPT Image設定画　耳の縁、こめかみの櫛目、後頭部の影。",
+    "crop": null,
+    "sha256": "cc989b6c276dbb1d71385f757c5bc0d05c1787c54617fa3f0c0d96e87f766937"
+  },
+  {
+    "figure": "coach-before",
+    "file": "evidence/v10/saloon-firstcar.png",
+    "caption": "Windows実機 v1.0・部分　左の窓を背にした横顔",
+    "crop": [
+      0.18,
+      0.19,
+      0.72,
+      0.85
+    ],
+    "sha256": "f7ea61c0c94e7aafe4e8ebc264c83b11e962e72363e7bde7cb4fbb6b926ba875"
+  },
+  {
+    "figure": "coach-after",
+    "file": "evidence/v11/saloon-occupied.png",
+    "caption": "Windows実機 v1.1直前版・部分　横灯が拾う頬と耳前の毛筋",
+    "crop": [
+      0.18,
+      0.19,
+      0.72,
+      0.85
+    ],
+    "sha256": "97a7a4d055c47ffd38f6baac7f17e62266bb0b610bc33e76b7a937fb1f01b8c1"
+  },
+  {
+    "figure": "club-fan-overlook-study",
+    "file": "art-source/club-two-views/stage-overlook.png",
+    "caption": "GPT Image設定画　先に制作した客席からの俯瞰",
+    "crop": null,
+    "sha256": "ebd9a49926db2acb524e57dd36e43b48f7480c0372a53594bf9bb72c46e2c23f"
+  },
+  {
+    "figure": "club-fan-geometry",
+    "file": "art-source/stage-broadcast/geometry.jpg",
+    "caption": "CPU形状図　客席側10度／指揮視点58.6度",
+    "crop": null,
+    "sha256": "435f0d0ec6062740f3933cceea9f5e40c7cc82255d148140af7af81eb524b9b4"
+  },
+  {
+    "figure": "club-fan-overlook-live",
+    "file": "evidence/v13/desk-air.png",
+    "caption": "Windows実機 v1.3　指揮視点から見た舞台と見物位置",
+    "crop": null,
+    "sha256": "304626fc59349d0da09ebfa700daa99b3e6c8a4d7b66aa96cfa688d0f9a3257d",
+    "windows_zip_sha256": "dff59edd83b40bfc27ce51c1d9d223df9ef5aa6932a9750fc352bc1429202d04"
+  },
+  {
+    "figure": "club-fan-shoulder-study",
+    "file": "art-source/club-two-views/stage-shoulder.png",
+    "caption": "GPT Image設定画　二枚目の肩越し。左手前が真壁。",
+    "crop": null,
+    "sha256": "b0c679f67c58742487110346e15149a7fe93276f84a61b0c455e40ba54497233"
+  },
+  {
+    "figure": "club-desk-live",
+    "file": "evidence/v13/voice-end-air.png",
+    "caption": "Windows実機 v1.3・部分　卓の管面に映る兄貴分とマイク",
+    "crop": [
+      0.1,
+      0.18,
+      0.91,
+      0.84
+    ],
+    "sha256": "2c43ec9767c92385463603a4e0db179ce830e8fc42bd8e408b70276240384dd4",
+    "windows_zip_sha256": "dff59edd83b40bfc27ce51c1d9d223df9ef5aa6932a9750fc352bc1429202d04"
+  },
+  {
+    "figure": "club-fan-shoulder-live",
+    "file": "evidence/v13/mic-hint-air.png",
+    "caption": "Windows実機 v1.3　真壁の肩越しに見た舞台",
+    "crop": null,
+    "sha256": "94f2f03399cc8fa371b8388ce215201027c9bdf39a889e97074bd1e9b21db10d",
+    "windows_zip_sha256": "dff59edd83b40bfc27ce51c1d9d223df9ef5aa6932a9750fc352bc1429202d04"
+  },
+  {
+    "figure": "club-desk-post",
+    "file": "evidence/v13/mic-hint-air.png",
+    "caption": "同じ肩越し画面の部分　袖の見物人と実況卓に着いた係員",
+    "crop": [
+      0.67,
+      0.36,
+      0.998,
+      0.84
+    ],
+    "sha256": "94f2f03399cc8fa371b8388ce215201027c9bdf39a889e97074bd1e9b21db10d",
+    "windows_zip_sha256": "dff59edd83b40bfc27ce51c1d9d223df9ef5aa6932a9750fc352bc1429202d04"
+  },
+  {
+    "figure": "level-hand-study",
+    "file": "art-source/broadcast-listeners/desk-hand.png",
+    "caption": "GPT Image原画　管面の右に縦に並ぶつまみ。右手で下の一つを回す。",
+    "crop": null,
+    "sha256": "ebc1a73831253552b5cf72f29defafc89013c58385ad861cca69fd551ac8a7d2"
+  },
+  {
+    "figure": "level-hand-contact",
+    "file": "evidence/v13/rotation-dial.png",
+    "caption": "Windows実機 v1.3・部分　Cを押したまま見た源の左手と白い指掛け",
+    "crop": [
+      0.19,
+      0.2,
+      0.79,
+      0.73
+    ],
+    "sha256": "a309b3b6f7d6e675bba709775d446d8128de182d6c072425def5ddaa51d43301",
+    "windows_zip_sha256": "101235869c7ac3fb34280157968a6207cea12907b213e370de69bf39b04fa1ed"
+  },
+  {
+    "figure": "level-hand-released",
+    "file": "evidence/v13/release-dial.png",
+    "caption": "Windows実機 v1.3・同じ範囲　左手が離れ、指掛けの向きが見える。",
+    "crop": [
+      0.19,
+      0.2,
+      0.79,
+      0.73
+    ],
+    "sha256": "312d0d1373d7336b0bf71bca97b7bb8be1a5a6a6a52f66a3daf0b378061a5013",
+    "windows_zip_sha256": "101235869c7ac3fb34280157968a6207cea12907b213e370de69bf39b04fa1ed"
+  },
+  {
+    "figure": "lotus-listens-study",
+    "file": "Game/Assets/Resources/Art/lotus-listens.png",
+    "caption": "GPT Image原画・全体　カウンター越しの二人と、壁掛けの受像機",
+    "crop": null,
+    "sha256": "2fc9fd23fea59943c9547df36f87fbd54c01f2f39e80ca11b34bfecd36d16fa7"
+  },
+  {
+    "figure": "lotus-broadcast-result",
+    "file": "evidence/v13/result-dial.png",
+    "caption": "Windows実機 v1.3・全画面　町内中継の決着「金星から町内へ」",
+    "crop": null,
+    "sha256": "06454cf50ff14d03fce4474ea1e85f1fd69fc841b2866b54e5db0a1c63593bf0",
+    "windows_zip_sha256": "101235869c7ac3fb34280157968a6207cea12907b213e370de69bf39b04fa1ed"
+  },
+  {
+    "figure": "hall-wardrobe-study",
+    "file": "art-source/hall-regulars/wardrobe.png",
+    "caption": "GPT Image 衣装原画　左に紺谷、右に浦。",
+    "crop": null,
+    "sha256": "ba98ab0e96d7ebabc296006f3423cbf06541e7ae5375d6da3cab5baf5ca7e6ec",
+    "source_kind": "GPT Image concept",
+    "prompt_file": "art-source/hall-regulars/prompt.txt"
+  },
+  {
+    "figure": "hall-wardrobe-model",
+    "file": "art-source/hall-regulars/tailoring-offline.png",
+    "caption": "衣装モデルのオフライン描画　同じ二着を並べた。",
+    "crop": null,
+    "sha256": "c82a3ed8a6e18ec3b50ef8ed61b0d6fcc7ba474467f086d8a3577c1a517e421b",
+    "source_kind": "Offline rendering of model geometry"
+  },
+  {
+    "figure": "hall-yield-study",
+    "file": "art-source/hall-regulars/kontani-movement.png",
+    "caption": "GPT Image 動作原画　紺谷が右足を踏み出し、左膝をつくまで。",
+    "crop": null,
+    "sha256": "c39a269873d2cce617069adfaad9d8b7ce6e4cd738a5ab55bd2a2165d6e87f6f",
+    "source_kind": "GPT Image concept",
+    "prompt_file": "art-source/hall-regulars/movement-prompt.txt"
+  },
+  {
+    "figure": "hall-cuffs-study",
+    "file": "art-source/hall-regulars/ura-cuffs.png",
+    "caption": "GPT Image 接写原画　浦が上げた掌と、膝に置く手の袖口。",
+    "crop": null,
+    "sha256": "3df4a3d27532a01f3cce24fc6f6aff5f61a0bba1eb2d3bd4442771b459955c74",
+    "source_kind": "GPT Image concept",
+    "prompt_file": "art-source/hall-regulars/cuffs-prompt.txt"
+  },
+  {
+    "figure": "hall-enamel-a",
+    "file": "art-source/broadcast-console/originals/enamel-a.png",
+    "caption": "MOSS原画　前板の塗り欠け",
+    "crop": null,
+    "sha256": "557d6932ca421e2bb2a904e360863d2ae60a50f16f0d1ee80b81bbbcc9b466de",
+    "source_kind": "MOSS-Image material study",
+    "prompt_id": "922c0e9f-8624-4e1e-b592-88a0d4c9d4ef",
+    "seed": 140331501
+  },
+  {
+    "figure": "hall-enamel-b",
+    "file": "art-source/broadcast-console/originals/enamel-b.png",
+    "caption": "MOSS原画　上蓋と左右の返し",
+    "crop": null,
+    "sha256": "5e7556c29b46ed3f68ed7570b78ac65924d6c6d56ee67c5ad6f3ee8b05d20f42",
+    "source_kind": "MOSS-Image material study",
+    "prompt_id": "ef3122a1-c3d2-49ea-96bc-424a253f2336",
+    "seed": 140331502
+  },
+  {
+    "figure": "hall-brass-a",
+    "file": "art-source/broadcast-console/originals/brass-a.png",
+    "caption": "MOSS原画　つまみの正面",
+    "crop": null,
+    "sha256": "a0a387b9535ae46ea027e53f4b2dc4f4073982a8a80be5681295f88c50ffc344",
+    "source_kind": "MOSS-Image material study",
+    "prompt_id": "a90af17b-1b5b-4ba5-a891-575749fd6a31",
+    "seed": 140331503
+  },
+  {
+    "figure": "hall-brass-b",
+    "file": "art-source/broadcast-console/originals/brass-b.png",
+    "caption": "MOSS原画　つまみの周面",
+    "crop": null,
+    "sha256": "3b83bc7fa2a6885345a7e714e43ae36395c759d974ee19e621eb11b2304a1dc0",
+    "source_kind": "MOSS-Image material study",
+    "prompt_id": "265a5458-5445-48c9-bfcf-bd161e80707d",
+    "seed": 140331504
+  },
+  {
+    "figure": "hall-console-model",
+    "file": "art-source/broadcast-console/console-geometry.jpg",
+    "caption": "実装メッシュのCPU描画　操作側と管面側。指掛けと管面の縁を、それぞれの角度から見る。",
+    "crop": null,
+    "sha256": "0931018b861336dfa186e0bab2483bfdea7175fa32f71c05c0d63e091a331766",
+    "source_kind": "Offline rendering of model geometry"
+  },
+  {
+    "figure": "hall-kontani-live",
+    "file": "evidence/v14/kontani-view-published.png",
+    "caption": "Windows実機 v1.4・Z視点　眼鏡の紺谷が左の掌を上げる。",
+    "crop": null,
+    "sha256": "b3915be78a395c028f320136ee884d03752e6223aef06dc1d4c7390ef5fede11",
+    "source_kind": "Windows Player capture",
+    "windows_zip_sha256": "b0c1e4f5898e12341041d8da682a8ad4a5a36bffde2129734320023eb1759eaf"
+  },
+  {
+    "figure": "hall-ura-live",
+    "file": "evidence/v14/ura-view-published.png",
+    "caption": "Windows実機 v1.4・Z視点　桑色の上着で片膝をつく浦。",
+    "crop": null,
+    "sha256": "187ccea0bc2a60b46161b5ef5d8c8428de01e05e9f21824c0b41c17053773fc8",
+    "source_kind": "Windows Player capture",
+    "windows_zip_sha256": "b0c1e4f5898e12341041d8da682a8ad4a5a36bffde2129734320023eb1759eaf"
+  },
+  {
+    "figure": "hall-console-live",
+    "file": "evidence/v14/rotation-pubdesk.png",
+    "caption": "Windows実機 v1.4・C視点の部分　琺瑯の前板と源の左手",
+    "crop": [
+      0.19,
+      0.2,
+      0.79,
+      0.73
+    ],
+    "sha256": "4d960b3ab0bd2aebf168fc1935ae9172a17179a3b8934e65cbb42ccf08730c78",
+    "source_kind": "Windows Player capture",
+    "windows_zip_sha256": "b0c1e4f5898e12341041d8da682a8ad4a5a36bffde2129734320023eb1759eaf"
+  },
+  {
+    "figure": "west-front-study",
+    "file": "art-source/west-bath/bath-frontage.png",
+    "caption": "GPT Image 全景原画　暖簾の下に二人の湯客。二階にも明かりがともる。",
+    "crop": null,
+    "sha256": "2ee80ee0283ef339f967ca163277bc025a2e9e4facbaced9e8b0d1fa6fae6bde",
+    "source_kind": "GPT Image concept",
+    "prompt_file": "art-source/west-bath/frontage-prompt.txt"
+  },
+  {
+    "figure": "west-bridge-live",
+    "file": "evidence/v15/bridge-west15.png",
+    "caption": "Windows実機 v1.5　親柱の間から西岸の浴場を見る。",
+    "crop": null,
+    "sha256": "152638b3df1ce6621ac08c2bf4861cb84184652827d21c06e5da40fb100548d5",
+    "source_kind": "Windows Player capture",
+    "windows_zip_sha256": "f03c934064a9c03af6827df845f6e6f617ca05dd1bf4e3ea4ac3c6dd5a1d68db"
+  },
+  {
+    "figure": "west-front-live",
+    "file": "evidence/v15/bath-front-west15.png",
+    "caption": "Windows実機 v1.5　外壁の受像機、暖簾、牛乳箱。",
+    "crop": null,
+    "sha256": "96362558fe5ab5dd13e78d780588020c547b709f05862f2a3146fb41c1bbc37a",
+    "source_kind": "Windows Player capture",
+    "windows_zip_sha256": "f03c934064a9c03af6827df845f6e6f617ca05dd1bf4e3ea4ac3c6dd5a1d68db"
+  },
+  {
+    "figure": "west-moss-Tile",
+    "file": "art-source/west-bath/materials/Tile.png",
+    "caption": "MOSS 素材原画　青緑の釉薬",
+    "crop": null,
+    "sha256": "ab6a1819831c69386dae8f2afdd7424a267b66a7ecd684b49c4ca70f8cb69c8c",
+    "source_kind": "MOSS-Image material master",
+    "prompt_id": "feb02561-3736-4921-aeef-a0e54f1a5302",
+    "seed": 1502701
+  },
+  {
+    "figure": "west-moss-Terrazzo",
+    "file": "art-source/west-bath/materials/Terrazzo.png",
+    "caption": "MOSS 素材原画　洗い出し石の骨材",
+    "crop": null,
+    "sha256": "38c76ded0bab07f8cf487beeb4697aca5623e6e897409c63d55a9caee3110918",
+    "source_kind": "MOSS-Image material master",
+    "prompt_id": "f9f5855c-f9dc-419b-8836-745fde13290c",
+    "seed": 1502702
+  },
+  {
+    "figure": "west-moss-Noren",
+    "file": "art-source/west-bath/materials/Noren.png",
+    "caption": "MOSS 素材原画　葡萄色の木綿",
+    "crop": null,
+    "sha256": "fc57173378aae4d6aa1f75540e10b14761c46385d6370e32b26b7c49b39bdb14",
+    "source_kind": "MOSS-Image material master",
+    "prompt_id": "0e969830-aba9-4ac9-a45c-3f3f874f5921",
+    "seed": 1502703
+  },
+  {
+    "figure": "west-moss-Mat",
+    "file": "art-source/west-bath/materials/Mat.png",
+    "caption": "MOSS 素材原画　ゴムの畝",
+    "crop": null,
+    "sha256": "99c56c661b93c45c4288e4fd85d6a05a06f76804bb1d3031acd7cd3d961260d0",
+    "source_kind": "MOSS-Image material master",
+    "prompt_id": "64bcf77e-e294-4c11-9368-894041073750",
+    "seed": 1502704
+  },
+  {
+    "figure": "west-moss-Glass",
+    "file": "art-source/west-bath/materials/Glass.png",
+    "caption": "MOSS 素材原画　型板ガラス",
+    "crop": null,
+    "sha256": "c6c5b80e9ea39d4ece07bb0bc4c5fb2fe8c8048184afebc9ebd8c55fc5cc1ac0",
+    "source_kind": "MOSS-Image material master",
+    "prompt_id": "10f3266a-a7e6-47cd-b52e-00ba33b8bf06",
+    "seed": 1502705
+  },
+  {
+    "figure": "west-curtain-live",
+    "file": "evidence/v15/curtains-west15.png",
+    "caption": "Windows実機 v1.5・部分　壁の目地と、三枚の布にまたがる「ゆ」。",
+    "crop": [
+      0.05,
+      0.14,
+      0.95,
+      0.86
+    ],
+    "sha256": "9279349427320052ab66bdbef4b7ec53a4bed486d71d73665fda9aadf573f03d",
+    "source_kind": "Windows Player capture",
+    "windows_zip_sha256": "f03c934064a9c03af6827df845f6e6f617ca05dd1bf4e3ea4ac3c6dd5a1d68db"
+  },
+  {
+    "figure": "west-lobby-live",
+    "file": "evidence/v15/lobby-west15.png",
+    "caption": "Windows実機 v1.5　戸の型板ガラスと、靴を収めた番号付きの下足箱。",
+    "crop": null,
+    "sha256": "f7e10f5746e3177f8996c985f48128722d0c1e382d82f09ac2f8c6234f5c7550",
+    "source_kind": "Windows Player capture",
+    "windows_zip_sha256": "f03c934064a9c03af6827df845f6e6f617ca05dd1bf4e3ea4ac3c6dd5a1d68db"
+  },
+  {
+    "figure": "west-cast-study",
+    "file": "art-source/west-bath/residents-and-seo.png",
+    "caption": "GPT Image 衣装原画　左から文子、喜一、瀬尾。",
+    "crop": null,
+    "sha256": "bcbd58b9b23430770a95707107b7689cc070b2679452db8922169e52e28d646c",
+    "source_kind": "GPT Image concept",
+    "prompt_file": "art-source/west-bath/cast-prompt.txt"
+  },
+  {
+    "figure": "west-guests-live",
+    "file": "evidence/v15/cast-side-west15.png",
+    "caption": "Windows実機 v1.5・部分　喜一の洗面器と文子の籐籠。",
+    "crop": [
+      0.27,
+      0.13,
+      0.89,
+      0.92
+    ],
+    "sha256": "5c6e7d8c2daccd9e89041e38f931d2c7e8ecc4da3b51db2c7afcdb69cd3c3bb6",
+    "source_kind": "Windows Player capture",
+    "windows_zip_sha256": "f03c934064a9c03af6827df845f6e6f617ca05dd1bf4e3ea4ac3c6dd5a1d68db"
+  },
+  {
+    "figure": "west-crossing-live",
+    "file": "evidence/v15/bridge-walk-b-title15.png",
+    "caption": "Windows実機 v1.5・部分　橋を渡る二人。瀬尾は奥の西岸に残る。",
+    "crop": [
+      0,
+      0.11,
+      0.74,
+      0.94
+    ],
+    "sha256": "3d69ff3f13aede1799f6e3e97b9fb42b42b0a12ac63a7a04b7bcab1884f4d79c",
+    "source_kind": "Windows Player capture",
+    "windows_zip_sha256": "f03c934064a9c03af6827df845f6e6f617ca05dd1bf4e3ea4ac3c6dd5a1d68db"
+  },
+  {
+    "figure": "rain-shoes-study",
+    "file": "art-source/rain-street/street-at-shoe-level.png",
+    "caption": "GPT Image 照明原画　靴、さざ波、庇の電球。",
+    "crop": null,
+    "sha256": "b5f04a02152d6cb08d03ef4f217edc2feca3a6090abb4e2f204a2a93ad75b553",
+    "source_kind": "GPT Image concept",
+    "prompt_file": "art-source/rain-street/street-prompt.txt"
+  },
+  {
+    "figure": "rain-reflection-live",
+    "file": "evidence/v16/water-pixel1080.png",
+    "caption": "Windows実機 v1.6　足元の水に映る受像機の下縁。",
+    "crop": null,
+    "sha256": "3452968f0324311c0337750254fadefa99d56913fe3c1e1932685cbdae0d2f42",
+    "source_kind": "Windows Player capture",
+    "windows_zip_sha256": "4e6a1eef3a0d9ce8eabceb23a4e2cd774f3d5da32096dbe7a16499214167aba9"
+  },
+  {
+    "figure": "rain-moss-Asphalt",
+    "file": "art-source/rain-street/Asphalt.png",
+    "caption": "MOSS 素材原画　舗装の骨材",
+    "crop": null,
+    "sha256": "e89de7c7fffd80386882e89925fd9dd266fc6524ae80423cb58727293394e4a8",
+    "source_kind": "MOSS-Image material master",
+    "prompt_id": "4a8b0256-7ca2-4643-b6ea-886437398a0a",
+    "seed": 1602101
+  },
+  {
+    "figure": "rain-moss-Basin",
+    "file": "art-source/rain-street/Basin.png",
+    "caption": "MOSS 素材原画　水のくぼみ",
+    "crop": null,
+    "sha256": "b33140ebc3a56d2e53a048150285ed7a03d333f4de947a824bc285c5b97cce64",
+    "source_kind": "MOSS-Image material master",
+    "prompt_id": "b9168830-1f70-4c25-a9f0-dc6dafc8d1ef",
+    "seed": 1602102
+  },
+  {
+    "figure": "rain-moss-Ripple",
+    "file": "art-source/rain-street/Ripple.png",
+    "caption": "MOSS 素材原画　細かなさざ波",
+    "crop": null,
+    "sha256": "7f99317bb31657c46451f0fcf38b803048556974fec12447ef5f480b306aa3d0",
+    "source_kind": "MOSS-Image material master",
+    "prompt_id": "89857cc1-835b-48c4-9f1f-5c33fe1f79df",
+    "seed": 1602103
+  },
+  {
+    "figure": "rain-people-live",
+    "file": "evidence/v16/second3-pixel1080.png",
+    "caption": "Windows実機 v1.6・部分　脚の逆像が選局器の手前に重なる。",
+    "crop": [
+      0.4427083333333333,
+      0.5277777777777778,
+      0.703125,
+      0.7870370370370371
+    ],
+    "sha256": "49e5972ef276a10e408bbb212b8c24adb3dc5da146ce5bb67b0c0167b015cb5e",
+    "source_kind": "Windows Player capture",
+    "windows_zip_sha256": "4e6a1eef3a0d9ce8eabceb23a4e2cd774f3d5da32096dbe7a16499214167aba9"
+  },
+  {
+    "figure": "rain-receiver-study",
+    "file": "art-source/rain-street/street-receiver.png",
+    "caption": "GPT Image 受像機原画　放送に見入る二人。",
+    "crop": null,
+    "sha256": "68b41d9c100254652273c03d2db6a2330d34d4bc642618f07a9d6f23ab6b46e9",
+    "source_kind": "GPT Image concept",
+    "prompt_file": "art-source/rain-street/receiver-prompt.txt"
+  },
+  {
+    "figure": "rain-receiver-live",
+    "file": "evidence/v16/dial-pixel1080.png",
+    "caption": "Windows実機 v1.6・C視点　管面と、その下の選局器・保護桟。",
+    "crop": null,
+    "sha256": "8f15b3567502defd574c40d0966b0d149409d4f77b1a79f116e23a0ff1f2603e",
+    "source_kind": "Windows Player capture",
+    "windows_zip_sha256": "4e6a1eef3a0d9ce8eabceb23a4e2cd774f3d5da32096dbe7a16499214167aba9"
+  },
+  {
+    "figure": "rain-moss-Enamel",
+    "file": "art-source/rain-street/Enamel.png",
+    "caption": "MOSS 素材原画　焼付琺瑯",
+    "crop": null,
+    "sha256": "d8b6adbb4b83b709b12d1862ad595a116f0dd2594e8de2949682b72e90e0d176",
+    "source_kind": "MOSS-Image material master",
+    "prompt_id": "7c4bf9a3-8f5a-43b4-8637-3b1347954c7f",
+    "seed": 1602104
+  },
+  {
+    "figure": "rain-moss-Grille",
+    "file": "art-source/rain-street/Grille.png",
+    "caption": "MOSS 素材原画　スピーカーの織布",
+    "crop": null,
+    "sha256": "073d1837f191ca5bebf6e18c54fbdc31fab96941fca95ea05546c01465e82890",
+    "source_kind": "MOSS-Image material master",
+    "prompt_id": "b8bc4837-0ef6-46a8-b890-5c6c11fa0399",
+    "seed": 1602105
+  }
+]

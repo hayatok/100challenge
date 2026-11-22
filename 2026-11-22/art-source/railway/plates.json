@@ -1,0 +1,42 @@
+[
+  {
+    "key": "route-board",
+    "width": 1280,
+    "height": 512,
+    "resource": "RouteBoard",
+    "seed": 1970112300,
+    "prompt": "Single very wide landscape enamel transit route board filling the whole frame, absolutely front-on scan of ivory porcelain enamel made in Osaka in the late 1960s. Top and bottom trim in oxblood red, thin amber pinstripe a few millimeters inset, pale warm grey-grey shadows of little enamel chips and a small dull brass rivet near either extreme of the frame. Wide completely blank ivory central field for exact later typesetting. Mid century Japanese electric railway interior, workaday utilitarian design, no map, no diagrams, no words no characters no numbers no branding. No background or frame surrounding the board. Nearly orthographic, uniform diffuse material colour, soft scuffs around rivets."
+  },
+  {
+    "key": "moquette",
+    "width": 1024,
+    "height": 1024,
+    "resource": "Moquette",
+    "seed": 1970112301,
+    "prompt": "Entire square is the texture of densely woven moquette upholstery for a real 1971 Japanese suburban railway seat, exactly perpendicular macro textile scan under diffuse soft daylight. Repeating small compact rhythmic stepped chevron and dotted lattice, a deliberate sophisticated repeating geometric design: garnet and muted russet abstract scallops interleaved with two thin biscuit-gold diagonals in a field of deep claret wine, similar period scale to 20mm motifs. Woven short wool pile, occasional slightly lighter tips where generations of commuters sit, understated chiaroscuro, crisp tightly integrated yarn. No seam, border, writing, couch, room, backdrop or vignette. Seamless field intended as a repeating seat material."
+  },
+  {
+    "key": "fare-ticket",
+    "width": 1024,
+    "height": 512,
+    "resource": "Ticket",
+    "seed": 1970112302,
+    "prompt": "Full-bleed flat straight-on scan of a single 1970s Japanese railway Edmondson cardboard ticket, landscape 2:1. Buff rose board with delicate repeating tiny salmon-red interlaced five-pointed star guilloche watermark printed evenly across the empty face. Thin dark burgundy inset rule and clipped upper right corner, two tiny rose rosettes on far left. Pale center reserved for exact black Japanese fare overprint. Material has fine broken rag fibres and slight compressed edge, subtly worn but lovingly preserved. Only blank preprinted ticket stock, no words, symbols beyond guilloche, letters, numbers, pincers or props."
+  },
+  {
+    "key": "car-at-night",
+    "width": 1216,
+    "height": 832,
+    "resource": null,
+    "seed": 1970112303,
+    "prompt": "Cinematic archival location photograph, looking from a standing adult eye height down one short electric interurban carriage parked over a working Osaka shopping street at night. Alternate history 2026 where shops use a shared wired television network designed in 1970. Cream enamel ceiling, warm-white fluorescent strips, stainless poles with braided grey hand loops, garnet-red woven moquette longitudinal benches, nickel window latches, red and cream body. Across the window the real live apartment windows and small cabaret lamps below reflect through faintly scratched glass, a distant passenger in everyday period business coat at the far end. Narrow human-scale cabin of a two-car carset, quietly used, deliberately practical retrofuture. No digital screens, no legible text, no motorcycles, no fantasy city, no brand names or neon canyon."
+  },
+  {
+    "key": "lift-arrival",
+    "width": 1216,
+    "height": 832,
+    "resource": null,
+    "seed": 1970112304,
+    "prompt": "Human eye-level documentary still inside a compact 1970 Osaka neighbourhood elevated railway station passenger lift, doors opening onto a short platform in humid blue-hour air. Oxblood theatre wall down below, clerk in a plain brown Japanese work suit holding a folded umbrella beside a moquette sample bag, small pearly grey translucent round call button and brass backing plate worn at knuckle height, warm door light across small dark floor tiles. Traditional painted indicator over the door, very quiet atmosphere of last train. Landscape architectural production photo, expansive gap visible behind platform, people at a real believable scale, no readable text, no cyberpunk, no LED panels."
+  }
+]

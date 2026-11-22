@@ -1,0 +1,62 @@
+Mono path[0] = 'C:/Users/hayat/AppData/Local/Temp/kinsei62-v05revised-player/Kinsei_Data/Managed'
+Mono config path = 'C:/Users/hayat/AppData/Local/Temp/kinsei62-v05revised-player/MonoBleedingEdge/etc'
+Input System module state changed to: Initialized.
+[Physics::Module] Initialized fallback backend.
+[Physics::Module] Id: 0xdecafbad
+Loading player data from C:/Users/hayat/AppData/Local/Temp/kinsei62-v05revised-player/Kinsei_Data/data.unity3d
+Initialize engine version: 6000.3.28f1 (8f082d2fe476)
+[Subsystems] Discovering subsystems at path C:/Users/hayat/AppData/Local/Temp/kinsei62-v05revised-player/Kinsei_Data/UnitySubsystems
+[D3D12 Device Filter] Vendor Name: NVIDIA
+[D3D12 Device Filter] Device Name: NVIDIA GeForce RTX 4070 Ti
+[D3D12 Device Filter] Driver Version: 32.0.16.1742
+[D3D12 Device Filter] Feature Level: 12.2
+[D3D12 Device Filter] Graphics Memory: 11996 MB
+[D3D12 Device Filter] Processor Count: 16
+[D3D12 Device Filter] Device Type: Discrete
+GfxDevice: creating device client; kGfxThreadingModeSplitJobs
+d3d12: failed to query info queue interface (0x80004002).
+Direct3D:
+    Version:         Direct3D 12 [level 12.2]
+    Renderer:        NVIDIA GeForce RTX 4070 Ti (ID=0x2782)
+    Vendor:          NVIDIA
+    VRAM:            11996 MB
+    App VRAM Budget: 11228 MB
+    Driver:          32.0.16.1742
+Begin MonoManager ReloadAssembly
+- Loaded All Assemblies, in  0.171 seconds
+- Finished resetting the current domain, in  0.003 seconds
+[Physics::Module] Selected backend.
+[Physics::Module] Name: PhysX
+[Physics::Module] Id: 0xf2b8ea05
+[Physics::Module] SDK Version: 4.1.2
+[Physics::Module] Integration Version: 1.0.0
+[Physics::Module] Threading Mode: Multi-Threaded
+<RI> Initializing input.
+<RI> Input initialized.
+UnloadTime: 0.611400 ms
+KINSEI start t=0.00 phase=Arrival pos=(0.00, 0.00, -10.65)
+KINSEI RTS t=0.99 phase=Arrival pos=(0.00, 0.00, -10.65)
+KINSEI order-0-Attend t=1.18 phase=Arrival pos=(0.00, 0.00, -10.65)
+KINSEI order-2-Guard t=1.56 phase=Arrival pos=(0.00, 0.00, -10.65)
+KINSEI TPS t=1.91 phase=Arrival pos=(0.00, 0.00, -10.65)
+KINSEI phase-Floor t=3.65 phase=Floor pos=(0.00, 0.03, -6.74)
+KINSEI house-claimed-18000 t=4.64 phase=Floor pos=(-1.19, 0.03, -6.34)
+KINSEI hit-guard-68 t=7.84 phase=Floor pos=(0.00, 0.03, -1.66)
+KINSEI hit-guard-36 t=8.25 phase=Floor pos=(0.00, 0.03, -1.66)
+KINSEI hit-guard-4 t=8.66 phase=Floor pos=(0.00, 0.03, -1.66)
+KINSEI hit-guard-0 t=9.08 phase=Floor pos=(0.00, 0.03, -1.66)
+KINSEI kaji-held t=9.26 phase=Floor pos=(0.00, 0.03, -1.66)
+KINSEI hit-brother-68 t=9.68 phase=Floor pos=(0.00, 0.03, -1.66)
+KINSEI hit-brother-36 t=10.10 phase=Floor pos=(0.00, 0.03, -1.66)
+KINSEI hit-brother-4 t=10.52 phase=Floor pos=(0.00, 0.03, -1.66)
+KINSEI hit-brother-0 t=10.94 phase=Floor pos=(0.00, 0.03, -1.66)
+KINSEI hit-guard-24 t=11.54 phase=Floor pos=(0.00, 0.03, -1.66)
+KINSEI hit-guard-0 t=11.95 phase=Floor pos=(0.00, 0.03, -1.66)
+KINSEI phase-Choice t=11.95 phase=Choice pos=(0.00, 0.03, -1.66)
+KINSEI RTS t=13.34 phase=Choice pos=(0.00, 0.03, -1.66)
+KINSEI TPS t=13.71 phase=Choice pos=(0.00, 0.03, -1.66)
+KINSEI escort t=14.91 phase=Choice pos=(0.50, 0.03, 0.62)
+KINSEI phase-Mirror t=17.31 phase=Mirror pos=(-2.52, 0.00, -0.60)
+KINSEI phase-Release t=21.92 phase=Release pos=(-2.52, 0.00, -0.60)
+KINSEI ending-accord t=29.62 phase=Result pos=(-2.46, 0.03, -0.68)
+KINSEI_FRAME n=1658 median_ms=16.67 p95_ms=20.70 size=1920x1080 gpu=NVIDIA GeForce RTX 4070 Ti

@@ -1,0 +1,12 @@
+{
+    "version": 1,
+    "nights": 4,
+    "completed": 4,
+    "lastSettledNight": 4,
+    "earnings": 0,
+    "kajiPromise": true,
+    "stagePromise": true,
+    "cooperativeEnding": true,
+    "exclusiveEnding": true,
+    "seal": "金星・出納帳"
+}

@@ -1,0 +1,223 @@
+using UnityEngine;
+
+public sealed partial class KinseiSession
+{
+    enum FinaleStep { Collect, Connect, Choose, Cooperative, Exclusive }
+    enum FinaleAction { None, Take, Broadcast, Deliver, Talk }
+
+    static readonly Vector3 NeedleDesk = new Vector3(-1.34f,0,-17.2f);
+    static readonly Vector3 RelayDesk = new Vector3(14.9f,0,-17.2f);
+    static readonly Vector3 RelaySeat = new Vector3(17.1f,0,-17.2f);
+    static readonly Vector3 LotusDesk = new Vector3(-16,0,-17.2f);
+    // The opening attendant welcomes guests from the west end of the counter.
+    static readonly Vector3 OpeningPost=KinseiBoxOffice.Counter+new Vector3(-1.25f,0,-.23f);
+    static readonly Vector3 PressViewCentre=KinseiBoxOffice.Counter+new Vector3(.27f,0,.64f);
+    const float PressClearRadius=1.38f;
+    bool finale,pressFromWest;
+    float nextFinaleFrame;
+    float firstPictureAt=-1;
+    bool OnAir => finale && firstPictureAt>=0;
+    FinaleStep finaleStep;
+    Person operatorOnDuty, stageDirector;
+    bool FinaleUnlocked => ledger.kajiPromise && ledger.stagePromise;
+
+    void StartFinale()
+    {
+        if(!FinaleUnlocked)return;
+        OpenNight(true);
+    }
+
+    void SetUpFinale()
+    {
+        finaleStep=FinaleStep.Collect;
+        firstPictureAt=-1;pressFromWest=false;
+        nextFinaleFrame=0;
+        operatorOnDuty=null;
+        club.SetMasterOnDesk(new Vector3(-.88f,1.15f,-18.16f),false);
+        foreach(var person in everyone) {
+            if(person==player || crew.Contains(person))continue;
+            person.retired=true;
+            person.root.gameObject.SetActive(false);
+        }
+        stageDirector=Make("金星の座長","resident",KinseiBoxOffice.Counter+new Vector3(.84f,0,.68f),3);
+        Face(stageDirector,KinseiBoxOffice.Counter);
+        Say("兵藤の書き置き「原盤は針音堂の左のターンテーブル。真壁さんに預けます」",6);
+    }
+
+    string FinaleObjective()
+    {
+        if(OnAir)return finaleStep==FinaleStep.Cooperative?"ロータスの一番席から共同放送を始める":"金星の帳場から専属興行を知らせる";
+        switch(finaleStep) {
+            case FinaleStep.Collect:return "針音堂の左の卓で原盤を受け取る";
+            case FinaleStep.Connect:return operatorOnDuty==null?"指揮で組員を一人、東の送像所へ":"組員が送像所に着くのを待つ";
+            case FinaleStep.Choose:return "送像所で共同放送、または金星の座長に原盤を渡す";
+            case FinaleStep.Cooperative:return "指揮で組員をロータスの最初の客席へ";
+            default:return "指揮で組員を金星の帳場へ";
+        }
+    }
+
+    bool AtFinaleDesk(Vector3 target) => player.Position.y<.85f && Flat(player.Position,target)<1.18f;
+
+    FinaleAction CurrentFinaleAction()
+    {
+        if(command)return FinaleAction.None;
+        if(finaleStep==FinaleStep.Collect && AtFinaleDesk(NeedleDesk))return FinaleAction.Take;
+        if(finaleStep==FinaleStep.Choose) {
+            if(AtFinaleDesk(RelayDesk))return FinaleAction.Broadcast;
+            if(AtFinaleDesk(KinseiBoxOffice.Counter))return FinaleAction.Deliver;
+        }
+        return StreetContact(out _,out _)?FinaleAction.Talk:FinaleAction.None;
+    }
+
+    string FinaleVerb()
+    {
+        if(OnAir)return "";
+        switch(CurrentFinaleAction()) {
+            case FinaleAction.Take:return "左の卓から原盤を受け取る";
+            case FinaleAction.Broadcast:return "共同放送に針を落とす";
+            case FinaleAction.Deliver:return "座長に専属の原盤を渡す";
+            case FinaleAction.Talk:return "近くの人と話す";
+            default:return "";
+        }
+    }
+
+    void FinaleInteract()
+    {
+        switch(CurrentFinaleAction()) {
+            case FinaleAction.Take:
+                club.CarryMaster(player.actor.LeftWrist);
+                finaleStep=FinaleStep.Connect;
+                Say("真壁「原盤はここや。誰か送像所の交換卓を頼む」");break;
+            case FinaleAction.Broadcast:
+                club.SetMasterOnDesk(new Vector3(14.05f,1.264f,-18.22f),true);
+                finaleStep=FinaleStep.Cooperative;
+                Say("四十の回線が開いた。澄子「最初のお客さん、うちへ案内して」",5);break;
+            case FinaleAction.Deliver:
+                club.SetMasterOnDesk(KinseiBoxOffice.Counter+new Vector3(.18f,1.049f,.88f),false);
+                finaleStep=FinaleStep.Exclusive;
+                Face(stageDirector,player.Position);Motion(stageDirector,"idle");
+                Say("座長「一枚目は金星の専属盤や。帳場へ一人、切符を頼むわ」",5);break;
+            case FinaleAction.Talk:
+                if(StreetContact(out int shop,out string words))SpeakAtCounter(shop,words);
+                return;
+            default:return;
+        }
+        sound.Cue("dial");
+        Mark("finale-"+finaleStep);
+    }
+
+    string FinaleOrderLabel => finaleStep==FinaleStep.Cooperative?"客席へ　E":
+        finaleStep==FinaleStep.Exclusive?"開場　E":"送像所　E";
+
+    void OrderFinale()
+    {
+        if(finaleStep==FinaleStep.Collect || finaleStep==FinaleStep.Choose){Say(FinaleObjective());return;}
+        Person member=crew[chosen];
+        if(operatorOnDuty!=null && operatorOnDuty!=member && operatorOnDuty.duty==Duty.FinalePost)
+            operatorOnDuty.duty=Duty.Follow;
+        operatorOnDuty=member;
+        member.duty=Duty.FinalePost;
+        member.destination=finaleStep==FinaleStep.Cooperative?LotusDesk:
+            finaleStep==FinaleStep.Exclusive?OpeningPost:RelaySeat;
+        Say(member.name+"「任せてくれ」");
+        sound.Cue("dial");Mark("finale-order-"+chosen+"-"+finaleStep);
+    }
+
+    static void PressShot(float reveal,bool west,out Vector3 eye,out Vector3 focus)
+    {
+        var first=west?new Vector3(-.32f,1.66f,.69f):new Vector3(.12f,1.71f,.98f);
+        var last=west?new Vector3(-.21f,1.53f,.17f):new Vector3(.416f,1.66f,.23f);
+        eye=KinseiBoxOffice.Counter+Vector3.Lerp(first,last,reveal);
+        focus=KinseiBoxOffice.Counter+Vector3.Lerp(new Vector3(.40f,1.12f,.49f),new Vector3(.38f,1.09f,.425f),reveal);
+    }
+
+    static float PressShotClearance(Vector3 viewer,bool west)
+    {
+        viewer.y=0;
+        float minimum=float.PositiveInfinity;
+        for(int i=0;i<=8;i++){
+            PressShot(i/8f,west,out var eye,out var focus);
+            eye.y=focus.y=0;
+            var ray=focus-eye;
+            float u=Mathf.Clamp01(Vector3.Dot(viewer-eye,ray)/ray.sqrMagnitude);
+            minimum=Mathf.Min(minimum,Vector3.Distance(viewer,eye+u*ray));
+        }
+        return minimum;
+    }
+
+    static bool NearPress(Vector3 at,float radius) => at.y<2f && Flat(at,PressViewCentre)<radius;
+
+    bool StandAsideForPress(Person member,int index,float dt)
+    {
+        if(member==operatorOnDuty || member.hp<=0)return false;
+        bool nearby=NearPress(member.Position,2.1f);
+        if(OnAir && nearby && !NearPress(member.Position,PressClearRadius)){
+            Face(member,stageDirector.Position);Motion(member,"idle");return true;
+        }
+        bool followsAudience=member.duty==Duty.Follow && NearPress(player.Position,4.8f);
+        if(!nearby && !followsAudience)return false;
+        if(!followsAudience && !NearPress(member.Position,PressClearRadius) &&
+            !NearPress(member.destination,PressClearRadius))return false;
+        var place=KinseiBoxOffice.Counter+new Vector3(-1.55f-(index%2)*.90f,0,1.94f-(index/2)*1.02f);
+        if(Flat(member.Position,place)>.20f)MovePerson(member,place,2.55f,dt);
+        else {Face(member,stageDirector.Position);Motion(member,"idle");}
+        return true;
+    }
+
+    void SimulateFinale(float dt)
+    {
+        if((finaleStep==FinaleStep.Cooperative || finaleStep==FinaleStep.Exclusive) && clock>=nextFinaleFrame && SystemInfo.graphicsDeviceType!=UnityEngine.Rendering.GraphicsDeviceType.Null) {
+            nextFinaleFrame=clock+.12f;
+            Vector3 target=finaleStep==FinaleStep.Cooperative?LotusDesk:stageDirector.Position;
+            relayCam.transform.position=target+new Vector3(2f,1.72f,1.8f);
+            relayCam.transform.LookAt(target+Vector3.up*1.26f);
+            relayCam.Render();
+            club.SetExchangePicture(relayImage);
+        }
+        bool opening=finaleStep==FinaleStep.Exclusive && operatorOnDuty!=null &&
+            operatorOnDuty.duty==Duty.FinalePost && operatorOnDuty.destination==OpeningPost;
+        bool pressClear=true;
+        for(int i=0;i<crew.Count;i++){
+            var member=crew[i];
+            if(!opening || !StandAsideForPress(member,i,dt))UpdateCrew(member,i,dt);
+            if(opening && member.hp>0 && NearPress(member.Position,PressClearRadius))pressClear=false;
+        }
+        if(operatorOnDuty==null)return;
+        if(operatorOnDuty.duty!=Duty.FinalePost){
+            operatorOnDuty=null;
+            if(finaleStep==FinaleStep.Choose)finaleStep=FinaleStep.Connect;
+            return;
+        }
+        if(Vector3.Distance(operatorOnDuty.Position,operatorOnDuty.destination)>.65f)return;
+        if(finaleStep==FinaleStep.Connect) {
+            finaleStep=FinaleStep.Choose;
+            Say(operatorOnDuty.name+"「送像所、つながった。真壁さん、どちらに盤を？」",5);
+            sound.Cue("choice");
+        } else if((finaleStep==FinaleStep.Cooperative && operatorOnDuty.destination==LotusDesk) ||
+                  (finaleStep==FinaleStep.Exclusive && operatorOnDuty.destination==OpeningPost)) {
+            bool cooperative=finaleStep==FinaleStep.Cooperative;
+            if(!OnAir) {
+                if(!cooperative && !pressClear)return;
+                if(!cooperative){
+                    float clearance=PressShotClearance(player.Position,false);
+                    pressFromWest=clearance<.65f && PressShotClearance(player.Position,true)>clearance;
+                }
+                firstPictureAt=clock;command=false;club.SetTactical(false);snapCamera=true;
+                Face(operatorOnDuty,cooperative?new Vector3(-16,0,-19):stageDirector.Position);
+                sound.Cue("accord");
+                Say(cooperative?"澄子「一番席、聞こえてるよ。ほな始めよか」":"座長「宵待町のみなさん、お待たせしました」",3.6f);
+                Mark("first-broadcast");
+            }
+            Motion(operatorOnDuty,"idle");
+            if(!cooperative) {
+                boxOffice.SetTicketPress(clock-firstPictureAt);
+                Face(stageDirector,boxOffice.LeverGrip);
+                stageDirector.actor.SetAttentionTarget(boxOffice.LeverGrip);
+                Motion(stageDirector,"print-ticket");
+            }
+            if(clock-firstPictureAt<3.6f)return;
+            if(cooperative)End("cooperative","四十軒の朝","ロータスの一席から拍手が返る。店ごとに出し物を決め、金星は四十軒の共同舞台になった。");
+            else End("exclusive","金星の朝","座長が最初の切符を切る。金星が演目を決め、四十軒は専属興行の客席として朝を迎えた。");
+        }
+    }
+}

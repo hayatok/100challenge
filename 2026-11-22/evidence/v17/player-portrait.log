@@ -1,0 +1,58 @@
+Mono path[0] = 'C:/Users/hayat/AppData/Local/Temp/kinsei62-v17-cface/Kinsei_Data/Managed'
+Mono config path = 'C:/Users/hayat/AppData/Local/Temp/kinsei62-v17-cface/MonoBleedingEdge/etc'
+Input System module state changed to: Initialized.
+[Physics::Module] Initialized fallback backend.
+[Physics::Module] Id: 0xdecafbad
+Loading player data from C:/Users/hayat/AppData/Local/Temp/kinsei62-v17-cface/Kinsei_Data/data.unity3d
+Initialize engine version: 6000.3.28f1 (8f082d2fe476)
+[Subsystems] Discovering subsystems at path C:/Users/hayat/AppData/Local/Temp/kinsei62-v17-cface/Kinsei_Data/UnitySubsystems
+[D3D12 Device Filter] Vendor Name: NVIDIA
+[D3D12 Device Filter] Device Name: NVIDIA GeForce RTX 4070 Ti
+[D3D12 Device Filter] Driver Version: 32.0.16.1742
+[D3D12 Device Filter] Feature Level: 12.2
+[D3D12 Device Filter] Graphics Memory: 11996 MB
+[D3D12 Device Filter] Processor Count: 16
+[D3D12 Device Filter] Device Type: Discrete
+GfxDevice: creating device client; kGfxThreadingModeSplitJobs
+d3d12: failed to query info queue interface (0x80004002).
+Direct3D:
+    Version:         Direct3D 12 [level 12.2]
+    Renderer:        NVIDIA GeForce RTX 4070 Ti (ID=0x2782)
+    Vendor:          NVIDIA
+    VRAM:            11996 MB
+    App VRAM Budget: 11228 MB
+    Driver:          32.0.16.1742
+Begin MonoManager ReloadAssembly
+- Loaded All Assemblies, in  0.144 seconds
+- Finished resetting the current domain, in  0.002 seconds
+[Physics::Module] Selected backend.
+[Physics::Module] Name: PhysX
+[Physics::Module] Id: 0xf2b8ea05
+[Physics::Module] SDK Version: 4.1.2
+[Physics::Module] Integration Version: 1.0.0
+[Physics::Module] Threading Mode: Multi-Threaded
+<RI> Initializing input.
+<RI> Input initialized.
+UnloadTime: 0.531000 ms
+KINSEI start t=0.00 phase=Arrival pos=(0.00, 0.00, -10.65)
+KINSEI RTS t=0.40 phase=Arrival pos=(0.00, 0.00, -10.65)
+KINSEI TPS t=0.42 phase=Arrival pos=(0.00, 0.00, -10.65)
+KINSEI_WATER_CONTACT t=1.320 seat=3 foot=right x=-0.921 z=-10.906
+KINSEI phase-Floor t=1.37 phase=Floor pos=(0.00, 0.03, -6.75)
+KINSEI RTS t=2.44 phase=Floor pos=(0.00, 0.03, -2.76)
+KINSEI TPS t=2.62 phase=Floor pos=(0.00, 0.03, -2.76)
+KINSEI RTS t=3.04 phase=Floor pos=(0.00, 0.03, -2.14)
+KINSEI TPS t=3.23 phase=Floor pos=(0.00, 0.03, -2.14)
+KINSEI RTS t=3.43 phase=Floor pos=(0.00, 0.03, -2.14)
+KINSEI floor-order-紺谷-4 t=4.48 phase=Floor pos=(0.00, 0.03, -2.14)
+KINSEI TPS t=4.58 phase=Floor pos=(0.00, 0.03, -2.14)
+KINSEI floor-named-hit-2-紺谷 t=5.20 phase=Floor pos=(0.00, 0.03, -2.14)
+KINSEI floor-yield-紺谷 t=5.28 phase=Floor pos=(0.00, 0.03, -2.14)
+KINSEI look-yield-紺谷 t=7.45 phase=Floor pos=(-0.94, 0.03, 0.04)
+KINSEI_PORTRAIT 紺谷 angle=0 distance=2.06m
+KINSEI pause t=9.44 phase=Floor pos=(-0.94, 0.03, 0.04)
+[Physics::Module] Cleanup current backend.
+[Physics::Module] Id: 0xf2b8ea05
+Input System module state changed to: ShutdownInProgress.
+Input System polling thread exited.
+Input System module state changed to: Shutdown.

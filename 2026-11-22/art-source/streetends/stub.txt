@@ -1,0 +1,42 @@
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
+namespace UnityEngine {
+ public struct Vector3 {
+  public float x,y,z;
+  public Vector3(float x,float y,float z){this.x=x;this.y=y;this.z=z;}
+  public static Vector3 right=>new Vector3(1,0,0);
+  public static Vector3 forward=>new Vector3(0,0,1);
+  public static Vector3 back=>new Vector3(0,0,-1);
+  public static Vector3 up=>new Vector3(0,1,0);
+  public static Vector3 operator +(Vector3 a,Vector3 b)=>new Vector3(a.x+b.x,a.y+b.y,a.z+b.z);
+  public static Vector3 operator -(Vector3 a,Vector3 b)=>new Vector3(a.x-b.x,a.y-b.y,a.z-b.z);
+  public static Vector3 operator -(Vector3 a)=>new Vector3(-a.x,-a.y,-a.z);
+  public static Vector3 operator *(Vector3 a,float b)=>new Vector3(a.x*b,a.y*b,a.z*b);
+  public static Vector3 Cross(Vector3 a,Vector3 b)=>new Vector3(a.y*b.z-a.z*b.y,a.z*b.x-a.x*b.z,a.x*b.y-a.y*b.x);
+  public Vector3 normalized { get {float l=(float)Math.Sqrt(x*x+y*y+z*z);return this*(1/l);} }
+ }
+ public struct Rect{ public float xMin,yMin,xMax,yMax;public Rect(float a,float b,float c,float d){xMin=a;yMin=b;xMax=a+c;yMax=b+d;}}
+ public struct Vector2{public Vector2(float x,float y){}}
+ public class Material{public string name;public Material(string s){name=s;}}
+ public struct Color{public Color(float r,float g,float b){}}
+ public enum LightRenderMode{ForceVertex}
+ public class Light{public LightRenderMode renderMode;}
+ public static class Mathf{public static int Max(int a,int b)=>Math.Max(a,b);public const float PI=(float)Math.PI;public static float Abs(float a)=>Math.Abs(a);public static float Cos(float a)=>(float)Math.Cos(a);public static float Sin(float a)=>(float)Math.Sin(a);}
+}
+public sealed partial class KinseiWorld{
+ public class KinseiNightAssets{public object Root;public UnityEngine.Material Keep(UnityEngine.Material m)=>m;}
+ KinseiNightAssets nightAssets=new KinseiNightAssets();
+ UnityEngine.Material asphalt=new UnityEngine.Material("road"),cream=new UnityEngine.Material("cream");
+ UnityEngine.Material Mat(string n,string c,float m,float s)=>new UnityEngine.Material("canal");
+ void Text(string t,UnityEngine.Vector3 p,float s,UnityEngine.Material m,float r){}
+ UnityEngine.Light LightAt(string n,UnityEngine.Vector3 p,UnityEngine.Color c,float intensity,float range)=>new UnityEngine.Light();
+ public static void Dump(string path){ using(writer=new BinaryWriter(File.Create(path)))new KinseiWorld().BuildStreetEnds(new UnityEngine.Material("stone"),new UnityEngine.Material("sheet"),new UnityEngine.Material("timber"),new UnityEngine.Material("window"),new UnityEngine.Material("roof")); }
+ void BuildStreetFixtures(UnityEngine.Material water,UnityEngine.Material zinc){
+  var frame=new NightGeometry();var glass=new NightGeometry();var tube=new NightGeometry();var screen=new NightGeometry();
+  MakeStreetFixtures(frame,glass,tube,screen);
+  frame.Upload(null,new Material("fixture"),null);glass.Upload(null,new Material("opal"),null);
+  tube.Upload(null,new Material("tube"),null);screen.Upload(null,new Material("signal"),null);
+ }
+ static BinaryWriter writer;

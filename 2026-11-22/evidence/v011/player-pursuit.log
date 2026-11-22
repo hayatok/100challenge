@@ -1,0 +1,66 @@
+Mono path[0] = 'C:/work/kinsei-release/2026-11-22/Builds/Windows/Kinsei_Data/Managed'
+Mono config path = 'C:/work/kinsei-release/2026-11-22/Builds/Windows/MonoBleedingEdge/etc'
+Input System module state changed to: Initialized.
+[Physics::Module] Initialized fallback backend.
+[Physics::Module] Id: 0xdecafbad
+Loading player data from C:/work/kinsei-release/2026-11-22/Builds/Windows/Kinsei_Data/data.unity3d
+Initialize engine version: 6000.3.28f1 (8f082d2fe476)
+[Subsystems] Discovering subsystems at path C:/work/kinsei-release/2026-11-22/Builds/Windows/Kinsei_Data/UnitySubsystems
+[D3D12 Device Filter] Vendor Name: NVIDIA
+[D3D12 Device Filter] Device Name: NVIDIA GeForce RTX 4070 Ti
+[D3D12 Device Filter] Driver Version: 32.0.16.1742
+[D3D12 Device Filter] Feature Level: 12.2
+[D3D12 Device Filter] Graphics Memory: 11996 MB
+[D3D12 Device Filter] Processor Count: 16
+[D3D12 Device Filter] Device Type: Discrete
+GfxDevice: creating device client; kGfxThreadingModeSplitJobs
+d3d12: failed to query info queue interface (0x80004002).
+Direct3D:
+    Version:         Direct3D 12 [level 12.2]
+    Renderer:        NVIDIA GeForce RTX 4070 Ti (ID=0x2782)
+    Vendor:          NVIDIA
+    VRAM:            11996 MB
+    App VRAM Budget: 11228 MB
+    Driver:          32.0.16.1742
+Begin MonoManager ReloadAssembly
+- Loaded All Assemblies, in  0.158 seconds
+- Finished resetting the current domain, in  0.003 seconds
+[Physics::Module] Selected backend.
+[Physics::Module] Name: PhysX
+[Physics::Module] Id: 0xf2b8ea05
+[Physics::Module] SDK Version: 4.1.2
+[Physics::Module] Integration Version: 1.0.0
+[Physics::Module] Threading Mode: Multi-Threaded
+<RI> Initializing input.
+<RI> Input initialized.
+UnloadTime: 0.563600 ms
+KINSEI start t=0.00 phase=Arrival pos=(0.00, 0.00, -10.65)
+KINSEI RTS t=0.86 phase=Arrival pos=(0.00, 0.00, -10.65)
+KINSEI order-0-Attend t=0.97 phase=Arrival pos=(0.00, 0.00, -10.65)
+KINSEI order-1-Guard t=1.27 phase=Arrival pos=(0.00, 0.00, -10.65)
+KINSEI TPS t=1.44 phase=Arrival pos=(0.00, 0.00, -10.65)
+KINSEI phase-Floor t=3.15 phase=Floor pos=(0.00, 0.03, -6.74)
+KINSEI hit-guard-68 t=5.46 phase=Floor pos=(0.00, 0.03, -1.59)
+KINSEI hit-guard-36 t=5.87 phase=Floor pos=(0.00, 0.03, -1.59)
+KINSEI hit-guard-4 t=6.29 phase=Floor pos=(0.00, 0.03, -1.59)
+KINSEI hit-guard-0 t=6.71 phase=Floor pos=(0.00, 0.03, -1.59)
+KINSEI hit-brother-68 t=7.32 phase=Floor pos=(0.00, 0.03, -1.59)
+KINSEI hit-brother-36 t=7.73 phase=Floor pos=(0.00, 0.03, -1.59)
+KINSEI hit-brother-4 t=8.15 phase=Floor pos=(0.00, 0.03, -1.59)
+KINSEI hit-brother-0 t=8.57 phase=Floor pos=(0.00, 0.03, -1.59)
+KINSEI kaji-held t=9.00 phase=Floor pos=(0.00, 0.03, -1.59)
+KINSEI hit-guard-35 t=9.17 phase=Floor pos=(0.00, 0.03, -1.59)
+KINSEI hit-guard-3 t=9.58 phase=Floor pos=(0.00, 0.03, -1.59)
+KINSEI phase-Choice t=9.70 phase=Choice pos=(0.00, 0.03, -1.59)
+KINSEI phase-Chase t=14.16 phase=Chase pos=(3.78, 0.03, 3.88)
+KINSEI hit-boss-47 t=14.53 phase=Chase pos=(3.78, 0.03, 3.88)
+KINSEI hit-boss-15 t=14.94 phase=Chase pos=(3.78, 0.03, 3.88)
+KINSEI hit-boss-0 t=15.36 phase=Chase pos=(3.78, 0.03, 3.88)
+KINSEI ending-pursuit t=15.36 phase=Result pos=(3.78, 0.03, 3.88)
+KINSEI_FRAME n=863 median_ms=16.67 p95_ms=16.67 size=1920x1080 gpu=NVIDIA GeForce RTX 4070 Ti
+KINSEI_PHOTO C:/Users/hayat/AppData/LocalLow/Yoimachi/金星の一夜\Photos\20261122-043647-568.png
+[Physics::Module] Cleanup current backend.
+[Physics::Module] Id: 0xf2b8ea05
+Input System module state changed to: ShutdownInProgress.
+Input System polling thread exited.
+Input System module state changed to: Shutdown.

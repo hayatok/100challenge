@@ -1,0 +1,28 @@
+{
+  "mindfront_aksel_skin": {
+    "author": "Mindfront",
+    "category": "",
+    "changed": "2018-11-04",
+    "created": "2017-06-11",
+    "description": "This skin is made by a friend from an original MakeHuman skin and then I did the normal and specular map from one I have done erlier. The specular map and normal map have body hair but the skin texture have non but it gives the skin suitable ruffness and you can maybe use the specular map to extract the hair and add on the skin. In MakeHuman viewport the normal map looks bad. Edit 2018-11-04 Removed obsolete links",
+    "license": "CC0",
+    "original_author": "",
+    "original_source": "",
+    "source": "http://www.makehumancommunity.org/node/850",
+    "thumbnail": "mindfront_aksel_skin.png",
+    "type": "skin"
+  },
+  "onlytheghosts_old_eurasian_male": {
+    "author": "OnlyTheGhosts",
+    "category": "",
+    "changed": "2018-08-31",
+    "created": "2018-08-31",
+    "description": "This is a combination of the old Asian and old Caucasian Male skins with only minimal editing. Offshoot from a project of mine that required Central Asian characters.",
+    "license": "CC0",
+    "original_author": "",
+    "original_source": "",
+    "source": "http://www.makehumancommunity.org/node/1581",
+    "thumbnail": "onlytheghosts_old_eurasian_male.png",
+    "type": "skin"
+  }
+}
