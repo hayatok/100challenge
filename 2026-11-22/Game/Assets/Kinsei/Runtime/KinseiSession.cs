@@ -5,7 +5,7 @@ using UnityEngine;
 public sealed partial class KinseiSession : MonoBehaviour
 {
     enum Phase { Title, Arrival, Floor, Choice, Chase, Showdown, Mirror, Release, Result, Dawn }
-    enum Duty { Follow, Go, Attend, Guard, Rest, BoxOffice, FinalePost, StageWitness, Backstage, Designated }
+    enum Duty { Follow, Go, Attend, Guard, Rest, BoxOffice, FinalePost, StageWitness, Backstage, Designated, HallDoor, HallRelay }
     sealed class Person
     {
         public string name, role, pose = "idle";
@@ -155,12 +155,15 @@ public sealed partial class KinseiSession : MonoBehaviour
         return person;
     }
 
+    static Vector3 FollowOffset(int index) =>
+        new Vector3(index%2==0?-1.75f:1.75f,0,-1.70f-(index/2)*1.05f);
+
     void Populate()
     {
         player = Make("真壁","makabe",new Vector3(0,0,-10.65f),0);
         string[] names = {"辰","千代","源","新田","茂","ハル"};
         for(int i=0;i<names.Length;i++)
-            crew.Add(Make(CrewName(i,names[i]),i==0?"tatsu":"ally",CrewPosition(i,new Vector3((i%3-1)*1.18f,0,-10-(i/3)*1.25f)),i));
+            crew.Add(Make(CrewName(i,names[i]),i==0?"tatsu":"ally",CrewPosition(i,player.Position+FollowOffset(i)),i));
         brother=Make("梶の弟","brother",new Vector3(-.6f,0,1.4f),1);
         guards.Add(Make("用心棒・紺谷","guard",GuardPosition(0,new Vector3(-2,0,1.9f)),0));
         guards.Add(Make("用心棒・浦","guard",GuardPosition(1,new Vector3(1.5f,0,2.7f)),1));
@@ -203,6 +206,7 @@ public sealed partial class KinseiSession : MonoBehaviour
         ResetStreets();
         ResetRailRide();
         ResetBackstage();
+        ResetHallFronts();
         club.PutAwayMaster();
         club.SetExchangePicture(null);
         foreach(var p in everyone) Destroy(p.root.gameObject);
@@ -276,7 +280,7 @@ public sealed partial class KinseiSession : MonoBehaviour
         sound.ListenAtBath(!command && phase==Phase.Arrival && !finale && !AboveStreet,player.Position);
         foreach(var p in everyone)
         {
-            float action=(p==player || p==brother || p==elder) && phase==Phase.Mirror?relayProgress:Mathf.Clamp01(1-(clock-p.lastAction)/.36f);
+            float action=(p==player || p==brother || p==elder || p==hallMirrorOperator) && phase==Phase.Mirror?relayProgress:Mathf.Clamp01(1-(clock-p.lastAction)/.36f);
             bool reacting=p.flinchUntil>clock && p.hp>0 && p.pose!="talk";
             p.actor.Pose(p.floorYielded?"floor-yield":reacting?"flinch":p.pose,p.speed,action);
             ApplyBackstageHands(p);
@@ -429,7 +433,8 @@ public sealed partial class KinseiSession : MonoBehaviour
             FrameCounter(out eye,out focus);
         } else if(command) {
             cam.orthographic=true; cam.orthographicSize=Mathf.Max(chartSize,15f/cam.aspect);
-            focus=new Vector3(mapOffset.x,0,1.55f+mapOffset.y);eye=focus+new Vector3(0,18,-11f);
+            float centreZ=HallFrontsVisible?-1.05f:1.55f;
+            focus=new Vector3(mapOffset.x,0,centreZ+mapOffset.y);eye=focus+new Vector3(0,18,-11f);
         } else {
             cam.orthographic=false; cam.fieldOfView=57;
             Vector3 look=Quaternion.Euler(tilt,angle,0)*Vector3.forward;
@@ -466,6 +471,7 @@ public sealed partial class KinseiSession : MonoBehaviour
         sound.ListenAtBath(false,Vector3.zero);
         ClearStageWitness();
         ClearFloorAssignments();sound.StopFloorYields();
+        ReleaseHallTeam(0);ReleaseHallTeam(1);
         floorGuardReport=FloorGuardReport();
         outcome=id; endingTitle=title; endingText=body; settlementMessage=FinishCampaign(id=="showdown" || id=="stage-broadcast"?"pursuit":id); phase=Phase.Result; command=false;
         SetPerformance(true);

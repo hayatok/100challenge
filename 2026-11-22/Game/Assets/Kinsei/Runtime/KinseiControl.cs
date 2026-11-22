@@ -21,6 +21,8 @@ public sealed partial class KinseiSession
     }
     void Motion(Person p,string pose,float speed=0)
     {
+        // Ordinary hall gunplay has an armed low ready; stage/west duels retain the unarmed guard.
+        if(pose=="guard" && !finale && !westDuel && (phase==Phase.Floor || phase==Phase.Chase))pose="hall-guard";
         p.pose=pose; p.speed=speed;
     }
     void Act(Person p,string kind)
@@ -219,6 +221,9 @@ public sealed partial class KinseiSession
         if(StageActive){
             if(Input.GetKeyDown(KeyCode.E))OrderStageDesk();
         }else{
+            if(HallFrontsVisible && Input.GetKeyDown(KeyCode.Z))AssignHallFront(1);
+            if(HallFrontsVisible && Input.GetKeyDown(KeyCode.X))AssignHallFront(0);
+            if(HallFrontsVisible && Input.GetKeyDown(KeyCode.H))hallOtherOrders=!hallOtherOrders;
             if(Input.GetKeyDown(KeyCode.E)) Assign(Duty.Attend);
             if(Input.GetKeyDown(KeyCode.F)) Assign(Duty.Follow);
             if(Input.GetKeyDown(KeyCode.R)) Assign(Duty.Rest);
@@ -226,6 +231,10 @@ public sealed partial class KinseiSession
             if(Input.GetKeyDown(KeyCode.T)) Assign(Duty.BoxOffice);
             if(Input.GetKeyDown(KeyCode.B)) Assign(Duty.Backstage);
             if(Input.GetKeyDown(KeyCode.V)) Assign(Duty.StageWitness);
+        }
+        if(HallFrontsVisible && (Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1)) && !OverHUD()){
+            int front=HallPinAt(Input.mousePosition);
+            if(front>=0){AssignHallFront(front);return;}
         }
         if(Input.GetMouseButtonDown(0) && !OverHUD()) {
             Vector2 hit=Input.mousePosition; float nearest=Screen.height*.057f; int member=-1;
@@ -299,6 +308,8 @@ public sealed partial class KinseiSession
     {
         float y=1-Input.mousePosition.y/Screen.height;
         float scale=Mathf.Min(Screen.width/1100f,Screen.height/720f);
+        if(HallFrontsVisible)return Input.mousePosition.y>=Screen.height-61*scale ||
+            Input.mousePosition.y<=(command?HallCommandHeight:43)*scale;
         return y<.12f || (command && Input.mousePosition.y<=CommandPanelHeight*scale);
     }
 }

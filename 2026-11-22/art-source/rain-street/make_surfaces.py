@@ -28,19 +28,19 @@ def request(path, payload=None):
     return urlopen(Request(HOST + path, data=data, headers={'Content-Type': 'application/json'}), timeout=35)
 
 
-def generate(name, seed, detail):
-    destination = ROOT / (name + '.png')
-    record = ROOT / (name + '.json')
+def generate(name, seed, detail, *, directory=ROOT, prefix='rain', negative=AVOID):
+    destination = directory / (name + '.png')
+    record = directory / (name + '.json')
     if destination.exists() and record.exists():
         expected = json.loads(record.read_text(encoding='utf-8'))['sha256']
         if hashlib.sha256(destination.read_bytes()).hexdigest() == expected:
             return
     graph = json.loads(GRAPH.read_text(encoding='utf-8'))
     graph['4']['inputs']['text'] = PREFIX + detail
-    graph['5']['inputs']['text'] = AVOID
+    graph['5']['inputs']['text'] = negative
     graph['7']['inputs']['seed'] = seed
-    graph['9']['inputs']['filename_prefix'] = 'kinsei/rain-' + name.lower()
-    with request('/prompt', {'prompt': graph, 'client_id': 'kinsei-rain-street'}) as response:
+    graph['9']['inputs']['filename_prefix'] = 'kinsei/' + prefix + '-' + name.lower()
+    with request('/prompt', {'prompt': graph, 'client_id': 'kinsei-' + prefix}) as response:
         job = json.load(response)['prompt_id']
     for _ in range(450):
         with request('/history/' + job) as response:

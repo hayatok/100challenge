@@ -15,6 +15,7 @@ public sealed partial class KinseiSession
 
     void InitStyle()
     {
+        hallSigns=Resources.Load<Texture2D>("HallSigns");
         morningCover=Resources.Load<Texture2D>("Art/lotus-dawn");
         ledgerCover=Resources.Load<Texture2D>("Art/kinsei-ledger-dawn");
         broadcastCover=Resources.Load<Texture2D>("Art/lotus-listens");
@@ -74,7 +75,7 @@ public sealed partial class KinseiSession
         Letter(new Rect(x,y-32,w,30),title?"キャバレー金星　開演":"キャバレー金星　終幕",18,gold);
         Letter(new Rect(x-4,y,w+18,100),title?"金星の一夜":endingTitle,title?77:Mathf.Min(57,Mathf.FloorToInt(w/Mathf.Max(1,endingTitle.Length))),cream,true);
         Block(new Rect(x,y+105,w,1),rule);
-        Letter(new Rect(x,y+115,w,114),title?"真壁は六人の仲間と金星へ戻る。入口の帳場に今夜の売上伝票がある。":endingText+"\n"+settlementMessage,18,cream,true,TextAnchor.UpperLeft,true);
+        Letter(new Rect(x,y+115,w,114),title?"真壁は六人を率いて金星に踏み込む。通用口で兄貴分を止めるか、中継卓から梶の弟を帰すか。組員を送り、真壁が現場で決める。":endingText+"\n"+settlementMessage,18,cream,true,TextAnchor.UpperLeft,true);
         if(pendingEnding!=null) Letter(new Rect(x,hudH-221,w,99),"保存先の空き容量や使用状況を確認し、Rで記帳してください。今終了すると、この帰還の売上と結末の記録を失います。",16,gold,false,TextAnchor.UpperLeft,true);
         else if(CampaignError.Length>0)Letter(new Rect(x,hudH-221,w,95),CampaignError,16,gold,false,TextAnchor.UpperLeft,true);
         else Letter(new Rect(x,hudH-212,w,84),CampaignSummary,16,gold,false,TextAnchor.UpperLeft,true);
@@ -163,12 +164,15 @@ public sealed partial class KinseiSession
             case Duty.BoxOffice:return "帳場へ";
             case Duty.StageWitness:return StageWitnessReady?"立会中":"舞台袖へ";
             case Duty.Rest:return "休息"; case Duty.Attend:return held?"交渉中":"梶の席へ";
+            case Duty.HallDoor:return "通用口";
+            case Duty.HallRelay:return "中継卓";
             default:return "随行";
         }
     }
     void LiveHUD()
     {
         pauseSelection=0;
+        if(HallFrontsVisible){DrawHallBattle();return;}
         if(!inspectingStageLevel){
             WorldMarks();
             DrawAddresses();
@@ -213,9 +217,7 @@ public sealed partial class KinseiSession
             if(WestNearby && westSeo!=null)hints=westDuel?"WASD　かわす　　F　返す　　Tab　組員を指揮":
                 "WASD　移動　　右ドラッグ　視点　　Tab　組員を指揮";
             if(PortraitHint.Length>0)hints="E　話す　　"+PortraitHint;
-            if(yieldingPortrait!=null)hints=GuardName(yieldingPortrait)+"　　Z を離して真壁に戻る";
-            else if(NearbyYieldingGuard() is Person nearbyGuard)hints="Z 長押し　"+GuardName(nearbyGuard)+"を見る　　Tab　組員を指揮";
-            Letter(new Rect(185,bottom+6,hudW-207,50),hints,17,cream);
+            Letter(new Rect(185,bottom+6,hudW-207,50),GuardViewHint(hints),17,cream);
             string interact=Interaction();
             if(interact.Length>0 && shopView==ShopView.None && !portraitOwner && yieldingPortrait==null){
                 float promptWidth=Mathf.Min(hudW-48,Mathf.Max(300,(interact.Length+3)*20+36));
@@ -239,6 +241,12 @@ public sealed partial class KinseiSession
             Block(new Rect(cx-9,cy,6,2),c);Block(new Rect(cx+4,cy,6,2),c);
             Block(new Rect(cx,cy-8,2,5),c);Block(new Rect(cx,cy+4,2,5),c);
         }
+    }
+    string GuardViewHint(string fallback)
+    {
+        if(yieldingPortrait!=null)return GuardName(yieldingPortrait)+"　　Z を離して真壁に戻る";
+        var nearby=NearbyYieldingGuard();
+        return nearby==null?fallback:"Z 長押し　"+GuardName(nearby)+"を見る　　Tab　組員を指揮";
     }
     void Meter(Rect rect,float value,Color color)
     {

@@ -1,0 +1,150 @@
+{
+  "prompt_id": "76c159c6-4c64-45ac-9540-4689d8fa0c51",
+  "sha256": "a8bb14d0ad75d122319e57bfb4152c0a5a6a1a55a2aa58b5da8d662e3d4dee50",
+  "seed": 1702202,
+  "source": {
+    "filename": "frontage-skirting_00001_.png",
+    "subfolder": "kinsei",
+    "type": "output",
+    "metadata": {
+      "kind": "image",
+      "width": 1024,
+      "height": 1024
+    }
+  },
+  "execution": {
+    "status_str": "success",
+    "completed": true,
+    "messages": [
+      [
+        "execution_start",
+        {
+          "prompt_id": "76c159c6-4c64-45ac-9540-4689d8fa0c51",
+          "timestamp": 1795310693610
+        }
+      ],
+      [
+        "execution_cached",
+        {
+          "nodes": [
+            "1",
+            "2",
+            "3",
+            "5",
+            "6"
+          ],
+          "prompt_id": "76c159c6-4c64-45ac-9540-4689d8fa0c51",
+          "timestamp": 1795310693611
+        }
+      ],
+      [
+        "execution_success",
+        {
+          "prompt_id": "76c159c6-4c64-45ac-9540-4689d8fa0c51",
+          "timestamp": 1795310711928
+        }
+      ]
+    ]
+  },
+  "graph": {
+    "1": {
+      "class_type": "UNETLoader",
+      "inputs": {
+        "unet_name": "moss_image_sft_int8_convrot.safetensors",
+        "weight_dtype": "default"
+      }
+    },
+    "2": {
+      "class_type": "CLIPLoader",
+      "inputs": {
+        "clip_name": "qwen3.5_9b_w4a8_gptq.safetensors",
+        "type": "moss_image",
+        "device": "default"
+      }
+    },
+    "3": {
+      "class_type": "VAELoader",
+      "inputs": {
+        "vae_name": "flux2-vae_small.safetensors"
+      }
+    },
+    "4": {
+      "class_type": "CLIPTextEncode",
+      "inputs": {
+        "clip": [
+          "2",
+          0
+        ],
+        "text": "Single flat top-down material scan, 1:1 square full bleed, eye perpendicular to the surface, neutral diffuse illumination without cast shadows. A 50-centimetre square of dark anthracite terrazzo from the clean lower wall of a well-loved late Showa theatre entrance. Flakes of ivory, bluish grey and warm grey stone of mixed 2 to 6 millimetre size, sparsely embedded in a dominant dark warm graphite binder. Fragments sit flush in the polished body. Uninterrupted honed surface, no build-up of dirt, no directional gradients. Cross-polarised neutral albedo photograph."
+      }
+    },
+    "5": {
+      "class_type": "CLIPTextEncode",
+      "inputs": {
+        "clip": [
+          "2",
+          0
+        ],
+        "text": "objects, signage, labels, text, watermark, border, seams, joints, bevels, trims, perspective, reflected scene, cast shadow, relief lighting, prominent damage, flaking paint, border patina, damp spots, vignette"
+      }
+    },
+    "6": {
+      "class_type": "EmptyFlux2LatentImage",
+      "inputs": {
+        "width": 1024,
+        "height": 1024,
+        "batch_size": 1
+      }
+    },
+    "7": {
+      "class_type": "KSampler",
+      "inputs": {
+        "model": [
+          "1",
+          0
+        ],
+        "positive": [
+          "4",
+          0
+        ],
+        "negative": [
+          "5",
+          0
+        ],
+        "latent_image": [
+          "6",
+          0
+        ],
+        "seed": 1702202,
+        "steps": 30,
+        "cfg": 2.5,
+        "sampler_name": "er_sde",
+        "scheduler": "simple",
+        "denoise": 1
+      }
+    },
+    "8": {
+      "class_type": "VAEDecode",
+      "inputs": {
+        "samples": [
+          "7",
+          0
+        ],
+        "vae": [
+          "3",
+          0
+        ]
+      }
+    },
+    "9": {
+      "class_type": "SaveImage",
+      "inputs": {
+        "images": [
+          "8",
+          0
+        ],
+        "filename_prefix": "kinsei/frontage-skirting"
+      }
+    }
+  }
+}

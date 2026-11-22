@@ -91,7 +91,8 @@ public sealed partial class KinseiSession
     Vector3 GuardPosition(int index, Vector3 original)
     {
         if (ledger.CrewShift == 0) return original;
-        float flank = (ledger.CrewShift == 1 ? .65f : -.65f);
+        // Later shifts concentrate on a different half of the hall, leaving the other approach open.
+        float flank = ledger.CrewShift == 1 ? 2.4f : -2.4f;
         original.x += flank;
         original.z += index == 0 ? -.45f : .4f;
         return original;

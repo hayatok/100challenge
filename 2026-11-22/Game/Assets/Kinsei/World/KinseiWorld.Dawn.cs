@@ -134,7 +134,7 @@ public sealed partial class KinseiWorld
         dawnSun.shadows=LightShadows.Hard;dawnSun.shadowStrength=.62f;dawnSun.shadowBias=.04f;
         var lamps=new System.Collections.Generic.List<Light>();
         foreach(var l in GetComponentsInChildren<Light>(true))
-            if(l!=dawnSun && (l==benchLamp || System.Array.IndexOf(serviceLights,l)>=0 ||
+            if(l!=dawnSun && (l==frontageFill || l==displayFill || l==benchLamp || System.Array.IndexOf(serviceLights,l)>=0 ||
                l.name=="Street jade neon" || l.name=="Entrance amber" || l.name=="舞台前の歌手用スポット"))lamps.Add(l);
         dawnLamps=lamps.ToArray();nightPower=new float[dawnLamps.Length];
 

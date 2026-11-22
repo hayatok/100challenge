@@ -48,6 +48,8 @@ public sealed partial class KinseiWorld : MonoBehaviour
         welt=Mat("Corded oxblood welting","#6E4440",.18f,.48f);
         Shell(); Floor(); Stage(); Furniture(); Balcony(); Entry(); BuildDistrict(); Mirror(); Lighting();
         BuildNightscape();
+        BuildFrontage();
+        BuildHallServiceDoor();
         BuildMarquee();
         BuildWestBath();
         BatchArchitecture();
@@ -219,22 +221,18 @@ public sealed partial class KinseiWorld : MonoBehaviour
         Box("Street asphalt",new Vector3(0,-.13f,-12),new Vector3(30,.2f,8),asphalt,true);
         for(int s=-1;s<=1;s+=2)
         {
-            Box("Facade stone wing",new Vector3(s*5.4f,2.7f,-8),new Vector3(7.2f,5.4f,.4f),cream,true);
-            for(int i=0;i<8;i++)Box("Facade vertical brass fin",new Vector3(s*(2.2f+i*.83f),2.65f,-8.27f),new Vector3(.05f,5.2f,.16f),brass);
-            Box("Window lacquer frame",new Vector3(s*5.5f,2.2f,-8.3f),new Vector3(3.8f,2.8f,.12f),dark);
-            Box("Opaque smoked display glass",new Vector3(s*5.5f,2.2f,-8.38f),new Vector3(3.45f,2.45f,.04f),glass);
+            var barrier=new GameObject("Facade stone wing");
+            barrier.transform.SetParent(transform,false);
+            barrier.transform.localPosition=new Vector3(s*5.4f,2.7f,-8);
+            barrier.AddComponent<BoxCollider>().size=new Vector3(7.2f,5.4f,.4f);
             Box("Street curb",new Vector3(s*7.5f,.09f,-10),new Vector3(3,.18f,3.8f),dark,true);
         }
-        Box("Entrance lintel",new Vector3(0,4.5f,-8.15f),new Vector3(4.2f,.6f,.65f),brass);
-        Box("Canopy",new Vector3(0,3.85f,-9),new Vector3(5.6f,.18f,2.4f),dark);
-        for(int i=-2;i<=2;i++)Box("Canopy luminous strip",new Vector3(i,3.73f,-9),new Vector3(.035f,.04f,2.2f),glow);
         for(int s=-1;s<=1;s+=2){Cylinder("Revolving entry jamb",new Vector3(s*1.65f,1.85f,-8),.08f,3.7f,brass,true);}
         // Glazed pivot wings are held open beside the centre walking path.
         Cylinder("Entry crown",new Vector3(0,3.65f,-8),1.65f,.1f,brass);
-        for(int s=-1;s<=1;s+=2){Box("Open glazed entry leaf",new Vector3(s*1.48f,1.8f,-8),new Vector3(.06f,3.4f,1.25f),glass);Rail(new Vector3(s*1.4f,.2f,-8.6f),new Vector3(s*1.4f,3.4f,-8.6f),.025f,brass);}
         var poster=Resources.Load<Texture2D>("Art/kinsei-poster");
-        if(poster){var pm=new Material(Shader.Find("Unlit/Texture"));pm.mainTexture=poster;var q=Part("Kinsei street poster",PrimitiveType.Quad,new Vector3(-5.5f,2.2f,-8.42f),new Vector3(2,2,1),pm);q.transform.rotation=Quaternion.identity;}
-        Text("KINSEI",new Vector3(0,4.65f,-8.51f),.65f,brass,0);
+        if(poster){var pm=new Material(Shader.Find("Unlit/Texture"));pm.mainTexture=poster;var q=Part("Kinsei street poster",PrimitiveType.Quad,new Vector3(-5.5f,2.2f,-7.97f),new Vector3(2,2,1),pm);q.transform.rotation=Quaternion.identity;}
+        Text("KINSEI",new Vector3(0,4.65f,-8.51f),.65f,cream,0);
         Text("キャバレー  金星",new Vector3(0,4.05f,-8.51f),.19f,glow,0);
         Box("Vertical neon sign",new Vector3(8.5f,4.8f,-8.6f),new Vector3(.8f,2.5f,.25f),dark);
         Text("K\nI\nN\nS\nE\nI",new Vector3(8.5f,4.8f,-8.77f),.29f,cyan,0);
@@ -340,8 +338,6 @@ public sealed partial class KinseiWorld : MonoBehaviour
         booth.type=LightType.Spot;booth.spotAngle=97;booth.transform.LookAt(new Vector3(.05f,3.96f,7.4f));
         booth.shadows=LightShadows.Soft;booth.shadowStrength=.64f;booth.shadowNormalBias=.16f;booth.shadowBias=.035f;
         LightAt("Terrace cool glass fill",new Vector3(2.65f,4.6f,7.95f),new Color(.55f,.73f,.91f),.59f,3.5f);
-        LightAt("Street jade neon",new Vector3(5,3,-10),new Color(.18f,1,.8f),2.5f,9);
-        LightAt("Entrance amber",new Vector3(0,3,-9),new Color(1,.68f,.35f),2.5f,8);
         // Low resolution realtime probe is rendered once after construction, not every frame.
         var probeGo=new GameObject("Club reflection probe");probeGo.transform.SetParent(transform,false);probeGo.transform.localPosition=new Vector3(0,2,0);
         var probe=probeGo.AddComponent<ReflectionProbe>();probe.mode=ReflectionProbeMode.Realtime;probe.refreshMode=ReflectionProbeRefreshMode.OnAwake;probe.timeSlicingMode=ReflectionProbeTimeSlicingMode.AllFacesAtOnce;probe.resolution=128;probe.size=new Vector3(18,8,22);probe.boxProjection=true;probe.intensity=.65f;

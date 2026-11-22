@@ -6,6 +6,9 @@ public sealed partial class KinseiSession
     {
         if(phase==Phase.Arrival && next!=phase)CloseWestDispute();
         if(phase==Phase.Floor && next!=phase)ClearFloorAssignments();
+        if((phase==Phase.Floor || phase==Phase.Choice) && next!=Phase.Choice && next!=phase){
+            ReleaseHallTeam(0);ReleaseHallTeam(1);
+        }
         if(next==Phase.Mirror || next==Phase.Showdown || next==Phase.Chase)sound.StopFloorYields();
         phase=next; phaseAge=0; lockedTarget=null; Mark("phase-"+next);
         if(next==Phase.Showdown)SetPerformance(false);
@@ -21,33 +24,41 @@ public sealed partial class KinseiSession
             ReleaseBackstagePost();
             if(fromWing)Mark("backstage-entry");
             Change(Phase.Floor); entranceTime=clock;
-            Say(westRelieved!=null?"浜口は席に残った。二階の加勢は三人や":"梶の連れが二階に四人。辰なら話をつけられる",4.1f); sound.Cue("door");
+            Say(westRelieved!=null?"浜口は席に残った。三人の加勢が降りる前に、どっちを押さえる？":"辰「通用口なら兄貴分を止められる。弟に会わせるなら左の中継卓や」",4.5f);sound.Cue("door");
         }
         // The same cast advances under both cameras.
         for(int i=0;i<crew.Count;i++) UpdateCrew(crew[i],i,dt);
+        TickHallFronts(dt);
         UpdateUpstairs(dt);
         if(phase==Phase.Floor) {
+            if(HallFrontReady(0))StopBossAtDoor(dt);
             foreach(var p in guards) Opponent(p,dt);
             if(brother.hp>0) Opponent(brother,dt);
+            else if(HallFrontReady(1))MoveBrotherToRelay(dt);
             else Motion(brother,"surrender");
             bool cleared=brother.hp<=0 && guards.TrueForAll(g=>g.hp<=0 || g.floorYielded);
             if(cleared) {
                 Change(Phase.Choice); Motion(brother,"surrender"); sound.Cue("choice");
-                Say("弟「もうええ……兄ちゃんに、顔だけ見せてくれ」",4.6f);
+                string call="弟「もうええ……兄ちゃんに、顔だけ見せてくれ」";
+                if(HallFrontReady(1))call="弟「兄ちゃんに顔を見せたい。卓で合図してくれ」";
+                else if(HallFrontReady(0))call=DoorInterception()?"通用口の班が兄貴分を押しとどめた。追うなら今や":"通用口は開いてる。兄貴分が逃げる前に追うんや";
+                Say(call,4.6f);
             }
         }
         if(phase==Phase.Choice) {
             escapeTime-=dt;
-            if(escapeTime>3f) MovePerson(boss,bossDoor,1.45f,dt);
+            if(escapeTime>3f && HallFrontReady(0))StopBossAtDoor(dt);
+            else if(escapeTime>3f) MovePerson(boss,bossDoor,1.45f,dt);
             else if(escapeTime>0) MovePerson(boss,bossDoor+new Vector3(2,0,.9f),1.5f,dt);
             else if(!boss.retired) {
                 boss.retired=true;boss.root.gameObject.SetActive(false);
                 Say("兄貴分が通用口を出た。弟はまだホールにいる。");
             }
-            if(escorted && Flat(brother.Position,player.Position)>.85f)
+            if(HallFrontReady(1))MoveBrotherToRelay(dt);
+            else if(escorted && Flat(brother.Position,player.Position)>.85f)
                 MovePerson(brother,player.Position,3.1f,dt);
             else Motion(brother,"surrender");
-            if(escapeTime<=0 && crew[0].hp<=0) {
+            if(escapeTime<=0 && crew[0].hp<=0 && !(HallFrontReady(1) && crew.Exists(p=>p.hp>0))) {
                 End("loss","金星からの撤退","兄貴分は通用口を出た。辰が倒れ、梶との中継もかなわず、真壁は仲間を連れて引き揚げた。");return;
             }
             if(escapeTime<=0 && !escorted && !held) {
@@ -58,18 +69,19 @@ public sealed partial class KinseiSession
             Opponent(boss,dt);
         } else if(phase==Phase.Mirror) {
             relayProgress=Mathf.Min(1,phaseAge/4.6f); club.SetMirror(relayProgress,relayImage,elder.actor.EyePosition,brother.actor.EyePosition);
-            Motion(player,"mirror"); Face(player,new Vector3(-2.68f,0,.03f));
+            var operatorAtDesk=hallMirrorOperator??player;
+            Motion(operatorAtDesk,"mirror");Face(operatorAtDesk,new Vector3(-2.68f,0,.03f));
             Motion(brother,"brother-call");
             elder.actor.SetAttentionTarget(club.UpperScreenCentre);Motion(elder,"listen-call");
             if(phaseAge>=4.6f) {
-                accord=true;held=false; crew[0].duty=Duty.Follow;
+                accord=true;held=false;if(crew[0].duty==Duty.Attend)crew[0].duty=Duty.Follow;
                 club.SetMirror(1,null);
-                Say("梶「帰るで。……辰さん、おおきに」",4f);
+                Say(hallMirrorOperator!=null?"梶「よう見えた。もう帰ろうや、二人で」":"梶「帰るで。……辰さん、おおきに」",4f);
                 sound.Cue("accord"); Change(Phase.Release);
             }
         } else if(phase==Phase.Release) {
             if(elder.Position.z< -8.85f && brother.Position.z< -8.5f) {
-                End("accord","兄弟を帰した夜",westRelieved!=null?"浜口は席に残り、梶は弟の肩を抱いて三人と店を出た。辰が真壁の隣に戻る。":"梶は弟の肩を抱いて四人と店を出た。辰が真壁の隣に戻る。兄貴分との決着は持ち越した。");return;
+                End("accord","兄弟を帰した夜",hallMirrorOperator!=null?hallMirrorOperator.name+"が中継鏡を閉じる。梶は弟の肩を抱いて店を出た。兄貴分との決着は持ち越した。":westRelieved!=null?"浜口は席に残り、梶は弟の肩を抱いて三人と店を出た。辰が真壁の隣に戻る。":"梶は弟の肩を抱いて四人と店を出た。辰が真壁の隣に戻る。兄貴分との決着は持ち越した。");return;
             }
         }
         UpdateStageWitness(dt);
@@ -85,6 +97,9 @@ public sealed partial class KinseiSession
             Motion(p,"fall");return;
         }
         if(WestEscortIndex(p)>=0)return;
+        if(phase==Phase.Mirror && p==hallMirrorOperator)return;
+        int hallSlot=HallFrontMember(index);
+        if(hallSlot>=0){UpdateHallCrew(p,index,hallSlot,dt);return;}
         if(p.duty==Duty.Designated && UpdateDesignated(p,index,dt))return;
         if(p.duty==Duty.Backstage) {
             if(!AtBackstagePost(p))MovePerson(p,BackstagePost,3.1f,dt);
@@ -112,8 +127,7 @@ public sealed partial class KinseiSession
         Vector3 at=p.destination;
         if(p.duty==Duty.Follow) {
             // A staggered grouping leaves the shoulder camera and the doorway open.
-            var offset=new Vector3(index%2==0?-1.75f:1.75f,0,-1.7f-(index/2)*1.05f);
-            at=player.Position+offset;
+            at=player.Position+FollowOffset(index);
             if(!AboveStreet && player.Position.x< -21.6f){
                 // On a narrow bridge the group follows along the deck. Leave the bath's doorway to its customers.
                 at=player.Position.x< -34
@@ -236,7 +250,14 @@ public sealed partial class KinseiSession
         string stageVerb=StageInteraction();
         if(stageVerb.Length>0)return stageVerb;
         if(phase==Phase.Choice) {
-            if(escorted && Flat(player.Position,witness)<1.6f && player.Position.y<1) return held?"弟を中継鏡へ":"辰を二階の梶の席へ";
+            var deskHand=HallRelayCrew();
+            if(deskHand!=null && OnHallFloor(player.Position,witness,2.3f)){
+                return OnHallFloor(deskHand.Position,MirrorOperatingPosition,.46f) && OnHallFloor(brother.Position,BrotherAtDesk,.6f)?CrewRelayCall:"";
+            }
+            if(escorted && Flat(player.Position,witness)<1.6f && player.Position.y<1){
+                if(held)return "弟を中継鏡へ";
+                if(!HallFrontReady(1))return "辰を二階の梶の席へ";
+            }
             if(!escorted && Flat(player.Position,brother.Position)<1.95f && player.Position.y<1) return "弟に肩を貸す";
             if(escapeTime>0 && Vector3.Distance(player.Position,boss.Position)<2.1f) return "兄貴分を追う";
         }
@@ -260,17 +281,26 @@ public sealed partial class KinseiSession
             escorted=true;Face(brother,player.Position); sound.Cue("dial");
             Say("弟「悪いな。あの卓の鏡まで頼む」");Mark("escort");
         } else if(verb=="兄貴分を追う") {
-            boss.hp=bossHp=100;Change(Phase.Chase); Say("兄貴分「まだうちの若頭のつもりか」");sound.Cue("choice");
-        } else if(verb=="弟を中継鏡へ") {
+            boss.hp=bossHp=100;
+            bool intercepted=DoorInterception();
+            if(intercepted)boss.cooldown=clock+3.5f;
+            Change(Phase.Chase);Say(intercepted?"仲間が兄貴分を抑えた。反撃される前に踏み込め":"兄貴分「まだうちの若頭のつもりか」");sound.Cue("choice");
+        } else if(verb=="弟を中継鏡へ" || verb==CrewRelayCall) {
+            hallMirrorOperator=verb==CrewRelayCall?HallRelayCrew():null;
+            var operatorAtDesk=hallMirrorOperator??player;
             if(motor!=null)motor.enabled=false;
-            player.root.position=witness+new Vector3(.48f,0,.0f);
+            if(hallMirrorOperator!=null){
+                player.root.position=witness+new Vector3(1.35f,0,-.04f);
+                Face(player,brother.Position);Motion(player,"idle");
+            }
+            operatorAtDesk.root.position=MirrorOperatingPosition;
             if(motor!=null)motor.enabled=true;
-            player.actor.SetMirrorWheel(club.MirrorReceiver);
-            brother.root.position=witness+new Vector3(-.88f,0,-.09f);
+            operatorAtDesk.actor.SetMirrorWheel(club.MirrorReceiver);
+            brother.root.position=BrotherAtDesk;
             Face(brother,new Vector3(-3.02f,1.41f,-.22f));
             angle=-14;tilt=8; snapCamera=true; nextHallPicture=clock;
             Change(Phase.Mirror); Say("弟「兄ちゃん……もうええ」",4.2f);sound.Cue("dial");
-        } else if(verb.Length>0) Say("指揮に切り替え、辰に梶との話を任せる");
+        } else if(verb=="辰を二階の梶の席へ")Say("指揮に切り替え、辰に梶との話を任せる");
     }
 }
 

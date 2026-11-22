@@ -11,6 +11,8 @@ public sealed partial class KinseiActor : MonoBehaviour
     readonly Dictionary<Transform, Vector3> rests = new Dictionary<Transform, Vector3>();
     Material realisticSkin, propMetal;
     Transform sidearm;
+    bool combatFlinch;
+    float combatLift;
     readonly Dictionary<Transform, Quaternion> lastRotations = new Dictionary<Transform, Quaternion>();
     readonly Dictionary<Transform, Vector3> lastPositions = new Dictionary<Transform, Vector3>();
     Material skin, cloth, dark, shirt, tie, hair, eye, iris, lip, metal, collar;
@@ -241,6 +243,7 @@ public sealed partial class KinseiActor : MonoBehaviour
         if(!ready) Init("guard",0);
         if(previous!=state)
         {
+            if(state=="flinch")combatFlinch=previous=="hall-guard"||previous=="aim"||previous=="shoot";
             if(state=="floor-yield")BeginHallYield();
             if(previous=="stage-testimony" || previous=="floor-yield")ReleaseCounterLine();
             glanceAfterYield=roleName=="brother" && previous=="surrender" && state=="idle";
@@ -270,7 +273,7 @@ public sealed partial class KinseiActor : MonoBehaviour
             lastPositions[j]=j.localPosition; lastRotations[j]=j.localRotation;
             j.localPosition=rests[j]; j.localRotation=Quaternion.identity;
         }
-        if(sidearm!=null)sidearm.gameObject.SetActive(state=="shoot" || state=="aim");
+        if(sidearm!=null)sidearm.gameObject.SetActive(CombatPropAllowed && (state=="hall-guard" || state=="shoot" || state=="aim" || state=="flinch" && combatFlinch));
         body.localPosition+=V(Mathf.Sin(t*.75f)*.006f,Mathf.Sin(t*2.1f)*.003f,0);
         chest.localRotation=Quaternion.Euler(Mathf.Sin(t*1.7f)*.85f,turnSpeed*.4f,Mathf.Sin(t*.6f)*.7f);
         la.localRotation=Quaternion.Euler(-5,0,-4);
@@ -298,7 +301,7 @@ public sealed partial class KinseiActor : MonoBehaviour
         if(state=="stage-testimony")PoseTestimonyBody(stateTime);
         if(state=="floor-yield")PoseHallYieldBody(stateTime);
         PoseStageAudienceBody(state,stateTime);
-        if(state=="guard")
+        if(state=="guard" || state=="hall-guard")
         {
             bool leadRight=roleName!="brother";
             int lead=leadRight?1:-1;
@@ -400,7 +403,7 @@ public sealed partial class KinseiActor : MonoBehaviour
         if(state=="flinch")
         {
             float impulse=Ease(0,.038f,stateTime)*(1-Ease(.067f,.235f,stateTime));
-            body.localPosition+=V(-.029f*impulse,-.028f*impulse,-.045f*impulse);
+            body.localPosition+=V(-(combatFlinch?.065f:.029f)*impulse,-(combatFlinch?.060f:.028f)*impulse,-(combatFlinch?.080f:.045f)*impulse);
             chest.localRotation*=Quaternion.Euler(-14*impulse,-24*impulse,13*impulse);
             head.localRotation*=Quaternion.Euler(-12*impulse,-11*impulse,5*impulse);
             la.localRotation*=Quaternion.Euler(-15*impulse,0,-12*impulse);
@@ -411,7 +414,10 @@ public sealed partial class KinseiActor : MonoBehaviour
             bool firing=state=="shoot";
             float raise=firing?1:Ease(0,.17f,stateTime);
             float recoil=firing?Ease(0,.036f,stateTime)*(1-Ease(.045f,.16f,stateTime)):0;
-            chest.localRotation=Quaternion.Euler(-1,-10*raise,3*raise);
+            body.localPosition+=V(0,-.035f,-.016f*recoil);
+            chest.localRotation=Quaternion.Euler(3-recoil*12,-10*raise+recoil*7,3*raise-recoil*6);
+            PlantGuardFoot(ll,lk,leftShoe,-1,1);
+            PlantGuardFoot(rl,rk,rightShoe,1,1);
             head.localRotation=Quaternion.Euler(-4,5*raise,0);
             ra.localRotation=Quaternion.Euler(Mathf.Lerp(-47,-88,raise)-recoil*9,-2,6);
             re.localRotation=Quaternion.Euler(Mathf.Lerp(-41,-11,raise)-recoil*10,0,0);
@@ -510,6 +516,7 @@ public sealed partial class KinseiActor : MonoBehaviour
         }
         if(state=="stage-testimony")PoseTestimonyHands(stateTime,out gripLeft,out gripRight);
         if(state=="floor-yield")PoseHallYieldLimbs(stateTime,out gripLeft,out gripRight);
+        PoseCombatHands(state,ref gripLeft,ref gripRight);
         leftGrip=Mathf.Lerp(leftGrip,gripLeft,blend);
         rightGrip=Mathf.Lerp(rightGrip,gripRight,blend);
         if(leftHandRenderer){
@@ -553,6 +560,37 @@ public sealed partial class KinseiActor : MonoBehaviour
     }
 
     static float Ease(float start,float end,float time) => Mathf.SmoothStep(0,1,Mathf.InverseLerp(start,end,time));
+
+    bool CombatPropAllowed => roleName!="resident" && roleName!="west-fumiko" && roleName!="west-kiichi" && roleName!="stage-singer" && roleName!="stage-pianist";
+
+    // Screen acting for the fictional prop. Solve after the pose blend so imported
+    // palms face one another in front of the body rather than opening out to the room.
+    void PoseCombatHands(string state,ref float gripLeft,ref float gripRight)
+    {
+        bool raised=state=="aim" || state=="shoot";
+        bool struck=state=="flinch" && combatFlinch;
+        if(!CombatPropAllowed || !(raised || state=="hall-guard" || struck)){combatLift=0;return;}
+        combatLift=Mathf.Lerp(combatLift,raised?1:0,1-Mathf.Exp(-Time.deltaTime*17));
+        if(state=="shoot")combatLift=Mathf.Max(combatLift,.94f);
+        float kick=state=="shoot"?Ease(0,.025f,stateTime)*(1-Ease(.075f,.21f,stateTime)):0;
+        float flinch=struck?Ease(0,.035f,stateTime)*(1-Ease(.10f,.32f,stateTime)):0;
+        Vector3 direction=transform.forward;
+        if(hasAttentionTarget)
+        {
+            Vector3 local=transform.InverseTransformDirection(attentionEyes-transform.TransformPoint(V(.12f,1.35f,.32f)));
+            if(local.sqrMagnitude>.0001f){local.Normalize();local.x=Mathf.Clamp(local.x,-.22f,.22f);local.y=Mathf.Clamp(local.y,-.14f,.18f);direction=transform.TransformDirection(local.normalized);}
+        }
+        Vector3 dominant=Vector3.Lerp(V(.13f,1.16f,.265f),V(.12f,1.36f,.43f),combatLift);
+        dominant+=V(.028f*kick,.078f*kick,-.10f*kick);
+        dominant=Vector3.Lerp(dominant,V(.18f,1.08f,.19f),flinch);
+        Vector3 fingers=Vector3.Slerp((direction-transform.up*.85f).normalized,direction,combatLift);
+        Vector3 right=transform.TransformPoint(dominant);
+        Vector3 support=right-transform.right*.047f-transform.up*.044f-direction*.040f;
+        if(struck)support=Vector3.Lerp(support,transform.TransformPoint(V(-.025f,1.22f,.145f)),flinch);
+        ReachPalm(ra,re,rh,right,-transform.right,fingers,1,transform.right);
+        ReachPalm(la,le,lh,support,transform.right,fingers,1,-transform.right);
+        gripRight=.98f;gripLeft=struck?.86f:.82f;
+    }
 
     void AimHead(Vector3 worldPoint,float weight)
     {

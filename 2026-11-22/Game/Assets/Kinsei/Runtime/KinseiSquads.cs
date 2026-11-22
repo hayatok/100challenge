@@ -9,6 +9,7 @@ public sealed partial class KinseiSession
 
     void ResetSquads()
     {
+        hallOtherOrders=false;lastHallMember=-1;
         chosen=0;extraMembers=0;
         squads[0]=squads[1]=0;
     }
